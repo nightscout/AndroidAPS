@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_code">Нагадування R1</string>
+    <string name="alert_r2_code">Нагадування R2</string>
+    <string name="alert_r3_code">Нагадування R3</string>
+    <string name="alert_r4_code">Нагадування R4</string>
+    <string name="alert_r7_code">Нагадування R7</string>
+    <string name="alert_w31_code">Попередження W31</string>
+    <string name="alert_w32_code">Попередження W32</string>
+    <string name="alert_w33_code">Попередження W33</string>
+    <string name="alert_w34_code">Попередження W34</string>
+    <string name="alert_w36_code">Попередження W36</string>
+    <string name="alert_w38_code">Попередження W38</string>
+    <string name="alert_w39_code">Попередження W39</string>
+    <string name="alert_m20_code">Обслуговування M20</string>
+    <string name="alert_m21_code">Обслуговування M21</string>
+    <string name="alert_m22_code">Обслуговування M22</string>
+    <string name="alert_m23_code">Обслуговування M23</string>
+    <string name="alert_m24_code">Обслуговування M24</string>
+    <string name="alert_m25_code">Обслуговування M25</string>
+    <string name="alert_m26_code">Обслуговування M26</string>
+    <string name="alert_m27_code">Обслуговування M27</string>
+    <string name="alert_m28_code">Обслуговування M28</string>
+    <string name="alert_m29_code">Обслуговування M29</string>
+    <string name="alert_m30_code">Обслуговування M30</string>
+    <string name="alert_e6_code">Помилка E6</string>
+    <string name="alert_e10_code">Помилка E10</string>
+    <string name="alert_e13_code">Помилка E13</string>
+</resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\\או מנהל ההתקן.</string>
+    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו/או מנהל ההתקן.</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">לא מאותחל</string>
     <string name="pump_status_initialized">מאותחל</string>
@@ -25,9 +25,9 @@
     <string name="pump_cmd_desc_get_battery_status">קבלת מצב הסוללה</string>
     <string name="pump_cmd_desc_get_time">קבלת השעה</string>
     <string name="pump_cmd_desc_set_time">הגדרת השעה</string>
-    <string name="pump_cmd_desc_get_pump_status">קבל את סטטוס הפוד</string>
+    <string name="pump_cmd_desc_get_pump_status">קבלת סטטוס המשאבה</string>
     <string name="pump_cmd_desc_get_history">קבלת היסטוריה</string>
-    <string name="pump_cmd_desc_get_history_params">קבל היסטוריה%s</string>
+    <string name="pump_cmd_desc_get_history_params">קבלת היסטוריה %s</string>
     <string name="pump_cmd_desc_custom">פקודה מותאמת אישית</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">בזאלים</string>
@@ -51,9 +51,9 @@
     <string name="time_last_6_hours">ב-6 השעות האחרונות</string>
     <string name="time_last_12_hours">ב-12 השעות האחרונות</string>
     <string name="time_last_24_hours">24 שעות אחרונות</string>
-    <string name="time_last_2_days">ביומיים אחרונים</string>
+    <string name="time_last_2_days">ביומיים האחרונים</string>
     <string name="time_last_4_days">ב-4 הימים האחרונים</string>
-    <string name="time_last_week">בשבוע שעבר</string>
-    <string name="time_last_month">בחודש שעבר</string>
+    <string name="time_last_week">בשבוע האחרון</string>
+    <string name="time_last_month">בחודש האחרון</string>
     <!-- Pump History -->
 </resources>

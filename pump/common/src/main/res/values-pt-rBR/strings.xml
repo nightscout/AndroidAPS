@@ -18,9 +18,9 @@
     <string name="pump_cmd_desc_get_tbr">Obter basal temporária</string>
     <string name="pump_cmd_desc_cancel_tbr">Cancelar basal temporária</string>
     <string name="pump_cmd_desc_set_tbr">Definir basal temporária</string>
-    <string name="pump_cmd_desc_set_bolus">Definir bolus</string>
-    <string name="pump_cmd_desc_get_bolus">Obter bolus</string>
-    <string name="pump_cmd_desc_cancel_bolus">Cancelar bolus</string>
+    <string name="pump_cmd_desc_set_bolus">Definir bólus</string>
+    <string name="pump_cmd_desc_get_bolus">Obter bólus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Cancelar bólus</string>
     <string name="pump_cmd_desc_get_remaining_insulin">Obter insulina restante</string>
     <string name="pump_cmd_desc_get_battery_status">Obter status da bateria</string>
     <string name="pump_cmd_desc_get_time">Obter horário</string>
@@ -36,10 +36,11 @@
     <string name="history_group_statistic">Estatísticas</string>
     <string name="history_group_unknown">Desconhecidos</string>
     <string name="history_group_all">Todos</string>
-    <string name="history_group_bolus">Bolus</string>
-    <string name="history_group_prime">Purgar/Preencher</string>
+    <string name="history_group_bolus">Bólus</string>
+    <string name="history_group_prime">Purgar</string>
     <string name="history_group_alarm">Alarmes</string>
     <string name="history_group_glucose">Glicose</string>
+    <string name="history_group_base">Base</string>
     <string name="history_group_other">Outro</string>
     <string name="history_group_events">Todos os eventos</string>
     <string name="history_group_events_no_stat">Eventos (sem Status)</string>

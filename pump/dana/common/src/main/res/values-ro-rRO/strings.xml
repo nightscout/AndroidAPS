@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Asocierea a expirat</string>
+    <string name="danars_bonding_failed">Asocierea Bluetooth cu pompa a eșuat sau a fost anulată. Încercați din nou și introduceți PIN-ul afișat pe pompă.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Integrare pentru pompele DANA Diabecare RS și Dana-i</string>
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
@@ -8,18 +9,25 @@
     <string name="speederror">Eroare viteză</string>
     <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
     <string name="boluserrorcode">Solicitat: %1$.2fU Administrat: %2$.2fU Cod eroare: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pompa nu este amorsată</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Insulină insuficientă în rezervor</string>
+    <string name="danai2_bolus_error_easy_sleep">Modul Easy sleep este pornit în pompă</string>
+    <string name="danai2_pump_check_error">Eroare la verificarea pompei</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Modul Easy</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Blocare automată</string>
     <string name="danar_valuenotsetproperly">Valoare setată incorect</string>
-    <string name="danar_setbasalstep001">Setare pas bazală la 0.01 U/h</string>
-    <string name="resetpairing">Resetați informațiile de împerechere?</string>
+    <string name="danar_setbasalstep001">Setare pas bazală la 0,01 U/h</string>
+    <string name="resetpairing">Resetați informațiile de asociere?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCod: %4$02X</string>
-    <string name="processinghistory">Se procesează activitatea</string>
+    <string name="processinghistory">Se procesează evenimentul</string>
     <string name="danar_enableextendedbolus">Activați bolusuri extinse în pompă</string>
     <string name="danar_disablebolusblock">Blocarea bolusului este activată în pompă. AAPS nu poate administra insulină în timp ce este activă. Dezactivați blocarea bolusului din setările pompei.</string>
     <string name="overview_bolusprogress_stoped">Oprit</string>
     <string name="unsupportedfirmware">Firmware pompă incompatibil</string>
+    <string name="danars_unsupported_model">Model de pompă nesuportat (cod %1$s)</string>
     <string name="pumperror">Eroare a pompei</string>
     <string name="lowbattery">Baterie aproape descărcată</string>
-    <string name="basalcompare">Se livrează mai puțin decât rata bazală curentă</string>
+    <string name="basalcompare">Se administrează mai puțin decât rata bazală setată</string>
     <string name="pumpshutdown">Oprire pompă</string>
     <string name="batterydischarged">Bateria pompei este descărcată</string>
     <string name="occlusion">Ocluzie</string>
@@ -30,7 +38,7 @@
     <string name="bloodsugarmeasurementalert">Alertă măsurare glicemie</string>
     <string name="remaininsulinalert">Nivel insulină disponibilă</string>
     <string name="missedbolus">Bolus ratat</string>
-    <string name="invalidpairing">Informații de asociere invalide. Cerere nouă de asociere </string>
+    <string name="invalidpairing">Informații de asociere invalide. Se cere o nouă asociere</string>
     <string name="gettingpumpstatus">Se primește starea pompei</string>
     <string name="gettingextendedbolusstatus">Se citește starea bolusului extins</string>
     <string name="gettingbolusstatus">Se citește starea bolusului</string>
@@ -38,8 +46,8 @@
     <string name="gettingpumpsettings">Se citesc setările pompei</string>
     <string name="gettingpumptime">Se citește ora pompei</string>
     <string name="largetimedifftitle">Diferență majoră de timp</string>
-    <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nPotriviți manual ora din pompă și asigurați-vă că sincronizarea cu datele istorice din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
-    <string name="pairfirst">Vă rog să asociați pompa la telefon!</string>
+    <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai mult de 1,5 ore.\nPotriviți manual ora din pompă și asigurați-vă că sincronizarea cu datele istorice din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și dezactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
+    <string name="pairfirst">Asociați pompa cu telefonul!</string>
     <string name="approachingdailylimit">Se apropie limita zilnică de insulină</string>
     <string name="startingbolus">Pornire administrare bolus</string>
     <string name="waitingforestimatedbolusend">Se așteaptă terminarea bolusării. Mai sunt %1$d secunde.</string>
@@ -56,9 +64,9 @@
     <string name="danar_history_carbohydrates">Carbohidrați</string>
     <string name="danar_history_dailyinsulin">Insulină zilnică</string>
     <string name="danar_history_glucose">Glicemie</string>
-    <string name="danar_history_refill">Reumpleți</string>
-    <string name="danar_history_syspend">Suspendați</string>
-    <string name="danar_history_prime">Amorsați</string>
+    <string name="danar_history_refill">Reumplere</string>
+    <string name="danar_history_syspend">Suspendare</string>
+    <string name="danar_history_prime">Amorsare</string>
     <string name="danar_user_options">Opțiunile utilizatorului</string>
     <string name="danar_time_display">Formatul de afișare timp</string>
     <string name="danar_button_scroll">Buton derulare</string>
@@ -72,9 +80,9 @@
     <string name="danar_shutdown">Oprire [ore]</string>
     <string name="danar_low_reservoir">Rezervor aproape gol [unități]</string>
     <string name="danar_save_user_options">Salvați opțiunile în pompă</string>
-    <string name="description_pump_dana_r">Integrare cu pompele DANA Diabcare R</string>
-    <string name="description_pump_dana_r_korean">Integrare cu pompele DANA Diabcare R coreene</string>
-    <string name="description_pump_dana_r_v2">Integrare cu pompele DANA Diabcare R cu firmware actualizat</string>
+    <string name="description_pump_dana_r">Integrare cu pompele DANA Diabecare R</string>
+    <string name="description_pump_dana_r_korean">Integrare cu pompele DANA Diabecare R coreene</string>
+    <string name="description_pump_dana_r_v2">Integrare cu pompele DANA Diabecare R cu firmware actualizat</string>
     <string name="devicenotfound">Dispozitivul selectat nu a fost găsit</string>
     <string name="danar_switchtouhmode">Schimbați din modul U/z în U/h în pompă</string>
     <string name="danarkoreanpump">DanaR din Coreea</string>
@@ -96,14 +104,14 @@
     <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Pompa selectată</string>
     <string name="rs_loginsulinchange_title">Înregistrați schimbarea rezervorului</string>
-    <string name="rs_loginsulinchange_summary">Adăugați eveniment \"Schimbare insulină\" în NS/Careportal când este detectat în istoric</string>
+    <string name="rs_loginsulinchange_summary">Adăugați evenimentul \"Schimbare insulină\" în Careportal când este detectat în istoric</string>
     <string name="rs_logcanulachange_title">Înregistrați schimbarea canulei</string>
-    <string name="rs_logcanulachange_summary">Adăugați eveniment \"Schimbare set\" în portal de îngrijire când este detectat în istoric</string>
-    <string name="press_ok_on_the_pump">Apăsați OK pe pompă\nşi introduceți cele 2 numere afişate\nPăstraţi ecranul pompei ACTIV apăsând butonul minus până când terminați introducerea codului.</string>
+    <string name="rs_logcanulachange_summary">Adăugați evenimentul \"Schimbare set\" în Careportal când este detectat în istoric</string>
+    <string name="press_ok_on_the_pump">Apăsați OK pe pompă\nși introduceți cele 2 numere afișate\nPăstrați ecranul pompei ACTIV apăsând butonul minus până când terminați introducerea codului.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
-    <string name="basal_bolus_step">Etapa bazală/bolus</string>
-    <string name="connecting_to_pump">Conectarea la pompa…</string>
+    <string name="basal_bolus_step">Pas bazală/bolus</string>
+    <string name="connecting_to_pump">Se conectează la pompă…</string>
     <string name="pairing_successful">Asociere reușită!</string>
     <string name="pairing_successful_message">Pompa dumneavoastră este acum conectată și gata de utilizare.</string>
     <string name="cancel_pairing_title">Anulați asocierea?</string>

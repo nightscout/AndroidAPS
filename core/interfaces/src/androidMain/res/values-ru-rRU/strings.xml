@@ -15,8 +15,6 @@
     <string name="sec_plus">(+%1$d сек)</string>
     <string name="minago_long">%1$d минут назад</string>
     <string name="hoursago">%1$.1fч назад</string>
-    <string name="days_ago">%1$s дн назад</string>
-    <string name="days_ago_round">%1$s дн назад</string>
     <plurals name="plurals_day_hour_ago">
         <item quantity="one">%1$s день %2$s час назад</item>
         <item quantity="few">%1$s дня %2$s часа назад</item>

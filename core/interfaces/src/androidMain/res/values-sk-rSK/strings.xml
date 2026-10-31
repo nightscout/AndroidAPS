@@ -57,7 +57,7 @@
     <string name="later_today">Neskôr počas dňa</string>
     <string name="tomorrow">Zajtra</string>
     <string name="today">Dnes</string>
-    <string name="yesterday">včera</string>
+    <string name="yesterday">Včera</string>
     <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
     <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
     <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
@@ -85,7 +85,7 @@
     <string name="pref_show_detailed_iob">Zobraziť detailný IOB</string>
     <string name="pref_show_cob">Zobraziť COB</string>
     <string name="pref_show_delta">Zobraziť odchýlku</string>
-    <string name="pref_show_detailed_delta">Zobraziť detailnú odchylku</string>
+    <string name="pref_show_detailed_delta">Zobraziť detailnú odchýlku</string>
     <string name="pref_show_avgdelta">Zobraziť priemernú odchýlku</string>
     <string name="pref_show_tempTarget">Zobraziť dočasný cieľ</string>
     <string name="pref_show_reservoir_level">Zobraziť stav zásobníka</string>
@@ -109,8 +109,8 @@
     <string name="default_custom_watchface_external_comment">Predvolený ciferník vrátane externých zobrazení pre sledovateľov, môžete kliknúť na tlačidlo EXPORTOVAŤ CIFERNÍK ak chcete vygenerovať šablónu</string>
     <string name="wear_default_watchface">Predvolený ciferník</string>
     <string name="wear_more_watchfaces">Ďalšie ciferníky</string>
-    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d</string>
-    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
@@ -160,14 +160,14 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
     <string name="basal_value">Hodnota bazálu</string>
     <string name="cobvsiob">COB vs. IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Detekovaná pomalá absorbcia sacharidov: %1$d%% času. Radšej dvakrát skontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Zistená pomalá absorpcia sacharidov: %1$d%% času. Dvakrát skontrolujte výpočet. COB môže byť nadhodnotené, a preto môže byť podaného viac inzulínu !!!!!</string>
     <string name="bolus_constraint_applied_warn">Použité obmedzenie bolusu: %1$.2f U na %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
+    <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (pumpa ho nepodá)</string>
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eSacharidy %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
     <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
-    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Spustenie zásuvného modulu %1$s zlyhalo a preto nemusí fungovať. Prosím reštartujte AAPS.</string>
-    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">V zásuvnom module %1$s došlo k chybe a jeho časť prestala fungovať. Reštartujte, prosím, AndroidAPS.</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s sa nepodarilo spustiť a nemusí fungovať. Reštartujte, prosím, AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">V plugine %1$s došlo k chybe a jeho časť prestala fungovať. Reštartujte, prosím, AAPS.</string>
 </resources>

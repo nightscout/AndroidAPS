@@ -5,7 +5,7 @@
     <string name="dia_profile">Трябва да зададете стойността на DIA в Настройки на инсулина (Управление → Настройки на инсулина), а не в профила.</string>
     <string name="dia_minimumis5h">Минималната възможна стойност е 5 часа.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
-    <string name="dia_meaningisequaltodiapump">Ако сте били доволни от зададената стойност за DIA, която е използвала вашата помпа, преди да започнете да ползвате AndroidAPS, няма нужда да я променяте, когато затворите цикъла.</string>
+    <string name="dia_meaningisequaltodiapump">Ако сте били доволни от зададената стойност за DIA, която е използвала вашата помпа, преди да започнете да ползвате AndroidAPS, няма нужда да я променяте, когато затворите кръга.</string>
     <string name="dia_valuemustbedetermined">Вие трябва да установите за себе си правилната стойност за DIA.</string>
     <string name="hypott_label">Хипо временна цел</string>
     <string name="hypott_whenhypott">Каква е основната причина за задаване на хипо временна цел?</string>
@@ -18,7 +18,7 @@
     <string name="pumpdisconnect_unnecessary">Това не е нужно, инсулин няма да бъде доставен, тъй като помпата е физически разкачена.</string>
     <string name="pumpdisconnect_missinginsulin">Предотвратява AAPS да отчете инсулин, който не е бил доставен, докато помпата е била физически разкачена.</string>
     <string name="pumpdisconnect_notstop">Това няма да спре доставянето на инсулин, ако помпата е закачена на тялото.</string>
-    <string name="pumpdisconnect_openloop">Ще вкара AAPS в отворен цикъл.</string>
+    <string name="pumpdisconnect_openloop">Ще вкара AAPS в отворен кръг.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">Настройки на AAPS</string>
     <string name="objectives2_label">Настройки на AAPS</string>
@@ -36,7 +36,7 @@
     <string name="noisycgm_label">Шумни показания от CGM</string>
     <string name="noisycgm_whattodo">Какво трябва да се направи, ако CGM данните са шумни?</string>
     <string name="noisycgm_nothing">Не правете нищо - AAPS ще се справи с това.</string>
-    <string name="noisycgm_pause">Деактивирайте затворения цикъл, за да избегнете възможно предозиране или недостатъчно дозиране.</string>
+    <string name="noisycgm_pause">Деактивирайте затворения кръг, за да избегнете възможно предозиране или недостатъчно дозиране.</string>
     <string name="noisycgm_replacesensor">Сменете постоянно шумните или неточни сензори.</string>
     <string name="noisycgm_checksmoothing">Уверете се, че данните ви за глюкоза са изгладени, или от приложението за CGM, или от плъгин за изглаждане в AAPS.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
@@ -45,7 +45,7 @@
     <string name="exerciseprofile_switchprofilebelow100">Превключете профила на по-малко от 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Превключете профила на повече от 100%.</string>
     <string name="exerciseprofile_leaveat100">Оставете профила настроен на 100%.</string>
-    <string name="exerciseprofile_suspendloop">Спрете цикъла</string>
+    <string name="exerciseprofile_suspendloop">Спрете кръга</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Упражнения и Временни цели</string>
     <string name="exercise_whattodo">Как можете да използвате временните цели, за да помогнете на системата да се справи с аеробните упражнения?</string>
@@ -56,7 +56,7 @@
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="basaltest_label">Тестване на Базал, ISF и I:C</string>
     <string name="basaltest_when">Кога тези стойности трябва да бъдат потвърдени?</string>
-    <string name="basaltest_beforeloop">Преди затваряне на цикъла.</string>
+    <string name="basaltest_beforeloop">Преди затваряне на кръга.</string>
     <string name="basaltest_havingregularhighlow">При чести високи или ниски нива на кръвната захар.</string>
     <string name="basaltest_weekly">Поне веднъж седмично.</string>
     <string name="basaltest_fixed">Веднъж зададени и потвърдени, тези стойности не трябва да се променят с течение на времето.</string>
@@ -64,7 +64,7 @@
     <string name="prerequisites_label">Предпоставки</string>
     <string name="prerequisites_what">Какво е важно за настройка и използване на AAPS?</string>
     <string name="prerequisites_build">Начин да компилирате AAPS чрез браузър или компютър с Android Studio.</string>
-    <string name="prerequisites_pump">Съвместима инсулинова помпа, ако планирате да използвате затворен цикъл.</string>
+    <string name="prerequisites_pump">Съвместима инсулинова помпа, ако планирате да използвате затворен кръг.</string>
     <string name="prerequisites_nightscout">Nightscout или Tidepool, за да пазите запис на данните си.</string>
     <string name="prerequisites_beanandroiddeveloper">Опит в програмирането или редактирането на програмен код.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
@@ -72,7 +72,7 @@
     <string name="prerequisites2_what">Какво е важно за настройка и използване на AAPS?</string>
     <string name="prerequisites2_profile">Потвърдени стойности за вашия профил (базални дози, ISF, съотношение I:C) и за вашия инсулин (DIA).</string>
     <string name="prerequisites2_device">Съвместимо Android устройство (напр. мобилен телефон, Android часовник или таблет).</string>
-    <string name="prerequisites2_internet">AAPS изисква интернет връзка, за да работи в затворен цикъл.</string>
+    <string name="prerequisites2_internet">AAPS изисква интернет връзка, за да работи в затворен кръг.</string>
     <string name="prerequisites2_supportedcgm">Поддържан CGM и подходящо приложение за получаване на стойности на кръвната захар на телефона/устройството.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Актуализиране на AAPS</string>
@@ -154,7 +154,7 @@
     <string name="nsclient_nightscout">AAPSClient, приложението Nightscout и уеб страницата на Nightscout позволяват да следите AAPS дистанционно.</string>
     <string name="nsclient_dexcomfollow">Други приложения (например Dexcom Follow или xDrip+ в режим на последовател) позволяват да следите дистанционно част от данните, като стойностите на глюкозата. Възможно е да не показват IOB или COB или да ги изчисляват по различен начин.</string>
     <string name="nsclient_data">За да следите или управлявате AAPS дистанционно, и двата телефона трябва да имат интернет достъп (например Wi-Fi или мобилни данни).</string>
-    <string name="nsclient_fullcontrol">Когато AAPSClient е сдвоен с главния телефон, можете да управлявате AAPS и дистанционно, например болус, въглехидрати, временни цели, смяна на профил и режим на цикъла.</string>
+    <string name="nsclient_fullcontrol">Когато AAPSClient е сдвоен с главния телефон, можете да управлявате AAPS и дистанционно, например болус, въглехидрати, временни цели, смяна на профил и режим на кръга.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="nsclient_hint2">https://wiki.aaps.app/en/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Фактор на инсулинова чувствителност (ISF)</string>
@@ -196,7 +196,7 @@
     <string name="profileswitch4_multi">Няколко профила могат да бъдат настроени и избрани, за да се приспособят към променящите се обстоятелства (напр. хормонални промени, работа на смени, начин на живот през делничните дни/почивните дни).</string>
     <string name="other_medication_label">Други лекарства. Моля, прочетете изявлението по-долу и поставете отметка в квадратчето, за да приемете декларацията.</string>
     <string name="other_medication_text">AAPS намалява базалните нива или спира доставянето на инсулин, за да повиши кръвната захар. Лекарствата от класа инхибитори на SGLT2 (глифлозини) могат да предотвратят повишаването на кръвната глюкоза и по този начин да предизвикат опасен инсулинов дефицит, водещ до DKA (диабетна кетоацидоза).
-\nЧесто срещаните марки са: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nС настоящото обещавам, че няма да приемам такива лекарства, когато използвам AAPS или ще деактивирам цикъла, преди да използвам такива лекарства.</string>
+\nЧесто срещаните марки са: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nС настоящото обещавам, че няма да приемам такива лекарства, когато използвам AAPS или ще деактивирам кръга, преди да използвам такива лекарства.</string>
     <string name="concentration_feature_label">Управление на различни инсулинови концентрации</string>
     <string name="u200_with_profile">Преди AAPS да поддържа инсулинова концентрация, потребителите пускаха U200 чрез пускане на профила на 50%, за да намалят стойностите наполовина. В този случай кои стойности са правилни?</string>
     <string name="u200_with_profile_reports">Базата данни на AAPS и отчетите в NS стават грешни. Всички стойности (болуси, дози, ОДД) трябва да се умножат по 2, за да се видят реалните стойности, особено за лекарите и здравния екип.</string>

@@ -4,13 +4,13 @@
     <string name="string_a003">Pumpe vypršala platnosť\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a004">Oklúzia\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a005">Zlyhanie automatického testu\nPumpa bola deaktivovaná. Vymeňte pumpu.</string>
-    <string name="string_a007">Nevhodná teplota\nPodávanie inzulínu, alebo proces \"Aktivovania pumpy\" bol zastavený. Vyhnite se extrémnej teplote.</string>
+    <string name="string_a007">Nevhodná teplota\nPodávanie inzulínu alebo proces \'Aktivovať pumpu\' bol zastavený. Ihneď sa vyhnite extrémnej teplote.</string>
     <string name="string_a016">Chyba vloženia kanyly\nSkontrolujte pozíciu páčky a stlačte \'Opakovať\'.</string>
-    <string name="string_a018">Chyba batérie\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
+    <string name="string_a018">Chyba batérie pumpy\nPumpa bola deaktivovaná a\npodávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a019">Chyba batérie\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a020">Chyba aktivácie pumpy\nČas na aktiváciu pumpy vypršal. Stlačením \'Potvrdiť\' deaktivujete aktuálnu pumpu. Vymeňte pumpu.</string>
     <string name="string_a022">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
-    <string name="string_a023">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
+    <string name="string_a023">Chyba pumpy\nPumpa bola deaktivovaná a\npodávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a034">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a041">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a042">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
@@ -22,11 +22,11 @@
     <string name="string_a116">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a117">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
     <string name="string_a118">Chyba pumpy\nPumpa bola deaktivovaná a podávanie inzulínu bolo zastavené. Vymeňte pumpu.</string>
-    <string name="string_b000">Životnosť pumpy vyprší %s. Buďte pripravený vymeniť pumpu.</string>
-    <string name="string_b001">Koniec pozastavenia pumpy\nStlačením tlačítka \"Pokračovať\" obnovíte podávanie inzulínu.</string>
-    <string name="string_b003">Nízký stav zásobníka\nVymeňte pumpu čo možno najskôr..</string>
+    <string name="string_b000">Životnosť pumpy vyprší %s. Buďte pripravení vymeniť pumpu.</string>
+    <string name="string_b001">Koniec pozastavenia inzulínu\nKliknite na \'Obnoviť\' pre obnovenie podávania inzulínu.</string>
+    <string name="string_b003">Nízky stav zásobníka\nČoskoro vymeňte pumpu.</string>
     <string name="string_b005">Životnosť pumpy vypršala\nVymeňte pumpu.</string>
     <string name="string_b006">Pumpa čoskoro vyprší\nVymeňte pumpu.</string>
     <string name="string_b012">Neúplná aktivácia pumpy\nDokončite proces \'Aktivácia pumpy\'.</string>
-    <string name="string_b018">Nízký stav batérie\nBuďte pripravený vymeniť pumpu.</string>
+    <string name="string_b018">Nízky stav batérie pumpy\nBuďte pripravení vymeniť pumpu.</string>
 </resources>

@@ -5,13 +5,14 @@
     <string name="insulin_label">İnsülin</string>
     <string name="pb_label">Pompa pili</string>
     <string name="cannula">Kanül</string>
-    <string name="patch_pump">Yama pompa</string>
+    <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
     <string name="basal_shortname">BAZAL</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
+    <string name="description_persistent_notification">Döngünün ne yaptığına dair kısa bir genel bakış içeren sürekli bir bildirim gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="notification_iob_short">%1$.1fÜ</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
-    <string name="danars_bonding_failed">Bluetooth връзката с помпата пропадна или е прекъсната. Опитайте отново и въведете ПИН-a от помпата.</string>
+    <string name="danars_bonding_failed">Bluetooth сдвояването с помпата е неуспешно или е прекъснато. Опитайте отново и въведете ПИН кода, показан на помпата.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
@@ -9,7 +9,7 @@
     <string name="speederror">Скорост грешка</string>
     <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
     <string name="boluserrorcode">Стартирано: %1$.2fЕ Доставено: %2$.2fЕ Код на грешка: %3$s</string>
-    <string name="danai2_bolus_error_no_prime">Помпата не е инициализирана</string>
+    <string name="danai2_bolus_error_no_prime">Помпата не е напълнена</string>
     <string name="danai2_bolus_error_not_enough_insulin">Няма достатъчно инсулин в резервоара</string>
     <string name="danai2_bolus_error_easy_sleep">Режим за заспиване е активиран в помпата</string>
     <string name="danai2_pump_check_error">Грешка при проверка на помпата</string>
@@ -46,7 +46,7 @@
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
     <string name="largetimedifftitle">Голяма часова разлика</string>
-    <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
+    <string name="largetimediff">Голяма времева разлика:\nВремето в помпата се различава с повече от 1,5 часа.\nМоля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение.\nАко е възможно, премахнете историята от помпата, преди да промените времето, или изключете затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
     <string name="startingbolus">Стартира доставка на болус</string>
@@ -98,7 +98,7 @@
     <string name="option_off">Изкл</string>
     <string name="danars_password_title">Парола на помпата (само v1)</string>
     <string name="danar_password_title">Парола за помпата</string>
-    <string name="danar_useextended_title">Използвай уд болус на &gt;200%</string>
+    <string name="danar_useextended_title">Използвай удължени болуси при &gt;200%</string>
     <string name="bolus_speed_12">12 сек/Е</string>
     <string name="bolus_speed_30">30 сек/Е</string>
     <string name="bolus_speed_60">60 сек/Е</string>
@@ -112,14 +112,14 @@
     <string name="num2pin">2: (8 цифри)</string>
     <string name="basal_bolus_step">Базал/Болус стъпка</string>
     <string name="connecting_to_pump">Свързване с помпата…</string>
-    <string name="pairing_successful">Успешно свързване!</string>
+    <string name="pairing_successful">Успешно сдвояване!</string>
     <string name="pairing_successful_message">Помпата е свързана и готова за употреба.</string>
     <string name="cancel_pairing_title">Спри свързване?</string>
     <string name="cancel_pairing_message">Процесът ще бъде спрян.</string>
     <string name="done">Готово</string>
     <string name="open_bluetooth_settings">Отваряне на Bluetooth настройки</string>
     <string name="enter_pump_password">Парола за помпата</string>
-    <string name="select_paired_device">Изберете Свързано устройство</string>
+    <string name="select_paired_device">Изберете сдвоено устройство</string>
     <string name="no_paired_devices">Няма свързано устройство. Първо свържете помпата в настройките на Android.</string>
     <string name="password_hint">4-цифрена парола (0–9999)</string>
     <string name="connecting_verifying">Проверявам паролата…</string>

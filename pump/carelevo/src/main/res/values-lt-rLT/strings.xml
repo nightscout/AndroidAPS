@@ -50,7 +50,7 @@
     <string name="carelevo_state_disconnected_value">Atjungta</string>
     <string name="carelevo_state_connected_value">Prijungta</string>
     <string name="carelevo_overview_connect_btn_label">Aktyvuoti</string>
-    <string name="carelevo_overview_pump_discard_btn_label">Pašalinti rezervuarą</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Pašalinti pompą</string>
     <string name="carelevo_overview_pump_suspend_btn_label">Sustabdyti insulino tiekimą</string>
     <string name="carelevo_overview_pump_resume_btn_label">Atnaujinti insulino tiekimą</string>
     <string name="patch_prepare_dialog_title_insulin_amount">Pasirinkite pripildyto insulino kiekį.</string>
@@ -97,7 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Išimkite pompą iš lizdinės pakuotės ir nuimkite adatos dangtelį.</string>
     <string name="carelevo_patch_attach_step3_title">Priklijuokite pompą</string>
     <string name="carelevo_patch_attach_step3_desc">Priklijuokite pompos modulį prie odos taip, kad pažymėtas taškas būtų nukreiptas į viršų.</string>
-    <string name="carelevo_patch_attach_step4_desc">Priklijavę pompą, paspauskite mygtuką Paruošta.</string>
+    <string name="carelevo_patch_attach_step4_desc">Priklijavę pompą, spauskite „Toliau“.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Nuimkite apsauginį dangtelį</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Pasukite apsauginį dangtelį rodyklės kryptimi ir nuimkite.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Įveskite adatą</string>
@@ -194,7 +194,7 @@
     <string name="alarm_notification_desc_alert_expired_patch_phase2">Pompos naudojimo laikas baigėsi. Nedelsdami pakeiskite pompą.</string>
     <string name="alarm_notification_desc_alert_expired_patch_phase1">Pompos naudojimo laikas netrukus baigsis. Nedelsdami pakeiskite pompą.</string>
     <string name="alarm_notification_desc_alert_low_battery">Senka baterija. Pasiruoškite pakeisti pompą.</string>
-    <string name="alarm_notification_desc_alert_invalid_temperature">Dėl ekstremalios temperatūros insulino tiekimas pristabdytas. Kad jis būtų atnaujintas, pereikite į 40℉–99℉ temperatūros aplinką.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Dėl ekstremalios temperatūros insulino tiekimas pristabdytas. Kad jis būtų atnaujintas, pereikite į tinkamos temperatūros aplinką (5 °C–37 °C).</string>
     <string name="alarm_notification_desc_alert_not_used_app">Paspauskite [OK]. Jei nepaisysite, pranešimas taps kritiniu pavojaus signalu ir insulino tiekimas bus sustabdytas.</string>
     <string name="alarm_notification_desc_alert_incomplete_patch_setting">Paspauskite [OK], kad užbaigtumėte aktyvavimą.</string>
     <string name="alarm_notification_desc_alert_resume_infusion">Insulino tiekimo pristabdymas baigėsi. Paspauskite [Pradėti insulino tiekimą].</string>

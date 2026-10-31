@@ -17,10 +17,10 @@
     <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatické zamykání</string>
     <string name="danar_valuenotsetproperly">Hodnota nenastavena správně</string>
     <string name="danar_setbasalstep001">Nastavte bazální krok 0.01U/h</string>
-    <string name="resetpairing">Reset párování?</string>
+    <string name="resetpairing">Resetovat informace o párování?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKód: %4$02X</string>
     <string name="processinghistory">Zpracovávám</string>
-    <string name="danar_enableextendedbolus">Povolit kombinované bolusy v pumpě</string>
+    <string name="danar_enableextendedbolus">Povolit prodloužené bolusy v pumpě</string>
     <string name="danar_disablebolusblock">Blokování bolusu je na pumpě povoleno. AAPS nemůže dodávat inzulín, pokud je aktivní. Zakažte blokování bolusu v nastavení pumpy.</string>
     <string name="overview_bolusprogress_stoped">Zastaveno</string>
     <string name="unsupportedfirmware">Nepodporovaný firmware v pumpě</string>
@@ -104,9 +104,9 @@
     <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenat výměnu zásobníku</string>
-    <string name="rs_loginsulinchange_summary">Přidat událost \"Výměna inzulínu\" do portálu pěče, pokud je zjištěna v historii</string>
+    <string name="rs_loginsulinchange_summary">Přidat událost „Výměna inzulínu“ do Péče, pokud je zjištěna v historii</string>
     <string name="rs_logcanulachange_title">Zaznamenat změnu kanyly</string>
-    <string name="rs_logcanulachange_summary">Přidat událost \"Výměna setu\" do portálu pěče, pokud je zjištěna v historii</string>
+    <string name="rs_logcanulachange_summary">Přidat událost „Výměna setu“ do Péče, pokud je zjištěna v historii</string>
     <string name="press_ok_on_the_pump">Stiskněte OK na pumpě\na zadejte 2 zobrazená čísla\nUdržujte display na pumpě zapnutý stisknutím tlačítka minus dokud nedokončíte zadání kódu.</string>
     <string name="num1pin">1: (12 číslic)</string>
     <string name="num2pin">2: (8 číslic)</string>

@@ -70,7 +70,6 @@
     <string name="pair_with_master_fetching">正在查找配对…</string>
     <string name="pair_with_master_confirm_title">与此主机配对？</string>
     <string name="pair_with_master_confirm_master">主机：%1$s</string>
-    <string name="pair_with_master_confirm_warning">配对后，此主机将能够向此设备发送已签名的命令。</string>
     <string name="pair_with_master_confirm_pair">配对</string>
     <string name="pair_with_master_error_title">无法配对</string>
     <string name="pair_with_master_error_wrong_pin">未找到该 PIN 码对应的配对。请检查主机上的 PIN 码后重试。</string>
@@ -269,7 +268,7 @@
     <string name="smscommunicator_remote_bolus_not_allowed">远程大剂量不可用。请稍后再试。</string>
     <string name="smscommunicator_basal_reply_with_code">执行基础率%1$.2f U/h 持续 %2$d 分钟，请回复验证码：%3$s</string>
     <string name="smscommunicator_profile_reply_with_code">要切换到 %1$s %2$d%% 配置文件，请回复代码 %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">要开始扩展大剂量 %1$.2fU/h 持续时间%2$d 分钟，请回复验证码：%3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">要开始扩展大剂量 %1$.2fU 持续时间%2$d 分钟，请回复验证码：%3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">要在 %2$s 输入 %1$d 克，请回复验证码 %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">要开始基础率 %1$d%% 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">要暂停闭环 %1$d 分钟请回复如下代码 %2$s</string>
@@ -278,7 +277,7 @@
     <string name="smscommunicator_restart_reply_with_code">要重启 AAPS，请回复代码 %1$s</string>
     <string name="smscommunicator_restarting">AAPS 正在重启</string>
     <string name="smscommunicator_tempbasal_set">临时基础率 %1$.2fU/h 持续 %2$d 分钟启用成功了</string>
-    <string name="smscommunicator_extended_set">扩展大剂量 %1$.2fU/h 持续时间 %2$d 分钟已经启用成功了</string>
+    <string name="smscommunicator_extended_set">扩展大剂量 %1$.2fU 持续时间 %2$d 分钟已经启用成功了</string>
     <string name="smscommunicator_carbs_set">输入 %1$d g碳水成功</string>
     <string name="smscommunicator_carbs_failed">输入 %1$d g碳水失败</string>
     <string name="smscommunicator_tempbasal_set_percent">临时基础率 %1$d%% 持续时间 %2$d 分钟 启用成功了</string>

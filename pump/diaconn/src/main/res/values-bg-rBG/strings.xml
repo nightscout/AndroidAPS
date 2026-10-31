@@ -10,7 +10,7 @@
     <string name="diaconn_g8_history_suspend">Спиране</string>
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
-    <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
+    <string name="largetimediff">Голяма времева разлика:\nВремето в помпата се различава с повече от 1,5 часа.\nМоля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение.\nАко е възможно, премахнете историята от помпата, преди да промените времето, или изключете затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
     <string name="largetimedifftitle">Голяма разлика във времето</string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
     <string name="startingbolus">Стартира доставка на болус</string>
@@ -63,7 +63,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Добави \"смяна на батерията\" в Найтскаут, когато е открито в историята</string>
     <string name="diaconn_g8_logbatterychange_title">Записвай смяната на батерия</string>
     <string name="diaconn_g8_logsyncinprogress">Извършва се синхронизация на логовете</string>
-    <string name="diaconn_g8_loginsulinshorage">Недостиг на инулин</string>
+    <string name="diaconn_g8_loginsulinshorage">Недостиг на инсулин</string>
     <string name="diaconn_g8_logbatteryshorage">Слаба батерия</string>
     <string name="diaconn_g8_logneedleprime">Пълнене на игла: %1$.2fЕ</string>
     <string name="diaconn_g8_loginjectorprime">Пълнене на инжектор: %1$.2fЕ</string>
@@ -77,7 +77,7 @@
     <string name="diaconn_g8_reasoncomplete">Завършена</string>
     <string name="diaconn_g8_reasoninjectonblock">Инжектирането е блокирано</string>
     <string name="diaconn_g8_reasonbatteryshortage">Слаба батерия</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Недостиг на инулин</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Недостиг на инсулин</string>
     <string name="diaconn_g8_reasonuserstop">Спрян от потребител</string>
     <string name="diaconn_g8_reasonsystemreset">Системен рестарт</string>
     <string name="diaconn_g8_reasonother">Друго</string>
@@ -93,8 +93,8 @@
     <string name="diaconn_g8_logalarmblock">Инжектирането е блокирано (%s)</string>
     <string name="diaconn_g8_lgorelease">базална стойност (%s)</string>
     <string name="diaconn_g8_lgosuspend">базал изключен (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Dual Nomarl Success</string>
-    <string name="diaconn_g8_logdualsquarestart">Двоен нормален успешен</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Двоен нормален успешен</string>
+    <string name="diaconn_g8_logdualsquarestart">Двоен квадратен старт</string>
     <string name="diaconn_g8_logdualsquaresuccess">Двоен квадратен успешен</string>
     <string name="diaconn_g8_logsquarestart">Квадратен старт</string>
     <string name="diaconn_g8_logsquaresuccess">Квадратен успешен</string>
@@ -134,5 +134,5 @@
     <string name="bolus_speed_7">7 Е/мин</string>
     <string name="bolus_speed_8">8 Е/мин</string>
     <string name="diaconn_pairing_successful">Успешно свързване!</string>
-    <string name="diaconn_pairing_successful_message">Помпата е свързана и готова за употреба,</string>
+    <string name="diaconn_pairing_successful_message">Помпата е свързана и готова за употреба.</string>
 </resources>

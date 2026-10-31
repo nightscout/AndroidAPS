@@ -1,19 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Einfacher Modus</string>
+    <string name="pref_title_insulin_concentration">Unterstützung verschiedener Insulinkonzentrationen</string>
+    <string name="pref_summary_insulin_concentration">Unterstützung verschiedener Insulinkonzentrationen (U50, U200, etc.) aktivieren</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Bildschirm eingeschaltet lassen</string>
+    <string name="pref_summary_keep_screen_on">Hindere Android daran, den Bildschirm abzuschalten. Dies erhöht den Energieverbrauch, wenn das Gerät nicht an einem Ladegerät angeschlossen ist.</string>
+    <string name="pref_title_show_wizard_button">Bolusrechner-Schaltfläche anzeigen</string>
+    <string name="pref_title_show_insulin_button">Insulin-Schaltfläche anzeigen</string>
+    <string name="pref_title_show_carbs_button">KH-Schaltfläche anzeigen</string>
+    <string name="pref_title_show_cgm_button">CGM-Schaltfläche anzeigen</string>
+    <string name="pref_summary_show_cgm_button">Öffnet xDrip+ oder Dexcom-App (Du kannst die Zurück-Taste verwenden, um zu AAPS zurückzukehren).</string>
+    <string name="pref_summary_show_calibration_button">Sendet eine Kalibrierung an xDrip+ (stelle sicher, dass „Akzeptierung Kalibrierungen“ in xDrip+ unter den Inter-App-Einstellungen aktiviert ist).</string>
+    <string name="pref_title_show_notes_in_dialogs">Notizen in Dialogen anzeigen</string>
+    <string name="pref_title_use_bolus_advisor">Bolus-Rechner aktivieren</string>
     <!-- Pump preferences -->
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_smb_with_cob">SMB bei COB aktivieren</string>
+    <string name="pref_summary_aps_use_smb_with_cob">SMB zulassen, wenn aktive KH vorhanden sind.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">SMB bei niedrigen temporären Zielen aktivieren</string>
+    <string name="pref_title_aps_use_smb_after_carbs">SMB nach Mahlzeiten aktivieren</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">SMB für einen gewissen Zeitraum nach der Eingabe von Kohlenhydraten zulassen.</string>
+    <string name="pref_title_aps_use_uam">UAM aktivieren</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Empfindlichkeit erhöht den Zielwert</string>
+    <string name="pref_title_aps_resistance_lowers_target">Resistenz senkt den Zielwert</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_receive_cgm">CGM Daten von NS empfangen</string>
+    <string name="pref_summary_ns_receive_cgm">CGM-Werte von Nightscout akzeptieren.</string>
+    <string name="pref_title_ns_receive_profile_store">Profil-Speicher von NS empfangen</string>
+    <string name="pref_summary_ns_receive_profile_store">Aktualisierungen des Profil-Speichers von Nightscout akzeptieren.</string>
+    <string name="pref_title_ns_receive_profile_switch">Profilwechsel von NS empfangen</string>
+    <string name="pref_title_ns_receive_insulin">Insulin von NS empfangen</string>
+    <string name="pref_title_ns_receive_carbs">Kohlenhydrate von NS empfangen</string>
+    <string name="pref_title_ns_receive_therapy_event">Empfange Therapieereignisse von NS</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS-Alarme</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS Ankündigungen</string>
+    <string name="pref_title_ns_use_roaming">Roaming verwenden</string>
+    <string name="pref_title_ns_use_wifi">WLAN verwenden</string>
+    <string name="pref_title_ns_use_on_charging">Synchronisieren während des Ladens</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Ankündigungen aus Fehlern generieren</string>
+    <string name="pref_title_ns_slow_sync">Langsame Synchronisation verwenden</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Nur bei WLAN-Verbindung</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_detailed_iob">Detailliertes IOB senden</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Sende detaillierte IOB-Informationen an xDrip+ zur Anzeige auf Smartwatches.</string>
     <!-- Wear preferences -->
+    <string name="pref_summary_wear_control">AAPS über Android Wear Smartwatch steuern.</string>
+    <string name="pref_title_wear_broadcast_data">Daten an Smartwatch senden</string>
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">Menge der Kohlenhydrate, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird.</string>
@@ -25,13 +66,18 @@
     <string name="custom_password">Benutzerdefiniertes Passwort</string>
     <string name="custom_pin">Eigene PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maximal erlaubte Kohlenhydrate</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Minimale Änderung im Open-Modus</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <!-- IntKey: APS preferences -->
     <string name="uam_smb_max_minutes">UAM SMB max. Minuten</string>
     <string name="carbs_req_threshold_summary">Minimale KH-Menge in Gramm, die Vorschlags-Alarm erforderlich ist. Vorschläge unterhalb dieser Menge, lösen keine Benachrichtigung aus.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein und weniger als 100 % für weniger aggressive Korrekturen.</string>
+    <string name="pref_title_autosens_period">Autosens Zeitraum</string>
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, wird nicht berücksichtigt)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Anzahl der zu sendenden Logs</string>
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
@@ -41,28 +87,64 @@
     <!-- IntKey: NS Client preferences -->
     <!-- IntKey: Site rotation preferences -->
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Mann</string>
+    <string name="site_rotation_profile_woman">Frau</string>
+    <string name="site_rotation_profile_child">Kind</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Einheiten</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Sprache</string>
+    <string name="lang_zh_tw">Chinesisch (traditionell)</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS-Verzeichnis</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Master-Passwort</string>
+    <string name="pref_title_settings_password">Passwort für Einstellungen</string>
+    <string name="pref_title_settings_pin">PIN für Einstellungen</string>
+    <string name="pref_title_bolus_password">Bolus-Passwort</string>
+    <string name="pref_title_bolus_pin">Bolus-PIN</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Wähle das dunkle, helle oder das Systemdesign</string>
+    <string name="pref_title_app_color_scheme">App-Farbschema</string>
+    <string name="pref_dark_theme">Dunkles Design</string>
+    <string name="pref_light_theme">Helles Design</string>
+    <string name="pref_follow_system_theme">Systemdesign verwenden</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Patientenalter</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">E-Mail Empfänger</string>
+    <string name="pref_title_identification">Identifizierung für Absturzberichte</string>
     <!-- StringKey: Automation preferences -->
+    <string name="automation_location_network">Netzwerkstandorts verwenden</string>
+    <string name="automation_location_gps">GPS-Position verwenden</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
     <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Pumpentyp</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout-URL</string>
+    <string name="ns_client_secret_title">Nightscout API-Secret</string>
+    <string name="ns_client_secret_summary">Gib Dein Nightscout API-Secret (mindestens 12 Zeichen) ein</string>
+    <string name="nsclient_token_title">Nightscout Zugriffstoken</string>
+    <string name="nsclient_token_summary">Gib Dein Nightscout Zugangs-Token (mindestens 17 Zeichen) ein</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
+    <string name="ns_wifi_ssids_summary">Erlaubte SSIDs (durch Semikolon getrennt)</string>
     <!-- DoubleKey: Overview preferences -->
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Füllen-Button 1</string>
+    <string name="pref_title_fill_button_2">Füllen-Button 2</string>
+    <string name="pref_title_fill_button_3">Füllen-Button 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maximaler Bolus</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Maximale Basalrate</string>
     <string name="openapsma_max_basal_summary">Dieser Wert wird \"max basal\" in OpenAPS genannt.</string>
+    <string name="pref_title_smb_max_iob">Max. IOB für SMB</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Standarwert: 2\nBolus snooze (\"Bolus-Schlummer\") bremst den Loop nach einem Mahleiten-Bolus, damit dieser nicht mit niedrigen TBR reagiert, wenn Du gerade gegessen hast. Beispiel: Der Standardwert 2 bewirkt, dass bei einem 3 Stunden DIA der Bolus snooze während 1.5 Stunden nach dem Bolus linear ausläuft (3 h Dia / 2 = 1.5 h Bolus snooze).</string>

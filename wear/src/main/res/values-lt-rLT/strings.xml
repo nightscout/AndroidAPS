@@ -60,8 +60,10 @@
     <string name="pref_wizard_in_menu">Skaičiuotuvas meniu</string>
     <string name="pref_prime_in_menu">Užpildyti per meniu</string>
     <string name="pref_single_target">Pavienis tikslas</string>
-    <string name="pref_wizard_percentage">Skaičiuotuvas proc.</string>
-    <string name="pref_complication_tap_action">Elementų skirtuko veiksmai</string>
+    <string name="pref_wizard_percentage">Skaičiuotuvo procentas</string>
+    <string name="pref_wizard_carbs_type">Skaičiuotuvo maisto tipas</string>
+    <string name="pref_wizard_carb_time">Skaičiuotuvo AV laikas</string>
+    <string name="pref_complication_tap_action">Veiksmas palietus elementą</string>
     <string name="pref_complication_bg_graph_hours">KG grafiko laiko intervalas</string>
     <string name="duration_1_hour">1 val.</string>
     <string name="duration_3_hours">3 val.</string>
@@ -78,7 +80,7 @@
     <string name="menu_treatment_short">Terap</string>
     <string name="menu_bolus">Bolusas</string>
     <string name="menu_carb">AV</string>
-    <string name="menu_ecarb">iAV</string>
+    <string name="menu_ecarb">i-AV</string>
     <string name="menu_settings">Nustatymai</string>
     <string name="menu_status">Būklė</string>
     <string name="menu_bg_graph">KG grafikas</string>
@@ -110,7 +112,7 @@
     <string name="action_carbs">AV</string>
     <string name="action_carbs_gram">Angliavandeniai [g]</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Daugiausia galima pašalinti: %1$d g (AAO)</string>
-    <string name="action_ecarbs">iAV</string>
+    <string name="action_ecarbs">i-AV</string>
     <string name="action_percentage">Procentai\n[%]</string>
     <string name="action_start_minutes">Pradžia\n[min]</string>
     <string name="action_duration_hours">Trukmė\n[valandos]</string>
@@ -118,7 +120,7 @@
     <string name="action_duration_hours_minutes_format">%1$d val. %2$d min</string>
     <string name="action_minutes_format">%1$d min</string>
     <string name="ecarbs_start_format">%1$d min</string>
-    <string name="action_confirm_timeshift">Laiko poslinkis: %1$s</string>
+    <string name="action_confirm_timeshift">Laiko perstūmimas: %1$s</string>
     <string name="action_insulin">Insulinas</string>
     <string name="action_insulin_units">Insulinas [V]</string>
     <string name="action_preset_1">Ruošinys 1</string>
@@ -126,7 +128,7 @@
     <string name="action_preset_3">Ruošinys 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
-    <string name="action_timeshift_hours">Laiko poslinkis\n[val.]</string>
+    <string name="action_timeshift_hours">Laiko perstūmimas\n[val.]</string>
     <string name="bolus_progress">Leidžiamas bolusas</string>
     <string name="press_to_cancel">paspauskite, kad atšauktumėte</string>
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>
@@ -177,7 +179,7 @@
     <string name="cwf_complication_layout">Elementų išdėstymas</string>
     <string name="cwf_complication_layout_description">Iš įkelto pasirinktinio ciferblato paimtų elementų vieta ir dydis.</string>
     <string name="pref_include_external">Įtraukti išorinius rodinius į šabloną</string>
-    <string name="pref_switch_external">Įjungti išorinius duomenis ciferblate</string>
+    <string name="pref_switch_external">Sukeisti išorinius duomenis ciferblate</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
     <string name="digitalstyle_pref_your_style">Jūsų stilius</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>
@@ -282,7 +284,27 @@
     <string name="title_activity_disconnect_pump">Atjungti pompą</string>
     <string name="title_activity_suspend_loop">Pristabdyti ciklą</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Maisto tipas</string>
+    <string name="wizard_carbs_type_bread">Duona</string>
+    <string name="wizard_carbs_type_cake">Pyragas</string>
+    <string name="wizard_carbs_type_pizza">Pica</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">AV laikas\n[min]</string>
+    <string name="wizard_carb_time_now">Dabar</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
     <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
+    <string name="eat_reminder_title">Laikas valgyti</string>
+    <string name="eat_reminder_silence">Nutildyti</string>
+    <string name="eat_reminder_stop">Sustabdyti</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Skambės %1$s</string>
+    <string name="eat_reminder_countdown_channel">Laikas valgyti - vykdoma</string>
+    <string name="eat_reminder_channel_silent">Laikas valgyti netrukdymo režimu</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Telefono aliarmai</string>
+    <string name="phone_alarm_channel_silent">Telefono aliarmai netrukdymo režimu</string>
+    <string name="phone_alarm_silence">Nutildyti</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Nutildyti %1$d min.</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">V</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f V</string>
@@ -300,7 +322,7 @@
     <string name="loop_status_no_last_run">N/A</string>
     <string name="loop_status_closed">Uždaras ciklas</string>
     <string name="loop_status_open">Atviras ciklas</string>
-    <string name="loop_status_lgs">Stabdymas esant žemai gliukozei</string>
+    <string name="loop_status_lgs">Stabdymas esant žemai glikemijai</string>
     <string name="loop_status_disabled">Ciklas išjungtas</string>
     <string name="loop_status_suspended">Ciklas sustabdytas</string>
     <string name="loop_status_pump_suspended">Pompa sustabdyta</string>
@@ -327,7 +349,7 @@
     <string name="loop_status_profile">Profilis</string>
     <string name="loop_status_no_profile">Nepasirinktas profilis</string>
     <string name="loop_status_profile_percentage">Profilio procentas</string>
-    <string name="loop_status_profile_timeshift">Laiko poslinkis</string>
+    <string name="loop_status_profile_timeshift">Laiko perstūmimas</string>
     <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Grįžtama į profilį</string>
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d val.</string>

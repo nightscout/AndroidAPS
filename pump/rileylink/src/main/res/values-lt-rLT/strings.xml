@@ -21,7 +21,7 @@
     <string name="medtronic_pump_status">Pompos būklė</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresas:</string>
-    <string name="rileylink_name">Vardas:</string>
+    <string name="rileylink_name">Pavadinimas:</string>
     <string name="rileylink_battery_level">Baterijos lygis:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Ryšio būklė:</string>
@@ -35,7 +35,7 @@
     <string name="rileylink_firmware_version">Programinės įrangos versija:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
-    <string name="rileylink_pump_serial_number">Pompos serijos Nr:</string>
+    <string name="rileylink_pump_serial_number">Pompos serijos Nr.:</string>
     <string name="rileylink_pump_frequency">Pompos dažnis:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
@@ -51,14 +51,14 @@
     <string name="rileylink_state_rl_ready">RileyLink paruoštas</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Įrenginys nėra RileyLink</string>
-    <string name="rileylink_error_unreachable">RileyLink nepasiekiama</string>
+    <string name="rileylink_error_unreachable">RileyLink nepasiekiamas</string>
     <string name="rileylink_error_bt_disabled">Bluetooth išjungtas</string>
     <string name="rileylink_error_no_bt_adapter">Nėra Bluetooth adapterio</string>
     <string name="rileylink_error_tuneup_failed">TuneUp klaida</string>
     <string name="rileylink_error_pod_unreachable">Pod nepasiekiamas</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
-    <string name="rileylink_target_device_omnipod">OmniPod (Eros)</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Rodyti baterijos įkrovimo lygį, gautą iš OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NEVEIKIA su originaliu RileyLink. Gali neveikti su kitomis RileyLink alternatyvomis.</string>

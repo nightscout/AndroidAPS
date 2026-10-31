@@ -14,100 +14,100 @@
     <string name="authorized_clients_title">Client autorizzati</string>
     <string name="authorized_clients_add">Aggiungi client</string>
     <string name="authorized_clients_comm_switch_title">Consenti controllo client</string>
-    <string name="authorized_clients_comm_switch_summary">Lascia che i client accoppiati inviino comandi firmati su Nightscout. Disattiva per interrompere la comunicazione senza rimuoverli.</string>
+    <string name="authorized_clients_comm_switch_summary">Lascia che i client associati inviino comandi firmati su Nightscout. Disattiva per interrompere la comunicazione senza rimuoverli.</string>
     <string name="authorized_clients_state_active">Attivo</string>
     <string name="authorized_clients_state_pending">In attesa</string>
     <string name="authorized_clients_last_seen">Ultimo accesso %1$s</string>
     <string name="authorized_clients_never_seen">Mai usato</string>
-    <string name="authorized_clients_pending_expires_in">Accoppiamento scade in %1$ss</string>
-    <string name="authorized_clients_empty_title">Client non autorizzati</string>
+    <string name="authorized_clients_pending_expires_in">L\'associazione scade tra %1$ss</string>
+    <string name="authorized_clients_empty_title">Nessun client autorizzato</string>
     <string name="authorized_clients_empty_subtitle">Associa un dispositivo client per lasciare che invii comandi firmati a questo master.</string>
     <string name="authorized_clients_name_dialog_title">Nuovo client</string>
     <string name="authorized_clients_name_placeholder">Nome dispositivo</string>
     <string name="authorized_clients_delete_dialog_title">Revocare l\'accesso?</string>
     <string name="authorized_clients_delete_dialog_message">%1$s non sarà più in grado di inviare comandi.</string>
-    <string name="authorized_clients_pin_dialog_title">Accoppia client</string>
-    <string name="authorized_clients_pin_instructions">Inserisci questo PIN sul dispositivo client. Il codice è valido per un solo accoppiamento.</string>
+    <string name="authorized_clients_pin_dialog_title">Associa client</string>
+    <string name="authorized_clients_pin_instructions">Inserisci questo PIN sul dispositivo client. Il codice è valido per una sola associazione.</string>
     <string name="authorized_clients_pin_expires_in">Scade in %1$ss</string>
     <string name="authorized_clients_pin_done">Fatto</string>
-    <string name="authorized_clients_pin_publishing">Invio richiesta di accoppiamento a Nightscout…</string>
-    <string name="authorized_clients_pin_published">Richiesta di accoppiamento pronta su Nightscout.</string>
-    <string name="authorized_clients_pin_publish_failed">Impossibile caricare la richiesta di accoppiamento su Nightscout.</string>
+    <string name="authorized_clients_pin_publishing">Invio dell\'offerta di associazione a Nightscout…</string>
+    <string name="authorized_clients_pin_published">Offerta di associazione pronta su Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Impossibile caricare la richiesta di associazione su Nightscout.</string>
     <string name="authorized_clients_pin_retry">Riprova</string>
     <string name="authorized_clients_method_title">Come viene impostato il telefono?</string>
-    <string name="authorized_clients_method_qr_pair">Codice QR: Nightscout e abbinamento</string>
-    <string name="authorized_clients_method_qr_pair_summary">Scansiona una volta sul nuovo telefono. Otterrà il suo token Nightscout e sarà accoppiato.</string>
+    <string name="authorized_clients_method_qr_pair">Codice QR: Nightscout e associazione</string>
+    <string name="authorized_clients_method_qr_pair_summary">Scansiona una volta sul nuovo telefono. Otterrà il suo token Nightscout e sarà associato.</string>
     <string name="authorized_clients_method_qr_ns">Codice QR: Solo Nightscout</string>
     <string name="authorized_clients_method_qr_ns_summary">Il telefono ottiene il proprio token Nightscout e può leggere i dati. Non è accoppiato e non può inviare comandi.</string>
     <string name="authorized_clients_method_pin">PIN</string>
     <string name="authorized_clients_method_pin_summary">Per un telefono senza fotocamera. Deve essere già collegato a Nightscout.</string>
     <string name="authorized_clients_qr_working">Creazione del token Nightscout…</string>
     <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Configura %1$s</string>
-    <string name="authorized_clients_qr_pair_instructions">Scansiona questo codice sul nuovo telefono, nella procedura guidata di installazione o in coppia con master. Imposta Nightscout e abbina il telefono.</string>
-    <string name="authorized_clients_qr_ns_instructions">Scansiona questo codice sul nuovo telefono, nella procedura guidata di installazione o in coppia con master. Imposta Nightscout e abbina il telefono.</string>
+    <string name="authorized_clients_qr_pair_instructions">Scansiona questo codice sul nuovo telefono, nella procedura guidata di configurazione o in Associa al master. Configura Nightscout e associa il telefono.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scansiona questo codice sul nuovo telefono, nella procedura guidata di configurazione o in Associa al master. Configura Nightscout. Il telefono non viene associato.</string>
     <string name="authorized_clients_qr_keep_private">Chiunque veda questo codice può leggere il tuo Nightscout. Mostralo solo al nuovo telefono.</string>
-    <string name="authorized_clients_token_problem_title">No QR code</string>
+    <string name="authorized_clients_token_problem_title">Nessun codice QR</string>
     <string name="authorized_clients_not_added_title">Client non aggiunto</string>
     <string name="authorized_clients_token_problem_not_connected">Questo telefono non è connesso a Nightscout, quindi non può creare un token per il client.</string>
-    <string name="authorized_clients_token_problem_not_allowed">Il token Nightscout di questo telefono non è un token di amministrazione, quindi non può fare un token per il client. Utilizzare un token di amministrazione qui, o aggiungere il client con il PIN.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Il token Nightscout di questo telefono non è un token di amministrazione, quindi non può creare un token per il client. Usa qui un token di amministrazione, o aggiungi il client con il PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout ha un token con questo nome e altri diritti. Scegli un altro nome.</string>
     <string name="authorized_clients_token_problem_name_in_use">Un client con questo nome è già nella lista. Scegli un altro nome o rimuovi prima quel client.</string>
     <string name="authorized_clients_token_problem_failed">Nightscout non ha elencato il nuovo token, quindi è stato rimosso di nuovo. Niente è rimasto indietro. Riprova.</string>
-    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout non ha elencato il nuovo token e non può essere rimosso nuovamente. Eliminare il token %1$s in Nightscout, quindi riprovare.</string>
-    <string name="authorized_clients_tokens_header">Leggi solo Nightscout</string>
-    <string name="authorized_clients_token_unpaired">Proprio token Nightscout, non accoppiato</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout non ha elencato il nuovo token e non è stato possibile rimuoverlo. Elimina il token %1$s in Nightscout, poi riprova.</string>
+    <string name="authorized_clients_tokens_header">Solo lettura di Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Proprio token Nightscout, non associato</string>
     <string name="authorized_clients_token_show_qr">Mostra codice QR</string>
     <string name="authorized_clients_token_delete_title">Eliminare il token?</string>
     <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s non può più leggere Nightscout.</string>
     <string name="authorized_clients_delete_dialog_token">Anche il suo token Nightscout viene eliminato, quindi non può più leggere Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Token Nightscout proprio</string>
-    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Usa il token %1$sdi Nightscout, che ha più diritti di quanto il client abbia bisogno</string>
-    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Usa il token %1$sdi Nightscout, non il suo: i suoi comandi sono rifiutati. Rimuovilo e aggiungilo di nuovo.</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Usa il token Nightscout %1$s, che ha più diritti di quelli necessari a un client</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Usa il token Nightscout %1$s, non il suo: i suoi comandi vengono rifiutati. Rimuovilo e aggiungilo di nuovo.</string>
     <!-- Pair with master (client side PIN entry) -->
-    <string name="pair_with_master_title">Accoppia con master</string>
-    <string name="pair_with_master_pin_entry_title">Inserisci il PIN di accoppiamento</string>
-    <string name="pair_with_master_pin_entry_message">Aprire client autorizzati sul dispositivo principale e aggiungere questo client. Digitare il PIN a 8 cifre mostrato.</string>
+    <string name="pair_with_master_title">Associa al master</string>
+    <string name="pair_with_master_pin_entry_title">Inserisci il PIN di associazione</string>
+    <string name="pair_with_master_pin_entry_message">Apri Client autorizzati sul master e aggiungi questo client. Digita il PIN a 8 cifre mostrato lì.</string>
     <string name="pair_with_master_pin_entry_label">PIN a 8 cifre</string>
-    <string name="pair_with_master_pin_entry_submit">Accoppia</string>
-    <string name="pair_with_master_fetching">Ricerca accoppiamento…</string>
-    <string name="pair_with_master_confirm_title">Accoppia con master?</string>
+    <string name="pair_with_master_pin_entry_submit">Associa</string>
+    <string name="pair_with_master_fetching">Ricerca associazione…</string>
+    <string name="pair_with_master_confirm_title">Associare a questo master?</string>
     <string name="pair_with_master_confirm_master">Master: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Dopo l\'accoppiamento, questo master sarà in grado di inviare comandi firmati a questo dispositivo.</string>
-    <string name="pair_with_master_confirm_pair">Accoppia</string>
-    <string name="pair_with_master_error_title">Impossibile accoppiare</string>
-    <string name="pair_with_master_error_wrong_pin">Nessun accoppiamento trovato per quel PIN. Controllare il PIN sul master e riprovare.</string>
-    <string name="pair_with_master_error_ambiguous_pin">Più accoppiamenti corrispondono a quel PIN. Chiedi al master di generarne uno nuovo e riprovare.</string>
-    <string name="pair_with_master_error_expired">Questa accoppiamento è scaduto. Genera un nuovo PIN sul master.</string>
+    <string name="pair_with_master_confirm_warning">Dopo l\'associazione, questo dispositivo potrà inviare comandi firmati a questo master.</string>
+    <string name="pair_with_master_confirm_pair">Associa</string>
+    <string name="pair_with_master_error_title">Impossibile associare</string>
+    <string name="pair_with_master_error_wrong_pin">Nessuna associazione trovata per quel PIN. Controlla il PIN sul master e riprova.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Più associazioni corrispondono a quel PIN. Chiedi al master di generarne uno nuovo e riprova.</string>
+    <string name="pair_with_master_error_expired">Questa associazione è scaduta. Genera un nuovo PIN sul master.</string>
     <string name="pair_with_master_error_network">Impossibile raggiungere Nightscout. Controlla la connessione e riprova.</string>
-    <string name="pair_with_master_error_secret_store">Questo telefono non può memorizzare il segreto di accoppiamento, quindi l\'accoppiamento è stato annullato. Nulla è stato modificato. Riprova e se continua a fallire, riavvia il telefono.</string>
+    <string name="pair_with_master_error_secret_store">Non è stato possibile salvare il segreto di associazione, quindi l\'associazione è stata annullata. Nulla è stato modificato. Riprova e, se continua a non riuscire, riavvia l\'app.</string>
     <string name="pair_with_master_retry">Riprova</string>
     <string name="pair_with_master_already_paired_title">Già associato</string>
-    <string name="pair_with_master_already_paired_master">Attualmente accoppiato con il master %1$s. Disaccoppiati prima per inserire un nuovo PIN.</string>
+    <string name="pair_with_master_already_paired_master">Attualmente associato al master %1$s. Prima disaccoppia per inserire un nuovo PIN.</string>
     <string name="pair_with_master_unpair">Disaccoppia</string>
-    <string name="pair_with_master_sending">Invio del messaggio di accoppiamento…</string>
+    <string name="pair_with_master_sending">Invio del messaggio di associazione…</string>
     <!-- Client set-up from the master's QR code -->
     <string name="client_setup_scan_button">Scansiona il codice QR</string>
     <string name="client_setup_scan_title">Scansiona il codice QR del master</string>
-    <string name="client_setup_scan_instructions">Sul master, aprire client autorizzati e aggiungere questo telefono con un codice QR. Posizionare la fotocamera al codice.</string>
-    <string name="client_setup_scan_camera_refused">La fotocamera è necessaria per leggere il codice QR. Consenti o abbinalo con il PIN.</string>
-    <string name="client_setup_scan_camera_denied">L\'accesso alla fotocamera è spento per AAPS. Accendere le impostazioni di sistema o accoppiare con il PIN.</string>
-    <string name="client_setup_scan_camera_blocked">L\'accesso alla fotocamera non è consentito su questo dispositivo. Coppia invece con il PIN.</string>
-    <string name="client_setup_scan_camera_unavailable">L\'accesso alla fotocamera non è consentito su questo dispositivo. Associa invece con il PIN.</string>
+    <string name="client_setup_scan_instructions">Sul master, apri Client autorizzati e aggiungi questo telefono con un codice QR. Punta la fotocamera sul codice.</string>
+    <string name="client_setup_scan_camera_refused">La fotocamera è necessaria per leggere il codice QR. Consentila, o associa con il PIN.</string>
+    <string name="client_setup_scan_camera_denied">L\'accesso alla fotocamera è disattivato per AAPS. Attivalo nelle impostazioni di sistema, o associa con il PIN.</string>
+    <string name="client_setup_scan_camera_blocked">L\'accesso alla fotocamera non è consentito su questo dispositivo. Associa invece con il PIN.</string>
+    <string name="client_setup_scan_camera_unavailable">La fotocamera non può essere usata su questo dispositivo. Associa invece con il PIN.</string>
     <string name="client_setup_scan_open_settings">Apri impostazioni</string>
     <string name="client_setup_scan_not_a_code">Questo non è un codice QR da AAPS.</string>
     <string name="client_setup_scan_other_version">Questo codice proviene da un\'altra versione AAPS. Il master e questo telefono devono eseguire la stessa versione.</string>
-    <string name="client_setup_scan_expired">Questo codice è scaduto. Crearne uno nuovo sul master.</string>
-    <string name="client_setup_scan_already_paired">Questo telefono è già accoppiato. Disaccoppialo prima per usare un codice che accoppia.</string>
+    <string name="client_setup_scan_expired">Questo codice è scaduto. Creane uno nuovo sul master.</string>
+    <string name="client_setup_scan_already_paired">Questo telefono è già associato. Prima disaccoppialo per usare un codice di associazione.</string>
     <string name="client_setup_confirm_title">Utilizzare questo codice?</string>
     <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
-    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Si abbina anche questo telefono con master %1$s.</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Associa anche questo telefono al master %1$s.</string>
     <string name="client_setup_confirm_replaces">Sostituisce l\'indirizzo di Nightscout e il token di questo telefono.</string>
     <string name="client_setup_confirm_apply">Usa</string>
     <string name="client_setup_done_title">Fatto</string>
-    <string name="client_setup_done_paired">Nightscout è impostato e il telefono è accoppiato. Il master lo mostra come attivo quando si è connesso.</string>
-    <string name="client_setup_done_ns_only">Nightscout è configurato. Per controllare il master da questo telefono, abbinalo anche.</string>
+    <string name="client_setup_done_paired">Nightscout è configurato e il telefono è associato. Il master lo mostra come attivo quando si è connesso.</string>
+    <string name="client_setup_done_ns_only">Nightscout è configurato. Per controllare il master da questo telefono, associalo anche.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
-    <string name="clientcontrol_orphan_notification">Master AAPS non riconosce più questo dispositivo. Apri Gestisci foglio → Coppia con master per ri-coppiare.</string>
+    <string name="clientcontrol_orphan_notification">Il master AAPS non riconosce più questo dispositivo. Apri il foglio Gestisci → Associa al master per associarlo di nuovo.</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
@@ -122,9 +122,9 @@
     <string name="ns_remote_control_options">Controllo remoto</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Se abilitato, i caricamenti andranno sui server di test invece che su quelli regolari</string>
-    <string name="title_tidepool_dev_servers">Usa server integrativi (test)</string>
+    <string name="title_tidepool_dev_servers">Usa server di integrazione (test)</string>
     <string name="title_tidepool_use_ns_connection">Usa le impostazioni di connessione Nightscout</string>
-    <string name="summary_tidepool_use_ns_connection">Disattiva per impostare le impostazioni di connessione separate per Tidepool</string>
+    <string name="summary_tidepool_use_ns_connection">Disattiva per usare impostazioni di connessione separate per Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Carica dati su Tidepool</string>
     <string name="upload_now">Carica adesso</string>
@@ -142,13 +142,13 @@
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="description_xdrip">Invia dati a xDrip+</string>
-    <string name="xdrip_status_settings">xDrip+ statusline (advanced)</string>
+    <string name="xdrip_status_settings">Riga di stato xDrip+ (avanzate)</string>
     <string name="xdrip_not_installed">xDrip+ non installato</string>
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Invia dati glicemia e trattamenti a xDrip+. La sorgente dati \"xDrip+ Sync Follower\" deve essere selezionata e l\'accettazione dei dati deve essere abilitata in: Settings - Inter-app settings - Accept Glucose/Treatments</string>
     <string name="xdrip_local_broadcasts_title">Abilita trasmissioni a xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="tizen">App Companion Esterna</string>
+    <string name="tizen">App companion esterne</string>
     <string name="tizen_description">Abilita la trasmissione di dati a varie applicazioni companion esterne</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -156,7 +156,7 @@
     <string name="garmin_local_http_server_port">Porta server HTTP locale</string>
     <string name="garmin_local_http_server">Server HTTP locale</string>
     <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">L\'orologio Garmin ha inviato %1$s di carboidrati. Questo telefono è un client, quindi non sono stati inseriti. Inseriscili in AAPS.</string>
-    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">L\'orologio Garmin ha chiesto di connettere o disconnettere la pompa. Questo telefono è un client, quindi non è stato cambiato nulla.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">L\'orologio Garmin ha chiesto di connettere o disconnettere il micro. Questo telefono è un client, quindi non è stato cambiato nulla. Fallo in AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
     <string name="no_watch_connected">(Nessuno smartwatch connesso)</string>
@@ -165,8 +165,8 @@
     <string name="user_action_not_available">L\'azione utente selezionata %1$s non è più disponibile, aggiorna la tua casella</string>
     <string name="scene_not_available">La scena %1$s non è più disponibile, aggiorna la tua casella</string>
     <string name="wear_remote_insulin_not_allowed_in_client">I comandi remoti dell\'insulina sono disabilitati in modalità client</string>
-    <string name="wear_phone_not_ready">Il telefono sta ancora avviando o applicando le impostazioni. Riprova tra un attimo.</string>
-    <string name="wear_control_disabled">Il controllo dell\'usura è spento nelle impostazioni di Wear sul telefono.</string>
+    <string name="wear_phone_not_ready">Il telefono si sta ancora avviando o sta applicando le impostazioni. Riprova tra un attimo.</string>
+    <string name="wear_control_disabled">Il controllo da smartwatch è disattivato nelle impostazioni Wear sul telefono.</string>
     <string name="wear_action_tempt_unit_error">Differenti unità usate su smartwatch e telefono!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG fuori range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG fuori range!</string>
@@ -176,10 +176,10 @@
     <string name="wear_custom_watchface_settings">Impostazioni watchface personalizzata</string>
     <string name="wear_custom_watchface">Watchface personalizzata: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installazione…</string>
-    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">L\'orologio mostra il quadrante Complicazioni. Selezionare l\'orologio personalizzato per vedere %1$s sull\'orologio.</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">L\'orologio mostra la watchface Complicazioni. Seleziona la watchface personalizzata per vedere %1$s sull\'orologio.</string>
     <string name="wear_pushed_watchface_confirm_title">Cambiare la watchface sull\'orologio?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s sostituirà la %2$s sull\'orologio.</string>
-    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s sostituirà la %2$s sull\'orologio. Le complicazioni che hai cambiato nell\'editor della faccia dell\'orologio tornano ai valori predefiniti.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s sostituirà la %2$s sull\'orologio. Le complicazioni che hai cambiato nell\'editor della watchface tornano ai valori predefiniti.</string>
     <string name="wear_load_watchface">Carica watchface</string>
     <string name="wear_infos_watchface">Informazioni watchface</string>
     <string name="wear_export_watchface">Esporta template</string>
@@ -222,20 +222,20 @@
     <string name="wear_action_loop_state_unauthorized">Per favore riprova.</string>
     <string name="wear_action_loop_state_invalid">Richiesta stato loop non valido</string>
     <string name="wear_action_running_mode_title">Modalità esecuzione</string>
-    <string name="garmin_request_key">Chiave Richiesta</string>
+    <string name="garmin_request_key">Chiave di richiesta</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="description_sms_communicator">Controlla AAPS in remoto usando i comandi SMS.</string>
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore: %1$s seguito da PIN</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">dall\'app autenticatore per: %1$s seguito dal PIN</string>
     <string name="smscommunicator_tab_otp_label">Configurazione autenticatore</string>
     <string name="smscommunicator_code_verify_label">Codice controllo:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Il codice di verifica è composto da 6 cifre visualizzate dall\'app autenticatore (note come OTP) seguite da 3 o più cifre del PIN obbligatorio.</string>
-    <string name="smscommunicator_otp_reset_btn">Resetta Autenticatore</string>
+    <string name="smscommunicator_otp_reset_btn">Resetta autenticatori</string>
     <string name="smscommunicator_otp_reset_title">Resetta chiave autenticatore</string>
     <string name="smscommunicator_otp_reset_prompt">Sei sicuro di resettare la chiave autenticatore? Renderà non validi tutti gli autenticatori attualmente configurati e sarà necessario configurarli nuovamente.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installa l\'autenticatore</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scansione il codice per configurare i codici OTP di AAPS</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scansiona il codice per configurare i codici OTP di AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Prova One-Time-Password</string>
     <string name="smscommunicator_otp_reset_header">Resetta autenticatori</string>
     <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
@@ -244,21 +244,21 @@
     <string name="smscommunicator_otp_verification_ivalid_size">DIMENSIONE NON VALIDA!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">PIN ERRATO</string>
     <string name="smscommunicator_otp_verification_wrong_otp">OTP ERRATO</string>
-    <string name="sms_wrong_code">Codice errato. Comando cancellato.</string>
+    <string name="sms_wrong_code">Codice errato. Comando annullato.</string>
     <string name="sms_timeout_while_waiting">Timeout nell\'attesa della fine della precedente comunicazione col micro</string>
     <string name="smscommunicator_bolus_reply_with_code">Per erogare il bolo di %1$.2fU rispondi col codice %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Per erogare il bolo pasto di %1$.2fU rispondi col codice %2$s</string>
-    <string name="smscommunicator_temptarget_with_code">Per impostare il Temp-Target %1$s rispondi con il codice %2$s</string>
-    <string name="smscommunicator_temptarget_cancel">Per cancellare il Temp-Target rispondi col codice %1$s</string>
+    <string name="smscommunicator_temptarget_with_code">Per impostare il target temporaneo %1$s rispondi con il codice %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Per annullare il target temporaneo rispondi col codice %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">Per disabilitare il servizio di controllo remoto tramite SMS rispondi col codice %1$s.\n\nRicorda che potrai riattivarlo solo in maniera diretta dallo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_stopped_sms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolo non riuscito. Verificare lo stato reale prima di inviare un altro comando!</string>
+    <string name="smscommunicator_bolus_failed">Bolo non riuscito. Verifica lo stato reale prima di inviare un altro comando!</string>
     <string name="smscommunicator_bolus_delivered">Bolo di %1$.2f U erogato con successo</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolo pasto di %1$.2f U erogato con successo</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s per %2$d minuti</string>
     <string name="smscommunicator_tt_set">Target %1$s per %2$d minuti impostato con successo</string>
-    <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
+    <string name="smscommunicator_tt_canceled">Target temporaneo annullato con successo</string>
     <string name="smscommunicator_loop_has_been_disabled">Il loop è stato disabilitato</string>
     <string name="smscommunicator_loop_is_enabled">Il loop è abilitato</string>
     <string name="smscommunicator_pump_connect_with_code">Per connettere il micro rispondi col codice %1$s</string>
@@ -271,16 +271,16 @@
     <string name="smscommunicator_remote_bolus_not_allowed">Bolo remoto non disponibile. Riprova più tardi.</string>
     <string name="smscommunicator_basal_reply_with_code">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Per passare al profilo %1$s %2$d%% rispondi col codice %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">Per avviare il bolo esteso %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Per avviare il bolo esteso %1$.2f U per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Per riprendere il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Per disabilitare il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_restart_reply_with_code">Per riprendere il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">Per riavviare AAPS rispondi col codice %1$s</string>
     <string name="smscommunicator_restarting">AAPS si sta riavviando</string>
     <string name="smscommunicator_tempbasal_set">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
-    <string name="smscommunicator_extended_set">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
+    <string name="smscommunicator_extended_set">Bolo esteso %1$.2fU per %2$d min avviato con successo</string>
     <string name="smscommunicator_carbs_set">CHO %1$d g inseriti con successo</string>
     <string name="smscommunicator_carbs_failed">Inserimento di %1$dg di CHO fallito</string>
     <string name="smscommunicator_tempbasal_set_percent">Basale temporanea %1$d%% per %2$d min avviata con successo</string>
@@ -288,10 +288,10 @@
     <string name="smscommunicator_extended_failed">Avvio bolo esteso fallito</string>
     <string name="smscommunicator_basal_stop_reply_with_code">Per stoppare la basale temporanea rispondi col codice %1$s</string>
     <string name="smscommunicator_extended_stop_reply_with_code">Per stoppare il bolo esteso rispondi col codice %1$s</string>
-    <string name="smscommunicator_tempbasal_canceled">Basale temporanea cancellata</string>
-    <string name="smscommunicator_extended_canceled">Bolo esteso cancellato</string>
-    <string name="smscommunicator_tempbasal_cancel_failed">Basale temporanea: cancellazione fallita</string>
-    <string name="smscommunicator_extended_cancel_failed">Bolo esteso: cancellazione fallita</string>
+    <string name="smscommunicator_tempbasal_canceled">Basale temporanea annullata</string>
+    <string name="smscommunicator_extended_canceled">Bolo esteso annullato</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Basale temporanea: annullamento fallito</string>
+    <string name="smscommunicator_extended_cancel_failed">Bolo esteso: annullamento fallito</string>
     <string name="smscommunicator_unknown_command">Comando sconosciuto o risposta errata</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
     <string name="smscommunicator_wrong_duration">Durata errata</string>
@@ -316,8 +316,8 @@
     <string name="sms_read_status_failed">Lettura stato fallita</string>
     <string name="sms_profile_switch_created">Cambio profilo creato</string>
     <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
-    <string name="sms_tbr_percent_only">Questo micro richiede una basale temporanea solo in percentuale, non in U/h.</string>
-    <string name="sms_tbr_absolute_only">Questo micro prende una basale temporanea solo in U/h, non in percentuale.</string>
+    <string name="sms_tbr_percent_only">Questo micro accetta una basale temporanea solo in percentuale, non in U/h.</string>
+    <string name="sms_tbr_absolute_only">Questo micro accetta una basale temporanea solo in U/h, non in percentuale.</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">L\'applicazione richiede l\'autorizzazione SMS per il controllo remoto tramite messaggi di testo</string>

@@ -64,7 +64,7 @@
     <string name="equil_firmware_version">Phiên bản phần mềm</string>
     <string name="equil_shutdown_be">Equil sẽ tự động tắt</string>
     <string name="equil_shutdown">Equil tự động tắt</string>
-    <string name="equil_common_history_tbr_value">Tỷ lệ: %1$.2f U, thời lượng: %2$d phút</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Tỷ lệ: %1$.2f U/giờ, thời lượng: %2$d phút</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Đặt liều Bolus</string>

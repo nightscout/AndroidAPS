@@ -27,15 +27,15 @@
     <string name="omnipod_common_error_pod_suspended">Pod pozastavený</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Nepodařilo se přehrát testovací pípnutí</string>
     <string name="omnipod_common_error_time_out_of_sync">Čas na Podu není synchronizován. Aktualizujte prosím čas na kartě Omnipod.</string>
-    <string name="omnipod_common_error_unexpected_exception">Došlo k neočekávané chybě. Prosíme o její nahlášeníní! (%1$s: %2$s).</string>
+    <string name="omnipod_common_error_unexpected_exception">Došlo k neočekávané chybě. Prosíme o její nahlášení! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Nastavení výstrahy bylo v Podu aktualizováno.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Čas na Podu byl aktualizován.</string>
     <!-- Omnipod - Overview -->
-    <string name="omnipod_common_overview_button_set_time">Nastavení času</string>
-    <string name="omnipod_common_overview_button_suspend_delivery">Vypnutí</string>
+    <string name="omnipod_common_overview_button_set_time">Nastavit čas</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Pozastavit</string>
     <string name="omnipod_common_overview_button_resume_delivery">Obnovit dodávání inzulínu</string>
-    <string name="omnipod_common_overview_button_silence_alerts">Ztišit alarmy</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Ztišit výstrahy</string>
     <string name="omnipod_common_overview_pod_status">Stav Podu</string>
     <string name="omnipod_common_overview_total_delivered">Celkem vydáno</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikátní ID</string>
@@ -73,7 +73,7 @@
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivován</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod deaktivován.\n\nOdstraňte Pod z těla a znehodnoťte jej.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod vyřazen</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Stav Podu byl vyřazen. Doručení inzulinu nebylo pozastaveno, protože Pod nebyl řádně deaktivován!\n\nOdstraňte Podod z vašeho těla a recyklujte ho.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Stav Podu byl vyřazen. Výdej inzulínu nebyl pozastaven, protože Pod nebyl řádně deaktivován!\n\nOdstraňte Pod z těla a recyklujte ho.</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Pokud tento Pod vyřadíte, nebudete s ním již moci komunikovat. Tuto operaci byste měli provést pouze v případě, že veškerá komunikace s tímto Pod trvale selhává. Opravdu chcete vyřadit Pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Vyřadit Pod</string>
     <!-- Omnipod - Preferences -->
@@ -120,7 +120,7 @@
     <string name="omnipod_common_pdm_notification_header_reservoir_empty">Prázdný zásobník</string>
     <string name="omnipod_common_pdm_notification_text_reservoir_empty">Doručení inzulínu bylo zastaveno. Nyní změňte Pod.</string>
     <string name="omnipod_common_pdm_notification_header_auto_off">Automatické vypnutí</string>
-    <string name="omnipod_common_pdm_notification_text_auto_off">Doručení inzulínu zastaveno. Váš PDM a Pod nekomikovaly během posledních 4 hodin. Chcete-li pokračovat v dodávce inzulínu, změňte nyní Pod.</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Výdej inzulínu zastaven. Váš PDM a Pod spolu během posledních 4 hodin nekomunikovaly. Chcete-li obnovit výdej inzulínu, vyměňte nyní Pod.</string>
     <string name="omnipod_common_pdm_notification_header_pod_expired">Pod vypršel</string>
     <string name="omnipod_common_pdm_notification_text_pod_expired">Doručení inzulínu bylo zastaveno. Nyní změňte Pod.</string>
     <string name="omnipod_common_pdm_notification_header_occluded">Detekována okluze</string>
@@ -146,7 +146,7 @@
     <string name="omnipod_common_cmd_get_pod_status">Zjistit stav Podu</string>
     <string name="omnipod_common_cmd_set_time">Nastavit čas</string>
     <string name="omnipod_common_cmd_configure_alerts">Konfigurovat výstrahy</string>
-    <string name="omnipod_common_cmd_silence_alerts">Ztišit alarmy</string>
+    <string name="omnipod_common_cmd_silence_alerts">Ztišit výstrahy</string>
     <string name="omnipod_common_cmd_read_pulse_log">Číst protokol pulsů</string>
     <string name="omnipod_common_cmd_suspend_delivery">Pozastavit dodávání inzulínu</string>
     <string name="omnipod_common_cmd_resume_delivery">Obnovit dodávání inzulínu</string>
