@@ -9,6 +9,9 @@
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Εμφάνιση κουμπιού καταγραφής Pulse στο μενού Διαχείριση Pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Εμφάνιση του κουμπιού Στατιστικά RileyLink στο μενού Διαχείριση Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Ενεργοποίηση καταγραφής αλλαγής μπαταρίας στις Ενέργειες</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, Υδατ.=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Τιμή: %1$.2f U, διάρκεια: %2$d λεπτά</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Αποτυχία επικοινωνίας: επαλήθευση ακεραιότητας μηνύματος απέτυχε</string>
@@ -41,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Ένας προσωρινός βασικός τρέχει στο Pod, αλλά το AAPS δεν γνωρίζει αυτόν τον προσωρινό βασικό ρυθμό. Παρακαλώ ακυρώστε τον προσωρινό βασικό σας χειροκίνητα.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Στατιστικά RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Επαναφορά RileyLink</string>
     <string name="omnipod_eros_pod_management_pulse_log">Αρχείο Καταγραφής Pulse</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Αρχείο καταγραφής Pulse (αντιγράφηκε στο πρόχειρο)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
