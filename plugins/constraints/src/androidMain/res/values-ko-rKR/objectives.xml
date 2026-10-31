@@ -16,7 +16,7 @@
     <string name="objectives_maxbasal">권장 사항을 충족하는 동작을 수행하십시오</string>
     <string name="objectives_maxbasal_learned">안전 기능에 주의하고 필요하면 안전 매개 변수를 조정하십시오.</string>
     <string name="objectives_maxiobzero_objective">저혈당 주입 정지(LGS)로 폐쇄 루프 시작</string>
-    <string name="objectives_maxiobzero_gate">저혈당 주입정지 모드(LGS, 즉 최대 IOB = 0이 자동으로 설정됨)에서 폐쇄 루프로 며칠 동안 실행하십시오. LGS 이벤트가 너무 많지 않아야 합니다.</string>
+    <string name="objectives_maxiobzero_gate">저혈당 주입 정지 모드(LGS, 즉 최대 IOB = 0이 자동으로 설정됨)에서 폐쇄 루프로 며칠 동안 실행하십시오. LGS 이벤트가 너무 많지 않아야 합니다.</string>
     <string name="objectives_maxiobzero_learned">MaxIOB를 0으로 설정하면 저혈당이 방지되며, 기저 주입량 이상으로 인슐린을 더 추가하지 않습니다 (음수 IOB인 경우 제외)</string>
     <string name="objectives_maxiob_objective">폐쇄 루프 조정: 최대 IOB를 0보다 높이고 혈당 목표를 서서히 낮추기</string>
     <string name="objectives_maxiob_gate">혈당 목표를 낮추기 전에 며칠 동안 실행하고, 최소 하룻밤은 저혈당 알람 없이 지내십시오</string>
