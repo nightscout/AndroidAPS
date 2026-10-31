@@ -82,7 +82,7 @@
     <string name="wait_for_priming">Wacht alstublieft tot het voorvullen voltooid is.</string>
     <string name="press_next">Druk op <b>Volgende</b> om verder te gaan.</string>
     <string name="press_next_to_start_activation">Druk op <b>Volgende</b> om het activeren te starten.</string>
-    <string name="remove_safety_lock">Verwijder het veiligheidsslot, Bevestig de pomp aan het lichaam. Druk op de naald knop.</string>
+    <string name="remove_safety_lock">Verwijder het veiligheidsslot. Bevestig de pomp aan het lichaam. Druk op de naaldknop.</string>
     <string name="activating_pump">Pomp activeren en initiële basaalstand instellen. Even geduld alstublieft.</string>
     <string name="activating_complete">Nieuwe patch geactiveerd. %.2f Eenheden resterend.</string>
     <string name="can_export_settings">Je kunt de instellingen exporteren om deze patch sessie later te kunnen herstellen.</string>
@@ -90,14 +90,14 @@
     <string name="deactivate_sure">Weet u zeker dat u de huidige patch wilt deactiveren?</string>
     <string name="cancel_sure">Weet u zeker dat u de activatie wil annuleren?</string>
     <string name="medtrum_deactivate_pump_confirm">Weet u het zeker? Deze actie kan niet ongedaan worden gemaakt!!</string>
-    <string name="press_next_or_cancel">Druk op <b>Volgende</b> om te deactiveren of <b>Annuleer</b> om terug te keren naar het hoofdscherm.</string>
+    <string name="press_next_or_cancel">Druk op <b>Volgende</b> om te deactiveren of op <b>Annuleren</b> om terug te keren naar het hoofdscherm.</string>
     <string name="deactivating_pump">Patch deactiveren. Even geduld.</string>
-    <string name="deactivating_error">Deactivatie mislukt, druk <b>Verwijderen</b> om de patch te vergeten.</string>
+    <string name="deactivating_error">Deactivatie mislukt, druk op <b>Weggooien</b> om de patch te vergeten.</string>
     <string name="retract_needle">Trek de naald terug. Verwijder patch van het lichaam.</string>
     <string name="remove_base_discard_patch">Verwijder pomp basis en voer de gebruikte patch op de juiste manier af.</string>
     <string name="press_next_or_OK">Druk op <b>OK</b> om terug te keren naar het hoofdscherm. Druk op <b>Volgende</b> om te beginnen met de activering van een nieuwe patch.</string>
     <string name="activation_in_progress">Oeps! Er ging iets mis, het lijkt erop dat er al een activatie bezig is.</string>
-    <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of <b>Verwijderen</b> om de activeringsstatus te resetten.</string>
+    <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of op <b>Weggooien</b> om de activeringsstatus te resetten.</string>
     <string name="reading_activation_status">Een ogenblik geduld, activeringsstatus van de pomp wordt gelezen.</string>
     <!-- settings-->
     <string name="alarm_setting_title">Alarminstellingen</string>
