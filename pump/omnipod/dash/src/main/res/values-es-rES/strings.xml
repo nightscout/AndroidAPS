@@ -28,6 +28,7 @@
     <string name="failed_to_set_the_new_basal_profile">Error al establecer el nuevo perfil basal. Entrega suspendida</string>
     <string name="setting_basal_profile_might_have_failed">El ajuste del perfil basal puede haber fallado. Es posible que se haya suspendido el suministro. Actualice manualmente el estado del Pod desde la pestaña Omnipod y reanude el suministro si es necesario</string>
     <string name="bolus_delivery_status_uncertain">Estado de entrega de bolo incierto. Actualice el estado del bolo para confirmarlo o rechazarlo</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">No se puede comprobar si el SMB (%1$s) se administró correctamente. Actualiza el estado del Pod para confirmar o descartar este comando.</string>
     <string name="temp_basal_out_of_sync">El estado de la basal temporal no es el esperado. Si se estaba ejecutando anteriormente una basal temporal, se ha cancelado. Por favor, comprueba la insulina suministrada y el historial de pod</string>
     <string name="checking_delivery_status">Comprobando el estado de la entrega</string>
     <string name="setting_temp_basal_might_have_basal_failed">Establecer la basal temporal podría haber fallado. Si se estaba ejecutando una basal temporal, se ha cancelado. Actualice manualmente el estado del Pod desde la pestaña Omnipod</string>
