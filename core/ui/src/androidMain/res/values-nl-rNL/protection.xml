@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="biometric_title">Authentificatie vereist</string>
+    <string name="biometric_title">Authenticatie vereist</string>
     <string name="biometric_description">Plaats uw vinger op de vingerafdruklezer om uw identiteit te verifiëren</string>
     <string name="settings_protection">Instellingen beveiliging</string>
     <string name="application_protection">App beveiliging</string>
