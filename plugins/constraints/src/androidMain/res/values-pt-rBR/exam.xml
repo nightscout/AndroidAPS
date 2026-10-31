@@ -99,7 +99,7 @@
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/insulina humana \"regular\".</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
-    <string name="sensitivity_label">Tópico: Plugins de Sensibilidade</string>
+    <string name="sensitivity_label">Plugins de sensibilidade</string>
     <string name="sensitivity_adjust">Plugins de sensibilidade permitem ao AAPS ajustar de forma temporária ou por uma curta duração alterações na sensibilidade à insulina (por exemplo, mudanças hormonais ou problemas com absorção de insulina no local onde ela é aplicada).</string>
     <string name="sensitivity_edit">Os plugins de sensibilidade fornecem ao usuário sugestões de alterações nas taxas basais, relações I:C e ISF, que podem ser usadas para editar o perfil.</string>
     <string name="sensitivity_cannula">Registrar uma troca de cânula irá redefinir a taxa de Autosense de volta para 100%.</string>
