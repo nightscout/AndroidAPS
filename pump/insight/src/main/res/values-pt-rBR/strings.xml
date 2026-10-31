@@ -28,7 +28,7 @@
     <string name="disable_vibration">Desativar vibrações na entrega manual de bólus</string>
     <string name="disable_vibration_summary">Para bólus e bólus estendido (disponível apenas com firmware Insight 3.x)</string>
     <string name="disable_vibration_auto">Desativar vibrações na entrega automática de bólus</string>
-    <string name="disable_vibration_auto_summary">Para SMB e basal temporária com com emulação da taxa basal temporária (disponível apenas com firmware Insight 3.x)</string>
+    <string name="disable_vibration_auto_summary">Para SMB e basal temporária com emulação da taxa basal temporária (disponível apenas com firmware Insight 3.x)</string>
     <string name="timeout_during_handshake">Tempo de operação excedido - reinicie bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
