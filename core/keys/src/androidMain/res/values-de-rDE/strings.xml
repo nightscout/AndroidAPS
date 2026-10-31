@@ -13,9 +13,21 @@
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_notifications_from_alarms">NS-Alarme</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS Ankündigungen</string>
+    <string name="pref_title_ns_use_roaming">Roaming verwenden</string>
+    <string name="pref_title_ns_use_wifi">WLAN verwenden</string>
+    <string name="pref_title_ns_use_on_charging">Synchronisieren während des Ladens</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Ankündigungen aus Fehlern generieren</string>
+    <string name="pref_title_ns_slow_sync">Langsame Synchronisation verwenden</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Nur bei WLAN-Verbindung</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_detailed_iob">Detailliertes IOB senden</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Sende detaillierte IOB-Informationen an xDrip+ zur Anzeige auf Smartwatches.</string>
     <!-- Wear preferences -->
+    <string name="pref_summary_wear_control">AAPS über Android Wear Smartwatch steuern.</string>
+    <string name="pref_title_wear_broadcast_data">Daten an Smartwatch senden</string>
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">Menge der Kohlenhydrate, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird.</string>
@@ -27,13 +39,18 @@
     <string name="custom_password">Benutzerdefiniertes Passwort</string>
     <string name="custom_pin">Eigene PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maximal erlaubte Kohlenhydrate</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Minimale Änderung im Open-Modus</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <!-- IntKey: APS preferences -->
     <string name="uam_smb_max_minutes">UAM SMB max. Minuten</string>
     <string name="carbs_req_threshold_summary">Minimale KH-Menge in Gramm, die Vorschlags-Alarm erforderlich ist. Vorschläge unterhalb dieser Menge, lösen keine Benachrichtigung aus.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein und weniger als 100 % für weniger aggressive Korrekturen.</string>
+    <string name="pref_title_autosens_period">Autosens Zeitraum</string>
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, wird nicht berücksichtigt)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Anzahl der zu sendenden Logs</string>
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
@@ -43,9 +60,14 @@
     <!-- IntKey: NS Client preferences -->
     <!-- IntKey: Site rotation preferences -->
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Mann</string>
+    <string name="site_rotation_profile_woman">Frau</string>
+    <string name="site_rotation_profile_child">Kind</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Einheiten</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Sprache</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS-Verzeichnis</string>
     <!-- StringKey: Protection preferences -->
