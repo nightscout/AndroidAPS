@@ -7,16 +7,52 @@
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Деактивований Pod не можна використати знову. Деактивувати цей Pod зараз?</string>
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Звук для сповіщення про призупинення введення увімкнено</string>
+    <string name="omnipod_dash_use_bonding">Звʼязування Bluetooth (bonding)</string>
+    <string name="omnipod_dash_use_bonding_summary">Пробуйте це лише тоді, коли Pod не може тримати стабільне зʼєднання. Телефон показуватиме запити на спарювання, які ви маєте прийняти. Залиште вимкненим, якщо Pod підключається нормально. Не діє на Android нижче 15.</string>
     <!-- Omnipod - Pod Status -->
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Сповіщення PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Порожній резервуар</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Введення інсуліну зупинено. Замініть Pod зараз.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Автовимкнення</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Введення інсуліну зупинено. Ваш PDM і Pod не звʼязувалися протягом останніх 4 годин. Щоб відновити введення інсуліну, замініть Pod зараз.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Термін дії Pod минув</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Введення інсуліну зупинено. Замініть Pod зараз.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Виявлено оклюзію</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Введення інсуліну зупинено. Замініть Pod зараз. Перевірте рівень ГК</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Помилка Pod</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Введення інсуліну зупинено. Замініть Pod зараз.</string>
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_set_tbr">Встановити TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Скасувати TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Скасувати TBR (користувачем)</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Встановити фіктивний TBR призупинення</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Скасувати фіктивний TBR призупинення</string>
+    <string name="omnipod_common_cmd_split_tbr">Розділити TBR</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Вимкнути сповіщення про призупинення</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Нагадування: завершити спарювання</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Нагадування: завершити налаштування</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
+    <string name="omnipod_common_overview_pod_hard_end_date">Остаточна зупинка Pod</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f Од/год, %2$d хв</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Корекція базалу</string>
+    <string name="omnipod_common_bolus_type_priming">Підготовка</string>
+    <string name="omnipod_common_failed_to_send">Не вдалося надіслати команду</string>
+    <string name="omnipod_common_command_not_sent">Команду не надіслано</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Pod не отримав команду</string>
+    <string name="omnipod_common_unknown">Невідомий стан команди</string>
 </resources>
