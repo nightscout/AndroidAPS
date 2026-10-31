@@ -132,7 +132,7 @@
     <string name="equil_password_tips">Equil v5.3 pompasıyla eşleştirme yapmak için isteğe bağlı olarak bir parola belirleyebilirsiniz. Bu parola, ileride eşleştirmeyi kaldırmak için de kullanılacaktır. Bu nedenle lütfen parolayı unutmayın. Parola kuralı: 4 karakter uzunluğunda olmalı ve ABCDEF0123456789 karakterlerinden seçilmelidir.</string>
     <string name="equil_set_pair_password">Eşleştirme parolasını belirleyin</string>
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>
-    <string name="equil_unbind">Eşleştirmeyi sonlandır</string>
+    <string name="equil_unbind">Cihaz Eşleşmesini Kaldır</string>
     <string name="equil_device_unpaired">Cihaz eşleşmesi kaldırıldı</string>
     <string name="equil_assemble">Lütfen pompayı, dolu rezervuarı ve şarj edilmiş pili birleştirin</string>
     <string name="equil_pair_password_title">%1$s için parola girin</string>
