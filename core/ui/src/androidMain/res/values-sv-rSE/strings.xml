@@ -1090,7 +1090,7 @@
     <string name="log_files">Loggfiler</string>
     <string name="delete_logs">Radera loggar</string>
     <string name="logs_deleted">Loggar raderade</string>
-    <string name="aaps_directory">AAPS katalog</string>
+    <string name="aaps_directory">AAPS-katalog</string>
     <string name="import_setting">Importera inställningar</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Dekryptera &amp; Granska</string>
@@ -1113,7 +1113,7 @@
     <string name="import_applying">Tillämpar inställningar...</string>
     <string name="import_replace_pump_settings">Byt även pumpinställningar</string>
     <string name="import_replace_pump_settings_summary">Låt detta vara avstängt för att behålla pumpen som telefonen är parkopplad med. Slå på det när du återställer till en ny telefon med samma pump.</string>
-    <string name="import_apply_waiting">Väntar på pump...</string>
+    <string name="import_apply_waiting">Väntar på pump…</string>
     <string name="import_apply_pump_busy">Pumpen är fortfarande upptagen, så inställningarna tillämpades inte.</string>
     <string name="import_apply_retry_question">Försök igen nu?</string>
     <string name="import_applied_title">Inställningar tillämpade</string>
