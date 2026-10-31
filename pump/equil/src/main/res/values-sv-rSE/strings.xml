@@ -24,6 +24,7 @@
     <string name="equil_title_unpair_detach">Ta loss pumpen</string>
     <string name="equil_title_history_events">Historikhändelser</string>
     <string name="equil_tone">Varningsljud</string>
+    <string name="equil_bolus_speed">Bolushastighet</string>
     <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (standard)</string>
     <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
     <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
