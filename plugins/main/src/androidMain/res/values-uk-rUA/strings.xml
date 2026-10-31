@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_history_browser">Перегляд історії</string>
+    <string name="sensor_label">Сенсор</string>
+    <string name="insulin_label">Інсулін</string>
+    <string name="pb_label">Батарея помпи</string>
+    <string name="cannula">Канюля</string>
+    <string name="patch_pump">Patch-помпа</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
     <string name="basal_shortname">БАЗ</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Показує постійне сповіщення з коротким оглядом того, що робить ваша петля</string>
+    <string name="old_data">СТАРІ ДАНІ</string>
     <string name="notification_iob_short">%1$.1fОд</string>
 </resources>
