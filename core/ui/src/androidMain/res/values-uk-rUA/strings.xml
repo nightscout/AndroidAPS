@@ -1074,9 +1074,9 @@
     <string name="resettodefaults">Скинути до значень за замовчуванням</string>
     <!--    Maintenance-->
     <string name="maintenance">Обслуговування</string>
-    <string name="description_maintenance">Надає інструменти для обслуговування (відправка логів, видалення логів).</string>
-    <string name="log_files">Файли логів</string>
-    <string name="delete_logs">Видалити логи</string>
+    <string name="description_maintenance">Надає інструменти для обслуговування (надсилання журналів, видалення журналів).</string>
+    <string name="log_files">Файли журналів</string>
+    <string name="delete_logs">Видалити журнали</string>
     <string name="logs_deleted">Журнали видалено</string>
     <string name="aaps_directory">Каталог AAPS</string>
     <string name="import_setting">Імпорт налаштувань</string>
