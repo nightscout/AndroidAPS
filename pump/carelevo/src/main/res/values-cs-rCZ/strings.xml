@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Vyndejte patch z blistru a sundejte kryt jehly.</string>
     <string name="carelevo_patch_attach_step3_title">Přilepit patch</string>
     <string name="carelevo_patch_attach_step3_desc">Přilepte patch na kůži tak, aby označená tečka mířila nahoru.</string>
+    <string name="carelevo_patch_attach_step4_desc">Po přilepení patche stiskněte Další.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Sundat bezpečnostní kryt</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Otočte bezpečnostní kryt ve směru šipky a sundejte ho.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Zavést jehlu</string>
