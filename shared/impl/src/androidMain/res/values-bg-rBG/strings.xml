@@ -14,9 +14,9 @@
     <string name="cwf_comment_cob2_ext">COB (от AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Малка делта на КЗ (от AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Средна делта (15 мин) (от AAPSClient или AAPSClient2)</string>
-    <string name="cwf_comment_temp_target_ext">TempTarget or TempTargetLow - TempTargetHigh (from AAPSClient or AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">TempTarget или TempTargetLow - TempTargetHigh (от AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">Инсулин в резервоар (от AAPSClient или AAPSClient2)</string>
-    <string name="cwf_comment_rig_battery_ext">Батерия (%) (from AAPSClient or AAPSClient2)</string>
+    <string name="cwf_comment_rig_battery_ext">Батерия (%) (от AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Базал (от AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">BGI value (от AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_status_ext">Status synthesis (от AAPSClient или AAPSClient2)</string>
@@ -31,7 +31,7 @@
     <string name="cwf_comment_cob2">COB стойност</string>
     <string name="cwf_comment_delta">Краткоср. Δ</string>
     <string name="cwf_comment_avg_delta">Средна делта (15мин)</string>
-    <string name="cwf_comment_temp_target">TempTarget or TempTargetLow - TempTargetHigh</string>
+    <string name="cwf_comment_temp_target">TempTarget или TempTargetLow - TempTargetHigh</string>
     <string name="cwf_comment_reservoir">Ниво на инсулин в резервоара</string>
     <string name="cwf_comment_uploader_battery">Батерия на телефона (%)</string>
     <string name="cwf_comment_rig_battery">Global loop батерия (%)</string>
@@ -47,7 +47,7 @@
     <string name="cwf_comment_day">Ден (ДД)</string>
     <string name="cwf_comment_week_number">Номер седмица (сс)</string>
     <string name="cwf_comment_month">Месец (кратко)</string>
-    <string name="cwf_comment_loop">Loop статус и \"преди\"</string>
+    <string name="cwf_comment_loop">Статус на кръга и \"преди\"</string>
     <string name="cwf_comment_direction">Делта стрелка</string>
     <string name="cwf_comment_timestamp">Последно получена КЗ преди минути</string>
     <string name="cwf_comment_sgv">КЗ стойност</string>
