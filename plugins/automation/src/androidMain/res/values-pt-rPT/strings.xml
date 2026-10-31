@@ -74,7 +74,7 @@
     <string name="xor">Exclusivo ou</string>
     <string name="atspecifiedtime">Às %1$s</string>
     <string name="onconnect">Ao ligar</string>
-    <string name="ondisconnect">Ao remover</string>
+    <string name="ondisconnect">Ao desligar</string>
     <string name="short_avgdelta">Delta médio curto</string>
     <string name="long_avgdelta">Delta médio longo</string>
     <string name="delta">Delta</string>
@@ -94,7 +94,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Diferença de Glicose</string>
-    <string name="currentlocation">Localização actual</string>
+    <string name="currentlocation">Localização atual</string>
     <string name="location">Localização</string>
     <string name="lastboluslabel">Último bolus atrás</string>
     <string name="lastboluscompared">Última vez do bolus %1$s %2$s atrás</string>
@@ -122,7 +122,7 @@
     <string name="every">Todo</string>
     <string name="never">Nunca</string>
     <string name="condition">Condição:</string>
-    <string name="action">Acção:</string>
+    <string name="action">Ação:</string>
     <string name="taskname">Nome da Tarefa</string>
     <string name="edit_short">EDITAR</string>
     <string name="preconditions">Precondições:</string>
