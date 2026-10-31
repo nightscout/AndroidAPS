@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
-    <string name="combov2_plugin_description">Inbyggd pumpintegration för Accu-Check Combo-pumpar</string>
+    <string name="combov2_plugin_description">Inbyggd pumpintegration för Accu-Chek Combo-pumpar</string>
     <string name="combov2_could_not_connect">Kunde inte ansluta till pumpen</string>
     <string name="combov2_not_paired">Inte parkopplad till en pump</string>
     <string name="combov2_warning">Combo varning</string>
@@ -21,7 +21,7 @@
     <string name="combov2_extended_bolus_not_supported">Förlängd bolus stöds inte</string>
     <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Parkoppla med pump</string>
-    <string name="combov2_unpair_pump_title">Koppla från pump</string>
+    <string name="combov2_unpair_pump_title">Ta bort parkoppling med pump</string>
     <string name="combov2_driver_state_label">Drivrutinsstatus</string>
     <string name="bluetooth_address">Bluetooth-adress</string>
     <string name="combov2_start_pairing">Påbörja parkoppling</string>
@@ -32,16 +32,16 @@
 3. Gå till pumpskärmen \"Lägg till enhet\" och starta parkoppling på pumpen\n
 4. Klicka på knappen \"Påbörja parkoppling\" nedan för att initiera parkoppling i AAPS\n</string>
     <string name="combov2_steps_if_no_connection_during_pairing">Efter ett tag visas telefonens namn på pumpens skärm; tryck på CHECK för att bekräfta.\n\n
-När parkopplingen är slutförd, bekräfta den färdiga parningen på pumpen och återgå till pumpens startskärm genom att trycka på CHECK-knappen två gånger.\n\n
+När parkopplingen är slutförd, bekräfta den färdiga parkopplingen på pumpen och återgå till pumpens startskärm genom att trycka på CHECK-knappen två gånger.\n\n
 Om ingen anslutning är etablerad efter mer än ~5 minuter:\n\n
-1. Tryck tillbaka eller \"Avbryt parkoppling\"\n
+1. Tryck på Tillbaka eller på \"Avbryt parkoppling\"\n
 2. Avbryt parkopplingen på Combo (tryck på både UP- och MENU-knapparna
 samtidigt för att avbryta parkoppling)\n
-3. Försök para ihop igen</string>
+3. Försök parkoppla igen</string>
     <string name="combov2_enter_pin">Ange PIN-kod</string>
     <string name="combov2_cancel_pairing">Avbryt parkoppling</string>
     <string name="combov2_pin_hint">10-siffrig PIN-kod</string>
-    <string name="combov2_pairing_finished_successfully">Parkoppingen lyckades</string>
+    <string name="combov2_pairing_finished_successfully">Parkopplingen med Combo lyckades</string>
     <string name="combov2_pairing_cancelled">Parkopplingen avbruten av användaren</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Sökningen tog för lång tid</string>
     <string name="combov2_pairing_failed_due_to_error">Parkoppling misslyckades på grund av fel: %1$s</string>
@@ -63,10 +63,10 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_executing_command">Kör kommando</string>
     <string name="combov2_getting_basal_profile_cmddesc">Hämtar basalprofil</string>
     <string name="combov2_setting_basal_profile_cmddesc">Sätter basalprofil</string>
-    <string name="combov2_setting_tbr_cmddesc">Sätter temp basal %1$d%% i %2$d minuter</string>
-    <string name="combov2_cancelling_tbr">Avbryter pågående temp basal</string>
+    <string name="combov2_setting_tbr_cmddesc">Sätter tillfällig basal %1$d%% i %2$d minuter</string>
+    <string name="combov2_cancelling_tbr">Avbryter pågående tillfällig basal</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Hämtar TDD-historik</string>
-    <string name="combov2_updating_pump_datetime_cmddesc">Uppdaterar pumpens datumtid</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Uppdaterar pumpens datum och tid</string>
     <string name="combov2_updating_pump_status_cmddesc">Uppdaterar pumpens status</string>
     <string name="combov2_pairing_pin_failure">PIN-koden fungerade inte. Kontrollera om det fanns ett stavfel. Om detta fortsätter att ske, avbryt och försök igen.</string>
     <string name="combov2_discovery_duration">Varaktighet för sökning (i sekunder)</string>
@@ -77,9 +77,11 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_cannot_deliver_pump_suspended">Kan inte skicka behandling - pumpen är pausad</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Otillräckligt med insulin i reservoaren</string>
     <string name="combov2_bolus_cancelled">Bolus avbruten</string>
-    <string name="combov2_bolus_delivery_failed">Bolus avbruten. Det verkar som om ingen bolus levererades. För att vara säker, vänligen kontrollera pumpen för att undvika dubbel bolus och prova sedan vid behov igen. För att förhindra fel orsakade av mjukvaran, försöker inte mjukvaran igen automatiskt.</string>
+    <string name="combov2_bolus_delivery_failed">Bolusen misslyckades. Det verkar som om ingen bolus levererades. För att vara säker, vänligen kontrollera pumpen för att undvika dubbel bolus och prova sedan vid behov igen. För att förhindra fel orsakade av mjukvaran, försöker inte mjukvaran igen automatiskt.</string>
     <string name="combov2_bolus_not_delivered">Bolus ej levererad</string>
     <string name="combov2_cannot_access_pump_data">Kan inte hämta pumpdata. Pumpen måste parkopplas på nytt</string>
+    <string name="combov2_bolus_request_outcome_unknown">Anslutningen till pumpen bröts medan AAPS skickade bolusen. Det är därför oklart om pumpen tog emot den. Kontrollera bolushistoriken i pumpen innan nästa bolus ges. AAPS kommer att hämta den faktiska mängden från pumpen vid nästa anslutning.</string>
+    <string name="combov2_unknown_bolus_in_history">Pumphistoriken innehåller en bolus som AAPS inte kände till. Den begärda bolusen levererades inte, eftersom den beräknades utan hänsyn till detta insulin. Kontrollera bolushistoriken i pumpen samt IOB i AAPS. Om en bolus fortfarande behövs, gör en ny beräkning.</string>
     <string name="combov2_incorrect_active_basal_profile">Felaktig aktiv basalprofil. Profil 1 måste vara aktiv, inte profil %1$d</string>
     <string name="combov2_unrecognized_alert">Okänd Combo-varning</string>
     <string name="combov2_combo_alert">Combo-varning</string>
@@ -89,15 +91,15 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_retrieving_tdds_failed">Hämtning av dygnsdoser misslyckades</string>
     <string name="combov2_battery_low_warning">Pumpbatteriet är svagt</string>
     <string name="combov2_reservoir_low_warning">Låg nivå i pumpreservoaren</string>
-    <string name="combov2_setting_tbr_succeeded">Inställning av temp basal lyckades</string>
-    <string name="combov2_setting_tbr_failed">Inställning av temp basal misslyckades</string>
-    <string name="combov2_set_emulated_100_tbr">Ställ in emulerad 100% temp basal</string>
-    <string name="combov2_letting_emulated_100_tbr_finish">Låter pågående emulerad 100% temp basal avsluta</string>
-    <string name="combov2_ignoring_redundant_100_tbr">Ignorerar överflödig begäran av 100% temp basal</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Oväntad gräns påträffades vid justering av temp basal: målprocenten var %1$d%%, nådde en gräns vid %2$d%%</string>
-    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan inte ställa in absolut temp basal om basaldosen är noll</string>
-    <string name="combov2_unpair_pump_summary">Koppla bort AndroidAPS och Android från den nuvarande parkopplade Accu-Chek Combo-pumpen</string>
-    <string name="combov2_unknown_tbr_detected">Okänd temp basal upptäcktes och stoppades; procentsats: %1$d%%; återstående varaktighet: %2$s</string>
+    <string name="combov2_setting_tbr_succeeded">Inställning av tillfällig basal lyckades</string>
+    <string name="combov2_setting_tbr_failed">Inställning av tillfällig basal misslyckades</string>
+    <string name="combov2_set_emulated_100_tbr">Ställ in emulerad 100% tillfällig basal</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Låter pågående emulerad 100% tillfällig basal avsluta</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Ignorerar överflödig begäran av 100% tillfällig basal</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Oväntad gräns påträffades vid justering av tillfällig basal: målprocenten var %1$d%%, nådde en gräns vid %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan inte ställa in absolut tillfällig basal om basaldosen är noll</string>
+    <string name="combov2_unpair_pump_summary">Ta bort parkopplingen mellan AAPS/Android och den parkopplade Accu-Chek Combo-pumpen</string>
+    <string name="combov2_unknown_tbr_detected">Okänd tillfällig basal upptäcktes och stoppades; procentsats: %1$d%%; återstående varaktighet: %2$s</string>
     <string name="combov2_connection_error">Anslutningsfel: %1$s</string>
     <string name="combov2_short_status_alert">Varning: %s</string>
     <string name="combov2_automatic_reservoir_entry">Auto-detektera och ange byte av insulinreservoar automatiskt</string>
