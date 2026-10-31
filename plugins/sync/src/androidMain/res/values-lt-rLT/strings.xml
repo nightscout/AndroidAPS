@@ -105,7 +105,7 @@
     <string name="client_setup_confirm_apply">Naudoti</string>
     <string name="client_setup_done_title">Atlikta</string>
     <string name="client_setup_done_paired">Nightscout nustatytas, telefonas susietas. Pagrindiniame įrenginyje jis bus rodomas kaip aktyvus, kai prisijungs.</string>
-    <string name="client_setup_done_ns_only">Nightscout nustatytas. Kad galėtumėte iš šio telefono valdyti pagrindinį telefoną, susiekite ir šį telefoną.</string>
+    <string name="client_setup_done_ns_only">Nightscout nustatytas. Kad galėtumėte iš šio telefono valdyti pagrindinį įrenginį, susiekite ir šį telefoną.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Pagrindinis AAPS įrenginys šio įrenginio nebeatpažįsta. Atverkite Valdymas → Susieti su pagrindiniu įrenginiu ir susiekite iš naujo.</string>
     <string name="ns_client">NSClient</string>
@@ -162,7 +162,7 @@
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
     <string name="pump_status">Pompos būklė</string>
     <string name="loop_status">Ciklo būsena</string>
-    <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo valdiklį</string>
+    <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo plytelę</string>
     <string name="scene_not_available">Scenarijus %1$s nebepasiekiamas. Atnaujinkite plytelę</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Kliento režimu nuotolinės insulino komandos išjungtos</string>
     <string name="wear_phone_not_ready">Telefonas vis dar paleidžiamas arba taiko nustatymus. Netrukus bandykite dar kartą.</string>
@@ -180,7 +180,7 @@
     <string name="wear_pushed_watchface_confirm_title">Pakeisti laikrodžio ciferblatą?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s laikrodyje pakeis %2$s.</string>
     <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s pakeis %2$s laikrodyje. Laikrodžio ciferblato redaktoriuje pakeisti informaciniai laukeliai grąžinami į numatytuosius nustatymus.</string>
-    <string name="wear_load_watchface">Įkelti laikrodžio ekraną</string>
+    <string name="wear_load_watchface">Įkelti ciferblatą</string>
     <string name="wear_infos_watchface">Ekrano info</string>
     <string name="wear_export_watchface">Eksportuoti šabloną</string>
     <string name="wear_new_custom_watchface_exported">Pasirinktinio ekrano šablonas eksportuotas</string>
@@ -215,7 +215,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Paskutinis veiksmas</string>
     <string name="last_enact">Paskutinis veiksmas</string>
-    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fv %2$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2f V %2$.0f%%</string>
     <string name="today">Šiandien</string>
     <string name="weighted">svertinis</string>
     <string name="full_xdrip_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai laiko ir kol ji nebus užbaigta, nematysite atnaujintų xDrip+.</string>
@@ -227,17 +227,17 @@
     <string name="smscommunicator">SMS komandos</string>
     <string name="description_sms_communicator">Nuotolinis AAPS valdymas naudojant SMS komandas.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš Authenticator programėlės: %1$s, po to - PIN</string>
-    <string name="smscommunicator_tab_otp_label">Autentifikavimo sąrankos nustatymas</string>
+    <string name="smscommunicator_tab_otp_label">Autentifikatoriaus sąranka</string>
     <string name="smscommunicator_code_verify_label">Kodas patikrinimui:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Patvirtinimo kodą sudaro 6 skaitmenys, kuriuos rodo Authenticator programa (dar vadinama OTP), po 3 ar daugiau privalomo PIN skaitmenų.</string>
-    <string name="smscommunicator_otp_reset_btn">Atstatyti autentikatorius</string>
+    <string name="smscommunicator_otp_reset_btn">Iš naujo nustatyti autentifikatorius</string>
     <string name="smscommunicator_otp_reset_title">Atstatyti autentifikatoriaus kodą</string>
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skanuokite kodą AAPS OTP kodų nustatymui</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
-    <string name="smscommunicator_otp_reset_header">Atstatyti autentikatorius</string>
+    <string name="smscommunicator_otp_reset_header">Iš naujo nustatyti autentifikatorius</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Turėsite juos vėl nustatyti!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
