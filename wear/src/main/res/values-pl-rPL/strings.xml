@@ -95,7 +95,7 @@
     <string name="menu_default">Domyślnie</string>
     <string name="menu_menu">Menu</string>
     <string name="action_tempt_confirmation">Żądany cel tymczasowy</string>
-    <string name="action_quick_wizard_confirmation">Szybki kreator</string>
+    <string name="action_quick_wizard_confirmation">Wysłano żądanie szybkiego kalkulatora</string>
     <string name="action_user_action_confirmation">Wymagane działanie użytkownika</string>
     <string name="action_scene_confirmation">Zażądano sceny</string>
     <string name="scene_end">Zakończ</string>
