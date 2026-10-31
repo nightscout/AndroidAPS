@@ -65,11 +65,19 @@
     <string name="carelevo_patch_step_3">שלב 3.</string>
     <string name="carelevo_patch_connect_step_1_title">הסרת מכסה המחט</string>
     <string name="carelevo_patch_attach_step4_desc">לאחר הדבקת הפאץ׳, לחצו על הבא.</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">לחצו את לחצן הדחיפה של מתקן ההחדרה עד הסוף. לאחר החדרה מוצלחת יישמע צפצוף.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">החדרת המחט הושלמה ומתקן ההחדרה הוסר</string>
+    <string name="carelevo_dialog_connect_detached">מתקן ההחדרה הוסר</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        לחצו על האחיזות משני צדי מתקן ההחדרה כדי לנתק אותו מהפאץ\',\n
+        ולאחר מכן לחצו על `מתקן ההחדרה הוסר`. מתן האינסולין יתחיל.
+    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth אינו מופעל. נא לבדוק.</string>
     <!-- Profile -->
     <!-- Needle Insertion -->
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">השלכת הפאץ\' נכשלה. נא לנסות שוב.</string>
     <!-- Basal Delivery -->
     <!-- Delivery Resume/Suspend -->
     <!-- Safety Check -->
@@ -83,11 +91,13 @@
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_check_bg">בדיקת סוכר בדם</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">השבתת הפאץ\'</string>
     <!-- General Messages -->
     <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">לא ניתן לתת את הבולוס. בולוס זמין: %1$s</string>
     <string name="carelevo_bolus_rejected_exceed_limit_none">לא ניתן לתת את הבולוס. לא נשאר מספיק אינסולין.</string>
     <!--    notification -->
     <string name="alarm_notification_desc_alert_off_bluetooth">נדרש Bluetooth כדי להשתמש בפאץ\'. לחצו על [אישור] והפעילו את ה-Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_check_bg">עברו %s מאז הבולוס. נא לבדוק את רמת הסוכר בדם.</string>
     <string name="alarm_notification_desc_notice_lgs_error">נא לבדוק את החיבור לפאץ\' ול־CGM.</string>
     <string name="carelevo_profile_update_skip_comment">דולג: העדכון הקודם בוצע לפני זמן קצר מדי.</string>
     <string name="carelevo_bolus_stop_not_confirmed">הפאץ׳ לא אישר עצירה. ממתין לסיום הבולוס…</string>
