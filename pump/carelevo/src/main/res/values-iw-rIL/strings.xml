@@ -66,6 +66,7 @@
     <string name="carelevo_patch_connect_step_1_title">הסרת מכסה המחט</string>
     <string name="carelevo_patch_attach_step4_desc">לאחר הדבקת הפאץ׳, לחצו על הבא.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth אינו מופעל. נא לבדוק.</string>
     <!-- Profile -->
     <!-- Needle Insertion -->
     <!-- Patch Discard -->
@@ -73,17 +74,23 @@
     <!-- Delivery Resume/Suspend -->
     <!-- Safety Check -->
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">אינסולין נמוך</string>
     <!-- Alert Titles -->
     <string name="alarm_feat_title_alert_low_battery">סוללה חלשה</string>
     <string name="alarm_feat_title_alert_invalid_temperature">טמפרטורה גבוהה/נמוכה</string>
     <string name="alarm_feat_title_alert_not_used_app">כיבוי אוטומטי</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">הפעלת Bluetooth</string>
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_check_bg">בדיקת סוכר בדם</string>
     <!-- Action Buttons -->
     <!-- General Messages -->
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">לא ניתן לתת את הבולוס. בולוס זמין: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">לא ניתן לתת את הבולוס. לא נשאר מספיק אינסולין.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_alert_off_bluetooth">נדרש Bluetooth כדי להשתמש בפאץ\'. לחצו על [אישור] והפעילו את ה-Bluetooth.</string>
     <string name="alarm_notification_desc_notice_lgs_error">נא לבדוק את החיבור לפאץ\' ול־CGM.</string>
     <string name="carelevo_profile_update_skip_comment">דולג: העדכון הקודם בוצע לפני זמן קצר מדי.</string>
-    <string name="carelevo_bolus_stop_not_confirmed">הפאצ\' לא אישר עצירה. ממתין לסיום הבולוס…</string>
-    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">הפאצ\' לא אישר את העצירה. נרשם הבולוס השלם של %1$s יח\'.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">הפאץ׳ לא אישר עצירה. ממתין לסיום הבולוס…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">בולוס שלא נרשם נוסף כעת. יש לבדוק את ה-IOB ולאחר מכן לנסות שוב.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">הפאץ׳ לא אישר את העצירה. נרשם הבולוס המלא של %1$s.</string>
 </resources>
