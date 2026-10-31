@@ -23,7 +23,7 @@ import java.util.TimeZone
  *   - a basal correction is NOT currently delivering ([PodState.basalCorrectionInProgress] == false).
  *
  * When a basal correction is in progress its pulses must NOT be counted as bolus pulses,
- * otherwise [basalDelivered] (= total − bolus) would decrease and mask the correction
+ * otherwise `basalDelivered` (= total − bolus) would decrease and mask the correction
  * against [basalExpected], corrupting the drift calculation.
  */
 class UpdatePodStateBolusTrackingTest : TestBase() {

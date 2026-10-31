@@ -11,8 +11,9 @@ class IncomingPackets {
 
     fun byCharacteristicType(char: CharacteristicType): BlockingQueue<ByteArray> {
         return when (char) {
-            CharacteristicType.DATA -> dataQueue
-            CharacteristicType.CMD  -> cmdQueue
+            CharacteristicType.DATA    -> dataQueue
+            CharacteristicType.DATA_O5 -> dataQueue
+            CharacteristicType.CMD     -> cmdQueue
         }
     }
 }

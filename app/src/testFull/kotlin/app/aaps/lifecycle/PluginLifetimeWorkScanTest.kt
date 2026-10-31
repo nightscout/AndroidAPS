@@ -52,6 +52,9 @@ class PluginLifetimeWorkScanTest {
         "SignatureVerifierPlugin#onStart" to "onStop removes the callbacks, quits the looper and nulls the handler",
         "OmnipodDashPumpPlugin#scope" to "onStop cancels the scope and tears the handler down",
         "OmnipodDashPumpPlugin#onStart" to "onStop cancels the scope and tears the handler down",
+        "O5PumpPlugin#scope" to "the statusChecker that the init block re-posts is removed in onStop, which also nulls the handler",
+        "O5PumpPlugin#armStatusChecker" to "onStop removes the statusChecker callbacks and nulls the handler",
+        "O5PumpPlugin#onStart" to "onStop removes the statusChecker callbacks, nulls the handler and cancels the scope",
         "LoopPlugin#scheduleBuildAndStoreDeviceStatus" to "the job is held in deviceStatusJob and onStop cancels it",
         "LoopPlugin#scheduleSmbFallback" to "the deferred SMB re-run is held in smbFallbackJob and onStop cancels it",
         "XdripPlugin#onStart" to "onStop removes the callbacks first, then quits the looper",
@@ -277,6 +280,11 @@ class PluginLifetimeWorkScanTest {
             "readStatus(unconfirmed_command). A read. SAFE to abandon - but see handleCommandConfirmation " +
                 "below, which is the reason unconfirmed commands are being chased in the first place."
         ),
+        "O5PumpPlugin.kt#refreshStatusOnUnacknowledgedCommands" to Site(
+            1,
+            "readStatus(omnipod_5_unconfirmed_command). A copy of OmnipodDashPumpPlugin#refreshStatusOnUnacknowledgedCommands. " +
+                "A read. SAFE to abandon."
+        ),
         "OmnipodErosPumpPlugin.kt#queueAcknowledgeAlertsCommand" to Site(
             1,
             "customCommand(CommandSilenceAlerts), result only logged. Silencing an alert is a pod write, but " +
@@ -300,6 +308,13 @@ class PluginLifetimeWorkScanTest {
                 "actual harm here, because it is the only record that the correction worked. Cancelling would " +
                 "not stop the delivery anyway; the command is already in the queue by then. This is the site " +
                 "that rules out a per-enable pluginScope for this driver."
+        ),
+        "O5PumpPlugin.kt#queueBasalCorrectionIfNeeded" to Site(
+            1,
+            "customCommand(CommandDeliverBasalCorrection). DELIVERS INSULIN. The O5 copy of the correction in " +
+                "OmnipodDashPumpPlugin#handleCommandConfirmation, and the same decision: it must NOT be cancelled, " +
+                "and cancelling would not stop it anyway, because the command is already in the queue. The queued " +
+                "command checks the drift again before it sends anything. Rules out a per-enable pluginScope for O5 too."
         )
     )
 
