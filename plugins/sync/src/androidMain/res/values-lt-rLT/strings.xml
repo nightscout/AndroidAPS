@@ -114,7 +114,7 @@
     <string name="deliver_now">Suleisti dabar</string>
     <string name="queue">Eilė:</string>
     <string name="status_label">Būsena:</string>
-    <string name="clear_log">Ištrinti įrašą</string>
+    <string name="clear_log">Išvalyti žurnalą</string>
     <string name="full_sync">Pilna sinchronizacija</string>
     <string name="full_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai valandų ir kol ji nebus užbaigta, nematysite atnaujintų NS duomenų.</string>
     <string name="ns_sync_options">Sinchronizacija</string>
@@ -173,7 +173,7 @@
     <string name="wear_action_tempt_range_error">Netinkamas diapazonas: apatinis riba (%1$s) negali būti didesnė už viršutinę ribą (%2$s)</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukiami į rezultatą:</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
-    <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
+    <string name="wear_custom_watchface_settings">Pasirinktinių ciferblatų nustatymai</string>
     <string name="wear_custom_watchface">Pasirinktinis ekranas: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Diegiama…</string>
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Laikrodyje rodomas Elementų ciferblatas. Pasirinkite Pasirinktinį ciferblatą, kad laikrodyje matytumėte %1$s.</string>
