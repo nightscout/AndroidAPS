@@ -414,7 +414,7 @@
     <string name="scene_summary">%1$d acties, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
-    <string name="scene_duration_indefinite">Ongedefinieerd (handmatig einde)</string>
+    <string name="scene_duration_indefinite">Onbeperkt (handmatig einde)</string>
     <string name="scene_some_actions_failed">Sommige acties zijn mislukt</string>
     <string name="scene_no_active">Geen scène actief</string>
     <string name="scene_some_reverts_failed">Sommige wijzigingen konden niet worden teruggedraaid</string>
@@ -831,7 +831,7 @@
     <string name="extended_bolus_label">Verlengde bolus</string>
     <string name="serial_number">Serienummer</string>
     <string name="disconnected">Verbinding verbroken</string>
-    <string name="connecting">Verbining maken</string>
+    <string name="connecting">Verbinding maken</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbinden met pomp geklikt</string>
     <string name="daily_units">Dagtotaal</string>
     <string name="max_daily_units">Max. dagtotaal</string>
