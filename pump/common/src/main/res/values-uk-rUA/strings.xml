@@ -3,7 +3,26 @@
     <!-- PumpCommon - Pump Abstract -->
     <!-- PumpCommon - Pump Status -->
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Отримати налаштування</string>
+    <string name="pump_cmd_desc_get_firmware">Отримати прошивку помпи</string>
+    <string name="pump_cmd_desc_get_basal_profile">Отримати базальний профіль</string>
+    <string name="pump_cmd_desc_set_basal_profile">Встановити базальний профіль</string>
+    <string name="pump_cmd_desc_get_tbr">Отримати тимчасовий базал</string>
+    <string name="pump_cmd_desc_cancel_tbr">Скасувати тимчасовий базал</string>
+    <string name="pump_cmd_desc_set_tbr">Встановити тимчасовий базал</string>
+    <string name="pump_cmd_desc_set_bolus">Встановити болюс</string>
+    <string name="pump_cmd_desc_get_bolus">Отримати болюс</string>
+    <string name="pump_cmd_desc_cancel_bolus">Скасувати болюс</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Отримати залишок інсуліну</string>
+    <string name="pump_cmd_desc_get_battery_status">Отримати стан батареї</string>
+    <string name="pump_cmd_desc_get_time">Отримати час</string>
+    <string name="pump_cmd_desc_set_time">Встановити час</string>
+    <string name="pump_cmd_desc_get_pump_status">Отримати стан помпи</string>
+    <string name="pump_cmd_desc_get_history">Отримати історію</string>
+    <string name="pump_cmd_desc_get_history_params">Отримати історію %s</string>
+    <string name="pump_cmd_desc_custom">Користувацька команда</string>
     <!-- PumpCommon - History Group -->
     <!-- Time -->
+    <string name="time_last_24_hours">Останні 24 години</string>
     <!-- Pump History -->
 </resources>
