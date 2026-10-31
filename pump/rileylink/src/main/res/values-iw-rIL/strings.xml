@@ -59,7 +59,7 @@
     <string name="rileylink_target_device_medtronic">משאבת Medtronic</string>
     <string name="rileylink_target_device_omnipod">אומניפוד (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">הצג את רמת הסוללה המדווחת על-ידי OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">הצגת רמת הסוללה המדווחת על-ידי OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">לא עובד עם ריילילינק המקורי. עלול שלא לעבוד עם חלופות ריילילינק אחרות.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d יום</item>
@@ -71,9 +71,9 @@
         <item quantity="two">%1$d שעות</item>
         <item quantity="other">%1$d שעות</item>
     </plurals>
-    <string name="orange_use_scanning_level">השתמש בסריקה</string>
+    <string name="orange_use_scanning_level">שימוש בסריקה</string>
     <string name="orange_use_scanning_level_summary">סריקה לפני החיבור ל-OrangeLink, נועד לשפר את החיבורים (ניתן להשתמש בו גם עם מכשירים תואמי RileyLink אחרים, במידת הצורך)</string>
-    <string name="rileylink_pair">צמד RileyLink</string>
+    <string name="rileylink_pair">צימוד RileyLink</string>
     <string name="rileylink_pair_success">צימוד RileyLink הצליח</string>
     <string name="rileylink_config_reset">אתחול תצורת RileyLink</string>
 </resources>
