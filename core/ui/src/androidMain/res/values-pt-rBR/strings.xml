@@ -669,8 +669,8 @@
     <string name="uel_stat_reset">Reinício das estatísticas</string>
     <string name="uel_delete_logs">Apagar logs</string>
     <string name="uel_delete_future_treatments">Apagar tratamentos futuros</string>
-    <string name="uel_export_settings">Exportar ajustes</string>
-    <string name="uel_import_settings">Importar ajustes</string>
+    <string name="uel_export_settings">EXPORTAR CONFIGURAÇÕES</string>
+    <string name="uel_import_settings">IMPORTAR CONFIGURAÇÕES</string>
     <string name="uel_select_directory">SELECIONAR DIRETÓRIO</string>
     <string name="uel_reset_databases">Redefinir banco de dados</string>
     <string name="uel_reset_aps_results">REDEFINIR RESULTADOS DO APS</string>
