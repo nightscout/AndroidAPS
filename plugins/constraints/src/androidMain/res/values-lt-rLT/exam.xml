@@ -24,7 +24,7 @@
     <string name="objectives2_label">AAPS nustatymai</string>
     <string name="objectives_howtosave">Kaip geriausiai padaryti nustatymų atsarginę kopiją?</string>
     <string name="objectives_notesettings">Jums nereikia eksportuoti nustatymų, jei juos užsirašėte.</string>
-    <string name="objectives_afterobjective">Reikia eksportuoti nustatymus kaskart užbaigus tikslą.</string>
+    <string name="objectives_afterobjective">Reikia eksportuoti nustatymus kaskart užbaigus mokymo etapą.</string>
     <string name="objectives_afterchange">Reikia eksportuoti nustatymus juos pakoregavus.</string>
     <string name="objectives_afterinitialsetup">Užbaigus pirminę sąranką ir įvedus asmeninius parametrus reikia eksportuoti nustatymus.</string>
     <string name="objectives2_maintenance">Nustatymai eksportuojami lokaliai per Serviso meniu.</string>

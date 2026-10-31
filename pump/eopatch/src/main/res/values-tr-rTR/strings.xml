@@ -12,7 +12,7 @@
     <string name="eopatch_not_activated">Etkinleştirilmedi</string>
     <string name="eopatch_base_basal_rate">Temel Bazal Oranı</string>
     <string name="eopatch_temp_basal_rate">Geçici Bazal Oranı</string>
-    <string name="invalid_basal_rate">Profilin bazal değeri 0,05 Ü/sa\'ten azdır. EOPatch, minimum 0,05Ü enjeksiyon ünitesine sahiptir. Profili minimum enjeksiyon ünitesinden daha fazlasına ayarladıktan sonra lütfen tekrar deneyin.</string>
+    <string name="invalid_basal_rate">Profilin bazal değeri 0,05 Ü/sa\'ten düşüktür. EOPatch\'in en küçük enjeksiyon birimi 0,05 Ü\'dir. Profili en az bu değere ayarladıktan sonra tekrar deneyin.</string>
     <string name="no_profile_selected_try_again">Profil seçilmedi. Lütfen bir profil seçin ve tekrar deneyin.</string>
     <string name="symbol_day">gün</string>
     <string name="symbol_plus">+</string>
@@ -21,8 +21,8 @@
     <string name="time_1hr">1 sa</string>
     <string name="time_1hr_30min">1 sa 30 dk</string>
     <string name="time_2hr">2 sa</string>
-    <string name="patch_safe_deactivation_desc">Yeni Patch\'e geçmek için mevcut Patch atılmalıdır. Patch\'ten yapılan tüm insülin iletimi iptal edilecektir.</string>
-    <string name="patch_discard_complete_title">Patch atma işlemi tamamlandı.</string>
+    <string name="patch_safe_deactivation_desc">Yeni Patch\'e geçmek için mevcut Patch çıkarılmalıdır. Patch\'ten yapılan tüm insülin iletimi iptal edilecektir.</string>
+    <string name="patch_discard_complete_title">Patch çıkarma işlemi tamamlandı.</string>
     <string name="patch_discard_complete_desc">Patch devre dışı bırakıldı.\nPatch\'i atın.\nVücudunuza takılı Patch\'i çıkarın.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Şu anda bir bolus iletiliyor. İnsülin iletimini iptal etmek ve Patch\'i çıkarmak istiyor musunuz?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Şu anda bir geçici bazal iletiliyor. İnsülin iletimini iptal etmek ve Patch\'i çıkarmak istiyor musunuz?</string>
@@ -56,7 +56,7 @@
     <string name="patch_rotate_knob">İğneyi yerleştirme</string>
     <string name="patch_rotate_knob_desc_1">İğneyi yerleştirmek için İğne hareket kolunu 100°\'den fazla çevirin ve ardından çıkarmak için tamamen döndürün</string>
     <string name="patch_rotate_knob_desc_2">1 bip sesini kontrol edin ve ardından \'İleri\'ye dokunun.</string>
-    <string name="patch_rotate_knob_desc_2_needle_insertion_error">1 bip sesini kontrol edin ve ardından \'Yeniden Dene\'ye dokunun.</string>
+    <string name="patch_rotate_knob_desc_2_needle_insertion_error">1 bip sesini kontrol edin ve ardından \'Tekrar dene\'ye dokunun.</string>
     <string name="patch_basal_schedule">Patch etkinleştirme tamamlandı!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' program etkinleştirildi.</string>
     <string name="patch_basal_schedule_desc_2">Patch\'in kullanım süresi dolmak üzereyken sizi uyarır.\nGerekirse hatırlatma zamanını değiştirin.</string>

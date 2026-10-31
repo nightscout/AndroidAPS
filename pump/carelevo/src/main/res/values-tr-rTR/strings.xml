@@ -137,12 +137,20 @@
     <!-- Warning Titles -->
     <string name="alarm_feat_title_warning_low_insulin">Düşük insülin</string>
     <string name="alarm_feat_title_warning_expired_patch">Patch\'in Süresi Doldu</string>
+    <string name="alarm_feat_title_warning_low_battery">Düşük Pil</string>
     <string name="alarm_feat_title_warning_invalid_temperature">Yüksek/Düşük Sıcaklık</string>
+    <string name="alarm_feat_title_warning_not_used_app">Otomatik kapanma</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE bağlı değil</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Patch uygulama zaman aşımı</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Tanılama Başarısız Oldu</string>
+    <string name="alarm_feat_title_warning_patch_error">Patch hatası</string>
     <string name="alarm_feat_title_warning_infusion_clogged">Tıkanma</string>
     <string name="alarm_feat_title_warning_needle_injection_error">İğne Yerleştirme Hatası</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Düşük insülin</string>
     <string name="alarm_feat_title_alert_expired_patch_phase2">Patch Çalışma Ömrü Doldu</string>
     <string name="alarm_feat_title_alert_expired_patch_phase1">Patch\'in Süresi Yakında Dolacak</string>
+    <string name="alarm_feat_title_alert_low_battery">Düşük Pil</string>
     <string name="alarm_feat_title_alert_invalid_temperature">Yüksek/Düşük Sıcaklık</string>
     <string name="alarm_feat_title_alert_not_used_app">Otomatik kapanma</string>
     <string name="alarm_feat_title_alert_not_connected_ble">BLE bağlı değil</string>
@@ -190,6 +198,8 @@
     <string name="alarm_notification_desc_alert_off_bluetooth">Patch\'i kullanmak için Bluetooth gereklidir. [Tamam] butonuna dokunun ve Bluetooth\'u açın.</string>
     <string name="alarm_notification_desc_notice_low_insulin">%s Ü\'den az insülin kaldı. Patch\'i değiştirmeye hazırlanın.</string>
     <string name="alarm_notification_desc_notice_expired_patch">Patch kullanım süresi %1$s gün %2$s saat. Kullanırken bunu aklınızda tutun.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Saat dilimi %1$s (UTC %2$s) iken %3$s (UTC %4$s) olarak değişti.</string>
+    <string name="alarm_notification_desc_notice_check_bg">Bolus dozunuzun üzerinden %s geçti. Lütfen kan şekerinizi kontrol edin.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS başladı.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS, patch/CGM bağlantısının kesilmesi nedeniyle sona erdi.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS verilen ara nedeniyle sona erdi.</string>

@@ -24,10 +24,10 @@
     <string name="rileylink_name">이름:</string>
     <string name="rileylink_battery_level">배터리 잔량:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
-    <string name="rileylink_connection_status">연결상태:</string>
+    <string name="rileylink_connection_status">연결 상태:</string>
     <string name="rileylink_connection_error">연결 오류:</string>
     <string name="rileylink_device">장치</string>
-    <string name="rileylink_device_type">장치타입:</string>
+    <string name="rileylink_device_type">장치 타입:</string>
     <string name="rileylink_configured_device_model">설정된 장치 모델:</string>
     <string name="rileylink_connected_device_model">연결된 장치 모델:</string>
     <string name="rileylink_last_used_frequency">최근 사용된 주파수:</string>
@@ -42,7 +42,7 @@
     <string name="rileylink_state_bt_init">블루투스 초기화중...</string>
     <string name="rileylink_state_bt_error">블루투스 오류</string>
     <string name="rileylink_state_bt_ready">블루투스 준비</string>
-    <string name="rileylink_state_not_started">시작되지 않았습니다.</string>
+    <string name="rileylink_state_not_started">시작 안 됨</string>
     <string name="rileylink_state_rl_init">RileyLink 초기화…</string>
     <string name="rileylink_state_rl_error">RileyLink 오류</string>
     <string name="rileylink_state_pc_tune_up">RileyLink 와 펌프 튜닝</string>
@@ -55,7 +55,7 @@
     <string name="rileylink_error_bt_disabled">블루투스 비활성</string>
     <string name="rileylink_error_no_bt_adapter">블루투스 어댑터 없음</string>
     <string name="rileylink_error_tuneup_failed">튜닝 실패</string>
-    <string name="rileylink_error_pod_unreachable">포드에 연결할 수 없습니다.</string>
+    <string name="rileylink_error_pod_unreachable">Pod에 연결할 수 없음</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic 펌프</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>

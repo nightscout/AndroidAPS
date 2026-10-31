@@ -6,7 +6,7 @@
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink-adressen är ogiltig.</string>
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Visa Pulse Log-knapp i menyn Podhantering</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Visa Pulslogg-knapp i menyn Podhantering</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Visa knappen RileyLink-statistik i menyn Podhantering</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktivera loggning av batteribyte i Åtgärder</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
@@ -44,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En tillfällig basal körs på podden, men AAPS känner inte till den. Avbryt den tillfälliga basalen manuellt.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink-statistik</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Återställ RileyLink</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulslogg (kopierad till klippbordet)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">İES (DIA) hakkında doğru olan nedir?</string>
     <string name="dia_label_exam">İnsülin Etki Süresi (İES)</string>
+    <string name="dia_profile">İES değerini profilde değil, İnsülin ayarlarında (Yönet → İnsülin ayarları) belirlemelisiniz.</string>
     <string name="dia_minimumis5h">İzin verilen minimum değer 5 saattir.</string>
     <string name="dia_hint1">https://wiki.aaps.app/tr/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">AAPS\'den önce pompanızda kullandığınız İES değerinin doğru olduğundan eminseniz, döngüye başladığınızda bunu değiştirmenize gerek yoktur.</string>
@@ -27,6 +28,7 @@
     <string name="objectives_afterchange">Ayarlarınızdan herhangi birini değiştirdikten sonra ayarlarınızı dışa aktarın.</string>
     <string name="objectives_afterinitialsetup">İlk kurulumunuzu tamamladıktan ve Tercihlerinizi belirledikten sonra ayarlarınızı dışa aktarın.</string>
     <string name="objectives2_maintenance">Bakım menüsünü kullanarak ayarlarınızı yerel olarak dışa aktarın.</string>
+    <string name="objectives2_internalstorage">Ayarlar dosyanız, telefonunuzda seçtiğiniz AAPS klasörünün içindeki \"preferences\" klasörüne kaydedilir.</string>
     <string name="objectives2_cloud">Tercihler dosyanızı telefonunuzun dışındaki güvenli bir konuma kopyalayın (ör. bulut sürücüsü kullanarak, bilgisayara kablo bağlayarak, e-posta vb.)</string>
     <string name="objectives2_easyrestore">Telefonunuz hasar görürse veya kaybolursa, ayarlarınızı yedeklemeden uzaktan kurtarmanın kolay yolları vardır.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/tr/latest/Maintenance/ExportImportSettings.html</string>
@@ -199,10 +201,16 @@
     <string name="u200_with_profile">AAPS insülin konsantrasyonlarını desteklemeden önce kullanıcılar, tüm değerleri yarıya indirmek için %50 profil ayarlayarak U200 kullanıyordu. Bu kurulumda hangi cevaplar doğrudur?</string>
     <string name="u200_with_profile_reports">AAPS veritabanım ve NS raporlarım yanlış olur. Gerçek değerleri görmek için tüm değerler (boluslar, oranlar, GTD) 2 ile çarpılmalıdır; bu özellikle doktorlar ve sağlık ekibi için önemlidir.</string>
     <string name="u200_with_profile_pens">Harici bolus için U200 kalem kullanırsam, AAPS ile kalem arasında hiçbir dönüştürme yapmam gerekmez.</string>
+    <string name="u200_with_profile_pens2">Harici bir bolus (U100 veya U200) uygulamak için hangi insülin kalemini kullanırsam kullanayım, her bir harici bolus için AAPS tarafından hesaplanan miktar ile kalem üzerinde seçtiğim miktar arasında dönüştürme yapmam gerekir.</string>
     <string name="concentration_hint1">https://wiki.aaps.app/tr/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">U200 ile %50 profil çözümünü kullanıyordunuz ve İnsülin Konsantrasyonu özelliğine geçmek istiyorsunuz. Hangi cevaplar doğrudur?</string>
     <string name="switch_u200_profile_any_time">Pompamda zaten doğru U200 insülin olduğu için istediğim zaman geçiş yapabilirim.</string>
     <string name="switch_u200_profile_ps">İki kat agresif bir profil (mevcut varsayılan profile göre %200) hazırlamam ve bu yeni profili, U200 insülin seçiliyken bir sonraki Patch/Rezervuar değişikliğinden sonra senkronize etmem gerekir.</string>
     <string name="switch_u200_profile_dynisf">GTD\'nin, Uluslararası Birim olarak hesaplanan gerçek GTD değeriyle tam olarak uyumlu olması için DinamikİDF özelliğini en az bir hafta kapatmam gerekir.</string>
     <string name="switch_u200_profile_mental">Geçişten sonra, bolus, bazal oran ve GTD değerlerini uluslararası birim olarak düşünmeye alışmak için birkaç hafta boyunca çok dikkatli olmam gerekecek.</string>
+    <string name="switch_u100_u200">Hâlihazırda U100 kullanıyorsunuz ve İnsülin Konsantrasyonu özelliğini kullanarak başka bir konsantrasyona geçmeyi planlıyorsunuz. Hangi cevaplar doğrudur?</string>
+    <string name="switch_u100_u200_profile">Profilimi değiştirmem gerekiyor.</string>
+    <string name="switch_u100_u200_tube">Bolus vermek için (hortumlu tip pompalarda) pompa kullanıcı arayüzünü asla kullanmamalıyım.</string>
+    <string name="switch_u100_u200_pen">Geçiş sonrasında, AAPS ile kalem kullanılarak yapılan harici boluslar arasındaki dönüşümü hâlâ yönetmem gerekiyor.</string>
+    <string name="switch_u100_u200_change">İnsülin Konsantrasyonu, yalnızca rezervuardaki insülin değiştirildiğinde veya bir Patch/Pod değişikliğinde değiştirilebilir.</string>
 </resources>

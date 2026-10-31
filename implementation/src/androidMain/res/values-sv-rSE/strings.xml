@@ -1,21 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Kommando körs just nu</string>
+    <string name="smb_being_delivered">En SMB levereras just nu. Försök igen när den är färdig.</string>
     <string name="basal_value_below_minimum">Basal understiger miniminivå. Profilen sattes inte.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalprofilen i pumpen är uppdaterad. Pumpen rundar av basalen till sin egna skala: den ger %1$s per dag istället för %2$s.</string>
+    <string name="basal_reported_far_from_profile">Pumpen rapporterar en basal som avviker kraftigt från profilen. AAPS behåller profilens basal. Kontrollera basaldoserna i pumpen.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">KH</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Sen ansl: %1$d min sedan</string>
+    <string name="short_status_last_bolus">Sen. bolus: %1$s U @%2$s</string>
+    <string name="short_status_temp_basal">Temp. basal: %1$s</string>
+    <string name="short_status_battery">Batt.: %1$d%%</string>
+    <string name="short_status_not_initialized">Pump ej initierad</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Batterioptimering</string>
+    <string name="permission_battery_description">Appen måste uteslutas från batterioptimering för att köras på ett tillförlitligt sätt i bakgrunden</string>
+    <string name="permission_directory_title">AAPS-katalog</string>
+    <string name="permission_directory_description">Välj en katalog för programinställningar och loggfiler</string>
     <string name="permission_notifications_title">Aviseringar</string>
+    <string name="permission_notifications_description">Krävs för att visa varningar, larm och pumpstatusuppdateringar</string>
+    <string name="permission_schedule_exact_alarm_title">Alarm och påminnelser</string>
+    <string name="permission_schedule_exact_alarm_description">Krävs för att larm ska kunna väcka skärmen medan AAPS körs i bakgrunden, och för att påminnelser ska ljuda i rätt tid</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS larm</string>
+    <string name="alarm_channel_standard">Standardlarm</string>
+    <string name="alarm_channel_bolus_error">Bolusfel</string>
+    <string name="alarm_channel_error">Generellt fel</string>
+    <string name="alarm_channel_urgent">Brådskande larm</string>
+    <string name="alarm_channel_eat_reminder">Dags att äta</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (ignorera Stör ej)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (tar hänsyn till Stör ej)</string>
+    <string name="alarm_channel_silent_urgent">Brådskande larm (gradvis ökande volym)</string>
+    <string name="alarm_channel_silent">Larm (gradvis ökande volym)</string>
     <string name="alarm_channel_silent_description">Används när \"Öka aviseringsvolymen gradvis\" är påslaget. Larmskärmen spelar upp ljudet.</string>
+    <string name="ongoing_channel_name">Status pågående</string>
+    <string name="eat_reminder_channel">Nedräkning till ätpåminnelse</string>
+    <string name="eat_reminder_channel_description">Visar tiden som återstår tills det är dags att äta. Nedräkningen är ljudlös, men alarmet på slutet ger ljud.</string>
     <string name="notifications_channel_name">AAPS-aviseringar</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0μl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Inställningarna exporterade till molnlagring</string>
+    <string name="export_to_cloud_failed">Misslyckades att exportera till molnlagring</string>
+    <string name="csv_uploaded_to_cloud">CSV med användarposter har överförts till molnlagring</string>
+    <string name="exported">Inställningar exporterade</string>
+    <string name="exported_failed">Export av inställningar misslyckades!</string>
+    <string name="filenotfound">Filen hittas ej</string>
+    <string name="ue_exported">Användarposter exporterade</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporterades för %1$s sedan</string>
+    <string name="exported_at" comment="at placeholder we add export date">exporterades vid %1$s</string>
+    <string name="exported_less_than_hour_ago">exporterades för mindre än en timme sedan</string>
     <string name="metadata_warning_different_flavour">Inställningarna skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller vara ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
+    <string name="metadata_warning_different_device">Inställningar skapades på en annan enhet. Det är OK om du importerar från en äldre eller en annan telefon, men se till att importerade inställningar är korrekta!</string>
+    <string name="metadata_warning_old_export">Importerade inställningar är %1$s dagar gamla. Du kanske har mer aktuella inställningar eller valde du fel fil? Kom ihåg att exportera dina inställningar regelbundet!</string>
+    <string name="metadata_warning_date_format">Ogiltigt datumformat!</string>
+    <string name="metadata_warning_different_version">Inställningarna är sparade i en annan delversion av appen. Det är OK om du importerar efter uppgradering, men kontrollera att inställningarna fortfarande är korrekta efter import!</string>
+    <string name="metadata_urgent_different_version">Inställningarna är sparade i en annan huvudversion av appen. Olika huvudversioner kan ha helt olika struktur vilket kan göra dem inkompatibla. Kontrollera inställningarna noggrant efter import!</string>
+    <string name="prefdecrypt_settings_tampered">Inställningsfil manipulerad</string>
+    <string name="prefdecrypt_settings_secure">Inställningsfilen är säker</string>
+    <string name="prefdecrypt_settings_unencrypted">Använder osäkert, okrypterat format för inställningar</string>
+    <string name="prefdecrypt_wrong_json">JSON-formatfel, saknar obligatoriskt fält (format, innehåll, metadata eller säkerhet)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfel. Det angivna lösenordet kan inte dekryptera filen</string>
     <string name="prefdecrypt_issue_missing_file_hash">Filens kontrollsumma (hash) saknas. Det går inte att verifiera äktheten för inställningarna!</string>
+    <string name="prefdecrypt_issue_modified">Filen har ändrats efter export!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfel. Det gick inte att tolka inställningarna.</string>
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfel. Det angivna lösenordet är ogiltigt eller så har inställningsfilen ändrats. Det kan hända att den importerade filen har exporterats med ett annat huvudlösenord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Krypteringsalgoritmen stöds inte eller är inte angiven!</string>
+    <string name="metadata_label_format">Filformat</string>
+    <string name="metadata_label_created_at">Skapad den</string>
+    <string name="metadata_label_aaps_version">AAPS-version</string>
+    <string name="metadata_label_aaps_flavour">Byggvariant</string>
     <string name="metadata_label_device_name">Patientnamn på exporterande enhet</string>
     <string name="metadata_label_device_model">Modell på exporterande enhet</string>
     <string name="metadata_label_encryption">Filkryptering</string>
+    <string name="metadata_format_new">Nytt krypterat format</string>
+    <string name="metadata_format_other">Okänt exportformat</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Fel vid åtkomst till filsystem. Välj AAPS-katalog korrekt.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Säkerhetskopiera till Google Drive</string>
+    <string name="csv_upload_failed">Misslyckades att ladda upp CSV med användarposter till molnlagring</string>
+    <string name="csv_upload_error">Ett fel uppstod vid uppladdning av CSV till molnet</string>
+    <string name="uploading_to_cloud">Laddar upp till moln...</string>
+    <string name="cloud_directory_path">Molnkatalog: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Kunde inte uppdatera Google Drive-åtkomsttoken</string>
+    <string name="google_drive_token_refresh_error">Kunde inte uppdatera Google Drive-åtkomsttoken: %1$s</string>
+    <string name="google_drive_connection_test_failed">Test av anslutningen till Google Drive misslyckades</string>
+    <string name="google_drive_connect_error">Det gick inte att ansluta till Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Misslyckades med att lista Google Drive-mappar</string>
+    <string name="google_drive_list_folders_error">Fel vid listning av mappar: %1$s</string>
+    <string name="google_drive_upload_no_id">Uppladdningen lyckades, men inget id returnerades</string>
+    <string name="google_drive_upload_verify_failed">Verifiering av uppladdningen misslyckades</string>
+    <string name="google_drive_upload_failed">Uppladdning misslyckades: %1$s</string>
+    <string name="google_drive_upload_error">Fel vid uppladdning av fil: %1$s</string>
+    <string name="google_drive_folder_access_error">Kan inte skapa eller komma åt målmappen: %1$s</string>
+    <string name="google_drive_list_settings_failed">Misslyckades att lista inställningsfilerna</string>
+    <string name="google_drive_list_settings_error">Fel vid listning av inställningsfiler: %1$s</string>
+    <string name="google_drive_download_failed">Misslyckades att ladda ner fil</string>
+    <string name="google_drive_download_error">Fel vid nedladdning av fil: %1$s</string>
+    <string name="google_drive_authorized">Google Drive auktoriserad</string>
+    <string name="google_drive_reauth_required">Töm inställningarna och auktorisera Google Drive igen</string>
 </resources>

@@ -56,7 +56,7 @@
     <string name="insulinlackwarning">İnsülin Eksikliği Uyarısı</string>
     <string name="needbatteryreplace">Pil değişimi gerekli</string>
     <string name="needinsullinreplace">İnsülin değişimi gerekli</string>
-    <string name="diaconn_g8_loginsulinchange_title">Rezervuar değişikliği günlüğe kaydet</string>
+    <string name="diaconn_g8_loginsulinchange_title">Rezervuar değişikliğini günlüğe kaydet</string>
     <string name="diaconn_g8_loginsulinchange_summary">Geçmişte tespit edildiğinde careportal\'a \"İnsülin Değişimi\" olayı ekleyin</string>
     <string name="diaconn_g8_logcanulachange_title">Kanül değişikliğini günlüğe kaydet</string>
     <string name="diaconn_g8_logcanulachange_summary">Geçmişte tespit edildiğinde careportal\'a \"Kanül Değişikliği\" olayı ekleyin</string>
@@ -67,7 +67,7 @@
     <string name="diaconn_g8_logbatteryshorage">Pil bitiyor</string>
     <string name="diaconn_g8_logneedleprime">İğne doldurma: %1$.2fÜ</string>
     <string name="diaconn_g8_loginjectorprime">Enjektör doldurma: %1$.2fÜ</string>
-    <string name="diaconn_g8_logtubeprime">Tüp değişimi doldurma: %1$.2fÜ</string>
+    <string name="diaconn_g8_logtubeprime">Hortum değişimi doldurma: %1$.2f Ü</string>
     <string name="diaconn_g8_resetfactoryreset">Fabrika ayarlarına sıfırladıktan sonra sıfırla</string>
     <string name="diaconn_g8_resetemergencyoff">Acil Durum Kapatıldıktan Sonra Sıfırla</string>
     <string name="diaconn_g8_resetbatteryreplacement">Pil değişiminden sonra sıfırla</string>
@@ -115,7 +115,7 @@
     <string name="diaconn_g8_errorcode_13">Tek seferlik limiti aştığı için enjekte edilemez.</string>
     <string name="diaconn_g8_errorcode_14">Günlük enjeksiyon limitini aştığı için enjeksiyon yapılamaz.</string>
     <string name="diaconn_g8_errorcode_15">Bazal kurulum tamamlandıktan sonra bazal enjeksiyon yapılabilir.</string>
-    <string name="diaconn_g8_logtubechange_title">Tüp değişimini günlüğe kaydet</string>
+    <string name="diaconn_g8_logtubechange_title">Hortum değişimini günlüğe kaydet</string>
     <string name="diaconn_g8_logtubechange_summary">Geçmişte tespit edildiğinde Not\'a \"Tüp Değişikliği\" olayı ekleyin</string>
     <string name="diaconn_g8_logtempstart">Geçici Bazal Başladı</string>
     <string name="diaconn_g8_errorcode_32">LGS çalışırken, enjeksiyon kısıtlanır</string>

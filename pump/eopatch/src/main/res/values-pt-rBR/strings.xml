@@ -9,9 +9,11 @@
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Número de série</string>
     <string name="eopatch_expiration_time">Data de validade</string>
+    <string name="eopatch_not_activated">Não ativado</string>
     <string name="eopatch_base_basal_rate">Taxa Basal de base</string>
     <string name="eopatch_temp_basal_rate">Taxa Basal Temporária</string>
     <string name="invalid_basal_rate">A basal do perfil é inferior a 0.05 U/h. EOPatch tem uma unidade mínima de injeção de 0.05U. Por favor, tente novamente após definir o perfil para mais do que a unidade mínima de injeção.</string>
+    <string name="no_profile_selected_try_again">Nenhum perfil selecionado. Selecione um perfil e tente novamente.</string>
     <string name="symbol_day">dia</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -21,6 +23,7 @@
     <string name="time_2hr">2 horas</string>
     <string name="patch_safe_deactivation_desc">Para trocar por um novo patch, o patch atual deve ser descartado. Toda a administração de insulina do patch será cancelada.</string>
     <string name="patch_discard_complete_title">O descarte do patch foi concluído.</string>
+    <string name="patch_discard_complete_desc">O patch foi desativado.\nDescarte o patch.\nRemova o patch preso ao seu corpo.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Um bólus está sendo administrado agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Uma basal temporária está sendo administrada agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Um bólus e uma basal temporária estão sendo administrados agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>

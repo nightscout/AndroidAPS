@@ -44,6 +44,7 @@
     <string name="equil_new_infusion_set_no">Nie, iba zásobník alebo batériu</string>
     <string name="equil_same_infusion_set_hint">Kanyla nebude naplnená a nezaznamená sa žiadna výmena kanyly.</string>
     <string name="equil_unpair_alert">Naozaj sa chcete vzdať kontroly nad %1$s?</string>
+    <string name="equil_record_basal">Bazálna dávka %1$s U/h</string>
     <string name="equil_record_basal_temp">Dočasná bazálna dávka %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>

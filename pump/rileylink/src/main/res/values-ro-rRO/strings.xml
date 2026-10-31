@@ -51,7 +51,7 @@
     <string name="rileylink_state_rl_ready">RileyLink este gata</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Dispozitivul nu este RileyLink</string>
-    <string name="rileylink_error_unreachable">Nu se poate găsi RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink inaccesibil</string>
     <string name="rileylink_error_bt_disabled">Bluetooth dezactivat</string>
     <string name="rileylink_error_no_bt_adapter">Nu există un adaptor Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Reglarea a eșuat</string>
