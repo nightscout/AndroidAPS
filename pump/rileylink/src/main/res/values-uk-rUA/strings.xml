@@ -21,7 +21,9 @@
     <string name="medtronic_pump_status">Статус помпи</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Адреса:</string>
+    <string name="rileylink_name">Ім\'я:</string>
     <string name="rileylink_battery_level">Рівень заряду:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Статус з’єднання:</string>
     <string name="rileylink_connection_error">Помилка з’єднання:</string>
     <string name="rileylink_device">Пристрій</string>
@@ -35,6 +37,7 @@
     <string name="rileylink_firmware_version_value_orange">Прошивка: %1$s\nАпаратна версія: %2$s</string>
     <string name="rileylink_pump_serial_number">Серійний номер помпи:</string>
     <string name="rileylink_pump_frequency">Частота помпи:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f МГц</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Ініціалізація Bluetooth…</string>
     <string name="rileylink_state_bt_error">Помилка Bluetooth</string>
@@ -54,6 +57,7 @@
     <string name="rileylink_error_tuneup_failed">Не вдалося налаштувати частоту (TuneUp)</string>
     <string name="rileylink_error_pod_unreachable">Pod недоступний</string>
     <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Помпа Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Показувати рівень заряду, який повідомляє OrangeLink/EmaLink/DiaLink</string>
