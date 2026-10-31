@@ -50,7 +50,7 @@
     <string name="snooze_60m">Atidėti 60 min.</string>
     <string name="virtual_pump">Virtuali pompa</string>
     <string name="constraints">Apribojimai</string>
-    <string name="superbolus">Superbolus</string>
+    <string name="superbolus">Superbolusas</string>
     <string name="pump_paused">Pompa pristabdyta</string>
     <string name="and">Ir</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Naudotojas</string>
@@ -528,7 +528,7 @@
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Iš piršto</string>
-    <string name="glucosetype_sensor">Sensorius</string>
+    <string name="glucosetype_sensor">Jutiklis</string>
     <string name="manual">Rankiniu būdu</string>
     <string name="unknown">Nežinoma</string>
     <string name="eatingsoon">Netrukus valgysiu</string>
@@ -992,7 +992,7 @@
     <string name="device_maintenance">Įrenginio priežiūra</string>
     <string name="from_label">Nuo</string>
     <string name="to_label">Iki</string>
-    <string name="sensor_label">Sensorius</string>
+    <string name="sensor_label">Jutiklis</string>
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
