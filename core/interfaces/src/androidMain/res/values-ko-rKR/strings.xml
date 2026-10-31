@@ -130,7 +130,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="mins">%1$d분</string>
     <string name="record">기록</string>
-    <string name="bolus">Bolus</string>
+    <string name="bolus">볼러스</string>
     <string name="uel_extended_carbs">확장 탄수화물</string>
     <string name="profile_low_target">프로파일 낮은 목표</string>
     <string name="profile_high_target">프로파일 높은 목표</string>
