@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="executing_right_now">Команда виконується зараз</string>
     <string name="smb_being_delivered">Зараз вводиться SMB. Спробуйте ще раз, коли введення завершиться.</string>
+    <string name="basal_value_below_minimum">Базальне значення нижче мінімального. Профіль не встановлено!</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базальний профіль у помпі оновлено. Помпа округлює базал до власного кроку: вона вводить %1$s на добу замість %2$s.</string>
     <string name="basal_reported_far_from_profile">Помпа повідомляє базал, який сильно відрізняється від профілю. AAPS залишає базал профілю. Перевірте базальні швидкості в помпі.</string>
     <!--       Stats -->
@@ -49,21 +51,45 @@
     <string name="exported_to_cloud">Налаштування успішно експортовано у хмарне сховище</string>
     <string name="export_to_cloud_failed">Не вдалося експортувати у хмарне сховище</string>
     <string name="csv_uploaded_to_cloud">CSV записів користувача успішно вивантажено у хмарне сховище</string>
+    <string name="exported">Налаштування експортовано</string>
+    <string name="exported_failed">Помилка експорту налаштувань!</string>
+    <string name="filenotfound">Файл не знайдено</string>
+    <string name="ue_exported">Записи користувача експортовано</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">експортовано %1$s тому</string>
+    <string name="exported_at" comment="at placeholder we add export date">експортовано %1$s</string>
+    <string name="exported_less_than_hour_ago">експортовано менш ніж годину тому</string>
+    <string name="metadata_warning_different_flavour">Налаштування створено у іншому варіанті AAPS (%1$s), а у вас: %2$s.\n\nДеякі параметри можуть бути відсутні або некоректні — перевірте налаштування після імпорту.</string>
+    <string name="metadata_warning_different_device">Налаштування створено на іншому пристрої. Це нормально, якщо імпортуєте зі старого/іншого телефону. Переконайтеся, що імпортовані налаштування коректні!</string>
+    <string name="metadata_warning_old_export">Імпортованим налаштуванням уже %1$s днів! Можливо, у вас є новіші налаштування або ви обрали неправильний файл? Не забувайте регулярно експортувати налаштування!</string>
+    <string name="metadata_warning_date_format">Некоректний формат дати!</string>
+    <string name="metadata_warning_different_version">Налаштування з іншої мінорної версії. Це нормально після оновлення, але перевірте налаштування після імпорту!</string>
+    <string name="metadata_urgent_different_version">Налаштування з іншої мажорної версії. Можлива несумісність! Переконайтеся, що після імпорту все налаштовано правильно!</string>
+    <string name="prefdecrypt_settings_tampered">Файл налаштувань змінено</string>
+    <string name="prefdecrypt_settings_secure">Файл налаштувань захищено</string>
+    <string name="prefdecrypt_settings_unencrypted">Використовується незахищений, нешифрований формат налаштувань</string>
+    <string name="prefdecrypt_wrong_json">Помилка JSON — відсутні обов’язкові поля (format, content, metadata або security)</string>
+    <string name="prefdecrypt_wrong_password">Помилка розшифрування — пароль неправильний</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Відсутній хеш файлу — неможливо підтвердити автентичність!</string>
+    <string name="prefdecrypt_issue_modified">Файл було змінено після експорту!</string>
+    <string name="prefdecrypt_issue_parsing">Помилка розшифрування — не вдалося розібрати налаштування!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Помилка розшифрування — пароль неправильний або файл налаштувань змінено! Можливо, файл було експортовано з іншим головним паролем.</string>
+    <string name="prefdecrypt_issue_wrong_format">Відсутня конфігурація шифрування — формат неправильний!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Непідтримуваний або не вказаний алгоритм шифрування!</string>
     <string name="metadata_label_format">Формат файлу</string>
     <string name="metadata_label_created_at">Дата створення</string>
     <string name="metadata_label_aaps_version">Версія AAPS</string>
-    <string name="metadata_label_aaps_flavour">Створити варіант</string>
+    <string name="metadata_label_aaps_flavour">Варіант збірки</string>
     <string name="metadata_label_device_name">Ім\'я пацієнта пристрою, що експортується</string>
     <string name="metadata_label_device_model">Модель пристрою, що експортується</string>
     <string name="metadata_label_encryption">Шифрування файлу</string>
     <string name="metadata_format_new">Новий метод шифрування</string>
     <string name="metadata_format_other">Невідомий формат експорту</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Помилка доступу до файлової системи. Правильно виберіть каталог AAPS.</string>
     <string name="storage_google_drive">Google Drive</string>
     <string name="backup_to_google_drive">Резервна копія на Google Drive</string>
     <string name="csv_upload_failed">Не вдалося вивантажити CSV записів користувача у хмарне сховище</string>
     <string name="csv_upload_error">Помилка під час вивантаження CSV у хмару</string>
-    <string name="uploading_to_cloud">Завантаження в хмару...</string>
+    <string name="uploading_to_cloud">Вивантаження в хмару...</string>
     <string name="cloud_directory_path">Хмарний каталог: %1$s</string>
     <string name="google_drive_token_refresh_failed">Не вдалося оновити токен доступу Google Drive</string>
     <string name="google_drive_token_refresh_error">Не вдалося оновити токен доступу Google Drive: %1$s</string>
