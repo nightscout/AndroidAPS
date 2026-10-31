@@ -10,6 +10,7 @@
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_confirm_warning">Nach der Kopplung kann dieses Gerät signierte Befehle an diesen Master senden.</string>
     <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client">Nightscout-Client</string>
