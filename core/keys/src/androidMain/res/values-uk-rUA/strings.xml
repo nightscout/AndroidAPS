@@ -34,7 +34,7 @@
     <string name="pref_title_alert_override_dnd">Ігнорувати режим «Не турбувати»</string>
     <string name="pref_summary_alert_override_dnd">Увімкнено: сигнали лунають, навіть коли телефон у беззвучному режимі або в режимі «Не турбувати». Вимкнено: тоді сигнали не лунають. У режимі «Не турбувати» вони лише вібрують.</string>
     <!-- BG Source preferences -->
-    <string name="pref_title_bg_source_upload_to_ns">Завантажувати дані ГК в NS</string>
+    <string name="pref_title_bg_source_upload_to_ns">Вивантажувати дані ГК в NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Записувати заміну сенсора</string>
     <string name="pref_summary_bg_source_create_sensor_change">Створювати подію терапії «Заміна сенсора», коли сенсор встановлено.</string>
     <!-- APS preferences -->
@@ -90,10 +90,10 @@
     <string name="pref_title_sms_report_pump_unreachable">Повідомляти через SMS про недоступну помпу</string>
     <string name="pref_summary_sms_report_pump_unreachable">Надсилати SMS-сповіщення, коли помпа стає недоступною.</string>
     <!-- Virtual pump preferences -->
-    <string name="pref_title_virtual_pump_status_upload">Завантажувати статус помпи в NS</string>
+    <string name="pref_title_virtual_pump_status_upload">Вивантажувати статус помпи в NS</string>
     <!-- NS Client preferences -->
-    <string name="pref_title_ns_upload_data">Завантажувати дані в NS</string>
-    <string name="pref_summary_ns_upload_data">Завантажувати в Nightscout терапію, тимчасові базали та інші дані.</string>
+    <string name="pref_title_ns_upload_data">Вивантажувати дані в NS</string>
+    <string name="pref_summary_ns_upload_data">Вивантажувати в Nightscout терапію, тимчасові базали та інші дані.</string>
     <string name="pref_title_ns_receive_cgm">Отримувати дані CGM з NS</string>
     <string name="pref_summary_ns_receive_cgm">Приймати показники CGM з Nightscout.</string>
     <string name="pref_title_ns_receive_profile_store">Отримувати сховище профілів з NS</string>
@@ -146,7 +146,7 @@
     <string name="pref_title_wear_wizard_iob">Враховувати IOB у калькуляторі</string>
     <string name="pref_title_wear_custom_watchface_authorization">Дозволити власні циферблати</string>
     <string name="pref_title_wear_pushed_watchface">Циферблат, встановлений на годиннику</string>
-    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Циферблат з ускладненнями</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Циферблат з віджетами</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Власний циферблат</string>
     <string name="pref_title_wear_notify_on_smb">Сповіщати про SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Надсилати сповіщення на годинник, коли введено SMB.</string>
@@ -159,6 +159,7 @@
     <string name="pref_title_carbs_button_increment_1">Крок кнопки вуглеводів 1</string>
     <string name="pref_title_carbs_button_increment_2">Крок кнопки вуглеводів 2</string>
     <string name="pref_title_carbs_button_increment_3">Крок кнопки вуглеводів 3</string>
+    <string name="carb_increment_button_message">Кількість вуглеводів, яка додається при натисканні кнопки</string>
     <string name="pref_title_cage_warning">Поріг попередження віку канюлі</string>
     <string name="pref_title_cage_critical">Критичний поріг віку канюлі</string>
     <string name="pref_title_iage_warning">Поріг попередження віку інсуліну</string>
@@ -176,6 +177,7 @@
     <string name="pref_title_bolus_percentage">Відсоток болюсу</string>
     <string name="deliverpartofboluswizard">Застосувати це значення до корекції на ГК і вуглеводи в результаті калькулятора болюса</string>
     <string name="pref_title_reset_bolus_percentage_time">Час скидання відсотка болюсу</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Вводити повний болюс (100%), якщо дані про глюкозу старші ніж</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Тайм-аут захисту</string>
     <string name="pref_title_protection_type_application">Рівень 0: Захист застосунку</string>
@@ -186,19 +188,30 @@
     <string name="pref_summary_protection_type_settings">Редагування профілів, налаштувань</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="noprotection">Без захисту</string>
+    <string name="biometric">Біометрія</string>
+    <string name="master_password">Головний пароль</string>
+    <string name="custom_password">Власний пароль</string>
+    <string name="custom_pin">Власний PIN</string>
     <!-- IntKey: Safety preferences -->
     <string name="pref_title_max_carbs">Максимально дозволені вуглеводи</string>
     <!-- IntKey: Loop preferences -->
     <string name="pref_title_open_mode_min_change">Мінімальна зміна в режимі відкритої петлі</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Відкрита петля показуватиме новий запит на зміну, лише якщо зміна більша за це значення у %. Значення за замовчуванням 20%</string>
     <!-- IntKey: APS preferences -->
     <string name="pref_title_smb_frequency">Інтервал SMB</string>
     <string name="pref_title_smb_max_minutes">Макс. хвилин базалу для обмеження SMB</string>
     <string name="pref_title_uam_smb_max_minutes">UAM: макс. хвилин базалу для обмеження SMB</string>
+    <string name="uam_smb_max_minutes">Максимальні хвилини SMB для UAM</string>
     <string name="pref_title_carbs_request_threshold">Поріг потреби у вуглеводах</string>
+    <string name="carbs_req_threshold_summary">Мінімальна кількість грамів вуглеводів, при якій показується пропозиція з’їсти вуглеводи. Пропозиції, менші за це число, не викликають сповіщення.</string>
     <string name="pref_title_half_basal_exercise_target">Ціль навантаження для половини базалу</string>
+    <string name="half_basal_exercise_target_summary">Встановіть число, наприклад 160. Це означає: коли тимчасова ціль 160 мг/дл і «High temptarget raises sensitivity» = true, базал працює на 50%% на цьому рівні (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Поріг IOB у відсотках</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Відсоток maxIOB, при якому SMB вимикаються.\nЗначення за замовчуванням: 100%\nПри 100% ця функція фактично вимкнена.</string>
     <string name="pref_title_dynisf_adjustment_factor">Коефіцієнт коригування DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Фактор корекції для DynamicISF. Встановіть більше 100% для більш агресивних доз корекції, і менше 100% для менш агресивних корекцій.</string>
     <string name="pref_title_autosens_period">Період Autosens</string>
+    <string name="openapsama_autosens_period_summary">Кількість годин у минулому для визначення чутливості (час засвоєння вуглеводів виключено)</string>
     <!-- IntKey: Maintenance preferences -->
     <string name="pref_title_logs_amount">Кількість логів для надсилання</string>
     <!-- IntKey: Alert preferences -->
@@ -207,6 +220,7 @@
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Кількість днів за замовчуванням</string>
+    <string name="autotune_default_tune_days_summary">Кількість днів даних за замовчуванням, які обробляє Autotune (до 30)</string>
     <!-- IntKey: SMS preferences -->
     <string name="pref_title_sms_remote_bolus_distance">Мін. інтервал між віддаленими болюсами</string>
     <!-- IntKey: BG Source preferences -->
@@ -283,6 +297,9 @@
     <string name="automation_location_gps">Використовувати GPS-розташування</string>
     <!-- StringKey: SMS preferences -->
     <string name="smscommunicator_allowednumbers">Дозволені номери телефонів</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Додатковий обов’язковий PIN у кінці токена</string>
+    <string name="smscommunicator_otp_pin_summary">Додаткові цифри, які необхідно запам’ятати та додавати в кінці кожного згенерованого одноразового пароля</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Тип помпи</string>
     <!-- StringKey: NS Client preferences -->
@@ -298,6 +315,7 @@
     <string name="pref_title_insulin_button_increment_1">Крок кнопки інсуліну 1</string>
     <string name="pref_title_insulin_button_increment_2">Крок кнопки інсуліну 2</string>
     <string name="pref_title_insulin_button_increment_3">Крок кнопки інсуліну 3</string>
+    <string name="insulin_increment_button_message">Кількість інсуліну, яка додається при натисканні кнопки</string>
     <!-- DoubleKey: Actions preferences -->
     <string name="pref_title_fill_button_1">Кнопка заповнення 1</string>
     <string name="pref_title_fill_button_2">Кнопка заповнення 2</string>
@@ -306,37 +324,60 @@
     <string name="pref_title_max_bolus">Максимальний болюс</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Максимальна швидкість базалу</string>
+    <string name="openapsma_max_basal_summary">Це значення називається max basal у контексті OpenAPS</string>
     <string name="pref_title_smb_max_iob">Макс. IOB для SMB</string>
     <string name="openapssmb_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nOpenAPS не додаватиме інсулін, якщо поточний IOB більший за це значення. Значення також залежить від типу пацієнта.</string>
     <string name="pref_title_ama_max_iob">Max IOB для AMA</string>
     <string name="openapsma_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nЦе максимальна кількість інсуліну в [Од], яку APS може ввести за один раз. Значення також залежить від типу пацієнта.</string>
     <string name="pref_title_max_daily_multiplier">Безпечний множник макс. добового базалу</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Значення за замовчуванням: 3. Це ключове обмеження безпеки OpenAPS. Воно обмежує ваш базал до 3x вашої найбільшої базальної швидкості. Імовірно, вам не потрібно це змінювати, але знайте, що саме це мається на увазі під правилом «3x максимальний добовий; 4x поточний».</string>
     <string name="pref_title_current_basal_multiplier">Безпечний множник поточного базалу</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Значення за замовчуванням: 4. Це друга половина ключових обмежень безпеки OpenAPS, друга частина правила «3x максимальний добовий; 4x поточний». Ваш базал, незалежно від максимального базалу, встановленого на помпі, не може бути вищим за це число, помножене на поточний рівень базалу. Це захищає людей від небезпечних значень, якщо вони встановлять надто високий максимальний базал, ще не розуміючи, як працює алгоритм. За замовчуванням 4x; більшості людей ніколи не потрібно це змінювати. Якщо вам здається, що ви «впираєтеся» в це обмеження, скоріше потрібно змінити інші налаштування.</string>
     <string name="pref_title_bolus_snooze_divisor">Дільник DIA для паузи після болюсу</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Значення за замовчуванням: 2\nВідстрочка болюса діє після болюса на їжу, щоб петля не протидіяла низькими тимчасовими базалами, коли ви щойно поїли. У прикладі і за замовчуванням значення 2: при DIA 3 години відстрочка болюса поступово зникає протягом 1,5 години (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA мін. вплив вуглеводів за 5 хв</string>
     <string name="pref_title_smb_min_5m_carbs_impact">Мін. вплив вуглеводів за 5 хв для SMB</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Значення за замовчуванням: 3.0 (AMA) або 8.0 (SMB). Це вплив засвоєння вуглеводів за замовчуванням на кожні 5 хвилин. За замовчуванням очікується 3 мг/дл/5 хв. Від цього залежить, як швидко зменшуються COB і скільки засвоєних вуглеводів враховується при прогнозі майбутньої ГК, коли ГК падає швидше, ніж очікувалося, або росте повільніше, ніж очікувалося.</string>
     <string name="pref_title_absorption_cutoff">Межа засвоєння</string>
+    <string name="absorption_cutoff_summary">Час, після якого вважається, що їжа повністю засвоєна. Решта вуглеводів не враховується.</string>
     <string name="pref_title_absorption_maxtime">Максимальний час засвоєння</string>
+    <string name="absorption_max_time_summary">Час у годинах, протягом якого очікується повне засвоєння всіх вуглеводів з прийому їжі</string>
     <string name="pref_title_autosens_min">Autosens мін.</string>
+    <string name="openapsama_autosens_min_summary">Значення за замовчуванням: 0.7\nМінімальний коефіцієнт для autosens, що обмежує, наскільки низько може впасти регулювання базальної швидкості, і наскільки можна підвищити ISF та цільовий рівень глюкози.</string>
     <string name="pref_title_autosens_max">Autosens макс.</string>
+    <string name="openapsama_autosens_max_summary">Значення за замовчуванням: 1.2\nЦе обмежувальний множник для autosens (і незабаром autotune). Він задає межу 20%% для того, наскільки високим може бути коефіцієнт autosens. Від цього залежить, наскільки autosens може підвищити базал, знизити ISF і знизити ціль ГК.</string>
     <string name="pref_title_autoisf_min">AutoISF мін.</string>
+    <string name="openapsama_autoISF_min_summary">Подібно до autosens_min, визначає, наскільки слабким може бути ISF.\n\nЗначення за замовчуванням 1.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_autoisf_max">AutoISF макс.</string>
+    <string name="openapsama_autoISF_max_summary">Подібно до autosens_max, визначає, наскільки сильним може бути ISF.\n\nЗначення за замовчуванням 1.0 фактично вимикає цей ефект.\n\nУВАГА: Будьте вкрай обережні при використанні значень понад 2.5</string>
     <string name="pref_title_bg_accel_weight">Вага ISF за прискоренням ГК</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Вага, яка застосовується під час прискорення росту глюкози, що посилює ISF і потенційно збільшує доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_bg_brake_weight">Вага ISF за гальмуванням ГК</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Вага, яка застосовується під час уповільнення росту глюкози, що послаблює ISF і потенційно зменшує доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_low_bg_weight">Вага діапазону низької ГК</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Вага, яка застосовується, коли глюкоза нижче цілі, що послаблює ISF і потенційно зменшує доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_high_bg_weight">Вага діапазону високої ГК</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Вага, яка застосовується, коли глюкоза вище цілі, що посилює ISF і потенційно збільшує доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Діапазон ГК для коефіцієнта подачі SMB</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Значення за замовчуванням: 0. Лінійно зростаюче співвідношення доставки SMB відображається у діапазоні глюкози [target_bg, target_bg+bg_range].\nНа target_bg співвідношення SMB = smb_delivery_ratio_min, на target_bg+bg_range = smb_delivery_ratio_max.\nПри 0 лінійне зростання вимкнено, використовується фіксоване smb_delivery_ratio.</string>
     <string name="pref_title_pp_weight">Вага ISF після їжі</string>
+    <string name="openapsama_pp_ISF_weight_summary">Вага, яка застосовується під час підйому глюкози після їжі, що посилює ISF і потенційно збільшує доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_dura_weight">Вага ISF за тривалістю</string>
+    <string name="openapsama_dura_ISF_weight_summary">Вага, яка застосовується під час тривалих підвищених плато глюкози, і яка посилює ISF, потенційно збільшуючи доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_smb_delivery_ratio">Коефіцієнт подачі SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Значення за замовчуванням: 0.5. Це ще одне ключове обмеження безпеки OpenAPS. Воно визначає, яку частку від усього потрібного інсуліну можна ввести як SMB. Це захищає від небезпечних ситуацій, коли запити SMB надходять одночасно з телефону доглядача. Збільшуйте це експериментальне значення повільно та обережно.</string>
     <string name="pref_title_smb_delivery_ratio_min">Мін. коефіцієнт подачі SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Значення за замовчуванням: 0.5. Це нижній кінець лінійно зростаючого співвідношення, а не фіксоване значення вище.</string>
     <string name="pref_title_smb_delivery_ratio_max">Макс. коефіцієнт подачі SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Значення за замовчуванням: 0.5. Це верхній кінець лінійно зростаючого співвідношення, а не фіксоване значення вище.</string>
     <string name="pref_title_smb_max_range_extension">Макс. розширення діапазону SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">Значення за замовчуванням: 1. Це ще один ключовий обмежувач безпеки OpenAPS і визначає, у скільки разів можна перевищити стандартні 120 хв maxSMB/maxUAM. Збільшуйте обережно.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <string name="pref_title_low_mark">Нижня межа ГК</string>
     <string name="pref_title_high_mark">Верхня межа ГК</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">Поріг LGS</string>
+    <string name="lgs_threshold_summary">Рівень ГК, нижче якого інсулін призупиняється. За замовчуванням використовується стандартна модель цілі. Користувач може встановити значення від 60 мг/дл (3,3 ммоль/л) до 100 мг/дл (5,5 ммоль/л). Значення нижче 65/3,6 використовують модель за замовчуванням</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
