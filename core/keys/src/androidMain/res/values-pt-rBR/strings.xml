@@ -324,7 +324,7 @@
     <string name="pref_title_max_bolus">Bólus máximo</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Taxa basal máxima</string>
-    <string name="openapsma_max_basal_summary">O valor definido será o máximo de unidades de basal por hora que o aaps poderá chegar</string>
+    <string name="openapsma_max_basal_summary">Este valor é chamado de max basal no contexto do OpenAPS</string>
     <string name="pref_title_smb_max_iob">Max IOB para SMB</string>
     <string name="openapssmb_max_iob_summary">Este valor é chamado de Max IOB no contexto do OpenAPS\nO OpenAPS não adicionará mais insulina se o IOB atual for maior que este valor. O valor também é afetado pelo tipo de paciente.</string>
     <string name="pref_title_ama_max_iob">Max IOB para AMA</string>
