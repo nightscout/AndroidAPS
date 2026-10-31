@@ -72,6 +72,7 @@
     <string name="pair_with_master_fetching">Свързване…</string>
     <string name="pair_with_master_confirm_title">Свържи се с главния телефон?</string>
     <string name="pair_with_master_confirm_master">Главен телефон: %1$s</string>
+    <string name="pair_with_master_confirm_warning">След сдвояването това устройство ще може да изпраща подписани команди към този главен телефон.</string>
     <string name="pair_with_master_confirm_pair">Свържи</string>
     <string name="pair_with_master_error_title">Не мога да се свържа</string>
     <string name="pair_with_master_error_wrong_pin">Грешен PIN. Проверете го на главния телефон и опитайте отново.</string>
@@ -207,10 +208,10 @@
     <string name="no_profile">Не е зареден профил</string>
     <string name="aps_only">Прилагане само в режим АПС!</string>
     <string name="last_aps_result_na">Последният резултат не е наличен!</string>
-    <string name="loop_status_closed">ЗАТВОРЕН ЦИКЪЛ</string>
-    <string name="loop_status_open">ОТВОРЕН ЦИКЪЛ</string>
+    <string name="loop_status_closed">ЗАТВОРЕН КРЪГ</string>
+    <string name="loop_status_open">ОТВОРЕН КРЪГ</string>
     <string name="loop_status_lgs">Само при ниска КЗ LGS</string>
-    <string name="loop_status_disabled">ЦИКЪЛ ИЗКЛЮЧЕН</string>
+    <string name="loop_status_disabled">КРЪГ ИЗКЛЮЧЕН</string>
     <string name="aps">АПС</string>
     <string name="last_run">Последно изпълнение</string>
     <string name="last_enact">Последно зададено</string>
@@ -219,7 +220,7 @@
     <string name="weighted">претеглено</string>
     <string name="full_xdrip_sync_comment">Пълна синхронизация? Ще отнеме малко време и до тогава няма да виждате данните в xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Опитайте отново.</string>
-    <string name="wear_action_loop_state_invalid">Поискан е невалиден статус на цикъла</string>
+    <string name="wear_action_loop_state_invalid">Поискан е невалиден статус на кръга</string>
     <string name="wear_action_running_mode_title">Режим</string>
     <string name="garmin_request_key">Ключ</string>
     <!-- SMS Communicator & OTP Authenticator -->
@@ -267,7 +268,7 @@
     <string name="smscommunicator_reconnect">Помпата е свързана отново</string>
     <string name="smscommunicator_remote_command_not_allowed">Отдалечените команди са забранени</string>
     <string name="smscommunicator_remote_command_not_possible">Отдалечената команда не е възможна</string>
-    <string name="smscommunicator_remote_bolus_not_allowed">Отдалечен болус не е възможен. Опитайте отново.</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Отдалечен болус не е възможен. Опитайте отново по-късно.</string>
     <string name="smscommunicator_basal_reply_with_code">За да стартирате базал от %1$.2fЕ/ч за %2$d мин, отговорете с код %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">За да превключите профила към %1$s %2$d%%, отговорете с код %3$s</string>
     <string name="smscommunicator_extended_reply_with_code">За да стартирате удължен болус %1$.2fЕ за %2$d мин, отговорете с код %3$s</string>
