@@ -39,7 +39,7 @@
     <string name="rileylink_pump_frequency">Συχνότητα Αντλίας:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
-    <string name="rileylink_state_bt_init">Επαναφορά Bluetooth…</string>
+    <string name="rileylink_state_bt_init">Αρχικοποίηση Bluetooth…</string>
     <string name="rileylink_state_bt_error">Σφάλμα Bluetooth</string>
     <string name="rileylink_state_bt_ready">Bluetooth Έτοιμο</string>
     <string name="rileylink_state_not_started">Δεν ξεκίνησε</string>
