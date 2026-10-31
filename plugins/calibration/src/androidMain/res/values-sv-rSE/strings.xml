@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Ingen kalibrering</string>
+    <string name="description_no_calibration">"Ingen sensorkalibrering används. Sensorvärdena används som de är. Använd detta när sensorn redan är fabrikskalibrerad och korrekt."</string>
+    <string name="linear_calibration_name">Linjär kalibrering</string>
+    <string name="description_linear_calibration">"Linjär kalibreringsjustering för sensorn (lutning och förskjutning/offset) beräknas utifrån dina blodsockervärden från stick i fingret. Nyare mätningar ges större vikt. Justeringen tillämpas när den pågående sensorsessionen har inletts; de första två timmarna exkluderas, då dessa utgör uppstartsperioden."</string>
+    <string name="sensor_change_detected_text">Möjligt sensorbyte upptäcktes vid %1$s. Markera som ny sensor?</string>
+    <string name="sensor_change_detected_action">Notera byte av sensor</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Logga ett sensorbyte för att möjliggöra kalibrering.</string>
+    <string name="cal_status_warmup">Sensoruppvärmning — kalibrering aktiv efter %1$s.</string>
+    <string name="cal_status_need_more_entries">Det krävs minst 2 fingersticksmätningar (nu %1$d).</string>
     <string name="cal_status_unsafe_fit">Anpassningen är utanför säkert intervall – kalibreringen har inte tillämpats.</string>
+    <string name="cal_status_applied">Kalibrering applicerad.</string>
+    <string name="cal_status_applied_offset_only">Kalibrering med enbart förskjutning/offset har tillämpats – sensorns mätområde är för snävt att kalibrera lutningen.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrering applicerad – grafens lutning begränsad till ett säkert intervall. Lägg till ytterligare mätningar för att lätta på denna begränsning.</string>
+    <string name="cal_slope_offset">Lutning %1$.2f, korrektion i mellanområdet %2$s</string>
+    <string name="cal_session_started">Sessionen startad: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Logga sensorbyte</string>
+    <string name="cal_add_calibration">Lägg till kalibrering</string>
+    <string name="cal_entries_header">Fingersticksmätningar (%1$d)</string>
+    <string name="cal_no_entries">Inga blodsockermätningar ännu.</string>
+    <string name="cal_entry_pair">Fingerstick %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Mätning %1$d/%2$d · %3$s · sensor %4$s → BG %5$s</string>
 </resources>
