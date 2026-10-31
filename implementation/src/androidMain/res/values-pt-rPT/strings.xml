@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Comando será executado agora</string>
+    <string name="smb_being_delivered">Está a ser administrado um SMB neste momento. Tente novamente quando terminar.</string>
     <string name="basal_value_below_minimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Perfil basal da bomba atualizado. A bomba arredonda a basal ao seu próprio passo: administra %1$s por dia em vez de %2$s.</string>
+    <string name="basal_reported_far_from_profile">A bomba indica uma basal muito diferente da do perfil. A AAPS mantém a basal do perfil. Verifique as taxas basais na bomba.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Hidratos de carbono</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">ÚltLig: há %1$d min</string>
+    <string name="short_status_last_bolus">ÚltBólus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Temp: %1$s</string>
+    <string name="short_status_battery">Bat: %1$d%%</string>
+    <string name="short_status_not_initialized">Bomba não inicializada</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Otimização da bateria</string>
+    <string name="permission_battery_description">A aplicação tem de ser excluída da otimização da bateria para funcionar de forma fiável em segundo plano</string>
+    <string name="permission_directory_title">Pasta AAPS</string>
+    <string name="permission_directory_description">Selecione uma pasta para as definições da aplicação e os ficheiros de registo</string>
+    <string name="permission_notifications_title">Notificações</string>
+    <string name="permission_notifications_description">Necessário para mostrar alertas, alarmes e atualizações do estado da bomba</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmes e lembretes</string>
+    <string name="permission_schedule_exact_alarm_description">Necessário para que os alarmes possam ligar o ecrã enquanto a AAPS está em segundo plano e para que os lembretes toquem a horas</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Alarmes AAPS</string>
+    <string name="alarm_channel_standard">Alarme normal</string>
+    <string name="alarm_channel_bolus_error">Erro de bólus</string>
+    <string name="alarm_channel_error">Erro geral</string>
+    <string name="alarm_channel_urgent">Alarme urgente</string>
+    <string name="alarm_channel_eat_reminder">Hora de comer</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (ignora Não incomodar)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respeita Não incomodar)</string>
+    <string name="alarm_channel_silent_urgent">Alarme urgente (modo de volume progressivo)</string>
+    <string name="alarm_channel_silent">Alarme (modo de volume progressivo)</string>
+    <string name="alarm_channel_silent_description">Usado quando «Aumentar gradualmente o volume da notificação» está ligado. O ecrã de alarme toca o som.</string>
+    <string name="ongoing_channel_name">Estado em curso</string>
+    <string name="eat_reminder_channel">Contagem decrescente até à hora de comer</string>
+    <string name="eat_reminder_channel_description">Mostra o tempo que falta até à hora de comer. Não faz som; quem toca é o alarme no fim.</string>
+    <string name="notifications_channel_name">Notificações AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Definições exportadas com sucesso para o armazenamento na nuvem</string>
+    <string name="export_to_cloud_failed">Falha ao exportar para o armazenamento na nuvem</string>
+    <string name="csv_uploaded_to_cloud">CSV dos registos do utilizador enviado com sucesso para o armazenamento na nuvem</string>
     <string name="exported">Preferências exportadas</string>
+    <string name="exported_failed">Falha na exportação das preferências!</string>
     <string name="filenotfound">Ficheiro não encontrado</string>
     <string name="ue_exported">Registos do utilizador exportadas</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado às %1$s</string>
@@ -39,4 +82,28 @@
     <string name="metadata_label_encryption">Encriptação do Ficheiro</string>
     <string name="metadata_format_new">Novo formato de encriptação</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Erro ao aceder ao sistema de ficheiros. Selecione corretamente a pasta AAPS.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Cópia de segurança para o Google Drive</string>
+    <string name="csv_upload_failed">Falha ao enviar o CSV dos registos do utilizador para o armazenamento na nuvem</string>
+    <string name="csv_upload_error">Ocorreu um erro ao enviar o CSV para a nuvem</string>
+    <string name="uploading_to_cloud">A enviar para a nuvem...</string>
+    <string name="cloud_directory_path">Pasta na nuvem: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Não foi possível renovar o token de acesso do Google Drive</string>
+    <string name="google_drive_token_refresh_error">Não foi possível renovar o token de acesso do Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Falha no teste de ligação ao Google Drive</string>
+    <string name="google_drive_connect_error">Não foi possível ligar ao Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Falha ao listar as pastas do Google Drive</string>
+    <string name="google_drive_list_folders_error">Erro ao listar as pastas: %1$s</string>
+    <string name="google_drive_upload_no_id">Envio concluído, mas não foi devolvido nenhum id</string>
+    <string name="google_drive_upload_verify_failed">Falha na verificação do envio</string>
+    <string name="google_drive_upload_failed">Falha no envio: %1$s</string>
+    <string name="google_drive_upload_error">Erro ao enviar o ficheiro: %1$s</string>
+    <string name="google_drive_folder_access_error">Não é possível criar ou aceder à pasta de destino: %1$s</string>
+    <string name="google_drive_list_settings_failed">Falha ao listar os ficheiros de definições</string>
+    <string name="google_drive_list_settings_error">Erro ao listar os ficheiros de definições: %1$s</string>
+    <string name="google_drive_download_failed">Falha ao transferir o ficheiro</string>
+    <string name="google_drive_download_error">Erro ao transferir o ficheiro: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorizado</string>
+    <string name="google_drive_reauth_required">Limpe as definições e autorize novamente o Google Drive</string>
 </resources>
