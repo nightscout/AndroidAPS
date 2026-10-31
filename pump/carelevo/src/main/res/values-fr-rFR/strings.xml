@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Sortez le patch de sa coque et retirez le capuchon de l\'aiguille.</string>
     <string name="carelevo_patch_attach_step3_title">Poser le patch</string>
     <string name="carelevo_patch_attach_step3_desc">Collez le patch sur la peau avec le point marqué vers le haut.</string>
+    <string name="carelevo_patch_attach_step4_desc">Après avoir fixé le patch, appuyez sur Suivant.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Retirer le capuchon de sécurité</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Tournez le capuchon de sécurité dans le sens de la flèche et retirez-le.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Insérer l\'aiguille</string>
