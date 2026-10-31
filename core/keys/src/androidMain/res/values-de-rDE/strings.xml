@@ -68,6 +68,7 @@
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
     <string name="pref_title_language">Sprache</string>
+    <string name="lang_zh_tw">Chinesisch (traditionell)</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS-Verzeichnis</string>
     <!-- StringKey: Protection preferences -->
