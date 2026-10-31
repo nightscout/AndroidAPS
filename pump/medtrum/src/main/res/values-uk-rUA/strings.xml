@@ -62,7 +62,7 @@
     <string name="step_prepare_patch">Активувати патч</string>
     <string name="step_prepare_patch_connect">Підʼєднати й заповнити</string>
     <string name="step_select_insulin">Вибрати інсулін</string>
-    <string name="step_prime">Підготовка (прайм)</string>
+    <string name="step_prime">Підготовка (заповнення)</string>
     <string name="step_priming">Триває підготовка</string>
     <string name="step_priming_complete">Підготовку завершено</string>
     <string name="step_attach">Прикріпити патч</string>
@@ -80,7 +80,7 @@
     <string name="note_min_70_units">Примітка: для активації потрібно щонайменше 70 Од.</string>
     <string name="reservoir_text_and_level">Резервуар: %.2f Од</string>
     <string name="do_not_attach_to_body">Поки що не прикріплюйте патч до тіла.</string>
-    <string name="half_press_needle">Натисніть кнопку голки наполовину. Потім натисніть <b>Далі</b>, щоб почати підготовку (прайм).</string>
+    <string name="half_press_needle">Натисніть кнопку голки наполовину. Потім натисніть <b>Далі</b>, щоб почати підготовку (заповнення).</string>
     <string name="wait_for_priming">Будь ласка, зачекайте, доки завершиться підготовка.</string>
     <string name="press_next">Натисніть <b>Далі</b>, щоб продовжити.</string>
     <string name="press_next_to_start_activation">Натисніть <b>Далі</b>, щоб почати активацію.</string>
@@ -92,7 +92,7 @@
     <string name="deactivate_sure">Ви впевнені, що хочете деактивувати поточний патч?</string>
     <string name="cancel_sure">Ви впевнені, що хочете скасувати активацію?</string>
     <string name="medtrum_deactivate_pump_confirm">Ви впевнені? Цю дію не можна скасувати!!</string>
-    <string name="press_next_or_cancel">Натисніть <b>Далі</b>, щоб деактивувати, або <b>Відміна</b>, щоб повернутися на головний екран.</string>
+    <string name="press_next_or_cancel">Натисніть <b>Далі</b>, щоб деактивувати, або <b>Скасувати</b>, щоб повернутися на головний екран.</string>
     <string name="deactivating_pump">Деактивація патча. Будь ласка, зачекайте.</string>
     <string name="deactivating_error">Не вдалося деактивувати. Натисніть <b>Відкинути</b>, щоб забути патч.</string>
     <string name="retract_needle">Витягніть голку. Зніміть патч із тіла.</string>
