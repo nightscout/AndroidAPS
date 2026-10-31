@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Підтвердження</string>
     <!--    Events-->
     <string name="bolus_delivering">Введення %1$.2f Од</string>
     <string name="bolus_delivered_so_far">Введено %1$.2f Од / %2$.2f Од</string>
     <string name="bolus_delivered_successfully">Болюс %1$.2f Од успішно введено</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпи змінено.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d хв тому</string>
     <string name="secago">%1$d с тому</string>
@@ -48,6 +50,7 @@
     <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Підключаюся %1$d сек</string>
+    <string name="handshaking">Узгодження</string>
     <string name="connected">Підключено</string>
     <string name="authorized">Авторизовано</string>
     <string name="disconnecting">Відключаюся</string>
@@ -66,21 +69,31 @@
     <string name="pref_show_delta">Показати дельту</string>
     <string name="pref_show_detailed_delta">Показати детальну дельту</string>
     <string name="pref_show_avgdelta">Показати середню дельту</string>
+    <string name="pref_show_tempTarget">Показати тимчасову ціль</string>
+    <string name="pref_show_reservoir_level">Показати рівень резервуара</string>
     <string name="pref_show_phone_battery">Показати заряд телефона</string>
     <string name="pref_show_rig_battery">Показати заряд пристрою</string>
-    <string name="pref_show_basal_rate">Показати базову швидкість</string>
+    <string name="pref_show_basal_rate">Показати базальну швидкість</string>
     <string name="pref_show_loop_status">Показати статус петлі</string>
     <string name="pref_show_bg">Показати ГК</string>
     <string name="pref_show_bgi">Показати BGI</string>
     <string name="pref_show_direction_arrow">Показати стрілку тренду</string>
     <string name="pref_show_ago">Показати Ago</string>
+    <string name="pref_show_week_number">Показати номер тижня</string>
+    <string name="pref_show_date">Показати дату</string>
+    <string name="pref_show_seconds">Показати секунди</string>
     <string name="pref_show_complication1">Показати віджет 1</string>
     <string name="pref_show_complication2">Показати віджет 2</string>
     <string name="pref_show_complication3">Показати віджет 3</string>
     <string name="pref_show_complication4">Показати віджет 4</string>
     <string name="pref_show_complication5">Показати віджет 5</string>
-    <string name="default_custom_watchface_comment">Вікно за замовчуванням, ви можете натиснути на кнопку EXPORT WATCHFACE, щоб створити шаблон</string>
+    <string name="default_custom_watchface_comment">Циферблат за замовчуванням, ви можете натиснути кнопку EXPORT WATCHFACE, щоб створити шаблон</string>
+    <string name="default_custom_watchface_external_comment">Стандартний циферблат із зовнішніми елементами для підписників. Ви можете натиснути кнопку ЕКСПОРТ ЦИФЕРБЛАТА, щоб створити шаблон</string>
     <string name="wear_default_watchface">Циферблат за замовчуванням</string>
+    <string name="wear_more_watchfaces">Більше циферблатів</string>
+    <string name="temp_basal_absolute_rate">%1$.2f Од/год @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">П %1$.2f Од/год @%2$s %3$d/%4$d хв</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Застосунку потрібен дозвіл Bluetooth для зв’язку з помпою</string>
@@ -88,7 +101,11 @@
     <string name="unknown">Невідомий</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Час піку [хв]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u20">U20</string>
@@ -100,13 +117,37 @@
     <string name="u500">U500</string>
     <string name="profile_isf_units_mgdl">мг/дл/Од</string>
     <string name="profile_isf_units_mmol">ммоль/л/Од</string>
+    <string name="formatsignedinsulinunits">%1$+.2f Од</string>
+    <string name="format_carbs">%1$d г</string>
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Вуглеводи</string>
+    <string name="alarminxmin">Сигнал через %1$d хв</string>
+    <string name="pumpsuspended">Помпу призупинено</string>
+    <string name="loopsuspended">Петля призупинена</string>
+    <string name="pump_disconnected">Помпу від\'єднано</string>
     <string name="basalprofilenotaligned">Значення базалу не вирівняні по годинах: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Базальне значення замінено на мінімальне підтримуване значення: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Базальне значення замінено на максимальне підтримуване значення: %1$s</string>
+    <string name="profile_ins_units_per_hour">Од/год</string>
+    <string name="profile_carbs_per_unit">г/Од</string>
     <string name="mins">%1$d хв</string>
+    <string name="record">Запис</string>
+    <string name="bolus">Болюс</string>
+    <string name="uel_extended_carbs">ПОДОВЖЕНІ ВУГЛЕВОДИ</string>
     <string name="profile_low_target">Нижня ціль профілю</string>
+    <string name="profile_high_target">Верхня ціль профілю</string>
+    <string name="profile_dia">Значення DIA профілю</string>
+    <string name="profile_sensitivity_value">Значення чутливості профілю</string>
+    <string name="profile_carbs_ratio_value">Значення вуглеводного коефіцієнта профілю</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f поза жорсткими межами</string>
+    <string name="basal_value">Базальна швидкість</string>
+    <string name="cobvsiob">COB проти IOB</string>
     <string name="slowabsorptiondetected_plain">!!!!! Виявлено повільне засвоєння вуглеводів: %1$d%% часу. Перевірте ваш розрахунок ще раз. COB може бути завищено, і тому може бути введено більше інсуліну !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Застосовано обмеження болюса: з %1$.2f Од до %2$.2f Од</string>
+    <string name="bolus_recorded_only">Болюс буде лише записаний (не подається помпою)</string>
+    <string name="advisoralarm">Сигнал тривоги при настанні часу їжі</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d г / %2$d год (+%3$d хв)</string>
-    <string name="format_insulin_units">%1$.2f од</string>
+    <string name="format_insulin_units">%1$.2f Од</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
     <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Плагін %1$s не вдалося запустити, і він може не працювати. Перезапустіть AAPS.</string>
