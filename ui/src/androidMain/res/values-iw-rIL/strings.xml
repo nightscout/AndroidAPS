@@ -72,7 +72,6 @@
     <string name="aaps_bolus_icon_label">בולוס</string>
     <string name="aaps_carbs_icon_label">פחמימות</string>
     <string name="aaps_tbr_icon_label">בזאלי זמני</string>
-    <string name="aaps_activity_icon_label">פעילות גופנית</string>
     <string name="aaps_note_icon_label">הערה</string>
     <string name="aaps_automation_icon_label">אוטומציה</string>
     <string name="aaps_calibration_icon_label">כיול</string>

@@ -56,7 +56,7 @@
     <string name="patch_rotate_knob">Adatos įvedimas</string>
     <string name="patch_rotate_knob_desc_1">Norėdami įdurti adatą, pasukite adatos įvedimo svirtelę daugiau 100 °, po to pilnai pasukite ir pašalinkite ją</string>
     <string name="patch_rotate_knob_desc_2">Sulaukite 1 pyptelėjimo ir spauskite \'Toliau\'.</string>
-    <string name="patch_rotate_knob_desc_2_needle_insertion_error">Sulaukite 1 pyptelėjimo ir spauskite \'Kartoti\'.</string>
+    <string name="patch_rotate_knob_desc_2_needle_insertion_error">Sulaukite 1 pyptelėjimo ir spauskite \'Bandyti dar kartą\'.</string>
     <string name="patch_basal_schedule">Rezervuaras aktyvuotas!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' programa įgalinta.</string>
     <string name="patch_basal_schedule_desc_2">Perspėja, kai artėja rezervuaro naudojimo pabaiga.\nGalite pakeisti perspėjimo laiką, jei reikia.</string>
@@ -76,7 +76,7 @@
     <string name="string_activate_patch">Aktyvuoti rezervuarą</string>
     <string name="string_discard_patch">Pašalinti pompą</string>
     <string name="string_running">Vykdoma</string>
-    <string name="retry">Kartoti</string>
+    <string name="retry">Bandyti dar kartą</string>
     <string name="string_are_you_sure_to_discard_current_patch">Ar tikrai pašalinti pompą?</string>
     <string name="needle_insertion_error_1">Adatos įvedimo klaida.</string>
     <string name="needle_insertion_error_3">Norėdami pašalinti pompą spauskite \'Pašalinti\'.</string>

@@ -5,7 +5,7 @@
     <string name="string_a004">Užsikimšimas\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a005">Įjungimo savikontrolės klaida\nPompa išjungta. Pakeiskite pompą.</string>
     <string name="string_a007">Netinkama temperatūra\nInsulino tiekimas ir rezervuaro aktyvavimo procesas sustabdyti. Venkite ekstremalių temperatūrų.</string>
-    <string name="string_a016">Adatos įvedimo klaida\nPatikrinkite mygtuką ir spauskite \'Kartoti\'.</string>
+    <string name="string_a016">Adatos įvedimo klaida\nPatikrinkite mygtuką ir spauskite \'Bandyti dar kartą\'.</string>
     <string name="string_a018">Rezervuaro baterijos klaida\nPompa išjungta,\ninsulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a019">Rezervuaro baterijos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a020">Pompos aktyvavimo klaida\nAktyvavimo procesas sustabdytas. Paspauskite \'Patvirtinti\' ir pompa bus išjungta. Pakeiskite pompą.</string>

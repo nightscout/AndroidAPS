@@ -2,10 +2,10 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Интегриране на помпа EOPatch2 / GlucoMen Day</string>
-    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Пача не потвърди край на болус. Записано е %1$s, но пача може да е доставил повече. Проверете пача преди да пуснете още инсулин.</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Пачът не потвърди края на болуса. Записано е %1$s, но пачът може да е доставил повече. Проверете пача, преди да пуснете още инсулин.</string>
     <string name="low_reservoir">Предупреждение за празен резервоар</string>
     <string name="patch_expiration_reminders">Напомняне за изтичане на Patch</string>
-    <string name="patch_buzzer_reminders">Звуково Напомняне за Patch</string>
+    <string name="patch_buzzer_reminders">Звуково напомняне за Patch</string>
     <string name="eopatch_ble_status">Състояние на BLE</string>
     <string name="eopatch_serial_number">Сериен номер</string>
     <string name="eopatch_expiration_time">Време на изтичане</string>
@@ -28,7 +28,7 @@
     <string name="patch_change_confirm_temp_basal_is_active_desc">Временният базал се доставя в момента. Наистина ли искате да отмените подаването на инсулин и да изхвърлите Patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">В момента се доставят болус и временен базал. Наистина ли искате да отмените подаването на инсулин и да изхвърлите Patch?</string>
     <string name="patch_change_confirm_desc">Сигурни ли сте, че ще изхвърлите Patch?</string>
-    <string name="patch_forced_discard">Откажи</string>
+    <string name="patch_forced_discard">Изхвърли</string>
     <string name="patch_comm_error_during_discard_desc_2">За едностранно деактивиране, натиснете „Отхвърляне“.</string>
     <string name="patch_manually_turning_off_alarm_title">Ръчно изключване на алармата на Patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Ако се деактивира едностранно по време на грешка в свързването, звуковият сигнал на алармата може да не спре от Patch.</string>
@@ -67,7 +67,7 @@
     <string name="patch_safety_check_failed_desc">Грешка при проверката за сигурност. Опитайте отново.</string>
     <string name="patch_communication_failed">Грешка при свързване</string>
     <string name="patch_communication_succeed">Успешно свързване</string>
-    <string name="patch_communication_succeed_message">Свързанo с Patch.</string>
+    <string name="patch_communication_succeed_message">Свързано с пача.</string>
     <string name="patch_cancel_pairing">Отмени сдвояване</string>
     <string name="insulin_suspend_msg1">При спиране, текущо доставяният болус &amp; Временният базал ще бъде отменен. \n\nСкорост: %1$s Е/час\nОставащо време: %2$s\n&amp; Оставащ инсулин: %3$.2f Е</string>
     <string name="insulin_suspend_msg2">При спиране, доставяният в момента болус ще бъде отменен. \n\nОставащ инсулин: %1$.2f Е</string>
@@ -82,7 +82,7 @@
     <string name="needle_insertion_error_3">Натиснете „Отхвърляне“, за да деактивирате Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Време за спиране на базала</string>
     <string name="string_resume_insulin_delivery_title">Възобновяване доставянето на инсулин</string>
-    <string name="string_resume_insulin_delivery_message">Край на спирането на инсулин.\nНатиснете \'Потвърди\' за да го продължите.\n\nСпирането няма да прължи докато не натиснете \'Потвърди\'.\nАко не го направите може да изпаднете в хипергликемия.</string>
+    <string name="string_resume_insulin_delivery_message">Край на спирането на инсулин.\nНатиснете \'Потвърди\' за да го продължите.\n\nДоставянето на инсулин няма да продължи, докато не натиснете \'Потвърди\'.\nАко не го направите може да изпаднете в хипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Доставянето на инсулин е спряно.</string>
     <string name="string_resumed_insulin_delivery_message">Доставянето на инсулин е възобновено.</string>
     <string name="string_temp_basal_remained_hhmm">оставащо време: %1$s:%2$s</string>
@@ -90,6 +90,6 @@
     <string name="string_resume_failed">Възобновяването е неуспешно.</string>
     <string name="wizard_exit_activation_warning">Изход от съветника? Пач помпата ще остане в незавършен статус и ще се наложи да сложите нова.</string>
     <string name="wizard_exit_deactivation_warning">Изход от съветника? Помпата може да остане активна и да пуска инсулин.</string>
-    <string name="patch_force_reset">Форирано нулиране</string>
+    <string name="patch_force_reset">Форсирано нулиране</string>
     <string name="patch_force_reset_confirm">Това ще изчисти статуса на пача локално и без да изпрати команда до помпата. Използвай само ако нормалната деактивация е невъзможна. Помпата ще доставя инсулин докато не свърши батерията или е ръчно изключена.</string>
 </resources>

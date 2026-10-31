@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">Nu, doar rezervor sau baterie</string>
     <string name="equil_same_infusion_set_hint">Canula nu va fi amorsată și nici o schimbare de canulă nu va fi înregistrată.</string>
     <string name="equil_unpair_alert">Sunteți sigur că vreți să renunțați la controlul asupra %1$s?</string>
-    <string name="equil_record_basal">Rată bazală %1$s U/h</string>
-    <string name="equil_record_basal_temp">Rată bazală temporară %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Durata TBR trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
     <string name="equil_basal_exceeds_max">Rata bazală a profilului %1$s U/h depășește valoarea maximă bazală a pompei %2$s U/h. Creșteți setarea valorii maxime a bazalei, apoi reconectați pompa.</string>
@@ -64,7 +62,6 @@
     <string name="equil_firmware_version">Versiune firmware</string>
     <string name="equil_shutdown_be">Equil se va opri automat</string>
     <string name="equil_shutdown">Oprire automată Equil</string>
-    <string name="equil_common_history_tbr_value">Rată: %1$.2f U/H, durată: %2$d minute</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Setați bolus</string>

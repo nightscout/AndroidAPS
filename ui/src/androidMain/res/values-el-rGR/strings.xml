@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
-    <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">Δεν τρέχει προσωρινός βασικός ρυθμός</string>
+    <string name="start_activity_tt">Εκκίνηση TT Άσκησης</string>
+    <string name="start_eating_soon_tt">Εκκίνηση TT Γεύμα Σύντομα</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
     <string name="time_offset">Χρονική μετατόπιση</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dημ%2$dώ</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dώ</string>
     <!--    Widget-->
     <string name="configure">Ρύθμιση διαφάνειας</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">Γράφημα BG του AAPS</string>
+    <string name="widget_glucose_circle_description">Κύκλος γλυκόζης AAPS</string>
+    <string name="widget_compact_bg_description">AAPS BG + IOB + COB (συμπαγές)</string>
+    <string name="widget_small_description">AAPS Μικρό</string>
     <!--     Activities-->
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Περιπατητικό προφίλ γλυκόζης (AGP)</string>
+    <string name="agp_glycemic_overview">Γλυκαιμική επισκόπηση</string>
+    <string name="agp_today">Σήμερα</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dώ</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dημ</string>
+    <string name="agp_no_data">Δεν υπάρχουν δεδομένα γλυκόζης για αυτό το διάστημα.</string>
+    <string name="agp_load_failed">Δεν ήταν δυνατή η φόρτωση των στατιστικών AGP. Δοκιμάστε ξανά.</string>
+    <string name="agp_chart_description">Γράφημα εκατοστημορίων γλυκόζης</string>
+    <string name="agp_tir_chart">Γράφημα χρόνου εντός εύρους</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Μέσος όρος</string>
+    <string name="agp_median">Διάμεσος</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Ημέρες</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="cgp_title">Πεντάγωνο γλυκόζης (CGP) — 14 ημέρες</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Υπογλυκαιμία</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Υπεργλυκαιμία</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Μέση τιμή</string>
+    <string name="cgp_reference">Υγιές άτομο</string>
+    <string name="cgp_patient">Ασθενής</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Πολύ χαμηλός κίνδυνος</string>
+    <string name="cgp_pgr_low">Χαμηλός κίνδυνος</string>
+    <string name="cgp_pgr_moderate">Μέτριος κίνδυνος</string>
+    <string name="cgp_pgr_high">Υψηλός κίνδυνος</string>
+    <string name="cgp_pgr_extremely_high">Εξαιρετικά υψηλός κίνδυνος</string>
+    <string name="do_you_want_recalculate_tdd_stats">Θέλετε να υπολογιστούν ξανά τα στατιστικά TDD;</string>
     <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
     <string name="age">Ηλικία</string>
     <string name="weight_label">Βάρος</string>
@@ -17,20 +66,119 @@
     <string name="bg_sensor">Αισθητήρας</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Επεξεργασία</string>
+    <string name="record_site_location">Θέση σημείου: %1$s</string>
+    <string name="record_site_arrow">Βέλος σημείου: %1$s</string>
+    <string name="record_site_note">Σημείωση: %1$s</string>
+    <string name="delete_site_note">Η σημείωση διαγράφηκε</string>
     <!-- FillDialog -->
     <string name="fill_warning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
-    <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
+    <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή του φυσιγγίου ινσουλίνης</string>
+    <string name="fill_prime_amount">Ποσότητα πλήρωσης</string>
+    <string name="fill_pump_units_note">Η ποσότητα πλήρωσης είναι σε μονάδες αντλίας</string>
+    <string name="fill_insulin_change">Αλλαγή ινσουλίνης σε: %1$s (θα γίνει αλλαγή προφίλ)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Δραστηριότητα</string>
+    <string name="scene_cat_health">Υγεία</string>
+    <string name="scene_cat_food">Φαγητό</string>
+    <string name="scene_cat_sleep">Ύπνος</string>
+    <string name="scene_cat_dailylife">Καθημερινή ζωή</string>
+    <string name="scene_cat_wellness">Ευεξία</string>
+    <string name="scene_cat_general">Γενικά</string>
+    <string name="aaps_tt_high_icon_label">Προσωρινός στόχος</string>
+    <string name="aaps_tt_activity_icon_label">TT Άσκηση</string>
+    <string name="aaps_tt_eating_icon_label">TT Γεύμα σύντομα</string>
+    <string name="aaps_tt_hypo_icon_label">TT Υπογλυκαιμία</string>
+    <string name="aaps_tt_manual_icon_label">TT Χειροκίνητα</string>
+    <string name="aaps_profile_icon_label">Προφίλ</string>
+    <string name="aaps_loop_icon_label">Κύκλωμα</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">Υδατάνθρακες</string>
+    <string name="aaps_tbr_icon_label">Προσωρινός βασικός</string>
+    <string name="aaps_note_icon_label">Σημείωση</string>
+    <string name="aaps_automation_icon_label">Αυτοματισμός</string>
+    <string name="aaps_calibration_icon_label">Βαθμονόμηση</string>
+    <string name="exercise_icon_label">Τρέξιμο</string>
+    <string name="fitness_icon_label">Φυσική κατάσταση</string>
+    <string name="swim_icon_label">Κολύμπι</string>
+    <string name="hiking_icon_label">Πεζοπορία</string>
+    <string name="bike_icon_label">Ποδήλατο</string>
+    <string name="skateboard_icon_label">Σκέιτμπορντ</string>
+    <string name="tennis_icon_label">Τένις</string>
+    <string name="soccer_icon_label">Ποδόσφαιρο</string>
+    <string name="baseball_icon_label">Ράγκμπι</string>
+    <string name="basketball_icon_label">Χάντμπολ</string>
+    <string name="volleyball_icon_label">Γυμναστική</string>
+    <string name="golf_icon_label">Γκολφ</string>
+    <string name="scubadiving_icon_label">Καταδύσεις</string>
+    <string name="rowing_icon_label">Κωπηλασία</string>
+    <string name="surfing_icon_label">Σέρφινγκ</string>
+    <string name="hospital_icon_label">Νοσοκομείο</string>
+    <string name="medication_icon_label">Φάρμακα</string>
+    <string name="monitor_heart_icon_label">Παρακολούθηση</string>
+    <string name="thermostat_icon_label">Θερμοστάτης</string>
+    <string name="blood_type_icon_label">Αίμα</string>
+    <string name="health_safety_icon_label">Υγεία</string>
+    <string name="healing_icon_label">Επούλωση</string>
+    <string name="meal_icon_label">Εστιατόριο</string>
+    <string name="cafe_icon_label">Καφές</string>
+    <string name="lunch_icon_label">Μεσημεριανό</string>
+    <string name="bakery_icon_label">Αρτοποιείο</string>
+    <string name="sleep_icon_label">Ύπνος</string>
+    <string name="night_icon_label">Νύχτα</string>
+    <string name="nights_stay_icon_label">Διανυκτέρευση</string>
+    <string name="hotel_icon_label">Ξενοδοχείο</string>
+    <string name="seat_flat_icon_label">Ξεκούραση</string>
+    <string name="work_icon_label">Εργασία</string>
+    <string name="school_icon_label">Σχολείο</string>
+    <string name="home_icon_label">Σπίτι</string>
+    <string name="car_icon_label">Οδήγηση</string>
+    <string name="flight_icon_label">Πτήση</string>
+    <string name="shopping_icon_label">Ψώνια</string>
+    <string name="relax_icon_label">Διαλογισμός</string>
+    <string name="spa_icon_label">Σπα</string>
+    <string name="heart_icon_label">Καρδιά</string>
+    <string name="psychology_icon_label">Νους</string>
+    <string name="star_icon_label">Αστέρι</string>
+    <string name="speed_icon_label">Ταχύτητα</string>
+    <string name="alarm_icon_label">Συναγερμός</string>
+    <string name="event_icon_label">Συμβάν</string>
+    <string name="flag_icon_label">Σημαία</string>
+    <string name="bookmark_icon_label">Σελιδοδείκτης</string>
+    <string name="label_icon_label">Ετικέτα</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Λείπει το όνομα ινσουλίνης</string>
+    <string name="insulin_name_exists">Το όνομα ινσουλίνης %1$s υπάρχει ήδη, επιλέξτε νέο όνομα</string>
+    <string name="insulin_external_update_title">Η ρύθμιση ινσουλίνης άλλαξε</string>
+    <string name="insulin_external_update_message">Ένας συνδεδεμένος client άλλαξε τη ρύθμιση ινσουλίνης. Πατήστε OK για να φορτώσετε τις αλλαγές του και να απορρίψετε τις μη αποθηκευμένες αλλαγές σας, ή Ακύρωση για να συνεχίσετε την επεξεργασία (η επόμενη αποθήκευσή σας θα αντικαταστήσει τις δικές του).</string>
+    <string name="insulin_edit_target_gone">Αυτή η ινσουλίνη αφαιρέθηκε από αλλού, οπότε η αλλαγή σας δεν αποθηκεύτηκε. Η λίστα φορτώθηκε ξανά.</string>
+    <string name="insulin_activation_applied">Η ενεργοποίηση ινσουλίνης εφαρμόστηκε</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Εφαρμογή…</string>
+    <string name="clientcontrol_pending_working_text">Αναμονή για επιβεβαίωση από την κύρια συσκευή (master)…</string>
+    <string name="clientcontrol_pending_rejected_title">Δεν εφαρμόστηκε</string>
+    <string name="clientcontrol_pending_failed_format">%1$s: δεν ήταν δυνατό να γίνει.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Εφαρμόστηκε μερικώς</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s: εφαρμόστηκε, αλλά κάποιες ενέργειες όχι.\nΕλέγξτε την τρέχουσα κατάσταση.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Δεν επιβεβαιώθηκε</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s: στάλθηκε, αλλά δεν ήρθε επιβεβαίωση.\n%2$s\nΘα εμφανιστεί εδώ αν/όταν η κύρια συσκευή (master) το εφαρμόσει.</string>
+    <string name="clientcontrol_pending_stop_waiting">Διακοπή αναμονής</string>
+    <string name="a11y_add_new_insulin">Προσθήκη νέας ινσουλίνης</string>
+    <string name="a11y_delete_current_insulin">Διαγραφή τρέχουσας ινσουλίνης</string>
+    <string name="load_peak_from">Φόρτωση κορυφής από</string>
+    <string name="cannot_delete_last_insulin">Δεν μπορείτε να διαγράψετε την τελευταία ινσουλίνη</string>
+    <string name="cannot_delete_active_insulin">Δεν μπορείτε να διαγράψετε την ενεργή ινσουλίνη</string>
     <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="percentage_label">Ποσοστό</string>
     <!-- LoopDialog -->
-    <string name="resume">Επαναφορά</string>
+    <string name="disconnectpump">Αποσύνδεση αντλίας</string>
+    <string name="resume">Συνέχιση</string>
     <string name="reconnect">Επανασύνδεση αντλίας</string>
     <string name="duration15m">15 λεπτά</string>
     <string name="duration30m">30 λεπτά</string>
@@ -40,6 +188,13 @@
     <string name="duration10h">10 ώρες</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Που υπολείπεται%1$d</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
+    <string name="wizard_carbs_type_bread_desc">100% άμεσοι υδατάνθρακες, χωρίς εκτεταμένους υδατάνθρακες</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Υδατάνθρακες μειωμένοι κατά %1$d%%, προστέθηκαν eCarbs %2$d%% με καθυστέρηση %3$d λεπ. για %4$d ώρ.</string>
+    <string name="wizard_include_info">Πατήστε για συμπερίληψη/εξαίρεση από τον υπολογισμό:\n• BG — γλυκόζη αίματος (ενεργό στην αρχή)\n• TT — προσωρινός στόχος (ενεργό στην αρχή)\n• Τάση — τάση BG (θυμάται την τελευταία κατάσταση)\n• IOB — ινσουλίνη στον οργανισμό (ενεργό στην αρχή)\n• COB — υδατάνθρακες στον οργανισμό (θυμάται την τελευταία κατάσταση)</string>
     <!-- Treatments -->
     <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -49,12 +204,53 @@
     <string name="careportal_remove_started_events">Αφαίρεση καταχωρήσεων έναρξης AAPS</string>
     <string name="user_entry">Καταχώρηση χρήστη</string>
     <string name="clone_label">Κλώνος</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Γράφημα γλυκόζης. Πρόσφατες τιμές %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Εμφάνιση στοιχείων ελέγχου</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Ειδοποιήσεις: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">χωρίς προσωρινό στόχο, στόχος προφίλ</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">προσαρμοσμένος από το κύκλωμα</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s στις %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">διαφορά %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">παλιά μέτρηση</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Γράφημα γλυκόζης. Πρόσφατες τιμές %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Προβλέψεις. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s: ανεβαίνει στο %2$s.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s: πέφτει στο %2$s.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s: μένει στο %2$s.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">Πρόβλεψη IOB</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">Πρόβλεψη COB</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Πρόβλεψη απορροφημένων COB</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">Πρόβλεψη UAM</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Πρόβλεψη μηδενικού βασικού (zero temp)</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">απαιτείται ενέργεια</string>
+    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d διαθέσιμα</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d από %2$d ολοκληρώθηκαν</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Εκτέλεση</string>
+    <string name="add_new_profile">Προσθήκη νέου προφίλ</string>
+    <string name="edit_label">Επεξεργασία</string>
+    <string name="activate_label">Ενεργοποίηση</string>
     <string name="activate_profile">Ενεργοποίηση προφίλ</string>
+    <string name="remove_label">Αφαίρεση</string>
+    <string name="active_profile_indicator">ΕΝΕΡΓΟ</string>
+    <string name="confirm_remove_profile">Αφαίρεση του προφίλ \"%1$s\";</string>
+    <string name="confirm_clone_profile">Κλωνοποίηση του προφίλ \"%1$s\";</string>
+    <string name="profile_no_longer_exists">Η λίστα προφίλ άλλαξε στο μεταξύ — δοκιμάστε ξανά</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Τύπος προφίλ</string>
+    <string name="profile_parameters">Παράμετροι προφίλ</string>
+    <string name="active_profile">Ενεργό προφίλ</string>
+    <string name="available_profiles">Διαθέσιμα προφίλ</string>
     <string name="profile_switches">Αλλαγές Προφίλ</string>
     <string name="basal_pct_from_tdd_label">% Ποσοστό βασικού ρυθμού basal</string>
     <string name="selected_profile">Επιλεγμένο:</string>
+    <string name="comparation">Σύγκριση</string>
+    <string name="profile_tab_1">Προφίλ 1</string>
+    <string name="profile_tab_2">Προφίλ 2</string>
     <string name="motol_default_profile">Προεπιλεγμένο προφίλ</string>
     <string name="current_profile">Τρέχον προφίλ</string>
     <string name="available_profile">Διαθέσιμα προφίλ</string>
@@ -64,11 +260,100 @@
     <string name="dpv_default_profile">Προεπιλεγμένο προφίλ DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Κείμενο κουμπιού</string>
+    <string name="quick_wizard_mode_wizard">Οδηγός</string>
+    <string name="quick_wizard_mode_insulin">Ινσουλίνη</string>
+    <string name="quick_wizard_mode_carbs">Υδατάνθρακες</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Μόνο θετικό IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <!--    History browser-->
+    <string name="history_now">Τώρα</string>
+    <string name="a11y_history_previous_window">Προηγούμενο διάστημα</string>
+    <string name="a11y_history_next_window">Επόμενο διάστημα</string>
+    <string name="additional_ecarbs">Προσθήκη eCarbs</string>
+    <string name="calculator_options">Επιλογές υπολογισμού</string>
+    <string name="use_bg">Χρήση BG</string>
+    <string name="use_cob">Χρήση COB</string>
+    <string name="use_iob">Χρήση IOB</string>
+    <string name="use_trend">Χρήση τάσης</string>
+    <string name="trend_all">Όλα</string>
+    <string name="trend_positive_only">Μόνο θετικά</string>
+    <string name="trend_negative_only">Μόνο αρνητικά</string>
+    <string name="use_temp_target">Χρήση προσωρινού στόχου</string>
+    <string name="use_alarm">Χρήση συναγερμού</string>
+    <string name="device_selection">Επιλογή συσκευής</string>
+    <string name="show_on_phone">Εμφάνιση στο τηλέφωνο</string>
+    <string name="show_on_watch">Εμφάνιση στο ρολόι</string>
+    <string name="ecarbs_additional">Επιπλέον υδατάνθρακες</string>
+    <string name="valid_from_to">Έγκυρο χρονικό διάστημα</string>
+    <string name="carb_time">Χρόνος υδατανθράκων</string>
+    <string name="save_changes_question">Αποθήκευση αλλαγών σε αυτή την καταχώρηση;</string>
+    <string name="wizard_no_insulin_required">Δεν απαιτείται ινσουλίνη</string>
+    <string name="carbs_constraint_violation">Οι υδατάνθρακες περιορίστηκαν λόγω περιορισμών</string>
+    <string name="insulin_constraint_violation">Η ινσουλίνη περιορίστηκε λόγω περιορισμών</string>
+    <string name="confirm_treatment">Επιβεβαιώστε τη θεραπεία</string>
+    <string name="recalculate">Επανυπολογισμός</string>
     <!--    Widget-->
+    <string name="use_black_color">Χρήση μαύρου χρώματος</string>
+    <string name="widget_configuration">Ρύθμιση widget</string>
+    <string name="until_changed">Μέχρι να αλλάξει</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Απαιτούνται άδειες</string>
+    <string name="permission_sheet_subtitle">Χρειάζονται κάποιες άδειες για να λειτουργεί σωστά η εφαρμογή</string>
+    <string name="permission_grant">Παραχώρηση</string>
+    <string name="permission_change">Αλλαγή</string>
+    <string name="permission_denied_go_to_settings">Η άδεια απορρίφθηκε μόνιμα. Ενεργοποιήστε την στις ρυθμίσεις της εφαρμογής.</string>
+    <string name="permission_open_settings">Ρυθμίσεις</string>
+    <string name="permission_directory_picker_error">Δεν είναι δυνατό να ανοίξει η επιλογή φακέλου. Συνήθως είναι πρόβλημα του Android ή του Family Link.</string>
+    <string name="permission_nav_label">Άδειες</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Κύκλος</string>
+    <string name="cycle_offset">Μετατόπιση κύκλου</string>
+    <string name="raw_tdd">Ακατέργαστο TDD</string>
+    <string name="cleaned_tdd">Καθαρό TDD</string>
+    <string name="cleaned_tdd_explanation">TDD μείον την ινσουλίνη για υδατάνθρακες.</string>
+    <string name="cycle_lines_legend">Μεμονωμένοι κύκλοι</string>
+    <string name="cycles_found">%1$d κύκλοι (%2$d ημέρες)</string>
+    <string name="cycle_day1_date">Ημέρα 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Υπολογισμός… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Δεν υπάρχουν αρκετά δεδομένα (χρειάζονται τουλάχιστον 56 ημέρες για 2 κύκλους)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Και τα δύο</item>
+        <item>Μόνο θετικά</item>
+        <item>Μόνο αρνητικά</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Επιλεγμένες ενέργειες</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Προσθήκη %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Αφαίρεση %1$s</string>
+    <string name="quick_launch_no_dynamic_items">Δεν υπάρχουν διαθέσιμα στοιχεία</string>
+    <string name="quick_launch_category_treatment">Θεραπεία</string>
+    <string name="quick_launch_category_care">Careportal</string>
+    <string name="quick_launch_category_profile">Προφίλ</string>
+    <string name="quick_launch_category_temp_target">Προεπιλογές προσωρινού στόχου</string>
+    <string name="quick_launch_category_quick_wizard">Γρήγορος Οδηγός</string>
+    <string name="quick_launch_category_automation">Αυτοματισμός</string>
+    <string name="quick_launch_all_selected">Επιλέχθηκαν όλα τα στοιχεία</string>
+    <string name="quick_launch_no_quick_wizard">Προσθέστε καταχωρήσεις Γρήγορου Οδηγού για να τις χρησιμοποιήσετε εδώ</string>
+    <string name="quick_launch_no_automation">Δημιουργήστε ενέργειες αυτοματισμού χρήστη για να τις χρησιμοποιήσετε εδώ</string>
+    <string name="quick_launch_no_tt_presets">Προσθέστε προεπιλογές προσωρινού στόχου για να τις χρησιμοποιήσετε εδώ</string>
+    <string name="quick_launch_no_profiles">Δημιουργήστε προφίλ στο Τοπικό Προφίλ για να τα χρησιμοποιήσετε εδώ</string>
+    <string name="quick_launch_edit_profile_preset">Επεξεργασία προεπιλογής προφίλ</string>
+    <string name="quick_launch_profile_permanent">Μόνιμο</string>
+    <string name="select_arrow">Επιλογή βέλους</string>
+    <string name="loop_accept_nav_label">Κύκλωμα</string>
+    <string name="loop_accept_set_basal_question">Αποδοχή νέου προσωρινού βασικού ρυθμού:</string>
+    <string name="loop_accept_perform">Εκτέλεση</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Ανενεργό</string>
+    <string name="widget_rm_suspended">Σε αναστολή</string>
+    <string name="widget_rm_resume">Συνέχιση</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Ο αισθητήρας είναι ακόμα σε προθέρμανση. Η βαθμονόμηση θα είναι διαθέσιμη στις %1$s.</string>
+    <string name="cal_precheck_no_session">Δεν υπάρχει ενεργή συνεδρία αισθητήρα.</string>
+    <string name="cal_precheck_no_pair">Καμία μέτρηση CGM τα τελευταία 10 λεπτά. Ελέγξτε τη σύνδεση του αισθητήρα.</string>
+    <string name="cal_precheck_delta_too_high">Η γλυκόζη αλλάζει πολύ γρήγορα (Δ %1$s %3$s ανά 5 λεπ., όριο %2$s). Περιμένετε να σταθεροποιηθεί.</string>
+    <string name="cal_precheck_mark_sensor_change">Καταγραφή αλλαγής αισθητήρα</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>

@@ -1,7 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Автоматизація</string>
+    <string name="automation_enabled">Увімкнено</string>
+    <string name="automation_read_only">Лише читання</string>
+    <string name="automation_new_rule">Нове правило</string>
+    <string name="automation_empty_desc">Створіть правило, щоб автоматизувати дії на основі тригерів.</string>
+    <string name="automation_edit_rule">Редагувати правило</string>
+    <string name="automation_discard_title">Відкинути зміни?</string>
+    <string name="automation_discard_message">Правило неповне, і його не можна зберегти. Відкинути ваші зміни?</string>
+    <string name="automation_discard_confirm">Відкинути</string>
+    <string name="automation_category_time">Час і розклад</string>
+    <string name="automation_category_glucose">Глюкоза та терапія</string>
+    <string name="automation_category_device">Стан пристрою</string>
+    <string name="automation_category_sensors">Сенсори та з’єднання</string>
+    <string name="automation_category_other">Інше</string>
+    <string name="automation_choose_trigger">Додати тригер</string>
+    <string name="automation_add_group">Група</string>
+    <string name="automation_choose_action">Додати дію</string>
+    <string name="automation_category_targets">Цілі</string>
+    <string name="automation_category_profile">Профіль</string>
+    <string name="automation_category_loop">Петля та інсулін</string>
+    <string name="automation_category_alerts">Сповіщення</string>
+    <string name="automation_category_system">Система</string>
+    <string name="automation_category_scenes">Сцени</string>
+    <string name="action_run_scene">Запустити сцену</string>
+    <string name="action_run_scene_short">Запустити сцену: %1$s</string>
+    <string name="action_enable_scene">Увімкнути сцену</string>
+    <string name="action_enable_scene_short">Увімкнути сцену: %1$s</string>
+    <string name="action_disable_scene">Вимкнути сцену</string>
+    <string name="action_disable_scene_short">Вимкнути сцену: %1$s</string>
+    <string name="action_scene_label">Сцена</string>
+    <string name="trigger_scene_active">Сцена</string>
+    <string name="trigger_scene_active_compared">Сцена %1$s</string>
+    <string name="action_scene_not_found">Сцену не знайдено</string>
+    <string name="action_scene_disabled">Сцену вимкнено</string>
+    <string name="automation_unit_meters">м</string>
+    <string name="automation_unit_bpm">уд/хв</string>
     <string name="delta">Дельта</string>
+    <string name="triggerUnknownLabel">Невідомий тригер</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Невідомий тригер %1$s – ніколи не спрацьовує</string>
     <!--    Reminders-->
     <!--    Autotune-->
     <string name="autotune_run">Запустити Автотюн</string>
@@ -10,8 +47,25 @@
     <string name="autotune_run_with_error">Помилка при останньому запуску Autotune</string>
     <string name="autotune_run_cancelled">Виявлено ще один запуск Autotune, запуск скасовано</string>
     <!--    Steps count-->
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Увімкнути/вимкнути SMB</string>
+    <string name="changeSmbTo">Змінити SMB на %1$s</string>
+    <string name="newSmbMode">Новий режим SMB:</string>
+    <string name="on">УВІМК</string>
+    <string name="off">ВИМК</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Змінити згладжування</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Змінити згладжування на %1$s</string>
+    <string name="smoothing_label">Згладжування</string>
+    <string name="precondition_smoothing_not_active_name">Згладжування не активне</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Згладжування %1$s не активне</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Вибрати на карті</string>
+    <string name="tap_to_select_location">Торкніться карти, щоб вибрати місце</string>
+    <string name="selected_coords">Вибрано: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Розташування</string>
+    <string name="permission_location_description">Потрібно для тригерів автоматизації за розташуванням і для визначення мережі Wi-Fi</string>
+    <string name="permission_background_location_description">Потрібно, щоб тригери автоматизації працювали, коли застосунок у фоні</string>
 </resources>

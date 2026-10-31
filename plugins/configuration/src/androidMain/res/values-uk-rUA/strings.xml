@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Використовуйте значення для найбільшої страви, яку ви зазвичай їсте\n</string>
+    <string name="status_label">Статус:</string>
+    <string name="diawarning">Пам’ятайте: нові профілі інсуліну потребують DIA щонайменше 5 год. DIA 5–6 год у новому профілі відповідає DIA 3 год у старих профілях інсуліну.</string>
     <string name="profile">Профіль</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Виберіть один із доступних алгоритмів. Вони впорядковані від найстарішого до найновішого. Новіший алгоритм зазвичай потужніший. Не забудьте прочитати документацію OpenAPS і налаштувати алгоритм перед використанням.</string>
+    <string name="open_objectives">Відкрити Завдання</string>
+    <string name="setupwizard_permissions">Дозволи</string>
+    <string name="setupwizard_profile_info">Створіть профіль з вашими базальними швидкостями, IC, ISF і цільовими значеннями. Пізніше можна додати кілька профілів.</string>
+    <string name="setupwizard_permissions_info">Для правильної роботи AAPS потребує доступу до сховища та дозволів. Надайте потрібні дозволи нижче.</string>
+    <string name="setupwizard_client_control_title">Керування з клієнта</string>
+    <string name="setupwizard_client_control_info">Спаруйте клієнтські пристрої, щоб вони могли надсилати підписані команди на цей основний телефон через Nightscout. Це новий рекомендований спосіб віддаленого керування AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Приймання терапії та даних напряму з Nightscout (менш безпечний спосіб) тепер за замовчуванням вимкнено. Відкривайте налаштування нижче, лише якщо вам це ще потрібно. Це потрібно, якщо ви вводите дані через NS або сторонні застосунки.</string>
+    <string name="setupwizard_open_ns_receive_settings">Приймання даних з Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Спаруйте цей клієнт з вашим основним AAPS, щоб він міг надсилати команди захищеним каналом. Після спарювання налаштування завершено.</string>
+    <string name="setupwizard_setup_from_master_title">Налаштувати з основного телефону</string>
+    <string name="setupwizard_setup_from_master_info">На основному телефоні відкрийте «Авторизовані клієнти» і додайте цей телефон за допомогою QR-коду. Сканування налаштує Nightscout з окремим токеном для цього телефону, а також може його спарувати. Після сканування налаштування завершено. Якщо QR-коду немає, пропустіть цей крок і налаштуйте Nightscout самостійно.</string>
+    <string name="setupwizard_scan_master_qr">Сканувати QR-код</string>
+    <string name="setupwizard_pairing_ws_warning">Для спарювання потрібне з’єднання Nightscout WebSocket. Поверніться до попереднього кроку і спочатку увімкніть його.</string>
+    <string name="setupwizard_pairing_status_master">Спарені клієнти: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Ще немає спарених клієнтів</string>
+    <string name="setupwizard_pairing_status_client_paired">Спарено з основним телефоном</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Ще не спарено</string>
+    <string name="setupwizard_instance_name_title">Хто користується цим телефоном?</string>
     <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Схоже, цей пристрій не підтримує додавання до винятків оптимізації батареї — можливі проблеми з роботою.</string>
     <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Яку помпу ви хочете використовувати з AAPS?</string>
+    <string name="configbuilder_sync_description">Плагіни для завантаження даних, синхронізації та зв’язку.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -14,6 +40,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Завантаження…</string>
+    <string name="warning_wrong_directory_selected">Вибрано неправильну папку</string>
+    <string name="warning_wrong_directory_message">Ви вибрали підпапку «%1$s» замість кореневої папки AAPS. Виберіть батьківську папку AAPS. Застосунок сам створить підпапки та керуватиме ними.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->

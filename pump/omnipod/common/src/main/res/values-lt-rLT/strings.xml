@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Išjungti Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Spustelėkite<b>Toliau</b>, kad išjungtumėte Pod.\n\n<b>Pastaba:</b> tai sustabdys insulino tiekimą ir išjungs Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Išjungto Pod pakartotinai naudoti negalima. Išjungti šį Pod dabar?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod išjungiamas</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Pod išjungiamas.\n\nKai veiksmas bus sėkmingai baigtas, spauskite <b>Toliau</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod išjungtas</string>
@@ -99,6 +100,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Garsinis pranešimas apie neaiškų SMB įjungtas</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Garsinis pranešimas apie neaiškų bolusą įjungtas</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Garsinis pranešimas apie sustabdytą insulino tiekimą įjungtas</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth susiejimas</string>
+    <string name="omnipod_dash_use_bonding_summary">Bandykite tik tada, jei ryšys su Pod nėra stabilus. Telefone bus rodomos susiejimo užklausos, kurias turėsite patvirtinti. Jei Pod prisijungia be problemų, šią parinktį palikite išjungtą. Android 14 ir senesnėse versijose ši parinktis neveikia.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nėra aktyvaus Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Nustatoma (laukiama Pod aktyvavimo)</string>
@@ -109,9 +112,19 @@
     <string name="omnipod_common_pod_status_inactive">Neaktyvus</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod klaida: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM pranešimai</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Tuščias rezervuaras</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulino tiekimas sustabdytas. Pakeiskite Pod.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Auto-Off</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulino tiekimas sustabdytas. PDM ir Pod neturėjo ryšio paskutines 4 val. Norėdami atnaujinti insulino tiekimą, pakeiskite Pod.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod naudojimo pabaiga</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulino tiekimas sustabdytas. Pakeiskite Pod.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Aptiktas užsikimšimas</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulino tiekimas sustabdytas. Pakeiskite Pod. Pasitikrinkite glikemiją</string>
     <string name="omnipod_common_pdm_notification_header_pod_error">Pod klaida</string>
     <string name="omnipod_common_pdm_notification_text_pod_error">Insulino tiekimas sustabdytas. Pakeiskite Pod.</string>
     <!-- Omnipod - Alerts -->
@@ -179,10 +192,17 @@
         <item quantity="other">Pod aliarmai: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod veikimo pabaiga</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f V/val., %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f V</string>
     <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
     <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Bazės korekcija</string>
+    <string name="omnipod_common_bolus_type_priming">Užpildymas</string>
     <string name="omnipod_common_history_total_delivered">Viso suleista: %1$.2f V</string>
+    <string name="omnipod_common_failed_to_send">Nepavyko išsiųsti komandos</string>
+    <string name="omnipod_common_command_not_sent">Komanda neišsiųsta</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Pod negavo komandos</string>
+    <string name="omnipod_common_unknown">Nežinoma komandos būklė</string>
 </resources>

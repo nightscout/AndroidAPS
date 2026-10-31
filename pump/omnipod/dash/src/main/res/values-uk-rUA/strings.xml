@@ -4,4 +4,9 @@
     <!-- Omnipod Dash - Overview -->
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Не вдалося підключитися</string>
+    <string name="omnipod_dash_found_too_many_pods">Знайдено забагато Pod</string>
+    <string name="omnipod_dash_scan_failed">Помилка сканування</string>
+    <string name="omnipod_dash_connection_lost">Зʼєднання втрачено</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Не вдалося перевірити, чи SMB (%1$s) було введено. Оновіть статус Pod, щоб підтвердити або спростувати цю команду.</string>
 </resources>

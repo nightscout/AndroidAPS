@@ -2,4 +2,24 @@
 <resources>
     <string name="authorizationfailed">Η εξουσιοδότηση απέτυχε</string>
     <string name="identification_not_set">Η ταυτοποίηση δεν έχει οριστεί στη λειτουργία προγραμματισμού</string>
+    <string name="select">Επιλογή</string>
+    <string name="set">Ορισμός</string>
+    <string name="migrating_preferences">Μετεγκατάσταση προτιμήσεων…</string>
+    <string name="optimizing_database">Βελτιστοποίηση βάσης δεδομένων…</string>
+    <string name="initializing_plugins">Αρχικοποίηση προσθέτων…</string>
+    <string name="initializing">Αρχικοποίηση…</string>
+    <string name="migrating_profile_switches">Μετεγκατάσταση αλλαγών προφίλ…</string>
+    <string name="migrating_effective_profile_switches">Μετεγκατάσταση ενεργών αλλαγών προφίλ…</string>
+    <string name="migrating_boluses">Μετεγκατάσταση bolus…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Τα παλαιότερα αρχεία δεν διέθεταν ρυθμίσεις ινσουλίνης και δεν υπήρχε ενεργό προφίλ, επομένως χρησιμοποιήθηκε το %1$s για αυτά. Ελέγξτε τις ρυθμίσεις ινσουλίνης σας — τα αρχεία που έχουν ήδη μετεγκατασταθεί δεν ενημερώνονται στη συνέχεια.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Τα παλαιότερα αρχεία δεν είχαν διάρκεια δράσης ινσουλίνης, επομένως χρησιμοποιήθηκαν %1$.1f ώρες για το %2$s. Ελέγξτε τις ρυθμίσεις ινσουλίνης σας — τα αρχεία που έχουν ήδη μετεγκατασταθεί δεν ενημερώνονται αργότερα.</string>
+    <string name="settings_unreadable_title">Δεν είναι δυνατή η ανάγνωση των ρυθμίσεων του AAPS</string>
+    <string name="settings_unreadable_key_explanation">Οι ρυθμίσεις σας σε αυτό το τηλέφωνο είναι κρυπτογραφημένες με ένα κλειδί που διατηρεί το Android για το AAPS, και το κλειδί αυτό δεν τις ανοίγει πλέον. Αυτό μπορεί να συμβεί μετά από επαναφορά της αποθήκης κλειδιών (key store) του τηλεφώνου.</string>
+    <string name="settings_unreadable_keystore_explanation">Ο χώρος αποθήκευσης κλειδιών (key store) του τηλεφώνου δεν αποκρίθηκε, επομένως το AAPS δεν μπόρεσε να ανοίξει τις ρυθμίσεις του.</string>
+    <string name="settings_unreadable_not_running">Το AAPS δεν εκτελείται και δεν ελέγχει την αντλία. Ο προσωρινός βασικός ρυθμός που βρίσκεται σε εξέλιξη θα τερματιστεί στην προγραμματισμένη ώρα του, και στη συνέχεια η αντλία θα χορηγεί τον δικό της βασικό ρυθμό.</string>
+    <string name="settings_unreadable_what_to_do">Η «Επανάληψη» κλείνει το AAPS και το ξεκινά ξανά. Αν αυτό δεν βοηθήσει, επανεκκινήστε το τηλέφωνο. Επιλέξτε «Νέα αρχή» μόνο όταν τίποτα άλλο δεν βοηθά: βάζει στην άκρη τις μη αναγνώσιμες ρυθμίσεις και το AAPS ξεκινά με κενές ρυθμίσεις. Στη συνέχεια, εισαγάγετε την τελευταία εξαγωγή ρυθμίσεων στον οδηγό εγκατάστασης.</string>
+    <string name="settings_unreadable_start_fresh">Νέα αρχή</string>
+    <string name="settings_unreadable_confirm_title">Έναρξη με κενές ρυθμίσεις;</string>
+    <string name="settings_unreadable_confirm_text">Το μη αναγνώσιμο αρχείο ρυθμίσεων μετονομάζεται και διατηρείται. Όλες οι ρυθμίσεις επανέρχονται στις προεπιλεγμένες τιμές τους. Στη συνέχεια, ρυθμίζετε ξανά το AAPS ή εισάγετε ένα εξαγμένο αρχείο ρυθμίσεων.</string>
+    <string name="settings_unreadable_notification">Το AAPS δεν εκτελείται. Ανοίξτε το AAPS για να δείτε τι πρέπει να κάνετε.</string>
 </resources>

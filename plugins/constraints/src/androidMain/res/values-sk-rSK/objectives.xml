@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="objectives_button_start">Štart</string>
-    <string name="objectives_button_verify">Kontrola</string>
+    <string name="objectives_button_verify">Overiť</string>
     <string name="nth_objective">%1$d. cieľ</string>
-    <string name="objectivenotstarted">Výukový cieľ %1$d nespustený</string>
-    <string name="objectivenotfinished">Výukový cieľ %1$d nedokončený</string>
+    <string name="objectivenotstarted">Cieľ %1$d nebol spustený</string>
+    <string name="objectivenotfinished">Cieľ %1$d nie je dokončený</string>
     <string name="objectives_0_objective">Nastaviť vizualizáciu a monitoring, analyzovať bazály a pomery</string>
     <string name="objectives_0_gate">Skontrolovať, či sú glykémie a údaje z pumpy viditeľné v Nightscoute</string>
-    <string name="objectives_0_learned">Urobili ste základné nastavenie ekosystému AAPS. Nightscout nie je nevyhnutný na fungovanie AAPS, ale je veľmi užitočný na vykazovanie a monitorovanie iných pacientov.</string>
+    <string name="objectives_0_learned">Urobili ste základné nastavenie ekosystému AAPS. Nightscout nie je nevyhnutný na fungovanie AAPS, ale je veľmi užitočný na vykazovanie a monitorovanie iných pacientov. Ak používate NS iba pre seba, nie je nutné byť k nemu pripojený stále. Môžete napríklad nastaviť nahrávanie iba cez domácu WiFi a šetriť batériu.</string>
     <string name="objectives_openloop_objective">Začať s otvoreným okruhom</string>
-    <string name="objectives_openloop_gate">Niekoľko dní používať otvorený okruh a ručne potvrdzovať doporučené dočasné bazály. Nastavovať a používať dočasné ciele (napr. pre šport, alebo hypo)</string>
+    <string name="objectives_openloop_gate">Niekoľko dní používať otvorený okruh a ručne potvrdiť veľa dočasných bazálov. Nastaviť a používať dočasné ciele aj predvolené dočasné ciele (napr. pre aktivitu alebo pre sacharidy na liečbu hypoglykémie)</string>
     <string name="objectives_openloop_learned">Otvorený okruh môže byť použitý na odporúčania, pokiaľ nemáte kompatibilnú pumpu, alebo nie ste pripravený na uzavretý okruh.</string>
-    <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu, vrátane jeho doporučení ohľadne dočasných bazálov</string>
-    <string name="objectives_maxbasal_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký je potrebný maximálny bazál a nastaviť ho v pumpe a v aplikácii</string>
-    <string name="objectives_maxbasal">Vykonajte akciu pre splnenie doporučenia</string>
-    <string name="objectives_maxbasal_learned">Dávajte pozor na bezpečnostné prvky a nastavte bezpečnotné parametre, pokiaľ je to potrebné.</string>
-    <string name="objectives_maxiobzero_objective">Spustiť uzavretý okruh iba zo zastavovaním pri nízkej glykémii</string>
-    <string name="objectives_maxiobzero_gate">Spustite uzavretý okruh v režime pozastavenia pri nízkej glykémii (tzv. LGS), (tj. max. IOB = 0 je nastavené automaticky) na niekoľko dní, bez príliš častých udalostí s nízkou glykémiou.</string>
+    <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu, vrátane jeho odporúčaní ohľadne dočasných bazálov</string>
+    <string name="objectives_maxbasal_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký má byť maximálny bazál, a nastaviť ho v pumpe a v nastaveniach. V jednoduchom móde sa táto hodnota počíta podľa odporúčania na wiki a nie je nutné ju nastavovať.</string>
+    <string name="objectives_maxbasal">Vykonajte akciu pre splnenie odporúčania</string>
+    <string name="objectives_maxbasal_learned">Dávajte pozor na bezpečnostné prvky a nastavte bezpečnostné parametre, pokiaľ je to potrebné.</string>
+    <string name="objectives_maxiobzero_objective">Spustiť uzavretý okruh s ochranou pred nízkou glykémiou (LGS)</string>
+    <string name="objectives_maxiobzero_gate">Niekoľko dní používať uzavretý okruh v režime Ochrana pred nízkou glykémiou (LGS) (t. j. max. IOB = 0 sa nastaví automaticky) bez príliš veľa udalostí LGS.</string>
     <string name="objectives_maxiobzero_learned">Nastavením MaxIOB na nulu predídete hypoglykémii a nebude pridávaný inzulín nad štandardnú bazálnu dávku (s výnimkou situácií, kedy je IOB negatívne)</string>
-    <string name="objectives_maxiob_objective">Zapnúť uzavretý okruh, zvyšovať max IOB nad 0 a znižovať cieľovou glykémii</string>
-    <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu</string>
-    <string name="objectives_maxiob_learned">Aktualizujte MaxIOB počas rastu dieťaťa. Nedovoľte systému, aby podal viac inzulínu, ako ste v skutočnosti schopní pokryť jedlom = skutočne vysoká hodnota je zlý nápad. Maximálne IOB sa v jednoduchom režime počíta automaticky.</string>
-    <string name="maxiobset">Maximálne IOB nastavené správne (nie je nutné v jednoduchom režime)</string>
-    <string name="objectives_autosens_objective">Upraviť bazály a pomery, ak je to potrebné, a povoliť automatickú detekciu citlivosti na inzulín</string>
-    <string name="objectives_autosens_gate">Jeden týždeň úspešného používania s bežným príjmom sacharidov</string>
-    <string name="objectives_autosens_learned">Ak váš výsledok Autosens neosciluje okolo 100%, Váš profil zrejme nebude správny.</string>
-    <string name="objectives_smb_objective">Povoliť ďalšie funkcie pre bežné používanie ako SMB</string>
-    <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
-    <string name="objectives_smb_learned">Používanie SMB je Váš cieľ. Oref1 algoritmus bol navrhnutý tak, aby Vám pomáhal aj s Vašimi bolusmi. Nemali by ste si poslať celý bolus k jedlu naraz, ale iba časť a nechať AAPS poslať zvyšok, keď bude treba. Takto máte väčší priestor na zle spočítané sacharidy. Viete, že možete nastaviť precento vypočítaného bolusu, na zníženie veľkosti bolusu?</string>
-    <string name="objectives_auto_objective">Povolenie automatiky</string>
-    <string name="objectives_auto_gate">Prečítajte si dokumentáciu, ako automatika funguje. Najskôr nastavte iba jednoduché pravidlá. Namiesto vykonávania akcií nechajte AAPS zobrazovať iba oznámenia. Pokiaľ ste si istý, že automatika je spustená v správnom čase, môžete oznámenie nahradiť vykonaním reálnej akcie. (https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/Automations.html)</string>
-    <string name="objectives_auto_learned">Automatizácia môže byť dobrý sluha, ale zlý pán. Nepreháňajte to s ním. Nesnažte sa nahradiť základný algoritmus. Odtestujte pravidlo iba so správou, predtým, ako ho použijete. Závisí na požiadavke.</string>
+    <string name="objectives_maxiob_objective">Ladiť uzavretý okruh, zvyšovať max IOB nad 0 a postupne znižovať cieľovú glykémiu</string>
+    <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní a aspoň jednu noc bez alarmov nízkej glykémie, až potom znížiť cieľovú glykémiu</string>
+    <string name="objectives_maxiob_learned">Aktualizujte MaxIOB počas rastu dieťaťa. Nedovoľte systému, aby podal viac inzulínu, ako ste v skutočnosti schopní pokryť jedlom = skutočne vysoká hodnota je zlý nápad. Maximálne IOB sa v jednoduchom móde počíta automaticky.</string>
+    <string name="maxiobset">Maximálne IOB nastavené správne (nie je nutné v jednoduchom móde)</string>
+    <string name="objectives_autosens_objective">Upraviť bazály a pomery, ak je to potrebné, a potom povoliť Autosens</string>
+    <string name="objectives_autosens_gate">Jeden týždeň úspešného používania okruhu cez deň s pravidelným zadávaním sacharidov. V jednoduchom móde je Autosens predvolene zapnutý.</string>
+    <string name="objectives_autosens_learned">Ak váš výsledok Autosens neosciluje okolo 100%, váš profil zrejme nie je správny.</string>
+    <string name="objectives_smb_objective">Povoliť ďalšie funkcie pre denné používanie, ako napríklad SMB</string>
+    <string name="objectives_smb_gate">Musíte si prečítať wiki a zvýšiť maxIOB, aby SMB fungovalo správne! Dobrý začiatok je maxIOB = priemerný bolus na jedlo + 3 x maximálny denný bazál. V jednoduchom móde sa táto hodnota počíta podľa odporúčania na wiki a nie je nutné ju nastavovať.</string>
+    <string name="objectives_smb_learned">Používanie SMB je váš cieľ. Algoritmus Oref1 bol navrhnutý tak, aby vám pomáhal aj s vašimi bolusmi. Nemali by ste si podať celý bolus na jedlo, ale iba jeho časť, a nechať AAPS podať zvyšok, ak to bude potrebné. Takto máte väčšiu rezervu pre zle spočítané sacharidy. Viete, že môžete nastaviť percento výsledku bolusovej kalkulačky, aby sa znížila veľkosť bolusu?</string>
+    <string name="objectives_auto_objective">Povolenie automatizácie</string>
+    <string name="objectives_auto_gate">Prečítajte si dokumentáciu, ako automatizácia funguje. Nastavte svoje prvé jednoduché pravidlá. Namiesto vykonávania akcií nechajte AAPS zobrazovať iba oznámenia. Keď ste si istí, že automatizácia sa spúšťa v správnom čase, nahraďte oznámenie skutočnou akciou. (https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Automatizácia môže byť dobrý sluha, ale zlý pán. Nepreháňajte to s ňou. Nesnažte sa nahradiť základný algoritmus. Pred použitím pravidlo otestujte iba so správou. Záleží na poradí.</string>
     <string name="objectives_bgavailableinns">Glykémia dostupná v NS, alebo Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS, alebo Tidepool</string>
     <string name="objectives_manualenacts">Spustené manuálne</string>
     <string name="accomplished">Splnené: %1$s</string>
-    <string name="objectives_usage_objective">Naučte sa, ako ovládať AndroidAPS</string>
-    <string name="objectives_usage_gate">Vykonávajte v AndroidAPS rôzne akcie</string>
+    <string name="objectives_usage_objective">Naučte sa, ako ovládať AAPS</string>
+    <string name="objectives_usage_gate">Vykonávajte v AAPS rôzne akcie</string>
     <string name="objectives_usage_learned">Naučili ste sa základy AAPS. Hlavné ovládacie prvky sú umiestnené na obrazovke Prehľad. Ďalšie možnosti nájdete dole pod záložkami Ošetrenia a Spravovať, prípadne v postrannom menu.</string>
     <string name="objectives_useprofileswitch">Nastaviť profil 90% na 10 min</string>
     <string name="objectives_usedisconnectpump">Simulujte sprchovanie. Odpojte pumpu na 1h</string>
     <string name="objectives_usereconnectpump">...a rovnakým spôsobom ju znovu pripojte</string>
     <string name="objectives_usetemptarget">Vytvorte vlastný dočasný cieľ s trvaním 10 minút</string>
-    <string name="objectives_useloop">Zobrazte obsah modulu uzavretý okruh</string>
+    <string name="objectives_useloop">Zobrazte obsah pluginu Uzavretý okruh</string>
     <string name="objectives_usescale">Použite skrolovanie a priblíženie na grafe glykémie</string>
     <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
     <string name="objectives_exam_gate">Prečítajte si otázky. Pri každej môže byť správnych aj viacero odpovedí naraz. Zaškrtnite všetky správne a kliknite na OVERIŤ.</string>
     <string name="objectives_exam_learned_prerequisites">Nemusíte byť vývojár. Na úspešné splnenie Cieľov budete potrebovať Nightscout alebo Tidepool, kompatibilnú pumpu a možnosť zostaviť si AAPS (cez webový prehliadač alebo Android Studio) pri prvej inštalácii aj pri každej aktualizácii.</string>
-    <string name="objectives_exam_learned_prerequisites2">AAPS može fungovať offline.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS môže fungovať offline.</string>
     <string name="objectives_exam_learned_basaltest">Profil by mal byť kontrolovaný a aktualizovaný. Lepší profil = lepšie výsledky.</string>
-    <string name="objectives_exam_learned_dia">DIA pri uzavretom okruhu má iný význam (čas, kým sa vstrebá všetok inzulín), než pri klasickej liečbe pumpou (čas, kým sa vstrebá vačšina inzulínu).</string>
+    <string name="objectives_exam_learned_dia">DIA pri uzavretom okruhu má iný význam (čas, kým sa vstrebe všetok inzulín), než pri klasickej liečbe pumpou (čas, kým sa vstrebe väčšina inzulínu).</string>
     <string name="objectives_exam_learned_isf">Naučili ste sa význam hodnoty ISF (citlivosti) a ako ovplyvňuje množstvo inzulínu, použitého pre korekcie glykémie.</string>
-    <string name="objectives_exam_learned_ic">Naučili ste sa význam hodnoty IC (sacharidovo-inzulínový prevod) a ako ovplyvňuje množstvo inzulínu, potrebného k pokrytiu sacharidov.</string>
-    <string name="objectives_exam_learned_hypott">Dočasný cieľ Hypoglykémia je používaný iba na zabránenie nadmernej korekcii po hype, kedy sa zväčša nakumuluje negatívne IOB.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">Používanie percenta neovplyvňuje cieľovú glykémiu, ale bazál, citlivosť a sacharidovo-inzulínové prevody sú prispôsobené, aby bolo použitého viac inzulínu (nad 100%), alebo menej inzulínu (pod 100%).</string>
+    <string name="objectives_exam_learned_ic">Naučili ste sa význam hodnoty IC (inzulínovo-sacharidový pomer) a ako ovplyvňuje množstvo inzulínu potrebného na pokrytie sacharidov.</string>
+    <string name="objectives_exam_learned_hypott">Dočasný cieľ Hypoglykémia sa používa iba na zabránenie nadmernej korekcii po hypoglykémii, keď je zvyčajne nahromadené negatívne IOB. Je potrebné zvážiť ďalšie kroky, aby sa tejto situácii v budúcnosti zabránilo.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Používanie percenta neovplyvňuje cieľovú glykémiu, ale bazál, ISF a IC sa upravia tak, aby sa podalo viac inzulínu (nad 100%) alebo menej inzulínu (pod 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Pri používani posunu času pri prepínaní profilu, môžete prispôsobiť cirkadiánny profil na nezrovnalosti, ako napríklad neskoršie zobudenie.</string>
     <string name="objectives_exam_learned_profileswitch4">Úprava samotného profilu na vykonanie zmien nepostačuje. Pre aktiváciu zmien, potrebujete stále urobiť prepnutie profilu.</string>
     <string name="objectives_exam_learned_exercise">Množstvo inzulínu v tele, by ste mali znížiť aspoň 1 hodinu pred začiatkom cvičenia, výberom profilu pod 100%.</string>
-    <string name="objectives_exam_learned_exercise2">Nastavením vyššieho dočasného cieľa aspoň 1 hodinu pred cvičením, pomôže so znížením množstva inzulínu v tele.</string>
+    <string name="objectives_exam_learned_exercise2">Nastavenie vyššieho dočasného cieľa aspoň 1 hodinu pred cvičením tiež pomáha znížiť množstvo inzulínu v tele.</string>
     <string name="objectives_exam_learned_noisycgm">Ak nemôžete dôverovať hodnotám CGM, nemali by ste používať uzavretý okruh bez dozoru.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS musí vedieť, že pumpa nie je pripojená, aby správne počítalo IOB.</string>
     <string name="objectives_exam_learned_insulin">AAPS musí vedieť, aký inzulín je v pumpe, pretože to ovplyvňuje výpočet IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Detekcia citlivosti je časť algoritmu, ktorá dovoľuje prispôsobovať dávkovanie inzulínu rôznym situáciam.</string>
     <string name="objectives_exam_learned_objectives">Váš pokrok v cieľoch je ukladaný spolu s ostatnými nastaveniami a mal by sa pravidelne zálohovať.</string>
-    <string name="objectives_exam_learned_objectives2">Vždy držte exportované nastavenia aj vygenerovaný APK mimo telefónu. Telefón sa môže stratiť, poškodiť atď. Dobré miesto môže byť akýkoľvek cloud prístupný z telefónu. V tomto prípade môžete AAPS obnoviť z iného zariadenia za pár minút. Dobrým zvykom je uložiť na bezpečnom mieste aj použité hlavné heslo. Bez neho je Vaša záloha nepoužiteľná. To isté platí aj pre podpisové kľúče (.jks súbory) a heslá použité na vytvorenie AAPS. Zvyšok nie je dôležitý - dá sa kedykoľvek stiahnuť znovu z internetu.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Ak ste do AAPS niečo zadali nesprávne, alebo sa to nezhoduje so skutočnosťou, vyriešte to čo možno najskôr. Pretože by to mohlo viesť k predávkovaniu. AAPS by mala byť vždy najlepšie informovaná o množstve sacharidov, inzulínu atď.</string>
+    <string name="objectives_exam_learned_objectives2">Vždy majte exportované nastavenia aj vygenerovaný APK uložené aj mimo telefónu. Telefón sa môže stratiť, poškodiť atď. Dobré miesto môže byť akýkoľvek cloud prístupný z telefónu. V takom prípade môžete AAPS obnoviť na inom zariadení za pár minút. Dobrým zvykom je uložiť na bezpečnom mieste aj použité hlavné heslo. Bez neho je vaša záloha nepoužiteľná. To isté platí aj pre podpisové kľúče (súbor .jks) a heslá použité na zostavenie AAPS. Zvyšok nie je dôležitý - dá sa kedykoľvek znova stiahnuť z internetu.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Ak ste do AAPS niečo zadali nesprávne alebo sa to nezhoduje so skutočnosťou, vyriešte to čo najskôr. Mohlo by to viesť k predávkovaniu. AAPS by malo byť vždy čo najlepšie informované o sacharidoch, inzulíne atď.</string>
     <string name="objectives_exam_learned_iob">Sledovanie grafu IOB (aktívneho inzulínu) vám poskytne cenné informácie o tom, či AAPS funguje správne.</string>
     <string name="objectives_exam_learned_cob">Výpočet COB závisí od vzťahu medzi ISF a IC. Zvýšenie ISF, alebo zníženie IC vedie k dlhším časom vstrebávania. Ale percentuálne prepnutie profilu zmení obe tieto hodnoty v rovnakom čase a doba vstrebávania sa nemení.</string>
     <string name="objectives_exam_learned_breadgrams">Pri zadávaní sacharidov sú povolené iba gramy.</string>
     <string name="objectives_exam_learned_ecarbs">E-Carbs je náhrada za predĺžený bolus vo svete pumpy.</string>
     <string name="objectives_exam_learned_nsclient">AAPS môžete vzdialene sledovať pomocou AAPSClienta alebo Nightscoutu. Keď je AAPSClient spárovaný s hlavným telefónom (master), môžete AAPS aj vzdialene ovládať.</string>
-    <string name="objectives_exam_learned_concentration1">Používanie inzulínu U200 s profilom na 50 % vyžaduje neustály prepočet: týka sa to externých bolusov podávaných perom a rovnako aj všetkých štandardných reportov z AAPS alebo Nightscoutu, ktoré budú skreslené a bude potrebné ich prerátať na jednotky (IU).</string>
+    <string name="objectives_exam_learned_concentration1">Používanie inzulínu U200 s profilom na 50 % vyžaduje neustály prepočet: týka sa to externých bolusov podávaných perom a rovnako aj všetkých štandardných reportov z AAPS alebo Nightscoutu, ktoré budú skreslené a bude potrebné ich prerátať na jednotky (IU) pre lekársky tím.</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">Prechod z U200 s profilom 50% na U200 s funkciou koncentrácie inzulínu bude vyžadovať vytvorenie nového silnejšieho profilu, vypnutie DynISF na jeden týždeň a natrénovanie mozgu myslieť v medzinárodných jednotkách.</string>
-    <string name="objectives_exam_learned_concentration3">Koncentráciu inzulínu je možné meniť iba pri výmene inzulínu alebo Patchu. Ale predovšetkým, hlavne pri pumpách s hadičkou, nikdy nepoužívajte uživateľské rozhranie pumpy k podávaniu bolusov priamo z pumpy.</string>
+    <string name="objectives_exam_learned_concentration3">Koncentráciu inzulínu je možné meniť iba pri výmene inzulínu alebo Patchu. Ale predovšetkým, hlavne pri pumpách s hadičkou, nikdy nepoužívajte používateľské rozhranie pumpy na podávanie bolusov priamo z pumpy.</string>
     <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
     <string name="wronganswer">Nesprávna odpoveď!</string>
     <string name="unfinshed_button">Ďalšia nedokončená</string>
@@ -90,7 +90,7 @@
     <string name="objectives_collapse">Menej</string>
     <string name="objectives_expand">Viac</string>
     <string name="objectives_no_learned">Nezaznamenaná žiadna lekcia pre tento cieľ.</string>
-    <string name="objectives_open_exam">Otvoriť cvičenie</string>
+    <string name="objectives_open_exam">Otvoriť test</string>
     <string name="objectives_exam_question_progress">Otázka %1$d z %2$d</string>
     <string name="objectives_exam_reset">Resetovať</string>
     <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Hotovo</string>

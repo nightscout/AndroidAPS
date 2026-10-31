@@ -8,6 +8,7 @@
     <string name="time_offset">времево отместване</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dд%2$dч</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dч</string>
     <!--    Widget-->
     <string name="configure">Конфигуриране на прозрачността</string>
     <string name="widget_description">AAPS уиджет</string>
@@ -97,7 +98,6 @@
     <string name="aaps_bolus_icon_label">Болус</string>
     <string name="aaps_carbs_icon_label">Въглехидрати</string>
     <string name="aaps_tbr_icon_label">Временен базал</string>
-    <string name="aaps_activity_icon_label">Спорт</string>
     <string name="aaps_note_icon_label">Бележка</string>
     <string name="aaps_automation_icon_label">Автоматизация</string>
     <string name="aaps_calibration_icon_label">Калибрация</string>
@@ -208,7 +208,7 @@
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Покажи контролите</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Известия: %1$d</string>
     <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">няма временна цел, цел от профила</string>
-    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">променена от Loop</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">променена от кръга</string>
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s в %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">промяна %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">стар отчет</string>
@@ -257,7 +257,7 @@
     <string name="format_with_tdd">Възраст: %1$d TDD: %2$.0f Е</string>
     <string name="format_with_tdd_and_pct">Възраст: %1$d TDD: %2$.0f Е %3$d%% </string>
     <string name="format_with_weight">Възраст: %1$d Тегло: %2$.0f кг</string>
-    <string name="dpv_default_profile">Профил по подразбиране</string>
+    <string name="dpv_default_profile">DPV профил по подразбиране</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Текст на бутона</string>
@@ -270,7 +270,7 @@
     <string name="history_now">Сега</string>
     <string name="a11y_history_previous_window">Предишен прозорец</string>
     <string name="a11y_history_next_window">Следващ прозорец</string>
-    <string name="additional_ecarbs">Добави уд въглехидрати</string>
+    <string name="additional_ecarbs">Добави удължени въглехидрати</string>
     <string name="calculator_options">Опции</string>
     <string name="use_bg">Включвай КЗ</string>
     <string name="use_cob">Включвай въглехидрати</string>
@@ -298,7 +298,7 @@
     <string name="widget_configuration">Конфигурация на уиджет</string>
     <string name="until_changed">До промяна</string>
     <!--    Permissions-->
-    <string name="permission_sheet_title">Трябват права за достъп за няколко неща</string>
+    <string name="permission_sheet_title">Нужни са разрешения</string>
     <string name="permission_sheet_subtitle">Някои разрешения са нужни, за да работя добре</string>
     <string name="permission_grant">Позволи</string>
     <string name="permission_change">Промяна</string>
@@ -332,7 +332,7 @@
     <string name="quick_launch_category_profile">Профил</string>
     <string name="quick_launch_category_temp_target">Предварително зададени временни цели</string>
     <string name="quick_launch_category_quick_wizard">Съветник</string>
-    <string name="quick_launch_category_automation">Автомация</string>
+    <string name="quick_launch_category_automation">Автоматизация</string>
     <string name="quick_launch_all_selected">Всичко е избрано</string>
     <string name="quick_launch_no_quick_wizard">Добавете опции за съветника, за да ги използвате тук</string>
     <string name="quick_launch_no_automation">Добавете нови действия, за да ги използвате тук</string>

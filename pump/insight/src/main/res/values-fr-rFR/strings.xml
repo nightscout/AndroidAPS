@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">Activer la notification de la fin DBT\n(réglage de pompe)</string>
+    <string name="enable_tbr_over_notification">Activer la notification de fin de DBT
+(réglage de pompe)</string>
     <string name="disable_tbr_over_notification">Désactiver la notification de la fin de DBT\n(réglage de pompe)</string>
     <string name="not_paired">Non appairé</string>
     <string name="recovering">Récupération en cours.</string>

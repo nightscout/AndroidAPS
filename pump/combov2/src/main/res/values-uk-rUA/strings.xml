@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_confirm_cancel_pairing_message">Ви дійсно хочете скасувати спарювання?</string>
+    <string name="combov2_confirm_unpair_message">Ви дійсно хочете розпарувати помпу?</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Під час болюсу з’єднання з помпою було втрачено. На той момент помпа ввела %1$s і може ще ввести решту. Не вводьте болюс повторно. AAPS прочитає реальну кількість із помпи під час наступного підключення.</string>
+    <string name="combov2_bolus_stopped_history_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Помпа зупинила болюс після %1$s. Потім з’єднання було втрачено, тому AAPS не зміг прочитати історію помпи. AAPS прочитає реальну кількість під час наступного підключення. Перевірте помпу перед наступним болюсом.</string>
+    <string name="combov2_bolus_stopped_after_error" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Болюс зупинено через помилку після %1$s. Перевірте помпу перед наступним болюсом.</string>
+    <string name="combov2_bolus_request_outcome_unknown">З’єднання з помпою було втрачено, коли AAPS надсилав болюс, тому невідомо, чи помпа його отримала. Перевірте історію болюсів на помпі перед наступним болюсом. AAPS прочитає реальну кількість із помпи під час наступного підключення.</string>
+    <string name="combov2_unknown_bolus_in_history">В історії помпи є болюс, про який AAPS не знав. Запитаний болюс не введено, бо його розраховано без цього інсуліну. Перевірте історію болюсів на помпі та активний інсулін (IOB) в AAPS. Якщо болюс ще потрібен, розрахуйте його знову.</string>
+    <string name="combov2_bolus_given_other_boluses_found">Болюс введено, але в історії помпи були й інші болюси, про які AAPS не знав. Їх записано зараз. Перевірте активний інсулін (IOB) перед наступним болюсом.</string>
+    <string name="combov2_battery_empty">Розряджена</string>
+    <string name="combov2_battery_low">Низький заряд</string>
+    <string name="combov2_battery_full">Заряджена</string>
+</resources>

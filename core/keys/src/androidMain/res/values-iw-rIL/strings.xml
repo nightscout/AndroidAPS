@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">הפעל התראות דחופות כהתראות אנדרואיד</string>
     <string name="pref_title_alert_increase_volume">הגברת  עוצמת הקול של ההתראות באופן הדרגתי</string>
     <string name="pref_title_alert_override_dnd">עקיפת מצב \'נא לא להפריע\'</string>
-    <string name="pref_summary_alert_override_dnd">כשאפשרות זו מופעלת, התראות AAPS נשמעות גם אם הטלפון מושתק או במצב נא לא להפריע. כאשר היא מושבתת, התראות נשארות שקטות במצבים אלה.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">העלאת נתוני סוכר ל־Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">רישום החלפת חיישן</string>

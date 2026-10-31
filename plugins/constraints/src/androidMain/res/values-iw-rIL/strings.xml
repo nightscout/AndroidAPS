@@ -9,6 +9,7 @@
     <string name="application_expired">תוקף האפליקציה פג</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה שאינה בתוקף. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
+    <string name="version_expire">תוקף גרסה %1$s יפוג ב־%2$s ויופעל מצב LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
@@ -40,4 +41,5 @@
     <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
     <string name="objectives_button_unfinish">ביטול השלמה</string>
     <string name="objectives_button_unstart">ביטול התחלה</string>
+    <string name="bg_doubled_lgs">במצב LGS עקב ערכים כפולים במקור נתוני הסוכר</string>
 </resources>

@@ -1,2 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="objectives_autosens_learned">Якщо результат autosens не коливається навколо 100%, ваш профіль, імовірно, неправильний.</string>
+    <string name="objectives_usage_learned">Ви вивчили основи AAPS. Більшість елементів керування — на екрані «Огляд». Більше дій — у меню «Терапія» та «Керування» внизу екрана і в бічному меню.</string>
+    <string name="objectives_useprofileswitch">Встановіть профіль 90% на 10 хв</string>
+    <string name="objectives_usedisconnectpump">Імітуйте душ. Від’єднайте помпу на 1 год</string>
+    <string name="objectives_usetemptarget">Створіть власну тимчасову ціль тривалістю 10 хв</string>
+    <string name="objectives_usescale">Прокрутіть або масштабуйте графік ГК</string>
+    <string name="objectives_exam_gate">Вивчіть питання. Кожне питання має кілька можливих відповідей, і правильних може бути більше однієї. Позначте всі правильні відповіді та натисніть ПЕРЕВІРИТИ.</string>
+    <string name="objectives_exam_learned_prerequisites">Вам не потрібно бути розробником. Щоб пройти Завдання, потрібні Nightscout або Tidepool, сумісна помпа і спосіб зібрати AAPS (у браузері або в Android Studio) для першої інсталяції та кожного оновлення.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Відсоток не впливає на цільові значення ГК, але базал, ISF та IC коригуються так, щоб давати більше інсуліну (понад 100%) або менше інсуліну (нижче 100%).</string>
+    <string name="objectives_exam_learned_insulin">AAPS має знати, який інсулін у помпі, бо це впливає на розрахунок IOB.</string>
+    <string name="objectives_exam_learned_iob">Якщо ви аналізуєте, чи добре AAPS працює для вас, графік IOB може дати багато корисної інформації.</string>
+    <string name="objectives_exam_learned_cob">Розрахунок COB залежить від співвідношення між ISF та IC. Збільшення ISF або зменшення IC призводить до довшого часу засвоєння. Але перемикання профілю з відсотком змінює обидва значення одночасно, тому час засвоєння не змінюється.</string>
+    <string name="objectives_exam_learned_nsclient">Ви можете віддалено стежити за AAPS через AAPSClient або Nightscout. Коли AAPSClient спарено з основним телефоном, ви також можете віддалено керувати AAPS.</string>
+    <string name="objectives_exam_learned_concentration1">Використання інсуліну U200 з профілем 50% потребує постійного перерахунку: для зовнішніх болюсів шприц-ручкою, а всі стандартні звіти AAPS або NS стануть неправильними, і для медичної команди їх доведеться перераховувати в МО.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Перехід з U200 з профілем 50% на U200 з функцією концентрації інсуліну потребує створити новий, сильніший профіль, вимкнути DynISF на тиждень і привчити себе думати в міжнародних одиницях.</string>
+    <string name="objectives_exam_learned_concentration3">Концентрацію інсуліну можна змінити лише під час заміни інсуліну або патча. Але найважливіше, особливо для помп із трубкою: ніколи не вводьте болюси напряму через інтерфейс помпи.</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="failedretrievetime">Не вдалося отримати час</string>
+    <string name="objectives_collapse">Менше</string>
+    <string name="objectives_expand">Більше</string>
+    <string name="objectives_no_learned">Для цього завдання немає записаних уроків.</string>
+    <string name="objectives_open_exam">Відкрити іспит</string>
+    <string name="objectives_exam_question_progress">Питання %1$d з %2$d</string>
+    <string name="objectives_exam_reset">Скинути</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Виконано</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Виконується</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Не розпочато</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Заблоковано</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">правильна відповідь</string>
+    <string name="objectives_exam_previous">Назад</string>
+    <string name="objectives_exam_next">Далі</string>
+    <string name="objectives_exam_next_unanswered">Наступне без відповіді</string>
+    <string name="objectives_show_hint">Підказка</string>
+</resources>

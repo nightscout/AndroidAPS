@@ -43,7 +43,6 @@
     <string name="pair_with_master_fetching">Buscando pareamento…</string>
     <string name="pair_with_master_confirm_title">Parear com este dispositivo principal?</string>
     <string name="pair_with_master_confirm_master">Dispositivo principal: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Após o pareamento, este dispositivo principal poderá enviar comandos assinados para este dispositivo.</string>
     <string name="pair_with_master_confirm_pair">Parear</string>
     <string name="pair_with_master_error_title">Não é possível parear</string>
     <string name="pair_with_master_error_wrong_pin">Nenhum pareamento encontrado para esse PIN. Verifique o PIN no dispositivo principal e tente novamente.</string>

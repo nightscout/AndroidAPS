@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Bir başlangıç ​​noktası seçin. Şablonlar yaygın durumlar için önerilen eylemleri önceden doldurur- sonraki adımlarda her şeyi dilediğiniz gibi düzenleyebilirsiniz.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Egzersiz</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Hastalık— Kusma</string>

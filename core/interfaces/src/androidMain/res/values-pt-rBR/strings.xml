@@ -13,7 +13,7 @@
     <string name="secago">há %1$ds</string>
     <string name="minago_long">%1$d minutos atrás</string>
     <string name="hoursago">%1$.1fh atrás</string>
-    <string name="days_ago">%1$d dias atrás</string>
+    <string name="days_ago">%1$.1f dias atrás</string>
     <string name="days_ago_round">%1$.0f dias atrás</string>
     <plurals name="plurals_day_hour_ago">
         <item quantity="one">há %1$s dia e %2$s h</item>

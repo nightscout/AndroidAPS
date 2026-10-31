@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Koppelingsgegevens opnieuw instellen?</string>
     <string name="diaconn_pairing">Diaconn Pomp Koppeling</string>
     <string name="diaconn_g8_history_alarm">Alarmen</string>
     <string name="diaconn_g8_history_basalhours">Basaal uren</string>
@@ -10,8 +11,11 @@
     <string name="gettingpumpsettings">Pomp instellingen aan het ophalen</string>
     <string name="gettingpumptime">Pomp tijd aan het ophalen</string>
     <string name="largetimediff">Groot tijdsverschil:\nTijd in de pomp staat meer dan 1,5 uur uit.\nPas de tijd handmatig aan op de pomp en zorg ervoor dat het lezen van geschiedenis uit de pomp geen onverwacht gedrag veroorzaakt.\nindien mogelijk verwijder de geschiedenis van de pomp voordat je de tijd wijzigt of schakel de closed loop uit voor een DIA na het laatste verkeerde geschiedenis-invoer, maar vanaf nu minimaal één DIA.</string>
+    <string name="largetimedifftitle">Groot tijdsverschil</string>
     <string name="approachingdailylimit">Insuline daglimiet aan het benaderen</string>
     <string name="startingbolus">Bolus toediening gestart</string>
+    <string name="waitingforbolusend">Wachten tot het einde van de bolus is bereikt</string>
+    <string name="gettingbolusstatus">Bolus status aan het ophalen</string>
     <string name="stoppingtempbasal">Stoppen van tijdelijk basaal</string>
     <string name="settingtempbasal">Instellen tijdelijk basaal</string>
     <string name="settingextendedbolus">Instellen van vertraagde bolus</string>
@@ -28,6 +32,7 @@
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
     <string name="pairfirst">A.u.b. de pomp koppelen met je telefoon!</string>
+    <string name="processinghistory">Gebeurtenis verwerken</string>
     <string name="diaconn_g8_history_tempbasal">Tijdelijk basaal</string>
     <string name="diaconng8_pump_settings">Diaconn pomp instellingen</string>
     <string name="diaconn_g8_pumpalarm">Geluid</string>
@@ -53,7 +58,7 @@
     <string name="needinsullinreplace">Insuline vervanging is vereist</string>
     <string name="diaconn_g8_loginsulinchange_title">Reservoir wissel vastleggen</string>
     <string name="diaconn_g8_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pomp geschiedenis wordt uitgelezen</string>
-    <string name="diaconn_g8_logcanulachange_title">Infuus wissel noteren</string>
+    <string name="diaconn_g8_logcanulachange_title">Canulewissel noteren</string>
     <string name="diaconn_g8_logcanulachange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logbatterychange_summary">Zet \"Batterij wissel\" melding in Nightscout als deze in pomp geschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logbatterychange_title">Batterijwissel noteren</string>
@@ -110,7 +115,7 @@
     <string name="diaconn_g8_errorcode_13">U kunt het niet injecteren omdat het de limiet eenmaal overschrijdt.</string>
     <string name="diaconn_g8_errorcode_14">Injectie kan niet toegediend worden omdat de dagelijkse maximale injectie hoeveelheid overschreden is.</string>
     <string name="diaconn_g8_errorcode_15">Nadat je basaal instellingen zijn voltooid, kan basaal afgifte worden uitgevoerd.</string>
-    <string name="diaconn_g8_logtubechange_title">Infuuswissel noteren</string>
+    <string name="diaconn_g8_logtubechange_title">Slangwissel noteren</string>
     <string name="diaconn_g8_logtubechange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logtempstart">Tijdelijk Basaal Start</string>
     <string name="diaconn_g8_errorcode_32">Als LGS loopt is de injectie begrensd</string>
@@ -120,4 +125,14 @@
     <string name="diaconn_g8_errorcode_36">Tijdelijk basaal stop geweigerd als tijdelijk basaal niet wordt uitgevoerd</string>
     <string name="diaconn_g8_cloudsend_summary">Stuur pomp logs naar de Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
+    <string name="bolus_speed_1">1 E/min</string>
+    <string name="bolus_speed_2">2 E/min</string>
+    <string name="bolus_speed_3">3 E/min</string>
+    <string name="bolus_speed_4">4 E/min</string>
+    <string name="bolus_speed_5">5 E/min</string>
+    <string name="bolus_speed_6">6 E/min</string>
+    <string name="bolus_speed_7">7 E/min</string>
+    <string name="bolus_speed_8">8 E/min</string>
+    <string name="diaconn_pairing_successful">Succesvol gekoppeld!</string>
+    <string name="diaconn_pairing_successful_message">De pomp is nu verbonden en klaar voor gebruik.</string>
 </resources>

@@ -51,6 +51,7 @@
     <string name="carbs_suggestion">Koolhydraten suggestie</string>
     <string name="open_loop_new_suggestion">Nieuwe suggestie beschikbaar</string>
     <string name="loop_notification_channel_name">Loop suggesties</string>
+    <string name="loop_notification_channel_silent_name">Loop meldingen tijdens \'niet storen\'</string>
     <string name="open_loop_suggestion_too_old">Deze suggestie is te oud. Er is niets naar de pomp gestuurd. Wacht op de volgende.</string>
     <string name="basal_set_correctly">Basaal correct ingesteld</string>
     <string name="last_run_label">Laatst uitgevoerd</string>

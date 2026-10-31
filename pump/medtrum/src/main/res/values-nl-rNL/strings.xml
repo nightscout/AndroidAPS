@@ -12,6 +12,7 @@
     <string name="patch_not_active">Patch niet geactiveerd</string>
     <string name="pump_setting_failed">Gebruikersinstellingen instellen op de pomp mislukt!</string>
     <string name="pump_sync_error">Fout bij het synchroniseren van de geschiedenis van de pomp: een record is overgeslagen. Controleer in het behandeling tabblad of de bolus correct is gesynchroniseerd. Stel het alarm uit en vervang als de fout blijft terugkomen de patch of pompbasis.</string>
+    <string name="patch_reset_after_primed_error">De patch is zelf opnieuw gestart, heeft zijn sessie verloren en kan geen insuline meer aanleveren. Verwijder de patch en start een nieuwe patch.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Actieve bolus</string>
     <string name="pump_state_label">Pomp status</string>
@@ -48,10 +49,17 @@
     <string name="pump_time_update_failed">Update van pomp tijdzone mislukt, snooze bericht en vernieuw handmatig.</string>
     <string name="bolus_error">Bolus fout</string>
     <!-- Status strings -->
+    <string name="status_idle">Inactief</string>
+    <string name="status_filled">Gevuld</string>
+    <string name="status_priming">Voorvullen</string>
+    <string name="status_primed">Voorgevuld</string>
+    <string name="status_active">Actief</string>
+    <string name="status_stopped">Gestopt</string>
     <!-- wizard-->
     <string name="retry">Opnieuw</string>
     <string name="step_prepare_patch">Activeer Patch</string>
     <string name="step_prepare_patch_connect">Verbinden en vullen</string>
+    <string name="step_select_insulin">Selecteer insuline</string>
     <string name="step_prime">Voorvullen</string>
     <string name="step_priming">Voorvullen</string>
     <string name="step_priming_complete">Voorvullen voltooid</string>
@@ -61,9 +69,12 @@
     <string name="step_deactivate">Deactiveer Patch</string>
     <string name="step_deactivating">Deactiveren...</string>
     <string name="step_deactivate_complete">Patch gedeactiveerd</string>
+    <string name="unpair_confirm_message">Het opgeslagen pomp serienummer wordt gewist en de verbinding verbroken. Activeer een nieuwe patch om een scan naar een pomp te starten.</string>
     <string name="step_retry_activation">Bezig met activatie</string>
     <string name="unexpected_state">Onverwachte staat: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Verbind de pomp basis met een nieuwe patch om hem aan te zetten, selecteer hem daarna uit de lijst hieronder.</string>
     <string name="patch_begin_activation">Geen actieve patch. Druk op <b>Volgende</b> om het activeringsproces te starten.</string>
+    <string name="connect_pump_base">Controleer of de pomp basis is verbonden met de patch, verwijder luchtbellen en vul met insuline, druk daarna op <b>Volgende</b>.</string>
     <string name="note_min_70_units">Opmerking: Voor de activering zijn minimaal 70 eenheden vereist.</string>
     <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Plaats de patch nog niet op het lichaam.</string>
@@ -71,7 +82,7 @@
     <string name="wait_for_priming">Wacht alstublieft tot het voorvullen voltooid is.</string>
     <string name="press_next">Druk op <b>Volgende</b> om verder te gaan.</string>
     <string name="press_next_to_start_activation">Druk op <b>Volgende</b> om het activeren te starten.</string>
-    <string name="remove_safety_lock">Verwijder het veiligheidsslot, Bevestig de pomp aan het lichaam. Druk op de naald knop.</string>
+    <string name="remove_safety_lock">Verwijder het veiligheidsslot. Bevestig de pomp aan het lichaam. Druk op de naaldknop.</string>
     <string name="activating_pump">Pomp activeren en initiële basaalstand instellen. Even geduld alstublieft.</string>
     <string name="activating_complete">Nieuwe patch geactiveerd. %.2f Eenheden resterend.</string>
     <string name="can_export_settings">Je kunt de instellingen exporteren om deze patch sessie later te kunnen herstellen.</string>
@@ -79,18 +90,22 @@
     <string name="deactivate_sure">Weet u zeker dat u de huidige patch wilt deactiveren?</string>
     <string name="cancel_sure">Weet u zeker dat u de activatie wil annuleren?</string>
     <string name="medtrum_deactivate_pump_confirm">Weet u het zeker? Deze actie kan niet ongedaan worden gemaakt!!</string>
-    <string name="press_next_or_cancel">Druk op <b>Volgende</b> om te deactiveren of <b>Annuleer</b> om terug te keren naar het hoofdscherm.</string>
+    <string name="press_next_or_cancel">Druk op <b>Volgende</b> om te deactiveren of op <b>Annuleren</b> om terug te keren naar het hoofdscherm.</string>
     <string name="deactivating_pump">Patch deactiveren. Even geduld.</string>
-    <string name="deactivating_error">Deactivatie mislukt, druk <b>Verwijderen</b> om de patch te vergeten.</string>
+    <string name="deactivating_error">Deactivatie mislukt, druk op <b>Weggooien</b> om de patch te vergeten.</string>
     <string name="retract_needle">Trek de naald terug. Verwijder patch van het lichaam.</string>
     <string name="remove_base_discard_patch">Verwijder pomp basis en voer de gebruikte patch op de juiste manier af.</string>
     <string name="press_next_or_OK">Druk op <b>OK</b> om terug te keren naar het hoofdscherm. Druk op <b>Volgende</b> om te beginnen met de activering van een nieuwe patch.</string>
     <string name="activation_in_progress">Oeps! Er ging iets mis, het lijkt erop dat er al een activatie bezig is.</string>
-    <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of <b>Verwijderen</b> om de activeringsstatus te resetten.</string>
+    <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of op <b>Weggooien</b> om de activeringsstatus te resetten.</string>
     <string name="reading_activation_status">Een ogenblik geduld, activeringsstatus van de pomp wordt gelezen.</string>
     <!-- settings-->
     <string name="alarm_setting_title">Alarminstellingen</string>
     <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
+    <string name="alarm_setting_vibrate_beep">Trillen en pieptoon</string>
+    <string name="alarm_setting_vibrate">Trillen</string>
+    <string name="alarm_setting_beep">Pieptoon</string>
+    <string name="alarm_setting_silent">Stil</string>
     <string name="pump_warning_notification_title">Notificatie bij pomp waarschuwing</string>
     <string name="pump_warning_notification_summary">Melding weergeven op niet-kritische pompwaarschuwingen: batterij bijna leeg, reservoir bijna leeg (20 eenheden) en vervalt bijna. Aanbevolen om ingeschakeld te laten wanneer pomp alarmen op stil zijn ingesteld.</string>
     <string name="pump_warning_expiry_hour_title">Waarschuwing vervallen pomp [uren]</string>

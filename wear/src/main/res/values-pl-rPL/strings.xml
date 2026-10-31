@@ -16,7 +16,7 @@
     <string name="pref_display_settings">Wyświetlacz</string>
     <string name="pref_graph_settings">Wykres</string>
     <string name="pref_interface_settings">Interfejs</string>
-    <string name="pref_tile_settings">Widżety</string>
+    <string name="pref_tile_settings">Kafelki</string>
     <string name="pref_others_settings">Inne</string>
     <string name="pref_complication_settings">Komplikacje</string>
     <string name="pref_show_date">Pokaż Datę</string>
@@ -62,6 +62,7 @@
     <string name="pref_single_target">Pojedyńcza wartość Celu</string>
     <string name="pref_wizard_percentage">Procent kalkulatora</string>
     <string name="pref_wizard_carbs_type">Typ posiłku w kalkulatorze</string>
+    <string name="pref_wizard_carb_time">Czas węglowodanów w kalkulatorze</string>
     <string name="pref_complication_tap_action">Akcja po kliknięciu komplikacji</string>
     <string name="pref_complication_bg_graph_hours">Zakres czasu wykresu BG</string>
     <string name="duration_1_hour">1 godzina</string>
@@ -79,7 +80,7 @@
     <string name="menu_treatment_short">Lecz</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Węglowodany</string>
-    <string name="menu_ecarb">wirtualne węgle</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
     <string name="menu_bg_graph">Wykres BG</string>
@@ -94,7 +95,7 @@
     <string name="menu_default">Domyślnie</string>
     <string name="menu_menu">Menu</string>
     <string name="action_tempt_confirmation">Żądany cel tymczasowy</string>
-    <string name="action_quick_wizard_confirmation">Szybki kreator</string>
+    <string name="action_quick_wizard_confirmation">Wysłano żądanie szybkiego kalkulatora</string>
     <string name="action_user_action_confirmation">Wymagane działanie użytkownika</string>
     <string name="action_scene_confirmation">Zażądano sceny</string>
     <string name="scene_end">Zakończ</string>
@@ -264,7 +265,7 @@
     <string name="complication_br">Dawka bazowa</string>
     <string name="complication_br_tt">BR i Cel</string>
     <string name="complication_target">Cel</string>
-    <string name="complication_cob_iob">CoB i; IoB</string>
+    <string name="complication_cob_iob">CoB i IoB</string>
     <string name="complication_cob_icon">Ikona CoB</string>
     <string name="complication_cob_detailed">Szczegółowe CoB</string>
     <string name="complication_iob_icon">Ikona IoB</string>
@@ -281,15 +282,28 @@
     <string name="tile_tap_loop_status">Status pętli</string>
     <string name="action_running_mode_selected">Żądanie zmiany trybu pracy wysłane</string>
     <string name="title_activity_disconnect_pump">Odłącz pompę</string>
-    <string name="title_activity_suspend_loop">Zawieś pętlę</string>
+    <string name="title_activity_suspend_loop">Wstrzymaj pętlę</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="wizard_carbs_type">Typ posiłku</string>
     <string name="wizard_carbs_type_bread">Pieczywo</string>
     <string name="wizard_carbs_type_cake">Ciasto</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Czas węgl.\n[min]</string>
+    <string name="wizard_carb_time_now">Teraz</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
     <string name="wizard_set_alarm">Ustaw alarm</string>
     <string name="eat_reminder_title">Czas coś zjeść</string>
+    <string name="eat_reminder_silence">Wycisz</string>
+    <string name="eat_reminder_stop">Zatrzymaj</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Dzwoni o %1$s</string>
+    <string name="eat_reminder_countdown_channel">Czas coś zjeść, w trakcie</string>
+    <string name="eat_reminder_channel_silent">Czas na posiłek w trybie Nie przeszkadzać</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmy z telefonu</string>
+    <string name="phone_alarm_channel_silent">Alarmy z telefonu w trybie Nie przeszkadzać</string>
+    <string name="phone_alarm_silence">Wycisz</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Wycisz na %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>

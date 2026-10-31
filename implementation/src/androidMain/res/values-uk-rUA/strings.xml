@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="smb_being_delivered">Зараз вводиться SMB. Спробуйте ще раз, коли введення завершиться.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базальний профіль у помпі оновлено. Помпа округлює базал до власного кроку: вона вводить %1$s на добу замість %2$s.</string>
+    <string name="basal_reported_far_from_profile">Помпа повідомляє базал, який сильно відрізняється від профілю. AAPS залишає базал профілю. Перевірте базальні швидкості в помпі.</string>
     <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Вуглев</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Ост. з’єдн.: %1$d хв тому</string>
+    <string name="short_status_last_bolus">Ост. болюс: %1$s Од @ %2$s</string>
+    <string name="short_status_temp_basal">Тимч.: %1$s</string>
+    <string name="short_status_battery">Бат: %1$d%%</string>
+    <string name="short_status_not_initialized">Помпа не ініціалізована</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Оптимізація батареї</string>
+    <string name="permission_battery_description">Застосунок потрібно виключити з оптимізації батареї, щоб він надійно працював у фоновому режимі</string>
+    <string name="permission_directory_title">Каталог AAPS</string>
+    <string name="permission_directory_description">Виберіть каталог для налаштувань застосунку та файлів журналів</string>
+    <string name="permission_notifications_title">Сповіщення</string>
+    <string name="permission_notifications_description">Потрібно для показу попереджень, тривог та оновлень стану помпи</string>
+    <string name="permission_schedule_exact_alarm_title">Будильники й нагадування</string>
+    <string name="permission_schedule_exact_alarm_description">Потрібно, щоб тривоги могли вмикати екран, коли AAPS працює у фоновому режимі, і щоб нагадування спрацьовували вчасно</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Тривоги AAPS</string>
+    <string name="alarm_channel_standard">Стандартна тривога</string>
+    <string name="alarm_channel_bolus_error">Помилка болюсу</string>
+    <string name="alarm_channel_error">Загальна помилка</string>
+    <string name="alarm_channel_urgent">Термінова тривога</string>
+    <string name="alarm_channel_eat_reminder">Час їсти</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (ігнорує режим «Не турбувати»)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (враховує режим «Не турбувати»)</string>
+    <string name="alarm_channel_silent_urgent">Термінова тривога (режим наростання гучності)</string>
+    <string name="alarm_channel_silent">Тривога (режим наростання гучності)</string>
+    <string name="alarm_channel_silent_description">Використовується, коли увімкнено «Поступово збільшувати гучність сповіщень». Звук відтворює екран тривоги.</string>
+    <string name="ongoing_channel_name">Поточний стан</string>
+    <string name="eat_reminder_channel">Зворотний відлік до їжі</string>
+    <string name="eat_reminder_channel_description">Показує, скільки часу залишилося до їжі. Без звуку; звук подає тривога наприкінці.</string>
+    <string name="notifications_channel_name">Сповіщення AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0Од (%2$.1f\u00a0мкл)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Налаштування успішно експортовано у хмарне сховище</string>
+    <string name="export_to_cloud_failed">Не вдалося експортувати у хмарне сховище</string>
+    <string name="csv_uploaded_to_cloud">CSV записів користувача успішно вивантажено у хмарне сховище</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">експортовано %1$s тому</string>
+    <string name="metadata_label_format">Формат файлу</string>
     <string name="metadata_label_created_at">Дата створення</string>
     <string name="metadata_label_aaps_version">Версія AAPS</string>
     <string name="metadata_label_aaps_flavour">Створити варіант</string>
@@ -14,4 +59,27 @@
     <string name="metadata_label_encryption">Шифрування файлу</string>
     <string name="metadata_format_new">Новий метод шифрування</string>
     <string name="metadata_format_other">Невідомий формат експорту</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Резервна копія на Google Drive</string>
+    <string name="csv_upload_failed">Не вдалося вивантажити CSV записів користувача у хмарне сховище</string>
+    <string name="csv_upload_error">Помилка під час вивантаження CSV у хмару</string>
+    <string name="uploading_to_cloud">Завантаження в хмару...</string>
+    <string name="cloud_directory_path">Хмарний каталог: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Не вдалося оновити токен доступу Google Drive</string>
+    <string name="google_drive_token_refresh_error">Не вдалося оновити токен доступу Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Перевірка з’єднання з Google Drive не вдалася</string>
+    <string name="google_drive_connect_error">Не вдалося підключитися до Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Не вдалося отримати список папок Google Drive</string>
+    <string name="google_drive_list_folders_error">Помилка отримання списку папок: %1$s</string>
+    <string name="google_drive_upload_no_id">Вивантаження вдалося, але ідентифікатор не повернуто</string>
+    <string name="google_drive_upload_verify_failed">Перевірка вивантаження не вдалася</string>
+    <string name="google_drive_upload_failed">Вивантаження не вдалося: %1$s</string>
+    <string name="google_drive_upload_error">Помилка вивантаження файлу: %1$s</string>
+    <string name="google_drive_folder_access_error">Не вдається створити папку призначення або отримати до неї доступ: %1$s</string>
+    <string name="google_drive_list_settings_failed">Не вдалося отримати список файлів налаштувань</string>
+    <string name="google_drive_list_settings_error">Помилка отримання списку файлів налаштувань: %1$s</string>
+    <string name="google_drive_download_failed">Не вдалося завантажити файл</string>
+    <string name="google_drive_download_error">Помилка завантаження файлу: %1$s</string>
+    <string name="google_drive_authorized">Google Drive авторизовано</string>
+    <string name="google_drive_reauth_required">Очистіть налаштування та знову авторизуйте Google Drive</string>
 </resources>
