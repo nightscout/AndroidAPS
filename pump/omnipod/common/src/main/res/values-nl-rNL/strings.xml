@@ -99,6 +99,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Geluid voor onzekere TBR notificaties ingeschakeld</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Geluid voor onzekere SMB notificaties ingeschakeld</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Geluid voor onzekere bolus notificaties ingeschakeld</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Geluid voor levering onderbroken notificatie ingeschakeld</string>
     <string name="omnipod_dash_use_bonding">Bluetooth bonding</string>
     <string name="omnipod_dash_use_bonding_summary">Probeer dit alleen als de pod geen stabiele verbinding kan behouden. De telefoon toont een koppelingsverzoek dat je moet accepteren. Schakel dit niet in als de pod goed verbinding maakt. Heeft geen effect bij versies ouder dan Android 15.</string>
     <!-- Omnipod - Pod Status -->
@@ -151,9 +152,15 @@
     <string name="omnipod_common_cmd_resume_delivery">Toediening hervatten</string>
     <string name="omnipod_common_cmd_cancel_tbr">Annuleer TBR (gebruiker)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod info verversen</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nep onderbroken TBR instellen</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Nep onderbroken TBR annuleren</string>
+    <string name="omnipod_common_cmd_split_tbr">Splitsen TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Test pieptoon afspelen</string>
     <string name="omnipod_common_cmd_unknown_entry">Onbekende invoer</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Zet onderbreking waarschuwingen uit</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Herinnering koppeling afronden</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Zojuist</string>
