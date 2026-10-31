@@ -24,14 +24,14 @@
     <string name="patch_safe_deactivation_desc">Om naar nieuwe patch te wisselen moet de huidige patch verwijderd worden. Alle insuline toediening van Patch zal worden geannuleerd.</string>
     <string name="patch_discard_complete_title">Het verwijderen van de patch is voltooid.</string>
     <string name="patch_discard_complete_desc">Patch is gedeactiveerd.\nVerwijder de patch.\nVerwijder de patch die op uw lichaam zit aangebracht.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Er wordt op dit. moment een bolus uitgevoerd. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Er wordt op dit moment een bolus uitgevoerd. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
+    <string name="patch_change_confirm_bolus_is_active_desc">Er wordt op dit moment een bolus uitgevoerd. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
+    <string name="patch_change_confirm_temp_basal_is_active_desc">Er loopt op dit moment een tijdelijk basaal. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Er wordt op dit moment een bolus en een tijdelijk basaal uitgevoerd. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
     <string name="patch_change_confirm_desc">Weet je zeker dat je een Patch wilt verwijderen?</string>
     <string name="patch_forced_discard">Verwijder</string>
     <string name="patch_comm_error_during_discard_desc_2">Voor unilaterale deactivering, Tik op \'Verwijderen\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Handmatig het alarm van Patch uitschakelen</string>
-    <string name="patch_manually_turning_off_alarm_desc_1">Waneer unilateraal gedeactiveerd tijdens een communicatiefout, zal Patch mogelijk niet stoppen met piepen.</string>
+    <string name="patch_manually_turning_off_alarm_desc_1">Wanneer de patch eenzijdig wordt gedeactiveerd tijdens een communicatiefout, stopt de patch mogelijk niet met piepen.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">In dit geval kunt u dit volledig stopzetten door op de patch in de handmatige alarm poort te steken. Zoals hieronder aangegeven:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Verwijder de Patch van je lichaam en verwijder de bevestigingstape.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Gebruik een clip om krachtig in het gat naast de insuline vul poort te steken.</string>
