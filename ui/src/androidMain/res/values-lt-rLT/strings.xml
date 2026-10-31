@@ -328,7 +328,7 @@
     <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Pašalinti %1$s</string>
     <string name="quick_launch_no_dynamic_items">Nėra galimų elementų</string>
     <string name="quick_launch_category_treatment">Terapija</string>
-    <string name="quick_launch_category_care">Terapija</string>
+    <string name="quick_launch_category_care">Terapijos įrašai</string>
     <string name="quick_launch_category_profile">Profilis</string>
     <string name="quick_launch_category_temp_target">Laikino tikslo ruošiniai</string>
     <string name="quick_launch_category_quick_wizard">Greitasis vedlys</string>
