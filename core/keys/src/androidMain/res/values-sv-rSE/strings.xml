@@ -281,7 +281,7 @@
     <string name="pref_title_bolus_pin">PIN-kod för bolus</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Välj mörkt, ljust eller att följa systemets tema</string>
-    <string name="pref_title_app_color_scheme">App färgschema</string>
+    <string name="pref_title_app_color_scheme">Appens färgschema</string>
     <string name="pref_dark_theme">Mörkt tema</string>
     <string name="pref_light_theme">Ljust tema</string>
     <string name="pref_follow_system_theme">Använd systemets tema</string>
@@ -303,8 +303,8 @@
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Pumptyp</string>
     <!-- StringKey: NS Client preferences -->
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_summary">Ange din Nightscout URL (dvs. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_url_title">Nightscout-URL</string>
+    <string name="ns_client_url_summary">Ange din Nightscout-URL (t.ex. https://yoursitename.yourplatform.dom)</string>
     <string name="ns_client_secret_title">Nightscout API-kod</string>
     <string name="ns_client_secret_summary">Ange din Nightscout API-kod (minst 12 tecken).</string>
     <string name="nsclient_token_title">Nightscout åtkomsttoken</string>
