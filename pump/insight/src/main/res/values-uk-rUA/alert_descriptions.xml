@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Кількість: <b>%1$d%%</b>\nТривалість: <b>%2$s год</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Вміст картриджа: <b>%1$s Од</b>]]></string>
+    <string name="alert_w32_description">Замініть акумулятор.</string>
+    <string name="alert_w33_description">Встановіть час/дату.</string>
+    <string name="alert_w34_description">Зверніться до служби підтримки Accu-Chek.</string>
+    <string name="alert_w36_description"><![CDATA[Кількість: <b>%1$d%%</b><br/>Тривалість: <b>%2$s год</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Заплановано: <b>%1$s Од</b><br/>Введено: <b>%2$s Од</b>]]></string>
+    <string name="alert_m20_description">Вставте картридж.</string>
+    <string name="alert_m21_description">Замініть картридж.</string>
+    <string name="alert_m22_description">Замініть акумулятор.</string>
+    <string name="alert_m23_description">Перевірте стан помпи.</string>
+    <string name="alert_m24_description">Замініть інфузійний набір.</string>
+    <string name="alert_m25_description">Зверніться до служби підтримки Accu-Chek.</string>
+    <string name="alert_m26_description">Замініть картридж.</string>
+    <string name="alert_m27_description">Перезапустіть завантаження даних.</string>
+    <string name="alert_m28_description">Перевірте стан помпи.</string>
+    <string name="alert_m29_description">Встановіть тип акумулятора.</string>
+    <string name="alert_m30_description">Встановіть тип картриджа.</string>
+    <string name="alert_e6_description">Замініть акумулятор і картридж.</string>
+    <string name="alert_e10_description">Замініть картридж.</string>
+    <string name="alert_e13_description">Змініть мову.</string>
+</resources>
