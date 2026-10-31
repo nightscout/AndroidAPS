@@ -3,7 +3,7 @@
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
     <string name="combov2_plugin_description">Ingebouwde integratie voor Accu-Chek Combo pomp</string>
     <string name="combov2_could_not_connect">Kon niet verbinden met de pomp</string>
-    <string name="combov2_not_paired">Niet verbonden met een pomp</string>
+    <string name="combov2_not_paired">Niet gekoppeld aan een pomp</string>
     <string name="combov2_warning">Combo waarschuwing</string>
     <string name="combov2_error">Combo fout</string>
     <string name="combov2_warning_4">Bel hotline voor update</string>
