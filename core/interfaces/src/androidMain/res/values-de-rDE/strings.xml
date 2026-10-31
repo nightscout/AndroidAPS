@@ -17,6 +17,19 @@
     <string name="hoursago">Vor %1$.1fh</string>
     <string name="days_ago">vor %1$.1f Tagen</string>
     <string name="days_ago_round">vor %1$.0f Tagen</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">Vor %1$s Tag %2$s Stunden</item>
+        <item quantity="other">Vor %1$s Tagen %2$s Stunden</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">Vor %1$s Stunde</item>
+        <item quantity="other">Vor %1$s Stunden</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">gerade eben</item>
+        <item quantity="other">vor %1$s Minuten</item>
+    </plurals>
+    <string name="seconds_ago">Sekunden her</string>
     <string name="in_days">in %1$.0f Tagen</string>
     <string name="in_days_round">in %1$.0f Tagen</string>
     <string name="shorthour">h</string>
@@ -33,13 +46,20 @@
     <string name="unit_days">Tage</string>
     <string name="unit_weeks">Wochen</string>
     <string name="shortminute">m</string>
+    <string name="time_remaining_h_m">Noch %1$d Std %2$d Min verbleibend</string>
+    <string name="time_remaining_m">%1$dmin verbleibend</string>
     <string name="later_today">Später heute</string>
     <string name="tomorrow">Morgen</string>
     <string name="today">Heute</string>
     <string name="yesterday">Gestern</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
     <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
     <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Verbindungsaufbau seit %1$d s</string>
     <string name="handshaking">Handshaking</string>
@@ -82,8 +102,13 @@
     <string name="default_custom_watchface_comment">Standard-Watchface, Du kannst auf den Knopf WATCHFACE exportieren drücken, um eine Vorlage zu generieren</string>
     <string name="default_custom_watchface_external_comment">Standard-Zifferblatt mit externen Ansichten für Follower. Klicke auf die ZIFFERBLATT-Schaltfläche, um eine Vorlage zu generieren</string>
     <string name="wear_default_watchface">Standard-Watchface</string>
+    <string name="wear_more_watchfaces">Weitere AAPS Watchfaces</string>
+    <string name="temp_basal_absolute_rate">%1$.2f IE/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f IE/h @%2$s %3$d/%4$d min</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Die App benötigt die Bluetooth-Berechtigung, um mit der Pumpe zu kommunizieren</string>
     <!-- Insulin -->
     <string name="unknown">Unbekannt</string>
     <string name="rapid_acting_oref">Novorapid</string>
@@ -117,9 +142,11 @@
     <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
     <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Eintrag</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">VERLÄNGERTE KOHLENHYDRATE</string>
+    <string name="profile_low_target">Unterer Zielwert im Profil</string>
     <string name="profile_high_target">Profil oberes Ziel</string>
     <string name="profile_dia">Profil Insulinwirkdauer</string>
     <string name="profile_sensitivity_value">Profil Sensitivitätswert</string>
@@ -127,8 +154,13 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f ist außerhalb der fest programmierten Grenzen</string>
     <string name="basal_value">Basal-Wert</string>
     <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %1$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch berechnet sein und deswegen zu viel Insulin abgegeben werden !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f IE</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s konnte nicht gestartet werden und wird eventuell nicht funktionieren. Starte AAPS neu.</string>
 </resources>
