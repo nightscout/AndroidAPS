@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_start">Inicio</string>
+    <string name="objectives_button_start">Iniciar</string>
     <string name="objectives_button_verify">Verificar</string>
     <string name="nth_objective">%1$d. Objetivo</string>
     <string name="objectivenotstarted">Objetivo %1$d no iniciado</string>
@@ -16,12 +16,11 @@
     <string name="objectives_maxbasal">Realizar la acción para cumplir la recomendación</string>
     <string name="objectives_maxbasal_learned">Tenga cuidado con las características de seguridad y ajuste los parámetros de seguridad cuando sea necesario.</string>
     <string name="objectives_maxiobzero_objective">Empezando a cerrar el lazo con suspensión por glucosa baja</string>
-    <string name="objectives_maxiobzero_gate">Ejecutar en Laco cerrado en modo LGS - Suspensión de glucosa baja (ej. se establece automáticamente max IOB = 0) para unos días sin demasiados eventos LGS.</string>
+    <string name="objectives_maxiobzero_gate">Ejecutar en lazo cerrado en modo LGS - Suspensión por glucosa baja (es decir, max IOB = 0 se establece automáticamente) durante unos días sin demasiados eventos LGS.</string>
     <string name="objectives_maxiobzero_learned">Establecer MaxIOB a cero evita la hipo y no añadirá más insulina por encima de la tasa basal (excepto en situaciones con IOB negativo)</string>
     <string name="objectives_maxiob_objective">Ajustando el lazo cerrado, aumentando la IOB máxima por encima de 0 y bajando gradualmente los objetivos de glucemia</string>
     <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
-    <string name="objectives_maxiob_learned">Actualica MaxIOB a medida que el niño/a crezca. No permita que el sistema le de más insulina de la que puede cubrir con la comida = un valor realmente alto es una mala idea. Max IOB es calculado 
- automáticamente en el modo simple</string>
+    <string name="objectives_maxiob_learned">Actualiza MaxIOB a medida que el niño/a crezca. No permitas que el sistema te dé más insulina de la que puedes cubrir con la comida = un valor realmente alto es una mala idea. Max IOB se calcula automáticamente en el modo simple</string>
     <string name="maxiobset">Máximo IOB configurado correctamente (no es necesario en modo simple)</string>
     <string name="objectives_autosens_objective">Ajustar las basales y ratios, si es necesario, y luego activar auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de funcionamiento exitoso del lazo durante el día con introducción regular de hidratos de carbono. En el modo simple, el autosens está activado por defecto</string>
