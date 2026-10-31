@@ -125,7 +125,7 @@
     <string name="pref_title_ns_slow_sync">Αργός συγχρονισμός</string>
     <string name="pref_title_ns_use_ws">Χρήση websockets</string>
     <string name="pref_summary_ns_use_ws">Χρήση websockets για επικοινωνία σε πραγματικό χρόνο με το Nightscout.</string>
-    <string name="pref_title_ns_allow_client_control">Να επιτρέπεται ο έλεγχος από client</string>
+    <string name="pref_title_ns_allow_client_control">Να επιτρέπεται ο έλεγχος από πελάτες</string>
     <string name="pref_summary_ns_allow_client_control">Οι συζευγμένες συσκευές client μπορούν να στέλνουν υπογεγραμμένες εντολές (π.χ. έναρξη/διακοπή σεναρίων) μέσω Nightscout. Αυτό ενεργοποιεί και την ενισχυμένη λειτουργία: αλλαγές που γίνονται απευθείας στο Nightscout δεν γίνονται πια δεκτές.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Μόνο με WiFi</string>
@@ -377,7 +377,7 @@
     <string name="pref_title_high_mark">Όριο υψηλής γλυκόζης</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">Όριο LGS</string>
-    <string name="lgs_threshold_summary">Η τιμή BG κάτω από την οποία αναστέλλεται η ινσουλίνη. Η προεπιλεγμένη τιμή χρησιμοποιεί τυποποιημένο μοντέλο στόχου. Ο χρήστης μπορεί να ορίσει τιμή μεταξύ 60mg/dl (3. mmol/l) και 100mg/dl (5.5mmol/l). Τιμές κάτω των 65/3.6 έχουν ως αποτέλεσμα τη χρήση προκαθορισμένου μοντέλου</string>
+    <string name="lgs_threshold_summary">Η τιμή BG κάτω από την οποία αναστέλλεται η ινσουλίνη. Η προεπιλεγμένη τιμή χρησιμοποιεί τυποποιημένο μοντέλο στόχου. Ο χρήστης μπορεί να ορίσει τιμή μεταξύ 60mg/dl (3.3mmol/l) και 100mg/dl (5.5mmol/l). Τιμές κάτω των 65/3.6 έχουν ως αποτέλεσμα τη χρήση προκαθορισμένου μοντέλου</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
