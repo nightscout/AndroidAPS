@@ -29,7 +29,7 @@
     <string name="disable_vibration_summary">Для болюсу і подовженого болюсу (лише з прошивкою Insight 3.x)</string>
     <string name="disable_vibration_auto">Вимкнути вібрацію при автоматичному введенні болюсу</string>
     <string name="disable_vibration_auto_summary">Для SMB і тимчасового базалу з емуляцією TBR (лише з прошивкою Insight 3.x)</string>
-    <string name="timeout_during_handshake">Час очікування під час handshake вичерпано - перезапустіть Bluetooth</string>
+    <string name="timeout_during_handshake">Час очікування під час встановлення з\'єднання вичерпано - перезапустіть Bluetooth</string>
     <string name="pump_stopped">Помпу зупинено</string>
     <string name="pump_started">Помпу запущено</string>
     <string name="release_software_version">Версія ПЗ випуску</string>
@@ -38,7 +38,7 @@
     <string name="log_site_changes">Записувати заміну місця введення</string>
     <string name="log_reservoir_changes">Записувати заміну резервуара</string>
     <string name="log_tube_changes">Записувати заміну трубки</string>
-    <string name="log_battery_changes">Записувати заміну акумулятора</string>
+    <string name="log_battery_changes">Записувати заміну батареї</string>
     <string name="log_operating_mode_changes">Записувати зміну робочого режиму</string>
     <string name="log_alerts">Записувати тривоги</string>
     <string name="enable_tbr_emulation">Увімкнути емуляцію TBR</string>
