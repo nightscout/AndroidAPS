@@ -4,13 +4,13 @@
     <string name="string_a003">Pompos naudojimo laikas pasibaigė\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a004">Užsikimšimas\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a005">Įjungimo savikontrolės klaida\nPompa išjungta. Pakeiskite pompą.</string>
-    <string name="string_a007">Netinkama temperatūra\nInsulino tiekimas ir rezervuaro aktyvavimo procesas sustabdyti. Venkite ekstremalių temperatūrų.</string>
-    <string name="string_a016">Adatos įvedimo klaida\nPatikrinkite mygtuką ir spauskite \'Bandyti dar kartą\'.</string>
-    <string name="string_a018">Rezervuaro baterijos klaida\nPompa išjungta,\ninsulino tiekimas sustabdytas. Pakeiskite pompą.</string>
-    <string name="string_a019">Rezervuaro baterijos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
+    <string name="string_a007">Netinkama temperatūra\nInsulino tiekimas arba pompos aktyvavimo procesas sustabdytas. Venkite ekstremalių temperatūrų.</string>
+    <string name="string_a016">Adatos įvedimo klaida\nPatikrinkite svirtelės padėtį ir spauskite \'Bandyti dar kartą\'.</string>
+    <string name="string_a018">Pompos baterijos klaida\nPompa išjungta,\ninsulino tiekimas sustabdytas. Pakeiskite pompą.</string>
+    <string name="string_a019">Pompos baterijos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a020">Pompos aktyvavimo klaida\nAktyvavimo procesas sustabdytas. Paspauskite \'Patvirtinti\' ir pompa bus išjungta. Pakeiskite pompą.</string>
-    <string name="string_a022">Rezervuaro klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
-    <string name="string_a023">Rezervuaro klaida\nPompa išjungta,\ninsulino tiekimas sustabdytas. Pakeiskite pompą.</string>
+    <string name="string_a022">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
+    <string name="string_a023">Pompos klaida\nPompa išjungta,\ninsulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a034">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a041">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a042">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
@@ -22,11 +22,11 @@
     <string name="string_a116">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a117">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
     <string name="string_a118">Pompos klaida\nPompa išjungta, insulino tiekimas sustabdytas. Pakeiskite pompą.</string>
-    <string name="string_b000">Rezervuaras baigs galioti %s. Būkite pasiruošę pakeisti rezervuarą.</string>
+    <string name="string_b000">Pompos naudojimo laikas baigsis %s. Būkite pasiruošę pakeisti pompą.</string>
     <string name="string_b001">Insulino tiekimo sustabdymo pabaiga\nNorėdami atnaujinti insulino tiekimą, spauskite \'Atnaujinti\'.</string>
-    <string name="string_b003">Mažai insulino\nNetrukus reikės keisti rezervuarą.</string>
-    <string name="string_b005">Rezervuaras baigė galioti\nPakeiskite rezervuarą.</string>
-    <string name="string_b006">Rezervuaras netrukus baigs galioti\nPakeiskite rezervuarą.</string>
-    <string name="string_b012">Rezervuaras nepilnai aktyvuotas\nUžbaikite aktyvavimo procesą.</string>
-    <string name="string_b018">Rezervuaro baterija senka\nBūkite pasiruošę pakeisti rezervuarą.</string>
+    <string name="string_b003">Mažai insulino\nNetrukus reikės keisti pompą.</string>
+    <string name="string_b005">Pompos naudojimo laikas baigėsi\nPakeiskite pompą.</string>
+    <string name="string_b006">Pompos naudojimo laikas netrukus baigsis\nPakeiskite pompą.</string>
+    <string name="string_b012">Pompa nepilnai aktyvuota\nUžbaikite aktyvavimo procesą.</string>
+    <string name="string_b018">Pompos baterija senka\nBūkite pasiruošę pakeisti pompą.</string>
 </resources>
