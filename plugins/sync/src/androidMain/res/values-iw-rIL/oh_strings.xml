@@ -39,7 +39,7 @@
     <string name="nightscout_url">כתובת Nightscout</string>
     <string name="nightscout_api_secret">API Secret של Nightscout</string>
     <string name="free_text_fields">שדות טקסט חופשיים</string>
-    <string name="agree">הבנתי והסכמתי.</string>
+    <string name="agree">אני מבינ/ה ומסכימ/ה.</string>
     <string name="login_open_humans">התחברות ל-Open Humans</string>
     <string name="final_touches">נגיעות אחרונות</string>
     <string name="uploading_proceed">אתם צעד אחד בלבד מהעלאת הנתונים שלכם ל-Open Humans. האם אתם רוצים להמשיך?</string>
