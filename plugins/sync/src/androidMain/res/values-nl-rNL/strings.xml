@@ -11,9 +11,9 @@
     <string name="unsupported_ns_version">Niet ondersteunde versie van Nightscout</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
-    <string name="authorized_clients_title">Geautoriseerde klanten</string>
+    <string name="authorized_clients_title">Geautoriseerde clients</string>
     <string name="authorized_clients_add">Klant toevoegen</string>
-    <string name="authorized_clients_comm_switch_title">Klankcontrole toestaan</string>
+    <string name="authorized_clients_comm_switch_title">Client controle toestaan</string>
     <string name="authorized_clients_comm_switch_summary">Sta toe dat gekoppelde clients ondertekende commando\'s via Nightscout verzenden. Schakel dit uit om de communicatie te stoppen zonder de clients te verwijderen.</string>
     <string name="authorized_clients_state_active">Actief</string>
     <string name="authorized_clients_state_pending">In behandeling</string>
@@ -23,7 +23,7 @@
     <string name="authorized_clients_empty_title">Geen geautoriseerde clients</string>
     <string name="authorized_clients_empty_subtitle">Koppel een client apparaat zodat het ondertekende opdrachten naar deze master kan verzenden.</string>
     <string name="authorized_clients_name_dialog_title">Nieuwe client</string>
-    <string name="authorized_clients_name_placeholder">Apparatennaam</string>
+    <string name="authorized_clients_name_placeholder">Apparaatnaam</string>
     <string name="authorized_clients_delete_dialog_title">Toegang intrekken?</string>
     <string name="authorized_clients_delete_dialog_message">%1$s kan niet langer opdrachten verzenden.</string>
     <string name="authorized_clients_pin_dialog_title">Koppel client</string>
@@ -44,7 +44,7 @@
     <string name="authorized_clients_qr_working">Nightscout token aanmaken…</string>
     <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Instellen %1$s</string>
     <string name="authorized_clients_qr_pair_instructions">Scan deze code op de nieuwe telefoon, in de installatiewizard of in koppelen met master. Dit stelt Nightscout in en koppelt de telefoon.</string>
-    <string name="authorized_clients_qr_ns_instructions">Scan deze code op de nieuwe telefoon, in de installatiewizard of in een paar met de meester. Nightscout wordt ingesteld. De telefoon is niet gekoppeld.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scan deze code op de nieuwe telefoon, in de installatiewizard of in Koppel met master. Nightscout wordt ingesteld. De telefoon is niet gekoppeld.</string>
     <string name="authorized_clients_qr_keep_private">Iedereen die deze code ziet kan je Nightscout lezen. Toon deze alleen aan de nieuwe telefoon.</string>
     <string name="authorized_clients_token_problem_title">Geen QR-code</string>
     <string name="authorized_clients_not_added_title">Client is niet toegevoegd</string>
@@ -54,7 +54,7 @@
     <string name="authorized_clients_token_problem_name_in_use">Een client met deze naam bestaat al. Kies een andere naam, of verwijder de bestaande client.</string>
     <string name="authorized_clients_token_problem_failed">Nightscout heeft het nieuwe token niet vermeld, dus het is opnieuw verwijderd. Er is nog niets achtergelaten. Probeer het opnieuw.</string>
     <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout heeft het nieuwe token niet weergegeven en het kon ook niet meer worden verwijderd. Verwijder het token %1$s in Nightscout en probeer het daarna opnieuw.</string>
-    <string name="authorized_clients_tokens_header">Nightscout allen lezen</string>
+    <string name="authorized_clients_tokens_header">Nightscout alleen lezen</string>
     <string name="authorized_clients_token_unpaired">Eigen Nightscout token, niet gekoppeld</string>
     <string name="authorized_clients_token_show_qr">Toon QR-code</string>
     <string name="authorized_clients_token_delete_title">Verwijder het token?</string>
@@ -235,7 +235,7 @@
     <string name="smscommunicator_otp_reset_title">Reset Authentificatie-sleutel</string>
     <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Autentificatie-sleutel wilt resetten? Met deze actie maak je alle Authentificatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AndroidAPS OTP codes in te stellen</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
