@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Tempo emparelhamento excedido</string>
+    <string name="danars_bonding_failed">O emparelhamento Bluetooth com a bomba falhou ou foi cancelado. Tente novamente e introduza o PIN mostrado na bomba.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Integração para bombas DANA Diabecare RS</string>
     <string name="maxbolusviolation">Transgressão Bólus máx</string>
@@ -8,14 +9,22 @@
     <string name="speederror">Erro velocidade</string>
     <string name="insulinlimitviolation">Transgressão limite insulina</string>
     <string name="boluserrorcode">Pedido: %1$.2fU Administrado: %2$.2fU Código Erro: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">A bomba não foi purgada</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Insulina insuficiente no reservatório</string>
+    <string name="danai2_bolus_error_easy_sleep">O modo Easy sleep está ligado na bomba</string>
+    <string name="danai2_pump_check_error">Erro na verificação da bomba</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Modo fácil</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Bloqueio automático</string>
     <string name="danar_valuenotsetproperly">Valor não definido corretamente</string>
     <string name="danar_setbasalstep001">Coloque o incremento da basal em 0.01 U/h</string>
     <string name="resetpairing">Repor as informações de emparelhamento?</string>
     <string name="dana_model">%1$s\nModelo: %2$02X\nProtocolo: %3$02X\nCódigo: %4$02X</string>
     <string name="processinghistory">A processar acção</string>
     <string name="danar_enableextendedbolus">Habilitar bólus prolongado na bomba</string>
+    <string name="danar_disablebolusblock">O bloqueio de bólus está ativo na bomba. A AAPS não pode administrar insulina enquanto ele estiver ativo. Desative o bloqueio de bólus nas definições da bomba.</string>
     <string name="overview_bolusprogress_stoped">Parado</string>
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
+    <string name="danars_unsupported_model">Modelo de bomba não suportado (código %1$s)</string>
     <string name="pumperror">Erro Bomba</string>
     <string name="lowbattery">Bateria fraca</string>
     <string name="basalcompare">A administrar menos insulina basal que a predefinida</string>
@@ -36,6 +45,7 @@
     <string name="gettingtempbasalstatus">A obter o status da basal temporária</string>
     <string name="gettingpumpsettings">A obter as definições da bomba</string>
     <string name="gettingpumptime">A obter hora bomba</string>
+    <string name="largetimedifftitle">Grande diferença horária</string>
     <string name="largetimediff">Grande diferença horária:\n A diferença de hora para a bomba é superior a 1.5h.\nPor favor ajuste manualmente a hora na bomba e certifique-se que a leitura do histórico da bomba não provoca problemas.\nSe possível apague o histórico da bomba antes de modificar a hora ou desabilite o loop durante toda a duração de acção da insulina (DIA) depois da ultima entrada no histórico da bomba ou mais um DIA desde o momento da correcção, qual delas seja a que mantenha o loop aberto durante mais tempo.</string>
     <string name="pairfirst">Emparelhe a sua bomba com o seu telefone!</string>
     <string name="approachingdailylimit">Aproximação do limite diário de insulina</string>
@@ -88,6 +98,9 @@
     <string name="option_off">Desligado</string>
     <string name="danars_password_title">Senha da bomba (apenas v1)</string>
     <string name="danar_password_title">Senha da bomba</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Registar mudança de reservatório</string>
     <string name="rs_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao careportal quando detectado no histórico</string>
@@ -97,4 +110,18 @@
     <string name="num1pin">1: (12 dígitos)</string>
     <string name="num2pin">2: (8 dígitos)</string>
     <string name="basal_bolus_step">Etapa basal/bolus</string>
+    <string name="connecting_to_pump">A ligar à bomba…</string>
+    <string name="pairing_successful">Emparelhamento bem-sucedido!</string>
+    <string name="pairing_successful_message">A bomba está agora ligada e pronta a usar.</string>
+    <string name="cancel_pairing_title">Cancelar o emparelhamento?</string>
+    <string name="cancel_pairing_message">O processo de emparelhamento será interrompido.</string>
+    <string name="done">Concluído</string>
+    <string name="open_bluetooth_settings">Abrir definições de Bluetooth</string>
+    <string name="enter_pump_password">Introduza a senha da bomba</string>
+    <string name="select_paired_device">Selecionar dispositivo emparelhado</string>
+    <string name="no_paired_devices">Não foram encontrados dispositivos Dana emparelhados. Emparelhe primeiro a bomba nas definições de Bluetooth do Android.</string>
+    <string name="password_hint">Senha de 4 dígitos (0–9999)</string>
+    <string name="connecting_verifying">A ligar e a verificar a senha…</string>
+    <string name="password_ok">Senha verificada com sucesso!</string>
+    <string name="password_wrong">Senha errada. Volte atrás e corrija-a.</string>
 </resources>
