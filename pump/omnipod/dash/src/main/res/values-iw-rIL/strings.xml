@@ -26,7 +26,7 @@
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">לא ניתן לוודא אם ה-SMB (%1$s) הצליח. יש לרענן את סטטוס הפוד כדי לאשר או לשלול את הפקודה הזו.</string>
     <string name="temp_basal_out_of_sync">סטטוס הבזאלי הזמני אינו כצפוי! אם בזאלי זמני פעל עד עכשיו, הוא בוטל. נא לבדוק את הכמות שהוזרקה ואת היסטוריית הפוד</string>
     <string name="checking_delivery_status">בודק סטטוס הזרקה</string>
-    <string name="setting_temp_basal_might_have_basal_failed">הגדרת בזאלי זמני כנראה נכשלה. אם בזאלי זמני הוחל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="setting_temp_basal_might_have_basal_failed">ייתכן שהגדרת הבזאלי הזמני נכשלה. אם בזאלי זמני פעל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">תוצאת ביטול הבזאלי הזמני אינה ודאית</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">פקודת חידוש ההזרקה לא אושרה. יש לרענן את סטטוס הפוד</string>
     <string name="cancelling_temp_basal_might_have_failed">ייתכן שביטול הבזאלי הזמני נכשל. אם בזאלי זמני הוחל קודם לכן, ייתכן שהוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
