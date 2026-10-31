@@ -1,22 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Das Feld darf nicht leer sein</string>
+    <string name="error_mustbe4hexadidits">Muss aus genau 4 Zeichen aus ABCDEF0123456789 bestehen</string>
+    <string name="authorized_clients_manage_label">Autorisierte Clients</string>
+    <string name="authorized_clients_manage_desc">Gekoppelte Client-Geräte verwalten, die diesen Master steuern.</string>
+    <string name="pair_with_master_manage_label">Mit Master koppeln</string>
+    <string name="pair_with_master_manage_desc">Gib die Kopplungs-PIN des Masters ein, damit dieser Client signierte Befehle senden kann.</string>
     <!--    General-->
+    <string name="treatments">Behandlungen</string>
+    <string name="treatments_history">Behandlungsverlauf</string>
+    <string name="treatments_desc">Behandlungsverlauf anzeigen und verwalten</string>
+    <string name="nav_configuration">Konfiguration</string>
+    <string name="nav_configuration_desc">Richte CGM, Pumpe und weitere Komponenten ein und aktiviere Funktionen</string>
+    <string name="count_selected">%1$d ausgewählt</string>
+    <string name="delete">Löschen</string>
+    <string name="show_invalidated">Ungültige Einträge anzeigen</string>
+    <string name="hide_invalidated">Ungültige Einträge ausblenden</string>
+    <string name="more_options">Weitere Optionen</string>
     <string name="refresh">Aktualisieren</string>
+    <string name="no_history_records">Keine Einträge gefunden</string>
     <string name="error">Fehler</string>
+    <string name="navigation_error_screen_not_found">Ansicht konnte nicht geöffnet werden (in dieser Konfiguration nicht verfügbar)</string>
     <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
     <string name="invalid_input">Ungültige Eingabedaten</string>
+    <string name="invalid_number">Ungültige Zahl</string>
     <string name="constraint_applied">Beschränkung angewendet!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpe nicht erreichbar</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Der Pumpentreiber reagiert nicht. „%1$s“ läuft seit %2$d min und kein weiterer Befehl kann die Pumpe erreichen. Prüfe die Pumpe und starte anschließend AAPS neu.</string>
     <string name="insulin_unit_shortname">IE</string>
     <string name="pump_base_basal_rate">%1$.2f IE/h</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s IE/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
     <string name="failed_update_basal_profile">Fehler beim Aktualisieren des Basalprofils</string>
     <string name="no_valid_basal_rate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
+    <string name="loop_disabled_by_user">Loop von Benutzer deaktiviert</string>
     <string name="event_type">Ereignistyp</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Speichern</string>
+    <string name="skip">Überspringen</string>
+    <string name="switch_to_edit">Bearbeiten</string>
     <string name="snooze">Schlummern</string>
+    <string name="snooze_15m">Schlummern 15min</string>
+    <string name="snooze_30m">Schlummern 30min</string>
+    <string name="snooze_60m">Schlummern 60min</string>
     <string name="virtual_pump">Virtuelle Pumpe</string>
     <string name="constraints">Beschränkungen</string>
     <string name="superbolus">Superbolus</string>
@@ -25,8 +56,30 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
     <string name="result">Ergebnis</string>
     <string name="settings">Einstellungen</string>
+    <string name="open_plugin">Plugin öffnen</string>
+    <string name="configbuilder_pick_one_hint">Wähle ein Plugin aus. Es kann jeweils nur eines aktiv sein.</string>
+    <string name="configbuilder_pick_many_hint">Wähle die gewünschten Plugins aus.</string>
+    <string name="configbuilder_no_selection_warning">In dieser Kategorie ist kein Plugin ausgewählt.</string>
+    <string name="configbuilder_switch_confirmation_title">Plugin wechseln?</string>
+    <string name="configbuilder_switch_confirmation">Dadurch wird %1$s deaktiviert und %2$s aktiviert.</string>
+    <string name="expand">Ausklappen</string>
+    <string name="collapse">Zuklappen</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Abgeschlossen</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Ausgeklappt</string>
+    <string name="no_compose_preferences">Für dieses Plugin sind keine Einstellungen verfügbar</string>
+    <string name="confirm_password_hint">Passwort bestätigen</string>
+    <string name="confirm_pin_hint">PIN bestätigen</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Statusanzeige</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_bgsource">BZ-Quelle</string>
+    <string name="configbuilder_smoothing">Glättung</string>
+    <string name="configbuilder_calibration">Kalibrierung</string>
+    <string name="configbuilder_pump">Pumpe</string>
+    <string name="configbuilder_sensitivity">Erkennung der Insulinempfindlichkeit</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">Kommunikation</string>
     <string name="value_unavailable_short">N/A</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Benutzereinträge nach Excel exportieren (csv)</string>
