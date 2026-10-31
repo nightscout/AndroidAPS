@@ -245,7 +245,7 @@
     <string name="profile_parameters">Parâmetros do perfil</string>
     <string name="active_profile">Perfil ativo</string>
     <string name="available_profiles">Perfis disponíveis</string>
-    <string name="profile_switches">Troca de Perfil</string>
+    <string name="profile_switches">Trocas de perfil</string>
     <string name="basal_pct_from_tdd_label">% da basal</string>
     <string name="selected_profile">Selecionado:</string>
     <string name="comparation">Comparação</string>
@@ -253,7 +253,7 @@
     <string name="profile_tab_2">Perfil 2</string>
     <string name="motol_default_profile">Perfil padrão</string>
     <string name="current_profile">Perfil atual</string>
-    <string name="available_profile">Perfis disponíveis</string>
+    <string name="available_profile">Perfil disponível</string>
     <string name="format_with_tdd">Idade: %1$d TDD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Idade: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Idade: %1$d Peso: %2$.0f kg</string>
