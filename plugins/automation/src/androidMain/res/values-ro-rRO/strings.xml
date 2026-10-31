@@ -69,6 +69,7 @@
     <string name="temptargetcomparedmgdl">Ținta temporară %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Ținta temporară %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Procent profil %1$s %2$d</string>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Sau</string>
     <string name="xor">Sau exclusiv</string>
     <string name="atspecifiedtime">La %1$s</string>
@@ -97,6 +98,8 @@
     <string name="location">Localizare</string>
     <string name="lastboluslabel">Timp de la ultimul bolus</string>
     <string name="lastboluscompared">Ultimul bolus %1$s %2$s min în urmă</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritm cardiac</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="triggerSensorAgeLabel">Vechimea senzorului</string>
