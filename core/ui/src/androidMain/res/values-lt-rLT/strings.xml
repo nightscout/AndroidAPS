@@ -179,7 +179,7 @@
     <string name="waiting_for_pump">Laukiama pompos…</string>
     <string name="initialization_failed">Inicijuoti nepavyko</string>
     <string name="notes_label">Pastabos</string>
-    <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
+    <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos tvarkyklę, kad būtų atstatyta pompos būsena.</string>
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
@@ -382,7 +382,7 @@
     <string name="scene_end_active">Baigti aktyvų scenarijų</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Pereiti prie</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Kitas scenarijus %1$s nebus paleistas</string>
-    <string name="scene_confirm_activate">Aktyvuoti scenarijų %1$s\"?</string>
+    <string name="scene_confirm_activate">Aktyvuoti scenarijų „%1$s“?</string>
     <string name="scene_confirm_deactivate">Baigti scenarijų „%1$s“ ir atšaukti pakeitimus?</string>
     <string name="scene_conflict_active_tt">Aktyvus laikinas tikslas bus pakeistas</string>
     <string name="scene_conflict_active_profile">Aktyvus profilis bus pakeistas</string>
@@ -435,7 +435,7 @@
     <string name="client_role_title">Vaidmuo</string>
     <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Vaidmuo: %1$s</string>
     <string name="client_roles_info_open">Apie vaidmenis</string>
-    <string name="client_roles_info">Kiekvienas susietas telefonas turi savo vaidmenį. Pagrindinis telefonas jį patikrina vykdydamas kiekvieną komandą, o susietame telefone rodomos tik tam vaidmeniui leidžiamos funkcijos. Pakeitus vaidmenį, jis įsigalioja iš karto – susieti iš naujo nereikia.\n\nTik peržiūra: telefonas lieka susietas, tačiau gali tik rodyti duomenis.\n\nMaistas: leidžiama naudoti bolusą, boluso vedlį, Greitąjį vedlį ir įvesti angliavandenius. Taip pat galima sustabdyti vykdomą bolusą. Čia įvesti angliavandeniai gali paskatinti algoritmą skirti daugiau insulino.\n\nPrižiūrintis asmuo: leidžiama atlikti visus įprastus AAPS naudotojo veiksmus, pavyzdžiui, keisti laikiną gliukozės tikslą, profilį ar insuliną, ciklo režimą, laikiną bazę, išplėstinį bolusą, scenarijus, Terapijos įvykius, kalibravimus ir šalinti įrašus. Nustatymų ir ruošinių keisti negalima.\n\nAdministratorius: leidžiama viskas, įskaitant nustatymų ir ruošinių keitimą: Greitąjį vedlį, laikino gliukozės tikslo ruošinius, scenarijus, profilius, automatizaciją ir insuliną.</string>
+    <string name="client_roles_info">Kiekvienas susietas telefonas turi savo vaidmenį. Pagrindinis telefonas jį patikrina vykdydamas kiekvieną komandą, o susietame telefone rodomos tik tam vaidmeniui leidžiamos funkcijos. Pakeitus vaidmenį, jis įsigalioja iš karto – susieti iš naujo nereikia.\n\nTik peržiūra: telefonas lieka susietas, tačiau gali tik rodyti duomenis.\n\nMaistas: leidžiama naudoti bolusą, boluso patarėją, Greitąjį vedlį ir įvesti angliavandenius. Taip pat galima sustabdyti vykdomą bolusą. Čia įvesti angliavandeniai gali paskatinti algoritmą skirti daugiau insulino.\n\nPrižiūrintis asmuo: leidžiama atlikti visus įprastus AAPS naudotojo veiksmus, pavyzdžiui, keisti laikiną gliukozės tikslą, profilį ar insuliną, ciklo režimą, laikiną bazę, ištęstą bolusą, scenarijus, terapijos įrašus, kalibravimus ir šalinti įrašus. Nustatymų ir ruošinių keisti negalima.\n\nAdministratorius: leidžiama viskas, įskaitant nustatymų ir ruošinių keitimą: Greitąjį vedlį, laikino gliukozės tikslo ruošinius, scenarijus, profilius, automatizaciją ir insuliną.</string>
     <string name="client_read_only_banner">Šiam telefonui pagrindiniame telefone nustatytas tik peržiūros vaidmuo.</string>
     <string name="hardened_mode_info">Pagrindinis telefonas priima pakeitimus tik iš susietų klientų. Jis nepriima terapijos įrašų, laikinų gliukozės tikslų, profilio pakeitimų, veikimo režimo pakeitimų ar įrašų šalinimo, jei šie pakeitimai atliekami tiesiogiai per Nightscout. Kai įjungtas sustiprintos apsaugos režimas, nustatymai, leidžiantys priimti duomenis iš Nightscout, yra paslėpti. SMS komandoms tai įtakos neturi.\n\nPagrindinis telefonas ir toliau siunčia visus duomenis į Nightscout, įskaitant gliukozės duomenis. Jei gliukozės duomenys gaunami iš Nightscout, jie ir toliau bus priimami iš ten.\n\nNorėdami įkelti istorinius duomenis į naują pagrindinį telefoną, NSClient naudokite pilną sinchronizavimą. Pilno sinchronizavimo metu įkeliami visi Nightscout esantys duomenys, įskaitant profilius.\n\nNuotoliniam valdymui iš klientų reikia veikiančio WebSocket ryšio su Nightscout tiek pagrindiniame telefone, tiek susietuose klientuose. Paprastasis režimas visada įjungia sustiprintos apsaugos režimą. Norėdami jį išjungti, išeikite iš paprastojo režimo ir pagrindiniame telefone išjunkite klientų valdymą.</string>
     <string name="scene_lock_reason_master_offline">Pagrindinis įrenginys atsijungęs</string>
@@ -477,7 +477,7 @@
     <string name="clientcontrol_fail_unknown">Komanda neįvykdyta.</string>
     <string name="clientcontrol_unconfirmed_wear">Būsena nežinoma — prieš pakartotinai leisdami bolusą patikrinkite telefoną arba Nightscout.</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Ryšys nutrūko — suleidimo būsena nežinoma</string>
-    <string name="clientcontrol_bolus_progress_stalled_body">Šis telefonas nebegauna duomenų iš pagrindinio telefono. Bolusas gali būti dar leidžiamas arba jau suleistas. Uždarius šį langą, pranešimas tik dings iš šio telefono – pompos veikimas nebus sustabdytas. Pagrindiniame telefone patikrinkite, kiek insulino iš tikrųjų suleista.</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Šis telefonas nebegauna duomenų iš pagrindinio įrenginio. Bolusas gali būti dar leidžiamas arba jau suleistas. Uždarius šį langą, pranešimas tik dings iš šio telefono – pompos veikimas nebus sustabdytas. Pagrindiniame telefone patikrinkite, kiek insulino iš tikrųjų suleista.</string>
     <string name="scene_revert_tt">Atšaukti laikiną tikslą</string>
     <string name="scene_revert_profile">Atšaukti profilio keitimą</string>
     <string name="scene_revert_smb_on">Vėl įjungti SMB</string>
@@ -719,7 +719,7 @@
     <string name="missing_profile_name">Nėra profilio pavadinimo</string>
     <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s kopija</string>
     <string name="profile_not_saved_activate">Profilis neišsaugotas. Išsaugokite profilį prieš jį aktyvuodami.</string>
-    <string name="profile_basal_not_compatible_with_pump">Bazė nesuderinama su šiuo metu naudojama pompa, todėl profilio aktyvuoti negalima. Sumažinkite procentą arba pakoreguokite bazinę dozę.</string>
+    <string name="profile_basal_not_compatible_with_pump">Valandinė bazė nesuderinama su šiuo metu naudojama pompa, todėl profilio aktyvuoti negalima. Sumažinkite procentą arba pakoreguokite valandinę bazę.</string>
     <string name="profile_basal_below_pump_minimum">Bazinė dozė yra mažesnė už mažiausią šios pompos leidžiamą reikšmę, todėl profilio aktyvuoti negalima. Padidinkite procentą arba pakoreguokite bazę.</string>
     <string name="profile_pump_incompatible_label">Pompos riba</string>
     <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
@@ -809,7 +809,7 @@
     <string name="wizard_trend_detail">15 min. tendencija (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulino apribojimų pažeidimas!\nNesuleista %1$.2fv</string>
     <string name="wizard_pump_not_available">Pompa nepasiekiama!</string>
-    <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
+    <string name="quick_wizard_not_available">Pasirinktas greitasis vedlys nebepasiekiamas, atnaujinkite plytelę</string>
     <string name="quickwizard_managemnt">Greitasis vedlys</string>
     <!--    Preferences-->
     <string name="child">Vaikas</string>
@@ -1099,7 +1099,7 @@
     <string name="aaps_directory">AAPS aplankas</string>
     <string name="import_setting">Importuoti nustatymus</string>
     <!-- Import settings screen -->
-    <string name="import_decrypt_review">Iššifruoti &amp; peržiūrėti</string>
+    <string name="import_decrypt_review">Iššifruoti ir peržiūrėti</string>
     <string name="import_decrypt">Iššifruoti</string>
     <string name="import_master_password">Pagrindinis slaptažodis</string>
     <string name="import_decryption_password">Iššifravimo slaptažodis</string>
