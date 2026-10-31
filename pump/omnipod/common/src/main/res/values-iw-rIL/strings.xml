@@ -14,7 +14,7 @@
     <string name="omnipod_common_error_failed_to_set_profile_empty_profile">כשל בהגדרת הפרופיל הבזאלי: התקבל פרופיל ריק. נא להפעיל את הפרופיל שלכם.</string>
     <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">אין פרופיל בזאלי פעיל. נא להפעיל את הפרופיל הבזאלי שלכם.</string>
     <string name="omnipod_common_error_unsupported_custom_command">פקודה מותאמת אישית לא נתמכת: %1$s</string>
-    <string name="omnipod_common_error_failed_to_refresh_status">נסיון רענון הסטטוס נכשל</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">רענון הסטטוס נכשל</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">רענון סטטוס בזמן האתחול נכשל</string>
     <string name="omnipod_common_error_failed_to_silence_alerts">השתקת ההתראות נכשלה</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">השהיית ההזרקה נכשלה</string>
@@ -59,7 +59,7 @@
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">אתחול פוד</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">הדביקו את הפוד</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">הכינו את אתר העירוי. הסירו את מכסה המחט של הפוד ואת כיסוי הדבק והדביקו את הפוד לאתר העירוי.\n\nאם הצינורית בולטת, לחצו על <b>ביטול</b> והיפטרו מהפוד.\n\nלחצו <b>הבא</b> כדי להכניס את הצינורית ולהתחיל מתן בזאלי.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">בלחיצה על <b>OK</b> הצינורית תוכנס. יש לוודא שהפוד הוצמד לאתר העירוי.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">בלחיצה על <b>אישור</b> הצינורית תוכנס. יש לוודא שהפוד הוצמד לאתר העירוי.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">הכנסת צינורית</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">מנסה להגדיר לו\"ז בזאלי התחלתי ולהכניס את הצינורית.\n\nכאשר הצינורית תוכנס בהצלחה, ניתן יהיה ללחוץ <b>הבא</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">הפוד הופעל</string>
@@ -68,12 +68,12 @@
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">השבתת פוד</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">לחצו <b>הבא</b> כדי להשבית את הפוד.\n\n<b>הערה:</b> פעולה זו תשהה כל הזרקת אינסולין ותשבית את הפוד.</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">לא ניתן להשתמש שוב בפוד שהושבת. להשבית את הפוד הזה עכשיו?</string>
-    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">בתהליך כיבוי הפוד</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">בתהליך השבתת הפוד</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">משבית את הפוד.\n\nכאשר ההשבתה תושלם, תוכלו ללחוץ על <b>הבא</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">הפוד הושבת</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">הפוד שלכם כבר לא פעיל.\n\nכעת יש להסיר את הפוד ולמחזרו.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">הפוד נזרק</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">מצב הפוד נמחק. הזרקת האינסולין לא הושהתה כי הפוד לא הושבת כהלכה!\n\nנא להסיר את הפוד מהגוף ולמחזרו.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">הפוד הושלך</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">הפוד הושלך ומצבו נמחק. הזרקת האינסולין לא הושהתה כי הפוד לא הושבת כהלכה!\n\nנא להסיר את הפוד מהגוף ולמחזרו.</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">אם תשליכו את הפוד, לא תוכלו לתקשר איתו יותר. כדאי לעשות זאת רק כאשר כל התקשורת עם הפוד נכשלת באופן קבוע. בטוחים שברצונכם להשליך את הפוד?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">השלכת הפוד</string>
     <!-- Omnipod - Preferences -->
@@ -95,11 +95,11 @@
     <string name="omnipod_common_preferences_category_other">אחר</string>
     <string name="omnipod_common_preferences_category_alerts">התראות</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">צפצופי אימות</string>
-    <string name="omnipod_common_preferences_category_notifications">התראות</string>
-    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ודאי מאופשרת</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">מאופשרת התראת צליל עבור SMB לא ודאי</string>
-    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ודאי מאופשרת</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">צליל להתראה על השהיית מתן אינסולין מופעל</string>
+    <string name="omnipod_common_preferences_category_notifications">הודעות</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">צליל להודעות על בזאלי זמני לא ודאי מופעל</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">צליל להודעות על SMB לא ודאי מופעל</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">צליל להודעות על בולוס לא ודאי מופעל</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">צליל להודעה על השהיית מתן אינסולין מופעל</string>
     <string name="omnipod_dash_use_bonding">צימוד בלוטות\'</string>
     <string name="omnipod_dash_use_bonding_summary">יש לנסות זאת רק אם הפוד לא מצליח לשמור על חיבור יציב. הטלפון יציג בקשות צימוד שיש לאשר. אם הפוד מתחבר כשורה, יש להשאיר את האפשרות כבויה. אין לכך השפעה בגרסאות Android מתחת ל-15.</string>
     <!-- Omnipod - Pod Status -->
