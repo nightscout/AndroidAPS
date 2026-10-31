@@ -15,7 +15,7 @@
     <string name="objectives_maxbasal_gate">Com base nessa experiência, decida qual deve ser a basal máxima e configure-a na bomba e nas preferências. No modo simples, este valor é calculado de acordo com a recomendação da wiki e não é necessário configurá-lo.</string>
     <string name="objectives_maxbasal">Realize a ação para cumprir a recomendação</string>
     <string name="objectives_maxbasal_learned">Tome cuidado com os recursos de segurança e ajuste os parâmetros de segurança quando necessário.</string>
-    <string name="objectives_maxiobzero_objective">Comece a fechar loop com Suspensão por Glicose Baixa</string>
+    <string name="objectives_maxiobzero_objective">Começando a fechar o loop com Suspensão por glicose baixa</string>
     <string name="objectives_maxiobzero_gate">Use o loop fechado no modo LGS (ou seja, Max IOB = 0 é definido automaticamente) por alguns dias sem muitos eventos de LGS.</string>
     <string name="objectives_maxiobzero_learned">Definir o MaxIOB como zero protege você de hipoglicemia e não adicionará insulina acima da taxa basal (exceto em situação de IOB negativo)</string>
     <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar o IOB máximo acima de 0 e reduzir gradualmente os alvos de glicemia</string>
