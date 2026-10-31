@@ -222,7 +222,7 @@
     <string name="pref_title_autotune_days">Varsayılan ayar günleri</string>
     <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (30\'a kadar)</string>
     <!-- IntKey: SMS preferences -->
-    <string name="pref_title_sms_remote_bolus_distance">Uzak bolus min mesafesi</string>
+    <string name="pref_title_sms_remote_bolus_distance">Uzaktan bolus için en kısa ara</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Rastgele KŞ aralığı</string>
     <string name="pref_title_random_bg_randomize">Rastgele KŞ verisi</string>
