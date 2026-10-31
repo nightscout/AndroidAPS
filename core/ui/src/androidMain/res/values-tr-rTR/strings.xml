@@ -529,7 +529,7 @@
     <string name="uel_carbs_removed">KARBONHİDRAT KALDIRILDI</string>
     <string name="uel_temp_basal_removed">GEÇİCİ BAZAL KALDIRILDI</string>
     <string name="uel_extended_bolus_removed">YAYMA BOLUS KALDIRILDI</string>
-    <string name="uel_food">YEMEK</string>
+    <string name="uel_food">YİYECEK</string>
     <string name="uel_food_removed">YİYECEK KALDIRILDI</string>
     <string name="uel_profile_removed">PROFİL KALDIRILDI</string>
     <string name="uel_profile_switch_removed">PROFİL DEĞİŞİMİ KALDIRILDI</string>
@@ -703,7 +703,7 @@
     <string name="message">İleti</string>
     <string name="ok">Tamam</string>
     <string name="cancel">Vazgeç</string>
-    <string name="dismiss">Reddet</string>
+    <string name="dismiss">Kapat</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="close">Kapat</string>
@@ -847,6 +847,7 @@
     <!--    Search-->
     <string name="search_category_plugins">Eklentiler</string>
     <string name="search_category_wiki">Dokümantasyon</string>
+    <string name="wiki_search_offline">Dokümantasyonda arama yapmak için internet bağlantısı gerekir</string>
     <string name="no_search_results">Hiçbir sonuç bulunamadı</string>
     <string name="search_plugin_disabled">%1$s eklentisi devre dışı</string>
     <!--    Food Management -->
