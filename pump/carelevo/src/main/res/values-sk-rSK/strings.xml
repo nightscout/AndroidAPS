@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Vyberte náplasťovú pumpu z blistra a odstráňte kryt ihly.</string>
     <string name="carelevo_patch_attach_step3_title">Aplikovať náplasťovú pumpu</string>
     <string name="carelevo_patch_attach_step3_desc">Pripevnite náplasťovú pumpu na pokožku tak, aby označená bodka smerovala nahor.</string>
+    <string name="carelevo_patch_attach_step4_desc">Po pripojení náplasťovej pumpy stlačte Ďalej.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Odstráňte bezpečnostný uzáver</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Otočte bezpečnostný uzáver v smere šípky a odstráňte ho.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Zaveďte ihlu</string>
