@@ -30,14 +30,14 @@
     <string name="timeout_during_handshake">Timeout under handskakningen – starta om Bluetooth</string>
     <string name="pump_stopped">Pump stoppad</string>
     <string name="pump_started">Pump startad</string>
-    <string name="release_software_version">Mjukvaruversion Release</string>
+    <string name="release_software_version">Programvaruversion (release)</string>
     <string name="bluetooth_address">Bluetooth-adress</string>
     <string name="manufacturing_date">Tillverkningsdatum</string>
     <string name="log_site_changes">Logga kanylbyten</string>
     <string name="log_reservoir_changes">Logga reservoarbyten</string>
     <string name="log_tube_changes">Logga slangbyten</string>
     <string name="log_battery_changes">Logga batteribyten</string>
-    <string name="log_operating_mode_changes">Logga när driftsläge ändras</string>
+    <string name="log_operating_mode_changes">Logga när driftläge ändras</string>
     <string name="log_alerts">Logga varningar</string>
     <string name="enable_tbr_emulation">Aktivera emulering av tillfällig basal</string>
     <string name="enable_tbr_emulation_summary">Använd förlängda bolusar i stället för tillfälliga basaler för att kringgå 250%%-begränsningen</string>
@@ -47,5 +47,6 @@
     <string name="pump_alert">Pumpvarning</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Ta bort parkoppling</string>
-    <string name="reset_pairing">Återställ parkopplingsinformation?</string>
+    <string name="reset_pairing">Återställ parkopplingen?</string>
+    <string name="reservoir_level">Reservoarnivå</string>
 </resources>
