@@ -66,9 +66,11 @@
     <string name="objectives_exam_learned_objectives2">Gardez toujours les paramètres exportés et l\'APK généré ailleurs que sur le téléphone. Le téléphone peut être perdu, endommagé, etc. Un bon endroit peut être n\'importe quel disque sur le cloud accessible depuis le téléphone. Dans ce cas, vous pourrez restaurer AAPS sur un autre appareil en quelques minutes. La bonne pratique est aussi de stocker le mot de passe maître utilisé dans un endroit sûr. Sans cela, votre sauvegarde est inutile, il en va de même pour les clés de signature (fichier .jks) et les mots de passe utilisés pour construire AAPS. Le reste n\'est pas important - cela peut être téléchargé à tout moment à partir d\'Internet à nouveau.</string>
     <string name="objectives_exam_learned_wrongcarbs">Si vous avez fait une entrée incorrecte dans AAPS ou si cela ne correspond pas à la réalité, résolvez-la dès que possible. Cela pourrait conduire à un surdosage. AAPS doit toujours être informé de la meilleure façon possible sur les glucides, l\'insuline, etc.</string>
     <string name="objectives_exam_learned_iob">Si vous voulez vérifier que AAPS fonctionne bien pour vous, regarder le graphe IA peut vous donner beaucoup d\'informations utiles.</string>
+    <string name="objectives_exam_learned_cob">Le calcul des GA dépend du rapport entre la SI et le G/I. Augmenter la SI ou diminuer le G/I allonge le temps d\'absorption. Mais un changement de profil avec un pourcentage modifie les deux valeurs en même temps, et le temps d\'absorption ne change pas.</string>
     <string name="objectives_exam_learned_breadgrams">Seuls les grammes sont autorisés pour l\'entrée des glucides.</string>
     <string name="objectives_exam_learned_ecarbs">Les E-glucides remplacent les bolus étendus dans le monde de la pompe.</string>
     <string name="objectives_exam_learned_nsclient">Vous pouvez suivre AAPS à distance avec AAPSClient ou Nightscout. Lorsque AAPSClient est jumelé avec le téléphone principal, vous pouvez également contrôler AAPS à distance.</string>
+    <string name="objectives_exam_learned_concentration1">Utiliser de l\'insuline U200 avec un profil à 50 % demande une conversion permanente : pour les bolus externes au stylo, et tous les rapports standard de AAPS ou NS seront faux et devront être convertis en UI pour l\'équipe médicale.</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">Passer de l\'U200 avec un profil de 50 % à U200 avec la fonction de concentration d\'insuline nécessite de créer un nouveau profil plus agressif, désactiver DynISF pendant une semaine et entraîner le cerveau à penser en Unités Internationales.</string>
     <string name="objectives_exam_learned_concentration3">La concentration de l\'insuline ne peut être modifiée que lorsque l\'insuline ou le patch sont changés. Mais le plus important, en particulier pour les pompes à tubes, est de ne jamais utiliser l\'interface utilisateur de la pompe pour injecter des bolus directement depuis la pompe.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
@@ -81,6 +83,7 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Non connecté à Internet</string>
+    <string name="failedretrievetime">Impossible d\'obtenir l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>
     <string name="what_i_ve_learned">Ce que j\'ai appris :</string>
     <string name="verify_master_password">Soyez sûr de connaitre votre mot de passe principal</string>
@@ -92,6 +95,8 @@
     <string name="objectives_exam_reset">Réinitialiser</string>
     <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Terminé</string>
     <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">En cours</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Non commencé</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Verrouillé</string>
     <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">réponse correcte</string>
     <string name="objectives_exam_previous">Précédent</string>
     <string name="objectives_exam_next">Suivant</string>
