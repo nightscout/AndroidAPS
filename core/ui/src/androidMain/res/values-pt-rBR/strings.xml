@@ -254,7 +254,7 @@
     <string name="select_site_location">Selecionar local</string>
     <string name="site_location">Local</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="stoptemptarget">Parar Alvo Temp</string>
+    <string name="stoptemptarget">Parar alvo temporário</string>
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
     <string name="lowglucosesuspend">Suspensão por glicose baixa</string>
@@ -298,7 +298,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% por %2$d min</string>
     <!--    APSResult-->
-    <string name="cancel_temp">Cancelar basal temporário</string>
+    <string name="cancel_temp">Cancelar basal temporária</string>
     <string name="let_temp_basal_run">Deixa o basal temporário em andamento</string>
     <string name="rate">Taxa</string>
     <string name="duration">Duração</string>
@@ -625,7 +625,7 @@
     <string name="uel_hw_pump_allowed">BOMBA HW PERMITIDO</string>
     <string name="uel_clear_pairing_keys">APAGAR CHAVES DE PAREAMENTO</string>
     <string name="uel_accepts_temp_basal">ACEITAR BASAL TEMPORARIO</string>
-    <string name="uel_cancel_temp_basal">CANCELAR BASAL TEMPORARIO</string>
+    <string name="uel_cancel_temp_basal">CANCELAR BASAL TEMPORÁRIA</string>
     <string name="uel_cancel_bolus">CANCELAR BÓLUS</string>
     <string name="uel_cancel_extended_bolus">CANCELAR BÓLUS ESTENDIDO</string>
     <string name="uel_cancel_tt">CANCELAR ALVO TEMPORÁRIO</string>
