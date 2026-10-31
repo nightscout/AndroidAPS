@@ -10,7 +10,8 @@
     <string name="treatments">Leczenie</string>
     <string name="treatments_history">Historia leczenia</string>
     <string name="treatments_desc">Przeglądaj i zarządzaj historią leczenia.</string>
-    <string name="nav_configuration">Ustawienia</string>
+    <string name="nav_configuration">Konfiguracja</string>
+    <string name="nav_configuration_desc">Skonfiguruj ustawienia (CGM, pompa, ...) i włącz funkcje</string>
     <string name="count_selected">Wybrany %1$d</string>
     <string name="delete">Usuń</string>
     <string name="show_invalidated">Pokaż niepoprawne</string>
@@ -160,10 +161,10 @@
     <string name="loopisdisabled">Pętla jest wyłączona</string>
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Eksport ustawień</string>
-    <string name="disableloop">Wyłącz pętle</string>
+    <string name="disableloop">Wyłącz pętlę</string>
     <string name="disabled_loop">Pętla wyłączona</string>
     <string name="resumeloop">Wznów pętlę</string>
-    <string name="suspendloop">Wstrzymaj pętle</string>
+    <string name="suspendloop">Wstrzymaj pętlę</string>
     <string name="notification">Powiadomienie</string>
     <string name="noprofile">Nie załadowano profilu z NS</string>
     <string name="exists">istnieje</string>
@@ -239,8 +240,8 @@
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="login">Zaloguj się</string>
     <string name="logout">Wyloguj się</string>
-    <string name="prime_fill">Rozpocznij/Wypełnij</string>
-    <string name="prime_not_available">Ta pompa sama rozpoczyna i napełnia się podczas aktywacji. Rozpocznij/Wypełnij z poziomu AAPS nie jest dostępne.</string>
+    <string name="prime_fill">Napełnij/Wypełnij</string>
+    <string name="prime_not_available">Ta pompa sama napełnia się i wypełnia podczas aktywacji. Funkcja Napełnij/Wypełnij z poziomu AAPS nie jest dostępna.</string>
     <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Zmień</string>
     <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Wypełnij</string>
     <string name="site_rotation">Zmiana miejsca</string>
@@ -423,7 +424,7 @@
     <string name="scene_lock_banner_master_offline">Urządzenie pacjenta jest nieosiągalne. Sterowanie scenami wznowi się po przywróceniu połączenia.</string>
     <string name="scene_lock_banner_control_disabled">Pacjent wyłączył zdalne sterowanie. Sterowanie scenami zostanie wznowione, gdy zostanie ponownie włączone na urządzeniu pacjenta.</string>
     <string name="master_offline_banner">Urządzenie pacjenta jest niedostępne. Edycja jest wyłączona, dopóki połączenie nie zostanie przywrócone.</string>
-    <string name="master_control_disabled_banner">Pacjent urządzenie wyłączyło zdalne sterowanie. Edycja jest zablokowana, dopóki nie zostanie ponownie włączona na urządzeniu pacjenta.</string>
+    <string name="master_control_disabled_banner">Urządzenie pacjenta wyłączyło zdalne sterowanie. Edycja jest zablokowana, dopóki nie zostanie ponownie włączona na urządzeniu pacjenta.</string>
     <string name="hardened_mode_on">Włączono tryb silniejszych zabezpieczeń</string>
     <string name="hardened_mode_title">Tryb silniejszych zabezpieczeń</string>
     <string name="hardened_mode_info_open">O trybie silniejszych zabezpieczeń</string>
@@ -508,7 +509,7 @@
     <string name="manage_temp_basal_desc">Rozpocznij tymczasową dawkę bazową</string>
     <string name="manage_extended_bolus_desc">Rozpocznij podawanie bolusa przedłużonego</string>
     <string name="manage_site_rotation_desc">Śledź i zmieniaj miejsca wkłucia</string>
-    <string name="manage_quickwizard_desc">Zarządzaj presetami kalkulatora bolusa</string>
+    <string name="manage_quickwizard_desc">Zarządzaj ustawieniami szybkiego kalkulatora</string>
     <string name="treatment_note_desc">Dodaj notatkę do swojego dziennika.</string>
     <string name="treatment_question_desc">Zapisz pytanie dla swojego zespołu opieki</string>
     <string name="treatment_cgm_desc">Otwórz aplikację CGM</string>
@@ -763,7 +764,7 @@
     <string name="algorithm_long">Autosens w algorytmie: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_tune_days">Dostrojonych dni :</string>
+    <string name="autotune_tune_days">Dni do dostrojenia :</string>
     <string name="autotune_select_profile">Wybierz profil do dostrojenia</string>
     <!-- Alerts -->
     <string name="urgent_alarm">Pilny alarm</string>
@@ -808,7 +809,7 @@
     <string name="wizard_constraint_bolus_size">Naruszenie ograniczeń insuliny!\nNie można podać %1$.2fU</string>
     <string name="wizard_pump_not_available">Pompa niedostępna!</string>
     <string name="quick_wizard_not_available">Wybrany szybki bolus nie jest już dostępny, odśwież swój kafelek</string>
-    <string name="quickwizard_managemnt">Szybki bolus</string>
+    <string name="quickwizard_managemnt">Szybki kalkulator</string>
     <!--    Preferences-->
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
