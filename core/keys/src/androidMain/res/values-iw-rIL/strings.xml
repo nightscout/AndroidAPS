@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">הפעל התראות דחופות כהתראות אנדרואיד</string>
     <string name="pref_title_alert_increase_volume">הגברת  עוצמת הקול של ההתראות באופן הדרגתי</string>
     <string name="pref_title_alert_override_dnd">עקיפת מצב \'נא לא להפריע\'</string>
+    <string name="pref_summary_alert_override_dnd">מופעל: ההתראות מצלצלות גם כשהטלפון בשקט או במצב נא לא להפריע. כבוי: ההתראות לא מצלצלות במצבים אלה. במצב נא לא להפריע הן רק רוטטות.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">העלאת נתוני סוכר ל־Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">רישום החלפת חיישן</string>
@@ -112,6 +113,7 @@
     <string name="pref_title_ns_use_ws">שימוש ב־WebSockets</string>
     <string name="pref_summary_ns_use_ws">השתמש ב־WebSockets לתקשורת בזמן אמת עם Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">אפשר שליטה ממכשיר לקוח</string>
+    <string name="pref_summary_ns_allow_client_control">מאפשר למכשירי לקוח מצומדים לשלוח פקודות חתומות (למשל הפעלה/עצירה של תרחישים) דרך Nightscout. זה גם מפעיל מצב מוקשח: שינויים שנעשים ישירות ב-Nightscout כבר לא מתקבלים.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Wi‑Fi בלבד</string>
     <string name="pref_title_openhumans_charging_only">רק בזמן טעינה</string>
@@ -231,6 +233,8 @@
     <string name="lang_tr">טורקית</string>
     <string name="lang_zh_tw">סינית מסורתית</string>
     <string name="lang_zh_cn">סינית מפושטת</string>
+    <string name="pref_title_patient_name">שם המופע</string>
+    <string name="pref_summary_patient_name">שם האדם שמשתמש בטלפון זה. השם מבדיל את מופע AAPS הזה מאחרים בדוחות ובסנכרון.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">תיקיית AAPS</string>
     <!-- StringKey: Protection preferences -->
