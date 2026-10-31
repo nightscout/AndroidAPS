@@ -105,6 +105,8 @@
     <string name="triggerCannulaAgeDesc">Vechimea canulei %1$s %2$.1f oră</string>
     <string name="triggerPodChangeLabel">Activarea pompei</string>
     <string name="triggerPodChangeDesc">Pompă activată</string>
+    <string name="triggerUnknownLabel">Declanșator necunoscut</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Declanșator necunoscut %1$s - niciodată adevărat</string>
     <string name="triggerInsulinAgeLabel">Vechime insulină</string>
     <string name="triggerInsulinAgeDesc">Vechime insulină %1$s %2$.1f oră</string>
     <string name="triggerPumpBatteryAgeLabel">Vechime baterie pompă</string>
@@ -141,6 +143,7 @@
     <string name="triggerStepsCountLabel">Număr de pași</string>
     <string name="triggerStepsCountDesc">Număr de pași per %1$s minute %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Durata de măsurare</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Activați/dezactivați SMB</string>
     <string name="changeSmbTo">Schimbați SMB la %1$s</string>
@@ -148,6 +151,11 @@
     <string name="on">Pornit</string>
     <string name="off">Oprit</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Schimbați netezirea</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Schimbați netezirea în %1$s</string>
+    <string name="smoothing_label">Netezire</string>
+    <string name="precondition_smoothing_not_active_name">Netezirea nu este activă</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Netezirea %1$s nu este activă</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Alegeți de pe hartă</string>
     <string name="tap_to_select_location">Apăsați pe hartă pentru a selecta un loc</string>
