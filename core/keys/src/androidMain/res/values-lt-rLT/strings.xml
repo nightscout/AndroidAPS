@@ -94,7 +94,7 @@
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Įkelti duomenis į NS</string>
     <string name="pref_summary_ns_upload_data">Įkelti terapijos įrašus, laikinas bazes ir kitus duomenis į Nightscout.</string>
-    <string name="pref_title_ns_receive_cgm">Gauti CGM duomenis iš NS</string>
+    <string name="pref_title_ns_receive_cgm">Gauti NGJ duomenis iš NS</string>
     <string name="pref_summary_ns_receive_cgm">Priimti CGM rodmenis iš Nightscout.</string>
     <string name="pref_title_ns_receive_profile_store">Gauti profilius iš NS</string>
     <string name="pref_summary_ns_receive_profile_store">Priimti profilių saugyklos naujinius iš Nightscout.</string>
@@ -296,7 +296,7 @@
     <string name="automation_location_network">Nustatyti vietą pagal tinklą</string>
     <string name="automation_location_gps">Nustatyti vietą naudojant GPS</string>
     <!-- StringKey: SMS preferences -->
-    <string name="smscommunicator_allowednumbers">Patvirtinti telefono numeriai</string>
+    <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
     <string name="smscommunicator_allowednumbers_summary">+370XXXXXXXX; +370YYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Papildomas privalomas PIN kodas žymeklio gale</string>
     <string name="smscommunicator_otp_pin_summary">Papildomi skaitmenys, kuriuos reikia atsiminti ir pridėti kiekvieno sugeneruoto slaptažodžio pabaigoje</string>
