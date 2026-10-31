@@ -11,7 +11,7 @@
     <string name="medtronic_pump_encoding_title">קידוד Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">קידוד תוכנה 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">קידוד חומרה 4b6b</string>
-    <string name="medtronic_pump_frequency_worldwide">ברחבי העולם (868 Mhz)</string>
+    <string name="medtronic_pump_frequency_worldwide">ברחבי העולם (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">סורק</string>
     <string name="riley_link_ble_config_connected_never">אף פעם</string>
