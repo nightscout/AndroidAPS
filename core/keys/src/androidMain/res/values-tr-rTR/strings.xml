@@ -142,6 +142,16 @@
     <string name="pref_title_wear_wizard_bg">Sihirbaza KŞ\'ni dahil et</string>
     <string name="pref_title_wear_wizard_tt">Sihirbaza geçici hedef ekle</string>
     <string name="pref_title_wear_wizard_trend">Sihirbaza eğilimi dahil et</string>
+    <string name="pref_title_wear_wizard_cob">Sihirbaza AKRB dahil et</string>
+    <string name="pref_title_wear_wizard_iob">Sihirbaza AİNS dahil et</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Özel saat arayüzlerine izin ver</string>
+    <string name="pref_title_wear_pushed_watchface">Saat arayüzü saate yüklendi</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Saat arayüzü bileşenleri</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Özel Saat arayüzü</string>
+    <string name="pref_title_wear_notify_on_smb">SMB\'yi bildir</string>
+    <string name="pref_summary_wear_notify_on_smb">SMB iletildiğinde saate bildirim gönder.</string>
+    <string name="pref_title_wear_broadcast_data">Verileri saate yayınla</string>
+    <string name="pref_summary_wear_broadcast_data">AAPS verilerini net aracılığıyla üçüncü taraf saat uygulamalarına yayınlayın.</string>
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
