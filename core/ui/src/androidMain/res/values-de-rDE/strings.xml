@@ -346,7 +346,13 @@
     <string name="careportal_note_message">Hinweis : %1$s</string>
     <string name="careportal_question_message">Frage : %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">​Setzstelle wechseln.: %1$s</string>
     <string name="careportal_pump_site_change">Pumpenkatheter-Wechsel</string>
+    <string name="cgm_sensor_insert">Sensor gesetzt</string>
+    <string name="careportal_pump_site_management">Pumpen-Setzstellen</string>
+    <string name="careportal_cgm_site_management">CGM Setzstellen</string>
+    <string name="careportal_cgmsensorstart">Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">Sensor Anhalten</string>
     <string name="careportal_dad_alert">D.A.D. Warnung</string>
     <string name="careportal_insulin_cartridge_change">Insulin Ampullenwechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
@@ -361,7 +367,67 @@
     <string name="careportal_openapsoffline">OpenAPS offline</string>
     <string name="pump_battery_change">Pumpenbatterie-Wechsel</string>
     <string name="temporary_target">Temporäres Ziel</string>
+    <string name="temporary_targets">Temporäre Ziele</string>
+    <string name="running_mode_desc">​Loop schließen, öffnen oder pausieren oder die Pumpe trennen</string>
+    <string name="pump_reconnect">Pumpe wieder verbinden</string>
+    <string name="scene">Szene</string>
+    <string name="scenes">Szenen</string>
+    <string name="scene_desc">Voreinstellungen für bestimmte Situationen – mehrere Aktionen gleichzeitig ausführen</string>
+    <string name="scene_activate">Aktivieren</string>
+    <string name="scene_deactivate">Szene beenden</string>
+    <string name="scene_active">Aktiv</string>
+    <string name="scene_ended">Szene beendet</string>
+    <string name="scene_end_active">Aktive Szene beenden</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Springe zu</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Folgeszene %1$s wird nicht gestartet</string>
+    <string name="scene_confirm_activate">Szene \"%1$s \"aktivieren?</string>
+    <string name="scene_confirm_deactivate">Szene \"%1$s\" beenden und Änderungen rückgängig machen?</string>
+    <string name="scene_conflict_active_tt">Aktives temporäres Ziel wird ersetzt</string>
+    <string name="scene_conflict_active_profile">Aktiver Profilwechsel wird ersetzt</string>
+    <string name="scene_conflict_active_scene">Aktive Szene \"%1$s\" wird zuerst beendet</string>
+    <string name="scene_action_tt">Temporäres Ziel %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
+    <string name="scene_action_smb_on">Aktiviere SMB</string>
+    <string name="scene_action_smb_off">SMB deaktivieren</string>
+    <string name="scene_action_careportal">Protokoll: %1$s</string>
+    <string name="scene_management">Szenen</string>
+    <string name="scene_management_desc">Szenen erstellen, bearbeiten und verwalten</string>
+    <string name="scene_start_from_template">Mit einer Vorlage beginnen</string>
+    <string name="scene_editor_target">Ziel</string>
+    <string name="scene_editor_tt_preset">TT Voreinstellung</string>
+    <string name="scene_editor_no_tt_presets">Keine TT-Voreinstellungen konfiguriert</string>
+    <string name="scene_editor_select_tt_preset">Voreinstellung auswählen</string>
+    <string name="scene_editor_percentage">Prozent</string>
+    <string name="scene_editor_profile">Profil</string>
+    <string name="scene_editor_keep_current_profile">-- Aktuelles beibehalten--</string>
+    <string name="scene_editor_mode">Modus</string>
+    <string name="scene_editor_event_type">Ereignistyp</string>
+    <string name="scene_editor_note">Notiz</string>
+    <string name="scene_icon">Symbol</string>
+    <string name="scene_editor_enabled">Aktiviert</string>
+    <string name="scene_editor_disabled">Deaktiviert</string>
+    <string name="scene_summary">%1$d Aktionen, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Unbegrenzt (manuelles Ende)</string>
+    <string name="scene_some_actions_failed">Einige Aktionen sind fehlgeschlagen</string>
+    <string name="scene_no_active">Keine aktive Szene</string>
+    <string name="scene_some_reverts_failed">Einige Änderungen konnten nicht rückgängig gemacht werden</string>
+    <string name="scene_no_profile_store">Kein Profilspeicher verfügbar</string>
+    <string name="scene_no_actions">Die Szene enthält keine Aktionen</string>
+    <string name="scene_profile_not_found">Profil \"%1$s\" nicht gefunden</string>
+    <string name="scene_lock_banner_master_offline">Master nicht erreichbar. Die Szenensteuerung ist wieder verfügbar, sobald die Verbindung wiederhergestellt ist.</string>
+    <string name="scene_lock_banner_control_disabled">Die Fernsteuerung ist auf dem Master deaktiviert. Die Szenensteuerung ist wieder verfügbar, sobald die Fernsteuerung auf dem Master erneut aktiviert wird.</string>
+    <string name="master_offline_banner">Master nicht erreichbar. Die Bearbeitung ist gesperrt, bis die Verbindung wiederhergestellt ist.</string>
+    <string name="master_control_disabled_banner">Die Fernsteuerung ist auf dem Master deaktiviert. Die Bearbeitung ist gesperrt, bis die Fernsteuerung auf dem Master erneut aktiviert wird.</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Schreibgeschützt</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Mahlzeiten</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Betreuer</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Administrator</string>
+    <string name="client_role_title">Rolle</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rolle %1$s</string>
+    <string name="client_roles_info_open">​Über Rollen</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
@@ -489,6 +555,7 @@
     <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
     <!-- Profile validation -->
     <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s Kopie</string>
     <string name="error_in_ic_values">Fehler in IC-Werten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
