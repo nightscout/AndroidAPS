@@ -21,7 +21,7 @@
     <string name="common_values">Use valores da maior refeição que você costuma comer\n</string>
     <string name="syncinfotext">Sincronize os dados com a nuvem. Você pode pular esta parte agora, mas não poderá passar nos objetivos até configurar o cliente Nightscout ou Tidepool.</string>
     <string name="status_label">Status:</string>
-    <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
+    <string name="diawarning">Lembre-se: novos perfis de insulina exigem DIA de pelo menos 5h. DIA de 5–6h no novo perfil equivale a DIA de 3h nos perfis de insulina antigos.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="exitwizard">Sair do assistente de configuração</string>
