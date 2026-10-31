@@ -139,7 +139,7 @@
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Valdymas per Wear</string>
     <string name="pref_summary_wear_control">Valdyti AAPS iš „Android Wear“ laikrodžio.</string>
-    <string name="pref_title_wear_wizard_bg">Įtraukti glikemiją į boluso skaičiuoklę</string>
+    <string name="pref_title_wear_wizard_bg">Įtraukti glikemiją į boluso skaičiuotuvą</string>
     <string name="pref_title_wear_wizard_tt">Įtraukti laikiną tikslą į skaičiuotuvą</string>
     <string name="pref_title_wear_wizard_trend">Įtraukti tendenciją į skaičiuotuvą</string>
     <string name="pref_title_wear_wizard_cob">Įtraukti AAO į skaičiuotuvą</string>
@@ -213,7 +213,7 @@
     <string name="pref_title_autosens_period">Autosens laikotarpis</string>
     <string name="openapsama_autosens_period_summary">Valandų skaičius praeityje jautrumo nustatymui (angliavandenių įsisavinimo laikas neįtrauktas)</string>
     <!-- IntKey: Maintenance preferences -->
-    <string name="pref_title_logs_amount">Siunčiamų įrašų skaičius</string>
+    <string name="pref_title_logs_amount">Siunčiamų žurnalų skaičius</string>
     <!-- IntKey: Alert preferences -->
     <string name="pref_title_stale_data_threshold">Pasenusių duomenų riba</string>
     <string name="pref_title_pump_unreachable_threshold">Perspėjimo apie nepasiekiamą pompą riba</string>
@@ -267,7 +267,7 @@
     <string name="lang_tr">Turkish</string>
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
-    <string name="pref_title_patient_name">Vardas</string>
+    <string name="pref_title_patient_name">Egzemplioriaus pavadinimas</string>
     <string name="pref_summary_patient_name">Šį telefoną naudojančio asmens vardas. Jis padeda atskirti šią AAPS sistemą ataskaitose ir sinchronizuojant.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS aplankas</string>
