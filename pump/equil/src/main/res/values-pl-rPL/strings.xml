@@ -57,7 +57,7 @@
     <string name="equil_pump_not_run">Pompa nie jest uruchomiona</string>
     <string name="equil_pair">Paruj</string>
     <string name="equil_pair_error">Błąd parowania</string>
-    <string name="equil_fill">Rozpocznij/Wypełnij</string>
+    <string name="equil_fill">Napełnij/Wypełnij</string>
     <string name="equil_air">Usuń powietrze</string>
     <string name="equil_temp_basal_rate">Tymczasowa dawka bazowa</string>
     <string name="equil_total_delivered">Łącznie dostarczono</string>
