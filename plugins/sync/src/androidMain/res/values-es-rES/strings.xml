@@ -72,6 +72,7 @@
     <string name="pair_with_master_fetching">Buscando vinculación…</string>
     <string name="pair_with_master_confirm_title">¿Vincular con este máster?</string>
     <string name="pair_with_master_confirm_master">Máster: %1$s</string>
+    <string name="pair_with_master_confirm_warning">Tras el emparejamiento, este dispositivo podrá enviar comandos firmados a este máster.</string>
     <string name="pair_with_master_confirm_pair">Vincular</string>
     <string name="pair_with_master_error_title">No se puede vincular</string>
     <string name="pair_with_master_error_wrong_pin">No se encontró ningún emparejamiento para ese PIN. Comprueba el PIN en el máster e inténtalo de nuevo</string>
@@ -267,7 +268,7 @@
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remote_command_not_allowed">El comando remoto no está permitido</string>
     <string name="smscommunicator_remote_command_not_possible">El comando remoto no es posible</string>
-    <string name="smscommunicator_remote_bolus_not_allowed">Bol remoto no disponible. Inténtelo de nuevo más tarde</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Bolo remoto no disponible. Inténtalo de nuevo más tarde.</string>
     <string name="smscommunicator_basal_reply_with_code">Para iniciar una basal de %1$.2f U/h durante %2$d min, responda con el código %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Para cambiar el perfil a %1$s %2$d%%, responda con el código %3$s</string>
     <string name="smscommunicator_extended_reply_with_code">Para iniciar un bolus extendido de %1$.2f U durante %2$d min, responda con el código %3$s</string>
@@ -315,7 +316,7 @@
     <string name="sms_read_status_failed">Error al leer estado</string>
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de la TBR debe ser un múltiplo de %1$d minutos y mayor que 0</string>
-    <string name="sms_tbr_percent_only">Esta bomba solo admite un bolo temporal en porcentaje, no en U/h</string>
+    <string name="sms_tbr_percent_only">Esta bomba solo admite una basal temporal en porcentaje, no en U/h.</string>
     <string name="sms_tbr_absolute_only">Esta bomba solo admite una tasa basal temporal en U/h, no en porcentaje</string>
     <string name="a11y_otp_qr_code">Código QR para configurar la contraseña de un solo uso</string>
     <string name="permission_sms_title">SMS</string>
