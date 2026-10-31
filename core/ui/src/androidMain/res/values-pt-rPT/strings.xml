@@ -268,7 +268,7 @@
     <string name="canceling_tbr_failed">Não foi possível cancelar a basal temporária</string>
     <string name="canceling_eb_failed">Não foi possível cancelar o bólus prolongado</string>
     <string name="virtualpump_uploadstatus_title">Enviar o estado da bomba para NS ou Tidepool</string>
-    <string name="iob_label">Insulina ativa (IA )</string>
+    <string name="iob_label">Insulina ativa (IA)</string>
     <string name="loopstatus_targets">Alvos:</string>
     <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
     <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
@@ -818,7 +818,7 @@
     <string name="last_connection_label">Última ligação</string>
     <string name="last_bolus_label">Último bólus</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
-    <string name="tempbasal_label">Basal temp</string>
+    <string name="tempbasal_label">Basal temporária</string>
     <string name="extended_bolus_label">Bólus Prolongado</string>
     <string name="serial_number">Número de Série</string>
     <string name="disconnected">Desligada</string>
@@ -836,7 +836,7 @@
     <string name="connection_error">Erro de ligação da bomba</string>
     <string name="reading_pump_history">A ler histórico da bomba</string>
     <string name="password_cleared">Senha limpa!</string>
-    <string name="pairing">A Emparelhar</string>
+    <string name="pairing">Emparelhamento</string>
     <string name="initializing">A inicializar…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Aviso</string>
