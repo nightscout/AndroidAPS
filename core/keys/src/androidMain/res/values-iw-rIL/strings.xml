@@ -72,7 +72,7 @@
     <string name="pref_title_aps_use_autoisf_weights">הפעלת AutoISF</string>
     <string name="pref_summary_aps_use_autoisf_weights">הפעלת התאמות ISF מבוססות משקלים של AutoISF.</string>
     <string name="pref_title_aps_smb_on_even_target">הפעלת SMB ביעד זוגי</string>
-    <string name="pref_summary_aps_smb_on_even_target">אפשרות חלופית להפעלת SMB תמיד, בהתאם לערך מטרת הגלוקוז.</string>
+    <string name="pref_summary_aps_smb_on_even_target">אפשרות חלופית להפעלת SMB תמיד, לפי ערך יעד הסוכר.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">הפעלת דיווח קריסות באמצעות Fabric</string>
     <string name="pref_title_maintenance_enable_export_automation">הפעלת ייצוא אוטומטי של הגדרות</string>
@@ -145,9 +145,9 @@
     <string name="pref_title_wear_wizard_cob">הכללת COB באשף</string>
     <string name="pref_title_wear_wizard_iob">הכללת IOB באשף</string>
     <string name="pref_title_wear_custom_watchface_authorization">אישור תצוגות שעון מותאמות אישית</string>
-    <string name="pref_title_wear_pushed_watchface">תצוגת שעון מותקנת בשעון</string>
-    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">תצוגת שעון עם רכיבים (Complications)</string>
-    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">תצוגת שעון מותאמת אישית</string>
+    <string name="pref_title_wear_pushed_watchface">פני השעון שמותקנים בשעון</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">פני שעון עם רכיבים (Complications)</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">פני שעון מותאמים אישית</string>
     <string name="pref_title_wear_notify_on_smb">התראה בעת מתן SMB</string>
     <string name="pref_summary_wear_notify_on_smb">שליחת התראה לשעון כאשר ניתן SMB.</string>
     <string name="pref_title_wear_broadcast_data">שידור נתונים לשעון</string>
@@ -273,7 +273,7 @@
     <string name="pref_title_aaps_directory">תיקיית AAPS</string>
     <!-- StringKey: Protection preferences -->
     <string name="pref_title_master_password">סיסמה ראשית</string>
-    <string name="pref_title_settings_password">סיסמת הגדרות</string>
+    <string name="pref_title_settings_password">סיסמת ההגדרות</string>
     <string name="pref_title_settings_pin">קוד PIN להגדרות</string>
     <string name="pref_title_application_password">סיסמת האפליקציה</string>
     <string name="pref_title_application_pin">קוד PIN לאפליקציה</string>
