@@ -12,7 +12,7 @@
     <string name="medtronic_pump_encoding_4b6b_local">Codificação 4b6b por software</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codificação 4b6b por hardware</string>
     <string name="medtronic_pump_frequency_us_ca">EUA e Canadá (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Mundial (868 Mhz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mundial (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">A procurar</string>
     <string name="riley_link_ble_config_connected_never">Nunca</string>
@@ -60,7 +60,7 @@
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Mostrar o nível de bateria reportada pelo OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Mostrar o nível de bateria reportado pelo OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NÃO trabalha com o RileyLink original. Pode não funcionar com outras alternativas ao RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
