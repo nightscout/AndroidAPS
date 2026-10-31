@@ -33,14 +33,14 @@
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod에서 시간 업데이트 됨</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">시간 설정</string>
-    <string name="omnipod_common_overview_button_suspend_delivery">중지</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">주입 중지</string>
     <string name="omnipod_common_overview_button_resume_delivery">주입 재개</string>
     <string name="omnipod_common_overview_button_silence_alerts">경고 음소거</string>
     <string name="omnipod_common_overview_pod_status">Pod 상태</string>
     <string name="omnipod_common_overview_total_delivered">총 주입량</string>
     <string name="omnipod_common_overview_pod_unique_id">고유 ID</string>
     <string name="omnipod_common_overview_lot_number">LOT 번호</string>
-    <string name="omnipod_common_overview_pod_sequence_number">일련번호</string>
+    <string name="omnipod_common_overview_pod_sequence_number">시퀀스 번호</string>
     <string name="omnipod_common_overview_pod_expiry_date">Pod 만료</string>
     <string name="omnipod_common_overview_last_connection">마지막 연결</string>
     <string name="omnipod_common_overview_last_bolus">마지막 볼러스</string>
