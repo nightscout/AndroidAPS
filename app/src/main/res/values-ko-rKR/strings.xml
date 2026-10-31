@@ -2,4 +2,24 @@
 <resources>
     <string name="authorizationfailed">인증 실패</string>
     <string name="identification_not_set">개발 모드에서 신원 확인이 설정되지 않았습니다.</string>
+    <string name="select">선택</string>
+    <string name="set">설정</string>
+    <string name="migrating_preferences">설정 이전 중…</string>
+    <string name="optimizing_database">데이터베이스 최적화 중…</string>
+    <string name="initializing_plugins">플러그인 초기화 중…</string>
+    <string name="initializing">초기화 중…</string>
+    <string name="migrating_profile_switches">프로필 변경 이전 중…</string>
+    <string name="migrating_effective_profile_switches">유효 프로필 변경 이전 중…</string>
+    <string name="migrating_boluses">볼러스 이전 중…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">이전 기록에는 인슐린 구성이 없고 활성 프로필도 없어서 %1$s을(를) 사용했습니다. 인슐린 설정을 확인하십시오. 이미 이전된 기록은 나중에 수정되지 않습니다.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">이전 기록에는 인슐린 작용 시간이 없어서 %2$s에 %1$.1f시간을 사용했습니다. 인슐린 설정을 확인하십시오. 이미 이전된 기록은 나중에 수정되지 않습니다.</string>
+    <string name="settings_unreadable_title">AAPS 설정을 읽을 수 없습니다</string>
+    <string name="settings_unreadable_key_explanation">이 휴대폰의 설정은 Android가 AAPS를 위해 보관하는 키로 암호화되어 있는데, 이 키로 더 이상 설정을 열 수 없습니다. 휴대폰의 키 저장소가 초기화된 후에 이런 일이 생길 수 있습니다.</string>
+    <string name="settings_unreadable_keystore_explanation">휴대폰의 키 저장소가 응답하지 않아서 AAPS가 설정을 열 수 없었습니다.</string>
+    <string name="settings_unreadable_not_running">AAPS가 실행되고 있지 않으며 펌프를 제어하지 않습니다. 실행 중인 임시 기저는 정해진 시간에 끝나고, 그 후에는 펌프가 자체 기저를 주입합니다.</string>
+    <string name="settings_unreadable_what_to_do">재시도를 누르면 AAPS를 닫고 다시 시작합니다. 그래도 해결되지 않으면 휴대폰을 다시 시작하십시오. 다른 방법이 모두 소용없을 때만 새로 시작을 선택하십시오. 읽을 수 없는 설정은 따로 보관되고, AAPS는 빈 설정으로 시작합니다. 그다음 설정 마법사에서 마지막 설정 내보내기 파일을 가져오십시오.</string>
+    <string name="settings_unreadable_start_fresh">새로 시작</string>
+    <string name="settings_unreadable_confirm_title">빈 설정으로 시작하시겠습니까?</string>
+    <string name="settings_unreadable_confirm_text">읽을 수 없는 설정 파일은 이름을 바꾸어 보관합니다. 모든 설정은 기본값으로 시작합니다. 그다음 AAPS를 다시 설정하거나 설정 내보내기 파일을 가져옵니다.</string>
+    <string name="settings_unreadable_notification">AAPS가 실행되고 있지 않습니다. 해야 할 일을 보려면 AAPS를 여십시오.</string>
 </resources>
