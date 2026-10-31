@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Фонове зображення</string>
     <string name="cwf_comment_chart">Графіки (глюкоза, база, лінії прогнозу...)</string>
     <string name="cwf_comment_cover_chart">Зображення перед графіком та позаду текстових полів</string>
+    <string name="cwf_comment_complication">Контейнер для віджета</string>
     <string name="cwf_comment_freetext1">Вільний текст 1</string>
     <string name="cwf_comment_freetext2">Вільний текст 2</string>
     <string name="cwf_comment_freetext3">Вільний текст 3</string>
