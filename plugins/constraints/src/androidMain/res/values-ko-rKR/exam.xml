@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">DIA에 대하여 올바른 것은?</string>
-    <string name="dia_label_exam">활성 인슐린 지속 시간 (DIA)</string>
+    <string name="dia_label_exam">인슐린 작용 시간 (DIA)</string>
     <string name="dia_profile">DIA 값은 프로파일이 아니라 인슐린 설정(관리 → 인슐린 설정)에서 설정해야 합니다.</string>
     <string name="dia_minimumis5h">허용되는 최소값은 5시간입니다.</string>
     <string name="dia_hint1">https://wiki.aaps.app/ko/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
