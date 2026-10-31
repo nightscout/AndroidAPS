@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Hora de verão em 24 h ou menos</string>
+    <string name="dst_loop_disabled_warning">Hora de verão em menos de 3 horas - Loop fechado desativado</string>
     <!-- Storage constraint -->
     <string name="disk_full">Liberte pelo menos %1$d MB no armazenamento interno! Loop desativado!</string>
     <!-- Version Checker -->
