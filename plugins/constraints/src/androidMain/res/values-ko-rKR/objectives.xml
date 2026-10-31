@@ -86,6 +86,7 @@
     <string name="failedretrievetime">시간을 가져오지 못했습니다</string>
     <string name="requirementnotmet">목표 요구 사항이 충족되지 않음</string>
     <string name="what_i_ve_learned">내가 배운 것들:</string>
+    <string name="verify_master_password">마스터 암호 확인</string>
     <string name="objectives_collapse">접기</string>
     <string name="objectives_expand">펼치기</string>
     <string name="objectives_no_learned">이 목표에 기록된 학습 내용이 없습니다.</string>
