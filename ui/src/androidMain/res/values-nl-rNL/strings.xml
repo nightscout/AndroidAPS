@@ -42,8 +42,11 @@
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">Dagen</string>
     <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="cgp_title">Glucose Pentagon (CGP) - 14 dagen</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
     <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Gemiddelde</string>
     <string name="cgp_reference">Gezond persoon</string>
     <string name="cgp_patient">Patiënt</string>
     <string name="cgp_pgr_very_low">Zeer laag risico</string>
@@ -61,6 +64,7 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Wijzig</string>
     <string name="record_site_location">Site locatie: %1$s</string>
     <string name="record_site_arrow">Site pijl %1$s</string>
     <string name="record_site_note">Notitie: %1$s</string>
@@ -69,6 +73,9 @@
     <string name="fill_warning">Zorg ervoor dat de hoeveelheid overeenkomt met de specificatie van uw infusieset!</string>
     <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
+    <string name="fill_prime_amount">Prime hoeveelheid</string>
+    <string name="fill_pump_units_note">Prime hoeveelheid in pomp eenheden</string>
+    <string name="fill_insulin_change">Wijzig insuline naar: %1$s (profielwissel zal worden toegepast)</string>
     <!-- Scene -->
     <string name="aaps_tt_high_icon_label">Tijdelijk streefdoel</string>
     <string name="aaps_tt_activity_icon_label">TT Activiteit</string>
@@ -93,6 +100,18 @@
     <string name="tennis_icon_label">Tennissen</string>
     <string name="soccer_icon_label">Voetbal</string>
     <string name="baseball_icon_label">Rugby</string>
+    <string name="blood_type_icon_label">Bloed</string>
+    <string name="health_safety_icon_label">Gezondheid</string>
+    <string name="healing_icon_label">Genezing</string>
+    <string name="meal_icon_label">Restaurant</string>
+    <string name="cafe_icon_label">Koffie</string>
+    <string name="lunch_icon_label">Lunch</string>
+    <string name="bakery_icon_label">Bakkerij</string>
+    <string name="sleep_icon_label">Slaap</string>
+    <string name="night_icon_label">Nacht</string>
+    <string name="nights_stay_icon_label">Overnachtingen</string>
+    <string name="hotel_icon_label">Hotel</string>
+    <string name="seat_flat_icon_label">Rust</string>
     <string name="work_icon_label">Werk</string>
     <string name="school_icon_label">School</string>
     <string name="home_icon_label">Thuis</string>
@@ -106,15 +125,27 @@
     <string name="star_icon_label">Ster</string>
     <string name="speed_icon_label">Snelheid</string>
     <string name="alarm_icon_label">Alarm</string>
+    <string name="event_icon_label">Gebeurtenis</string>
     <string name="flag_icon_label">Vlag</string>
+    <string name="bookmark_icon_label">Bladwijzer</string>
+    <string name="label_icon_label">Label</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Insuline naam ontbreekt</string>
+    <string name="insulin_name_exists">Insuline naam %1$s bestaat al, selecteer een nieuwe naam</string>
     <string name="insulin_external_update_title">Insuline configuratie is gewijzigd</string>
     <string name="insulin_external_update_message">Een gekoppelde client heeft de insulineconfiguratie gewijzigd. Tik op OK om de wijzigingen van de client te laden en je niet-opgeslagen wijzigingen te verwerpen. Tik op Annuleren om verder te gaan met bewerken (bij de volgende keer opslaan worden de wijzigingen van de client overschreven).</string>
     <string name="insulin_edit_target_gone">Deze insuline is elders verwijderd. De wijzigingen konden niet worden opgeslagen. De lijst is opnieuw geladen.</string>
     <string name="insulin_activation_applied">Activering insuline is voltooid</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Uitvoeren…</string>
+    <string name="clientcontrol_pending_working_text">Wacht op master voor bevestiging…</string>
+    <string name="clientcontrol_pending_rejected_title">Niet uitgevoerd</string>
+    <string name="clientcontrol_pending_failed_format">%1$s kan niet worden uitgevoerd.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Deels uitgevoerd</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s was uitgevoerd, maar sommige acties konden niet worden uitgevoerd.\nControleer de actieve status.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Kan niet bevestigen</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="percentage_label">Percentage</string>
