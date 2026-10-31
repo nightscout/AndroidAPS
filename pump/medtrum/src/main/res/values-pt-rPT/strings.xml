@@ -74,7 +74,7 @@
     <string name="unpair_confirm_message">Isto apaga o número de série da bomba guardado e desliga a ligação. Ative um novo patch para procurar uma bomba.</string>
     <string name="step_retry_activation">Ativação em curso</string>
     <string name="unexpected_state">Estado inesperado: %1$s</string>
-    <string name="ble_scan_connect_pump_base_first">Ligue a base da bomba a um patch novo para o ligar e depois selecione-o na lista abaixo.</string>
+    <string name="ble_scan_connect_pump_base_first">Ligue a base da bomba a um patch novo para a pôr a funcionar e depois selecione-a na lista abaixo.</string>
     <string name="patch_begin_activation">Nenhum patch ativo. Prima <b>Seguinte</b> para iniciar o processo de ativação.</string>
     <string name="connect_pump_base">Confirme que a base da bomba está ligada ao patch, remova o ar residual e encha com insulina. Depois prima <b>Seguinte</b>.</string>
     <string name="note_min_70_units">Nota: são necessárias pelo menos 70 unidades para a ativação.</string>
