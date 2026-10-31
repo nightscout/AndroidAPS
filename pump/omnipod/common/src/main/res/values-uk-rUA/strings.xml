@@ -16,7 +16,7 @@
     <string name="omnipod_common_error_unsupported_custom_command">Непідтримувана користувацька команда: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Не вдалося оновити статус</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Не вдалося оновити статус під час запуску</string>
-    <string name="omnipod_common_error_failed_to_silence_alerts">Не вдалося заглушити сповіщення</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Не вдалося вимкнути звук попереджень</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Не вдалося призупинити введення</string>
     <string name="omnipod_common_error_failed_to_set_time">Не вдалося встановити час</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Не вдалося відновити введення</string>
@@ -146,7 +146,7 @@
     <string name="omnipod_common_cmd_get_pod_status">Отримати статус Pod</string>
     <string name="omnipod_common_cmd_set_time">Встановити час</string>
     <string name="omnipod_common_cmd_configure_alerts">Налаштувати сповіщення</string>
-    <string name="omnipod_common_cmd_silence_alerts">Заглушити сповіщення</string>
+    <string name="omnipod_common_cmd_silence_alerts">Вимкнути звук попереджень</string>
     <string name="omnipod_common_cmd_read_pulse_log">Прочитати журнал імпульсів</string>
     <string name="omnipod_common_cmd_suspend_delivery">Призупинити введення</string>
     <string name="omnipod_common_cmd_resume_delivery">Відновити введення</string>
