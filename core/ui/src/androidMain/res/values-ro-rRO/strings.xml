@@ -58,9 +58,9 @@
     <string name="settings">Setări</string>
     <string name="open_plugin">Deschideți modulul</string>
     <string name="configbuilder_pick_one_hint">Alegeți unul. Doar unul poate fi activ odată.</string>
-    <string name="configbuilder_pick_many_hint">Alegeți oricare care se potrivește.</string>
+    <string name="configbuilder_pick_many_hint">Alegeți toate variantele potrivite.</string>
     <string name="configbuilder_no_selection_warning">Nu este selectat niciun modul în această categorie.</string>
-    <string name="configbuilder_switch_confirmation_title">Schimbați modul?</string>
+    <string name="configbuilder_switch_confirmation_title">Schimbați modulul?</string>
     <string name="configbuilder_switch_confirmation">Acest lucru va dezactiva %1$s și va activa %2$s.</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
@@ -613,7 +613,7 @@
     <string name="uel_profile_switch">SCHIMBARE PROFIL</string>
     <string name="uel_profile_switch_cloned">SCHIMBARE PROFIL CLONATĂ</string>
     <string name="uel_closed_loop_mode">MOD BUCLĂ ÎNCHISĂ</string>
-    <string name="uel_lgs_loop_mode">MOD BUCLĂ SUSPENDARE LA HIPOGLICEMIE</string>
+    <string name="uel_lgs_loop_mode">MOD BUCLĂ SUSPENDARE LA GLICEMIE SCĂZUTĂ</string>
     <string name="uel_open_loop_mode">MOD BUCLĂ DESCHISĂ</string>
     <string name="uel_loop_disabled">BUCLĂ DEZACTIVATĂ</string>
     <string name="uel_loop_resumed">BUCLĂ RELUATĂ</string>
@@ -909,7 +909,7 @@
     <string name="send_logs">Trimiteți jurnale</string>
     <string name="file_management">Gestionarea fișierelor</string>
     <string name="database_management">Gestionarea bazei de date</string>
-    <string name="data_choices">Alegeri date</string>
+    <string name="data_choices">Opțiuni de date</string>
     <string name="unattended_settings_export">Exportare nesupravegheată a setărilor</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configurare niveluri de detaliere ale jurnalului</string>
@@ -1094,7 +1094,7 @@
     <string name="delete_logs">Ștergeți jurnalele</string>
     <string name="logs_deleted">Jurnale șterse</string>
     <string name="aaps_directory">Dosar AAPS</string>
-    <string name="import_setting">Importați setări</string>
+    <string name="import_setting">Importați setările</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Decriptați &amp; Revizuiți</string>
     <string name="import_decrypt">Decriptați</string>
