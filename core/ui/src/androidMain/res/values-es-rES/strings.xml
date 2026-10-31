@@ -11,6 +11,7 @@
     <string name="treatments_history">Historial de tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
+    <string name="nav_configuration_desc">Configura tus ajustes (MCG, bomba, etc.) y activa funciones</string>
     <string name="count_selected">%1$d seleccionado</string>
     <string name="delete">Borrar</string>
     <string name="show_invalidated">Mostrar invalidados</string>
@@ -422,7 +423,7 @@
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
     <string name="scene_lock_banner_master_offline">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
     <string name="scene_lock_banner_control_disabled">El máster ha desactivado el control remoto. Los controles de escena se reanudarán cuando se vuelva a activar en el máster</string>
-    <string name="master_offline_banner">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
+    <string name="master_offline_banner">Dispositivo máster inaccesible. La edición está desactivada hasta que se restablezca la conexión.</string>
     <string name="master_control_disabled_banner">El máster ha desactivado el control remoto. La edición estará deshabilitada hasta que se vuelva a activar en el máster</string>
     <string name="hardened_mode_on">Modo reforzado activado</string>
     <string name="hardened_mode_title">Modo reforzado</string>
@@ -716,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Ningún perfil seleccionado</string>
     <string name="missing_profile_name">Falta el nombre del perfil</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s copia</string>
     <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
     <string name="profile_basal_not_compatible_with_pump">La tasa basal no es compatible con la bomba actual y no se puede activar. Reduce el porcentaje o ajusta la tasa basal</string>
     <string name="profile_basal_below_pump_minimum">La tasa basal está por debajo del mínimo de la bomba actual y no se puede activar. Aumente el porcentaje o ajuste la tasa basal</string>
@@ -764,7 +766,7 @@
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Días de ajuste:</string>
-    <string name="autotune_select_profile">Selecciona el perfil para a ajustar</string>
+    <string name="autotune_select_profile">Selecciona el perfil para ajustar</string>
     <!-- Alerts -->
     <string name="urgent_alarm">Alarma urgente</string>
     <string name="info">INFORMACIÓN</string>
