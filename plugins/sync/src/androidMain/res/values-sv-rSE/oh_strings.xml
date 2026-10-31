@@ -11,7 +11,7 @@
     <string name="open_humans_notifications">Aviseringar från Open Humans</string>
     <string name="uploading_to_open_humans">AAPS laddar upp till Open Humans. Det kan ta ett tag.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen.</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här för att logga in igen om detta inte var avsiktligt.</string>
     <string name="next">Nästa</string>
     <string name="welcome_to_open_humans">Välkommen till Open Humans</string>
     <string name="setup_data_upload">För att ställa in datauppladdning, klicka på \"Nästa\".</string>
@@ -27,7 +27,7 @@
     <string name="careportal_events">Careportal-händelser (utom anteckningar)</string>
     <string name="profile_switches">Profilbyten</string>
     <string name="total_daily_doses">Total daglig dos (TDD)</string>
-    <string name="temporary_basal_rates">Tillfälliga basaldoser</string>
+    <string name="temporary_basal_rates">Tillfälliga basaler</string>
     <string name="temporary_targets">Tillfälliga målvärden</string>
     <string name="settings">Inställningar</string>
     <string name="application_version">Programversion</string>
