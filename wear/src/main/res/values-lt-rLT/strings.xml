@@ -80,7 +80,7 @@
     <string name="menu_treatment_short">Terap</string>
     <string name="menu_bolus">Bolusas</string>
     <string name="menu_carb">AV</string>
-    <string name="menu_ecarb">iAV</string>
+    <string name="menu_ecarb">i-AV</string>
     <string name="menu_settings">Nustatymai</string>
     <string name="menu_status">Būklė</string>
     <string name="menu_bg_graph">KG grafikas</string>
@@ -112,7 +112,7 @@
     <string name="action_carbs">AV</string>
     <string name="action_carbs_gram">Angliavandeniai [g]</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Daugiausia galima pašalinti: %1$d g (AAO)</string>
-    <string name="action_ecarbs">iAV</string>
+    <string name="action_ecarbs">i-AV</string>
     <string name="action_percentage">Procentai\n[%]</string>
     <string name="action_start_minutes">Pradžia\n[min]</string>
     <string name="action_duration_hours">Trukmė\n[valandos]</string>
@@ -322,7 +322,7 @@
     <string name="loop_status_no_last_run">N/A</string>
     <string name="loop_status_closed">Uždaras ciklas</string>
     <string name="loop_status_open">Atviras ciklas</string>
-    <string name="loop_status_lgs">Stabdymas esant žemai gliukozei</string>
+    <string name="loop_status_lgs">Stabdymas esant žemai glikemijai</string>
     <string name="loop_status_disabled">Ciklas išjungtas</string>
     <string name="loop_status_suspended">Ciklas sustabdytas</string>
     <string name="loop_status_pump_suspended">Pompa sustabdyta</string>
@@ -349,7 +349,7 @@
     <string name="loop_status_profile">Profilis</string>
     <string name="loop_status_no_profile">Nepasirinktas profilis</string>
     <string name="loop_status_profile_percentage">Profilio procentas</string>
-    <string name="loop_status_profile_timeshift">Laiko poslinkis</string>
+    <string name="loop_status_profile_timeshift">Laiko perstūmimas</string>
     <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Grįžtama į profilį</string>
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d val.</string>
