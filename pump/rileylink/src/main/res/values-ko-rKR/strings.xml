@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">연결된 적 없음</string>
+    <string name="pump_status_sleeping">절전 중</string>
+    <string name="pump_status_waking_up">깨우는 중</string>
+    <string name="pump_status_active">활성</string>
+    <string name="pump_status_error_comm">통신 오류</string>
+    <string name="pump_status_timeout_comm">통신 시간 초과</string>
+    <string name="pump_status_invalid_config">잘못된 설정</string>
+    <string name="medtronic_pump_encoding_title">Medtronic 인코딩</string>
+    <string name="medtronic_pump_encoding_4b6b_local">소프트웨어 4b6b 인코딩</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">하드웨어 4b6b 인코딩</string>
+    <string name="medtronic_pump_frequency_us_ca">미국 및 캐나다 (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">전 세계 (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">스캔중</string>
-    <string name="riley_link_ble_config_connected_never">절대</string>
+    <string name="riley_link_ble_config_connected_never">없음</string>
     <!-- RL Status Page -->
     <string name="rileylink_status">RileyLink 상태</string>
     <string name="medtronic_pump_status">펌프 상태</string>
@@ -13,7 +25,7 @@
     <string name="rileylink_battery_level">배터리 잔량:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">연결상태:</string>
-    <string name="rileylink_connection_error">연결에러:</string>
+    <string name="rileylink_connection_error">연결 오류:</string>
     <string name="rileylink_device">장치</string>
     <string name="rileylink_device_type">장치타입:</string>
     <string name="rileylink_configured_device_model">설정된 장치 모델:</string>
@@ -28,11 +40,11 @@
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">블루투스 초기화중...</string>
-    <string name="rileylink_state_bt_error">블루투스 에러</string>
+    <string name="rileylink_state_bt_error">블루투스 오류</string>
     <string name="rileylink_state_bt_ready">블루투스 준비</string>
     <string name="rileylink_state_not_started">시작되지 않았습니다.</string>
     <string name="rileylink_state_rl_init">RileyLink 초기화…</string>
-    <string name="rileylink_state_rl_error">RileyLink 에러</string>
+    <string name="rileylink_state_rl_error">RileyLink 오류</string>
     <string name="rileylink_state_pc_tune_up">RileyLink 와 펌프 튜닝</string>
     <string name="rileylink_state_pc_error">펌프 연결 문제</string>
     <string name="rileylink_state_connected">연결됨</string>
@@ -58,4 +70,7 @@
     </plurals>
     <string name="orange_use_scanning_level">스캔 사용하기</string>
     <string name="orange_use_scanning_level_summary">OrangeLink에 연결하기 전에 스캔하면 연결이 향상됩니다 (필요한 경우 다른 RileyLink 클론과도 사용 가능합니다)</string>
+    <string name="rileylink_pair">RileyLink 페어링</string>
+    <string name="rileylink_pair_success">RileyLink 페어링 성공</string>
+    <string name="rileylink_config_reset">RileyLink 설정 초기화</string>
 </resources>
