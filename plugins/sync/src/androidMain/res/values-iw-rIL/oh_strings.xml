@@ -9,7 +9,7 @@
     <string name="project_member_id">מספר זיהוי משתמש: %1$s</string>
     <string name="open_humans_uploading">מעלה נתונים ל-Open Humans…</string>
     <string name="open_humans_notifications">התראות Open Humans</string>
-    <string name="uploading_to_open_humans"> Androidaps מעלה נתונים ל-Open Humans. פעולה זו תיקח זמן מה.</string>
+    <string name="uploading_to_open_humans">AAPS מעלה נתונים ל-Open Humans. הפעולה עשויה להימשך זמן מה.</string>
     <string name="you_have_been_signed_out_of_open_humans">התנתקתם מ-Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">לחצו כאן כדי להתחבר מחדש אם זה לא היה בכוונה.</string>
     <string name="next">הבא</string>
@@ -22,24 +22,24 @@
     <string name="data_uploaded">הנתונים הועלו</string>
     <string name="glucose_values">ערכי סוכר</string>
     <string name="boluses">בולוסים</string>
-    <string name="extended_boluses">בולוסים מושהים</string>
+    <string name="extended_boluses">בולוסים ממושכים</string>
     <string name="carbohydrates">פחמימות</string>
     <string name="careportal_events">אירועי פורטל הטיפולים (למעט הערות)</string>
     <string name="profile_switches">החלפות פרופיל</string>
     <string name="total_daily_doses">סך המינונים היומיים</string>
     <string name="temporary_basal_rates">מינונים בזאליים זמניים</string>
-    <string name="temporary_targets">ערכי מטרה זמניים</string>
+    <string name="temporary_targets">יעדים זמניים</string>
     <string name="settings">הגדרות</string>
-    <string name="application_version">גירסת היישום</string>
+    <string name="application_version">גרסת היישום</string>
     <string name="device_model">דגם המכשיר</string>
     <string name="screen_dimensions">רזולוציית מסך</string>
     <string name="algorithm_debug_data">נתוני דיבאג של האלגוריתם</string>
     <string name="data_not_uploaded">הנתונים לא הועלו</string>
     <string name="passwords">סיסמאות</string>
-    <string name="nightscout_url">כתובת נייטסקאוט</string>
-    <string name="nightscout_api_secret">סיסמת נייטסקאוט (API SECRET)</string>
+    <string name="nightscout_url">כתובת Nightscout</string>
+    <string name="nightscout_api_secret">API Secret של Nightscout</string>
     <string name="free_text_fields">שדות טקסט חופשיים</string>
-    <string name="agree">אני מבינ\\ה ומסכימ\\ה.</string>
+    <string name="agree">הבנתי והסכמתי.</string>
     <string name="login_open_humans">התחברות ל-Open Humans</string>
     <string name="final_touches">נגיעות אחרונות</string>
     <string name="uploading_proceed">אתם צעד אחד בלבד מהעלאת הנתונים שלכם ל-Open Humans. האם אתם רוצים להמשיך?</string>
@@ -49,5 +49,5 @@
     <string name="this_may_take_a_few_seconds">פעולה זו עשויה להימשך מספר שניות.</string>
     <string name="we_re_done">סיימנו!</string>
     <string name="silently_upload_date_note">מעתה ואילך, הטלפון שלכם יעלה מדי פעם נתונים ברקע.</string>
-    <string name="close">סגור</string>
+    <string name="close">סגירה</string>
 </resources>
