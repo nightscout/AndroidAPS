@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Otomasyon</string>
+    <string name="automation_enabled">Etkin</string>
+    <string name="automation_read_only">Salt okunur</string>
+    <string name="automation_new_rule">Yeni kural</string>
+    <string name="automation_empty_desc">Tetikleyicilere dayalı eylemleri otomatikleştirmek için bir kural oluşturun.</string>
+    <string name="automation_edit_rule">Kuralı düzenle</string>
+    <string name="automation_discard_title">Değişiklikler yok sayılsın mı?</string>
+    <string name="automation_discard_message">Kural eksik ve kaydedilemez. Değişiklikler yok sayılsın mı?</string>
+    <string name="automation_discard_confirm">Vazgeç</string>
+    <string name="automation_category_time">Zaman &amp; program</string>
+    <string name="automation_category_glucose">Glikoz &amp; tedavi</string>
+    <string name="automation_category_device">Cihaz durumu</string>
+    <string name="automation_category_sensors">Sensörler &amp; bağlantı</string>
+    <string name="automation_category_other">Diğer</string>
+    <string name="automation_choose_trigger">Tetikleyici ekle</string>
+    <string name="automation_add_group">Grup</string>
+    <string name="automation_choose_action">Eylem ekle</string>
+    <string name="automation_category_targets">Hedefler</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Döngü &amp; insülin</string>
+    <string name="automation_category_alerts">Alarmlar</string>
+    <string name="automation_category_system">Sistem</string>
+    <string name="automation_category_scenes">Senaryolar</string>
+    <string name="action_run_scene">Senaryoyu çalıştır</string>
     <string name="action_run_scene_short">Senaryoyu çalıştır: %1$s</string>
+    <string name="action_enable_scene">Senaryoyu etkinleştir</string>
     <string name="action_enable_scene_short">Senaryoyu etkinleştir: %1$s</string>
+    <string name="action_disable_scene">Senaryoyu devre dışı bırak</string>
     <string name="action_disable_scene_short">Senaryoyu devre dışı bırak: %1$s</string>
+    <string name="action_scene_label">Senaryo</string>
+    <string name="trigger_scene_active">Senaryo</string>
+    <string name="trigger_scene_active_compared">Senaryo %1$s</string>
+    <string name="action_scene_not_found">Senaryo bulunamadı</string>
+    <string name="action_scene_disabled">Senaryo devre dışı</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
     <string name="automation_missing_trigger">Lütfen en az bir tetikleyici belirtin.</string>
     <string name="automation_missing_action">Lütfen en az bir eylem belirtin.</string>
@@ -76,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Kanül yaşı %1$s %2$.1f saat</string>
     <string name="triggerPodChangeLabel">Pod aktivasyonu</string>
     <string name="triggerPodChangeDesc">Pod Etkinleştirildi</string>
+    <string name="triggerUnknownLabel">Bilinmeyen tetikleyici</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Bilinmeyen tetikleyici %1$s - asla doğru değil</string>
     <string name="triggerInsulinAgeLabel">İnsülin yaşı</string>
     <string name="triggerInsulinAgeDesc">İnsülin yaşı %1$s %2$.1f saat</string>
     <string name="triggerPumpBatteryAgeLabel">Pompa pil yaşı</string>
@@ -112,12 +146,25 @@
     <string name="triggerStepsCountLabel">Adım Sayacı</string>
     <string name="triggerStepsCountDesc">%1$s dakikadaki adım sayısı %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Ölçüm Süresi</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">SMB\'yi etkinleştir/devre dışı bırak</string>
+    <string name="changeSmbTo">SMB\'yi %1$s olarak değiştirin</string>
+    <string name="newSmbMode">Yeni SMB modu:</string>
     <string name="on">AÇIK</string>
     <string name="off">KAPALI</string>
     <!--    Smoothing-->
     <string name="change_smoothing">Yumuşatmayı değiştir</string>
     <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Yumuşatmayı %1$s olarak değiştir</string>
+    <string name="smoothing_label">Yumuşatma</string>
+    <string name="precondition_smoothing_not_active_name">Yumuşatma etkin değil</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Yumuşatma %1$s etkin değil</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Haritadan seç</string>
+    <string name="tap_to_select_location">Bir konum seçmek için haritaya dokunun</string>
+    <string name="selected_coords">Seçilen: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Konum</string>
+    <string name="permission_location_description">Konum tabanlı otomasyon tetikleyicileri ve WiFi ağı tanımlama için gereklidir</string>
+    <string name="permission_background_location_description">Uygulama arka plandayken otomasyon tetikleyicilerinin çalışabilmesi için gereklidir</string>
 </resources>
