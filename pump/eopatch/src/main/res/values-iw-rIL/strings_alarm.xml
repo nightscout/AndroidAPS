@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
     <string name="string_a002">המכל ריק\nה-Patch כובה והזרקת האינסולין הופסקה. החליפו Patch עכשיו.</string>
+    <string name="string_a016">שגיאה בהחדרת המחט\nבדקו את מיקום הידית ולחצו על \'ניסיון חוזר\'.</string>
 </resources>
