@@ -2,7 +2,12 @@
 <resources>
     <string name="error_field_must_not_be_empty">Το πεδίο αυτό δεν πρέπει να είναι κενό</string>
     <string name="error_mustbe4hexadidits">Πρέπει να είναι 4 χαρακτήρες από τους ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Εξουσιοδοτημένοι πελάτες</string>
+    <string name="authorized_clients_manage_desc">Διαχείριση των συζευγμένων πελατών που ελέγχουν αυτή την κύρια συσκευή.</string>
     <!--    General-->
+    <string name="treatments">Θεραπείες</string>
+    <string name="treatments_history">Ιστορικό θεραπειών</string>
+    <string name="treatments_desc">Προβολή και διαχείριση του ιστορικού θεραπειών</string>
     <string name="count_selected">Επιλέχθηκαν %1$d</string>
     <string name="show_invalidated">Εμφάνιση ακυρωμένων</string>
     <string name="hide_invalidated">Απόκρυψη ακυρωμένων</string>
@@ -20,8 +25,15 @@
     <string name="no_valid_basal_rate">Διαβάζεται από την αντλία μη έγκυρος βασικός ρυθμός</string>
     <string name="limiting_iob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="event_type">Τύπος Συμβάντος</string>
+    <string name="bg_mgdl">%1$d mg/dL</string>
+    <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Αποθήκευση</string>
+    <string name="skip">Παράλειψη</string>
+    <string name="switch_to_edit">Επεξεργασία</string>
     <string name="snooze">Αναβολή</string>
+    <string name="snooze_15m">Αναβολή 15 λεπ.</string>
+    <string name="snooze_30m">Αναβολή 30 λεπ.</string>
+    <string name="snooze_60m">Αναβολή 60 λεπ.</string>
     <string name="virtual_pump">Εικονική Αντλία</string>
     <string name="constraints">Περιορισμοί</string>
     <string name="superbolus">Superbolus</string>
@@ -30,6 +42,9 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Χρήστης</string>
     <string name="result">Αποτέλεσμα</string>
     <string name="settings">Ρυθμίσεις</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Ολοκληρώθηκε</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Αναπτυγμένο</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Συμπτυγμένο</string>
     <string name="statuslights">Ενδείξεις κατάστασης</string>
     <string name="configbuilder_insulin">Ινσουλίνη</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
@@ -53,19 +68,28 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Σίγαση για 5 λεπτά</string>
     <string name="mute">Σίγαση</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Σίγαση συναγερμού</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Σίγαση και κλείσιμο</string>
     <string name="success">Επιτυχία</string>
     <string name="advanced_settings_title">Ρυθμίσεις για Προχωρημένους</string>
     <string name="extended_bolus">Εκτεταμένο bolus</string>
     <string name="paused">Παύση</string>
+    <string name="running">Σε λειτουργία</string>
     <string name="tdd_total">TDD σύνολο</string>
     <string name="goingtodeliver">Πρόκειται να εγχυθούν %1$.2f μονάδες</string>
+    <string name="carbs_not_saved_after_bolus">Το bolus χορηγήθηκε, αλλά οι υδατάνθρακες δεν αποθηκεύτηκαν. Εισάγετε ξανά τους υδατάνθρακες.</string>
     <string name="androidaps_start">Το AAPS ξεκίνησε</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
     <string name="objectives">Βήματα</string>
     <string name="please_wait">Περιμένετε…</string>
     <string name="stop">Stop</string>
+    <string name="stop_pressed">ΠΑΤΗΘΗΚΕ ΔΙΑΚΟΠΗ</string>
     <string name="invalid_profile">Μη έγκυρο προφίλ!</string>
     <string name="no_profile_set">ΔΕΝ ΟΡΙΣΤΗΚΕ ΠΡΟΦΙΛ</string>
+    <string name="scene_no_profile_before">Δεν υπήρχε ενεργό προφίλ πριν ξεκινήσει το σενάριο.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Το σενάριο %1$s τελείωσε, αλλά το προφίλ του είναι ακόμα σε χρήση. %2$s Ενεργοποιήστε ένα προφίλ χειροκίνητα.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Ο προσωρινός στόχος πρέπει να ξεκινά μέσα σε %1$d ώρες από τώρα.</string>
     <string name="active"><![CDATA[<Ενεργή>]]></string>
     <string name="date">Ημερομηνία</string>
     <string name="dia_label">DIA</string>
@@ -104,11 +128,17 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Η βαθμονόμηση δεν αποθηκεύτηκε: η BG αλλάζει πολύ γρήγορα (Δ %1$s %3$s ανά 5 λεπ., όριο %2$s). Δοκιμάστε ξανά όταν η γλυκόζη είναι σταθερή.</string>
+    <string name="cal_reject_no_pair">Η βαθμονόμηση δεν αποθηκεύτηκε: δεν βρέθηκε μέτρηση CGM στα τελευταία 10 λεπτά.</string>
+    <string name="cal_reject_warmup">Η βαθμονόμηση δεν αποθηκεύτηκε: ο αισθητήρας είναι ακόμα στο διάστημα προθέρμανσης 2 ωρών.</string>
+    <string name="cal_reject_no_session">Η βαθμονόμηση δεν αποθηκεύτηκε: δεν υπάρχει ενεργή συνεδρία αισθητήρα. Καταγράψτε πρώτα μια αλλαγή αισθητήρα.</string>
     <string name="cgm">CGM</string>
+    <string name="bolus_reminder">Υπενθύμιση για bolus όταν η BG επανέλθει</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_triple_down">πολύ ταχεία πτώση</string>
     <string name="a11y_arrow_double_down">ταχεία πτώση</string>
     <string name="a11y_arrow_single_down">πτώση</string>
     <string name="a11y_arrow_forty_five_down">αργή πτώση</string>
@@ -116,19 +146,31 @@
     <string name="a11y_arrow_forty_five_up">αργή αύξηση</string>
     <string name="a11y_arrow_single_up">αύξηση</string>
     <string name="a11y_arrow_double_up">ταχεία αύξηση</string>
+    <string name="a11y_arrow_triple_up">πολύ ταχεία αύξηση</string>
     <string name="a11y_arrow_none">κανένα</string>
     <string name="a11y_arrow_unknown">άγνωστο</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">μείωση %1$s κατά %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">αύξηση %1$s κατά %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">άνοιγμα %1$s για πληκτρολόγηση</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">κλείσιμο %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Μετακίνηση πάνω</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Μετακίνηση κάτω</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Βήμα %1$d από %2$d</string>
     <string name="decrement">μείωση</string>
     <string name="increment">αύξηση</string>
     <string name="a11y_high">υψηλό</string>
     <string name="a11y_inrange">εντός στόχου</string>
     <string name="a11y_low">χαμηλό</string>
+    <string name="remove_label">Αφαίρεση</string>
     <string name="activate_profile">Ενεργοποίηση προφίλ</string>
+    <string name="activate_insulin">Ενεργοποίηση ινσουλίνης</string>
+    <string name="reset">Επαναφορά</string>
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="profile">Προφίλ</string>
     <string name="percentage_label">Ποσοστό</string>
     <string name="timeshift_label">Αλλαγή της ώρας</string>
     <string name="confirm_remove_multiple_items">Είστε βέβαιοι ότι θέλετε να καταργήσετε %1$d στοιχεία</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Η κύρια συσκευή δεν έχει %1$d από αυτές τις εγγραφές. Αυτές δεν αφαιρούνται.</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="copytolocalprofile">Δημιουργία νέου προφίλ από αυτό το προφίλ;</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -137,11 +179,20 @@
     <string name="login">Σύνδεση</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="prime_fill">Πλήρωση/Γέμισμα</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Αλλαγή</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Γέμισμα</string>
+    <string name="site_rotation">Εναλλαγή σημείων</string>
+    <string name="select_arrow">Επιλογή βέλους</string>
+    <string name="site_filter_info">Επιλέξτε τον τύπο συμβάντος θεραπείας που θέλετε να βλέπετε: Αλλαγή καθετήρα και/ή Αλλαγή αισθητήρα</string>
+    <string name="selected_location">Επιλέχθηκε: %1$s</string>
+    <string name="select_site_location">Επιλογή σημείου</string>
+    <string name="site_location">Σημείο τοποθέτησης</string>
     <string name="overview_insulin_label">Ινσουλίνη</string>
     <string name="stoptemptarget">Λήξη προσ. στόχου</string>
     <string name="closedloop">Κλειστό Κύκλωμα</string>
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
     <string name="lowglucosesuspend">Αναστολή Χαμηλής Γλυκόζης</string>
+    <string name="select_insulin">Επιλογή ινσουλίνης</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -149,9 +200,13 @@
     <string name="canceling_eb_failed">Η ακύρωση της εκτεταμένης δόσης bolus απέτυχε</string>
     <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης αντλίας στο NS ή στο Tidepool</string>
     <string name="iob_label">Ενεργή Ινσουλίνη (IOB)</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
     <string name="not_available_full">Μη διαθέσιμο</string>
     <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
+    <string name="back">Πίσω</string>
     <string name="next">Επόμενο</string>
     <string name="show_hide_records">Απόκρυψη εγγραφών κυκλώματος</string>
     <!--    Protection-->
@@ -161,6 +216,7 @@
     <string name="pin_dont_match">Τα PINs δεν ταιριάζουν</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Έναρξη προφίλ %1$d%% για %2$d λεπτά</string>
     <!--    APSResult-->
     <string name="cancel_temp">Ακύρωση προσωρινού βασικού ρυθμού</string>
     <string name="let_temp_basal_run">Αφήστε τον προσωρινό ρυθμό ενεργό</string>
@@ -169,8 +225,12 @@
     <string name="reason">Αιτιολογία</string>
     <string name="nochangerequested">Δεν απαιτείται αλλαγή</string>
     <!--    Insulin / Concentration-->
+    <string name="select_insulin_description">Επιλέξτε την ινσουλίνη με την οποία γεμίζετε την αντλία. Μετά την ενεργοποίηση/πλήρωση θα εφαρμοστεί αλλαγή προφίλ.</string>
+    <string name="selected_insulin">Επιλεγμένη ινσουλίνη: %1$s</string>
+    <string name="record_insulin_hint">Αν καταγράφετε ινσουλίνη από πένα, επιλέξτε παρακάτω τον σωστό τύπο ινσουλίνης. Η δόση είναι πάντα σε Διεθνείς Μονάδες.</string>
     <!--       Stats -->
     <string name="average">Μέση</string>
+    <string name="tir">Χρόνος εντός στόχου</string>
     <string name="below" comment="below &quot;in range&quot;">Κάτω του στόχου</string>
     <string name="in_range">Εντός στόχου</string>
     <string name="low" comment="3.1-3.9">Χαμηλό</string>
@@ -182,9 +242,12 @@
     <string name="night_tir">Στόχος νύχτας</string>
     <string name="hba1c">Γλυκοζυλιωμένη αιμοσφαιρίνη (HbA1c): </string>
     <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7 ημ.</string>
+    <string name="thirty_days_short">30 ημ.</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Έλεγχος BG</string>
     <string name="careportal_mbg">Χειροκίνητη εισαγωγή γλυκόζης αίματος ή βαθμονόμηση</string>
     <string name="careportal_announcement">Ανακοίνωση</string>
@@ -195,7 +258,13 @@
     <string name="careportal_note_message">Σημείωση: %1$s</string>
     <string name="careportal_question_message">Ερώτηση : %1$s</string>
     <string name="careportal_exercise_message">Άσκηση : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Αλλαγή σημείου αντλίας : %1$s</string>
     <string name="careportal_pump_site_change">Αλλαγή σημείου αντλίας</string>
+    <string name="cgm_sensor_insert">Τοποθέτηση αισθητήρα</string>
+    <string name="careportal_pump_site_management">Σημεία αντλίας</string>
+    <string name="careportal_cgm_site_management">Σημεία CGM</string>
+    <string name="careportal_cgmsensorstart">Έναρξη αισθητήρα</string>
+    <string name="careportal_cgm_sensor_stop">Διακοπή αισθητήρα</string>
     <string name="careportal_dad_alert">Ειδοποίηση D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Αλλαγή Αμπούλας Ινσουλίνης</string>
     <string name="careportal_profileswitch">Αλλαγή Προφίλ</string>
@@ -209,12 +278,132 @@
     <string name="careportal_openapsoffline">OpenAPS εκτός σύνδεσης</string>
     <string name="pump_battery_change">Αλλαγή Μπαταρίας Αντλίας</string>
     <string name="temporary_target">Προσωρινός στόχος</string>
+    <string name="temporary_targets">Προσωρινοί στόχοι</string>
+    <string name="running_mode_desc">Κλείστε ή ανοίξτε το κύκλωμα, αναστείλετέ το ή αποσυνδέστε την αντλία</string>
+    <string name="running_mode_change_not_allowed">Η αλλαγή κατάστασης λειτουργίας δεν είναι διαθέσιμη</string>
+    <string name="scene">Σενάριο</string>
+    <string name="scenes">Σενάρια</string>
+    <string name="scene_desc">Έτοιμες ρυθμίσεις για καταστάσεις — ενεργοποιήστε πολλές ενέργειες μαζί</string>
+    <string name="scene_activate">Ενεργοποίηση</string>
+    <string name="scene_deactivate">Τερματισμός σεναρίου</string>
+    <string name="scene_active">Ενεργό</string>
+    <string name="scene_ended">Το σενάριο τερματίστηκε</string>
+    <string name="scene_end_active">Τερματισμός ενεργού σεναρίου</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Μετάβαση σε</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Το επόμενο σενάριο %1$s δεν θα ξεκινήσει</string>
+    <string name="scene_confirm_activate">Ενεργοποίηση του σεναρίου \"%1$s\";</string>
+    <string name="scene_confirm_deactivate">Τερματισμός του σεναρίου \"%1$s\" και αναίρεση των αλλαγών;</string>
+    <string name="scene_conflict_active_tt">Ο ενεργός προσωρινός στόχος θα αντικατασταθεί</string>
+    <string name="scene_conflict_active_profile">Η ενεργή αλλαγή προφίλ θα αντικατασταθεί</string>
+    <string name="scene_conflict_active_running_mode">Η ενεργή κατάσταση λειτουργίας θα αντικατασταθεί</string>
+    <string name="scene_conflict_active_scene">Το ενεργό σενάριο \"%1$s\" θα τερματιστεί πρώτα</string>
+    <string name="scene_action_tt">Προσωρινός στόχος: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Προφίλ: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Προφίλ: %1$d%%</string>
+    <string name="scene_action_smb_on">Ενεργοποίηση SMB</string>
+    <string name="scene_action_smb_off">Απενεργοποίηση SMB</string>
+    <string name="scene_action_running_mode">Κατάσταση λειτουργίας: %1$s</string>
+    <string name="scene_action_careportal">Καταγραφή: %1$s</string>
+    <string name="scene_management">Σενάρια</string>
+    <string name="scene_management_desc">Δημιουργία, επεξεργασία και διαχείριση σεναρίων</string>
+    <string name="scene_start_from_template">Έναρξη από πρότυπο</string>
+    <string name="scene_editor_target">Στόχος</string>
+    <string name="scene_editor_tt_preset">Προεπιλογή προσ. στόχου</string>
+    <string name="scene_editor_no_tt_presets">Δεν έχουν οριστεί προεπιλογές προσωρινού στόχου</string>
+    <string name="scene_editor_select_tt_preset">Επιλέξτε προεπιλογή</string>
+    <string name="scene_editor_percentage">Ποσοστό</string>
+    <string name="scene_editor_profile">Προφίλ</string>
+    <string name="scene_editor_keep_current_profile">-- Διατήρηση τρέχοντος --</string>
+    <string name="scene_editor_mode">Λειτουργία</string>
+    <string name="scene_editor_event_type">Τύπος συμβάντος</string>
+    <string name="scene_editor_note">Σημείωση</string>
+    <string name="scene_icon">Εικονίδιο</string>
+    <string name="scene_editor_enabled">Ενεργοποιημένο</string>
+    <string name="scene_editor_disabled">Απενεργοποιημένο</string>
+    <string name="scene_summary">%1$d ενέργειες, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Χωρίς όριο (χειροκίνητος τερματισμός)</string>
+    <string name="scene_some_actions_failed">Ορισμένες ενέργειες απέτυχαν</string>
+    <string name="scene_no_active">Κανένα ενεργό σενάριο</string>
+    <string name="scene_some_reverts_failed">Ορισμένες αναιρέσεις απέτυχαν</string>
+    <string name="scene_no_profile_store">Δεν υπάρχει διαθέσιμη αποθήκη προφίλ</string>
+    <string name="scene_no_actions">Το σενάριο δεν έχει ενέργειες</string>
+    <string name="scene_profile_not_found">Το προφίλ \"%1$s\" δεν βρέθηκε</string>
+    <string name="scene_lock_banner_master_offline">Η κύρια συσκευή δεν είναι προσβάσιμη. Ο έλεγχος των σεναρίων θα λειτουργήσει ξανά όταν αποκατασταθεί η σύνδεση.</string>
+    <string name="scene_lock_banner_control_disabled">Η κύρια συσκευή έχει απενεργοποιήσει τον απομακρυσμένο έλεγχο. Ο έλεγχος των σεναρίων θα λειτουργήσει ξανά όταν ενεργοποιηθεί ξανά στην κύρια συσκευή.</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Μόνο ανάγνωση</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Γεύματα</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Φροντιστής</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Διαχειριστής</string>
+    <string name="client_role_title">Ρόλος</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Ρόλος: %1$s</string>
+    <string name="client_roles_info_open">Σχετικά με τους ρόλους</string>
+    <string name="client_roles_info">Κάθε συζευγμένο τηλέφωνο έχει έναν ρόλο. Το κύριο τηλέφωνο τον ελέγχει σε κάθε εντολή και το τηλέφωνο δείχνει μόνο ό,τι επιτρέπει ο ρόλος του. Ένας νέος ρόλος ισχύει αμέσως, χωρίς νέα σύζευξη.\n\nΜόνο ανάγνωση: το τηλέφωνο μένει συζευγμένο, αλλά μόνο δείχνει δεδομένα.\n\nΓεύματα: bolus, οδηγός bolus, QuickWizard και υδατάνθρακες. Μπορεί επίσης να σταματήσει ένα bolus που εκτελείται. Οι υδατάνθρακες που εισάγονται εδώ μπορεί να κάνουν το κύκλωμα να δώσει περισσότερη ινσουλίνη.\n\nΦροντιστής: όλα όσα κάνει ένας χρήστης στο AAPS, όπως προσωρινοί στόχοι, αλλαγές προφίλ και ινσουλίνης, τρόπος λειτουργίας κυκλώματος, προσωρινός βασικός ρυθμός, εκτεταμένο bolus, σενάρια, συμβάντα careportal, βαθμονομήσεις και διαγραφή εγγραφών. Δεν μπορεί να αλλάξει ρυθμίσεις ή προεπιλογές.\n\nΔιαχειριστής: τα πάντα, μαζί με ρυθμίσεις και προεπιλογές (QuickWizard, προεπιλογές προσωρινού στόχου, σενάρια, προφίλ, αυτοματισμός, ινσουλίνη).</string>
+    <string name="client_read_only_banner">Αυτό το τηλέφωνο είναι σε λειτουργία μόνο ανάγνωσης στο κύριο τηλέφωνο.</string>
+    <string name="scene_lock_reason_master_offline">Η κύρια συσκευή αποσυνδέθηκε</string>
+    <string name="scene_lock_reason_control_disabled">Ο απομακρυσμένος έλεγχος είναι απενεργοποιημένος</string>
+    <string name="scene_lock_reason_scene_active">Σταματήστε πρώτα το ενεργό σενάριο</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Ορισμός προσωρινού στόχου</string>
+    <string name="clientcontrol_action_cancel_temp_target">Ακύρωση προσωρινού στόχου</string>
+    <string name="clientcontrol_action_activate_scene">Ενεργοποίηση σεναρίου %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Λήξη σεναρίου</string>
+    <string name="clientcontrol_action_update_settings">Ενημέρωση ρυθμίσεων</string>
+    <string name="clientcontrol_action_deliver_bolus">Χορήγηση bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Αλλαγή υπενθύμισης φαγητού</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_expired">Η εντολή έληξε πριν την εφαρμόσει η κύρια συσκευή.</string>
+    <string name="clientcontrol_fail_busy">Μια άλλη ενέργεια είναι ήδη σε εξέλιξη.</string>
+    <string name="clientcontrol_fail_execution">Η κύρια συσκευή δεν μπόρεσε να την εφαρμόσει.</string>
+    <string name="clientcontrol_fail_cancelled">Η εντολή ακυρώθηκε πριν εκτελεστεί. Δεν στάλθηκε τίποτα στην αντλία.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Το bolus ακυρώθηκε. Δεν δόθηκε ινσουλίνη.\n%1$s</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Κανένα SMB όσο ένα bolus περιμένει επιβεβαίωση</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Χορηγείται ένα SMB. Μπορείτε να επιβεβαιώσετε όταν τελειώσει.</string>
+    <string name="clientcontrol_fail_control_disabled">Ο απομακρυσμένος έλεγχος είναι απενεργοποιημένος στην κύρια συσκευή.</string>
+    <string name="clientcontrol_fail_bolus_compute">Η κύρια συσκευή δεν μπόρεσε να υπολογίσει το bolus (λείπει γλυκόζη / προφίλ ή η αντλία δεν είναι έτοιμη).</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Η σύνδεση χάθηκε — η κατάσταση χορήγησης είναι άγνωστη</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Αυτό το τηλέφωνο σταμάτησε να λαμβάνει ενημερώσεις από την κύρια συσκευή. Το bolus μπορεί ακόμα να χορηγείται ή μπορεί να έχει τελειώσει. Το κλείσιμο εδώ μόνο το κρύβει — δεν σταματά την αντλία. Ελέγξτε στο κύριο τηλέφωνο την ποσότητα που πραγματικά χορηγήθηκε.</string>
+    <string name="scene_revert_tt">Ακύρωση προσωρινού στόχου</string>
+    <string name="scene_revert_profile">Αναίρεση αλλαγής προφίλ</string>
+    <string name="scene_revert_smb_on">Επανενεργοποίηση SMB</string>
+    <string name="scene_revert_smb_off">Απενεργοποίηση SMB</string>
+    <string name="scene_revert_loop_mode">Ακύρωση αλλαγής κατάστασης λειτουργίας</string>
+    <string name="scene_careportal_no_revert">Οι εγγραφές CarePortal δεν θα αναιρεθούν</string>
+    <string name="careportal_sickness">Ασθένεια</string>
+    <string name="careportal_stress">Στρες</string>
+    <string name="careportal_pre_period">Πριν την περίοδο</string>
+    <string name="careportal_alcohol">Αλκοόλ</string>
+    <string name="careportal_cortisone">Κορτιζόνη</string>
+    <string name="careportal_feeling_low">Αίσθηση χαμηλής</string>
+    <string name="careportal_feeling_high">Αίσθηση υψηλής</string>
+    <string name="careportal_falling_asleep">Αποκοίμηση</string>
+    <string name="careportal_waking_up">Αφύπνιση</string>
     <string name="careportal_temporarytargetvalue">Τιμή Προσωρινού στόχου</string>
     <string name="careportal_temporarytargetcancel">Ακύρωση προσωρινού στόχου</string>
     <string name="boluswizard">Οδηγός Bolus</string>
+    <string name="treatment_desc">Καταγραφή ινσουλίνης και υδατανθράκων μαζί</string>
+    <string name="treatment_insulin_desc">Χειροκίνητη χορήγηση bolus</string>
+    <string name="treatment_carbs_desc">Καταγραφή υδατανθράκων χωρίς ινσουλίνη</string>
+    <string name="treatment_calculator_desc">Υπολογισμός bolus</string>
+    <string name="simple_mode_blocked_by_concentration">Δεν μπορείτε να ενεργοποιήσετε την απλή λειτουργία όσο χρησιμοποιείτε ινσουλίνη που δεν είναι U100. Αλλάξτε πρώτα σε ινσουλίνη U100.</string>
+    <string name="treatment_note_desc">Προσθήκη σημείωσης στις καταγραφές σας</string>
+    <string name="treatment_question_desc">Καταγραφή ερώτησης για την ιατρική σας ομάδα</string>
+    <string name="treatment_cgm_desc">Άνοιγμα εφαρμογής CGM</string>
+    <string name="treatment_calibration_desc">Βαθμονόμηση αισθητήρα CGM</string>
+    <string name="treatment_bg_check_desc">Καταγραφή ελέγχου γλυκόζης αίματος</string>
+    <string name="treatment_exercise_desc">Καταγραφή άσκησης</string>
+    <string name="treatment_announcement_desc">Δημοσίευση ανακοίνωσης</string>
+    <string name="treatment_sensor_insert_desc">Καταγραφή τοποθέτησης αισθητήρα CGM</string>
+    <string name="treatment_battery_change_desc">Καταγραφή αλλαγής μπαταρίας αντλίας</string>
+    <string name="treatment_cannula_change_desc">Καταγραφή αλλαγής καθετήρα/σετ έγχυσης</string>
+    <string name="treatment_fill_desc">Πλήρωση σετ έγχυσης και καθετήρα</string>
+    <string name="temp_basal">Προσωρινός βασικός ρυθμός</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Πάνω από το προφίλ</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Κάτω από το προφίλ</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Κανένας</string>
     <string name="user_entry">Καταχώρηση χρήστη</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Δάκτυλο</string>
     <string name="glucosetype_sensor">Αισθητήρας</string>
     <string name="manual">Χειροκίνητα</string>
@@ -223,9 +412,22 @@
     <string name="activity">Άσκηση</string>
     <string name="wear">Wear</string>
     <string name="automation">Αυτοματισμός</string>
+    <string name="automation_management_desc">Δημιουργήστε κανόνες που εκτελούν ενέργειες αυτόματα, με βάση συνθήκες</string>
     <string name="custom">Προσαρμογή</string>
+    <string name="activation">Ενεργοποίηση</string>
+    <string name="temp_target_management">Προσωρινός στόχος</string>
+    <string name="revert_to_defaults">Επαναφορά προεπιλογών</string>
     <string name="loop">Κύκλωμα</string>
     <string name="ns">NS</string>
+    <string name="arrow_up">Πάνω</string>
+    <string name="arrow_up_right">Πάνω δεξιά</string>
+    <string name="arrow_right">Δεξιά</string>
+    <string name="arrow_down_right">Κάτω δεξιά</string>
+    <string name="arrow_down">Κάτω</string>
+    <string name="arrow_down_left">Κάτω αριστερά</string>
+    <string name="arrow_left">Αριστερά</string>
+    <string name="arrow_up_left">Πάνω αριστερά</string>
+    <string name="arrow_center">Κέντρο</string>
     <!--    Command-->
     <string name="connectiontimedout">Ο χρόνος σύνδεσης έληξε</string>
     <!--    PumpEnactResult-->
@@ -238,6 +440,8 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g επιπλέον υδατάνθρακες απαιτούνται μέσα σε %2$d λεπτά</string>
     <string name="basalrate">Βασικός Ρυθμός</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Συνολική ημερήσια δόση</string>
     <!--    Ntp-->
     <string name="timedetection">Ανίχνευση χρόνου</string>
     <!-- User Entry -->
@@ -281,6 +485,7 @@
     <string name="uel_tt_ns_refresh">ΑΝΑΝΕΩΣΗ ΠΡΟΣΩΡΙΝΟΥ ΣΤΟΧΟΥ NS</string>
     <string name="uel_automation_removed">ΑΥΤΟΜΑΤΙΣΜΟΣ ΑΦΑΙΡΕΘΗΚΕ</string>
     <string name="uel_bg_removed">ΜΕΤΡΗΣΗ ΓΛΥΚΟΖΗΣ ΑΙΜΑΤΟΣ ΑΦΑΙΡΕΘΗΚΕ</string>
+    <string name="uel_calibration_removed">ΒΑΘΜΟΝΟΜΗΣΗ ΑΦΑΙΡΕΘΗΚΕ</string>
     <string name="uel_careportal_removed">CAREPORTAL ΑΦΑΙΡΕΘΗΚΕ</string>
     <string name="uel_bolus_removed">BOLUS ΑΦΑΙΡΕΘΗΚΕ</string>
     <string name="uel_carbs_removed">ΥΔΑΤΑΝΘΡΑΚΕΣ ΑΦΑΙΡΕΘΗΚΑΝ</string>
@@ -328,7 +533,14 @@
     <string name="ue_none">Χωρίς Μονάδα</string>
     <string name="uel_loop_change">ΤΟ ΚΥΚΛΩΜΑ ΑΛΛΑΞΕ</string>
     <string name="uel_loop_removed">ΤΟ ΚΥΚΛΩΜΑ ΑΦΑΙΡΕΘΗΚΕ</string>
+    <string name="uel_new_insulin">ΝΕΑ ΙΝΣΟΥΛΙΝΗ</string>
+    <string name="uel_change_pump_insulin">ΑΛΛΑΓΗ ΙΝΣΟΥΛΙΝΗΣ ΑΝΤΛΙΑΣ</string>
+    <string name="uel_change_insulin_concentration">ΑΛΛΑΓΗ ΣΥΓΚΕΝΤΡΩΣΗΣ ΙΝΣΟΥΛΙΝΗΣ</string>
+    <string name="uel_insulin_removed">ΙΝΣΟΥΛΙΝΗ ΑΦΑΙΡΕΘΗΚΕ</string>
+    <string name="uel_running_mode">ΚΑΤΑΣΤΑΣΗ ΛΕΙΤΟΥΡΓΙΑΣ</string>
+    <string name="uel_remote_config_changed">ΑΛΛΑΓΗ ΑΠΟΜΑΚΡΥΣΜΕΝΩΝ ΡΥΘΜΙΣΕΩΝ</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Κάτω τιμή προσωρινού στόχου</string>
     <string name="temp_target_high_target">Πάνω τιμή προσωρινού στόχου</string>
     <string name="temp_target_value">Τιμή προσωρινού στόχου</string>
     <string name="profile_max_daily_basal_value">Μέγιστη τιμή βασικού ρυθμού προφίλ</string>
@@ -369,6 +581,8 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Βασικός Ρυθμός</string>
     <string name="basalpct">Βασικός Ρυθμός %</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens ανενεργό</string>
+    <string name="autosens_short">%.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Ημέρες συντονισμού:</string>
@@ -379,12 +593,18 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Σύμβουλος Bolus</string>
     <string name="bolus_advisor_message">Έχετε υπεργλυκαιμία. Αντί να φάτε τώρα συνιστάτε να περιμένετε μια καλύτερη γλυκαιμία. Θέλετε να κάνετε ένα διορθωτικό bolus τώρα και να γίνει υπενθύμιση όταν έρθει η ώρα να φάτε; Σε αυτή την περίπτωση δε θα καταγραφούν καθόλου υδατάνθρακες και θα πρέπει να χρησιμοποιήσετε τον οδηγό ξανά μετά την υπενθύμιση.</string>
+    <string name="carbs_type_bread">Ψωμί, αλμυρά αρτοσκευάσματα, γιαούρτι, φρούτα (μήλο, μπανάνα, αχλάδι), πατάτες, ρύζι, φαγόπυρο, βρώμη, τροφές αργής απορρόφησης και με λίγους υδατάνθρακες, λαχανικά</string>
+    <string name="carbs_type_cake">Ζυμαρικά γεμιστά (ντάμπλινγκ), ζυμαρικά, ασιατική κουζίνα με πολλούς υδατάνθρακες και λιπαρά, γλυκά και αρτοσκευάσματα με μαγιά, δημητριακά, χυλοί δημητριακών, μέλι, μαρμελάδα</string>
+    <string name="carbs_type_pizza">Λαζάνια, πίτσα, χάμπουργκερ, πατάτες τηγανητές, ψητές πατάτες, πατατάκια και παρόμοια σνακ</string>
+    <string name="carb_time_now">Τώρα</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Μέγιστη αφαίρεση: %1$d g (ενεργοί υδατάνθρακες)</string>
     <string name="wizard_no_actual_bg">Δεν υπάρχει πρόσφατή γλυκόζη αίματος για να γίνει υπολογισμός!</string>
     <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
     <string name="wizard_carbs_constraint">Παραβίαση περιορισμού υδατανθράκων!</string>
     <string name="wizard_constraint_bolus_size">Παραβίαση περιορισμού ινσουλίνης!\nΔεν μπορούν να χορηγηθούν %1$.2fU</string>
     <string name="wizard_pump_not_available">Δεν υπάρχει διαθέσιμη αντλία!</string>
     <string name="quick_wizard_not_available">Ο επιλεγμένος οδηγός δεν είναι πλέον διαθέσιμος, παρακαλώ ανανεώστε το πλακίδιο σας</string>
+    <string name="quickwizard_managemnt">Γρήγορος Οδηγός</string>
     <!--    Preferences-->
     <string name="child">Παιδί</string>
     <string name="teenage">Έφηβος</string>
@@ -420,6 +640,9 @@
     <string name="reading_pump_history">Ανάγνωση ιστορικού αντλίας</string>
     <string name="password_cleared">Ο κωδικός εκκαθαρίστηκε!</string>
     <string name="pairing">Σύζευξη</string>
+    <string name="alert" comment="Generic alert dialog title">Προειδοποίηση</string>
+    <string name="retry" comment="Button label to retry a failed operation">Επανάληψη</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Ταχύτητα bolus</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ο μέγιστος βασικός ρυθμός περιορίζεται σε %1$.2f U/h λόγω ότι %2$s</string>
     <string name="pumplimit">όριο αντλίας</string>
@@ -443,9 +666,16 @@
     <!-- <unattended_export result messages> -->
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
+    <string name="send_logs">Αποστολή αρχείων καταγραφής</string>
     <string name="data_choices">Επιλογές δεδομένων</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Επιλογή τύπου αποθήκευσης</string>
+    <string name="clear_cloud_action">Διαγραφή ρυθμίσεων</string>
+    <string name="clear_cloud_settings">Διαγραφή ρυθμίσεων cloud</string>
+    <string name="clear_cloud_settings_message">Αυτό θα αλλάξει σε τοπική αποθήκευση και θα διαγράψει την εξουσιοδότηση. Συνέχεια;</string>
+    <string name="reauthorize">Νέα ταυτοποίηση</string>
+    <string name="authorization_status">Κατάσταση εξουσιοδότησης</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ώρα Συμβάντος</string>
     <!-- BluetoothDevicePreference -->
@@ -457,24 +687,41 @@
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Χαμηλή ενέργεια Bluetooth δεν υποστηρίζεται.</string>
     <string name="ble_not_enabled">Bluetooth μη ενεργοποιημένο.</string>
+    <string name="ble_permissions_missing">Δεν έχουν δοθεί οι άδειες Bluetooth. Δώστε τις στις ρυθμίσεις της εφαρμογής.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Επιλογές προσθήκης</string>
     <!-- Navigation -->
     <string name="nav_exit">Έξοδος</string>
     <string name="open_navigation">Άνοιγμα μενού πλοήγησης</string>
     <string name="nav_history_browser">Ιστορικό περιήγησης</string>
+    <string name="appearance">Εμφάνιση</string>
     <string name="nav_setupwizard">Οδηγός εγκατάστασης</string>
     <string name="statistics">Στατιστικά</string>
+    <string name="statistics_desc">Προβολή στατιστικών και αναφορών</string>
+    <string name="tdd_cycle_pattern">Κυκλικό μοτίβο TDD</string>
+    <string name="tdd_cycle_pattern_desc">Επικάλυψη των ημερήσιων συνόλων ινσουλίνης σε κύκλους 28 ημερών, για να βρείτε μοτίβα που επαναλαμβάνονται</string>
     <string name="nav_profile_helper">Βοηθός ρύθμισης προφίλ</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="add">Προσθήκη</string>
+    <string name="remove">Αφαίρεση</string>
+    <string name="reorder">Αναδιάταξη</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Μετακίνηση πιο μπροστά</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Μετακίνηση πιο πίσω</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Εμφάνιση λεπτομερειών</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Θέση %1$d από %2$d</string>
+    <string name="status">Κατάσταση</string>
+    <string name="tempbasal_button">Προσωρινός ρυθμός</string>
     <string name="extended_bolus_button">Εκτεταμμένο Bolus</string>
+    <string name="to_label">Έως</string>
     <string name="sensor_label">Αισθητήρας</string>
     <string name="insulin_label">Ινσουλίνη</string>
     <string name="pb_label">Μπαταρία αντλίας</string>
     <string name="cannula">Καθετήρας</string>
     <string name="patch_pump">Αυτοκόλλητη αντλία</string>
     <!-- Site Rotation -->
+    <string name="select_location">Πατήστε παρακάτω για να επιλέξετε σημείο</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Μην σκοτώσεις την εφαρμογή μου;</string>
     <string name="fabric_upload_disabled">Η μεταφόρτωση των αρχείων καταγραφής σφαλμάτων απενεργοποιήθηκε!</string>
@@ -507,13 +754,28 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"Το AAPS αναπαράγει ήχο"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">ΣΤΟΧΟΣ</string>
     <string name="profile_name">Όνομα προφίλ:</string>
     <string name="units_colon">Μονάδες:</string>
     <string name="discard">Απόρριψη</string>
+    <string name="add_time_block">Προσθήκη χρονικού διαστήματος</string>
+    <string name="remove_entry">Αφαίρεση εγγραφής</string>
+    <string name="target_low_label">Χαμηλό</string>
+    <string name="target_high_label">Υψηλό</string>
     <!--    Search-->
+    <string name="search">Αναζήτηση</string>
+    <string name="clear">Καθαρισμός</string>
+    <string name="search_category_categories">Κατηγορίες επιλογών</string>
+    <string name="search_category_preferences">Επιλογές</string>
+    <string name="search_category_dialogs">Παράθυρα διαλόγου</string>
+    <string name="search_category_plugins">Πρόσθετα</string>
+    <string name="search_category_wiki">Τεκμηρίωση</string>
+    <string name="search_plugin_disabled">Το πρόσθετο %1$s είναι απενεργοποιημένο</string>
     <!--    Food Management -->
+    <string name="add_food">Προσθήκη τροφίμου</string>
     <string name="category">Κατηγορία</string>
     <string name="subcategory">Υποκατηγορία</string>
     <!--    Log Settings-->
@@ -533,8 +795,18 @@
     <string name="database_cleanup">Εκκαθάριση βάσης δεδομένων</string>
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Εύρεση αντλίας</string>
+    <string name="ble_scan_select_pump">Επιλέξτε την αντλία σας από την παρακάτω λίστα</string>
+    <string name="ble_scan_scanning">Αναζήτηση συσκευών…</string>
     <!-- Graph configuration -->
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">ΒΗΜΑΤΑ</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
+    <string name="secrets_not_protected">Δεν βρέθηκε αποθήκη κλειδιών συστήματος σε αυτόν τον υπολογιστή. Τα κλειδιά που προστατεύουν τις ρυθμίσεις σας και τη σύζευξη με την κύρια συσκευή φυλάσσονται σε αρχεία δίπλα στα δεδομένα, οπότε όποιος πάρει αντίγραφο των αρχείων σας παίρνει και αυτά. Σε Linux, εγκαταστήστε και ξεκινήστε ένα keyring (για παράδειγμα GNOME Keyring ή KWallet) και μετά ξεκινήστε ξανά το AAPS.</string>
 </resources>
