@@ -9,7 +9,7 @@
     <string name="carbs_short" comment="max 6 characters">Carbohidrați</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">UltimaConexiune: acum %1$d min</string>
-    <string name="short_status_last_bolus">UltimulBolus: %1$s @ %2$s</string>
+    <string name="short_status_last_bolus">UltimulBolus: %1$sU @ %2$s</string>
     <string name="short_status_temp_basal">BazalăTemporară: %1$s</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="short_status_not_initialized">Pompa nu este inițializată</string>
@@ -63,7 +63,7 @@
     <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
     <string name="metadata_warning_date_format">Format dată-oră invalid!</string>
     <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după actualizare, dar verificați după importare că preferințele sunt corecte!</string>
-    <string name="metadata_urgent_different_version">Preferințe dintr-o versiune diferită majoră a aplicației. Versiunile majore au diferențe semnificative și pot avea preferințe incompatibile! Asigurați-vă după importare ca preferințele sunt corecte!</string>
+    <string name="metadata_urgent_different_version">Preferințe dintr-o versiune diferită majoră a aplicației. Versiunile majore au diferențe semnificative și pot avea preferințe incompatibile! Asigurați-vă după importare că preferințele sunt corecte!</string>
     <string name="prefdecrypt_settings_tampered">Fișier de setări modificat</string>
     <string name="prefdecrypt_settings_secure">Fișierul de setări este sigur</string>
     <string name="prefdecrypt_settings_unencrypted">Folosirea formatului nesecurizat, necriptat pentru setări</string>
@@ -79,8 +79,8 @@
     <string name="metadata_label_created_at">Creat la</string>
     <string name="metadata_label_aaps_version">Versiune AAPS</string>
     <string name="metadata_label_aaps_flavour">Varianta construită</string>
-    <string name="metadata_label_device_name">Exportați numele dispozitivului pacientului</string>
-    <string name="metadata_label_device_model">Exportare model dispozitiv</string>
+    <string name="metadata_label_device_name">Numele pacientului de pe dispozitivul care a exportat</string>
+    <string name="metadata_label_device_model">Modelul dispozitivului care a exportat</string>
     <string name="metadata_label_encryption">Criptare fișier</string>
     <string name="metadata_format_new">Format nou criptat</string>
     <string name="metadata_format_other">Format necunoscut pentru exportare</string>
@@ -91,18 +91,18 @@
     <string name="csv_upload_error">Eroare la încărcarea fișierului CSV în Cloud</string>
     <string name="uploading_to_cloud">Se încarcă în Cloud...</string>
     <string name="cloud_directory_path">Dosar Cloud: %1$s</string>
-    <string name="google_drive_token_refresh_failed">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive</string>
-    <string name="google_drive_token_refresh_error">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nu s-a putut reîmprospăta codul de acces pentru Google Drive</string>
+    <string name="google_drive_token_refresh_error">Nu s-a putut reîmprospăta codul de acces pentru Google Drive: %1$s</string>
     <string name="google_drive_connection_test_failed">Testul de conectare la Google Drive a eșuat</string>
     <string name="google_drive_connect_error">Nu s-a putut conecta la Google Drive: %1$s</string>
-    <string name="google_drive_list_folders_failed">Eșuare afișare dosare Google Drive</string>
+    <string name="google_drive_list_folders_failed">Nu s-au putut afișa dosarele Google Drive</string>
     <string name="google_drive_list_folders_error">Eroare la afișarea dosarelor: %1$s</string>
-    <string name="google_drive_upload_no_id">Încărcarea a reușit dar niciun ID returnat</string>
+    <string name="google_drive_upload_no_id">Încărcarea a reușit, dar nu s-a returnat niciun ID</string>
     <string name="google_drive_upload_verify_failed">Verificarea încărcării a eșuat</string>
     <string name="google_drive_upload_failed">Încărcare nereușită: %1$s</string>
     <string name="google_drive_upload_error">Eroare încărcare fișier: %1$s</string>
     <string name="google_drive_folder_access_error">Nu se poate crea sau accesa dosarul destinație: %1$s</string>
-    <string name="google_drive_list_settings_failed">Eșuare în afișarea fișierelor de setări</string>
+    <string name="google_drive_list_settings_failed">Nu s-au putut afișa fișierele de setări</string>
     <string name="google_drive_list_settings_error">Eroare în afișarea fișierelor de setări: %1$s</string>
     <string name="google_drive_download_failed">Descărcarea fișierului a eșuat</string>
     <string name="google_drive_download_error">Eroare la descărcarea fișierului: %1$s</string>
