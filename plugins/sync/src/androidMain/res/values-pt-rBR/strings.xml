@@ -200,7 +200,7 @@
     <string name="no_active_profile">Nenhum perfil ativo definido!</string>
     <string name="target_only_aps_mode">Alvos só se aplicam no modo APS!</string>
     <string name="no_history">Nenhum dado no histórico!</string>
-    <string name="temp_target">Alvos Temporários</string>
+    <string name="temp_target">Alvo temporário</string>
     <string name="until">até</string>
     <string name="default_range">DEFAULT RANGE</string>
     <string name="target">alvo</string>
@@ -301,7 +301,7 @@
     <string name="smscommunicator_calibration_sent">Calibração enviada. O recebimento deve estar ativado no xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ não está recebendo calibrações</string>
     <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o modo do Loop para LGS (Suspensão de Baixa Glicemia), responda com o código %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o modo do Loop para LGS (Suspensão por glicose baixa), responda com o código %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Para mudar o modo do Loop para Loop Fechado, responda com o código %1$s</string>
     <string name="smscommunicator_current_loop_mode">Modo de operação atual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
