@@ -3,7 +3,7 @@
     <!-- Medtronic (MDT) - Base -->
     <string name="description_pump_medtronic">Integrare cu pompa Medtronic; necesită un dispozitiv RileyLink și un anumit model de pompă</string>
     <!-- MDT Configuration -->
-    <string name="medtronic_serial_number">Număr serial pompă</string>
+    <string name="medtronic_serial_number">Număr de serie pompă</string>
     <string name="medtronic_pump_type">Tip pompă</string>
     <string name="medtronic_pump_frequency">Frecvență pompă</string>
     <string name="medtronic_pump_bolus_delay">Întârziere până la pornirea bolusului (s)</string>
@@ -39,7 +39,7 @@
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterie RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_error_serial_invalid">Număr serial invalid.</string>
+    <string name="medtronic_error_serial_invalid">Număr de serie invalid.</string>
     <string name="medtronic_error_pump_type_not_set">Tipul pompei nesetat.</string>
     <string name="medtronic_error_pump_type_invalid">Tip de pompă nesuportat.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adresa RileyLink invalidă.</string>
