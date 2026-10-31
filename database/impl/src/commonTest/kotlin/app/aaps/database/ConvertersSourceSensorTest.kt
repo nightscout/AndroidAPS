@@ -27,6 +27,13 @@ class ConvertersSourceSensorTest {
     }
 
     @Test
+    fun `dexcom one plus native is stored by its name`() {
+        // The column holds the entry name, so a new entry needs no database migration.
+        assertEquals("DEXCOM_ONEPLUS_NATIVE", converters.fromSourceSensor(GlucoseValue.SourceSensor.DEXCOM_ONEPLUS_NATIVE))
+        assertEquals(GlucoseValue.SourceSensor.DEXCOM_ONEPLUS_NATIVE, converters.toSourceSensor("DEXCOM_ONEPLUS_NATIVE"))
+    }
+
+    @Test
     fun `names written before the dexcom entries were merged keep their sensor`() {
         assertEquals(GlucoseValue.SourceSensor.DEXCOM_UNKNOWN, converters.toSourceSensor("DEXCOM_NATIVE_UNKNOWN"))
         assertEquals(GlucoseValue.SourceSensor.DEXCOM_G6, converters.toSourceSensor("DEXCOM_G6_NATIVE"))

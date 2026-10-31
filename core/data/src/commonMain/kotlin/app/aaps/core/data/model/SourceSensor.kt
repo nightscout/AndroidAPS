@@ -16,6 +16,9 @@ enum class SourceSensor(val text: String, val aliases: Set<String> = emptySet())
     DEXCOM_UNKNOWN("Dexcom", setOf("AAPS-Dexcom", "Share Follow")),
     DEXCOM_G6("Dexcom G6", setOf("AAPS-DexcomG6", "G6 Native")),
     DEXCOM_G7("Dexcom G7", setOf("AAPS-DexcomG7", "G7 Native", "G7")),
+
+    /** Dexcom ONE+ and G7, read directly over Bluetooth by the AAPS Dexcom ONE+ / G7 source plugin. */
+    DEXCOM_ONEPLUS_NATIVE("AAPS-DexcomOnePlus"),
     LIBRE_1(
         "Libre1",
         setOf("Other App", "Network libre", "BlueReader", "Transmiter PL", "Blucon", "Tomato", "Rfduino", "LimiTTer", "Bubble", "Atom", "Glimp")

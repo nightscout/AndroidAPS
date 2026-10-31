@@ -1,6 +1,7 @@
 package app.aaps.core.data.model
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -18,6 +19,13 @@ class SourceSensorExtensionsTest {
         assertTrue(SourceSensor.DEXCOM_G6.advancedFilteringSupported())
         assertTrue(SourceSensor.DEXCOM_G7.advancedFilteringSupported())
         assertTrue(SourceSensor.DEXCOM_G7.advancedFilteringSupported())
+        assertTrue(SourceSensor.DEXCOM_ONEPLUS_NATIVE.advancedFilteringSupported())
+    }
+
+    @Test
+    fun `dexcom one plus native is found by its text`() {
+        assertEquals(SourceSensor.DEXCOM_ONEPLUS_NATIVE, SourceSensor.fromString("AAPS-DexcomOnePlus"))
+        assertEquals("AAPS-DexcomOnePlus", SourceSensor.DEXCOM_ONEPLUS_NATIVE.text)
     }
 
     @Test

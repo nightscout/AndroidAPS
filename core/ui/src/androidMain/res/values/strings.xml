@@ -182,6 +182,8 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
+    <string name="calibration_to_sensor_warning">This value goes to the sensor. The sensor keeps it for good: it cannot be removed later. Make sure it is right.</string>
+    <string name="calibration_sent_to_sensor">Sent to the sensor</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>
     <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>

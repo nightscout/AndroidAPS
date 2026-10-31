@@ -16,8 +16,11 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.plugins.calibration.fitLinearCalibration
+import app.aaps.plugins.calibration.fitStart
+import app.aaps.plugins.calibration.keys.CalibrationLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -52,7 +55,8 @@ class CalibrationViewModel(
     rh: TextResolver,
     rxBus: RxBus,
     config: Config,
-    batchExecutor: BatchExecutor
+    batchExecutor: BatchExecutor,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalibrationUiState())
@@ -80,7 +84,10 @@ class CalibrationViewModel(
     private suspend fun recomputeSuspend() {
         val now = dateUtil.now()
         val sessionStart = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)?.timestamp
-        val entries = if (sessionStart != null) persistenceLayer.getValidCalibrationEntriesSince(sessionStart) else emptyList()
+        // Same entries as the fit in LinearCalibrationPlugin, so the screen shows the fit that is applied.
+        val entries = if (sessionStart != null) {
+            persistenceLayer.getValidCalibrationEntriesSince(fitStart(sessionStart, preferences.get(CalibrationLongKey.EntriesValidFrom)))
+        } else emptyList()
         val warmUpEndsAt = sessionStart?.plus(WARM_UP_DURATION_MS)
         val isInWarmUp = warmUpEndsAt != null && now < warmUpEndsAt
         _uiState.update { previous ->
