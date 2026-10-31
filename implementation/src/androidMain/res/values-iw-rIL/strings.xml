@@ -2,6 +2,8 @@
 <resources>
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
     <string name="basal_value_below_minimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">הפרופיל הבזאלי במשאבה עודכן. המשאבה מעגלת את הבזאלי לצעד שלה: היא נותנת %1$s ליום במקום %2$s.</string>
+    <string name="basal_reported_far_from_profile">המשאבה מדווחת על בזאלי רחוק מהפרופיל. AAPS שומר על הבזאלי של הפרופיל. יש לבדוק את המינונים הבזאליים במשאבה.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">פחמימות</string>
     <!--    PumpStatusGenerator-->
@@ -19,6 +21,9 @@
     <string name="permission_notifications_description">נדרש כדי להציג התראות, אזעקות ועדכוני מצב משאבה</string>
     <string name="permission_schedule_exact_alarm_title">שעונים מעוררים ותזכורות</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_eat_reminder">זמן לאכול</string>
+    <string name="eat_reminder_channel">ספירה לאחור של תזכורת האכילה</string>
+    <string name="eat_reminder_channel_description">מציג את הזמן שנותר עד שיגיע הזמן לאכול. אין צליל; ההתראה בסוף משמיעה צליל.</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
