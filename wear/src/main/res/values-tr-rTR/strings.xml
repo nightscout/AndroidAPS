@@ -74,7 +74,7 @@
     <string name="pref_lookInYourWatchfaceConfiguration">Lütfen, Saatarayüzü yapılandırmasına bakın.</string>
     <string name="menu_tempt">GH</string>
     <string name="menu_tempt_long">Geçici Hedef</string>
-    <string name="menu_wizard">Hesap makinesi</string>
+    <string name="menu_wizard">Hesaplayıcı</string>
     <string name="menu_wizard_short">Hesap</string>
     <string name="menu_treatment">Tedavi</string>
     <string name="menu_treatment_short">Tedavi</string>
@@ -283,7 +283,7 @@
     <string name="action_running_mode_selected">Çalışma modu istendi</string>
     <string name="title_activity_disconnect_pump">Pompa bağlantısını kes</string>
     <string name="title_activity_suspend_loop">Döngüyü askıya al</string>
-    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d gr</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="wizard_carbs_type">Öğün türü</string>
     <string name="wizard_carbs_type_bread">Ekmek</string>
     <string name="wizard_carbs_type_cake">Kek</string>
@@ -304,9 +304,9 @@
     <string name="phone_alarm_channel_silent">Rahatsız Etmeyin modundayken telefondan gelen alarmlar</string>
     <string name="phone_alarm_silence">Sessize al</string>
     <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">%1$d dk sessiz</string>
-    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d gr</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">Ü</string>
-    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d gr</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f Ü</string>
     <string name="wizard_confirmation_sent">Gönderildi</string>
     <string name="contacting_master">Ana birimle iletişime geçiliyor…</string>
