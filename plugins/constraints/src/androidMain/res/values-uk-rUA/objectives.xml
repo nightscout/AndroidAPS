@@ -1,26 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="objectives_button_start">Почати</string>
+    <string name="objectives_button_verify">Перевірити</string>
+    <string name="nth_objective">%1$d. Завдання</string>
+    <string name="objectivenotstarted">Завдання %1$d не розпочато</string>
+    <string name="objectivenotfinished">Завдання %1$d не завершено</string>
+    <string name="objectives_0_objective">Налаштування візуалізації та моніторингу, аналіз базальних подач та коефіцієнтів</string>
+    <string name="objectives_0_gate">Переконайтеся, що ГК доступна в Nightscout і дані помпи про інсулін вивантажуються</string>
+    <string name="objectives_0_learned">Ви виконали базове налаштування екосистеми AAPS. Nightscout не є обов’язковим для роботи AAPS, але дуже корисний для звітів або моніторингу інших пацієнтів. Постійне підключення до NS не потрібне, якщо ви використовуєте його лише для себе. Ви можете налаштувати вивантаження, наприклад, лише через домашній Wi-Fi, щоб економити батарею.</string>
+    <string name="objectives_openloop_objective">Початок роботи в режимі відкритої петлі</string>
+    <string name="objectives_openloop_gate">Попрацюйте кілька днів у режимі відкритої петлі і вручну застосуйте багато тимчасових базалів. Налаштуйте й використовуйте тимчасові цілі та тимчасові цілі за замовчуванням (наприклад, для активності або для вуглеводів при лікуванні гіпо)</string>
+    <string name="objectives_openloop_learned">Відкрита петля може використовуватися для рекомендацій, якщо у вас немає сумісної помпи або ви ще не готові до закритої петлі.</string>
+    <string name="objectives_maxbasal_objective">Розуміння вашої відкритої петлі, включно з її рекомендаціями щодо тимчасового базалу</string>
+    <string name="objectives_maxbasal_gate">На основі цього досвіду вирішіть, якою має бути максимальна базальна подача, і встановіть її в помпі та у налаштуваннях. У простому режимі це значення обчислюється автоматично за рекомендаціями з вікі, і його не потрібно встановлювати.</string>
+    <string name="objectives_maxbasal">Виконайте дію для виконання рекомендації</string>
+    <string name="objectives_maxbasal_learned">Звертайте увагу на функції безпеки та коригуйте параметри безпеки, коли це необхідно.</string>
+    <string name="objectives_maxiobzero_objective">Початок закритої петлі з призупиненням при низькій глюкозі (LGS)</string>
+    <string name="objectives_maxiobzero_gate">Попрацюйте кілька днів у закритій петлі в режимі LGS (тобто max IOB = 0 встановлюється автоматично) без надто частих LGS-подій.</string>
+    <string name="objectives_maxiobzero_learned">Встановлення MaxIOB у нуль запобігає гіпо та не додає інсуліну понад базальний рівень (за винятком ситуацій із негативним IOB).</string>
+    <string name="objectives_maxiob_objective">Налаштування закритої петлі, підвищення максимального IOB вище 0 та поступове зниження цілей ГК</string>
+    <string name="objectives_maxiob_gate">Попрацюйте кілька днів, включно з хоча б однією ніччю без сигналів про низьку ГК, перш ніж знижувати ГК</string>
+    <string name="objectives_maxiob_learned">Оновлюйте MaxIOB у міру росту дитини. Не дозволяйте системі вводити більше інсуліну, ніж можна перекрити їжею — надто велике значення є поганою ідеєю. У простому режимі MaxIOB обчислюється автоматично.</string>
+    <string name="maxiobset">Максимальний IOB встановлено правильно (не потрібно в простому режимі)</string>
+    <string name="objectives_autosens_objective">За потреби відкоригуйте базальні подачі та коефіцієнти, а потім увімкніть autosens</string>
+    <string name="objectives_autosens_gate">1 тиждень успішної роботи петлі вдень із регулярним внесенням вуглеводів. У простому режимі autosens увімкнено за замовчуванням.</string>
     <string name="objectives_autosens_learned">Якщо результат autosens не коливається навколо 100%, ваш профіль, імовірно, неправильний.</string>
+    <string name="objectives_smb_objective">Увімкнення додаткових функцій для денного використання, таких як SMB</string>
+    <string name="objectives_smb_gate">Ви повинні прочитати вікі та підвищити MaxIOB, щоб SMB працювали добре! Гарний початок — MaxIOB = середній болюс на їжу + 3 × максимальний денний базал. У простому режимі це значення обчислюється за рекомендацією з вікі, і його не потрібно встановлювати.</string>
+    <string name="objectives_smb_learned">SMB — це ваша мета. Алгоритм Oref1 створений, щоб допомагати з болюсами. Не слід вводити повний болюс на їжу — лише його частину, а решту за потреби додасть AAPS. Так у вас більше запасу на помилки в підрахунку вуглеводів. Ви знали, що можете встановити відсоток від результату болюс-калькулятора для зменшення розміру болюсу?</string>
+    <string name="objectives_auto_objective">Увімкнення автоматизації</string>
+    <string name="objectives_auto_gate">Прочитайте документацію про те, як працює автоматизація. Налаштуйте свої перші прості правила. Замість дії дозвольте AAPS спочатку лише показувати сповіщення. Коли будете впевнені, що правило спрацьовує в правильний час, замініть сповіщення реальною дією. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Автоматизація може бути хорошим слугою, але поганим господарем. Не зловживайте нею. Не намагайтеся замінювати основний алгоритм. Завжди тестуйте правило в режимі «лише повідомлення». Порядок має значення.</string>
+    <string name="objectives_bgavailableinns">ГК доступна в NS або Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Статус помпи доступний у NS або Tidepool</string>
+    <string name="objectives_manualenacts">Ручні дії</string>
+    <string name="accomplished">Виконано: %1$s</string>
+    <string name="objectives_usage_objective">Навчіться керувати AAPS</string>
+    <string name="objectives_usage_gate">Виконайте різні дії в AAPS</string>
     <string name="objectives_usage_learned">Ви вивчили основи AAPS. Більшість елементів керування — на екрані «Огляд». Більше дій — у меню «Терапія» та «Керування» внизу екрана і в бічному меню.</string>
     <string name="objectives_useprofileswitch">Встановіть профіль 90% на 10 хв</string>
     <string name="objectives_usedisconnectpump">Імітуйте душ. Від’єднайте помпу на 1 год</string>
+    <string name="objectives_usereconnectpump">... і під’єднайте її назад тим самим способом</string>
     <string name="objectives_usetemptarget">Створіть власну тимчасову ціль тривалістю 10 хв</string>
+    <string name="objectives_useloop">Показати вміст плагіна Петля</string>
     <string name="objectives_usescale">Прокрутіть або масштабуйте графік ГК</string>
+    <string name="objectives_exam_objective">Підтвердьте свої знання</string>
     <string name="objectives_exam_gate">Вивчіть питання. Кожне питання має кілька можливих відповідей, і правильних може бути більше однієї. Позначте всі правильні відповіді та натисніть ПЕРЕВІРИТИ.</string>
     <string name="objectives_exam_learned_prerequisites">Вам не потрібно бути розробником. Щоб пройти Завдання, потрібні Nightscout або Tidepool, сумісна помпа і спосіб зібрати AAPS (у браузері або в Android Studio) для першої інсталяції та кожного оновлення.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS може працювати офлайн.</string>
+    <string name="objectives_exam_learned_basaltest">Профіль слід переглядати та оновлювати. Кращий профіль = кращі результати.</string>
+    <string name="objectives_exam_learned_dia">DIA у петлі означає інший час (поки весь інсулін не всмоктається), ніж у класичній помповій терапії (поки більшість інсуліну не всмоктається).</string>
+    <string name="objectives_exam_learned_isf">Ви дізналися значення ISF та як він впливає на кількість інсуліну для корекції ГК.</string>
+    <string name="objectives_exam_learned_ic">Ви дізналися значення IC та як воно впливає на кількість інсуліну для покриття вуглеводів.</string>
+    <string name="objectives_exam_learned_hypott">Гіпо-ціль використовується лише для запобігання надмірній корекції після гіпо, коли зазвичай існує накопичений негативний IOB. Варто оцінити додаткові дії, щоб уникнути повторення цієї ситуації.</string>
     <string name="objectives_exam_learned_profileswitch" formatted="false">Відсоток не впливає на цільові значення ГК, але базал, ISF та IC коригуються так, щоб давати більше інсуліну (понад 100%) або менше інсуліну (нижче 100%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Завдяки часовому зсуву в перемиканні профілю можна адаптувати циркадний профіль до нерегулярностей, наприклад пізнього пробудження.</string>
+    <string name="objectives_exam_learned_profileswitch4">Редагування самого профілю недостатньо для внесення змін — потрібно виконати перемикання профілю, щоб вони набули чинності.</string>
+    <string name="objectives_exam_learned_exercise">Потрібно зменшити кількість інсуліну в організмі мінімум за 1 годину до тренування, встановивши профіль менше 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Підвищена тимчасова ціль мінімум за годину до тренування також допомагає зменшити кількість інсуліну в організмі.</string>
+    <string name="objectives_exam_learned_noisycgm">Якщо CGM недостовірний, не використовуйте петлю без нагляду.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS має знати, що помпа від’єднана, щоб правильно рахувати IOB.</string>
     <string name="objectives_exam_learned_insulin">AAPS має знати, який інсулін у помпі, бо це впливає на розрахунок IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Виявлення чутливості — частина алгоритму, що дозволяє адаптувати дозування інсуліну до різних ситуацій.</string>
+    <string name="objectives_exam_learned_objectives">Ваш прогрес у завданнях зберігається разом з іншими налаштуваннями, і його слід зберігати в резервній копії.</string>
+    <string name="objectives_exam_learned_objectives2">Завжди зберігайте експортовані налаштування та згенерований APK також поза телефоном. Телефон може бути втрачений або пошкоджений. Добре місце — будь-яка хмара з доступом із телефону. У такому разі можна відновити AAPS на іншому пристрої за кілька хвилин. Гарною практикою є також зберігання головного пароля у безпечному місці. Без нього резервна копія марна. Те саме стосується ключів підпису (файл .jks) та паролів для збірки AAPS. Решту можна будь-коли знову завантажити з інтернету.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Якщо ви неправильно внесли дані або вони не відповідають реальності, виправте це якомога швидше. Це може призвести до передозування. AAPS завжди має отримувати максимально точну інформацію про вуглеводи, інсулін тощо.</string>
     <string name="objectives_exam_learned_iob">Якщо ви аналізуєте, чи добре AAPS працює для вас, графік IOB може дати багато корисної інформації.</string>
     <string name="objectives_exam_learned_cob">Розрахунок COB залежить від співвідношення між ISF та IC. Збільшення ISF або зменшення IC призводить до довшого часу засвоєння. Але перемикання профілю з відсотком змінює обидва значення одночасно, тому час засвоєння не змінюється.</string>
+    <string name="objectives_exam_learned_breadgrams">Для внесення вуглеводів дозволені лише грами.</string>
+    <string name="objectives_exam_learned_ecarbs">E-вуглеводи — заміна подовженого болюсу з помпової терапії.</string>
     <string name="objectives_exam_learned_nsclient">Ви можете віддалено стежити за AAPS через AAPSClient або Nightscout. Коли AAPSClient спарено з основним телефоном, ви також можете віддалено керувати AAPS.</string>
     <string name="objectives_exam_learned_concentration1">Використання інсуліну U200 з профілем 50% потребує постійного перерахунку: для зовнішніх болюсів шприц-ручкою, а всі стандартні звіти AAPS або NS стануть неправильними, і для медичної команди їх доведеться перераховувати в МО.</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">Перехід з U200 з профілем 50% на U200 з функцією концентрації інсуліну потребує створити новий, сильніший профіль, вимкнути DynISF на тиждень і привчити себе думати в міжнародних одиницях.</string>
     <string name="objectives_exam_learned_concentration3">Концентрацію інсуліну можна змінити лише під час заміни інсуліну або патча. Але найважливіше, особливо для помп із трубкою: ніколи не вводьте болюси напряму через інтерфейс помпи.</string>
+    <string name="answerdisabledto">Відповідь заблоковано до: %1$s</string>
+    <string name="wronganswer">Неправильна відповідь!</string>
+    <string name="unfinshed_button">Наступне незавершене</string>
+    <string name="requestcode">Код запиту: %1$s</string>
+    <string name="objectives_hint">(позначте всі правильні відповіді)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
     <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="notconnected">Немає підключення до інтернету</string>
     <string name="failedretrievetime">Не вдалося отримати час</string>
+    <string name="requirementnotmet">Вимоги до завдання не виконані</string>
+    <string name="what_i_ve_learned">Що я засвоїв:</string>
+    <string name="verify_master_password">Підтвердіть, що ви знаєте головний пароль</string>
     <string name="objectives_collapse">Менше</string>
     <string name="objectives_expand">Більше</string>
     <string name="objectives_no_learned">Для цього завдання немає записаних уроків.</string>
