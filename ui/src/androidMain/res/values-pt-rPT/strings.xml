@@ -73,8 +73,8 @@
     <string name="delete_site_note">Nota eliminada</string>
     <!-- FillDialog -->
     <string name="fill_warning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
-    <string name="record_pump_site_change">Registar mudança local bomba</string>
-    <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
+    <string name="record_pump_site_change">Registar mudança de local da bomba</string>
+    <string name="record_insulin_cartridge_change">Registar mudança de cartucho de insulina</string>
     <string name="fill_prime_amount">Quantidade a purgar</string>
     <string name="fill_pump_units_note">A quantidade a purgar está em unidades da bomba</string>
     <string name="fill_insulin_change">Trocar a insulina para: %1$s (será aplicada uma troca de perfil)</string>
@@ -179,7 +179,7 @@
     <!-- LoopDialog -->
     <string name="disconnectpump">Desligar bomba</string>
     <string name="resume">Retomar</string>
-    <string name="reconnect">Re-ligar a Bomba</string>
+    <string name="reconnect">Religar bomba</string>
     <string name="duration15m">15 min.</string>
     <string name="duration30m">30 min.</string>
     <string name="duration1h">1 hora</string>
@@ -230,7 +230,7 @@
     <string name="add_new_profile">Adicionar novo perfil</string>
     <string name="edit_label">Editar</string>
     <string name="activate_label">Ativar</string>
-    <string name="activate_profile">Activar perfil</string>
+    <string name="activate_profile">Ativar perfil</string>
     <string name="remove_label">Remover</string>
     <string name="active_profile_indicator">ATIVO</string>
     <string name="confirm_remove_profile">Remover o perfil \"%1$s\"?</string>
@@ -247,17 +247,17 @@
     <string name="available_profiles">Perfis disponíveis</string>
     <string name="profile_switches">Trocas de perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
-    <string name="selected_profile">Seleccionado:</string>
+    <string name="selected_profile">Selecionado:</string>
     <string name="comparation">Comparação</string>
     <string name="profile_tab_1">Perfil 1</string>
     <string name="profile_tab_2">Perfil 2</string>
-    <string name="motol_default_profile">Perfil Padrão</string>
-    <string name="current_profile">Perfil Actual</string>
+    <string name="motol_default_profile">Perfil predefinido</string>
+    <string name="current_profile">Perfil Atual</string>
     <string name="available_profile">Perfil Disponível</string>
     <string name="format_with_tdd">Idade: %1$d TID: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Idade: %1$d TID: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Idade: %1$d Peso: %2$.0f kg</string>
-    <string name="dpv_default_profile">Perfil Padrão DPV</string>
+    <string name="dpv_default_profile">Perfil predefinido DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Texto do botão</string>
