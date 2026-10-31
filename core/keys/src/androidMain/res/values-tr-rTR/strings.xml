@@ -275,7 +275,9 @@
     <string name="pref_title_master_password">Ana parola</string>
     <string name="pref_title_settings_password">Ayarlar parolası</string>
     <string name="pref_title_settings_pin">Ayarlar PIN\'i</string>
+    <string name="pref_title_application_password">Uygulama şifresi</string>
     <string name="pref_title_application_pin">Uygulama PIN\'i</string>
+    <string name="pref_title_bolus_password">Bolus parolası</string>
     <string name="pref_title_bolus_pin">Bolus PIN</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Sistem teması veya koyu ve açık tema için seçim yapın</string>
@@ -325,7 +327,7 @@
     <string name="openapsma_max_basal_summary">Bu değer OpenAPS\'te \"maksimum bazal\" olarak adlandırılır</string>
     <string name="pref_title_smb_max_iob">SMB için maks AİNS</string>
     <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Maks AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez. Söz konusu değer, hasta tipine göre de değişiklik gösterebilir.</string>
-    <string name="pref_title_ama_max_iob">GYD için maks AİNS</string>
+    <string name="pref_title_ama_max_iob">AMA için maks AİNS</string>
     <string name="openapsma_max_iob_summary">Bu değere OpenAPS bağlamında maks AİNS denir.\nAPS\'de bir kerede verilebilen maksimum insülin [Ü]. Değer, hasta tipinden etkilenir.</string>
     <string name="pref_title_max_daily_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'nin önemli bir güvenlik sınırıdır. Bu, bazal dozunuzu en yüksek bazal dozunuzun 3 katıyla sınırlandırır. Bunu değiştirmenize muhtemelen gerek kalmayacak, ancak güvenlik sınırları için \"günlük maksimumun 3 katı; mevcut dozun 4 katı\" ifadesinin ne anlama geldiğinin farkında olmalısınız.</string>
@@ -333,9 +335,9 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan değer: 4. Bu, OpenAPS\'in önemli güvenlik sınırlarının diğer yarısıdır, yani “günlük maksimumun 3 katı; mevcut değerin 4 katı” kuralının diğer yarısıdır. Pompanızda ayarlanan maksimum bazaldan bağımsız olarak, bazalınız mevcut bazal seviyenizin bu sayı ile çarpımından yüksek olamaz. Bu, algoritmanın nasıl çalıştığını anlamadan çok yüksek maksimum bazal değerleri ayarlayarak tehlikeli duruma düşmeyi önlemek içindir. Varsayılan değer yine 4 kattır; çoğu kişinin bunu değiştirmesi gerekmez. Bu güvenlik sınırına “takıldığını” düşünen kişilerin bunun yerine başka ayarları değiştirmesi gerekir.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus erteleme İES böleni</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Varsayılan değer: 2\nYemek bolusu yaptıktan sonra bolus erteleme devreye girer, bu nedenle döngü, yeni yemek yediğinizde düşük geçici bazallar-hedefler ile etkileşime girmez. Buradaki örnek ve varsayılan 2\'dir; bu nedenle 3 saatlik bir İES, bolus ertelemenin kademeli olarak 1,5 saat (3İES/2) üzerinden aşamalı olarak sonlandırılacağı anlamına gelir.</string>
-    <string name="pref_title_ama_min_5m_carbs_impact">GYD min. 5 dk karb etkisi</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA min. 5 dk karb etkisi</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB min. 5 dk karb etkisi</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Varsayılan değer: 3,0 (GYD) veya 8,0 (SMB). Bu, 5 dakika başına varsayılan karbonhidrat emilim etkisi ayarıdır. Varsayılan olarak 3 mg/dl/5 dk beklenir. Bu değer, AKRB\'nin ne kadar hızlı azaldığını ve KŞ beklenenden fazla düştüğünde veya beklendiği kadar yükselmediğinde, gelecekteki KŞ tahmini hesaplanırken ne kadar karbonhidrat emilimi varsayıldığını etkiler.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Varsayılan değer: 3,0 (AMA) veya 8,0 (SMB). Bu, 5 dakika başına varsayılan karbonhidrat emilim etkisi ayarıdır. Varsayılan olarak 3 mg/dl/5 dk beklenir. Bu değer, AKRB\'nin ne kadar hızlı azaldığını ve KŞ beklenenden fazla düştüğünde veya beklendiği kadar yükselmediğinde, gelecekteki KŞ tahmini hesaplanırken ne kadar karbonhidrat emilimi varsayıldığını etkiler.</string>
     <string name="pref_title_absorption_cutoff">Emilim kesme</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
     <string name="pref_title_absorption_maxtime">Emilim max süre</string>
