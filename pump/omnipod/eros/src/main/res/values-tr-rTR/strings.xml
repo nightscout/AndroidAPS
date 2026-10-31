@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
-    <string name="omnipod_eros_pump_description">Omnipod Eros için pompa entegrasyonu (şeffaf iğne kapaklı eski model). En az donanım yazılımı sürümü 2.0 olan bir RileyLink cihazı gerektirir.</string>
+    <string name="omnipod_eros_pump_description">Omnipod Eros için pompa entegrasyonu (şeffaf iğne kapaklı eski model). En az üretici yazılımı sürümü 2.0 olan bir RileyLink cihazı gerektirir.</string>
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adresi geçersiz.</string>
