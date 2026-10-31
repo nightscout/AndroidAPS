@@ -11,7 +11,7 @@
     <string name="eopatch_expiration_time">Hora de expiração</string>
     <string name="eopatch_not_activated">Não ativado</string>
     <string name="eopatch_base_basal_rate">Taxa Basal do Perfil</string>
-    <string name="eopatch_temp_basal_rate">Taxa Basal Temp</string>
+    <string name="eopatch_temp_basal_rate">Taxa basal temporária</string>
     <string name="invalid_basal_rate">A basal do perfil é inferior a 0,05 U/h. O EOPatch tem uma unidade mínima de injeção de 0,05 U. Tente novamente depois de definir no perfil um valor acima da unidade mínima de injeção.</string>
     <string name="no_profile_selected_try_again">Nenhum perfil selecionado. Selecione um perfil e tente novamente.</string>
     <string name="symbol_day">dia</string>
