@@ -104,7 +104,7 @@
     <string name="extended_bolus">확장 볼러스</string>
     <string name="paused">일시중지</string>
     <string name="running">실행 중</string>
-    <string name="tdd_total">TDD Total</string>
+    <string name="tdd_total">총 TDD</string>
     <string name="tdd_old_data">오래된 데이터</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
     <string name="carbs_not_saved_after_bolus">볼러스는 주입되었지만 탄수화물을 저장하지 못했습니다. 탄수화물을 다시 입력하십시오.</string>
@@ -235,8 +235,8 @@
     <string name="overview_treatment_label">처치</string>
     <string name="copytolocalprofile">이 프로파일에서 새로운 프로파일을 생성하시겠습니까?</string>
     <string name="wear_wizard_settings">워치 마법사 설정</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
-    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="bolus_iob_label">볼러스 IOB</string>
+    <string name="treatments_wizard_basaliob_label">기저 IOB</string>
     <string name="invalid">유효하지 않음</string>
     <string name="login">로그인</string>
     <string name="logout">로그아웃</string>
@@ -437,7 +437,7 @@
     <string name="client_roles_info_open">역할 정보</string>
     <string name="client_roles_info">페어링된 각 휴대폰에는 역할이 있습니다. 메인 휴대폰은 모든 명령에서 역할을 확인하고, 휴대폰에는 역할이 허용하는 것만 표시됩니다. 새 역할은 다시 페어링하지 않아도 바로 적용됩니다.\n\n읽기 전용: 휴대폰은 페어링된 상태로 유지되지만 데이터만 표시합니다.\n\n식사: 볼러스, 볼러스 마법사, 빠른 마법사, 탄수화물. 진행 중인 볼러스를 멈출 수도 있습니다. 여기서 입력한 탄수화물 때문에 루프가 더 많은 인슐린을 줄 수 있습니다.\n\n보호자: 임시 목표, 프로파일 및 인슐린 변경, 루프 모드, 임시 기저, 확장 볼러스, 장면, 케어포털 이벤트, 보정, 기록 삭제처럼 사용자가 AAPS에서 하는 모든 것. 설정이나 프리셋은 바꿀 수 없습니다.\n\n관리자: 설정과 프리셋을 포함한 모든 것 (빠른 마법사, 임시 목표 프리셋, 장면, 프로파일, 자동화, 인슐린).</string>
     <string name="client_read_only_banner">이 휴대폰은 메인 휴대폰에서 읽기 전용 모드로 설정되어 있습니다.</string>
-    <string name="hardened_mode_info">메인 휴대폰은 페어링된 클라이언트의 변경만 받습니다. Nightscout에서 직접 만든 처치, 임시 목표, 프로파일 변경, 실행 모드 변경, 삭제는 받지 않습니다. 예를 들어 웹사이트나 다른 앱에서 만든 것입니다. 강화 모드가 켜져 있는 동안 Nightscout에서 데이터를 받는 설정은 숨겨집니다. SMS 명령에는 영향이 없습니다.\n\n메인 휴대폰은 혈당을 포함한 모든 데이터를 계속 Nightscout에 업로드합니다. 혈당을 Nightscout에서 받는 경우, 혈당은 계속 그곳에서 받습니다.\n\n새 메인 휴대폰에 이력을 불러오려면 NSClient의 전체 동기화를 사용하십시오. 전체 동기화는 프로파일을 포함하여 Nightscout에 있는 모든 것을 가져옵니다.\n\n클라이언트의 원격 제어를 사용하려면 메인 휴대폰과 페어링된 클라이언트 모두에서 Nightscout과의 WebSocket 연결이 작동해야 합니다. 간단 모드에서는 강화 모드가 항상 켜집니다. 강화 모드를 끄려면 간단 모드를 끝내고 메인 휴대폰에서 클라이언트 제어를 끄십시오.</string>
+    <string name="hardened_mode_info">메인 휴대폰은 페어링된 클라이언트의 변경만 받습니다. Nightscout에서 직접 만든 처치, 임시 목표, 프로파일 변경, 실행 모드 변경, 삭제는 받지 않습니다. 예를 들어 웹사이트나 다른 앱에서 만든 것입니다. 강화 모드가 켜져 있는 동안 Nightscout에서 데이터를 받는 설정은 숨겨집니다. SMS 명령에는 영향이 없습니다.\n\n메인 휴대폰은 혈당을 포함한 모든 데이터를 계속 Nightscout에 업로드합니다. 혈당을 Nightscout에서 받는 경우, 혈당은 계속 그곳에서 받습니다.\n\n새 메인 휴대폰에 이력을 불러오려면 NSClient의 전체 동기화를 사용하십시오. 전체 동기화는 프로파일을 포함하여 Nightscout에 있는 모든 것을 가져옵니다.\n\n클라이언트의 원격 제어를 사용하려면 메인 휴대폰과 페어링된 클라이언트 모두에서 Nightscout와의 WebSocket 연결이 작동해야 합니다. 간단 모드에서는 강화 모드가 항상 켜집니다. 강화 모드를 끄려면 간단 모드를 끝내고 메인 휴대폰에서 클라이언트 제어를 끄십시오.</string>
     <string name="scene_lock_reason_master_offline">마스터 연결 끊김</string>
     <string name="scene_lock_reason_control_disabled">원격 제어 비활성화됨</string>
     <string name="scene_lock_reason_scene_active">먼저 실행 중인 장면을 중지하십시오</string>
@@ -900,7 +900,7 @@
     <string name="csv_export_failed">사용자 항목 내보내기 실패!</string>
     <string name="logs_sent">로그를 이메일로 보냈습니다</string>
     <string name="logs_send_failed">로그 보내기 실패</string>
-    <string name="cloud_directory">클라우드 폴더</string>
+    <string name="cloud_directory">클라우드 디렉터리</string>
     <string name="cloud_token_expired_or_invalid">클라우드 저장소 인증이 만료되었거나 유효하지 않습니다. 다시 인증하십시오.</string>
     <!-- Export destination chip labels -->
     <string name="chip_local">로컬</string>
