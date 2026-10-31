@@ -61,7 +61,7 @@
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
-    <string name="connecting_for">Verbonden gedurende %1$d s</string>
+    <string name="connecting_for">Verbinden gedurende %1$d s</string>
     <string name="handshaking">Verbinding maken</string>
     <string name="connected">Verbonden</string>
     <string name="authorized">Geautoriseerd</string>
