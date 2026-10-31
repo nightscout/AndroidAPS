@@ -26,15 +26,23 @@
     <string name="description_source_patched_syai_tag_app">Ontvang glucose-gegevens van de Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Ontvang glucose gegevens van Patched Sibionic SI App of van Sibionics App.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Ontvang glucose gegevens van Patched Sino App.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Ontvang BG waarden van de Instara app.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara historische gegevens opvragen</string>
+    <string name="pref_summary_instara_history_request">Mogelijk ontbrekende historische gegevens op de achtergrond opvragen</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Notificatielezer</string>
+    <string name="description_source_notification_reader">Lees glucosewaarden uit notificaties van officiële CGM apps (Dexcom, Medtronic, Eversense, enz.).</string>
     <!-- Permission rationales -->
     <string name="permission_dexcom_title">Dexcom CGM</string>
     <string name="permission_dexcom_description">De app heeft toestemming nodig om CGM-gegevens van de Dexcom-app te ontvangen</string>
+    <string name="permission_notification_listener_title">Toegang tot notificaties</string>
     <string name="permission_notification_listener_description">Vereist om glucosewaarden uit meldingen van de CGM-app te lezen</string>
     <string name="aidex">Micro Tech CGM App</string>
     <string name="description_source_aidex">Ontvang Glucose waarden van LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 enzovoort</string>
