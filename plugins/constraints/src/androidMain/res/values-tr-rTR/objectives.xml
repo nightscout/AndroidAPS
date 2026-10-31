@@ -22,7 +22,7 @@
     <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
     <string name="objectives_maxiob_learned">Çocuk büyüdükçe MaksAİNS\'i güncelleyin. Sistemin size karbonhidrat hesabından daha fazla insülin vermesine izin vermeyin = yüksek değer gerçekten kötü bir fikirdir. Maks. AİNS basit modda otomatik olarak hesaplanır</string>
     <string name="maxiobset">Maksimum AİNS düzgün bir şekilde ayarlandı (Basit modda gerekli değildir)</string>
-    <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i (otoduyarlılık) etkinleştirin</string>
+    <string name="objectives_autosens_objective">Gerekirse bazal ve oranları ayarlayın, ardından Otoduyarlılık\'ı etkinleştirin</string>
     <string name="objectives_autosens_gate">Düzenli karbonhidrat girişiyle 1 hafta başarılı gündüz döngüsü. Basit modda otoduyarlılık varsayılan olarak etkindir.</string>
     <string name="objectives_autosens_learned">Otoduyarlılık sonucunuz %100 civarında dalgalanmıyorsa, profiliniz muhtemelen yanlıştır.</string>
     <string name="objectives_smb_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
@@ -35,7 +35,7 @@
     <string name="objectives_pumpstatusavailableinns">Pompa durumu NS veya Tidepool\'da mevcut</string>
     <string name="objectives_manualenacts">Manuel eylemler</string>
     <string name="accomplished">Başarıldı: %1$s</string>
-    <string name="objectives_usage_objective">AAPS\'yi nasıl kontrol edeceğinizi öğrenin</string>
+    <string name="objectives_usage_objective">AAPS\'i nasıl kontrol edeceğinizi öğrenin</string>
     <string name="objectives_usage_gate">AAPS\'de farklı eylemler gerçekleştirin</string>
     <string name="objectives_usage_learned">AAPS\'in temel kullanımını öğrendiniz. Kontrollerin çoğu Genel bakış ekranındadır. Diğer işlemler ekranın altındaki Tedaviler ve Yönet menülerinde ve yan menüdedir.</string>
     <string name="objectives_useprofileswitch">Profili 10 dk için %90 olarak ayarlayın</string>
