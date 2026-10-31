@@ -140,6 +140,7 @@
     <string name="equil_insert2">펌프가 펌프 베이스에 있으면 안 됩니다.</string>
     <string name="equil_attach">펌프를 베이스에 부착하십시오</string>
     <string name="equil_hint2">캐뉼라 프라임</string>
+    <string name="equil_pump_updated">펌프가 업데이트 되었습니다</string>
     <string name="equil_replace_reservoir">레저버가 비었습니다. 레저버를 교체하십시오.</string>
     <string name="equil_removed_anyway">페어링 해제 명령에 실패했습니다. 그래도 펌프는 삭제됩니다. 페어링할 때 설정한 비밀번호는 펌프에서 삭제되지 않습니다.</string>
 </resources>
