@@ -50,12 +50,15 @@
     <string name="wear_general_settings">Generella inställningar</string>
     <string name="wear_custom_watchface_settings">Anpassade inställningar för urtavla</string>
     <string name="wear_custom_watchface">Anpassad urtavla: %1$s</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s ersätter %2$s på klockan. Komplikationer som du har ändrat i urtavlans redigerare återställs till standard.</string>
     <string name="wear_load_watchface">Ladda urtavla</string>
     <string name="wear_infos_watchface">Info urtavla</string>
     <string name="wear_export_watchface">Exportera mall</string>
     <string name="wear_new_custom_watchface_exported">Anpassad mall exporterad</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Uppdatera klockans data</string>
     <string name="open_settings_on_wear">Öppna inställningar på klockan</string>
+    <string name="wear_import_custom_watchface_title">Välj anpassad urtavla</string>
     <string name="cwf_infos_pref_locked">Inställningar som är låsta av urtavlan</string>
     <string name="cwf_infos_pref_required">Inställningar som krävs av urtavlan</string>
     <string name="cwf_infos_view_title">Fält som ingår i urtavlan</string>
