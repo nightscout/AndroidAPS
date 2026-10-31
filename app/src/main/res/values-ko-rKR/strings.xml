@@ -8,10 +8,10 @@
     <string name="optimizing_database">데이터베이스 최적화 중…</string>
     <string name="initializing_plugins">플러그인 초기화 중…</string>
     <string name="initializing">초기화 중…</string>
-    <string name="migrating_profile_switches">프로필 변경 이전 중…</string>
-    <string name="migrating_effective_profile_switches">유효 프로필 변경 이전 중…</string>
+    <string name="migrating_profile_switches">프로파일 전환 이전 중…</string>
+    <string name="migrating_effective_profile_switches">유효 프로파일 전환 이전 중…</string>
     <string name="migrating_boluses">볼러스 이전 중…</string>
-    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">이전 기록에는 인슐린 구성이 없고 활성 프로필도 없어서 %1$s을(를) 사용했습니다. 인슐린 설정을 확인하십시오. 이미 이전된 기록은 나중에 수정되지 않습니다.</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">이전 기록에는 인슐린 구성이 없고 활성 프로파일도 없어서 %1$s을(를) 사용했습니다. 인슐린 설정을 확인하십시오. 이미 이전된 기록은 나중에 수정되지 않습니다.</string>
     <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">이전 기록에는 인슐린 작용 시간이 없어서 %2$s에 %1$.1f시간을 사용했습니다. 인슐린 설정을 확인하십시오. 이미 이전된 기록은 나중에 수정되지 않습니다.</string>
     <string name="settings_unreadable_title">AAPS 설정을 읽을 수 없습니다</string>
     <string name="settings_unreadable_key_explanation">이 휴대폰의 설정은 Android가 AAPS를 위해 보관하는 키로 암호화되어 있는데, 이 키로 더 이상 설정을 열 수 없습니다. 휴대폰의 키 저장소가 초기화된 후에 이런 일이 생길 수 있습니다.</string>
