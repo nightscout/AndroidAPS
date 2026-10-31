@@ -51,7 +51,7 @@
     <!-- Status strings -->
     <string name="status_idle">Inactivo</string>
     <string name="status_filled">Llenado</string>
-    <string name="status_priming">Cebado</string>
+    <string name="status_priming">Purgando</string>
     <string name="status_primed">Cebado</string>
     <string name="status_ejecting">Expulsando</string>
     <string name="status_ejected">Expulsado</string>
