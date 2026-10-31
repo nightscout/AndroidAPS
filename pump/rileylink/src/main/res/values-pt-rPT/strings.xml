@@ -52,7 +52,7 @@
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Dispositivo não é RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink inacessível</string>
-    <string name="rileylink_error_bt_disabled">Bluetooth desactivado</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth desativado</string>
     <string name="rileylink_error_no_bt_adapter">Nenhum Adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">TuneUp Falhou</string>
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>
