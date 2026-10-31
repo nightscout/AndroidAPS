@@ -268,7 +268,7 @@
     <string name="smscommunicator_remote_bolus_not_allowed">远程大剂量不可用。请稍后再试。</string>
     <string name="smscommunicator_basal_reply_with_code">执行基础率%1$.2f U/h 持续 %2$d 分钟，请回复验证码：%3$s</string>
     <string name="smscommunicator_profile_reply_with_code">要切换到 %1$s %2$d%% 配置文件，请回复代码 %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">要开始扩展大剂量 %1$.2fU/h 持续时间%2$d 分钟，请回复验证码：%3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">要开始扩展大剂量 %1$.2fU 持续时间%2$d 分钟，请回复验证码：%3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">要在 %2$s 输入 %1$d 克，请回复验证码 %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">要开始基础率 %1$d%% 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">要暂停闭环 %1$d 分钟请回复如下代码 %2$s</string>
@@ -277,7 +277,7 @@
     <string name="smscommunicator_restart_reply_with_code">要重启 AAPS，请回复代码 %1$s</string>
     <string name="smscommunicator_restarting">AAPS 正在重启</string>
     <string name="smscommunicator_tempbasal_set">临时基础率 %1$.2fU/h 持续 %2$d 分钟启用成功了</string>
-    <string name="smscommunicator_extended_set">扩展大剂量 %1$.2fU/h 持续时间 %2$d 分钟已经启用成功了</string>
+    <string name="smscommunicator_extended_set">扩展大剂量 %1$.2fU 持续时间 %2$d 分钟已经启用成功了</string>
     <string name="smscommunicator_carbs_set">输入 %1$d g碳水成功</string>
     <string name="smscommunicator_carbs_failed">输入 %1$d g碳水失败</string>
     <string name="smscommunicator_tempbasal_set_percent">临时基础率 %1$d%% 持续时间 %2$d 分钟 启用成功了</string>
