@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Eşleştirme zaman aşımı</string>
+    <string name="danars_bonding_failed">Pompa ile Bluetooth eşleştirmesi başarısız oldu veya iptal edildi. Tekrar deneyin ve pompada gösterilen PIN\'i girin.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS ve Dana-i pompaları için pompa entegrasyonu</string>
     <string name="maxbolusviolation">Maks bolus ihlali</string>
@@ -8,14 +9,20 @@
     <string name="speederror">Hız hatası</string>
     <string name="insulinlimitviolation">İnsülin sınırı ihlali</string>
     <string name="boluserrorcode">İstenen: %1$.2fÜ Teslim edilen: %2$.2fÜ Hata kodu: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pompa hazırlanmamış</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Rezervuarda yeterli insülin yok</string>
+    <string name="danai2_bolus_error_easy_sleep">Pompada Easy sleep modu açık</string>
+    <string name="danai2_pump_check_error">Pompa kontrol hatası</string>
     <string name="danar_valuenotsetproperly">Değer düzgün ayarlanmamış</string>
     <string name="danar_setbasalstep001">Bazal adımı ayarla 0,01 Ü/s</string>
     <string name="resetpairing">Eşleştirme bilgileri sıfırlansın mı?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKod: %4$02X</string>
     <string name="processinghistory">Etkinlik işleniyor</string>
     <string name="danar_enableextendedbolus">Pompada yayma bolusları etkinleştir</string>
+    <string name="danar_disablebolusblock">Pompada bolus bloğu açık. Bolus bloğu açıkken AAPS insülin veremez. Pompa ayarlarından bolus bloğunu kapatın.</string>
     <string name="overview_bolusprogress_stoped">Durdu</string>
     <string name="unsupportedfirmware">Desteklenmeyen pompa yazılımı</string>
+    <string name="danars_unsupported_model">Desteklenmeyen pompa modeli (kod %1$s)</string>
     <string name="pumperror">Pompa hatası</string>
     <string name="lowbattery">Düşük Pil</string>
     <string name="basalcompare">Önceden ayarlanmış bazal orandan daha az teslimat</string>
@@ -99,6 +106,9 @@
     <string name="num1pin">1: (12 basamak)</string>
     <string name="num2pin">2: (8 basamak)</string>
     <string name="basal_bolus_step">Bazal/bolus adımı</string>
+    <string name="cancel_pairing_message">Eşleştirme işlemi iptal edilecek.</string>
+    <string name="done">Tamam</string>
+    <string name="open_bluetooth_settings">Bluetooth ayarlarını aç</string>
     <string name="password_ok">Parola başarıyla doğrulandı!</string>
     <string name="password_wrong">Yanlış parola. Geri dönün ve düzeltin.</string>
 </resources>
