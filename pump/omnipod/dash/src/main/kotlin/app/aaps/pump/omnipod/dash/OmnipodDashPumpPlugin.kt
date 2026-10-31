@@ -740,8 +740,7 @@ class OmnipodDashPumpPlugin(
                 if (bolusType == BolusType.SMB) {
                     notifyOnUnconfirmed(
                         NotificationId.OMNIPOD_UNCERTAIN_SMB,
-                        "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
-                            "Refresh pod status to confirm or deny this command.",
+                        rh.gs(R.string.smb_delivery_status_uncertain, rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, requestedBolusAmount)),
                         AlarmSound.BOLUS_ERROR
                     )
                 } else {

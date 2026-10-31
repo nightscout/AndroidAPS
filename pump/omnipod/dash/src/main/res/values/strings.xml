@@ -33,6 +33,7 @@
     <string name="failed_to_set_the_new_basal_profile">Failed to set the new basal profile. Delivery suspended</string>
     <string name="setting_basal_profile_might_have_failed">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="bolus_delivery_status_uncertain">Bolus delivery status uncertain. Refresh pod status to confirm or deny.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Unable to verify whether SMB (%1$s) succeeded. Refresh pod status to confirm or deny this command.</string>
     <string name="temp_basal_out_of_sync">Temp basal status not as expected! If a temp basal was previously running, it has been cancelled. Please check delivered insulin and pod history</string>
     <string name="checking_delivery_status">Checking delivery status</string>
     <string name="setting_temp_basal_might_have_basal_failed">Setting temp basal might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
