@@ -801,15 +801,15 @@
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <string name="quickwizard_managemnt">אשף מהיר</string>
     <!--    Preferences-->
-    <string name="child">ילד\\ה צעיר\\ה</string>
-    <string name="teenage">מתבגר\\ת</string>
-    <string name="adult">מבוגר\\ת</string>
-    <string name="resistant_adult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
+    <string name="child">ילד/ה צעיר/ה</string>
+    <string name="teenage">מתבגר/ת</string>
+    <string name="adult">מבוגר/ת</string>
+    <string name="resistant_adult">מבוגר/ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
-    <string name="patient_age_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
+    <string name="patient_age_summary">נא לבחור את גיל המטופל/ת להתאמת מגבלות בטיחות</string>
     <string name="max_bolus_title">בולוס מקסימלי מותר [יח\']</string>
     <string name="max_carbs_title">מקסימום פחמימות מותר [גר\']</string>
-    <string name="patient_type">סוג המטופל\\ת</string>
+    <string name="patient_type">סוג המטופל/ת</string>
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">סוללה</string>
@@ -842,7 +842,7 @@
     <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">קריטי</string>
     <string name="alert" comment="Generic alert dialog title">התראה</string>
     <string name="retry" comment="Button label to retry a failed operation">ניסיון חוזר</string>
-    <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">סיום</string>
     <string name="firmware" comment="Pump firmware version label">קושחה</string>
     <string name="bolusspeed" comment="Speed at which bolus is delivered">מהירות הזרקת הבולוס</string>
     <string name="history" comment="Tab/screen title for viewing past events">היסטוריה</string>
@@ -1038,7 +1038,7 @@
     <string name="units_colon">יחידות:</string>
     <string name="unsaved_changes">שינויים שלא נשמרו</string>
     <string name="unsaved_changes_message">יש שינויים שלא נשמרו. מה ברצונכם לעשות?</string>
-    <string name="discard">ביטול השינויים</string>
+    <string name="discard">ניתוק</string>
     <string name="ic_dynamic_label_warning">האלגוריתם יכול לחשב IC באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
     <string name="isf_dynamic_label_warning">האלגוריתם יכול לחשב ISF באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
     <string name="add_time_block">הוספת מקטע זמן</string>
