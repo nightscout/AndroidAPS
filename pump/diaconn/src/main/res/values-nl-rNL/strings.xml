@@ -67,7 +67,7 @@
     <string name="diaconn_g8_logbatteryshorage">Batterij bijna leeg</string>
     <string name="diaconn_g8_logneedleprime">Naald voorvullen :%1$.2fE</string>
     <string name="diaconn_g8_loginjectorprime">Injector voorvullen :%1$.2fE</string>
-    <string name="diaconn_g8_logtubeprime">Infuus wissel voorvullen :%1$.2fE</string>
+    <string name="diaconn_g8_logtubeprime">Slangwissel voorvullen :%1$.2fE</string>
     <string name="diaconn_g8_resetfactoryreset">Herstellen na terugzetten naar fabrieksinstellingen</string>
     <string name="diaconn_g8_resetemergencyoff">Herstellen na nood uitschakeling</string>
     <string name="diaconn_g8_resetbatteryreplacement">Herstellen na batterij vervanging door de gebruiker</string>
