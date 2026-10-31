@@ -1122,12 +1122,34 @@
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Meer laden</string>
     <string name="import_no_files">Geen instellingenbestanden gevonden</string>
-    <string name="reset_aps_results">Reset APS resultaten</string>
+    <string name="import_decrypt_ok">Ontsleutelen geslaagd. Klaar om te importeren.</string>
+    <string name="import_decrypt_warn">Ontsleutelen geslaagd, maar er zijn waarschuwingen.</string>
+    <string name="import_decrypt_error">Ontsleutelen geslaagd, maar importeren is niet mogelijk.</string>
+    <string name="reset_aps_results">APS-resultaten wissen</string>
     <string name="database_cleanup">Database opschonen</string>
-    <string name="nav_resetdb">Reset database</string>
+    <string name="nav_resetdb">Database wissen</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Pomp zoeken</string>
+    <string name="ble_scan_select_pump">Selecteer de pomp uit de onderstaande lijst</string>
+    <string name="ble_scan_scanning">Zoeken naar apparaten…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Grafiek toevoegen</string>
+    <string name="graph_new">Nieuwe grafiek</string>
+    <string name="graph_number">Grafiek %1$d</string>
+    <string name="graph_bg">BG grafiek</string>
+    <string name="graph_height">Grafiekhoogte [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HS</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STAPPEN</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="graph_series_iob">Actieve insuline (IOB)</string>
     <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolute insuline</string>
