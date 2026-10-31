@@ -11,6 +11,7 @@
     <string name="treatments_history">Tedavi geçmişi</string>
     <string name="treatments_desc">Tedavi geçmişini görüntüleyin ve yönetin</string>
     <string name="nav_configuration">Konfigürasyon</string>
+    <string name="nav_configuration_desc">Yapılandırmanızı (CGM, pompa, ...) ayarlayın ve özellikleri etkinleştirin</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="delete">Sil</string>
     <string name="show_invalidated">Geçersiz olanları göster</string>
@@ -102,22 +103,45 @@
     <string name="advanced_settings_title">Gelişmiş Ayarlar</string>
     <string name="extended_bolus">Yayma Bolus</string>
     <string name="paused">Duraklatıldı</string>
+    <string name="running">Çalışıyor</string>
     <string name="tdd_total">GTD Toplam</string>
     <string name="tdd_old_data">Eski veri</string>
     <string name="goingtodeliver">%1$.2f Ü iletilecek</string>
+    <string name="carbs_not_saved_after_bolus">Bolus iletildi ancak karbonhidrat kaydedilemedi. Lütfen tekrar karbonhidrat girin.</string>
     <string name="androidaps_start">AAPS başladı</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f sa</string>
+    <string name="format_mins">%1$d dk</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Görevler</string>
     <string name="please_wait">Lütfen bekleyin…</string>
     <string name="stop">Durdur</string>
+    <string name="stop_pressed">DURDUR\'A BASILDI</string>
     <string name="invalid_profile">Geçersiz profil!</string>
     <string name="no_profile_set">PROFİL AYARLANMADI</string>
+    <string name="profile_switch_no_insulin">Profil değiştirilemiyor: kullanımda olan bir insülin yok ve herhangi biri seçilmemiş.</string>
+    <string name="scene_no_profile_before">Senaryo başlamadan önce hiçbir profil kullanımda değildi.</string>
     <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">%1$s senaryosu sona erdi ancak profili hâlâ kullanımda. %2$s Bir profili manuel olarak etkinleştirin.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Bu geçici geçiş %1$s değerine sahip, ancak bunun altındaki kalıcı profil %2$s değerine sahip. Öncelikle İnsülin ayarlarından, pompa içindeki insülini etkinleştirin.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Profil değiştirme zamanı, şu andan itibaren %1$d saatlik bir süre içinde olmalıdır.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Geçici hedef, şu andan itibaren %1$d saat içinde başlamalıdır.</string>
+    <string name="profile_switch_select_insulin_hint">Henüz hiçbir insülin kullanılmıyor. Kullandığınız insülini seçin; böylece profil değişikliği sırasında bu bilgi kaydedilebilir.</string>
     <string name="insulin_activation_failed">İnsülin değiştirilmedi. Önceki insülininiz hâlâ kullanımda.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">İnsülin değiştirilmedi: %1$s Önceki insülininiz kullanılmaya devam ediyor.</string>
+    <string name="insulin_activation_unconfirmed">İnsülin değişikliği doğrulanamadı. Doz uygulamadan önce profilinizde hangi insülinin aktif olduğunu kontrol edin.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">İnsülin değiştirilmedi. Önceki insülininiz hâlâ kullanımda.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nİnsülin de değiştirilmedi.</string>
     <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="date">Tarih</string>
+    <string name="insulin_nickname_label">İnsülinin takma adı</string>
+    <string name="concentration_label">Konsantrasyon</string>
+    <string name="peak_label">Tepe</string>
     <string name="dia_label">İES</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">İDF</string>
@@ -151,19 +175,28 @@
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Yükleniyor…</string>
+    <string name="waiting_for_pump">Pompa bekleniyor...</string>
+    <string name="initialization_failed">Başlatılamadı</string>
     <string name="notes_label">Notlar</string>
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibrasyon kaydedilmedi: KŞ çok hızlı değişiyor (5 dakikada Δ %1$s %3$s, sınır %2$s). Glikoz seviyesi sabitlendiğinde tekrar deneyin.</string>
+    <string name="cal_reject_no_pair">Kalibrasyon kaydedilmedi: Son 10 dakika içinde hiçbir CGM ölçümü bulunamadı.</string>
+    <string name="cal_reject_warmup">Kalibrasyon kaydedilmedi: sensör 2 saatlik ısınma süresi içinde.</string>
+    <string name="cal_reject_no_session">Kalibrasyon kaydedilmedi: etkin bir sensör oturumu yok. Öncelikle bir sensör değişikliği işaretleyin.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek iletilen insülin ve karbonhidrat miktarını manuel olarak kontrol edin</string>
+    <string name="bolus_reminder">KŞ düzeldiğinde bolus için hatırlatma yap</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">g</string>
     <string name="pump_running">Pompa çalışıyor</string>
     <string name="notconfigured">Yapılandırılmadı</string>
     <string name="loop_suspended_by_dst">Döngü yaz saati değişikliği nedeniyle askıya alındı</string>
     <string name="required">iht.</string>
+    <string name="a11y_arrow_triple_down">çok hızlı düşüyor</string>
     <string name="a11y_arrow_double_down">hızla düşüyor</string>
     <string name="a11y_arrow_single_down">düşüyor</string>
     <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
@@ -171,18 +204,28 @@
     <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
     <string name="a11y_arrow_single_up">yükseliyor</string>
     <string name="a11y_arrow_double_up">hızla yükseliyor</string>
+    <string name="a11y_arrow_triple_up">çok hızlı yükseliyor</string>
     <string name="a11y_arrow_none">yok</string>
     <string name="a11y_arrow_unknown">bilinmiyor</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">%1$s değerini %2$s azalt</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">%1$s değerini %2$s artır</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">yazmak için %1$s açın</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">%1$s kapat</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Yukarı taşı</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Aşağı taşı</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Adım %1$d/%2$d</string>
     <string name="decrement">azalt</string>
     <string name="increment">artır</string>
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
+    <string name="remove_label">Kaldır</string>
     <string name="activate_profile">Profil etkinleştir</string>
+    <string name="activate_insulin">İnsülini etkinleştirin</string>
+    <string name="pump_wizard_profile_gate_title">Profil gerekli</string>
+    <string name="pump_wizard_profile_gate_pick">Etkinleştirme sırasında uygulanacak profili seçin.</string>
+    <string name="pump_wizard_profile_gate_no_store">Tanımlı profil yok. Bir profil oluşturmak için Profil Yönetimi\'ni açın, ardından etkinleştirme işlemini yeniden başlatın.</string>
+    <string name="reset">Sıfırla</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Yüzde</string>
@@ -332,14 +375,52 @@
     <string name="scene">Senaryo</string>
     <string name="scenes">Senaryolar</string>
     <string name="scene_desc">Durum ön ayarları — birden fazla eylemi aynı anda etkinleştirin</string>
+    <string name="scene_activate">Aktive et</string>
+    <string name="scene_deactivate">Senaryoyu sonlandır</string>
     <string name="scene_active">Etkin</string>
+    <string name="scene_ended">Senaryo sonlandı</string>
+    <string name="scene_end_active">Aktif senaryoyu sonlandır</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Atla</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Devam senaryosu %1$s başlamayacak</string>
     <string name="scene_confirm_activate">\"%1$s\" senaryosu etkinleştirilsin mi?</string>
     <string name="scene_confirm_deactivate">\"%1$s\" senaryosu sonlandırılıp değişiklikler geri alınsın mı?</string>
+    <string name="scene_conflict_active_tt">Etkin geçici hedef değiştirilecektir</string>
+    <string name="scene_conflict_active_profile">Etkin profil değişimi değiştirilecek</string>
+    <string name="scene_conflict_active_running_mode">Aktif çalışma modu değiştirilecek</string>
+    <string name="scene_conflict_active_scene">Önce \"%1$s\" adlı etkin senaryo sonlandırılacak</string>
+    <string name="scene_action_tt">Geçici hedef: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">SMB\'yi etkinleştir</string>
+    <string name="scene_action_smb_off">SMB\'yi devre dışı bırak</string>
+    <string name="scene_action_running_mode">Çalışma modu: %1$s</string>
+    <string name="scene_action_careportal">Günlük: %1$s</string>
+    <string name="scene_management">Senaryolar</string>
+    <string name="scene_management_desc">Senaryolar oluşturun, düzenleyin ve yönetin</string>
+    <string name="scene_start_from_template">Bir şablondan başla</string>
+    <string name="scene_editor_target">Hedef</string>
+    <string name="scene_editor_tt_preset">GH ön ayarı</string>
+    <string name="scene_editor_no_tt_presets">Hiçbir GH ön ayarı yapılandırılmamış</string>
+    <string name="scene_editor_select_tt_preset">Bir ön ayar seçin</string>
+    <string name="scene_editor_percentage">Yüzde</string>
+    <string name="scene_editor_profile">Profil</string>
     <string name="scene_editor_keep_current_profile">-- Mevcut olanı koru --</string>
+    <string name="scene_editor_mode">Mod</string>
+    <string name="scene_editor_event_type">Etkinlik tipi</string>
+    <string name="scene_editor_note">Not</string>
+    <string name="scene_icon">Simge</string>
+    <string name="scene_editor_enabled">Etkin</string>
+    <string name="scene_editor_disabled">Devre dışı</string>
+    <string name="scene_summary">%1$d eylem, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Belirsiz (manuel sonlandırma)</string>
+    <string name="scene_some_actions_failed">Bazı işlemler başarısız oldu</string>
+    <string name="scene_no_active">Etkin senaryo yok</string>
+    <string name="scene_some_reverts_failed">Bazı geri alma işlemleri başarısız oldu</string>
     <string name="scene_no_profile_store">Profil deposu yok</string>
     <string name="scene_no_actions">Senaryoda eylem yok</string>
+    <string name="scene_profile_not_found">Profil \"%1$s\" bulunamadı</string>
     <string name="scene_lock_banner_master_offline">Ana birime ulaşılamıyor. Bağlantı yeniden sağlandığında senaryo kontrolleri devam edecektir.</string>
     <string name="scene_lock_banner_control_disabled">Ana birim uzaktan kumandayı devre dışı bıraktı. Ana birimde tekrar etkinleştirildiğinde senaryo kontrolleri devam edecektir.</string>
     <string name="master_offline_banner">Ana birime ulaşılamıyor. Bağlantı yeniden sağlanana kadar düzenleme devre dışı bırakılmıştır.</string>
@@ -398,31 +479,70 @@
     <string name="clientcontrol_bolus_progress_stalled_title">Bağlantı koptu — iletim durumu bilinmiyor</string>
     <string name="clientcontrol_bolus_progress_stalled_body">Bu telefon, ana birimden güncelleme almayı durdurdu. Bolus dozunun verilmesi hâlâ devam ediyor olabilir ya da tamamlanmış olabilir. Bu uyarıyı kapatmak onu yalnızca buradan gizler — pompa üzerindeki işlemi durdurmaz. Gerçekte ne kadar doz verildiğini kontrol etmek için ana telefona bakın.</string>
     <string name="scene_revert_tt">Geçici hedefi iptal et</string>
+    <string name="scene_revert_profile">Profil değişikliğini geri al</string>
+    <string name="scene_revert_smb_on">SMB\'yi yeniden etkinleştir</string>
+    <string name="scene_revert_smb_off">SMB\'yi devre dışı bırak</string>
     <string name="scene_revert_loop_mode">Çalışma modu geçersiz kılmasını iptal et</string>
+    <string name="scene_careportal_no_revert">CarePortal kayıtları geri alınmayacaktır</string>
+    <string name="careportal_sickness">Hastalık</string>
+    <string name="careportal_stress">Stres</string>
+    <string name="careportal_pre_period">Adet öncesi</string>
+    <string name="careportal_alcohol">Alkol</string>
+    <string name="careportal_cortisone">Kortizon</string>
     <string name="careportal_feeling_low">Düşük hissetme</string>
     <string name="careportal_feeling_high">Yüksek hissetme</string>
+    <string name="careportal_falling_asleep">Uykuya dalma</string>
+    <string name="careportal_waking_up">Uyanma</string>
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
     <string name="boluswizard">Bolus sihirbazı</string>
+    <string name="treatment_desc">İnsülini ve karbonhidratları birlikte kaydedin</string>
+    <string name="treatment_insulin_desc">Bolusu manuel olarak verin</string>
     <string name="treatment_carbs_desc">İnsülin olmadan karbonhidratları kaydedin</string>
+    <string name="treatment_calculator_desc">Bolus hesapla</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">İnsülin ayarları</string>
+    <string name="manage_insulin_desc">İnsülin yapılandırmalarını yönetin ve etkinleştirin</string>
+    <string name="concentration_disable_blocked">U100 dışı insülinler mevcutken konsantrasyon desteği devre dışı bırakılamaz. Öncelikle tüm U100 dışı insülin yapılandırmalarını kaldırın ve U100 profiline geçiş yapın.</string>
+    <string name="simple_mode_blocked_by_concentration">U100 olmayan insülin kullanılırken basit mod etkinleştirilemez. Öncelikle U100 insüline geçiş yapın.</string>
+    <string name="manage_profile_desc">Profilleri yönetin ve etkinleştirin</string>
+    <string name="manage_temp_target_desc">Geçici hedefler belirleyin ve yönetin</string>
+    <string name="manage_temp_basal_desc">Geçici bazalı başlat</string>
     <string name="manage_extended_bolus_desc">Yayma bolus iletimini başlatın</string>
+    <string name="manage_site_rotation_desc">İnfüzyon bölgelerini takip edin ve değiştirin</string>
+    <string name="manage_quickwizard_desc">Hızlı sihirbaz ön ayarlarını yönetin</string>
+    <string name="treatment_note_desc">Kayıtlarınıza bir not ekleyin</string>
+    <string name="treatment_question_desc">Bakım ekibiniz için bir soru kaydedin</string>
+    <string name="treatment_cgm_desc">CGM uygulamasını açın</string>
+    <string name="treatment_calibration_desc">CGM sensör kalibrasyonu</string>
     <string name="treatment_bg_check_desc">Kan şekeri ölçümünü kaydedin</string>
     <string name="treatment_exercise_desc">Egzersiz aktivitesini kaydedin</string>
     <string name="treatment_announcement_desc">Duyuru yayınlayın</string>
     <string name="treatment_sensor_insert_desc">CGM sensör yerleştirmesini kaydedin</string>
     <string name="treatment_battery_change_desc">Pompa pil değişimini kaydedin</string>
     <string name="treatment_cannula_change_desc">Kanül/infüzyon seti değişimini kaydedin</string>
+    <string name="treatment_fill_desc">Kanülü doldurun ve hazırlayın</string>
+    <string name="temp_basal">Geçici Bazal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Profilin üzerinde</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Profilin altında</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Yok</string>
     <string name="user_entry">Kullanıcı girişi</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Parmak</string>
     <string name="glucosetype_sensor">Sensör</string>
     <string name="manual">Manuel</string>
+    <string name="unknown">Bilinmiyor</string>
     <string name="eatingsoon">Yakında Yenecek</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Aktivite</string>
     <string name="wear">Wear</string>
     <string name="automation">Otomasyon</string>
+    <string name="automation_management_desc">Tetikleyicilere dayalı olarak eylemleri otomatik şekilde çalıştıran kurallar oluşturun</string>
     <string name="settingsexport">Ayarları dışa aktar</string>
     <string name="custom">Özel</string>
+    <string name="preset_settings">Ön Ayarlar</string>
+    <string name="activation">Etkinleştirme</string>
+    <string name="temp_target_management">Geçici Hedef</string>
+    <string name="revert_to_defaults">Varsayılanlara dön</string>
     <string name="loop">Döngü</string>
     <string name="ns">NS</string>
     <string name="location_front_right_upper_chest">Sağ Göğüs</string>
@@ -580,15 +700,28 @@
     <string name="uel_insulin_removed">İNSÜLİN ÇIKARILDI</string>
     <string name="uel_running_mode">ÇALIŞMA MODU</string>
     <string name="uel_running_mode_removed">ÇALIŞMA MODU KALDIRILDI</string>
+    <string name="uel_running_mode_updarted">ÇALIŞMA MODU GÜNCELLENDİ</string>
+    <string name="uel_scene_activated">SENARYO ETKİNLEŞTİRİLDİ</string>
+    <string name="uel_scene_deactivated">SENARYO DEVRE DIŞI</string>
+    <string name="uel_remote_config_changed">UZAKTAN YAPILANDIRMA DEĞİŞTİRİLDİ</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Geçici hedef alt değeri</string>
     <string name="temp_target_high_target">Geçici hedef üst değeri</string>
     <string name="temp_target_value">Geçici hedef değeri</string>
+    <string name="insulin_dia">İnsülin İES değeri</string>
+    <string name="insulin_peak">İnsülin tepe değeri</string>
     <string name="profile_max_daily_basal_value">Azami profil bazal değeri</string>
     <string name="current_basal_value">Mevcut bazal değer</string>
     <string name="valuelimitedto">%1$.2f, %2$.2f ile sınırlıdır</string>
     <string name="valueoutofrange">»%1$s« sert sınırların dışında</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Profil seçilmedi</string>
     <string name="missing_profile_name">Profil adı eksik</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s kopya</string>
+    <string name="profile_not_saved_activate">Profil kaydedilmedi. Lütfen etkinleştirmeden önce profili kaydedin.</string>
+    <string name="profile_basal_not_compatible_with_pump">Bazal oran mevcut pompa ile uyumlu değildir ve etkinleştirilemez. Yüzde değerini düşürün veya bazal oranı ayarlayın.</string>
+    <string name="profile_basal_below_pump_minimum">Bazal oran mevcut pompanın minimum değerinin altındadır ve etkinleştirilemez. Yüzdeyi artırın veya bazal oranı ayarlayın.</string>
+    <string name="profile_pump_incompatible_label">Pompa sınırı</string>
     <string name="error_in_ic_values">IC değerinde hata</string>
     <string name="error_in_isf_values">İDF değerinde hata</string>
     <string name="error_in_basal_values">Bazal değerlerde hata</string>
@@ -622,8 +755,13 @@
     <string name="basal">Bazal</string>
     <string name="basalpct">Bazal %</string>
     <string name="sensitivity">Duyarlılık</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Otoduyarlılık kapalı</string>
     <string name="isf_for_carbs">Hesaplayıcı ve karbonhidrat emilimi için ortalama İDF: %1$.1f</string>
+    <string name="isf_profile">Profil İDF: %1$.1f</string>
+    <string name="isf_variable">Değişken İDF: %1$.1f</string>
+    <string name="isf_effective">Etkin İDF: %1$.1f</string>
     <string name="autosens_long">Otoduyarlılık değeri: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Algoritmadaki otoduyarlılık: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">OtoAyar</string>
@@ -635,9 +773,36 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus danışmanı</string>
     <string name="bolus_advisor_message">Kan şekeriniz yüksek. Şimdi yemek yerine kan şekerinizin düşmesini beklemeniz önerilir. Şimdi bir düzeltme bolusu yapıp yemek zamanı geldiğinde hatırlatma almak ister misiniz? Bu durumda karbonhidrat kaydedilmez ve size hatırlattığımızda sihirbazı tekrar kullanmanız gerekir.</string>
+    <string name="wizard_bg_label">KŞ</string>
+    <string name="wizard_correction">Düzeltme</string>
+    <string name="wizard_subtotal">Ara toplam</string>
+    <string name="carbs_type_bread">Ekmek, tuzlu hamur işleri, yoğurt, meyve (elma, muz, armut), patates, pirinç, karabuğday, yulaf ezmesi, yavaş ve düşük karbonhidratlı yiyecekler, sebzeler</string>
+    <string name="carbs_type_cake">Mantılar, makarnalar, karbonhidrat ve yağ açısından zengin Asya mutfağı, tatlı ve mayalı hamur işleri, tahıllar, tahıl lapaları, bal, reçel</string>
+    <string name="carbs_type_pizza">Lazanya, pizza, hamburger, patates kızartması, fırın patates, cips ve benzeri atıştırmalıklar</string>
+    <string name="wizard_total">Toplam</string>
+    <string name="wizard_carb_time">Karb. zamanı</string>
+    <string name="carb_time_now">Şimdi</string>
+    <string name="change">Değiştir</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
+    <string name="grant">İzin ver</string>
     <string name="set">Uygula</string>
+    <string name="wizard_set_alarm">Alarmı ayarla</string>
+    <string name="eat_reminder_title">Yemek vakti</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Toplam bekleme: %1$s</string>
+    <string name="eat_reminder_rung">Süre doldu</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d dk</string>
+    <string name="eat_reminder_not_set">Yemek hatırlatıcısı ayarlanamadı. Android ayarlarından AAPS\'in alarm ve hatırlatıcı ayarlamasına izin verin.</string>
+    <string name="wizard_use_percentage">Yüzde kullanın</string>
+    <string name="wizard_include_bg">KŞ dahil</string>
+    <string name="wizard_include_tt">Geçici hedef dahil</string>
     <string name="wizard_include_trend">Eğilim dahil</string>
+    <string name="wizard_include_iob">AİNS dahil</string>
+    <string name="wizard_include_cob">AKRB dahil</string>
+    <string name="wizard_calculation">Hesaplama</string>
+    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maksimum çıkarma: %1$d g (AKRB)</string>
+    <string name="wizard_no_insulin_required">İnsülin gerekmiyor</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
@@ -645,6 +810,7 @@
     <string name="wizard_constraint_bolus_size">İnsülin kısıtlaması ihlali!\n%1$.2fÜ iletilemez</string>
     <string name="wizard_pump_not_available">Pompa mevcut değil!</string>
     <string name="quick_wizard_not_available">Seçili Hızlı Asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
+    <string name="quickwizard_managemnt">Hızlı Asistan</string>
     <!--    Preferences-->
     <string name="child">Çocuk</string>
     <string name="teenage">Ergen</string>
@@ -669,6 +835,7 @@
     <string name="connecting">Bağlanıyor</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
     <string name="daily_units">Günlük ünite</string>
+    <string name="max_daily_units">Maks günlük ünite</string>
     <string name="pump_history">Pompa geçmişi</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pompa sürücüsü değişimi.</string>
     <string name="device_changed" comment="26 characters max for translation">Cihaz değişti</string>
@@ -776,22 +943,53 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Kullanıcı talebi</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Eşleştir</string>
+    <string name="pump_unpair">Eşleşmeyi Kaldır</string>
+    <string name="pump_unpair_confirm_title">Pompa eşleşmesi kaldırılsın mı?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Düşük Enerji Bluetooth desteklenmez.</string>
     <string name="ble_not_enabled">Bluetooth etkin değil.</string>
+    <string name="ble_permissions_missing">Bluetooth izinleri verilmemiş. Lütfen uygulama ayarlarından bu izinleri verin.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
     <!-- Navigation -->
+    <string name="nav_about">Hakkında</string>
+    <string name="nav_about_desc">Uygulama sürümünü ve bilgilerini görüntüle</string>
     <string name="nav_exit">Çıkış</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="nav_history_browser">Geçmiş tarayıcısı</string>
+    <string name="nav_history_browser_desc">Geçmişe dönük grafikleri inceleyin</string>
+    <string name="appearance">Görünüm</string>
+    <string name="manage">Yönet</string>
+    <string name="localprofile">Profil</string>
     <string name="nav_setupwizard">Kurulum Sihirbazı</string>
+    <string name="nav_setupwizard_desc">AAPS\'i adım adım yapılandırın</string>
     <string name="statistics">İstatistikler</string>
+    <string name="statistics_desc">İstatistikleri ve raporları görüntüle</string>
+    <string name="tdd_cycle_pattern">GTD Döngü Modeli</string>
+    <string name="tdd_cycle_pattern_desc">Tekrarlayan kalıpları tespit etmek için günlük toplam insülin miktarlarını 28 günlük döngüler halinde üst üste getirin</string>
     <string name="nav_profile_helper">Profil yardımcısı</string>
+    <string name="nav_profile_helper_desc">Profilinizi ağırlığa veya GTD\'ye göre oluşturun</string>
+    <string name="quick_launch_configure">Hızlı Başlatma\'yı yapılandırın</string>
+    <string name="quick_launch_configure_desc">Genel bakış ekranındaki hızlı işlem butonlarını özelleştirin</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Yerel uyarılar</string>
     <!-- Actions Screen -->
+    <string name="add">Ekle</string>
+    <string name="remove">Kaldır</string>
+    <string name="reorder">Yeniden sırala</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Öne taşı</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Arkaya taşı</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Detayları göster</string>
+    <string name="presets_changed_reorder_aborted">Ön ayarlar başka bir yerde değiştirildi. Yeni sıralama kaydedilmedi.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Pozisyon %1$d / %2$d</string>
+    <string name="status">Durum</string>
+    <string name="pump_actions">Pompa eylemleri</string>
+    <string name="tempbasal_button">Geçici Bazal</string>
     <string name="extended_bolus_button">Yayma Bolus</string>
+    <string name="device_maintenance">Cihaz Bakımı</string>
     <string name="from_label">Başlangıç</string>
     <string name="to_label">Bitiş</string>
     <string name="sensor_label">Sensör</string>
@@ -800,6 +998,7 @@
     <string name="cannula">Kanül</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Site Rotation -->
+    <string name="select_location">Bölge seçmek için aşağıya tıklayın</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
     <string name="fabric_upload_disabled">Çökme günlükleri yükleme devre dışı bırakıldı!</string>
@@ -832,19 +1031,34 @@
     <string name="weekday_monday_short">Pts</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f Ü</string>
+    <string name="format_insulin_units_signed">%1$+.2f Ü</string>
     <string name="percent_rate_duration">Oran: %1$.2f%% (%2$.2f Ü/sa) Süre: %3$d dk</string>
     <string name="rate_percent_duration">Oran: %1$.2f Ü/sa (%2$.2f%%) Süre: %3$d dk</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f%% (%2$.2f Ü/sa)<br><b>Süre</b>: %3$d dk<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/sa (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS ses çalıyor"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAZAL</string>
     <string name="target_short">HDF</string>
     <string name="profile_name">Profil adı:</string>
+    <string name="edit_profile_name">Profil adını düzenle</string>
     <string name="units_colon">Birim:</string>
+    <string name="unsaved_changes">Kaydedilmemiş değişiklikler</string>
+    <string name="unsaved_changes_message">Kaydedilmemiş değişiklikleriniz var. Ne yapmak istersiniz?</string>
     <string name="discard">Çıkar</string>
     <string name="ic_dynamic_label_warning">Algoritmanız IC\'nizi dinamik olarak hesaplayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda bir geri dönüş olarak veya yalnızca bir referans değeri olarak kullanılabilir</string>
     <string name="isf_dynamic_label_warning">Algoritmanız İDF\'nizi dinamik olarak hesaplayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda bir geri dönüş olarak veya yalnızca bir referans değeri olarak kullanılabilir</string>
+    <string name="add_time_block">Zaman bloğu ekle</string>
+    <string name="remove_entry">Girdiyi kaldır</string>
+    <string name="target_low_label">Düşük</string>
+    <string name="target_high_label">Yüksek</string>
     <!--    Search-->
+    <string name="search">Ara</string>
+    <string name="clear">Temizle</string>
+    <string name="search_category_categories">Tercih kategorileri</string>
+    <string name="search_category_preferences">Tercihler</string>
+    <string name="search_category_dialogs">Diyaloglar</string>
     <string name="search_category_plugins">Eklentiler</string>
     <string name="search_category_wiki">Dokümantasyon</string>
     <string name="wiki_search_offline">Dokümantasyonda arama yapmak için internet bağlantısı gerekir</string>
@@ -881,31 +1095,116 @@
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Şifreyi Çöz &amp; Gözden geçir</string>
     <string name="import_decrypt">Şifreyi çöz</string>
+    <string name="import_master_password">Ana parola</string>
+    <string name="import_decryption_password">Şifre çözme parolası</string>
+    <string name="import_different_password_hint">Dosya farklı bir parolayla şifrelenmiş</string>
+    <string name="import_wrong_password">Yanlış parola</string>
     <string name="import_btn">İçe aktar</string>
+    <string name="import_anyway_btn">Yine de içe aktar</string>
+    <string name="import_apply_title">İçe aktarılan ayarlar uygulansın mı?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Değiştirilecek ayarlar: %1$d. Değişikliğe uğrayan eklentiler yeniden başlatılacaktır.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Değiştirilecek ayarlar: %1$d. Korunan pompa ayarları: %2$d, böylece pompanız çalışmaya devam eder.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">İçe aktarılan ayarlarda, bu telefonda herhangi bir pompa bulunmadığı seçilmiş. %1$s şu anda etkin — pompa ayarlarınızı kontrol edin.</string>
+    <string name="import_applying">Ayarlar uygulanıyor…</string>
+    <string name="import_replace_pump_settings">Ayrıca pompa ayarlarını da değiştirin</string>
+    <string name="import_replace_pump_settings_summary">Bu telefonun eşleştirilmiş olduğu pompayı korumak için bunu kapalı bırakın. Aynı pompayı kullanacağınız yeni bir telefona geri yükleme yaparken bunu açın.</string>
+    <string name="import_apply_waiting">Pompa bekleniyor...</string>
+    <string name="import_apply_pump_busy">Pompa hâlâ meşgul, bu nedenle ayarlar uygulanmadı.</string>
+    <string name="import_apply_retry_question">Şimdi tekrar denensin mi?</string>
+    <string name="import_applied_title">Ayarlar uygulandı</string>
+    <string name="import_applied_message">İçe aktarılan ayarlar şu anda kullanımda.</string>
+    <string name="import_apply_pump_changed">İptal edildi: pompa, ayarların içe aktarılmasıyla değiştirildi</string>
+    <string name="import_source_local">Yerel</string>
+    <string name="import_source_cloud">Bulut</string>
+    <string name="import_load_more">Daha fazla yükle</string>
+    <string name="import_no_files">Hiçbir ayar dosyası bulunamadı</string>
+    <string name="import_decrypt_ok">Şifre çözme başarılı. İçe aktarmaya hazır.</string>
+    <string name="import_decrypt_warn">Şifre çözme başarılı, ancak uyarılar var.</string>
+    <string name="import_decrypt_error">Şifre çözme başarılı, ancak içe aktarma mümkün değil.</string>
     <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
     <string name="database_cleanup">Veritabanı temizleme</string>
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Pompa Bul</string>
+    <string name="ble_scan_select_pump">Pompanızı aşağıdaki listeden seçin</string>
+    <string name="ble_scan_scanning">Cihazlar aranıyor…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Grafik ekle</string>
+    <string name="graph_new">Yeni grafik</string>
+    <string name="graph_number">Grafik %1$d</string>
+    <string name="graph_bg">KŞ Grafiği</string>
+    <string name="graph_height">Grafik yüksekliği [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">TAHMİN</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZAL</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">SAPMA</string>
     <string name="activity_shortname" comment="Short label for Activity graph series">AKTİVİTE</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">KŞEtkisi</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">MUTLAK</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">SAPMA EĞİMİ</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">Nabız</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">DYRLLK%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">DDYRLLK</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">ADMLR</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Aktif İnsülin</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Mutlak insülin</string>
+    <string name="graph_series_cob">Aktif Karbonhidrat</string>
+    <string name="graph_series_bgi">Kan Şekeri Etkisi</string>
+    <string name="graph_series_deviations">Sapmalar</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Duyarlılık değişikliği</string>
+    <string name="graph_series_variable_sens">Değişken duyarlılık</string>
+    <string name="graph_series_deviation_slope">Sapma eğimi</string>
+    <string name="graph_series_heart_rate">Nabız</string>
+    <string name="graph_series_steps">Adımlar</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Aktivite</string>
+    <string name="graph_series_predictions">Tahminler</string>
+    <string name="units_days">gün</string>
+    <string name="units_format_days">%1$d gün</string>
+    <string name="units_format_days_range">%1$d gün (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_grams">%1$d g</string>
     <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d sa</string>
     <string name="units_format_hours_double">%1$.1f sa</string>
     <string name="units_format_hours_double_range">%1$.1f sa (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d sa (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f Ü</string>
+    <string name="units_format_insulin_int">%1$d Ü</string>
+    <string name="units_format_insulin_int_range">%1$d Ü (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f Ü (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate">%1$.1f Ü/sa</string>
     <string name="units_format_insulin_rate_range">%1$.1f Ü/sa (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d dk</string>
+    <string name="units_format_min_range">%1$d dk (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d sn</string>
+    <string name="units_format_sec_range">%1$d sn (%2$d - %3$d)</string>
     <string name="units_grams">g</string>
     <string name="units_hours">sa</string>
+    <string name="units_insulin">Ü</string>
     <string name="units_insulin_rate">Ü/sa</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
     <string name="units_min">dk</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">sn</string>
+    <string name="units_years">y</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
+    <string name="secrets_not_protected">Bu bilgisayarda herhangi bir sistem anahtar deposu bulunamadı. Ayarlarınızı ve ana birimle eşleşmenizi koruyan anahtarlar, verilerinizin bulunduğu yerdeki dosyalarda saklanır; dolayısıyla dosyalarınızın bir kopyasını ele geçiren herkes bu anahtarlara da sahip olur. Linux üzerinde bir anahtar zinciri (örneğin GNOME Keyring veya KWallet) kurup çalıştırın, ardından AAPS\'i yeniden başlatın.</string>
 </resources>
