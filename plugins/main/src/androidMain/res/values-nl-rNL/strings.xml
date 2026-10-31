@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_history_browser">Historiek venster</string>
+    <string name="nav_history_browser">Historie bekijken</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insuline</string>
     <string name="pb_label">Pomp batterij</string>
