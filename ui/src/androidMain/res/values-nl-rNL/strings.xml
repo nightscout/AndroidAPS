@@ -6,6 +6,8 @@
     <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="time_offset">Tijdverschuiving</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$du</string>
     <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$du</string>
     <!--    Widget-->
     <string name="configure">Configureer transparantie</string>
@@ -40,6 +42,15 @@
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">Dagen</string>
     <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_reference">Gezond persoon</string>
+    <string name="cgp_patient">Patiënt</string>
+    <string name="cgp_pgr_very_low">Zeer laag risico</string>
+    <string name="cgp_pgr_low">Laag risico</string>
+    <string name="cgp_pgr_moderate">Gemiddeld risico</string>
+    <string name="cgp_pgr_high">Hoog risico</string>
+    <string name="cgp_pgr_extremely_high">Zeer hoog risico</string>
     <string name="do_you_want_recalculate_tdd_stats">Wilt u de TDD statistieken opnieuw berekenen?</string>
     <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
     <string name="age">Leeftijd</string>
@@ -169,4 +180,5 @@
     <!-- Toolbar configuration -->
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_no_pair">Geen sensor waarde in de laatste 10 minuten. Controleer de verbinding met de sensor.</string>
 </resources>
