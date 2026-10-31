@@ -23,8 +23,8 @@
     <string name="automation_category_alerts">התראות</string>
     <string name="automation_category_system">מערכת</string>
     <string name="automation_category_scenes">תרחישים</string>
-    <string name="action_run_scene">הפעלת תרחיש</string>
-    <string name="action_run_scene_short">הפעלת תרחיש: %1$s</string>
+    <string name="action_run_scene">הרצת תרחיש</string>
+    <string name="action_run_scene_short">הרצת תרחיש: %1$s</string>
     <string name="action_enable_scene">הפעלת תרחיש</string>
     <string name="action_enable_scene_short">הפעלת תרחיש: %1$s</string>
     <string name="action_disable_scene">השבתת תרחיש</string>
@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">גיל הצינורית %1$s %2$.1f שעות</string>
     <string name="triggerPodChangeLabel">הפעלת הפוד</string>
     <string name="triggerPodChangeDesc">הפוד הופעל</string>
+    <string name="triggerUnknownLabel">טריגר לא ידוע</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">טריגר לא ידוע %1$s - אינו מתקיים לעולם</string>
     <string name="triggerInsulinAgeLabel">גיל האינסולין</string>
     <string name="triggerInsulinAgeDesc">גיל האינסולין %1$s %2$.1f שעות</string>
     <string name="triggerPumpBatteryAgeLabel">גיל סוללת המשאבה</string>
@@ -126,9 +128,9 @@
     <string name="preconditions">תנאים מוקדמים:</string>
     <string name="user_action">פעולות משתמש</string>
     <string name="system_automation">אוטומציית מערכת</string>
-    <string name="run_automations">הפעלת אוטומציות</string>
+    <string name="run_automations">הרצת אוטומציות</string>
     <string name="add_automation">הוספת כלל</string>
-    <string name="stop_processing">עצירת העיבוד</string>
+    <string name="stop_processing">הפסקת עיבוד</string>
     <!--    Reminders-->
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
