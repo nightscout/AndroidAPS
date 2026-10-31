@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="authorizationfailed">Помилка авторизації</string>
+    <string name="identification_not_set">Ідентифікацію не задано в режимі розробника</string>
+    <string name="select">Обрати</string>
+    <string name="set">Задати</string>
     <string name="migrating_preferences">Перенесення налаштувань…</string>
     <string name="optimizing_database">Оптимізація бази даних…</string>
     <string name="initializing_plugins">Ініціалізація плагінів…</string>
