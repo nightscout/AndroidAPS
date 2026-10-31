@@ -77,7 +77,7 @@
     <string name="autotune_result">Resultat: %1$s</string>
     <string name="autotune_param">Parameter</string>
     <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Saknas:</string>
+    <string name="autotune_missing">Saknas</string>
     <string name="autotune_run">Kör Autotune</string>
     <string name="autotune_check_input_profile_button">Kontrollera profilen</string>
     <string name="autotune_compare_profile">Jämför profiler</string>
