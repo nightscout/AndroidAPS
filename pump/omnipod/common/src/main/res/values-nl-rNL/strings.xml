@@ -139,6 +139,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Basaalprofiel instellen</string>
     <string name="omnipod_common_cmd_set_bolus">Bolus instellen</string>
     <string name="omnipod_common_cmd_cancel_bolus">Annuleer Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">TBR instellen</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annuleer TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Pod verwerpen</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod status verversen</string>
     <string name="omnipod_common_cmd_set_time">Tijd instellen</string>
@@ -147,6 +149,7 @@
     <string name="omnipod_common_cmd_read_pulse_log">Pulslog uitlezen</string>
     <string name="omnipod_common_cmd_suspend_delivery">Onderbreek toediening</string>
     <string name="omnipod_common_cmd_resume_delivery">Toediening hervatten</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Annuleer TBR (gebruiker)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod info verversen</string>
     <string name="omnipod_common_cmd_play_test_beep">Test pieptoon afspelen</string>
     <string name="omnipod_common_cmd_unknown_entry">Onbekende invoer</string>
