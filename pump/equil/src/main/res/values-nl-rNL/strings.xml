@@ -19,7 +19,7 @@
     <string name="equil_title_assemble">Montage pomp</string>
     <string name="equil_title_serial">Apparaat koppelen</string>
     <string name="equil_title_fill">Prime / Vullen</string>
-    <string name="equil_title_attach">Pomp koppelen</string>
+    <string name="equil_title_attach">Pomp aanbrengen</string>
     <string name="equil_title_air">Canule vullen</string>
     <string name="equil_title_unpair_detach">Pomp ontkoppelen</string>
     <string name="equil_title_history_events">Historie gebeurtenissen</string>
@@ -50,7 +50,7 @@
     <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="equil_basal_exceeds_max">Profiel basaal stand %1$s E/u overtreft de pomp max basaal %2$s E/u. Verhoog de max basaal instelling en verbind de pomp opnieuw.</string>
     <string name="equil_not_enough_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
-    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batterij bijna leeg: %1$d%</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batterij bijna leeg: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Niet genoeg insuline over in het reservoir: %1$s</string>
     <string name="equil_reservoir_empty">Het reservoir is leeg. De pomp levert geen insuline meer.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">De pomp is gestopt tijdens de bolus. Toegediend: %1$s van %2$s</string>
