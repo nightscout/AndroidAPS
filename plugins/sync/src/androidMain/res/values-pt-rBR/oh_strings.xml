@@ -20,12 +20,12 @@
     <string name="please_read__information">Por favor, leia atentamente as seguintes informações e aceite os termos de uso para prosseguir.</string>
     <string name="info_openhumans">Esta é uma ferramenta de código aberto que copiará seus dados para o Open Humans. Não retemos nenhum direito de compartilhar seus dados com terceiros sem sua autorização explícita. Os dados que o projeto e o aplicativo recebem são identificados por meio de um ID de usuário aleatório e só serão transmitidos de forma segura a uma conta Open Humans com a sua autorização desse processo. Você pode parar de carregar e excluir seus dados de upload a qualquer momento em www.openhumans.org.</string>
     <string name="data_uploaded">Upload de dados concluído</string>
-    <string name="glucose_values">Valor da glicose</string>
+    <string name="glucose_values">Valores de glicose</string>
     <string name="boluses">Bólus</string>
-    <string name="extended_boluses">Bólus estendido</string>
+    <string name="extended_boluses">Bólus estendidos</string>
     <string name="carbohydrates">Carboidratos</string>
     <string name="careportal_events">Eventos do Careportal (exceto notas)</string>
-    <string name="profile_switches">Troca de Perfil</string>
+    <string name="profile_switches">Trocas de perfil</string>
     <string name="total_daily_doses">Total de doses diárias</string>
     <string name="temporary_basal_rates">Taxa Basal Temporária</string>
     <string name="temporary_targets">Alvos temporários</string>
