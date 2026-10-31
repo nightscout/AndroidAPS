@@ -22,7 +22,7 @@
     <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Asociați pompa</string>
     <string name="combov2_unpair_pump_title">Dezasociați pompa</string>
-    <string name="combov2_driver_state_label">Stare soft conexiune</string>
+    <string name="combov2_driver_state_label">Stare driver</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="combov2_start_pairing">Începeți asocierea</string>
     <string name="combov2_pairing_in_progress">Asocierea Combo în curs</string>
