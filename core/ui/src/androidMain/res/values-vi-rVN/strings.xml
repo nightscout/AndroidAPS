@@ -717,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Chưa chọn hồ sơ</string>
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s bản sao</string>
     <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
     <string name="profile_basal_not_compatible_with_pump">Tỷ lệ liều nền không tương thích với máy bơm hiện tại và không thể được kích hoạt. Hãy giảm tỷ lệ phần trăm hoặc điều chỉnh tỷ lệ liều nền.</string>
     <string name="profile_basal_below_pump_minimum">Tốc độ liều nền thấp hơn mức tối thiểu của bơm hiện tại nên không thể kích hoạt. Hãy tăng tỷ lệ phần trăm hoặc điều chỉnh tốc độ liều nền.</string>
