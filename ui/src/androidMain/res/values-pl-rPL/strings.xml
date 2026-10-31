@@ -338,7 +338,7 @@ Pojawi się tutaj, jeśli/gdy telefon pacjenta je zastosuje.</string>
     <string name="quick_launch_all_selected">Wszystkie elementy zaznaczone</string>
     <string name="quick_launch_no_quick_wizard">Dodaj skróty kalkulatora, aby móc ich tu użyć.</string>
     <string name="quick_launch_no_automation">Utwórz własne akcje automatyzacji, aby móc ich tutaj używać.</string>
-    <string name="quick_launch_no_tt_presets">Dodaj presety celów tymczasowegych, aby móc ich tutaj użyć.</string>
+    <string name="quick_launch_no_tt_presets">Dodaj presety celów tymczasowych, aby móc ich tutaj użyć.</string>
     <string name="quick_launch_no_profiles">Utwórz profile w sekcji \"Lokalny profil\", aby móc ich tutaj użyć.</string>
     <string name="quick_launch_edit_profile_preset">Edytuj preset profilu</string>
     <string name="quick_launch_profile_permanent">Stały</string>
