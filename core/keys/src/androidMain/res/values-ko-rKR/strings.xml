@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">간단 모드</string>
     <!-- Overview preferences -->
+    <string name="pref_title_show_treatment_button">처치 버튼 표시</string>
+    <string name="pref_title_show_wizard_button">마법사 버튼 표시</string>
+    <string name="pref_title_show_insulin_button">인슐린 버튼 표시</string>
+    <string name="pref_title_show_carbs_button">탄수화물 버튼 표시</string>
+    <string name="pref_title_show_cgm_button">CGM 버튼 표시</string>
+    <string name="pref_title_show_calibration_button">보정 버튼 표시</string>
+    <string name="pref_title_show_notes_in_dialogs">대화 상자에 노트 표시</string>
+    <string name="pref_title_use_bolus_advisor">볼러스 조언자 사용</string>
+    <string name="pref_title_use_bolus_reminder">볼러스 알림 사용</string>
+    <string name="pref_title_use_super_bolus">슈퍼 볼러스 사용</string>
     <!-- Pump preferences -->
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
@@ -9,68 +20,196 @@
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">SMS로 원격 명령 허용</string>
+    <string name="pref_title_sms_report_pump_unreachable">펌프 연결 불가를 SMS로 알림</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">NS에 펌프 상태 업로드</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">NS에 데이터 업로드</string>
+    <string name="pref_title_ns_receive_cgm">NS에서 CGM 데이터 받기</string>
+    <string name="pref_title_ns_receive_profile_store">NS에서 프로필 저장소 받기</string>
+    <string name="pref_title_ns_receive_temp_target">NS에서 임시 목표 받기</string>
+    <string name="pref_title_ns_receive_profile_switch">NS에서 프로필 변경 받기</string>
+    <string name="pref_title_ns_receive_insulin">NS에서 인슐린 받기</string>
+    <string name="pref_title_ns_receive_carbs">NS에서 탄수화물 받기</string>
+    <string name="pref_title_ns_receive_therapy_event">NS에서 치료 이벤트 받기</string>
+    <string name="pref_title_ns_receive_running_mode">NS에서 실행 모드 받기</string>
+    <string name="pref_title_ns_receive_tbr_eb">NS에서 TBR/EB 받기</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS 알람</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS 알림</string>
+    <string name="pref_title_ns_use_cellular">모바일 데이터 사용</string>
+    <string name="pref_title_ns_use_roaming">로밍 사용</string>
+    <string name="pref_title_ns_use_wifi">WiFi 사용</string>
+    <string name="pref_title_ns_use_on_battery">배터리 사용 중 동기화</string>
+    <string name="pref_title_ns_use_on_charging">충전 중 동기화</string>
+    <string name="pref_title_ns_log_app_start">앱 시작 이벤트 기록</string>
+    <string name="pref_title_ns_create_announcements_from_errors">오류로 알림 생성</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">필요 탄수화물로 알림 생성</string>
+    <string name="pref_title_ns_slow_sync">느린 동기화 사용</string>
+    <string name="pref_title_ns_use_ws">웹소켓 사용</string>
+    <string name="pref_title_ns_allow_client_control">클라이언트 제어 허용</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">WiFi 연결 시에만</string>
+    <string name="pref_title_openhumans_charging_only">충전 중에만</string>
     <!-- xDrip preferences -->
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">워치 제어</string>
+    <string name="pref_title_wear_wizard_bg">마법사에 혈당 포함</string>
+    <string name="pref_title_wear_wizard_tt">마법사에 임시 목표 포함</string>
+    <string name="pref_title_wear_wizard_trend">마법사에 추세 포함</string>
+    <string name="pref_title_wear_wizard_cob">마법사에 COB 포함</string>
+    <string name="pref_title_wear_wizard_iob">마법사에 IOB 포함</string>
+    <string name="pref_title_wear_custom_watchface_authorization">사용자 지정 워치 페이스 허가</string>
+    <string name="pref_title_wear_pushed_watchface">워치에 설치된 워치 페이스</string>
+    <string name="pref_title_wear_notify_on_smb">SMB 알림</string>
+    <string name="pref_title_wear_broadcast_data">워치로 데이터 전송</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">펌프 위치 순환 관리</string>
+    <string name="pref_title_site_rotation_manage_cgm">CGM 위치 순환 관리</string>
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">버튼을 누를 때 추가되는 탄수화물 양</string>
+    <string name="pref_title_sage_warning">센서 사용 기간 경고 기준값</string>
+    <string name="pref_title_sage_critical">센서 사용 기간 위험 기준값</string>
+    <string name="pref_title_sbat_warning">센서 배터리 잔량 경고 기준값</string>
+    <string name="pref_title_sbat_critical">센서 배터리 잔량 위험 기준값</string>
+    <string name="pref_title_res_warning">인슐린 잔량 경고 기준값</string>
+    <string name="pref_title_res_critical">인슐린 잔량 위험 기준값</string>
+    <string name="deliverpartofboluswizard">이 값을 볼러스 마법사 결과의 혈당 교정과 탄수화물 교정에 적용합니다</string>
+    <string name="pref_title_reset_bolus_percentage_time">볼러스 비율 초기화 시간</string>
     <string name="deliver_part_of_boluswizard_reset_time">혈당증이 다음보다 오래된 경우 총 bolus (100%) 주입하기</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">보안 시간 제한</string>
+    <string name="pref_title_protection_type_application">레벨 0: 애플리케이션 보안</string>
+    <string name="pref_title_protection_type_bolus">레벨 1: 볼러스 보안</string>
+    <string name="pref_title_protection_type_settings">레벨 2: 설정 보안</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">보안 없음</string>
     <string name="biometric">생체 인식</string>
     <string name="master_password">마스터 비밀번호</string>
     <string name="custom_password">사용자 지정 비밀번호</string>
     <string name="custom_pin">사용자 지정 PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">최대 허용 탄수화물</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">개방 루프 최소 변경량</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">변경 사항이 %의 값보다 큰 경우에만 열린 루프의 새 변경 요청을 팝업합니다. 기본값은 20%입니다.</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">SMB 간격</string>
+    <string name="pref_title_smb_max_minutes">SMB 제한을 위한 최대 기저 시간(분)</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM SMB 제한을 위한 최대 기저 시간(분)</string>
     <string name="uam_smb_max_minutes">UAM SMB의 최대 기간 (분)</string>
     <string name="carbs_req_threshold_summary">탄수화물 제안 알림을 보여주는 최소 탄수화물 g수. 이 양보다 적은 경우 탄수화물 제안 알림이 작동하지 않습니다.</string>
+    <string name="half_basal_exercise_target_summary">숫자를 설정합니다(예: 160). 임시 목표가 160 mg/dL이고 높은 임시 목표로 민감도 높이기가 켜져 있으면, 이 수준에서 기저를 50%%로 실행합니다(120 = 75%%; 140 = 60%%).</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB가 비활성화되는 maxIOB의 백분율입니다.\n기본값: 100%\n100%이면 이 기능은 사실상 꺼집니다.</string>
     <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
     <!-- IntKey: Maintenance preferences -->
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">오래된 데이터 기준값</string>
+    <string name="pref_title_pump_unreachable_threshold">펌프 연결 불가 기준값</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
     <string name="autotune_default_tune_days_summary">Autotune 에서 처리할 기본 데이터 일수 (최대 30일)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">원격 볼러스 최소 간격</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">무작위 혈당 간격</string>
+    <string name="pref_title_random_bg_randomize">혈당 데이터 무작위화</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_urgent_alarm_stale_data">오래된 데이터 긴급 알람 기준값</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">위치 순환용 체형</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">단위</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="lang_default">시스템 기본값</string>
+    <string name="lang_en">영어</string>
+    <string name="lang_af">아프리칸스어</string>
+    <string name="lang_bg">불가리아어</string>
+    <string name="lang_cs">체코어</string>
+    <string name="lang_de">독일어</string>
+    <string name="lang_dk">덴마크어</string>
+    <string name="lang_fr">프랑스어</string>
+    <string name="lang_nl">네덜란드어</string>
+    <string name="lang_es">스페인어</string>
+    <string name="lang_el">그리스어</string>
+    <string name="lang_ga">아일랜드어</string>
+    <string name="lang_it">이탈리아어</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_lt">리투아니아어</string>
+    <string name="lang_nb">노르웨이어</string>
+    <string name="lang_pl">폴란드어</string>
+    <string name="lang_pt">포르투갈어</string>
+    <string name="lang_pt_br">포르투갈어(브라질)</string>
+    <string name="lang_ro">루마니아어</string>
+    <string name="lang_ru">러시아어</string>
+    <string name="lang_sk">슬로바키아어</string>
+    <string name="lang_sv">스웨덴어</string>
+    <string name="lang_tr">터키어</string>
+    <string name="lang_zh_tw">중국어(번체)</string>
+    <string name="lang_zh_cn">중국어(간체)</string>
+    <string name="pref_title_patient_name">인스턴스 이름</string>
     <!-- StringKey: Directory preferences -->
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_settings_password">설정 비밀번호</string>
+    <string name="pref_title_settings_pin">설정 PIN</string>
     <!-- Theme switcher dark and light mode-->
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">환자 나이</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">이메일 수신자</string>
     <!-- StringKey: Automation preferences -->
+    <string name="automation_location_passive">패시브 위치 사용</string>
+    <string name="automation_location_network">네트워크 위치 사용</string>
+    <string name="automation_location_gps">GPS 위치 사용</string>
     <!-- StringKey: SMS preferences -->
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">암호 끝에 더해지는 자동형성 PIN</string>
     <string name="smscommunicator_otp_pin_summary">부가적인 숫자를 생성되는 일회성 비밀번호 끝에 더하고 기억해야 함.</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">펌프 종류</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Nightscout URL을 입력하십시오(예: https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Nightscout API secret을 입력하십시오(최소 12자)</string>
+    <string name="nsclient_token_title">Nightscout 액세스 토큰</string>
+    <string name="nsclient_token_summary">Nightscout 액세스 토큰을 입력하십시오(최소 17자)</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="ns_wifi_ssids_summary">허용된 SSID(세미콜론으로 구분)</string>
     <!-- DoubleKey: Overview preferences -->
     <string name="insulin_increment_button_message">버튼을 누를때 추가될 인슐린 양</string>
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">최대 볼러스</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">최대 기저 주입량</string>
     <string name="openapsma_max_basal_summary">이 값은 OpenAPS에서 Max Basal(최대 Basal)로 설정되는 값입니다</string>
+    <string name="pref_title_smb_max_iob">SMB 최대 IOB</string>
+    <string name="pref_title_max_daily_multiplier">최대 일일 안전 승수</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">기본값: 2\n식사주입 후 Bolus snooze가 수행되게 되고, 따라서 식사주입 직후엔 loop가 low temp에 대응하지 않게 됩니다. 기본값이 2일때 예제는 다음과 같습니다; DIA가 3시간일 경우  bolus snooz는 점차적으로 1.5시간에 걸쳐 단계적으로 사라지게 됩니다.(3DIA/2).</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB 최소 5분 탄수화물 영향</string>
     <string name="openapsama_min_5m_carb_impact_summary">기본값: 3.0 (AMA) 또는 8.0 (SMB). 5분당 탄수화물이 얼만큼 흡수되었는지에 대한 기본값 설정입니다. 기본값은 3mg/dl / 5분 입니다. 이는 혈당이 예상보다 빨리 떨어지거나 혹은 예상보다 오르지 않을때, COB가 얼마나 빨리 사라지게 되는지에 영향을 주게 되고, 추정된 탄수화물 흡수량이 미래 혈당 예측 계산시에도 영향을 주게 됩니다.</string>
     <string name="absorption_cutoff_summary">식사가 모두 흡수되었다고 간주되는 시간. 나머지 탄수화물은 모두 없어집니다.</string>
     <string name="absorption_max_time_summary">식사로 섭취한 탄수화물이 모두 흡수될기까지 예상되는 시간</string>
     <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
     <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
+    <string name="openapsama_autoISF_min_summary">autosens_min과 비슷하게, ISF가 얼마나 약해질 수 있는지 정합니다.\n\n기본값 1.0은 이 효과를 사실상 끕니다.</string>
+    <string name="openapsama_autoISF_max_summary">autosens_max와 비슷하게, ISF가 얼마나 강해질 수 있는지 정합니다.\n\n기본값 1.0은 이 효과를 사실상 끕니다.\n\n경고: 2.5보다 큰 값은 매우 주의해서 사용하십시오</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">혈당이 가속할 때 적용되는 가중치입니다. ISF를 강하게 하므로 인슐린 주입이 늘어날 수 있습니다.\n\n기본값 0.0은 이 효과를 사실상 끕니다.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">혈당이 감속할 때 적용되는 가중치입니다. ISF를 약하게 하므로 인슐린 주입이 줄어들 수 있습니다.\n\n기본값 0.0은 이 효과를 사실상 끕니다.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">혈당이 목표보다 낮을 때 적용되는 가중치입니다. ISF를 약하게 하므로 인슐린 주입이 줄어들 수 있습니다.\n\n기본값 0.0은 이 효과를 사실상 끕니다.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">혈당이 목표보다 높을 때 적용되는 가중치입니다. ISF를 강하게 하므로 인슐린 주입이 늘어날 수 있습니다.\n\n기본값 0.0은 이 효과를 사실상 끕니다.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">SMB 주입 비율 혈당 범위</string>
+    <string name="pref_title_pp_weight">식후 ISF 가중치</string>
+    <string name="openapsama_dura_ISF_weight_summary">높은 혈당이 오래 일정하게 유지될 때 적용되는 가중치입니다. ISF를 강하게 하므로 인슐린 주입이 늘어날 수 있습니다.\n\n기본값 0.0은 이 효과를 사실상 끕니다.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB 주입 비율</string>
+    <string name="pref_title_smb_delivery_ratio_min">SMB 주입 비율 최소값</string>
+    <string name="pref_title_smb_delivery_ratio_max">SMB 주입 비율 최대값</string>
+    <string name="pref_title_smb_max_range_extension">SMB 최대 범위 확장</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <string name="lgs_threshold_summary">BG 값이 이하인 경우 인슐린 공급이 중단됩니다. 기본값은 표준 타겟 모델을 사용합니다. 사용자는 60mg/dl (3.3mmol/l)에서 100mg/dl(5.5mmol/l) 사이의 값을 설정할 수 있습니다. 65/3.6 이하의 값은 기본 모델을 사용하게 됩니다.</string>
