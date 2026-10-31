@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="combov2_plugin_name">Accu-Check Combo</string>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
     <string name="combov2_plugin_description">Integración de bombas de insulina Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">No se pudo conectar con la bomba</string>
     <string name="combov2_not_paired">No se encuentra emparejado a una bomba</string>
@@ -19,7 +19,7 @@
     <string name="combov2_error_10">Error del reservorio</string>
     <string name="combov2_error_11">El set de infusión no ha sido llenado</string>
     <string name="combov2_extended_bolus_not_supported">El bolo extendido no es compatible</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Emparejar con la bomba</string>
     <string name="combov2_unpair_pump_title">Desemparejar la bomba</string>
     <string name="combov2_driver_state_label">Estado del controlador</string>
@@ -76,9 +76,9 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_setting_basal_profile">Configurando perfil basal; %1$d factor(es) escrito(s)</string>
     <string name="combov2_delivering_bolus">Entregando bolo (%1$.1f de %2$.1f U entregado)</string>
     <string name="combov2_cannot_deliver_pump_suspended">No se puede entregar el tratamiento: la bomba está suspendida</string>
-    <string name="combov2_insufficient_insulin_in_reservoir">Inulina insuficiente en el reservorio</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Insulina insuficiente en el reservorio</string>
     <string name="combov2_bolus_cancelled">Bolo cancelado</string>
-    <string name="combov2_bolus_delivery_failed">Entrega del bolo fallida. No se ha entregado ningún bolo. Para asegurarse, por favor, compruebe la bomba para evitar un doble bolo. Para protegerle contra los fallos, no se reintentan automáticamente los bolos.</string>
+    <string name="combov2_bolus_delivery_failed">Entrega del bolo fallida. Parece que no se ha entregado ningún bolo. Para asegurarte, comprueba la bomba para evitar un doble bolo y después vuelve a poner el bolo. Para protegerte contra fallos, los bolos no se reintentan automáticamente.</string>
     <string name="combov2_bolus_not_delivered">Bolo no entregado</string>
     <string name="combov2_cannot_access_pump_data">No se puede acceder a los datos de la bomba; la bomba debe ser emparejada de nuevo</string>
     <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Se perdió la conexión con la bomba durante el bolo. La bomba ya había administrado %1$s en ese momento y es posible que aún administre el resto. No administre otro bolo. AAPS leerá la cantidad real de la bomba en la siguiente conexión</string>
