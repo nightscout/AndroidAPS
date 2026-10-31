@@ -4,10 +4,18 @@
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
     <string name="start_hypo_tt">Starta \"Hypo\"</string>
     <string name="time_offset">KH-tid</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dh</string>
     <!--    Widget-->
     <string name="configure">Konfigurera opacitet</string>
     <string name="widget_description">AAPS-widget</string>
     <!--     Activities-->
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dh</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dd</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
     <string name="calculation_in_progress">Beräkning pågår</string>
     <string name="age">Ålder</string>
     <string name="weight_label">Vikt</string>
@@ -39,6 +47,9 @@
     <string name="duration10h">10 tim</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Saknar %1$dg</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <!-- Treatments -->
     <string name="no_records_available">Inga poster tillgängliga</string>
     <string name="treatments_iob_label_string">IOB:</string>
