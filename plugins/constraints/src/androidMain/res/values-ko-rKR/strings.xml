@@ -40,5 +40,5 @@
     <string name="doyouwantresetstart">목표 시작을 초기화하시겠습니까? 진행 상황을 잃을 수 있습니다.</string>
     <string name="objectives_button_unfinish">완료 상태 초기화</string>
     <string name="objectives_button_unstart">시작 상태 초기화</string>
-    <string name="bg_doubled_lgs">혈당 소스의 중복 값 때문에 LGS 모드</string>
+    <string name="bg_doubled_lgs">혈당 출처의 중복 값 때문에 LGS 모드</string>
 </resources>
