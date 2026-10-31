@@ -253,6 +253,7 @@ class ElementNavigatorTest {
             ElementType.QUICK_WIZARD,
             ElementType.SCENE,
             ElementType.AUTOMATION,
+            ElementType.NFC,
             ElementType.COB,
             ElementType.SENSITIVITY,
             ElementType.USER_ENTRY,
