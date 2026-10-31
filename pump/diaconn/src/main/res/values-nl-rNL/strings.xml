@@ -58,7 +58,7 @@
     <string name="needinsullinreplace">Insuline vervanging is vereist</string>
     <string name="diaconn_g8_loginsulinchange_title">Reservoir wissel vastleggen</string>
     <string name="diaconn_g8_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pomp geschiedenis wordt uitgelezen</string>
-    <string name="diaconn_g8_logcanulachange_title">Infuus wissel noteren</string>
+    <string name="diaconn_g8_logcanulachange_title">Canulewissel noteren</string>
     <string name="diaconn_g8_logcanulachange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logbatterychange_summary">Zet \"Batterij wissel\" melding in Nightscout als deze in pomp geschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logbatterychange_title">Batterijwissel noteren</string>
@@ -115,7 +115,7 @@
     <string name="diaconn_g8_errorcode_13">U kunt het niet injecteren omdat het de limiet eenmaal overschrijdt.</string>
     <string name="diaconn_g8_errorcode_14">Injectie kan niet toegediend worden omdat de dagelijkse maximale injectie hoeveelheid overschreden is.</string>
     <string name="diaconn_g8_errorcode_15">Nadat je basaal instellingen zijn voltooid, kan basaal afgifte worden uitgevoerd.</string>
-    <string name="diaconn_g8_logtubechange_title">Infuuswissel noteren</string>
+    <string name="diaconn_g8_logtubechange_title">Slangwissel noteren</string>
     <string name="diaconn_g8_logtubechange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logtempstart">Tijdelijk Basaal Start</string>
     <string name="diaconn_g8_errorcode_32">Als LGS loopt is de injectie begrensd</string>
