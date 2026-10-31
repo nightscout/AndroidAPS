@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Коефіцієнт корекції DynamicISF %</string>
+    <string name="description_auto_isf">Експериментальний алгоритм для досвідчених користувачів з розширеннями AutoISF</string>
     <string name="constraints">Обмеження</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
+    <string name="autotune_peak">Пік</string>
     <!--    Loop -->
+    <string name="smb_frequency_exceeded">Болюс було введено протягом останніх 3 хвилин, SMB пропущено</string>
+    <string name="zero_basal_not_set">Помпа не прийняла нульовий тимчасовий базал. Вона може й далі вводити базальний інсулін. Перевірте помпу.</string>
+    <string name="loop_notification_channel_name">Пропозиції петлі</string>
+    <string name="loop_notification_channel_silent_name">Пропозиції петлі в режимі «Не турбувати»</string>
+    <string name="open_loop_suggestion_too_old">Ця пропозиція застаріла. На помпу нічого не надіслано. Дочекайтеся наступної.</string>
     <!-- Autotune -->
     <string name="autotune_default_tune_days_title">Кількість днів даних</string>
     <string name="autotune_tunedprofile_name">Налаштувано</string>
@@ -32,4 +40,5 @@
     <string name="autotune_revert_local_profile_message">Відновити профіль %1$s з Вхідним профілем?</string>
     <string name="autotune_profile_invalid">Недійсний профіль</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">Налаштування AutoISF</string>
 </resources>
