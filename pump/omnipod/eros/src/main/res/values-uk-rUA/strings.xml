@@ -49,5 +49,5 @@
     <string name="omnipod_eros_pod_management_pulse_log_value">Журнал імпульсів (скопійовано в буфер обміну)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Заповніть новий Pod інсуліном, якого вистачить на 3 дні.\n\nПід час заповнення дочекайтеся двох звукових сигналів від Pod. Вони означають, що в Pod уже є мінімальна кількість 80 Од. Повністю спорожніть шприц для заповнення, навіть після двох сигналів.\n\nПісля заповнення Pod натисніть <b>Далі</b>.\n\n<b>Примітка:</b> поки що не знімайте кришечку голки Pod.\n<b>Примітка:</b> поставте RileyLink вертикально і розмістіть Pod на відстані кількох сантиметрів від нього.</string>
-    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Спроба спарувати новий Pod і підготувати його (прайм).\n\nПісля успішного завершення ініціалізації натисніть <b>Далі</b>.\n\n<b>Примітка:</b> поставте RileyLink вертикально і розмістіть Pod на відстані кількох сантиметрів від нього.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Спроба спарувати новий Pod і підготувати його.\n\nПісля успішного завершення ініціалізації натисніть <b>Далі</b>.\n\n<b>Примітка:</b> поставте RileyLink вертикально і розмістіть Pod на відстані кількох сантиметрів від нього.</string>
 </resources>
