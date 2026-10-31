@@ -43,6 +43,7 @@
     <string name="objectives_usereconnectpump">... ve aynı şekilde tekrar bağlanın</string>
     <string name="objectives_usetemptarget">10 dk süreli özel bir geçici hedef oluşturun</string>
     <string name="objectives_useloop">Döngü eklentisinin içeriğini görüntüleyin</string>
+    <string name="objectives_usescale">KŞ grafiğinde kaydırma veya yakınlaştırma kullanın</string>
     <string name="objectives_exam_objective">Bilginizi sınayın</string>
     <string name="objectives_exam_gate">Soruları inceleyin. Her sorunun birden fazla olası cevabı vardır ve birden fazla cevap doğru olabilir. Tüm doğru cevapları işaretleyin ve DOĞRULA\'yı seçin.</string>
     <string name="objectives_exam_learned_prerequisites">Yazılımcı olmanıza gerek yok. Görevleri tamamlamak için Nightscout veya Tidepool\'a, uyumlu bir pompaya ve ilk kurulum ile her güncelleme için AAPS\'i oluşturmanın bir yoluna (web tarayıcısında veya Android Studio ile) ihtiyacınız var.</string>
@@ -59,13 +60,19 @@
     <string name="objectives_exam_learned_exercise2">Egzersizden en az 1 saat önce daha yüksek geçici hedef belirlemek, vücuttaki insülin miktarının azalmasına da yardımcı olur.</string>
     <string name="objectives_exam_learned_noisycgm">CGM değerlerine güvenemediğinizde, gözetimsiz döngü kullanmamalısınız.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS, AİNS\'i doğru saymak için pompanın bağlı olmadığını bilmelidir.</string>
+    <string name="objectives_exam_learned_insulin">AAPS, insülin pompasında hangi insülinin bulunduğunu bilmelidir; çünkü bu durum, vücuttaki AİNS hesaplamasını etkiler.</string>
     <string name="objectives_exam_learned_sensitivity">Duyarlılık tespiti, insülin dozajının farklı durumlara uyarlanmasına izin veren algoritmanın bir parçasıdır.</string>
     <string name="objectives_exam_learned_objectives">Görevlerdeki ilerlemeniz, diğer ayarlarla birlikte saklanır ve yedeklenmesi gerekir.</string>
     <string name="objectives_exam_learned_objectives2">Her zaman dışa aktarılan ayarları ve oluşturulan APK\'yı telefonun dışında bir yere de kaydedin. Telefon kaybolabilir, hasar görebilir vb. Telefondan erişilebilen herhangi bir bulut iyi bir yer olabilir. Bu durumda AAPS\'i başka bir cihaza birkaç dakika içinde geri yükleyebilirsiniz. En iyisi, kullanılan ana parolayı da güvenli bir yerde saklamaktır. Onsuz yedeklemeniz işe yaramaz. Aynısı, AAPS oluşturmak için kullanılan imzalama anahtarları (.jks dosyası) ve parolalar için de geçerlidir. Gerisi önemli değil - her zaman internetten tekrar indirilebilir.</string>
     <string name="objectives_exam_learned_wrongcarbs">AAPS\'e yanlış giriş yaptıysanız veya gerçekle uyuşmuyorsa bir an önce düzeltin. Aşırı doza yol açabilir. AAPS her zaman karbonhidratlar, insülin vb. hakkında mümkün olan en iyi şekilde bilgilendirilmelidir.</string>
+    <string name="objectives_exam_learned_iob">AAPS\'in sizin için ne kadar iyi çalıştığını analiz etmek istiyorsanız, AİNS grafiğini incelemek size birçok yararlı bilgi sağlayabilir.</string>
+    <string name="objectives_exam_learned_cob">AKRB hesaplaması, İDF ile IC arasındaki ilişkiye bağlıdır. Artan İDF veya azalan IC, daha uzun emilim sürelerine yol açacaktır. Ancak yüzdeli profil değiştirme, her iki değeri aynı anda değiştirir ve emilim süresi etkilenmez.</string>
     <string name="objectives_exam_learned_breadgrams">Karbonhidratların girişinde sadece grama izin verilir.</string>
     <string name="objectives_exam_learned_ecarbs">Y-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
+    <string name="objectives_exam_learned_nsclient">AAPS\'i AAPSClient veya Nightscout aracılığıyla uzaktan takip edebilirsiniz. AAPSClient ana telefonla eşleştirildiğinde, AAPS\'i uzaktan kontrol etmeniz de mümkündür.</string>
+    <string name="objectives_exam_learned_concentration1">%50 profilli U200 insülin kullanımı, kalıcı bir dönüştürme işlemi gerektirecektir: kalemlerle yapılan harici boluslar için ve AAPS ya da NS tarafından sunulan tüm standart raporlar hatalı hale geleceğinden, sağlık ekibi için bu verilerin IU cinsine dönüştürülmesi gerekecektir.</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">%50 profilli U200\'den insülin konsantrasyonu özelliğiyle U200 kullanımına geçiş; daha güçlü yeni bir profil oluşturmayı, DinamikİDF\'yi bir hafta kapatmayı ve zihni Uluslararası Birim (IU) ile düşünmeye alıştırmayı gerektirir.</string>
+    <string name="objectives_exam_learned_concentration3">İnsülin konsantrasyonu yalnızca insülin veya patch değişiminde değiştirilebilir. Ancak en önemlisi, özellikle hortumlu insülin pompaları için, asla doğrudan pompa üzerindeki kullanıcı arayüzünü kullanarak bolus dozları uygulamayın.</string>
     <string name="answerdisabledto">Yanıtlama şu zamana kadar devre dışı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>
     <string name="unfinshed_button">Tamamlanmayan bir sonraki</string>
@@ -80,6 +87,19 @@
     <string name="requirementnotmet">Görev gereksinimleri karşılanmadı</string>
     <string name="what_i_ve_learned">Ne öğrendim:</string>
     <string name="verify_master_password">Ana parolayı bildiğinizi doğrulayın</string>
+    <string name="objectives_collapse">Daha az</string>
+    <string name="objectives_expand">Daha fazla</string>
     <string name="objectives_no_learned">Bu görev için kaydedilmiş ders bulunmuyor.</string>
+    <string name="objectives_open_exam">Sınavı aç</string>
+    <string name="objectives_exam_question_progress">Soru %1$d / %2$d</string>
+    <string name="objectives_exam_reset">Sıfırla</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Tamam</string>
     <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Devam ediyor</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Başlatılmadı</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Kilitli</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">doğru cevap</string>
+    <string name="objectives_exam_previous">Önceki</string>
+    <string name="objectives_exam_next">Sonraki</string>
+    <string name="objectives_exam_next_unanswered">Sonraki yanıtlanmamış</string>
+    <string name="objectives_show_hint">İpucu</string>
 </resources>
