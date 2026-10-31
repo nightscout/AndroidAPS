@@ -2,9 +2,9 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%2$s %1$s</string>
     <string name="no_temp_basal_running">실행 중인 임시 기저 없음</string>
-    <string name="start_activity_tt">활동 임시목표 시작</string>
-    <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
-    <string name="start_hypo_tt">저혈당 임시목표 시작</string>
+    <string name="start_activity_tt">활동 임시 목표 시작</string>
+    <string name="start_eating_soon_tt">식사 직전 임시 목표 시작</string>
+    <string name="start_hypo_tt">저혈당 임시 목표 시작</string>
     <string name="time_offset">시간 이동</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$d일%2$d시간</string>
@@ -59,7 +59,7 @@
     <string name="do_you_want_recalculate_tdd_stats">TDD 통계를 다시 계산하시겠습니까?</string>
     <string name="calculation_in_progress">계산 진행 중</string>
     <string name="age">나이</string>
-    <string name="weight_label">가중</string>
+    <string name="weight_label">체중</string>
     <string name="glucose_type">혈당 종류</string>
     <string name="bg_other">기타</string>
     <string name="bg_meter">측정기</string>
@@ -72,7 +72,7 @@
     <string name="record_site_note">노트: %1$s</string>
     <string name="delete_site_note">노트 삭제됨</string>
     <!-- FillDialog -->
-    <string name="fill_warning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
+    <string name="fill_warning">양이 주입 세트의 사양과 일치하는지 확인하십시오!</string>
     <string name="record_pump_site_change">펌프 위치 변경 기록</string>
     <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
     <string name="fill_prime_amount">프라임 양</string>
@@ -174,11 +174,11 @@
     <string name="load_peak_from">피크 불러오기</string>
     <string name="cannot_delete_last_insulin">마지막 인슐린은 삭제할 수 없습니다</string>
     <string name="cannot_delete_active_insulin">사용 중인 인슐린은 삭제할 수 없습니다</string>
-    <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
+    <string name="reuse_profile_pct_hours">%1$d%% %2$d시간 재사용</string>
     <string name="percentage_label">퍼센트</string>
     <!-- LoopDialog -->
     <string name="disconnectpump">펌프 연결 해제</string>
-    <string name="resume">재실행</string>
+    <string name="resume">재개</string>
     <string name="reconnect">펌프 재연결</string>
     <string name="duration15m">15분</string>
     <string name="duration30m">30분</string>
@@ -187,7 +187,7 @@
     <string name="duration3h">3시간</string>
     <string name="duration10h">10시간</string>
     <!-- WizardDialog -->
-    <string name="missing_carbs">부족 %1$d g</string>
+    <string name="missing_carbs">%1$d g 부족</string>
     <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
     <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
@@ -198,10 +198,10 @@
     <!-- Treatments -->
     <string name="no_records_available">사용 가능한 기록 없음</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="carbs_and_bolus">탄수화물과 bolus</string>
+    <string name="carbs_and_bolus">탄수화물과 볼러스</string>
     <string name="show_invalidated">무효화 표시</string>
     <string name="hide_invalidated">무효화 숨기기</string>
-    <string name="careportal_remove_started_events">AAPS 시작 입력 제거</string>
+    <string name="careportal_remove_started_events">AAPS가 시작한 항목 삭제</string>
     <string name="user_entry">사용자 항목</string>
     <string name="clone_label">복사</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">혈당 그래프. 최근 값 %1$s. %2$s. %3$s</string>
@@ -230,11 +230,11 @@
     <string name="add_new_profile">새 프로파일 추가</string>
     <string name="edit_label">편집</string>
     <string name="activate_label">활성화</string>
-    <string name="activate_profile">프로파일 활성화하기</string>
+    <string name="activate_profile">프로파일 활성화</string>
     <string name="remove_label">삭제</string>
     <string name="active_profile_indicator">활성</string>
     <string name="confirm_remove_profile">프로파일 \"%1$s\"을(를) 삭제하시겠습니까?</string>
-    <string name="confirm_clone_profile">프로파일 \"%1$s\"을(를) 복제하시겠습니까?</string>
+    <string name="confirm_clone_profile">프로파일 \"%1$s\"을(를) 복사하시겠습니까?</string>
     <string name="profile_no_longer_exists">그 사이에 프로파일 목록이 변경되었습니다 — 다시 시도하십시오</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
@@ -245,8 +245,8 @@
     <string name="profile_parameters">프로파일 매개변수</string>
     <string name="active_profile">활성 프로파일</string>
     <string name="available_profiles">사용 가능한 프로파일</string>
-    <string name="profile_switches">프로파일 변경</string>
-    <string name="basal_pct_from_tdd_label">% basal</string>
+    <string name="profile_switches">프로파일 전환</string>
+    <string name="basal_pct_from_tdd_label">기저의 %</string>
     <string name="selected_profile">선택:</string>
     <string name="comparation">비교</string>
     <string name="profile_tab_1">프로파일 1</string>
