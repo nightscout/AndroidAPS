@@ -108,7 +108,7 @@
     <string name="pref_summary_ns_receive_carbs">Aceptar entradas de carbohidratos desde Nightscout</string>
     <string name="pref_title_ns_receive_therapy_event">Recibir eventos de terapia desde NS</string>
     <string name="pref_summary_ns_receive_therapy_event">Aceptar eventos de terapia desde Nightscout</string>
-    <string name="pref_title_ns_receive_running_mode">Recibir modo de ejecución desde NS</string>
+    <string name="pref_title_ns_receive_running_mode">Recibir modo de funcionamiento desde NS</string>
     <string name="pref_summary_ns_receive_running_mode">Aceptar cambios del modo de ejecución desde Nightscout</string>
     <string name="pref_title_ns_receive_tbr_eb">Recibir TBR/EB desde NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Aceptar tasas basales temporales y bolos extendidos desde Nightscout</string>
