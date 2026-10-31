@@ -85,7 +85,7 @@
     <string name="protection">הגנה בסיסמאות</string>
     <string name="value_unavailable_short">לא זמין</string>
     <!-- master_password moved to core/keys/strings.xml -->
-    <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
+    <string name="ue_export_to_csv">ייצוא רישומי המשתמש לאקסל (csv)</string>
     <string name="confirm">אישור</string>
     <string name="pump">משאבה</string>
     <string name="pump_management">משאבה</string>
