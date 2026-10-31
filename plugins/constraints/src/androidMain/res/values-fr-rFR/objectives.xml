@@ -6,8 +6,8 @@
     <string name="objectivenotstarted">Objectif %1$d non démarré</string>
     <string name="objectivenotfinished">Objectif %1$d non terminé</string>
     <string name="objectives_0_objective">Paramétrage de la visualisation et la surveillance des données, analyse des débits Basal et des ratios</string>
-    <string name="objectives_0_gate">Vérifiez que la Glycémie est disponible sur Nightscout et que les données d’insuline ont été téléchargées de la pompe</string>
-    <string name="objectives_0_learned">Vous avez fait la configuration de base de l\'écosystème AAPS. Nightscout n\'est pas nécessaire pour que AAPS puisse fonctionner, mais il est très utile pour signaler ou surveiller d\'autres patients. Il n\'est pas nécessaire d\'être connecté à NS tout le temps si vous n\'utilisez NS que pour vous-même. Vous pouvez configurer pour télécharger par exemple uniquement sur le wifi de la maison et économiser la batterie.</string>
+    <string name="objectives_0_gate">Vérifiez que la Glycémie est disponible sur Nightscout et que les données d’insuline de la pompe sont envoyées</string>
+    <string name="objectives_0_learned">Vous avez fait la configuration de base de l\'écosystème AAPS. Nightscout n\'est pas nécessaire pour que AAPS puisse fonctionner, mais il est très utile pour signaler ou surveiller d\'autres patients. Il n\'est pas nécessaire d\'être connecté à NS tout le temps si vous n\'utilisez NS que pour vous-même. Vous pouvez configurer l\'envoi par exemple uniquement sur le wifi de la maison et économiser la batterie.</string>
     <string name="objectives_openloop_objective">Démarrage de la boucle ouverte</string>
     <string name="objectives_openloop_gate">Utilisez votre boucle ouverte pendant plusieurs jours et lancez manuellement plusieurs débits Basal temporaires. Définissez et utilisez les cibles temporaires et celles par défaut (ex : sport ou resucrage suite à une hypo)</string>
     <string name="objectives_openloop_learned">La boucle ouverte peut être utilisée pour les recommandations si vous n\'avez pas de pompe compatible ou si vous n\'êtes pas prêt à fermer la boucle.</string>
