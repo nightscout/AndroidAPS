@@ -25,6 +25,8 @@
     <string name="activating_pump">המשאבה בתהליך הפעלה והגדרת הקצב הבזאלי הראשוני. נא להמתין.</string>
     <string name="can_export_settings">ניתן לייצא את ההגדרות כדי להיות מסוגלים לשחזר את הפעלת המשאבה הנוכחית מאוחר יותר.</string>
     <string name="press_OK_to_return">לחצו על <b>OK</b> כדי לחזור למסך הראשי.</string>
+    <string name="deactivating_error">ההשבתה נכשלה. לחצו על <b>השלכה</b> כדי להסיר את הפאץ\' מהזיכרון.</string>
+    <string name="press_retry_or_discard">לחצו על <b>הבא</b> כדי להמשיך בהפעלה או על <b>השלכה</b> כדי לאפס את מצב ההפעלה.</string>
     <!-- settings-->
     <string name="alarm_setting_vibrate_beep">רטט וצפצוף</string>
     <string name="alarm_setting_beep">צפצוף</string>
