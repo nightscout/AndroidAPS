@@ -14,7 +14,7 @@
     <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
     <string name="description_smb_dynamic_isf">동적/자동 ISF를 사용하는 고급 사용자를 위한 최신 알고리즘</string>
     <string name="description_auto_isf">AutoISF 확장 기능이 있는 고급 사용자용 실험적 알고리즘</string>
-    <string name="openapsma_last_run_label">최근 실행</string>
+    <string name="openapsma_last_run_label">마지막 실행</string>
     <string name="openapsma_input_parameters_label">입력 변수</string>
     <string name="openapsma_glucose_status_label">혈당 상태</string>
     <string name="openapsma_current_temp_label">현재 임시 기저</string>
