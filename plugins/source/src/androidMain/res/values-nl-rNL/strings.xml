@@ -33,6 +33,9 @@
     <!-- Instara preferences -->
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">De app heeft toestemming nodig om CGM-gegevens van de Dexcom-app te ontvangen</string>
+    <string name="permission_notification_listener_description">Vereist om glucosewaarden uit meldingen van de CGM-app te lezen</string>
     <string name="aidex">Micro Tech CGM App</string>
     <string name="description_source_aidex">Ontvang Glucose waarden van LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 enzovoort</string>
     <string name="aidex_sensor_expired">De Sensor is verlopen, vervang sensor</string>
