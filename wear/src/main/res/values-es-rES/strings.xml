@@ -77,7 +77,7 @@
     <string name="menu_wizard">Calculadora</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Tratamiento</string>
-    <string name="menu_treatment_short">Trata</string>
+    <string name="menu_treatment_short">Trat.</string>
     <string name="menu_bolus">Bolo</string>
     <string name="menu_carb">Carbohidratos</string>
     <string name="menu_ecarb">eCarbs</string>
@@ -249,7 +249,7 @@
     <string name="complication_full_status_flipped">Estado completo (invertido)</string>
     <string name="complication_blood_glucose">Glucosa en sangre</string>
     <string name="complication_blood_glucose_large">Glucemia (grande)</string>
-    <string name="complication_blood_glucose_ext1">Glocosa en sangre Ext1</string>
+    <string name="complication_blood_glucose_ext1">Glucosa en sangre Ext1</string>
     <string name="complication_blood_glucose_ext2">Glucosa en sangre Ext2</string>
     <string name="complication_bg_graph">Gráfico BG</string>
     <string name="complication_cwf_image">Esfera de reloj personalizada</string>
@@ -288,7 +288,8 @@
     <string name="wizard_carbs_type_bread">Pan</string>
     <string name="wizard_carbs_type_cake">Pastel</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
-    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Tiempo de hidratos de carbono\n[min]</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Hora HC
+[min]</string>
     <string name="wizard_carb_time_now">Ahora</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
