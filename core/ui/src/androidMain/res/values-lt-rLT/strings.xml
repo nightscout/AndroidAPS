@@ -234,7 +234,7 @@
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Pagrindinėje AAPS programėlėje trūksta %1$d šių įrašų. Jie nebus pašalinti.</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
-    <string name="wear_wizard_settings">Wear boluso skaičiuoklės nustatymai</string>
+    <string name="wear_wizard_settings">Wear boluso skaičiuotuvo nustatymai</string>
     <string name="bolus_iob_label">Bolusų AIO</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="invalid">KLAIDA</string>
@@ -818,7 +818,7 @@
     <string name="resistant_adult">Insulinui rezistentiškas suaugęs</string>
     <string name="pregnant">Nėščioji</string>
     <string name="patient_age_summary">Pasirinkite naudotojo tipą, kad būtų nustatytos saugos ribos.</string>
-    <string name="max_bolus_title">Maksimalus leistinas bolusas [U]</string>
+    <string name="max_bolus_title">Maksimalus leistinas bolusas [V]</string>
     <string name="max_carbs_title">Maks. leistini angliavandeniai [g]</string>
     <string name="patient_type">Naudotojo tipas</string>
     <!--    Protection-->
@@ -906,7 +906,7 @@
     <string name="chip_local">Vietinė saugykla</string>
     <string name="chip_cloud">Debesis</string>
     <string name="chip_email">El. paštas</string>
-    <string name="send_logs">Siųsti įrašus</string>
+    <string name="send_logs">Siųsti žurnalus</string>
     <string name="file_management">Failų tvarkymas</string>
     <string name="database_management">Duomenų bazės tvarkymas</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
