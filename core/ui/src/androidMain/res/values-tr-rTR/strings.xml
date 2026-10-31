@@ -2,7 +2,7 @@
 <resources>
     <string name="error_field_must_not_be_empty">Alan boş olmamalı</string>
     <string name="error_mustbe4hexadidits">4 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>
-    <string name="authorized_clients_manage_label">Yetkili müşteriler</string>
+    <string name="authorized_clients_manage_label">Yetkili istemciler</string>
     <string name="authorized_clients_manage_desc">Bu ana cihazı kontrol eden eşleştirilmiş istemci cihazları yönetin.</string>
     <string name="pair_with_master_manage_label">Ana üniteyle eşleştirin</string>
     <string name="pair_with_master_manage_desc">Bu istemcinin imzalı komutlar göndermesi için ana eşleştirme PIN\'i girin.</string>
@@ -137,7 +137,7 @@
     <string name="disableloop">Döngüyü devre dışı bırak</string>
     <string name="disabled_loop">Döngü Devredışı</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
-    <string name="suspendloop">Döngüyü duraklat</string>
+    <string name="suspendloop">Döngüyü askıya al</string>
     <string name="notification">Bildirim</string>
     <string name="noprofile">Henüz NS\'tan profil yüklenmedi</string>
     <string name="exists">var</string>
@@ -159,6 +159,7 @@
     <string name="shortgramm">gr</string>
     <string name="pump_running">Pompa çalışıyor</string>
     <string name="notconfigured">Yapılandırılmadı</string>
+    <string name="loop_suspended_by_dst">Döngü DST nedeniyle askıya alındı</string>
     <string name="required">iht.</string>
     <string name="a11y_arrow_double_down">hızla düşüyor</string>
     <string name="a11y_arrow_single_down">düşüyor</string>
@@ -207,14 +208,14 @@
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
     <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
-    <string name="pump_suspended">Pompa Durduruldu</string>
-    <string name="pump_suspend">Pompayı duraklat</string>
+    <string name="pump_suspended">Pompa askıya alındı</string>
+    <string name="pump_suspend">Pompayı askıya al</string>
     <string name="pump_resume">Pompayı devam ettir</string>
     <string name="mode_reverted">Mod Döndü</string>
     <string name="select_insulin">İnsülin Seçin</string>
     <string name="dia">İES</string>
     <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
-    <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
+    <string name="isf_short">İDF</string>
     <string name="canceling_tbr_failed">Geçici bazal iptali başarısız oldu</string>
     <string name="canceling_eb_failed">Yayma bolusun iptal edilmesi başarısız oldu</string>
     <string name="virtualpump_uploadstatus_title">Pompa durumunu NS veya Tidepool\'a yükleyin</string>
@@ -324,6 +325,7 @@
     <string name="scene">Senaryo</string>
     <string name="scenes">Senaryolar</string>
     <string name="scene_desc">Durum ön ayarları — birden fazla eylemi aynı anda etkinleştirin</string>
+    <string name="scene_active">Etkin</string>
     <string name="hardened_mode_on">Güçlendirilmiş mod açık</string>
     <string name="hardened_mode_title">Güçlendirilmiş mod</string>
     <string name="hardened_mode_info_open">Güçlendirilmiş mod hakkında</string>
