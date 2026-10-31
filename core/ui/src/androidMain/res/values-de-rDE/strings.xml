@@ -370,6 +370,7 @@
     <string name="temporary_targets">Temporäre Ziele</string>
     <string name="running_mode">Betriebsmodus</string>
     <string name="running_mode_desc">​Loop schließen, öffnen oder pausieren oder die Pumpe trennen</string>
+    <string name="running_mode_change_not_allowed">Änderung des AAPS-Modus nicht verfügbar</string>
     <string name="pump_reconnect">Pumpe wieder verbinden</string>
     <string name="scene">Szene</string>
     <string name="scenes">Szenen</string>
@@ -385,12 +386,14 @@
     <string name="scene_confirm_deactivate">Szene \"%1$s\" beenden und Änderungen rückgängig machen?</string>
     <string name="scene_conflict_active_tt">Aktives temporäres Ziel wird ersetzt</string>
     <string name="scene_conflict_active_profile">Aktiver Profilwechsel wird ersetzt</string>
+    <string name="scene_conflict_active_running_mode">Der aktive AAPS-Modus wird ersetzt</string>
     <string name="scene_conflict_active_scene">Aktive Szene \"%1$s\" wird zuerst beendet</string>
     <string name="scene_action_tt">Temporäres Ziel %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Aktiviere SMB</string>
     <string name="scene_action_smb_off">SMB deaktivieren</string>
+    <string name="scene_action_running_mode">AAPS-Modus: %1$s</string>
     <string name="scene_action_careportal">Protokoll: %1$s</string>
     <string name="scene_management">Szenen</string>
     <string name="scene_management_desc">Szenen erstellen, bearbeiten und verwalten</string>
@@ -479,6 +482,7 @@
     <string name="scene_revert_profile">Profiländerung rückgängig machen</string>
     <string name="scene_revert_smb_on">SMB wieder aktivieren</string>
     <string name="scene_revert_smb_off">SMB deaktivieren</string>
+    <string name="scene_revert_loop_mode">Überschreibung des AAPS-Modus aufheben</string>
     <string name="scene_careportal_no_revert">Careportal-Einträge werden nicht rückgängig gemacht</string>
     <string name="careportal_sickness">Krankheit</string>
     <string name="careportal_stress">Stress</string>
@@ -486,6 +490,7 @@
     <string name="careportal_alcohol">Alkohol</string>
     <string name="careportal_cortisone">Kortison</string>
     <string name="careportal_feeling_low">Gefühlte Unterzuckerung</string>
+    <string name="careportal_feeling_high">Gefühlt hoher Glukosewert</string>
     <string name="careportal_falling_asleep">Einschlafen</string>
     <string name="careportal_waking_up">Aufwachen</string>
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
@@ -693,6 +698,9 @@
     <string name="uel_store_insulin">INSULIN SPEICHERN</string>
     <string name="uel_change_insulin_concentration">INSULIN KONZENTRATION ÄNDERN</string>
     <string name="uel_insulin_removed">INSULIN ENTFERNT</string>
+    <string name="uel_running_mode">AAPS-MODUS</string>
+    <string name="uel_running_mode_removed">AAPS-MODUS ENTFERNT</string>
+    <string name="uel_running_mode_updarted">AAPS-MODUS AKTUALISIERT</string>
     <string name="uel_scene_activated">SZENE AKTIVIERT</string>
     <string name="uel_scene_deactivated">SZENE DEAKTIVIERT</string>
     <string name="uel_remote_config_changed">FERNKONFIGURATION GEÄNDERT</string>
@@ -910,15 +918,24 @@
     <string name="maintenance_aaps_directory_desc">Lokalen Speicherordner auswählen</string>
     <string name="maintenance_cloud_directory_desc">Cloud-Speicher einrichten (Google Drive)</string>
     <string name="maintenance_export_desc">Verschlüsselte Sicherung der Einstellungen speichern</string>
+    <string name="maintenance_import_desc">Einstellungen aus Sicherung wiederherstellen</string>
+    <string name="maintenance_export_csv_desc">Behandlungsverlauf als Tabelle exportieren</string>
+    <string name="maintenance_cleanup_db_desc">Alte Datenbankeinträge löschen</string>
+    <string name="maintenance_reset_aps_results_desc">Gespeicherte Algorithmus-Ergebnisse löschen</string>
+    <string name="maintenance_reset_db_desc">Alle Datenbanken löschen und neu laden</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Speichertyp auswählen</string>
     <string name="clear_cloud_action">Einstellungen löschen</string>
     <string name="clear_cloud_settings">Cloud-Einstellungen löschen</string>
     <string name="clear_cloud_settings_message">Es wird auf lokales Speichern umgestellt und die Autorisierung wird gelöscht. Weiter?</string>
+    <string name="cloud_revoke_incomplete">Die Cloud-Einstellungen wurden auf diesem Gerät gelöscht. Das Konto konnte jedoch nicht erreicht werden, um den Zugriff vollständig zu widerrufen. Du kannst die Zugriffsberechtigung manuell in deinen Kontoeinstellungen entfernen.</string>
     <string name="cloud_connection_failed">Verbindung zum Cloud-Speicher fehlgeschlagen</string>
     <string name="cloud_reauthorize_message">Verbindung zum Cloud-Speicher fehlgeschlagen. Möchtest Du erneut authentifizieren?</string>
     <string name="reauthorize">Erneut authentifizieren</string>
     <string name="cloud_auth_success">Cloud-Speicher-Authentifizierung erfolgreich</string>
+    <string name="authorization_status">Berechtigungsstatus</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d h %2$d min</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d h</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ereignis-Zeit</string>
     <!-- BluetoothDevicePreference -->
@@ -926,28 +943,62 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Benutzeranfrage</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Koppeln</string>
+    <string name="pump_unpair">Kopplung Aufheben</string>
+    <string name="pump_unpair_confirm_title">Kopplung mit der Pumpe aufheben?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
     <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
+    <string name="ble_permissions_missing">Bluetooth-Berechtigungen fehlen. Erteile sie in den App-Einstellungen.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- Navigation -->
+    <string name="nav_about">Über</string>
+    <string name="nav_about_desc">App-Version und Informationen anzeigen</string>
     <string name="nav_exit">Schließen</string>
     <string name="open_navigation">Menü öffnen</string>
     <string name="nav_history_browser">Historie</string>
+    <string name="nav_history_browser_desc">Historische Diagramme durchsuchen</string>
+    <string name="appearance">Darstellung</string>
+    <string name="manage">Verwalten</string>
+    <string name="localprofile">Profil</string>
     <string name="nav_setupwizard">Einrichtungsassistent</string>
+    <string name="nav_setupwizard_desc">AAPS Schritt für Schritt einrichten</string>
     <string name="statistics">Statistiken</string>
+    <string name="statistics_desc">Statistiken und Berichte anzeigen</string>
+    <string name="tdd_cycle_pattern">TDD-Zyklus-Muster</string>
+    <string name="tdd_cycle_pattern_desc">Tägliche Insulinmengen in 28-Tage-Zyklen übereinanderlegen, um wiederkehrende Muster zu erkennen</string>
     <string name="nav_profile_helper">Profil-Helfer</string>
+    <string name="nav_profile_helper_desc">Erstelle Dein Profil anhand des Gewichts oder des TDD</string>
+    <string name="quick_launch_configure">Schnellstart konfigurieren</string>
+    <string name="quick_launch_configure_desc">Schnellaktions-Buttons in der Übersicht anpassen</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Lokale Alarme</string>
     <!-- Actions Screen -->
+    <string name="add">Hinzufügen</string>
+    <string name="remove">Entfernen</string>
+    <string name="reorder">Reihenfolge ändern</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Nach vorne verschieben</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Nach hinten verschieben</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Details anzeigen</string>
+    <string name="presets_changed_reorder_aborted">Die Voreinstellungen wurden an anderer Stelle geändert. Die neue Reihenfolge wurde nicht gespeichert.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d von %2$d</string>
+    <string name="status">Status</string>
+    <string name="pump_actions">Pumpenaktionen</string>
+    <string name="tempbasal_button">Temporäre Basalrate</string>
     <string name="extended_bolus_button">Verzögerter Bolus</string>
+    <string name="device_maintenance">Gerätewartung</string>
+    <string name="from_label">Von</string>
+    <string name="to_label">Bis</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpenbatterie</string>
     <string name="cannula">Kanüle</string>
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Site Rotation -->
+    <string name="select_location">Tippe unten, um die Setzstelle auszuwählen</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Meine App nicht beenden?</string>
     <string name="fabric_upload_disabled">Absturzprotokolle hochladen deaktiviert!</string>
@@ -969,6 +1020,7 @@
     <string name="cleanup_db_confirm_sync">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
     <string name="cleared_entries">Gelöschte Einträge</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
+    <string name="reset_aps_results_confirm">Möchtest du die gespeicherten APS-Ergebnisse wirklich zurücksetzen?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">So</string>
     <string name="weekday_saturday_short">Sa</string>
@@ -979,39 +1031,180 @@
     <string name="weekday_monday_short">Mo</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
+    <string name="format_insulin_units_signed">%1$+.2f IE</string>
     <string name="percent_rate_duration">Rate: %1$.2f%% (%2$.2f IE/h) Dauer: %3$d min</string>
     <string name="rate_percent_duration">Rate: %1$.2f IE/h (%2$.2f%%) Dauer: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f%% (%2$.2f IE/h)<br><b>Dauer</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f IE/h (%2$.2f%%) <br><b>Dauer</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS gibt Audio wieder"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">ZIEL</string>
     <string name="profile_name">Profilname:</string>
+    <string name="edit_profile_name">Profilname bearbeiten</string>
     <string name="units_colon">Einheiten:</string>
+    <string name="unsaved_changes">Ungespeicherte Änderungen</string>
+    <string name="unsaved_changes_message">Du hast ungespeicherte Änderungen. Was möchtest du tun?</string>
     <string name="discard">Verwerfen</string>
+    <string name="ic_dynamic_label_warning">Dein Algorithmus kann das Kohlenhydrat-Insulin-Verhältnis (IC) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatzwerte bei fehlenden Daten oder als Referenzwerte.</string>
+    <string name="isf_dynamic_label_warning">Dein Algorithmus kann den Insulinempfindlichkeitsfaktor (ISF) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatzwerte bei fehlenden Daten oder als Referenzwerte.</string>
+    <string name="add_time_block">Zeitblock hinzufügen</string>
+    <string name="remove_entry">Eintrag entfernen</string>
+    <string name="target_low_label">Untergrenze</string>
+    <string name="target_high_label">Obergrenze</string>
     <!--    Search-->
+    <string name="search">Suchen</string>
+    <string name="clear">Leeren</string>
+    <string name="search_category_categories">Einstellungskategorien</string>
+    <string name="search_category_preferences">Einstellungen</string>
+    <string name="search_category_dialogs">Dialoge</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Dokumentation</string>
+    <string name="wiki_search_offline">Für die Suche in der Dokumentation ist eine Internetverbindung erforderlich</string>
+    <string name="no_search_results">Keine Ergebnisse gefunden</string>
+    <string name="search_plugin_disabled">Plugin %1$s deaktiviert</string>
     <!--    Food Management -->
+    <string name="food_management">Lebensmittel</string>
+    <string name="food_deleted">Lebensmittel gelöscht</string>
+    <string name="edit_food">Lebensmittel bearbeiten</string>
+    <string name="add_food">Lebensmittel hinzufügen</string>
+    <string name="name">Name</string>
     <string name="category">Kategorie</string>
     <string name="subcategory">Unterkategorie</string>
+    <string name="portion">Portion</string>
+    <string name="unit_label">Einheit</string>
+    <string name="undo">Rückgängig machen</string>
+    <string name="no_data">Keine Daten</string>
+    <string name="manage_food_desc">Einträge in der Lebensmitteldatenbank verwalten</string>
+    <string name="label_carbs_g">Kohlenhydrate (g)</string>
+    <string name="label_fat_g">Fett (g)</string>
+    <string name="label_protein_g">Proteine (g)</string>
+    <string name="label_energy_kj">Energie (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Protokollierungseinstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <!--    Maintenance-->
     <string name="maintenance">Wartung</string>
     <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
     <string name="log_files">Log Dateien</string>
     <string name="delete_logs">Logs löschen</string>
+    <string name="logs_deleted">Protokolle gelöscht</string>
+    <string name="aaps_directory">AAPS-Ordner</string>
     <string name="import_setting">Einstellungen importieren</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Entschlüsseln &amp; Überprüfen</string>
+    <string name="import_decrypt">Entschlüsseln</string>
+    <string name="import_master_password">Master-Passwort</string>
+    <string name="import_decryption_password">Passwort zum Entschlüsseln</string>
+    <string name="import_different_password_hint">Datei wurde mit einem anderen Passwort verschlüsselt</string>
+    <string name="import_wrong_password">Falsches Passwort</string>
+    <string name="import_btn">Importieren</string>
+    <string name="import_anyway_btn">Trotzdem importieren</string>
+    <string name="import_apply_title">Importierte Einstellungen übernehmen?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Zu ändernde Einstellungen: %1$d. Die geänderten Plugins werden neu gestartet.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Zu ändernde Einstellungen: %1$d. Pumpeneinstellungen beibehalten: %2$d, also funktioniert deine Pumpe weiter.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Die importierten Einstellungen enthalten eine Pumpe, die dieses Smartphone nicht enthält. %1$s ist jetzt aktiv — überprüfen Sie Ihre Pump-Einstellungen.</string>
+    <string name="import_applying">Einstellungen werden angewendet…</string>
+    <string name="import_replace_pump_settings">Pumpeneinstellungen auch ersetzen</string>
+    <string name="import_replace_pump_settings_summary">Lassen Sie dies aus, um die Pumpe mit diesem Telefon verbunden zu halten. Schalten Sie es ein, wenn Sie auf ein neues Telefon mit der gleichen Pumpe zurückkehren.</string>
+    <string name="import_apply_waiting">Warte auf Pumpe…</string>
+    <string name="import_apply_pump_busy">Die Pumpe ist immer noch beschäftigt, so dass die Einstellungen nicht angewendet wurden.</string>
+    <string name="import_apply_retry_question">Jetzt erneut versuchen?</string>
+    <string name="import_applied_title">Einstellungen übernommen</string>
+    <string name="import_applied_message">Die importierten Einstellungen werden jetzt verwendet.</string>
+    <string name="import_apply_pump_changed">Abgebrochen: Die Pumpe wurde durch den Import der Einstellungen geändert</string>
+    <string name="import_source_local">Lokal</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Weitere laden</string>
+    <string name="import_no_files">Keine Einstellungsdateien gefunden</string>
+    <string name="import_decrypt_ok">Entschlüsselung erfolgreich. Bereit zum Importieren.</string>
+    <string name="import_decrypt_warn">Entschlüsselung erfolgreich, es liegen jedoch Warnungen vor.</string>
+    <string name="import_decrypt_error">Entschlüsselung erfolgreich, der Import ist jedoch nicht möglich.</string>
+    <string name="reset_aps_results">APS-Ergebnisse zurücksetzen</string>
     <string name="database_cleanup">Datenbankbereinigung</string>
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Pumpe suchen</string>
+    <string name="ble_scan_select_pump">Wähle deine Pumpe aus der folgenden Liste unten aus</string>
+    <string name="ble_scan_scanning">Geräten werden gesucht…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Diagramm hinzufügen</string>
+    <string name="graph_new">Neues Diagramm</string>
+    <string name="graph_number">Diagramm %1$d</string>
+    <string name="graph_bg">Glukoseverlauf</string>
+    <string name="graph_height">Diagrammhöhe [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HF</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">SCHRITTE</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin an Bord</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolute Insulinmenge</string>
+    <string name="graph_series_cob">Aktive Kohlenhydrate</string>
+    <string name="graph_series_bgi">Auswirkung auf den Glukosewert</string>
+    <string name="graph_series_deviations">Abweichungen</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Änderung der Insulinempfindlichkeit</string>
+    <string name="graph_series_variable_sens">Variable Insulinempfindlichkeit</string>
+    <string name="graph_series_deviation_slope">Änderungsrate der Abweichungen</string>
+    <string name="graph_series_heart_rate">Herzfrequenz</string>
+    <string name="graph_series_steps">Schritte</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Aktivität</string>
+    <string name="graph_series_predictions">Vorhersagen</string>
+    <string name="units_days">Tage</string>
+    <string name="units_format_days">%1$d Tage</string>
+    <string name="units_format_days_range">%1$d Tage (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f IE</string>
+    <string name="units_format_insulin_int">%1$d IE</string>
+    <string name="units_format_insulin_int_range">%1$d IE (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f IE (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f IE/h</string>
+    <string name="units_format_insulin_rate_range">%1$.1f IE/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dl</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d Min</string>
+    <string name="units_format_min_range">%1$d Min (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d Sek.</string>
+    <string name="units_format_sec_range">%1$d Sek. (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">h</string>
+    <string name="units_insulin">IE</string>
+    <string name="units_insulin_rate">IE/h</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dl</string>
+    <string name="units_min">min</string>
+    <string name="units_mmol">mmol/l</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">s</string>
+    <string name="units_years">J.</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
+    <string name="secrets_not_protected">Auf diesem Computer wurde kein System-Schlüsselspeicher gefunden. Die Schlüssel zum Schutz deiner Einstellungen und der Kopplung mit dem Master werden in Dateien zusammen mit den Daten gespeichert. Wer eine Kopie deiner Dateien erhält, hat daher auch Zugriff auf diese Schlüssel. Installiere und starte unter Linux einen Schlüsselbunddienst (z. B. GNOME Keyring oder KWallet) und starte anschließend AAPS neu.</string>
 </resources>
