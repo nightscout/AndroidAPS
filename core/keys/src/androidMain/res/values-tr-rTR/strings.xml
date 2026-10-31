@@ -153,8 +153,21 @@
     <string name="pref_title_wear_broadcast_data">Verileri saate yayınla</string>
     <string name="pref_summary_wear_broadcast_data">AAPS verilerini net aracılığıyla üçüncü taraf saat uygulamalarına yayınlayın.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Pompa bölge rotasyonunu yönetin</string>
+    <string name="pref_title_site_rotation_manage_cgm">CGM bölge rotasyonunu yönetin</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Karb butonu artış miktarı: 1</string>
+    <string name="pref_title_carbs_button_increment_2">Karb butonu artış miktarı: 2</string>
+    <string name="pref_title_carbs_button_increment_3">Karb butonu artış miktarı: 3</string>
     <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
+    <string name="pref_title_cage_warning">Kanül ömrü uyarısı</string>
+    <string name="pref_title_cage_critical">Kritik kanül ömrü</string>
+    <string name="pref_title_iage_warning">İnsülin ömrü uyarısı</string>
+    <string name="pref_title_iage_critical">Kritik insülin ömrü</string>
+    <string name="pref_title_sage_warning">Sensör ömrü uyarısı</string>
+    <string name="pref_title_sage_critical">Kritik sensör ömrü</string>
+    <string name="pref_title_sbat_warning">Sensör pili seviye uyarısı</string>
+    <string name="pref_title_sbat_critical">Kritik sensör pili seviyesi</string>
     <string name="pref_title_bage_warning">Pompa pil ömrü uyarısı</string>
     <string name="pref_title_bage_critical">Kritik pompa pil ömrü seviyesi</string>
     <string name="pref_title_res_warning">Rezervuar seviye uyarısı</string>
@@ -236,8 +249,32 @@
     <string name="lang_de">Almanca</string>
     <string name="lang_dk">Danca</string>
     <string name="lang_fr">Fransızca</string>
+    <string name="lang_nl">Flemenkçe</string>
+    <string name="lang_es">İspanyolca</string>
+    <string name="lang_el">Yunanca</string>
+    <string name="lang_ga">İrlandaca</string>
+    <string name="lang_it">İtalyanca</string>
+    <string name="lang_ko">Korece</string>
+    <string name="lang_lt">Litvanyaca</string>
+    <string name="lang_nb">Norveçce</string>
+    <string name="lang_pl">Polonyaca</string>
+    <string name="lang_pt">Portekizce</string>
+    <string name="lang_pt_br">Portekizce (Brezilya)</string>
+    <string name="lang_ro">Romence</string>
+    <string name="lang_ru">Rusça</string>
+    <string name="lang_sk">Slovakça</string>
+    <string name="lang_sv">İsveççe</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_zh_tw">Geleneksel Çince</string>
+    <string name="lang_zh_cn">Basitleştirilmiş Çince</string>
+    <string name="pref_title_patient_name">Örnek isim</string>
+    <string name="pref_summary_patient_name">Bu telefonu kullanan kişinin ismi. Bu, raporlarda ve eşitleme işlemlerinde ilgili AAPS örneğinin ayırt edilmesini sağlar.</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS dizini</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Ana parola</string>
+    <string name="pref_title_settings_password">Parola Ayarları</string>
+    <string name="pref_title_settings_pin">PIN ayarları</string>
     <string name="pref_title_bolus_pin">Bolus PIN</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Sistem teması veya koyu ve açık tema için seçim yapın</string>
