@@ -22,6 +22,7 @@
     <string name="stoppingextendedbolus">Зупинка подовженого болюсу</string>
     <string name="updatingbasalrates">Оновлення базальних швидкостей</string>
     <string name="description_pump_diaconn_g8">Інтеграція помпи для помп Diaconn G8</string>
+    <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="maxbolusviolation">Порушення максимального болюсу</string>
     <string name="commanderror">Помилка команди</string>
     <string name="speederror">Помилка швидкості</string>
@@ -42,7 +43,14 @@
     <string name="diaconn_g8_pumpalarm_intensity_middle">середній</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">високий</string>
     <string name="diaconn_g8_screentimeout">Час підсвічування LCD [с]</string>
+    <string name="diaconn_g8_language">Мова</string>
     <string name="diaconn_g8_bolus_speed">Швидкість болюсу</string>
+    <string name="diaconn_g8_pumplang_chiness">Китайська</string>
+    <string name="diaconn_g8_pumplang_korean">Корейська</string>
+    <string name="diaconn_g8_pumplang_english">Англійська</string>
+    <string name="diaconn_g8_pumpscreentimeout_10">10</string>
+    <string name="diaconn_g8_pumpscreentimeout_20">20</string>
+    <string name="diaconn_g8_pumpscreentimeout_30">30</string>
     <string name="injectionblocked">Введення заблоковано</string>
     <string name="batterywarning">Попередження про батарею</string>
     <string name="insulinlackwarning">Попередження про нестачу інсуліну</string>
@@ -51,7 +59,7 @@
     <string name="diaconn_g8_loginsulinchange_title">Записувати заміну резервуара</string>
     <string name="diaconn_g8_loginsulinchange_summary">Додавати подію «Заміна інсуліну» в Careportal, коли її знайдено в історії</string>
     <string name="diaconn_g8_logcanulachange_title">Записувати заміну голки</string>
-    <string name="diaconn_g8_logcanulachange_summary">Додавати подію «Заміна катетера» в Careportal, коли її знайдено в історії</string>
+    <string name="diaconn_g8_logcanulachange_summary">Додавати подію «Заміна канюлі» в Careportal, коли її знайдено в історії</string>
     <string name="diaconn_g8_logbatterychange_summary">Додавати подію «Заміна батареї» в Careportal, коли її знайдено в історії</string>
     <string name="diaconn_g8_logbatterychange_title">Записувати заміну батареї</string>
     <string name="diaconn_g8_logsyncinprogress">Триває синхронізація журналу</string>
