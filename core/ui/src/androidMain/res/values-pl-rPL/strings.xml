@@ -717,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Nie wybrano profilu</string>
     <string name="missing_profile_name">Brak nazwy profilu</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s kopia</string>
     <string name="profile_not_saved_activate">Profil nie został zapisany. Przed aktywacją zapisz profil.</string>
     <string name="profile_basal_not_compatible_with_pump">Wartość bazy nie jest zgodna z aktualną pompą i nie może zostać aktywowana. Zmniejsz procent lub dostosuj dawki bazowe.</string>
     <string name="profile_basal_below_pump_minimum">Wartość bazy jest poniżej minimum pompy i nie może zostać aktywowana. Zwiększ procent lub dostosuj dawkę bazową.</string>
