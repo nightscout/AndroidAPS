@@ -176,7 +176,7 @@
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Yükleniyor…</string>
-    <string name="waiting_for_pump">Pompa bekleniyor...</string>
+    <string name="waiting_for_pump">Pompa bekleniyor…</string>
     <string name="initialization_failed">Başlatılamadı</string>
     <string name="notes_label">Notlar</string>
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
@@ -437,7 +437,7 @@
     <string name="client_roles_info_open">Roller hakkında</string>
     <string name="client_roles_info">Eşleştirilmiş her telefonun bir rolü vardır. Ana telefon her komut için bunu kontrol eder ve telefon yalnızca rolünün izin verdiği bilgileri gösterir. Yeni bir rol, tekrar eşleştirmeye gerek kalmadan hemen yürürlüğe girer.\n\nSalt okunur: Telefon eşleştirilmiş halde kalır, ancak yalnızca verileri gösterir.\n\nYemekler: Bolus, bolus sihirbazı, Hızlı Asistan ve karbonhidratlar. Ayrıca devam eden bir bolusu durdurabilir. Buraya girilen karbonhidratlar, döngünün daha fazla insülin vermesini sağlayabilir.\n\nBakıcı: Kullanıcının AAPS\'de yaptığı her şey, örneğin geçici hedefler, profil ve insülin değiştirme, döngü modu, geçici bazal, yayma bolus, senaryolar, Careportal olayları, kalibrasyonlar ve kayıtların silinmesi. Ayarları veya ön ayarları değiştiremez.\n\nYönetici: Ayarlar ve ön ayarlar dahil her şey (Hızlı Asistan, geçici hedef ön ayarları, senaryolar, profiller, otomasyon, insülin).</string>
     <string name="client_read_only_banner">Bu telefon ana telefonda salt okunur moddadır.</string>
-    <string name="hardened_mode_info">Ana telefon, yalnızca eşleştirilmiş istemcilerden gelen değişiklikleri kabul eder. Nightscout üzerinden örneğin web sitesi veya diğer uygulamalar aracılığıyla doğrudan yapılan tedavileri, geçici hedefleri, profil değişikliklerini, çalışma modu değişikliklerini veya silme işlemlerini dikkate almaz. Güçlendirilmiş mod açıkken, Nightscout\'tan veri kabul etmeye yönelik ayarlar gizlenir. SMS komutları bu durumdan etkilenmez. \n\nAna telefon KŞ dahil olmak üzere tüm verileri hâlâ Nightscout\'a yüklemeye devam eder. Eğer kan şekeri verisini Nightscout\'tan alıyorsa, bu veriyi yine oradan çekmeye devam eder.\n\nGeçmiş verileri yeni bir ana telefona yüklemek için NSClient içindeki tam eşitleme özelliğini kullanın. Tam eşitleme, profiller dahil olmak üzere Nightscout\'ta bulunan her şeyi aktarır.\n\nİstemcilerden uzaktan kontrol sağlanabilmesi için, hem ana telefonda hem de eşleştirilmiş istemcilerde Nightscout\'a yönelik çalışan bir WebSocket bağlantısı gereklidir. Basit mod, güçlendirilmiş modu her zaman etkinleştirir. Bunu kapatmak için basit moddan çıkın ve ana telefondaki istemci denetimini devre dışı bırakın.</string>
+    <string name="hardened_mode_info">Ana telefon, yalnızca eşleştirilmiş istemcilerden gelen değişiklikleri kabul eder. Nightscout üzerinden örneğin web sitesi veya diğer uygulamalar aracılığıyla doğrudan yapılan tedavileri, geçici hedefleri, profil değişikliklerini, çalışma modu değişikliklerini veya silme işlemlerini dikkate almaz. Güçlendirilmiş mod açıkken, Nightscout\'tan veri kabul etmeye yönelik ayarlar gizlenir. SMS komutları bu durumdan etkilenmez. \n\nAna telefon KŞ dahil olmak üzere tüm verileri hâlâ Nightscout\'a yüklemeye devam eder. Eğer kan şekeri verisini Nightscout\'tan alıyorsa, bu veriyi yine oradan çekmeye devam eder.\n\nGeçmiş verileri yeni bir ana telefona yüklemek için NSClient içindeki tam eşitleme özelliğini kullanın. Tam eşitleme, profiller dahil olmak üzere Nightscout\'ta bulunan her şeyi aktarır.\n\nİstemcilerden uzaktan kontrol sağlanabilmesi için, hem ana telefonda hem de eşleştirilmiş istemcilerde Nightscout\'a yönelik çalışan bir WebSocket bağlantısı gereklidir. Basit mod, güçlendirilmiş modu her zaman etkinleştirir. Bunu kapatmak için basit moddan çıkın ve ana telefondaki istemci kontrolünü devre dışı bırakın.</string>
     <string name="scene_lock_reason_master_offline">Ana birim bağlantısı kesildi</string>
     <string name="scene_lock_reason_control_disabled">Uzaktan kumanda devre dışı</string>
     <string name="scene_lock_reason_scene_active">Önce çalışan senaryoyu durdurun</string>
@@ -1091,7 +1091,7 @@
     <string name="delete_logs">Günlükleri Sil</string>
     <string name="logs_deleted">Günlükler silindi</string>
     <string name="aaps_directory">AAPS dizini</string>
-    <string name="import_setting">Ayarları içe aktarın</string>
+    <string name="import_setting">Ayarları içe aktar</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Şifreyi Çöz &amp; Gözden geçir</string>
     <string name="import_decrypt">Şifreyi çöz</string>
@@ -1111,9 +1111,9 @@
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Değiştirilecek ayarlar: %1$d. Korunan pompa ayarları: %2$d, böylece pompanız çalışmaya devam eder.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">İçe aktarılan ayarlarda, bu telefonda herhangi bir pompa bulunmadığı seçilmiş. %1$s şu anda etkin — pompa ayarlarınızı kontrol edin.</string>
     <string name="import_applying">Ayarlar uygulanıyor…</string>
-    <string name="import_replace_pump_settings">Ayrıca pompa ayarlarını da değiştirin</string>
+    <string name="import_replace_pump_settings">Pompa ayarlarını da değiştir</string>
     <string name="import_replace_pump_settings_summary">Bu telefonun eşleştirilmiş olduğu pompayı korumak için bunu kapalı bırakın. Aynı pompayı kullanacağınız yeni bir telefona geri yükleme yaparken bunu açın.</string>
-    <string name="import_apply_waiting">Pompa bekleniyor...</string>
+    <string name="import_apply_waiting">Pompa bekleniyor…</string>
     <string name="import_apply_pump_busy">Pompa hâlâ meşgul, bu nedenle ayarlar uygulanmadı.</string>
     <string name="import_apply_retry_question">Şimdi tekrar denensin mi?</string>
     <string name="import_applied_title">Ayarlar uygulandı</string>
