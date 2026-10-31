@@ -50,7 +50,7 @@
     <string name="unit_weeks">săptămâni</string>
     <string name="shortminute">m</string>
     <string name="time_remaining_h_m">%1$dh %2$dm rămase</string>
-    <string name="time_remaining_m">%1$d rămase</string>
+    <string name="time_remaining_m">%1$d min rămase</string>
     <string name="later_today">Mai târziu astăzi</string>
     <string name="tomorrow">Mâine</string>
     <string name="today">Astăzi</string>
@@ -64,8 +64,8 @@
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
-    <string name="connecting_for">Conectat de %1$d s</string>
-    <string name="handshaking">Asociere</string>
+    <string name="connecting_for">Se conectează de %1$d s</string>
+    <string name="handshaking">Negociere conexiune</string>
     <string name="connected">Conectat</string>
     <string name="authorized">Autorizat</string>
     <string name="disconnecting">Se deconectează</string>
@@ -82,7 +82,7 @@
     <string name="pref_show_detailed_iob">Afișați IOB detaliat</string>
     <string name="pref_show_cob">Afișați COB</string>
     <string name="pref_show_delta">Afișați diferența</string>
-    <string name="pref_show_detailed_delta">Afișați variație detaliată</string>
+    <string name="pref_show_detailed_delta">Afișați diferența detaliată</string>
     <string name="pref_show_avgdelta">Afișați diferența medie</string>
     <string name="pref_show_tempTarget">Afișați țintă temporară</string>
     <string name="pref_show_reservoir_level">Afișați nivel rezervor</string>
@@ -102,9 +102,9 @@
     <string name="pref_show_complication3">Afișați complicația 3</string>
     <string name="pref_show_complication4">Afișați complicația 4</string>
     <string name="pref_show_complication5">Afișați complicația 5</string>
-    <string name="default_custom_watchface_comment">Fațetă implicită. Poți apăsa pe butonul EXPORT pentru a genera un șablon</string>
+    <string name="default_custom_watchface_comment">Cadran implicit, puteți apăsa pe butonul EXPORTARE CADRAN pentru a genera un șablon</string>
     <string name="default_custom_watchface_external_comment">Cadran de ceas implicit, inclusiv vizualizări externe pentru urmăritori, puteți apăsa pe butonul EXPORTARE CADRAN pentru a genera un șablon</string>
-    <string name="wear_default_watchface">Fațetă implicită</string>
+    <string name="wear_default_watchface">Cadran implicit</string>
     <string name="wear_more_watchfaces">Mai multe cadrane de ceas</string>
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
@@ -148,12 +148,13 @@
     <string name="record">Înregistrați</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">CARBOHIDRAȚI EXTINȘI</string>
-    <string name="profile_high_target">Profil țintă ridicată</string>
+    <string name="profile_low_target">Ținta joasă din profil</string>
+    <string name="profile_high_target">Ținta înaltă din profil</string>
     <string name="profile_dia">Valoare profil DIA</string>
     <string name="profile_sensitivity_value">Valoare sensibilitate profil</string>
     <string name="profile_carbs_ratio_value">Valoarea raportului carbohidrați din profil</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f este in afara limitelor stabilite</string>
-    <string name="basal_value">Valoare rata bazală</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f este în afara limitelor stabilite</string>
+    <string name="basal_value">Valoarea ratei bazale</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected_plain">!!!!! S-a detectat o absorbție lentă de carbohidrați: %1$d%% din timp. Verificați de două ori calculul. COB poate fi supraestimat, astfel încât mai multă insulină poate fi administrată !!!!!</string>
     <string name="bolus_constraint_applied_warn">Este aplicată limitarea bolusului %1$.2f U la %2$.2f U</string>
