@@ -13,28 +13,93 @@
     <string name="objectives_openloop_learned">O loop aberto pode ser utilizado para recomendações se não tiver uma bomba compatível ou não estiver pronto para fechar o loop.</string>
     <string name="objectives_maxbasal_objective">Compreender o seu open loop, incluindo as recomendações de basais temporárias</string>
     <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máxima e configurá-la na bomba e nas preferências</string>
+    <string name="objectives_maxbasal">Execute a ação para cumprir a recomendação</string>
     <string name="objectives_maxbasal_learned">Tenha cuidado com os recursos de segurança e ajuste os parâmetros de segurança quando necessário.</string>
     <string name="objectives_maxiobzero_objective">Começar o loop fechado com Suspensão por Glicose Baixa</string>
+    <string name="objectives_maxiobzero_gate">Use o loop fechado no modo de Suspensão por Glicose Baixa (ou seja, IA máxima = 0 é definida automaticamente) durante alguns dias, sem demasiados eventos SGB.</string>
     <string name="objectives_maxiobzero_learned">Definir a maxIA para zero previne-o de hipoglicemias e não adicionará mais insulina acima da taxa basal (exceto situações com IA negativa)</string>
     <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IA máxima acima de 0 e reduzir gradualmente os alvos de GLIC</string>
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de GLIC baixa, antes de baixar GLIC</string>
+    <string name="objectives_maxiob_learned">Atualize a IA máxima à medida que a criança cresce. Não deixe o sistema dar mais insulina do que consegue cobrir com comida = um valor muito alto é má ideia. A IA máxima é calculada automaticamente no modo simples</string>
+    <string name="maxiobset">IA máxima definida corretamente (não é necessário no modo simples)</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, active o auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de hidratos de carbono</string>
+    <string name="objectives_autosens_learned">Se o resultado do autosens não oscila à volta de 100%, o seu perfil está provavelmente errado.</string>
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a maxIA para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIA=média dos bólus + 3 x a basal diária máxima</string>
     <string name="objectives_smb_learned">Usar SMB é o seu objetivo. O algoritmo Oref1 foi projetado para ajudá-lo também com seus bólus. Não deve dar o bólus completo para o que come, mas apenas parte dela e deixar a AAPS dar o resto, se necessário. Desta forma, você margem para hidratos de carbono mal calculados. Sabia que pode definir uma percentagem do resultado da calculadora de bólus para reduzir o tamanho do bólus?</string>
     <string name="objectives_auto_objective">A ativar a automatização</string>
+    <string name="objectives_auto_gate">Leia a documentação sobre como funciona a automatização. Crie as suas primeiras regras simples. Em vez de uma ação, deixe a AAPS mostrar apenas uma notificação. Quando tiver a certeza de que a automatização é acionada no momento certo, substitua a notificação pela ação real. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">A automatização pode ser um bom servo, mas um mau mestre. Não a use em excesso. Não tente substituir o algoritmo de base. Antes de usar a regra, teste-a apenas com uma mensagem. A ordem das regras conta.</string>
+    <string name="objectives_bgavailableinns">Glicose disponível no NS ou no Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Estado da bomba disponível no NS ou no Tidepool</string>
     <string name="objectives_manualenacts">Execução manual</string>
     <string name="accomplished">Concluído: %1$s</string>
+    <string name="objectives_usage_objective">Aprender a controlar a AAPS</string>
+    <string name="objectives_usage_gate">Realize diferentes ações na AAPS</string>
+    <string name="objectives_usage_learned">Aprendeu o básico da AAPS. A maioria dos controlos está no ecrã Visão geral. Há mais ações nos menus Tratamentos e Gerir, na parte de baixo do ecrã, e no menu lateral.</string>
+    <string name="objectives_useprofileswitch">Defina o perfil a 90% durante 10 min</string>
+    <string name="objectives_usedisconnectpump">Simule um duche. Desligue a bomba durante 1 h</string>
     <string name="objectives_usereconnectpump">... e volte a ligar de volta da mesma forma</string>
+    <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com duração de 10 min</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
+    <string name="objectives_usescale">Use o deslocamento ou o zoom no gráfico de glicose</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
+    <string name="objectives_exam_gate">Estude as perguntas. Cada pergunta tem várias respostas possíveis, e mais do que uma resposta pode estar correta. Marque todas as respostas corretas e selecione VERIFICAR.</string>
+    <string name="objectives_exam_learned_prerequisites">Não precisa de ser programador. Precisa do Nightscout ou do Tidepool para passar os Objetivos, de uma bomba compatível e de uma forma de compilar a AAPS (num navegador web ou com o Android Studio) para a primeira instalação e para cada atualização.</string>
+    <string name="objectives_exam_learned_prerequisites2">A AAPS pode funcionar sem internet.</string>
+    <string name="objectives_exam_learned_basaltest">O perfil deve ser revisto e atualizado. Melhor perfil = melhores resultados.</string>
+    <string name="objectives_exam_learned_dia">No loop, a DAI tem um significado diferente (tempo até toda a insulina ser absorvida) do que na terapia clássica com bomba (tempo até a maior parte da insulina ser absorvida).</string>
+    <string name="objectives_exam_learned_isf">Aprendeu o significado do valor FSI e como ele afeta a quantidade de insulina usada para corrigir a glicose.</string>
+    <string name="objectives_exam_learned_ic">Aprendeu o significado do valor IHC e como ele afeta a quantidade de insulina necessária para cobrir os hidratos.</string>
+    <string name="objectives_exam_learned_hypott">O alvo temporário de hipoglicemia serve apenas para evitar a sobrecorreção após uma hipoglicemia, quando normalmente há IA negativa acumulada. Devem ser avaliadas outras ações para evitar esta situação no futuro.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Usar uma percentagem não afeta os alvos de glicose, mas a basal, o FSI e o IHC são ajustados para dar mais insulina (acima de 100%) ou menos insulina (abaixo de 100%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Com o deslocamento temporal na troca de perfil, pode adaptar o perfil circadiano a irregularidades, como acordar tarde.</string>
+    <string name="objectives_exam_learned_profileswitch4">Editar o próprio perfil não é suficiente para fazer uma alteração. Ainda precisa de fazer uma troca de perfil para ativar as alterações.</string>
+    <string name="objectives_exam_learned_exercise">Deve reduzir a quantidade de insulina no corpo pelo menos 1 hora antes de começar o exercício, selecionando um perfil abaixo de 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Definir um alvo temporário mais alto pelo menos 1 hora antes do exercício também ajuda a reduzir a quantidade de insulina no corpo.</string>
+    <string name="objectives_exam_learned_noisycgm">Quando não pode confiar nos valores do CGM, não deve usar o loop sem vigilância.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">A AAPS tem de saber que a bomba não está ligada para calcular a IA corretamente.</string>
+    <string name="objectives_exam_learned_insulin">A AAPS tem de saber que insulina está na bomba, porque isso afeta o cálculo da IA.</string>
+    <string name="objectives_exam_learned_sensitivity">A deteção de sensibilidade é a parte do algoritmo que permite adaptar a dose de insulina a diferentes situações.</string>
+    <string name="objectives_exam_learned_objectives">O seu progresso nos Objetivos é guardado com as outras definições e deve ter uma cópia de segurança.</string>
+    <string name="objectives_exam_learned_objectives2">Guarde sempre as definições exportadas e o APK gerado também fora do telefone. O telefone pode perder-se, estragar-se, etc. Um bom local é qualquer nuvem acessível a partir do telefone. Assim, pode restaurar a AAPS noutro dispositivo em poucos minutos. Também é boa prática guardar a senha mestre usada num local seguro. Sem ela, a sua cópia de segurança é inútil. O mesmo vale para as chaves de assinatura (ficheiro .jks) e as senhas usadas para compilar a AAPS. O resto não é importante - pode ser descarregado novamente da internet a qualquer momento.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Se introduziu dados errados na AAPS ou se eles não correspondem à realidade, corrija-os o mais rápido possível. Isso pode levar a uma sobredosagem. A AAPS deve ser sempre informada da melhor forma possível sobre hidratos, insulina, etc.</string>
+    <string name="objectives_exam_learned_iob">Para analisar se a AAPS funciona bem para si, observar o gráfico da IA pode dar-lhe muita informação útil.</string>
+    <string name="objectives_exam_learned_cob">O cálculo dos HCA depende da relação entre o FSI e o IHC. Aumentar o FSI ou diminuir o IHC leva a tempos de absorção mais longos. Mas uma troca de perfil com percentagem altera os dois valores ao mesmo tempo, e o tempo de absorção não é afetado.</string>
+    <string name="objectives_exam_learned_breadgrams">Os hidratos de carbono só podem ser introduzidos em gramas.</string>
+    <string name="objectives_exam_learned_ecarbs">Os hidratos-e substituem o bólus prolongado do mundo das bombas.</string>
+    <string name="objectives_exam_learned_nsclient">Pode seguir a AAPS remotamente com a AAPSClient ou o Nightscout. Quando a AAPSClient está emparelhada com o telefone principal, também pode controlar a AAPS remotamente.</string>
+    <string name="objectives_exam_learned_concentration1">Usar insulina U200 com um perfil a 50% obriga a uma conversão permanente: nos bólus externos com canetas; e todos os relatórios padrão da AAPS ou do NS ficam errados e têm de ser convertidos para UI para a equipa de saúde.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Mudar de U200 com um perfil a 50% para U200 com a função de concentração de insulina obriga a criar um novo perfil mais forte, a desativar o DynISF durante uma semana e a treinar o cérebro para pensar em unidades internacionais.</string>
+    <string name="objectives_exam_learned_concentration3">A concentração de insulina só pode ser mudada quando se troca a insulina ou o patch. Mas, acima de tudo, sobretudo nas bombas com tubo, nunca use a interface da bomba para dar bólus diretamente a partir da bomba.</string>
     <string name="answerdisabledto">Responder desactivado até: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Seguinte inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Não está ligado à internet</string>
+    <string name="failedretrievetime">Falha ao obter a hora</string>
     <string name="requirementnotmet">Requisitos de objectivo não cumpridos</string>
     <string name="what_i_ve_learned">O que eu aprendi:</string>
+    <string name="verify_master_password">Confirme que sabe a senha mestre</string>
+    <string name="objectives_collapse">Menos</string>
+    <string name="objectives_expand">Mais</string>
+    <string name="objectives_no_learned">Não há lições registadas para este objetivo.</string>
+    <string name="objectives_open_exam">Abrir exame</string>
+    <string name="objectives_exam_question_progress">Pergunta %1$d de %2$d</string>
+    <string name="objectives_exam_reset">Repor</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Concluído</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Em curso</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Não iniciado</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Bloqueado</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">resposta correta</string>
+    <string name="objectives_exam_previous">Anterior</string>
+    <string name="objectives_exam_next">Seguinte</string>
+    <string name="objectives_exam_next_unanswered">Seguinte sem resposta</string>
+    <string name="objectives_show_hint">Dica</string>
 </resources>
