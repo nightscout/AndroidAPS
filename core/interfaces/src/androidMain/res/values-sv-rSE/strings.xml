@@ -4,13 +4,32 @@
     <string name="confirmation">Bekräftelse</string>
     <!--    Events-->
     <string name="bolus_delivering">Levererar %1$.2f U</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU levererat</string>
     <string name="bolus_delivered_successfully">Bolus på %1$.2f U har levererats</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpdrivrutinen har bytts.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$dm sedan</string>
+    <string name="secago">%1$ds sedan</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minuter sedan</string>
+    <string name="hoursago">%1$.1f tim sedan</string>
     <string name="days_ago">%1$.1f dagar sedan</string>
     <string name="days_ago_round">%1$.0f dagar sedan</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s dag %2$s timmar sedan</item>
+        <item quantity="other">%1$s dagar %2$s timmar sedan</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s timme sedan</item>
+        <item quantity="other">%1$s timmar sedan</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">nyss</item>
+        <item quantity="other">%1$s minuter sedan</item>
+    </plurals>
+    <string name="seconds_ago">sekunder sedan</string>
     <string name="in_days">om %1$.0f dagar</string>
     <string name="in_days_round">om %1$.0f dagar</string>
     <string name="shorthour">h</string>
@@ -27,6 +46,8 @@
     <string name="unit_days">dagar</string>
     <string name="unit_weeks">veckor</string>
     <string name="shortminute">m</string>
+    <string name="time_remaining_h_m">%1$d tim %2$d min återstår</string>
+    <string name="time_remaining_m">%1$d min återstår</string>
     <string name="later_today">Senare idag</string>
     <string name="tomorrow">Imorgon</string>
     <string name="today">Idag</string>
@@ -43,6 +64,7 @@
     <string name="connecting_for">Ansluter (%1$d s)</string>
     <string name="handshaking">Anslutningen verifieras</string>
     <string name="connected">Ansluten</string>
+    <string name="authorized">Auktoriserad</string>
     <string name="disconnecting">Kopplar från</string>
     <string name="waiting_for_disconnection">Väntar på frånkoppling</string>
     <!-- Custom Watchface -->
@@ -60,34 +82,71 @@
     <string name="pref_show_detailed_delta">Visa detaljerad delta</string>
     <string name="pref_show_avgdelta">Visa genomsnittlig delta</string>
     <string name="pref_show_tempTarget">Visa tillfälligt målvärde</string>
+    <string name="pref_show_reservoir_level">Visa reservoarnivå</string>
     <string name="pref_show_phone_battery">Visa telefonens batterinivå</string>
     <string name="pref_show_rig_battery">Visa riggens batterinivå</string>
     <string name="pref_show_basal_rate">Visa basaldos</string>
-    <string name="pref_show_loop_status">Visa loop-status</string>
+    <string name="pref_show_loop_status">Visa loopstatus</string>
     <string name="pref_show_bg">Visa BG</string>
     <string name="pref_show_bgi">Visa BGI</string>
     <string name="pref_show_direction_arrow">Visa riktningspil</string>
     <string name="pref_show_ago">Visa tid sedan</string>
     <string name="pref_show_week_number">Visa veckonummer</string>
     <string name="pref_show_date">Visa datum</string>
+    <string name="pref_show_seconds">Visa sekunder</string>
+    <string name="pref_show_complication1">Visa komplikation 1</string>
+    <string name="pref_show_complication2">Visa komplikation 2</string>
+    <string name="pref_show_complication3">Visa komplikation 3</string>
+    <string name="pref_show_complication4">Visa komplikation 4</string>
+    <string name="pref_show_complication5">Visa komplikation 5</string>
     <string name="default_custom_watchface_comment">Standard-urtavla - du kan klicka på EXPORTERA URTAVLA för att generera en mall</string>
+    <string name="default_custom_watchface_external_comment">Standard-urtavla inklusive externa vyer för följare, du kan klicka på EXPORTERA URTAVLA för att generera en mall</string>
     <string name="wear_default_watchface">Standard-urtavla</string>
+    <string name="wear_more_watchfaces">Fler urtavlor</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Applikationen behöver bluetooth-behörighet för att kommunicera med pumpen</string>
     <!-- Insulin -->
+    <string name="unknown">Okänd</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Tid till insulintopp [min]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Kolhydrater</string>
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="pumpsuspended">Pump pausad</string>
     <string name="loopsuspended">Loop pausad</string>
+    <string name="pump_disconnected">Pump frånkopplad</string>
+    <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det högsta tillåtna: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Post</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">FÖRLÄNGDA KH</string>
+    <string name="profile_low_target">Nedre målvärde för profilen</string>
     <string name="profile_high_target">Övre målvärde för profilen</string>
     <string name="profile_dia">Profilens DIA</string>
     <string name="profile_sensitivity_value">Profilens insulinkänslighetsvärde</string>
@@ -99,7 +158,10 @@
     <string name="bolus_constraint_applied_warn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus kommer bara att loggas (inte levereras av pumpen)</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
     <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Insticksprogram %1$s lyckades inte starta och kanske inte fungerar. Vänligen starta om AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Insticksprogram %1$s har problem och delar av det har kraschat. Vänligen starta om AAPS.</string>
 </resources>
