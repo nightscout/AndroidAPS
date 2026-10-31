@@ -16,7 +16,7 @@
     <string name="pref_display_settings">Wyświetlacz</string>
     <string name="pref_graph_settings">Wykres</string>
     <string name="pref_interface_settings">Interfejs</string>
-    <string name="pref_tile_settings">Widżety</string>
+    <string name="pref_tile_settings">Kafelki</string>
     <string name="pref_others_settings">Inne</string>
     <string name="pref_complication_settings">Komplikacje</string>
     <string name="pref_show_date">Pokaż Datę</string>
@@ -80,7 +80,7 @@
     <string name="menu_treatment_short">Lecz</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Węglowodany</string>
-    <string name="menu_ecarb">wirtualne węgle</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
     <string name="menu_bg_graph">Wykres BG</string>
@@ -265,7 +265,7 @@
     <string name="complication_br">Dawka bazowa</string>
     <string name="complication_br_tt">BR i Cel</string>
     <string name="complication_target">Cel</string>
-    <string name="complication_cob_iob">CoB i; IoB</string>
+    <string name="complication_cob_iob">CoB i IoB</string>
     <string name="complication_cob_icon">Ikona CoB</string>
     <string name="complication_cob_detailed">Szczegółowe CoB</string>
     <string name="complication_iob_icon">Ikona IoB</string>
@@ -282,7 +282,7 @@
     <string name="tile_tap_loop_status">Status pętli</string>
     <string name="action_running_mode_selected">Żądanie zmiany trybu pracy wysłane</string>
     <string name="title_activity_disconnect_pump">Odłącz pompę</string>
-    <string name="title_activity_suspend_loop">Zawieś pętlę</string>
+    <string name="title_activity_suspend_loop">Wstrzymaj pętlę</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="wizard_carbs_type">Typ posiłku</string>
     <string name="wizard_carbs_type_bread">Pieczywo</string>
