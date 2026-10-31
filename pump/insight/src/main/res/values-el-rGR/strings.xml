@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">Ενεργοποίηση ειδοποίησης TBR τέλος\n (ρύθμιση αντλίας)</string>
-    <string name="disable_tbr_over_notification">Απενεργοποίηση ειδοποίησης TBR τέλος\n (ρύθμιση αντλίας)</string>
+    <string name="enable_tbr_over_notification">Ενεργοποίηση ειδοποίησης τέλους TBR\n(ρύθμιση αντλίας)</string>
+    <string name="disable_tbr_over_notification">Απενεργοποίηση ειδοποίησης τέλους TBR\n(ρύθμιση αντλίας)</string>
     <string name="not_paired">Μη σύζευξη</string>
     <string name="recovering">Ανάκτηση</string>
     <string name="insight_status">Κατάσταση</string>
@@ -35,15 +35,15 @@
     <string name="release_software_version">Έκδοση λογισμικού</string>
     <string name="bluetooth_address">Διεύθυνση Bluetooth</string>
     <string name="manufacturing_date">Ημερομηνία κατασκευής</string>
-    <string name="log_site_changes">Αλλαγές αρχείου καταγραφής</string>
-    <string name="log_reservoir_changes">Αλλαγές αρχείου αμπούλας</string>
-    <string name="log_tube_changes">Αλλαγές αρχείου σωλήνα</string>
-    <string name="log_battery_changes">Αλλαγές αρχείου μπαταρίας</string>
-    <string name="log_operating_mode_changes">Αλλαγές αρχείου κατάστασης λειτουργίας</string>
-    <string name="log_alerts">Τοπικές Ειδοποιήσεις</string>
+    <string name="log_site_changes">Καταγραφή αλλαγών σημείου έγχυσης</string>
+    <string name="log_reservoir_changes">Καταγραφή αλλαγών δεξαμενής</string>
+    <string name="log_tube_changes">Καταγραφή αλλαγών σωληνακίου</string>
+    <string name="log_battery_changes">Καταγραφή αλλαγών μπαταρίας</string>
+    <string name="log_operating_mode_changes">Καταγραφή αλλαγών κατάστασης λειτουργίας</string>
+    <string name="log_alerts">Καταγραφή ειδοποιήσεων</string>
     <string name="enable_tbr_emulation">Ενεργοποίηση εξομοίωσης TBR</string>
     <string name="enable_tbr_emulation_summary">Χρησιμοποιείστε εκτεταμένα bolus αντί για TBR για παράκαμψη του ορίου 250%%</string>
-    <string name="disconnect_delay">Αποσυνδέστε καθυστέρηση [s]</string>
+    <string name="disconnect_delay">Καθυστέρηση αποσύνδεσης [s]</string>
     <string name="max_recovery_duration">Μέγ. διάρκεια αποκατάστασης [s]</string>
     <string name="min_recovery_duration">Ελάχ. διάρκεια αποκατάστασης [s]</string>
     <string name="pump_alert">Συναγερμός αντλίας</string>
