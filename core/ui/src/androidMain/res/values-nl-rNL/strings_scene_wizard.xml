@@ -7,11 +7,11 @@
     <string name="scene_wizard_exercise_desc">Verhoog doelstelling, verminder het profiel tot 70%, schakel SMB uit lage BG waarden bij beweging/sport te voorkomen.</string>
     <string name="scene_wizard_info_exercise">Tijdens lichaamsbeweging verbruiken spieren sneller glucose en neemt insuline gevoeligheid toe. Het van tevoren verhogen van uw tijdelijke streefwaarde geeft het algoritme een voorschot — het zal het verminderen van de insuline-levering vervroegd beginnen om zo een buffer bouwen tegen door beweging/sporten veroorzaakte lage BG waarden. Het uitschakelen van SMB is ook aanbevolen, omdat BG waarden door correctie bolussen tijdens de oefening snel kunnen dalen. Activeer voor de beste resultaten deze scène 1 at 2 uur voordat je begint te bewegen/sporten zodat het algoritme tijd heeft om je insuline aan boord te verlagen.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
-    <string name="scene_template_sick_day">Ziekte dag</string>
+    <string name="scene_template_sick_day">Ziektedag</string>
     <string name="scene_wizard_sick_day_desc">Sterker profiel (150%) om met verhoogde insuline weerstand tijdens ziekte om te gaan.</string>
     <string name="scene_wizard_info_sick_day" formatted="false">Ziekte, koorts en stress hormonen kunnen de insulineresistentie drastisch vergroten — soms met 50% of meer. Een sterker profiel (bijv. 150%) laat het algoritme weten om meer insuline te leveren in alle berekeningen - basaalstanden, bolus suggesties en correctie factoren. U kunt ook een tijdelijk doel toevoegen of de bedrijfsmodus aanpassen in de volgende stappen. Controleer nauwkeurig en pas aan na het herstel van uw lichaam.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
-    <string name="scene_template_sick_day_vomiting">Ziekte dag - overgeven</string>
+    <string name="scene_template_sick_day_vomiting">Ziektedag - overgeven</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Verminderd profiel met LGS - het tegenovergestelde van een standaard ziekte dag: wanneer je geen voedsel kunt absorberen.</string>
     <string name="scene_wizard_info_sick_day_vomiting">Wanneer je geen voedsel kunt binnenhouden, kan de standaard ‘ziekte dag’-aanpak waarbij je de insuline verhoogt gevaarlijk zijn. Braken betekent dat koolhydraten niet worden opgenomen, waardoor de bloedglucose kan dalen in plaats van stijgen. Een verlaagd profiel (60%) vermindert de insulinetoevoer, en de LGS‑modus biedt extra veiligheid door insuline te pauzeren wanneer de glucose daalt. Het uitschakelen van SMB voorkomt extra bolussen. Monitor frequent: controleer de bloedglucose elke 1–2 uur en ketonen elke 2–4 uur. Zoek medische hulp als het braken langer dan enkele uren aanhoudt of de ketonen boven 1,5 mmol/L stijgen.</string>
     <!-- Sleep: no default actions — 8h -->
@@ -65,7 +65,7 @@
     <string name="scene_wizard_include_action">%1$s opnemen in scène</string>
     <string name="scene_wizard_finish">Voltooien</string>
     <!-- Scene wizard: chain step -->
-    <string name="scene_wizard_chain_title">Vervolg scène</string>
+    <string name="scene_wizard_chain_title">Vervolgscène</string>
     <string name="scene_wizard_chain_info">Koppel optioneel een andere scène die automatisch wordt geactiveerd wanneer deze scène verloopt. Je kunt er ook direct naartoe overschakelen wanneer je eerder beëindigt. De opvolgscène wordt alleen uitgevoerd als de doelwaarde is ingeschakeld en de pomp beschikbaar is; anders ontvang je een melding waarom niet gestart.</string>
     <string name="scene_chain_none">Geen</string>
     <string name="scene_skip_to_format">Overslaan naar %1$s</string>
