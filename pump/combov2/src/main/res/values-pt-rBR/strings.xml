@@ -39,7 +39,7 @@ Se nenhuma conexão for estabelecida após mais de ~5 minutos:\n\n
 botão ao mesmo tempo para cancelar o pareamento)\n
 3. Tente parear novamente</string>
     <string name="combov2_enter_pin">Inserir PIN</string>
-    <string name="combov2_cancel_pairing">Pareamento cancelado</string>
+    <string name="combov2_cancel_pairing">Cancelar pareamento</string>
     <string name="combov2_confirm_cancel_pairing_message">Você realmente deseja cancelar o pareamento?</string>
     <string name="combov2_confirm_unpair_message">Você realmente deseja desfazer o pareamento da bomba?</string>
     <string name="combov2_pin_hint">PIN de 10 dígitos</string>
@@ -99,7 +99,7 @@ botão ao mesmo tempo para cancelar o pareamento)\n
     <string name="combov2_battery_low">Baixa</string>
     <string name="combov2_battery_full">Cheia</string>
     <string name="combov2_battery_low_warning">A bateria da bomba está fraca</string>
-    <string name="combov2_reservoir_low_warning">O nível do cartucho da bomba está baixo</string>
+    <string name="combov2_reservoir_low_warning">O nível do reservatório da bomba está baixo</string>
     <string name="combov2_setting_tbr_succeeded">TBR definida com sucesso</string>
     <string name="combov2_setting_tbr_failed">Falha ao definir a TBR</string>
     <string name="combov2_set_emulated_100_tbr">Definir TBR emulada de 100%</string>
@@ -111,7 +111,7 @@ botão ao mesmo tempo para cancelar o pareamento)\n
     <string name="combov2_unknown_tbr_detected">TBR desconhecida foi detectada e parada; porcentagem: %1$d%%; duração restante: %2$s</string>
     <string name="combov2_connection_error">Erro de conexão: %1$s</string>
     <string name="combov2_short_status_alert">Alerta: %s</string>
-    <string name="combov2_automatic_reservoir_entry">Detectar automaticamente e inserir alteração de reservatório insulina</string>
+    <string name="combov2_automatic_reservoir_entry">Detectar automaticamente e inserir troca de reservatório de insulina</string>
     <string name="combov2_automatic_battery_entry">Autodetectar e inserir automaticamente a mudança de bateria</string>
     <string name="combov2_timezone_changed">Fuso horário alterado</string>
     <string name="combov2_datetime_changed">Data e/ou hora alterada</string>
