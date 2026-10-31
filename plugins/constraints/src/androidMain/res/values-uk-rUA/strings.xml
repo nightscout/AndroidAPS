@@ -6,5 +6,7 @@
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <!-- Safety -->
+    <string name="safety">Безпека</string>
     <!-- Objectives -->
+    <string name="bg_doubled_lgs">Режим LGS через подвоєні значення в джерелі ГК</string>
 </resources>
