@@ -67,10 +67,10 @@
     <string name="fallback_to_isf_no_tdd">프로파일 민감도를 대신 사용합니다. 데이터가 충분하지 않습니다. 이유: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">프로파일(ISF, 탄수화물 비율, 기저 주입량)을 조정할 때 도움을 줍니다</string>
-    <string name="autotune_default_tune_days_title">데이터 일 수</string>
+    <string name="autotune_default_tune_days_title">데이터 일수</string>
     <string name="autotune_tunedprofile_name">조정된</string>
     <string name="autotune_profile">프로파일 :</string>
-    <string name="autotune_last_run">최근 실행 :</string>
+    <string name="autotune_last_run">마지막 실행 :</string>
     <string name="autotune_warning">경고 :</string>
     <string name="autotune_ic_warning">선택한 프로파일에 IC 값이 %1$d개 있습니다. Autotune은 %2$.2f g/U를 사용합니다.</string>
     <string name="autotune_isf_warning">선택한 프로파일에 ISF 값이 %1$d개 있습니다. Autotune은 %2$.1f %3$s/U를 사용합니다.</string>
