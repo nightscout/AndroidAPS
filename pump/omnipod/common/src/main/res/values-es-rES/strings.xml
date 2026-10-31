@@ -19,7 +19,7 @@
     <string name="omnipod_common_error_failed_to_silence_alerts">Error al silenciar las alertas</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Error al suspender la entrega</string>
     <string name="omnipod_common_error_failed_to_set_time">Error al establecer la hora</string>
-    <string name="omnipod_common_error_failed_to_resume_delivery">Error al aceptar la entrega</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Error al reanudar la entrega</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Error al iniciar el Pod</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Fallo al insertar cánula</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Se ha excedido el tiempo de activación del Pod. Este Pod ya no se puede activar.</string>
@@ -49,7 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Alertas de Pod activas</string>
     <string name="omnipod_common_overview_firmware_version">Versión de Firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Hora en el Pod</string>
-    <string name="omnipod_common_uncertain">inseguro</string>
+    <string name="omnipod_common_uncertain">incierto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Todavía no has completado todos los pasos. ¿Está seguro de que desea salir?</string>
