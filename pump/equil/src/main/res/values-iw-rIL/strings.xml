@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">משאבת מדבקה Equil גרסה 5.3 ומעלה </string>
+    <string name="equil_pump_description">משאבת פאץ\' Equil גרסה 5.3 ומעלה </string>
     <!--  start  -->
     <string name="equil_dressing">החלפת מכל</string>
     <string name="equil_dressing_onkey_msg">הבוכנה נעה לתחתית המכל ותיעצר אוטומטית כשהיא תגיע לשם. במקרה הצורך ניתן לעצור בלחיצה על \"עצירה\".</string>
     <string name="equil_stop">עצירה</string>
-    <string name="equil_title_dressing">החליפו מכל</string>
+    <string name="equil_title_dressing">החלפת מכל</string>
     <string name="equil_title_assemble">הרכבת המשאבה</string>
     <string name="equil_title_serial">צימוד משאבה</string>
     <string name="equil_title_air">תיחול צינורית</string>
@@ -16,6 +16,7 @@
     <string name="equil_tone_mode_shake">רטט בלבד</string>
     <string name="equil_tone_mode_tone">צליל בלבד</string>
     <string name="equil_unbind_content">פעולה זו תפסיק את מתן האינסולין, תחזיר את בוכנת המשאבה לתחתית המכל ותבטל את הצימוד!</string>
+    <string name="equil_ble_config_confirmation_title">צימוד משאבת הפאץ\' Equil</string>
     <string name="equil_error">שגיאת חיבור</string>
     <string name="equil_new_infusion_set_question">האם תרכיבו גם סט אינפוזיה חדש (בסיס וצינורית)?</string>
     <string name="equil_new_infusion_set_yes">כן, סט אינפוזיה חדש</string>
@@ -27,7 +28,7 @@
     <string name="equil_pump_not_run">המשאבה לא פעילה</string>
     <string name="equil_pair">צימוד</string>
     <string name="equil_pair_error">שגיאת צימוד</string>
-    <string name="equil_fill">מילוי והכנה</string>
+    <string name="equil_fill">תיחול/מילוי</string>
     <string name="equil_air">ניקוז אוויר</string>
     <string name="equil_firmware_version">גרסת קושחה</string>
     <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">קצב: %1$.2f יח׳/שעה, משך: %2$d דקות</string>
