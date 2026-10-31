@@ -134,7 +134,7 @@
     <string name="pref_title_xdrip_send_status">Enviar estado para xDrip+</string>
     <string name="pref_title_xdrip_send_detailed_iob">Enviar IA detalhada</string>
     <string name="pref_summary_xdrip_send_detailed_iob">Enviar informação detalhada da IA para o xDrip+, para mostrar nas watchfaces.</string>
-    <string name="pref_title_xdrip_send_bgi">Mostrar BGI</string>
+    <string name="pref_title_xdrip_send_bgi">Mostrar IG</string>
     <string name="pref_summary_xdrip_send_bgi">Mostrar o Impacto na Glicose (IG) na linha de estado do xDrip+.</string>
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Controlo pelo Wear</string>
