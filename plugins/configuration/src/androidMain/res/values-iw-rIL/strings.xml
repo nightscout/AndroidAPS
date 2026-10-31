@@ -42,7 +42,7 @@
     <string name="setupwizard_open_ns_receive_settings">קבלת נתונים מ־Nightscout</string>
     <string name="setupwizard_pair_with_master_info">יש לצמד את מכשיר הלקוח הזה למכשיר AAPS הראשי כדי שיוכל לשלוח פקודות בערוץ מאובטח. לאחר הצימוד, ההתקנה מסתיימת.</string>
     <string name="setupwizard_setup_from_master_title">הגדרה מהמכשיר הראשי</string>
-    <string name="setupwizard_setup_from_master_info">במכשיר הראשי יש לפתוח את משתמשים מורשים ולהוסיף את הטלפון הזה עם קוד QR. הסריקה מגדירה את Nightscout עם אסימון משלו, ויכולה גם לצמד את הטלפון. לאחר הסריקה, ההתקנה מסתיימת. בלי קוד QR, יש לדלג על שלב זה ולהגדיר את Nightscout באופן ידני.</string>
+    <string name="setupwizard_setup_from_master_info">במכשיר הראשי יש לפתוח את לקוחות מורשים ולהוסיף את הטלפון הזה עם קוד QR. הסריקה מגדירה את Nightscout עם אסימון משלו, ויכולה גם לצמד את הטלפון. לאחר הסריקה, ההתקנה מסתיימת. בלי קוד QR, יש לדלג על שלב זה ולהגדיר את Nightscout באופן ידני.</string>
     <string name="setupwizard_scan_master_qr">סריקת קוד ה-QR</string>
     <string name="setupwizard_pairing_ws_warning">חיבור WebSocket ל־Nightscout נדרש לצימוד. יש לחזור לשלב הקודם ולהפעיל אותו תחילה.</string>
     <string name="setupwizard_pairing_status_master">מכשירי לקוח מצומדים: %1$d</string>
@@ -52,7 +52,7 @@
     <string name="setupwizard_instance_name_title">מי משתמש בטלפון זה?</string>
     <string name="readstatus">קריאת מצב</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכנו בעיות ביצועים.</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך בהחרגה מאופטימיזציית הסוללה - ייתכנו בעיות ביצועים.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AAPS?</string>
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
