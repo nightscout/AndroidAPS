@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Pumpenintegration für Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Carelevo Alarme</string>
+    <string name="carelevo_alarm_channel_description">Benachrichtigungen bei Carelevo Patch-Alarmen</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth-Status</string>
+    <string name="carelevo_serial_number_key">Seriennummer</string>
+    <string name="carelevo_boot_date_time_key">Aktivierungszeitpunkt</string>
+    <string name="carelevo_expiration_key">Ablaufdatum</string>
+    <string name="carelevo_basal_rate_key">Basalrate</string>
+    <string name="carelevo_temp_basal_rate_key">Temporäre Basalrate</string>
+    <string name="carelevo_insulin_remain_key">Insulin verbleibend</string>
+    <string name="carelevo_running_remain_time">Verbleibende Patch-Zeit</string>
+    <string name="carelevo_total_insulin_key">Insgesamt abgegebenes Insulin</string>
     <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d Std.</string>
+    <string name="common_label_unit_value_dose_with_space">%s IE</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f IE/h</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Möchtest Du die Abgabe fortsetzen?</string>
+    <string name="carelevo_pump_resume_description">Nach dem Bestätigen wird die Abgabe fortgesetzt.</string>
     <string name="carelevo_pump_stop_duration_title">Bitte gib die Dauer der Unterbrechung der Insulinabgabe an.</string>
     <string name="carelevo_pump_stop_duration_label_30_min">30 Minuten</string>
     <string name="carelevo_pump_stop_duration_label_1_hour">1 Stunde</string>
@@ -11,6 +31,7 @@
     <string name="carelevo_pump_stop_duration_label_3_hour">3 Stunden</string>
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 Stunden 30 Minuten</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4 Stunden</string>
+    <string name="carelevo_patch_attach_step4_desc">Tippe nach dem Anbringen des Patches auf „Weiter“.</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
