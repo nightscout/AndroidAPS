@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Інтеграція помпи для Omnipod Dash (нова модель з Bluetooth та синьою кришечкою голки).</string>
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_address">Адреса Bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Прошивка %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Якість з\'єднання</string>
+    <string name="omnipod_dash_overview_delivery_status">Статус введення</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Заповніть новий Pod
+        достатньою кількістю інсуліну на 3 дні.\n\nПід час заповнення прослухайте два звукові сигнали від Pod. Вони вказують на те, що введено мінімум 80 Од. Переконайтеся, що шприц повністю спорожнений, навіть після двох сигналів.\n\nПісля заповнення Pod натисніть <b>Далі</b>.\n\n<b>Примітка:</b> наразі не знімайте кришечку голки Pod.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Триває спарювання з новим Pod і його підготовка.\n\nКоли ініціалізацію буде успішно завершено, натисніть <b>Далі</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Не вдалося підключитися</string>
     <string name="omnipod_dash_found_too_many_pods">Знайдено забагато Pod</string>
     <string name="omnipod_dash_scan_failed">Помилка сканування</string>
+    <string name="omnipod_dash_generic_error">Загальна помилка: %1$s</string>
     <string name="omnipod_dash_connection_lost">Зʼєднання втрачено</string>
+    <string name="omnipod_common_alert_delivery_suspended">Введення інсуліну призупинено</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Інший болюс вже вводиться</string>
+    <string name="omnipod_dash_not_enough_insulin">У резервуарі недостатньо інсуліну</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Непідтверджена команда</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Запит користувача</string>
+    <string name="suspend_delivery_is_unconfirmed">Призупинення введення не підтверджено! Будь ласка, оновіть статус Pod вручну на вкладці Omnipod та відновіть введення при необхідності.</string>
+    <string name="insulin_delivery_suspended">Введення інсуліну призупинено</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Часовий пояс Pod відрізняється від часового поясу телефону. Базальна швидкість неправильна. Виконайте перемикання профілю, щоб виправити</string>
+    <string name="failed_to_set_the_new_basal_profile">Не вдалося встановити новий базальний профіль. Введення призупинено</string>
+    <string name="setting_basal_profile_might_have_failed">Встановлення базального профілю могло не вдатися. Введення може бути призупинено! Будь ласка, оновіть статус Pod вручну на вкладці Omnipod та відновіть введення при необхідності.</string>
+    <string name="bolus_delivery_status_uncertain">Статус введення болюсу невизначений. Оновіть статус Pod, щоб підтвердити або спростувати.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Не вдалося перевірити, чи SMB (%1$s) було введено. Оновіть статус Pod, щоб підтвердити або спростувати цю команду.</string>
+    <string name="temp_basal_out_of_sync">Стан тимчасового базалу не такий, як очікувалося! Якщо раніше діяв тимчасовий базал, його скасовано. Перевірте введений інсулін та історію Pod</string>
+    <string name="checking_delivery_status">Перевірка статусу введення</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Встановлення тимчасового базалу могло не вдатися. Якщо раніше діяв тимчасовий базал, його скасовано. Оновіть статус Pod вручну на вкладці Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Результат скасування тимчасового базалу невизначений</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Команда відновлення введення не підтверджена. Будь ласка, оновіть статус Pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Скасування тимчасового базалу могло не вдатися. Якщо раніше діяв тимчасовий базал, його могло бути скасовано. Оновіть статус Pod вручну на вкладці Omnipod.</string>
 </resources>
