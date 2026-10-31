@@ -123,6 +123,8 @@
     <string name="scene_no_profile_before">Aucun profil n\'était utilisé avant le début du scénario.</string>
     <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scénario %1$s est termin, mais son profil est toujours utilisé. %2$s Activez un profil à la main.</string>
     <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Ce profile temporaire a du %1$s, mais le profil permanent a du %2$s. En premier, dans les paramètres de l\'insuline, sélectionnez la même insuline qui se trouve dans la pompe.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">L\'heure du changement de profil doit être à moins de %1$d heures de maintenant.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">La cible temporaire doit commencer à moins de %1$d heures de maintenant.</string>
     <string name="profile_switch_select_insulin_hint">Aucune insuline n\'est encore utilisée. Sélectionnez l\'insuline que vous utilisez, afin que le changement de profil puisse l\'enregistrer.</string>
     <string name="insulin_activation_failed">L\'insuline n\'a pas été changée. Votre insuline précédente est toujours utilisée.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">L\'insuline n\'a pas été changée: %1$s. Votre insuline précédente est toujours utilisée.</string>
@@ -298,8 +300,8 @@
     <string name="nochangerequested">Pas de changement demandé</string>
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insuline %1$s confirmée</string>
-    <string name="current_insulin">Insuline Active</string>
-    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Sera activé</string>
+    <string name="current_insulin">Active actuellement</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Sera activée</string>
     <string name="change_insulin">Changer</string>
     <string name="select_insulin_description">Sélectionnez l\'insuline avec laquelle vous remplissez la pompe. Un changement de profil sera appliqué après l\'activation / amorçage.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -511,6 +513,8 @@
     <string name="treatment_cannula_change_desc">Enregistrer le changement de site d\'injection</string>
     <string name="treatment_fill_desc">Amorcer et remplir la canule</string>
     <string name="temp_basal">Basale Temp</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Au-dessus du profil</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">En dessous du profil</string>
     <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Aucun</string>
     <string name="user_entry">Entrées utilisateur</string>
     <string name="aaps">AAPS</string>
@@ -704,8 +708,9 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Aucun profil séléctionné</string>
     <string name="missing_profile_name">Nom de profil manquant</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s copie</string>
     <string name="profile_not_saved_activate">Profil non enregistré. Veuillez enregistrer le profil avant de l\'activer.</string>
-    <string name="profile_basal_not_compatible_with_pump">Le débit de base n\'est pas compatible avec la pompe actuelle et ne peut pas être activé. Réduisez le pourcentage ou ajustez le débit de basel.</string>
+    <string name="profile_basal_not_compatible_with_pump">Le débit de base n\'est pas compatible avec la pompe actuelle et ne peut pas être activé. Réduisez le pourcentage ou ajustez le débit de base.</string>
     <string name="profile_basal_below_pump_minimum">Le débit de base n\'est pas compatible avec la pompe actuelle et ne peut pas être activé. Augmentez le pourcentage ou ajustez le débit de base.</string>
     <string name="profile_pump_incompatible_label">Limite de la pompe</string>
     <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
@@ -762,11 +767,11 @@
     <string name="wizard_bg_label">Gly</string>
     <string name="wizard_correction">Correction</string>
     <string name="wizard_subtotal">Sous-total</string>
-    <string name="carbs_type_bread">Pain, viennoiseries, yaourts, fruits (pomme, banane, poire), pommes de terre, riz, sarrasin d\'avoine, aliments lents et à faible teneur en glucides, légumes</string>
+    <string name="carbs_type_bread">Pain, viennoiseries, yaourts, fruits (pomme, banane, poire), pommes de terre, riz, sarrasin, flocons d\'avoine, aliments lents et à faible teneur en glucides, légumes</string>
     <string name="carbs_type_cake">Raviolis, pâtes, cuisine asiatique riche en glucides et graisses, pâtisseries sucrées et levures, céréales, porridge de céréales, miel, confiture</string>
     <string name="carbs_type_pizza">Lasagne, pizza, hamburgers, frites, pommes de terre cuites, chips et collations similaires</string>
     <string name="wizard_total">Total</string>
-    <string name="wizard_carb_time">Décalage horaire</string>
+    <string name="wizard_carb_time">Heure des glucides</string>
     <string name="carb_time_now">Maintenant</string>
     <string name="change">Changer</string>
     <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s :</string>
@@ -1072,7 +1077,7 @@
     <string name="aaps_directory">Répertoire AAPS</string>
     <string name="import_setting">Importer les paramètres</string>
     <!-- Import settings screen -->
-    <string name="import_decrypt_review">Décrypter &amp; Revue</string>
+    <string name="import_decrypt_review">Déchiffrer et vérifier</string>
     <string name="import_decrypt">Décrypter</string>
     <string name="import_master_password">Mot de passe principal</string>
     <string name="import_decryption_password">Mot de passe de décryptage</string>
@@ -1086,6 +1091,12 @@
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Paramètres à modifier : %1$d. Les plugins modifiés seront redémarrés.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Paramètres à modifier : %1$d. Paramètres de pompe conservés : %2$d, pour que votre pompe continue de fonctionner.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Les paramètres importés n\'ont sélectionné aucune pompe présente sur ce téléphone. %1$s est maintenant actif — vérifiez les paramètres de votre pompe.</string>
+    <string name="import_applying">Application des paramètres…</string>
+    <string name="import_replace_pump_settings">Remplacer aussi les paramètres de pompe</string>
+    <string name="import_replace_pump_settings_summary">Laissez désactivé pour garder la pompe associée à ce téléphone. Activez-le pour une restauration sur un nouveau téléphone avec la même pompe.</string>
     <string name="import_apply_waiting">En attente de la pompe…</string>
     <string name="import_apply_pump_busy">La pompe est toujours occupée, donc les paramètres n\'ont pas été appliqués.</string>
     <string name="import_apply_retry_question">Réessayez maintenant ?</string>
