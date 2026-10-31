@@ -3,11 +3,11 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day를 위한 펌프 통합</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">패치가 볼러스 종료를 확인하지 않았습니다. %1$s이(가) 기록되었지만, 패치가 더 많이 주입했을 수 있습니다. 인슐린을 더 주입하기 전에 패치를 확인하십시오.</string>
-    <string name="low_reservoir">레저버 적음 경고</string>
+    <string name="low_reservoir">레저버 부족 경고</string>
     <string name="patch_expiration_reminders">패치 만료 알림</string>
     <string name="patch_buzzer_reminders">패치 신호 알림</string>
     <string name="eopatch_ble_status">블루투스 상태</string>
-    <string name="eopatch_serial_number">시리얼 넘버</string>
+    <string name="eopatch_serial_number">일련번호</string>
     <string name="eopatch_expiration_time">만료 시간</string>
     <string name="eopatch_not_activated">활성화되지 않음</string>
     <string name="eopatch_base_basal_rate">기본 기저 주입량</string>
