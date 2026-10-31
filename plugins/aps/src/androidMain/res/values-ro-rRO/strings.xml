@@ -41,6 +41,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">S-a administrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
     <string name="pump_not_initialized">Pompa nu este inițializată!</string>
+    <string name="zero_basal_not_set">Pompa nu a acceptat bazala temporară zero. Este posibil să administreze încă insulină bazală. Verificați pompa.</string>
     <string name="description_loop">Activați sau dezactivați implementarea declanșatoare pentru buclă.</string>
     <string name="no_aps_selected">REZULTAT NICIUN APS SELECTAT SAU FURNIZAT</string>
     <string name="ignore5m">Ignorați 5min</string>
@@ -48,6 +49,9 @@
     <string name="ignore30m">Ignorați 30min</string>
     <string name="carbs_suggestion">Sugestie carbohidrați</string>
     <string name="open_loop_new_suggestion">O nouă sugestie este disponibilă</string>
+    <string name="loop_notification_channel_name">Sugestii buclă</string>
+    <string name="loop_notification_channel_silent_name">Sugestii buclă în modul Nu deranjați</string>
+    <string name="open_loop_suggestion_too_old">Această sugestie este prea veche. Nu s-a trimis nimic către pompă. Așteptați următoarea sugestie.</string>
     <string name="basal_set_correctly">Bazala setată corect</string>
     <string name="last_run_label">Ultima rulare</string>
     <string name="loop_aps_label">APS</string>
