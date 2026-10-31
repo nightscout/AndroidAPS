@@ -38,7 +38,7 @@
     <string name="noisycgm_nothing">Nulla - AAPS se ne occuperà.</string>
     <string name="noisycgm_pause">Disabilitare il loop chiuso per evitare un possibile sovra-dosaggio o sotto-dosaggio.</string>
     <string name="noisycgm_replacesensor">Sostituire i sensori costantemente \"rumorosi\" o inaccurati.</string>
-    <string name="noisycgm_checksmoothing">Assicurati che i tuoi dati di glucosio siano lisciati, sia dalla tua app CGM che da un plugin di lisciatura in AAPS.</string>
+    <string name="noisycgm_checksmoothing">Assicurati che i tuoi dati glicemici siano sottoposti a smoothing, dalla tua app CGM o da un plugin di smoothing in AAPS.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Esercizio e profili</string>
     <string name="exerciseprofile_whattodo">Come puoi usare i profili per aiutare al meglio il sistema a gestire l\'esercizio aerobico?</string>
