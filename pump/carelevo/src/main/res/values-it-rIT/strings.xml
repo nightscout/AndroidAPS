@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Estrarre il cerotto dal blister e rimuovere il cappuccio dell’ago.</string>
     <string name="carelevo_patch_attach_step3_title">Applica Patch</string>
     <string name="carelevo_patch_attach_step3_desc">Collegare il cerotto alla pelle con il punto marcato rivolto verso l’alto.</string>
+    <string name="carelevo_patch_attach_step4_desc">Dopo aver apposto il cerotto, premere il pulsante Pronto.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Rimuovi Cappuccio Di Sicurezza</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Ruotare il cappuccio di sicurezza nella direzione della freccia e rimuoverlo.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Inserimento ago</string>
