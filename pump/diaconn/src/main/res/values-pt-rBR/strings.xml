@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Redefinir informações de pareamento?</string>
     <string name="diaconn_pairing">Pareamento de bomba Diaconn</string>
     <string name="diaconn_g8_history_alarm">Alarmes</string>
     <string name="diaconn_g8_history_basalhours">Horas de Basal</string>
@@ -10,6 +11,7 @@
     <string name="gettingpumpsettings">Obtendo as configurações da bomba</string>
     <string name="gettingpumptime">Obtendo a hora da bomba</string>
     <string name="largetimediff">Grande diferença de horário:\nA hora da bomba está errada em mais de 1.5 hora.\nAjuste a hora manualmente na bomba e verifique se a leitura do histórico da bomba não causa um comportamento inesperado.\nSe possível, apague o histórico da bomba antes de alterar a hora, ou desative o loop fechado durante um DIA após a última entrada errada do histórico, mas no mínimo um DIA a partir de agora.</string>
+    <string name="largetimedifftitle">Grande diferença de horário</string>
     <string name="approachingdailylimit">Aproximação do limite diario de insulina</string>
     <string name="startingbolus">Iniciando a administração do bólus</string>
     <string name="waitingforbolusend">Aguardando o fim estimado do bólus</string>
@@ -30,6 +32,7 @@
     <string name="bolus_step">Incremento de bólus</string>
     <string name="basal_step">Valor da Basal</string>
     <string name="pairfirst">Pareie a sua bomba com o seu telefone!</string>
+    <string name="processinghistory">Processando evento</string>
     <string name="diaconn_g8_history_tempbasal">Basal temporaria</string>
     <string name="diaconng8_pump_settings">Configurações da bomba Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Som</string>
@@ -130,4 +133,6 @@
     <string name="bolus_speed_6">6 U/min</string>
     <string name="bolus_speed_7">7 U/min</string>
     <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Pareamento concluído!</string>
+    <string name="diaconn_pairing_successful_message">Sua bomba está conectada e pronta para uso.</string>
 </resources>
