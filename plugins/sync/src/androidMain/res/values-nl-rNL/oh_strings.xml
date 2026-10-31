@@ -34,7 +34,7 @@
     <string name="device_model">Apparaat model</string>
     <string name="screen_dimensions">Scherm afmetingen</string>
     <string name="algorithm_debug_data">Algoritme debug data</string>
-    <string name="data_not_uploaded">Gegevens NIET ge-upload</string>
+    <string name="data_not_uploaded">Gegevens NIET geüpload</string>
     <string name="passwords">Wachtwoorden</string>
     <string name="nightscout_url">Nightscout URL</string>
     <string name="nightscout_api_secret">Nightscout API Secret</string>
