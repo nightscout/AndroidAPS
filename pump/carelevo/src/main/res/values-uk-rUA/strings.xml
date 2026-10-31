@@ -47,10 +47,10 @@
     <string name="carelevo_btn_research">Шукати знову</string>
     <string name="carelevo_btn_needle_insert_check">Підтвердити введення</string>
     <string name="carelevo_state_none_value">Немає активного патча</string>
-    <string name="carelevo_state_disconnected_value">Від’єднано</string>
+    <string name="carelevo_state_disconnected_value">Роз\'єднано</string>
     <string name="carelevo_state_connected_value">Підключено</string>
     <string name="carelevo_overview_connect_btn_label">Активувати патч</string>
-    <string name="carelevo_overview_pump_discard_btn_label">Утилізувати патч</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Викинути патч</string>
     <string name="carelevo_overview_pump_suspend_btn_label">Призупинити введення</string>
     <string name="carelevo_overview_pump_resume_btn_label">Відновити введення</string>
     <string name="patch_prepare_dialog_title_insulin_amount">Виберіть заповнений обсяг.</string>
@@ -129,7 +129,7 @@
     <!-- Needle Insertion -->
     <string name="carelevo_toast_msg_needle_check_failed">Перевірка голки не вдалася.</string>
     <!-- Patch Discard -->
-    <string name="carelevo_toast_msg_discard_failed">Не вдалося утилізувати патч. Спробуйте ще раз.</string>
+    <string name="carelevo_toast_msg_discard_failed">Не вдалося викинути патч. Спробуйте ще раз.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Запит на введення базалу не вдався. Спробуйте ще раз.</string>
     <!-- Delivery Resume/Suspend -->
@@ -173,7 +173,7 @@
     <string name="alarm_feat_desc_unknown">Неочікувана помилка патча.</string>
     <!-- Action Buttons -->
     <string name="alarm_feat_btn_patch_discard">Деактивувати патч</string>
-    <string name="alarm_feat_btn_patch_force_discard">Утилізувати патч</string>
+    <string name="alarm_feat_btn_patch_force_discard">Викинути патч</string>
     <string name="alarm_feat_btn_resume_infusion">Почати введення інсуліну</string>
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">Перевірте підключення патча.</string>
@@ -182,7 +182,7 @@
     <!--    notification -->
     <string name="alarm_notification_desc_warning_low_insulin">Залишилося менше 10 Од інсуліну; введення інсуліну зупинено. Натисніть кнопку [Деактивувати патч] і замініть патч зараз.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Термін дії патча закінчився; введення інсуліну зупинено. Натисніть кнопку [Деактивувати патч] і замініть патч зараз.</string>
-    <string name="alarm_notification_desc_warning_low_battery">Низький заряд батареї; введення інсуліну зупинено. Натисніть кнопку [Утилізувати патч] і замініть патч зараз.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Низький заряд батареї; введення інсуліну зупинено. Натисніть кнопку [Викинути патч] і замініть патч зараз.</string>
     <string name="alarm_notification_desc_warning_invalid_temperature">Введення інсуліну зупинено. Негайно перейдіть у місце з відповідною температурою (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Введення інсуліну зупинено. Натисніть кнопку [Почати введення інсуліну] і знову запустіть введення базалу.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Час накладання патча вичерпано. Натисніть кнопку [Деактивувати патч] і замініть патч зараз.</string>
