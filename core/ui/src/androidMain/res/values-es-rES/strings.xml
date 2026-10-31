@@ -59,8 +59,8 @@
     <string name="configbuilder_pick_one_hint">Elija uno. Solo puede haber uno activo a la vez</string>
     <string name="configbuilder_pick_many_hint">Seleccione todas las opciones que correspondan</string>
     <string name="configbuilder_no_selection_warning">No se ha seleccionado ningún complemento en esta categoría</string>
-    <string name="configbuilder_switch_confirmation_title">¿Cambiar de plugin?</string>
-    <string name="configbuilder_switch_confirmation">Esto deshabilitará %1$s y habilitará \%2$s</string>
+    <string name="configbuilder_switch_confirmation_title">¿Cambiar de complemento?</string>
+    <string name="configbuilder_switch_confirmation">Esto deshabilitará %1$s y habilitará %2$s.</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
     <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Completado</string>
