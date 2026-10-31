@@ -53,6 +53,8 @@
     <string name="status_filled">Gevuld</string>
     <string name="status_priming">Voorvullen</string>
     <string name="status_primed">Voorgevuld</string>
+    <string name="status_ejecting">Uitwerpen</string>
+    <string name="status_ejected">Uitgeworpen</string>
     <string name="status_active">Actief</string>
     <string name="status_stopped">Gestopt</string>
     <!-- wizard-->
@@ -102,6 +104,10 @@
     <!-- settings-->
     <string name="alarm_setting_title">Alarminstellingen</string>
     <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
+    <string name="alarm_setting_light_vibrate_beep">Licht, trillen en pieptoon</string>
+    <string name="alarm_setting_light_vibrate">Licht en trillen</string>
+    <string name="alarm_setting_light_beep">Licht en pieptoon</string>
+    <string name="alarm_setting_light">Licht</string>
     <string name="alarm_setting_vibrate_beep">Trillen en pieptoon</string>
     <string name="alarm_setting_vibrate">Trillen</string>
     <string name="alarm_setting_beep">Pieptoon</string>
