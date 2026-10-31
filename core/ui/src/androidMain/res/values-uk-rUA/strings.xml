@@ -1,77 +1,710 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="authorized_clients_manage_label">Авторизовані клієнти</string>
+    <string name="authorized_clients_manage_desc">Керування спареними клієнтськими пристроями, які керують цим основним телефоном.</string>
+    <string name="pair_with_master_manage_label">Спарувати з головним пристроєм</string>
+    <string name="pair_with_master_manage_desc">Введіть PIN для спарювання з головного пристрою, щоб цей клієнт міг надсилати підписані команди.</string>
     <!--    General-->
+    <string name="treatments">Терапія</string>
+    <string name="treatments_history">Історія терапії</string>
+    <string name="treatments_desc">Перегляд історії терапії та керування нею</string>
+    <string name="nav_configuration">Конфігурація</string>
+    <string name="nav_configuration_desc">Налаштуйте вашу конфігурацію (CGM, помпа, ...) і ввімкніть функції</string>
+    <string name="delete">Видалити</string>
+    <string name="more_options">Інші параметри</string>
+    <string name="refresh">Оновити</string>
+    <string name="no_history_records">Записів не знайдено</string>
+    <string name="navigation_error_screen_not_found">Не вдалося відкрити екран (недоступний у цій конфігурації)</string>
+    <string name="invalid_number">Неправильне число</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Драйвер помпи не відповідає. «%1$s» виконується вже %2$d хв, і жодна інша команда не може дійти до помпи. Перевірте помпу, потім перезапустіть AAPS.</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s Од/год</string>
+    <string name="loop_disabled_by_user">Петлю вимкнено користувачем</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммоль/л</string>
+    <string name="bg_mgdl">%1$d мг/дл</string>
+    <string name="bg_mmol">%1$.1f ммоль/л</string>
+    <string name="skip">Пропустити</string>
+    <string name="switch_to_edit">Редагувати</string>
+    <string name="snooze_15m">Відкласти на 15 хв</string>
+    <string name="snooze_30m">Відкласти на 30 хв</string>
+    <string name="snooze_60m">Відкласти на 60 хв</string>
     <string name="constraints">Обмеження</string>
     <string name="settings">Налаштування</string>
+    <string name="open_plugin">Відкрити плагін</string>
+    <string name="configbuilder_pick_one_hint">Виберіть один. Активним може бути лише один.</string>
+    <string name="configbuilder_pick_many_hint">Виберіть усі потрібні.</string>
+    <string name="configbuilder_no_selection_warning">У цій категорії не вибрано жодного плагіна.</string>
+    <string name="configbuilder_switch_confirmation_title">Змінити плагін?</string>
+    <string name="configbuilder_switch_confirmation">Це вимкне %1$s і ввімкне %2$s.</string>
+    <string name="expand">Розгорнути</string>
+    <string name="collapse">Згорнути</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Виконано</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Розгорнуто</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Згорнуто</string>
+    <string name="no_compose_preferences">Для цього плагіна немає налаштувань</string>
+    <string name="confirm_password_hint">Підтвердіть пароль</string>
+    <string name="confirm_pin_hint">Підтвердіть PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
+    <string name="configbuilder_calibration">Калібрування</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Петля</string>
+    <string name="configbuilder_sync">Звʼязок</string>
     <!-- master_password moved to core/keys/strings.xml -->
+    <string name="ue_export_to_csv">Експорт записів користувача в Excel (csv)</string>
+    <string name="pump_management">Помпа</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Вимкнути звук</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Вимкнути звук і закрити</string>
+    <string name="running">Працює</string>
+    <string name="carbs_not_saved_after_bolus">Болюс введено, але вуглеводи не вдалося зберегти. Введіть вуглеводи ще раз.</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d г</string>
+    <string name="format_mins">%1$d хв</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
+    <string name="stop_pressed">НАТИСНУТО СТОП</string>
+    <string name="profile_switch_no_insulin">Неможливо перемкнути профіль: жоден інсулін не використовується, і жодного не вибрано.</string>
+    <string name="scene_no_profile_before">До початку сцени жоден профіль не використовувався.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Сцену %1$s завершено, але її профіль досі використовується. %2$s Активуйте профіль вручну.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">У цьому тимчасовому перемиканні профілю інсулін %1$s, але в постійному профілі під ним — %2$s. Спочатку активуйте інсулін, який є в помпі, у розділі «Налаштування інсуліну».</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Час перемикання профілю має бути в межах %1$d год від поточного часу.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Тимчасова ціль має починатися в межах %1$d год від поточного часу.</string>
+    <string name="profile_switch_select_insulin_hint">Інсулін ще не використовується. Виберіть інсулін, який ви використовуєте, щоб це перемикання профілю могло його записати.</string>
+    <string name="insulin_activation_failed">Інсулін не було змінено. Ваш попередній інсулін і далі використовується.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Інсулін не було змінено: %1$s Ваш попередній інсулін і далі використовується.</string>
+    <string name="insulin_activation_unconfirmed">Не вдалося підтвердити зміну інсуліну. Перед введенням дози перевірте, який інсулін активний у вашому профілі.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Інсулін не було змінено. Ваш попередній інсулін і далі використовується.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nІнсулін також не було змінено.</string>
+    <string name="insulin_nickname_label">Псевдонім інсуліну</string>
+    <string name="concentration_label">Концентрація</string>
+    <string name="peak_label">Пік</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Завантаження…</string>
+    <string name="waiting_for_pump">Очікування помпи…</string>
+    <string name="initialization_failed">Помилка ініціалізації</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Калібрування не збережено: ГК змінюється надто швидко (Δ %1$s %3$s за 5 хв, межа %2$s). Спробуйте знову, коли глюкоза стабілізується.</string>
+    <string name="cal_reject_no_pair">Калібрування не збережено: за останні 10 хвилин немає показника CGM.</string>
+    <string name="cal_reject_warmup">Калібрування не збережено: сенсор ще у 2-годинному періоді розігріву.</string>
+    <string name="cal_reject_no_session">Калібрування не збережено: немає активної сесії сенсора. Спершу позначте заміну сенсора.</string>
+    <string name="bolus_reminder">Нагадати про болюс, коли ГК відновиться</string>
+    <string name="loop_suspended_by_dst">Петлю призупинено через перехід на літній/зимовий час</string>
+    <string name="a11y_arrow_triple_down">дуже швидко падає</string>
+    <string name="a11y_arrow_triple_up">дуже швидко зростає</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">зменшити %1$s на %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">збільшити %1$s на %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">відкрити %1$s для введення</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">закрити %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Перемістити вгору</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Перемістити вниз</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Крок %1$d з %2$d</string>
+    <string name="remove_label">Видалити</string>
+    <string name="activate_insulin">Активувати інсулін</string>
+    <string name="pump_wizard_profile_gate_title">Потрібен профіль</string>
+    <string name="pump_wizard_profile_gate_pick">Виберіть профіль, який буде застосовано під час активації.</string>
+    <string name="pump_wizard_profile_gate_no_store">Профіль не визначено. Відкрийте керування профілями, щоб створити його, потім знову почніть активацію.</string>
+    <string name="reset">Скинути</string>
     <string name="profile">Профіль</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Записів, яких немає на головному пристрої: %1$d. Їх не видалено.</string>
+    <string name="wear_wizard_settings">Налаштування калькулятора Wear</string>
+    <string name="prime_not_available">Ця помпа сама заповнюється під час активації. Прайм/Заповнення з AAPS недоступне.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Замінити</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Заповнити</string>
+    <string name="edit_site">Редагувати</string>
+    <string name="select_arrow">Вибрати стрілку</string>
+    <string name="site_filter_info">Виберіть тип події терапії, який хочете бачити: Заміна канюлі та/або Заміна сенсора</string>
+    <string name="selected_location">Вибрано: %1$s</string>
+    <string name="last_site_location">Останнє місце: %1$s</string>
+    <string name="pick_site">Вибрати місце</string>
+    <string name="select_site_location">Вибрати місце введення</string>
+    <string name="site_location">Місце введення</string>
+    <string name="pump_suspend">Призупинити помпу</string>
+    <string name="pump_resume">Відновити помпу</string>
+    <string name="select_insulin">Вибрати інсулін</string>
+    <string name="not_implemented_yet">Ця функція ще не готова на цій платформі</string>
+    <string name="not_available_on_platform">Ця функція недоступна на цій платформі</string>
+    <string name="back">Назад</string>
     <string name="next">Далі</string>
+    <string name="pref_syncs_with_main_phone">Синхронізується з головним телефоном</string>
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Запустити профіль %1$d%% на %2$d хв</string>
     <!--    APSResult-->
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Інсулін %1$s підтверджено</string>
+    <string name="current_insulin">Зараз активний</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Буде активовано</string>
+    <string name="change_insulin">Змінити</string>
+    <string name="select_insulin_description">Виберіть інсулін, яким ви заповнюєте помпу. Після активації/заповнення буде застосовано зміну профілю.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
+    <string name="selected_insulin">Вибраний інсулін: %1$s</string>
+    <string name="record_insulin_hint">Якщо ви вводите інсулін, введений шприц-ручкою, виберіть нижче правильний тип інсуліну. Доза завжди в міжнародних одиницях.</string>
     <!--       Stats -->
+    <string name="average">Середнє</string>
+    <string name="tir">Час у діапазоні</string>
+    <string name="veryLow" comment="below 3.1">Дуже низький</string>
+    <string name="seven_days_short">7д</string>
+    <string name="thirty_days_short">30д</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Заміна катетера : %1$s</string>
+    <string name="cgm_sensor_insert">Встановлення сенсора</string>
+    <string name="careportal_pump_site_management">Місця введення помпи</string>
+    <string name="careportal_cgm_site_management">Місця сенсора CGM</string>
+    <string name="careportal_cgmsensorstart">Запуск сенсора</string>
+    <string name="careportal_cgm_sensor_stop">Зупинка сенсора</string>
+    <string name="profile_management">Профіль</string>
+    <string name="temporary_targets">Тимчасові цілі</string>
+    <string name="running_mode_desc">Закрийте або відкрийте петлю, призупиніть її або відʼєднайте помпу</string>
+    <string name="running_mode_change_not_allowed">Зміна робочого режиму недоступна</string>
+    <string name="pump_reconnect">Перепідключити помпу</string>
+    <string name="scene">Сцена</string>
+    <string name="scenes">Сцени</string>
+    <string name="scene_desc">Готові дії для різних ситуацій — запуск кількох дій одночасно</string>
+    <string name="scene_activate">Активувати</string>
+    <string name="scene_deactivate">Завершити сцену</string>
+    <string name="scene_active">Активна</string>
+    <string name="scene_ended">Сцену завершено</string>
+    <string name="scene_end_active">Завершити активну сцену</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Перейти до</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Наступна сцена %1$s не запуститься</string>
+    <string name="scene_confirm_activate">Активувати сцену «%1$s»?</string>
+    <string name="scene_confirm_deactivate">Завершити сцену «%1$s» і скасувати зміни?</string>
+    <string name="scene_conflict_active_tt">Активну тимчасову ціль буде замінено</string>
+    <string name="scene_conflict_active_profile">Активну зміну профілю буде замінено</string>
+    <string name="scene_conflict_active_running_mode">Активний робочий режим буде замінено</string>
+    <string name="scene_conflict_active_scene">Активну сцену «%1$s» спочатку буде завершено</string>
+    <string name="scene_action_tt">Тимчасова ціль: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Профіль: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Профіль: %1$d%%</string>
+    <string name="scene_action_smb_on">Увімкнути SMB</string>
+    <string name="scene_action_smb_off">Вимкнути SMB</string>
+    <string name="scene_action_running_mode">Робочий режим: %1$s</string>
+    <string name="scene_action_careportal">Запис: %1$s</string>
+    <string name="scene_management">Сцени</string>
+    <string name="scene_management_desc">Створення, редагування та керування сценами</string>
+    <string name="scene_start_from_template">Почати з шаблону</string>
+    <string name="scene_editor_target">Ціль</string>
+    <string name="scene_editor_tt_preset">Шаблон ТЦ</string>
+    <string name="scene_editor_no_tt_presets">Шаблони ТЦ не налаштовано</string>
+    <string name="scene_editor_select_tt_preset">Виберіть шаблон</string>
+    <string name="scene_editor_percentage">Відсоток</string>
+    <string name="scene_editor_profile">Профіль</string>
+    <string name="scene_editor_keep_current_profile">-- Залишити поточний --</string>
+    <string name="scene_editor_mode">Режим</string>
+    <string name="scene_editor_event_type">Тип події</string>
+    <string name="scene_editor_note">Примітка</string>
+    <string name="scene_icon">Значок</string>
+    <string name="scene_editor_enabled">Увімкнено</string>
+    <string name="scene_editor_disabled">Вимкнено</string>
+    <string name="scene_summary">Дій: %1$d, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Без обмеження (завершення вручну)</string>
+    <string name="scene_some_actions_failed">Деякі дії не вдалися</string>
+    <string name="scene_no_active">Немає активної сцени</string>
+    <string name="scene_some_reverts_failed">Деякі дії скасування не вдалися</string>
+    <string name="scene_no_profile_store">Сховище профілів недоступне</string>
+    <string name="scene_no_actions">Сцена не має дій</string>
+    <string name="scene_profile_not_found">Профіль «%1$s» не знайдено</string>
+    <string name="scene_lock_banner_master_offline">Основний пристрій недоступний. Керування сценами відновиться, коли з’єднання буде відновлено.</string>
+    <string name="scene_lock_banner_control_disabled">Основний пристрій вимкнув віддалене керування. Керування сценами відновиться, коли його знову увімкнуть на основному пристрої.</string>
+    <string name="master_offline_banner">Головний пристрій недоступний. Редагування вимкнено, доки зʼєднання не відновиться.</string>
+    <string name="master_control_disabled_banner">Головний пристрій вимкнув дистанційне керування. Редагування вимкнено, доки його знову не ввімкнуть на головному пристрої.</string>
+    <string name="hardened_mode_on">Захищений режим увімкнено</string>
+    <string name="hardened_mode_title">Захищений режим</string>
+    <string name="hardened_mode_info_open">Про захищений режим</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Лише читання</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Їжа</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Доглядач</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Адмін</string>
+    <string name="client_role_title">Роль</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Роль: %1$s</string>
+    <string name="client_roles_info_open">Про ролі</string>
+    <string name="client_roles_info">Кожен спарений телефон має роль. Основний телефон перевіряє її для кожної команди, а телефон показує лише те, що дозволяє його роль. Нова роль діє одразу, без повторного спарювання.\n\nЛише читання: телефон залишається спареним, але лише показує дані.\n\nЇжа: болюс, калькулятор болюса, QuickWizard і вуглеводи. Також може зупинити болюс, що вводиться. Вуглеводи, введені тут, можуть змусити петлю подати більше інсуліну.\n\nДоглядач: усе, що користувач робить в AAPS, наприклад тимчасові цілі, перемикання профілю та інсуліну, режим петлі, тимчасовий базал, подовжений болюс, сцени, події Careportal, калібрування і видалення записів. Не може змінювати налаштування чи шаблони.\n\nАдмін: усе, включно з налаштуваннями та шаблонами (QuickWizard, шаблони тимчасових цілей, сцени, профілі, автоматизація, інсулін).</string>
+    <string name="client_read_only_banner">Цей телефон працює в режимі лише читання на основному телефоні.</string>
+    <string name="hardened_mode_info">Головний телефон приймає зміни лише від спарених клієнтів. Він не приймає записи терапії, тимчасові цілі, зміни профілю, зміни робочого режиму та видалення, які зроблено безпосередньо в Nightscout, наприклад на вебсайті або в інших застосунках. Налаштування прийому даних з Nightscout приховані, поки захищений режим увімкнено. На SMS-команди це не впливає.\n\nГоловний телефон і далі вивантажує всі дані в Nightscout, разом з ГК. Якщо він отримує ГК з Nightscout, він і далі бере ГК звідти.\n\nЩоб завантажити історію на новий головний телефон, використайте повну синхронізацію (Full sync) в NSClient. Повна синхронізація бере все, що є в Nightscout, разом з профілями.\n\nДистанційне керування з клієнтів потребує робочого зʼєднання WebSocket з Nightscout на головному телефоні та на спарених клієнтах. Простий режим завжди вмикає захищений режим. Щоб вимкнути його, вийдіть з простого режиму і вимкніть керування клієнтами на головному телефоні.</string>
+    <string name="scene_lock_reason_master_offline">Основний пристрій відключено</string>
+    <string name="scene_lock_reason_control_disabled">Віддалене керування вимкнено</string>
+    <string name="scene_lock_reason_scene_active">Спочатку зупиніть активну сцену</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Встановити тимчасову ціль</string>
+    <string name="clientcontrol_action_cancel_temp_target">Скасувати тимчасову ціль</string>
+    <string name="clientcontrol_action_activate_scene">Активувати сцену %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Завершити сцену</string>
+    <string name="clientcontrol_action_update_settings">Оновити налаштування</string>
+    <string name="clientcontrol_action_deliver_bolus">Ввести болюс</string>
+    <string name="clientcontrol_action_eat_reminder">Змінити нагадування про їжу</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Цей пристрій не спарено з основним телефоном.</string>
+    <string name="clientcontrol_fail_not_reachable">Основний телефон не в мережі.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Конфігурація помпи не збігається з основним телефоном. Спробуйте ще раз.</string>
+    <string name="clientcontrol_fail_no_reply">Основний телефон не відповів вчасно.</string>
+    <string name="clientcontrol_fail_expired">Термін дії команди минув до того, як основний телефон її застосував.</string>
+    <string name="clientcontrol_fail_busy">Інша дія вже виконується.</string>
+    <string name="clientcontrol_fail_send_failed">Не вдалося з’єднатися з Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">На основному телефоні немає активного профілю, до якого це можна застосувати.</string>
+    <string name="clientcontrol_fail_scene_not_found">Сцени більше не існує.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Запису місця введення більше не існує.</string>
+    <string name="clientcontrol_fail_scene_disabled">Сцену вимкнено.</string>
+    <string name="clientcontrol_fail_partial">Деякі дії не вдалося застосувати.</string>
+    <string name="clientcontrol_fail_execution">Основний телефон не зміг це застосувати.</string>
+    <string name="clientcontrol_fail_cancelled">Команду скасовано до виконання. На помпу нічого не надіслано.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Болюс скасовано. Інсулін не введено.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Скасовано</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">SMB не вводиться, поки болюс очікує підтвердження</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Зараз вводиться SMB. Ви зможете підтвердити, коли введення завершиться.</string>
+    <string name="clientcontrol_fail_control_disabled">Віддалене керування вимкнено на основному телефоні.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Роль цього телефону на основному телефоні цього не дозволяє.</string>
+    <string name="clientcontrol_fail_other_token">Основний телефон відхилив команду: цей телефон записує в Nightscout з іншим токеном, ніж власний. На основному телефоні видаліть цей телефон і додайте його знову.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Підготовлений болюс застарів або його замінено. Натисніть кнопку ще раз.</string>
+    <string name="clientcontrol_fail_bolus_compute">Основний телефон не зміг розрахувати болюс (немає глюкози / профілю або помпа не готова).</string>
+    <string name="clientcontrol_fail_internal">Щось пішло не так.</string>
+    <string name="clientcontrol_fail_unknown">Команда не виконана.</string>
+    <string name="clientcontrol_unconfirmed_wear">Стан невідомий — перевірте телефон/Nightscout перед повторним болюсом.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">З’єднання втрачено — стан введення невідомий</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Цей телефон перестав отримувати оновлення від основного телефону. Болюс, можливо, ще вводиться або вже завершився. Закриття лише приховує це вікно тут — помпу воно не зупиняє. Перевірте на основному телефоні, скільки інсуліну фактично введено.</string>
+    <string name="scene_revert_tt">Скасувати тимчасову ціль</string>
+    <string name="scene_revert_profile">Скасувати зміну профілю</string>
+    <string name="scene_revert_smb_on">Знову увімкнути SMB</string>
+    <string name="scene_revert_smb_off">Вимкнути SMB</string>
+    <string name="scene_revert_loop_mode">Скасувати зміну робочого режиму</string>
+    <string name="scene_careportal_no_revert">Записи CarePortal не буде скасовано</string>
+    <string name="careportal_sickness">Хвороба</string>
+    <string name="careportal_stress">Стрес</string>
+    <string name="careportal_pre_period">Перед менструацією</string>
+    <string name="careportal_alcohol">Алкоголь</string>
+    <string name="careportal_cortisone">Кортизон</string>
+    <string name="careportal_feeling_low">Відчуття низької ГК</string>
+    <string name="careportal_feeling_high">Відчуття високої ГК</string>
+    <string name="careportal_falling_asleep">Засинання</string>
+    <string name="careportal_waking_up">Пробудження</string>
+    <string name="treatment_desc">Записати інсулін і вуглеводи разом</string>
+    <string name="treatment_insulin_desc">Ввести болюс вручну</string>
+    <string name="treatment_carbs_desc">Записати вуглеводи без інсуліну</string>
+    <string name="treatment_calculator_desc">Розрахувати болюс</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Налаштування інсуліну</string>
+    <string name="manage_insulin_desc">Керувати налаштуваннями інсуліну й активувати їх</string>
+    <string name="concentration_disable_blocked">Неможливо вимкнути підтримку концентрації, поки є інсуліни не U100. Спочатку видаліть усі налаштування інсуліну не U100 і перейдіть на профіль U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Неможливо увімкнути простий режим, поки використовується інсулін, відмінний від U100. Спочатку перейдіть на інсулін U100.</string>
+    <string name="manage_profile_desc">Керувати профілями й активувати їх</string>
+    <string name="manage_temp_target_desc">Керувати тимчасовими цілями й встановлювати їх</string>
+    <string name="manage_temp_basal_desc">Почати тимчасовий базал</string>
+    <string name="manage_extended_bolus_desc">Почати введення подовженого болюсу</string>
+    <string name="manage_site_rotation_desc">Відстежувати й чергувати місця введення</string>
+    <string name="manage_quickwizard_desc">Керувати шаблонами швидкого майстра</string>
+    <string name="treatment_note_desc">Додати примітку до ваших записів</string>
+    <string name="treatment_question_desc">Записати питання для вашого лікаря</string>
+    <string name="treatment_cgm_desc">Відкрити застосунок CGM</string>
+    <string name="treatment_calibration_desc">Калібрувати сенсор CGM</string>
+    <string name="treatment_bg_check_desc">Записати вимірювання глюкози крові</string>
+    <string name="treatment_exercise_desc">Записати фізичну активність</string>
+    <string name="treatment_announcement_desc">Опублікувати оголошення</string>
+    <string name="treatment_sensor_insert_desc">Записати встановлення сенсора CGM</string>
+    <string name="treatment_battery_change_desc">Записати заміну батареї помпи</string>
+    <string name="treatment_cannula_change_desc">Записати заміну канюлі/інфузійного набору</string>
+    <string name="treatment_fill_desc">Прайм і заповнення канюлі</string>
+    <string name="temp_basal">Тимчасовий базал</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Вище профілю</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Нижче профілю</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Немає</string>
+    <string name="aaps">AAPS</string>
+    <string name="unknown">Невідомо</string>
     <string name="automation">Автоматизація</string>
+    <string name="automation_management_desc">Створюйте правила, які автоматично виконують дії за тригерами</string>
+    <string name="preset_settings">Налаштування шаблонів</string>
+    <string name="activation">Активація</string>
+    <string name="temp_target_management">Тимчасова ціль</string>
+    <string name="revert_to_defaults">Повернути значення за замовчуванням</string>
+    <string name="location_front_right_upper_chest">Груди справа</string>
+    <string name="location_front_left_upper_chest">Груди зліва</string>
+    <string name="location_side_right_upper_arm">Праве плече збоку</string>
+    <string name="location_side_left_upper_arm">Ліве плече збоку</string>
+    <string name="location_back_right_upper_arm">Праве плече ззаду</string>
+    <string name="location_back_left_upper_arm">Ліве плече ззаду</string>
+    <string name="location_side_right_upper_abdomen">Живіт збоку справа, верх</string>
+    <string name="location_side_left_upper_abdomen">Живіт збоку зліва, верх</string>
+    <string name="location_side_right_lower_abdomen">Живіт збоку справа, низ</string>
+    <string name="location_side_left_lower_abdomen">Живіт збоку зліва, низ</string>
+    <string name="location_front_right_upper_abdomen">Живіт спереду справа, верх</string>
+    <string name="location_front_left_upper_abdomen">Живіт спереду зліва, верх</string>
+    <string name="location_front_right_lower_abdomen">Живіт спереду справа, низ</string>
+    <string name="location_front_left_lower_abdomen">Живіт спереду зліва, низ</string>
+    <string name="location_back_right_buttock">Права сідниця</string>
+    <string name="location_back_left_buttock">Ліва сідниця</string>
+    <string name="location_back_right_lower_back">Поперек справа</string>
+    <string name="location_back_left_lower_back">Поперек зліва</string>
+    <string name="location_side_right_upper_thigh">Праве стегно збоку, верх</string>
+    <string name="location_side_left_upper_thigh">Ліве стегно збоку, верх</string>
+    <string name="location_side_right_lower_thigh">Праве стегно збоку, низ</string>
+    <string name="location_side_left_lower_thigh">Ліве стегно збоку, низ</string>
+    <string name="location_front_right_upper_thigh">Праве стегно спереду, верх</string>
+    <string name="location_front_left_upper_thigh">Ліве стегно спереду, верх</string>
+    <string name="location_front_right_lower_thigh">Праве стегно спереду, низ</string>
+    <string name="location_front_left_lower_thigh">Ліве стегно спереду, низ</string>
+    <string name="arrow_up">Вгору</string>
+    <string name="arrow_up_right">Вгору праворуч</string>
+    <string name="arrow_right">Праворуч</string>
+    <string name="arrow_down_right">Вниз праворуч</string>
+    <string name="arrow_down">Вниз</string>
+    <string name="arrow_down_left">Вниз ліворуч</string>
+    <string name="arrow_left">Ліворуч</string>
+    <string name="arrow_up_left">Вгору ліворуч</string>
+    <string name="arrow_center">Центр</string>
     <!--    Command-->
+    <string name="command_replaced">Замінено новішою командою</string>
+    <string name="pump_not_configured">Помпу не налаштовано</string>
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Загальна добова доза</string>
     <!--    Ntp-->
     <!-- User Entry -->
+    <string name="uel_sensor_location">МІСЦЕ СЕНСОРА</string>
+    <string name="uel_site_location">МІСЦЕ ВВЕДЕННЯ</string>
+    <string name="uel_calibration_removed">КАЛІБРУВАННЯ ВИДАЛЕНО</string>
+    <string name="uel_new_insulin">НОВИЙ ІНСУЛІН</string>
+    <string name="uel_change_pump_insulin">ЗМІНА ІНСУЛІНУ В ПОМПІ</string>
+    <string name="uel_store_insulin">ЗБЕРЕГТИ ІНСУЛІН</string>
+    <string name="uel_change_insulin_concentration">ЗМІНА КОНЦЕНТРАЦІЇ ІНСУЛІНУ</string>
+    <string name="uel_insulin_removed">ІНСУЛІН ВИДАЛЕНО</string>
+    <string name="uel_running_mode">РОБОЧИЙ РЕЖИМ</string>
+    <string name="uel_running_mode_removed">РОБОЧИЙ РЕЖИМ ВИДАЛЕНО</string>
+    <string name="uel_running_mode_updarted">РОБОЧИЙ РЕЖИМ ОНОВЛЕНО</string>
+    <string name="uel_scene_activated">СЦЕНУ АКТИВОВАНО</string>
+    <string name="uel_scene_deactivated">СЦЕНУ ДЕАКТИВОВАНО</string>
+    <string name="uel_remote_config_changed">ВІДДАЛЕНУ КОНФІГУРАЦІЮ ЗМІНЕНО</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Тимчасове низьке цільове значення</string>
+    <string name="insulin_dia">Значення DIA інсуліну</string>
+    <string name="insulin_peak">Значення піку інсуліну</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Профіль не вибрано</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s (копія)</string>
+    <string name="profile_not_saved_activate">Профіль не збережено. Збережіть профіль перед активацією.</string>
+    <string name="profile_basal_not_compatible_with_pump">Базальна швидкість несумісна з поточною помпою, тому її не можна активувати. Зменште відсоток або змініть базальну швидкість.</string>
+    <string name="profile_basal_below_pump_minimum">Базальна швидкість нижча за мінімум поточної помпи, тому її не можна активувати. Збільште відсоток або змініть базальну швидкість.</string>
+    <string name="profile_pump_incompatible_label">Обмеження помпи</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="temp_basal_percent">ТИМЧАСОВИЙ БАЗАЛ %1$d%% %2$d хв</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens вимкнено</string>
+    <string name="isf_for_carbs">Середній ISF для калькулятора та засвоєння вуглеводів: %1$.1f</string>
+    <string name="isf_profile">ISF профілю: %1$.1f</string>
+    <string name="isf_variable">Змінний ISF: %1$.1f</string>
+    <string name="isf_effective">Ефективний ISF: %1$.1f</string>
+    <string name="autosens_short">%.0f%%</string>
     <!-- Autotune -->
     <!-- Alerts -->
+    <string name="urgent_alarm">Термінова тривога</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Помічник болюсу</string>
+    <string name="wizard_bg_label">ГК</string>
+    <string name="wizard_correction">Корекція</string>
+    <string name="wizard_subtotal">Проміжна сума</string>
+    <string name="carbs_type_bread">Хліб, несолодка випічка, йогурт, фрукти (яблуко, банан, груша), картопля, рис, гречка, вівсянка, повільні та низьковуглеводні продукти, овочі</string>
+    <string name="carbs_type_cake">Вареники, макарони, азійська кухня з великою кількістю вуглеводів і жирів, солодка та дріжджова випічка, пластівці, каші, мед, джем</string>
+    <string name="carbs_type_pizza">Лазанья, піца, гамбургери, картопля фрі, печена картопля, чипси та подібні снеки</string>
+    <string name="wizard_total">Разом</string>
+    <string name="wizard_carb_time">Час прийому вуглеводів</string>
+    <string name="carb_time_now">Зараз</string>
+    <string name="change">Змінити</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
+    <string name="grant">Надати</string>
+    <string name="wizard_set_alarm">Встановити сигнал</string>
+    <string name="eat_reminder_title">Час їсти</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Загальне очікування: %1$s</string>
+    <string name="eat_reminder_rung">Час минув</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d хв</string>
+    <string name="eat_reminder_not_set">Не вдалося встановити нагадування про їжу. Дозвольте AAPS встановлювати будильники й нагадування в налаштуваннях Android.</string>
+    <string name="wizard_use_percentage">Використати відсоток</string>
+    <string name="wizard_include_bg">Враховувати ГК</string>
+    <string name="wizard_include_tt">Враховувати тимчасову ціль</string>
+    <string name="wizard_include_trend">Враховувати тренд</string>
+    <string name="wizard_include_iob">Враховувати IOB</string>
+    <string name="wizard_include_cob">Враховувати COB</string>
+    <string name="wizard_calculation">Розрахунок</string>
+    <string name="no_action_selected">Дію не вибрано, нічого не станеться.</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Макс. видалення: %1$d г (активні вуглеводи)</string>
+    <string name="wizard_no_insulin_required">Інсулін не потрібен</string>
+    <string name="wizard_trend_detail">Тренд за 15 хв (%1$s %2$s)</string>
+    <string name="quick_wizard_not_available">Вибраний швидкий майстер більше недоступний, оновіть плитку</string>
+    <string name="quickwizard_managemnt">Швидкий майстер</string>
     <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
+    <string name="max_daily_units">Макс. одиниць на добу</string>
+    <string name="initializing">Ініціалізація…</string>
+    <string name="warning" comment="Generic warning dialog title">Попередження</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Критично</string>
+    <string name="alert" comment="Generic alert dialog title">Попередження</string>
+    <string name="retry" comment="Button label to retry a failed operation">Повторити</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Завершити</string>
+    <string name="firmware" comment="Pump firmware version label">Прошивка</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Швидкість болюсу</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Історія</string>
+    <string name="overview_reservoir_concentration_value_over">Залишилось понад %1$s</string>
     <!--    Constraints-->
+    <string name="limitingpercentrate">Обмеження максимального відсотка до %1$d%% через %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Відсоткову швидкість %1$d%% перераховано в %2$s Од/год за поточного базалу %3$s Од/год</string>
     <!--    Dialogs-->
+    <string name="dismiss">Закрити</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Головний пароль не встановлено!\n\nСпочатку встановіть головний пароль, потім спробуйте знову.</string>
     <!-- <unattended_export result messages> -->
     <!-- Cloud export -->
+    <string name="export_cloud_success">Експорт у хмару виконано</string>
+    <string name="export_cloud_failed">Експорт у хмару НЕ ВДАВСЯ!</string>
+    <string name="csv_exported">Записи користувача експортовано</string>
+    <string name="csv_export_failed">Експорт записів користувача НЕ ВДАВСЯ!</string>
+    <string name="logs_sent">Журнали надіслано електронною поштою</string>
+    <string name="logs_send_failed">Не вдалося надіслати журнали</string>
+    <string name="cloud_directory">Хмарний каталог</string>
+    <string name="cloud_token_expired_or_invalid">Авторизація хмарного сховища закінчилася або недійсна. Авторизуйтеся ще раз.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Локально</string>
+    <string name="chip_cloud">Хмара</string>
+    <string name="chip_email">Ел. пошта</string>
+    <string name="send_logs">Надіслати журнали</string>
+    <string name="file_management">Керування файлами</string>
+    <string name="database_management">Керування базою даних</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Налаштувати рівні деталізації журналу</string>
+    <string name="maintenance_send_logs_desc">Поділитися файлами журналів для пошуку проблем</string>
+    <string name="maintenance_delete_logs_desc">Видалити старі файли журналів</string>
+    <string name="maintenance_aaps_directory_desc">Вибрати папку локального сховища</string>
+    <string name="maintenance_cloud_directory_desc">Налаштувати хмарне сховище (Google Drive)</string>
+    <string name="maintenance_export_desc">Зберегти зашифровану резервну копію налаштувань</string>
+    <string name="maintenance_import_desc">Відновити налаштування з резервної копії</string>
+    <string name="maintenance_export_csv_desc">Експортувати історію терапії як таблицю</string>
+    <string name="maintenance_cleanup_db_desc">Видалити старі записи з бази даних</string>
+    <string name="maintenance_reset_aps_results_desc">Очистити збережені результати алгоритму</string>
+    <string name="maintenance_reset_db_desc">Стерти всі бази даних і завантажити заново</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Вибрати тип сховища</string>
+    <string name="clear_cloud_action">Очистити налаштування</string>
+    <string name="clear_cloud_settings">Очистити хмарні налаштування</string>
+    <string name="clear_cloud_settings_message">Буде виконано перехід на локальне сховище, а авторизацію буде видалено. Продовжити?</string>
+    <string name="cloud_revoke_incomplete">Хмарні налаштування на цьому пристрої очищено, але не вдалося зв’язатися з обліковим записом, щоб повністю відкликати доступ. Можливо, варто видалити доступ вручну в налаштуваннях облікового запису.</string>
+    <string name="cloud_connection_failed">Не вдалося з’єднатися з хмарним сховищем</string>
+    <string name="cloud_reauthorize_message">Не вдалося з’єднатися з хмарним сховищем. Пройти автентифікацію ще раз?</string>
+    <string name="reauthorize">Автентифікуватися знову</string>
+    <string name="cloud_auth_success">Автентифікація хмарного сховища успішна</string>
+    <string name="authorization_status">Статус авторизації</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d год %2$d хв</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d год</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Спарувати</string>
+    <string name="pump_unpair">Розпарувати</string>
+    <string name="pump_unpair_confirm_title">Розпарувати помпу?</string>
     <!--    BlePreCheck-->
+    <string name="ble_permissions_missing">Дозволи Bluetooth не надано. Надайте їх у налаштуваннях застосунку.</string>
     <!--    Preferences -->
     <!-- Navigation -->
+    <string name="nav_about">Про застосунок</string>
+    <string name="nav_about_desc">Переглянути версію та інформацію про застосунок</string>
+    <string name="nav_history_browser_desc">Переглядати графіки історії</string>
+    <string name="appearance">Вигляд</string>
+    <string name="manage">Керувати</string>
+    <string name="localprofile">Профіль</string>
+    <string name="nav_setupwizard_desc">Налаштуйте AAPS крок за кроком</string>
+    <string name="statistics_desc">Перегляд статистики та звітів</string>
+    <string name="tdd_cycle_pattern">Циклічність TDD</string>
+    <string name="tdd_cycle_pattern_desc">Накладає добові суми інсуліну за 28-денними циклами, щоб побачити повторювані закономірності</string>
+    <string name="nav_profile_helper_desc">Створіть профіль на основі ваги або TDD</string>
+    <string name="quick_launch_configure">Налаштувати швидкий запуск</string>
+    <string name="quick_launch_configure_desc">Налаштуйте кнопки швидких дій на екрані огляду</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Локальні сповіщення</string>
     <!-- Actions Screen -->
+    <string name="add">Додати</string>
+    <string name="remove">Видалити</string>
+    <string name="reorder">Змінити порядок</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Перемістити раніше</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Перемістити пізніше</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Показати деталі</string>
+    <string name="presets_changed_reorder_aborted">Шаблони змінено в іншому місці. Новий порядок не збережено.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Позиція %1$d з %2$d</string>
+    <string name="status">Статус</string>
+    <string name="pump_actions">Дії помпи</string>
+    <string name="tempbasal_button">Тимчасовий базал</string>
+    <string name="device_maintenance">Обслуговування пристрою</string>
+    <string name="from_label">Від</string>
+    <string name="to_label">До</string>
     <!-- Site Rotation -->
+    <string name="select_location">Натисніть нижче, щоб вибрати місце введення</string>
     <!-- About -->
     <!--    Maintenance-->
     <!--    Weekday-->
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units_signed">%1$+.2f Од</string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS відтворює звук"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
+    <string name="edit_profile_name">Редагувати назву профілю</string>
+    <string name="unsaved_changes">Незбережені зміни</string>
+    <string name="unsaved_changes_message">У вас є незбережені зміни. Що ви хочете зробити?</string>
+    <string name="discard">Відкинути</string>
+    <string name="add_time_block">Додати часовий блок</string>
+    <string name="remove_entry">Видалити запис</string>
+    <string name="target_low_label">Нижня</string>
+    <string name="target_high_label">Верхня</string>
     <!--    Search-->
+    <string name="search">Пошук</string>
+    <string name="clear">Очистити</string>
+    <string name="search_category_categories">Категорії налаштувань</string>
+    <string name="search_category_preferences">Налаштування</string>
+    <string name="search_category_dialogs">Діалоги</string>
+    <string name="search_category_plugins">Плагіни</string>
+    <string name="search_category_wiki">Документація</string>
+    <string name="wiki_search_offline">Для пошуку в документації потрібне підключення до інтернету</string>
+    <string name="no_search_results">Нічого не знайдено</string>
+    <string name="search_plugin_disabled">Плагін %1$s вимкнено</string>
     <!--    Food Management -->
+    <string name="food_management">Їжа</string>
+    <string name="food_deleted">Їжу видалено</string>
+    <string name="edit_food">Редагувати їжу</string>
+    <string name="add_food">Додати їжу</string>
+    <string name="name">Назва</string>
+    <string name="portion">Порція</string>
+    <string name="unit_label">Одиниця</string>
+    <string name="undo">Скасувати</string>
+    <string name="no_data">Немає даних</string>
+    <string name="manage_food_desc">Керувати записами бази їжі</string>
+    <string name="label_carbs_g">Вуглеводи (г)</string>
+    <string name="label_fat_g">Жири (г)</string>
+    <string name="label_protein_g">Білки (г)</string>
+    <string name="label_energy_kj">Енергія (кДж)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Налаштування журналу</string>
     <!--    Maintenance-->
+    <string name="logs_deleted">Журнали видалено</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Розшифрувати &amp; переглянути</string>
+    <string name="import_decrypt">Розшифрувати</string>
+    <string name="import_master_password">Головний пароль</string>
+    <string name="import_decryption_password">Пароль для розшифрування</string>
+    <string name="import_different_password_hint">Файл зашифровано іншим паролем</string>
+    <string name="import_wrong_password">Неправильний пароль</string>
+    <string name="import_btn">Імпортувати</string>
+    <string name="import_anyway_btn">Все одно імпортувати</string>
+    <string name="import_apply_title">Застосувати імпортовані налаштування?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Налаштувань для зміни: %1$d. Плагіни, які змінилися, буде перезапущено.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Налаштувань для зміни: %1$d. Налаштувань помпи збережено: %2$d, тому ваша помпа працюватиме далі.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Імпортовані налаштування не вибрали жодної помпи, яка є на цьому телефоні. Зараз активний драйвер %1$s — перевірте налаштування помпи.</string>
+    <string name="import_applying">Застосування налаштувань…</string>
+    <string name="import_replace_pump_settings">Також замінити налаштування помпи</string>
+    <string name="import_replace_pump_settings_summary">Залиште вимкненим, щоб зберегти помпу, спарену з цим телефоном. Увімкніть, коли відновлюєте налаштування на новому телефоні з тією самою помпою.</string>
+    <string name="import_apply_waiting">Очікування помпи…</string>
+    <string name="import_apply_pump_busy">Помпа ще зайнята, тому налаштування не застосовано.</string>
+    <string name="import_apply_retry_question">Спробувати знову зараз?</string>
+    <string name="import_applied_title">Налаштування застосовано</string>
+    <string name="import_applied_message">Імпортовані налаштування тепер використовуються.</string>
+    <string name="import_apply_pump_changed">Скасовано: імпорт налаштувань змінив помпу</string>
+    <string name="import_source_local">Локально</string>
+    <string name="import_source_cloud">Хмара</string>
+    <string name="import_load_more">Завантажити ще</string>
+    <string name="import_no_files">Файли налаштувань не знайдено</string>
+    <string name="import_decrypt_ok">Розшифрування успішне. Можна імпортувати.</string>
+    <string name="import_decrypt_warn">Розшифрування успішне, але є попередження.</string>
+    <string name="import_decrypt_error">Розшифрування успішне, але імпорт неможливий.</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Знайти помпу</string>
+    <string name="ble_scan_select_pump">Виберіть свою помпу зі списку нижче</string>
+    <string name="ble_scan_scanning">Пошук пристроїв…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Додати графік</string>
+    <string name="graph_new">Новий графік</string>
+    <string name="graph_number">Графік %1$d</string>
+    <string name="graph_bg">Графік ГК</string>
+    <string name="graph_height">Висота графіка [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">ПРОГН</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">ВІДХ</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">НАХ.ВІДХ</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">ЧСС</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">КРОКИ</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Активний інсулін (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Абсолютний інсулін</string>
+    <string name="graph_series_cob">Активні вуглеводи (COB)</string>
+    <string name="graph_series_bgi">Вплив на глюкозу крові</string>
+    <string name="graph_series_deviations">Відхилення</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Зміна чутливості</string>
+    <string name="graph_series_variable_sens">Змінна чутливість</string>
+    <string name="graph_series_deviation_slope">Нахил відхилень</string>
+    <string name="graph_series_heart_rate">Пульс</string>
+    <string name="graph_series_steps">Кроки</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Активність інсуліну</string>
+    <string name="graph_series_predictions">Прогнози</string>
+    <string name="units_days">днів</string>
+    <string name="units_format_days">%1$d дн.</string>
+    <string name="units_format_days_range">%1$d дн. (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d г</string>
+    <string name="units_format_grams_range">%1$d г (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d год</string>
+    <string name="units_format_hours_double">%1$.1f год</string>
+    <string name="units_format_hours_double_range">%1$.1f год (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d год (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f Од</string>
+    <string name="units_format_insulin_int">%1$d Од</string>
+    <string name="units_format_insulin_int_range">%1$d Од (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f Од (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f Од/год</string>
+    <string name="units_format_insulin_rate_range">%1$.1f Од/год (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s мг/дл</string>
+    <string name="units_format_mgdl_range">%1$s мг/дл (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d хв</string>
+    <string name="units_format_min_range">%1$d хв (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d с</string>
+    <string name="units_format_sec_range">%1$d с (%2$d - %3$d)</string>
+    <string name="units_grams">г</string>
+    <string name="units_hours">год</string>
+    <string name="units_insulin">Од</string>
+    <string name="units_insulin_rate">Од/год</string>
+    <string name="units_kg">кг</string>
+    <string name="units_mgdl">мг/дл</string>
+    <string name="units_min">хв</string>
+    <string name="units_mmol">ммоль/л</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">с</string>
+    <string name="units_years">р.</string>
+    <string name="secrets_not_protected">На цьому комп’ютері не знайдено системного сховища ключів. Ключі, що захищають ваші налаштування та спарювання з основним пристроєм, зберігаються у файлах поруч із даними, тому кожен, хто отримає копію ваших файлів, отримає і ці ключі. На Linux встановіть і запустіть сховище ключів (наприклад, GNOME Keyring або KWallet), а потім знову запустіть AAPS.</string>
 </resources>
