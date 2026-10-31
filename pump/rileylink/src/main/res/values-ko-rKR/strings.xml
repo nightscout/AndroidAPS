@@ -57,7 +57,7 @@
     <string name="rileylink_error_tuneup_failed">튜닝 실패</string>
     <string name="rileylink_error_pod_unreachable">포드에 연결할 수 없습니다.</string>
     <!-- RileyLink - Common -->
-    <string name="rileylink_target_device_medtronic">메드트로닉 펌프</string>
+    <string name="rileylink_target_device_medtronic">Medtronic 펌프</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">OrangeLink/EmaLink/DiaLink에서 보고한 배터리 잔량 나타내기</string>
