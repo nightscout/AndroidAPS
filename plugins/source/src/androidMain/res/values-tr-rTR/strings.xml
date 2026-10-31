@@ -2,7 +2,7 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient KŞ</string>
-    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
+    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini indirir</string>
     <string name="source_xdrip">xDrip+ KŞ</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
@@ -17,7 +17,7 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Intelligo uygulamasından değerler alır</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
+    <string name="description_source_tomato">Tomato uygulamasından (MiaoMiao cihazı) KŞ değerlerini alır</string>
     <string name="random_bg">Rastgele KŞ</string>
     <string name="description_source_random_bg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
     <!-- Patched Syai Tag App -->
