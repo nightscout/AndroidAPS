@@ -90,7 +90,7 @@
     <string name="pump_management">Pompe</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
-    <string name="uploader">Téléchargement</string>
+    <string name="uploader">Envoi</string>
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
     <string name="treatments_iob_label_string">IA: </string>
@@ -262,7 +262,7 @@
     <string name="isf_short">SI</string>
     <string name="canceling_tbr_failed">Echec de l\'annulation du basal temporaire</string>
     <string name="canceling_eb_failed">Échec de l\'annulation du Bolus étendu</string>
-    <string name="virtualpump_uploadstatus_title">Télécharger l\'état de la pompe sur NS ou Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Envoyer l\'état de la pompe sur NS ou Tidepool</string>
     <string name="iob_label">Insuline Active (IA)</string>
     <string name="loopstatus_targets">CIBLES:</string>
     <string name="loopstatus_OAPS_result">RÉSULTATS OAPS:</string>
@@ -431,7 +431,7 @@
     <string name="client_roles_info_open">À propos des rôles</string>
     <string name="client_roles_info">Chaque téléphone appairé a un rôle. Le téléphone principal le vérifie pour chaque commande, et le téléphone ne montre que ce que son rôle permet. Un nouveau rôle prend effet immédiatement, sans besoin de s\'appairer à nouveau.\n\nEn lecture seule : le téléphone reste appairé, mais n\'affiche que les données.\n\nRepas: bolus, assistant de bolus, QuickWizard et glucides. Il peut également arrêter un bolus en cours d\'injection. Les glucides entrés ici fait que la boucle donne plus d\'insuline.\n\nAidant: tout ce qu\'un utilisateur fait dans AAPS, comme les cibles temporaires, les changements de profil et d\'insuline, état de la boucle, basal temporaire, bolus étendus, scenarii, événements du careportail, calibrations et suppression d\'enregistrements. Il ne peut pas modifier les paramètres ou préréglages.\n\nAdmin: tout, paramètres et préréglages inclus (QuickWizard, paramétragedes cibles temporaires, scenarii, profiles, automation, insulin).</string>
     <string name="client_read_only_banner">Ce téléphone est en mode lecture seule sur le téléphone principal.</string>
-    <string name="hardened_mode_info">Le téléphone principal n\'accepte les changements que de la part des clients appairés. Il n\'accepte pas de traitements, cibles temporaires, changements de profil, les modifications du mode en cours d\'exécution ou suppressions qui sont effectuées directement dans Nightscout, par le site Web ou dans d\'autres applications. Les paramètres pour accepter les données de Nightscout sont masqués lorsque le mode renforcé est activé. Les commandes par SMS ne sont pas affectées.\n\nLe téléphone principal télécharge toujours toutes les données dans Nightscout, glycémie incluse. Si elle obtient sa glycémie de Nightscout, elle prend quand même la glycémie de là.\n\nPour charger l\'historique sur un nouveau téléphone principal, utilisez la synchronisation complète dans NSClient. La synchronisation complète prend tout ce qui se trouve dans Nightscout, les profils inclus.\n\nLe contrôle à distance des clients a besoin d\'une connexion WebSocket fonctionnelle à Nightscout, sur le téléphone principal et sur les clients appairés. Le mode simple active toujours le mode renforcé. Pour le désactiver, quittez le mode simple et arrêtez le contrôle du client sur le téléphone principal.</string>
+    <string name="hardened_mode_info">Le téléphone principal n\'accepte les changements que de la part des clients appairés. Il n\'accepte pas de traitements, cibles temporaires, changements de profil, les modifications du mode en cours d\'exécution ou suppressions qui sont effectuées directement dans Nightscout, par le site Web ou dans d\'autres applications. Les paramètres pour accepter les données de Nightscout sont masqués lorsque le mode renforcé est activé. Les commandes par SMS ne sont pas affectées.\n\nLe téléphone principal envoie toujours toutes les données vers Nightscout, glycémie incluse. S\'il obtient sa glycémie de Nightscout, il prend quand même la glycémie de là.\n\nPour charger l\'historique sur un nouveau téléphone principal, utilisez la synchronisation complète dans NSClient. La synchronisation complète prend tout ce qui se trouve dans Nightscout, les profils inclus.\n\nLe contrôle à distance des clients a besoin d\'une connexion WebSocket fonctionnelle à Nightscout, sur le téléphone principal et sur les clients appairés. Le mode simple active toujours le mode renforcé. Pour le désactiver, quittez le mode simple et arrêtez le contrôle du client sur le téléphone principal.</string>
     <string name="scene_lock_reason_master_offline">Maître déconnecté</string>
     <string name="scene_lock_reason_control_disabled">Contrôle à distance désactivé</string>
     <string name="scene_lock_reason_scene_active">Arrêter d\'abord le scénario en cours d\'exécution</string>
@@ -717,7 +717,7 @@
     <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
     <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
     <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
-    <string name="profile_name_contains_dot">Certains noms de profil contiennent des points.\nCeci n\'est pas supporté par NS.\nLes profils ne seront pas téléchargés vers NS.</string>
+    <string name="profile_name_contains_dot">Certains noms de profil contiennent des points.\nCeci n\'est pas supporté par NS.\nLes profils ne seront pas envoyés vers NS.</string>
     <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
     <string name="errors">Erreurs</string>
     <!-- Command Queue + readStatus reasons -->
@@ -985,7 +985,7 @@
     <string name="select_location">Cliquez ci-dessous pour sélectionner le site</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
-    <string name="fabric_upload_disabled">Téléchargement des logs de plantage désactivé !</string>
+    <string name="fabric_upload_disabled">Envoi des logs de plantage désactivé !</string>
     <string name="about_link_urls">\n\nDocumentation :\nhttps://wiki.aaps.app/fr/latest/\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
