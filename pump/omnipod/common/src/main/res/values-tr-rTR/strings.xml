@@ -57,11 +57,11 @@
     <!-- Omnipod - Pod Activation Wizard -->
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Pod\'u Doldur</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Pod\'u Başlat</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Pod\'u Ekle</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Pod\'u Tak</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">İnfüzyon bölgesini hazırlayın. Pod\'un iğne kapağını ve yapışkan desteğini çıkarın ve Pod\'u infüzyon bölgesine takın.\n\nKanül dışarı çıkarsa, lütfen <b>İptal</b>\'e basın ve Pod\'unuzu atın.\n\nKanülü yerleştirmek ve bazal iletimini başlatmak için <b>İleri</b>\'ye basın.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text"><b>Tamam</b>\'a bastığınızda kanül yerleştirilecektir. Pod\'u infüzyon bölgenize taktığınızdan emin olun.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Kanül Yerleştir</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Başlangıç bazal programı ayarlanacak ve kanül yerleştirilecek\n\nKanül başarıyla yerleştirildiğinde, <b>İleri</b>\'ye basabilirsiniz.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Başlangıç bazal programı ayarlanacak ve kanül yerleştirilecek.\n\nKanül başarıyla yerleştirildiğinde, <b>İleri</b>\'ye basabilirsiniz.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod Etkinleştirildi</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Yeni Pod artık aktif.\n\nBazal planınız programlandı ve kanül yerleştirildi.\n\nLütfen kanülün doğru şekilde takıldığından emin olun. Düzgün takılmadığını düşünüyorsanız Pod\'unuzu değiştirin.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
@@ -73,7 +73,7 @@
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Devre dışı bırakıldı</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod\'unuz devre dışı bırakıldı.\n\nLütfen Pod\'u vücudunuzdan çıkarın ve geri dönüşüme atın.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod Çıkarıldı</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Pod durumu \"çıkarıldı\". Pod düzgün devre dışı bırakılmadığı için insülin iletimi askıya alınmadı!\n\nLütfen Podu vücudunuzdan çıkarın ve geri dönüşüme atın.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Pod durumu silindi. Pod düzgün devre dışı bırakılmadığı için insülin iletimi askıya alınmadı!\n\nLütfen Pod\'u vücudunuzdan çıkarın ve geri dönüşüme atın.</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Pod\'u çıkartırsanız, artık onunla iletişim kuramazsınız. Bunu yalnızca Pod ile tüm iletişim sürekli olarak başarısız olduğunda yapmalısınız. Pod\'u çıkartmak istediğinizden emin misiniz?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Pod\'u Çıkart</string>
     <!-- Omnipod - Preferences -->
@@ -87,17 +87,17 @@
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Etkinleştirirseniz, belirtilen süreye ulaşıldığında pod bip sesi çıkarır</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Süre bitiminden önce hatırlatma (72 Saat)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Süre sonu alarmını etkinleştir</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Etkinleştirildiğinde, pompa kapanmadan 1 saat önce pod bip sesi çıkarır</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Etkinleştirilirse, belirtilen süreye ulaşıldığında ve kapanmadan 1 saat önce pod bip sesi çıkarır</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Pompa kapanmadan önce uyar (80 Saat)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Düşük rezervuar uyarısını etkinleştir</string>
-    <string name="omnipod_common_preferences_low_reservoir_alert_units">Ünite</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Ünite sayısı</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod uyarılarını otomatik olarak sustur</string>
     <string name="omnipod_common_preferences_category_other">Diğer</string>
     <string name="omnipod_common_preferences_category_alerts">Alarmlar</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Onay Bipleri</string>
     <string name="omnipod_common_preferences_category_notifications">Bildirimler</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO bildirimleri için sesi etkinleştir</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için ses etkinleştirildi</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için sesi etkinleştir</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Belirsiz bolus bildirimleri için sesi etkinleştir</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">İletimin askıya alındığı bildirimi etkinleştirildiğinde sesle uyar</string>
     <string name="omnipod_dash_use_bonding">Bluetooth eşleşmesi</string>
@@ -124,7 +124,7 @@
     <string name="omnipod_common_pdm_notification_header_pod_expired">Pod Süresi Doldu</string>
     <string name="omnipod_common_pdm_notification_text_pod_expired">İnsülin iletimi durdu. Pod\'u şimdi değiştirin.</string>
     <string name="omnipod_common_pdm_notification_header_occluded">Tıkanma tespit edildi</string>
-    <string name="omnipod_common_pdm_notification_text_occluded">İnsülin iletimi durdu. Pod\'u şimdi değiştirin. KŞ\'ni kontrol edin</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">İnsülin iletimi durdu. Pod\'u şimdi değiştirin. KŞ\'nizi kontrol edin</string>
     <string name="omnipod_common_pdm_notification_header_pod_error">Pod hatası</string>
     <string name="omnipod_common_pdm_notification_text_pod_error">İnsülin iletimi durdu. Pod\'u şimdi değiştirin.</string>
     <!-- Omnipod - Alerts -->
@@ -147,7 +147,7 @@
     <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
     <string name="omnipod_common_cmd_configure_alerts">Alarmları Yapılandır</string>
     <string name="omnipod_common_cmd_silence_alerts">Alarmları Sustur</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Nabız Kaydını Oku</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Darbe Kaydını Oku</string>
     <string name="omnipod_common_cmd_suspend_delivery">İletimi Askıya Al</string>
     <string name="omnipod_common_cmd_resume_delivery">İletime devam et</string>
     <string name="omnipod_common_cmd_cancel_tbr">GBO iptal et (kullanıcı)</string>
@@ -159,14 +159,14 @@
     <string name="omnipod_common_cmd_unknown_entry">Bilinmeyen Giriş</string>
     <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Askıya Alma Uyarılarını Devre Dışı Bırak</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Eşleştirme hatırlatıcısını bitir</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Kurulum hatırlatıcısını bitir</string>
+    <string name="omnipod_common_alert_finish_pairing_reminder">Eşleştirmeyi bitirme hatırlatıcısı</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Kurulumu bitirme hatırlatıcısı</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
-    <string name="omnipod_common_moments_ago">Dakika önce</string>
+    <string name="omnipod_common_moments_ago">Az önce</string>
     <string name="omnipod_common_less_than_a_minute_ago">Bir dakikadan az bir süre önce</string>
     <string name="omnipod_common_composite_time">%1$s ve %2$s</string>
-    <string name="omnipod_common_time_ago">%1$s dak önce</string>
+    <string name="omnipod_common_time_ago">%1$s önce</string>
     <plurals name="omnipod_common_minutes">
         <item quantity="one">%1$d dakika</item>
         <item quantity="other">%1$d dakika</item>
@@ -186,15 +186,15 @@
     <string name="omnipod_common_overview_pod_hard_end_date">Pod Zorunlu Sonu</string>
     <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
-    <string name="omnipod_common_history_tbr_value">%1$.2f Ü/s, %2$d dakika</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f Ü/sa, %2$d dakika</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
     <string name="omnipod_common_bolus_type_smb">SMB</string>
     <string name="omnipod_common_bolus_type_basal_correction">Bazal düzeltme</string>
     <string name="omnipod_common_bolus_type_priming">Hazırlanıyor</string>
-    <string name="omnipod_common_history_total_delivered">Toplam gönderilen: %1$.2f Ü</string>
+    <string name="omnipod_common_history_total_delivered">Toplam iletilen: %1$.2f Ü</string>
     <string name="omnipod_common_failed_to_send">Komut gönderilirken hata</string>
     <string name="omnipod_common_command_not_sent">Komut gönderilmedi</string>
-    <string name="omnipod_common_command_not_received_by_the_pod">Pod\'dan komut alınmadı</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Komut Pod tarafından alınmadı</string>
     <string name="omnipod_common_unknown">Bilinmeyen komut durumu</string>
 </resources>
