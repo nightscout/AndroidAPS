@@ -4,14 +4,14 @@
     <string name="biometric_description">Coloque o dedo sobre o leitor de impressões digitais para verificar a sua identidade</string>
     <string name="settings_protection">Proteção das configurações</string>
     <string name="application_protection">Proteção do aplicativo</string>
-    <string name="bolus_protection">Proteção Bólus</string>
+    <string name="bolus_protection">Proteção do bólus</string>
     <string name="settings_password">Senha das configurações</string>
     <string name="settings_pin">Configurações do PIN</string>
     <string name="application_password">Senha do aplicativo</string>
     <string name="application_pin">PIN do Aplicativo</string>
     <string name="bolus_password">Senha do bólus</string>
     <string name="bolus_pin">PIN do bólus</string>
-    <string name="protection_timeout_title">PIN e senha de segurança</string>
+    <string name="protection_timeout_title">Retenção de senha e PIN [s]</string>
     <string name="protection_timeout_summary">Tempo até que a senha ou PIN sejam inseridos</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Retorno Inseguro</string>
