@@ -108,7 +108,7 @@
     <string name="pref_summary_ns_receive_carbs">קבלת רשומות פחמימות מ-Nightscout.</string>
     <string name="pref_title_ns_receive_therapy_event">קבלת אירועי טיפול מ־Nightscout</string>
     <string name="pref_summary_ns_receive_therapy_event">קבלת אירועי טיפול מ-Nightscout.</string>
-    <string name="pref_title_ns_receive_running_mode">קבלת מצב פעולה מ־Nightscout</string>
+    <string name="pref_title_ns_receive_running_mode">קבלת מצב הפעלה מ־Nightscout</string>
     <string name="pref_summary_ns_receive_running_mode">קבלת שינויים במצב הפעולה מ-Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">קבלת TBR/EB מ־Nightscout</string>
     <string name="pref_summary_ns_receive_tbr_eb">קבלת קצבי בזאלי זמני ובולוסים ממושכים מ-Nightscout.</string>
