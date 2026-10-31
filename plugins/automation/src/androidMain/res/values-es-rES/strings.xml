@@ -36,9 +36,9 @@
     <string name="action_scene_disabled">La escena está desactivada</string>
     <string name="automation_unit_meters">m</string>
     <string name="automation_unit_bpm">bpm</string>
-    <string name="automation_missing_task_name">Introduzca un nombre de tarea.</string>
-    <string name="automation_missing_trigger">Por favor, especifique al menos un activador.</string>
-    <string name="automation_missing_action">Por favor, especifique al menos una acción.</string>
+    <string name="automation_missing_task_name">Introduce un nombre de tarea.</string>
+    <string name="automation_missing_trigger">Por favor, especifica al menos un activador.</string>
+    <string name="automation_missing_action">Por favor, especifica al menos una acción.</string>
     <string name="exportsettings_message">Exportación de configuraciones: %1$s</string>
     <string name="export_settings_short">Texto en tratamientos:</string>
     <string name="alarm_message">Alarma: %1$s</string>
