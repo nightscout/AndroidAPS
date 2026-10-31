@@ -828,7 +828,7 @@
     <string name="last_connection_label">Última conexão</string>
     <string name="last_bolus_label">Último Bólus</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
-    <string name="tempbasal_label">Basal temporaria</string>
+    <string name="tempbasal_label">Basal temporária</string>
     <string name="extended_bolus_label">Bólus estendido</string>
     <string name="serial_number">Número de série</string>
     <string name="disconnected">Desconectado</string>
@@ -846,7 +846,7 @@
     <string name="connection_error">Erro de conexão com a bomba</string>
     <string name="reading_pump_history">Lendo histórico da bomba</string>
     <string name="password_cleared">Senha apagada!</string>
-    <string name="pairing">Pareando</string>
+    <string name="pairing">Pareamento</string>
     <string name="initializing">Inicializando…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Aviso</string>
