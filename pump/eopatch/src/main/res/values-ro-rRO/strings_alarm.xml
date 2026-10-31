@@ -5,7 +5,7 @@
     <string name="string_a004">Ocluzie\nPlasturele a fost dezactivat și administrarea insulinei a fost oprită. Schimbați plasturele acum.</string>
     <string name="string_a005">Autotestul la pornire a eșuat\nPlasturele a fost dezactivat. Schimbați plasturele acum.</string>
     <string name="string_a007">Temperatură necorespunzătoare\nAdministrarea insulinei sau procesul \"Activare plasture\" a fost oprit. Evitați acum temperatura extremă.</string>
-    <string name="string_a016">Eroare la inserarea acului\nVerificați poziția butonului și atingeți \'Reîncercați\'.</string>
+    <string name="string_a016">Eroare la inserarea acului\nVerificați poziția butonului și apăsați \'Reîncercați\'.</string>
     <string name="string_a018">Eroare baterie plasture\nPlasturele a fost dezactivat și\nadministrarea insulinei a fost oprită. Schimbați plasturele acum.</string>
     <string name="string_a019">Eroare baterie plasture\nPlasturele a fost dezactivat și administrarea insulinei a fost oprită. Schimbați plasturele acum.</string>
     <string name="string_a020">Eroare de activare plasture\nProcesul \'Activare plasture\' a expirat. Apăsați \'Confirmați\' pentru a dezactiva plasturele curent. Schimbați plasturele acum.</string>
@@ -25,7 +25,7 @@
     <string name="string_b000">Durata de funcționare a plasturelui va expira %s. Fiți pregătit să schimbați plasturele.</string>
     <string name="string_b001">Sfârșit suspendare insulină\nApăsați \'Reluați\' pentru a relua administrarea insulinei.</string>
     <string name="string_b003">Rezervor pe terminate\nÎnlocuiți plasturele în curând.</string>
-    <string name="string_b005">Durata de operare a plasturelui a expirat\nSchimbați plasturele acum.</string>
+    <string name="string_b005">Durata de funcționare a plasturelui a expirat\nSchimbați plasturele acum.</string>
     <string name="string_b006">Plasturele va expira în curând\nSchimbați plasturele acum.</string>
     <string name="string_b012">Activare plasture incompletă\nFinalizați procesul \'Activare plasture\'.</string>
     <string name="string_b018">Baterie plasture pe terminate\nFiți gata să schimbați plasturele.</string>
