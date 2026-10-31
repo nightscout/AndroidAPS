@@ -75,7 +75,7 @@
     <string name="pair_with_master_fetching">Looking up pairing…</string>
     <string name="pair_with_master_confirm_title">Pair with this master?</string>
     <string name="pair_with_master_confirm_master">Master: %1$s</string>
-    <string name="pair_with_master_confirm_warning">After pairing, this master will be able to send signed commands to this device.</string>
+    <string name="pair_with_master_confirm_warning">After pairing, this device will be able to send signed commands to this master.</string>
     <string name="pair_with_master_confirm_pair">Pair</string>
     <string name="pair_with_master_error_title">Cannot pair</string>
     <string name="pair_with_master_error_wrong_pin">No pairing found for that PIN. Check the PIN on the master and try again.</string>
