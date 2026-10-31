@@ -3,7 +3,7 @@
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Çalışan geçici bazal yok</string>
     <string name="start_activity_tt">Aktivite GH başlat</string>
-    <string name="start_eating_soon_tt">Yakında Yemek GH başlat</string>
+    <string name="start_eating_soon_tt">Yakında Yenecek GH başlat</string>
     <string name="start_hypo_tt">Hipo GH başlat</string>
     <string name="time_offset">Saat farkı</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
@@ -260,7 +260,7 @@
     <string name="dpv_default_profile">DPV Varsayılan profil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
-    <string name="overview_edit_quickwizard_button_text">Buton Metni</string>
+    <string name="overview_edit_quickwizard_button_text">Düğme Metni</string>
     <string name="quick_wizard_mode_wizard">Sihirbaz</string>
     <string name="quick_wizard_mode_insulin">İnsülin</string>
     <string name="quick_wizard_mode_carbs">Karbonhidrat</string>
