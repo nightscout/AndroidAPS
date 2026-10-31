@@ -40,7 +40,7 @@ class Libre3StagingTest {
 
     @Test
     fun `a sensor within twelve hours of its end is end of life`() {
-        val activatedAt = now - (Libre3Staging.DEFAULT_LIFE_MS + Libre3Staging.SENSOR_GRACE_MS - 6 * hour)
+        val activatedAt = now - (Libre3Staging.DEFAULT_LIFE_MS - 6 * hour)
         val lifecycle = Libre3Staging.computeLifecycle(activatedAt, null, now)!!
 
         assertThat(lifecycle.endOfLife).isTrue()
@@ -48,7 +48,7 @@ class Libre3StagingTest {
 
     /** Activation time that leaves exactly [Libre3Staging.END_OF_LIFE_MS] before the end of a [lifeMs] sensor. */
     private fun activatedAtOnEndOfLifeEdge(lifeMs: Long) =
-        now - (lifeMs + Libre3Staging.SENSOR_GRACE_MS - Libre3Staging.END_OF_LIFE_MS)
+        now - (lifeMs - Libre3Staging.END_OF_LIFE_MS)
 
     @Test
     fun `an unknown wear time falls back to fourteen days`() {

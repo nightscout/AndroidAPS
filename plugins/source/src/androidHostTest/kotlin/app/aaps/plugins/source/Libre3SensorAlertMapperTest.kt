@@ -19,7 +19,8 @@ class Libre3SensorAlertMapperTest {
     private val activated = 1_800_000_000_000L
     private val wearMinutes = 14 * 24 * 60
     private val lifeEnd = activated + wearMinutes * minute
-    private val expires = lifeEnd + Libre3Staging.SENSOR_GRACE_MS
+    // A Libre 3 has no grace period: the usable time ends with the life.
+    private val expires = lifeEnd
     private val lead = 12 * hour
 
     /** Day 5 of a running sensor, link up, a reading a minute ago: nothing to say. */
@@ -77,7 +78,7 @@ class Libre3SensorAlertMapperTest {
 
     /** The urgent alarm sounds once per end: the episode must not move with the health message. */
     @Test
-    fun `the first end message after life and grace keeps the same expired episode`() {
+    fun `the first end message after the end of life keeps the same expired episode`() {
         val past = running.copy(nowMs = expires + hour, lastReadingAtMs = expires + hour - minute)
         val before = map(past)
         val after = map(past.copy(fault = Libre3SensorFault.ENDED, nowMs = past.nowMs + minute))
@@ -99,7 +100,7 @@ class Libre3SensorAlertMapperTest {
     }
 
     @Test
-    fun `past life and grace the sensor is expired`() {
+    fun `past its life the sensor is expired`() {
         assertThat(map(running.copy(nowMs = expires, lastReadingAtMs = expires - minute))).isEqualTo(CgmSensorAlertState.Expired(expires))
     }
 
@@ -116,8 +117,8 @@ class Libre3SensorAlertMapperTest {
     }
 
     @Test
-    fun `the end of the usable time is the sensor life plus 12 h of grace`() {
-        assertThat(expires - lifeEnd).isEqualTo(12 * hour)
+    fun `the end of the usable time is the sensor life with no grace period`() {
+        assertThat(expires).isEqualTo(activated + 14 * 24 * hour)
         assertThat(map(running.copy(nowMs = expires - 1, lastReadingAtMs = expires - 1))).isEqualTo(CgmSensorAlertState.Expiring(expires))
         assertThat(map(running.copy(nowMs = expires, lastReadingAtMs = expires))).isEqualTo(CgmSensorAlertState.Expired(expires))
     }
@@ -125,7 +126,7 @@ class Libre3SensorAlertMapperTest {
     @Test
     fun `the wear time read by the scan sets the end`() {
         val shortLife = 10 * 24 * 60
-        val end = activated + shortLife * minute + Libre3Staging.SENSOR_GRACE_MS
+        val end = activated + shortLife * minute
         assertThat(map(running.copy(wearMinutes = shortLife, nowMs = end - hour, lastReadingAtMs = end - hour)))
             .isEqualTo(CgmSensorAlertState.Expiring(end))
     }

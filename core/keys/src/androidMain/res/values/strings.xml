@@ -50,9 +50,9 @@
     <string name="pref_title_alert_cgm_sensor_failed">Alert when the CGM sensor fails</string>
     <string name="pref_summary_alert_cgm_sensor_failed">Sound an alarm when the sensor reports an error or cannot be used. Only for BG sources that report their sensor state.</string>
     <string name="pref_title_alert_cgm_sensor_expired">Alert when the CGM sensor has ended</string>
-    <string name="pref_summary_alert_cgm_sensor_expired">Sound an alarm when the usable time of the sensor has ended, including the grace period the sensor allows (for Libre 3: its life plus 12 hours). Only for BG sources that report their sensor state.</string>
+    <string name="pref_summary_alert_cgm_sensor_expired">Sound an alarm when the usable time of the sensor has ended. Only for BG sources that report their sensor state.</string>
     <string name="pref_title_alert_cgm_sensor_expiring">Warn before the CGM sensor ends</string>
-    <string name="pref_summary_alert_cgm_sensor_expiring">Notify some hours before the usable time of the sensor ends, including the grace period the sensor allows (for Libre 3: its life plus 12 hours), so you can prepare a new sensor. Only for BG sources that report their sensor state.</string>
+    <string name="pref_summary_alert_cgm_sensor_expiring">Notify some hours before the usable time of the sensor ends, so you can prepare a new sensor. Only for BG sources that report their sensor state.</string>
     <string name="pref_title_alert_cgm_expiring_lead">Warn this long before the sensor ends</string>
     <string name="pref_title_alert_cgm_signal_lost">Alert on lost CGM signal</string>
     <string name="pref_summary_alert_cgm_signal_lost">Notify when the phone has had no link to the sensor, or no reading from it, for some time. Only for BG sources that report their sensor state.</string>

@@ -25,9 +25,6 @@ internal object Libre3Staging {
     /** Sensor life used when the NFC scan did not report a wear time. A Libre 3 runs 14 days. */
     const val DEFAULT_LIFE_MS = 14L * 24L * HOUR_MS
 
-    /** End of life grace. A sensor that still reads past its stored end is still a sensor. */
-    const val SENSOR_GRACE_MS = 12L * HOUR_MS
-
     /** End of life window: the user should start the next sensor. */
     const val END_OF_LIFE_MS = 12L * HOUR_MS
 
@@ -66,7 +63,8 @@ internal object Libre3Staging {
      * @param activatedAtMs when the sensor was started, in phone time. 0 means it is not known and
      *   no lifecycle is reported.
      * @param wearMinutes whole sensor life read by the NFC scan. Null or zero falls back to
-     *   [DEFAULT_LIFE_MS], which also covers a Libre 3 Plus on the safe side.
+     *   [DEFAULT_LIFE_MS], which also covers a Libre 3 Plus on the safe side. A Libre 3 has no
+     *   grace period after this life, unlike a Libre 2.
      */
     fun computeLifecycle(
         activatedAtMs: Long,
@@ -76,7 +74,7 @@ internal object Libre3Staging {
         if (activatedAtMs <= 0L) return null
         val lifeMs = wearMinutes?.takeIf { it > 0 }?.let { it * MINUTE_MS } ?: DEFAULT_LIFE_MS
         val age = (nowMs - activatedAtMs).coerceAtLeast(0L)
-        val expires = activatedAtMs + lifeMs + SENSOR_GRACE_MS
+        val expires = activatedAtMs + lifeMs
         val remaining = expires - nowMs
         return CgmSensorLifecycle(
             startedAtEpochMs = activatedAtMs,

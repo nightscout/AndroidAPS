@@ -48,10 +48,10 @@ class Libre3PluginSensorAlertTest {
 
     private val wearMinutes = 14 * 24 * 60
 
-    /** A sensor whose life and 12 h grace are over: it ended an hour ago. */
+    /** A sensor whose life is over: it ended an hour ago. */
     private fun storeEndedSensor(): Long {
         val expiresAtMs = System.currentTimeMillis() - 60L * 60L * 1000L
-        val activatedAtMs = expiresAtMs - wearMinutes * 60_000L - Libre3Staging.SENSOR_GRACE_MS
+        val activatedAtMs = expiresAtMs - wearMinutes * 60_000L
         assertThat(Libre3SensorStore(context, null).saveIdentityAndWait(identity(activatedAtMs))).isTrue()
         return expiresAtMs
     }

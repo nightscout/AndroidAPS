@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
  * is the warning time, which the source may also read, see [CgmSensorAlertState.Expiring].
  *
  * "Ending soon" and "ended" are measured against the end of the sensor's usable time, including
- * any grace period the source knows of (for Libre 3: the sensor life plus 12 h). The source shows
+ * any grace period the source knows of (a Libre 3 has none, it ends with its life). The source shows
  * the same end on its own status screen.
  */
 interface CgmSensorAlertProvider {
@@ -54,8 +54,8 @@ sealed interface CgmSensorAlertState {
     data class WarmupDone(val atEpochMs: Long) : CgmSensorAlertState
 
     /**
-     * The usable time of the sensor ends at [endsAtEpochMs], including any grace period (for
-     * Libre 3: the sensor life plus 12 h).
+     * The usable time of the sensor ends at [endsAtEpochMs], including any grace period the source
+     * knows of (a Libre 3 has none).
      *
      * The source publishes it from the warning time the user has set (`AlertCgmExpiringLeadHours`)
      * when no more important state applies. Not earlier: it would hide a less important state, for

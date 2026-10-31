@@ -22,9 +22,9 @@ internal enum class Libre3SensorFault { ERROR, ENDED }
  * [app.aaps.core.interfaces.source.CgmSensorAlertProvider.sensorAlertState]: Failed > Expired >
  * SignalLost > Expiring > SecondSensorReady > WarmupDone > Ok.
  *
- * The end of the sensor is the end of its usable time: the life read by the NFC scan plus the
- * 12 h grace a Libre 3 still reads after it ([Libre3Staging.SENSOR_GRACE_MS]). The status screen
- * and the Overview sensor age use the same end ([Libre3Staging.computeLifecycle]).
+ * The end of the sensor is the end of its life read by the NFC scan. A Libre 3 has no grace period
+ * after it, unlike a Libre 2. The status screen and the Overview sensor age use the same end
+ * ([Libre3Staging.computeLifecycle]).
  */
 internal object Libre3SensorAlertMapper {
 
@@ -104,9 +104,9 @@ internal object Libre3SensorAlertMapper {
         val now = input.nowMs
         val known = input.activatedAtMs > 0L
         val lifeMs = input.wearMinutes?.takeIf { it > 0 }?.let { it * MINUTE_MS } ?: Libre3Staging.DEFAULT_LIFE_MS
-        val lifeEndMs = input.activatedAtMs + lifeMs
-        // The end of the usable time, the same as the status screen uses: life + grace.
-        val expiresAtMs = lifeEndMs + Libre3Staging.SENSOR_GRACE_MS
+        // The end of the usable time, the same as the status screen uses. A Libre 3 has no grace
+        // period: it ends at the end of its life.
+        val expiresAtMs = input.activatedAtMs + lifeMs
 
         // Failed
         if (input.phase == Libre3WarmupState.Phase.FAILED) return CgmSensorAlertState.Failed(CgmSensorFailure.OTHER)
@@ -117,7 +117,7 @@ internal object Libre3SensorAlertMapper {
             // seen: that moment changes with every restart and with the first health message after
             // the end, and each change would sound the urgent alarm again.
             Libre3SensorFault.ENDED ->
-                return if (known && now >= lifeEndMs) CgmSensorAlertState.Expired(expiresAtMs)
+                return if (known && now >= expiresAtMs) CgmSensorAlertState.Expired(expiresAtMs)
                 else CgmSensorAlertState.Failed(CgmSensorFailure.ENDED_EARLY)
 
             null                    -> Unit
