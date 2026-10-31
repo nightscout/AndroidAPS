@@ -43,8 +43,8 @@
     <string name="authorized_clients_method_pin_summary">Kamerası olmayan bir telefon için. Telefon önceden Nightscout\'a bağlı olmalıdır.</string>
     <string name="authorized_clients_qr_working">Nightscout belirteci oluşturuluyor…</string>
     <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Kurulum: %1$s</string>
-    <string name="authorized_clients_qr_pair_instructions">Bu kodu yeni telefonda, kurulum sihirbazında veya Ana üniteyle eşleştirin bölümünde taratın. Kod Nightscout\'u kurar ve telefonu eşleştirir.</string>
-    <string name="authorized_clients_qr_ns_instructions">Bu kodu yeni telefonda, kurulum sihirbazında veya Ana üniteyle eşleştirin bölümünde taratın. Kod Nightscout\'u kurar. Telefon eşleştirilmez.</string>
+    <string name="authorized_clients_qr_pair_instructions">Bu kodu yeni telefonda, kurulum sihirbazında veya Ana birimle eşleştirin bölümünde taratın. Kod Nightscout\'u kurar ve telefonu eşleştirir.</string>
+    <string name="authorized_clients_qr_ns_instructions">Bu kodu yeni telefonda, kurulum sihirbazında veya Ana birimle eşleştirin bölümünde taratın. Kod Nightscout\'u kurar. Telefon eşleştirilmez.</string>
     <string name="authorized_clients_qr_keep_private">Bu kodu gören herkes Nightscout\'unuzu okuyabilir. Kodu yalnızca yeni telefona gösterin.</string>
     <string name="authorized_clients_token_problem_title">QR kodu yok</string>
     <string name="authorized_clients_not_added_title">İstemci eklenmedi</string>
@@ -64,9 +64,9 @@
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">%1$s Nightscout belirtecini kullanıyor; bu belirteç bir istemcinin ihtiyacından fazla yetkiye sahip</string>
     <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Kendi belirtecini değil, %1$s Nightscout belirtecini kullanıyor: komutları reddedilir. Kaldırın ve tekrar ekleyin.</string>
     <!-- Pair with master (client side PIN entry) -->
-    <string name="pair_with_master_title">Ana üniteyle eşleştirin</string>
+    <string name="pair_with_master_title">Ana birimle eşleştirin</string>
     <string name="pair_with_master_pin_entry_title">Eşleştirme PIN\'ini girin</string>
-    <string name="pair_with_master_pin_entry_message">Ana cihazda Yetkili istemciler bölümünü açın ve bu istemciyi ekleyin. Orada gösterilen 8 haneli PIN\'i yazın.</string>
+    <string name="pair_with_master_pin_entry_message">Ana birimde Yetkili istemciler bölümünü açın ve bu istemciyi ekleyin. Orada gösterilen 8 haneli PIN\'i yazın.</string>
     <string name="pair_with_master_pin_entry_label">8 haneli PIN</string>
     <string name="pair_with_master_pin_entry_submit">Eşleştir</string>
     <string name="pair_with_master_fetching">Eşleştirme aranıyor…</string>
@@ -107,18 +107,18 @@
     <string name="client_setup_done_paired">Nightscout kuruldu ve telefon eşleştirildi. Telefon bağlandığında ana birim onu etkin olarak gösterir.</string>
     <string name="client_setup_done_ns_only">Nightscout kuruldu. Ana birimi bu telefondan kontrol etmek için telefonu ayrıca eşleştirin.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
-    <string name="clientcontrol_orphan_notification">Ana AAPS bu cihazı artık tanımıyor. Yeniden eşleştirmek için Yönet → Ana üniteyle eşleştirin bölümünü açın.</string>
+    <string name="clientcontrol_orphan_notification">Ana AAPS bu cihazı artık tanımıyor. Yeniden eşleştirmek için Yönet → Ana birimle eşleştirin bölümünü açın.</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
-    <string name="deliver_now">Simdi ilet</string>
+    <string name="deliver_now">Şimdi ilet</string>
     <string name="queue">Sıra:</string>
     <string name="status_label">Durum:</string>
     <string name="clear_log">Günlüğü temizle</string>
     <string name="full_sync">Tam senkronizasyon</string>
     <string name="full_sync_comment">Tam senkronizasyon? Birkaç saat sürebilir ve bitene kadar NS\'ta yeni veriler göremeyeceksiniz.</string>
     <string name="ns_sync_options">Senkronizasyon</string>
-    <string name="ns_alarm_options">Alarm türleri</string>
+    <string name="ns_alarm_options">Alarm seçenekleri</string>
     <string name="ns_remote_control_options">Uzaktan kumanda</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Etkinleştirilirse, yüklemeler normal sunucular yerine test sunucularına gider</string>
@@ -144,9 +144,9 @@
     <string name="description_xdrip">xDrip+\'a verileri gönder</string>
     <string name="xdrip_status_settings">xDrip+ Durum Satırı Gelişmiş</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
-    <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
+    <string name="calibration_sent">Kalibrasyon xDrip+\'a gönderildi</string>
     <string name="xdrip_local_broadcasts_summary">KŞ ve tedavi verilerini xDrip+\'a gönderin. Veri Kaynağı \"xDrip+ Sync Follower\" seçilmeli ve Ayarlar - Uygulamalar arası ayarlar - KŞ/Tedavileri Kabul Et bölümünde verilerin kabul edilmesi etkinleştirilmelidir.</string>
-    <string name="xdrip_local_broadcasts_title">xDrip+ \'a yayınları etkinleştirin.</string>
+    <string name="xdrip_local_broadcasts_title">xDrip+\'a yayınları etkinleştirin.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Harici yardımcı uygulamalar</string>
     <string name="tizen_description">Çeşitli harici yardımcı uygulamalara veri yayınını etkinleştirir</string>
@@ -156,13 +156,14 @@
     <string name="garmin_local_http_server_port">Yerel HTTP sunucusu bağlantı noktası</string>
     <string name="garmin_local_http_server">Yerel HTTP sunucusu</string>
     <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Garmin saat %1$s karbonhidrat gönderdi. Bu telefon bir istemci olduğu için karbonhidratlar girilmedi. Bunları AAPS\'e girin.</string>
-    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin saat pompanın bağlanmasını veya ayrılmasını istedi. Bu telefon bir istemci olduğu için hiçbir şey değiştirilmedi. Bunu AAPS\'te yapın.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin saat pompanın bağlanmasını veya bağlantısının kesilmesini istedi. Bu telefon bir istemci olduğu için hiçbir şey değiştirilmedi. Bunu AAPS\'te yapın.</string>
     <!--    Wear-->
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
     <string name="pump_status">Pompa durumu</string>
     <string name="loop_status">Döngü durumu</string>
     <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
+    <string name="scene_not_available">%1$s senaryosu artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="wear_remote_insulin_not_allowed_in_client">İstemci modunda uzaktan insülin komutları devre dışıdır</string>
     <string name="wear_phone_not_ready">Telefon hâlâ başlatılıyor veya ayarları uyguluyor. Biraz sonra tekrar deneyin.</string>
     <string name="wear_control_disabled">Saat kontrolü, telefondaki Wear ayarlarında kapalı.</string>
@@ -175,10 +176,10 @@
     <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
     <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Yükleniyor…</string>
-    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Saatte Saat arayüzü bileşenleri gösteriliyor. %1$s öğesini saatte görmek için Özel Saat arayüzü seçin.</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Saatte Komplikasyonlu saat arayüzü gösteriliyor. %1$s öğesini saatte görmek için Özel saat arayüzünü seçin.</string>
     <string name="wear_pushed_watchface_confirm_title">Saatteki saat arayüzü değiştirilsin mi?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">Saatte %1$s, %2$s yerine geçecek.</string>
-    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">Saatte %1$s, %2$s yerine geçecek. Saat arayüzü düzenleyicisinde değiştirdiğiniz bileşenler varsayılan ayarlara döner.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">Saatte %1$s, %2$s yerine geçecek. Saat arayüzü düzenleyicisinde değiştirdiğiniz komplikasyonlar varsayılan ayarlara döner.</string>
     <string name="wear_load_watchface">Saat arayüzü yükle</string>
     <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
     <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
@@ -193,7 +194,7 @@
     <string name="enabled">Etkin</string>
     <string name="disabled">Devre dışı</string>
     <string name="pump_fetching_data">pompadan veri almaya çalışıyor.</string>
-    <string name="pump_old_data">TGD: Hala eski veriler! Pompadan yüklenemiyor.</string>
+    <string name="pump_old_data">GTD: Hâlâ eski veriler! Pompadan yüklenemiyor.</string>
     <string name="units_short">Ü</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
@@ -213,7 +214,7 @@
     <string name="loop_status_disabled">DÖNGÜ DEVRE DIŞI</string>
     <string name="aps">APS (YPS)</string>
     <string name="last_run">Son Çalıştırma</string>
-    <string name="last_enact">Son sahne</string>
+    <string name="last_enact">Son uygulama</string>
     <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fÜ %2$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
@@ -223,9 +224,9 @@
     <string name="wear_action_running_mode_title">Çalışma modu</string>
     <string name="garmin_request_key">Anahtar talebi</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator">SMS Kominikatör</string>
+    <string name="smscommunicator">SMS Komünikatör</string>
     <string name="description_sms_communicator">SMS komutlarını kullanarak AAPS\'yi uzaktan kontrol edin.</string>
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator (kimlik doğrulama) uygulamasından %1$s için PIN girin</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">%1$s için Authenticator uygulamasındaki kod ve ardından PIN</string>
     <string name="smscommunicator_tab_otp_label">Authenticator (kimlik doğrulama) kurulumu</string>
     <string name="smscommunicator_code_verify_label">Kontrol edilecek kod:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
@@ -241,17 +242,17 @@
     <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
     <string name="smscommunicator_otp_verification_ok">Tamam</string>
     <string name="smscommunicator_otp_verification_ivalid_size">GEÇERSİZ BOYUT!</string>
-    <string name="smscommunicator_otp_verification_wrong_pin">HATALI PİN KODU</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">HATALI PIN</string>
     <string name="smscommunicator_otp_verification_wrong_otp">HATALI OTP</string>
     <string name="sms_wrong_code">Hatalı kod. Komut iptal edildi.</string>
     <string name="sms_timeout_while_waiting">Önceki pompa iletişiminin bitmesini beklerken zaman aşımı</string>
-    <string name="smscommunicator_bolus_reply_with_code">%1$.2fÜ Bolus gönderilecek, kod ile cevap ver %2$s</string>
+    <string name="smscommunicator_bolus_reply_with_code">%1$.2f Ü bolus iletmek için %2$s koduyla yanıt verin</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">%1$.2fÜ Yemek bolusu göndermek için %2$s koduyla yanıt verin</string>
     <string name="smscommunicator_temptarget_with_code">Geçici Hedefi %1$s yapmak için %2$s koduyla yanıt verin</string>
     <string name="smscommunicator_temptarget_cancel">Geçici Hedefi iptal etmek için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_stops_ns_with_code">SMS Uzak Hizmet desteğini devre dışı bırakmak için %1$s koduyla yanıt verin.\n\nBu hizmeti yalnızca AAPS yüklü ana telefondan yeniden etkinleştirebileceğinizi unutmayın.</string>
     <string name="smscommunicator_stopped_sms">SMS Uzak Hizmeti durduruldu. Yeniden etkinleştirmek için ana telefondaki AAPS\'i kullanın.</string>
-    <string name="smscommunicator_calibration_reply_with_code">Kalibrasyon için %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
+    <string name="smscommunicator_calibration_reply_with_code">%1$.2f kalibrasyonunu göndermek için %2$s koduyla yanıt verin</string>
     <string name="smscommunicator_bolus_failed">Bolus başarısız oldu. Başka bir komut göndermeden önce gerçek durumu doğrulayın!</string>
     <string name="smscommunicator_bolus_delivered">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="smscommunicator_meal_bolus_delivered">%1$.2f Ü Yemek Bolusu başarıyla gönderildi</string>
@@ -266,7 +267,7 @@
     <string name="smscommunicator_pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
     <string name="smscommunicator_remote_command_not_allowed">Uzaktan komuta izin verilmez</string>
-    <string name="smscommunicator_remote_command_not_possible">Uzaktan komuta izin verilmez</string>
+    <string name="smscommunicator_remote_command_not_possible">Uzaktan komut mümkün değil</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
     <string name="smscommunicator_basal_reply_with_code">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profile_reply_with_code">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
@@ -275,17 +276,17 @@
     <string name="smscommunicator_basal_pct_reply_with_code">%2$d dk boyunca %1$d%% bazal başlatmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_suspend_reply_with_code">Döngüyü %1$d dakika askıya almak için %2$s koduyla yanıtlayın</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Döngüye devam etmek için %1$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_loop_disable_reply_with_code">Döngüyü iptal etmek için %1$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Döngüyü devre dışı bırakmak için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_restart_reply_with_code">AAPS\'i yeniden başlatmak için %1$s koduyla yanıtlayın</string>
     <string name="smscommunicator_restarting">AAPS yeniden başlatılıyor</string>
-    <string name="smscommunicator_tempbasal_set">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
+    <string name="smscommunicator_tempbasal_set">Geçici bazal %1$.2fÜ/sa %2$d dakika için başarıyla başlatıldı</string>
     <string name="smscommunicator_extended_set">%1$.2fÜ yayma bolus %2$d dakika boyunca başarıyla başlatıldı</string>
     <string name="smscommunicator_carbs_set">%1$d g karbonhidrat başarıyla sisteme girildi</string>
     <string name="smscommunicator_carbs_failed">%1$d g karbonhidrat girilemedi</string>
     <string name="smscommunicator_tempbasal_set_percent">%2$d dakikalık geçici bazal %1$d%% başarıyla başlatıldı</string>
     <string name="smscommunicator_tempbasal_failed">Geçici bazal başlatma başarısız oldu</string>
     <string name="smscommunicator_extended_failed">Yayma bolus başlatma başarısız oldu</string>
-    <string name="smscommunicator_basal_stop_reply_with_code">Geçici bazalı durdurmak için %1$s kodunu gir</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Geçici bazalı durdurmak için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_extended_stop_reply_with_code">Yayma bolusu durdurmak için %1$s koduyla yanıtlayın</string>
     <string name="smscommunicator_tempbasal_canceled">Geçici bazal iptal edildi</string>
     <string name="smscommunicator_extended_canceled">Yayma bolus iptal edildi</string>
@@ -300,7 +301,7 @@
     <string name="smscommunicator_calibration_sent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ kalibrasyonları almıyor</string>
     <string name="smscommunicator_message_body">Geçersiz mesaj</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Döngü modunu LGS\'ye (Düşük kan şekerinde duraklatma modu) geçirmek için %1$s koduyla yanıt verin</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Döngü modunu LGS\'ye (Düşük Glikoz Duraklatma) geçirmek için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Döngü modunu Kapalı döngüye geçirmek için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_current_loop_mode">Geçerli çalışma modu: %1$s</string>
     <string name="wrong_format">Yanlış Format</string>
@@ -310,7 +311,7 @@
     <string name="sms_iob">AİNS:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
-    <string name="sms_min_ago">%1$ddak önce</string>
+    <string name="sms_min_ago">%1$d dk önce</string>
     <string name="sms_loop_suspended_for">Askıya alındı (%1$d dk)</string>
     <string name="sms_read_status_failed">Durum okuması başarısız oldu</string>
     <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
