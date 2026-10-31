@@ -5,7 +5,7 @@
     <string name="nth_objective">%1$d. Objetivo</string>
     <string name="objectivenotstarted">Objetivo %1$d não iniciado</string>
     <string name="objectivenotfinished">Objetivo %1$d não terminado</string>
-    <string name="objectives_0_objective">A configurar visualização e monitorização, e análise de rácios e basais</string>
+    <string name="objectives_0_objective">Configurar a visualização e a monitorização e analisar as basais e os rácios</string>
     <string name="objectives_0_gate">Verificar se a Glic está disponível no Nightscout, e se os dados da bomba de insulina estão a ser carregados</string>
     <string name="objectives_0_learned">Fez a configuração básica do ecossistema AAPS. O Nightscout não é necessário para que o AAPS funcione, mas é muito útil para relatórios ou monitorização de outras pessoas. Não é necessário estar conectado ao NS o tempo todo se usar o NS apenas para si. Pode configurar para fazer o upload, por exemplo, apenas quando estiver na sua rede Wi-Fi doméstica e economizar bateria.</string>
     <string name="objectives_openloop_objective">A iniciar em loop aberto</string>
@@ -18,11 +18,11 @@
     <string name="objectives_maxiobzero_objective">Começar o loop fechado com Suspensão por Glicose Baixa</string>
     <string name="objectives_maxiobzero_gate">Use o loop fechado no modo de Suspensão por Glicose Baixa (ou seja, IA máxima = 0 é definida automaticamente) durante alguns dias, sem demasiados eventos SGB.</string>
     <string name="objectives_maxiobzero_learned">Definir a maxIA para zero previne-o de hipoglicemias e não adicionará mais insulina acima da taxa basal (exceto situações com IA negativa)</string>
-    <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IA máxima acima de 0 e reduzir gradualmente os alvos de GLIC</string>
+    <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IA máxima acima de 0 e reduzir gradualmente os alvos de glicose</string>
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de GLIC baixa, antes de baixar GLIC</string>
     <string name="objectives_maxiob_learned">Atualize a IA máxima à medida que a criança cresce. Não deixe o sistema dar mais insulina do que consegue cobrir com comida = um valor muito alto é má ideia. A IA máxima é calculada automaticamente no modo simples</string>
     <string name="maxiobset">IA máxima definida corretamente (não é necessário no modo simples)</string>
-    <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, ative o auto-sens</string>
+    <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, ative o Autosens</string>
     <string name="objectives_autosens_gate">1 semana de loop diurno com sucesso, com registo regular de hidratos de carbono. No modo simples, o Autosens está ativado por predefinição.</string>
     <string name="objectives_autosens_learned">Se o resultado do autosens não oscila à volta de 100%, o seu perfil está provavelmente errado.</string>
     <string name="objectives_smb_objective">Ativar funções adicionais para uso durante o dia, como o SMB</string>
