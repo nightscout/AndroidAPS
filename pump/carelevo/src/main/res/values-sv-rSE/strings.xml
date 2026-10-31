@@ -10,7 +10,7 @@
     <string name="carelevo_boot_date_time_key">Aktiveringstid</string>
     <string name="carelevo_expiration_key">Utgångstid</string>
     <string name="carelevo_basal_rate_key">Basaldos</string>
-    <string name="carelevo_temp_basal_rate_key">Temp basaldos</string>
+    <string name="carelevo_temp_basal_rate_key">Tillfällig basaldos</string>
     <string name="carelevo_insulin_remain_key">Insulin kvar</string>
     <string name="carelevo_running_remain_time">Poddens återstående tid</string>
     <string name="carelevo_total_insulin_key">Totalt levererat insulin</string>
@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Ta ut podden ur blisterförpackningen och ta av nålskyddet.</string>
     <string name="carelevo_patch_attach_step3_title">Sätt på podden</string>
     <string name="carelevo_patch_attach_step3_desc">Fäst podden på huden med den markerade punkten uppåt.</string>
+    <string name="carelevo_patch_attach_step4_desc">När podden har satts fast, tryck på Nästa.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Ta bort säkerhetslocket</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Vrid säkerhetslocket i pilens riktning och ta bort det.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Sätt in nålen</string>
@@ -206,4 +207,6 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS avslutades av okänd anledning.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Kontrollera anslutningen till podden och CGM.</string>
     <string name="carelevo_profile_update_skip_comment">Hoppades över: uppdateringen kom för tidigt.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Podden bekräftade inte stoppet. Väntar på att bolusen ska avslutas…</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Podden bekräftade inte stoppet. Hela bolusen på %1$s har registrerats.</string>
 </resources>
