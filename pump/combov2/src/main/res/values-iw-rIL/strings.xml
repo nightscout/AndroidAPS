@@ -35,7 +35,7 @@
     <string name="combov2_enter_pin">הזינו קוד PIN</string>
     <string name="combov2_cancel_pairing">ביטול צימוד</string>
     <string name="combov2_confirm_cancel_pairing_message">בטוחים שברצונכם לבטל את הצימוד?</string>
-    <string name="combov2_confirm_unpair_message">בטוחים שברצונכם לבטל את צימוד המשאבה?</string>
+    <string name="combov2_confirm_unpair_message">האם לבטל את צימוד המשאבה?</string>
     <string name="combov2_pin_hint">קוד בן 10 ספרות</string>
     <string name="combov2_pairing_finished_successfully">הצימוד עם Combo הושלם</string>
     <string name="combov2_pairing_cancelled">הצימוד עם Combo בוטל ע\"י המשתמש</string>
@@ -66,7 +66,7 @@
     <string name="combov2_updating_pump_status_cmddesc">מעדכן את סטטוס המשאבה</string>
     <string name="combov2_pairing_pin_failure">הקוד לא עבד. וודאו שלא טעיתם בהעתקתו. אם זה קורה שוב ושוב, בטלו ונסו לצמד שוב.</string>
     <string name="combov2_discovery_duration">משך הגילוי (בשניות)</string>
-    <string name="combov2_verbose_logging">הפעלת רישום Combo מפורט</string>
+    <string name="combov2_verbose_logging">הפעלת רישום מפורט של Combo</string>
     <string name="combov2_getting_basal_profile">טוען פרופיל בזאלי; %1$d מינונים נקראו</string>
     <string name="combov2_setting_basal_profile">מגדיר פרופיל בזאלי; %1$d מינונים נכתבו</string>
     <string name="combov2_delivering_bolus">מזריק בולוס (%1$.1f מתוך %2$.1f יח\' הוזרקו)</string>
