@@ -47,10 +47,13 @@
     <string name="authorized_clients_qr_ns_instructions">Scannez ce code sur le nouveau téléphone, dans l\'assistant de configuration ou dans Appairer avec le maître. Il configure Nightscout. Le téléphone n\'est pas appairé.</string>
     <string name="authorized_clients_qr_keep_private">Quiconque voit ce code peut lire votre Nightscout. Ne le montrer qu\'au nouveau téléphone.</string>
     <string name="authorized_clients_token_problem_title">Pas de QR code</string>
+    <string name="authorized_clients_not_added_title">Client non ajouté</string>
     <string name="authorized_clients_token_problem_not_connected">Ce téléphone n\'est pas connecté à Nightscout, donc il ne peut pas créer de jeton pour le client.</string>
     <string name="authorized_clients_token_problem_not_allowed">Le jeton Nightscout de ce téléphone n\'est pas un jeton administrateur, donc il ne peut donc pas créer de jeton pour le client. Utilisez un jeton admin ici, ou ajoutez le client avec le code PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout a un jeton avec ce nom et d\'autres droits. Choisissez un autre nom.</string>
     <string name="authorized_clients_token_problem_name_in_use">Un client portant ce nom est déjà dans la liste. Choisissez un autre nom ou supprimez d\'abord ce client.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout n\'a pas répertorié le nouveau jeton, il a donc été supprimé à nouveau. Rien n\'a été laissé derrière. Réessayez.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout n\'a pas répertorié le nouveau jeton et il n\'a pas pu être retiré à nouveau. Supprimez le jeton %1$s dans Nightscout, puis réessayez.</string>
     <string name="authorized_clients_tokens_header">Lecture Nightscout uniquement</string>
     <string name="authorized_clients_token_unpaired">Propre jeton Nightscout, non appairé</string>
     <string name="authorized_clients_token_show_qr">Afficher le QR code</string>
@@ -69,6 +72,7 @@
     <string name="pair_with_master_fetching">Recherche d\'appairage…</string>
     <string name="pair_with_master_confirm_title">Associer avec ce maître ?</string>
     <string name="pair_with_master_confirm_master">Maître: %1$s</string>
+    <string name="pair_with_master_confirm_warning">Après l\'appairage, cet appareil sera en mesure d\'envoyer des commandes signées à ce maître.</string>
     <string name="pair_with_master_confirm_pair">Appairer</string>
     <string name="pair_with_master_error_title">Impossible d\'appairer</string>
     <string name="pair_with_master_error_wrong_pin">Aucun appairage trouvé pour ce code PIN. Vérifiez le code PIN sur le maître et réessayez.</string>
