@@ -130,7 +130,7 @@
     <string name="press_to_cancel">눌러서 취소하기</string>
     <string name="cancel_bolus">볼러스 취소</string>
     <string name="status_pump">펌프</string>
-    <string name="status_loop">Loop</string>
+    <string name="status_loop">루프</string>
     <string name="status_profile_switch">프로파일 전환</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carb</string>
@@ -312,7 +312,7 @@
     <string name="loop_status_no_last_run">없음</string>
     <string name="loop_status_closed">폐쇄 루프</string>
     <string name="loop_status_open">개방 루프</string>
-    <string name="loop_status_lgs">저혈당 주입정지</string>
+    <string name="loop_status_lgs">저혈당 주입 정지</string>
     <string name="loop_status_disabled">루프 비활성화됨</string>
     <string name="loop_status_suspended">루프 일시 중지됨</string>
     <string name="loop_status_pump_suspended">펌프 일시 중지됨</string>
