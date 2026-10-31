@@ -84,7 +84,7 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Εμφάνιση κουμπιού Αναστολής Έγχυσης στην καρτέλα Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Ανίχνευση ζώνης ώρας ενεργοποιημένη</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Ενεργοποιημένη υπενθύμιση λήξης</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Όταν ενεργοποιηθεί το pod, θα ηχήσει, όταν φτάσει η καθορισμένη ώρα</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Όταν είναι ενεργοποιημένο, το Pod θα ηχήσει όταν φτάσει η καθορισμένη ώρα</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Υπενθύμιση σε ώρες πριν από τη λήξη (72 ώρες)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Ειδοποίηση λήξης ενεργοποιήθηκε</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Όταν είναι ενεργοποιημένο το pod θα ηχήσει όταν φτάσει η προκαθορισμένη ώρα και 1 ώρα πριν τον τερματισμό</string>
@@ -93,7 +93,7 @@
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Αριθμός μονάδων</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Αυτόματη σίγαση ειδοποιήσεων Pod</string>
     <string name="omnipod_common_preferences_category_other">Άλλο</string>
-    <string name="omnipod_common_preferences_category_alerts">Ειδοποιήσεις</string>
+    <string name="omnipod_common_preferences_category_alerts">Συναγερμοί Pod</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Ήχοι Επιβεβαίωσης</string>
     <string name="omnipod_common_preferences_category_notifications">Ειδοποιήσεις</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Ήχος για αβέβαιες ειδοποιήσεις TBR ενεργοποιημένος</string>
