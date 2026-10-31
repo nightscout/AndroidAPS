@@ -25,7 +25,7 @@
     <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dh</string>
     <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dd</string>
     <string name="agp_no_data">No hay datos de glucosa disponibles para este rango</string>
-    <string name="agp_load_failed">Error al cargar las estadísticas de AGP. Por favor, intente de nuevo</string>
+    <string name="agp_load_failed">Error al cargar las estadísticas de AGP. Por favor, inténtalo de nuevo</string>
     <string name="agp_chart_description">Gráfico de percentiles de glucosa</string>
     <string name="agp_tir_chart">Gráfico de tiempo en rango</string>
     <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
@@ -151,7 +151,7 @@
     <string name="label_icon_label">Etiqueta</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nombre de insulina no especificado</string>
-    <string name="insulin_name_exists">El nombre de insulina %1$s ya existe, seleccione un nombre nuevo</string>
+    <string name="insulin_name_exists">El nombre de insulina %1$s ya existe, selecciona un nombre nuevo</string>
     <string name="insulin_external_update_title">Configuración de insulina cambiada</string>
     <string name="insulin_external_update_message">Un cliente emparejado ha cambiado la configuración de insulina. Pulsa OK para cargar sus cambios y descartar tus ediciones no guardadas, o Cancelar para seguir editando (tu próxima acción de guardar sobrescribirá la suya)</string>
     <string name="insulin_edit_target_gone">Esta insulina se eliminó en otro lugar, por lo que tu edición no se pudo guardar. La lista se ha vuelto a cargar</string>
@@ -179,7 +179,7 @@
     <!-- LoopDialog -->
     <string name="disconnectpump">Desconectar bomba</string>
     <string name="resume">Reanudar</string>
-    <string name="reconnect">Vuelva a conectar la bomba</string>
+    <string name="reconnect">Vuelve a conectar la bomba</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 hora</string>
@@ -334,10 +334,10 @@
     <string name="quick_launch_category_quick_wizard">Asistente rápido</string>
     <string name="quick_launch_category_automation">Automatización</string>
     <string name="quick_launch_all_selected">Todos los elementos seleccionados</string>
-    <string name="quick_launch_no_quick_wizard">Agregue entradas al Asistente Rápido para usarlas aquí</string>
-    <string name="quick_launch_no_automation">Cree acciones de automatización de usuario para usarlas aquí</string>
-    <string name="quick_launch_no_tt_presets">Agregue ajustes de objetivos temporales para usarlos aquí</string>
-    <string name="quick_launch_no_profiles">Cree perfiles en Perfil Local para usarlos aquí</string>
+    <string name="quick_launch_no_quick_wizard">Agrega entradas al Asistente Rápido para usarlas aquí</string>
+    <string name="quick_launch_no_automation">Crea acciones de automatización de usuario para usarlas aquí</string>
+    <string name="quick_launch_no_tt_presets">Agrega ajustes de objetivos temporales para usarlos aquí</string>
+    <string name="quick_launch_no_profiles">Crea perfiles en Perfil Local para usarlos aquí</string>
     <string name="quick_launch_edit_profile_preset">Editar ajuste de perfil</string>
     <string name="quick_launch_profile_permanent">Permanente</string>
     <string name="select_arrow">Seleccionar flecha</string>
