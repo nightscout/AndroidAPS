@@ -71,7 +71,7 @@
     <string name="combov2_updating_pump_status_cmddesc">Оновлення статусу помпи</string>
     <string name="combov2_pairing_pin_failure">PIN не спрацював. Перевірте, чи немає друкарської помилки. Якщо це повторюється, скасуйте і спробуйте спарувати знову.</string>
     <string name="combov2_discovery_duration">Тривалість пошуку (у секундах)</string>
-    <string name="combov2_verbose_logging">Увімкнути детальний лог Combo</string>
+    <string name="combov2_verbose_logging">Увімкнути детальний журнал Combo</string>
     <string name="combov2_getting_basal_profile">Отримання базального профілю; прочитано %1$d фактор(ів)</string>
     <string name="combov2_setting_basal_profile">Встановлення базального профілю; записано %1$d фактор(ів)</string>
     <string name="combov2_delivering_bolus">Введення болюсу (введено %1$.1f з %2$.1f Од)</string>
