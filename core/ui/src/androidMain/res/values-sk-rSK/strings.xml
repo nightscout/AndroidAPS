@@ -11,6 +11,7 @@
     <string name="treatments_history">História ošetrení</string>
     <string name="treatments_desc">Zobraziť a spravovať históriu ošetrení</string>
     <string name="nav_configuration">Konfigurácia</string>
+    <string name="nav_configuration_desc">Nastaviť konfiguráciu (CGM, pumpa, ...) a zapnúť funkcie</string>
     <string name="count_selected">%1$d vybraných</string>
     <string name="delete">Vymazať</string>
     <string name="show_invalidated">Zobraziť zneplatnené</string>
