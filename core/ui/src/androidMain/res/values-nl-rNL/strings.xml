@@ -11,6 +11,7 @@
     <string name="treatments_history">Behandelingen geschiedenis</string>
     <string name="treatments_desc">Bekijk en beheer de behandelingsgeschiedenis</string>
     <string name="nav_configuration">Configuratie</string>
+    <string name="nav_configuration_desc">Configureer instellingen (CGM, pomp, ...) en activeer functies</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="delete">Verwijderen</string>
     <string name="show_invalidated">Toon ongeldig</string>
@@ -1054,20 +1055,51 @@
     <!--    Search-->
     <string name="search">Zoeken</string>
     <string name="clear">Wissen</string>
+    <string name="search_category_categories">Instellingencategorieën</string>
+    <string name="search_category_preferences">Instellingen</string>
+    <string name="search_category_dialogs">Dialoogvensters</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Documentatie</string>
+    <string name="wiki_search_offline">Voor zoeken in de documentatie is een internetverbinding vereist</string>
+    <string name="no_search_results">Geen resultaten gevonden</string>
+    <string name="search_plugin_disabled">Plugin %1$s gedeactiveerd</string>
     <!--    Food Management -->
+    <string name="food_management">Voeding</string>
+    <string name="food_deleted">Voedingsmiddel verwijderd</string>
+    <string name="edit_food">Voedingsmiddel bewerken</string>
+    <string name="add_food">Voedingsmiddel toevoegen</string>
+    <string name="name">Naam</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
+    <string name="portion">Portie</string>
+    <string name="unit_label">Eenheid</string>
+    <string name="undo">Ongedaan maken</string>
+    <string name="no_data">Geen data</string>
+    <string name="manage_food_desc">Voedingsmiddelen beheren</string>
+    <string name="label_carbs_g">Koolhydraten (g)</string>
+    <string name="label_fat_g">Vet (g)</string>
+    <string name="label_protein_g">Eiwit (g)</string>
+    <string name="label_energy_kj">Energie (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Logboekinstellingen</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <!--    Maintenance-->
     <string name="maintenance">Onderhoud</string>
     <string name="description_maintenance">Biedt verschillende functies voor onderhoud (bv. log verzenden, verwijderen melden).</string>
     <string name="log_files">Logbestanden</string>
     <string name="delete_logs">Verwijder Logs</string>
+    <string name="logs_deleted">Logs verwijderd</string>
     <string name="aaps_directory">AAPS map</string>
     <string name="import_setting">Importeer instellingen</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Ontsleutelen &amp; controleren</string>
+    <string name="import_decrypt">Ontsleutelen</string>
     <string name="import_master_password">Hoofdwachtwoord</string>
+    <string name="import_decryption_password">Ontsleutelingswachtwoord</string>
+    <string name="import_different_password_hint">Het bestand is versleuteld met een ander wachtwoord</string>
+    <string name="import_wrong_password">Wachtwoord onjuist</string>
+    <string name="import_btn">Importeren</string>
+    <string name="import_anyway_btn">Toch importeren</string>
     <string name="import_apply_title">Geïmporteerde instellingen toepassen?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
@@ -1080,6 +1112,16 @@
     <string name="import_applying">Instellingen toepassen…</string>
     <string name="import_replace_pump_settings">Vervang ook de pompinstellingen</string>
     <string name="import_replace_pump_settings_summary">Schakel dit uit om de koppeling met de huidige pomp te behouden. Schakel het in bij het terugzetten van gegevens op een nieuwe telefoon met dezelfde pomp.</string>
+    <string name="import_apply_waiting">Wacht op pomp…</string>
+    <string name="import_apply_pump_busy">De pomp is nog bezig, waardoor de instellingen niet zijn toegepast.</string>
+    <string name="import_apply_retry_question">Nu opnieuw proberen?</string>
+    <string name="import_applied_title">Instellingen zijn toegepast</string>
+    <string name="import_applied_message">De geïmporteerde instellingen zijn nu in gebruik.</string>
+    <string name="import_apply_pump_changed">Geannuleerd: de pomp is gewijzigd door het importeren van instellingen</string>
+    <string name="import_source_local">Lokaal</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Meer laden</string>
+    <string name="import_no_files">Geen instellingenbestanden gevonden</string>
     <string name="reset_aps_results">Reset APS resultaten</string>
     <string name="database_cleanup">Database opschonen</string>
     <string name="nav_resetdb">Reset database</string>
@@ -1099,8 +1141,47 @@
     <string name="graph_series_steps">Stappen</string>
     <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Activiteit</string>
     <string name="graph_series_predictions">Voorspellingen</string>
+    <string name="units_days">dagen</string>
+    <string name="units_format_days">%1$d dagen</string>
+    <string name="units_format_days_range">%1$d dagen (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d u</string>
+    <string name="units_format_hours_double">%1$.1f u</string>
+    <string name="units_format_hours_double_range">%1$.1f u (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d u (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f E</string>
     <string name="units_format_insulin_int">%1$d E</string>
+    <string name="units_format_insulin_int_range">%1$d E (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f E (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate">%1$.1f E/u</string>
+    <string name="units_format_insulin_rate_range">%1$.1f E/u (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d sec</string>
+    <string name="units_format_sec_range">%1$d sec (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">u</string>
+    <string name="units_insulin">E</string>
+    <string name="units_insulin_rate">E/u</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">min</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">sec</string>
+    <string name="units_years">j</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="secrets_not_protected">Er is geen systeemsleutelopslag gevonden op deze computer. De sleutels die je instellingen en de koppeling met de master beveiligen, worden opgeslagen in bestanden naast de gegevensbestanden. Iedereen die een kopie van deze bestanden in handen krijgt, krijgt daardoor ook toegang tot deze sleutels. Gebruik je Linux? Installeer en start dan een keyring (bijvoorbeeld GNOME Keyring of KWallet) en start AAPS daarna opnieuw.</string>
 </resources>
