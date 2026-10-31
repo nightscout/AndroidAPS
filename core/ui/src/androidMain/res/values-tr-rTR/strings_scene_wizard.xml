@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
-    <string name="scene_wizard_choose_template">Bir başlangıç ​​noktası seçin. Şablonlar yaygın durumlar için önerilen eylemleri önceden doldurur- sonraki adımlarda her şeyi dilediğiniz gibi düzenleyebilirsiniz.</string>
+    <string name="scene_wizard_choose_template">Bir başlangıç noktası seçin. Şablonlar yaygın durumlar için önerilen eylemleri önceden doldurur. Sonraki adımlarda her şeyi dilediğiniz gibi düzenleyebilirsiniz.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
     <string name="scene_template_exercise">Egzersiz</string>
+    <string name="scene_wizard_info_exercise">Fiziksel aktivite sırasında kaslar glikozu daha hızlı tüketir ve insülin duyarlılığı artar. Geçici hedef değerinizi önceden yükseltmek, algoritmaya bir başlangıç avantajı sağlar; egzersiz kaynaklı düşüşlere karşı bir tampon oluşturarak insülin iletimini erken azaltmaya başlar. Egzersiz sırasında düzeltme bolusları hızlı düşüşlere neden olabileceğinden, SMB\'yi devre dışı bırakmanız da önerilir. En iyi sonuçlar için, algoritmanın vücudunuzdaki insülini düşürmesi için zamanı olması amacıyla, egzersize başlamadan 1-2 saat önce bu senaryoyu etkinleştirin.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
-    <string name="scene_template_sick_day_vomiting">Hastalık— Kusma</string>
-    <string name="scene_wizard_sick_day_vomiting_desc">LGS ile azaltılmış profil- yiyecek sindiremediğiniz standart hastalık gününün tam tersidir.</string>
+    <string name="scene_template_sick_day_vomiting">Hastalık Günü — Kusma</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">LGS ile azaltılmış profil — standart hastalık gününün tersi; yiyecekleri sindiremediğiniz durumlar için.</string>
     <string name="scene_wizard_info_sick_day_vomiting">Yiyecekleri midenizde tutamadığınızda, standart hastalık günü yaklaşımı olan insülin dozunu artırmak tehlikeli olabilir. Kusma, karbonhidratların emilmediği anlamına gelir, bu nedenle kan şekeri yükselmek yerine düşebilir. Azaltılmış profil (%60) insülin dozunu düşürür ve LGS modu, glikoz düştüğünde insülini durdurarak ek bir güvenlik ağı sağlar. SMB\'yi devre dışı bırakmak, ek bolus dozlarını önler. Sık sık izleyin — kan şekerini her 1-2 saatte bir ve ketonları her 2-4 saatte bir kontrol edin. Kusma birkaç saatten fazla sürerse veya ketonlar 1,5 mmol/L\'nin üzerine çıkarsa tıbbi yardım alın.</string>
     <!-- Sleep: no default actions — 8h -->
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
@@ -22,11 +23,14 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <!-- Hot Weather: Profile 85% — 8h -->
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_wizard_medical_procedure_desc">Cerrahi veya tıbbi müdahaleler için SMB kapalıyken açık döngü modu.</string>
     <!-- Blank: no actions — 1h -->
     <!-- Scene wizard: action step education -->
     <string name="scene_wizard_loop_mode_info">Çalışma modu algoritmanın ne kadar otonom olduğunu belirler. Kapalı Döngü modunda, insülin dozunu otomatik olarak ayarlar. LGS (Düşük Glikoz Duraklatma) modu, glikoz seviyesi düşmeye başladığında insülini azaltır veya durdurur; dozu artırmaz. Açık Döngü modu ise öneriler hesaplar ancak her birini onaylamanızı bekler.</string>
     <!-- Scene wizard: UI labels -->
     <!-- Scene wizard: chain step -->
+    <string name="scene_skip_to_format">Şuna atla: %1$s</string>
     <!-- Scene list: chain indicator -->
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Devam senaryosu başlamadı: %1$s</string>
 </resources>
