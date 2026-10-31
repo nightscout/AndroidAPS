@@ -98,6 +98,7 @@
     <string name="option_off">Desligado</string>
     <string name="danars_password_title">Senha da bomba (apenas v1)</string>
     <string name="danar_password_title">Senha da bomba</string>
+    <string name="danar_useextended_title">Usar bólus prolongado para &gt;200%</string>
     <string name="bolus_speed_12">12 s/U</string>
     <string name="bolus_speed_30">30 s/U</string>
     <string name="bolus_speed_60">60 s/U</string>
@@ -109,7 +110,7 @@
     <string name="press_ok_on_the_pump">Prima OK na bomba\ne introduza os 2 números mostrados\nMantenha o visor da bomba ligado, premindo o botão menos até terminar de introduzir o código.</string>
     <string name="num1pin">1: (12 dígitos)</string>
     <string name="num2pin">2: (8 dígitos)</string>
-    <string name="basal_bolus_step">Etapa basal/bolus</string>
+    <string name="basal_bolus_step">Passo basal/bólus</string>
     <string name="connecting_to_pump">A ligar à bomba…</string>
     <string name="pairing_successful">Emparelhamento bem-sucedido!</string>
     <string name="pairing_successful_message">A bomba está agora ligada e pronta a usar.</string>
