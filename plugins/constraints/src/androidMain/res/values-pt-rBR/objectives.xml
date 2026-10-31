@@ -77,7 +77,7 @@
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Próximo inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
-    <string name="objectives_hint">(marque todas as respostas correctas)</string>
+    <string name="objectives_hint">(marque todas as respostas corretas)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
     <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
