@@ -33,6 +33,6 @@
     <string name="checking_delivery_status">Έλεγχος κατάστασης χορήγησης</string>
     <string name="setting_temp_basal_might_have_basal_failed">Η ρύθμιση του βασικού ρυθμού μπορεί να έχει απέτυχε. Αν προηγουμένως εκτελούνταν ένας βασικός ρυθμός, έχει πλέον ακυρωθεί. Παρακαλώ ανανεώστε χειροκίνητα την κατάσταση του Pod από την καρτέλα Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Το αποτέλεσμα της ακύρωσης του προσωρινού βασικού ρυθμού είναι αβέβαιο</string>
-    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ανεπιβεβαίωτη εντολή συνέχισηΈγχυσης. Παρακαλούμε ανανεώστε την κατάσταση του pod</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ανεπιβεβαίωτη εντολή συνέχισης έγχυσης. Παρακαλούμε ανανεώστε την κατάσταση του pod</string>
     <string name="cancelling_temp_basal_might_have_failed">Η ακύρωση του προσωρινού βασικού ρυθμού μπορεί να έχει αποτύχει. Αν εκτελούνταν προηγουμένως ένας προσωρινός ρυθμός, αυτός μπορεί να έχει ακυρωθεί. Παρακαλώ ανανεώστε χειροκίνητα την κατάσταση του Pod από την καρτέλα Omnipod.</string>
 </resources>
