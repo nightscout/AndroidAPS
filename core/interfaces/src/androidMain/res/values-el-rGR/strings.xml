@@ -14,8 +14,21 @@
     <string name="min_plus">(+%1$d λεπ.)</string>
     <string name="sec_plus">(+%1$d δευτ.)</string>
     <string name="minago_long">%1$d λεπτά πριν</string>
+    <string name="hoursago">πριν από %1$.1f ώρ.</string>
     <string name="days_ago">%1$.1f ημέρες πριν</string>
     <string name="days_ago_round">%1$.0f ημέρες πριν</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">πριν από %1$s ημέρα %2$s ώρες</item>
+        <item quantity="other">πριν από %1$s ημέρες %2$s ώρες</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">πριν από %1$s ώρα</item>
+        <item quantity="other">πριν από %1$s ώρες</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">μόλις τώρα</item>
+        <item quantity="other">πριν από %1$s λεπτά</item>
+    </plurals>
     <string name="seconds_ago">πριν λίγα δευτερόλεπτα</string>
     <string name="in_days">σε %1$.0f ημέρες</string>
     <string name="in_days_round">σε %1$.0f ημέρες</string>
@@ -68,6 +81,8 @@
     <string name="pref_show_delta">Εμφάνιση Διαφοράς</string>
     <string name="pref_show_detailed_delta">Εμφάνιση λεπτομερούς Διαφοράς</string>
     <string name="pref_show_avgdelta">Εμφάνιση Μέσης Διαφοράς</string>
+    <string name="pref_show_tempTarget">Εμφάνιση προσωρινού στόχου</string>
+    <string name="pref_show_reservoir_level">Εμφάνιση επιπέδου δεξαμενής</string>
     <string name="pref_show_phone_battery">Εμφάνιση Μπαταρίας Τηλεφώνου</string>
     <string name="pref_show_rig_battery">Εμφάνιση Μπαταρίας Rig</string>
     <string name="pref_show_basal_rate">Εμφάνιση Βασικού Ρυθμού</string>
@@ -77,6 +92,8 @@
     <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
     <string name="pref_show_ago">Εμφάνιση Πριν</string>
     <string name="pref_show_week_number">Εμφάνιση αριθμού Εβδομάδας</string>
+    <string name="pref_show_date">Εμφάνιση ημερομηνίας</string>
+    <string name="pref_show_seconds">Εμφάνιση δευτερολέπτων</string>
     <string name="pref_show_complication1">Εμφάνιση Complication 1</string>
     <string name="pref_show_complication2">Εμφάνιση Complication 2</string>
     <string name="pref_show_complication3">Εμφάνιση Complication 3</string>
@@ -88,12 +105,14 @@
     <string name="wear_more_watchfaces">Περισσότερα Watchface</string>
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">Ε %1$.2f U/h @%2$s %3$d/%4$d λεπ.</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Η εφαρμογή χρειάζεται άδεια Bluetooth για να επικοινωνεί με την αντλία</string>
     <!-- Insulin -->
     <string name="unknown">Άγνωστη</string>
     <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
     <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
@@ -117,6 +136,8 @@
     <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
+    <string name="pump_disconnected">Αντλία αποσυνδεδεμένη</string>
+    <string name="basalprofilenotaligned">Οι τιμές του βασικού ρυθμού δεν είναι ευθυγραμμισμένες σε ακέραιες ώρες: %1$s</string>
     <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %1$s</string>
     <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
