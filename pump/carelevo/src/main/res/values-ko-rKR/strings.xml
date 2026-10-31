@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Carelevo용 펌프 연동</string>
+    <string name="carelevo_alarm_channel_name">Carelevo 알람</string>
+    <string name="carelevo_alarm_channel_description">Carelevo 패치 알람 알림</string>
     <string name="common_btn_ok">확인</string>
     <string name="carelevo_bluetooth_state_key">블루투스 상태</string>
     <string name="carelevo_serial_number_key">시리얼 넘버</string>
@@ -13,6 +17,9 @@
     <string name="common_label_unit_value_duration_hour_and_minute">%1$d시간 %2$d분</string>
     <string name="common_label_unit_value_minute">%d분</string>
     <string name="common_label_unit_value_duration_hour">%d시간</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/hr</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
     <string name="carelevo_pump_resume_title">주입을 재개 할까요?</string>
     <string name="carelevo_pump_resume_description">확인 버튼을 누르면 주입이 재개 됩니다.</string>
     <string name="carelevo_pump_stop_duration_title">주입 정지 시간을 설정해 주세요.</string>
@@ -25,8 +32,11 @@
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3시간 30분</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4시간</string>
     <string name="common_unit_value_day_hour_min">%1$d일 %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
     <string name="common_unit_remain_min_sec">%1$d분 %2$02d초 남음</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">인슐린 채우기 가이드</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
     <string name="carelevo_btn_patch_expiration">사용 종료</string>
     <string name="carelevo_btn_input_search_patch">패치 검색</string>
     <string name="carelevo_btn_retry">재시도</string>
@@ -67,6 +77,9 @@
     <string name="carelevo_patch_expiration_reminders_title_value">패치 사용 기간 알림 설정 값</string>
     <string name="carelevo_title_fill_insulin">패치에 인슐린 채우기</string>
     <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">사용 기간 (최대 168시간)을 고려하여 패치에 인슐린을 채워주세요.\n(%1$d U - %2$d U)인슐린 양 입력 버튼을 눌러 채운 인슐린 양을 입력해 주세요.</string>
+    <string name="carelevo_patch_step_1">1단계.</string>
+    <string name="carelevo_patch_step_2">2단계.</string>
+    <string name="carelevo_patch_step_3">3단계.</string>
     <string name="carelevo_patch_connect_step_1_title">바늘 보호캡 제거하기</string>
     <string name="carelevo_patch_connect_step_1_desc">패치를 포장재에서 꺼낸 후 바늘 보호캡을 제거해 주세요.</string>
     <string name="carelevo_patch_connect_step_2_title">전원 켜기 및 연결</string>
@@ -84,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">패치의 보호 테이프를 제거해 주세요.</string>
     <string name="carelevo_patch_attach_step3_title">패치 부착</string>
     <string name="carelevo_patch_attach_step3_desc">패치에 표시된 점이 위로 향하게 피부에 부착해 주세요.</string>
+    <string name="carelevo_patch_attach_step4_desc">패치를 부착한 후 다음을 누르십시오.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">안전캡 제거</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">안전캡을 화살표 방향으로 90도 돌린 후 안전캡을 들어 제거해 주세요.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">바늘 삽입</string>
