@@ -63,7 +63,7 @@
     <string name="scene_wizard_name_info">Bu senaryoyu bir bakışta kolayca tanınabilir kılacak bir isim ve simge seçin. Bunları, etkinleştirme düğmesinde ve genel bakış ekranınızdaki aktif senaryo başlığında göreceksiniz.</string>
     <!-- Scene wizard: UI labels -->
     <string name="scene_wizard_include_action">Senaryoya %1$s dahil et</string>
-    <string name="scene_wizard_finish">Bitti</string>
+    <string name="scene_wizard_finish">Bitir</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Devam senaryosu</string>
     <string name="scene_wizard_chain_info">Mevcut senaryo sona erdiğinde otomatik olarak devreye girecek başka bir senaryoyu buna zincirleme olarak ekleyebilirsiniz. Ayrıca erken sonlandırdığınızda doğrudan bir sonraki senaryoya geçiş yapabilirsiniz. Bu sonraki senaryo, yalnızca hedef etkinleştirilmişse ve pompa kullanılabilir durumdaysa çalışır. Aksi takdirde sona eren senaryonun başlık kısmında neden başlamadığına dair bir açıklama yer alır.</string>
