@@ -59,7 +59,7 @@
     <string name="diaconn_g8_loginsulinchange_title">레저버 교체 기록</string>
     <string name="diaconn_g8_loginsulinchange_summary">로그 동기화 시 케어포털 \"인슐린 교체\" 정보 자동 업로드</string>
     <string name="diaconn_g8_logcanulachange_title">바늘 교체 기록</string>
-    <string name="diaconn_g8_logcanulachange_summary">로그 동기화 시 케어포털 \"위치 교체\" 정보 자동 업로드</string>
+    <string name="diaconn_g8_logcanulachange_summary">로그 동기화 시 케어포털 \"위치 변경\" 정보 자동 업로드</string>
     <string name="diaconn_g8_logbatterychange_summary">로그 동기화 시 케어포털 \"배터리 교체\" 정보 자동 업로드</string>
     <string name="diaconn_g8_logbatterychange_title">배터리 교체 기록</string>
     <string name="diaconn_g8_logsyncinprogress">로그 동기화 진행 중</string>
