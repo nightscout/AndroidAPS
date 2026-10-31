@@ -18,7 +18,7 @@
     <string name="pref_interface_settings">ממשק</string>
     <string name="pref_tile_settings">אריחים</string>
     <string name="pref_others_settings">אחרים</string>
-    <string name="pref_complication_settings">סיבוכים</string>
+    <string name="pref_complication_settings">רכיבים</string>
     <string name="pref_show_date">הצגת תאריך</string>
     <string name="pref_show_iob">הצגת IOB</string>
     <string name="pref_show_detailed_iob">הצגת אינסולין פעיל מפורט</string>
@@ -63,12 +63,12 @@
     <string name="pref_wizard_percentage">אחוז במחשבון</string>
     <string name="pref_wizard_carbs_type">סוג הארוחה במחשבון</string>
     <string name="pref_wizard_carb_time">זמן הפחמימות במחשבון</string>
-    <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
+    <string name="pref_complication_tap_action">פעולת הקשה על רכיב</string>
     <string name="pref_complication_bg_graph_hours">טווח זמנים של גרף הסוכר</string>
     <string name="duration_1_hour">שעה אחת</string>
     <string name="duration_3_hours">3 שעות</string>
     <string name="duration_6_hours">6 שעות</string>
-    <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
+    <string name="pref_unicode_in_complications">יוניקוד ברכיבים</string>
     <string name="pref_version">גירסה:</string>
     <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
     <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
@@ -163,21 +163,21 @@
     <string name="pref_simplify_ui">פישוט הממשק</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצגת מס\' שבוע</string>
-    <string name="pref_complication_1">סיבוך 1</string>
-    <string name="pref_complication_2">סיבוך 2</string>
-    <string name="pref_complication_3">סיבוך 3</string>
-    <string name="pref_complication_4">סיבוך 4</string>
-    <string name="pref_complication_5">סיבוך 5</string>
+    <string name="pref_complication_1">רכיב 1</string>
+    <string name="pref_complication_2">רכיב 2</string>
+    <string name="pref_complication_3">רכיב 3</string>
+    <string name="pref_complication_4">רכיב 4</string>
+    <string name="pref_complication_5">רכיב 5</string>
     <string name="complication_summary_none">הקישו לבחירת מקור נתונים</string>
-    <string name="pref_complication_type_priority">עדיפות סוג הסיבוך</string>
+    <string name="pref_complication_type_priority">עדיפות סוג הרכיב</string>
     <string name="pref_complication_type_priority_all">ברירת מחדל לכל המיקומים</string>
     <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">שינוי כאן יוחל בפעם הבאה שתבחרו מקור נתונים. בחירה חוזרת באותו מקור אינה מספיקה: בחרו תחילה מקור נתונים אחר, ואז בחרו את הרצוי.</string>
     <string name="complication_type_priority_value">ערך או מד</string>
     <string name="complication_type_priority_text">טקסט</string>
     <string name="complication_type_priority_icon">סמל</string>
     <string name="complication_type_priority_use_default">שימוש בברירת המחדל</string>
-    <string name="cwf_complication_layout">פריסת סיבוכים</string>
-    <string name="cwf_complication_layout_description">המיקום והגודל של הסיבוכים, כפי שנלקחו מפני השעון המותאמים אישית שנטענו.</string>
+    <string name="cwf_complication_layout">פריסת רכיבים</string>
+    <string name="cwf_complication_layout_description">המיקום והגודל של הרכיבים, כפי שנלקחו מפני השעון המותאמים אישית שנטענו.</string>
     <string name="pref_include_external">הכללת תצוגות חיצוניות בתבנית</string>
     <string name="pref_switch_external">החלפת נתונים חיצוניים בפני השעון</string>
     <string name="custom_pref_show_seconds">הצגת שניות</string>
@@ -259,7 +259,7 @@
     <string name="complication_cwf_lower">רקע של פני שעון מותאמים אישית</string>
     <string name="complication_cwf_upper">שעון של פני שעון מותאמים אישית</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
-    <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext2</string>
+    <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">קצב בזאלי</string>
@@ -281,7 +281,7 @@
     <string name="tile_tap_main_menu">תפריט ראשי</string>
     <string name="tile_tap_loop_status">סטטוס הלולאה</string>
     <string name="action_running_mode_selected">התבקש מצב פעולה</string>
-    <string name="title_activity_disconnect_pump">ניתוק משאבה</string>
+    <string name="title_activity_disconnect_pump">ניתוק המשאבה</string>
     <string name="title_activity_suspend_loop">השהיית הלולאה</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d גר׳</string>
     <string name="wizard_carbs_type">סוג הארוחה</string>
