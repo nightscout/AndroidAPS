@@ -7,7 +7,7 @@
     <string name="common_btn_ok">OK</string>
     <string name="carelevo_bluetooth_state_key">Stato bluetooth</string>
     <string name="carelevo_serial_number_key">Numero di serie</string>
-    <string name="carelevo_boot_date_time_key">Tempo di attivazione</string>
+    <string name="carelevo_boot_date_time_key">Ora di attivazione</string>
     <string name="carelevo_expiration_key">Scadenza</string>
     <string name="carelevo_basal_rate_key">Velocità basale</string>
     <string name="carelevo_temp_basal_rate_key">Velocità basale temporanea</string>
@@ -105,7 +105,7 @@
     <string name="carelevo_patch_needle_insertion_desc_warning">Tieni premuto per 10 secondi.</string>
     <string name="carelevo_dialog_patch_needle_retry_count">%d tentativi rimasti per l\'inserimento dell\'ago.</string>
     <string name="carelevo_dialog_patch_discard_message_title">Disattivare la patch e avviare la nuova patch?</string>
-    <string name="carelevo_dialog_patch_discard_message_desc">Premere il pulsante [OK] interromperà l’insulina.</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Premendo il pulsante [OK] l\'erogazione di insulina verrà interrotta.</string>
     <string name="carelevo_dialog_patch_discard_unused_title">Terminare senza iniziare l\'erogazione?</string>
     <string name="carelevo_dialog_patch_discard_unused_desc">Premendo il pulsante [OK] questa patch diventerà inutilizzabile.</string>
     <string name="carelevo_dialog_patch_activation_cancel_title">Annullare l\'attivazione della patch?</string>
@@ -202,7 +202,7 @@
     <string name="alarm_notification_desc_notice_low_insulin">Meno di %s U di insulina rimanenti. Preparati a cambiare la patch.</string>
     <string name="alarm_notification_desc_notice_expired_patch">La durata di utilizzo della patch è di %1$s giorni %2$s ore. Tieni presente questo aspetto durante l\'utilizzo.</string>
     <string name="alarm_notification_desc_notice_change_time_zone">Il fuso orario è cambiato da %1$s(UTC %2$s) a %3$s(UTC %4$s).</string>
-    <string name="alarm_notification_desc_notice_check_bg">%s è passato dal tuo bolo. Controlla la tua glicemia.</string>
+    <string name="alarm_notification_desc_notice_check_bg">Sono passati %s dal tuo bolo. Controlla la tua glicemia.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS avviato.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS è terminato a causa della disconnessione patch/CGM.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS terminato a causa della pausa LGS.</string>
