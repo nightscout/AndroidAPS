@@ -229,7 +229,7 @@
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Ativar Perfil\" em PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Porcentagem</string>
-    <string name="timeshift_label">Alteração Turno</string>
+    <string name="timeshift_label">Deslocamento de tempo</string>
     <string name="confirm_remove_multiple_items">Tem certeza que deseja remover %1$d itens</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">O dispositivo principal não tem %1$d destes registros. Eles não são removidos.</string>
     <string name="overview_treatment_label">Tratamento</string>
@@ -257,7 +257,7 @@
     <string name="stoptemptarget">Parar Alvo Temp</string>
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
-    <string name="lowglucosesuspend">Suspensão de Glicémia Baixa</string>
+    <string name="lowglucosesuspend">Suspensão por glicose baixa</string>
     <string name="pump_suspended">Bomba suspensa</string>
     <string name="pump_suspend">Suspender bomba</string>
     <string name="pump_resume">Retomar bomba</string>
@@ -841,7 +841,7 @@
     <string name="device_changed" comment="26 characters max for translation">Troca de dispositivo</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bólus OK</string>
     <string name="temp_basal_delivery_error">Erro na entrega da basal temporária</string>
-    <string name="ebstopsloop">O uso do Bólus Estendido irá parar o modo Closed Loop no tempo do bólus estendido. Quer realmente isso?</string>
+    <string name="ebstopsloop">O uso do bólus estendido vai parar o modo de loop fechado enquanto o bólus estendido estiver em andamento. Deseja mesmo isso?</string>
     <string name="pump_busy">A bomba está ocupada</string>
     <string name="connection_error">Erro de conexão com a bomba</string>
     <string name="reading_pump_history">Lendo histórico da bomba</string>
