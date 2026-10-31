@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatisering</string>
-    <string name="automation_empty_desc">Maak een regel aan om acties te automatiseren op basis van triggers.</string>
+    <string name="automation_enabled">Geactiveerd</string>
+    <string name="automation_read_only">Alleen lezen</string>
+    <string name="automation_new_rule">Regel toevoegen</string>
+    <string name="automation_empty_desc">Maak een regel om acties automatisch uit te voeren op basis van triggers.</string>
+    <string name="automation_edit_rule">Regel bewerken</string>
+    <string name="automation_discard_title">Wijzigingen weggooien?</string>
+    <string name="automation_discard_message">De regel is onvolledig en kan niet worden opgeslagen. Wijzigingen weggooien?</string>
+    <string name="automation_discard_confirm">Weggooien</string>
     <string name="automation_missing_task_name">Voer een taaknaam in.</string>
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
