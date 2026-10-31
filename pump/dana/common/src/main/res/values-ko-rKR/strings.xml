@@ -17,7 +17,7 @@
     <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">자동 잠금</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
     <string name="danar_setbasalstep001">기저 단계를 0.01 U/h로 설정하십시오</string>
-    <string name="resetpairing">페어링 정보를 다시 설정하시겠습니까?</string>
+    <string name="resetpairing">페어링 정보를 초기화하시겠습니까?</string>
     <string name="dana_model">%1$s\n모델: %2$02X\n프로토콜: %3$02X\n코드: %4$02X</string>
     <string name="processinghistory">이벤트 처리 중</string>
     <string name="danar_enableextendedbolus">펌프에서 확장 볼러스를 활성화하십시오</string>
@@ -60,7 +60,7 @@
     <string name="wrongpumppassword">펌프 비밀번호가 잘못되었습니다!</string>
     <string name="danar_history_alarm">알람</string>
     <string name="danar_history_basalhours">기저 시간</string>
-    <string name="danar_history_bolus">Boluses</string>
+    <string name="danar_history_bolus">볼러스</string>
     <string name="danar_history_carbohydrates">탄수화물</string>
     <string name="danar_history_dailyinsulin">일일 인슐린</string>
     <string name="danar_history_glucose">혈당</string>
@@ -110,7 +110,7 @@
     <string name="press_ok_on_the_pump">펌프에서 OK를 누르고\n표시된 숫자 2개를 입력하십시오\n코드 입력을 마칠 때까지 빼기 버튼을 눌러 펌프 화면을 켜진 상태로 유지하십시오.</string>
     <string name="num1pin">1: (12자리)</string>
     <string name="num2pin">2: (8자리)</string>
-    <string name="basal_bolus_step">기저/볼러스 단계</string>
+    <string name="basal_bolus_step">기저/볼러스 단위</string>
     <string name="connecting_to_pump">펌프에 연결하는 중…</string>
     <string name="pairing_successful">페어링 성공!</string>
     <string name="pairing_successful_message">펌프가 연결되었으며 사용할 준비가 되었습니다.</string>
