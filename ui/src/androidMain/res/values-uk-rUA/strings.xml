@@ -2,10 +2,16 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Немає активного тимчасового базалу</string>
+    <string name="start_activity_tt">Запустити ТЦ для активності</string>
+    <string name="start_eating_soon_tt">Запустити ТЦ «Очікуваний прийом їжі»</string>
+    <string name="start_hypo_tt">Запустити ТЦ при гіпо</string>
+    <string name="time_offset">Зсув часу</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
-    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dд%2$dг</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dд%2$dгод</string>
     <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dг</string>
     <!--    Widget-->
+    <string name="configure">Налаштувати прозорість</string>
+    <string name="widget_description">Віджет AAPS</string>
     <string name="widget_bg_graph_description">Графік ГК AAPS</string>
     <string name="widget_glucose_circle_description">Коло глюкози AAPS</string>
     <string name="widget_compact_bg_description">AAPS ГК + IOB + COB (компактний)</string>
@@ -50,6 +56,14 @@
     <string name="cgp_pgr_moderate">Помірний ризик</string>
     <string name="cgp_pgr_high">Високий ризик</string>
     <string name="cgp_pgr_extremely_high">Надзвичайно високий ризик</string>
+    <string name="do_you_want_recalculate_tdd_stats">Бажаєте перерахувати статистику TDD?</string>
+    <string name="calculation_in_progress">Виконується обчислення</string>
+    <string name="age">Вік</string>
+    <string name="weight_label">Вага</string>
+    <string name="glucose_type">Тип глюкози</string>
+    <string name="bg_other">Інше</string>
+    <string name="bg_meter">Глюкометр</string>
+    <string name="bg_sensor">Сенсор</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
     <string name="edit_site">Редагувати</string>
@@ -58,6 +72,9 @@
     <string name="record_site_note">Примітка: %1$s</string>
     <string name="delete_site_note">Примітку видалено</string>
     <!-- FillDialog -->
+    <string name="fill_warning">Будь ласка, переконайтеся, що обсяг відповідає специфікації вашого інфузійного набору!</string>
+    <string name="record_pump_site_change">Запис заміни канюлі помпи</string>
+    <string name="record_insulin_cartridge_change">Запис заміни картриджа інсуліну</string>
     <string name="fill_prime_amount">Кількість для заповнення</string>
     <string name="fill_pump_units_note">Кількість для заповнення вказано в одиницях помпи</string>
     <string name="fill_insulin_change">Змінити інсулін на: %1$s (буде застосовано перемикання профілю)</string>
@@ -136,7 +153,7 @@
     <string name="missing_insulin_name">Відсутня назва інсуліну</string>
     <string name="insulin_name_exists">Назва інсуліну %1$s вже існує, виберіть нову назву</string>
     <string name="insulin_external_update_title">Конфігурацію інсуліну змінено</string>
-    <string name="insulin_external_update_message">Спарений клієнт змінив конфігурацію інсуліну. Натисніть OK, щоб завантажити його зміни й відкинути ваші незбережені зміни, або Відміна, щоб продовжити редагування (ваше наступне збереження перезапише його зміни).</string>
+    <string name="insulin_external_update_message">Спарений клієнт змінив конфігурацію інсуліну. Натисніть «OK», щоб завантажити його зміни й відкинути ваші незбережені зміни, або «Скасувати», щоб продовжити редагування (ваше наступне збереження перезапише його зміни).</string>
     <string name="insulin_edit_target_gone">Цей інсулін було видалено в іншому місці, тому ваші зміни не вдалося зберегти. Список оновлено.</string>
     <string name="insulin_activation_applied">Активацію інсуліну застосовано</string>
     <!-- Client→master round-trip pending dialog -->
@@ -158,8 +175,17 @@
     <string name="cannot_delete_last_insulin">Неможливо видалити останній інсулін</string>
     <string name="cannot_delete_active_insulin">Неможливо видалити активний інсулін</string>
     <string name="reuse_profile_pct_hours">Повторити %1$d%% %2$d год</string>
+    <string name="percentage_label">Відсоток</string>
     <!-- LoopDialog -->
     <string name="disconnectpump">Від’єднати помпу</string>
+    <string name="resume">Відновити</string>
+    <string name="reconnect">Знову під’єднати помпу</string>
+    <string name="duration15m">15 хв</string>
+    <string name="duration30m">30 хв</string>
+    <string name="duration1h">1 година</string>
+    <string name="duration2h">2 години</string>
+    <string name="duration3h">3 години</string>
+    <string name="duration10h">10 годин</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Бракує %1$d г</string>
     <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
@@ -170,6 +196,14 @@
     <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Вуглеводи зменшено на %1$d%%, додано eCarbs %2$d%% із затримкою %3$d хв на %4$d год</string>
     <string name="wizard_include_info">Торкніться, щоб увімкнути або вимкнути в розрахунку:\n• ГК — глюкоза крові (на початку УВІМК.)\n• ТЦ — тимчасова ціль (на початку УВІМК.)\n• Тренд — тренд ГК (запамʼятовується останній стан)\n• IOB — активний інсулін (на початку УВІМК.)\n• COB — активні вуглеводи (запамʼятовується останній стан)</string>
     <!-- Treatments -->
+    <string name="no_records_available">Записи відсутні</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Вуглеводи і болюс</string>
+    <string name="show_invalidated">Показати анульовані</string>
+    <string name="hide_invalidated">Приховати анульовані</string>
+    <string name="careportal_remove_started_events">Видалити записи, розпочаті AAPS</string>
+    <string name="user_entry">Введення користувача</string>
+    <string name="clone_label">Клонувати</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Графік глюкози. Останні значення %1$s. %2$s. %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Показати елементи керування</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Сповіщення: %1$d</string>
@@ -196,6 +230,7 @@
     <string name="add_new_profile">Додати новий профіль</string>
     <string name="edit_label">Редагувати</string>
     <string name="activate_label">Активувати</string>
+    <string name="activate_profile">Активувати профіль</string>
     <string name="remove_label">Видалити</string>
     <string name="active_profile_indicator">АКТИВНИЙ</string>
     <string name="confirm_remove_profile">Видалити профіль \"%1$s\"?</string>
@@ -211,19 +246,31 @@
     <string name="active_profile">Активний профіль</string>
     <string name="available_profiles">Доступні профілі</string>
     <string name="profile_switches">Перемикання профілів</string>
+    <string name="basal_pct_from_tdd_label">% від базалу</string>
+    <string name="selected_profile">Вибрано:</string>
     <string name="comparation">Порівняння</string>
     <string name="profile_tab_1">Профіль 1</string>
     <string name="profile_tab_2">Профіль 2</string>
+    <string name="motol_default_profile">Профіль за замовчуванням</string>
+    <string name="current_profile">Поточний профіль</string>
+    <string name="available_profile">Доступний профіль</string>
+    <string name="format_with_tdd">Вік: %1$d TDD: %2$.0f Од</string>
+    <string name="format_with_tdd_and_pct">Вік: %1$d TDD: %2$.0f Од %3$d%%</string>
+    <string name="format_with_weight">Вік: %1$d Вага: %2$.0f кг</string>
+    <string name="dpv_default_profile">Профіль DPV за замовчуванням</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Текст кнопки</string>
     <string name="quick_wizard_mode_wizard">Калькулятор</string>
     <string name="quick_wizard_mode_insulin">Інсулін</string>
     <string name="quick_wizard_mode_carbs">Вуглеводи</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Тільки позитивний IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
     <!--    History browser-->
     <string name="history_now">Зараз</string>
     <string name="a11y_history_previous_window">Попередній період</string>
     <string name="a11y_history_next_window">Наступний період</string>
+    <string name="additional_ecarbs">Додати eCarbs</string>
     <string name="calculator_options">Параметри калькулятора</string>
     <string name="use_bg">Використовувати ГК</string>
     <string name="use_cob">Використовувати COB</string>
@@ -244,7 +291,12 @@
     <string name="wizard_no_insulin_required">Інсулін не потрібен</string>
     <string name="carbs_constraint_violation">Вуглеводи зменшено через обмеження</string>
     <string name="insulin_constraint_violation">Інсулін зменшено через обмеження</string>
+    <string name="confirm_treatment">Будь ласка, підтвердьте терапію</string>
+    <string name="recalculate">Перерахувати</string>
     <!--    Widget-->
+    <string name="use_black_color">Використовувати чорний колір</string>
+    <string name="widget_configuration">Налаштування віджета</string>
+    <string name="until_changed">До зміни</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Потрібні дозволи</string>
     <string name="permission_sheet_subtitle">Для правильної роботи застосунку потрібні деякі дозволи</string>
@@ -265,6 +317,11 @@
     <string name="cycle_day1_date">День 1 = %1$s</string>
     <string name="calculation_in_progress_percent">Розрахунок… %1$d%%</string>
     <string name="not_enough_data_for_cycles">Недостатньо даних (для 2 циклів потрібно щонайменше 56 днів)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Обидва</item>
+        <item>Тільки позитивні</item>
+        <item>Тільки негативні</item>
+    </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Вибрані дії</string>
     <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Додати %1$s</string>
