@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Protection type entries moved to core/keys/strings.xml -->
+    <string name="unsecure_fallback_biometric">Небезпечний запасний варіант</string>
+    <string name="protection_password_hint">Введіть пароль тут</string>
+    <string name="protection_pin_hint">Введіть PIN тут</string>
+    <string name="auth_hint_master_password">Введіть головний пароль</string>
+    <string name="auth_hint_master_or_pin">Введіть головний пароль або PIN</string>
+    <string name="auth_hint_master_or_password">Введіть головний пароль або власний пароль</string>
+    <string name="use_pin_password">Використати PIN/пароль</string>
+    <string name="aaps_directory_access_lost">Доступ до каталогу AAPS втрачено, тому налаштування більше не зберігаються на телефоні. Виберіть каталог ще раз.</string>
 </resources>
