@@ -36,8 +36,8 @@
     <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS of Tidepool</string>
     <string name="objectives_manualenacts">Handmatige aanpassingen</string>
     <string name="accomplished">Voltooid: %1$s</string>
-    <string name="objectives_usage_objective">Leer hoe AndroidAPS te gebruiken</string>
-    <string name="objectives_usage_gate">Voer verschillende acties uit in AndroidAPS</string>
+    <string name="objectives_usage_objective">Leer hoe AAPS te gebruiken</string>
+    <string name="objectives_usage_gate">Voer verschillende acties uit in AAPS</string>
     <string name="objectives_usage_learned">Je hebt de basis van AAPS geleerd. De meeste bedieningselementen bevinden zich op het overzichtsscherm. Meer acties vind je in de menu\'s \'Behandelingen\' en \'Beheer\' onderaan het scherm, en in het zijmenu.</string>
     <string name="objectives_useprofileswitch">Stel profiel in op 90% gedurende 10 min</string>
     <string name="objectives_usedisconnectpump">Simuleer douchen. Ontkoppel de pomp gedurende 1 uur</string>
@@ -87,7 +87,7 @@
     <string name="failedretrievetime">Tijd kon niet worden opgehaald</string>
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
-    <string name="verify_master_password">Verifieer dat u het masterwachtwoord kent</string>
+    <string name="verify_master_password">Verifieer dat u het hoofdwachtwoord kent</string>
     <string name="objectives_collapse">Minder</string>
     <string name="objectives_expand">Meer</string>
     <string name="objectives_no_learned">Geen lessen vastgelegd voor dit doel.</string>
