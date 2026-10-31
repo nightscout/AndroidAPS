@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
     <string name="mute5min">השתקה ל-5 דקות</string>
     <string name="mute">השתק</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">השתקת ההתראה</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">השתקה וסגירה</string>
     <string name="success">הצלחה</string>
     <string name="advanced_settings_title">הגדרות מתקדמות</string>
     <string name="extended_bolus">בולוס ממושך</string>
@@ -110,10 +112,13 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d גר׳</string>
     <string name="format_hours">%1$.2f ש\'</string>
     <string name="format_mins">%1$d דקות</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">משימות</string>
     <string name="please_wait">נא להמתין…</string>
     <string name="stop">עצור</string>
@@ -121,10 +126,16 @@
     <string name="invalid_profile">פרופיל לא חוקי!</string>
     <string name="no_profile_set">לא הוגדר פרופיל</string>
     <string name="profile_switch_no_insulin">לא ניתן להחליף פרופיל: אין אינסולין פעיל ולא נבחר אינסולין.</string>
+    <string name="scene_no_profile_before">לא היה פרופיל בשימוש לפני שהתרחיש התחיל.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">התרחיש %1$s הסתיים, אבל הפרופיל שלו עדיין בשימוש. %2$s יש להפעיל פרופיל באופן ידני.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">בהחלפה הזמנית הזו יש %1$s, אבל בפרופיל הקבוע שמתחתיה יש %2$s. יש קודם להפעיל בהגדרות אינסולין את האינסולין שנמצא במשאבה.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">זמן החלפת הפרופיל חייב להיות בטווח של %1$d שעות מעכשיו.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">היעד הזמני חייב להתחיל בטווח של %1$d שעות מעכשיו.</string>
     <string name="profile_switch_select_insulin_hint">עדיין אין אינסולין פעיל. בחרו את האינסולין שבו אתם משתמשים כדי שהחלפת הפרופיל תוכל לרשום אותו.</string>
     <string name="insulin_activation_failed">האינסולין לא הוחלף. האינסולין הקודם עדיין פעיל.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">האינסולין לא הוחלף: %1$s האינסולין הקודם עדיין פעיל.</string>
     <string name="insulin_activation_unconfirmed">לא ניתן היה לאשר את החלפת האינסולין. בדקו איזה אינסולין פעיל בפרופיל לפני מתן מינון.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">האינסולין לא הוחלף. האינסולין הקודם עדיין בשימוש.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nגם האינסולין לא הוחלף.</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
@@ -172,6 +183,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">הכיול לא נשמר: רמת הסוכר משתנה מהר מדי (Δ %1$s %3$s ל-5 דקות, מגבלה %2$s). יש לנסות שוב כשרמת הסוכר יציבה.</string>
     <string name="cal_reject_no_pair">הכיול לא נשמר: לא נמצאה קריאת חיישן ב-10 הדקות האחרונות.</string>
     <string name="cal_reject_warmup">הכיול לא נשמר: החיישן עדיין נמצא בזמן החימום.</string>
     <string name="cal_reject_no_session">הכיול לא נשמר: לא רשום חיישן פעיל. יש לרשום חיישן פעיל תחילה.</string>
@@ -197,6 +209,8 @@
     <string name="a11y_arrow_unknown">לא ידוע</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">הפחתת %1$s ב־%2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">הגדלת %1$s ב־%2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">פתיחת %1$s להקלדה</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">סגירת %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">הזזה למעלה</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">הזזה למטה</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">שלב %1$d מתוך %2$d</string>
@@ -217,6 +231,7 @@
     <string name="percentage_label">אחוזים</string>
     <string name="timeshift_label">היסט זמן</string>
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">במכשיר הראשי אין %1$d מהרשומות האלה. הן לא יוסרו.</string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
     <string name="wear_wizard_settings">הגדרות אשף Wear</string>
@@ -227,6 +242,8 @@
     <string name="logout">התנתקות</string>
     <string name="prime_fill">תיחול\\מילוי</string>
     <string name="prime_not_available">משאבה זו מתמלאת ומתחלת את עצמה במהלך ההפעלה. תיחול או מילוי באמצעות AAPS אינם זמינים.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">החלפה</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">מילוי</string>
     <string name="site_rotation">סבב אתרי עירוי</string>
     <string name="edit_site">עריכה</string>
     <string name="select_arrow">בחירת חץ</string>
@@ -290,6 +307,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">האינסולין %1$s אושר</string>
     <string name="current_insulin">פעיל כעת</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">יופעל</string>
     <string name="change_insulin">שינוי</string>
     <string name="select_insulin_description">בחרו את האינסולין שבו אתם ממלאים את המשאבה. לאחר ההפעלה/התיחול תוחל החלפת פרופיל.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -349,6 +367,7 @@
     <string name="temporary_target">ערך מטרה זמני</string>
     <string name="temporary_targets">ערכי מטרה זמניים</string>
     <string name="running_mode">מצב הפעלה</string>
+    <string name="running_mode_desc">סגירה או פתיחה של הלולאה, השהיה שלה או ניתוק המשאבה</string>
     <string name="running_mode_change_not_allowed">שינוי מצב ההפעלה אינו זמין</string>
     <string name="pump_reconnect">חיבור המשאבה מחדש</string>
     <string name="scene">תרחיש</string>
@@ -401,6 +420,19 @@
     <string name="scene_lock_banner_control_disabled">השליטה מרחוק הושבתה במכשיר הראשי. השליטה בתרחישים תחזור כאשר היא תופעל מחדש במכשיר הראשי.</string>
     <string name="master_offline_banner">המכשיר הראשי אינו זמין. העריכה מושבתת עד שהחיבור ישוחזר.</string>
     <string name="master_control_disabled_banner">השליטה מרחוק הושבתה במכשיר הראשי. העריכה מושבתת עד שהיא תופעל מחדש במכשיר הראשי.</string>
+    <string name="hardened_mode_on">מצב מוקשח מופעל</string>
+    <string name="hardened_mode_title">מצב מוקשח</string>
+    <string name="hardened_mode_info_open">על מצב מוקשח</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">קריאה בלבד</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">ארוחות</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">טיפול</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">ניהול</string>
+    <string name="client_role_title">תפקיד</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">תפקיד: %1$s</string>
+    <string name="client_roles_info_open">על התפקידים</string>
+    <string name="client_roles_info">לכל טלפון מצומד יש תפקיד. הטלפון הראשי בודק אותו בכל פקודה, והטלפון מציג רק את מה שהתפקיד שלו מאפשר. תפקיד חדש נכנס לתוקף מיד, בלי צימוד מחדש.\n\nקריאה בלבד: הטלפון נשאר מצומד, אבל רק מציג נתונים.\n\nארוחות: בולוס, אשף בולוס, אשף מהיר ופחמימות. אפשר גם לעצור בולוס שפועל. פחמימות שמוזנות כאן יכולות לגרום ללולאה לתת יותר אינסולין.\n\nטיפול: כל מה שמשתמשים עושים ב-AAPS, כמו יעדים זמניים, החלפות פרופיל ואינסולין, מצב לולאה, בזאלי זמני, בולוס ממושך, תרחישים, אירועי פורטל הטיפולים, כיולים ומחיקת רשומות. לא ניתן לשנות הגדרות או הגדרות מוכנות.\n\nניהול: הכול, כולל הגדרות והגדרות מוכנות (אשף מהיר, יעדים זמניים מוגדרים מראש, תרחישים, פרופילים, אוטומציה, אינסולין).</string>
+    <string name="client_read_only_banner">טלפון זה במצב קריאה בלבד בטלפון הראשי.</string>
+    <string name="hardened_mode_info">הטלפון הראשי מקבל שינויים רק ממכשירי לקוח מצומדים. הוא לא מקבל טיפולים, יעדים זמניים, שינויי פרופיל, שינויים במצב הפעולה או מחיקות שנעשים ישירות ב-Nightscout, למשל באתר או באפליקציות אחרות. ההגדרות לקבלת נתונים מ-Nightscout מוסתרות כל עוד מצב מוקשח מופעל. פקודות SMS לא מושפעות.\n\nהטלפון הראשי עדיין מעלה את כל הנתונים ל-Nightscout, כולל ערכי הסוכר. אם הוא מקבל את ערכי הסוכר מ-Nightscout, הוא ממשיך לקבל אותם משם.\n\nכדי לטעון את ההיסטוריה בטלפון ראשי חדש, יש להשתמש בסנכרון מלא ב-NSClient. סנכרון מלא לוקח את כל מה שיש ב-Nightscout, כולל פרופילים.\n\nשליטה מרחוק ממכשירי לקוח דורשת חיבור WebSocket תקין ל-Nightscout, בטלפון הראשי ובמכשירי הלקוח המצומדים. מצב פשוט תמיד מפעיל את המצב המוקשח. כדי לכבות אותו, יש לצאת ממצב פשוט ולכבות את השליטה ממכשירי לקוח בטלפון הראשי.</string>
     <string name="scene_lock_reason_master_offline">המכשיר הראשי מנותק</string>
     <string name="scene_lock_reason_control_disabled">השליטה מרחוק מושבתת</string>
     <string name="scene_lock_reason_scene_active">יש לסיים תחילה את התרחיש הפעיל</string>
@@ -411,6 +443,7 @@
     <string name="clientcontrol_action_deactivate_scene">סיום תרחיש</string>
     <string name="clientcontrol_action_update_settings">עדכון הגדרות</string>
     <string name="clientcontrol_action_deliver_bolus">מתן בולוס</string>
+    <string name="clientcontrol_action_eat_reminder">שינוי תזכורת האכילה</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">מכשיר זה אינו מצומד למכשיר ראשי.</string>
     <string name="clientcontrol_fail_not_reachable">המכשיר הראשי אינו מקוון.</string>
@@ -428,7 +461,11 @@
     <string name="clientcontrol_fail_cancelled">הפקודה בוטלה לפני שמולאה. לא נשלח דבר אל המשאבה.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">הבולוס בוטל. לא הוזרק אינסולין.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">בוטל</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">אין SMB בזמן שבולוס ממתין לאישור</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">SMB ניתן כעת. ניתן לאשר כשהוא יסתיים.</string>
     <string name="clientcontrol_fail_control_disabled">השליטה מרחוק כבויה במכשיר הראשי.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">התפקיד של טלפון זה במכשיר הראשי לא מאפשר זאת.</string>
+    <string name="clientcontrol_fail_other_token">המכשיר הראשי דחה את הפקודה: טלפון זה כותב ל-Nightscout עם אסימון אחר ולא עם האסימון שלו. יש להסיר את הטלפון במכשיר הראשי ולהוסיף אותו שוב.</string>
     <string name="clientcontrol_fail_no_pending_bolus">תוקף הבולוס המוכן פג או שהוא הוחלף. הקישו שוב על הכפתור.</string>
     <string name="clientcontrol_fail_bolus_compute">המכשיר הראשי לא הצליח לחשב את הבולוס (חסר גלוקוז/פרופיל או שהמשאבה אינה מוכנה).</string>
     <string name="clientcontrol_fail_internal">משהו השתבש.</string>
@@ -671,8 +708,10 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">לא נבחר פרופיל</string>
     <string name="missing_profile_name">חסר שם לפרופיל</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s (עותק)</string>
     <string name="profile_not_saved_activate">הפרופיל לא נשמר. יש לשמור אותו לפני ההפעלה.</string>
     <string name="profile_basal_not_compatible_with_pump">הקצב הבזאלי אינו תואם למשאבה הנוכחית ולא ניתן להפעיל אותו. הפחיתו את האחוז או התאימו את הקצב הבזאלי.</string>
+    <string name="profile_basal_below_pump_minimum">המינון הבזאלי נמוך מהמינימום של המשאבה הנוכחית ולא ניתן להפעיל אותו. יש להעלות את האחוז או לשנות את המינון הבזאלי.</string>
     <string name="profile_pump_incompatible_label">מגבלת המשאבה</string>
     <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
@@ -738,6 +777,12 @@
     <string name="grant">מתן הרשאה</string>
     <string name="set">הגדר</string>
     <string name="wizard_set_alarm">הגדרת התראה</string>
+    <string name="eat_reminder_title">זמן לאכול</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">זמן המתנה כולל: %1$s</string>
+    <string name="eat_reminder_rung">הזמן הגיע</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d דק׳</string>
+    <string name="eat_reminder_not_set">לא ניתן היה להגדיר את תזכורת האכילה. יש לאפשר ל-AAPS להגדיר שעונים מעוררים ותזכורות בהגדרות Android.</string>
     <string name="wizard_use_percentage">שימוש באחוזים</string>
     <string name="wizard_include_bg">כלול BG</string>
     <string name="wizard_include_tt">כלול ערך מטרה זמני</string>
@@ -806,6 +851,7 @@
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
     <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">קצב באחוזים %1$d%% חושב מחדש ל-%2$s יח׳/שעה עם הבזאלי הנוכחי %3$s יח׳/שעה</string>
     <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
     <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
     <!--    Dialogs-->
@@ -1088,6 +1134,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">רג\' משתנה</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">צעדים</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">אינסולין פעיל בגוף</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">אינסולין מוחלט</string>
+    <string name="graph_series_cob">פחמימות פעילות</string>
+    <string name="graph_series_bgi">השפעת רמת הסוכר בדם</string>
+    <string name="graph_series_deviations">סטיות</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">שינוי ברגישות</string>
+    <string name="graph_series_variable_sens">רגישות משתנה</string>
+    <string name="graph_series_deviation_slope">שיפוע הסטיות</string>
+    <string name="graph_series_heart_rate">דופק</string>
+    <string name="graph_series_steps">צעדים</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">פעילות אינסולין</string>
+    <string name="graph_series_predictions">תחזיות</string>
     <string name="units_days">ימים</string>
     <string name="units_format_days">%1$d ימים</string>
     <string name="units_format_days_range">%1$d ימים (%2$d - %3$d)</string>
@@ -1114,6 +1172,7 @@
     <string name="units_format_min">%1$d דקות</string>
     <string name="units_format_min_range">%1$d דקות (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d שניות</string>
     <string name="units_format_sec_range">%1$d שניות (%2$d - %3$d)</string>
@@ -1129,4 +1188,5 @@
     <string name="units_sec">שנ׳</string>
     <string name="units_years">שנים</string>
     <string name="prefs_range_title">טווח להצגה</string>
+    <string name="secrets_not_protected">לא נמצא מאגר מפתחות של המערכת במחשב זה. המפתחות שמגנים על ההגדרות ועל הצימוד עם המכשיר הראשי נשמרים בקבצים ליד הנתונים, כך שכל מי שמקבל עותק של הקבצים מקבל גם אותם. ב-Linux יש להתקין ולהפעיל מחזיק מפתחות (keyring), למשל GNOME Keyring או KWallet, ולאחר מכן להפעיל שוב את AAPS.</string>
 </resources>
