@@ -34,7 +34,7 @@
     <string name="authorized_clients_pin_published">Parkopplingserbjudandet är klart i Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Kunde inte ladda upp parkopplingserbjudandet till Nightscout.</string>
     <string name="authorized_clients_pin_retry">Försök igen</string>
-    <string name="authorized_clients_method_title">Hur ställer jag in telefonen?</string>
+    <string name="authorized_clients_method_title">Hur ska telefonen ställas in?</string>
     <string name="authorized_clients_method_qr_pair">QR-kod: Nightscout och parkoppling</string>
     <string name="authorized_clients_method_qr_pair_summary">Skanna en gång med den nya telefonen. Den får en egen Nightscout-token och parkopplas.</string>
     <string name="authorized_clients_method_qr_ns">QR-kod: Endast Nightscout</string>
@@ -166,14 +166,14 @@
     <string name="scene_not_available">Scen %1$s är inte längre tillgänglig, uppdatera din bricka</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Fjärrkommandon för insulin är inaktiverade i klientläge</string>
     <string name="wear_phone_not_ready">Telefonen startar fortfarande upp eller applicerar inställningar. Försök igen om ett tag.</string>
-    <string name="wear_control_disabled">Wear-styrning är avstängd i Wear-inställningarna på telefonen.</string>
+    <string name="wear_control_disabled">Kontroll från Wear-klocka är avstängd i Wear-inställningarna på telefonen.</string>
     <string name="wear_action_tempt_unit_error">Olika enheter på klocka och telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Ogiltigt minimum BG!</string>
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
     <string name="wear_action_tempt_range_error">Ogiltigt område: Lågt mål (%1$s) får inte vara större än Högt mål (%2$s)</string>
     <string name="wear_wizard_settings_summary">Beräkningar som ingår i kalkylatorns resultat:</string>
     <string name="wear_general_settings">Generella inställningar</string>
-    <string name="wear_custom_watchface_settings">Anpassade inställningar för urtavla</string>
+    <string name="wear_custom_watchface_settings">Inställningar för anpassad urtavla</string>
     <string name="wear_custom_watchface">Anpassad urtavla: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installerar...</string>
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Klockan visar urtavlan Komplikationer. Välj Anpassad urtavla för att se %1$s på klockan.</string>
@@ -235,7 +235,7 @@
     <string name="smscommunicator_otp_reset_title">Återställ autentiseringsnyckel</string>
     <string name="smscommunicator_otp_reset_prompt">Är du säker på att du vill återställa autentiseringsnyckeln? Alla konfigurerade autentiseringsappar blir då ogiltiga och du måste konfigurera dem igen.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installera autentiseringsapp</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanna koden för att ställa in OTP-koder för AAPS</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Skanna koden för att ställa in OTP-koder för AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
     <string name="smscommunicator_otp_reset_header">Återställ autentiseringsfunktioner</string>
     <string name="smscommunicator_otp_install_info">Installera en autentiseringsapp som stöder RFC 6238 TOTP-tokens på varje följartelefon. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
