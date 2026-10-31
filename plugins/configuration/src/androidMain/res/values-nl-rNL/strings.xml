@@ -4,7 +4,7 @@
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
     <string name="next_button">Volgende</string>
     <string name="previous_button">Vorige</string>
-    <string name="setupwizard_finish">FINISH</string>
+    <string name="setupwizard_finish">VOLTOOIEN</string>
     <string name="welcome">Welkom</string>
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
@@ -16,7 +16,7 @@
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
-    <string name="master_password_summary">Het masterwachtwoord wordt gebruikt om back-ups te versleutelen en om risicovolle handelingen in de app te bevestigen. Onthoud het wachtwoord goed of bewaar het op een veilige plek.</string>
+    <string name="master_password_summary">Het hoofdwachtwoord wordt gebruikt om back-ups te versleutelen en om risicovolle handelingen in de app te bevestigen. Onthoud het wachtwoord goed of bewaar het op een veilige plek.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
     <string name="syncinfotext">Gegevens naar de cloud synchroniseren. Je kan dit deel nu overslaan, maar je kan pas verder met de doelen wanneer je een Nightscout of Tidepool client hebt ingesteld.</string>
@@ -42,7 +42,7 @@
     <string name="setupwizard_open_ns_receive_settings">Nightscout-gegevensacceptatie</string>
     <string name="setupwizard_pair_with_master_info">Koppel deze client aan jouw master AAPS, zodat deze via een beveiligde verbinding opdrachten kan versturen. Na het koppelen is de installatie voltooid.</string>
     <string name="setupwizard_setup_from_master_title">Instellen vanaf de master</string>
-    <string name="setupwizard_setup_from_master_info">Open \'geautoriseerde clients\' op de master en voeg deze telefoon toe met een QR-code. Door de QR-code te scannen, wordt Nightscout ingesteld met een eigen token. Ook kan de telefoon hiermee worden gekoppeld. Na het scannen is de installatie voltooid. Heb je geen QR-code? Sla deze stap dan over en stel Nightscout zelf in.</string>
+    <string name="setupwizard_setup_from_master_info">Open Geautoriseerde clients op de master en voeg deze telefoon toe met een QR-code. Door de QR-code te scannen, wordt Nightscout ingesteld met een eigen token. Ook kan de telefoon hiermee worden gekoppeld. Na het scannen is de installatie voltooid. Heb je geen QR-code? Sla deze stap dan over en stel Nightscout zelf in.</string>
     <string name="setupwizard_scan_master_qr">Scan de QR-code</string>
     <string name="setupwizard_pairing_ws_warning">Voor het koppelen is de Nightscout WebSocket-verbinding vereist. Ga terug naar de vorige stap en schakel deze eerst in.</string>
     <string name="setupwizard_pairing_status_master">Gekoppelde apparaten: %1$d</string>
