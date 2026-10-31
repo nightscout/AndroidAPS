@@ -4,6 +4,7 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Setări conexiune</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Sincronizează datele dumneavoastră cu Nightscout folosind API v3</string>
     <string name="blocked_by_charging">Blocat de opțiunile de încărcare</string>
     <string name="blocked_by_connectivity">Blocat de opțiunile de conectivitate</string>
     <string name="no_connectivity">Fără conexiune</string>
@@ -33,6 +34,35 @@
     <string name="authorized_clients_pin_published">Oferta de asociere este pregătită pentru Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Nu s-a putut încărca oferta de asociere către Nightscout.</string>
     <string name="authorized_clients_pin_retry">Reîncercați</string>
+    <string name="authorized_clients_method_title">Cum este configurat telefonul?</string>
+    <string name="authorized_clients_method_qr_pair">Cod QR: Nightscout și asociere</string>
+    <string name="authorized_clients_method_qr_pair_summary">Scanați o singură dată pe telefonul nou. Acesta primește propriul cod de acces Nightscout și este asociat.</string>
+    <string name="authorized_clients_method_qr_ns">Cod QR: doar Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Telefonul primește propriul cod de acces Nightscout și poate citi datele. Nu este asociat și nu poate trimite comenzi.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Pentru un telefon fără cameră. Trebuie să fie deja conectat la Nightscout.</string>
+    <string name="authorized_clients_qr_working">Se creează codul de acces Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Configurați %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Scanați acest cod pe telefonul nou, în asistentul de configurare sau în Asociați cu dispozitivul principal. Codul configurează Nightscout și asociază telefonul.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scanați acest cod pe telefonul nou, în asistentul de configurare sau în Asociați cu dispozitivul principal. Codul configurează Nightscout. Telefonul nu este asociat.</string>
+    <string name="authorized_clients_qr_keep_private">Oricine vede acest cod poate citi datele din Nightscout-ul dumneavoastră. Arătați-l doar telefonului nou.</string>
+    <string name="authorized_clients_token_problem_title">Niciun cod QR</string>
+    <string name="authorized_clients_not_added_title">Clientul nu a fost adăugat</string>
+    <string name="authorized_clients_token_problem_not_connected">Acest telefon nu este conectat la Nightscout, așa că nu poate crea un cod de acces pentru client.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Codul de acces Nightscout al acestui telefon nu este un cod de administrator, așa că nu poate crea un cod de acces pentru client. Folosiți aici un cod de administrator sau adăugați clientul cu PIN-ul.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout are deja un cod de acces cu acest nume și cu alte drepturi. Alegeți alt nume.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Un client cu acest nume este deja în listă. Alegeți alt nume sau eliminați mai întâi acel client.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout nu a afișat noul cod de acces în listă, așa că acesta a fost șters din nou. Nu a rămas nimic în urmă. Încercați din nou.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout nu a afișat noul cod de acces în listă și acesta nu a putut fi șters din nou. Ștergeți codul de acces %1$s din Nightscout, apoi încercați din nou.</string>
+    <string name="authorized_clients_tokens_header">Doar citire Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Cod de acces Nightscout propriu, neasociat</string>
+    <string name="authorized_clients_token_show_qr">Afișați codul QR</string>
+    <string name="authorized_clients_token_delete_title">Ștergeți codul de acces?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s nu mai poate citi datele din Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Jetonul său Nightscout este și el șters, așa că nu mai poate citi Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Cod de acces Nightscout propriu</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Folosește codul de acces Nightscout %1$s, care are mai multe drepturi decât îi trebuie unui client</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Folosește codul de acces Nightscout %1$s, nu pe al său: comenzile lui sunt refuzate. Eliminați-l și adăugați-l din nou.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Asociați cu dispozitivul principal</string>
     <string name="pair_with_master_pin_entry_title">Introduceți codul PIN de asociere</string>
@@ -42,18 +72,40 @@
     <string name="pair_with_master_fetching">Se caută asocierea...</string>
     <string name="pair_with_master_confirm_title">Asociați cu acest dispozitiv principal?</string>
     <string name="pair_with_master_confirm_master">Dispozitiv principal: %1$s</string>
+    <string name="pair_with_master_confirm_warning">După asociere, acest dispozitiv va putea trimite comenzi semnate către acest dispozitiv principal.</string>
     <string name="pair_with_master_confirm_pair">Asociați</string>
     <string name="pair_with_master_error_title">Nu poate fi asociat</string>
     <string name="pair_with_master_error_wrong_pin">Nu a fost găsită nicio asociere pentru acel PIN. Verificați codul PIN de pe dispozitivul principal și încercați din nou.</string>
     <string name="pair_with_master_error_ambiguous_pin">Au fost găsite mai multe asocieri care corespund acelui PIN. Cereți dispozitivului principal să genereze un PIN nou și reîncercați.</string>
     <string name="pair_with_master_error_expired">Această asociere a expirat. Generați un PIN nou pe dispozitivul principal.</string>
     <string name="pair_with_master_error_network">Nu se poate ajunge la Nightscout. Verificați conexiunea și încercați din nou.</string>
+    <string name="pair_with_master_error_secret_store">Secretul de asociere nu a putut fi salvat, așa că asocierea a fost anulată. Nu s-a schimbat nimic. Încercați din nou, iar dacă eroarea se repetă, reporniți aplicația.</string>
     <string name="pair_with_master_retry">Încercați din nou</string>
     <string name="pair_with_master_already_paired_title">Deja asociat</string>
     <string name="pair_with_master_already_paired_master">Momentan asociat cu dispozitivul principal %1$s. Pentru a introduce un PIN nou, opriți mai întâi asocierea curentă.</string>
     <string name="pair_with_master_unpair">Dezasociați</string>
     <string name="pair_with_master_sending">Se trimite mesajul de asociere…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Scanați codul QR</string>
+    <string name="client_setup_scan_title">Scanați codul QR al dispozitivului principal</string>
+    <string name="client_setup_scan_instructions">Pe dispozitivul principal, deschideți Clienți autorizați și adăugați acest telefon cu un cod QR. Îndreptați camera spre cod.</string>
+    <string name="client_setup_scan_camera_refused">Camera este necesară pentru a citi codul QR. Permiteți accesul sau asociați cu PIN-ul.</string>
+    <string name="client_setup_scan_camera_denied">Accesul la cameră este dezactivat pentru AAPS. Activați-l în setările sistemului sau asociați cu PIN-ul.</string>
+    <string name="client_setup_scan_camera_blocked">Accesul la cameră nu este permis pe acest dispozitiv. Asociați în schimb cu PIN-ul.</string>
+    <string name="client_setup_scan_camera_unavailable">Camera nu poate fi folosită pe acest dispozitiv. Asociați în schimb cu PIN-ul.</string>
+    <string name="client_setup_scan_open_settings">Deschideți setările</string>
+    <string name="client_setup_scan_not_a_code">Acesta nu este un cod QR de la AAPS.</string>
+    <string name="client_setup_scan_other_version">Acest cod este de la o altă versiune AAPS. Dispozitivul principal și acest telefon trebuie să ruleze aceeași versiune.</string>
+    <string name="client_setup_scan_expired">Acest cod a expirat. Creați unul nou pe dispozitivul principal.</string>
+    <string name="client_setup_scan_already_paired">Acest telefon este deja asociat. Dezasociați-l mai întâi pentru a folosi un cod care asociază.</string>
+    <string name="client_setup_confirm_title">Folosiți acest cod?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">De asemenea, asociază acest telefon cu dispozitivul principal %1$s.</string>
+    <string name="client_setup_confirm_replaces">Înlocuiește adresa Nightscout și codul de acces ale acestui telefon.</string>
+    <string name="client_setup_confirm_apply">Folosiți</string>
+    <string name="client_setup_done_title">Finalizat</string>
+    <string name="client_setup_done_paired">Nightscout este configurat și telefonul este asociat. Dispozitivul principal îl afișează ca activ după ce s-a conectat.</string>
+    <string name="client_setup_done_ns_only">Nightscout este configurat. Pentru a controla dispozitivul principal de pe acest telefon, asociați-l și pe acesta.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Dispozitivul principal AAPS nu mai recunoaște acest dispozitiv. Deschideți pagina Gestionare → Asociați cu dispozitivul principal pentru a re-asocia.</string>
     <string name="ns_client">NSClient</string>
@@ -71,11 +123,19 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Dacă este activată, încărcările vor merge către serverele de testare în loc de cele obișnuite</string>
     <string name="title_tidepool_dev_servers">Folosiți serverele Integration (test)</string>
+    <string name="title_tidepool_use_ns_connection">Folosiți setările de conexiune Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Dezactivați pentru a seta setări de conexiune separate pentru Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Înregistrați datele la Tidepool</string>
     <string name="upload_now">Încărcați acum</string>
     <string name="tidepool_purge_data">Ștergeți toate datele</string>
     <string name="tidepool_purge_data_confirm">Ștergeți TOATE datele AAPS încărcate în Tidepool? Această acțiune nu poate fi anulată. Folosiți-o pentru a elimina datele corupte de o versiune mai veche, apoi rulați \"Sincronizare completă\" pentru a re-încărca.</string>
+    <string name="tidepool_full_sync_comment">Sincronizare completă? AAPS va încărca din nou toate datele în Tidepool. Poate dura ceva timp.</string>
+    <string name="tidepool_logout_confirm">Vă deconectați de la Tidepool? Încărcările se opresc până când vă conectați din nou.</string>
+    <string name="tidepool_status_not_logged_in">Neautentificat</string>
+    <string name="tidepool_status_no_session">Autentificat, încă neconectat</string>
+    <string name="tidepool_status_blocked">Blocat de setările de conexiune</string>
+    <string name="tidepool_status_failed">Eșuat. Vedeți jurnalul de mai jos.</string>
     <string name="not_connected">Neconectat</string>
     <string name="read_only">Doar vizualizare</string>
     <string name="working">În lucru</string>
@@ -95,6 +155,8 @@
     <string name="garmin_description">Conexiune la dispozitivul Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Port server HTTP local</string>
     <string name="garmin_local_http_server">Server HTTP local</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Ceasul Garmin a trimis %1$s de carbohidrați. Acest telefon este un client, așa că aceștia nu au fost introduși. Introduceți-i în AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Ceasul Garmin a cerut conectarea sau deconectarea pompei. Acest telefon este un client, așa că nu s-a schimbat nimic. Faceți acest lucru în AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Monitorizați și controlați AAPS folosind ceasul WearOS.</string>
     <string name="no_watch_connected">(Niciun ceas conectat)</string>
@@ -103,6 +165,8 @@
     <string name="user_action_not_available">Acțiunea utilizatorului selectat %1$s nu mai este disponibilă, vă rugăm să reîmprospătați iconița</string>
     <string name="scene_not_available">Scena %1$s nu mai este disponibilă, vă rugăm să reîmprospătați iconița</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Comenzile de insulină de la distanță sunt dezactivate în modul client</string>
+    <string name="wear_phone_not_ready">Telefonul încă pornește sau aplică setările. Încercați din nou peste câteva momente.</string>
+    <string name="wear_control_disabled">Controlul Wear este dezactivat în setările Wear de pe telefon.</string>
     <string name="wear_action_tempt_unit_error">Unități diferite folosite pe ceas și telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Glicemia minimă în afara limitelor!</string>
     <string name="wear_action_tempt_max_bg_error">Glicemia maximă în afara limitelor!</string>
@@ -111,10 +175,16 @@
     <string name="wear_general_settings">Setări generale</string>
     <string name="wear_custom_watchface_settings">Cadran ceas - Setări personalizate </string>
     <string name="wear_custom_watchface">Cadran personalizat: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Se instalează…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Ceasul afișează Fața de ceas cu complicații. Selectați Fața de ceas personalizată pentru a vedea %1$s pe ceas.</string>
+    <string name="wear_pushed_watchface_confirm_title">Schimbați fața de ceas de pe ceas?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s va înlocui %2$s pe ceas.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s va înlocui %2$s pe ceas. Complicațiile pe care le-ați schimbat în editorul feței de ceas revin la valorile implicite.</string>
     <string name="wear_load_watchface">Încărcați cadranul</string>
     <string name="wear_infos_watchface">Info cadran</string>
     <string name="wear_export_watchface">Exportați șablonul</string>
     <string name="wear_new_custom_watchface_exported">Șablon ceas personalizat exportat</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Retrimiteți toate datele</string>
     <string name="open_settings_on_wear">Deschideți setările pe Wear</string>
     <string name="wear_import_custom_watchface_title">Selectați o față personalizată pentru ceas</string>
@@ -145,6 +215,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Ultima rulare</string>
     <string name="last_enact">Ultima implementare</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Astăzi</string>
     <string name="weighted">ponderat</string>
     <string name="full_xdrip_sync_comment">Sincronizare completă? Poate dura ceva timp și până la finalizare nu vor exista date noi în xDrip+.</string>
@@ -245,6 +316,8 @@
     <string name="sms_read_status_failed">Citire eșuată a stării</string>
     <string name="sms_profile_switch_created">Schimbare de profil creată</string>
     <string name="sms_wrong_tbr_duration">Durata RBT trebuie să fie un multiplu de %1$d minute și mai mare de 0.</string>
+    <string name="sms_tbr_percent_only">Această pompă acceptă o bazală temporară doar în procente, nu în U/h.</string>
+    <string name="sms_tbr_absolute_only">Această pompă acceptă o bazală temporară doar în U/h, nu în procente.</string>
     <string name="a11y_otp_qr_code">Cod QR pentru configurarea unei parole de unică folosință</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Aplicația are nevoie de permisiunea SMS pentru controlul de la distanță prin mesaje text</string>
