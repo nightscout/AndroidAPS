@@ -88,7 +88,7 @@
     <string name="what_i_ve_learned">מה שלמדתי:</string>
     <string name="verify_master_password">וודאו שאתם יודעים וזוכרים את הסיסמה הראשית</string>
     <string name="objectives_collapse">פחות</string>
-    <string name="objectives_expand">יותר</string>
+    <string name="objectives_expand">עוד</string>
     <string name="objectives_no_learned">לא תועדו לקחים למשימה זו.</string>
     <string name="objectives_open_exam">פתיחת מבחן</string>
     <string name="objectives_exam_question_progress">שאלה %1$d מתוך %2$d</string>
