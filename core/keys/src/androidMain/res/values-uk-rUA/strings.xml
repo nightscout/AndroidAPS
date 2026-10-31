@@ -213,7 +213,7 @@
     <string name="pref_title_autosens_period">Період Autosens</string>
     <string name="openapsama_autosens_period_summary">Кількість годин у минулому для визначення чутливості (час засвоєння вуглеводів виключено)</string>
     <!-- IntKey: Maintenance preferences -->
-    <string name="pref_title_logs_amount">Кількість логів для надсилання</string>
+    <string name="pref_title_logs_amount">Кількість журналів для надсилання</string>
     <!-- IntKey: Alert preferences -->
     <string name="pref_title_stale_data_threshold">Поріг застарілих даних</string>
     <string name="pref_title_pump_unreachable_threshold">Поріг недоступності помпи</string>
