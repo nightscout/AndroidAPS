@@ -181,7 +181,7 @@
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s laikrodyje pakeis %2$s.</string>
     <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s pakeis %2$s laikrodyje. Laikrodžio ciferblato redaktoriuje pakeisti informaciniai laukeliai grąžinami į numatytuosius nustatymus.</string>
     <string name="wear_load_watchface">Įkelti ciferblatą</string>
-    <string name="wear_infos_watchface">Ekrano info</string>
+    <string name="wear_infos_watchface">Ciferblato info</string>
     <string name="wear_export_watchface">Eksportuoti šabloną</string>
     <string name="wear_new_custom_watchface_exported">Pasirinktinio ekrano šablonas eksportuotas</string>
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/lt/latest/ExchangeSiteCustomWatchfaces/index.html</string>
