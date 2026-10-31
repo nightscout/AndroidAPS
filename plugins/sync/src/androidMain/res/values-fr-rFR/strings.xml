@@ -32,7 +32,7 @@
     <string name="authorized_clients_pin_done">Terminé</string>
     <string name="authorized_clients_pin_publishing">Envoi de la demande d\'appairage à Nightscout…</string>
     <string name="authorized_clients_pin_published">Demande d\'appairage prête sur Nightscout.</string>
-    <string name="authorized_clients_pin_publish_failed">Impossible de télécharger la demande d\'appairage vers Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Impossible d\'envoyer la demande d\'appairage vers Nightscout.</string>
     <string name="authorized_clients_pin_retry">Réessayer</string>
     <string name="authorized_clients_method_title">Comment configurer le téléphone ?</string>
     <string name="authorized_clients_method_qr_pair">QR code : Nightscout et appairage</string>
@@ -117,7 +117,7 @@
     <string name="ns_alarm_options">Options d\'alarme</string>
     <string name="ns_remote_control_options">Contrôle à distance</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Si activé, les téléchargements iront vers les serveurs de test au lieu des serveurs habituels</string>
+    <string name="summary_tidepool_dev_servers">Si activé, les envois iront vers les serveurs de test au lieu des serveurs habituels</string>
     <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
     <string name="title_tidepool_use_ns_connection">Utiliser les paramètres de connexion de Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Désactiver pour définir des paramètres de connexion séparés pour Tidepool</string>
