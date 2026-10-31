@@ -64,7 +64,7 @@
     <string name="prerequisites_label">Pré-requisitos</string>
     <string name="prerequisites_what">O que é essencial para configurar e utilizar o AAPS?</string>
     <string name="prerequisites_build">Uma forma de compilar o AAPS: num navegador ou num computador com o Android Studio instalado.</string>
-    <string name="prerequisites_pump">Uma bomba de insulina compatível se planeia correr um closed loop.</string>
+    <string name="prerequisites_pump">Uma bomba de insulina compatível, se planeia usar um loop fechado.</string>
     <string name="prerequisites_nightscout">Nightscout ou Tidepool, para guardar um registo dos seus dados.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiência na programação ou edição de código.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
