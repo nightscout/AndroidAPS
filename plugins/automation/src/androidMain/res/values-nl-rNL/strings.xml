@@ -9,6 +9,11 @@
     <string name="automation_discard_title">Wijzigingen weggooien?</string>
     <string name="automation_discard_message">De regel is onvolledig en kan niet worden opgeslagen. Wijzigingen weggooien?</string>
     <string name="automation_discard_confirm">Weggooien</string>
+    <string name="automation_category_time">Tijd &amp; planning</string>
+    <string name="automation_category_glucose">Glucose &amp; behandeling</string>
+    <string name="automation_category_device">Apparaatstatus</string>
+    <string name="automation_category_sensors">Sensoren &amp; verbindingen</string>
+    <string name="automation_category_other">Overig</string>
     <string name="automation_missing_task_name">Voer een taaknaam in.</string>
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
