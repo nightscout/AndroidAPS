@@ -2,9 +2,9 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Ingen midlertidig basal kjører</string>
-    <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
-    <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
-    <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
+    <string name="start_activity_tt">Start midlertidig mål Aktivitet</string>
+    <string name="start_eating_soon_tt">Start midlertidig mål Spise snart</string>
+    <string name="start_hypo_tt">Start midlertidig mål Hypo</string>
     <string name="time_offset">Tidsforskyvning</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dt</string>
