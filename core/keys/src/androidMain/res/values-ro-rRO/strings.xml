@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Ridicați alarmele urgente ca notificări Android</string>
     <string name="pref_title_alert_increase_volume">Creșteți treptat volumul notificărilor</string>
     <string name="pref_title_alert_override_dnd">Suprascrieți modul Nu Deranjați</string>
+    <string name="pref_summary_alert_override_dnd">Activat: alarmele sună chiar și când telefonul este pe silențios sau în modul Nu deranjați. Dezactivat: atunci alarmele nu sună. În modul Nu deranjați doar vibrează.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Încărcați datele de glicemie în NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Înregistrați schimbarea senzorului</string>
@@ -125,6 +126,7 @@
     <string name="pref_title_ns_use_ws">Utilizați websockets</string>
     <string name="pref_summary_ns_use_ws">Utilizați conexiuni de tip websocket pentru comunicarea în timp real cu Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Permite controlul clientului</string>
+    <string name="pref_summary_ns_allow_client_control">Permiteți clienților asociați să trimită comenzi semnate (de ex. pornire/oprire scenarii) prin Nightscout. Aceasta activează și modul securizat: modificările făcute direct în Nightscout nu mai sunt preluate.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Doar WiFi</string>
     <string name="pref_title_openhumans_charging_only">Doar la încărcare</string>
