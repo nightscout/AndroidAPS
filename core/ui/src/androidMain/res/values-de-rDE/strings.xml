@@ -368,6 +368,7 @@
     <string name="pump_battery_change">Pumpenbatterie-Wechsel</string>
     <string name="temporary_target">Temporäres Ziel</string>
     <string name="temporary_targets">Temporäre Ziele</string>
+    <string name="running_mode">Betriebsmodus</string>
     <string name="running_mode_desc">​Loop schließen, öffnen oder pausieren oder die Pumpe trennen</string>
     <string name="pump_reconnect">Pumpe wieder verbinden</string>
     <string name="scene">Szene</string>
@@ -889,10 +890,35 @@
     <string name="export_cloud_failed">Cloud-Export FEHLGESCHLAGEN!</string>
     <string name="csv_exported">Benutzereinträge exportiert</string>
     <string name="csv_export_failed">Export von Benutzereinträgen FEHLGESCHLAGEN!</string>
+    <string name="logs_sent">Protokolle per E-Mail gesendet</string>
+    <string name="logs_send_failed">Protokolle konnten nicht gesendet werden</string>
+    <string name="cloud_directory">Cloud-Ordner</string>
+    <string name="cloud_token_expired_or_invalid">Die Zugriffsberechtigung für den Cloud-Speicher ist abgelaufen oder ungültig. Erteile die Berechtigung erneut.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Lokal</string>
+    <string name="chip_cloud">Cloud</string>
+    <string name="chip_email">E-Mail</string>
+    <string name="send_logs">Protokolle senden</string>
+    <string name="file_management">Dateiverwaltung</string>
+    <string name="database_management">Datenbankmanagement</string>
     <string name="data_choices">Datenübermittlung</string>
+    <string name="unattended_settings_export">Automatischer Einstellungsexport</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Detailgrad der Protokollierung einstellen</string>
+    <string name="maintenance_send_logs_desc">Protokolldateien zur Fehleranalyse teilen</string>
+    <string name="maintenance_delete_logs_desc">Alte Protokolldateien löschen</string>
+    <string name="maintenance_aaps_directory_desc">Lokalen Speicherordner auswählen</string>
+    <string name="maintenance_cloud_directory_desc">Cloud-Speicher einrichten (Google Drive)</string>
+    <string name="maintenance_export_desc">Verschlüsselte Sicherung der Einstellungen speichern</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Speichertyp auswählen</string>
+    <string name="clear_cloud_action">Einstellungen löschen</string>
+    <string name="clear_cloud_settings">Cloud-Einstellungen löschen</string>
+    <string name="clear_cloud_settings_message">Es wird auf lokales Speichern umgestellt und die Autorisierung wird gelöscht. Weiter?</string>
+    <string name="cloud_connection_failed">Verbindung zum Cloud-Speicher fehlgeschlagen</string>
+    <string name="cloud_reauthorize_message">Verbindung zum Cloud-Speicher fehlgeschlagen. Möchtest Du erneut authentifizieren?</string>
+    <string name="reauthorize">Erneut authentifizieren</string>
+    <string name="cloud_auth_success">Cloud-Speicher-Authentifizierung erfolgreich</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ereignis-Zeit</string>
     <!-- BluetoothDevicePreference -->
