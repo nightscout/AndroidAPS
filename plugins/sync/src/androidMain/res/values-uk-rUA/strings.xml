@@ -176,10 +176,10 @@
     <string name="wear_custom_watchface_settings">Налаштування власного циферблата</string>
     <string name="wear_custom_watchface">Власний циферблат: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Встановлення…</string>
-    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Годинник показує циферблат з ускладненнями. Виберіть власний циферблат, щоб побачити %1$s на годиннику.</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Годинник показує циферблат з віджетами. Виберіть власний циферблат, щоб побачити %1$s на годиннику.</string>
     <string name="wear_pushed_watchface_confirm_title">Змінити циферблат на годиннику?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s замінить %2$s на годиннику.</string>
-    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s замінить %2$s на годиннику. Ускладнення, які ви змінили в редакторі циферблата, повернуться до стандартних.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s замінить %2$s на годиннику. Віджети, які ви змінили в редакторі циферблата, повернуться до стандартних.</string>
     <string name="wear_load_watchface">Завантажити циферблат</string>
     <string name="wear_infos_watchface">Інформація про циферблат</string>
     <string name="wear_export_watchface">Експортувати шаблон</string>
@@ -224,11 +224,101 @@
     <string name="wear_action_running_mode_title">Робочий режим</string>
     <string name="garmin_request_key">Ключ запиту</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Комунікатор</string>
+    <string name="description_sms_communicator">Віддалене керування AAPS за допомогою SMS-команд.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">із застосунку Authenticator для: %1$s, а потім PIN</string>
+    <string name="smscommunicator_tab_otp_label">Налаштування Authenticator</string>
+    <string name="smscommunicator_code_verify_label">Код для перевірки:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Перевірочний код складається з 6 цифр, показаних у застосунку Authenticator (OTP), після яких іде обов’язковий PIN із 3 або більше цифр.</string>
+    <string name="smscommunicator_otp_reset_btn">Скинути Authenticators</string>
+    <string name="smscommunicator_otp_reset_title">Скидання ключа Authenticator</string>
+    <string name="smscommunicator_otp_reset_prompt">Ви впевнені, що хочете скинути ключ Authenticator? Це зробить усі налаштовані Authenticators недійсними, і їх потрібно буде налаштувати знову.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Встановіть Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Відскануйте код, щоб налаштувати OTP-коди AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Перевірте одноразовий пароль</string>
+    <string name="smscommunicator_otp_reset_header">Скидання Authenticators</string>
+    <string name="smscommunicator_otp_install_info">На кожному телефоні послідовника встановіть застосунок Authenticator, що підтримує TOTP-токени згідно з RFC 6238. Популярні безкоштовні застосунки:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Скидаючи authenticator, ви робите всі вже налаштовані пристрої недійсними. Їх потрібно буде налаштувати знову!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">НЕПРАВИЛЬНА ДОВЖИНА!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">НЕПРАВИЛЬНИЙ PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">НЕПРАВИЛЬНИЙ OTP</string>
+    <string name="sms_wrong_code">Неправильний код. Команду скасовано.</string>
+    <string name="sms_timeout_while_waiting">Тайм-аут під час очікування завершення попереднього зв’язку з помпою</string>
+    <string name="smscommunicator_bolus_reply_with_code">Щоб подати болюс %1$.2f Од, відповідайте кодом %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Щоб подати харчовий болюс %1$.2f Од, відповідайте кодом %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Щоб встановити тимчасову ціль %1$s, відповідайте кодом %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Щоб скасувати тимчасову ціль, відповідайте кодом %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Щоб вимкнути сервіс SMS Remote Service, відповідайте кодом %1$s.\n\nМайте на увазі, що знову активувати його можна буде лише безпосередньо в AAPS на основному телефоні.</string>
+    <string name="smscommunicator_stopped_sms">Сервіс SMS Remote Service зупинено. Щоб знову його активувати, використайте AAPS на основному телефоні.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Щоб надіслати калібрування %1$.2f, відповідайте кодом %2$s</string>
+    <string name="smscommunicator_bolus_failed">Помилка подачі болюсу. Перевірте реальний стан перед повторною командою!</string>
+    <string name="smscommunicator_bolus_delivered">Болюс %1$.2f Од успішно подано</string>
+    <string name="smscommunicator_meal_bolus_delivered">Харчовий болюс %1$.2f Од успішно подано</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Ціль %1$s на %2$d хвилин</string>
+    <string name="smscommunicator_tt_set">Ціль %1$s на %2$d хвилин успішно встановлено</string>
+    <string name="smscommunicator_tt_canceled">Тимчасову ціль успішно скасовано</string>
+    <string name="smscommunicator_loop_has_been_disabled">Петлю вимкнено</string>
+    <string name="smscommunicator_loop_is_enabled">Петлю увімкнено</string>
+    <string name="smscommunicator_pump_connect_with_code">Щоб під’єднати помпу, відповідайте кодом %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Не вдалося під’єднатися до помпи</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Щоб від’єднати помпу на %1$d хвилин, відповідайте кодом %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Помпу від’єднано</string>
+    <string name="smscommunicator_reconnect">Помпу знову під’єднано</string>
+    <string name="smscommunicator_remote_command_not_allowed">Віддалена команда заборонена</string>
+    <string name="smscommunicator_remote_command_not_possible">Віддалена команда неможлива</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Віддалений болюс недоступний. Спробуйте пізніше.</string>
+    <string name="smscommunicator_basal_reply_with_code">Щоб почати базал %1$.2f Од/год на %2$d хв, відповідайте кодом %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Щоб перемкнути профіль на %1$s %2$d%%, відповідайте кодом %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Щоб почати подовжений болюс %1$.2f Од на %2$d хв, відповідайте кодом %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Щоб внести %1$d г о %2$s, відповідайте кодом %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Щоб почати базал %1$d%% на %2$d хв, відповідайте кодом %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Щоб призупинити петлю на %1$d хвилин, відповідайте кодом %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Щоб відновити петлю, відповідайте кодом %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Щоб вимкнути петлю, відповідайте кодом %1$s</string>
     <string name="smscommunicator_restart_reply_with_code">Щоб перезапустити AAPS, дайте відповідь кодом %1$s</string>
     <string name="smscommunicator_restarting">AAPS перезапускається</string>
+    <string name="smscommunicator_tempbasal_set">Тимчасовий базал %1$.2f Од/год на %2$d хв успішно розпочато</string>
+    <string name="smscommunicator_extended_set">Подовжений болюс %1$.2f Од на %2$d хв успішно розпочато</string>
+    <string name="smscommunicator_carbs_set">Вуглеводи %1$d г успішно введено</string>
+    <string name="smscommunicator_carbs_failed">Не вдалося ввести %1$d г вуглеводів</string>
+    <string name="smscommunicator_tempbasal_set_percent">Тимчасовий базал %1$d%% на %2$d хв успішно розпочато</string>
+    <string name="smscommunicator_tempbasal_failed">Не вдалося запустити тимчасовий базал</string>
+    <string name="smscommunicator_extended_failed">Не вдалося запустити подовжений болюс</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Щоб зупинити тимчасовий базал, відповідайте кодом %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Щоб зупинити подовжений болюс, відповідайте кодом %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Тимчасовий базал скасовано</string>
+    <string name="smscommunicator_extended_canceled">Подовжений болюс скасовано</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Не вдалося скасувати тимчасовий базал</string>
+    <string name="smscommunicator_extended_cancel_failed">Не вдалося скасувати подовжений болюс</string>
+    <string name="smscommunicator_unknown_command">Невідома команда або неправильна відповідь</string>
+    <string name="smscommunicator_another_bolus_in_queue">Інший болюс у черзі. Спробуйте пізніше.</string>
+    <string name="smscommunicator_wrong_duration">Неправильна тривалість</string>
+    <string name="smscommunicator_loop_suspended">Петлю призупинено</string>
+    <string name="smscommunicator_loop_resumed">Петлю відновлено</string>
+    <string name="smscommunicator_invalid_phone_number">Неправильний номер телефону для SMS</string>
+    <string name="smscommunicator_calibration_sent">Калібрування надіслано. Приймання має бути увімкнене в xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ не приймає калібрування</string>
+    <string name="smscommunicator_message_body">Неправильний текст повідомлення</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Щоб перемкнути режим петлі на LGS (Low Glucose Suspend), відповідайте кодом %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Щоб перемкнути режим петлі на закриту петлю, відповідайте кодом %1$s</string>
     <string name="smscommunicator_current_loop_mode">Поточний робочий режим: %1$s</string>
+    <string name="wrong_format">Неправильний формат</string>
+    <string name="sms_actual_bg">ГК:</string>
+    <string name="sms_last_bg">Остання ГК:</string>
+    <string name="sms_delta">Дельта:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Болюс:</string>
+    <string name="sms_basal">Базал:</string>
+    <string name="sms_min_ago">%1$d хв тому</string>
+    <string name="sms_loop_suspended_for">Призупинено (%1$d хв)</string>
+    <string name="sms_read_status_failed">Не вдалося прочитати статус</string>
+    <string name="sms_profile_switch_created">Перемикання профілю створено</string>
+    <string name="sms_wrong_tbr_duration">Тривалість TBR має бути кратною %1$d хвилинам і більшою за 0.</string>
     <string name="sms_tbr_percent_only">Ця помпа приймає тимчасовий базал лише у відсотках, а не в Од/год.</string>
     <string name="sms_tbr_absolute_only">Ця помпа приймає тимчасовий базал лише в Од/год, а не у відсотках.</string>
+    <string name="a11y_otp_qr_code">QR-код для налаштування одноразового пароля</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Застосунку потрібен дозвіл на SMS для віддаленого керування текстовими повідомленнями</string>
 </resources>
