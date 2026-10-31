@@ -154,7 +154,7 @@
     <string name="nsclient_nightscout">Met AAPSClient, de Nightscout-app en de Nightscout-webpagina kun je AAPS allemaal op afstand volgen.</string>
     <string name="nsclient_dexcomfollow">Andere apps (zoals Dexcom Follow of xDrip+ in \'follower\'-modus) maken het mogelijk om bepaalde gegevens, zoals glucosewaarden, op afstand te volgen. Deze apps tonen mogelijk geen IOB of COB, of berekenen deze op een andere manier.</string>
     <string name="nsclient_data">Om AAPS op afstand te volgen of te bedienen, hebben beide telefoons internettoegang nodig (bijvoorbeeld wifi of mobiele data).</string>
-    <string name="nsclient_fullcontrol">Wanneer AAPSClient is gekoppeld aan de hoofdtelefoon, kun je AAPS ook op afstand bedienen, bijvoorbeeld voor bolussen, koolhydraten, tijdelijke streefwaarden, profielwisselingen en de loop-modus.</string>
+    <string name="nsclient_fullcontrol">Wanneer AAPSClient is gekoppeld aan de AAPS-telefoon, kun je AAPS ook op afstand bedienen, bijvoorbeeld voor bolussen, koolhydraten, tijdelijke streefwaarden, profielwisselingen en de loop-modus.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="nsclient_hint2">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Insulinegevoeligheidsfactor (ISF)</string>
