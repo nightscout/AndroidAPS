@@ -16,8 +16,8 @@
     <string name="medtronic_pump_battery_no">선택되지 않음(심플뷰)</string>
     <string name="medtronic_pump_battery_alkaline">알카라인(확장뷰)</string>
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
-    <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
-    <string name="medtronic_pump_battery_nimh">NiMH (확장 뷰)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (확장뷰)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (확장뷰)</string>
     <!-- Pump type entries -->
     <string name="medtronic_pump_type_unsupported">기타 (지원되지 않음)</string>
     <string name="medtronic_pump_type_512">512</string>
@@ -49,7 +49,7 @@
     <string name="medtronic_error_pump_wrong_tbr_type_set">펌프에 잘못된 TBR 유형이 설정되었습니다(절대값이어야 합니다).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">펌프에 잘못된 최대 볼러스가 설정되었습니다(%1$.2f여야 합니다).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">펌프에 잘못된 최대 기저가 설정되었습니다(%1$.2f여야 합니다).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">작업이 불가능합니다.\n\n이 작업을 사용하려면 먼저 메드트로닉 펌프를 구성해야 합니다.</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">작업이 불가능합니다.\n\n이 작업을 사용하려면 먼저 Medtronic 펌프를 구성해야 합니다.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">24시간 이상의 시간 변경이 요청되었습니다.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
@@ -59,7 +59,7 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">펌프에 이미 설정된 볼러스를 취소했습니다. 메드트로닉 펌프는 취소를 지원하지 않으므로 수동으로 취소해야 합니다. (그래도 취소하려면) 펌프를 일시 중단 모드로 전환한 다음 재개하십시오. 앱은 다음 업데이트 때(5분 이내) 변경 사항을 반영합니다.</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">펌프에 이미 설정된 볼러스를 취소했습니다. Medtronic 펌프는 취소를 지원하지 않으므로 수동으로 취소해야 합니다. (그래도 취소하려면) 펌프를 일시 중단 모드로 전환한 다음 재개하십시오. 앱은 다음 업데이트 때(5분 이내) 변경 사항을 반영합니다.</string>
     <string name="medtronic_cmd_cant_read_tbr">현재 TBR을 읽을 수 없습니다.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">현재 TBR을 취소할 수 없습니다. 작동을 중지합니다.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">다음 패턴의 기저 주입량이 너무 높아서 프로파일 설정이 실패했습니다: %1$s</string>
@@ -90,6 +90,6 @@
     <string name="set_neutral_temps_title">중립 임시 기저 설정</string>
     <string name="set_neutral_temps_summary">활성화하면 매시 정각 전에 임시 기저를 취소합니다. 이 방법은 일부 펌프가 정각마다 소리를 내거나 진동하는 것을 막는 데 도움이 될 수 있습니다.</string>
     <string name="invalid_history_data">잘못된 펌프 기록 데이터가 감지되었습니다. 새 이슈를 열고 로그를 제공하십시오.</string>
-    <string name="riley_statistics">RL Stats</string>
+    <string name="riley_statistics">RL 통계</string>
     <string name="clicked_refresh" comment="26 characters max for translation">새로고침 클릭</string>
 </resources>
