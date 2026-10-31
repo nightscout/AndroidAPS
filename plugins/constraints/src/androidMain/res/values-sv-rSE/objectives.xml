@@ -57,6 +57,10 @@
     <string name="unfinshed_button">Nästa icke slutförda</string>
     <string name="requestcode">Begärd kod: %1$s</string>
     <string name="objectives_hint">(markera ett eller flera alternativ)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Inte ansluten till internet</string>
     <string name="requirementnotmet">Målets krav är inte uppfyllda</string>
     <string name="what_i_ve_learned">Vad jag har lärt mig:</string>
