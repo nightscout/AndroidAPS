@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Lấy miếng dán ra khỏi vỉ và tháo nắp kim.</string>
     <string name="carelevo_patch_attach_step3_title">Dán miếng dán</string>
     <string name="carelevo_patch_attach_step3_desc">Dán miếng dán lên da sao cho chấm đánh dấu hướng lên trên.</string>
+    <string name="carelevo_patch_attach_step4_desc">Sau khi gắn miếng dán, nhấn Tiếp theo.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Tháo nắp bảo vệ</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Xoay nắp theo hướng mũi tên và tháo nắp.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Đưa kim vào</string>
