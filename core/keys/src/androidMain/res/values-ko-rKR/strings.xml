@@ -219,7 +219,7 @@
     <string name="pref_title_pump_unreachable_threshold">펌프 연결 불가 기준값</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
-    <string name="pref_title_autotune_days">기본 튜닝 일수</string>
+    <string name="pref_title_autotune_days">기본 조정 일수</string>
     <string name="autotune_default_tune_days_summary">Autotune 에서 처리할 기본 데이터 일수 (최대 30일)</string>
     <!-- IntKey: SMS preferences -->
     <string name="pref_title_sms_remote_bolus_distance">원격 볼러스 최소 간격</string>
