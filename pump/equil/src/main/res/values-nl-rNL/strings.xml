@@ -16,6 +16,12 @@
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Succes</string>
     <string name="equil_title_dressing">Vervang ampul</string>
+    <string name="equil_title_assemble">Montage pomp</string>
+    <string name="equil_title_serial">Apparaat koppelen</string>
+    <string name="equil_title_fill">Prime / Vullen</string>
+    <string name="equil_title_attach">Pomp koppelen</string>
+    <string name="equil_title_air">Canule vullen</string>
+    <string name="equil_title_unpair_detach">Pomp ontkoppelen</string>
     <string name="equil_title_history_events">Historie gebeurtenissen</string>
     <string name="equil_tone">Alarmtoon</string>
     <string name="equil_bolus_speed">Bolussnelheid</string>
@@ -28,6 +34,7 @@
     <string name="equil_tone_mode_shake">Alleen trillen</string>
     <string name="equil_tone_mode_tone">Alleen toon</string>
     <string name="equil_tone_mode_tone_and_shake">Trillen en geluid</string>
+    <string name="equil_unbind_content">Deze operatie zal de toediening van insuline stopzetten en de pomp zuiger terugplaatsen naar de bodem van het reservoir! Ook wordt de verbinding status verwijderd!</string>
     <string name="equil_ble_config_confirmation_title">Koppel Equil patch pomp</string>
     <string name="equil_error">Communicatiefout</string>
     <string name="equil_change">Vervang pomp</string>
@@ -37,6 +44,8 @@
     <string name="equil_new_infusion_set_no">Nee, alleen een reservoir of batterij</string>
     <string name="equil_same_infusion_set_hint">De canule wordt niet gevuld en de wijziging van canule wordt niet geregistreerd.</string>
     <string name="equil_unpair_alert">Weet u zeker dat u de controle over %1$s wilt opgeven?</string>
+    <string name="equil_record_basal">Basaalstand %1$s E/uur</string>
+    <string name="equil_record_basal_temp">Tijdelijke basaalstand %1$s E/u</string>
     <string name="equil_record_bolus">Bolus %1$s E</string>
     <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="equil_basal_exceeds_max">Profiel basaal stand %1$s E/u overtreft de pomp max basaal %2$s E/u. Verhoog de max basaal instelling en verbind de pomp opnieuw.</string>
@@ -55,6 +64,7 @@
     <string name="equil_firmware_version">Firmwareversie</string>
     <string name="equil_shutdown_be">Equil zal automatisch uit gaan</string>
     <string name="equil_shutdown">Equil auto uit</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Snelheid: %1$.2f E/u, duur: %2$d minuten</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Bolus instellen</string>
@@ -83,6 +93,7 @@
     <string name="equil_command_connect_error">Pomp verbindingsfout</string>
     <string name="equil_command_connect_no_response">Geen reactie van de pomp</string>
     <string name="equil_command__unknown">Onbekende status van de opdracht</string>
+    <string name="equil_install">Plaats de pomp op het lichaam</string>
     <string name="equil_settings_alarm_battery">Alarm bij bijna lege batterij</string>
     <string name="equil_settings_alarm_insulin">Alarm bij bijna leeg reservoir</string>
     <string name="equil_init_insulin_error">Initialisatie van het reservoir is niet voltooid</string>
@@ -118,11 +129,13 @@
     <string name="equil_common_wizard_exit_confirmation_text">Je hebt nog niet alle stappen voltooid. Weet je zeker dat je wilt afsluiten?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Afsluiten</string>
     <string name="equil_support_error">Firmware versie te laag. Niet ondersteund</string>
+    <string name="equil_password_tips">Stel optioneel een wachtwoord in om te koppelen met de Equil v5.3 pomp. Dit wachtwoord zal ook worden gebruikt om in de toekomst te ontkoppelen, dus zorg ervoor dat u het onthoudt. Wachtwoordregel: 4 tekens lang, gekozen uit ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Instellen koppelwachtwoord</string>
     <string name="equil_hint1">Na het installeren van de pomp op het basisplaat, selecteer of de lucht uit de binnenste naald moet worden verwijderd.</string>
     <string name="equil_unbind">Apparaat ontkoppelen</string>
     <string name="equil_device_unpaired">Apparaat niet gekoppeld</string>
     <string name="equil_assemble">Monteer de pomp, het gevulde reservoir en de opgeladen batterij</string>
+    <string name="equil_pair_password_title">Voer wachtwoord in voor %1$s</string>
     <string name="equil_insert">Prime het reservoir totdat er een druppel insuline aan de punt van de naald zichtbaar is</string>
     <string name="equil_insert2">De pomp mag niet op de pompbasis zitten.</string>
     <string name="equil_attach">Bevestig de pomp aan de basis</string>
