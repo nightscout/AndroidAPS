@@ -738,6 +738,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">No profile selected</string>
     <string name="missing_profile_name">Missing profile name</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s copy</string>
     <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
     <string name="profile_basal_not_compatible_with_pump">Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.</string>
     <string name="profile_basal_below_pump_minimum">Basal rate is below the minimum of the current pump and cannot be activated. Raise the percentage or adjust the basal rate.</string>
