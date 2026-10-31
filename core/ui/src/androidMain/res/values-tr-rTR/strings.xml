@@ -21,7 +21,7 @@
     <string name="no_history_records">Kayıt Bulunamadı</string>
     <string name="error">Hata</string>
     <string name="navigation_error_screen_not_found">Ekran açılamadı (bu yapılandırmada mevcut değil)</string>
-    <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
+    <string name="profile_set_ok">Pompadaki bazal profili güncellendi</string>
     <string name="invalid_input">Geçersiz bilgi girişi</string>
     <string name="invalid_number">Geçersiz sayı</string>
     <string name="constraint_applied">Kısıtlama uygulandı!</string>
@@ -509,7 +509,7 @@
     <string name="manage_temp_basal_desc">Geçici bazalı başlat</string>
     <string name="manage_extended_bolus_desc">Yayma bolus iletimini başlatın</string>
     <string name="manage_site_rotation_desc">İnfüzyon bölgelerini takip edin ve değiştirin</string>
-    <string name="manage_quickwizard_desc">Hızlı sihirbaz ön ayarlarını yönetin</string>
+    <string name="manage_quickwizard_desc">Hızlı Asistan ön ayarlarını yönetin</string>
     <string name="treatment_note_desc">Kayıtlarınıza bir not ekleyin</string>
     <string name="treatment_question_desc">Bakım ekibiniz için bir soru kaydedin</string>
     <string name="treatment_cgm_desc">CGM uygulamasını açın</string>
@@ -972,7 +972,7 @@
     <string name="nav_profile_helper">Profil yardımcısı</string>
     <string name="nav_profile_helper_desc">Profilinizi ağırlığa veya GTD\'ye göre oluşturun</string>
     <string name="quick_launch_configure">Hızlı Başlatma\'yı yapılandırın</string>
-    <string name="quick_launch_configure_desc">Genel bakış ekranındaki hızlı işlem butonlarını özelleştirin</string>
+    <string name="quick_launch_configure_desc">Genel bakış ekranındaki hızlı işlem düğmelerini özelleştirin</string>
     <!-- Alerts -->
     <string name="localalertsettings_title">Yerel uyarılar</string>
     <!-- Actions Screen -->
