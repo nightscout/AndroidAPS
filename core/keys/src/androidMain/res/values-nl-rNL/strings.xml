@@ -34,7 +34,7 @@
     <string name="pref_title_alert_override_dnd">Niet storen-stand negeren</string>
     <string name="pref_summary_alert_override_dnd">Aan: alarmen ook als de telefoon stil is of in niet storen. Uitgeschakeld: geen geluids alarmen, trillen bij niet storen.</string>
     <!-- BG Source preferences -->
-    <string name="pref_title_bg_source_upload_to_ns">Upload data naar NS</string>
+    <string name="pref_title_bg_source_upload_to_ns">Upload BG-gegevens naar NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Log plaatsen nieuwe sensor</string>
     <string name="pref_summary_bg_source_create_sensor_change">Maak een behandelgebeurtenis aan bij het plaatsen van een nieuwe sensor.</string>
     <!-- APS preferences -->
