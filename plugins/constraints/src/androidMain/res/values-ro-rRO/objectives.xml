@@ -16,7 +16,7 @@
     <string name="objectives_maxbasal">Efectuați acțiunea pentru a îndeplini recomandarea</string>
     <string name="objectives_maxbasal_learned">Aveți grijă la funcțiile de siguranță și ajustați parametrii de siguranță atunci când este necesar.</string>
     <string name="objectives_maxiobzero_objective">Se va începe modul buclă închisă cu funcția Suspendare la glicemie scăzută</string>
-    <string name="objectives_maxiobzero_gate">Folosiți bucla închisă în modul de Suspendare la glicemie scăzută (adică IOB maxim = 0 este setat automat) pentru câteva zile fără prea multe suspendări pentru hipoglicemie (LGS).</string>
+    <string name="objectives_maxiobzero_gate">Folosiți bucla închisă în modul Suspendare la glicemie scăzută (adică IOB maxim = 0 este setat automat) câteva zile, fără prea multe evenimente LGS.</string>
     <string name="objectives_maxiobzero_learned">Setarea MaxIOB la zero previne hipoglicemia și nu va adăuga mai multă insulină peste rata bazală (cu excepția situațiilor cu IOB negativ)</string>
     <string name="objectives_maxiob_objective">Îmbunătățirea buclei închise, mărirea valorii max IOB peste 0 și scăderea graduală a țintelor de glicemie</string>
     <string name="objectives_maxiob_gate">Se rulează pentru câteva zile și cel puțin o noapte fără a avea alarme de glicemie mică înainte de scăderea țintei</string>
