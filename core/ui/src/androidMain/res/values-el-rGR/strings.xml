@@ -149,7 +149,7 @@
     <string name="target_label">Στόχος</string>
     <string name="dia_long_label">Διάρκεια Δράσης Ινσουλίνης</string>
     <string name="ic_long_label">Αναλογία Ινσουλίνης προς Υδατάνθρακες</string>
-    <string name="isf_long_label">Συντελεστής Ευαισθησίας στην Ινσουλίνης</string>
+    <string name="isf_long_label">Συντελεστής Ευαισθησίας στην Ινσουλίνη</string>
     <string name="basal_long_label">Βασικός Ρυθμός</string>
     <string name="target_long_label">Στόχος Γλυκόζης Αίματος</string>
     <string name="shortgram">g</string>
@@ -161,9 +161,9 @@
     <string name="loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="alarm">Συναγερμός</string>
     <string name="exportsettings">Εξαγωγή ρυθμίσεων</string>
-    <string name="disableloop">Απενεργοποιήστε κύκλωμα</string>
+    <string name="disableloop">Απενεργοποίηση κυκλώματος</string>
     <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
-    <string name="resumeloop">Επαναφορά κυκλώματος</string>
+    <string name="resumeloop">Συνέχιση κυκλώματος</string>
     <string name="suspendloop">Αναστολή κυκλώματος</string>
     <string name="notification">Ειδοποίηση</string>
     <string name="noprofile">Δεν φορτώθηκε προφίλ από το NS ακόμα</string>
@@ -470,7 +470,7 @@
     <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Χορηγείται ένα SMB. Μπορείτε να επιβεβαιώσετε όταν τελειώσει.</string>
     <string name="clientcontrol_fail_control_disabled">Ο απομακρυσμένος έλεγχος είναι απενεργοποιημένος στην κύρια συσκευή.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Ο ρόλος αυτού του τηλεφώνου στην κύρια συσκευή δεν το επιτρέπει αυτό.</string>
-    <string name="clientcontrol_fail_other_token">Η κύρια συσκευή την απέρριψε: αυτό το τηλέφωνο γράφει στο Nightscout με άλλο token από το δικό του. Στην κύρια συσκευή, αφαιρέστε αυτό το τηλέφωνο και προσθέστε το ξανά.</string>
+    <string name="clientcontrol_fail_other_token">Η κύρια συσκευή την απέρριψε: αυτό το τηλέφωνο γράφει στο Nightscout με άλλο διακριτικό από το δικό του. Στην κύρια συσκευή, αφαιρέστε αυτό το τηλέφωνο και προσθέστε το ξανά.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Το προετοιμασμένο bolus έληξε ή αντικαταστάθηκε. Πατήστε ξανά το κουμπί.</string>
     <string name="clientcontrol_fail_bolus_compute">Η κύρια συσκευή δεν μπόρεσε να υπολογίσει το bolus (λείπει γλυκόζη / προφίλ ή η αντλία δεν είναι έτοιμη).</string>
     <string name="clientcontrol_fail_internal">Κάτι πήγε στραβά.</string>
@@ -509,7 +509,7 @@
     <string name="manage_temp_basal_desc">Έναρξη προσωρινού βασικού ρυθμού</string>
     <string name="manage_extended_bolus_desc">Έναρξη χορήγησης εκτεταμένου bolus</string>
     <string name="manage_site_rotation_desc">Παρακολούθηση και εναλλαγή σημείων έγχυσης</string>
-    <string name="manage_quickwizard_desc">Διαχείριση προεπιλογών QuickWizard</string>
+    <string name="manage_quickwizard_desc">Διαχείριση προεπιλογών Γρήγορου Οδηγού</string>
     <string name="treatment_note_desc">Προσθήκη σημείωσης στις καταγραφές σας</string>
     <string name="treatment_question_desc">Καταγραφή ερώτησης για την ιατρική σας ομάδα</string>
     <string name="treatment_cgm_desc">Άνοιγμα εφαρμογής CGM</string>
@@ -818,15 +818,15 @@
     <string name="resistant_adult">Ενήλικας με αντίσταση στην ινσουλίνη</string>
     <string name="pregnant">Κύηση</string>
     <string name="patient_age_summary">Παρακαλώ επιλέξτε τύπο ασθενούς για να ορισθούν τα όρια ασφαλείας</string>
-    <string name="max_bolus_title">Μέγιστο επιτρεπτό bolus[U]</string>
-    <string name="max_carbs_title">Μέγιστο επιτρεπτό υδατανθράκων [g]</string>
+    <string name="max_bolus_title">Μέγιστο επιτρεπτό bolus [U]</string>
+    <string name="max_carbs_title">Μέγιστοι επιτρεπτοί υδατάνθρακες [g]</string>
     <string name="patient_type">Τύπος ασθενή</string>
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">Μπαταρία</string>
     <string name="reservoir_label">Δεξαμενή</string>
     <string name="last_connection_label">Τελευταία σύνδεση</string>
-    <string name="last_bolus_label">Τελευταίο Bolus:</string>
+    <string name="last_bolus_label">Τελευταίο bolus</string>
     <string name="base_basal_rate_label">Βάση Βασικού Ρυθμού</string>
     <string name="tempbasal_label">Προσωρινός Ρυθμός</string>
     <string name="extended_bolus_label">Εκτεταμένο bolus</string>
