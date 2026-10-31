@@ -7,7 +7,7 @@
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor da DAI que utilizava na bomba antes do AAPS e que funcionava bem, não há necessidade de o alterar quando iniciar o loop.</string>
     <string name="dia_valuemustbedetermined">Deve determinar para o seu valor adequado para a DAI.</string>
-    <string name="hypott_label">Hipo Alvo-Temp</string>
+    <string name="hypott_label">Alvo temporário Hipo</string>
     <string name="hypott_whenhypott">Qual é a principal razão para definir um alvo temporário de hipoglicemia?</string>
     <string name="hypott_wrongbasal">Para corrigir hipos causadas por definições incorretas da taxa basal.</string>
     <string name="hypott_preventoversmb">Para evitar que o AAPS corrija em excesso um aumento de glicose no sangue causado pelos hidratos rápidos utilizados para tratar uma hipo.</string>
