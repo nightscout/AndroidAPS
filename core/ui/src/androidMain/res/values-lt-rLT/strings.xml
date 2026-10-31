@@ -159,9 +159,9 @@
     <string name="exit">Išeiti</string>
     <string name="removerecord">Ištrinti įrašą</string>
     <string name="loopisdisabled">Ciklas išjungtas</string>
-    <string name="alarm">Įspėjimas</string>
+    <string name="alarm">Aliarmas</string>
     <string name="exportsettings">Eksportuoti nustatymus</string>
-    <string name="disableloop">Išjungti Ciklą</string>
+    <string name="disableloop">Išjungti ciklą</string>
     <string name="disabled_loop">Išjungtas ciklas</string>
     <string name="resumeloop">Atnaujinti ciklą</string>
     <string name="suspendloop">Sustabdyti ciklą</string>
@@ -255,8 +255,8 @@
     <string name="site_location">Infuzijos vieta</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="stoptemptarget">Sustabdyti laikiną tikslą</string>
-    <string name="closedloop">Uždaras Ciklas</string>
-    <string name="openloop">Atviras Ciklas</string>
+    <string name="closedloop">Uždaras ciklas</string>
+    <string name="openloop">Atviras ciklas</string>
     <string name="lowglucosesuspend">Stabdymas esant žemai glikemijai</string>
     <string name="pump_suspended">Pompa sustabdyta</string>
     <string name="pump_suspend">Sustabdyti pompą</string>
@@ -774,7 +774,7 @@
     <string name="bolus_advisor">Boluso patarėjas</string>
     <string name="bolus_advisor_message">Gliukozė šiuo metu aukšta, todėl rekomenduojama su maistu palaukti, kol ji sumažės. Ar norite dabar suleisti korekcinį bolusą ir gauti priminimą, kada galėsite valgyti? Tokiu atveju angliavandeniai nebus įrašyti. Gavę priminimą, skaičiuotuvą turėsite paleisti iš naujo.</string>
     <string name="wizard_bg_label">KG</string>
-    <string name="wizard_correction">Taisyti</string>
+    <string name="wizard_correction">Korekcija</string>
     <string name="wizard_subtotal">Tarpinė suma</string>
     <string name="carbs_type_bread">Duona, nesaldūs kepiniai, jogurtas, vaisiai (obuoliai, bananai, kriaušės), bulvės, ryžiai, grikiai, avižinė košė, lėtai pasisavinamas ir mažai angliavandenių turintis maistas, daržovės</string>
     <string name="carbs_type_cake">Koldūnai, makaronai, daug angliavandenių ir riebalų turinti Azijos virtuvė, saldūs ir mieliniai kepiniai, dribsniai, grūdų košės, medus, uogienė</string>
@@ -1168,7 +1168,7 @@
     <string name="graph_series_deviation_slope">Nuokrypiai</string>
     <string name="graph_series_heart_rate">Pulsas</string>
     <string name="graph_series_steps">Žingsniai</string>
-    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Sportas</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Insulino aktyvumas</string>
     <string name="graph_series_predictions">Prognozės</string>
     <string name="units_days">d.</string>
     <string name="units_format_days">%1$d d.</string>
