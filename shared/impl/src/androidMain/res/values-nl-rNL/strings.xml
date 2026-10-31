@@ -35,7 +35,7 @@
     <string name="cwf_comment_reservoir">Reservoir niveau</string>
     <string name="cwf_comment_uploader_battery">Batterij Telefoon (%)</string>
     <string name="cwf_comment_rig_battery">Globale loop batterij (%)</string>
-    <string name="cwf_comment_basalRate">Basaal stand</string>
+    <string name="cwf_comment_basalRate">Basaalstand</string>
     <string name="cwf_comment_bgi">BGI waarde</string>
     <string name="cwf_comment_status">Status synthese</string>
     <string name="cwf_comment_time">Tijd (UU:MM of UU:MM:SS)</string>
