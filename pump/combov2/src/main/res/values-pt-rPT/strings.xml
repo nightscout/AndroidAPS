@@ -25,12 +25,12 @@
     <string name="combov2_driver_state_label">Estado do driver</string>
     <string name="bluetooth_address">Endereço Bluetooth</string>
     <string name="combov2_start_pairing">Iniciar o emparelhamento</string>
-    <string name="combov2_pairing_in_progress">Emparelhamento em andamento</string>
-    <string name="combov2_pairing_start_steps">Passos para executar o emparelhamento com a sua Combo:\n\n
-1. Na sua bomba, navegue até às definições de Bluetooth\n
-2. Verifique se um dispositivo já está emparelhado; em caso afirmativo, vá para o ecrã \"Excluir dispositivo\" para excluir/desemparelhar esse dispositivo\n
-3. Vá para o ecrã da bomba \"Adicionar dispositivo\" e inicie o emparelhamento na bomba\n
-4. Clique no botão \"Começar a emparelhar\" abaixo para iniciar o emparelhamento no AndroidAPS\n</string>
+    <string name="combov2_pairing_in_progress">Emparelhamento com a Combo em curso</string>
+    <string name="combov2_pairing_start_steps">Passos para emparelhar a sua Combo:\n\n
+1. Na sua bomba, vá às definições de Bluetooth\n
+2. Verifique se já há um dispositivo emparelhado; se houver, vá ao ecrã \"Eliminar dispositivo\" da bomba para eliminar/desemparelhar esse dispositivo\n
+3. Vá ao ecrã \"Adicionar dispositivo\" da bomba e inicie o emparelhamento na bomba\n
+4. Clique no botão \"Iniciar o emparelhamento\" abaixo para iniciar o emparelhamento no AndroidAPS\n</string>
     <string name="combov2_steps_if_no_connection_during_pairing">Após algum tempo, o nome do telemóvel aparece no ecrã da bomba; pressione CHECK para confirmar.\n\n
 Quando o emparelhamento estiver concluído, confirme na bomba e volte ao menu principal da bomba, clicando no botão CHECK duas vezes.\n\n
 Se nenhuma ligação for estabelecida em mais de 5 minutos:\n\n
@@ -43,7 +43,7 @@ para cancelar o emparelhamento)\n
     <string name="combov2_confirm_cancel_pairing_message">Quer mesmo cancelar o emparelhamento?</string>
     <string name="combov2_confirm_unpair_message">Quer mesmo desemparelhar a bomba?</string>
     <string name="combov2_pin_hint">PIN de 10 dígitos</string>
-    <string name="combov2_pairing_finished_successfully">Emparelhamento bem sucedido</string>
+    <string name="combov2_pairing_finished_successfully">Emparelhamento com a Combo concluído com sucesso</string>
     <string name="combov2_pairing_cancelled">Emparelhamento com a Combo cancelado pelo utilizador</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Tempo de pesquisa da Combo chegou ao fim</string>
     <string name="combov2_pairing_failed_due_to_error">Emparelhamento falhou devido ao erro: %1$s</string>
@@ -69,10 +69,10 @@ para cancelar o emparelhamento)\n
     <string name="combov2_cancelling_tbr">A cancelar a basal temporária</string>
     <string name="combov2_fetching_tdd_history_cmddesc">A obter histórico de TID</string>
     <string name="combov2_updating_pump_datetime_cmddesc">A atualizar a data da bomba</string>
-    <string name="combov2_updating_pump_status_cmddesc">A obter estado bomba</string>
+    <string name="combov2_updating_pump_status_cmddesc">A atualizar o estado da bomba</string>
     <string name="combov2_pairing_pin_failure">O PIN não funcionou. Verifique se havia um erro de digitação. Se continuar a acontecer, cancele e tente novamente.</string>
     <string name="combov2_discovery_duration">Duração da procura (em segundos)</string>
-    <string name="combov2_verbose_logging">Ativ. registo detal. Da Combo</string>
+    <string name="combov2_verbose_logging">Ativar registo detalhado da Combo</string>
     <string name="combov2_getting_basal_profile">A obter perfil da basal; %1$d lidos</string>
     <string name="combov2_setting_basal_profile">A definir perfil da basal; %1$d escritos</string>
     <string name="combov2_delivering_bolus">A administrar bólus (%1$.1f de %2$.1f U administrado)</string>
@@ -111,12 +111,12 @@ para cancelar o emparelhamento)\n
     <string name="combov2_unknown_tbr_detected">Foi detetada e parada uma basal temporária desconhecida; percentagem: %1$d%%; duração restante: %2$s</string>
     <string name="combov2_connection_error">Erro de ligação: %1$s</string>
     <string name="combov2_short_status_alert">Alerta: %s</string>
-    <string name="combov2_automatic_reservoir_entry">Detetar automaticamente e inserir alteração de reservatório insulina</string>
+    <string name="combov2_automatic_reservoir_entry">Detetar automaticamente e registar a troca do reservatório de insulina</string>
     <string name="combov2_automatic_battery_entry">Autodetetar e inserir automaticamente a mudança de bateria</string>
     <string name="combov2_timezone_changed">Fuso horário alterado</string>
     <string name="combov2_datetime_changed">Data e/ou hora alterada</string>
-    <string name="combov2_dst_started">Horário de verão iniciado</string>
-    <string name="combov2_dst_ended">Horário de verão terminado</string>
+    <string name="combov2_dst_started">Hora de verão iniciada</string>
+    <string name="combov2_dst_ended">Hora de verão terminada</string>
     <string name="combov2_cannot_connect_pump_error_observed">Não é possível conectar à bomba porque houve um erro na bomba. O utilizador deve tratar do erro na bomba e, em seguida, esperar 5 minutos ou pressionar o botão Atualizar na aba de drivers.</string>
     <string name="combov2_refresh_pump_status_after_error">A atualizar o estado da bomba depois de a bomba ter comunicado um erro</string>
     <string name="combov2_go_back">Voltar atrás</string>
