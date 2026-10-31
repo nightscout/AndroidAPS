@@ -153,8 +153,8 @@
     <string name="pref_title_wear_broadcast_data">Надсилати дані на годинник</string>
     <string name="pref_summary_wear_broadcast_data">Передавати дані AAPS у сторонні застосунки для годинника через intent.</string>
     <!-- Site rotation preferences -->
-    <string name="pref_title_site_rotation_manage_pump">Керувати заміною місць введення помпи</string>
-    <string name="pref_title_site_rotation_manage_cgm">Керувати заміною місць сенсора CGM</string>
+    <string name="pref_title_site_rotation_manage_pump">Керувати чергуванням місць введення помпи</string>
+    <string name="pref_title_site_rotation_manage_cgm">Керувати чергуванням місць сенсора CGM</string>
     <!-- IntKey: Overview preferences -->
     <string name="pref_title_carbs_button_increment_1">Крок кнопки вуглеводів 1</string>
     <string name="pref_title_carbs_button_increment_2">Крок кнопки вуглеводів 2</string>
@@ -209,7 +209,7 @@
     <string name="pref_title_iob_threshold_percent">Поріг IOB у відсотках</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Відсоток maxIOB, при якому SMB вимикаються.\nЗначення за замовчуванням: 100%\nПри 100% ця функція фактично вимкнена.</string>
     <string name="pref_title_dynisf_adjustment_factor">Коефіцієнт коригування DynamicISF</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">Фактор корекції для DynamicISF. Встановіть більше 100% для більш агресивних доз корекції, і менше 100% для менш агресивних корекцій.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Коефіцієнт коригування для DynamicISF. Встановіть більше 100% для більш агресивних доз корекції і менше 100% для менш агресивних корекцій.</string>
     <string name="pref_title_autosens_period">Період Autosens</string>
     <string name="openapsama_autosens_period_summary">Кількість годин у минулому для визначення чутливості (час засвоєння вуглеводів виключено)</string>
     <!-- IntKey: Maintenance preferences -->
@@ -231,7 +231,7 @@
     <string name="pref_title_alarm_stale_data">Поріг сигналу застарілих даних</string>
     <string name="pref_title_urgent_alarm_stale_data">Поріг термінового сигналу про застарілі дані</string>
     <!-- IntKey: Site rotation preferences -->
-    <string name="pref_title_site_rotation_profile">Профіль користувача для заміни місць введення</string>
+    <string name="pref_title_site_rotation_profile">Профіль користувача для чергування місць введення</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <string name="site_rotation_profile_man">Чоловік</string>
     <string name="site_rotation_profile_woman">Жінка</string>
@@ -327,14 +327,14 @@
     <string name="openapsma_max_basal_summary">Це значення називається max basal у контексті OpenAPS</string>
     <string name="pref_title_smb_max_iob">Макс. IOB для SMB</string>
     <string name="openapssmb_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nOpenAPS не додаватиме інсулін, якщо поточний IOB більший за це значення. Значення також залежить від типу пацієнта.</string>
-    <string name="pref_title_ama_max_iob">Max IOB для AMA</string>
+    <string name="pref_title_ama_max_iob">Макс. IOB для AMA</string>
     <string name="openapsma_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nЦе максимальна кількість інсуліну в [Од], яку APS може ввести за один раз. Значення також залежить від типу пацієнта.</string>
     <string name="pref_title_max_daily_multiplier">Безпечний множник макс. добового базалу</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Значення за замовчуванням: 3. Це ключове обмеження безпеки OpenAPS. Воно обмежує ваш базал до 3x вашої найбільшої базальної швидкості. Імовірно, вам не потрібно це змінювати, але знайте, що саме це мається на увазі під правилом «3x максимальний добовий; 4x поточний».</string>
     <string name="pref_title_current_basal_multiplier">Безпечний множник поточного базалу</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Значення за замовчуванням: 4. Це друга половина ключових обмежень безпеки OpenAPS, друга частина правила «3x максимальний добовий; 4x поточний». Ваш базал, незалежно від максимального базалу, встановленого на помпі, не може бути вищим за це число, помножене на поточний рівень базалу. Це захищає людей від небезпечних значень, якщо вони встановлять надто високий максимальний базал, ще не розуміючи, як працює алгоритм. За замовчуванням 4x; більшості людей ніколи не потрібно це змінювати. Якщо вам здається, що ви «впираєтеся» в це обмеження, скоріше потрібно змінити інші налаштування.</string>
     <string name="pref_title_bolus_snooze_divisor">Дільник DIA для паузи після болюсу</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Значення за замовчуванням: 2\nВідстрочка болюса діє після болюса на їжу, щоб петля не протидіяла низькими тимчасовими базалами, коли ви щойно поїли. У прикладі і за замовчуванням значення 2: при DIA 3 години відстрочка болюса поступово зникає протягом 1,5 години (3DIA/2).</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Значення за замовчуванням: 2\nПауза після болюсу діє після болюсу на їжу, щоб петля не протидіяла низькими тимчасовими базалами, коли ви щойно поїли. У прикладі і за замовчуванням значення 2: при DIA 3 години пауза після болюсу поступово зникає протягом 1,5 години (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA мін. вплив вуглеводів за 5 хв</string>
     <string name="pref_title_smb_min_5m_carbs_impact">Мін. вплив вуглеводів за 5 хв для SMB</string>
     <string name="openapsama_min_5m_carb_impact_summary">Значення за замовчуванням: 3.0 (AMA) або 8.0 (SMB). Це вплив засвоєння вуглеводів за замовчуванням на кожні 5 хвилин. За замовчуванням очікується 3 мг/дл/5 хв. Від цього залежить, як швидко зменшуються COB і скільки засвоєних вуглеводів враховується при прогнозі майбутньої ГК, коли ГК падає швидше, ніж очікувалося, або росте повільніше, ніж очікувалося.</string>
