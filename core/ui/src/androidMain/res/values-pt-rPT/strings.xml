@@ -175,7 +175,7 @@
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
     <string name="loading">A carregar…</string>
-    <string name="waiting_for_pump">A aguardar pela bomba…</string>
+    <string name="waiting_for_pump">A aguardar a bomba…</string>
     <string name="initialization_failed">Falha na inicialização</string>
     <string name="notes_label">Notas</string>
     <string name="wrong_pump_data">Os dados vêm de uma bomba diferente. Altere o driver da bomba para repor o estado da bomba.</string>
