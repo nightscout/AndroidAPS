@@ -125,7 +125,7 @@
     <string name="pref_title_ns_slow_sync">Usar sincronização lenta</string>
     <string name="pref_title_ns_use_ws">Usar websockets</string>
     <string name="pref_summary_ns_use_ws">Usar websockets para comunicação em tempo real com o Nightscout.</string>
-    <string name="pref_title_ns_allow_client_control">Permitir controlo pelo cliente</string>
+    <string name="pref_title_ns_allow_client_control">Permitir controlo pelos clientes</string>
     <string name="pref_summary_ns_allow_client_control">Permitir que os dispositivos cliente emparelhados enviem comandos assinados (p. ex. iniciar/parar cenas) através do Nightscout. Isto também ativa o modo reforçado: as alterações feitas diretamente no Nightscout deixam de ser aceites.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Só por WiFi</string>
@@ -228,7 +228,7 @@
     <string name="pref_title_random_bg_randomize">Aleatorizar dados de glicose</string>
     <string name="pref_summary_random_bg_randomize">Adicionar ruído, variar as horas, tornar aleatórias as setas de tendência e criar hidratos de carbono aleatórios de vez em quando. Desative para obter uma onda sinusoidal limpa e previsível, com a seta de tendência calculada a partir da inclinação da onda.</string>
     <!-- IntKey: NS Client preferences -->
-    <string name="pref_title_alarm_stale_data">Limite do alarme de dados antigos</string>
+    <string name="pref_title_alarm_stale_data">Limiar do alarme de dados desatualizados</string>
     <string name="pref_title_urgent_alarm_stale_data">Limiar do alarme urgente de dados desatualizados</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Perfil do utilizador para a rotação dos locais</string>
