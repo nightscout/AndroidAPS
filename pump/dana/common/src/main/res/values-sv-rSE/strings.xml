@@ -8,12 +8,15 @@
     <string name="speederror">Felaktig hastighet</string>
     <string name="insulinlimitviolation">Insulingräns nådd</string>
     <string name="boluserrorcode">Angivet: %1$.2f enheter. Levererat: %2$.2f enheter. Felkod: %3$s</string>
+    <string name="danai2_bolus_error_easy_sleep">Easy Sleep-läget är på i pumpen</string>
+    <string name="danai2_pump_check_error">Fel vid kontroll av pumpen</string>
     <string name="danar_valuenotsetproperly">Misslyckades med inställning</string>
     <string name="danar_setbasalstep001">Sätt basalsteg till 0.01 enheter per timme</string>
     <string name="resetpairing">Återställ parkopplingen?</string>
     <string name="dana_model">%1$s\nModell: %2$02X\nProtokoll: %3$02X\nKod: %4$02X</string>
     <string name="processinghistory">Behandlar</string>
     <string name="danar_enableextendedbolus">Aktivera förlängd bolus i pumpen</string>
+    <string name="danar_disablebolusblock">Bolus block är på i pumpen. AAPS kan inte ge insulin medan det är på. Stäng av Bolus block i pumpens inställningar.</string>
     <string name="overview_bolusprogress_stoped">Stoppad</string>
     <string name="unsupportedfirmware">Pumpens firmware stöds inte</string>
     <string name="pumperror">Pumpfel</string>
@@ -36,6 +39,7 @@
     <string name="gettingtempbasalstatus">Hämtar status för temp basal</string>
     <string name="gettingpumpsettings">Hämtar pumpinställningar</string>
     <string name="gettingpumptime">Hämtar tid och datum i pumpen</string>
+    <string name="largetimedifftitle">Stor tidsskillnad</string>
     <string name="largetimediff">Stor tidsskillnad:\nTiden i pumpen skiljer mer än 1,5 timme.\nVänligen justera tiden manuellt på pumpen och se till att det går att läsa historiken från pumpen utan oväntat beteende.\nOm möjligt, töm historiken i pumpen innan tidsomställning alternativt stäng av loopen i minst DIA timmar efter den senaste felaktiga historikloggen, men minst DIA timmar från nu.</string>
     <string name="pairfirst">Vänligen parkoppla pumpen.</string>
     <string name="approachingdailylimit">Maximal daglig dos snart nådd</string>
@@ -88,6 +92,9 @@
     <string name="option_off">Av</string>
     <string name="danars_password_title">Pumplösenord (endast v1)</string>
     <string name="danar_password_title">Pumplösenord</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Vald pump</string>
     <string name="rs_loginsulinchange_title">Logga reservoarbyten</string>
     <string name="rs_loginsulinchange_summary">Logga reservoarbyte automatiskt när det upptäcks i historiken</string>
@@ -97,4 +104,18 @@
     <string name="num1pin">1: (12 tecken)</string>
     <string name="num2pin">2: (8 tecken)</string>
     <string name="basal_bolus_step">Basal/bolus steg</string>
+    <string name="connecting_to_pump">Ansluter till pumpen…</string>
+    <string name="pairing_successful">Parkopplingen lyckades!</string>
+    <string name="pairing_successful_message">Din pump är nu ansluten och redo att användas.</string>
+    <string name="cancel_pairing_title">Avbryta parkopplingen?</string>
+    <string name="cancel_pairing_message">Parkopplingen kommer att avbrytas.</string>
+    <string name="done">Klar</string>
+    <string name="open_bluetooth_settings">Öppna Bluetooth-inställningar</string>
+    <string name="enter_pump_password">Ange pumpens lösenord</string>
+    <string name="select_paired_device">Välj parkopplad enhet</string>
+    <string name="no_paired_devices">Inga parkopplade Dana-enheter hittades. Parkoppla först din pump i Androids Bluetooth-inställningar.</string>
+    <string name="password_hint">4-siffrigt lösenord (0–9999)</string>
+    <string name="connecting_verifying">Ansluter och kontrollerar lösenordet…</string>
+    <string name="password_ok">Lösenordet är bekräftat!</string>
+    <string name="password_wrong">Fel lösenord. Gå tillbaka och rätta det.</string>
 </resources>
