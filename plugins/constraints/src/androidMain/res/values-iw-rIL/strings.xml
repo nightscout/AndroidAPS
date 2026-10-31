@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
     <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. הלולאה הסגורה מושבתת.</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
-    <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
+    <string name="smbalwaysdisabled">\"SMB תמיד\" ו-\"SMB אחרי פחמימות\" מושבתים כי מקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
     <string name="smbnotallowedinopenloopmode">SMB אינו מותר במצב לולאה פתוחה</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
