@@ -21,6 +21,8 @@
     <string name="pairing_completed">Emparelhamento concluído</string>
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo mudado</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <string name="disable_vibration">Desactivar vibrações na entrega manual de bólus</string>
@@ -34,7 +36,7 @@
     <string name="bluetooth_address">Endereço Bluetooth</string>
     <string name="manufacturing_date">Data de fabrico</string>
     <string name="log_site_changes">Registar mudanças de local</string>
-    <string name="log_reservoir_changes">Número de unidades do reservatório alteradas</string>
+    <string name="log_reservoir_changes">Registar mudanças de reservatório</string>
     <string name="log_tube_changes">Registar alterações de tubo</string>
     <string name="log_battery_changes">Registar mudanças de bateria</string>
     <string name="log_operating_mode_changes">Alterações do modo de funcionamento de registo</string>
@@ -45,4 +47,8 @@
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Desemparelhar</string>
+    <string name="reset_pairing">Repor a informação de emparelhamento?</string>
+    <string name="reservoir_level">Nível do reservatório</string>
 </resources>
