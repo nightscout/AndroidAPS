@@ -33,11 +33,13 @@ class AndroidBluetoothDevice(
     override val address: BluetoothAddress
 ) : BluetoothDevice(Dispatchers.IO) {
 
-    private var systemBluetoothSocket: SystemBluetoothSocket? = null
-    private var inputStream: InputStream? = null
-    private var outputStream: OutputStream? = null
-    private var canDoIO: Boolean = false
-    private var abortConnectAttempt: Boolean = false
+    // Volatile because disconnect() may run on another thread while connect() blocks,
+    // to stop that connect (see PumpIO.connectBTDeviceStoppableByCancel).
+    @Volatile private var systemBluetoothSocket: SystemBluetoothSocket? = null
+    @Volatile private var inputStream: InputStream? = null
+    @Volatile private var outputStream: OutputStream? = null
+    @Volatile private var canDoIO: Boolean = false
+    @Volatile private var abortConnectAttempt: Boolean = false
 
     // Use toUpperCase() since Android expects the A-F hex digits in the
     // Bluetooth address string to be uppercase (lowercase ones are considered
@@ -99,6 +101,10 @@ class AndroidBluetoothDevice(
                 } catch (ignored: InterruptedException) {
                 }
 
+                // disconnect() may have been called during the sleep.
+                if (abortConnectAttempt)
+                    return@retryBlocking
+
                 checkForConnectPermission(androidContext) {
                     systemBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(Constants.sdpSerialPortUUID)
 
@@ -147,6 +153,9 @@ class AndroidBluetoothDevice(
 
     override fun disconnect() {
         if (systemBluetoothSocket == null) {
+            // connect() may be between two attempts, when there is no socket. Stop it from
+            // starting the next attempt.
+            abortConnectAttempt = true
             logger(LogLevel.DEBUG) { "Device already disconnected - ignoring redundant call" }
             return
         }

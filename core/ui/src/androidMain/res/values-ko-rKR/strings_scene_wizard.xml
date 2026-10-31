@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">시작점을 선택하십시오. 템플릿은 자주 있는 상황에 맞는 권장 동작을 미리 채웁니다 — 다음 단계에서 모든 것을 조정할 수 있습니다.</string>
+    <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">운동</string>
+    <string name="scene_wizard_exercise_desc">목표를 높이고, 프로파일을 70%로 줄이고, SMB를 꺼서 운동 중 저혈당을 막습니다.</string>
+    <string name="scene_wizard_info_exercise">신체 활동 중에는 근육이 포도당을 더 빨리 사용하고 인슐린 민감도가 높아집니다. 미리 임시 목표를 높이면 알고리즘이 먼저 대응할 수 있습니다 — 일찍 인슐린 주입을 줄이기 시작하여 운동으로 인한 저혈당에 대비한 여유를 만듭니다. 운동 중 교정 볼러스는 혈당을 빠르게 떨어뜨릴 수 있으므로 SMB를 끄는 것도 권장합니다. 가장 좋은 결과를 위해 운동 시작 1–2시간 전에 이 장면을 활성화하여 알고리즘이 활성 인슐린을 낮출 시간을 주십시오.</string>
+    <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">아픈 날</string>
+    <string name="scene_wizard_sick_day_desc">질병 중 높아진 인슐린 저항성에 대응하기 위한 더 강한 프로파일(150%).</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">질병, 발열, 스트레스 호르몬은 인슐린 저항성을 크게 높일 수 있습니다 — 때로는 50% 이상입니다. 더 강한 프로파일(예: 150%)은 알고리즘이 모든 계산에서 더 많은 인슐린을 주입하도록 합니다 — 기저 주입량, 볼러스 제안, 교정 계수. 다음 단계에서 임시 목표를 추가하거나 실행 모드를 조정할 수도 있습니다. 주의 깊게 관찰하고 몸이 회복되면 조정하십시오.</string>
+    <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">아픈 날 — 구토</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">LGS와 함께 프로파일 감소 — 음식을 흡수할 수 없을 때의 방법으로, 일반적인 아픈 날과 반대입니다.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">먹은 음식을 토할 때는 인슐린을 늘리는 일반적인 아픈 날 방법이 위험할 수 있습니다. 구토는 탄수화물이 흡수되지 않는다는 뜻이므로 혈당이 오르지 않고 떨어질 수 있습니다. 프로파일 감소(60%)는 인슐린 주입을 낮추고, LGS 모드는 혈당이 떨어지면 인슐린을 중지하여 안전장치를 하나 더 추가합니다. SMB를 끄면 추가 볼러스를 막습니다. 자주 확인하십시오 — 1–2시간마다 혈당을, 2–4시간마다 케톤을 확인합니다. 구토가 몇 시간 넘게 계속되거나 케톤이 1.5 mmol/L 이상으로 오르면 의료 도움을 받으십시오.</string>
+    <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">수면</string>
+    <string name="scene_wizard_sleep_desc">밤 동안 더 좋은 조절을 위한 더 좁은 목표.</string>
+    <string name="scene_wizard_info_sleep">밤은 많은 사람이 알아차리지 못한 고혈당이나 저혈당을 겪는 시간입니다. 수면 중 목표를 약간 좁게 하면 알고리즘이 밤새 더 세밀하게 교정할 수 있습니다. 가장 좋은 결과를 위해 야간 기저 필요량에 맞춘 프로파일과 함께 사용하십시오.</string>
+    <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">운동 후 밤</string>
+    <string name="scene_wizard_post_exercise_night_desc">프로파일 감소, 목표 상승, SMB 끔 — 활동 후 늦게 오는 야간 저혈당을 막습니다.</string>
+    <string name="scene_wizard_info_post_exercise_night">신체 활동 후 근육은 여러 시간 동안 글리코겐 저장량을 계속 채웁니다 — 인슐린 민감도는 24–48시간 동안 높게 유지될 수 있으며, 야간 저혈당 위험은 운동 후 6–12시간에 가장 높습니다. 프로파일 감소는 밤 동안 기저 주입을 낮추고, 더 높은 임시 목표는 알고리즘에 안전 여유를 주며, SMB를 끄면 알고리즘이 짧은 혈당 상승을 지나치게 교정하는 것을 막습니다. 운동한 날, 특히 운동 시간이 길었거나 새로운 활동을 했을 때는 잠자리에 들 때 이 장면을 활성화하십시오. 침대 옆에 빠르게 흡수되는 탄수화물을 두고, 한밤중에 확인할 수 있도록 알람을 설정하는 것을 고려하십시오.</string>
+    <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">식사 전</string>
+    <string name="scene_wizard_pre_meal_desc">식후 혈당 급상승에 미리 대비하기 위해 목표를 낮춥니다.</string>
+    <string name="scene_wizard_info_pre_meal">식사 30–60분 전에 더 낮은 목표를 설정하면 알고리즘이 탄수화물이 들어오기 전에 활성 인슐린을 늘리기 시작합니다. 이는 음식이 인슐린 작용보다 빠르게 혈액에 들어갈 때 생기는 식후 혈당 급상승을 줄이는 데 도움이 됩니다. 곧 식사할 것을 알고 있을 때 사용하는 것이 가장 좋습니다.</string>
+    <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">음주</string>
+    <string name="scene_wizard_alcohol_desc">LGS 모드, 프로파일 감소, SMB 끔 — 늦게 오는 음주 후 저혈당을 막습니다.</string>
+    <string name="scene_wizard_info_alcohol">음주는 제1형 당뇨병 환자에게 가장 위험한 상황 중 하나입니다. 간은 포도당을 내보내는 것보다 알코올 처리를 먼저 하므로, 6–24시간 후에 늦은 저혈당이 생길 수 있습니다 — 흔히 잠자는 밤 동안입니다. LGS 모드는 혈당이 떨어질 때만 주입을 줄이므로 인슐린이 쌓이는 것을 막습니다. 프로파일 감소와 SMB 끄기는 활성 인슐린을 더 제한합니다. 잠자기 전에 항상 혈당을 확인하고, 한밤중에 확인할 수 있도록 알람을 설정하는 것을 고려하십시오.</string>
+    <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">운전</string>
+    <string name="scene_wizard_driving_desc">운전 중 안전을 위해 목표를 약간 높입니다.</string>
+    <string name="scene_wizard_info_driving">안전한 운전을 위해서는 혈당이 5.0 mmol/L (90 mg/dL) 이상으로 안정되어야 합니다. 일부 국가에서는 장거리 운전 전과 운전 중 혈당 확인이 법적 의무입니다. 목표를 약간 높이면 알고리즘에 안전 여유가 생깁니다 — 집중력과 반응 시간이 떨어지기 시작하는 수준보다 높게 유지하도록 작동합니다. 운전 중 저혈당이 오면 즉시 차를 세우고 저혈당을 처치한 뒤, 혈당이 정상으로 돌아온 후 최소 45분을 기다렸다가 다시 운전하십시오.</string>
+    <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">목욕</string>
+    <string name="scene_wizard_bathing_desc">샤워, 수영, 목욕 또는 물과 관련된 모든 활동을 위해 펌프 연결을 해제합니다.</string>
+    <string name="scene_wizard_info_bathing">펌프 연결을 해제하면 인슐린 주입이 완전히 멈춥니다 — 기저, 볼러스, 교정 모두 없습니다. 알고리즘은 연결 해제 모드로 바뀌고 조정을 멈춥니다. 샤워, 목욕, 수영처럼 짧은 시간에는 정상입니다. 장면이 끝나면 펌프가 다시 연결되고 알고리즘이 자동으로 다시 시작합니다. 연결 해제는 짧게 하십시오 — 기저 인슐린이 없으면 1–2시간 안에 혈당이 오르기 시작합니다.</string>
+    <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">황체기</string>
+    <string name="scene_wizard_luteal_phase_desc">생리 전 인슐린 저항성에 대응하기 위해 프로파일을 높입니다.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">많은 여성이 황체기(생리 시작 약 1–2주 전)에 인슐린 저항성이 높아집니다. 이는 인슐린 민감도를 낮추는 프로게스테론 수치 상승 때문입니다. 효과는 사람마다 매우 다릅니다 — 어떤 사람은 인슐린 필요량이 10–30% 늘고, 어떤 사람은 거의 변화가 없습니다. 작은 증가(115%)로 시작하고, 여러 주기 동안 자신의 패턴을 보고 조정하십시오. 케어포털에 이를 기록하면 개인의 주기를 파악하는 데 도움이 됩니다.</string>
+    <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">더운 날씨</string>
+    <string name="scene_wizard_hot_weather_desc">프로파일 감소 — 더위는 인슐린 흡수를 빠르게 합니다.</string>
+    <string name="scene_wizard_info_hot_weather">높은 기온은 혈관을 넓혀 인슐린 흡수를 빠르게 합니다 — 같은 용량이 더 빠르고 강하게 작용합니다. 이 때문에 특히 야외 활동 중 예상하지 못한 저혈당이 생길 수 있습니다. 프로파일을 조금 줄이면(85%) 빨라진 흡수를 보완합니다. 물을 충분히 마시고, 더 자주 확인하며, 따뜻한 펌프나 펜에 보관된 인슐린은 변질될 수 있다는 점에 주의하십시오. 더운 날씨에 운동도 한다면 추가 보호를 위해 운동 장면과 함께 사용하는 것을 고려하십시오.</string>
+    <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">의료 시술</string>
+    <string name="scene_wizard_medical_procedure_desc">수술이나 의료 시술을 위한 개방 루프, SMB 끔.</string>
+    <string name="scene_wizard_info_medical_procedure">수술이나 의료 시술 중에는 마취와 스트레스 호르몬 때문에 혈당을 예측하기 어렵습니다. 이런 상황에서는 알고리즘이 몸의 반응을 믿을 수 있게 예측할 수 없으므로 개방 루프 모드를 권장합니다. 더 높은 목표(150 mg/dL)는 수술 중 저혈당에 대한 안전 여유를 줍니다. SMB를 끄면 시술 중 예상하지 못한 인슐린 주입을 막습니다. 인슐린 펌프와 CGM을 착용하고 있다는 것을 의료진에게 항상 알리십시오. 3시간보다 긴 시술에서는 의료진이 정맥 인슐린으로 바꿀 수 있습니다.</string>
+    <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">빈 장면</string>
+    <string name="scene_wizard_blank_desc">미리 선택된 동작 없이 처음부터 시작합니다.</string>
+    <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">프로파일 전환은 기저 주입량, 인슐린 민감도(ISF), 인슐린 대 탄수화물 비율(IC)을 한 번에 바꿉니다. 모든 값을 백분율로 조정할 수 있습니다 — 예를 들어 110%는 기저 주입, 볼러스 계산, 탄수화물 흡수 속도를 10% 높입니다. 특정 상황을 위한 다른 프로파일이 있다면 그 프로파일로 완전히 바꿀 수도 있습니다.</string>
+    <string name="scene_wizard_tt_info">임시 목표는 정해진 시간 동안 알고리즘이 다른 혈당 수준을 목표로 하도록 합니다. 목표가 높으면 알고리즘은 상승하는 혈당에 더 천천히 반응하고 전체적으로 더 높은 값을 목표로 합니다 — 인슐린 주입이 줄어 운동 중 저혈당을 막는 데 도움이 됩니다. 목표가 낮으면 알고리즘이 더 빨리 반응하고 더 많은 인슐린을 주입합니다 — 식사에 미리 대비할 때 유용합니다. 아래 프리셋 중 하나를 선택하십시오 — 목표 값과 이유는 이미 설정되어 있습니다.</string>
+    <string name="scene_wizard_smb_info">SMB(Super Micro Bolus)는 알고리즘이 인슐린을 작은 볼러스로 미리 주입하고, 이를 보완하기 위해 기저 주입을 잠시 멈추게 합니다 — 사실상 미래의 인슐린을 앞당겨 써서 더 빠르게 반응합니다. SMB를 끄면 이것을 막고 알고리즘이 기저 주입량만 조정하도록 제한합니다. 반응이 더 느리고 완만해지며, 운동이나 수면 중에는 이것이 더 나은 경우가 많습니다.</string>
+    <string name="scene_wizard_loop_mode_info">실행 모드는 알고리즘이 얼마나 스스로 결정할 수 있는지 정합니다. 폐쇄 루프에서는 인슐린 주입을 자동으로 조정합니다. LGS (Low Glucose Suspend, 저혈당 시 중지)는 혈당이 저혈당 쪽으로 떨어질 때만 인슐린을 줄이거나 멈춥니다 — 주입을 늘리지 않습니다. 개방 루프는 제안을 계산하지만 각 제안을 사용자가 확인할 때까지 기다립니다.</string>
+    <string name="scene_wizard_careportal_info">케어포털 이벤트는 기록 항목입니다 — 인슐린 주입이나 알고리즘 동작을 바꾸지 않습니다. 활동, 상황 또는 메모를 처치 기록에 표시할 때 사용합니다. 이 기록은 처치 - 케어포털과 Nightscout에서 볼 수 있으며, 사용자와 의사가 데이터에서 패턴을 찾는 데 도움이 됩니다.</string>
+    <string name="scene_wizard_duration_info">기간은 이 장면이 얼마나 오래 활성 상태로 있는지 정합니다. 시간이 끝나면 기간이 있는 동작(임시 목표, 프로파일 전환, 실행 모드)은 스스로 만료되고, 계속 유지되는 변경(예: SMB 켜기/끄기)은 자동으로 이전 값으로 되돌아갑니다. 기간을 0으로 설정하면 장면이 무기한이 됩니다 — 장면을 직접 종료할 때까지 모든 동작이 활성 상태로 유지됩니다.</string>
+    <string name="scene_wizard_name_info">이 장면을 한눈에 알아볼 수 있는 이름과 아이콘을 선택하십시오. 활성화 버튼과 개요 화면의 활성 장면 배너에 표시됩니다.</string>
+    <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">장면에 %1$s 포함</string>
+    <string name="scene_wizard_finish">완료</string>
+    <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">후속 장면</string>
+    <string name="scene_wizard_chain_info">이 장면이 만료될 때 자동으로 활성화될 다른 장면을 연결할 수 있습니다(선택 사항). 일찍 종료할 때 그 장면으로 건너뛸 수도 있습니다. 후속 장면은 대상이 활성화되어 있고 펌프를 사용할 수 있을 때만 실행됩니다. 그렇지 않으면 종료된 장면의 배너에 시작되지 않은 이유가 표시됩니다.</string>
+    <string name="scene_chain_none">없음</string>
+    <string name="scene_skip_to_format">%1$s(으)로 건너뛰기</string>
+    <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">연결된 장면이 삭제되었습니다</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">후속 장면이 시작되지 않음: %1$s</string>
+    <string name="scene_chain_skipped_deleted">대상 장면이 삭제됨</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" 비활성화됨</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: 동작 %4$d개 중 %3$d개 실패</string>
+</resources>

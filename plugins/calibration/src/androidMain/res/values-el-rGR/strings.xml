@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_calibration_name">Χωρίς βαθμονόμηση</string>
+    <string name="description_no_calibration">"Δεν εφαρμόζεται βαθμονόμηση. Οι τιμές του αισθητήρα χρησιμοποιούνται όπως είναι. Χρησιμοποιήστε το όταν ο αισθητήρας είναι ήδη βαθμονομημένος από το εργοστάσιο και ακριβής."</string>
+    <string name="linear_calibration_name">Γραμμική βαθμονόμηση</string>
+    <string name="description_linear_calibration">"Γραμμική βαθμονόμηση για κάθε αισθητήρα (κλίση και μετατόπιση), που υπολογίζεται από τις μετρήσεις σας από το δάχτυλο. Οι πιο πρόσφατες μετρήσεις μετρούν περισσότερο. Η βαθμονόμηση εφαρμόζεται μετά την έναρξη του τρέχοντος αισθητήρα. Οι πρώτες 2 ώρες παραλείπονται ως προθέρμανση."</string>
+    <string name="sensor_change_detected_text">Εντοπίστηκε πιθανή αλλαγή αισθητήρα στις %1$s. Σήμανση ως νέος αισθητήρας;</string>
+    <string name="sensor_change_detected_action">Σήμανση αλλαγής αισθητήρα</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Καταγράψτε αλλαγή αισθητήρα για να ενεργοποιηθεί η βαθμονόμηση.</string>
+    <string name="cal_status_warmup">Προθέρμανση αισθητήρα — η βαθμονόμηση θα ενεργοποιηθεί μετά τις %1$s.</string>
+    <string name="cal_status_need_more_entries">Χρειάζονται τουλάχιστον 2 μετρήσεις από δάχτυλο (τώρα %1$d).</string>
+    <string name="cal_status_unsafe_fit">Το αποτέλεσμα είναι εκτός ασφαλούς εύρους — η βαθμονόμηση δεν εφαρμόστηκε.</string>
+    <string name="cal_status_applied">Η βαθμονόμηση εφαρμόστηκε.</string>
+    <string name="cal_status_applied_offset_only">Εφαρμόστηκε βαθμονόμηση μόνο με μετατόπιση — το εύρος τιμών του αισθητήρα είναι πολύ στενό για κλίση.</string>
+    <string name="cal_status_applied_slope_clamped">Η βαθμονόμηση εφαρμόστηκε — η κλίση περιορίστηκε σε ασφαλές εύρος. Προσθέστε περισσότερες μετρήσεις για να χαλαρώσει ο περιορισμός.</string>
+    <string name="cal_slope_offset">Κλίση %1$.2f, διόρθωση στο μέσο εύρος %2$s</string>
+    <string name="cal_session_started">Έναρξη αισθητήρα: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Καταγραφή αλλαγής αισθητήρα</string>
+    <string name="cal_add_calibration">Προσθήκη βαθμονόμησης</string>
+    <string name="cal_entries_header">Μετρήσεις από δάχτυλο (%1$d)</string>
+    <string name="cal_no_entries">Δεν υπάρχουν ακόμα μετρήσεις από δάχτυλο.</string>
+    <string name="cal_entry_pair">Δάχτυλο %1$s → αισθητήρας %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Μέτρηση %1$d/%2$d · %3$s · αισθητήρας %4$s → BG %5$s</string>
+</resources>

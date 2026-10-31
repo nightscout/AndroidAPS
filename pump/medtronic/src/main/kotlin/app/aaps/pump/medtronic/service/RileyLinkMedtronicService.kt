@@ -25,13 +25,14 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.keys.MedtronicIntPreferenceKey
 import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * RileyLinkMedtronicService is intended to stay running when the gui-app is closed.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class RileyLinkMedtronicService : RileyLinkService() {
 
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
@@ -73,7 +74,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
         setPumpIDString(preferences.get(MedtronicStringPreferenceKey.Serial))
 
         // get most recently used RileyLink address and name
-        rileyLinkServiceData.rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+        rileyLinkServiceData.rileyLinkAddress = preferences.get(RileyLinkStringKey.MacAddress)
         rileyLinkServiceData.rileyLinkName = preferences.get(RileyLinkStringKey.Name)
         rfSpy.startReader()
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed")
@@ -158,7 +159,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 }
             }
             rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.getByKey(preferences.get(MedtronicStringPreferenceKey.PumpFrequency))
-            val rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+            val rileyLinkAddress = preferences.get(RileyLinkStringKey.MacAddress)
             if (rileyLinkAddress.isEmpty()) {
                 aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: null")
                 medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_rileylink_address_invalid)
@@ -187,6 +188,8 @@ class RileyLinkMedtronicService : RileyLinkService() {
 
                 //LOG.debug("Max Basal from AAPS settings is " + maxBasal);
             }
+            // Every time, not only on a change: setting the pump type above put back the limit of the type.
+            medtronicPumpPlugin.applyMaxBasal()
             val encodingTypeStr = preferences.get(RileyLinkStringPreferenceKey.Encoding)
             val newEncodingType = RileyLinkEncodingType.getByKey(encodingTypeStr)
             if (encodingType == null) {
@@ -196,10 +199,6 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 encodingChanged = true
             }
             medtronicPumpStatus.batteryType = BatteryType.getByKey(preferences.get(MedtronicStringPreferenceKey.BatteryType))
-
-            //String bolusDebugEnabled = sp.getStringOrNull(MedtronicConst.Prefs.BolusDebugEnabled, null);
-            //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(rh.gs(R.string.common_on));
-            //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
             rileyLinkServiceData.showBatteryLevel = preferences.get(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel)
             reconfigureService(forceRileyLinkAddressRenewal)
             true

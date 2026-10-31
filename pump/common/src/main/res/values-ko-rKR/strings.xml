@@ -11,14 +11,33 @@
     <string name="pump_status_suspended">중지됨</string>
     <string name="pump_status_executing_command">명령 실행 중</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">설정 받기</string>
+    <string name="pump_cmd_desc_get_firmware">펌프 펌웨어 받기</string>
+    <string name="pump_cmd_desc_get_basal_profile">기저 프로파일 받기</string>
+    <string name="pump_cmd_desc_set_basal_profile">기저 프로파일 설정</string>
+    <string name="pump_cmd_desc_get_tbr">임시 기저 받기</string>
+    <string name="pump_cmd_desc_cancel_tbr">임시 기저 취소</string>
+    <string name="pump_cmd_desc_set_tbr">임시 기저 설정</string>
+    <string name="pump_cmd_desc_set_bolus">볼러스 설정</string>
+    <string name="pump_cmd_desc_get_bolus">볼러스 받기</string>
+    <string name="pump_cmd_desc_cancel_bolus">볼러스 취소</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">남은 인슐린 받기</string>
+    <string name="pump_cmd_desc_get_battery_status">배터리 상태 받기</string>
+    <string name="pump_cmd_desc_get_time">시간 받기</string>
+    <string name="pump_cmd_desc_set_time">시간 설정</string>
+    <string name="pump_cmd_desc_get_pump_status">펌프 상태 받기</string>
+    <string name="pump_cmd_desc_get_history">이력 받기</string>
+    <string name="pump_cmd_desc_get_history_params">이력 받기 %s</string>
+    <string name="pump_cmd_desc_custom">사용자 지정 명령</string>
     <!-- PumpCommon - History Group -->
-    <string name="history_group_basal">Basal</string>
+    <string name="history_group_basal">기저</string>
     <string name="history_group_configuration">환경설정</string>
     <string name="history_group_notification">알림</string>
     <string name="history_group_statistic">통계</string>
-    <string name="history_group_unknown">알수없음</string>
-    <string name="history_group_all">모든</string>
-    <string name="history_group_prime">교체</string>
+    <string name="history_group_unknown">알 수 없음</string>
+    <string name="history_group_all">전체</string>
+    <string name="history_group_bolus">볼러스</string>
+    <string name="history_group_prime">프라임</string>
     <string name="history_group_alarm">알람</string>
     <string name="history_group_glucose">혈당</string>
     <string name="history_group_base">기본</string>
@@ -31,30 +50,10 @@
     <string name="time_last_3_hours">지난 3시간</string>
     <string name="time_last_6_hours">지난 6시간</string>
     <string name="time_last_12_hours">지난 12시간</string>
+    <string name="time_last_24_hours">지난 24시간</string>
     <string name="time_last_2_days">지난 2일</string>
     <string name="time_last_4_days">지난 4일</string>
     <string name="time_last_week">지난 주</string>
     <string name="time_last_month">지난 달</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">스캔하기</string>
-    <string name="ble_config_scan_stop">정지</string>
-    <string name="ble_config_scan_selected">선택됨</string>
-    <string name="ble_config_scan_scanning">스캔중</string>
-    <string name="ble_config_scan_finished">스캔 완료</string>
-    <string name="ble_config_scan_error">스캔 에러: %1$d</string>
-    <string name="ble_config_remove">삭제</string>
     <!-- Pump History -->
-    <string name="pump_history_type">종류:</string>
-    <plurals name="duration_days">
-        <item quantity="other">%1$d 일</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="other">%1$d 시간</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="other">%1$d 시간 전</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="other">%1$d 일 전</item>
-    </plurals>
 </resources>

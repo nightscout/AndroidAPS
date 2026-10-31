@@ -18,7 +18,7 @@ enum class RileyLinkError(val resourceId: Int, val resourceIdPod: Int? = null) {
 
     // Device
     TuneUpOfDeviceFailed(R.string.rileylink_error_tuneup_failed),
-    NoContactWithDevice(R.string.rileylink_error_pump_unreachable, R.string.rileylink_error_pod_unreachable),
+    NoContactWithDevice(app.aaps.core.ui.R.string.pump_unreachable, R.string.rileylink_error_pod_unreachable),
     ;
 
     fun getResourceId(targetDevice: RileyLinkTargetDevice?): Int =

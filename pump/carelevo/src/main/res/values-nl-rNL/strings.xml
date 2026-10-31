@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Pomp integratie voor Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Carelevo alarmen</string>
+    <string name="carelevo_alarm_channel_description">Notificaties voor alarmen van de Carelevo patch</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth status</string>
+    <string name="carelevo_serial_number_key">Serienr.</string>
+    <string name="carelevo_boot_date_time_key">Activeringstijd</string>
+    <string name="carelevo_expiration_key">Vervaldatum</string>
+    <string name="carelevo_basal_rate_key">Basaalstand</string>
+    <string name="carelevo_temp_basal_rate_key">Tijdelijke basaalstand</string>
+    <string name="carelevo_insulin_remain_key">Resterende insuline</string>
+    <string name="carelevo_running_remain_time">Resterende patchtijd</string>
+    <string name="carelevo_total_insulin_key">Totaal toegediende insuline</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d uur %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d uur</string>
+    <string name="common_label_unit_value_dose_with_space">%s E</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f E/u</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Wil je de toediening hervatten?</string>
+    <string name="carelevo_pump_resume_description">De toediening wordt hervat als je op Bevestigen drukt.</string>
+    <string name="carelevo_pump_stop_duration_title">Stel in hoe lang de toediening onderbroken wordt.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minuten</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 uur</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 uur 30 minuten</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 uur</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 uur 30 minuten</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 uur</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 uur 30 minuten</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 uur</string>
+    <string name="common_unit_value_day_hour_min">%1$d dagen %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d min %2$02d sec resterend</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Uitleg insuline</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Patch deactiveren</string>
+    <string name="carelevo_btn_input_search_patch">Patch zoeken</string>
+    <string name="carelevo_btn_retry">Opnieuw</string>
+    <string name="carelevo_btn_next">Volgende</string>
+    <string name="carelevo_btn_safety_check">Veiligheidscontrole</string>
+    <string name="carelevo_btn_cancel">Annuleren</string>
+    <string name="carelevo_btn_confirm">Bevestigen</string>
+    <string name="carelevo_btn_research">Opnieuw zoeken</string>
+    <string name="carelevo_btn_needle_insert_check">Inbrengen bevestigen</string>
+    <string name="carelevo_state_none_value">Geen actieve patch</string>
+    <string name="carelevo_state_disconnected_value">Verbinding verbroken</string>
+    <string name="carelevo_state_connected_value">Verbonden</string>
+    <string name="carelevo_overview_connect_btn_label">Activeer patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Patch weggooien</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Toediening onderbreken</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Toediening hervatten</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Kies de gevulde hoeveelheid.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Bereik: %1$d ~ %2$d E</string>
+    <string name="carelevo_insulin_refill_step1">1. Trek het papier van de blisterverpakking van de patch.</string>
+    <string name="carelevo_insulin_refill_step2">2. Ontsmet de rubberen dop van het insulineflesje met een alcoholdoekje.</string>
+    <string name="carelevo_insulin_refill_step3">3. Trek de beschermdop recht van de naald van de insulinespuit.</string>
+    <string name="carelevo_insulin_refill_step4">4. Trek de zuiger van de spuit terug om de spuit met ongeveer 2 ml lucht te vullen.</string>
+    <string name="carelevo_insulin_refill_step5">5. Steek de met lucht gevulde spuit in het insulineflesje en spuit de lucht in het flesje.</string>
+    <string name="carelevo_insulin_refill_step6">6. Laat de spuit in het flesje zitten, draai flesje en spuit samen ondersteboven, en vul de spuit door de druk met ongeveer 2 ml insuline.</string>
+    <string name="carelevo_insulin_refill_step7">7. Steek de naald van de spuit recht in de insulinevulopening van de patch (①) tot op de bodem. Trek de zuiger helemaal omhoog en laat hem dan los. Haal de spuit uit de vulopening.</string>
+    <string name="carelevo_insulin_refill_step8">8. Houd de spuit rechtop en tik zachtjes tegen de zijkant zodat alle luchtbellen bovenin komen.</string>
+    <string name="carelevo_insulin_refill_step9">9. Steek de naald weer in het insulineflesje, duw alle lucht in het flesje en trek dan precies de hoeveelheid insuline op die je tijdens de gebruiksduur van de patch nodig hebt.</string>
+    <string name="carelevo_insulin_refill_step10">10. Haal de spuit uit het flesje. Zijn er luchtbellen? Houd de spuit rechtop, tik tegen de zijkant zodat de bellen naar boven gaan, en druk alle lucht uit de spuit.</string>
+    <string name="carelevo_insulin_refill_step11">11. Zet de bovenkant van de zuiger precies op het streepje van de schaal om de hoeveelheid insuline nauwkeurig in te stellen.</string>
+    <string name="carelevo_insulin_refill_step12">12. Steek de naald recht in de insulinevulopening van de patch (①) tot op de bodem, en duw de zuiger langzaam in om alle insuline in de patch te spuiten.</string>
+    <string name="carelevo_connect_prepare_title">Patch gestart</string>
+    <string name="carelevo_connect_patch_title">Patch verbinden</string>
+    <string name="carelevo_connect_safety_check_title">Veiligheidscontrole</string>
+    <string name="carelevo_connect_patch_attach_title">Patch aanbrengen</string>
+    <string name="carelevo_connect_needle_check_title">Naald inbrengen</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patch infoalarm</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Melding laag insulineniveau</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Instelling melding gebruiksduur patch</string>
+    <string name="carelevo_title_fill_insulin">Patch vullen met insuline</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Vul de patch met insuline (%1$d–%2$d E), passend bij de gebruiksduur (maximaal 168 uur). Tik op [Vulhoeveelheid] voor de gevulde insuline.</string>
+    <string name="carelevo_patch_step_1">STAP 1.</string>
+    <string name="carelevo_patch_step_2">STAP 2.</string>
+    <string name="carelevo_patch_step_3">STAP 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Naalddop verwijderen</string>
+    <string name="carelevo_patch_connect_step_1_desc">Haal de patch uit de blisterverpakking en verwijder de naalddop.</string>
+    <string name="carelevo_patch_connect_step_2_title">Aanzetten en verbinden</string>
+    <string name="carelevo_patch_connect_step_2_desc">Druk langer dan 1 seconde op de aan/uit-knop. Tik na de piep hieronder op [Patch zoeken].</string>
+    <string name="carelevo_patch_safety_check_start_title">Veiligheidscontrole</string>
+    <string name="carelevo_patch_safety_check_end_title">Veiligheidscontrole voltooid</string>
+    <string name="carelevo_patch_safety_check_start_desc">De patch is verbonden.\nDruk op [Veiligheidscontrole].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Veiligheidscontrole bezig.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Veiligheidscontrole voltooid.\nDruk op de knop Volgende.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Controleer of er een druppel insuline op de punt van de naald zit.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Zie je geen druppel insuline? Druk dan op [Opnieuw].</string>
+    <string name="carelevo_patch_attach_step1_title">Patchplek ontsmetten</string>
+    <string name="carelevo_patch_attach_step1_desc">Maak de plek goed schoon met een alcoholdoekje.</string>
+    <string name="carelevo_patch_attach_step2_title">Beschermtape verwijderen</string>
+    <string name="carelevo_patch_attach_step2_desc">Haal de patch uit de blisterverpakking en verwijder de naalddop.</string>
+    <string name="carelevo_patch_attach_step3_title">Patch aanbrengen</string>
+    <string name="carelevo_patch_attach_step3_desc">Plak de patch op je huid met de gemarkeerde stip naar boven.</string>
+    <string name="carelevo_patch_attach_step4_desc">Druk na het bevestigen van de patch op Volgende.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Veiligheidsdop verwijderen</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Draai de veiligheidsdop in de richting van de pijl en verwijder hem.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Naald inbrengen</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Druk de drukknop van de applicator helemaal in. Als de naald goed is ingebracht, hoor je een piep.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Houd 10 seconden ingedrukt.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Nog %d poging(en) over om de naald in te brengen.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Patch deactiveren en een nieuwe patch starten?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Als je op [OK] drukt, stopt de insulinetoediening.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Afsluiten zonder de toediening te starten?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Als je op [OK] drukt, is deze patch niet meer bruikbaar.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Activering van de patch annuleren?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Als je op de knop [OK] drukt, wordt wat je hebt ingevoerd niet bewaard.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Als de hieronder gevonden patch de juiste is, tik dan op de knop Bevestigen.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Naald ingebracht en applicator verwijderd</string>
+    <string name="carelevo_dialog_connect_detached">Applicator verwijderd</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        Druk op de grepen aan beide kanten van de applicator om deze los te maken van de patch,\n
+        en druk daarna op de knop `Applicator verwijderd`. De insulinetoediening start dan.
+    </string>
+    <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth staat niet aan. Controleer dit.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Geen patch verbonden.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">De patch is nog niet verbonden. Probeer het zo opnieuw.</string>
+    <string name="carelevo_toast_msg_scan_failed">Zoeken mislukt. Probeer het opnieuw.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Geen patch gevonden. Probeer het opnieuw.</string>
+    <string name="carelevo_toast_msg_connect_failed">Verbinden met de patch mislukt. Probeer het opnieuw.</string>
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profiel is niet ingesteld.</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Naaldcontrole mislukt.</string>
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Weggooien van de patch mislukt. Probeer het opnieuw.</string>
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Opdracht voor basale toediening mislukt. Probeer het opnieuw.</string>
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Hervatten van de toediening mislukt. Probeer het opnieuw.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Onderbreken van de toediening mislukt. Probeer het opnieuw.</string>
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Veiligheidscontrole mislukt.</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Insuline bijna op</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch verlopen</string>
+    <string name="alarm_feat_title_warning_low_battery">Batterij bijna leeg</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Hoge/lage temperatuur</string>
+    <string name="alarm_feat_title_warning_not_used_app">Automatisch uit</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE niet verbonden</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Tijd voor aanbrengen patch verstreken</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Zelfdiagnose mislukt</string>
+    <string name="alarm_feat_title_warning_patch_error">Patchfout</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Verstopping</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Fout bij inbrengen naald</string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Insuline bijna op</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Gebruiksduur patch verlopen</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patch verloopt binnenkort</string>
+    <string name="alarm_feat_title_alert_low_battery">Batterij bijna leeg</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Hoge/lage temperatuur</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatisch uit</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE niet verbonden</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Activering patch niet voltooid</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Insuline starten</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Bluetooth aanzetten</string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Insuline bijna op</string>
+    <string name="alarm_feat_title_notice_expired_patch">Melding gebruikstijd patch</string>
+    <string name="alarm_feat_title_notice_check_patch">Melding patch controleren</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Tijdzone gewijzigd</string>
+    <string name="alarm_feat_title_notice_check_bg">Bloedglucose controleren</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS gestart</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS beëindigd</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS niet beschikbaar</string>
+    <string name="alarm_feat_title_notice_unknown">Patchfout</string>
+    <string name="alarm_feat_desc_unknown">Onverwachte fout in de patch.</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Patch deactiveren</string>
+    <string name="alarm_feat_btn_patch_force_discard">Patch weggooien</string>
+    <string name="alarm_feat_btn_resume_infusion">Insuline starten</string>
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Controleer de verbinding met de patch.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus kan niet worden geleverd. Beschikbare bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus kan niet worden geleverd. Niet genoeg insuline over.</string>
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Minder dan 10 E insuline over; insulinetoediening gestopt. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch verlopen; insulinetoediening gestopt. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Batterij bijna leeg; insulinetoediening gestopt. Tik op de knop [Patch weggooien] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulinetoediening gestopt. Ga nu naar een plek met een geschikte temperatuur (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Insulinetoediening gestopt. Tik op de knop [Insuline starten] en start de basale toediening opnieuw.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">De tijd voor het aanbrengen van de patch is verstreken. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Zelfdiagnose mislukt. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Insulinetoediening gestopt door een onverwachte fout. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Insulinetoediening gestopt door verstopping. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Inbrengen van de naald mislukt. Tik op de knop [Patch deactiveren] en vervang de patch nu.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Minder dan %s E insuline over. Bereid je voor op het vervangen van de patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Patch verlopen. Vervang de patch nu.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Patch verloopt binnenkort. Vervang de patch nu.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Batterij bijna leeg. Bereid je voor op het vervangen van de patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Insulinetoediening gepauzeerd door extreme temperatuur. Ga naar een plek met 40℉–99℉ om verder te gaan.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Tik op [OK]. Als je dit negeert, wordt het een kritiek alarm en wordt de insulinetoediening gestopt.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Tik op de knop [OK] om de activering van de patch te voltooien.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Insuline pauzeren is beëindigd. Tik op [Insuline starten] om te starten.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth is nodig om de patch te gebruiken. Tik op [OK] en zet Bluetooth aan.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Minder dan %s E insuline over. Bereid je voor op het vervangen van de patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">De gebruiksduur van de patch is %1$s dagen %2$s uren. Houd hier tijdens het gebruik rekening mee.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">De tijdzone is gewijzigd van %1$s (UTC %2$s) naar %3$s (UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Sinds je bolus is %s verstreken. Controleer je bloedglucose.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS gestart.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS beëindigd omdat de verbinding met patch/CGM is verbroken.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS beëindigd omdat LGS is gepauzeerd.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS beëindigd omdat de geplande tijd voorbij is.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS beëindigd omdat LGS is uitgezet.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS beëindigd omdat de CGM waarde boven de ingestelde grens kwam.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS beëindigd om een onbekende reden.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Controleer de verbinding met de patch en de CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Overgeslagen: update te snel na de vorige.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">De patch heeft de stop opdracht niet bevestigd. Wachten op het einde van de bolus…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Er is nu een bolus toegevoegd die niet was vastgelegd. Controleer IOB en probeer het opnieuw.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">De patch heeft de stop niet bevestigd. De volledige bolus van %1$s is opgeslagen.</string>
+</resources>

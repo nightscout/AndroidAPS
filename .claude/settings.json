@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(adb logcat *)",
+      "Bash(adb devices*)",
+      "Bash(adb shell pidof *)",
+      "Bash(adb shell dumpsys *)",
+      "Bash(adb shell getprop *)",
+      "Bash(curl -s https://circleci.com/*)",
+      "Bash(curl -s https://api.codecov.io/*)",
+      "Bash(curl -s https://repo1.maven.org/*)",
+      "mcp__claude-in-chrome__get_page_text",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__find"
+    ]
+  }
+}

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.code.AlarmCategory
-import java.util.*
+import java.util.Locale
 import java.util.function.Function
 import java.util.stream.Collectors
 import java.util.stream.Stream

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">Åtgärden stöds inte i pumpen. Använd enbart AAPS gränssnitt!</string>
+    <string name="waiting_1_minute">Väntar %1$d/%2$d sek före nytt anslutningsförsök</string>
+</resources>

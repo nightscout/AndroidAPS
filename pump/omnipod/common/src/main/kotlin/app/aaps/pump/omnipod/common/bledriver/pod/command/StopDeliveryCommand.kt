@@ -6,7 +6,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.base.builder.NonceEnab
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.Encodable
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.BitSet
 
 class StopDeliveryCommand private constructor(
     uniqueId: Int,

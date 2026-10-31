@@ -2,10 +2,10 @@ package app.aaps.pump.medtronic.comm.history.pump
 
 import app.aaps.core.utils.StringUtil
 import app.aaps.core.utils.pump.ByteUtil
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.comm.history.MedtronicHistoryEntry
 import app.aaps.pump.medtronic.data.dto.BolusDTO
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
+import com.google.gson.annotations.Expose
 import java.util.Objects
 
 /**
@@ -137,7 +137,12 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
 
             if (entry.entryType == PumpHistoryEntryType.Bolus) {
                 val otherOne: BolusDTO = entry.decodedData["Object"] as BolusDTO
-                return (thisOne.value == otherOne.value)
+                // Changed means DIFFERENT. This used to return true when the two records were the
+                // same, which is the reverse of the name and of what the caller does with it:
+                // addNewHistory takes a true answer as "this record changed, keep the new one". An
+                // extended or dual-wave bolus is read while it is still being delivered, so its
+                // amount really does change between two reads, and the later value was dropped.
+                return (thisOne.value != otherOne.value)
             } else
                 return false
         }

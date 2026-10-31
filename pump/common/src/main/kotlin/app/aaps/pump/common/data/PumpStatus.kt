@@ -2,8 +2,8 @@ package app.aaps.pump.common.data
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.pump.common.defs.PumpRunningState
 import app.aaps.pump.common.defs.TempBasalPair
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Date
 
 /**
@@ -13,18 +13,43 @@ abstract class PumpStatus(var pumpType: PumpType) {
 
     // connection
     var lastDataTime: Long = 0
-    var lastConnection = 0L
+    val lastConnectionFlow = MutableStateFlow(0L)
+    var lastConnection: Long
+        get() = lastConnectionFlow.value
+        set(value) {
+            lastConnectionFlow.value = value
+        }
     var previousConnection = 0L // here should be stored last connection of previous session (so needs to be
 
     // bolus
-    var lastBolusTime: Date? = null  // legacy
-    var lastBolusAmount: Double? = null // legqacy
+    val lastBolusTimeFlow = MutableStateFlow<Date?>(null)
+    var lastBolusTime: Date?
+        get() = lastBolusTimeFlow.value
+        set(value) {
+            lastBolusTimeFlow.value = value
+        }
+    val lastBolusAmountFlow = MutableStateFlow<Double?>(null)
+    var lastBolusAmount: Double?
+        get() = lastBolusAmountFlow.value
+        set(value) {
+            lastBolusAmountFlow.value = value
+        }
     var lastBolus: DetailedBolusInfo? = null
 
     // other pump settings
-    var reservoirRemainingUnits = 0.0
+    val reservoirRemainingUnitsFlow = MutableStateFlow(0.0)
+    var reservoirRemainingUnits: Double
+        get() = reservoirRemainingUnitsFlow.value
+        set(value) {
+            reservoirRemainingUnitsFlow.value = value
+        }
     var reservoirFullUnits = 0
-    var batteryRemaining : Int? = null // percent, so 0-100
+    val batteryRemainingFlow = MutableStateFlow<Int?>(null)
+    var batteryRemaining: Int?
+        get() = batteryRemainingFlow.value
+        set(value) {
+            batteryRemainingFlow.value = value
+        }
     var batteryVoltage: Double? = null
     var units: String? = null // Constants.MGDL or Constants.MMOL
 
@@ -39,16 +64,11 @@ abstract class PumpStatus(var pumpType: PumpType) {
     var dailyTotalUnits: Double? = null
     var maxDailyTotalUnits: String? = null
 
-
-    // state
-    var pumpRunningState = PumpRunningState.Running
-
     // temp basal
     var currentTempBasal: TempBasalPair? = null
-        get() = field
         set(value) {
-            if (value!=null) {
-                if (value.start==null) {
+            if (value != null) {
+                if (value.start == null) {
                     this.currentTempBasalEstimatedEnd = System.currentTimeMillis() + (value.durationMinutes * 60 * 1000)
                 } else {
                     this.currentTempBasalEstimatedEnd = value.start!! + (value.durationMinutes * 60 * 1000)
@@ -61,13 +81,11 @@ abstract class PumpStatus(var pumpType: PumpType) {
 
     var currentTempBasalInternal: TempBasalPair? = null
 
-
     var currentTempBasalEstimatedEnd: Long? = null
     var tempBasalLegacyMode = false
 
     // time
     var pumpTime: PumpTimeDifferenceDto? = null
-
 
     // TODO refactor to use TempBasalPair - remove this
     var tempBasalStart: Long? = null
@@ -75,7 +93,6 @@ abstract class PumpStatus(var pumpType: PumpType) {
     var tempBasalPercent: Int? = 100
     var tempBasalDuration: Int? = 0
     var tempBasalEnd: Long? = null
-
 
 // OLD - Start
 //     var units: String? = null // Constants.MGDL or Constants.MMOL

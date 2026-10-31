@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Інтеграція помпи Omnipod Eros (старіша модель із прозорою кришечкою голки). Потрібен пристрій RileyLink із прошивкою версії 2.0 або новішою.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Неправильна адреса RileyLink.</string>
     <!-- Omnipod Eros - Preferences -->
-    <!-- Omnipod Eros - History -->
-    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Показувати кнопку «Журнал імпульсів» у меню керування Pod</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Показувати кнопку «Статистика RileyLink» у меню керування Pod</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Увімкнути запис заміни батареї в «Діях»</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f Од</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Од, вугл.=%2$.1f г</string>
+    <string name="omnipod_eros_history_tbr_value">Швидкість: %1$.2f Од, тривалість: %2$d хв</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_crc_mismatch">Помилка звʼязку: перевірка цілісності повідомлення не пройшла</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Помилка звʼязку: від Pod отримано неправильний пакет</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Помилка звʼязку: Pod у неправильному стані</string>
+    <string name="omnipod_eros_error_invalid_response">Помилка звʼязку: від Pod отримано неправильну відповідь</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Помилка звʼязку: від Pod отримано повідомлення з неправильним порядковим номером</string>
+    <string name="omnipod_eros_error_invalid_message_address">Помилка звʼязку: від Pod отримано повідомлення з неправильною адресою</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Помилка звʼязку: не вдалося декодувати повідомлення від Pod</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Помилка звʼязку: не вдалося повторно синхронізувати nonce</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Помилка звʼязку: nonce не синхронізовано</string>
+    <string name="omnipod_eros_error_not_enough_data">Помилка звʼязку: від Pod отримано замало даних</string>
+    <string name="omnipod_eros_error_pod_fault">Виявлено несправність Pod (%1$03d %2$s). Деактивуйте Pod і активуйте новий</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Помилка звʼязку: Pod повернув відповідь з помилкою</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Немає відповіді від RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Звʼязок із RileyLink перервано</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Немає відповіді від Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Не вдалося встановити базальний профіль. Введення може бути призупинено! Оновіть статус Pod вручну на вкладці Omnipod і за потреби відновіть введення.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Встановлення базального профілю могло не вдатися. Введення може бути призупинено! Оновіть статус Pod вручну на вкладці Omnipod і за потреби відновіть введення.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Не вдалося встановити базальний профіль. Введення призупинено! Відновіть введення вручну на вкладці Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Скасування тимчасового базалу могло не вдатися. Оновіть статус Pod вручну на вкладці Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Не вдалося встановити тимчасовий базал. Якщо раніше працював тимчасовий базал, його могло бути скасовано. Оновіть статус Pod вручну на вкладці Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Встановлення тимчасового базалу могло не вдатися. Якщо раніше діяв тимчасовий базал, його скасовано. Оновіть статус Pod вручну на вкладці Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Тривалість TBR має бути більшою за нуль і кратною %1$s хв.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Можливо, не вдалося встановити час. Введення інсуліну може бути призупинено! Оновіть статус Pod вручну на вкладці Omnipod і за потреби відновіть введення.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Не вдалося встановити час. Введення інсуліну призупинено! Відновіть введення вручну на вкладці Omnipod.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Не вдалося автоматично змінити час на Pod. Синхронізуйте час вручну на вкладці Omnipod.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Не вдалося перевірити, чи болюс введено. Перевірте вручну, чи Pod вводить болюс: прислухайтеся до клацань. <b>Якщо ви впевнені, що болюс не було введено, вручну видаліть запис болюсу з «Терапії», навіть якщо зараз натиснете «Скасувати болюс»!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Не вдалося перевірити, чи SMB-болюс (%1$.2f Од) введено. <b>Якщо ви впевнені, що болюс не було введено, вручну видаліть запис SMB з «Терапії».</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">На Pod працює тимчасовий базал, але AAPS про нього не знає. Скасуйте тимчасовий базал вручну.</string>
     <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">Статистика RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Скинути RileyLink</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Журнал імпульсів</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Журнал імпульсів (скопійовано в буфер обміну)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Заповніть новий Pod інсуліном, якого вистачить на 3 дні.\n\nПід час заповнення дочекайтеся двох звукових сигналів від Pod. Вони означають, що в Pod уже є мінімальна кількість 80 Од. Повністю спорожніть шприц для заповнення, навіть після двох сигналів.\n\nПісля заповнення Pod натисніть <b>Далі</b>.\n\n<b>Примітка:</b> поки що не знімайте кришечку голки Pod.\n<b>Примітка:</b> поставте RileyLink вертикально і розмістіть Pod на відстані кількох сантиметрів від нього.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Спроба спарувати новий Pod і підготувати його.\n\nПісля успішного завершення ініціалізації натисніть <b>Далі</b>.\n\n<b>Примітка:</b> поставте RileyLink вертикально і розмістіть Pod на відстані кількох сантиметрів від нього.</string>
 </resources>

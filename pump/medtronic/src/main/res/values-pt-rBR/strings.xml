@@ -7,34 +7,47 @@
     <string name="medtronic_pump_type">Tipo de Bomba</string>
     <string name="medtronic_pump_frequency">Frequência da Bomba</string>
     <string name="medtronic_pump_bolus_delay">Atraso antes que o Bólus seja iniciado (s)</string>
-    <string name="medtronic_pump_max_bolus">Max Bolus na Bomba (U)</string>
+    <string name="medtronic_pump_max_bolus">Bólus máximo na bomba (U)</string>
     <string name="medtronic_pump_max_basal">Máxima Basal na Bomba (U/h)</string>
-    <string name="medtronic_pump_encoding">Codificação Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Acordar e Configurar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Limpar Bloco de Bólus</string>
-    <string name="medtronic_custom_action_reset_rileylink">Redefinir configuração RileyLink</string>
+    <string name="medtronic_custom_action_reset_rileylink">Redefinir RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo de Bateria (Visão Detalhada)</string>
-    <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
+    <string name="medtronic_pump_battery_no">Não selecionado (Visão simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
-    <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
-    <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
-    <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
+    <string name="medtronic_pump_battery_lithium">Lítio (Visão estendida)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Visão estendida)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Visão estendida)</string>
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Outro (não suportado)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (FW 2.4A ou inferior)</string>
+    <string name="medtronic_pump_type_723_24a">723 (FW 2.4A ou inferior)</string>
+    <string name="medtronic_pump_type_554_eu">554 (UE FW. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (UE FW. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA FW. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA FW. &lt;= 2.7A)</string>
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Erros</string>
-    <string name="medtronic_error_serial_not_set">Núm. Série não definido.</string>
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de Bomba não definido.</string>
     <string name="medtronic_error_pump_type_invalid">Tipo de Bomba não suportado.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Frequência de Bomba não definida.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frequência da Bomba não suportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">A bomba detectada não é a mesma que a bomba configurada.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">A configuração de perfis/padrões da basal não éstá ativada na bomba. Ative-a na bomba.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Perfil Basal definido na Bomba está incorrecto (deve ser STD).</string>
-    <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo de DBT errado definido na bomba (deve ser Absoluto).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">Máx. Basal definida na Bomba está incorreta (deve ser %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo de TBR errado definido na bomba (deve ser Absoluto).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Bólus máximo definido errado na bomba (deve ser %1$.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Máx. Basal definido errado na Bomba (deve ser %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Operação não é possível.\n\n Você precisa configurar a Bomba Medtronic antes de poder usar esta operação.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">Solicitada uma alteração de tempo de mais de 24h.</string>
@@ -45,11 +58,10 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bolus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá obter as alterações, na próxima actualização (em menos de 5 minutos).</string>
-    <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler a TBR actual.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Não foi possível cancelar a TBR atual. A parar a operação.</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Você cancelou o bólus depois que ele já tinha sido enviado à bomba. Como a bomba Medtronic não permite cancelar, você precisará cancelá-lo manualmente. Coloque a bomba no modo Suspender e depois Retome (se ainda quiser cancelar). O aplicativo vai obter as alterações na próxima atualização (em menos de 5 minutos).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler a TBR atual.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Não foi possível cancelar a TBR atual. Parando a operação.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Falhou Definir Perfil devido aos seguintes padrões, tem uma taxa de basal muito grande: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">O bólus não pôde ser entregue.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bólus não foi entregue, porque o quantidade de insulina disponível (%1$.2f) é menor que o bólus necessário (%2$.2f).</string>
@@ -62,7 +74,7 @@
     <string name="medtronic_cmd_desc_get_time">Obter Hora da Bomba</string>
     <string name="medtronic_cmd_desc_set_time">Definir tempo da bomba</string>
     <string name="medtronic_cmd_desc_get_battery_status">Obter status da bateria</string>
-    <string name="medtronic_cmd_desc_get_settings">Obter Definições</string>
+    <string name="medtronic_cmd_desc_get_settings">Obter configurações</string>
     <string name="medtronic_cmd_desc_get_model">Obter Modelo de Bomba</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Obter Perfil Basal</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Definir Perfil Basal</string>
@@ -71,21 +83,13 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Cancelar a basal temporária</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Obter a insulina restante</string>
-    <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
-    <string name="medtronic_warning">Aviso</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Agora</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">atrás</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Agora</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">atrás</string>
     <string name="medtronic_notification_check_time_date">É necessário atualizar o relógio da bomba</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="set_neutral_temps_title">Definir as basais temporárias neutras</string>
-    <string name="set_neutral_temps_summary">Se ativado, cancelará uma basal temporária antes do final de cada hora. Este método pode ajudar a parar algumas bombas de alarmar/vibrar por uma hora.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="set_neutral_temps_summary">Se ativado, cancelará uma basal temporária antes do final de cada hora. Este método pode ajudar a impedir que algumas bombas apitem/vibrem na hora cheia.</string>
     <string name="invalid_history_data">Dados inválidos do histórico da bomba detectados. Abra nova solicitação e forneça logs.</string>
     <string name="riley_statistics">Status RL</string>
-    <string name="medtronic_history_type">Tipo:</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Atualização em andamento</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Att. de status programada</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Atualização solicitada</string>
 </resources>

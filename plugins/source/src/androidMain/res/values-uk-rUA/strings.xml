@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient ГК</string>
+    <string name="description_source_ns_client">Завантажує дані ГК з Nightscout</string>
+    <string name="source_xdrip">xDrip+ ГК</string>
+    <string name="description_source_xdrip">Отримувати значення ГК з xDrip+ та сумісних застосунків (Juggluco тощо).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="description_source_dexcom">Отримувати значення ГК з «Build Your Own Dexcom App».</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Отримувати значення ГК з Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Отримувати значення ГК з 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Отримувати значення ГК із застосунку Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Отримувати значення із застосунку Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Отримувати значення із застосунку Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="description_source_tomato">Отримувати значення ГК із застосунку Tomato (пристрій MiaoMiao)</string>
+    <string name="random_bg">Випадкова ГК</string>
+    <string name="description_source_random_bg">Генерувати випадкові дані ГК (лише в демо-режимі)</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Отримувати дані глюкози із застосунку Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Отримувати дані глюкози з пропатченого застосунку Sibionic SI або із застосунку Sibionics.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Отримувати дані глюкози з пропатченого застосунку Sino.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Отримувати значення ГК із застосунку Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Запит історичних даних Instara</string>
+    <string name="pref_summary_instara_history_request">Запитувати можливі відсутні історичні дані у фоновому режимі</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Читач сповіщень</string>
+    <string name="description_source_notification_reader">Зчитувати значення глюкози зі сповіщень офіційних застосунків CGM (Dexcom, Medtronic, Eversense тощо).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Застосунку потрібен дозвіл на отримання даних CGM із застосунку Dexcom</string>
+    <string name="permission_notification_listener_title">Доступ до сповіщень</string>
+    <string name="permission_notification_listener_description">Потрібно для зчитування значень глюкози зі сповіщень застосунку CGM</string>
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="description_source_aidex">Отримувати значення CGM з LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 тощо.</string>
+    <string name="aidex_sensor_expired">Термін дії сенсора закінчився, замініть його новим</string>
+    <string name="aidex_sensor_error">Помилка сенсора, перевірте стан сенсора</string>
+    <string name="aidex_sensor_stabilizing">Сенсор стабілізується, зачекайте…</string>
+    <string name="aidex_sensor_replace">Потрібна заміна сенсора, якнайшвидше замініть його новим</string>
+    <string name="aidex_signal_lost">Сигнал сенсора втрачено, перевірте з’єднання</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">дубльоване значення</string>
+</resources>

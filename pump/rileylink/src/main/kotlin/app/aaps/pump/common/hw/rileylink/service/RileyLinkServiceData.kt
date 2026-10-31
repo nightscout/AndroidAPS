@@ -11,15 +11,17 @@ import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by andy on 16/05/2018.
  */
-@Singleton
-class RileyLinkServiceData @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RileyLinkServiceData(
     private val aapsLogger: AAPSLogger,
     private val rileyLinkUtil: RileyLinkUtil,
     private val rxBus: RxBus

@@ -38,6 +38,7 @@ private const val MAX_NUM_SAME_QUANTITY_OBSERVATIONS = 10
  * requires pressing both MENU and UP buttons at the same time).
  */
 enum class RTNavigationButton(val rtButtonCodes: List<ApplicationLayer.RTButton>) {
+
     UP(listOf(ApplicationLayer.RTButton.UP)),
     DOWN(listOf(ApplicationLayer.RTButton.DOWN)),
     MENU(listOf(ApplicationLayer.RTButton.MENU)),
@@ -278,6 +279,7 @@ class QuantityNotChangingException(
  * "button" argument directly.
  */
 interface RTNavigationContext {
+
     /**
      * Maximum number of times functions like [cycleToRTScreen] can cycle through screens.
      *
@@ -312,6 +314,7 @@ class RTNavigationContextProduction(
     private val parsedDisplayFrameStream: ParsedDisplayFrameStream,
     override val maxNumCycleAttempts: Int = 20
 ) : RTNavigationContext {
+
     init {
         require(maxNumCycleAttempts > 0)
     }
@@ -399,7 +402,7 @@ suspend fun longPressRTButtonUntil(
             ) {
                 rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true)
             }
-        } catch (e: TimeoutCancellationException) {
+        } catch (_: TimeoutCancellationException) {
             // Timeout expired, and we got no new frame. Stop waiting
             // for one and continue long-pressing the button. We might
             // be on a screen that does not update on its own.
@@ -504,8 +507,8 @@ suspend fun shortPressRTButtonsUntil(
         logger(LogLevel.VERBOSE) { "Short-press RT button callback returned $command" }
 
         when (command) {
-            ShortPressRTButtonsCommand.DoNothing -> Unit
-            ShortPressRTButtonsCommand.Stop -> return parsedScreen
+            ShortPressRTButtonsCommand.DoNothing      -> Unit
+            ShortPressRTButtonsCommand.Stop           -> return parsedScreen
             is ShortPressRTButtonsCommand.PressButton -> rtNavigationContext.shortPressButton(command.button)
         }
     }
@@ -539,7 +542,8 @@ suspend fun cycleToRTScreen(
                 logger(LogLevel.DEBUG) { "Target screen of type $targetScreenType reached; cycleCount = $cycleCount" }
                 ShortPressRTButtonsCommand.Stop
             }
-            else -> {
+
+            else             -> {
                 cycleCount++
                 logger(LogLevel.VERBOSE) { "Did not yet reach target screen type; cycleCount increased to $cycleCount" }
                 ShortPressRTButtonsCommand.PressButton(button)
@@ -647,7 +651,7 @@ suspend fun adjustQuantityOnScreen(
     require(incrementSteps.isNotEmpty()) { "There must be at least one incrementSteps item" }
     require((cyclicQuantityRange == null) || (incrementSteps.size == 1)) {
         "If cyclicQuantityRange is not null, incrementSteps must contain " +
-        "exactly one item; actually contains ${incrementSteps.size}"
+            "exactly one item; actually contains ${incrementSteps.size}"
     }
 
     fun checkIfNeedsToIncrement(currentQuantity: Int): Boolean {
@@ -663,8 +667,8 @@ suspend fun adjustQuantityOnScreen(
 
     logger(LogLevel.DEBUG) {
         "Adjusting quantity on RT screen; targetQuantity = $targetQuantity; " +
-        "increment / decrement buttons = $incrementButton / $decrementButton; " +
-        "cyclicQuantityRange = $cyclicQuantityRange"
+            "increment / decrement buttons = $incrementButton / $decrementButton; " +
+            "cyclicQuantityRange = $cyclicQuantityRange"
     }
 
     var previouslySeenQuantity: Int? = null
@@ -822,7 +826,7 @@ suspend fun adjustQuantityOnScreen(
                 "short-pressing RT button(s) to finetune it"
         }
 
-        currentQuantity = lastQuantity!!
+        currentQuantity = lastQuantity
     } else {
         while (true) {
             val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true) ?: continue
@@ -852,7 +856,7 @@ suspend fun adjustQuantityOnScreen(
     if (numNeededShortRTButtonPresses != 0) {
         logger(LogLevel.DEBUG) {
             "Need to short-press the $shortRTButtonToPress " +
-                    "RT button $numNeededShortRTButtonPresses time(s)"
+                "RT button $numNeededShortRTButtonPresses time(s)"
         }
         repeat(numNeededShortRTButtonPresses) {
             // Get display frames. We don't actually do anything with the frame
@@ -945,7 +949,7 @@ suspend fun navigateToRTScreen(
     // Figure out the shortest path.
     var path = try {
         findShortestRtPath(currentParsedScreen::class, targetScreenType, isComboStopped)
-    } catch (e: IllegalArgumentException) {
+    } catch (_: IllegalArgumentException) {
         // Happens when currentParsedScreen::class or targetScreenType are not found in the navigation tree.
         null
     }
@@ -961,7 +965,7 @@ suspend fun navigateToRTScreen(
 
         logger(LogLevel.WARN) {
             "We are at screen of type ${currentParsedScreen::class}, which is unknown " +
-                    "to findRTNavigationPath(); exiting back to the main screen"
+                "to findRTNavigationPath(); exiting back to the main screen"
         }
         currentParsedScreen = cycleToRTScreen(
             rtNavigationContext,
@@ -973,7 +977,7 @@ suspend fun navigateToRTScreen(
         // not be here otherwise, since cycleToRTScreen() throws an exception then.
         path = try {
             findShortestRtPath(currentParsedScreen::class, targetScreenType, isComboStopped)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             listOf()
         }
 
@@ -1004,7 +1008,8 @@ suspend fun navigateToRTScreen(
         // skip the redundant screen.
         if ((parsedScreen::class != ParsedScreen.UnrecognizedScreen::class) &&
             (previousScreenType != null) &&
-            (previousScreenType == parsedScreen::class)) {
+            (previousScreenType == parsedScreen::class)
+        ) {
             logger(LogLevel.DEBUG) { "Got a screen of the same type ${parsedScreen::class}; skipping" }
             continue
         }
@@ -1036,7 +1041,7 @@ suspend fun navigateToRTScreen(
                 nextPathItem = pathIt.next()
                 logger(LogLevel.DEBUG) {
                     "Reached screen type $nextTargetScreenTypeInPath in path; " +
-                            "continuing to ${nextPathItem.targetNodeValue}"
+                        "continuing to ${nextPathItem.targetNodeValue}"
                 }
             } else {
                 // If this is the last path item, it implies
@@ -1057,7 +1062,7 @@ suspend fun navigateToRTScreen(
 internal fun findShortestRtPath(from: KClassifier, to: KClassifier, isComboStopped: Boolean) =
     rtNavigationGraph.findShortestPath(from, to) {
         when (it.edgeValidityCondition) {
-            RTEdgeValue.EdgeValidityCondition.ALWAYS -> true
+            RTEdgeValue.EdgeValidityCondition.ALWAYS                -> true
             RTEdgeValue.EdgeValidityCondition.ONLY_IF_COMBO_RUNNING -> !isComboStopped
             RTEdgeValue.EdgeValidityCondition.ONLY_IF_COMBO_STOPPED -> isComboStopped
         }

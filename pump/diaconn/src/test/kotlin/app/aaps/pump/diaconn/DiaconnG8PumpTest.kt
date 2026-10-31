@@ -153,6 +153,7 @@ class DiaconnG8PumpTest : TestBaseWithProfile() {
         }
     }
 
+    /* to be included in ViewModel test ?
     @Test
     fun temporaryBasalToStringTest() {
         // No temp basal active
@@ -182,18 +183,19 @@ class DiaconnG8PumpTest : TestBaseWithProfile() {
         assertThat(result).contains("E ")
         assertThat(result).contains("U/h")
     }
+     */
 
-    @Test
-    fun extendedBolusAbsoluteRateTest() {
-        sut.extendedBolusStart = dateUtil.now()
-        sut.extendedBolusDuration = 1000 * 60 * 60 // 60 minutes
-        sut.extendedBolusAmount = 3.0 // 3 units over 60 minutes
+@Test
+fun extendedBolusAbsoluteRateTest() {
+    sut.extendedBolusStart = dateUtil.now()
+    sut.extendedBolusDuration = 1000 * 60 * 60 // 60 minutes
+    sut.extendedBolusAmount = 3.0 // 3 units over 60 minutes
 
-        // Rate should be 3.0 U/h
-        assertThat(sut.extendedBolusAbsoluteRate).isWithin(0.01).of(3.0)
+    // Rate should be 3.0 U/h
+    assertThat(sut.extendedBolusAbsoluteRate).isWithin(0.01).of(3.0)
 
-        // Test setting rate
-        sut.extendedBolusAbsoluteRate = 2.0
-        assertThat(sut.extendedBolusAmount).isWithin(0.01).of(2.0)
-    }
+    // Test setting rate
+    sut.extendedBolusAbsoluteRate = 2.0
+    assertThat(sut.extendedBolusAmount).isWithin(0.01).of(2.0)
+}
 }

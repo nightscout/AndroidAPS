@@ -1,5 +1,6 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.medtrum.MedtrumPump
@@ -9,10 +10,9 @@ import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class NotificationPacket(val injector: HasAndroidInjector) {
+class NotificationPacket(val injector: MetroMemberInjector) {
 
     /**
      * This is a bit of a special packet, as it is not a command packet
@@ -121,7 +121,8 @@ class NotificationPacket(val injector: HasAndroidInjector) {
     var newPatchStartTime = 0L
 
     init {
-        injector.androidInjector().inject(this)
+        // Not a MedtrumPacket subclass, so it injects itself - same check as the base class.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 
     fun handleNotification(notification: ByteArray) {

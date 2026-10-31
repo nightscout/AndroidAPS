@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">Немає активного тимчасового базалу</string>
+    <string name="start_activity_tt">Запустити ТЦ для активності</string>
+    <string name="start_eating_soon_tt">Запустити ТЦ «Очікуваний прийом їжі»</string>
+    <string name="start_hypo_tt">Запустити ТЦ при гіпо</string>
+    <string name="time_offset">Зсув часу</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dд%2$dгод</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dг</string>
+    <!--    Widget-->
+    <string name="configure">Налаштувати прозорість</string>
+    <string name="widget_description">Віджет AAPS</string>
+    <string name="widget_bg_graph_description">Графік ГК AAPS</string>
+    <string name="widget_glucose_circle_description">Коло глюкози AAPS</string>
+    <string name="widget_compact_bg_description">AAPS ГК + IOB + COB (компактний)</string>
+    <string name="widget_small_description">AAPS малий</string>
+    <!--     Activities-->
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Амбулаторний профіль глюкози</string>
+    <string name="agp_glycemic_overview">Глікемічний огляд</string>
+    <string name="agp_today">Сьогодні</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$d год</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$d дн.</string>
+    <string name="agp_no_data">Для цього періоду немає даних глюкози.</string>
+    <string name="agp_load_failed">Не вдалося завантажити статистику AGP. Спробуйте ще раз.</string>
+    <string name="agp_chart_description">Графік перцентилів глюкози</string>
+    <string name="agp_tir_chart">Графік часу в діапазоні</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Середнє</string>
+    <string name="agp_median">Медіана</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Дні</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="cgp_title">Пентагон глюкози (CGP) — 14 днів</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Гіпо</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Гіпер</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Середнє</string>
+    <string name="cgp_reference">Здорова людина</string>
+    <string name="cgp_patient">Пацієнт</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Дуже низький ризик</string>
+    <string name="cgp_pgr_low">Низький ризик</string>
+    <string name="cgp_pgr_moderate">Помірний ризик</string>
+    <string name="cgp_pgr_high">Високий ризик</string>
+    <string name="cgp_pgr_extremely_high">Надзвичайно високий ризик</string>
+    <string name="do_you_want_recalculate_tdd_stats">Бажаєте перерахувати статистику TDD?</string>
+    <string name="calculation_in_progress">Виконується обчислення</string>
+    <string name="age">Вік</string>
+    <string name="weight_label">Вага</string>
+    <string name="glucose_type">Тип глюкози</string>
+    <string name="bg_other">Інше</string>
+    <string name="bg_meter">Глюкометр</string>
+    <string name="bg_sensor">Сенсор</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <string name="edit_site">Редагувати</string>
+    <string name="record_site_location">Місце введення: %1$s</string>
+    <string name="record_site_arrow">Стрілка місця введення: %1$s</string>
+    <string name="record_site_note">Примітка: %1$s</string>
+    <string name="delete_site_note">Примітку видалено</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Будь ласка, переконайтеся, що обсяг відповідає специфікації вашого інфузійного набору!</string>
+    <string name="record_pump_site_change">Запис заміни канюлі помпи</string>
+    <string name="record_insulin_cartridge_change">Запис заміни картриджа інсуліну</string>
+    <string name="fill_prime_amount">Кількість для заповнення</string>
+    <string name="fill_pump_units_note">Кількість для заповнення вказано в одиницях помпи</string>
+    <string name="fill_insulin_change">Змінити інсулін на: %1$s (буде застосовано перемикання профілю)</string>
+    <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Активність</string>
+    <string name="scene_cat_health">Здоровʼя</string>
+    <string name="scene_cat_food">Їжа</string>
+    <string name="scene_cat_sleep">Сон</string>
+    <string name="scene_cat_dailylife">Щоденне життя</string>
+    <string name="scene_cat_wellness">Самопочуття</string>
+    <string name="scene_cat_general">Загальне</string>
+    <string name="aaps_tt_high_icon_label">Тимчасова ціль</string>
+    <string name="aaps_tt_activity_icon_label">ТЦ Активність</string>
+    <string name="aaps_tt_eating_icon_label">ТЦ Очікуваний прийом їжі</string>
+    <string name="aaps_tt_hypo_icon_label">ТЦ Гіпо</string>
+    <string name="aaps_tt_manual_icon_label">ТЦ Вручну</string>
+    <string name="aaps_profile_icon_label">Профіль</string>
+    <string name="aaps_loop_icon_label">Петля</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Болюс</string>
+    <string name="aaps_carbs_icon_label">Вуглеводи</string>
+    <string name="aaps_tbr_icon_label">Тимчасовий базал</string>
+    <string name="aaps_note_icon_label">Примітка</string>
+    <string name="aaps_automation_icon_label">Автоматизація</string>
+    <string name="aaps_calibration_icon_label">Калібрування</string>
+    <string name="exercise_icon_label">Біг</string>
+    <string name="fitness_icon_label">Фітнес</string>
+    <string name="swim_icon_label">Плавання</string>
+    <string name="hiking_icon_label">Похід</string>
+    <string name="bike_icon_label">Велосипед</string>
+    <string name="skateboard_icon_label">Скейтборд</string>
+    <string name="tennis_icon_label">Теніс</string>
+    <string name="soccer_icon_label">Футбол</string>
+    <string name="baseball_icon_label">Регбі</string>
+    <string name="basketball_icon_label">Гандбол</string>
+    <string name="volleyball_icon_label">Гімнастика</string>
+    <string name="golf_icon_label">Гольф</string>
+    <string name="scubadiving_icon_label">Дайвінг</string>
+    <string name="rowing_icon_label">Веслування</string>
+    <string name="surfing_icon_label">Серфінг</string>
+    <string name="hospital_icon_label">Лікарня</string>
+    <string name="medication_icon_label">Ліки</string>
+    <string name="monitor_heart_icon_label">Монітор</string>
+    <string name="thermostat_icon_label">Термостат</string>
+    <string name="blood_type_icon_label">Кров</string>
+    <string name="health_safety_icon_label">Здоров’я</string>
+    <string name="healing_icon_label">Загоєння</string>
+    <string name="meal_icon_label">Ресторан</string>
+    <string name="cafe_icon_label">Кава</string>
+    <string name="lunch_icon_label">Обід</string>
+    <string name="bakery_icon_label">Випічка</string>
+    <string name="sleep_icon_label">Сон</string>
+    <string name="night_icon_label">Ніч</string>
+    <string name="nights_stay_icon_label">Ночівля</string>
+    <string name="hotel_icon_label">Готель</string>
+    <string name="seat_flat_icon_label">Відпочинок</string>
+    <string name="work_icon_label">Робота</string>
+    <string name="school_icon_label">Школа</string>
+    <string name="home_icon_label">Дім</string>
+    <string name="car_icon_label">Поїздка</string>
+    <string name="flight_icon_label">Політ</string>
+    <string name="shopping_icon_label">Покупки</string>
+    <string name="relax_icon_label">Медитація</string>
+    <string name="spa_icon_label">Спа</string>
+    <string name="heart_icon_label">Серце</string>
+    <string name="psychology_icon_label">Розум</string>
+    <string name="star_icon_label">Зірка</string>
+    <string name="speed_icon_label">Швидкість</string>
+    <string name="alarm_icon_label">Будильник</string>
+    <string name="event_icon_label">Подія</string>
+    <string name="flag_icon_label">Прапорець</string>
+    <string name="bookmark_icon_label">Закладка</string>
+    <string name="label_icon_label">Мітка</string>
+    <!-- Insulin Management -->
+    <string name="missing_insulin_name">Відсутня назва інсуліну</string>
+    <string name="insulin_name_exists">Назва інсуліну %1$s вже існує, виберіть нову назву</string>
+    <string name="insulin_external_update_title">Конфігурацію інсуліну змінено</string>
+    <string name="insulin_external_update_message">Спарений клієнт змінив конфігурацію інсуліну. Натисніть «OK», щоб завантажити його зміни й відкинути ваші незбережені зміни, або «Скасувати», щоб продовжити редагування (ваше наступне збереження перезапише його зміни).</string>
+    <string name="insulin_edit_target_gone">Цей інсулін було видалено в іншому місці, тому ваші зміни не вдалося зберегти. Список оновлено.</string>
+    <string name="insulin_activation_applied">Активацію інсуліну застосовано</string>
+    <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Застосування…</string>
+    <string name="clientcontrol_pending_working_text">Очікування підтвердження від основного телефону…</string>
+    <string name="clientcontrol_pending_rejected_title">Не застосовано</string>
+    <string name="clientcontrol_pending_failed_format">%1$s не вдалося виконати.\n%2$s</string>
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Частково застосовано</string>
+    <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s застосовано, але деякі дії не вдалося виконати.\nПеревірте активний стан.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Не вдалося підтвердити</string>
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s надіслано, але підтвердження не надійшло.\n%2$s\nЦе з’явиться тут, коли основний телефон це застосує.</string>
+    <string name="clientcontrol_pending_stop_waiting">Припинити очікування</string>
+    <string name="a11y_add_new_insulin">Додати новий інсулін</string>
+    <string name="a11y_delete_current_insulin">Видалити поточний інсулін</string>
+    <string name="load_peak_from">Завантажити пік з</string>
+    <string name="cannot_delete_last_insulin">Неможливо видалити останній інсулін</string>
+    <string name="cannot_delete_active_insulin">Неможливо видалити активний інсулін</string>
+    <string name="reuse_profile_pct_hours">Повторити %1$d%% %2$d год</string>
+    <string name="percentage_label">Відсоток</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Від’єднати помпу</string>
+    <string name="resume">Відновити</string>
+    <string name="reconnect">Знову під’єднати помпу</string>
+    <string name="duration15m">15 хв</string>
+    <string name="duration30m">30 хв</string>
+    <string name="duration1h">1 година</string>
+    <string name="duration2h">2 години</string>
+    <string name="duration3h">3 години</string>
+    <string name="duration10h">10 годин</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Бракує %1$d г</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
+    <string name="wizard_carbs_type_bread_desc">100% вуглеводів одразу, без відкладених вуглеводів</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Вуглеводи зменшено на %1$d%%, додано eCarbs %2$d%% із затримкою %3$d хв на %4$d год</string>
+    <string name="wizard_include_info">Торкніться, щоб увімкнути або вимкнути в розрахунку:\n• ГК — глюкоза крові (на початку УВІМК.)\n• ТЦ — тимчасова ціль (на початку УВІМК.)\n• Тренд — тренд ГК (запамʼятовується останній стан)\n• IOB — активний інсулін (на початку УВІМК.)\n• COB — активні вуглеводи (запамʼятовується останній стан)</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Записи відсутні</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Вуглеводи і болюс</string>
+    <string name="show_invalidated">Показати анульовані</string>
+    <string name="hide_invalidated">Приховати анульовані</string>
+    <string name="careportal_remove_started_events">Видалити записи, розпочаті AAPS</string>
+    <string name="user_entry">Введення користувача</string>
+    <string name="clone_label">Клонувати</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Графік глюкози. Останні значення %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Показати елементи керування</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Сповіщення: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">немає тимчасової цілі, ціль профілю</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">змінено петлею</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s о %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">дельта %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">застаріле значення</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Графік глюкози. Останні значення %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Прогнози. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s зростає до %2$s.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s знижується до %2$s.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s залишається на рівні %2$s.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">Прогноз IOB</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">Прогноз COB</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Прогноз засвоєних COB</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">Прогноз UAM</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Прогноз нульового базалу</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">потрібна дія</string>
+    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">доступно: %1$d</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">виконано %1$d з %2$d</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Виконати</string>
+    <string name="add_new_profile">Додати новий профіль</string>
+    <string name="edit_label">Редагувати</string>
+    <string name="activate_label">Активувати</string>
+    <string name="activate_profile">Активувати профіль</string>
+    <string name="remove_label">Видалити</string>
+    <string name="active_profile_indicator">АКТИВНИЙ</string>
+    <string name="confirm_remove_profile">Видалити профіль \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Клонувати профіль \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">Список профілів тим часом змінився — спробуйте ще раз</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Тип профілю</string>
+    <string name="profile_parameters">Параметри профілю</string>
+    <string name="active_profile">Активний профіль</string>
+    <string name="available_profiles">Доступні профілі</string>
+    <string name="profile_switches">Перемикання профілів</string>
+    <string name="basal_pct_from_tdd_label">% від базалу</string>
+    <string name="selected_profile">Вибрано:</string>
+    <string name="comparation">Порівняння</string>
+    <string name="profile_tab_1">Профіль 1</string>
+    <string name="profile_tab_2">Профіль 2</string>
+    <string name="motol_default_profile">Профіль за замовчуванням</string>
+    <string name="current_profile">Поточний профіль</string>
+    <string name="available_profile">Доступний профіль</string>
+    <string name="format_with_tdd">Вік: %1$d TDD: %2$.0f Од</string>
+    <string name="format_with_tdd_and_pct">Вік: %1$d TDD: %2$.0f Од %3$d%%</string>
+    <string name="format_with_weight">Вік: %1$d Вага: %2$.0f кг</string>
+    <string name="dpv_default_profile">Профіль DPV за замовчуванням</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Текст кнопки</string>
+    <string name="quick_wizard_mode_wizard">Калькулятор</string>
+    <string name="quick_wizard_mode_insulin">Інсулін</string>
+    <string name="quick_wizard_mode_carbs">Вуглеводи</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Тільки позитивний IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
+    <!--    History browser-->
+    <string name="history_now">Зараз</string>
+    <string name="a11y_history_previous_window">Попередній період</string>
+    <string name="a11y_history_next_window">Наступний період</string>
+    <string name="additional_ecarbs">Додати eCarbs</string>
+    <string name="calculator_options">Параметри калькулятора</string>
+    <string name="use_bg">Використовувати ГК</string>
+    <string name="use_cob">Використовувати COB</string>
+    <string name="use_iob">Використовувати IOB</string>
+    <string name="use_trend">Використовувати тренд</string>
+    <string name="trend_all">Усе</string>
+    <string name="trend_positive_only">Лише позитивні</string>
+    <string name="trend_negative_only">Лише негативні</string>
+    <string name="use_temp_target">Використовувати тимчасову ціль</string>
+    <string name="use_alarm">Використовувати сигнал</string>
+    <string name="device_selection">Вибір пристрою</string>
+    <string name="show_on_phone">Показувати на телефоні</string>
+    <string name="show_on_watch">Показувати на годиннику</string>
+    <string name="ecarbs_additional">Додаткові вуглеводи</string>
+    <string name="valid_from_to">Час дії</string>
+    <string name="carb_time">Час прийому вуглеводів</string>
+    <string name="save_changes_question">Зберегти зміни в цьому записі?</string>
+    <string name="wizard_no_insulin_required">Інсулін не потрібен</string>
+    <string name="carbs_constraint_violation">Вуглеводи зменшено через обмеження</string>
+    <string name="insulin_constraint_violation">Інсулін зменшено через обмеження</string>
+    <string name="confirm_treatment">Будь ласка, підтвердьте терапію</string>
+    <string name="recalculate">Перерахувати</string>
+    <!--    Widget-->
+    <string name="use_black_color">Використовувати чорний колір</string>
+    <string name="widget_configuration">Налаштування віджета</string>
+    <string name="until_changed">До зміни</string>
+    <!--    Permissions-->
+    <string name="permission_sheet_title">Потрібні дозволи</string>
+    <string name="permission_sheet_subtitle">Для правильної роботи застосунку потрібні деякі дозволи</string>
+    <string name="permission_grant">Надати</string>
+    <string name="permission_change">Змінити</string>
+    <string name="permission_denied_go_to_settings">Дозвіл остаточно відхилено. Увімкніть його в налаштуваннях застосунку.</string>
+    <string name="permission_open_settings">Налаштування</string>
+    <string name="permission_directory_picker_error">Не вдалося відкрити вибір каталогу. Зазвичай це проблема Android або Family Link.</string>
+    <string name="permission_nav_label">Дозволи</string>
+    <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Цикл</string>
+    <string name="cycle_offset">Зсув циклу</string>
+    <string name="raw_tdd">Необроблена TDD</string>
+    <string name="cleaned_tdd">Очищена TDD</string>
+    <string name="cleaned_tdd_explanation">TDD без інсуліну на вуглеводи.</string>
+    <string name="cycle_lines_legend">Окремі цикли</string>
+    <string name="cycles_found">Циклів: %1$d (днів: %2$d)</string>
+    <string name="cycle_day1_date">День 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Розрахунок… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Недостатньо даних (для 2 циклів потрібно щонайменше 56 днів)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Обидва</item>
+        <item>Тільки позитивні</item>
+        <item>Тільки негативні</item>
+    </string-array>
+    <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Вибрані дії</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Додати %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Прибрати %1$s</string>
+    <string name="quick_launch_no_dynamic_items">Немає доступних елементів</string>
+    <string name="quick_launch_category_treatment">Терапія</string>
+    <string name="quick_launch_category_care">Careportal</string>
+    <string name="quick_launch_category_profile">Профіль</string>
+    <string name="quick_launch_category_temp_target">Шаблони тимчасових цілей</string>
+    <string name="quick_launch_category_quick_wizard">Швидкий майстер</string>
+    <string name="quick_launch_category_automation">Автоматизація</string>
+    <string name="quick_launch_all_selected">Усі елементи вибрано</string>
+    <string name="quick_launch_no_quick_wizard">Додайте записи Швидкого майстра, щоб використовувати їх тут</string>
+    <string name="quick_launch_no_automation">Створіть дії автоматизації користувача, щоб використовувати їх тут</string>
+    <string name="quick_launch_no_tt_presets">Додайте шаблони тимчасових цілей, щоб використовувати їх тут</string>
+    <string name="quick_launch_no_profiles">Створіть профілі в локальному профілі, щоб використовувати їх тут</string>
+    <string name="quick_launch_edit_profile_preset">Редагувати шаблон профілю</string>
+    <string name="quick_launch_profile_permanent">Постійно</string>
+    <string name="select_arrow">Вибрати стрілку</string>
+    <string name="loop_accept_nav_label">Петля</string>
+    <string name="loop_accept_set_basal_question">Прийняти новий тимчасовий базал:</string>
+    <string name="loop_accept_perform">Виконати</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Вимкнено</string>
+    <string name="widget_rm_suspended">Призупинено</string>
+    <string name="widget_rm_resume">Відновити</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Сенсор ще прогрівається. Калібрування буде доступне о %1$s.</string>
+    <string name="cal_precheck_no_session">Немає активної сесії сенсора.</string>
+    <string name="cal_precheck_no_pair">Немає значень CGM за останні 10 хвилин. Перевірте підключення сенсора.</string>
+    <string name="cal_precheck_delta_too_high">Глюкоза змінюється надто швидко (Δ %1$s %3$s за 5 хв, ліміт %2$s). Дочекайтеся стабілізації.</string>
+    <string name="cal_precheck_mark_sensor_change">Позначити заміну сенсора</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
+</resources>

@@ -1,7 +1,6 @@
 package app.aaps.pump.eopatch.vo
 
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.code.BasalStatus
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import java.util.concurrent.TimeUnit
 
 class NormalBasalManagerTest : TestBaseWithProfile() {
 
@@ -111,6 +109,16 @@ class NormalBasalManagerTest : TestBaseWithProfile() {
 
         // Should be replaced with profile segments
         assertThat(manager.normalBasal.list.size).isNotEqualTo(initialSize)
+    }
+
+    /** #2454: the doses of the old basal must not be reported for a new one that was not sent yet. */
+    @Test
+    fun `setNormalBasal forgets the doses sent for the old basal`() {
+        manager.normalBasal.sentDoses = FloatArray(48) { 0.5f }
+
+        manager.setNormalBasal(mockProfile)
+
+        assertThat(manager.normalBasal.sentDoses).isNull()
     }
 
     @Test

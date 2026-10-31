@@ -1,0 +1,48 @@
+package app.aaps.implementation.bolus
+
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+
+/**
+ * [WizardExecutor] implementation — the RECOMPUTE bolus path (QuickWizard WIZARD-mode + manual Bolus Wizard). It
+ * only supplies the client command to dispatch (`BolusPrepare`/`WizardPrepare` + `BolusCommit`, the latter carrying
+ * the high-BG `asAdvisor` fork) and the master executor call (`prepareQuickWizard`/`prepareWizard` + `confirm`);
+ * the role branch (client round-trip vs master-local + the result mapping) lives once in [RoleBranch], shared with
+ * [BatchExecutorImpl]. The compute/deliver logic lives once in the executor, so a client's request lands in that
+ * same executor on the master and both roles render the master's identical lines.
+ */
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class WizardExecutorImpl(
+    private val roleBranch: RoleBranch,
+    private val masterActionExecutor: MasterActionExecutor
+) : WizardExecutor {
+
+    override suspend fun prepare(source: WizardExecutor.WizardSource, label: String): ActionProgress {
+        val command = when (source) {
+            is WizardExecutor.WizardSource.QuickWizard -> ClientControlActionDispatcher.Command.BolusPrepare(source.guid)
+            is WizardExecutor.WizardSource.Manual      -> ClientControlActionDispatcher.Command.WizardPrepare(source.inputs)
+        }
+        return roleBranch.prepare(label, command) {
+            when (source) {
+                is WizardExecutor.WizardSource.QuickWizard -> masterActionExecutor.prepareQuickWizard(source.guid)
+                is WizardExecutor.WizardSource.Manual      -> masterActionExecutor.prepareWizard(source.inputs)
+            }
+        }
+    }
+
+    override suspend fun commit(bolusId: Long, asAdvisor: Boolean, source: Sources, label: String, correctionU: Double): ActionProgress =
+        roleBranch.commit(label, ClientControlActionDispatcher.Command.BolusCommit(bolusId, asAdvisor, correctionU = correctionU)) { onError ->
+            masterActionExecutor.confirm(bolusId, source, onError, asAdvisor, correctionU)
+        }
+
+    override fun discard(bolusId: Long) = roleBranch.discard { masterActionExecutor.discard(bolusId) }
+}

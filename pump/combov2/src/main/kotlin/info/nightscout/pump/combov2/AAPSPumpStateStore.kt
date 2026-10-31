@@ -1,6 +1,6 @@
 package info.nightscout.pump.combov2
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.CurrentTbrState
 import info.nightscout.comboctl.base.InvariantPumpData
@@ -17,7 +17,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
- * [PumpStateStore] subclass that uses AndroidAPS' [SP] class for storing the pump state.
+ * [PumpStateStore] subclass that uses AAPS' [KeyValueStore] for storing the pump state.
  *
  * This pump state has a special logic to address the following problem:
  *
@@ -31,17 +31,17 @@ import kotlin.time.Instant
  * This pump state store has two special characteristics to be aware of, which work to solve the problem.
  *
  * 1. This subclass stores at most only one state. The base class is designed to be able to store multiple states,
- *  but this is not supported in AndroidAPS. For this reason, several methods do not actually use their
+ *  but this is not supported in AAPS. For this reason, several methods do not actually use their
  *  pumpAddress arguments. One example is the [hasPumpState] method.
- * 2. When AndroidAPS imports a configuration that was previously stored as an XML file, it calls plugin methods
+ * 2. When AAPS imports a configuration that was previously stored as an XML file, it calls plugin methods
  *  before and after the import was done. The ComboV2 driver uses this to restore an existing pump state. This is
  *  necessary, because importing a configuration wipes the values in the [sp] store.
  *
  * The second characteristic is why this subclass has the [createBackup] and [applyBackup] methods, as well as
- * the [hasAnyPumpState] method. When a configuration is imported, AndroidAPS calls the plugin class' method
+ * the [hasAnyPumpState] method. When a configuration is imported, AAPS calls the plugin class' method
  * mentioned earlier. In that method, the plugin uses [createBackup] to make a backup of the pump state.
  * During the import, the pump state is wiped. Once the import is done, another plugin method is called
- * by AndroidAPS. Inside that method, [applyBackup] is called to restore the previously pump state out of
+ * by AAPS. Inside that method, [applyBackup] is called to restore the previously pump state out of
  * the backup. The result is that the pump state remains intact. (If there is no pump state, then the
  * pre- and post-import methods do nothing of course.)
  *
@@ -66,7 +66,7 @@ import kotlin.time.Instant
  *   overwriting the pump state from the imported configuration.
  */
 class AAPSPumpStateStore(
-    private val sp: SP
+    private val sp: KeyValueStore
 ) : PumpStateStore {
     sealed interface States {
         var btAddress: String
@@ -114,7 +114,7 @@ class AAPSPumpStateStore(
         override var utcOffsetSeconds: Int = 0
     }
 
-    class SPStates(val sp: SP): States {
+    class SPStates(val sp: KeyValueStore): States {
         override var btAddress: String
             by SPDelegateString(sp, PreferenceKeys.BT_ADDRESS_KEY.str, "")
 
@@ -150,8 +150,8 @@ class AAPSPumpStateStore(
     /**
      * Checks if there is a pump state present.
      *
-     * This is an AndroidAPS specific addition to the standard [PumpStateStore.hasPumpState] call. Due to the
-     * way AndroidAPS works, there is actually always at most only one pump state present. Also, there are
+     * This is an AAPS specific addition to the standard [PumpStateStore.hasPumpState] call. Due to the
+     * way AAPS works, there is actually always at most only one pump state present. Also, there are
      * situations where the [info.nightscout.comboctl.main.PumpManager] is not available and the driver must
      * test if a pump state is present. To accomplish this, this function checks for that pump state. Unlike
      * [PumpStateStore.hasPumpState], it does not need a Bluetooth address as argument.
@@ -161,7 +161,7 @@ class AAPSPumpStateStore(
     /**
      * Copies all values from the [sp] instance into a local data structure and returns it as a backup.
      *
-     * This is needed for when AndroidAPS imports a configuration. See the class documentation above for details.
+     * This is needed for when AAPS imports a configuration. See the class documentation above for details.
      */
     fun createBackup() = if (sp.contains(PreferenceKeys.NONCE_KEY.str))
         StatesBackup().also { backup ->
@@ -173,7 +173,7 @@ class AAPSPumpStateStore(
     /**
      * Copies all values from a local data structure (which is the backup) into the [sp] instance.
      *
-     * This is needed for when AndroidAPS imports a configuration. See the class documentation above for details.
+     * This is needed for when AAPS imports a configuration. See the class documentation above for details.
      */
     fun applyBackup(backup: StatesBackup) {
         spStates.copyFrom(backup)

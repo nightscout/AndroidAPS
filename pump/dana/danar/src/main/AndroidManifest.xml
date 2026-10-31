@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+
+    <application android:supportsRtl="true">
+        <service
+            android:name="app.aaps.pump.danar.services.DanaRExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="app.aaps.pump.danarv2.services.DanaRv2ExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+</manifest>

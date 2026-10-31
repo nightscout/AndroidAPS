@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">단위</string>
+    <string name="setupwizard_units_prompt">값을 표시할 단위를 선택하십시오</string>
+    <string name="next_button">다음</string>
+    <string name="previous_button">이전</string>
+    <string name="setupwizard_finish">완료</string>
+    <string name="welcome">환영합니다</string>
+    <string name="welcometosetupwizard">설정 마법사에 오신 것을 환영합니다. 설정 과정을 안내해 드립니다.\n</string>
+    <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
+    <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
+    <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
+    <string name="display_settings">화면 설정</string>
+    <string name="low_mark">저혈당 선</string>
+    <string name="high_mark">고혈당 선</string>
+    <string name="low_mark_comment">혈당 정상범위의 하한값(표시 전용)</string>
+    <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
+    <string name="storedsettingsfound">저장된 설정이 있습니다.</string>
+    <string name="master_password_summary">마스터 비밀번호는 백업 암호화와 앱의 보안 해제에 사용됩니다. 기억하거나 안전한 곳에 보관하십시오.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">평소 섭취하는 가장 많은 양의 탄수화물 값을 사용하세요.\n</string>
+    <string name="syncinfotext">데이터를 클라우드에 동기화합니다. 지금은 이 부분을 건너뛸 수 있지만, Nightscout 또는 Tidepool 클라이언트를 설정할 때까지 목표를 통과할 수 없습니다.</string>
+    <string name="status_label">상태:</string>
+    <string name="diawarning">기억하십시오: 새 인슐린 프로파일은 DIA가 최소 5시간이어야 합니다. 새 프로파일의 DIA 5–6시간은 이전 인슐린 프로파일의 DIA 3시간과 같습니다.</string>
+    <string name="profile">프로파일</string>
+    <string name="doprofileswitch">프로파일 전환 실행</string>
+    <string name="exitwizard">설정 마법사 건너뛰기</string>
+    <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도 감지와 COB 계산에 사용됩니다. 자세한 정보는 다음을 참조하십시오:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ko/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하십시오. 오래된 것부터 새것 순서로 정렬되어 있습니다. 보통 새 알고리즘이 더 강력합니다. 사용하기 전에 OpenAPS 문서를 읽고 설정하십시오.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">아래에서 RileyLink를 설정하십시오. RileyLink를 선택한 후 RileyLink 상태가 \"연결됨\"이 되면 설정을 계속할 수 있습니다. 1분 정도 걸릴 수 있습니다.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>참고:</b> 펌프 설정이 끝나면 설정을 계속할 수 있습니다.\n</string>
+    <string name="startobjective">첫 번째 목표를 시작하십시오</string>
+    <string name="open_objectives">목표 열기</string>
+    <string name="setupwizard_permissions">권한</string>
+    <string name="setupwizard_profile_info">기저 주입량, IC, ISF, 목표 값으로 프로파일을 만드십시오. 나중에 프로파일을 여러 개 추가할 수 있습니다.</string>
+    <string name="setupwizard_permissions_info">AAPS가 제대로 작동하려면 저장소 접근과 권한이 필요합니다. 아래에서 필요한 권한을 허용하십시오.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink 상태:</string>
+    <string name="setupwizard_client_control_title">클라이언트 제어</string>
+    <string name="setupwizard_client_control_info">클라이언트 기기를 페어링하면 Nightscout를 통해 이 마스터에 서명된 명령을 보낼 수 있습니다. AAPS를 원격으로 제어하는 새로운 권장 방법입니다.</string>
+    <string name="setupwizard_ns_receive_info">Nightscout에서 처치와 데이터를 직접 받는 기능(보안이 낮은 방법)은 이제 기본으로 꺼져 있습니다. 아직 필요한 경우에만 아래 설정을 여십시오. NS나 타사 앱으로 데이터를 입력하려면 이 기능이 필요합니다.</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout 데이터 수신</string>
+    <string name="setupwizard_pair_with_master_info">이 클라이언트를 마스터 AAPS와 페어링하여 보안 채널로 명령을 보낼 수 있게 하십시오. 페어링이 끝나면 설정이 완료됩니다.</string>
+    <string name="setupwizard_setup_from_master_title">마스터에서 설정</string>
+    <string name="setupwizard_setup_from_master_info">마스터에서 허가된 클라이언트를 열고 QR 코드로 이 휴대폰을 추가하십시오. QR 코드를 스캔하면 이 휴대폰 전용 토큰으로 Nightscout가 설정되고, 휴대폰도 페어링할 수 있습니다. 스캔이 끝나면 설정이 완료됩니다. QR 코드가 없으면 이 단계를 건너뛰고 Nightscout를 직접 설정하십시오.</string>
+    <string name="setupwizard_scan_master_qr">QR 코드 스캔</string>
+    <string name="setupwizard_pairing_ws_warning">페어링에는 Nightscout 웹소켓 연결이 필요합니다. 이전 단계로 돌아가 먼저 활성화하십시오.</string>
+    <string name="setupwizard_pairing_status_master">페어링된 클라이언트: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">아직 페어링된 클라이언트가 없음</string>
+    <string name="setupwizard_pairing_status_client_paired">마스터와 페어링됨</string>
+    <string name="setupwizard_pairing_status_client_not_paired">아직 페어링되지 않음</string>
+    <string name="setupwizard_instance_name_title">이 휴대폰은 누가 사용합니까?</string>
+    <string name="readstatus">상태 불러오기</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">어떤 펌프를 AAPS에서 사용하시겠습니까?</string>
+    <string name="configbuilder_aps_description">어떤 APS 알고리즘이 치료를 조정해야 합니까?</string>
+    <string name="configbuilder_sync_description">데이터 업로드, 동기화 및 통신 플러그인.</string>
+    <string name="configbuilder_bgsource_description">AAPS가 어디에서 데이터를 가져옵니까?</string>
+    <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
+    <string name="allow_hardware_pump_text">주의: 하드웨어 펌프를 활성화하고 연결하면 AAPS가 프로파일의 기저 설정을 펌프로 복사하여 펌프에 저장된 기존 기저 주입량을 덮어씁니다. AAPS의 기저 설정이 올바른지 확인하십시오. 확실하지 않거나 펌프의 기저 설정을 덮어쓰고 싶지 않으면 취소를 누르고 나중에 다시 펌프로 전환하십시오.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient 버전이 AAPS 버전과 일치하지 않습니다. 업데이트하십시오.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">불러오는 중…</string>
+    <string name="warning_wrong_directory_selected">잘못된 디렉터리 선택됨</string>
+    <string name="warning_wrong_directory_message">AAPS 루트 디렉터리 대신 \"%1$s\" 하위 디렉터리를 선택했습니다. 상위 AAPS 디렉터리를 선택하십시오. 앱이 하위 디렉터리를 자동으로 만들고 관리합니다.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

@@ -19,6 +19,7 @@ abstract class StaticTileSource(val context: Context, val sp: SP, val aapsLogger
         @DrawableRes iconRes: Int,
         action: EventData? = null,
         message: String? = null,
+        val settingLabel: String? = null,
     ) : Action(buttonText, buttonTextSub, activityClass, iconRes, action, message)
 
     abstract fun getActions(resources: Resources): List<StaticAction>

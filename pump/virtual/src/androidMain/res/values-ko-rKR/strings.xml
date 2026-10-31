@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">가상 펌프 종류</string>
+    <string name="virtual_pump_definition">펌프 정의</string>
+    <string name="virtual_pump_pump_def">볼러스: 단계=%1$s\n확장 볼러스: [단계=%2$s, 기간=%3$s분-%4$s시간]\n기저: 단계=%5$s\n임시 기저: %6$s (%7$s 단위), 기간=%8$s분-%9$s시간\n%10$s</string>
+    <string name="description_pump_virtual">아직 드라이버가 없는 펌프를 위한 펌프 연동(개방 루프)</string>
+    <string name="virtualpump_settings">가상 펌프 설정</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* 가상 펌프에서 기저/볼러스 단위는 범위가 아닌 개별 값(discrete values)만 지원됩니다.</string>
+</resources>

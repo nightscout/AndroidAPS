@@ -1,7 +1,0 @@
-<resources>
-    <style name="Widget.AndroidAPS.AppWidget.Container" parent="android:Widget">
-        <item name="android:padding">?attr/appWidgetPadding</item>
-        <item name="android:background">@drawable/widget_background</item>
-    </style>
-
-</resources>

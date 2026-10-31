@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Instellingen</string>
-    <string name="nav_exit">Afsluiten</string>
-    <string name="delta">Verschil</string>
-    <string name="save">Opslaan</string>
-    <string name="wear">Wear</string>
-    <string name="nav_about">Over</string>
-    <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
-    <string name="invalid">Ongeldig</string>
-    <string name="gradually_increase_notification_volume">Volume van notificaties en meldingen geleidelijk verhogen</string>
-    <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
-    <string name="enable_missed_bg_readings_alert">Alarm als er geen BG gegevens ontvangen zijn</string>
-    <string name="enable_pump_unreachable_alert">Waarschuwing bij niet bereikbare pomp</string>
-    <string name="pump_unreachable_threshold">Pomp niet beschikbaar sinds [min]</string>
-    <string name="enable_carbs_req_alert">Waarschuwen als koolhydraten nodig zijn</string>
-    <string name="open_navigation">Open navigatie</string>
-    <string name="close_navigation">Sluit navigatie</string>
-    <string name="remove_items">Items verwijderen</string>
-    <string name="sort_items">Sorteer items</string>
-    <string name="unitsnosemicolon">Eenheden</string>
     <string name="authorizationfailed">Autorisatie mislukt</string>
-    <string name="cannula">Canule</string>
     <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Geselecteerde items verwijderen</string>
-    <string name="count_selected">%1$d geselecteerd</string>
-    <string name="sort_label">Sorteren</string>
-    <string name="search">Zoeken</string>
-    <string name="simple_mode">Eenvoudige modus</string>
     <string name="select">Selecteer</string>
     <string name="set">Stel in</string>
+    <string name="migrating_preferences">Instellingen migreren…</string>
+    <string name="optimizing_database">Gegevensverzameling optimaliseren…</string>
+    <string name="initializing_plugins">Initialiseren plug-ins…</string>
+    <string name="initializing">Initialiseren…</string>
+    <string name="migrating_profile_switches">Profiel wisselingen migreren…</string>
+    <string name="migrating_effective_profile_switches">Actieve profiel migreren…</string>
+    <string name="migrating_boluses">Bolussen migreren…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Oudere records hadden geen insuline configuratie en er was geen actief profiel, daarom werd %1$s voor hen gebruikt. Controleer uw insuline-instellingen; al gemigreerde records worden daarna niet bijgewerkt.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Oudere records hadden geen insuline duur, dus %1$.1f uur werd gebruikt voor %2$s. Controleer je insuline-instellingen - al gemigreerde records worden niet achteraf bijgewerkt.</string>
+    <string name="settings_unreadable_title">AAPS instellingen kunnen niet gelezen worden</string>
+    <string name="settings_unreadable_key_explanation">Je instellingen op deze telefoon zijn versleuteld met een sleutel die Android bewaart voor AAPS, en die sleutel opent ze niet meer. Dit kan gebeuren nadat de key store van de telefoon is gereset.</string>
+    <string name="settings_unreadable_keystore_explanation">De hoofdopslag van de telefoon heeft niet geantwoord, dus AAPS kon zijn instellingen niet openen.</string>
+    <string name="settings_unreadable_not_running">AAPS is niet actief en heeft geen controle over de pomp. Een actief tijdelijk basaal, eindigt op het moment dat de pomp zijn eigen basaal geeft.</string>
+    <string name="settings_unreadable_what_to_do">Opnieuw proberen sluit AAPS en start opnieuw. Als dat niet helpt, herstart dan de telefoon. Kies voor \'pas beginnen\' als er niets anders helpt: de onleesbare instellingen worden dan bewaard, en AAPS begint met lege instellingen. Importeer dan je laatste export instellingen in de setup-wizard.</string>
+    <string name="settings_unreadable_start_fresh">Opnieuw beginnen</string>
+    <string name="settings_unreadable_confirm_title">Starten met lege instellingen?</string>
+    <string name="settings_unreadable_confirm_text">Het onleesbare instellingenbestand is hernoemd en bewaard. Alle instellingen starten vanaf hun standaardwaarden. Vervolgens stel je AAPS opnieuw in of importeer je instellingen die geëxporteerd worden.</string>
+    <string name="settings_unreadable_notification">AAPS is niet actief. Open AAPS om te zien wat je moet doen.</string>
 </resources>

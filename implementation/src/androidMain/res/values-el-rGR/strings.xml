@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Η εντολή εκτελείται τώρα</string>
+    <string name="smb_being_delivered">Χορηγείται τώρα ένα SMB. Δοκιμάστε ξανά όταν τελειώσει.</string>
+    <string name="basal_value_below_minimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Το βασικό προφίλ στην αντλία ενημερώθηκε. Η αντλία στρογγυλοποιεί τον βασικό ρυθμό στο δικό της βήμα: δίνει %1$s την ημέρα αντί για %2$s.</string>
+    <string name="basal_reported_far_from_profile">Η αντλία αναφέρει βασικό ρυθμό πολύ διαφορετικό από το προφίλ. Το AAPS κρατά τον βασικό ρυθμό του προφίλ. Ελέγξτε τους βασικούς ρυθμούς στην αντλία.</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Υδατάνθρακες</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Τελ. σύνδ.: πριν %1$d λεπ.</string>
+    <string name="short_status_last_bolus">Τελ. bolus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Προσ.: %1$s</string>
+    <string name="short_status_battery">Μπατ.: %1$d%%</string>
+    <string name="short_status_not_initialized">Η αντλία δεν έχει αρχικοποιηθεί</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">Βελτιστοποίηση μπαταρίας</string>
+    <string name="permission_battery_description">Η εφαρμογή πρέπει να εξαιρεθεί από τη βελτιστοποίηση μπαταρίας για να λειτουργεί αξιόπιστα στο παρασκήνιο</string>
+    <string name="permission_directory_title">Φάκελος AAPS</string>
+    <string name="permission_directory_description">Επιλέξτε έναν φάκελο για τις ρυθμίσεις της εφαρμογής και τα αρχεία καταγραφής</string>
+    <string name="permission_notifications_title">Ειδοποιήσεις</string>
+    <string name="permission_notifications_description">Απαιτείται για την εμφάνιση ειδοποιήσεων, συναγερμών και ενημερώσεων κατάστασης της αντλίας</string>
+    <string name="permission_schedule_exact_alarm_title">Ξυπνητήρια και υπενθυμίσεις</string>
+    <string name="permission_schedule_exact_alarm_description">Απαιτείται ώστε οι συναγερμοί να ανάβουν την οθόνη όταν το AAPS είναι στο παρασκήνιο και οι υπενθυμίσεις να χτυπούν στην ώρα τους</string>
+    <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Συναγερμοί AAPS</string>
+    <string name="alarm_channel_standard">Κανονικός συναγερμός</string>
+    <string name="alarm_channel_bolus_error">Σφάλμα bolus</string>
+    <string name="alarm_channel_error">Γενικό σφάλμα</string>
+    <string name="alarm_channel_urgent">Συναγερμός έκτακτης ανάγκης</string>
+    <string name="alarm_channel_eat_reminder">Ώρα για φαγητό</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (παρακάμπτει το «Μην ενοχλείτε»)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (τηρεί το «Μην ενοχλείτε»)</string>
+    <string name="alarm_channel_silent_urgent">Συναγερμός έκτακτης ανάγκης (σταδιακή αύξηση έντασης)</string>
+    <string name="alarm_channel_silent">Συναγερμός (σταδιακή αύξηση έντασης)</string>
+    <string name="alarm_channel_silent_description">Χρησιμοποιείται όταν είναι ενεργή η ρύθμιση «Σταδιακή αύξηση έντασης ειδοποίησης». Τον ήχο τον παίζει η οθόνη συναγερμού.</string>
+    <string name="ongoing_channel_name">Τρέχουσα κατάσταση</string>
+    <string name="eat_reminder_channel">Αντίστροφη μέτρηση για το φαγητό</string>
+    <string name="eat_reminder_channel_description">Δείχνει πόσος χρόνος μένει μέχρι την ώρα του φαγητού. Δεν παίζει ήχο. Ήχο παίζει ο συναγερμός στο τέλος.</string>
+    <string name="notifications_channel_name">Ειδοποιήσεις AAPS</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Οι ρυθμίσεις εξήχθησαν με επιτυχία στο cloud</string>
+    <string name="export_to_cloud_failed">Η εξαγωγή στο cloud απέτυχε</string>
+    <string name="csv_uploaded_to_cloud">Το CSV εγγραφών χρήστη μεταφορτώθηκε με επιτυχία στο cloud</string>
+    <string name="exported">Επιλογές εξήχθησαν</string>
+    <string name="exported_failed">Αποτυχία εξαγωγής προτιμήσεων!</string>
+    <string name="filenotfound">Μη εύρεση φακέλου</string>
+    <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">εξήχθη πριν από %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">εξαγωγή στις %1$s</string>
+    <string name="exported_less_than_hour_ago">η εξαγωγή έγινε από λιγότερο από μία ώρα πριν</string>
+    <string name="metadata_warning_different_flavour">Οι προτιμήσεις δημιουργήθηκαν με διαφορετική έκδοση του AAPS (%1$s) ενώ έχετε: %2$s.\n\nΟρισμένες ρυθμίσεις ενδέχεται να λείπουν ή να μην είναι έγκυρες - μετά την εισαγωγή παρακαλώ ελέγξτε και ενημερώστε τις προτιμήσεις σας.</string>
+    <string name="metadata_warning_different_device">Οι προτιμήσεις δημιουργήθηκαν σε διαφορετική συσκευή. Είναι εντάξει αν κάνετε εισαγωγή από παλαιότερο/διαφορετικό τηλέφωνο, αλλά βεβαιωθείτε ότι οι εισαγόμενες προτιμήσεις είναι σωστές!</string>
+    <string name="metadata_warning_old_export">Οι εισαγόμενες προτιμήσεις είναι ήδη %1$s ημέρών! Ίσως έχετε πιο πρόσφατες-ενημερωμένες προτιμήσεις ή επιλέξατε λάθος αρχείο; Θυμηθείτε να εξάγετε τακτικά τις προτιμήσεις σας!</string>
+    <string name="metadata_warning_date_format">Μη έγκυρη μορφή ημερομηνίας-ώρας!</string>
+    <string name="metadata_warning_different_version">Προτιμήσεις από διαφορετική δευτερεύουσα έκδοση της εφαρμογής. Είναι εντάξει αν εισάγετε μετά από αναβάθμιση, αλλά ελέγξτε μετά την εισαγωγή αν οι προτιμήσεις είναι ακόμα σωστές!</string>
+    <string name="metadata_urgent_different_version">Προτιμήσεις από διαφορετική σημαντική έκδοση της εφαρμογής. Οι μεγάλες εκδόσεις διαφέρουν σημαντικά και μπορεί να έχουν μη-συμβατές προτιμήσεις! Βεβαιωθείτε μετά την εισαγωγή ότι οι προτιμήσεις είναι ακόμα σωστές!</string>
+    <string name="prefdecrypt_settings_tampered">Το αρχείο ρυθμίσεων έχει αλλοιωθεί</string>
+    <string name="prefdecrypt_settings_secure">Το αρχείο ρυθμίσεων είναι ασφαλές</string>
+    <string name="prefdecrypt_settings_unencrypted">Χρήση μη ασφαλούς, μη κρυπτογραφημένης μορφής ρυθμίσεων</string>
+    <string name="prefdecrypt_wrong_json">Σφάλμα μορφής JSON, λείπει απαιτούμενο πεδίο (μορφή, περιεχόμενο, μεταδεδομένα ή ασφάλεια)</string>
+    <string name="prefdecrypt_wrong_password">Σφάλμα αποκρυπτογράφησης, ο κωδικός πρόσβασης δεν μπορεί να αποκρυπτογραφήσει το αρχείο</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Λείπει το άθροισμα ελέγχου αρχείου (hash), δεν μπορεί να επαληθεύτεί η αυθεντικότητα των ρυθμίσεων!</string>
+    <string name="prefdecrypt_issue_modified">Το αρχείο τροποποιήθηκε μετά την εξαγωγή!</string>
+    <string name="prefdecrypt_issue_parsing">Σφάλμα αποκρυπτογράφησης, η ανάλυση των προτιμήσεων απέτυχε!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Σφάλμα αποκρυπτογράφησης, ο παρεχόμενος κωδικός πρόσβασης δεν είναι έγκυρος ή το αρχείο ρυθμίσεων τροποποιήθηκε! Μπορεί να συμβεί ότι το εισαγόμενο αρχείο εξήχθη με διαφορετικό Κύριο κωδικό πρόσβασης.</string>
+    <string name="prefdecrypt_issue_wrong_format">Λείπει η διαμόρφωση κρυπτογράφησης, η μορφή των ρυθμίσεων δεν είναι έγκυρη!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Μη υποστηριζόμενο ή μη καθορισμένος αλγόριθμος κρυπτογράφησης!</string>
+    <string name="metadata_label_format">Μορφή αρχείου</string>
+    <string name="metadata_label_created_at">Δημιουργήθηκε στις</string>
+    <string name="metadata_label_aaps_version">Έκδοση AAPS</string>
+    <string name="metadata_label_aaps_flavour">Δημιουργία Παραλλαγής</string>
+    <string name="metadata_label_device_name">Εξαγωγή ονόματος συσκευής ασθενούς </string>
+    <string name="metadata_label_device_model">Εξαγωγή μοντέλου συσκευής</string>
+    <string name="metadata_label_encryption">Κρυπτογράφηση αρχείων</string>
+    <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
+    <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Σφάλμα πρόσβασης στο σύστημα αρχείων. Επιλέξτε σωστά τον φάκελο AAPS.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Αντίγραφο ασφαλείας στο Google Drive</string>
+    <string name="csv_upload_failed">Η μεταφόρτωση του CSV εγγραφών χρήστη στο cloud απέτυχε</string>
+    <string name="csv_upload_error">Σφάλμα κατά τη μεταφόρτωση του CSV στο cloud</string>
+    <string name="uploading_to_cloud">Μεταφόρτωση στο cloud...</string>
+    <string name="cloud_directory_path">Φάκελος cloud: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Δεν είναι δυνατή η ανανέωση του διακριτικού πρόσβασης του Google Drive</string>
+    <string name="google_drive_token_refresh_error">Δεν είναι δυνατή η ανανέωση του διακριτικού πρόσβασης του Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Ο έλεγχος σύνδεσης με το Google Drive απέτυχε</string>
+    <string name="google_drive_connect_error">Δεν είναι δυνατή η σύνδεση στο Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Δεν ήταν δυνατή η εμφάνιση των φακέλων του Google Drive</string>
+    <string name="google_drive_list_folders_error">Σφάλμα στην εμφάνιση φακέλων: %1$s</string>
+    <string name="google_drive_upload_no_id">Η μεταφόρτωση πέτυχε, αλλά δεν επιστράφηκε id</string>
+    <string name="google_drive_upload_verify_failed">Ο έλεγχος της μεταφόρτωσης απέτυχε</string>
+    <string name="google_drive_upload_failed">Η μεταφόρτωση απέτυχε: %1$s</string>
+    <string name="google_drive_upload_error">Σφάλμα μεταφόρτωσης αρχείου: %1$s</string>
+    <string name="google_drive_folder_access_error">Δεν είναι δυνατή η δημιουργία ή η πρόσβαση στον φάκελο προορισμού: %1$s</string>
+    <string name="google_drive_list_settings_failed">Δεν ήταν δυνατή η εμφάνιση των αρχείων ρυθμίσεων</string>
+    <string name="google_drive_list_settings_error">Σφάλμα στην εμφάνιση αρχείων ρυθμίσεων: %1$s</string>
+    <string name="google_drive_download_failed">Η λήψη του αρχείου απέτυχε</string>
+    <string name="google_drive_download_error">Σφάλμα λήψης αρχείου: %1$s</string>
+    <string name="google_drive_authorized">Το Google Drive εξουσιοδοτήθηκε</string>
+    <string name="google_drive_reauth_required">Καθαρίστε τις ρυθμίσεις και εξουσιοδοτήστε ξανά το Google Drive</string>
+</resources>

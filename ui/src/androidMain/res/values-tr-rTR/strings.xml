@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">Çalışan geçici bazal yok</string>
+    <string name="start_activity_tt">Aktivite GH başlat</string>
+    <string name="start_eating_soon_tt">Yakında Yenecek GH başlat</string>
+    <string name="start_hypo_tt">Hipo GH başlat</string>
+    <string name="time_offset">Saat farkı</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dg%2$dsa</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dsa</string>
+    <!--    Widget-->
+    <string name="configure">Şeffaflığı yapılandır</string>
+    <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">AAPS KŞ grafiği</string>
+    <string name="widget_glucose_circle_description">AAPS glikoz dairesi</string>
+    <string name="widget_compact_bg_description">AAPS KŞ + AİNS + AKRB (kompakt)</string>
+    <string name="widget_small_description">AAPS Küçük</string>
+    <!--     Activities-->
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Ambulatuvar Glikoz Profili</string>
+    <string name="agp_glycemic_overview">Glisemik genel bakış</string>
+    <string name="agp_today">Bugün</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$d sa</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$d gün</string>
+    <string name="agp_no_data">Bu aralık için glikoz verisi yok.</string>
+    <string name="agp_load_failed">AGP istatistikleri yüklenemedi. Lütfen tekrar deneyin.</string>
+    <string name="agp_chart_description">Glikoz yüzdelik grafiği</string>
+    <string name="agp_tir_chart">Hedef aralıktaki süre grafiği</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Ortalama</string>
+    <string name="agp_median">Medyan</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Gün</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="cgp_title">Glikoz Pentagonu (CGP) — 14 gün</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Ortalama</string>
+    <string name="cgp_reference">Sağlıklı kişi</string>
+    <string name="cgp_patient">Hasta</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Çok düşük risk</string>
+    <string name="cgp_pgr_low">Düşük risk</string>
+    <string name="cgp_pgr_moderate">Orta risk</string>
+    <string name="cgp_pgr_high">Yüksek risk</string>
+    <string name="cgp_pgr_extremely_high">Aşırı yüksek risk</string>
+    <string name="do_you_want_recalculate_tdd_stats">GTD istatistiklerini tekrar hesaplamak istiyor musunuz?</string>
+    <string name="calculation_in_progress">Hesaplanıyor</string>
+    <string name="age">Yaş</string>
+    <string name="weight_label">Ağırlık</string>
+    <string name="glucose_type">Glikoz türü</string>
+    <string name="bg_other">Diğer</string>
+    <string name="bg_meter">GlkMetre</string>
+    <string name="bg_sensor">Sensör</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <string name="edit_site">Düzenle</string>
+    <string name="record_site_location">Bölge konumu: %1$s</string>
+    <string name="record_site_arrow">Bölge oku: %1$s</string>
+    <string name="record_site_note">Not: %1$s</string>
+    <string name="delete_site_note">Not silindi</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
+    <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
+    <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
+    <string name="fill_prime_amount">Doldurma miktarı</string>
+    <string name="fill_pump_units_note">Doldurma miktarı pompa birimi cinsindendir</string>
+    <string name="fill_insulin_change">İnsülini değiştir: %1$s (profil değişimi uygulanacak)</string>
+    <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Aktivite</string>
+    <string name="scene_cat_health">Sağlık</string>
+    <string name="scene_cat_food">Yiyecek</string>
+    <string name="scene_cat_sleep">Uyku</string>
+    <string name="scene_cat_dailylife">Günlük yaşam</string>
+    <string name="scene_cat_wellness">Sağlıklı yaşam</string>
+    <string name="scene_cat_general">Genel</string>
+    <string name="aaps_tt_high_icon_label">Geçici Hedef</string>
+    <string name="aaps_tt_activity_icon_label">GH Aktivite</string>
+    <string name="aaps_tt_eating_icon_label">GH Yakında Yenecek</string>
+    <string name="aaps_tt_hypo_icon_label">GH Hipo</string>
+    <string name="aaps_tt_manual_icon_label">GH Manuel</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Döngü</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">Karbonhidrat</string>
+    <string name="aaps_tbr_icon_label">Geçici Bazal</string>
+    <string name="aaps_note_icon_label">Not</string>
+    <string name="aaps_automation_icon_label">Otomasyon</string>
+    <string name="aaps_calibration_icon_label">Kalibrasyon</string>
+    <string name="exercise_icon_label">Koşu</string>
+    <string name="fitness_icon_label">Fitness</string>
+    <string name="swim_icon_label">Yüzme</string>
+    <string name="hiking_icon_label">Doğa yürüyüşü</string>
+    <string name="bike_icon_label">Bisiklet</string>
+    <string name="skateboard_icon_label">Kaykay</string>
+    <string name="tennis_icon_label">Tenis</string>
+    <string name="soccer_icon_label">Futbol</string>
+    <string name="baseball_icon_label">Ragbi</string>
+    <string name="basketball_icon_label">Hentbol</string>
+    <string name="volleyball_icon_label">Jimnastik</string>
+    <string name="golf_icon_label">Golf</string>
+    <string name="scubadiving_icon_label">Tüplü Dalış</string>
+    <string name="rowing_icon_label">Kürek</string>
+    <string name="surfing_icon_label">Sörf</string>
+    <string name="hospital_icon_label">Hastane</string>
+    <string name="medication_icon_label">İlaç</string>
+    <string name="monitor_heart_icon_label">Monitör</string>
+    <string name="thermostat_icon_label">Termostat</string>
+    <string name="blood_type_icon_label">Kan</string>
+    <string name="health_safety_icon_label">Sağlık</string>
+    <string name="healing_icon_label">İyileşme</string>
+    <string name="meal_icon_label">Restoran</string>
+    <string name="cafe_icon_label">Kahve</string>
+    <string name="lunch_icon_label">Öğle yemeği</string>
+    <string name="bakery_icon_label">Pastane</string>
+    <string name="sleep_icon_label">Uyku</string>
+    <string name="night_icon_label">Gece</string>
+    <string name="nights_stay_icon_label">Gece konaklama</string>
+    <string name="hotel_icon_label">Otel</string>
+    <string name="seat_flat_icon_label">Dinlenme</string>
+    <string name="work_icon_label">İş</string>
+    <string name="school_icon_label">Okul</string>
+    <string name="home_icon_label">Ev</string>
+    <string name="car_icon_label">Araba</string>
+    <string name="flight_icon_label">Uçuş</string>
+    <string name="shopping_icon_label">Alışveriş</string>
+    <string name="relax_icon_label">Meditasyon</string>
+    <string name="spa_icon_label">Spa</string>
+    <string name="heart_icon_label">Kalp</string>
+    <string name="psychology_icon_label">Zihin</string>
+    <string name="star_icon_label">Yıldız</string>
+    <string name="speed_icon_label">Hız</string>
+    <string name="alarm_icon_label">Alarm</string>
+    <string name="event_icon_label">Etkinlik</string>
+    <string name="flag_icon_label">Bayrak</string>
+    <string name="bookmark_icon_label">Yer imi</string>
+    <string name="label_icon_label">Etiket</string>
+    <!-- Insulin Management -->
+    <string name="missing_insulin_name">İnsülin adı eksik</string>
+    <string name="insulin_name_exists">%1$s insülin adı zaten var, yeni bir ad seçin</string>
+    <string name="insulin_external_update_title">İnsülin yapılandırması değişti</string>
+    <string name="insulin_external_update_message">Eşleştirilmiş bir istemci insülin yapılandırmasını değiştirdi. Onun değişikliklerini yüklemek ve kaydedilmemiş düzenlemelerinizi silmek için Tamam\'a, düzenlemeye devam etmek için Vazgeç\'e dokunun (bir sonraki kaydınız onun değişikliklerinin üzerine yazar).</string>
+    <string name="insulin_edit_target_gone">Bu insülin başka bir yerde silindi, bu yüzden düzenlemeniz kaydedilemedi. Liste yeniden yüklendi.</string>
+    <string name="insulin_activation_applied">İnsülin etkinleştirmesi uygulandı</string>
+    <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Uygulanıyor…</string>
+    <string name="clientcontrol_pending_working_text">Ana birimin onayı bekleniyor…</string>
+    <string name="clientcontrol_pending_rejected_title">Uygulanmadı</string>
+    <string name="clientcontrol_pending_failed_format">%1$s yapılamadı.\n%2$s</string>
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Kısmen uygulandı</string>
+    <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s uygulandı, ancak bazı işlemler uygulanamadı.\nEtkin durumu kontrol edin.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Onaylanamadı</string>
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s gönderildi, ancak onay gelmedi.\n%2$s\nAna birim uyguladığında burada görünecektir.</string>
+    <string name="clientcontrol_pending_stop_waiting">Beklemeyi bırak</string>
+    <string name="a11y_add_new_insulin">Yeni insülin ekle</string>
+    <string name="a11y_delete_current_insulin">Mevcut insülini sil</string>
+    <string name="load_peak_from">Tepe değerini şuradan yükle</string>
+    <string name="cannot_delete_last_insulin">Son insülin silinemez</string>
+    <string name="cannot_delete_active_insulin">Aktif insülin silinemez</string>
+    <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
+    <string name="percentage_label">Yüzde</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Pompa bağlantısını kes</string>
+    <string name="resume">Devam et</string>
+    <string name="reconnect">Pompayı tekrar bağla</string>
+    <string name="duration15m">15 dk</string>
+    <string name="duration30m">30 dk</string>
+    <string name="duration1h">1 saat</string>
+    <string name="duration2h">2 saat</string>
+    <string name="duration3h">3 saat</string>
+    <string name="duration10h">10 saat</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">%1$d g eksik</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (İDF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
+    <string name="wizard_carbs_type_bread_desc">Tüm karbonhidrat hemen, yayma karbonhidrat yok</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Karbonhidrat %%%1$d azaltıldı, %%%2$d yKarb eklendi, %3$d dk gecikmeli, %4$d sa boyunca</string>
+    <string name="wizard_include_info">Hesaplamaya dahil etmek/hariç tutmak için dokunun:\n• KŞ — kan şekeri (başlangıçta AÇIK)\n• GH — geçici hedef (başlangıçta AÇIK)\n• Eğilim — KŞ eğilimi (son durum hatırlanır)\n• AİNS — aktif insülin (başlangıçta AÇIK)\n• AKRB — aktif karbonhidrat (son durum hatırlanır)</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Kayıt mevcut değil</string>
+    <string name="treatments_iob_label_string">AİNS:</string>
+    <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
+    <string name="show_invalidated">Geçersiz olanları göster</string>
+    <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="careportal_remove_started_events">AAPS tarafından başlatılmış girdileri kaldırın</string>
+    <string name="user_entry">Kullanıcı girişi</string>
+    <string name="clone_label">Klon</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glikoz grafiği. Son değerler %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Kontrolleri göster</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Bildirimler: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">geçici hedef yok, profil hedefi</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">döngü tarafından ayarlandı</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s, saat %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">eski ölçüm</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Glikoz grafiği. Son değerler %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Tahminler. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s, %2$s değerine yükseliyor.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s, %2$s değerine düşüyor.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s, %2$s değerinde sabit kalıyor.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">AİNS tahmini</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">AKRB tahmini</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Emilen AKRB tahmini</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">UAM (Bildirilmemiş öğün) tahmini</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Sıfır geçici bazal tahmini</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">işlem gerekli</string>
+    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d mevcut</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d / %2$d tamamlandı</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Çalıştır</string>
+    <string name="add_new_profile">Yeni profil ekle</string>
+    <string name="edit_label">Düzenle</string>
+    <string name="activate_label">Aktive et</string>
+    <string name="activate_profile">Profil etkinleştir</string>
+    <string name="remove_label">Kaldır</string>
+    <string name="active_profile_indicator">AKTİF</string>
+    <string name="confirm_remove_profile">\"%1$s\" profili kaldırılsın mı?</string>
+    <string name="confirm_clone_profile">\"%1$s\" profili kopyalansın mı?</string>
+    <string name="profile_no_longer_exists">Bu arada profil listesi değişti — lütfen tekrar deneyin</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profil tipi</string>
+    <string name="profile_parameters">Profil Parametreleri</string>
+    <string name="active_profile">Aktif Profil</string>
+    <string name="available_profiles">Mevcut Profiller</string>
+    <string name="profile_switches">Profil Geçişleri</string>
+    <string name="basal_pct_from_tdd_label">Bazal yüzdesi</string>
+    <string name="selected_profile">Seçili:</string>
+    <string name="comparation">Karşılaştırma</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
+    <string name="motol_default_profile">Varsayılan profil</string>
+    <string name="current_profile">Mevcut profil</string>
+    <string name="available_profile">Kullanılabilir profil</string>
+    <string name="format_with_tdd">Yaş: %1$d GTD: %2$.0f Ü</string>
+    <string name="format_with_tdd_and_pct">Yaş: %1$d GTD: %2$.0f Ü %3$d%%</string>
+    <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Varsayılan profil</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Düğme Metni</string>
+    <string name="quick_wizard_mode_wizard">Sihirbaz</string>
+    <string name="quick_wizard_mode_insulin">İnsülin</string>
+    <string name="quick_wizard_mode_carbs">Karbonhidrat</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
+    <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
+    <!--    History browser-->
+    <string name="history_now">Şimdi</string>
+    <string name="a11y_history_previous_window">Önceki pencere</string>
+    <string name="a11y_history_next_window">Sonraki pencere</string>
+    <string name="additional_ecarbs">yKarb ekle</string>
+    <string name="calculator_options">Hesaplayıcı Seçenekleri</string>
+    <string name="use_bg">KŞ Kullan</string>
+    <string name="use_cob">AKRB Kullan</string>
+    <string name="use_iob">AİNS Kullan</string>
+    <string name="use_trend">Eğilim Kullan</string>
+    <string name="trend_all">Tümü</string>
+    <string name="trend_positive_only">Sadece pozitif</string>
+    <string name="trend_negative_only">Sadece negatif</string>
+    <string name="use_temp_target">Geçici Hedef Kullan</string>
+    <string name="use_alarm">Alarm Kullan</string>
+    <string name="device_selection">Cihaz Seçimi</string>
+    <string name="show_on_phone">Telefonda Göster</string>
+    <string name="show_on_watch">Saatte Göster</string>
+    <string name="ecarbs_additional">Ek Karbonhidrat</string>
+    <string name="valid_from_to">Geçerli Zaman Aralığı</string>
+    <string name="carb_time">Karb. zamanı</string>
+    <string name="save_changes_question">Bu girdideki değişiklikler kaydedilsin mi?</string>
+    <string name="wizard_no_insulin_required">İnsülin gerekmiyor</string>
+    <string name="carbs_constraint_violation">Karbonhidrat kısıtlamalarla sınırlandı</string>
+    <string name="insulin_constraint_violation">İnsülin kısıtlamalarla sınırlandı</string>
+    <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
+    <string name="recalculate">Tekrar Hesapla</string>
+    <!--    Widget-->
+    <string name="use_black_color">Siyah renk kullanın</string>
+    <string name="widget_configuration">Widget yapılandırması</string>
+    <string name="until_changed">Değiştirilene kadar</string>
+    <!--    Permissions-->
+    <string name="permission_sheet_title">Gerekli İzinler</string>
+    <string name="permission_sheet_subtitle">Uygulamanın doğru çalışması için bazı izinler gereklidir</string>
+    <string name="permission_grant">İzin ver</string>
+    <string name="permission_change">Değiştir</string>
+    <string name="permission_denied_go_to_settings">İzin kalıcı olarak reddedildi. Lütfen uygulama ayarlarından etkinleştirin.</string>
+    <string name="permission_open_settings">Ayarlar</string>
+    <string name="permission_directory_picker_error">Dizin seçici açılamıyor. Bu genellikle bir Android veya Family Link sorunudur.</string>
+    <string name="permission_nav_label">İzinler</string>
+    <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Döngü</string>
+    <string name="cycle_offset">Döngü kayması</string>
+    <string name="raw_tdd">Ham GTD</string>
+    <string name="cleaned_tdd">Temizlenmiş GTD</string>
+    <string name="cleaned_tdd_explanation">GTD eksi karbonhidrat için verilen insülin.</string>
+    <string name="cycle_lines_legend">Ayrı döngüler</string>
+    <string name="cycles_found">%1$d döngü (%2$d gün)</string>
+    <string name="cycle_day1_date">1. gün = %1$s</string>
+    <string name="calculation_in_progress_percent">Hesaplanıyor… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Yeterli veri yok (2 döngü için en az 56 gün gerekli)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>İkisi de</item>
+        <item>Sadece pozitif</item>
+        <item>Sadece negatif</item>
+    </string-array>
+    <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Seçili eylemler</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">%1$s ekle</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">%1$s kaldır</string>
+    <string name="quick_launch_no_dynamic_items">Kullanılabilir öğe yok</string>
+    <string name="quick_launch_category_treatment">Tedavi</string>
+    <string name="quick_launch_category_care">Careportal</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Geçici Hedef Ön Ayarları</string>
+    <string name="quick_launch_category_quick_wizard">Hızlı Asistan</string>
+    <string name="quick_launch_category_automation">Otomasyon</string>
+    <string name="quick_launch_all_selected">Tüm öğeler seçildi</string>
+    <string name="quick_launch_no_quick_wizard">Burada kullanmak için Hızlı Asistan girdileri ekleyin</string>
+    <string name="quick_launch_no_automation">Burada kullanmak için kullanıcı otomasyon eylemleri oluşturun</string>
+    <string name="quick_launch_no_tt_presets">Burada kullanmak için Geçici Hedef ön ayarları ekleyin</string>
+    <string name="quick_launch_no_profiles">Burada kullanmak için Yerel Profil içinde profiller oluşturun</string>
+    <string name="quick_launch_edit_profile_preset">Profil ön ayarını düzenle</string>
+    <string name="quick_launch_profile_permanent">Kalıcı</string>
+    <string name="select_arrow">Ok Seçimi</string>
+    <string name="loop_accept_nav_label">Döngü</string>
+    <string name="loop_accept_set_basal_question">Yeni geçici bazalı kabul et:</string>
+    <string name="loop_accept_perform">Uygula</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Devre dışı</string>
+    <string name="widget_rm_suspended">Askıya Alındı</string>
+    <string name="widget_rm_resume">Devam et</string>
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Sensör hâlâ ısınma süresinde. Kalibrasyon %1$s itibarıyla yapılabilir.</string>
+    <string name="cal_precheck_no_session">Etkin bir sensör oturumu yok.</string>
+    <string name="cal_precheck_no_pair">Son 10 dakikada CGM ölçümü yok. Sensör bağlantısını kontrol edin.</string>
+    <string name="cal_precheck_delta_too_high">Glikoz çok hızlı değişiyor (5 dakikada Δ %1$s %3$s, sınır %2$s). Değerin sabitlenmesini bekleyin.</string>
+    <string name="cal_precheck_mark_sensor_change">Sensör değişimini işaretle</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
+</resources>
