@@ -9,22 +9,67 @@
     <string name="unsupported_ns_version">Versionen av Nightscout stöds inte</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_comm_switch_summary">Låter parkopplade klienter skicka signerade kommandon via Nightscout. Stäng av för att stoppa kommunikationen utan att ta bort klienterna.</string>
+    <string name="authorized_clients_empty_subtitle">Parkoppla en klientenhet så att den kan skicka signerade kommandon till denna huvudenhet.</string>
+    <string name="authorized_clients_pin_dialog_title">Parkoppla klient</string>
+    <string name="authorized_clients_pin_publishing">Skickar parkopplingserbjudande till Nightscout…</string>
+    <string name="authorized_clients_pin_published">Parkopplingserbjudandet är klart i Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Kunde inte ladda upp parkopplingserbjudandet till Nightscout.</string>
+    <string name="authorized_clients_method_qr_pair">QR-kod: Nightscout och parkoppling</string>
+    <string name="authorized_clients_method_qr_pair_summary">Skanna en gång med den nya telefonen. Den får en egen Nightscout-token och parkopplas.</string>
+    <string name="authorized_clients_method_qr_ns_summary">Telefonen får en egen Nightscout-token och kan läsa datan. Den är inte parkopplad och kan inte skicka kommandon.</string>
+    <string name="authorized_clients_qr_working">Skapar Nightscout-token…</string>
+    <string name="authorized_clients_qr_pair_instructions">Skanna den här koden på den nya telefonen, i installationsguiden eller under \"Parkoppla med huvudenheten\". Detta konfigurerar Nightscout och parkopplar telefonen.</string>
+    <string name="authorized_clients_qr_ns_instructions">Skanna den här koden på den nya telefonen, i installationsguiden eller under \"Parkoppla med huvudenheten\". Detta konfigurerar Nightscout. Telefonen parkopplas inte.</string>
+    <string name="authorized_clients_qr_keep_private">Vem som helst som ser den här koden kan läsa din Nightscout-data. Visa den bara för den nya telefonen.</string>
+    <string name="authorized_clients_token_problem_not_connected">Den här telefonen är inte ansluten till Nightscout och kan därför inte skapa en token för klienten.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout listade inte den nya token, så den togs bort igen. Inget finns kvar. Försök igen.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout listade inte den nya token och den kunde inte tas bort igen. Radera token %1$s i Nightscout och försök sedan igen.</string>
+    <string name="authorized_clients_token_unpaired">Egen Nightscout-token, inte parkopplad</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Använder Nightscout-token %1$s, inte sin egen: dess kommandon nekas. Ta bort den och lägg till den igen.</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_title">Parkoppla med huvudenheten</string>
+    <string name="pair_with_master_pin_entry_title">Ange PIN-kod för parkoppling</string>
+    <string name="pair_with_master_pin_entry_submit">Parkoppla</string>
+    <string name="pair_with_master_fetching">Söker efter parkoppling…</string>
+    <string name="pair_with_master_confirm_title">Parkoppla med denna huvudenhet?</string>
+    <string name="pair_with_master_confirm_warning">Efter parkoppling kan den här enheten skicka signerade kommandon till denna huvudenhet.</string>
+    <string name="pair_with_master_confirm_pair">Parkoppla</string>
+    <string name="pair_with_master_error_title">Kan inte parkoppla</string>
+    <string name="pair_with_master_error_wrong_pin">Ingen parkoppling hittades för denna PIN-kod. Kontrollera PIN-koden på huvudenheten och försök igen.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Flera parkopplingar matchar denna PIN-kod. Skapa en ny på huvudenheten och försök igen.</string>
+    <string name="pair_with_master_error_expired">Denna parkoppling har löpt ut. Skapa en ny PIN-kod på huvudenheten.</string>
+    <string name="pair_with_master_already_paired_title">Redan parkopplad</string>
+    <string name="pair_with_master_already_paired_master">Parkopplad med huvudenheten %1$s. Ta bort parkopplingen först för att ange en ny PIN-kod.</string>
+    <string name="pair_with_master_unpair">Ta bort parkoppling</string>
+    <string name="pair_with_master_sending">Skickar parkopplingsmeddelande…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_camera_refused">Kameran krävs för att läsa QR-koden. Tillåt den, eller parkoppla med PIN-koden.</string>
+    <string name="client_setup_scan_camera_denied">Kameraåtkomst är avstängd för AAPS. Slå på den i systeminställningarna, eller parkoppla med PIN-koden.</string>
+    <string name="client_setup_scan_camera_blocked">Kameraåtkomst är inte tillåten på den här enheten. Parkoppla med PIN-koden i stället.</string>
+    <string name="client_setup_scan_camera_unavailable">Kameran kan inte användas på den här enheten. Parkoppla med PIN-koden i stället.</string>
+    <string name="client_setup_scan_already_paired">Den här telefonen är redan parkopplad. Ta bort parkopplingen först för att använda en kod som parkopplar.</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Den parkopplar också denna telefon med huvudenheten %1$s.</string>
+    <string name="client_setup_confirm_replaces">Detta ersätter Nightscout-adressen och token på den här telefonen.</string>
+    <string name="client_setup_done_paired">Nightscout är konfigurerad och telefonen är parkopplad. Huvudenheten visar telefonen som aktiv när den har anslutit.</string>
+    <string name="client_setup_done_ns_only">Nightscout är konfigurerad. För att styra huvudenheten från den här telefonen måste du även parkoppla den.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">Huvudenheten i AAPS känner inte längre igen den här enheten. Öppna Hantera → Parkoppla med huvudenheten för att parkoppla igen.</string>
     <string name="ns_client_url">URL:</string>
-    <string name="deliver_now">Synkronisera nu</string>
+    <string name="deliver_now">Skicka nu</string>
     <string name="queue">Kö:</string>
     <string name="clear_log">Töm logg</string>
     <string name="full_sync">Full synkronisering</string>
-    <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
+    <string name="full_sync_comment">Full synkronisering? Det kan ta många timmar och du kommer inte att se nya data i NS förrän den är klar.</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_alarm_options">Larminställningar</string>
     <!-- Tidepool -->
-    <string name="title_tidepool_dev_servers">Använd Integration (test) servrar</string>
+    <string name="summary_tidepool_dev_servers">Om detta är på skickas uppladdningar till testservrar i stället för de vanliga</string>
+    <string name="title_tidepool_dev_servers">Använd integrationsservrar (test)</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Laddar upp data till Tidepool</string>
     <string name="upload_now">Ladda upp nu</string>
+    <string name="tidepool_purge_data_confirm">Ta bort ALL data som AAPS har laddat upp till Tidepool? Denna åtgärd går inte att ångra. Använd detta för att ta bort data som skadats av en äldre version, och kör därefter \"Full synkronisering\" för att ladda upp på nytt.</string>
     <string name="not_connected">Inte ansluten</string>
     <string name="read_only">Skrivskyddad</string>
     <string name="working">Arbetar</string>
@@ -38,25 +83,29 @@
     <string name="xdrip_local_broadcasts_title">Aktivera sändningar till xDrip+.</string>
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin-klockan bad om att ansluta eller koppla från pumpen. Denna telefon är en klient, så ingenting har ändrats. Gör det i AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Följ och kontrollera AAPS med din Wear OS-klocka.</string>
     <string name="no_watch_connected">(Ingen klocka ansluten)</string>
     <string name="pump_status">Pumpstatus</string>
     <string name="loop_status">Loop-status</string>
+    <string name="scene_not_available">Scen %1$s är inte längre tillgänglig, uppdatera din bricka</string>
+    <string name="wear_control_disabled">Wear-styrning är avstängd i Wear-inställningarna på telefonen.</string>
     <string name="wear_action_tempt_unit_error">Olika enheter på klocka och telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Ogiltigt minimum BG!</string>
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
-    <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
+    <string name="wear_wizard_settings_summary">Beräkningar som ingår i kalkylatorns resultat:</string>
     <string name="wear_general_settings">Generella inställningar</string>
     <string name="wear_custom_watchface_settings">Anpassade inställningar för urtavla</string>
     <string name="wear_custom_watchface">Anpassad urtavla: %1$s</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Klockan visar urtavlan Komplikationer. Välj Anpassad urtavla för att se %1$s på klockan.</string>
     <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s ersätter %2$s på klockan. Komplikationer som du har ändrat i urtavlans redigerare återställs till standard.</string>
     <string name="wear_load_watchface">Ladda urtavla</string>
     <string name="wear_infos_watchface">Info urtavla</string>
     <string name="wear_export_watchface">Exportera mall</string>
     <string name="wear_new_custom_watchface_exported">Anpassad mall exporterad</string>
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
-    <string name="resend_all_data">Uppdatera klockans data</string>
+    <string name="resend_all_data">Skicka all data igen</string>
     <string name="open_settings_on_wear">Öppna inställningar på klockan</string>
     <string name="wear_import_custom_watchface_title">Välj anpassad urtavla</string>
     <string name="cwf_infos_pref_locked">Inställningar som är låsta av urtavlan</string>
@@ -75,7 +124,7 @@
     <string name="target">målvärde</string>
     <string name="rate_duration">Dos: %1$.2fU/h (%2$.2f%%) \nVaraktighet %3$d min</string>
     <string name="no_profile">Ingen profil inläst</string>
-    <string name="aps_only">Använd endast i APS-läge!</string>
+    <string name="aps_only">Gäller endast i APS-läge!</string>
     <string name="last_aps_result_na">Senaste resultat ej tillgängligt!</string>
     <string name="loop_status_closed">CLOSED LOOP</string>
     <string name="loop_status_open">OPEN LOOP</string>
@@ -86,7 +135,31 @@
     <string name="today">Idag</string>
     <string name="weighted">viktad</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_wrong_duration">Fel duration</string>
+    <string name="smscommunicator_otp_reset_prompt">Är du säker på att du vill återställa autentiseringsnyckeln? Alla konfigurerade autentiseringsappar blir då ogiltiga och du måste konfigurera dem igen.</string>
+    <string name="smscommunicator_otp_install_info">Installera en autentiseringsapp som stöder RFC 6238 TOTP-tokens på varje följartelefon. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_bolus_reply_with_code">För att ge bolus %1$.2f U, svara med kod %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">För att ge måltidsbolus %1$.2f U, svara med kod %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">För att ställa in tillfälligt målvärde %1$s, svara med kod %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">För att avbryta tillfälligt målvärde, svara med kod %1$s</string>
+    <string name="smscommunicator_stopped_sms">Fjärrkommandon via SMS stoppade. För att aktivera dem igen, använd AAPS på huvudtelefonen.</string>
+    <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U har levererats</string>
+    <string name="smscommunicator_meal_bolus_delivered">Måltidsbolus %1$.2f U har levererats</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Tillfälligt målvärde %1$s i %2$d minuter</string>
+    <string name="smscommunicator_tt_set">Tillfälligt målvärde %1$s i %2$d minuter har ställts in</string>
+    <string name="smscommunicator_tt_canceled">Tillfälligt målvärde avbrutet</string>
+    <string name="smscommunicator_basal_reply_with_code">För att starta basal %1$.2f U/h i %2$d min, svara med kod %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">För att starta förlängd bolus %1$.2f U i %2$d min, svara med kod %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">För att starta tillfällig basal %1$d%% i %2$d min, svara med kod %3$s</string>
+    <string name="smscommunicator_tempbasal_set">Tillfällig basal %1$.2f U/h i %2$d min har startats</string>
+    <string name="smscommunicator_extended_set">Förlängd bolus %1$.2f U i %2$d min har startats</string>
+    <string name="smscommunicator_tempbasal_set_percent">Tillfällig basal %1$d%% i %2$d min har startats</string>
+    <string name="smscommunicator_tempbasal_failed">Fel vid start av tillfällig basal</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">För att stoppa tillfällig basal, svara med kod %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Tillfällig basal avbruten</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Misslyckades med att avbryta tillfällig basal</string>
+    <string name="smscommunicator_wrong_duration">Fel varaktighet</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">För att växla Loop-läge till Closed Loop svara med kod %1$s</string>
-    <string name="sms_wrong_tbr_duration">Durationen måste vara större än 0 och en multipel av %1$d minuter.</string>
+    <string name="sms_wrong_tbr_duration">Varaktigheten för tillfällig basal måste vara större än 0 och en multipel av %1$d minuter.</string>
+    <string name="sms_tbr_percent_only">Den här pumpen tar bara emot tillfällig basal i procent, inte i U/h.</string>
+    <string name="sms_tbr_absolute_only">Den här pumpen tar bara emot tillfällig basal i U/h, inte i procent.</string>
 </resources>
