@@ -79,6 +79,7 @@
     <string name="pair_with_master_error_ambiguous_pin">נמצאו כמה צימודים התואמים לקוד PIN זה. בקשו מהמכשיר הראשי ליצור קוד חדש ונסו שוב.</string>
     <string name="pair_with_master_error_expired">תוקף הצימוד פג. צרו קוד PIN חדש במכשיר הראשי.</string>
     <string name="pair_with_master_error_network">לא ניתן להגיע ל־Nightscout. בדקו את החיבור ונסו שוב.</string>
+    <string name="pair_with_master_error_secret_store">לא ניתן היה לשמור את הסוד לצימוד, ולכן הצימוד בוטל. דבר לא השתנה. נא לנסות שוב, ואם התקלה נמשכת, להפעיל מחדש את האפליקציה.</string>
     <string name="pair_with_master_retry">ניסיון חוזר</string>
     <string name="pair_with_master_already_paired_title">כבר מצומד</string>
     <string name="pair_with_master_already_paired_master">מצומד כעת למכשיר הראשי %1$s. יש לבטל תחילה את הצימוד כדי להזין קוד PIN חדש.</string>
@@ -122,6 +123,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">אם האפשרות מופעלת, נתונים יישלחו לשרתי ניסוי במקום לשרתים הרגילים</string>
     <string name="title_tidepool_dev_servers">שימוש בשרתי אינטגרציה (בדיקה)</string>
+    <string name="title_tidepool_use_ns_connection">שימוש בהגדרות החיבור של Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">כבו כדי להגדיר הגדרות חיבור נפרדות עבור Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">מעלה נתונים ל-Tidepool</string>
     <string name="upload_now">העלאה עכשיו</string>
