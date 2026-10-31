@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="equil_name">Eşitlik</string>
+    <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Temel Bazal</string>
     <string name="equil_dressing">Rezervuarı Değiştir</string>
-    <string name="equil_dressing_onkey_msg">Pistonu otomatik olarak rezervuar tabanına hareket ettirin. Dibe ulaştığında otomatik olarak duracaktır. Gerekirse kesintiye uğratmak için \'Durdur\'a tıklayın.</string>
+    <string name="equil_dressing_onkey_msg">Piston otomatik olarak rezervuarın dibine hareket ettiriliyor. Dibe ulaşınca kendiliğinden durur. Gerekirse durdurmak için \'Durdur\'a dokunun.</string>
     <string name="equil_hint_dressing">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunun aşağıya doğru çekilmesine neden olacaktır!</string>
     <string name="equil_insulin_reservoir">İnsülin rezervuarı</string>
     <string name="equil_mode">Çalışma modu</string>
@@ -13,7 +13,7 @@
     <string name="equil_mode_stopped">Durdu</string>
     <string name="equil_mode_suspended">Askıya Alındı</string>
     <string name="equil_serialnumber">Cihaz numarası</string>
-    <string name="equil_stop">Dur</string>
+    <string name="equil_stop">Durdur</string>
     <string name="equil_success">Başarılı</string>
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_assemble">Pompayı birleştirin</string>
@@ -26,7 +26,7 @@
     <string name="equil_tone">Uyarı tonu</string>
     <string name="equil_bolus_speed">Bolus hızı</string>
     <string name="equil_bolus_speed_summary">Hızlı bolus iletimi, daha fazla tıkanıklık alarmına yol açabilir.</string>
-    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 Ü/dk (standart)</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 Ü/dk (standart)</string>
     <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 Ü/dk</string>
     <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 Ü/dk</string>
     <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 Ü/dk</string>
@@ -44,8 +44,8 @@
     <string name="equil_new_infusion_set_no">Hayır, yalnızca rezervuar veya pil</string>
     <string name="equil_same_infusion_set_hint">Kanül hazırlanmayacak ve kanül değişikliği kaydedilmeyecektir.</string>
     <string name="equil_unpair_alert">%1$s üzerindeki kontrolü bırakmak istediğinizden emin misiniz?</string>
-    <string name="equil_record_basal">Bazal oranı %1$s Ü/s</string>
-    <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/s</string>
+    <string name="equil_record_basal">Bazal oranı %1$s Ü/sa</string>
+    <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/sa</string>
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
     <string name="equil_basal_exceeds_max">%1$s Ü/sa değerindeki profil bazal oranı, pompanın %2$s Ü/sa olan maksimum bazal sınırını aşıyor. Maksimum bazal ayarını artırın ve pompayı yeniden bağlayın.</string>
@@ -53,7 +53,7 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Düşük pil: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Rezervuarda yeterli insülin kalmadı: %1$s</string>
     <string name="equil_reservoir_empty">Rezervuar boş. Pompa artık insülin iletmiyor.</string>
-    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Bolus sırasında pompa durdu. Verilen: %2$s nin %1$s\'i</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Bolus sırasında pompa durdu. Verilen: %1$s / %2$s</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>
@@ -64,7 +64,7 @@
     <string name="equil_firmware_version">Cihaz Yazılımı Sürümü</string>
     <string name="equil_shutdown_be">Equil otomatik olarak kapanacak</string>
     <string name="equil_shutdown">Equil otomatik kapanma</string>
-    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Oran: %1$.2f Ü/s, süre: %2$d dakika</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Oran: %1$.2f Ü/sa, süre: %2$d dakika</string>
     <string name="equil_common_history_bolus_value">%1$.2f Ü</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Bolusu ayarla</string>
@@ -75,9 +75,9 @@
     <string name="equil_common_cmd_set_time">Saati ayarla</string>
     <string name="equil_common_cmd_suspend_delivery">İletimi askıya al</string>
     <string name="equil_common_cmd_resume_delivery">İletime devam et</string>
-    <string name="equil_common_cmd_pair">Pompa Eşleştir</string>
+    <string name="equil_common_cmd_pair">Equil\'i Eşleştir</string>
     <string name="equil_common_cmd_insert_cannula">Kanül yerleştir</string>
-    <string name="equil_common_cmd_unpair">Pompa eşleştirmeyi kaldır</string>
+    <string name="equil_common_cmd_unpair">Equil eşleşmesini kaldır</string>
     <string name="equil_common_cmd_set_extended_bolus">Yayma bolusu ayarla</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Yayma bolusu İptal et</string>
     <!--    推杆回退-->
@@ -107,11 +107,11 @@
     <string name="equil_password_error">Equil eşleştirme şifresi yanlış</string>
     <string name="equil_none">yok</string>
     <string name="equil_history_item1">Rezervuar-Düşük insülin seviyesi</string>
-    <string name="equil_history_item2">Rezervuar- Boş</string>
+    <string name="equil_history_item2">Rezervuar-İnsülin boş</string>
     <string name="equil_history_item3">İnfüzyon blokajı algılandı</string>
     <string name="equil_history_item4">Motor ters çevirme algılandı</string>
     <string name="equil_history_item5">Motor arızası algılandı</string>
-    <string name="equil_history_item6">Enjeksiyon duraklatıldı başlatılıyor</string>
+    <string name="equil_history_item6">Enjeksiyon duraklatma başladı</string>
     <string name="equil_history_item7">Enjeksiyon zaten duraklatıldı</string>
     <string name="equil_history_item8">Yakında otomatik kapanma</string>
     <string name="equil_history_item9">Otomatik Kapanma!</string>
@@ -126,11 +126,11 @@
     <string name="equil_history_item18">Anormal İnfüzyon Durduruldu</string>
     <string name="equil_common_overview_button_suspend_delivery">Askıya al</string>
     <string name="equil_common_overview_button_resume_delivery">İletime devam et</string>
-    <string name="equil_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misin?</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misiniz?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
     <string name="equil_support_error">Cihaz yazılımı sürümü çok düşük. Desteklenmiyor</string>
     <string name="equil_password_tips">Equil v5.3 pompasıyla eşleştirme yapmak için isteğe bağlı olarak bir parola belirleyebilirsiniz. Bu parola, ileride eşleştirmeyi kaldırmak için de kullanılacaktır. Bu nedenle lütfen parolayı unutmayın. Parola kuralı: 4 karakter uzunluğunda olmalı ve ABCDEF0123456789 karakterlerinden seçilmelidir.</string>
-    <string name="equil_set_pair_password">Paylaşım şifresini belirleyin</string>
+    <string name="equil_set_pair_password">Eşleştirme parolasını belirleyin</string>
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>
     <string name="equil_unbind">Eşleştirmeyi sonlandır</string>
     <string name="equil_device_unpaired">Cihaz eşleşmesi kaldırıldı</string>
@@ -139,7 +139,7 @@
     <string name="equil_insert">Lütfen iğne ucunda bir damla insülin kalana kadar rezervuarı doldurun</string>
     <string name="equil_insert2">Pompa, pompa tabanı üzerinde olmamalıdır.</string>
     <string name="equil_attach">Lütfen pompayı tabana takın</string>
-    <string name="equil_hint2">Kanul dolumu</string>
+    <string name="equil_hint2">Kanül dolumu</string>
     <string name="equil_pump_updated">Pompa güncellendi</string>
     <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
     <string name="equil_removed_anyway">Eşleşmeyi kaldırma başarısız oldu. Pompa yine de kaldırılacak. Eşleştirme sırasında belirlenen parola, pompadan silinmeyecektir.</string>
