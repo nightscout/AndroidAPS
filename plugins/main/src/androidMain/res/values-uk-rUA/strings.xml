@@ -3,6 +3,8 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">БАЗ</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
+    <string name="notification_iob_short">%1$.1fОд</string>
 </resources>
