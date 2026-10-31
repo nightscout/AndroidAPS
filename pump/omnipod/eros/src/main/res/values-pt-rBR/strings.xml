@@ -6,8 +6,8 @@
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">Endereço RileyLink inválido.</string>
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botão de pulso Log no menu de gerenciamento do Pod</string>
-    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar estatísticas do botão RileyLink no menu de gerenciamento do Pod</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botão Registro de pulsos no menu de gerenciamento do Pod</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botão Estatísticas do RileyLink no menu de gerenciamento do Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Habilitar o log de mudança de bateria em Ações</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
