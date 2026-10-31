@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Arka plan görüntüsü</string>
     <string name="cwf_comment_chart">Grafik (KŞ, bazal, tahmin çizgileri...)</string>
     <string name="cwf_comment_cover_chart">Grafiğin önündeki ve metin alanlarının arkasındaki resim</string>
+    <string name="cwf_comment_complication">Komplikasyon alanı</string>
     <string name="cwf_comment_freetext1">Serbest metin 1</string>
     <string name="cwf_comment_freetext2">Serbest metin 2</string>
     <string name="cwf_comment_freetext3">Serbest metin 3</string>
