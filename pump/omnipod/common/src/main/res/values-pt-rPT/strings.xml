@@ -57,9 +57,9 @@
     <!-- Omnipod - Pod Activation Wizard -->
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Encher Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inicializar Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Anexar Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Colocar o Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Prepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e anexe o Pod no local de infusão.\n\nSe a cânula sair, por favor, pressione <b>Cancelar</b> e descarte o Pod.\n\nPressione <b>Seguinte</b> para inserir a cânula e começar a administração da basal.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Quando pressionar <b>OK</b>, a cânula será inserida. Certifique-se de ter anexado o Pod ao local de infusão.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Quando pressionar <b>OK</b>, a cânula será inserida. Certifique-se de que colocou o Pod no local de infusão.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Inserir Cânula</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">A tentar definir o horário da basal inicial e inserir a cânula.\n\nQuando a cânula for inserida com sucesso, pode pressionar <b>Seguinte</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod Ativado</string>
@@ -77,9 +77,9 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Se descartar o Pod, já não conseguirá comunicar com ele. Só deve fazer isso quando toda a comunicação com o Pod falhar persistentemente. Tem a certeza de que deseja descartar o Pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Descartar Pod</string>
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_common_preferences_bolus_beeps_enabled">Beeps bólus ativados</string>
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Beeps de bólus ativados</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Beeps de basal ativados</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">Beeps SMB ativado</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Beeps SMB ativados</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Beeps de basal temporária ativados</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar Botão Suspender Administração no separador Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Deteção de DST/Fuso Horário Ativado</string>
@@ -90,7 +90,7 @@
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Quando ativado, o Pod emite um beep quando a hora definida é atingida e 1 hora antes de se desligar</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alerta horas antes de desligar (80 horas)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservatório baixo ativado</string>
-    <string name="omnipod_common_preferences_low_reservoir_alert_units">No. Unidades</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">N.º de unidades</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automaticamente alertas do Pod</string>
     <string name="omnipod_common_preferences_category_other">Outro</string>
     <string name="omnipod_common_preferences_category_alerts">Alertas</string>
