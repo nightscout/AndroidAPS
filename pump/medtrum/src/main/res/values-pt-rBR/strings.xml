@@ -118,9 +118,9 @@
     <string name="pump_warning_expiry_hour_summary">Exibir notificação na hora especificada após a ativação.</string>
     <string name="patch_expiration_title">Expiração do patch</string>
     <string name="patch_expiration_summary">Quando ativado, o patch expirará após 3 dias, com um período de tolerância de 8 horas depois disso.</string>
-    <string name="hourly_max_insulin_title">Insulina máxima por hora[Units]</string>
+    <string name="hourly_max_insulin_title">Insulina máxima por hora [unidades]</string>
     <string name="hourly_max_insulin_summary">Especifique o número máximo de unidades de insulina permitido por hora. Se excedido, a bomba será suspensa.</string>
-    <string name="daily_max_insulin_title">Insulina máxima diária[Units]</string>
+    <string name="daily_max_insulin_title">Insulina máxima diária [unidades]</string>
     <string name="daily_max_insulin_summary">Especifique o número máximo de unidades de insulina permitido por dia. Se excedido, a bomba será suspensa.</string>
     <string name="scan_on_connection_error_title">Buscar em caso de erro de conexão</string>
     <string name="scan_on_connection_error_summary">AVISO: Ative somente se você tiver problemas de conexão. Quando ativado, o driver busca a bomba novamente antes de tentar reconectar-se a ela. Verifique se a permissão de localização está definida como \"Permitir sempre\".</string>
