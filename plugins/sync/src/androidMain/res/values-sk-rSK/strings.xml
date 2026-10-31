@@ -72,6 +72,7 @@
     <string name="pair_with_master_fetching">Hľadá sa spárovanie…</string>
     <string name="pair_with_master_confirm_title">Spárovať s týmto hlavným zariadením?</string>
     <string name="pair_with_master_confirm_master">Hlavné zariadenie: %1$s</string>
+    <string name="pair_with_master_confirm_warning">Po spárovaní bude toto zariadenie môcť odosielať podpísané príkazy do tohto hlavného zariadenia.</string>
     <string name="pair_with_master_confirm_pair">Spárovať</string>
     <string name="pair_with_master_error_title">Nedá sa spárovať</string>
     <string name="pair_with_master_error_wrong_pin">Pre daný PIN kód sa nenašlo žiadne párovanie. Skontrolujte PIN kód na hlavnom zariadení a skúste to znova.</string>
