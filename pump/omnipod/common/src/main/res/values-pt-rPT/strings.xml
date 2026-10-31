@@ -49,6 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Alertas Pod Activos</string>
     <string name="omnipod_common_overview_firmware_version">Versão do Firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Hora no Pod</string>
+    <string name="omnipod_common_uncertain">incerto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Ainda não completou todas as etapas. Tem certeza que quer sair?</string>
@@ -66,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Desactivar Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Pressione <b>Seguinte</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Um Pod desativado não pode voltar a ser usado. Desativar este Pod agora?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">A Desactivar Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">A desactivar o Pod.\n\nQuando a desativação for concluída com sucesso, pode pressionar <b>Seguinte</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Desactivado</string>
@@ -82,6 +84,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar Botão Suspender Administração no separador Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecção de DST/Fuso Horário Activado</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração activado</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Quando ativado, o Pod emite um beep quando a hora definida é atingida</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Lembrete horas antes da expiração (72 horas)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Alerta de expiração ativado</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Quando ativado, o Pod emite um beep quando a hora definida é atingida e 1 hora antes de se desligar</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alerta horas antes de desligar (80 horas)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservatório baixo activado</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">No. Unidades</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automaticamente alertas do Pod</string>
@@ -90,7 +97,11 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Beeps de Confirmação</string>
     <string name="omnipod_common_preferences_category_notifications">Notificações</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Som activado para notificações DBT incerto</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Som ativado para notificações de SMB incerto</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Som activado para notificações de bolús incerto</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Som ativado na notificação de administração suspensa</string>
+    <string name="omnipod_dash_use_bonding">Emparelhamento Bluetooth (bonding)</string>
+    <string name="omnipod_dash_use_bonding_summary">Experimente apenas se o Pod não conseguir manter uma ligação estável. O telefone vai mostrar pedidos de emparelhamento que tem de aceitar. Deixe desligado se o Pod se ligar sem problemas. Não tem efeito abaixo do Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nenhum Pod Activo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuração em progresso (a aguardar activação do Pod)</string>
@@ -101,9 +112,21 @@
     <string name="omnipod_common_pod_status_inactive">Inactivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Falha no Pod: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Notificação do PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Reservatório vazio</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">A administração de insulina parou. Mude o Pod agora.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Desligar automático</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">A administração de insulina parou. O PDM e o Pod não comunicaram nas últimas 4 horas. Para retomar a administração de insulina, mude o Pod agora.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod expirado</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">A administração de insulina parou. Mude o Pod agora.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Oclusão detetada</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">A administração de insulina parou. Mude o Pod agora. Verifique a sua glicose</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Erro do Pod</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">A administração de insulina parou. Mude o Pod agora.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod vai expirar em breve</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod vai expirar em breve</string>
@@ -117,6 +140,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Definir Programação Basal</string>
     <string name="omnipod_common_cmd_set_bolus">Definir Bólus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Cancelar Bólus</string>
+    <string name="omnipod_common_cmd_set_tbr">Definir DBT</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Cancelar DBT</string>
     <string name="omnipod_common_cmd_discard_pod">Descartar Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Obter Status do Pod</string>
     <string name="omnipod_common_cmd_set_time">Definir Hora</string>
@@ -125,10 +150,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Ler Pulse Log</string>
     <string name="omnipod_common_cmd_suspend_delivery">Suspender Administração</string>
     <string name="omnipod_common_cmd_resume_delivery">Retomar Administração</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Cancelar DBT (pelo utilizador)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obter Pod Info</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Definir DBT de suspensão simulada</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancelar DBT de suspensão simulada</string>
+    <string name="omnipod_common_cmd_split_tbr">Dividir DBT</string>
     <string name="omnipod_common_cmd_play_test_beep">Reproduzir Teste do Beep</string>
     <string name="omnipod_common_cmd_unknown_entry">Entrada Desconhecida</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Desativar alertas de suspensão</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Lembrete para terminar o emparelhamento</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Lembrete para terminar a configuração</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Momentos atrás</string>
@@ -151,7 +183,18 @@
         <item quantity="one">Alerta Pod: %1$s</item>
         <item quantity="other">Alertas Pod: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Fim definitivo do Pod</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutos</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Correção basal</string>
+    <string name="omnipod_common_bolus_type_priming">Purga</string>
     <string name="omnipod_common_history_total_delivered">Total administrado: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Falha ao enviar o comando</string>
+    <string name="omnipod_common_command_not_sent">Comando não enviado</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Comando não recebido pelo Pod</string>
+    <string name="omnipod_common_unknown">Estado do comando desconhecido</string>
 </resources>
