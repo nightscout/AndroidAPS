@@ -18,7 +18,7 @@
     <string name="equil_title_dressing">Schimbați cartușul</string>
     <string name="equil_title_assemble">Asamblați pompa</string>
     <string name="equil_title_serial">Asociați dispozitivul</string>
-    <string name="equil_title_fill">Amorsați / Umpleți</string>
+    <string name="equil_title_fill">Amorsare / Umplere</string>
     <string name="equil_title_attach">Atașați pompa</string>
     <string name="equil_title_air">Amorsați canula</string>
     <string name="equil_title_unpair_detach">Îndepărtați pompa</string>
@@ -39,8 +39,8 @@
     <string name="equil_error">Eroare conexiune</string>
     <string name="equil_change">Schimbați pompa</string>
     <string name="equil_change_content">Detașați pompa de pe placa de bază.</string>
-    <string name="equil_new_infusion_set_question">Veți aplica, de asemenea, un nou set de perfuzie (placă de bază și canulă)?</string>
-    <string name="equil_new_infusion_set_yes">Da, set nou de perfuzie</string>
+    <string name="equil_new_infusion_set_question">Veți aplica, de asemenea, un nou set de infuzie (placă de bază și canulă)?</string>
+    <string name="equil_new_infusion_set_yes">Da, set nou de infuzie</string>
     <string name="equil_new_infusion_set_no">Nu, doar rezervor sau baterie</string>
     <string name="equil_same_infusion_set_hint">Canula nu va fi amorsată și nici o schimbare de canulă nu va fi înregistrată.</string>
     <string name="equil_unpair_alert">Sunteți sigur că vreți să renunțați la controlul asupra %1$s?</string>
@@ -106,8 +106,8 @@
     <string name="equil_tab_equil">Istoric Equil</string>
     <string name="equil_password_error">Parola de asociere Equil este incorectă</string>
     <string name="equil_none">niciunul</string>
-    <string name="equil_history_item1">Rezervor-scăzut nivel de insulină</string>
-    <string name="equil_history_item2">Nivel de insulină Rezervor-Golit</string>
+    <string name="equil_history_item1">Rezervor - nivel scăzut de insulină</string>
+    <string name="equil_history_item2">Rezervor - gol</string>
     <string name="equil_history_item3">Blocaj infuzare detectat</string>
     <string name="equil_history_item4">Inversare motor detectată</string>
     <string name="equil_history_item5">Defecțiune motor detectată</string>
@@ -129,7 +129,7 @@
     <string name="equil_common_wizard_exit_confirmation_text">Nu ați finalizat încă toți pașii. Sigur doriți să ieșiți?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Ieșire</string>
     <string name="equil_support_error">Versiunea firmware este prea veche. Nu este acceptată</string>
-    <string name="equil_password_tips">Opțional setați o parolă pentru asocierea cu pompa Equil v5.3. Această parolă va fi folosită și pentru dezasocierea în viitor, așa că vă rugăm să vă amintiți de ea. Regulă parolă: trebuie să aibă 4 caractere, aleasă din ABCDEF0123456789.</string>
+    <string name="equil_password_tips">Opțional setați o parolă pentru asocierea cu pompa Equil v5.3. Această parolă va fi folosită și pentru dezasocierea în viitor, așa că vă rugăm să vă amintiți de ea. Regulă parolă: trebuie să aibă 4 caractere, alese din ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Setați parolă asociere</string>
     <string name="equil_hint1">După instalarea pompei pe placa de bază, selectați dacă doriți să purjați aerul din acul fix.</string>
     <string name="equil_unbind">Dezasociați dispozitiv</string>
@@ -142,5 +142,5 @@
     <string name="equil_hint2">Amorsați canula</string>
     <string name="equil_pump_updated">Pompă actualizată</string>
     <string name="equil_replace_reservoir">Rezervorul este gol. Vă rugăm să schimbați rezervorul</string>
-    <string name="equil_removed_anyway">Comanda de anulare a eșuat. Pompa va fi ștearsă oricum. Parola setată în timpul asocierii nu este eliminată din pompă.</string>
+    <string name="equil_removed_anyway">Comanda de dezasociere a eșuat. Pompa va fi ștearsă oricum. Parola setată în timpul asocierii nu este eliminată din pompă.</string>
 </resources>
