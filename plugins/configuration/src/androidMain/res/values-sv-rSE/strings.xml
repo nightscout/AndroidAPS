@@ -4,7 +4,7 @@
     <string name="setupwizard_units_prompt">Välj enheter du vill visa värden i</string>
     <string name="next_button">Nästa</string>
     <string name="previous_button">Föregående</string>
-    <string name="setupwizard_finish">Avsluta</string>
+    <string name="setupwizard_finish">Slutför</string>
     <string name="welcome">Välkommen</string>
     <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
