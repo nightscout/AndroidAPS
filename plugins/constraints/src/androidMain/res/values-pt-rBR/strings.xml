@@ -39,7 +39,7 @@
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="description_objectives">Programa de aprendizagem</string>
     <string name="doyouwantresetstart">Deseja reiniciar o objetivo? Pode perder seu progresso.</string>
-    <string name="objectives_button_unfinish">Reiniciar objetivo</string>
-    <string name="objectives_button_unstart">Reiniciar objetivo</string>
+    <string name="objectives_button_unfinish">Redefinir estado concluído</string>
+    <string name="objectives_button_unstart">Redefinir estado iniciado</string>
     <string name="bg_doubled_lgs">Modo LGS devido a valores duplicados na fonte de glicemia</string>
 </resources>
