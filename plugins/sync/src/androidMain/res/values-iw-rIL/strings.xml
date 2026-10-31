@@ -13,7 +13,7 @@
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">לקוחות מורשים</string>
     <string name="authorized_clients_add">הוספת מכשיר לקוח</string>
-    <string name="authorized_clients_comm_switch_title">לאפשר שליטה ממכשיר לקוח</string>
+    <string name="authorized_clients_comm_switch_title">מתן אפשרות לשליטה ממכשיר לקוח</string>
     <string name="authorized_clients_comm_switch_summary">לאפשר למכשירי לקוח מצומדים לשלוח פקודות חתומות דרך Nightscout. יש לכבות כדי להפסיק את התקשורת בלי להסיר אותם.</string>
     <string name="authorized_clients_state_active">פעיל</string>
     <string name="authorized_clients_state_pending">בהמתנה</string>
@@ -88,7 +88,7 @@
     <!-- Client set-up from the master's QR code -->
     <string name="client_setup_scan_button">סריקת קוד QR</string>
     <string name="client_setup_scan_title">סריקת קוד ה-QR של המכשיר הראשי</string>
-    <string name="client_setup_scan_instructions">במכשיר הראשי יש לפתוח את משתמשים מורשים ולהוסיף את הטלפון הזה עם קוד QR. יש לכוון את המצלמה אל הקוד.</string>
+    <string name="client_setup_scan_instructions">במכשיר הראשי יש לפתוח את לקוחות מורשים ולהוסיף את הטלפון הזה עם קוד QR. יש לכוון את המצלמה אל הקוד.</string>
     <string name="client_setup_scan_camera_refused">המצלמה נדרשת כדי לקרוא את קוד ה-QR. יש לאשר את הגישה, או לבצע צימוד עם PIN.</string>
     <string name="client_setup_scan_camera_denied">הגישה למצלמה כבויה עבור AAPS. יש להפעיל אותה בהגדרות המערכת, או לבצע צימוד עם PIN.</string>
     <string name="client_setup_scan_camera_blocked">הגישה למצלמה אסורה במכשיר זה. יש לבצע צימוד עם PIN במקום זאת.</string>
