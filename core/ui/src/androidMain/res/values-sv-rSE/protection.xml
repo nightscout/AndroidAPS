@@ -33,5 +33,5 @@
     <string name="current_master_password">Nuvarande huvudlösenord</string>
     <string name="master_password_not_set">Huvudlösenordet har inte angetts</string>
     <string name="aaps_directory_not_selected">Katalogen för AAPS är inte vald</string>
-    <string name="aaps_directory_access_lost">Behörigheten till AAPS-mappen är borta, så inställningar sparas inte längre till telefonen. Välj mappen på nytt.</string>
+    <string name="aaps_directory_access_lost">Behörigheten till AAPS-katalogen är borta, så inställningar sparas inte längre till telefonen. Välj katalogen på nytt.</string>
 </resources>
