@@ -22,7 +22,7 @@
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado pelo utilizador</string>
     <string name="suspend_delivery_is_unconfirmed">A suspensão da administração não está confirmada! Por favor, atualize manualmente o estado do Pod na guia Omnipod e retome a administração, se necessário.</string>
-    <string name="insulin_delivery_suspended">Entrega de insulina suspensa</string>
+    <string name="insulin_delivery_suspended">Administração de insulina suspensa</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">O fuso horário do Pod é diferente do fuso horário do telefone. A taxa basal está incorreta. Troque de perfil para corrigir</string>
     <string name="failed_to_set_the_new_basal_profile">Falha ao definir o novo perfil basal. Administração suspensa</string>
     <string name="setting_basal_profile_might_have_failed">A definição do perfil basal pode ter falhado. A administração pode estar suspensa! Atualize manualmente o estado do Pod no separador Omnipod e retome a administração se necessário.</string>
