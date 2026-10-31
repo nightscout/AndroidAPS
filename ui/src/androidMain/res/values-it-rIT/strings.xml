@@ -286,7 +286,7 @@
     <string name="show_on_watch">Mostra sull\'orologio</string>
     <string name="ecarbs_additional">Carboidrati Aggiuntivi</string>
     <string name="valid_from_to">Intervallo Di Tempo Valido</string>
-    <string name="carb_time">Tempo Carbo</string>
+    <string name="carb_time">Tempo carboidrati</string>
     <string name="save_changes_question">Salvare le modifiche a questa voce?</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="carbs_constraint_violation">Carboidrati limitati da vincoli</string>
