@@ -10,7 +10,7 @@
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$du</string>
     <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$du</string>
     <!--    Widget-->
-    <string name="configure">Configureer transparantie</string>
+    <string name="configure">Configureer dekking</string>
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">AAPS BG-grafiek</string>
     <string name="widget_glucose_circle_description">AAPS glucosecirkel</string>
@@ -234,7 +234,7 @@
     <string name="remove_label">Verwijder</string>
     <string name="active_profile_indicator">ACTIEF</string>
     <string name="confirm_remove_profile">Verwijder profiel \"%1$s\"?</string>
-    <string name="confirm_clone_profile">Profiel \"%1$s\" kopieren?</string>
+    <string name="confirm_clone_profile">Profiel \"%1$s\" kopiëren?</string>
     <string name="profile_no_longer_exists">Lijst van profielen ondertussen veranderd — probeer opnieuw</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
@@ -330,7 +330,7 @@
     <string name="quick_launch_category_treatment">Behandeling</string>
     <string name="quick_launch_category_care">Care Portal</string>
     <string name="quick_launch_category_profile">Profiel</string>
-    <string name="quick_launch_category_temp_target">Voorinstelingen tijdelijke streefwaarden</string>
+    <string name="quick_launch_category_temp_target">Voorinstellingen tijdelijke streefwaarden</string>
     <string name="quick_launch_category_quick_wizard">Quick Wizard</string>
     <string name="quick_launch_category_automation">Automatisering</string>
     <string name="quick_launch_all_selected">Alle items geselecteerd</string>
