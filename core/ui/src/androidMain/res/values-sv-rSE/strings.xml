@@ -4,7 +4,7 @@
     <string name="error_mustbe4hexadidits">Måste vara 4 tecken från ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Auktoriserade klienter</string>
     <string name="authorized_clients_manage_desc">Hantera parkopplade klientenheter som styr denna huvudenhet.</string>
-    <string name="pair_with_master_manage_label">Parkoppla med huvudenhet</string>
+    <string name="pair_with_master_manage_label">Parkoppla med huvudenheten</string>
     <string name="pair_with_master_manage_desc">Ange huvudenhetens PIN för parkoppling för att låta denna klient skicka signerade kommandon.</string>
     <!--    General-->
     <string name="treatments">Behandlingar</string>
@@ -423,7 +423,7 @@
     <string name="scene_profile_not_found">Profil \"%1$s\" hittades inte</string>
     <string name="scene_lock_banner_master_offline">Huvudenheten är inte nåbar. Scenkontroller blir tillgängliga igen när anslutningen har återställts.</string>
     <string name="scene_lock_banner_control_disabled">Huvudenheten har stängt av fjärrstyrning. Scenkontroller blir tillgängliga igen när fjärrstyrning har aktiverats på huvudenheten.</string>
-    <string name="master_offline_banner">Huvudenhet kan inte nås. Redigering är inaktiverad tills anslutningen är återställd.</string>
+    <string name="master_offline_banner">Huvudenheten kan inte nås. Redigering är inaktiverad tills anslutningen är återställd.</string>
     <string name="master_control_disabled_banner">Huvudenheten har stängt av fjärrstyrning. Redigering är inaktiverad tills den har aktiverats igen på huvudenheten.</string>
     <string name="hardened_mode_on">Härdat läge på</string>
     <string name="hardened_mode_title">Härdat läge</string>
@@ -470,7 +470,7 @@
     <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">En SMB levereras. Du kan bekräfta när den är färdig.</string>
     <string name="clientcontrol_fail_control_disabled">Fjärrstyrning är inaktiverad på huvudenheten.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Den här telefonens roll på huvudenheten tillåter inte detta.</string>
-    <string name="clientcontrol_fail_other_token">Huvudenheten avvisade förfrågan: den här telefonen skriver till Nightscout med en annan token än sin egen. Ta bort denna telefonen från huvudenheten och lägg till den igen.</string>
+    <string name="clientcontrol_fail_other_token">Huvudenheten avvisade förfrågan: den här telefonen skriver till Nightscout med en annan token än sin egen. Ta bort den här telefonen på huvudenheten och lägg till den igen.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den inlagda bolusen har löpt ut eller ersatts. Tryck på knappen igen.</string>
     <string name="clientcontrol_fail_bolus_compute">Huvudenheten kunde inte beräkna bolusdosen (saknar BG-värde/profil, eller så var pumpen inte redo).</string>
     <string name="clientcontrol_fail_internal">Något gick fel.</string>
@@ -926,7 +926,7 @@
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Välj lagringstyp</string>
     <string name="clear_cloud_action">Rensa inställningar</string>
-    <string name="clear_cloud_settings">Rensa moln-inställningar</string>
+    <string name="clear_cloud_settings">Rensa molninställningar</string>
     <string name="clear_cloud_settings_message">Detta kommer att växla till lokal lagring och autentiseringen tas bort. Vill du fortsätta?</string>
     <string name="cloud_revoke_incomplete">Molninställningarna har rensats på den här enheten, men det gick inte att nå kontot för att fullständigt återkalla åtkomsten. Du kan behöva ta bort den manuellt i dina kontoinställningar.</string>
     <string name="cloud_connection_failed">Anslutning till molnlagring misslyckades</string>
