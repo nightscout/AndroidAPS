@@ -4,12 +4,14 @@
     <string name="error_mustbe4hexadidits">ABCDEF043456789로 구성된 4자리 문자이어야 함</string>
     <!--    General-->
     <string name="count_selected">%1$d 선택됨</string>
+    <string name="delete">삭제</string>
     <string name="show_invalidated">무효화 표시</string>
     <string name="hide_invalidated">무효화 숨기기</string>
     <string name="refresh">새로고침</string>
     <string name="error">에러</string>
     <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
     <string name="invalid_input">사용할수 없는 입력 데이터</string>
+    <string name="invalid_number">잘못된 숫자</string>
     <string name="constraint_applied">제한 적용!</string>
     <string name="tt_label">임시목표</string>
     <string name="pump_unreachable">펌프에 연결할 수 없습니다.</string>
@@ -30,14 +32,25 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">사용자</string>
     <string name="result">결과</string>
     <string name="settings">설정</string>
+    <string name="configbuilder_pick_one_hint">하나를 선택하십시오. 한 번에 하나만 활성화할 수 있습니다.</string>
+    <string name="configbuilder_pick_many_hint">해당하는 것을 모두 선택하십시오.</string>
+    <string name="configbuilder_no_selection_warning">이 분류에서 선택된 플러그인이 없습니다.</string>
+    <string name="configbuilder_switch_confirmation_title">플러그인을 전환하시겠습니까?</string>
+    <string name="configbuilder_switch_confirmation">%1$s이(가) 비활성화되고 %2$s이(가) 활성화됩니다.</string>
+    <string name="expand">펼치기</string>
+    <string name="collapse">접기</string>
+    <string name="confirm_password_hint">비밀번호 확인</string>
+    <string name="confirm_pin_hint">PIN 확인</string>
     <string name="statuslights">상태 등</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
     <string name="configbuilder_smoothing">평탄화</string>
+    <string name="configbuilder_calibration">보정</string>
     <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">통신</string>
     <string name="configbuilder_general">일반</string>
     <string name="protection">보안</string>
     <string name="value_unavailable_short">사용불가</string>
@@ -61,14 +74,23 @@
     <string name="tdd_old_data">오래된 데이터</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
     <string name="androidaps_start">AAPS 시작</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f 시간</string>
+    <string name="format_mins">%1$d분</string>
     <string name="objectives">목표</string>
     <string name="please_wait">잠시 기다려 주세요...</string>
     <string name="stop">정지</string>
     <string name="invalid_profile">유효하지 않은 프로파일!</string>
     <string name="no_profile_set">프로파일 설정되지 않음</string>
+    <string name="insulin_activation_failed">인슐린이 전환되지 않았습니다. 이전 인슐린을 계속 사용합니다.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">인슐린이 전환되지 않았습니다: %1$s 이전 인슐린을 계속 사용합니다.</string>
+    <string name="insulin_activation_unconfirmed">인슐린 전환을 확인할 수 없습니다. 주입하기 전에 프로필에서 어떤 인슐린이 활성화되어 있는지 확인하십시오.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">인슐린이 전환되지 않았습니다. 이전 인슐린을 계속 사용합니다.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n인슐린도 전환되지 않았습니다.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
+    <string name="insulin_nickname_label">인슐린 별명</string>
+    <string name="concentration_label">농도</string>
     <string name="dia_label">인슐린활동시간(DIA):</string>
     <string name="ic_label">인슐린 대 탄수화물 비율(IC):</string>
     <string name="isf_label">인슐린 민감도(ISF):</string>
@@ -87,7 +109,9 @@
     <string name="removerecord">기록 삭제</string>
     <string name="loopisdisabled">Loop가 중지중입니다.</string>
     <string name="alarm">알람</string>
+    <string name="exportsettings">설정 내보내기</string>
     <string name="disableloop">Loop 중지하기</string>
+    <string name="disabled_loop">비활성화된 루프</string>
     <string name="resumeloop">Loop 재실행</string>
     <string name="suspendloop">Loop 일시중지</string>
     <string name="notification">공지</string>
@@ -100,6 +124,8 @@
     <string name="name_short">이름:</string>
     <string name="time">시간</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="loading">불러오는 중…</string>
+    <string name="initialization_failed">초기화 실패</string>
     <string name="notes_label">노트</string>
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
     <string name="bg_label">혈당</string>
@@ -138,6 +164,8 @@
     <string name="login">로그인</string>
     <string name="logout">로그아웃</string>
     <string name="prime_fill">프라임/채우기</string>
+    <string name="edit_site">편집</string>
+    <string name="last_site_location">마지막 부위: %1$s</string>
     <string name="overview_insulin_label">인슐린</string>
     <string name="stoptemptarget">임시 목표 중지</string>
     <string name="closedloop">Closed Loop</string>
@@ -152,6 +180,9 @@
     <string name="iob_label">활성 인슐린 (IOB)</string>
     <string name="loopstatus_targets">목표:</string>
     <string name="loopstatus_OAPS_result">OAPS 결과:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s분</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">설정 저장하기</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
@@ -172,6 +203,10 @@
     <string name="reason">근거</string>
     <string name="nochangerequested">변경사항 없음</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">인슐린 %1$s 확인됨</string>
+    <string name="current_insulin">현재 사용 중</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">활성화 예정</string>
+    <string name="change_insulin">변경</string>
     <!--       Stats -->
     <string name="average">평균</string>
     <string name="below" comment="below &quot;in range&quot;">이하</string>
@@ -212,11 +247,35 @@
     <string name="careportal_openapsoffline">OpenAPS 오프라인</string>
     <string name="pump_battery_change">펌프 배터리 교체</string>
     <string name="temporary_target">임시 목표</string>
+    <string name="hardened_mode_on">강화 모드 켜짐</string>
+    <string name="hardened_mode_title">강화 모드</string>
+    <string name="hardened_mode_info_open">강화 모드 정보</string>
+    <string name="hardened_mode_info">메인 휴대폰은 페어링된 클라이언트의 변경만 받습니다. Nightscout에서 직접 만든 처치, 임시 목표, 프로필 변경, 실행 모드 변경, 삭제는 받지 않습니다. 예를 들어 웹사이트나 다른 앱에서 만든 것입니다. 강화 모드가 켜져 있는 동안 Nightscout에서 데이터를 받는 설정은 숨겨집니다. SMS 명령에는 영향이 없습니다.\n\n메인 휴대폰은 혈당을 포함한 모든 데이터를 계속 Nightscout에 업로드합니다. 혈당을 Nightscout에서 받는 경우, 혈당은 계속 그곳에서 받습니다.\n\n새 메인 휴대폰에 이력을 불러오려면 NSClient의 전체 동기화를 사용하십시오. 전체 동기화는 프로필을 포함하여 Nightscout에 있는 모든 것을 가져옵니다.\n\n클라이언트의 원격 제어를 사용하려면 메인 휴대폰과 페어링된 클라이언트 모두에서 Nightscout과의 WebSocket 연결이 작동해야 합니다. 간단 모드에서는 강화 모드가 항상 켜집니다. 강화 모드를 끄려면 간단 모드를 끝내고 메인 휴대폰에서 클라이언트 제어를 끄십시오.</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">이 장치는 마스터와 페어링되지 않았습니다.</string>
+    <string name="clientcontrol_fail_not_reachable">마스터가 오프라인입니다.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">펌프 구성이 마스터와 일치하지 않습니다. 다시 시도하십시오.</string>
+    <string name="clientcontrol_fail_no_reply">제시간에 마스터의 응답이 없습니다.</string>
+    <string name="clientcontrol_fail_expired">마스터가 적용하기 전에 명령이 만료되었습니다.</string>
+    <string name="clientcontrol_fail_send_failed">Nightscout에 연결할 수 없습니다.</string>
+    <string name="clientcontrol_fail_no_active_profile">마스터에 적용할 활성 프로필이 없습니다.</string>
+    <string name="clientcontrol_fail_scene_not_found">장면이 더 이상 존재하지 않습니다.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">부위 항목이 더 이상 존재하지 않습니다.</string>
+    <string name="clientcontrol_fail_scene_disabled">장면이 비활성화되어 있습니다.</string>
+    <string name="clientcontrol_fail_partial">일부 작업을 적용할 수 없습니다.</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">취소됨</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">마스터에서 이 휴대폰의 역할로는 이 작업을 할 수 없습니다.</string>
+    <string name="clientcontrol_fail_other_token">마스터가 거부했습니다: 이 휴대폰은 자기 토큰이 아닌 다른 토큰으로 Nightscout에 기록합니다. 마스터에서 이 휴대폰을 삭제한 다음 다시 추가하십시오.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">준비된 볼러스가 만료되었거나 새 볼러스로 대체되었습니다. 버튼을 다시 누르십시오.</string>
+    <string name="clientcontrol_fail_internal">문제가 발생했습니다.</string>
+    <string name="clientcontrol_fail_unknown">명령이 실패했습니다.</string>
+    <string name="clientcontrol_unconfirmed_wear">상태를 알 수 없음 — 다시 볼러스하기 전에 휴대폰/Nightscout을 확인하십시오.</string>
     <string name="careportal_temporarytargetvalue">임시 목표 수치</string>
     <string name="careportal_temporarytargetcancel">임시 목표 취소</string>
     <string name="boluswizard">Bolus 마법사</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">인슐린 설정</string>
+    <string name="concentration_disable_blocked">U100이 아닌 인슐린이 있으면 농도 지원을 끌 수 없습니다. 먼저 U100이 아닌 인슐린 구성을 모두 삭제하고 U100 프로필로 전환하십시오.</string>
     <string name="user_entry">사용자 항목</string>
     <string name="glucosetype_finger">채혈</string>
     <string name="glucosetype_sensor">센서</string>
@@ -229,8 +288,17 @@
     <string name="custom">사용자 정의</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
+    <string name="location_back_right_upper_arm">오른쪽 위팔 (뒤쪽)</string>
+    <string name="location_back_left_upper_arm">왼쪽 위팔 (뒤쪽)</string>
+    <string name="location_front_left_lower_abdomen">왼쪽 아래 복부 (앞쪽)</string>
+    <string name="location_back_right_buttock">오른쪽 엉덩이</string>
+    <string name="location_back_left_buttock">왼쪽 엉덩이</string>
+    <string name="location_back_right_lower_back">오른쪽 허리</string>
+    <string name="location_back_left_lower_back">왼쪽 허리</string>
+    <string name="location_front_left_lower_thigh">왼쪽 허벅지 아래 (앞쪽)</string>
     <!--    Command-->
     <string name="connectiontimedout">연결시간초과</string>
+    <string name="command_replaced">새 명령으로 대체됨</string>
     <!--    PumpEnactResult-->
     <string name="enacted">실행</string>
     <string name="comment">의견</string>
@@ -334,6 +402,8 @@
     <!-- HardLimits -->
     <string name="temp_target_high_target">임시 목표 최고값</string>
     <string name="temp_target_value">임시 목표 수치</string>
+    <string name="insulin_dia">인슐린 DIA 값</string>
+    <string name="insulin_peak">인슐린 피크 값</string>
     <string name="profile_max_daily_basal_value">프로파일의 최대 basal 값</string>
     <string name="current_basal_value">현재 basal 값</string>
     <string name="valuelimitedto">%1$.2f은 %2$.2f까지 제한됨</string>
@@ -372,6 +442,10 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="isf_for_carbs">계산기 및 탄수화물 흡수용 평균 ISF: %1$.1f</string>
+    <string name="isf_profile">프로필 ISF: %1$.1f</string>
+    <string name="isf_variable">가변 ISF: %1$.1f</string>
+    <string name="isf_effective">유효 ISF: %1$.1f</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">조정 일수 :</string>
@@ -382,6 +456,15 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus 조언자</string>
     <string name="bolus_advisor_message">현재 높은 혈당을 가지고 있습니다. 지금 먹는 대신 더 나은 혈당을 기다리는 게 좋습니다. 지금 교정bolus 을 진행하고, 식사 시간을 알려드릴까요? 이 경우 탄수화물은 기록되지 않으며, 다시 알림을 줄 때 마법사를 다시 사용해야 합니다.</string>
+    <string name="change">변경</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
+    <string name="grant">허용</string>
+    <string name="eat_reminder_title">식사할 시간</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">총 대기 시간: %1$s</string>
+    <string name="eat_reminder_rung">시간이 되었습니다</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d분</string>
+    <string name="eat_reminder_not_set">식사 알림을 설정할 수 없습니다. Android 설정에서 AAPS가 알람 및 리마인더를 설정하도록 허용하십시오.</string>
     <string name="wizard_no_actual_bg">기저 계산에는 최근 BG가 없습니다!</string>
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
     <string name="wizard_carbs_constraint">탄수화물 제한 위반!</string>
@@ -423,6 +506,11 @@
     <string name="reading_pump_history">펌프 이력 읽기</string>
     <string name="password_cleared">비밀번호가 지워졌습니다.</string>
     <string name="pairing">동기화</string>
+    <string name="initializing">초기화 중…</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">위험</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">완료</string>
+    <string name="firmware" comment="Pump firmware version label">펌웨어</string>
+    <string name="history" comment="Tab/screen title for viewing past events">이력</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
@@ -434,21 +522,50 @@
     <string name="message">메시지</string>
     <string name="ok">네</string>
     <string name="cancel">취소</string>
+    <string name="dismiss">닫기</string>
     <string name="yes">네</string>
     <string name="no">아니오</string>
     <string name="close">닫기</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">정상</string>
+    <string name="export_warning">경고</string>
+    <string name="export_expired">만료됨</string>
+    <string name="export_disabled">비활성화됨</string>
+    <string name="export_failed">실패</string>
+    <string name="export_alert">경보</string>
     <!-- Export dialog strings -->
     <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
     <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
     <string name="preferences_export_canceled">내보내기 취소됩니다! 환경 설정을 내보내지 않았습니다!</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">설정을 내보냈습니다</string>
+    <string name="export_result_message_failed">설정 내보내기 실패!</string>
+    <string name="export_result_message_about_to_expire">설정을 내보냈습니다: 비밀번호가 곧 만료됩니다. 직접 내보내고 비밀번호를 (다시) 입력하십시오.</string>
+    <string name="export_result_message_expired">설정 내보내기 취소됨: 비밀번호가 만료되었습니다. 직접 내보내고 비밀번호를 (다시) 입력하십시오!</string>
+    <string name="export_result_message_disabled">경고 (자동화): 설정 내보내기가 활성화되지 않았습니다!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">클라우드 내보내기 성공</string>
+    <string name="export_cloud_failed">클라우드 내보내기 실패!</string>
+    <string name="csv_exported">사용자 항목을 내보냈습니다</string>
+    <string name="csv_export_failed">사용자 항목 내보내기 실패!</string>
+    <string name="cloud_directory">클라우드 폴더</string>
+    <string name="cloud_token_expired_or_invalid">클라우드 저장소 인증이 만료되었거나 유효하지 않습니다. 다시 인증하십시오.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">로컬</string>
+    <string name="chip_cloud">클라우드</string>
+    <string name="chip_email">이메일</string>
+    <string name="file_management">파일 관리</string>
+    <string name="database_management">데이터베이스 관리</string>
     <string name="data_choices">데이터선택</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
+    <string name="cloud_revoke_incomplete">이 장치의 클라우드 설정은 삭제되었지만, 계정에 연결할 수 없어 접근 권한을 완전히 취소하지 못했습니다. 계정 설정에서 직접 삭제하는 것이 좋습니다.</string>
+    <string name="cloud_connection_failed">클라우드 저장소 연결 실패</string>
+    <string name="cloud_reauthorize_message">클라우드 저장소 연결에 실패했습니다. 다시 인증하시겠습니까?</string>
+    <string name="cloud_auth_success">클라우드 저장소 인증 성공</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d시간 %2$d분</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d시간</string>
     <!-- datetime layout -->
     <string name="event_time_label">이벤트 시간</string>
     <!-- BluetoothDevicePreference -->
@@ -466,12 +583,16 @@
     <string name="nav_exit">종료</string>
     <string name="open_navigation">메뉴 열기</string>
     <string name="nav_history_browser">이력 브라우저</string>
+    <string name="localprofile">프로필</string>
     <string name="nav_setupwizard">설정 마법사</string>
     <string name="statistics">통계</string>
     <string name="nav_profile_helper">프로파일 보조기</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">로컬 알림</string>
     <!-- Actions Screen -->
     <string name="extended_bolus_button">확장 Bolus</string>
+    <string name="device_maintenance">장치 정비</string>
+    <string name="from_label">시작</string>
     <string name="sensor_label">센서</string>
     <string name="insulin_label">인슐린</string>
     <string name="pb_label">펌프 배터리</string>
@@ -506,16 +627,27 @@
     <string name="weekday_monday_short">월</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <string name="target_short">TARG</string>
     <string name="profile_name">프로파일명:</string>
+    <string name="edit_profile_name">프로필 이름 편집</string>
     <string name="units_colon">단위:</string>
     <string name="discard">폐기</string>
+    <string name="ic_dynamic_label_warning">알고리즘이 IC를 동적으로 계산할 수 있습니다. 아래 값은 데이터가 없을 때의 대체 값이나 참고 값으로만 사용됩니다</string>
+    <string name="isf_dynamic_label_warning">알고리즘이 ISF를 동적으로 계산할 수 있습니다. 아래 값은 데이터가 없을 때의 대체 값이나 참고 값으로만 사용됩니다</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="food_management">음식</string>
+    <string name="food_deleted">음식이 삭제되었습니다</string>
+    <string name="edit_food">음식 편집</string>
     <string name="category">분류</string>
     <string name="subcategory">하위 분류</string>
+    <string name="label_carbs_g">탄수화물 (g)</string>
+    <string name="label_fat_g">지방 (g)</string>
+    <string name="label_protein_g">단백질 (g)</string>
+    <string name="label_energy_kj">에너지 (kJ)</string>
     <!--    Log Settings-->
     <string name="resettodefaults">기본값으로 초기화</string>
     <!--    Maintenance-->
@@ -525,16 +657,64 @@
     <string name="delete_logs">로그 삭제하기</string>
     <string name="import_setting">설정 불러오기</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">해독 및 검토</string>
+    <string name="import_decrypt">해독</string>
+    <string name="import_master_password">마스터 비밀번호</string>
+    <string name="import_decryption_password">해독 비밀번호</string>
+    <string name="import_different_password_hint">파일이 다른 비밀번호로 암호화되었습니다</string>
+    <string name="import_wrong_password">잘못된 비밀번호</string>
+    <string name="import_btn">가져오기</string>
+    <string name="import_anyway_btn">그래도 가져오기</string>
+    <string name="import_apply_title">가져온 설정을 적용하시겠습니까?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">변경할 설정: %1$d. 변경된 플러그인은 다시 시작됩니다.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">변경할 설정: %1$d. 유지되는 펌프 설정: %2$d. 펌프는 계속 작동합니다.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">가져온 설정에서 이 휴대폰에 있는 펌프가 선택되지 않았습니다. 이제 %1$s이(가) 활성화되었습니다 — 펌프 설정을 확인하십시오.</string>
+    <string name="import_applying">설정 적용 중…</string>
+    <string name="import_replace_pump_settings">펌프 설정도 교체</string>
+    <string name="import_replace_pump_settings_summary">이 휴대폰과 페어링된 펌프를 유지하려면 꺼 두십시오. 같은 펌프로 새 휴대폰에 복원할 때 켜십시오.</string>
+    <string name="import_apply_waiting">펌프를 기다리는 중…</string>
+    <string name="import_apply_pump_busy">펌프가 아직 사용 중이어서 설정이 적용되지 않았습니다.</string>
+    <string name="import_apply_retry_question">지금 다시 시도하시겠습니까?</string>
+    <string name="import_applied_title">설정이 적용됨</string>
+    <string name="import_applied_message">가져온 설정이 이제 사용 중입니다.</string>
+    <string name="import_apply_pump_changed">취소됨: 설정 가져오기로 펌프가 변경되었습니다</string>
+    <string name="import_source_local">로컬</string>
+    <string name="import_source_cloud">클라우드</string>
+    <string name="import_load_more">더 불러오기</string>
+    <string name="import_no_files">설정 파일이 없습니다</string>
+    <string name="import_decrypt_ok">해독에 성공했습니다. 가져올 준비가 되었습니다.</string>
+    <string name="import_decrypt_warn">해독에 성공했지만 경고가 있습니다.</string>
+    <string name="import_decrypt_error">해독에 성공했지만 가져올 수 없습니다.</string>
     <string name="database_cleanup">데이터베이스 정리하기</string>
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
+    <string name="graph_add">그래프 추가</string>
+    <string name="graph_new">새 그래프</string>
+    <string name="graph_number">그래프 %1$d</string>
+    <string name="graph_bg">혈당 그래프</string>
+    <string name="graph_height">그래프 높이 [dp]</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">활성 인슐린 (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">절대 인슐린</string>
+    <string name="graph_series_cob">활성 탄수화물 (COB)</string>
+    <string name="graph_series_bgi">혈당 영향 (BGI)</string>
+    <string name="graph_series_deviations">편차</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">민감도 변화</string>
+    <string name="graph_series_variable_sens">가변 민감도</string>
+    <string name="graph_series_deviation_slope">편차 기울기</string>
+    <string name="graph_series_heart_rate">심박수</string>
+    <string name="graph_series_steps">걸음 수</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">인슐린 활동</string>
+    <string name="graph_series_predictions">예측</string>
     <string name="prefs_range_title">차트 표시 범위</string>
 </resources>
