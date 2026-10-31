@@ -142,7 +142,7 @@
     <string name="xdrip_status_settings">שורת מצב xDrip+ מתקדמת</string>
     <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
     <string name="calibration_sent">נשלח כיול ל-xDrip+</string>
-    <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" ולהפעיל קבלת נתונים בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבלת גלוקוז/טיפולים</string>
+    <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז/טיפולים</string>
     <string name="xdrip_local_broadcasts_title">הפעלת שידור ל-xDrip+</string>
     <!--    DataBroadcast-->
     <string name="tizen">אפליקציות נלוות חיצוניות</string>
@@ -201,7 +201,7 @@
     <string name="until">עד</string>
     <string name="default_range">טווח ברירת מחדל</string>
     <string name="target">יעד</string>
-    <string name="rate_duration">קצב: %1$.2f יח׳/שעה (%2$.2f%%) \nמשך: %3$d דק׳</string>
+    <string name="rate_duration">מינון: %1$.2f יח\'/שעה (%2$.2f%%) \nמשך: %3$d דק\'</string>
     <string name="no_profile">לא נטען פרופיל</string>
     <string name="aps_only">חל רק במצב APS!</string>
     <string name="last_aps_result_na">התוצאה האחרונה לא זמינה!</string>
@@ -276,7 +276,7 @@
     <string name="smscommunicator_loop_disable_reply_with_code">להשבתת הלולאה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_restart_reply_with_code">כדי להפעיל מחדש את AAPS, השיבו עם הקוד %1$s</string>
     <string name="smscommunicator_restarting">AAPS מופעל מחדש</string>
-    <string name="smscommunicator_tempbasal_set">בזאלי זמני %1$.2f יח׳/שעה למשך %2$d דקות הופעל בהצלחה</string>
+    <string name="smscommunicator_tempbasal_set">בזאלי זמני %1$.2f יחידות/שעה למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_extended_set">בולוס ממושך %1$.2f יחידות למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_carbs_set">%1$d גר\' פחמימות נקלטו בהצלחה</string>
     <string name="smscommunicator_carbs_failed">קליטת %1$d גר\' פחמימות נכשלה</string>
