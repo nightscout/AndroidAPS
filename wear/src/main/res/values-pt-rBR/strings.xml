@@ -134,7 +134,7 @@
     <string name="cancel_bolus">CANCELAR BÓLUS</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Loop</string>
-    <string name="status_profile_switch">Alternar perfil</string>
+    <string name="status_profile_switch">Troca de perfil</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carboidratos</string>
     <string name="activity_IOB">IOB</string>
