@@ -20,14 +20,14 @@
     <string name="refresh">Aggiorna</string>
     <string name="no_history_records">Non è stato trovato alcun dato</string>
     <string name="error">Errore</string>
-    <string name="navigation_error_screen_not_found">Impossibile aprire lo schermo (non disponibile in questa configurazione)</string>
+    <string name="navigation_error_screen_not_found">Impossibile aprire la schermata (non disponibile in questa configurazione)</string>
     <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
     <string name="invalid_input">Dati di input non validi</string>
     <string name="invalid_number">Numero non valido</string>
     <string name="constraint_applied">Vincolo applicato!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Micro irraggiungibile</string>
-    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Il driver del micro non risponde. \"%1$s\" è in esecuzione per %2$d min e nessun altro comando può raggiungere la pompa. Controllare il micro, quindi riavviare AAPS.</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Il driver del micro non risponde. \"%1$s\" è in esecuzione da %2$d min e nessun altro comando può raggiungere il micro. Controlla il micro, poi riavvia AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -57,7 +57,7 @@
     <string name="result">Risultato</string>
     <string name="settings">Impostazioni</string>
     <string name="open_plugin">Apri plugin</string>
-    <string name="configbuilder_pick_one_hint">Sceglierne uno. Solo uno alla volta può essere attivo.</string>
+    <string name="configbuilder_pick_one_hint">Scegline uno. Solo uno alla volta può essere attivo.</string>
     <string name="configbuilder_pick_many_hint">Scegli tutte le opzioni che si applicano.</string>
     <string name="configbuilder_no_selection_warning">Nessun plugin selezionato in questa categoria.</string>
     <string name="configbuilder_switch_confirmation_title">Cambiare plugin?</string>
@@ -95,9 +95,9 @@
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Letture BG mancanti</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="mute5min">Muto per 5 minuti</string>
-    <string name="mute">Muto</string>
-    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Silenzia avvisi</string>
+    <string name="mute5min">Silenzia per 5 minuti</string>
+    <string name="mute">Silenzia</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Silenzia allarme</string>
     <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Silenzia e chiudi</string>
     <string name="success">OK</string>
     <string name="advanced_settings_title">Impostazioni avanzate</string>
@@ -107,7 +107,7 @@
     <string name="tdd_total">TDD totale</string>
     <string name="tdd_old_data">Dati vecchi</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
-    <string name="carbs_not_saved_after_bolus">Bolo erogato, ma i carboidrati non possono essere salvati. Inserisci nuovamente i carboidrati.</string>
+    <string name="carbs_not_saved_after_bolus">Bolo erogato, ma non è stato possibile salvare i carboidrati. Inserisci di nuovo i carboidrati.</string>
     <string name="androidaps_start">AAPS avviato</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -127,17 +127,17 @@
     <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
     <string name="profile_switch_no_insulin">Impossibile cambiare profilo: nessuna insulina è in uso, e nessuna è stata selezionata.</string>
     <string name="scene_no_profile_before">Nessun profilo era in uso prima dell\'inizio della scena.</string>
-    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">La scena %1$s è finita, ma il suo interruttore di profilo è ancora in vigore. %2$s Attiva un profilo a mano.</string>
-    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Questo interruttore temporaneo ha %1$s, ma il profilo permanente sotto di esso ha %2$s. Attivare prima l’insulina presente nel microinfusore nelle impostazioni di Insulina.</string>
-    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Il tempo dell\'interruttore del profilo deve essere entro %1$d ore di ora.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">La scena %1$s è finita, ma il suo profilo è ancora in uso. %2$s Attiva un profilo a mano.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Questo cambio profilo temporaneo ha %1$s, ma il profilo permanente sotto di esso ha %2$s. Prima attiva l\'insulina presente nel micro in Impostazioni insulina.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">L\'ora del cambio profilo deve essere entro %1$d ore da adesso.</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Il target temporaneo deve iniziare entro %1$d ore da ora.</string>
-    <string name="profile_switch_select_insulin_hint">Non è ancora in uso insulina. Selezionare l\'insulina che si sta utilizzando, quindi questo pulsante del profilo potrà registrarla.</string>
+    <string name="profile_switch_select_insulin_hint">Non c\'è ancora un\'insulina in uso. Seleziona l\'insulina che usi, così questo cambio profilo potrà registrarla.</string>
     <string name="insulin_activation_failed">L’insulina non è cambiata. L’insulina precedente è ancora in uso.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">L\'insulina non è stata cambiata: %1$s. La tua insulina precedente è ancora in uso.</string>
-    <string name="insulin_activation_unconfirmed">Il commutatore di insulina non può essere confermato. Controllare che l’insulina sia attiva nel profilo prima della somministrazione.</string>
+    <string name="insulin_activation_unconfirmed">Non è stato possibile confermare il cambio di insulina. Prima di erogare insulina controlla quale insulina è attiva nel tuo profilo.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">L’insulina non è cambiata. L’insulina precedente è ancora in uso.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAnche l\'insulina non è stata cambiata.</string>
-    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="active"><![CDATA[<Attivo>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Soprannome dell\'insulina</string>
     <string name="concentration_label">Concentrazione</string>
@@ -173,7 +173,7 @@
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="name_short">Nome:</string>
-    <string name="time">Tempo</string>
+    <string name="time">Ora</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Caricamento…</string>
     <string name="waiting_for_pump">In attesa del micro...</string>
@@ -188,15 +188,15 @@
     <string name="cal_reject_warmup">Calibrazione non salvata: il sensore è ancora nella finestra di riscaldamento di 2 ore.</string>
     <string name="cal_reject_no_session">Calibrazione non salvata: nessuna sessione del sensore è attiva. Segna prima un cambio del sensore.</string>
     <string name="cgm">CGM</string>
-    <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
+    <string name="treatmentdeliveryerror">Il bolo ha segnalato un errore. Controlla manualmente la quantità reale di insulina erogata e di carboidrati</string>
     <string name="bolus_reminder">Ricorda il bolo quando la glicemia recupera</string>
     <string name="duration_label">Durata</string>
     <string name="shortgramm">g</string>
     <string name="pump_running">Micro in esecuzione</string>
     <string name="notconfigured">Non configurato</string>
-    <string name="loop_suspended_by_dst">Loop sospeso da DST</string>
+    <string name="loop_suspended_by_dst">Loop sospeso per il cambio dell\'ora legale</string>
     <string name="required">ric</string>
-    <string name="a11y_arrow_triple_down">discesa rapida</string>
+    <string name="a11y_arrow_triple_down">discesa molto rapida</string>
     <string name="a11y_arrow_double_down">discesa rapida</string>
     <string name="a11y_arrow_single_down">discesa</string>
     <string name="a11y_arrow_forty_five_down">discesa lenta</string>
@@ -204,7 +204,7 @@
     <string name="a11y_arrow_forty_five_up">salita lenta</string>
     <string name="a11y_arrow_single_up">salita</string>
     <string name="a11y_arrow_double_up">salita rapida</string>
-    <string name="a11y_arrow_triple_up">salita rapida</string>
+    <string name="a11y_arrow_triple_up">salita molto rapida</string>
     <string name="a11y_arrow_none">nessuno</string>
     <string name="a11y_arrow_unknown">sconosciuto</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decremento %1$s di %2$s</string>
@@ -224,7 +224,7 @@
     <string name="activate_insulin">Attiva insulina</string>
     <string name="pump_wizard_profile_gate_title">Profilo richiesto</string>
     <string name="pump_wizard_profile_gate_pick">Seleziona il profilo da applicare all\'attivazione.</string>
-    <string name="pump_wizard_profile_gate_no_store">Nessun profilo definito. Apri la Gestione del Profilo per crearne una, quindi riavvia l\'attivazione.</string>
+    <string name="pump_wizard_profile_gate_no_store">Nessun profilo definito. Apri la Gestione del Profilo per crearne uno, poi riavvia l\'attivazione.</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
@@ -234,27 +234,27 @@
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Il master non ha %1$d di queste voci. Queste non sono state rimosse.</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
-    <string name="wear_wizard_settings">Impostazioni Rapide Orologio</string>
+    <string name="wear_wizard_settings">Impostazioni Calcolatore orologio</string>
     <string name="bolus_iob_label">IOB da bolo</string>
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="invalid">NON VALIDO</string>
     <string name="login">Login</string>
     <string name="logout">Esci</string>
     <string name="prime_fill">Carica/Riempi</string>
-    <string name="prime_not_available">Questa pompa si riempie e si innesca durante l\'attivazione. Prima/Fill da AAPS non è disponibile.</string>
+    <string name="prime_not_available">Questo micro si riempie e si carica da solo durante l\'attivazione. Carica/Riempi da AAPS non è disponibile.</string>
     <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Cambia</string>
     <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Riempi</string>
     <string name="site_rotation">Rotazione del Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="select_arrow">Seleziona Freccia</string>
-    <string name="site_filter_info">Selezionare il tipo di evento Terapia che si desidera visualizzare: Cambio Cannula e/o Cambio Sensore</string>
-    <string name="selected_location">Selezionati: %1$s</string>
+    <string name="site_filter_info">Seleziona il tipo di evento terapia che vuoi vedere: Cambio cannula e/o Cambio sensore</string>
+    <string name="selected_location">Selezionato: %1$s</string>
     <string name="last_site_location">Ultimo sito: %1$s</string>
     <string name="pick_site">Scegli sito</string>
     <string name="select_site_location">Seleziona la posizione del sito</string>
     <string name="site_location">Posizione del sito</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="stoptemptarget">Stoppa target temporaneo</string>
+    <string name="stoptemptarget">Ferma target temporaneo</string>
     <string name="closedloop">Loop chiuso</string>
     <string name="openloop">Loop aperto</string>
     <string name="lowglucosesuspend">Sospensione a glicemia bassa (LGS)</string>
@@ -266,8 +266,8 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="canceling_tbr_failed">Basale temporanea: cancellazione fallita</string>
-    <string name="canceling_eb_failed">Bolo esteso: cancellazione fallita</string>
+    <string name="canceling_tbr_failed">Basale temporanea: annullamento non riuscito</string>
+    <string name="canceling_eb_failed">Bolo esteso: annullamento non riuscito</string>
     <string name="virtualpump_uploadstatus_title">Carica stato micro su NS o Tidepool</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <string name="loopstatus_targets">TARGET:</string>
@@ -298,9 +298,9 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
-    <string name="cancel_temp">Cancella basale temporanea</string>
+    <string name="cancel_temp">Annulla basale temporanea</string>
     <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
-    <string name="rate">Tasso</string>
+    <string name="rate">Velocità</string>
     <string name="duration">Durata</string>
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Nessun cambiamento richiesto</string>
@@ -308,12 +308,12 @@
     <string name="ins_concentration_confirmed">Insulina %1$s confermata</string>
     <string name="current_insulin">Attualmente attivo</string>
     <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Sarà attivato</string>
-    <string name="change_insulin">Cambiare</string>
-    <string name="select_insulin_description">Selezionare l\'insulina con cui si sta riempiendo la pompa. Dopo l\'attivazione/prime, verrà applicato un interruttore del profilo.</string>
+    <string name="change_insulin">Cambia</string>
+    <string name="select_insulin_description">Seleziona l\'insulina con cui stai riempiendo il micro. Dopo l\'attivazione/il caricamento verrà applicato un cambio profilo.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina Selezionata: %1$s</string>
-    <string name="record_insulin_hint">Se si entra in insulina applicata dalla penna, selezionare di seguito il tipo di insulina corretto. La dose è sempre nelle Unità Internazionali.</string>
+    <string name="record_insulin_hint">Se registri insulina fatta con la penna, seleziona qui sotto il tipo di insulina corretto. La dose è sempre in Unità Internazionali.</string>
     <!--       Stats -->
     <string name="average">Media</string>
     <string name="tir">Tempo nell’intervallo</string>
@@ -346,12 +346,12 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
-    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio Sito Pompa: %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio sito micro: %1$s</string>
     <string name="careportal_pump_site_change">Cambio posizione cannula</string>
     <string name="cgm_sensor_insert">Inserimento sensore</string>
     <string name="careportal_pump_site_management">Siti del micro</string>
     <string name="careportal_cgm_site_management">Siti del CGM</string>
-    <string name="careportal_cgmsensorstart">Attiva sensore</string>
+    <string name="careportal_cgmsensorstart">Avvio sensore</string>
     <string name="careportal_cgm_sensor_stop">Arresto Sensore</string>
     <string name="careportal_dad_alert">Avviso D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Cambio cartuccia insulina</string>
@@ -369,37 +369,37 @@
     <string name="temporary_target">Target temporaneo</string>
     <string name="temporary_targets">Target temporanei</string>
     <string name="running_mode">Modalità esecuzione</string>
-    <string name="running_mode_desc">Chiudere o aprire il loop, sospenderlo o scollegare il microinfusore</string>
+    <string name="running_mode_desc">Chiudi o apri il loop, sospendilo o scollega il micro</string>
     <string name="running_mode_change_not_allowed">Cambio modalità di esecuzione non disponibile</string>
     <string name="pump_reconnect">Riconnetti micro</string>
     <string name="scene">Scena</string>
     <string name="scenes">Scene</string>
-    <string name="scene_desc">Situazione preset — attivare azioni multiple contemporaneamente</string>
+    <string name="scene_desc">Preset per situazioni — attiva più azioni insieme</string>
     <string name="scene_activate">Attiva</string>
-    <string name="scene_deactivate">Fine Scena</string>
+    <string name="scene_deactivate">Termina scena</string>
     <string name="scene_active">Attivo</string>
     <string name="scene_ended">Scena conclusa</string>
-    <string name="scene_end_active">Fine scena attiva</string>
+    <string name="scene_end_active">Termina scena attiva</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Salta a</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Il follow-up %1$s non inizierà</string>
     <string name="scene_confirm_activate">Attivare la scena \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Terminare la scena \"%1$s\" e ripristinare le modifiche?</string>
     <string name="scene_conflict_active_tt">Il target temporaneo attivo verrà sostituito</string>
-    <string name="scene_conflict_active_profile">L\'interruttore del profilo attivo verrà sostituito</string>
+    <string name="scene_conflict_active_profile">Il cambio profilo attivo verrà sostituito</string>
     <string name="scene_conflict_active_running_mode">La modalità di esecuzione attiva verrà sostituita</string>
-    <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
-    <string name="scene_action_tt">Temp-Target %1$s</string>
+    <string name="scene_conflict_active_scene">La scena attiva \"%1$s\" verrà prima terminata</string>
+    <string name="scene_action_tt">Target temporaneo: %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profilo: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profilo: %1$d%%</string>
     <string name="scene_action_smb_on">Abilita SMB</string>
     <string name="scene_action_smb_off">Disabilita SMB</string>
-    <string name="scene_action_running_mode">Modalità in esecuzione: %1$s</string>
+    <string name="scene_action_running_mode">Modalità esecuzione: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Crea, modifica e gestisci scene</string>
     <string name="scene_start_from_template">Inizia da un modello</string>
     <string name="scene_editor_target">Target</string>
-    <string name="scene_editor_tt_preset">TT preset</string>
+    <string name="scene_editor_tt_preset">Preset TT</string>
     <string name="scene_editor_no_tt_presets">Nessun preset TT configurato</string>
     <string name="scene_editor_select_tt_preset">Seleziona Preset</string>
     <string name="scene_editor_percentage">Percentuale</string>
@@ -425,9 +425,9 @@
     <string name="scene_lock_banner_control_disabled">Il master ha disabilitato il controllo remoto. I controlli delle scene riprenderanno quando saranno riattivati sul master.</string>
     <string name="master_offline_banner">Dispositivo master irraggiungibile. La modifica è disabilitata fino al ripristino della connessione.</string>
     <string name="master_control_disabled_banner">Il Master ha disabilitato il controllo remoto. La modifica è disabilitata fino a quando non viene riattivata sul master.</string>
-    <string name="hardened_mode_on">Hardened mode on</string>
-    <string name="hardened_mode_title">Hardened mode</string>
-    <string name="hardened_mode_info_open">Circa la hardened mode</string>
+    <string name="hardened_mode_on">Modalità protetta attiva</string>
+    <string name="hardened_mode_title">Modalità protetta</string>
+    <string name="hardened_mode_info_open">Info sulla modalità protetta</string>
     <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Sola lettura</string>
     <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Pasti</string>
     <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Caregiver</string>
@@ -435,17 +435,17 @@
     <string name="client_role_title">Ruolo</string>
     <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Ruolo: %1$s</string>
     <string name="client_roles_info_open">Info sui ruoli</string>
-    <string name="client_roles_info">Ogni telefono associato ha un ruolo. Il telefono principale lo controlla per ogni comando, e il telefono mostra solo ciò che il suo ruolo consente. Un nuovo ruolo ha effetto in una volta, senza accoppiarsi di nuovo.\n\nSolo lettura: il telefono rimane accoppiato, ma mostra solo dati.\n\nPasti: bolo, procedura guidata bolus, QuickWizard e carboidrati. Può anche fermare un bolo in esecuzione. Le carote inserite qui possono rendere il ciclo dare più insulina.\n\nCaregiver: tutto ciò che un utente fa in AAPS, come obiettivi temp, profilo e interruttori di insulina, modalità loop, basale temp, bolo esteso, scene, eventi portale, calibrazioni e rimozione dei record.\n\nAdmin: tutto, impostazioni e preset inclusi (QuickWizard, preset target temp, scene, profili, automazione, insulina).</string>
+    <string name="client_roles_info">Ogni telefono associato ha un ruolo. Il telefono principale lo controlla per ogni comando, e il telefono mostra solo ciò che il suo ruolo consente. Un nuovo ruolo ha effetto subito, senza associarsi di nuovo.\n\nSolo lettura: il telefono rimane associato, ma mostra solo i dati.\n\nPasti: bolo, calcolatore bolo, Assistente Rapido e carboidrati. Può anche fermare un bolo in corso. I carboidrati inseriti qui possono far dare più insulina al loop.\n\nCaregiver: tutto ciò che un utente fa in AAPS, come target temporanei, cambi di profilo e di insulina, modalità del loop, basale temporanea, bolo esteso, scene, eventi del careportale, calibrazioni e rimozione dei record. Non può modificare impostazioni o preset.\n\nAdmin: tutto, impostazioni e preset inclusi (Assistente Rapido, preset dei target temporanei, scene, profili, automazione, insulina).</string>
     <string name="client_read_only_banner">Questo telefono è in modalità di sola lettura sul telefono principale.</string>
-    <string name="hardened_mode_info">Il telefono principale prende le modifiche solo dai client accoppiati. Non richiede trattamenti, obiettivi di temperatura, cambiamenti del profilo, modifiche o eliminazioni della modalità in esecuzione effettuate direttamente in Nightscout, ad esempio sul sito web o in altre applicazioni. Le impostazioni per accettare i dati da Nightscout sono nascoste mentre la modalità indurita è attiva. I comandi SMS non sono influenzati.\n\nIl telefono principale carica ancora tutti i dati su Nightscout, BG incluso. Se ottiene la sua glicemia da Nightscout, prende ancora glicemia da lì.\n\nPer caricare la cronologia su un nuovo telefono principale, utilizzare la sincronizzazione completa in NSClient. La sincronizzazione completa prende tutto ciò che è in Nightscout, profili inclusi.\n\nIl telecomando dei client ha bisogno di una connessione WebSocket funzionante a Nightscout, sul telefono principale e sui client accoppiati. La modalità semplice attiva sempre la modalità indurita. Per disattivarla, lascia la modalità semplice e disattiva il controllo client sul telefono principale.</string>
+    <string name="hardened_mode_info">Il telefono principale accetta modifiche solo dai client associati. Non accetta trattamenti, target temporanei, cambi di profilo, cambi di modalità di esecuzione o eliminazioni fatti direttamente in Nightscout, ad esempio sul sito web o in altre app. Le impostazioni per accettare dati da Nightscout sono nascoste mentre la modalità protetta è attiva. I comandi SMS non cambiano.\n\nIl telefono principale carica comunque tutti i dati su Nightscout, glicemia inclusa. Se riceve la glicemia da Nightscout, continua a prenderla da lì.\n\nPer caricare la cronologia su un nuovo telefono principale, usa la Sincronizzazione completa in NSClient. La sincronizzazione completa prende tutto ciò che è in Nightscout, profili inclusi.\n\nIl controllo remoto dai client ha bisogno di una connessione WebSocket funzionante a Nightscout, sul telefono principale e sui client associati. La modalità semplice attiva sempre la modalità protetta. Per disattivarla, esci dalla modalità semplice e disattiva il controllo client sul telefono principale.</string>
     <string name="scene_lock_reason_master_offline">Master disconnesso</string>
     <string name="scene_lock_reason_control_disabled">Controllo remoto disabilitato</string>
     <string name="scene_lock_reason_scene_active">Ferma prima la scena in esecuzione</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
-    <string name="clientcontrol_action_set_temp_target">Avvia temp-target</string>
-    <string name="clientcontrol_action_cancel_temp_target">Cancella temp target</string>
-    <string name="clientcontrol_action_activate_scene">Attivare la scena %1$s</string>
-    <string name="clientcontrol_action_deactivate_scene">Fine Scena</string>
+    <string name="clientcontrol_action_set_temp_target">Imposta target temporaneo</string>
+    <string name="clientcontrol_action_cancel_temp_target">Annulla target temporaneo</string>
+    <string name="clientcontrol_action_activate_scene">Attiva scena %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Termina scena</string>
     <string name="clientcontrol_action_update_settings">Aggiorna le impostazioni</string>
     <string name="clientcontrol_action_deliver_bolus">Eroga bolo</string>
     <string name="clientcontrol_action_eat_reminder">Cambia promemoria del pasto</string>
@@ -457,36 +457,36 @@
     <string name="clientcontrol_fail_expired">Il comando è scaduto prima che il master lo abbia applicato.</string>
     <string name="clientcontrol_fail_busy">Un\'altra azione è già in corso.</string>
     <string name="clientcontrol_fail_send_failed">Impossibile raggiungere Nightscout.</string>
-    <string name="clientcontrol_fail_no_active_profile">Il master non ha un profilo attivo per applicarlo.</string>
+    <string name="clientcontrol_fail_no_active_profile">Il master non ha un profilo attivo a cui applicarlo.</string>
     <string name="clientcontrol_fail_scene_not_found">La scena non esiste più.</string>
     <string name="clientcontrol_fail_site_entry_not_found">La voce del sito non esiste più.</string>
     <string name="clientcontrol_fail_scene_disabled">La scena è disabilitata.</string>
-    <string name="clientcontrol_fail_partial">Alcune azioni non possono essere applicate.</string>
-    <string name="clientcontrol_fail_execution">Il master non può applicare questa richiesta.</string>
-    <string name="clientcontrol_fail_cancelled">Il comando è stato annullato prima che fosse eseguito. Nulla è stato inviato all micro.</string>
+    <string name="clientcontrol_fail_partial">Alcune azioni non sono state applicate.</string>
+    <string name="clientcontrol_fail_execution">Il master non è riuscito ad applicarlo.</string>
+    <string name="clientcontrol_fail_cancelled">Il comando è stato annullato prima che fosse eseguito. Nulla è stato inviato al micro.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolo annullato. Non è stata somministrata insulina.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Annullato</string>
     <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Nessun SMB mentre un bolo è in attesa di conferma</string>
-    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Un SMB è in fase di consegna. Riprova quando è finito.</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Un SMB è in fase di erogazione. Potrai confermare quando è finito.</string>
     <string name="clientcontrol_fail_control_disabled">Il controllo remoto sul master è spento.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Il ruolo di questo telefono sul master non lo consente.</string>
-    <string name="clientcontrol_fail_other_token">Il master lo ha rifiutato: questo telefono scrive su Nightscout con un altro token rispetto al proprio. Sul master, rimuovere questo telefono e aggiungerlo di nuovo.</string>
+    <string name="clientcontrol_fail_other_token">Il master lo ha rifiutato: questo telefono scrive su Nightscout con un token diverso dal proprio. Sul master, rimuovi questo telefono e aggiungilo di nuovo.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Il bolo preparato è scaduto o è stato sostituito. Tocca nuovamente il pulsante.</string>
-    <string name="clientcontrol_fail_bolus_compute">Il master non è riuscito a calcolare il bolo (mancanza di glucosio / profilo, o pompa non pronta).</string>
+    <string name="clientcontrol_fail_bolus_compute">Il master non è riuscito a calcolare il bolo (glicemia / profilo mancante, o micro non pronto).</string>
     <string name="clientcontrol_fail_internal">Qualcosa è andato storto.</string>
     <string name="clientcontrol_fail_unknown">Comando fallito.</string>
-    <string name="clientcontrol_unconfirmed_wear">Stato sconosciuto — controllare il telefono/Nightscout prima di rifare il bolo.</string>
-    <string name="clientcontrol_bolus_progress_stalled_title">Connessione persa — stato di consegna sconosciuto</string>
-    <string name="clientcontrol_bolus_progress_stalled_body">Questo telefono ha smesso di ricevere aggiornamenti dal master. Il bolo potrebbe essere ancora in consegna o potrebbe essere finito. Chiudere questo lo nasconde solo qui — non ferma la pompa. Controlla il telefono principale per l\'importo effettivamente consegnato.</string>
-    <string name="scene_revert_tt">Cancella basali temporanee</string>
+    <string name="clientcontrol_unconfirmed_wear">Stato sconosciuto — controlla il telefono/Nightscout prima di rifare il bolo.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Connessione persa — stato dell\'erogazione sconosciuto</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Questo telefono non riceve più aggiornamenti dal master. Il bolo potrebbe essere ancora in erogazione o essere già finito. Chiudere questa finestra la nasconde solo qui — non ferma il micro. Controlla sul telefono master la quantità realmente erogata.</string>
+    <string name="scene_revert_tt">Annulla target temporaneo</string>
     <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
     <string name="scene_revert_smb_off">Disabilita SMB</string>
-    <string name="scene_revert_loop_mode">Annulla l\'override della modalità in esecuzione</string>
-    <string name="scene_careportal_no_revert">Le voci CarePortal non verranno ripristinate</string>
+    <string name="scene_revert_loop_mode">Annulla la modifica della modalità esecuzione</string>
+    <string name="scene_careportal_no_revert">Le voci del careportale non verranno ripristinate</string>
     <string name="careportal_sickness">Malattia</string>
     <string name="careportal_stress">Stress</string>
-    <string name="careportal_pre_period">Pre-periodo</string>
+    <string name="careportal_pre_period">Pre-ciclo</string>
     <string name="careportal_alcohol">Alcool</string>
     <string name="careportal_cortisone">Cortisone</string>
     <string name="careportal_feeling_low">Sensazione di ipo</string>
@@ -494,33 +494,33 @@
     <string name="careportal_falling_asleep">Addormentamento</string>
     <string name="careportal_waking_up">Risveglio</string>
     <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
-    <string name="careportal_temporarytargetcancel">Cancellazione target temporaneo</string>
+    <string name="careportal_temporarytargetcancel">Annullamento target temporaneo</string>
     <string name="boluswizard">Calcolatore</string>
-    <string name="treatment_desc">Registrare insieme insulina e carboidrati</string>
+    <string name="treatment_desc">Registra insieme insulina e carboidrati</string>
     <string name="treatment_insulin_desc">Eroga manualmente il bolo</string>
-    <string name="treatment_carbs_desc">Registrare carboidrati senza insulina</string>
+    <string name="treatment_carbs_desc">Registra carboidrati senza insulina</string>
     <string name="treatment_calculator_desc">Calcola bolo</string>
     <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Impostazioni insulina</string>
-    <string name="manage_insulin_desc">Gestire e attivare le configurazioni di insulina</string>
-    <string name="concentration_disable_blocked">Non è possibile disabilitare il supporto alla concentrazione mentre esistono insuline non-U100. Rimuovere prima tutte le configurazioni non-U100 e passare a un profilo U100.</string>
-    <string name="simple_mode_blocked_by_concentration">Non è possibile abilitare la modalità semplice mentre si utilizza insulina non-U100. Passare prima all\'insulina U100.</string>
+    <string name="manage_insulin_desc">Gestisci e attiva le configurazioni di insulina</string>
+    <string name="concentration_disable_blocked">Non puoi disabilitare il supporto alla concentrazione finché esistono insuline non U100. Prima rimuovi tutte le configurazioni non U100 e passa a un profilo U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Non puoi abilitare la modalità semplice mentre usi insulina non U100. Prima passa all\'insulina U100.</string>
     <string name="manage_profile_desc">Gestisci e attiva i profili</string>
-    <string name="manage_temp_target_desc">Gestisci e imposta obiettivi temporanei</string>
+    <string name="manage_temp_target_desc">Gestisci e imposta target temporanei</string>
     <string name="manage_temp_basal_desc">Imposta basale temporanea</string>
-    <string name="manage_extended_bolus_desc">Avvio erogazione bolo esteso</string>
+    <string name="manage_extended_bolus_desc">Avvia erogazione bolo esteso</string>
     <string name="manage_site_rotation_desc">Traccia e ruota i siti di infusione</string>
-    <string name="manage_quickwizard_desc">Gestisci le preimpostazioni della procedura guidata rapida</string>
-    <string name="treatment_note_desc">Aggiungi una nota al tuo record</string>
+    <string name="manage_quickwizard_desc">Gestisci i preset dell\'Assistente Rapido</string>
+    <string name="treatment_note_desc">Aggiungi una nota ai tuoi dati</string>
     <string name="treatment_question_desc">Registra una domanda per il tuo team di cura</string>
     <string name="treatment_cgm_desc">Apri app CGM</string>
     <string name="treatment_calibration_desc">Calibra sensore CGM</string>
     <string name="treatment_bg_check_desc">Registra il controllo della glicemia</string>
     <string name="treatment_exercise_desc">Registra attività di esercizio</string>
-    <string name="treatment_announcement_desc">Pubblicazione annuncio</string>
+    <string name="treatment_announcement_desc">Pubblica un avviso</string>
     <string name="treatment_sensor_insert_desc">Registra inserimento sensore CGM</string>
-    <string name="treatment_battery_change_desc">Registra il cambio batteria della pompa</string>
-    <string name="treatment_cannula_change_desc">Registrare il cambio del set cannula/infusione</string>
-    <string name="treatment_fill_desc">Inizializzazione e riempimento cannula</string>
+    <string name="treatment_battery_change_desc">Registra il cambio batteria del micro</string>
+    <string name="treatment_cannula_change_desc">Registra il cambio cannula/set di infusione</string>
+    <string name="treatment_fill_desc">Carica e riempi la cannula</string>
     <string name="temp_basal">Basale temporanea</string>
     <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Sopra il profilo</string>
     <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Sotto il profilo</string>
@@ -542,11 +542,11 @@
     <string name="preset_settings">Impostazioni Preset</string>
     <string name="activation">Attivazione</string>
     <string name="temp_target_management">Target Temporaneo</string>
-    <string name="revert_to_defaults">Ripristino delle impostazioni predefinite</string>
+    <string name="revert_to_defaults">Ripristina i valori predefiniti</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="location_front_right_upper_chest">Fianco destro</string>
-    <string name="location_front_left_upper_chest">Fianco sinistro</string>
+    <string name="location_front_right_upper_chest">Petto destro</string>
+    <string name="location_front_left_upper_chest">Petto sinistro</string>
     <string name="location_side_right_upper_arm">Braccio Esterno Superiore Destro</string>
     <string name="location_side_left_upper_arm">Braccio Esterno Superiore Sinistro</string>
     <string name="location_back_right_upper_arm">Braccio Posteriore Superiore Destro</string>
@@ -561,8 +561,8 @@
     <string name="location_front_left_lower_abdomen">Addome Anteriore Basso Sinistro</string>
     <string name="location_back_right_buttock">Natica Destra</string>
     <string name="location_back_left_buttock">Natica Sinistra</string>
-    <string name="location_back_right_lower_back">Indietro Inferiore Destro</string>
-    <string name="location_back_left_lower_back">Sinistra Inferiore Indietro</string>
+    <string name="location_back_right_lower_back">Parte bassa della schiena destra</string>
+    <string name="location_back_left_lower_back">Parte bassa della schiena sinistra</string>
     <string name="location_side_right_upper_thigh">Coscia Superiore Destra Esterna</string>
     <string name="location_side_left_upper_thigh">Coscia Superiore Esterna Sinistra</string>
     <string name="location_side_right_lower_thigh">Coscia Inferiore Esterna Destra</string>
@@ -585,7 +585,7 @@
     <string name="command_replaced">Sostituito con un nuovo comando</string>
     <string name="pump_not_configured">Micro non configurato</string>
     <!--    PumpEnactResult-->
-    <string name="enacted">Emanato</string>
+    <string name="enacted">Eseguito</string>
     <string name="comment">Commento</string>
     <string name="percent">Percento</string>
     <string name="absolute">Assoluto</string>
@@ -625,26 +625,26 @@
     <string name="uel_hw_pump_allowed">HW MICRO CONSENTITO</string>
     <string name="uel_clear_pairing_keys">CANCELLA CHIAVI DI ASSOCIAZIONE</string>
     <string name="uel_accepts_temp_basal">ACCETTA BASALE TEMPORANEA</string>
-    <string name="uel_cancel_temp_basal">CANCELLA BASALE TEMPORANEA</string>
-    <string name="uel_cancel_bolus">CANCELLA BOLO</string>
-    <string name="uel_cancel_extended_bolus">CANCELLA BOLO ESTESO</string>
-    <string name="uel_cancel_tt">CANCELLA TARGET TEMPORANEO</string>
-    <string name="uel_careportal">PORTALE</string>
-    <string name="uel_sensor_location">LOCAZIONE SENSORE</string>
+    <string name="uel_cancel_temp_basal">ANNULLA BASALE TEMPORANEA</string>
+    <string name="uel_cancel_bolus">ANNULLA BOLO</string>
+    <string name="uel_cancel_extended_bolus">ANNULLA BOLO ESTESO</string>
+    <string name="uel_cancel_tt">ANNULLA TARGET TEMPORANEO</string>
+    <string name="uel_careportal">CAREPORTALE</string>
+    <string name="uel_sensor_location">POSIZIONE SENSORE</string>
     <string name="uel_site_change">CAMBIO POSIZIONE CANNULA</string>
-    <string name="uel_site_location">LOCAZIONE SITO</string>
+    <string name="uel_site_location">POSIZIONE SITO</string>
     <string name="uel_reservoir_change">CAMBIO SERBATOIO</string>
     <string name="uel_calibration">CALIBRAZIONE</string>
     <string name="uel_prime_bolus">BOLO DI CARICAMENTO</string>
     <string name="uel_treatment">TRATTAMENTO</string>
-    <string name="uel_careportal_ns_refresh">PORTALE NS: AGGIORNAMENTO</string>
+    <string name="uel_careportal_ns_refresh">CAREPORTALE NS: AGGIORNAMENTO</string>
     <string name="uel_profile_switch_ns_refresh">CAMBIO PROFILO NS: AGGIORNAMENTO</string>
     <string name="uel_treatments_ns_refresh">TRATTAMENTI NS: AGGIORNAMENTO</string>
     <string name="uel_tt_ns_refresh">TARGET TEMPORANEO NS: AGGIORNAMENTO</string>
     <string name="uel_automation_removed">AUTOMAZIONE RIMOSSA</string>
     <string name="uel_bg_removed">BG RIMOSSO</string>
     <string name="uel_calibration_removed">CALIBRAZIONE RIMOSSA</string>
-    <string name="uel_careportal_removed">PORTALE RIMOSSO</string>
+    <string name="uel_careportal_removed">CAREPORTALE RIMOSSO</string>
     <string name="uel_bolus_removed">BOLO RIMOSSO</string>
     <string name="uel_carbs_removed">CHO RIMOSSI</string>
     <string name="uel_temp_basal_removed">BASALE TEMPORANEA RIMOSSA</string>
@@ -661,11 +661,11 @@
     <string name="uel_ns_queue_cleared">CODA NS CANCELLATA</string>
     <string name="uel_ns_settings_copied">IMPOSTAZIONI NS COPIATE</string>
     <string name="uel_error_dialog_ok">FINESTRA DI ERRORE OK</string>
-    <string name="uel_error_dialog_mute">FINESTRA DI ERRORE MUTO </string>
-    <string name="uel_error_dialog_mute_5min">FINESTRA DI ERRORE MUTO 5MIN</string>
+    <string name="uel_error_dialog_mute">FINESTRA DI ERRORE SILENZIA </string>
+    <string name="uel_error_dialog_mute_5min">FINESTRA DI ERRORE SILENZIA 5MIN</string>
     <string name="uel_objective_started">OBIETTIVO AVVIATO</string>
     <string name="uel_objective_unstarted">OBIETTIVO NON AVVIATO</string>
-    <string name="uel_objectives_skipped">OBIETTIVI IGNORATI</string>
+    <string name="uel_objectives_skipped">OBIETTIVI SALTATI</string>
     <string name="uel_stat_reset">RESET STAT</string>
     <string name="uel_delete_logs">ELIMINA LOG</string>
     <string name="uel_delete_future_treatments">ELIMINA TRATTAMENTI FUTURI</string>
@@ -694,18 +694,18 @@
     <string name="uel_loop_change">LOOP CAMBIATO</string>
     <string name="uel_loop_removed">LOOP RIMOSSO</string>
     <string name="uel_new_insulin">NUOVA INSULINA</string>
-    <string name="uel_change_pump_insulin">MODIFICA MICRO INSULINA</string>
-    <string name="uel_store_insulin">CONSERVAZIONE INSULINA</string>
+    <string name="uel_change_pump_insulin">CAMBIO INSULINA MICRO</string>
+    <string name="uel_store_insulin">MEMORIZZA INSULINA</string>
     <string name="uel_change_insulin_concentration">MODIFICA CONCENTRAZIONE INSULINA</string>
     <string name="uel_insulin_removed">INSULINA RIMOSSA</string>
-    <string name="uel_running_mode">MODALITÀ RUNNING</string>
-    <string name="uel_running_mode_removed">MODALITÀ RUNNING RIMOSSA</string>
-    <string name="uel_running_mode_updarted">MODALITÀ RUNNING AGGIORNATA</string>
+    <string name="uel_running_mode">MODALITÀ ESECUZIONE</string>
+    <string name="uel_running_mode_removed">MODALITÀ ESECUZIONE RIMOSSA</string>
+    <string name="uel_running_mode_updarted">MODALITÀ ESECUZIONE AGGIORNATA</string>
     <string name="uel_scene_activated">SCENA ATTIVATA</string>
     <string name="uel_scene_deactivated">SCENA DISATTIVATA</string>
     <string name="uel_remote_config_changed">CONFIG REMOTA MODIFICATA</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Valore superiore target temporaneo</string>
+    <string name="temp_target_low_target">Valore inferiore target temporaneo</string>
     <string name="temp_target_high_target">Valore superiore target temporaneo</string>
     <string name="temp_target_value">Valore target temporaneo</string>
     <string name="insulin_dia">Valore del DIA dell’insulina</string>
@@ -718,9 +718,9 @@
     <string name="no_profile_selected">Nessun profilo selezionato</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">Copia %1$s</string>
-    <string name="profile_not_saved_activate">Profilo non salvato. Si prega di salvare il profilo prima di attivarlo.</string>
-    <string name="profile_basal_not_compatible_with_pump">La velocità basale non è compatibile col micro corrente e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>
-    <string name="profile_basal_below_pump_minimum">La velocità basale è sotto il minimo attivabile e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>
+    <string name="profile_not_saved_activate">Profilo non salvato. Salva il profilo prima di attivarlo.</string>
+    <string name="profile_basal_not_compatible_with_pump">La velocità basale non è compatibile col micro attuale e non può essere attivata. Riduci la percentuale o regola la velocità basale.</string>
+    <string name="profile_basal_below_pump_minimum">La velocità basale è sotto il minimo del micro attuale e non può essere attivata. Aumenta la percentuale o regola la velocità basale.</string>
     <string name="profile_pump_incompatible_label">Limite micro</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
@@ -736,7 +736,7 @@
     <string name="load_events">CARICA EVENTI</string>
     <string name="clear_alarms">CANCELLA ALLARMI</string>
     <string name="deactivate">DISATTIVA</string>
-    <string name="update_time">AGGIORNAMENTO TEMPO</string>
+    <string name="update_time">AGGIORNA ORA</string>
     <string name="load_history">CARICA STORICO %1$d</string>
     <string name="load_tdds">CARICA TDD</string>
     <string name="set_profile">IMPOSTA PROFILO</string>
@@ -756,8 +756,8 @@
     <string name="basalpct">% basale</string>
     <string name="sensitivity">Sensibilità</string>
     <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens off</string>
-    <string name="isf_for_carbs">ISF per Calcolatore e Assorbimento di Carbo: %1$.1f</string>
-    <string name="isf_profile">Profilo ISF: %1$.1f</string>
+    <string name="isf_for_carbs">ISF medio per Calcolatore e assorbimento CHO: %1$.1f</string>
+    <string name="isf_profile">ISF del profilo: %1$.1f</string>
     <string name="isf_variable">ISF Variabile: %1$.1f</string>
     <string name="isf_effective">ISF Effettivo: %1$.1f</string>
     <string name="autosens_long">Valore Autosens: %.0f%%</string>
@@ -772,36 +772,36 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consiglio bolo</string>
-    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
+    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, è meglio aspettare una glicemia migliore. Vuoi fare adesso un bolo di correzione e ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il Calcolatore quando riceverai il promemoria.</string>
     <string name="wizard_bg_label">BG</string>
     <string name="wizard_correction">Correzione</string>
     <string name="wizard_subtotal">Subtotale</string>
     <string name="carbs_type_bread">Pane, pasticcini salati, yogurt, frutta (mela, banana, pera), patate, riso, grano saraceno, farina d\'avena, alimenti lenti e a basso contenuto di carboidrati, verdure</string>
-    <string name="carbs_type_cake">Ravioli, pasta, cucina asiatica ricca di carboidrati e grassi, dolci dolci e lieviti, cereali, porridge di grano, miele, marmellata</string>
-    <string name="carbs_type_pizza">Lasagna, pizza, hamburger, patatine fritte, patate, chips e snack simili</string>
+    <string name="carbs_type_cake">Ravioli, pasta, cucina asiatica ricca di carboidrati e grassi, dolci e prodotti lievitati, cereali, porridge di cereali, miele, marmellata</string>
+    <string name="carbs_type_pizza">Lasagne, pizza, hamburger, patatine fritte, patate al forno, chips e snack simili</string>
     <string name="wizard_total">Totale</string>
     <string name="wizard_carb_time">Tempo Carbo</string>
     <string name="carb_time_now">Adesso</string>
-    <string name="change">Cambiare</string>
+    <string name="change">Cambia</string>
     <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Concedi</string>
     <string name="set">Imposta</string>
     <string name="wizard_set_alarm">Imposta allarme</string>
-    <string name="eat_reminder_title">Tempo per mangiare</string>
+    <string name="eat_reminder_title">È ora di mangiare</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
     <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Attesa totale: %1$s</string>
     <string name="eat_reminder_rung">Il tempo è scaduto</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="eat_reminder_not_set">Non è stato possibile impostare il promemoria del pasto. Consenti ad AAPS di impostare avvisi e promemoria nelle impostazioni di Android.</string>
-    <string name="wizard_use_percentage">Uso percentuale</string>
+    <string name="wizard_use_percentage">Usa percentuale</string>
     <string name="wizard_include_bg">Includi Glicemia</string>
     <string name="wizard_include_tt">Includi TempTarget</string>
     <string name="wizard_include_trend">Includi la tendenza</string>
     <string name="wizard_include_iob">Includi IOB</string>
-    <string name="wizard_include_cob">Includi IOB</string>
+    <string name="wizard_include_cob">Includi COB</string>
     <string name="wizard_calculation">Calcolo</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla.</string>
-    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Rimozione massima: %1$d g (carboidrati a bordo)</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Rimozione massima: %1$d g (carboidrati attivi)</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
@@ -809,7 +809,7 @@
     <string name="wizard_trend_detail">Tendenza 15min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Violazione vincolo insulina!\nImpossibile erogare %1$.2fU</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
-    <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
+    <string name="quick_wizard_not_available">L\'Assistente Rapido selezionato non è più disponibile, aggiorna il riquadro</string>
     <string name="quickwizard_managemnt">Assistente Rapido</string>
     <!--    Preferences-->
     <string name="child">Bambino</string>
@@ -862,7 +862,7 @@
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
     <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
-    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percent rate %1$d%% recalculated to %2$s U/h with current basal %3$s U/h</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentuale %1$d%% ricalcolata in %2$s U/h con la basale attuale di %3$s U/h</string>
     <string name="itmustbepositivevalue">deve essere un valore positivo</string>
     <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
     <!--    Dialogs-->
@@ -870,7 +870,7 @@
     <string name="message">Messaggio</string>
     <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
-    <string name="dismiss">Cancella</string>
+    <string name="dismiss">Ignora</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
     <string name="close">Chiudi</string>
@@ -943,9 +943,9 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
     <!--    Pump pair/unpair (shared) -->
-    <string name="pump_pair">Accoppia</string>
+    <string name="pump_pair">Associa</string>
     <string name="pump_unpair">Disaccoppia</string>
-    <string name="pump_unpair_confirm_title">Disassocia micro?</string>
+    <string name="pump_unpair_confirm_title">Disaccoppia micro?</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
@@ -967,7 +967,7 @@
     <string name="nav_setupwizard_desc">Configura AAPS passo dopo passo</string>
     <string name="statistics">Statistiche</string>
     <string name="statistics_desc">Visualizza statistiche e rapporti</string>
-    <string name="tdd_cycle_pattern">Pattern ciclo TDD </string>
+    <string name="tdd_cycle_pattern">Pattern ciclo TDD</string>
     <string name="tdd_cycle_pattern_desc">Sovrapponi i totali giornalieri di insulina in cicli di 28 giorni per individuare i modelli ricorrenti</string>
     <string name="nav_profile_helper">Assistente profilo</string>
     <string name="nav_profile_helper_desc">Costruisci il tuo profilo in base al peso o al TDD</string>
@@ -1019,7 +1019,7 @@
     <string name="cleanup_db_confirm">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.</string>
     <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
     <string name="cleared_entries">Elementi cancellati</string>
-    <string name="reset_db_confirm">Sei sicuro di voler resettare i risultati di APS?</string>
+    <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="reset_aps_results_confirm">Sei sicuro di voler resettare i risultati di APS?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Dom</string>
@@ -1047,8 +1047,8 @@
     <string name="unsaved_changes">Modifiche non salvate</string>
     <string name="unsaved_changes_message">Hai delle modifiche non salvate. Cosa vuoi fare?</string>
     <string name="discard">Scarta</string>
-    <string name="ic_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'IC. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
-    <string name="isf_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="ic_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'IC. I valori qui sotto possono essere usati solo come fallback in caso di dati mancanti o solo come valore di riferimento</string>
+    <string name="isf_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'ISF. I valori qui sotto possono essere usati solo come fallback in caso di dati mancanti o solo come valore di riferimento</string>
     <string name="add_time_block">Aggiungi blocco orario</string>
     <string name="remove_entry">Rimuovi elemento</string>
     <string name="target_low_label">Basso</string>
@@ -1059,7 +1059,7 @@
     <string name="search_category_categories">Categorie di preferenze</string>
     <string name="search_category_preferences">Preferenze</string>
     <string name="search_category_dialogs">Finestre di dialogo</string>
-    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_plugins">Plugin</string>
     <string name="search_category_wiki">Documentazione</string>
     <string name="wiki_search_offline">La ricerca della documentazione richiede connessione internet</string>
     <string name="no_search_results">Nessun risultato trovato</string>
@@ -1093,7 +1093,7 @@
     <string name="aaps_directory">Directory AAPS</string>
     <string name="import_setting">Importa impostazioni</string>
     <!-- Import settings screen -->
-    <string name="import_decrypt_review">Decifra &amp; Review</string>
+    <string name="import_decrypt_review">Decifra e verifica</string>
     <string name="import_decrypt">Decripta</string>
     <string name="import_master_password">Password Master</string>
     <string name="import_decryption_password">Password di decifratura</string>
@@ -1109,11 +1109,11 @@
     -->
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Impostazioni da cambiare: %1$d. I plugin che sono cambiati verranno riavviati.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Impostazioni da cambiare: %1$d. Impostazioni del micro mantenute: %2$d, così il micro continua a funzionare.</string>
-    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Le impostazioni importate selezionate non hanno nessun micro su questo telefono. %1$s è ora attivo — controlla le impostazioni del micro.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Le impostazioni importate non selezionano nessun micro presente su questo telefono. %1$s è ora attivo — controlla le impostazioni del micro.</string>
     <string name="import_applying">Applicazione delle impostazioni…</string>
     <string name="import_replace_pump_settings">Sostituisci anche le impostazioni del micro</string>
-    <string name="import_replace_pump_settings_summary">Lascialo spento per mantenere il micro accoppiato con questo telefono. Accendilo quando si ripristina su un nuovo telefono con lo stesso micro.</string>
-    <string name="import_apply_waiting">In attesa del micro..</string>
+    <string name="import_replace_pump_settings_summary">Lascialo disattivato per mantenere il micro associato a questo telefono. Attivalo quando ripristini su un nuovo telefono con lo stesso micro.</string>
+    <string name="import_apply_waiting">In attesa del micro…</string>
     <string name="import_apply_pump_busy">Il micro è ancora occupato, quindi le impostazioni non sono state applicate.</string>
     <string name="import_apply_retry_question">Riprova adesso?</string>
     <string name="import_applied_title">Impostazioni applicate</string>
@@ -1136,7 +1136,7 @@
     <!-- Graph configuration -->
     <string name="graph_add">Aggiungi grafico</string>
     <string name="graph_new">Nuovo grafico</string>
-    <string name="graph_number">%1$d Grafico</string>
+    <string name="graph_number">Grafico %1$d</string>
     <string name="graph_bg">Grafico glicemia</string>
     <string name="graph_height">Altezza grafico [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
@@ -1206,5 +1206,5 @@
     <string name="units_sec">sec</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
-    <string name="secrets_not_protected">Nessun archivio di chiavi di sistema è stato trovato su questo computer. Le chiavi che proteggono le impostazioni e l\'accoppiamento con il master sono conservate nei file accanto ai dati, così chiunque ottiene una copia dei tuoi file li ottiene troppo. Su Linux, installa e avvia un portachiavi (ad esempio GNOME Keyring o KWallet), quindi riavvia AAPS.</string>
+    <string name="secrets_not_protected">Nessun archivio di chiavi di sistema è stato trovato su questo computer. Le chiavi che proteggono le impostazioni e l\'associazione con il master sono conservate in file accanto ai dati, quindi chi ottiene una copia dei tuoi file ottiene anche le chiavi. Su Linux, installa e avvia un portachiavi (ad esempio GNOME Keyring o KWallet), poi riavvia AAPS.</string>
 </resources>
