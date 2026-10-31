@@ -11,6 +11,7 @@
     <string name="treatments_history">Historique Traitements</string>
     <string name="treatments_desc">Voir et gérer l\'historique des traitements</string>
     <string name="nav_configuration">Configuration</string>
+    <string name="nav_configuration_desc">Paramétrez votre configuration (MGC, pompe, ...) et activez des fonctionnalités</string>
     <string name="count_selected">%1$d séléctionné(s)</string>
     <string name="delete">Supprimer</string>
     <string name="show_invalidated">Montrer les entrées invalides</string>
@@ -170,7 +171,7 @@
     <string name="waiting_for_pump">En attente de la pompe…</string>
     <string name="initialization_failed">Échec de l\'initialisation</string>
     <string name="notes_label">Notes</string>
-    <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
+    <string name="wrong_pump_data">Les données proviennent d\'une autre pompe. Changez de pilote de pompe pour réinitialiser l\'état de la pompe.</string>
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
