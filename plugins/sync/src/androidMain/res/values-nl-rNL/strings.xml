@@ -227,17 +227,17 @@
     <string name="smscommunicator">SMS Commando\'s</string>
     <string name="description_sms_communicator">Bedien AAPS op afstand met SMS commando\'s.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">van de Authenticator-app voor: %1$s gevolgd door PIN</string>
-    <string name="smscommunicator_tab_otp_label">Authentificatie instellingen</string>
+    <string name="smscommunicator_tab_otp_label">Authenticatie instellingen</string>
     <string name="smscommunicator_code_verify_label">Te controleren code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">De verificatiecode bestaat uit 6 cijfers die worden afgebeeld door de Authenticator-app (bekend als OTP), gevolgd door 3 of meer cijfers van de verplichte PIN-code.</string>
-    <string name="smscommunicator_otp_reset_btn">Reset Authentificatie</string>
-    <string name="smscommunicator_otp_reset_title">Reset Authentificatie-sleutel</string>
-    <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Autentificatie-sleutel wilt resetten? Met deze actie maak je alle Authentificatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
+    <string name="smscommunicator_otp_reset_btn">Reset Authenticatie</string>
+    <string name="smscommunicator_otp_reset_title">Reset Authenticatie-sleutel</string>
+    <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Authenticatie-sleutel wilt resetten? Met deze actie maak je alle Authenticatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
-    <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
+    <string name="smscommunicator_otp_reset_header">Reset Authenticatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Door de authenticator opnieuw in te stellen maakt u alle reeds aangemaakte authenticatoren ongeldig. U moet ze opnieuw instellen!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
