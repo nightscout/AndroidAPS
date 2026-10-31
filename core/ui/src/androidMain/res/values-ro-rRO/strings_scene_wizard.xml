@@ -66,12 +66,14 @@
     <string name="scene_wizard_finish">Finalizați</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Scenariu de continuare</string>
+    <string name="scene_wizard_chain_info">Opțional, puteți lega un alt scenariu care pornește automat când acesta expiră. Puteți trece la el și când încheiați mai devreme. Scenariul de continuare rulează doar dacă este activat și pompa este disponibilă; altfel, bannerul scenariului încheiat arată de ce nu a pornit.</string>
     <string name="scene_chain_none">Niciunul</string>
     <string name="scene_skip_to_format">Săriți la %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Scenariul conectat a fost șters</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Scenariul de continuare nu a pornit: %1$s</string>
     <string name="scene_chain_skipped_deleted">scenariul țintă a fost șters</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" este dezactivat</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d din %4$d acțiuni au eșuat</string>
