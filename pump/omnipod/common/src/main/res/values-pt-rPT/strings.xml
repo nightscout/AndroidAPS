@@ -44,7 +44,7 @@
     <string name="omnipod_common_overview_pod_expiry_date">Pod Expira</string>
     <string name="omnipod_common_overview_last_connection">Última Ligação</string>
     <string name="omnipod_common_overview_last_bolus">Último Bólus</string>
-    <string name="omnipod_common_overview_temp_basal_rate">Taxa Basal Temp</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Taxa basal temporária</string>
     <string name="omnipod_common_overview_base_basal_rate">Taxa Basal do Perfil</string>
     <string name="omnipod_common_overview_pod_active_alerts">Alertas Pod Ativos</string>
     <string name="omnipod_common_overview_firmware_version">Versão do Firmware</string>
@@ -58,7 +58,7 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Encher Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inicializar Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Colocar o Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Prepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e anexe o Pod no local de infusão.\n\nSe a cânula sair, por favor, pressione <b>Cancelar</b> e descarte o Pod.\n\nPressione <b>Seguinte</b> para inserir a cânula e começar a administração da basal.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Prepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e coloque o Pod no local de infusão.\n\nSe a cânula sair, por favor, pressione <b>Cancelar</b> e descarte o Pod.\n\nPressione <b>Seguinte</b> para inserir a cânula e começar a administração da basal.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Quando pressionar <b>OK</b>, a cânula será inserida. Certifique-se de que colocou o Pod no local de infusão.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Inserir Cânula</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">A tentar definir o horário da basal inicial e inserir a cânula.\n\nQuando a cânula for inserida com sucesso, pode pressionar <b>Seguinte</b>.</string>
@@ -82,7 +82,7 @@
     <string name="omnipod_common_preferences_smb_beeps_enabled">Beeps SMB ativados</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Beeps de basal temporária ativados</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar Botão Suspender Administração no separador Omnipod</string>
-    <string name="omnipod_common_preferences_time_change_enabled">Deteção de DST/Fuso Horário Ativado</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Deteção de hora de verão/fuso horário ativada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração ativado</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Quando ativado, o Pod emite um beep quando a hora definida é atingida</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Lembrete horas antes da expiração (72 horas)</string>
