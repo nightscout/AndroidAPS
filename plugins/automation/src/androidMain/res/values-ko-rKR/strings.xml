@@ -116,6 +116,8 @@
     <string name="triggerPumpBatteryAgeDesc">펌프 배터리 사용 기간 %1$s %2$.1f시간</string>
     <string name="triggerReservoirLevelLabel">레저버 잔량</string>
     <string name="triggerReservoirLevelDesc">레저버 잔량 %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">펌프 배터리 레벨</string>
+    <string name="triggerPumpBatteryLevelDesc">펌프 배터리 레벨 %1$s %2$.0f</string>
     <string name="recurringTime">반복 시간</string>
     <string name="every">매주</string>
     <string name="never">안 함</string>
