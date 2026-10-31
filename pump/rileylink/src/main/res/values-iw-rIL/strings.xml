@@ -11,6 +11,7 @@
     <string name="medtronic_pump_encoding_title">קידוד Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">קידוד תוכנה 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">קידוד חומרה 4b6b</string>
+    <string name="medtronic_pump_frequency_us_ca">ארה\"ב וקנדה (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">ברחבי העולם (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">סורק</string>
@@ -75,5 +76,5 @@
     <string name="orange_use_scanning_level_summary">סריקה לפני החיבור ל-OrangeLink, נועד לשפר את החיבורים (ניתן להשתמש בו גם עם מכשירים תואמי RileyLink אחרים, במידת הצורך)</string>
     <string name="rileylink_pair">צימוד RileyLink</string>
     <string name="rileylink_pair_success">צימוד RileyLink הצליח</string>
-    <string name="rileylink_config_reset">אתחול תצורת RileyLink</string>
+    <string name="rileylink_config_reset">תצורת RileyLink אופסה</string>
 </resources>

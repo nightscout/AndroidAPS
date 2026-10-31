@@ -10,7 +10,7 @@
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd. %2$dval.</string>
     <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$d val.</string>
     <!--    Widget-->
-    <string name="configure">Derinti skaidrumą</string>
+    <string name="configure">Derinti nepermatomumą</string>
     <string name="widget_description">AAPS valdiklis</string>
     <string name="widget_bg_graph_description">AAPS gliukozės grafikas</string>
     <string name="widget_glucose_circle_description">AAPS gliukozės apskritimas</string>
@@ -19,7 +19,7 @@
     <!--     Activities-->
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
-    <string name="agp_title">Ambulatory Glucose Profile</string>
+    <string name="agp_title">Ambulatorinis gliukozės profilis</string>
     <string name="agp_glycemic_overview">Glikemijos apžvalga</string>
     <string name="agp_today">Šiandien</string>
     <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$d val.</string>
@@ -58,7 +58,7 @@
     <string name="cgp_pgr_extremely_high">Ypač didelė rizika</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
-    <string name="age">Laikas</string>
+    <string name="age">Amžius</string>
     <string name="weight_label">Svoris</string>
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
@@ -257,7 +257,7 @@
     <string name="format_with_tdd">Laikas: %1$d BPD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Laikas: %1$d BPD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Laikas: %1$d Svoris: %2$.0f kg</string>
-    <string name="dpv_default_profile">Numatytasis profilis</string>
+    <string name="dpv_default_profile">DPV numatytasis profilis</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>

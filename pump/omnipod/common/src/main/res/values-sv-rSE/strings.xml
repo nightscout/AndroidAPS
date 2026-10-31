@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_button_activate_pod">Aktivera Pod</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Aktivera pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Inaktivera pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Kassera pod</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Om du kasserar podden kan du inte längre kommunicera med den. Gör detta bara när all kommunikation med podden misslyckas hela tiden. Om du fortfarande kan kommunicera med podden, använd <b>Inaktivera pod</b>.\n\nOm du vill fortsätta, se till att ta bort podden från kroppen!</string>
@@ -19,9 +19,9 @@
     <string name="omnipod_common_error_failed_to_silence_alerts">Det gick inte att kvittera larm</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Det gick inte att pausa leveransen</string>
     <string name="omnipod_common_error_failed_to_set_time">Det gick inte att ange tid</string>
-    <string name="omnipod_common_error_failed_to_resume_delivery">Misslyckades återuppta leveransen</string>
-    <string name="omnipod_common_error_failed_to_initialize_pod">Misslyckades att initiera Pod</string>
-    <string name="omnipod_common_error_failed_to_insert_cannula">Misslyckades att skjuta in kanylen</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Det gick inte att återuppta leveransen</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Det gick inte att initiera podden</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Det gick inte att skjuta in kanylen</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Poddens aktiveringstid har överskridits. Denna pod kan inte längre aktiveras.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Det gick inte att verifiera aktiveringen. Försök igen.</string>
     <string name="omnipod_common_error_pod_suspended">Pod pausad</string>
@@ -35,7 +35,7 @@
     <string name="omnipod_common_overview_button_set_time">Ställ in tid</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Pausa</string>
     <string name="omnipod_common_overview_button_resume_delivery">Återuppta insulintillförsel</string>
-    <string name="omnipod_common_overview_button_silence_alerts">Kvittera Larm</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Kvittera larm</string>
     <string name="omnipod_common_overview_pod_status">Pod-status</string>
     <string name="omnipod_common_overview_total_delivered">Totalt levererat</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikt ID</string>
@@ -49,6 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Aktiva pod-varningar</string>
     <string name="omnipod_common_overview_firmware_version">Firmwareversion</string>
     <string name="omnipod_common_overview_time_on_pod">Tid i Pod</string>
+    <string name="omnipod_common_uncertain">osäker</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Inaktivera pod</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Du har inte gjort alla steg än. Är du säker på att du vill avsluta?</string>
@@ -66,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Inaktivera pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Tryck på <b>Nästa</b> för att inaktivera podden.\n\n<b>Obs:</b> Det här pausar all insulintillförsel och inaktiverar podden.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">En inaktiverad Pod kan inte användas igen. Inaktivera denna Pod nu?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Inaktiverar Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Inaktiverar Pod.\n\nNär inaktiveringen har slutförts kan du trycka på <b>Nästa</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod inaktiverad</string>
@@ -75,17 +77,21 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Om du kasserar podden kan du inte längre kommunicera med den. Gör detta bara när all kommunikation med podden misslyckas hela tiden. Är du säker på att du vill kassera podden?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Kassera pod</string>
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_common_preferences_bolus_beeps_enabled">Bolus pip aktiverade</string>
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Boluspip aktiverade</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basalpip aktiverade</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-pip aktiverade</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Pip för tillfällig basal aktiverade</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Visa knapp för Pausa Leverans i Omnipod-fliken</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Visa knapp för Pausa leverans i Omnipod-fliken</string>
     <string name="omnipod_common_preferences_time_change_enabled">Avkänning av sommartid/tidszon aktiverad</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Påminnelse för utgångstid aktiverad</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">När den är aktiverad, kommer podden att pipa när den angivna tiden är nådd</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Påminnelse timmar före utgång (72 timmar)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Varning för utgångstid aktiverad</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">När den är aktiverad kommer podden att pipa när den angivna tiden är nådd och 1 timme före avstängning</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Varning vid timmar före avstängning (80 timmar)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varning för låg reservoar aktiverad</string>
-    <string name="omnipod_common_preferences_low_reservoir_alert_units">Antal Enheter</string>
-    <string name="omnipod_common_preferences_automatically_silence_alerts">Kvittera Podlarm automatiskt</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Antal enheter</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Kvittera podlarm automatiskt</string>
     <string name="omnipod_common_preferences_category_other">Annat</string>
     <string name="omnipod_common_preferences_category_alerts">Varningar</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bekräftelsepip</string>
@@ -107,10 +113,20 @@
     <string name="omnipod_common_pod_status_pod_fault_description">Podfel: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
     <string name="omnipod_common_pdm_notification_label">PDM-avisering</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Tom reservoar</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulintillförsel stoppades. Byt pod nu.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Automatisk avstängning</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulintillförsel stoppad. Din PDM har inte pratat med din pod de senaste 4 timmarna. För att återuppta insulintillförsel, byt till ny pod.</string>
     <string name="omnipod_common_pdm_notification_header_pod_expired">Podden har löpt ut</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulintillförsel stoppad. Byt pod nu.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Ocklusion upptäckt</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulintillförsel stoppad. Byt pod nu. Kontrollera ditt blodsocker</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Fel på pod</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulintillförsel stoppad. Byt pod nu.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod löper snart ut</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod löper snart ut</string>
@@ -124,21 +140,27 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Ange basaldoser</string>
     <string name="omnipod_common_cmd_set_bolus">Leverera bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Avbryt Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Ställ in TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Avbryt TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Kassera pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Hämta Pod-status</string>
     <string name="omnipod_common_cmd_set_time">Ställ in tid</string>
     <string name="omnipod_common_cmd_configure_alerts">Konfigurera varningar</string>
-    <string name="omnipod_common_cmd_silence_alerts">Kvittera Larm</string>
+    <string name="omnipod_common_cmd_silence_alerts">Kvittera larm</string>
     <string name="omnipod_common_cmd_read_pulse_log">Läs pulslogg</string>
     <string name="omnipod_common_cmd_suspend_delivery">Pausa insulintillförsel</string>
     <string name="omnipod_common_cmd_resume_delivery">Återuppta insulintillförsel</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Avbryt TBR (av användare)</string>
     <string name="omnipod_common_cmd_get_pod_info">Hämta Pod-information</string>
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Ställ in fejkad pausad TBR</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Avbryt fejkad pausad TBR</string>
+    <string name="omnipod_common_cmd_split_tbr">Dela upp TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Spela upp testljud</string>
     <string name="omnipod_common_cmd_unknown_entry">Okänd post</string>
     <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Inaktivera varningar om pausad insulinleverans</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Påminnelse att slutföra parkoppling</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Påminnelse att slutföra installation</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">nyss</string>
@@ -166,5 +188,13 @@
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minuter</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Basalkorrigering</string>
+    <string name="omnipod_common_bolus_type_priming">Förfyllning</string>
     <string name="omnipod_common_history_total_delivered">Totalt levererat: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Misslyckades att skicka kommando</string>
+    <string name="omnipod_common_command_not_sent">Kommando inte skickat</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Kommando inte mottaget av pod</string>
+    <string name="omnipod_common_unknown">Okänd status för kommandot</string>
 </resources>

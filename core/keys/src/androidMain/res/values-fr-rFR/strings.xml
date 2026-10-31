@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Déclencher les alarmes urgentes vers les notifications Android</string>
     <string name="pref_title_alert_increase_volume">Augmenter progressivement le volume des notifications</string>
     <string name="pref_title_alert_override_dnd">Outrepasser le mode Ne pas déranger</string>
+    <string name="pref_summary_alert_override_dnd">Activé : les alarmes sonnent même lorsque le téléphone est en mode silence ou en mode Ne pas déranger. Désactivé : les alarmes ne sonnent pas. En mode Ne pas déranger, elles ne vibrent pas.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Envoyer des Gly vers NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Enreg. changement de capteur</string>

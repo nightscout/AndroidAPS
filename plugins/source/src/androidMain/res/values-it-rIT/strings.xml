@@ -23,7 +23,7 @@
     <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai/Ottai</string>
-    <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
+    <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">App SI</string>
     <string name="description_source_patched_si_app">Ricevi i dati di glucosio dall\'app Sibionic SI Patched o dall\'app Sibionics.</string>
@@ -35,7 +35,7 @@
     <string name="description_source_instara_app">Ricevi valori glicemia dall\'app Instara.</string>
     <!-- Instara preferences -->
     <string name="pref_title_instara_history_request">Richiesta dati storici Instara</string>
-    <string name="pref_summary_instara_history_request">Richiesta possibile di dati storici mancanti in background</string>
+    <string name="pref_summary_instara_history_request">Richiedi in background eventuali dati storici mancanti</string>
     <!-- Notification Reader -->
     <string name="notification_reader">Lettore Notifiche</string>
     <string name="description_source_notification_reader">Leggi i valori di glucosio dalle notifiche pubblicate dalle app CGM ufficiali (Dexcom, Medtronic, Eversense, ecc.).</string>
@@ -46,10 +46,10 @@
     <string name="permission_notification_listener_description">Richiesto per leggere i valori di glucosio dalle notifiche delle app CGM</string>
     <string name="aidex">MicroTech CGM App</string>
     <string name="description_source_aidex">Ricevi valori CGM da LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ecc.</string>
-    <string name="aidex_sensor_expired">Sensore scaduto, sostituire con un nuovo sensore</string>
-    <string name="aidex_sensor_error">Errore del sensore, controllare lo stato del sensore</string>
-    <string name="aidex_sensor_stabilizing">Il sensore si sta stabilizzando, attendere…</string>
-    <string name="aidex_sensor_replace">Sostituzione del sensore necessaria, sostituire con un nuovo sensore il prima possibile</string>
+    <string name="aidex_sensor_expired">Sensore scaduto, sostituiscilo con un nuovo sensore</string>
+    <string name="aidex_sensor_error">Errore del sensore, controlla lo stato del sensore</string>
+    <string name="aidex_sensor_stabilizing">Il sensore si sta stabilizzando, attendi…</string>
+    <string name="aidex_sensor_replace">Sostituzione del sensore necessaria, sostituiscilo con un nuovo sensore il prima possibile</string>
     <string name="aidex_signal_lost">Segnale sensore perso, controlla la connessione</string>
     <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">lettura duplicata</string>
 </resources>

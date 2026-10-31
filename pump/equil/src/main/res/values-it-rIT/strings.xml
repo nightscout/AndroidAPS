@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Pompa Patch Equil 5.3 o più recente </string>
+    <string name="equil_pump_description">Microinfusore patch Equil 5.3 o più recente </string>
     <!--  start  -->
     <string name="equil_basal_speed">Basale originale</string>
     <string name="equil_dressing">Cambia Serbatoio</string>
-    <string name="equil_dressing_onkey_msg">Spostare automaticamente lo stantuffo verso il fondo del serbatoio. Si fermerà automaticamente al raggiungimento del fondo. Fare clic su \'Ferma\' per interrompere se necessario.</string>
-    <string name="equil_hint_dressing">Questa operazione interromperà l’infusione di insulina e causerà il ritiro dello stantuffo della pompa verso il fondo!</string>
+    <string name="equil_dressing_onkey_msg">Spostamento automatico dello stantuffo verso il fondo del serbatoio. Si fermerà automaticamente al raggiungimento del fondo. Tocca \'Stop\' per interrompere se necessario.</string>
+    <string name="equil_hint_dressing">Questa operazione interromperà l\'infusione di insulina e farà ritirare lo stantuffo del micro verso il fondo!</string>
     <string name="equil_insulin_reservoir">Serbatoio di insulina</string>
     <string name="equil_mode">Modalità esecuzione</string>
     <string name="equil_mode_running">In esecuzione</string>
@@ -21,12 +21,12 @@
     <string name="equil_title_fill">Carica/Riempi</string>
     <string name="equil_title_attach">Collega micro</string>
     <string name="equil_title_air">Riempi la cannula</string>
-    <string name="equil_title_unpair_detach">Scollega pompa</string>
+    <string name="equil_title_unpair_detach">Scollega micro</string>
     <string name="equil_title_history_events">Storico eventi</string>
     <string name="equil_tone">Tono di allerta</string>
     <string name="equil_bolus_speed">Velocità del bolo</string>
     <string name="equil_bolus_speed_summary">Un bolo più veloce può dare più allarmi occlusione.</string>
-    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 U/min (standard)</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (standard)</string>
     <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
     <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
     <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
@@ -34,29 +34,29 @@
     <string name="equil_tone_mode_shake">Solo vibrazione</string>
     <string name="equil_tone_mode_tone">Solo suoneria</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrazione e suoneria</string>
-    <string name="equil_unbind_content">Questa operazione interromperà l\'infusione di insulina e ritrarrà lo stantuffo della pompa verso il basso! Inoltre, eliminerà lo stato!</string>
-    <string name="equil_ble_config_confirmation_title">Accoppiamento Micro Equil Patch</string>
+    <string name="equil_unbind_content">Questa operazione interromperà l\'infusione di insulina e ritrarrà lo stantuffo del micro verso il fondo! Inoltre, eliminerà lo stato di associazione!</string>
+    <string name="equil_ble_config_confirmation_title">Associazione Micro Equil Patch</string>
     <string name="equil_error">Errore di connessione</string>
     <string name="equil_change">Cambia Micro</string>
     <string name="equil_change_content">Si prega di staccare il micro dalla base.</string>
-    <string name="equil_new_infusion_set_question">Si metterà anche un nuovo set di infusione (piastra di base e cannula)?</string>
+    <string name="equil_new_infusion_set_question">Metterai anche un nuovo set di infusione (piastra di base e cannula)?</string>
     <string name="equil_new_infusion_set_yes">Sì, nuovo set di infusione</string>
     <string name="equil_new_infusion_set_no">No, solo serbatoio o batteria</string>
-    <string name="equil_same_infusion_set_hint">La cannula non sarà innescata e non verrà registrato alcun cambiamento di cannula.</string>
+    <string name="equil_same_infusion_set_hint">La cannula non sarà riempita e non verrà registrato alcun cambio cannula.</string>
     <string name="equil_unpair_alert">Sei sicuro di voler rinunciare al controllo di %1$s?</string>
-    <string name="equil_record_basal">Tasso basale %1$s U/H</string>
-    <string name="equil_record_basal_temp">Tasso basale temporaneo %1$s U/H</string>
-    <string name="equil_record_bolus">Bolus %1$s U</string>
+    <string name="equil_record_basal">Velocità basale %1$s U/h</string>
+    <string name="equil_record_basal_temp">Velocità basale temporanea %1$s U/h</string>
+    <string name="equil_record_bolus">Bolo %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
-    <string name="equil_basal_exceeds_max">La velocità basale del profilo %1$s U/h supera la velocità basale massima del microinfusore %2$s U/h. Aumenta l\'impostazione basale massima e ricollega la pompa.</string>
+    <string name="equil_basal_exceeds_max">La velocità basale del profilo %1$s U/h supera la basale massima del micro %2$s U/h. Aumenta l\'impostazione della basale massima e ricollega il micro.</string>
     <string name="equil_not_enough_insulin">Insulina nel serbatoio insufficiente</string>
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batteria bassa: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Insulina nel serbatoio insufficiente: %1$s</string>
-    <string name="equil_reservoir_empty">Il serbatoio è vuoto. La pompa non eroga più insulina.</string>
-    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">La pompa si è fermata durante il bolo. Data: %1$s di %2$s</string>
+    <string name="equil_reservoir_empty">Il serbatoio è vuoto. Il micro non eroga più insulina.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Il micro si è fermato durante il bolo. Erogato: %1$s di %2$s</string>
     <string name="equil_pump_not_run">Micro non in esecuzione</string>
-    <string name="equil_pair">Accoppia</string>
-    <string name="equil_pair_error">Errore accoppiamento</string>
+    <string name="equil_pair">Associa</string>
+    <string name="equil_pair_error">Errore associazione</string>
     <string name="equil_fill">Carica/Riempi</string>
     <string name="equil_air">Spurga l\'aria</string>
     <string name="equil_temp_basal_rate">Basale Temporanea</string>
@@ -64,18 +64,18 @@
     <string name="equil_firmware_version">Versione del firmware</string>
     <string name="equil_shutdown_be">Equil sarà spento automaticamente</string>
     <string name="equil_shutdown">Equil auto off</string>
-    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Tasso: %1$.2f U/h, durata: %2$d minuti</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Velocità: %1$.2f U/h, durata: %2$d minuti</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Imposta bolo</string>
-    <string name="equil_common_cmd_cancel_bolus">Cancella bolo</string>
+    <string name="equil_common_cmd_cancel_bolus">Annulla bolo</string>
     <string name="equil_common_cmd_set_tbr">Imposta basale temporanea</string>
-    <string name="equil_common_cmd_cancel_tbr">Cancella basale temporanea</string>
+    <string name="equil_common_cmd_cancel_tbr">Annulla basale temporanea</string>
     <string name="equil_common_cmd_set_basal_schedule">Imposta piano basale</string>
     <string name="equil_common_cmd_set_time">Imposta ora</string>
     <string name="equil_common_cmd_suspend_delivery">Sospendi erogazione</string>
     <string name="equil_common_cmd_resume_delivery">Riprendi erogazione</string>
-    <string name="equil_common_cmd_pair">Accoppia Equil</string>
+    <string name="equil_common_cmd_pair">Associa Equil</string>
     <string name="equil_common_cmd_insert_cannula">Inserisci cannula</string>
     <string name="equil_common_cmd_unpair">Disaccoppia Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Imposta Bolo Esteso</string>
@@ -98,20 +98,20 @@
     <string name="equil_settings_alarm_insulin">Allarme livello basso insulina</string>
     <string name="equil_init_insulin_error">L\'inizializzazione del serbatoio non è completa</string>
     <string name="equil_history_group_all">Tutto</string>
-    <string name="equil_history_group_pair">Accoppiamento</string>
+    <string name="equil_history_group_pair">Associazione</string>
     <string name="equil_history_group_bolus">Boli</string>
     <string name="equil_history_group_basal">Basali</string>
     <string name="equil_history_group_configuration">Configurazioni</string>
     <string name="equil_tab_action">Cronologia azioni</string>
     <string name="equil_tab_equil">Storico Equil</string>
-    <string name="equil_password_error">La password di accoppiamento di Equil non è corretta</string>
+    <string name="equil_password_error">La password di associazione di Equil non è corretta</string>
     <string name="equil_none">nessuno</string>
     <string name="equil_history_item1">Serbatoio - Livello basso di Insulina</string>
     <string name="equil_history_item2">Serbatoio di insulina vuoto</string>
     <string name="equil_history_item3">Blocco Infusione Rilevato</string>
     <string name="equil_history_item4">Inversione Del Motore Rilevata</string>
     <string name="equil_history_item5">Rilevato Malfunzionamento Del Motore</string>
-    <string name="equil_history_item6">Avvia pausa Iniezione</string>
+    <string name="equil_history_item6">Pausa erogazione avviata</string>
     <string name="equil_history_item7">Iniezione già in pausa</string>
     <string name="equil_history_item8">Arresto Automatico Imminente</string>
     <string name="equil_history_item9">Auto off!</string>
@@ -129,19 +129,18 @@
     <string name="equil_common_wizard_exit_confirmation_text">Non hai ancora completato tutti i passaggi. Sei sicuro di voler uscire?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Esci</string>
     <string name="equil_support_error">Versione firmware troppo vecchia. Non supportata</string>
-    <string name="equil_password_tips">Si prega di impostare una nuova password per l\'accoppiamento col micro Equil v5.3. Questa password verrà utilizzata anche per disaccoppiarsi con la pompa in futuro, quindi assicurati di ricordarla.
-Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</string>
-    <string name="equil_set_pair_password">Imposta password di accoppiamento</string>
-    <string name="equil_hint1">Dopo aver installato la pompa sulla piastra di base, selezionare se eliminare l’aria dall’ago.</string>
+    <string name="equil_password_tips">Se vuoi, imposta una password per l\'accoppiamento con il micro Equil v5.3. Questa password servirà anche per disaccoppiare il micro in futuro, quindi assicurati di ricordarla. Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">Imposta password di associazione</string>
+    <string name="equil_hint1">Dopo aver installato il micro sulla piastra di base, seleziona se eliminare l\'aria dall\'ago.</string>
     <string name="equil_unbind">Disaccoppia dispositivo</string>
     <string name="equil_device_unpaired">Dispositivo disaccoppiato</string>
-    <string name="equil_assemble">Si prega di assemblare il micro, riempire il serbatoio e caricaere la batteria</string>
+    <string name="equil_assemble">Assembla il micro, il serbatoio riempito e la batteria carica</string>
     <string name="equil_pair_password_title">Inserisci la password per %1$s</string>
     <string name="equil_insert">Si prega di caricare il serbatoio fino a quando non vi è una goccia di insulina sulla punta dell’ago</string>
-    <string name="equil_insert2">Il Micro non deve trovarsi sulla sua base.</string>
+    <string name="equil_insert2">Il micro non deve trovarsi sulla sua base.</string>
     <string name="equil_attach">Si prega di collegare il micro alla base</string>
     <string name="equil_hint2">Riempi la cannula</string>
     <string name="equil_pump_updated">Micro aggiornato</string>
     <string name="equil_replace_reservoir">Il serbatoio è vuoto. Sostituire il serbatoio</string>
-    <string name="equil_removed_anyway">Comando disaccoppiamento non riuscito. Il micro verrà comunque rimosso. La password impostata durante l\'accoppiamento non verrà rimossa dal micro.</string>
+    <string name="equil_removed_anyway">Comando disaccoppiamento non riuscito. Il micro verrà comunque rimosso. La password impostata durante l\'associazione non verrà rimossa dal micro.</string>
 </resources>

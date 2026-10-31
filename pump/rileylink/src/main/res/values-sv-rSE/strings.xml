@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Aldrig ansluten</string>
+    <string name="pump_status_sleeping">Sover</string>
+    <string name="pump_status_waking_up">Väcker</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_error_comm">Kommunikationsfel</string>
+    <string name="pump_status_timeout_comm">Kommunikationstimeout</string>
+    <string name="pump_status_invalid_config">Felaktig konfiguration</string>
+    <string name="medtronic_pump_encoding_title">Medtronic-kodning</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Programvara 4b6b-kodning</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hårdvara 4b6b-kodning</string>
+    <string name="medtronic_pump_frequency_us_ca">USA &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Resten av världen (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Söker</string>
     <string name="riley_link_ble_config_connected_never">Aldrig</string>
@@ -60,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Använd sökning</string>
     <string name="orange_use_scanning_level_summary">Gör en sökning innan du ansluter till OrangeLink. Det bör förbättra anslutningarna (kan även användas med andra RileyLink-kloner om det behövs)</string>
+    <string name="rileylink_pair">Parkoppla RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink-parkoppling lyckades</string>
+    <string name="rileylink_config_reset">RileyLink-konfiguration återställd</string>
 </resources>

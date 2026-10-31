@@ -55,6 +55,7 @@
     <string name="exported_failed">Falha na exportação das preferências!</string>
     <string name="filenotfound">Ficheiro não encontrado</string>
     <string name="ue_exported">Registos do utilizador exportados</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado há %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado às %1$s</string>
     <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
     <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas definições podem estar ausentes ou inválidas - após a importação, por favor verifique e atualize as suas preferências.</string>
@@ -74,6 +75,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Erro de desencriptação: a senha é inválida ou o ficheiro de definições foi modificado! Pode acontecer que o ficheiro importado tenha sido exportado com uma senha mestre diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de definições é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
+    <string name="metadata_label_format">Formato do ficheiro</string>
     <string name="metadata_label_created_at">Criado em</string>
     <string name="metadata_label_aaps_version">Versão AAPS</string>
     <string name="metadata_label_aaps_flavour">Variante de Compilação</string>

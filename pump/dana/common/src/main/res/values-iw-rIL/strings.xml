@@ -9,6 +9,7 @@
     <string name="speederror">שגיאת מהירות</string>
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
     <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">המשאבה לא תוחלה</string>
     <string name="danai2_bolus_error_not_enough_insulin">אין מספיק אינסולין במכל</string>
     <string name="danai2_bolus_error_easy_sleep">מצב Easy sleep מופעל במשאבה</string>
     <string name="danai2_pump_check_error">שגיאה בבדיקת המשאבה</string>

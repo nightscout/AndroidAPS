@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
     <string name="description_source_ns_client">Laddar ner BG-data från Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Ta emot BG-värden från xDrip+ och kompatibla appar (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
     <string name="glimp">Glimp</string>
@@ -20,11 +22,34 @@
     <string name="random_bg">Slumpmässig BG</string>
     <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Ta emot glukosdata från Syai/Ottai-app.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI app</string>
+    <string name="description_source_patched_si_app">Ta emot glukosdata från Patchad Sibionic SI App eller från Sibionics App.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Ta emot glukosdata från Patchad Sino-app.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Ta emot BG-värden från Instara-appen.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Begäran om historisk data från Instara</string>
+    <string name="pref_summary_instara_history_request">Begär eventuellt saknad historisk data i bakgrunden</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Läsare för aviseringar</string>
+    <string name="description_source_notification_reader">Läs glukosvärden via aviseringar som publiceras av officiella CGM-appar (Dexcom, Medtronic, Eversense etc.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Applikationen behöver tillåtelse att ta emot CGM-data från Dexcom-appen</string>
+    <string name="permission_notification_listener_title">Åtkomst till aviseringar</string>
+    <string name="permission_notification_listener_description">Krävs för att läsa glukosvärden från CGM app-aviseringar</string>
+    <string name="aidex">MicroTech CGM-app</string>
+    <string name="description_source_aidex">Ta emot CGM-värden från LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
+    <string name="aidex_sensor_expired">Sensorn har löpt ut, var god och ersätt med en ny sensor</string>
+    <string name="aidex_sensor_error">Sensorfel, kontrollera sensorstatus</string>
+    <string name="aidex_sensor_stabilizing">Sensorn stabiliseras, var god vänta…</string>
+    <string name="aidex_sensor_replace">Sensorbyte krävs, ersätt med en ny sensor så snart som möjligt</string>
+    <string name="aidex_signal_lost">Sensorsignal förlorad, vänligen kontrollera anslutningen</string>
     <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">dubblettvärde</string>
 </resources>

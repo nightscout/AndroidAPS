@@ -14,6 +14,7 @@
     <string name="min_plus">(+%1$d분)</string>
     <string name="sec_plus">(+%1$d초)</string>
     <string name="minago_long">%1$d분 전</string>
+    <string name="hoursago">%1$.1f시간 전</string>
     <string name="days_ago">%1$.1f일 전</string>
     <string name="days_ago_round">%1$.0f일 전</string>
     <string name="seconds_ago">몇 초 전</string>
@@ -86,10 +87,10 @@
     <string name="pref_show_complication3">컴플리케이션 3 표시</string>
     <string name="pref_show_complication4">컴플리케이션 4 표시</string>
     <string name="pref_show_complication5">컴플리케이션 5 표시</string>
-    <string name="default_custom_watchface_comment">기본 워치페이스입니다. 워치페이스 내보내기 버튼을 눌러 템플릿을 만들 수 있습니다.</string>
-    <string name="default_custom_watchface_external_comment">팔로워용 외부 보기가 포함된 기본 워치페이스입니다. 워치페이스 내보내기 버튼을 눌러 템플릿을 만들 수 있습니다</string>
-    <string name="wear_default_watchface">기본 워치페이스</string>
-    <string name="wear_more_watchfaces">더 많은 워치페이스</string>
+    <string name="default_custom_watchface_comment">기본 워치 페이스입니다. 워치 페이스 내보내기 버튼을 눌러 템플릿을 만들 수 있습니다.</string>
+    <string name="default_custom_watchface_external_comment">팔로워용 외부 뷰가 포함된 기본 워치 페이스입니다. 워치 페이스 내보내기 버튼을 눌러 템플릿을 만들 수 있습니다.</string>
+    <string name="wear_default_watchface">기본 워치 페이스</string>
+    <string name="wear_more_watchfaces">더 많은 워치 페이스</string>
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d분</string>
@@ -99,6 +100,7 @@
     <!-- Insulin -->
     <string name="unknown">알 수 없음</string>
     <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="free_peak_oref">사용자지정-피크 Oref</string>
     <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">노보래피드, 노보로그, 휴마로그</string>
@@ -130,7 +132,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="mins">%1$d분</string>
     <string name="record">기록</string>
-    <string name="bolus">Bolus</string>
+    <string name="bolus">볼러스</string>
     <string name="uel_extended_carbs">확장 탄수화물</string>
     <string name="profile_low_target">프로파일 낮은 목표</string>
     <string name="profile_high_target">프로파일 높은 목표</string>

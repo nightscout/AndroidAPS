@@ -6,7 +6,7 @@
     <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Personalizat) mereu activ</string>
     <string name="label_actions_tile">Acțiuni</string>
     <string name="label_temp_target_tile">Țintă temporară</string>
-    <string name="label_quick_wizard_tile">Asistent rapid</string>
+    <string name="label_quick_wizard_tile">Asistent Rapid</string>
     <string name="label_user_action_tile">Acțiune utilizator</string>
     <string name="label_scene_tile">Scenariu</string>
     <string name="msg_warning_sync">Nu au fost primite date din %1$s! Verificați dacă AAPS de pe telefon trimite date către ceas</string>
@@ -27,9 +27,9 @@
     <string name="pref_show_detailed_delta">Afișați diferența detaliată</string>
     <string name="pref_show_avgdelta">Afișați diferența medie</string>
     <string name="pref_show_phone_battery">Afișați baterie telefon</string>
-    <string name="pref_show_rig_battery">Afișați baterie echipament</string>
+    <string name="pref_show_rig_battery">Afișați bateria dispozitivului</string>
     <string name="pref_show_basal_rate">Afișați rata bazală</string>
-    <string name="pref_show_temp_target">Afișați Ținta Temporară</string>
+    <string name="pref_show_temp_target">Afișați ținta temporară</string>
     <string name="pref_show_reservoir_level">Afișați nivelul rezervorului</string>
     <string name="pref_show_loop_status">Afișați starea buclei</string>
     <string name="pref_show_bg">Afișați glicemia</string>
@@ -70,7 +70,7 @@
     <string name="duration_6_hours">6 ore</string>
     <string name="pref_unicode_in_complications">Unicode în complicații</string>
     <string name="pref_version">Versiune:</string>
-    <string name="pref_moreWatchfaceSettings">Mai multe setări cadran ceas</string>
+    <string name="pref_moreWatchfaceSettings">Mai multe setări ale cadranului</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Verificați configurația cadranului, vă rugăm.</string>
     <string name="menu_tempt">Țintă temp.</string>
     <string name="menu_tempt_long">Țintă temporară</string>
@@ -95,7 +95,7 @@
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
-    <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
+    <string name="action_quick_wizard_confirmation">Asistent Rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
     <string name="action_scene_confirmation">Scenariu solicitat</string>
     <string name="scene_end">Sfârșit</string>
@@ -179,7 +179,7 @@
     <string name="cwf_complication_layout">Aranjament complicații</string>
     <string name="cwf_complication_layout_description">Poziția și dimensiunea complicațiilor, luate din cadranul personalizat încărcat.</string>
     <string name="pref_include_external">Includeți vizualizări externe în șablon</string>
-    <string name="pref_switch_external">Comutați date externe în cadranul ceasului</string>
+    <string name="pref_switch_external">Comutați datele externe în cadran</string>
     <string name="custom_pref_show_seconds">Afișați secunde</string>
     <string name="digitalstyle_pref_your_style">Stilul dumneavoastră</string>
     <string name="digitalstyle_style_none">niciun stil</string>
