@@ -4,6 +4,7 @@
     <string name="disable_tbr_over_notification">Inaktivera aviseringar om avslutade tillfälliga basaler\n(pumpinställning)</string>
     <string name="not_paired">Inte parkopplad</string>
     <string name="recovering">Återställs</string>
+    <string name="insight_status">Status</string>
     <string name="recovery_duration">Återanslutningsförsök</string>
     <string name="last_connected">Senast ansluten</string>
     <string name="start_pump">Starta pumpen</string>
@@ -13,6 +14,7 @@
     <string name="operating_mode">Driftläge</string>
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
+    <string name="tdd_bolus">TDD bolus</string>
     <string name="tdd_basal">TDD basal</string>
     <string name="multiwave_bolus">Kombi-bolus</string>
     <string name="searching_for_devices">Söker enheter…</string>
