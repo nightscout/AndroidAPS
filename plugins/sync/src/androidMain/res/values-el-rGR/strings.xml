@@ -231,9 +231,9 @@
     <string name="smscommunicator_code_verify_label">Κωδικός για έλεγχο:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Ο κωδικός επαλήθευσης αποτελείται από 6 ψηφία που εμφανίζονται στην εφαρμογή Ελέγχου Ταυτότητας (γνωστή ως OTP) και ακολουθούνται από 3 ή περισσότερα ψηφία του υποχρεωτικού PIN.</string>
-    <string name="smscommunicator_otp_reset_btn">Επαναφορά Πιστοποιητικών</string>
+    <string name="smscommunicator_otp_reset_btn">Επαναφορά Επαληθευτών</string>
     <string name="smscommunicator_otp_reset_title">Επαναφορά Κλειδιού Ταυτοποίησης</string>
-    <string name="smscommunicator_otp_reset_prompt">Είστε βέβαιοι ότι θα επαναφέρετε το κλειδί ελέγχου ταυτότητας? Θα καταστήσει όλους τους ρυθμισμένους Επαληθευτές άκυρους και θα πρέπει να τους ρυθμίσετε ξανά.</string>
+    <string name="smscommunicator_otp_reset_prompt">Είστε βέβαιοι ότι θα επαναφέρετε το κλειδί ελέγχου ταυτότητας; Θα καταστήσει όλους τους ρυθμισμένους Επαληθευτές άκυρους και θα πρέπει να τους ρυθμίσετε ξανά.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Εγκατάσταση Επαληθευτή</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Σαρώστε τον κωδικό για να ρυθμίσετε τους κωδικούς OTP του AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Δοκιμάστε τον Κωδικό μίας Χρήσης</string>
@@ -296,7 +296,7 @@
     <string name="smscommunicator_another_bolus_in_queue">Υπάρχει μια άλλη δόση bolus στην ουρά. Προσπαθήστε ξανά αργότερα.</string>
     <string name="smscommunicator_wrong_duration">Λάθος διάρκεια</string>
     <string name="smscommunicator_loop_suspended">Κύκλωμα σε αναστολή</string>
-    <string name="smscommunicator_loop_resumed">Επαναφορά κυκλώματος</string>
+    <string name="smscommunicator_loop_resumed">Το κύκλωμα συνεχίστηκε</string>
     <string name="smscommunicator_invalid_phone_number">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
     <string name="smscommunicator_calibration_sent">Η βαθμονόμηση στάλθηκε. Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip+.</string>
     <string name="smscommunicator_calibration_failed">το xDrip+ δεν λαμβάνει βαθμονόμηση</string>
