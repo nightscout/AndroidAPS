@@ -43,7 +43,7 @@
     <string name="log_alerts">Melduj ostrzeżenia</string>
     <string name="enable_tbr_emulation">Włącz emulację TBR</string>
     <string name="enable_tbr_emulation_summary">Użyj rozszerzonych bolusów zamiast TBR by ominąć limit 250%% bazy</string>
-    <string name="disconnect_delay">Opóźnienie rozłączenie [s]</string>
+    <string name="disconnect_delay">Opóźnienie rozłączenia [s]</string>
     <string name="max_recovery_duration">Max. czas odzyskiwania [s]</string>
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
     <string name="pump_alert">Alarm pompy</string>

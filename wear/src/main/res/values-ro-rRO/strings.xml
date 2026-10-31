@@ -3,35 +3,35 @@
     <string name="label_watchface_circle">AAPS(Cerc)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (Personalizat)</string>
-    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(personalizat) Mereu aprins</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Personalizat) mereu activ</string>
     <string name="label_actions_tile">Acțiuni</string>
     <string name="label_temp_target_tile">Țintă temporară</string>
-    <string name="label_quick_wizard_tile">Asistent rapid</string>
+    <string name="label_quick_wizard_tile">Asistent Rapid</string>
     <string name="label_user_action_tile">Acțiune utilizator</string>
     <string name="label_scene_tile">Scenariu</string>
-    <string name="msg_warning_sync">Nu au fost primite date de acum %1$s! Verificați că AAPS pe telefon trimite date către ceas</string>
+    <string name="msg_warning_sync">Nu au fost primite date din %1$s! Verificați dacă AAPS de pe telefon trimite date către ceas</string>
     <string name="msg_warning_old">Datele AAPS sunt vechi de %1$s! Verificați senzorul, xDrip+, NS, configurația AAPS sau altele!</string>
     <string name="pref_vibrate_on_bolus">Vibrare la bolus</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Afișaj</string>
     <string name="pref_graph_settings">Grafic</string>
     <string name="pref_interface_settings">Interfață</string>
-    <string name="pref_tile_settings">Dale</string>
+    <string name="pref_tile_settings">Panouri</string>
     <string name="pref_others_settings">Altele</string>
     <string name="pref_complication_settings">Complicație</string>
     <string name="pref_show_date">Afișați data</string>
     <string name="pref_show_iob">Afișați IOB</string>
     <string name="pref_show_detailed_iob">Afișați IOB detaliat</string>
     <string name="pref_show_cob">Afișați COB</string>
-    <string name="pref_show_delta">Afișați Delta</string>
-    <string name="pref_show_detailed_delta">Afișați variație detaliată</string>
+    <string name="pref_show_delta">Afișați diferența</string>
+    <string name="pref_show_detailed_delta">Afișați diferența detaliată</string>
     <string name="pref_show_avgdelta">Afișați diferența medie</string>
     <string name="pref_show_phone_battery">Afișați baterie telefon</string>
-    <string name="pref_show_rig_battery">Afișați baterie echipament</string>
+    <string name="pref_show_rig_battery">Afișați bateria dispozitivului</string>
     <string name="pref_show_basal_rate">Afișați rata bazală</string>
-    <string name="pref_show_temp_target">Afișați Ținta Temporară</string>
+    <string name="pref_show_temp_target">Afișați ținta temporară</string>
     <string name="pref_show_reservoir_level">Afișați nivelul rezervorului</string>
-    <string name="pref_show_loop_status">Afișați stare buclă închisă</string>
+    <string name="pref_show_loop_status">Afișați starea buclei</string>
     <string name="pref_show_bg">Afișați glicemia</string>
     <string name="pref_show_bgi">Afișați BGI</string>
     <string name="pref_show_direction_arrow">Afișați săgeată tendință</string>
@@ -43,7 +43,7 @@
     <string name="pref_highlight_basals">Evidențiere rate bazale</string>
     <string name="pref_prediction_lines">Afișați predicțiile</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Separator</string>
-    <string name="pref_chart_timeframe">Grafic Timp</string>
+    <string name="pref_chart_timeframe">Interval de timp grafic</string>
     <string name="pref_1_hour">1 oră</string>
     <string name="pref_2_hours">2 ore</string>
     <string name="pref_3_hours">3 ore</string>
@@ -55,22 +55,24 @@
     <string name="pref_15_min">15 minute</string>
     <string name="pref_big_numbers">Numere Mari</string>
     <string name="pref_ring_history">Inel istoric</string>
-    <string name="pref_light_ring_history">Inel istoric simplu</string>
+    <string name="pref_light_ring_history">Inel istoric luminos</string>
     <string name="pref_animations">Animații</string>
     <string name="pref_wizard_in_menu">Calculator în meniu</string>
     <string name="pref_prime_in_menu">Amorsare în meniu</string>
     <string name="pref_single_target">Țintă unică</string>
     <string name="pref_wizard_percentage">Calculator Procentaj</string>
-    <string name="pref_complication_tap_action">Acțiuni pentru complicații</string>
+    <string name="pref_wizard_carbs_type">Calculator tip masă</string>
+    <string name="pref_wizard_carb_time">Calculator timp carbohidrați</string>
+    <string name="pref_complication_tap_action">Acțiune la atingerea complicației</string>
     <string name="pref_complication_bg_graph_hours">Interval de timp grafic glicemie</string>
     <string name="duration_1_hour">1 oră</string>
     <string name="duration_3_hours">3 ore</string>
     <string name="duration_6_hours">6 ore</string>
     <string name="pref_unicode_in_complications">Unicode în complicații</string>
     <string name="pref_version">Versiune:</string>
-    <string name="pref_moreWatchfaceSettings">Mai multe setări cadran ceas</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Uitați-vă în configurarea cadranului de ceas, vă rugăm.</string>
-    <string name="menu_tempt">ŢintăTemporară</string>
+    <string name="pref_moreWatchfaceSettings">Mai multe setări ale cadranului</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Verificați configurația cadranului, vă rugăm.</string>
+    <string name="menu_tempt">Țintă temp.</string>
     <string name="menu_tempt_long">Țintă temporară</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calculator</string>
@@ -84,24 +86,24 @@
     <string name="menu_bg_graph">Grafic glicemie</string>
     <string name="menu_resync">Resincronizare</string>
     <string name="menu_prime_fill">Amorsare/Umplere</string>
-    <string name="menu_install_watchface">Instalați fața de ceas</string>
-    <string name="menu_installing_watchface">Se instalează fața de ceas…</string>
-    <string name="watchface_installed_active">Față de ceas instalată și setată ca activă</string>
-    <string name="watchface_installed_select">Față de ceas instalată, selectați-o în selectorul de fețe de ceas</string>
-    <string name="watchface_install_failed">Instalarea feței de ceas a eșuat</string>
+    <string name="menu_install_watchface">Instalați cadranul</string>
+    <string name="menu_installing_watchface">Se instalează cadranul…</string>
+    <string name="watchface_installed_active">Cadran instalat și setat ca activ</string>
+    <string name="watchface_installed_select">Cadran instalat; selectați-l în selectorul de cadrane</string>
+    <string name="watchface_install_failed">Instalarea cadranului a eșuat</string>
     <string name="menu_none">Nimic</string>
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
-    <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
+    <string name="action_quick_wizard_confirmation">Asistent Rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
-    <string name="action_scene_confirmation">Scena solicitată</string>
+    <string name="action_scene_confirmation">Scenariu solicitat</string>
     <string name="scene_end">Sfârșit</string>
     <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Omiteți</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>
-    <string name="action_fill_confirmation">Completare solicitată</string>
+    <string name="action_fill_confirmation">Umplere solicitată</string>
     <string name="action_ecarb_confirmation">Carbohidrați solicitați</string>
     <string name="action_profile_switch_confirmation">Schimbare profil solicitată</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Țintă [%s]</string>
@@ -137,7 +139,7 @@
     <string name="activity_carb">Carbohidrați</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">nicio stare</string>
-    <string name="color_name_red">roşu</string>
+    <string name="color_name_red">roșu</string>
     <string name="color_name_pink">roz</string>
     <string name="color_name_purple">mov</string>
     <string name="color_name_deeppurple">mov închis</string>
@@ -169,14 +171,15 @@
     <string name="complication_summary_none">Atingeți pentru a selecta o sursă de date</string>
     <string name="pref_complication_type_priority">Prioritate tip complicație</string>
     <string name="pref_complication_type_priority_all">Implicit pentru toate intrările</string>
-    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">O schimbare aici se aplică data viitoare când alegeți o sursă de date. Alegerea din nou a aceleiași surse nu este suficient: mai întâi alegeți o sursă de date diferită și apoi alegeți pe cea care o doriți.</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">O schimbare aici se aplică data viitoare când alegeți o sursă de date. Nu este suficient să alegeți din nou aceeași sursă: mai întâi alegeți o altă sursă de date și apoi alegeți-o pe cea pe care o doriți.</string>
     <string name="complication_type_priority_value">Valoare sau indicator</string>
     <string name="complication_type_priority_text">Text</string>
     <string name="complication_type_priority_icon">Pictogramă</string>
     <string name="complication_type_priority_use_default">Utilizați implicit</string>
     <string name="cwf_complication_layout">Aranjament complicații</string>
+    <string name="cwf_complication_layout_description">Poziția și dimensiunea complicațiilor, luate din cadranul personalizat încărcat.</string>
     <string name="pref_include_external">Includeți vizualizări externe în șablon</string>
-    <string name="pref_switch_external">Comutați date externe în cadranul ceasului</string>
+    <string name="pref_switch_external">Comutați datele externe în cadran</string>
     <string name="custom_pref_show_seconds">Afișați secunde</string>
     <string name="digitalstyle_pref_your_style">Stilul dumneavoastră</string>
     <string name="digitalstyle_style_none">niciun stil</string>
@@ -195,20 +198,20 @@
     <string name="simple_ui_off">Oprit</string>
     <string name="simple_ui_charging">În timpul încărcării</string>
     <string name="simple_ui_always_on">Modul mereu activ</string>
-    <string name="simple_ui_always_on_charging">Mereu activ şi încărcare</string>
+    <string name="simple_ui_always_on_charging">Mereu activ și încărcare</string>
     <string name="temp_target_eating_soon">Mănânc</string>
     <string name="temp_target_hypo">Hipoglicemie</string>
     <string name="temp_target_activity">Exercițiu fizic</string>
     <string name="temp_target_manual">Manual</string>
     <string name="temp_target_cancel">Anulați</string>
     <string name="tile_none">Nimic</string>
-    <string name="tile_no_config">Nici o configurație disponibilă</string>
+    <string name="tile_no_config">Nicio configurație disponibilă</string>
     <string name="wear_control_not_enabled">Comenzi Wear dezactivate</string>
     <string name="wear_control_no_data">Nu există date disponibile</string>
     <string name="abbreviation_average">med.</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
-    <string name="no_tmp_basal_u_h">-.--U/o</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
@@ -222,8 +225,8 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="error">Eroare</string>
     <string name="pref_heartRateSampling">Ritm cardiac</string>
-    <string name="pref_heartRateSmoothing">Uniformizare rată cardio (RC)</string>
-    <string name="pref_stepsSampling">Activează numărătoare de pași</string>
+    <string name="pref_heartRateSmoothing">Netezire ritm cardiac</string>
+    <string name="pref_stepsSampling">Activați numărarea pașilor</string>
     <string name="tile_tempt_1">Țintă temporară 1</string>
     <string name="tile_tempt_2">Țintă temporară 2</string>
     <string name="tile_tempt_3">Țintă temporară 3</string>
@@ -249,12 +252,12 @@
     <string name="complication_blood_glucose_ext1">Glicemie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemie Ext2</string>
     <string name="complication_bg_graph">Grafic glicemie</string>
-    <string name="complication_cwf_image">Față de ceas personalizată</string>
-    <string name="complication_cwf_ambient_bg">Glicemie ambientală a feței personalizate de ceas</string>
-    <string name="complication_cwf_ambient_status">Starea ambientală a feței personalizate de ceas</string>
-    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s U %2$s</string>
-    <string name="complication_cwf_lower">Fundal personalizat pentru fața de ceas</string>
-    <string name="complication_cwf_upper">Ceas personalizat pentru fața de ceas</string>
+    <string name="complication_cwf_image">Cadran personalizat</string>
+    <string name="complication_cwf_ambient_bg">Glicemie ambientală cadran personalizat</string>
+    <string name="complication_cwf_ambient_status">Stare ambientală cadran personalizat</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Fundal cadran personalizat</string>
+    <string name="complication_cwf_upper">Ceas cadran personalizat</string>
     <string name="complication_br_cob_iob">RB, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">RB, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">RB, CoB &amp; IoB Ext2</string>
@@ -272,16 +275,36 @@
     <string name="running_mode_reconnect">Reconectați pompa</string>
     <string name="label_running_mode_title">Mod de funcționare</string>
     <string name="label_bg_graph_tile">Grafic glicemie</string>
-    <string name="tile_tap_action">Atingeți acțiunea</string>
+    <string name="tile_tap_action">Acțiune la atingere</string>
     <string name="tile_graph_time_range">Interval de timp</string>
     <string name="tile_tap_bg_graph">Grafic glicemie</string>
     <string name="tile_tap_main_menu">Meniul principal</string>
     <string name="tile_tap_loop_status">Stare buclă</string>
-    <string name="action_running_mode_selected">Mod de rulare solicitat</string>
+    <string name="action_running_mode_selected">Mod de funcționare solicitat</string>
     <string name="title_activity_disconnect_pump">Deconectați pompa</string>
     <string name="title_activity_suspend_loop">Suspendați bucla</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Tip masă</string>
+    <string name="wizard_carbs_type_bread">Pâine</string>
+    <string name="wizard_carbs_type_cake">Prăjitură</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Timp carb\n[min]</string>
+    <string name="wizard_carb_time_now">Acum</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
     <string name="wizard_set_alarm">Setați alarma</string>
+    <string name="eat_reminder_title">E timpul să mâncați</string>
+    <string name="eat_reminder_silence">Opriți sunetul</string>
+    <string name="eat_reminder_stop">Stop</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Sună la %1$s</string>
+    <string name="eat_reminder_countdown_channel">E timpul să mâncați, în curs</string>
+    <string name="eat_reminder_channel_silent">E timpul să mâncați în modul Nu Deranjați</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarme de la telefon</string>
+    <string name="phone_alarm_channel_silent">Alarme de la telefon în modul Nu Deranjați</string>
+    <string name="phone_alarm_silence">Opriți sunetul</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Amuțiți %1$d min</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -322,7 +345,7 @@
     <string name="loop_status_adjusted_target">Ținta ajustată</string>
     <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Până este încheiat</string>
     <string name="loop_status_scene_ended">Încheiat</string>
-    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Urmărire</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Continuare</string>
     <string name="loop_status_profile">Profil</string>
     <string name="loop_status_no_profile">Niciun profil setat</string>
     <string name="loop_status_profile_percentage">Procentaj</string>
@@ -331,15 +354,15 @@
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
     <string name="loop_status_sensitivity">Sensibilitate</string>
-    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Setat de scena activă</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Setat de scenariul activ</string>
     <string name="loop_status">Stare buclă</string>
     <string name="loop_status_refresh">Reîncărcați</string>
     <string name="confirm">Confirmați</string>
-    <string name="request">Cerință</string>
+    <string name="request">Solicitare</string>
     <string name="constraint_applied">Constrângere aplicată!</string>
     <string name="wizard_total_insulin">Insulină totală</string>
     <string name="wizard_calculation">Calcul</string>
-    <string name="wizard_settings_format">IC: %1$s | FSI: %2$s</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
     <string name="wizard_result_bg">Glicemie</string>
     <string name="wizard_result_bg_tt">Glicemie (Țintă temporară: %1$s)</string>
     <string name="wizard_result_trend">Tendință 15\'</string>

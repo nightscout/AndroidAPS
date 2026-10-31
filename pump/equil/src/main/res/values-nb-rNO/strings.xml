@@ -64,7 +64,7 @@
     <string name="equil_firmware_version">Fastvareversjon</string>
     <string name="equil_shutdown_be">Equil vil bli skrudd av automatisk</string>
     <string name="equil_shutdown">Equil auto-av</string>
-    <string name="equil_common_history_tbr_value">Dose： %1$.2f E/t，varighet： %2$d minutter</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Basaldose: %1$.2f E/t, varighet: %2$d minutter</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Angi bolus</string>

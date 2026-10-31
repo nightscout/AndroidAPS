@@ -9,8 +9,8 @@
     <string name="label_quick_wizard_tile">Hızlı Asistan</string>
     <string name="label_user_action_tile">Kullanıcı Eylemi</string>
     <string name="label_scene_tile">Senaryo</string>
-    <string name="msg_warning_sync">%1$s\' den bu yana veri alınmıyor! Telefondaki AAPS \' nin veri gönderip göndermediğini kontrol edin</string>
-    <string name="msg_warning_old">AAPS verileri %1$s eski! Sensörleri denetleyin, xDrip+, NS, AAPS yapılandırma ya da diğerleri!</string>
+    <string name="msg_warning_sync">%1$s zamanından bu yana veri alınmadı! Telefondaki AAPS\'in saate veri gönderip göndermediğini kontrol edin</string>
+    <string name="msg_warning_old">AAPS verileri %1$s eski! Sensörünüzü, xDrip+, NS, AAPS yapılandırmasını veya diğerlerini kontrol edin!</string>
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>
     <string name="units_short">Ü</string>
     <string name="pref_display_settings">Ekran</string>
@@ -32,10 +32,10 @@
     <string name="pref_show_temp_target">Geçici Hedefi Göster</string>
     <string name="pref_show_reservoir_level">Rezervuar Seviyesini Göster</string>
     <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
-    <string name="pref_show_bg">KŞ\'ni göster</string>
+    <string name="pref_show_bg">KŞ göster</string>
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
-    <string name="pref_show_direction_arrow">Yön Oku Göster</string>
-    <string name="pref_show_ago">Önce Göster</string>
+    <string name="pref_show_direction_arrow">Yön Okunu Göster</string>
+    <string name="pref_show_ago">Geçen Süreyi Göster</string>
     <string name="pref_show_temp_basal">GBO göster</string>
     <string name="pref_show_bolus">Bolus &amp; SMB göster</string>
     <string name="pref_show_grid">Izgarayı Göster</string>
@@ -54,14 +54,14 @@
     <string name="pref_10_min">10 dk</string>
     <string name="pref_15_min">15 dk</string>
     <string name="pref_big_numbers">Büyük Sayılar</string>
-    <string name="pref_ring_history">Zil Geçmişi</string>
-    <string name="pref_light_ring_history">Düşük zil Geçmişi</string>
+    <string name="pref_ring_history">Halka Geçmişi</string>
+    <string name="pref_light_ring_history">Açık Renk Halka Geçmişi</string>
     <string name="pref_animations">Animasyonlar</string>
     <string name="pref_wizard_in_menu">Menüdeki Hesap Makinesi</string>
-    <string name="pref_prime_in_menu">Menüden Başlatma</string>
+    <string name="pref_prime_in_menu">Menüde Doldurma</string>
     <string name="pref_single_target">Tek hedef</string>
     <string name="pref_wizard_percentage">Hesap Makinesi Yüzdesi</string>
-    <string name="pref_wizard_carbs_type">Öğün Türü Hesaplayıcı</string>
+    <string name="pref_wizard_carbs_type">Hesap Makinesi Öğün Türü</string>
     <string name="pref_wizard_carb_time">Karb Hesaplama Zamanı</string>
     <string name="pref_complication_tap_action">Komplikasyon Dokunma Eylemi</string>
     <string name="pref_complication_bg_graph_hours">KŞ grafiği zaman aralığı</string>
@@ -72,9 +72,9 @@
     <string name="pref_version">Versiyon:</string>
     <string name="pref_moreWatchfaceSettings">Diğer Saatarayüz ayarları</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Lütfen, Saatarayüzü yapılandırmasına bakın.</string>
-    <string name="menu_tempt">GeçiciH</string>
+    <string name="menu_tempt">GH</string>
     <string name="menu_tempt_long">Geçici Hedef</string>
-    <string name="menu_wizard">Hesap makinesi</string>
+    <string name="menu_wizard">Hesaplayıcı</string>
     <string name="menu_wizard_short">Hesap</string>
     <string name="menu_treatment">Tedavi</string>
     <string name="menu_treatment_short">Tedavi</string>
@@ -98,43 +98,43 @@
     <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
     <string name="action_user_action_confirmation">Kullanıcı Eylemi Gerekli</string>
     <string name="action_scene_confirmation">Senaryo talep edildi</string>
-    <string name="scene_end">Son</string>
+    <string name="scene_end">Sonlandır</string>
     <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Atla</string>
     <string name="action_treatment_confirmation">Tedavi talebi</string>
     <string name="action_bolus_confirmation">Bolus talebi</string>
     <string name="action_wizard_confirmation">Hesaplama talebi</string>
     <string name="action_fill_confirmation">Doldurma talebi</string>
-    <string name="action_ecarb_confirmation">Karonhidrat talebi</string>
+    <string name="action_ecarb_confirmation">Karbonhidrat talebi</string>
     <string name="action_profile_switch_confirmation">Profil Değişimi İstendi</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Hedef [%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Düşük[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Yüksek[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Düşük [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Yüksek [%s]</string>
     <string name="action_carbs">Karbonhidrat</string>
-    <string name="action_carbs_gram">Karb.lar [g]</string>
+    <string name="action_carbs_gram">Karb [g]</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Maksimum çıkarma: %1$d g (AKRB)</string>
     <string name="action_ecarbs">yKarb</string>
     <string name="action_percentage">Yüzde\n[%]</string>
-    <string name="action_start_minutes">Başlama\n[minutes]</string>
-    <string name="action_duration_hours">Süre\n[hours]</string>
-    <string name="action_duration_hours_format">%1$d s</string>
+    <string name="action_start_minutes">Başlama\n[dk]</string>
+    <string name="action_duration_hours">Süre\n[sa]</string>
+    <string name="action_duration_hours_format">%1$d sa</string>
     <string name="action_duration_hours_minutes_format">%1$d saat %2$d dk</string>
     <string name="action_minutes_format">%1$d dk</string>
     <string name="ecarbs_start_format">%1$d dk</string>
     <string name="action_confirm_timeshift">Zaman kayması: %1$s</string>
     <string name="action_insulin">İnsülin</string>
-    <string name="action_insulin_units">İnsülin [U]</string>
+    <string name="action_insulin_units">İnsülin [Ü]</string>
     <string name="action_preset_1">Ön ayar 1</string>
     <string name="action_preset_2">Ön ayar 2</string>
     <string name="action_preset_3">Ön ayar 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Serbest miktar</string>
     <string name="action_confirm">ONAYLA</string>
-    <string name="action_timeshift_hours">Zaman kayması\n[hours]</string>
+    <string name="action_timeshift_hours">Zaman kayması\n[sa]</string>
     <string name="bolus_progress">Bolus İlerlemesi</string>
     <string name="press_to_cancel">iptal etmek için basın</string>
     <string name="cancel_bolus">BOLUS İPTAL ET</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Döngü</string>
-    <string name="status_profile_switch">Profil değiştir</string>
+    <string name="status_profile_switch">Profil değişimi</string>
     <string name="status_tdd">GTD</string>
     <string name="activity_carb">Karb</string>
     <string name="activity_IOB">AİNS</string>
@@ -181,7 +181,7 @@
     <string name="pref_include_external">Şablona harici görünümleri dahil et</string>
     <string name="pref_switch_external">Saat arayüzünde harici verileri değiştir</string>
     <string name="custom_pref_show_seconds">Saniyeyi göster</string>
-    <string name="digitalstyle_pref_your_style">Stilin</string>
+    <string name="digitalstyle_pref_your_style">Stiliniz</string>
     <string name="digitalstyle_style_none">stil yok</string>
     <string name="digitalstyle_style_minimal">minimal stil</string>
     <string name="digitalstyle_style_shape">şekil stili</string>
@@ -194,8 +194,8 @@
     <string name="bolus_progress_channel_description">Bolus iletimi ve iptali</string>
     <string name="bolus_progress_silent_channel_description">Bolus iletimi ve daha az titreşimle iptal etme</string>
     <string name="open_loop_channel_name">AAPS Açık Döngü</string>
-    <string name="open_loop_channel_description">Açık Döngü bildirim isteği</string>
-    <string name="simple_ui_off">Kapa</string>
+    <string name="open_loop_channel_description">Açık Döngü istek bildirimi</string>
+    <string name="simple_ui_off">Kapalı</string>
     <string name="simple_ui_charging">Şarj Olurken</string>
     <string name="simple_ui_always_on">Her Zaman Açık Modu</string>
     <string name="simple_ui_always_on_charging">Her Zaman Açık ve Şarj Oluyor</string>
@@ -258,32 +258,32 @@
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_cwf_lower">Özel saat arayüzü arka planı</string>
     <string name="complication_cwf_upper">Özel Saat arayüzü saat</string>
-    <string name="complication_br_cob_iob">Nabız, AKRB &amp; AİNS</string>
-    <string name="complication_br_cob_iob_ext1">Nabız, AKRB &amp; AİNS Uzt.1</string>
-    <string name="complication_br_cob_iob_ext2">Nabız, AKRB &amp; AİNS Uzt.2</string>
-    <string name="complication_br_iob">Nabız &amp; AiNS</string>
+    <string name="complication_br_cob_iob">Bazal, AKRB &amp; AİNS</string>
+    <string name="complication_br_cob_iob_ext1">Bazal, AKRB &amp; AİNS Uzt.1</string>
+    <string name="complication_br_cob_iob_ext2">Bazal, AKRB &amp; AİNS Uzt.2</string>
+    <string name="complication_br_iob">Bazal &amp; AİNS</string>
     <string name="complication_br">Bazal oranı</string>
-    <string name="complication_br_tt">BR &amp; Hedef</string>
+    <string name="complication_br_tt">Bazal &amp; Hedef</string>
     <string name="complication_target">Hedef</string>
     <string name="complication_cob_iob">AKRB &amp; AİNS</string>
     <string name="complication_cob_icon">AKRB simgesi</string>
     <string name="complication_cob_detailed">Detaylı AKRB</string>
     <string name="complication_iob_icon">AİNS simgesi</string>
-    <string name="complication_iob_detailed">Detaylı AiNS</string>
+    <string name="complication_iob_detailed">Detaylı AİNS</string>
     <string name="complication_uploader_phone_battery">Yükleyici/Telefon Pili</string>
     <string name="running_mode_resume">Döngüyü devam ettir</string>
     <string name="running_mode_reconnect">Pompayı tekrar bağla</string>
     <string name="label_running_mode_title">Çalışma modu</string>
     <string name="label_bg_graph_tile">KŞ Grafiği</string>
-    <string name="tile_tap_action">Tıklatma eylemi</string>
+    <string name="tile_tap_action">Dokunma eylemi</string>
     <string name="tile_graph_time_range">Zaman aralığı</string>
     <string name="tile_tap_bg_graph">KŞ Grafiği</string>
     <string name="tile_tap_main_menu">Ana Menü</string>
     <string name="tile_tap_loop_status">Döngü durumu</string>
     <string name="action_running_mode_selected">Çalışma modu istendi</string>
-    <string name="title_activity_disconnect_pump">Pompayı ayırın</string>
-    <string name="title_activity_suspend_loop">Döngüyü duraklat</string>
-    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d gr</string>
+    <string name="title_activity_disconnect_pump">Pompa bağlantısını kes</string>
+    <string name="title_activity_suspend_loop">Döngüyü askıya al</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="wizard_carbs_type">Öğün türü</string>
     <string name="wizard_carbs_type_bread">Ekmek</string>
     <string name="wizard_carbs_type_cake">Kek</string>
@@ -298,10 +298,15 @@
     <string name="eat_reminder_stop">Durdur</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Zil %1$s çalacak</string>
     <string name="eat_reminder_countdown_channel">Yemek vakti, çalışıyor</string>
+    <string name="eat_reminder_channel_silent">Rahatsız Etmeyin modundayken yemek yeme zamanı</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d dk</string>
-    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d gr</string>
+    <string name="phone_alarm_channel">Telefondan gelen alarmlar</string>
+    <string name="phone_alarm_channel_silent">Rahatsız Etmeyin modundayken telefondan gelen alarmlar</string>
+    <string name="phone_alarm_silence">Sessize al</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">%1$d dk sessiz</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">Ü</string>
-    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d gr</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f Ü</string>
     <string name="wizard_confirmation_sent">Gönderildi</string>
     <string name="contacting_master">Ana birimle iletişime geçiliyor…</string>
@@ -309,7 +314,7 @@
     <string name="tile_settings">Panel Ayarları</string>
     <string name="loop_status_error">Durum yüklenemedi</string>
     <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
-    <string name="loop_status_tbr_rate">%1$.2f Ü/s (%2$d%%)</string>
+    <string name="loop_status_tbr_rate">%1$.2f Ü/sa (%2$d%%)</string>
     <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s kaldı</string>
     <string name="loop_status_tbr_continues">Geçici bazal devam ediyor</string>
     <string name="loop_status_tbr_cancel">Düzenli bazal ayarı</string>
@@ -319,9 +324,9 @@
     <string name="loop_status_open">Açık Döngü</string>
     <string name="loop_status_lgs">Düşük Glikoz Duraklatma</string>
     <string name="loop_status_disabled">Döngü devre dışı</string>
-    <string name="loop_status_suspended">Döngü duraklatıldı</string>
-    <string name="loop_status_pump_suspended">Pompa Durduruldu</string>
-    <string name="loop_status_dst_suspended">DST tarafından durduruldu</string>
+    <string name="loop_status_suspended">Döngü askıya alındı</string>
+    <string name="loop_status_pump_suspended">Pompa askıya alındı</string>
+    <string name="loop_status_dst_suspended">DST nedeniyle askıya alındı</string>
     <string name="loop_status_disconnected">Pompa bağlantısı kesildi</string>
     <string name="loop_status_superbolus">Süperbolus</string>
     <string name="loop_status_unknown">Bilinmiyor</string>
@@ -371,5 +376,5 @@
     <string name="wizard_insulin_format">%1$s Ü</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s dk)</string>
-    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d s (+%3$d dk)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d sa (+%3$d dk)</string>
 </resources>

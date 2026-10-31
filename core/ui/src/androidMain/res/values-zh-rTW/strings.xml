@@ -11,7 +11,7 @@
     <string name="treatments_history">治療紀錄</string>
     <string name="treatments_desc">查看並管理治療紀錄</string>
     <string name="nav_configuration">組態</string>
-    <string name="nav_configuration_desc">設定您的組態（CGM、幫浦…）並啟用功能</string>
+    <string name="nav_configuration_desc">設定您的組態（CGM、幫浦等），並啟用功能</string>
     <string name="count_selected">%1$d 個已選取</string>
     <string name="delete">刪除</string>
     <string name="show_invalidated">顯示已作廢</string>
@@ -719,6 +719,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">未選擇設定檔</string>
     <string name="missing_profile_name">缺少設定檔名稱</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s 複本</string>
     <string name="profile_not_saved_activate">設定檔未儲存。請先儲存設定檔再啟用。</string>
     <string name="profile_basal_not_compatible_with_pump">基礎率與目前的幫浦不相容，因此無法啟用。請降低百分比，或調整基礎率。</string>
     <string name="profile_basal_below_pump_minimum">基礎率低於目前幫浦的最低值，無法啟用。請提高百分比或調整基礎率。</string>

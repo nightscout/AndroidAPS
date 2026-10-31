@@ -40,7 +40,7 @@
     <string name="automation_missing_trigger">Proszę podać przynajmniej jedno wywołanie.</string>
     <string name="automation_missing_action">Proszę podać przynajmniej jedną akcję.</string>
     <string name="exportsettings_message">Eksport ustawień: %1$s</string>
-    <string name="export_settings_short">Eksp. ust.</string>
+    <string name="export_settings_short">Tekst w leczeniu:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Inf:</string>

@@ -12,34 +12,55 @@
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
     <string name="display_settings">Görüntü Ayarları</string>
     <string name="low_mark">DÜŞÜK işareti</string>
-    <string name="high_mark">Yüksek işareti</string>
-    <string name="low_mark_comment">Aralıktan daha düşük değer (sadece görüntüle)</string>
-    <string name="high_mark_comment">Aralıktan daha yüksek değer (Sadece görüntüle)</string>
+    <string name="high_mark">YÜKSEK işareti</string>
+    <string name="low_mark_comment">Hedef aralığın alt değeri (yalnızca görüntüleme)</string>
+    <string name="high_mark_comment">Hedef aralığın üst değeri (yalnızca görüntüleme)</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
-    <string name="master_password_summary">Ana parola, yedekleme şifrelemesi ve uygulamanın güvenliği için kullanılır. Bu parolayı unutmayın ve güvenli bir yerde saklayın.</string>
+    <string name="master_password_summary">Ana parola, yedeklerin şifrelenmesi ve uygulamadaki güvenliği geçersiz kılmak için kullanılır. Bu parolayı unutmayın veya güvenli bir yerde saklayın.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
     <string name="syncinfotext">Verileri bulutla senkronize edin. Bu kısmı şimdi atlayabilirsiniz, ancak Nightscout veya Tidepool istemcisini kurmadan görevleri geçemezsiniz.</string>
-    <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
+    <string name="status_label">Durum:</string>
+    <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat İES gerektirir. Yeni profildeki 5–6 saatlik İES, eski insülin profillerindeki 3 saatlik İES\'e eşittir.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/tr/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Daha yeni algoritma genellikle daha güçlüdür. Kullanmadan önce OpenAPS belgelerini okumayı ve yapılandırmayı unutmayın.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
     <string name="startobjective">İlk görevinize başlayın</string>
+    <string name="open_objectives">Görevleri Aç</string>
+    <string name="setupwizard_permissions">İzinler</string>
+    <string name="setupwizard_profile_info">Bazal oranlarınız, IC, İDF ve hedef değerlerinizle bir profil oluşturun. Daha sonra birden fazla profil ekleyebilirsiniz.</string>
+    <string name="setupwizard_permissions_info">AAPS\'in düzgün çalışabilmesi için depolama erişimine ve izinlere ihtiyacı vardır. Lütfen aşağıda istenen izinleri verin.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink durumu:</string>
+    <string name="setupwizard_client_control_title">İstemci denetimi</string>
+    <string name="setupwizard_client_control_info">İstemci cihazları, Nightscout üzerinden bu ana birime imzalı komutlar gönderebilecek şekilde eşleştirin. AAPS\'i uzaktan kontrol etmek için önerilen yeni yöntem budur.</string>
+    <string name="setupwizard_ns_receive_info">Nightscout üzerinden doğrudan tedavi ve veri kabul etme özelliği (daha az güvenli bir yöntemdir) artık varsayılan olarak kapalıdır. Eğer hâlâ bu özelliğe ihtiyaç duyuyorsanız, aşağıdaki ayarlardan etkinleştirebilirsiniz. Nightscout veya üçüncü taraf uygulamalar aracılığıyla veri girişi yapmanız gerekiyorsa bu özellik gereklidir.</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout veri kabulü</string>
+    <string name="setupwizard_pair_with_master_info">Bu istemciyi ana AAPS\'nizle eşleştirin; böylece güvenli bir kanal üzerinden komut gönderebilir. Eşleştirme sonrasında kurulum tamamlanmış olur.</string>
+    <string name="setupwizard_setup_from_master_title">Ana birimden kurulumu yapın</string>
+    <string name="setupwizard_setup_from_master_info">Ana birimde Yetkili istemciler kısmını açın ve bu telefonu bir QR kodu ile ekleyin. Kodu taratmak, Nightscout\'u kendine özel bir belirteçle yapılandırır ve telefonun eşleştirilmesini de sağlar. Tarama işlemi tamamlandığında kurulum bitmiş olur. QR kodu kullanmıyorsanız bu adımı atlayın ve Nightscout kurulumunu kendiniz gerçekleştirin.</string>
+    <string name="setupwizard_scan_master_qr">QR kodunu tarayın</string>
+    <string name="setupwizard_pairing_ws_warning">Eşleştirme için Nightscout WebSocket bağlantısı gereklidir. Önceki adıma dönün ve öncelikle bunu etkinleştirin.</string>
+    <string name="setupwizard_pairing_status_master">Eşleştirilmiş istemciler: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Henüz eşleşmiş istemci yok</string>
+    <string name="setupwizard_pairing_status_client_paired">Ana birimle eşleşti</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Henüz eşleştirilmedi</string>
+    <string name="setupwizard_instance_name_title">Bu telefonu kim kullanıyor?</string>
     <string name="readstatus">Durum oku</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, pil optimizasyonu muafiyetini desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
+    <string name="configbuilder_sync_description">Veri yükleme, senkronizasyon ve iletişim eklentileri.</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
-    <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelleyin.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -50,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Yükleniyor…</string>
+    <string name="warning_wrong_directory_selected">Yanlış Dizin Seçildi</string>
+    <string name="warning_wrong_directory_message">Kök AAPS dizini yerine \"%1$s\" alt dizinini seçtiniz. Lütfen üst AAPS dizinini seçin. Uygulama, alt dizinleri otomatik olarak oluşturacak ve yönetecektir.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->

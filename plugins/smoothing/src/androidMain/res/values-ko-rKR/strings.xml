@@ -5,4 +5,7 @@
     <string name="avg_smoothing_name">평균 평활화</string>
     <string name="description_avg_smoothing">"평균 평활화 알고리즘, 최신 값은 영향을 받지 않습니다."</string>
     <string name="no_smoothing_name">평활화 없음</string>
+    <string name="description_no_smoothing">"이미 필터링된 데이터를 받는 경우에 사용합니다(예: BYODA G6)."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"노이즈 자동 조정과 RTS 평활화를 사용하는 고급 알고리즘입니다."</string>
 </resources>

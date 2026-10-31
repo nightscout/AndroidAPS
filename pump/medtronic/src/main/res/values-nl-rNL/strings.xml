@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">Max Basaal op Pomp (E/u)</string>
     <string name="medtronic_custom_action_wake_and_tune">Ontwaak en maak verbinding</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Blokkering wissen</string>
+    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
     <string name="medtronic_pump_battery_select">Batterij type (batterij weergave)</string>
     <string name="medtronic_pump_battery_no">Niet geselecteerd (Eenvoudige weergave)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (uitgebreide weergave)</string>
@@ -18,7 +19,23 @@
     <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Uitgebreide weergave)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Overig (niet ondersteund)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (fw 2.4A of lager)</string>
+    <string name="medtronic_pump_type_723_24a">723 (fw 2.4A of lager)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA fw. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batterij van de rileylink</string>
     <!-- MDT Errors -->

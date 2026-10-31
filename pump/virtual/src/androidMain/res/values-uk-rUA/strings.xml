@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Тип віртуальної помпи</string>
+    <string name="virtual_pump_definition">Визначення помпи</string>
+    <string name="virtual_pump_pump_def">Болюс: крок=%1$s\nПодовжений болюс: [крок=%2$s, тривалість=%3$s хв–%4$s год]\nБазал: крок=%5$s\nTBR: %6$s (крок %7$s), тривалість=%8$s хв–%9$s год\n%10$s</string>
+    <string name="description_pump_virtual">Інтеграція для помп, які ще не мають драйвера (відкрита петля)</string>
+    <string name="virtualpump_settings">Налаштування віртуальної помпи</string>
     <!--    PumpType-->
     <string name="def_extended_note">В віртуальній помпі тільки дискретні значення підтримуються для налаштування базала/болюса.</string>
 </resources>

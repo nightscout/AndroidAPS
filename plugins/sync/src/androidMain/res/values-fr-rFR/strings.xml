@@ -32,7 +32,7 @@
     <string name="authorized_clients_pin_done">Terminé</string>
     <string name="authorized_clients_pin_publishing">Envoi de la demande d\'appairage à Nightscout…</string>
     <string name="authorized_clients_pin_published">Demande d\'appairage prête sur Nightscout.</string>
-    <string name="authorized_clients_pin_publish_failed">Impossible de télécharger la demande d\'appairage vers Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Impossible d\'envoyer la demande d\'appairage vers Nightscout.</string>
     <string name="authorized_clients_pin_retry">Réessayer</string>
     <string name="authorized_clients_method_title">Comment configurer le téléphone ?</string>
     <string name="authorized_clients_method_qr_pair">QR code : Nightscout et appairage</string>
@@ -47,10 +47,13 @@
     <string name="authorized_clients_qr_ns_instructions">Scannez ce code sur le nouveau téléphone, dans l\'assistant de configuration ou dans Appairer avec le maître. Il configure Nightscout. Le téléphone n\'est pas appairé.</string>
     <string name="authorized_clients_qr_keep_private">Quiconque voit ce code peut lire votre Nightscout. Ne le montrer qu\'au nouveau téléphone.</string>
     <string name="authorized_clients_token_problem_title">Pas de QR code</string>
+    <string name="authorized_clients_not_added_title">Client non ajouté</string>
     <string name="authorized_clients_token_problem_not_connected">Ce téléphone n\'est pas connecté à Nightscout, donc il ne peut pas créer de jeton pour le client.</string>
     <string name="authorized_clients_token_problem_not_allowed">Le jeton Nightscout de ce téléphone n\'est pas un jeton administrateur, donc il ne peut donc pas créer de jeton pour le client. Utilisez un jeton admin ici, ou ajoutez le client avec le code PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout a un jeton avec ce nom et d\'autres droits. Choisissez un autre nom.</string>
     <string name="authorized_clients_token_problem_name_in_use">Un client portant ce nom est déjà dans la liste. Choisissez un autre nom ou supprimez d\'abord ce client.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout n\'a pas répertorié le nouveau jeton, il a donc été supprimé à nouveau. Rien n\'a été laissé derrière. Réessayez.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout n\'a pas répertorié le nouveau jeton et il n\'a pas pu être retiré à nouveau. Supprimez le jeton %1$s dans Nightscout, puis réessayez.</string>
     <string name="authorized_clients_tokens_header">Lecture Nightscout uniquement</string>
     <string name="authorized_clients_token_unpaired">Propre jeton Nightscout, non appairé</string>
     <string name="authorized_clients_token_show_qr">Afficher le QR code</string>
@@ -69,14 +72,14 @@
     <string name="pair_with_master_fetching">Recherche d\'appairage…</string>
     <string name="pair_with_master_confirm_title">Associer avec ce maître ?</string>
     <string name="pair_with_master_confirm_master">Maître: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Après l\'appairage, ce maître pourra envoyer des commandes signées à cet appareil.</string>
+    <string name="pair_with_master_confirm_warning">Après l\'appairage, cet appareil sera en mesure d\'envoyer des commandes signées à ce maître.</string>
     <string name="pair_with_master_confirm_pair">Appairer</string>
     <string name="pair_with_master_error_title">Impossible d\'appairer</string>
     <string name="pair_with_master_error_wrong_pin">Aucun appairage trouvé pour ce code PIN. Vérifiez le code PIN sur le maître et réessayez.</string>
     <string name="pair_with_master_error_ambiguous_pin">Plusieurs appairages correspondent à ce PIN. Demandez au maître d\'en générer un nouveau et réessayez.</string>
     <string name="pair_with_master_error_expired">Cet appairage a expiré. Générer un nouveau code PIN sur le maître.</string>
     <string name="pair_with_master_error_network">Impossible d\'accéder à Nightscout. Vérifiez la connexion et réessayez.</string>
-    <string name="pair_with_master_error_secret_store">L\'appairage secret n\'a pas pu être stocké, l\'appairage a donc été annulé. Rien n\'a été changé. Essayez à nouveau, et si ça continue à échouer, redémarrez l\'application.</string>
+    <string name="pair_with_master_error_secret_store">Le secret d\'appairage n\'a pas pu être enregistré, l\'appairage a donc été annulé. Rien n\'a été modifié. Réessayez et, si cela échoue encore, redémarrez l\'application.</string>
     <string name="pair_with_master_retry">Essayer à nouveau</string>
     <string name="pair_with_master_already_paired_title">Déjà appairé</string>
     <string name="pair_with_master_already_paired_master">Actuellement appairé avec le maître %1$s. Dissocier d\'abord pour entrer un nouveau PIN.</string>
@@ -94,7 +97,7 @@
     <string name="client_setup_scan_not_a_code">Ceci n\'est pas un QR code d\'AAPS.</string>
     <string name="client_setup_scan_other_version">Ce code provient d\'une autre version d\'AAPS. Le maître et ce téléphone doivent exécuter la même version.</string>
     <string name="client_setup_scan_expired">Ce code a expiré. Faites-en un nouveau sur le maître.</string>
-    <string name="client_setup_scan_already_paired">Ce téléphone est déjà appairé. Déconnectez-le d\'abord pour utiliser un code qui l\'appairera.</string>
+    <string name="client_setup_scan_already_paired">Ce téléphone est déjà appairé. Dissociez-le d\'abord pour utiliser un code d\'appairage.</string>
     <string name="client_setup_confirm_title">Utiliser ce code ?</string>
     <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout : %1$s</string>
     <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Il appaire également ce téléphone avec le maître %1$s.</string>
@@ -118,18 +121,19 @@
     <string name="ns_alarm_options">Options d\'alarme</string>
     <string name="ns_remote_control_options">Contrôle à distance</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Si activé, les téléchargements iront vers les serveurs de test au lieu des serveurs habituels</string>
+    <string name="summary_tidepool_dev_servers">Si activé, les envois iront vers les serveurs de test au lieu des serveurs habituels</string>
     <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
     <string name="title_tidepool_use_ns_connection">Utiliser les paramètres de connexion de Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Désactiver pour définir des paramètres de connexion séparés pour Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Transfère les données vers Tidepool</string>
-    <string name="upload_now">Télécharger maintenant</string>
+    <string name="upload_now">Envoyer maintenant</string>
     <string name="tidepool_purge_data">Purger toutes les données</string>
-    <string name="tidepool_purge_data_confirm">Supprimer TOUTES les données que AAPS a téléchargées sur Tidepool ? Cette action est irréversible. Utilisez-le pour supprimer les données corrompues par une ancienne version, puis exécutez \"Synchronisation totale\" pour re-télécharger.</string>
+    <string name="tidepool_purge_data_confirm">Supprimer TOUTES les données qu\'AAPS a envoyées à Tidepool ? Cette action est irréversible. Utilisez-la pour supprimer les données corrompues par une ancienne version, puis lancez « Synchronisation complète » pour les renvoyer.</string>
     <string name="tidepool_full_sync_comment">Synchronisation complète ? AAPS téléversera toutes les données sur Tidepool. Cela peut prendre un certain temps.</string>
     <string name="tidepool_logout_confirm">Se déconnecter de Tidepool ? Les téléversements s\'arrêtent jusqu\'à ce que vous vous connectiez à nouveau.</string>
     <string name="tidepool_status_not_logged_in">Non connecté</string>
+    <string name="tidepool_status_no_session">Connecté au compte, pas encore relié</string>
     <string name="tidepool_status_blocked">Bloqué par les paramètres de connexion</string>
     <string name="tidepool_status_failed">Échec. Voir le journal ci-dessous.</string>
     <string name="not_connected">Non connecté</string>
@@ -171,7 +175,11 @@
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
     <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
-    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s remplacera la %2$s sur la montre. Les complications que vous avez modifiées dans l\'éditeur de cadrans reviennent aux valeurs par défaut.</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installation…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">La montre affiche le Cadran des complications. Sélectionnez Cadran personnalisé pour voir %1$s sur la montre.</string>
+    <string name="wear_pushed_watchface_confirm_title">Changer le cadran de la montre ?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s remplacera le %2$s sur la montre.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s remplacera le %2$s sur la montre. Les complications que vous avez modifiées dans l\'éditeur de cadrans reviennent aux valeurs par défaut.</string>
     <string name="wear_load_watchface">Charger le cadran</string>
     <string name="wear_infos_watchface">Infos Cadran</string>
     <string name="wear_export_watchface">Exporter le modèle</string>
@@ -226,7 +234,7 @@
     <string name="smscommunicator_otp_reset_btn">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
     <string name="smscommunicator_otp_reset_prompt">Voulez-vous réinitialiser la clé de l\'Authenticateur ? Cela rendra tous authentificateurs configurés invalides, et vous devrez les configurer à nouveau.</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installer l\'Authentificateur</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scannez le code pour configurer les codes OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
@@ -263,7 +271,7 @@
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus à distance non disponible. Réessayez plus tard.</string>
     <string name="smscommunicator_basal_reply_with_code">Pour démarrer la basal de %1$.2f U/h pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Pour changer le profil vers %1$s %2$d%%, renvoyez le code %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">Pour démarrer le bolus étendu de %1$.2f U/h pendant %2$d min, renvoyez le code %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Pour démarrer le bolus étendu de %1$.2f U pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Pour entrer %1$dg à %2$s, renvoyez le code %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Pour démarrer la Basal %1$d%% pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Pour suspendre la boucle pendant %1$d min, renvoyez le code %2$s</string>

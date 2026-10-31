@@ -13,11 +13,11 @@
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Ресет на RileyLink</string>
     <string name="medtronic_pump_battery_select">Тип батерия (напреднали)</string>
-    <string name="medtronic_pump_battery_no">Не е избрано (общ)</string>
-    <string name="medtronic_pump_battery_alkaline">Алкални</string>
-    <string name="medtronic_pump_battery_lithium">Литиева</string>
-    <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
-    <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
+    <string name="medtronic_pump_battery_no">Не е избрано (опростен изглед)</string>
+    <string name="medtronic_pump_battery_alkaline">Алкална (разширен изглед)</string>
+    <string name="medtronic_pump_battery_lithium">Литиева (разширен изглед)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (разширен изглед)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (разширен изглед)</string>
     <!-- Pump type entries -->
     <string name="medtronic_pump_type_unsupported">Друга (неподдържана)</string>
     <string name="medtronic_pump_type_512">512</string>
@@ -59,7 +59,7 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Отказали сте болус след като е бил изпратен към помпата. Помпите Медтроник не го поддържат и ще трябва да го направите ръчно. Пуснете Suspend mode и след това Resume (ако оше искате да го откажете). Апликацията ще покаже промените след около 5 мин.</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Отказали сте болус след като е бил изпратен към помпата. Помпите Медтроник не го поддържат и ще трябва да го направите ръчно. Пуснете Suspend mode и след това Resume (ако още искате да го откажете). Апликацията ще покаже промените след около 5 мин.</string>
     <string name="medtronic_cmd_cant_read_tbr">Не може да бъде прочетен вр. базал.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Не може да бъде изключен вр. базал. Операцията е спряна.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Смяната на профила е невъзможна, поради твърде голям размер: %1$s</string>

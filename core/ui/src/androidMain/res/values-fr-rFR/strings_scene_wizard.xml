@@ -66,12 +66,14 @@
     <string name="scene_wizard_finish">Terminer</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Scénario suivant</string>
+    <string name="scene_wizard_chain_info">Vous pouvez éventuellement enchaîner un autre scénario à activer automatiquement lorsque celui-ci expire. Vous pouvez également le démarrer lorsque vous arrêtez celui-ci en avance. Le scénario suivant ne s\'exécute que si la cible est activée et que la pompe est disponible ; sinon la bannière du scénario final indique pourquoi il ne commence pas.</string>
     <string name="scene_chain_none">Aucun</string>
     <string name="scene_skip_to_format">Aller à %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Un scénario chaîné a été supprimé</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Le suivant n\'a pas commencé : %1$s</string>
     <string name="scene_chain_skipped_deleted">le scénario cible a été supprimé</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" est désactivé</string>
     <string name="scene_chain_error_summary">%1$s → %2$s : %3$d des %4$d actions ont échoué</string>

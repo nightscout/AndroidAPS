@@ -1,10 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Зв’язку ще не було</string>
+    <string name="pump_status_sleeping">Сплячий режим</string>
+    <string name="pump_status_waking_up">Пробудження</string>
+    <string name="pump_status_active">Активна</string>
+    <string name="pump_status_error_comm">Помилка зв’язку</string>
+    <string name="pump_status_timeout_comm">Час очікування зв’язку вичерпано</string>
+    <string name="pump_status_invalid_config">Неправильна конфігурація</string>
+    <string name="medtronic_pump_encoding_title">Кодування Medtronic</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Програмне кодування 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Апаратне кодування 4b6b</string>
+    <string name="medtronic_pump_frequency_us_ca">США та Канада (916 МГц)</string>
+    <string name="medtronic_pump_frequency_worldwide">Весь світ (868 МГц)</string>
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_scan_scanning">Сканування</string>
+    <string name="riley_link_ble_config_connected_never">Ніколи</string>
     <!-- RL Status Page -->
+    <string name="rileylink_status">Статус RileyLink</string>
+    <string name="medtronic_pump_status">Статус помпи</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Адреса:</string>
+    <string name="rileylink_name">Ім\'я:</string>
+    <string name="rileylink_battery_level">Рівень заряду:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Статус з’єднання:</string>
+    <string name="rileylink_connection_error">Помилка з’єднання:</string>
+    <string name="rileylink_device">Пристрій</string>
+    <string name="rileylink_device_type">Тип пристрою:</string>
+    <string name="rileylink_configured_device_model">Налаштована модель пристрою:</string>
+    <string name="rileylink_connected_device_model">Підключена модель пристрою:</string>
+    <string name="rileylink_last_used_frequency">Остання використана частота:</string>
+    <string name="rileylink_last_device_contact">Останній зв’язок із пристроєм:</string>
+    <string name="rileylink_firmware_version">Версія прошивки:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Прошивка: %1$s\nАпаратна версія: %2$s</string>
+    <string name="rileylink_pump_serial_number">Серійний номер помпи:</string>
+    <string name="rileylink_pump_frequency">Частота помпи:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f МГц</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">Ініціалізація Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Помилка Bluetooth</string>
+    <string name="rileylink_state_bt_ready">Bluetooth готовий</string>
+    <string name="rileylink_state_not_started">Не запущено</string>
+    <string name="rileylink_state_rl_init">Ініціалізація RileyLink…</string>
+    <string name="rileylink_state_rl_error">Помилка RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Налаштування частоти RileyLink і помпи</string>
+    <string name="rileylink_state_pc_error">Проблема з підключенням до помпи</string>
+    <string name="rileylink_state_connected">Підключено</string>
+    <string name="rileylink_state_rl_ready">RileyLink готовий</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Пристрій не є RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink недоступний</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth вимкнено</string>
+    <string name="rileylink_error_no_bt_adapter">Немає адаптера Bluetooth</string>
+    <string name="rileylink_error_tuneup_failed">Не вдалося налаштувати частоту (TuneUp)</string>
+    <string name="rileylink_error_pod_unreachable">Pod недоступний</string>
     <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Помпа Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Показувати рівень заряду, який повідомляє OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">НЕ працює з оригінальним RileyLink. Може не працювати з іншими альтернативами RileyLink.</string>
+    <string name="orange_use_scanning_level">Використовувати сканування</string>
+    <string name="orange_use_scanning_level_summary">Сканувати перед підключенням до OrangeLink, це має покращити з’єднання (за потреби можна використовувати й з іншими клонами RileyLink)</string>
+    <string name="rileylink_pair">Спарувати RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink успішно спарено</string>
+    <string name="rileylink_config_reset">Конфігурацію RileyLink скинуто</string>
 </resources>

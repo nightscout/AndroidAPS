@@ -157,6 +157,26 @@ internal fun markerAnchorTime(time: Long, partners: List<Long>): Long {
     return if (partner != null && partner < time) partner else time
 }
 
+/** How far a prediction may lift the top of the BG axis above the real data, in mg/dl. The phone uses 54 (3 mmol/L). */
+internal const val PREDICTION_AXIS_HEADROOM_MGDL = 50f
+
+/** Room between the highest value on the axis and the top edge, in mg/dl. */
+private const val AXIS_TOP_MARGIN_MGDL = 30f
+
+/**
+ * The top of the BG axis, in mg/dl. The highest reading in the window ([actualMax]) and the high
+ * mark ([high]) widen the axis freely. A prediction ([predMax]) counts only up to
+ * [PREDICTION_AXIS_HEADROOM_MGDL] above the higher of those two: a COB curve running off towards
+ * 20 mmol/L used to press the real readings together at the bottom. A prediction above the top is
+ * not drawn, so the curve is cut at the edge like on the phone. Same rule as `bgAxisTop` in the
+ * phone's GraphUtils.
+ */
+internal fun bgAxisTop(actualMax: Float, predMax: Float, high: Float): Float {
+    val realTop = maxOf(actualMax, high)
+    val predictionTop = predMax.coerceAtMost(realTop + PREDICTION_AXIS_HEADROOM_MGDL)
+    return maxOf(realTop, predictionTop) + AXIS_TOP_MARGIN_MGDL
+}
+
 /**
  * [now] is the moment the graph is drawn for; a screen that ticks passes its own clock, so the drawing
  * follows it. [minutesText] writes the minutes left of the "time to eat" timer at its end line; null
@@ -194,9 +214,8 @@ internal fun DrawScope.renderBgGraph(
     val predMax = predictions
         .filter { it.timeStamp in (now + 1)..endTime && it.sgv > 0 }
         .maxOfOrNull { it.sgv.toFloat() } ?: 0f
-    val dataMax = predMax.coerceAtMost(actualMax + 50f).coerceAtLeast(actualMax)
     val yMin = 40f
-    val yMax = maxOf(dataMax, bgData.high.toFloat()) + 30f
+    val yMax = bgAxisTop(actualMax, predMax, bgData.high.toFloat())
     val ySpan = yMax - yMin
 
     fun timeToX(t: Long) = pad + drawW * ((t - startTime).toFloat() / timeSpan)
@@ -340,6 +359,9 @@ internal fun DrawScope.renderBgGraph(
     val predRadius = dotRadius * 0.6f
     for (pred in predictions) {
         if (pred.timeStamp !in (now + 1)..endTime) continue
+        // Above the axis the point is left out, not pressed onto the top edge: a row of dots along
+        // the edge would look like a real flat prediction. See bgAxisTop.
+        if (pred.sgv > yMax) continue
         val color = if (pred.color != 0) {
             Color(pred.color).copy(alpha = 0.7f)
         } else {

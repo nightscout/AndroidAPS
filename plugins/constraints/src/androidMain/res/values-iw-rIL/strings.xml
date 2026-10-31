@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">שינוי לשעון קיץ ב-24 השעות הקרובות</string>
-    <string name="dst_loop_disabled_warning">חל מעבר לשעון קיץ לפני פחות מ-3 שעות - לולאה סגורה מושבתת</string>
+    <string name="dst_in_24h_warning">מעבר שעון (שעון קיץ/חורף) ב-24 השעות הקרובות או פחות</string>
+    <string name="dst_loop_disabled_warning">מעבר שעון (שעון קיץ/חורף) לפני פחות מ-3 שעות - הלולאה הסגורה מושבתת</string>
     <!-- Storage constraint -->
-    <string name="disk_full">יש לפנות לפחות %1$d מ\"ב מנפח האחסון של מכשירכם! הלולאה מושבתת!</string>
+    <string name="disk_full">יש לפנות לפחות %1$d MB מהאחסון הפנימי! הלולאה מושבתת!</string>
     <!-- Version Checker -->
     <string name="application_expired">תוקף האפליקציה פג</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה שאינה בתוקף. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
+    <string name="version_expire">תוקף גרסה %1$s יפוג ב־%2$s ויופעל מצב LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
@@ -21,10 +22,10 @@
     <string name="limitingcarbs">הגבלת פחמימות ל-%1$d גר\' בגלל %2$s</string>
     <string name="safety">בטיחות</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
-    <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
+    <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. הלולאה הסגורה מושבתת.</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
     <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
-    <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
+    <string name="smbnotallowedinopenloopmode">SMB אינו מותר במצב לולאה פתוחה</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
     <!-- Objectives -->
@@ -40,4 +41,5 @@
     <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
     <string name="objectives_button_unfinish">ביטול השלמה</string>
     <string name="objectives_button_unstart">ביטול התחלה</string>
+    <string name="bg_doubled_lgs">מצב LGS עקב ערכים כפולים במקור נתוני הסוכר</string>
 </resources>

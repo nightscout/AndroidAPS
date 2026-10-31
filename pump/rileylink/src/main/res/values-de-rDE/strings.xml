@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_active">Aktiv</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Weltweit (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Scannt gerade</string>
     <string name="riley_link_ble_config_connected_never">Nie</string>
@@ -60,4 +63,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Verwende Scannen</string>
     <string name="orange_use_scanning_level_summary">Scanne, bevor Du mit dem OrangeLink verbindest. Das sollte die Stabilität der Verbindung verbessern und kann auch mit anderen RileyLink-Nachbauten probiert werden.</string>
+    <string name="rileylink_pair">RileyLink verbinden</string>
+    <string name="rileylink_pair_success">RileyLink erfolgreich verbunden</string>
+    <string name="rileylink_config_reset">Zurücksetzen der RileyLink-Konfiguration</string>
 </resources>

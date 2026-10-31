@@ -2,8 +2,9 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient KŞ</string>
-    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
+    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini indirir</string>
     <string name="source_xdrip">xDrip+ KŞ</string>
+    <string name="description_source_xdrip">xDrip+ ve uyumlu uygulamalardan (Juggluco vb.) KŞ değerlerini alın.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
     <string name="glimp">Glimp</string>
@@ -17,14 +18,38 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Intelligo uygulamasından değerler alır</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
+    <string name="description_source_tomato">Tomato uygulamasından (MiaoMiao cihazı) KŞ değerlerini alır</string>
     <string name="random_bg">Rastgele KŞ</string>
     <string name="description_source_random_bg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Syai/Ottai uygulamasından glikoz verilerini alın.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI Uygulaması</string>
+    <string name="description_source_patched_si_app">Glikoz verilerini yamalı Sibionic SI uygulamasından veya Sibionics Uygulamasından alın.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino uygulaması</string>
+    <string name="description_source_patched_sino_app">Glikoz verilerini yamalı Sino uygulamasından alın.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Instara uygulamasından KŞ değerlerini alın.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara geçmiş veri isteği</string>
+    <string name="pref_summary_instara_history_request">Eksik olabilecek geçmiş verileri arka planda iste</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Bildirim okuyucu</string>
+    <string name="description_source_notification_reader">Resmi CGM uygulamalarının (Dexcom, Medtronic, Eversense vb.) bildirimlerinden glikoz değerlerini okuyun.</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Uygulamanın Dexcom uygulamasından CGM verilerini alabilmesi için izne ihtiyacı var</string>
+    <string name="permission_notification_listener_title">Bildirim erişimi</string>
+    <string name="permission_notification_listener_description">CGM uygulaması bildirimlerinden glikoz değerlerini okumak için gereklidir</string>
+    <string name="aidex">MicroTech CGM uygulaması</string>
+    <string name="description_source_aidex">LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 vb. cihazlardan CGM değerlerini alın.</string>
+    <string name="aidex_sensor_expired">Sensörün süresi doldu, lütfen yeni bir sensörle değiştirin</string>
+    <string name="aidex_sensor_error">Sensör hatası, lütfen sensör durumunu kontrol edin</string>
+    <string name="aidex_sensor_stabilizing">Sensör dengeleniyor, lütfen bekleyin…</string>
+    <string name="aidex_sensor_replace">Sensör değişimi gerekli, lütfen en kısa sürede yeni bir sensörle değiştirin</string>
+    <string name="aidex_signal_lost">Sensör sinyali kayboldu, lütfen bağlantıyı kontrol edin</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">yinelenen ölçüm</string>
 </resources>

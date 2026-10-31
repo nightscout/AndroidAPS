@@ -11,7 +11,7 @@
     <string name="application_pin">PIN за приложението</string>
     <string name="bolus_password">Парола за болус</string>
     <string name="bolus_pin">PIN за болус</string>
-    <string name="protection_timeout_title">Време между опити за PIN [сек]</string>
+    <string name="protection_timeout_title">Валидност на паролата и PIN кода [сек]</string>
     <string name="protection_timeout_summary">Времето, за което паролата или PIN трябва да бъдат въведени</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Грешка при биометрични данни!</string>

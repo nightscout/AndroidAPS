@@ -154,7 +154,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
     <string name="basal_value">Valor basal</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected_plain">¡¡¡Absorción lenta de hidratos detectada: %1$d%% del tiempo. Revisa tus cálculos. Los COB pueden estar sobreestimados y el sistema podría darte demasiada insulina!!!</string>
+    <string name="slowabsorptiondetected_plain">¡¡¡Absorción lenta de carbohidratos detectada: %1$d%% del tiempo. Revisa tus cálculos. Los COB pueden estar sobreestimados y el sistema podría darte demasiada insulina!!!</string>
     <string name="bolus_constraint_applied_warn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
     <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>

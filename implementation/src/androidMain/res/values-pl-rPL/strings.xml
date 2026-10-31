@@ -28,6 +28,7 @@
     <string name="alarm_channel_bolus_error">Błąd bolusa</string>
     <string name="alarm_channel_error">Błąd ogólny</string>
     <string name="alarm_channel_urgent">Pilny alarm</string>
+    <string name="alarm_channel_eat_reminder">Czas na posiłek</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (ignoruje tryb Nie przeszkadzać)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (uwzględnia tryb Nie przeszkadzać)</string>
     <string name="alarm_channel_silent_urgent">Pilny alarm (tryb narastania głośności)</string>

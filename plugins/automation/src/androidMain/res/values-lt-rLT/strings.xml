@@ -2,7 +2,7 @@
 <resources>
     <string name="automation">Automatizacija</string>
     <string name="automation_enabled">Įjungta</string>
-    <string name="automation_read_only">Tik skaityti</string>
+    <string name="automation_read_only">Tik peržiūra</string>
     <string name="automation_new_rule">Nauja taisyklė</string>
     <string name="automation_empty_desc">Sukurkite taisyklę, kuri automatiškai atliks veiksmus pagal nustatytas sąlygas.</string>
     <string name="automation_edit_rule">Redaguoti taisyklę</string>
@@ -20,7 +20,7 @@
     <string name="automation_category_targets">Tikslai</string>
     <string name="automation_category_profile">Profilis</string>
     <string name="automation_category_loop">Ciklas &amp; insulinas</string>
-    <string name="automation_category_alerts">Įspėjimai</string>
+    <string name="automation_category_alerts">Perspėjimai</string>
     <string name="automation_category_system">Sistema</string>
     <string name="automation_category_scenes">Scenarijai</string>
     <string name="action_run_scene">Paleisti scenarijų</string>
@@ -42,7 +42,7 @@
     <string name="exportsettings_message">Nustatymų eksportas: %1$s</string>
     <string name="export_settings_short">Tekstas terapijoje:</string>
     <string name="alarm_message">Įspėjimas: %1$s</string>
-    <string name="alarm_short">Įspėjimas:</string>
+    <string name="alarm_short">Aliarmas:</string>
     <string name="message_short">Žin:</string>
     <string name="notification_message">Įspėjimas: %1$s</string>
     <string name="profilename">Pakeisti profilį</string>
@@ -71,7 +71,7 @@
     <string name="percentagecompared">Profilis %1$s%2$d</string>
     <string name="iobcompared">AIO %1$s %2$.1f</string>
     <string name="or">Arba</string>
-    <string name="xor">Išskyrus arba</string>
+    <string name="xor">Išskirtinis arba</string>
     <string name="atspecifiedtime">%1$s</string>
     <string name="onconnect">Sujungimo metu</string>
     <string name="ondisconnect">Atjungimo metu</string>
@@ -102,7 +102,7 @@
     <string name="cobcompared">AAO %1$s %2$.0f</string>
     <string name="triggerHeartRate">Pulsas</string>
     <string name="triggerHeartRateDesc">Pulsas %1$s %2$.0f</string>
-    <string name="triggerSensorAgeLabel">Sensoriaus laikas</string>
+    <string name="triggerSensorAgeLabel">Jutiklio amžius</string>
     <string name="triggerSensorAgeDesc">Sensoriaus laikas %1$s %2$.1f val.</string>
     <string name="triggerCannulaAgeLabel">Kaniulės laikas</string>
     <string name="triggerCannulaAgeDesc">Kaniulės laikas %1$s %2$.1f val.</string>
@@ -146,6 +146,7 @@
     <string name="triggerStepsCountLabel">Žingsniai</string>
     <string name="triggerStepsCountDesc">Žingsnių skaičius per %1$s min %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trukmė</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Įjungti/išjungti SMB</string>
     <string name="changeSmbTo">Pakeisti SMB į %1$s</string>

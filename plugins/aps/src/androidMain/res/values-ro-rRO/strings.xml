@@ -5,10 +5,11 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF dinamic</string>
     <string name="openaps_auto_isf">Auto ISF</string>
-    <string name="openapsma_disabled">Modul inactiv</string>
+    <string name="openapsma_disabled">Modulul este dezactivat</string>
     <string name="openapsma_no_glucose_data">Nu există date despre glicemie</string>
     <string name="openaps_no_as_data">Nu există date disponibile privind autosens</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice de %1$d elemente.\nValoarea curentă:</string>
     <string name="description_ama">Starea algoritmului în 2017</string>
     <string name="description_smb">Cel mai recent algoritm destinat utilizatorilor avansați</string>
@@ -25,7 +26,7 @@
     <string name="constraints">Constrângeri</string>
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_script_debug_data_label">Depanare script</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Atenție!\nÎn mod normal nu este nevoie să modificați valorile de mai jos. Vă rog să APĂSAȚI AICI și să CITIȚI textul și să vă asigurați că l-ați ÎNȚELES înainte de a schimba valorile.</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Atenție!\nÎn mod normal nu este nevoie să modificați valorile de mai jos. Vă rugăm să APĂSAȚI AICI și să CITIȚI textul și să vă asigurați că l-ați ÎNȚELES înainte de a schimba valorile.</string>
     <string name="increasing_max_basal">Se mărește valoarea bazalei maxime deoarece setarea este mai joasă decât bazala maximă din profil</string>
     <string name="max_basal_multiplier">maximul multiplicatorului bazalei</string>
     <string name="max_daily_basal_multiplier">maximul zilnic al multiplicatorului bazalei</string>
@@ -33,21 +34,25 @@
     <string name="uam_disabled_in_preferences">UAM dezactivat din setări</string>
     <string name="autosens_disabled_in_preferences">Autosens dezactivat în preferințe</string>
     <!--    Verify if needed in safety-->
-    <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
+    <string name="limiting_iob">Se limitează IOB la %1$.1f U din cauza %2$s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
-    <string name="hardlimit">limită fizică</string>
+    <string name="hardlimit">limită strictă</string>
     <!--    Autotune   -->
     <string name="autotune_peak">Vârf</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">S-a administrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
     <string name="pump_not_initialized">Pompa nu este inițializată!</string>
+    <string name="zero_basal_not_set">Pompa nu a acceptat bazala temporară zero. Este posibil să administreze încă insulină bazală. Verificați pompa.</string>
     <string name="description_loop">Activați sau dezactivați implementarea declanșatoare pentru buclă.</string>
-    <string name="no_aps_selected">REZULTAT NICIUN APS SELECTAT SAU FURNIZAT</string>
+    <string name="no_aps_selected">NICIUN APS SELECTAT SAU NICIUN REZULTAT FURNIZAT</string>
     <string name="ignore5m">Ignorați 5min</string>
     <string name="ignore15m">Ignorați 15min</string>
     <string name="ignore30m">Ignorați 30min</string>
     <string name="carbs_suggestion">Sugestie carbohidrați</string>
     <string name="open_loop_new_suggestion">O nouă sugestie este disponibilă</string>
+    <string name="loop_notification_channel_name">Sugestii buclă</string>
+    <string name="loop_notification_channel_silent_name">Sugestii buclă în modul Nu deranjați</string>
+    <string name="open_loop_suggestion_too_old">Această sugestie este prea veche. Nu s-a trimis nimic către pompă. Așteptați următoarea sugestie.</string>
     <string name="basal_set_correctly">Bazala setată corect</string>
     <string name="last_run_label">Ultima rulare</string>
     <string name="loop_aps_label">APS</string>
@@ -62,7 +67,7 @@
     <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date DZT.</string>
     <string name="fallback_to_isf_no_tdd">Revenire la sensibilitatea din profil. Nu sunt suficiente date. Motivul: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Ajutor pentru ajustarea potențială a profilului (ISF, ICR și ratele bazale)</string>
+    <string name="autotune_description">Ajutor pentru ajustarea potențială a profilului (ISF, IC și ratele bazale)</string>
     <string name="autotune_default_tune_days_title">Număr de zile de date</string>
     <string name="autotune_tunedprofile_name">Ajustat</string>
     <string name="autotune_profile">Profil :</string>
@@ -70,9 +75,9 @@
     <string name="autotune_warning">Atenție :</string>
     <string name="autotune_ic_warning">Profilul selectat are %1$d valori IC. Autotune va utiliza %2$.2f g/U</string>
     <string name="autotune_isf_warning">Profilul selectat are %1$d valori ISF. Autotune va folosi %2$.1f %3$s/U</string>
-    <string name="autotune_error">Eroare în datele introduse, încercați să rulați din nou automat sau să reduceți numărul de zile</string>
-    <string name="autotune_error_more_days">Eroare în datele de introducere, mărește numărul de zile</string>
-    <string name="autotune_warning_during_run">Calcularea automată a început, vă rugăm să aveți răbdare</string>
+    <string name="autotune_error">Eroare în datele introduse, încercați să rulați din nou Autotune sau să reduceți numărul de zile</string>
+    <string name="autotune_error_more_days">Eroare în datele de intrare, măriți numărul de zile</string>
+    <string name="autotune_warning_during_run">Calculul Autotune a început, vă rugăm să aveți răbdare</string>
     <string name="autotune_warning_after_run">Verificați cu atenție rezultatele înainte de a le utiliza!</string>
     <string name="autotune_partial_result">Rezultatul parțial din ziua %1$d / %2$d ajustat</string>
     <string name="autotune_result">Rezultat: %1$s</string>
@@ -91,6 +96,6 @@
     <string name="autotune_profile_invalid">Profil invalid</string>
     <string name="pump_disconnected">Pompă deconectată</string>
     <!--    autoISF -->
-    <string name="autoISF_settings_title">Setări AutoFSI</string>
+    <string name="autoISF_settings_title">Setări AutoISF</string>
     <string name="smb_delivery_settings_title">Setări administrare SMB</string>
 </resources>

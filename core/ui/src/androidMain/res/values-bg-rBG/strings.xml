@@ -5,13 +5,13 @@
     <string name="authorized_clients_manage_label">Оторизирани клиенти</string>
     <string name="authorized_clients_manage_desc">Редактиране на позволените клиенти, на които е разрешено да контролират главния телефон.</string>
     <string name="pair_with_master_manage_label">Свържи се с главния телефон</string>
-    <string name="pair_with_master_manage_desc">Въведете PINът от главният телефон за да позволите на този да изпраща подписани команди.</string>
+    <string name="pair_with_master_manage_desc">Въведете PIN-а от главния телефон за да позволите на този да изпраща подписани команди.</string>
     <!--    General-->
     <string name="treatments">Лечения</string>
     <string name="treatments_history">История на леченията</string>
     <string name="treatments_desc">Прегледай и редактирай леченията</string>
     <string name="nav_configuration">Конфигурация</string>
-    <string name="nav_configuration_desc">НАстройка на конфигурацията (CGM, помпа, ...) и пускане на други функции</string>
+    <string name="nav_configuration_desc">Настройте конфигурацията си (CGM, помпа, ...) и активирайте функции</string>
     <string name="count_selected">%1$d избрани</string>
     <string name="delete">Изтрий</string>
     <string name="show_invalidated">Покажи невалидните</string>
@@ -21,7 +21,7 @@
     <string name="no_history_records">Няма записи</string>
     <string name="error">Грешка</string>
     <string name="navigation_error_screen_not_found">Екранът не е наличен в конфигурация.</string>
-    <string name="profile_set_ok">Профила на помпата е обновен</string>
+    <string name="profile_set_ok">Базалният профил в помпата е обновен</string>
     <string name="invalid_input">Грешни входящи данни</string>
     <string name="invalid_number">Грешен брой</string>
     <string name="constraint_applied">Приложено ограничение!</string>
@@ -72,7 +72,7 @@
     <string name="confirm_pin_hint">Потвърдете ПИН</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Индикатори</string>
-    <string name="configbuilder_insulin">Инсулин (ед.):</string>
+    <string name="configbuilder_insulin">Инсулин</string>
     <string name="configbuilder_bgsource">Източник на КЗ</string>
     <string name="configbuilder_smoothing">Изглаждане</string>
     <string name="configbuilder_calibration">Калибрация</string>
@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Изключи за 5 минути</string>
     <string name="mute">Заглушаване</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Заглуши алармата</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Заглуши и затвори</string>
     <string name="success">Успешен</string>
     <string name="advanced_settings_title">Разширени настройки</string>
     <string name="extended_bolus">Удължен болус</string>
@@ -129,7 +131,7 @@
     <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Тази временна смяна е с %1$s, а постоянният профил под нея е с %2$s. Първо активирайте в настройките на инсулина този, който е в помпата.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Времето за смяна на профила трябва да е в рамките на %1$d ч от настоящия момент.</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Временната цел трябва да започва в рамките на %1$d ч от настоящия момент.</string>
-    <string name="profile_switch_select_insulin_hint">Няма избран инсулин. Изберете какъв използвате за да може профилът да го използва.</string>
+    <string name="profile_switch_select_insulin_hint">Все още няма използван инсулин. Изберете инсулина, който използвате, за да може тази смяна на профил да го запише.</string>
     <string name="insulin_activation_failed">Превключването на инсулина не е направено. Старият ви инсулин е още избран.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Превключването на инсулина не е направено: %1$s Старият ви инсулин е още избран.</string>
     <string name="insulin_activation_unconfirmed">Не мога да потвърдя смяната на инсулин. Проверете кой инсулин е активен в профила преди да направите болус.</string>
@@ -144,7 +146,7 @@
     <string name="ic_label">IC (Инсулин/въглехидр.):</string>
     <string name="isf_label">ISF (Инс.чувствителност):</string>
     <string name="basal_label">Базал</string>
-    <string name="target_label">Целeва КЗ:</string>
+    <string name="target_label">Целева КЗ</string>
     <string name="dia_long_label">Продължителност на Действие на Инсулина (DIA)</string>
     <string name="ic_long_label">Съотношение инсулин/въглехидратите ICR I:C И:ВХ</string>
     <string name="isf_long_label">Инсулинова Чувствителност ISF</string>
@@ -159,10 +161,10 @@
     <string name="loopisdisabled">APS е изключен</string>
     <string name="alarm">Аларма</string>
     <string name="exportsettings">Експортиране на настройките</string>
-    <string name="disableloop">Изключи Loop</string>
-    <string name="disabled_loop">Изключен/забранен цикъл</string>
-    <string name="resumeloop">Възстанови loop</string>
-    <string name="suspendloop">Изключи APS</string>
+    <string name="disableloop">Изключи кръга</string>
+    <string name="disabled_loop">Изключен/забранен кръг</string>
+    <string name="resumeloop">Възстанови кръга</string>
+    <string name="suspendloop">Спри кръга</string>
     <string name="notification">Известие</string>
     <string name="noprofile">Още не е зареден профила от NS</string>
     <string name="exists">съществува</string>
@@ -230,7 +232,7 @@
     <string name="timeshift_label">Време на отместване</string>
     <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Главният телефон няма %1$d от тези записи. Те не са премахнати.</string>
-    <string name="overview_treatment_label">Болус</string>
+    <string name="overview_treatment_label">Лечение</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
     <string name="wear_wizard_settings">Помощник за часовник</string>
     <string name="bolus_iob_label">IOB от болуси</string>
@@ -282,7 +284,7 @@
     <string name="not_available_full">Не е наличен</string>
     <string name="not_implemented_yet">Тази функция още не е готова за тази платформа</string>
     <string name="not_available_on_platform">Тази функция не е налична на тази платформа</string>
-    <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
+    <string name="engineering_mode_enabled">Режим за разработчици (Engineering mode) включен</string>
     <string name="back">Назад</string>
     <string name="next">Напред</string>
     <string name="pref_syncs_with_main_phone">Симхронизации с главния телефон</string>
@@ -304,7 +306,7 @@
     <string name="nochangerequested">Не се изисква промяна</string>
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Инсулин %1$s потвърден</string>
-    <string name="current_insulin">Активно</string>
+    <string name="current_insulin">Активен</string>
     <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Ще бъде активиран</string>
     <string name="change_insulin">Сменете</string>
     <string name="select_insulin_description">Изберете инсулин с който е пълна помпата. Профилът ще бъде сменен след активация/пълнене на помпата.</string>
@@ -372,17 +374,17 @@
     <string name="pump_reconnect">Свържи отново помпата</string>
     <string name="scene">Сценарий</string>
     <string name="scenes">Сценарии</string>
-    <string name="scene_desc">Ситуационни предпоставки - активиране на много действия едновременно</string>
+    <string name="scene_desc">Готови настройки за ситуации – активиране на няколко действия наведнъж</string>
     <string name="scene_activate">Активиране</string>
     <string name="scene_deactivate">Край на сценарий</string>
-    <string name="scene_active">Активиране</string>
+    <string name="scene_active">Активен</string>
     <string name="scene_ended">Сценарият приключи</string>
     <string name="scene_end_active">Край на активен сценарий</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Прескочи до</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Следващият сценарий %1$s няма да стартира</string>
     <string name="scene_confirm_activate">Стартиране на сценарий \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Спри сценарий \"%1$s\" и върни промененото?</string>
-    <string name="scene_conflict_active_tt">Текущата временна цел ще бъде промена</string>
+    <string name="scene_conflict_active_tt">Текущата временна цел ще бъде сменена</string>
     <string name="scene_conflict_active_profile">Текущият профил ще бъде сменен</string>
     <string name="scene_conflict_active_running_mode">Текущият режим ще бъде сменен</string>
     <string name="scene_conflict_active_scene">Активният сценарий \"%1$s\" ще бъде спрян</string>
@@ -414,14 +416,14 @@
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Безкрайно (ръчно спиране)</string>
     <string name="scene_some_actions_failed">Някой действия не проработиха</string>
-    <string name="scene_no_active">Няма активе сценарий</string>
+    <string name="scene_no_active">Няма активен сценарий</string>
     <string name="scene_some_reverts_failed">Някой действия за връщане не проработиха</string>
     <string name="scene_no_profile_store">Няма профили</string>
     <string name="scene_no_actions">Сценарият няма действия</string>
     <string name="scene_profile_not_found">Профил \"%1$s\" не е намерен</string>
     <string name="scene_lock_banner_master_offline">Главния телефон е недостъпен. Контолът на сценарии ще се поднови при възстановяване на връзката.</string>
     <string name="scene_lock_banner_control_disabled">Главния телефон е с изключен отдалечен достъп. Контолът на сценарии ще се поднови при възстановяване на тази функция.</string>
-    <string name="master_offline_banner">Главният телефон недостъпен. Редакцията е изключена до възстановяване на връзката.</string>
+    <string name="master_offline_banner">Главният телефон е недостъпен. Редакцията е изключена до възстановяване на връзката.</string>
     <string name="master_control_disabled_banner">Главния телефон е с изключен отдалечен достъп. Редакцията е изключена до активирането на тази функция.</string>
     <string name="hardened_mode_on">Включен режим на засилена защита</string>
     <string name="hardened_mode_title">Режим на засилена защита</string>
@@ -499,7 +501,7 @@
     <string name="treatment_carbs_desc">Запиши въглехидрати без инсулин</string>
     <string name="treatment_calculator_desc">Изчисли болус</string>
     <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Настройки на инсулина</string>
-    <string name="manage_insulin_desc">Редакция и активация на инсолинови конфигурации</string>
+    <string name="manage_insulin_desc">Редакция и активация на инсулинови конфигурации</string>
     <string name="concentration_disable_blocked">Не може да изключите поддръжката на концентрация докато има инсулини различни от 100E/мл съществуват. Изтрийте всички такива конфигурации и превключете на профил с концентрация U100.</string>
     <string name="simple_mode_blocked_by_concentration">Не може да включите опростен режим докато ползвате инсулин, който не е U100ед/мл. Първо превключете към такъв.</string>
     <string name="manage_profile_desc">Редакция и активация на профили</string>
@@ -514,7 +516,7 @@
     <string name="treatment_calibration_desc">Калибрация на сензор</string>
     <string name="treatment_bg_check_desc">Записване на проверка на КЗ</string>
     <string name="treatment_exercise_desc">Записване на физ активност</string>
-    <string name="treatment_announcement_desc">Следващи обявления</string>
+    <string name="treatment_announcement_desc">Публикувай обявление</string>
     <string name="treatment_sensor_insert_desc">Запис на поставяне на нов сензор</string>
     <string name="treatment_battery_change_desc">Запис на смяна на батерия</string>
     <string name="treatment_cannula_change_desc">Запис на смяна на игла/резервоар</string>
@@ -530,8 +532,8 @@
     <string name="manual">Друго</string>
     <string name="unknown">Неизвестен</string>
     <string name="eatingsoon">Преди хранене</string>
-    <string name="hypo">Хипоглекимия</string>
-    <string name="activity">Физ.активност</string>
+    <string name="hypo">Хипогликемия</string>
+    <string name="activity">Физ. активност</string>
     <string name="wear">Часовник</string>
     <string name="automation">Автоматизация</string>
     <string name="automation_management_desc">Създаване на правила за автоматични действия при определени условия</string>
@@ -610,11 +612,11 @@
     <string name="uel_store_profile">ЗАПАЗИ ПРОФИЛ</string>
     <string name="uel_profile_switch">ПРЕВКЛЮЧВАНЕ НА ПРОФИЛ</string>
     <string name="uel_profile_switch_cloned">ПРЕВКЛЮЧВАНЕТО НА ПРОФИЛ КЛОНИРАНО</string>
-    <string name="uel_closed_loop_mode">РЕЖИМ НА ЗАТВОРЕН ЦИКЪЛ</string>
-    <string name="uel_lgs_loop_mode">РЕЖИМ LGS ЦИКЪЛ</string>
-    <string name="uel_open_loop_mode">РЕЖИМ ОТВОРЕН ЦИКЪЛ</string>
-    <string name="uel_loop_disabled">ЦИКЪЛ ИЗКЛЮЧЕН</string>
-    <string name="uel_loop_resumed">ЦИКЪЛЪТ Е ВЪЗСТАНОВЕН</string>
+    <string name="uel_closed_loop_mode">РЕЖИМ НА ЗАТВОРЕН КРЪГ</string>
+    <string name="uel_lgs_loop_mode">РЕЖИМ LGS КРЪГ</string>
+    <string name="uel_open_loop_mode">РЕЖИМ ОТВОРЕН КРЪГ</string>
+    <string name="uel_loop_disabled">КРЪГ ИЗКЛЮЧЕН</string>
+    <string name="uel_loop_resumed">КРЪГЪТ Е ВЪЗСТАНОВЕН</string>
     <string name="uel_pump_running">ПОМПАТА РАБОТИ</string>
     <string name="uel_reconnect">СВЪРЗВАНЕ ОТНОВО</string>
     <string name="uel_disconnect">Разкачане</string>
@@ -689,8 +691,8 @@
     <string name="ue_action">Действие</string>
     <string name="ue_timestamp">Време</string>
     <string name="ue_none">Няма единица</string>
-    <string name="uel_loop_change">ЦИКЪЛ ПРОМЕНЕН</string>
-    <string name="uel_loop_removed">ЦИКЪЛ ПРЕМАХНАТ</string>
+    <string name="uel_loop_change">КРЪГ ПРОМЕНЕН</string>
+    <string name="uel_loop_removed">КРЪГ ПРЕМАХНАТ</string>
     <string name="uel_new_insulin">НОВ ИНСУЛИН</string>
     <string name="uel_change_pump_insulin">СМЯНА НА ИНСУЛИН В ПОМПА</string>
     <string name="uel_store_insulin">ЗАПАЗЕН ИНСУЛИН</string>
@@ -715,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Няма избран профил</string>
     <string name="missing_profile_name">Няма име на профила</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s копие</string>
     <string name="profile_not_saved_activate">Профила не е запазен. Моля съхранете го преди активация.</string>
     <string name="profile_basal_not_compatible_with_pump">Базалът не се поддържа от помпата. Намалете процента или стойността на базала.</string>
     <string name="profile_basal_below_pump_minimum">Базалът е под минималния за текущата помпа и не може да бъде активиран. Увеличете процента или коригирайте базала.</string>
@@ -773,8 +776,8 @@
     <string name="wizard_bg_label">КЗ</string>
     <string name="wizard_correction">Корекция</string>
     <string name="wizard_subtotal">Междинна сума</string>
-    <string name="carbs_type_bread">Хляб, паста, кис мляко, плодове (ябълки, банани круши), картофи, ориз, бавни и нисковъглехидр храни, зеленчуци</string>
-    <string name="carbs_type_cake">Паста, зърнени закуски, мед, сладка</string>
+    <string name="carbs_type_bread">Хляб, солени тестени изделия, кисело мляко, плодове (ябълки, банани, круши), картофи, ориз, елда, овесени ядки, бавни и нисковъглехидратни храни, зеленчуци</string>
+    <string name="carbs_type_cake">Кнедли, паста, азиатски ястия с много въглехидрати и мазнини, сладки и дрождени тестени изделия, зърнени закуски, каши от зърнени храни, мед, конфитюр</string>
     <string name="carbs_type_pizza">Лазаня, пица, хамбургери, пържени и печени картофи, чипс и др снаксове</string>
     <string name="wizard_total">Общо</string>
     <string name="wizard_carb_time">Започват от</string>
@@ -786,6 +789,7 @@
     <string name="wizard_set_alarm">Напомни ми</string>
     <string name="eat_reminder_title">Време е за ядене</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Общо изчакване: %1$s</string>
     <string name="eat_reminder_rung">Времето изтече</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d мин</string>
     <string name="eat_reminder_not_set">Напомняне за хранене не може да се зададе. Позволете на AAPS да задава аларми в настройките на Android.</string>
@@ -822,12 +826,12 @@
     <string name="battery_label">Батерия</string>
     <string name="reservoir_label">Резервоар</string>
     <string name="last_connection_label">Последно свързване</string>
-    <string name="last_bolus_label">Последен болус:</string>
+    <string name="last_bolus_label">Последен болус</string>
     <string name="base_basal_rate_label">Базова базална стойност</string>
     <string name="tempbasal_label">Временен базал</string>
     <string name="extended_bolus_label">Удължен болус</string>
     <string name="serial_number">Сериен номер</string>
-    <string name="disconnected">Не е сврзана</string>
+    <string name="disconnected">Не е свързана</string>
     <string name="connecting">Свързване</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Натиснато е свързване с помпата</string>
     <string name="daily_units">Инсулин за деня</string>
@@ -888,7 +892,7 @@
     <string name="export_result_message_failed">Експорт на настройки СЕ ИЗДЪНИ!</string>
     <string name="export_result_message_about_to_expire">Настройките са експортирани: паролата изтича скоро. Експортирайте ръчно и потвърдете паролата.</string>
     <string name="export_result_message_expired">Експорт на настройките е невъзможен: изтекла парола. Експортирайте ръчно и я въведете отново.</string>
-    <string name="export_result_message_disabled">Внимание (автомация): експорт на настройки не е позволен!</string>
+    <string name="export_result_message_disabled">Внимание (автоматизация): експортът на настройки не е позволен!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Експорт в клауда успешен!</string>
     <string name="export_cloud_failed">Експорт в клауда НЕУСПЕШЕН!</string>
@@ -906,7 +910,7 @@
     <string name="file_management">Управление на файлове</string>
     <string name="database_management">Управление на база данни</string>
     <string name="data_choices">Избор на данни</string>
-    <string name="unattended_settings_export">Разреши автоматизирания експорт на настройки</string>
+    <string name="unattended_settings_export">Автоматичен експорт на настройки</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Детайлност на логовете</string>
     <string name="maintenance_send_logs_desc">Споделяне на логовете за оправяне на грешки</string>
@@ -972,7 +976,7 @@
     <!-- Alerts -->
     <string name="localalertsettings_title">Локални аларми</string>
     <!-- Actions Screen -->
-    <string name="add">Смени</string>
+    <string name="add">Добави</string>
     <string name="remove">Изтрий</string>
     <string name="reorder">Подреди</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-рано</string>
@@ -996,9 +1000,9 @@
     <!-- Site Rotation -->
     <string name="select_location">Натиснете долу за избор на място</string>
     <!-- About -->
-    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app? (как телефонът да не спира приложението)</string>
     <string name="fabric_upload_disabled">Качването на логове е изключено!</string>
-    <string name="about_link_urls">\n\nДокументация:\nhttps://androidaps.readthedocs.io\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="about_link_urls">\n\nДокументация:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
@@ -1042,7 +1046,7 @@
     <string name="units_colon">Единици:</string>
     <string name="unsaved_changes">Незаписани промени</string>
     <string name="unsaved_changes_message">Има незаписани промени. Какво правим?</string>
-    <string name="discard">Откажи</string>
+    <string name="discard">Изхвърли</string>
     <string name="ic_dynamic_label_warning">Алгоритъмът може да прави динамична калкулация на инс/въгл. Стойностите ще се използват като резерва при липсващи данни или като отправна точка</string>
     <string name="isf_dynamic_label_warning">Алгоритъмът може да направи динамична калкулация на ISF. /стойностите долу ще се използват като резерва при липсващи данни или само като рефентни</string>
     <string name="add_time_block">Добави времева част</string>
@@ -1089,7 +1093,7 @@
     <string name="aaps_directory">AAPS директория</string>
     <string name="import_setting">Импорт настройки</string>
     <!-- Import settings screen -->
-    <string name="import_decrypt_review">Декрипт &amp; Преглед</string>
+    <string name="import_decrypt_review">Дешифриране и преглед</string>
     <string name="import_decrypt">Декриптиране</string>
     <string name="import_master_password">Главна парола</string>
     <string name="import_decryption_password">Парола за декриптиране</string>
@@ -1148,10 +1152,10 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">ПРОМ ЧУВСТВ</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">КРАЧКИ</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
-    <string name="graph_series_iob">Insulin On Board</string>
+    <string name="graph_series_iob">Активен инсулин</string>
     <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Абсолютен инсулин</string>
     <string name="graph_series_cob">Активни въглехидрати</string>
-    <string name="graph_series_bgi">Въздействие на Кръвна Захар</string>
+    <string name="graph_series_bgi">Въздействие върху кръвната захар</string>
     <string name="graph_series_deviations">Отклонения</string>
     <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Промяна в чувствителността</string>
     <string name="graph_series_variable_sens">Променлива чувствителност</string>
@@ -1202,4 +1206,5 @@
     <string name="units_sec">сек</string>
     <string name="units_years">г</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
+    <string name="secrets_not_protected">На този компютър не е намерено системно хранилище за ключове. Ключовете, които защитават настройките ви и сдвояването с главния телефон, се пазят във файлове до данните, така че всеки, който получи копие на файловете ви, получава и тях. В Linux инсталирайте и стартирайте хранилище за ключове (keyring, например GNOME Keyring или KWallet), след което стартирайте AAPS отново.</string>
 </resources>
