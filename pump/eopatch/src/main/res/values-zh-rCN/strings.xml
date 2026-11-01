@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 泵集成</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">贴片未确认大剂量输注结束。已记录 %1$s，但贴片实际可能已输注更多。在追加胰岛素前，请检查贴片。</string>
-    <string name="low_reservoir">储药器药量低！警告！</string>
-    <string name="patch_expiration_reminders">敷贴更换提醒</string>
     <string name="patch_buzzer_reminders">贴片蜂鸣提醒</string>
     <string name="eopatch_ble_status">蓝牙状态</string>
     <string name="eopatch_serial_number">序列号</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">若要更换新贴片，必须先放弃当前贴片。所有来自贴片的胰岛素将被取消。</string>
     <string name="patch_discard_complete_title">放弃贴片完成。</string>
     <string name="patch_discard_complete_desc">贴片已停用。\n请放弃贴片。\n移除您身上的贴片。</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">目前正在进行推注。您确定要取消胰岛素输送并弃用贴片吗？</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">目前正在输送临时基础率。您确实要取消胰岛素输送并弃用贴片吗？</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">目前正在进行推注和临时基础率。您确实要取消胰岛素输送并弃用贴片吗？</string>
-    <string name="patch_change_confirm_desc">您确实要弃用当前贴片吗？</string>
     <string name="patch_forced_discard">忽略</string>
     <string name="patch_comm_error_during_discard_desc_2">如需单侧停用，请轻触“放弃”。</string>
     <string name="patch_manually_turning_off_alarm_title">手动关闭贴片的警报</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">在配对过程中，将出现两个Android系统弹窗。您必须确认这两个弹窗才能完成蓝牙配对。</string>
     <string name="patch_start_pairing">开始配对</string>
     <string name="patch_connect_new">贴片泵配对</string>
-    <string name="patch_connect_new_desc">新贴片正在进行配对。\n请尽量让贴片与智能设备靠得近一些</string>
     <string name="patch_remove_needle_cap">准备贴片</string>
     <string name="patch_remove_needle_cap_desc_1">移除胶带，然后点击 “下一步”。</string>
     <string name="patch_remove_needle_cap_desc_2">如果针头露出，轻触“丢弃”。</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">这需要大约30秒。</string>
     <string name="patch_safety_check_desc_2">为确保安全使用，在完成安全检查之前，切勿移除针头操作杆！</string>
     <string name="patch_rotate_knob">插入针头</string>
-    <string name="patch_rotate_knob_desc_1">将针操作杆旋转100°以上以插入针，然后完全旋转以将其取出</string>
     <string name="patch_rotate_knob_desc_2">检查是否有1声蜂鸣声，然后点击“下一步”。</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">检查是否有1声蜂鸣声，然后点击“重试”。</string>
     <string name="patch_basal_schedule">贴片启动完成！</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' 程序已启用。</string>
     <string name="patch_basal_schedule_desc_2">当贴片接近过期时间时，会向您发出提醒。\n如有必要，可更改提醒时间。</string>
     <string name="patch_expiration_reminder_setting_title">贴片过期提醒</string>
-    <string name="patch_activate_reminder_desc">贴片激活尚未完成，\n 继续。</string>
     <string name="patch_communication_check_helper_1">使您的智能设备更靠近贴片。</string>
     <string name="patch_communication_check_helper_2">请移动到其他位置并重试。</string>
     <string name="patch_safety_check_failed_desc">安全检查失败。请重试。</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">通信成功</string>
     <string name="patch_communication_succeed_message">已连接贴片。</string>
     <string name="patch_cancel_pairing">取消配对</string>
-    <string name="insulin_suspend_msg1">暂停后，当前正在输送的推注和临时基础率将被取消。\n\n速率：%1$s U/hr\n剩余时间：%2$s\n&amp; 剩余胰岛素：%3$.2f U</string>
-    <string name="insulin_suspend_msg2">暂停后，当前正在输送的推注将被取消。\n\n剩余胰岛素：%1$.2f U</string>
-    <string name="insulin_suspend_msg3">暂停后，当前正在输送的临时基础剂率将被取消。\n\n速率：%1$s U/hr\n剩余时间：%2$s</string>
     <string name="insulin_suspend_msg4">胰岛素输送将被暂停。</string>
     <string name="string_activate_patch">激活Patch</string>
     <string name="string_discard_patch">丢弃贴片</string>
     <string name="string_running">正在运行</string>
     <string name="retry">重试</string>
-    <string name="string_are_you_sure_to_discard_current_patch">您确定要放弃当前的贴片吗？</string>
     <string name="needle_insertion_error_1">针头插入错误。</string>
     <string name="needle_insertion_error_3">点击“丢弃”来停用贴片。</string>
     <string name="string_suspend_time_insulin_delivery_title">基础率暂停时间</string>
