@@ -16,7 +16,7 @@
     <string name="omnipod_common_error_unsupported_custom_command">Ukjent kommando: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Kunne ikke oppdatere status</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Kunne ikke oppdatere status ved oppstart</string>
-    <string name="omnipod_common_error_failed_to_silence_alerts">Kunne ikke bekrefte varsler</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Kunne ikke dempe varsler</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Kunne ikke pause leveringen</string>
     <string name="omnipod_common_error_failed_to_set_time">Kunne ikke angi tid</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Kunne ikke gjenoppta leveringen</string>
@@ -85,17 +85,17 @@
     <string name="omnipod_common_preferences_time_change_enabled">DST/Tidssone-deteksjon aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Når aktivert, vil Pod\'en pipe når tidspunktet er nådd</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Påminnelse før utløp (72 timer)</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled">Nedstengingspåminnelse aktivert</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Påminnelse, timer før utløp (72 timer)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Nedstengingsvarsel aktivert</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Når aktivert, vil Pod\'en pipe når tidspunktet er nådd og en time før nedstenging</string>
-    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Påminnelse før nedstenging (80 timer)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Varsel, timer før nedstenging (80 timer)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Antall enheter</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Demp Pod-varsler automatisk</string>
     <string name="omnipod_common_preferences_category_other">Annet</string>
     <string name="omnipod_common_preferences_category_alerts">Varsler</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bekreftelseslyd</string>
-    <string name="omnipod_common_preferences_category_notifications">Varsler</string>
+    <string name="omnipod_common_preferences_category_notifications">Varslinger</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Lydvarsel for ubekreftet midlertidig basal</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for ubekreftet SMB</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Lydvarsel for ubekreftet bolus</string>
@@ -110,7 +110,7 @@
     <string name="omnipod_common_pod_status_suspended">Pauset</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod-feil</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
-    <string name="omnipod_common_pod_status_pod_fault_description">Pod feil: %1$03d %2$s</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Pod-feil: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
     <string name="omnipod_common_pdm_notification_label">PDM-varsel</string>
     <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
