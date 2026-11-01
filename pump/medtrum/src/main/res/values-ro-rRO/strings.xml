@@ -5,13 +5,11 @@
     <string name="medtrum_pump_description">Integrarea pompei pentru Medtrum Nano și Medtrum 300U</string>
     <string name="medtrum_pump_setting">Setări pompă Medtrum</string>
     <string name="pump_error">Eroare pompă: %1$s!! </string>
-    <string name="pump_warning">Avertizare pompă: %1$s </string>
     <string name="pump_is_suspended">Pompă suspendată</string>
     <string name="pump_is_suspended_hour_max">Pompă suspendată din cauza depășirii valorii maxime a insulinei pe oră</string>
     <string name="pump_is_suspended_day_max">Pompă suspendată din cauza depășirii valorii maxime zilnice a insulinei</string>
     <string name="patch_not_active">Plasture neactivat</string>
     <string name="pump_setting_failed">Setarea setărilor utilizatorului pe pompă a eșuat!</string>
-    <string name="pump_sync_error">Eroare la sincronizarea istoricului de la pompă, o înregistrare a fost omisă. Verificați fila de tratamente pentru a vedea dacă bolusul este sincronizat corect. Amânați alarma și, dacă eroarea reapare, schimbați plasturele sau baza pompei.</string>
     <string name="patch_reset_after_primed_error">Plasturele s-a repornit de la sine și și-a pierdut sesiunea. Nu mai poate administra insulină. Îndepărtați plasturele și porniți unul nou.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Bolus activ</string>
