@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans를 사용하면 당뇨 데이터를 업로드하여 과학 연구 프로젝트에 기증할 수 있습니다.</string>
     <string name="logout">로그아웃</string>
     <string name="setup">설정하기</string>
-    <string name="setup_completed_info">Open Humans가 설정되었습니다. 데이터 업로드의 중단을 원할 경우, \'로그아웃\'을 누르십시오.</string>
     <string name="not_setup_info">Open Humans가 현재 비활성화되어 있습니다. 데이터 업로드를 시작하려면 \'설정하기\'를 누르십시오.</string>
     <string name="project_member_id">프로젝트 회원 ID: %1$s</string>
     <string name="open_humans_uploading">Open Humans에 업로드 중...</string>
