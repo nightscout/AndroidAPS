@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Das Bearbeiten von Profilen zur Änderung von Werten reicht aus, um alle vorgenommenen Änderungen durchzuführen.</string>
     <string name="profileswitch4_multi">Es können mehrere Profile erstellt und ausgewählt werden, um sich verändernden Umständen anzupassen (z.B. hormonelle Veränderungen, Schichtarbeit, Wochentage/Wochenend-Lebensstil).</string>
     <string name="other_medication_label">Andere Medikation. Bitte lies die Erklärung unten und markiere dann das Kästchen, um die Erklärung zu akzeptieren.</string>
-    <string name="other_medication_text">AAPS reduziert die Basalrate oder stoppt die Insulinzufuhr zur Erhöhung des Blutzuckers. Medikamente aus der Gruppe der SGLT2-Hemmer (Gliflozine) können zu erwartende Blutzuckersteigungen verhindern und damit einen gefährlichen Insulinmangel (DKA) produzieren.
-\nÜbliche Handelsnamen sind: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nIch versichere, dass ich solche Medikamente bei der Anwendung von AAPS nicht einnehme oder den Loop vor der Verwendung dieser Medikamente deaktivieren werde.</string>
     <string name="concentration_feature_label">Insulin-Konzentrations-Management</string>
     <string name="u200_with_profile">Bevor AAPS die Insulinkonzentration unterstützte, verwendeten Benutzer U200, indem sie ein 50%-iges Profil setzten, um alle Werte zu halbieren. In diesem Kontext, welche Antworten sind richtig?</string>
     <string name="u200_with_profile_reports">Meine AAPS-Datenbank und die NS-Berichte werden fehlerhaft. Alle Werte (Boli, Raten, TDD) müssen mit 2 multipliziert werden, um die realen Werte zu sehen, insbesondere für Ärzte und das Gesundheitsteam.</string>
