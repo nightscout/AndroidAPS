@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">Pumpen kan inte hantera tillfälliga basaler</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Sluten loop inaktiverad.</string>
     <string name="closed_loop_disabled_with_eb">Sluten loop inaktiverad pga att en förlängd bolus är aktiv</string>
-    <string name="smbalwaysdisabled">SMB Alltid På och SMB Efter Kolhydrater är inaktiverat pga att den aktiva BG-källan inte stöder avancerad filtrering</string>
+    <string name="smbalwaysdisabled">SMB alltid och SMB efter kolhydrater är inaktiverade eftersom den aktiva BG-källan inte stöder avancerad filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i öppen loop</string>
     <string name="maxvalueinpreferences">maxvärde i Inställningar</string>
     <string name="hardlimit">hård begränsning</string>
