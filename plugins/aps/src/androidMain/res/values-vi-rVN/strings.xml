@@ -67,7 +67,7 @@
     <string name="fallback_smb_no_tdd">Chuyển sang SMB. Không đủ dữ liệu TDD.</string>
     <string name="fallback_to_isf_no_tdd">Chuyển sang cấu hình độ nhạy insulin. Không đủ dữ liệu. Lý do: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Hướng dẫn hỗ trợ điều chỉnh cấu hình (ISF, tỷ lệ carb và liều nền)</string>
+    <string name="autotune_description">Hỗ trợ điều chỉnh cấu hình (ISF, tỷ lệ carb và liều nền)</string>
     <string name="autotune_default_tune_days_title">Số ngày dữ liệu</string>
     <string name="autotune_tunedprofile_name">Đã tinh chỉnh</string>
     <string name="autotune_profile">Cấu hình:</string>
