@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Ü, CH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Oran: %1$.2f Ü, süre: %2$d dakika</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">İletişim başarısız oldu: mesaj bütünlüğü doğrulaması başarısız oldu</string>
     <string name="omnipod_eros_error_invalid_packet_type">İletişim başarısız oldu: Pod\'dan geçersiz bir paket alındı</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">RileyLink yanıt vermiyor</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink kesintiye uğradı</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Pod yanıt vermiyor</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Bazal profil ayar hatası. İletim askıya alınabilir! Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin ve gerekirse iletime devam edin.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Bazal profil ayarı hatalı olabilir. İletim askıya alınabilir! Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin ve gerekirse iletime devam edin.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Bazal profil ayar hatası. İletim askıya alındı! Lütfen insülin iletimini Omnipod sekmesinden manuel olarak devam ettirin.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Geçici bazal iptal işlemi başarısız olabilir. Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Geçici bazal ayar hatası. Geçici bir bazal önceden çalışıyorsa, iptal edilmiş olabilir. Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Geçici bazal ayarı hatalı olabilir. Geçici bir bazal daha önce çalışıyorsa, iptal edilmiştir. Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">GBO (TBR) süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Zaman ayarı hatalı olabilir. İletim askıya alınabilir! Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin ve gerekirse iletime devam edin.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Zaman ayarı hatalı. İletim askıya alındı! Lütfen insülin iletimini Omnipod sekmesinden manuel olarak devam ettirin.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Pod\'daki saat otomatik olarak değiştirilemedi. Omnipod sekmesinde saati manuel olarak senkronize etmelisiniz.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Bolusun başarılı olup olmadığı doğrulanamıyor. Lütfen tıklamaları dinleyerek Pod\'unuzun bolus yaptığını doğrulayın. <b>Bolusun iletilmediğinden eminseniz, bolus girişini \'Bolusu iptal et\'i tıklayarak iptal etseniz bile Tedaviler\'den de silmelisiniz!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">SMB bolusunun (%1$.2f Ü) başarılı olup olmadığı doğrulanamadı. <b>Bolusun iletilmediğinden eminseniz, SMB girişini Tedaviler\'den de silmelisiniz.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod\'da geçici bir bazal çalışıyor, ancak AAPS bu geçici bazaldan habersiz. Lütfen geçici bazalınızı manuel olarak iptal edin.</string>
