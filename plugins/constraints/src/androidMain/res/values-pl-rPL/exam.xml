@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Edycja profili w celu zmiany wartości wystarczy, aby uaktywnić wszelkie wprowadzone zmiany.</string>
     <string name="profileswitch4_multi">Można skonfigurować i wybrać spośród wielu profili, aby uwzględnić zmieniające się okoliczności (np. zmiany hormonalne, praca zmianowa, tryb życia w dni powszednie / weekendy).</string>
     <string name="other_medication_label">Inne leki. Przeczytaj poniższe oświadczenie, a następnie zaznacz pole, aby zaakceptować oświadczenie.</string>
-    <string name="other_medication_text">AAPS zmniejsza dawki bazowe lub wstrzymuje dostarczanie insuliny, aby podnieść poziom cukru we krwi. Leki z klasy inhibitorów SGLT2 (gliflozyny) mogą zapobiegać wzrostowi poziomu glukozy we krwi, a tym samym mogą powodować niebezpieczny niedobór insuliny prowadzący do Cukrzycowej Kwasicy Ketonowej (DKA).
-\nPowszechne nazwy tych leków to: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\n Niniejszym deklaruję, że nie będę przyjmować takich leków, podczas korzystania z AAPS lub dezaktywuję pętlę przed użyciem takich leków.</string>
     <string name="concentration_feature_label">Zarządzanie stężeniem insuliny</string>
     <string name="u200_with_profile">Zanim AAPS obsługiwał stężenia insuliny, użytkownicy stosowali U200, ustawiając profil 50%, aby zmniejszyć wszystkie wartości o połowę. Które odpowiedzi są w tym przypadku prawdziwe?</string>
     <string name="u200_with_profile_reports">Moja baza danych AAPS i raporty NS stają się błędne. Wszystkie wartości (bolusy, dawki, TDD) należy pomnożyć przez 2, aby zobaczyć rzeczywiste wartości, co istotne szczególnie dla lekarzy i zespołu medycznego.</string>
