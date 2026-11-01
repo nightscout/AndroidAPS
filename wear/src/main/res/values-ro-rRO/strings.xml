@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Aranjament complicații</string>
     <string name="cwf_complication_layout_description">Poziția și dimensiunea complicațiilor, luate din cadranul personalizat încărcat.</string>
     <string name="pref_include_external">Includeți vizualizări externe în șablon</string>
-    <string name="pref_switch_external">Comutați datele externe în cadran</string>
     <string name="custom_pref_show_seconds">Afișați secunde</string>
     <string name="digitalstyle_pref_your_style">Stilul dumneavoastră</string>
     <string name="digitalstyle_style_none">niciun stil</string>
