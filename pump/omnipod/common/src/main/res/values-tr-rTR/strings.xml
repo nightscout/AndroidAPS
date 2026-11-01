@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Etkinleştirme ilerlemesi doğrulanamadı. Lütfen tekrar deneyin.</string>
     <string name="omnipod_common_error_pod_suspended">Pod askıya alındı</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Test bip sesi çalınamadı</string>
-    <string name="omnipod_common_error_time_out_of_sync">Pod\'daki saat senkronize değil. Lütfen Omnipod sekmesindeki saati güncelleyin.</string>
     <string name="omnipod_common_error_unexpected_exception">Beklenmedik bir hata oluştu. Lütfen raporlayın! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod alarm yapılandırması güncellendi.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Bazal bip seslerini etkinleştir</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB bip seslerini etkinleştir</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">GBO bip seslerini etkinleştir</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod sekmesinde İletimi Askıya Al düğmesini göster</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Saat dilimi algılamayı etkinleştir</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Süre sonu hatırlatıcısını etkinleştir</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Etkinleştirirseniz, belirtilen süreye ulaşıldığında pod bip sesi çıkarır</string>
