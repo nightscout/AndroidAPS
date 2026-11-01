@@ -79,7 +79,6 @@
     <string name="notification">Avís</string>
     <string name="noprofile">Encara cap perfil carregat des de NS</string>
     <string name="exists">existeix</string>
-    <string name="notexists">no existeix</string>
     <string name="glucose">Glucèmia</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -101,7 +100,6 @@
     <string name="a11y_high">alt</string>
     <string name="a11y_low">baix</string>
     <string name="activate_profile">Activar perfil</string>
-    <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Percentatge</string>
     <string name="timeshift_label">Decalatge horari</string>
@@ -150,9 +148,7 @@
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Pregunta</string>
     <string name="careportal_exercise">Esport</string>
-    <string name="careportal_announcement_message">Anunci: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
-    <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Exercici : %1$s</string>
     <string name="careportal_dad_alert">Alerta D.A.D.</string>
     <string name="careportal_profileswitch">Canvi de perfil</string>
@@ -252,7 +248,6 @@
     <string name="uel_ns_queue_cleared">CUA NS BUIDADA</string>
     <string name="uel_ns_settings_copied">CONFIGURACIÓ NS COPIADA</string>
     <string name="uel_error_dialog_ok">DIÀLEG D\'ERROR OK</string>
-    <string name="uel_error_dialog_mute">DIÀLEG D\'ERROR SILENCIAT</string>
     <string name="uel_error_dialog_mute_5min">DIÀLEG D\'ERROR SILENCIAT 5MIN</string>
     <string name="uel_objective_started">OBJECTIU INICIAT</string>
     <string name="uel_objective_unstarted">OBJECTIU NO INICIAT</string>
