@@ -65,8 +65,17 @@
     <!-- Safety Check -->
     <!-- Warning Titles -->
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_off_bluetooth">Bluetooth einschalten</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_change_time_zone">Zeitzonenänderung</string>
+    <string name="alarm_feat_title_notice_check_bg">Blutzucker prüfen</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS gestartet</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS beendet</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS nicht verfügbar</string>
+    <string name="alarm_feat_title_notice_unknown">Patch-Fehler</string>
+    <string name="alarm_feat_desc_unknown">Unerwarteter Patch-Fehler.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Patch deaktivieren</string>
     <!-- General Messages -->
     <!--    notification -->
 </resources>
