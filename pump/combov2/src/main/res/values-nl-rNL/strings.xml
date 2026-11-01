@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Reservoir fout</string>
     <string name="combov2_error_11">Infuusset niet voorgevuld</string>
     <string name="combov2_extended_bolus_not_supported">Verlengde bolus wordt niet ondersteund</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Koppelen met de pomp</string>
     <string name="combov2_unpair_pump_title">Ontkoppel pomp</string>
     <string name="combov2_driver_state_label">Besturingsprogramma status</string>
@@ -31,13 +30,6 @@
 2. Controleer of er hier een apparaat wordt weergegeven als gekoppeld indien dit het geval is, ga dan naar het scherm \"Verwijder apparaat\" om het apparaat te verwijderen/ontkoppelen\n
 3. Ga vervolgens naar het scherm \"Voeg apparaat toe\" en begin met koppelen van de pomp\n
 4. Klik op de knop \"Begin met koppelen\" om de koppeling in AndroidAPS te starten\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Na een tijdje wordt de telefoonnaam op het pompscherm weergegeven; druk op CHECK om te bevestigen.\n\n
-Wanneer het koppelen succesvol is voltooid, bevestig het koppelen van je pomp en keer terug naar het hoofdpompscherm door twee keer op de CHECK-knop te drukken.\n\n
-Als na meer dan ~5 minuten geen verbinding is opgericht:\n\n
-1. Druk op Terug of op de knop \"Koppeling annuleren\"\n
-2. Annuleer de koppeling op de Combo (druk op zowel UP als MENU
-knoppen tegelijkertijd om koppelen te annuleren)\n
-Probeer opnieuw te koppelen</string>
     <string name="combov2_enter_pin">PIN Invoeren</string>
     <string name="combov2_cancel_pairing">Koppeling annuleren</string>
     <string name="combov2_confirm_cancel_pairing_message">Wil je echt het koppelen annuleren?</string>
@@ -107,7 +99,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_ignoring_redundant_100_tbr">Overbodig 100% TBR verzoek wordt genegeerd</string>
     <string name="combov2_hit_unexpected_tbr_limit">Onverwachte limiet waargenomen bij het aanpassen van TBR: doelpercentage was %1$d%%, een limiet bereikt op %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan absolute TBR niet instellen als basaalstand nul is</string>
-    <string name="combov2_unpair_pump_summary">Ontkoppel AndroidAPS en Android van de huidige Accu-Chek Combo pomp</string>
     <string name="combov2_unknown_tbr_detected">Onbekende TBR werd gedetecteerd en gestopt; percentage: %1$d%%; resterende duur: %2$s</string>
     <string name="combov2_connection_error">Verbindingsfout: %1$s</string>
     <string name="combov2_short_status_alert">Waarschuwing: %s</string>
