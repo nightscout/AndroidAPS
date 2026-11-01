@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Komplikasyon düzeni</string>
     <string name="cwf_complication_layout_description">Yüklenen özel saat arayüzünden alınan komplikasyonların konumu ve boyutu.</string>
     <string name="pref_include_external">Şablona harici görünümleri dahil et</string>
-    <string name="pref_switch_external">Saat arayüzünde harici verileri değiştir</string>
     <string name="custom_pref_show_seconds">Saniyeyi göster</string>
     <string name="digitalstyle_pref_your_style">Stiliniz</string>
     <string name="digitalstyle_style_none">stil yok</string>
