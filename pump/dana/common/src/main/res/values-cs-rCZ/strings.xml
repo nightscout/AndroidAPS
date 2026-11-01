@@ -8,7 +8,6 @@
     <string name="commanderror">Chyba příkazu</string>
     <string name="speederror">Chyba rychlosti</string>
     <string name="insulinlimitviolation">Překročen limit inzulínu</string>
-    <string name="boluserrorcode">Požadováno: %1$.2fU Doručeno: %2$.2fU Chyba: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pumpa není naplněna</string>
     <string name="danai2_bolus_error_not_enough_insulin">Nedostatek inzulínu v zásobníku</string>
     <string name="danai2_bolus_error_easy_sleep">Režim spánku je v pumpě zapnutý</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenat výměnu zásobníku</string>
     <string name="rs_loginsulinchange_summary">Přidat událost „Výměna inzulínu“ do Péče, pokud je zjištěna v historii</string>
-    <string name="rs_logcanulachange_title">Zaznamenat změnu kanyly</string>
     <string name="rs_logcanulachange_summary">Přidat událost „Výměna setu“ do Péče, pokud je zjištěna v historii</string>
     <string name="press_ok_on_the_pump">Stiskněte OK na pumpě\na zadejte 2 zobrazená čísla\nUdržujte display na pumpě zapnutý stisknutím tlačítka minus dokud nedokončíte zadání kódu.</string>
     <string name="num1pin">1: (12 číslic)</string>
