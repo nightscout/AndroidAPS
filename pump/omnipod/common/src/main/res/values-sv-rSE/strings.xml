@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Det gick inte att verifiera aktiveringen. Försök igen.</string>
     <string name="omnipod_common_error_pod_suspended">Pod pausad</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Det gick inte att spela testpip</string>
-    <string name="omnipod_common_error_time_out_of_sync">Tiden på podden är inte synkroniserad. Uppdatera tiden i Omnipod-fliken.</string>
     <string name="omnipod_common_error_unexpected_exception">Ett oväntat fel uppstod. Vänligen rapportera! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Varningskonfigurationen har uppdaterats i Pod.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basalpip aktiverade</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-pip aktiverade</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Pip för tillfällig basal aktiverade</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Visa knapp för Pausa leverans i Omnipod-fliken</string>
     <string name="omnipod_common_preferences_time_change_enabled">Avkänning av sommartid/tidszon aktiverad</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Påminnelse för utgångstid aktiverad</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">När den är aktiverad, kommer podden att pipa när den angivna tiden är nådd</string>
