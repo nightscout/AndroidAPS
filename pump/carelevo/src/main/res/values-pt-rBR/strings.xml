@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Remover tampa da agulha</string>
     <string name="carelevo_patch_connect_step_1_desc">Retire o patch do blister e remova a tampa da agulha.</string>
     <string name="carelevo_patch_connect_step_2_title">Ligar e conectar</string>
-    <string name="carelevo_patch_connect_step_2_desc">Pressione o botão liga/desliga por mais de 1 segundo. Após o bipe, toque no botão [Buscar patch] abaixo.</string>
     <string name="carelevo_patch_safety_check_start_title">Verificação de segurança</string>
     <string name="carelevo_patch_safety_check_end_title">Verificação de segurança concluída</string>
     <string name="carelevo_patch_safety_check_start_desc">O patch foi conectado com sucesso.\nPressione o botão [Verificação de segurança].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Se o patch detectado abaixo estiver correto, toque no botão Confirmar.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Inserção da agulha concluída e remoção do aplicador</string>
     <string name="carelevo_dialog_connect_detached">Aplicador removido</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Pressione as alças dos dois lados do aplicador para soltá-lo do patch,\n
-        e depois pressione o botão `Aplicador removido`. A administração de insulina começará.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">O Bluetooth não está ativado. Verifique.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Nenhum patch conectado.</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Restam menos de 10 U de insulina; a administração de insulina foi interrompida. Toque no botão [Desativar patch] e troque o patch agora.</string>
     <string name="alarm_notification_desc_warning_expired_patch">O patch expirou; a administração de insulina foi interrompida. Toque no botão [Desativar patch] e troque o patch agora.</string>
     <string name="alarm_notification_desc_warning_low_battery">A bateria está fraca; a administração de insulina foi interrompida. Toque no botão [Descartar patch] e troque o patch agora.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">A administração de insulina foi interrompida. Mude para uma temperatura adequada agora (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">A administração de insulina foi interrompida. Toque no botão [Iniciar insulina] e reinicie a administração basal.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">O tempo de aplicação do patch acabou. Toque no botão [Desativar patch] e troque o patch agora.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">O autodiagnóstico falhou. Toque no botão [Desativar patch] e troque o patch agora.</string>
