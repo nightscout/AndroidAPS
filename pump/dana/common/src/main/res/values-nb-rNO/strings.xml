@@ -110,9 +110,9 @@
     <string name="press_ok_on_the_pump">Trykk OK på pumpen\nog skriv inn de 2 viste tallene\nHold skjermen på pumpen PÅ ved å trykke minus knappen til du fullfører inntastingen.</string>
     <string name="num1pin">1: (12 tall)</string>
     <string name="num2pin">2: (8 tall)</string>
-    <string name="basal_bolus_step">Basal/bolus trinn</string>
+    <string name="basal_bolus_step">Basal-/bolustrinn</string>
     <string name="connecting_to_pump">Kobler til pumpen…</string>
-    <string name="pairing_successful">Paringen er vellykket!</string>
+    <string name="pairing_successful">Sammenkoblingen er vellykket!</string>
     <string name="pairing_successful_message">Pumpen din er nå tilkoblet og klar til bruk.</string>
     <string name="cancel_pairing_title">Avbryte paring?</string>
     <string name="cancel_pairing_message">Paringsprosessen vil bli avbrutt.</string>
