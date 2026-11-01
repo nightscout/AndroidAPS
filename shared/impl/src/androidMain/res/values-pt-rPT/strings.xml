@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Nome do Mês (curto)</string>
     <string name="cwf_comment_loop">Estado do loop e há quanto tempo</string>
     <string name="cwf_comment_direction">Seta de direção</string>
-    <string name="cwf_comment_timestamp">Minutos desde a receção do último valor de GLIC</string>
     <string name="cwf_comment_sgv">Valor de GLIC</string>
     <string name="cwf_comment_cover_plate">Imagem da capa na frente do texto</string>
     <string name="cwf_comment_hour_hand">Imagem do ponteiro das horas (Relógio Analógico)</string>
