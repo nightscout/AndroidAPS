@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Komplikations-Layout</string>
     <string name="cwf_complication_layout_description">Position und Größe der Komplikationen, übernommen vom geladenen benutzerdefinierten Zifferblatt.</string>
     <string name="pref_include_external">Externe Ansichten in Vorlage einbeziehen</string>
-    <string name="pref_switch_external">Externe Daten in Watchface umschalten</string>
     <string name="custom_pref_show_seconds">Sekunden anzeigen</string>
     <string name="digitalstyle_pref_your_style">Dein Stil</string>
     <string name="digitalstyle_style_none">ohne Stil</string>
