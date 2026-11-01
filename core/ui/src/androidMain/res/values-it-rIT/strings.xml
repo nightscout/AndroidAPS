@@ -3,7 +3,7 @@
     <string name="error_field_must_not_be_empty">Il campo non deve essere vuoto</string>
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Client autorizzati</string>
-    <string name="authorized_clients_manage_desc">Gestisci i dispositivi client accoppiati che controllano questo master.</string>
+    <string name="authorized_clients_manage_desc">Gestisci i dispositivi client associati che controllano questo master.</string>
     <string name="pair_with_master_manage_label">Associa al master</string>
     <string name="pair_with_master_manage_desc">Inserisci il PIN di associazione di un master per consentire a questo client di inviare comandi firmati.</string>
     <!--    General-->
