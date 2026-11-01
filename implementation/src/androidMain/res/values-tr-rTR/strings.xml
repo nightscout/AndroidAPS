@@ -57,10 +57,8 @@
     <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s önce dışa aktarıldı</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s\'de dışa aktarıldı</string>
-    <string name="exported_less_than_hour_ago">bir saatten kısa süre önce dışa aktarıldı</string>
     <string name="metadata_warning_different_flavour">Sizde: %2$s varken, farklı AAPS (%1$s) türeviyle tercihler oluşturuldu.\n\nBazı ayarlar eksik veya geçersiz olabilir - içe aktardıktan sonra lütfen tercihlerinizi kontrol edin ve güncelleyin.</string>
     <string name="metadata_warning_different_device">Tercihler farklı bir cihazda oluşturuldu. Daha eski/farklı bir telefondan içe aktarıyorsanız sorun değil, ancak içe aktarılan tercihlerin doğru olduğundan emin olun!</string>
-    <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçiyorsunuz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
     <string name="metadata_warning_date_format">Geçersiz tarih-saat biçimi!</string>
     <string name="metadata_warning_different_version">Uygulamanın farklı alt sürümlerinden tercihler. Yükseltmeden sonra içe aktarıyorsanız sorun değil, ancak tercihlerin hala doğru olup olmadığını içe aktarmadan sonra kontrol edin!</string>
     <string name="metadata_urgent_different_version">Uygulamanın farklı ana sürümünden tercihler. Ana sürümler önemli ölçüde farklılık gösterir ve uyumsuz tercihlere sahip olabilir! İçe aktardıktan sonra tercihlerin hala doğru olduğundan emin olun!</string>
