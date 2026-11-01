@@ -73,9 +73,9 @@
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_last_run">Siste beregning :</string>
     <string name="autotune_warning">Varsel :</string>
-    <string name="autotune_ic_warning">Valgt profil har %1$d IK verdier. Autotune vil bruke %2$.2f g/E</string>
-    <string name="autotune_isf_warning">Valgte profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
-    <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
+    <string name="autotune_ic_warning">Valgt profil har %1$d IK-verdier. Autotune vil bruke %2$.2f g/E</string>
+    <string name="autotune_isf_warning">Valgt profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
+    <string name="autotune_error">Feil i inndata, prøv å kjøre Autotune på nytt eller reduser antall dager</string>
     <string name="autotune_error_more_days">Feil i inntastet data, øk antall dager</string>
     <string name="autotune_warning_during_run">Har startet Autotune-beregning, vennligst vent</string>
     <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>
@@ -91,8 +91,8 @@
     <string name="autotune_update_input_profile_button">Oppdater inngangsprofil</string>
     <string name="autotune_revert_input_profile_button">Tilbakestill inngangsprofil</string>
     <string name="autotune_copy_local_profile_message">Opprette ny lokal profil fra denne Autotune-profilen?</string>
-    <string name="autotune_update_local_profile_message">Oppdater %1$s profil med Autotune-profil?</string>
-    <string name="autotune_revert_local_profile_message">Tilbakestill %1$s profil med inngangsprofil?</string>
+    <string name="autotune_update_local_profile_message">Oppdatere profilen %1$s med Autotune-profilen?</string>
+    <string name="autotune_revert_local_profile_message">Tilbakestille profilen %1$s til inngangsprofilen?</string>
     <string name="autotune_profile_invalid">Ugyldig profil</string>
     <string name="pump_disconnected">Pumpe frakoblet</string>
     <!--    autoISF -->
