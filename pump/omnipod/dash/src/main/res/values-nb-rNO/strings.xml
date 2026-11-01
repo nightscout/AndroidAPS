@@ -21,7 +21,7 @@
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Kommando er ikke bekreftet</string>
     <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
-    <string name="suspend_delivery_is_unconfirmed">Pausing av insulinlevering ble ikke bekreftet! Vennligst oppdater Podstatus fra Omnipod-fanen og gjenoppta insulinlevering om nødvendig.</string>
+    <string name="suspend_delivery_is_unconfirmed">Pause av insulinlevering er ikke bekreftet! Oppdater Pod-status manuelt på pumpeskjermen, og gjenoppta leveringen hvis nødvendig.</string>
     <string name="insulin_delivery_suspended">Insulinlevering er pauset</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Tidssone på pod er forskjellig fra tidssonen på telefon. Basaldoser er feil. Bytt profil for å korrigere</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke sette ny basalprofil. Insulinlevering er pauset</string>
@@ -30,8 +30,8 @@
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Kunne ikke bekrefte om SMB (%1$s) ble utført. Oppdater pod-statusen for å bekrefte om kommandoen ble utført eller avvist.</string>
     <string name="temp_basal_out_of_sync">Midlertidig basalstatus er ikke som forventet! Dersom en midlertidig basal tidligere kjørte, har den blitt avbrutt. Kontroller levert insulin og pod historikk</string>
     <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Innstillingen av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktivert, så har den blitt kansellert. Vennligst oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Innstilling av midlertidig basal kan ha mislyktes. Hvis en midlertidig basal var aktiv, er den avbrutt. Oppdater Pod-status manuelt på pumpeskjermen.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Kansellering av midl. basal er ikke bekreftet</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ubekreftet \"gjennoppta levering\"-kommando. Vennligst oppdater podstatus</string>
-    <string name="cancelling_temp_basal_might_have_failed">Endring av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktiv så har den blitt kansellert. Oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
+    <string name="cancelling_temp_basal_might_have_failed">Avbryting av midlertidig basal kan ha mislyktes. Hvis en midlertidig basal var aktiv, kan den ha blitt avbrutt. Oppdater Pod-status manuelt på pumpeskjermen.</string>
 </resources>
