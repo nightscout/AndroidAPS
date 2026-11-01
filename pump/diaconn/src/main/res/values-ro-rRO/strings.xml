@@ -27,7 +27,6 @@
     <string name="commanderror">Eroare de comandă</string>
     <string name="speederror">Eroare de viteză</string>
     <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
-    <string name="boluserrorcode">Solicitat: %1$.2fU Administrat: %2$.2fU Cod eroare: %3$s</string>
     <string name="selectedpump">Pompa selectată</string>
     <string name="bolus_step">Pas bolus</string>
     <string name="basal_step">Pas bazală</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">Timp de afișare LCD [secunde]</string>
     <string name="diaconn_g8_language">Limba</string>
     <string name="diaconn_g8_bolus_speed">Viteză bolus</string>
-    <string name="diaconn_g8_pumplang_chiness">Chineză</string>
     <string name="diaconn_g8_pumplang_korean">Coreeană</string>
     <string name="diaconn_g8_pumplang_english">Engleză</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">Adăugați evenimentul \"Schimbare baterie\" în Careportal când este detectat în istoric</string>
     <string name="diaconn_g8_logbatterychange_title">Înregistrați schimbarea bateriei</string>
     <string name="diaconn_g8_logsyncinprogress">Sincronizare jurnal în curs</string>
-    <string name="diaconn_g8_loginsulinshorage">Insulină pe terminate</string>
     <string name="diaconn_g8_logbatteryshorage">Baterie pe terminate</string>
     <string name="diaconn_g8_logneedleprime">Amorsare ac :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Amorsare injector :%1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">Complet</string>
     <string name="diaconn_g8_reasoninjectonblock">Blocare injectare</string>
     <string name="diaconn_g8_reasonbatteryshortage">Baterie pe terminate</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Insulină pe terminate</string>
     <string name="diaconn_g8_reasonuserstop">Oprire utilizator</string>
     <string name="diaconn_g8_reasonsystemreset">Resetare sistem</string>
     <string name="diaconn_g8_reasonother">Altele</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">Blocare injectare (%s)</string>
     <string name="diaconn_g8_lgorelease">administrare bazală (%s)</string>
     <string name="diaconn_g8_lgosuspend">bazală suspendată (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Succes Dual Normal</string>
     <string name="diaconn_g8_logdualsquarestart">Start Dual Pătrat</string>
     <string name="diaconn_g8_logdualsquaresuccess">Succes Dual Pătrat</string>
     <string name="diaconn_g8_logsquarestart">Start Pătrat</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">Succes</string>
     <string name="diaconn_g8_logmealsuccess">Masă cu succes</string>
     <string name="diaconn_g8_errorcode_1">Nu se poate căuta din cauza erorii pachetului CRC.</string>
-    <string name="diaconn_g8_errorcode_2">Nu poate fi setat la o eroare de introducere a parametrului.</string>
-    <string name="diaconn_g8_errorcode_3">Nu poate fi setat la o eroare de specificare a protocolului.</string>
     <string name="diaconn_g8_errorcode_4">Masa a fost înregistrată, nu poate fi injectat.</string>
     <string name="diaconn_g8_errorcode_6">Anulat de pompă</string>
     <string name="diaconn_g8_errorcode_7">Se iau alte acțiuni, se limitează setările aplicației.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">Injectarea nu este posibilă din cauza bateriei descărcate.</string>
     <string name="diaconn_g8_errorcode_12">Insuficientă insulină. Nu poate fi injectată.</string>
     <string name="diaconn_g8_errorcode_13">Nu se poate injecta, deoarece se depășește limita pentru o singură administrare.</string>
-    <string name="diaconn_g8_errorcode_14">Nu se poate injecta, deoarece se depășește volumul de injectare pentru azi.</string>
     <string name="diaconn_g8_errorcode_15">După finalizarea configurării ratei bazale, se poate injecta bazala.</string>
     <string name="diaconn_g8_logtubechange_title">Înregistrați schimbarea furtunului</string>
     <string name="diaconn_g8_logtubechange_summary">Adăugați evenimentul \"Schimbare furtun\" în Notă atunci când este detectat în istoric</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">În timpul rulării Suspendării la glicemie scăzută, injectarea este restricționată.</string>
     <string name="diaconn_g8_errorcode_33">Starea LGS este activă, comanda de activare este refuzată.</string>
     <string name="diaconn_g8_errorcode_34">Starea LGS este inactivă, comanda de inactivare este refuzată.</string>
-    <string name="diaconn_g8_errorcode_35">Pornirea bazalei temporare este respinsă atunci când se execută bazala temporară</string>
-    <string name="diaconn_g8_errorcode_36">Oprirea bazalei temporare este respinsă atunci când bazala temporară nu rulează</string>
     <string name="diaconn_g8_cloudsend_summary">Trimiteți jurnalele pompei către Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Sincronizați în Cloud Diaconn</string>
     <string name="bolus_speed_1">1 U/min</string>
