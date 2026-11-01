@@ -26,7 +26,6 @@
     <string name="constraints">מגבלות</string>
     <string name="openapsma_autosensdata_label">נתוני Autosens</string>
     <string name="openapsma_script_debug_data_label">תיקון באגים בסקריפט</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">שימו לב!\nבדרך כלל אינכם צריכים לשנות את הערכים שלהלן. נא ללחוץ כאן, לקרוא את הטקסט ולוודא שאתם מבינים אותו לפני שתשנו ערכים אלה.</string>
     <string name="increasing_max_basal">מגדיל את ערך מקסימום הבזאלי מפני שהוא נמוך מערכו המרבי בפרופיל</string>
     <string name="max_basal_multiplier">מכפיל בזאלי מרבי</string>
     <string name="max_daily_basal_multiplier">מכפיל בזאלי יומי מרבי</string>
