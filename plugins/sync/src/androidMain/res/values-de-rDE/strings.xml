@@ -4,11 +4,61 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Verbindungs-Einstellungen</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Synchronisiert deine Daten mit Nightscout mittels v3 API</string>
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
+    <string name="no_connectivity">Keine Verbindung</string>
     <string name="unsupported_ns_version">Nicht unterstützte Nightscout-Version</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_title">Autorisierte Clients</string>
+    <string name="authorized_clients_add">Client hinzufügen</string>
+    <string name="authorized_clients_comm_switch_title">Client-Steuerung erlauben</string>
+    <string name="authorized_clients_comm_switch_summary">Gepaart Clients können signierte Befehle über Nightscout senden. Deaktiviere dies, um die Kommunikation zu stoppen, ohne die Clients zu entfernen.</string>
+    <string name="authorized_clients_state_active">Aktiv</string>
+    <string name="authorized_clients_state_pending">Ausstehend</string>
+    <string name="authorized_clients_last_seen">Zuletzt gesehen %1$s</string>
+    <string name="authorized_clients_never_seen">Nie verwendet</string>
+    <string name="authorized_clients_pending_expires_in">Kopplung läuft in %1$ss ab</string>
+    <string name="authorized_clients_empty_title">Keine autorisierten Clients</string>
+    <string name="authorized_clients_empty_subtitle">Kopple ein Client-Gerät, um es signierte Befehle an diesen Master senden zu lassen.</string>
+    <string name="authorized_clients_name_dialog_title">Client hinzufügen</string>
+    <string name="authorized_clients_name_placeholder">Gerätename</string>
+    <string name="authorized_clients_delete_dialog_title">Zugriff widerrufen?</string>
+    <string name="authorized_clients_delete_dialog_message">%1$s wird keine Befehle mehr senden können.</string>
+    <string name="authorized_clients_pin_dialog_title">Client koppeln</string>
+    <string name="authorized_clients_pin_instructions">Gib diese PIN auf dem Client-Gerät ein. Der Code ist nur für eine Kopplung gültig.</string>
+    <string name="authorized_clients_pin_expires_in">Läuft in %1$ss ab</string>
+    <string name="authorized_clients_pin_done">Fertig</string>
+    <string name="authorized_clients_pin_publishing">Sende Kopplungsanfrage an Nightscout…</string>
+    <string name="authorized_clients_pin_published">Kopplungsanfrage bereit auf Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Konnte die Kopplungsanfrage nicht nach Nightscout hochladen.</string>
+    <string name="authorized_clients_pin_retry">Erneut versuchen</string>
+    <string name="authorized_clients_method_title">Wie wird das Telefon eingerichtet?</string>
+    <string name="authorized_clients_method_qr_pair">QR-Code: Nightscout und Kopplung</string>
+    <string name="authorized_clients_method_qr_pair_summary">Scanne einmal auf dem neuen Telefon. Es erhält seinen eigenen Nightscout Token und wird gekoppelt.</string>
+    <string name="authorized_clients_method_qr_ns">QR-Code: Nur Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Das Telefon erhält ein eigenes Nightscout-Token und kann die Daten lesen. Es ist nicht gekoppelt und kann keine Befehle senden.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Ein Telefon muss vorab mit Nightscout verbunden werden.</string>
+    <string name="authorized_clients_qr_working">Erstelle den Nightscout-Token…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Einrichten von %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Scanne diesen Code auf dem neuen Telefon im Einrichtungsassistenten oder unter \'Mit Master koppeln\'. Dadurch wird Nightscout eingerichtet und das Telefon gekoppelt.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scanne diesen Code auf dem neuen Telefon im Einrichtungsassistenten oder unter \'Mit Master koppeln\'. Dadurch wird Nightscout eingerichtet. Das Telefon ist nicht gekoppelt.</string>
+    <string name="authorized_clients_qr_keep_private">Jeder, der diesen Code sieht, kann deine Nightscout-Daten lesen. Nur zur Kopplung des neuen Telefons verwenden.</string>
+    <string name="authorized_clients_token_problem_title">Kein QR-Code</string>
+    <string name="authorized_clients_not_added_title">Client nicht hinzugefügt</string>
+    <string name="authorized_clients_token_problem_not_connected">Dieses Telefon ist nicht mit Nightscout verbunden, daher kann es kein Token für den Client erstellen.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Das Nightscout Token dieses Telefons ist kein Administrator-Token, daher kann es kein Token für den Client erstellen. Verwende hier ein Administrator-Token oder füge den Client mit der PIN hinzu.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout hat bereits ein Token mit diesem Namen und anderen Rechten. Wähle einen anderen Namen.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Ein Client mit diesem Namen ist bereits in der Liste. Wähle einen anderen Namen oder entferne diesen Client zuerst.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout hat den neuen Token nicht aufgelistet, daher wurde er wieder entfernt. Es sind keine Rückstände verblieben. Versuche es erneut.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout hat den neuen Token nicht aufgelistet und er konnte nicht wieder entfernt werden. Lösche den Token %1$s in Nightscout und versuche es dann erneut.</string>
+    <string name="authorized_clients_tokens_header">Nightscout nur lesen</string>
+    <string name="authorized_clients_token_unpaired">Eigener Nightscout Token, nicht gekoppelt</string>
+    <string name="authorized_clients_token_show_qr">QR-Code anzeigen</string>
+    <string name="authorized_clients_token_delete_title">Token löschen?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s kann Nightscout nicht mehr lesen.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_confirm_warning">Nach der Kopplung kann dieses Gerät signierte Befehle an diesen Master senden.</string>
     <!-- Client set-up from the master's QR code -->
@@ -24,6 +74,7 @@
     <string name="ns_alarm_options">Alarm-Optionen</string>
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Integrations (Test) Server verwenden</string>
+    <string name="summary_tidepool_use_ns_connection">Ausschalten, um separate Verbindungseinstellungen für Tidepool festzulegen</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Daten zu Tidepool hochladen</string>
     <string name="upload_now">Jetzt hochladen</string>
