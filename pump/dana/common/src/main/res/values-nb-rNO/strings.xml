@@ -119,7 +119,7 @@
     <string name="done">Ferdig</string>
     <string name="open_bluetooth_settings">Åpne Bluetooth-innstillinger</string>
     <string name="enter_pump_password">Skriv inn pumpepassordet</string>
-    <string name="select_paired_device">Velg paret enhet</string>
+    <string name="select_paired_device">Velg sammenkoblet enhet</string>
     <string name="no_paired_devices">Ingen parkoblede Dana-enheter funnet. Par først pumpen i Android Bluetooth-innstillingene.</string>
     <string name="password_hint">4-siffer passord (0–9999)</string>
     <string name="connecting_verifying">Kobler til og verifiserer passord…</string>
