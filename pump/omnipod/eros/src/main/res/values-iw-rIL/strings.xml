@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f יח\'</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
-    <string name="omnipod_eros_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">התקשורת נכשלה: אימות תקינות ההודעה נכשל</string>
     <string name="omnipod_eros_error_invalid_packet_type">התקשורת נכשלה: התקבלה חבילת נתונים לא חוקית מהפוד</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">אין תגובה מ-RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">החיבור ל-RileyLink הופרע</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">אין תגובה מהפוד</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">הגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">ייתכן שהגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">הגדרת הפרופיל הבזאלי נכשלה. ההזרקה מושהית! נא לחדש את ההזרקה ידנית בלשונית Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">ייתכן שביטול הבזאלי הזמני נכשל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">הגדרת בזאלי זמני נכשלה. אם בזאלי זמני הוחל קודם לכן, ייתכן שהוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">ייתכן שהגדרת הבזאלי הזמני נכשלה. אם בזאלי זמני פעל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">משך של בזאלי זמני חייב להיות גדול מאפס וכפולה של %1$s דקות.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">ייתכן שהגדרת השעה נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">הגדרת השעה נכשלה. ההזרקה מושהית! נא לחדש את ההזרקה ידנית בלשונית Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">לא ניתן לשנות את השעה בפוד באופן אוטומטי. יש לסנכרן באופן ידני את השעון בלשונית Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">לא ניתן לאמת שהבולוס הצליח. נא לאמת את מתן האינסולין ע\"י הקשבה לקליקים. <b>אם אתם בטוחים שהבולוס נכשל, עליכם למחוק את רשומת הבולוס מהטיפולים, גם אם לחצתם עכשיו על \'ביטול בולוס\'.</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">לא ניתן לאמת שבולוס SMB (%1$.2f יח\') הצליח. <b>אם אתם בטוחים שהבולוס נכשל, עליכם למחוק את רשומת ה-SMB מהטיפולים.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">בזאלי זמני מופעל בפוד אבל AAPS אינו מודע לבזאלי זמני זה. יש לבטל את הבזאלי הזמני באופן ידני.</string>
