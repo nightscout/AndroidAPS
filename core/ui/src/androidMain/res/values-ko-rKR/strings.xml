@@ -50,7 +50,7 @@
     <string name="snooze_60m">60분 스누즈</string>
     <string name="virtual_pump">가상 펌프</string>
     <string name="constraints">제한</string>
-    <string name="superbolus">Superbolus</string>
+    <string name="superbolus">슈퍼 볼러스</string>
     <string name="pump_paused">펌프 일시중지</string>
     <string name="and">그리고</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">사용자</string>
@@ -174,7 +174,7 @@
     <string name="cob">COB</string>
     <string name="name_short">이름:</string>
     <string name="time">시간</string>
-    <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">불러오는 중…</string>
     <string name="waiting_for_pump">펌프를 기다리는 중…</string>
     <string name="initialization_failed">초기화 실패</string>
