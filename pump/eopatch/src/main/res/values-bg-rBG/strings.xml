@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Интегриране на помпа EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Пачът не потвърди края на болуса. Записано е %1$s, но пачът може да е доставил повече. Проверете пача, преди да пуснете още инсулин.</string>
-    <string name="low_reservoir">Предупреждение за празен резервоар</string>
-    <string name="patch_expiration_reminders">Напомняне за изтичане на Patch</string>
     <string name="patch_buzzer_reminders">Звуково напомняне за Patch</string>
     <string name="eopatch_ble_status">Състояние на BLE</string>
     <string name="eopatch_serial_number">Сериен номер</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">За да смените с нов Patch, текущият Patch трябва да бъде изхвърлен. Всички доставки на инсулин от Patch ще бъдат отменени.</string>
     <string name="patch_discard_complete_title">Изхвърлянето на Patch е завършено.</string>
     <string name="patch_discard_complete_desc">Patch е деактивиран.\nИзхвърлете Patch.\nПремахнете patch, прикрепен към тялото ви.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">В момента се доставя болус. Наистина ли искате да отмените подаването на инсулин и да изхвърлите Patch?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Временният базал се доставя в момента. Наистина ли искате да отмените подаването на инсулин и да изхвърлите Patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">В момента се доставят болус и временен базал. Наистина ли искате да отмените подаването на инсулин и да изхвърлите Patch?</string>
-    <string name="patch_change_confirm_desc">Сигурни ли сте, че ще изхвърлите Patch?</string>
     <string name="patch_forced_discard">Изхвърли</string>
     <string name="patch_comm_error_during_discard_desc_2">За едностранно деактивиране, натиснете „Отхвърляне“.</string>
     <string name="patch_manually_turning_off_alarm_title">Ръчно изключване на алармата на Patch</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">При свързването 2 Android нотификации ще се покажат. Трябва да ги потвърдите за Bluetooth свързване.</string>
     <string name="patch_start_pairing">Започване на сдвояване</string>
     <string name="patch_connect_new">Сдвояване на Patch</string>
-    <string name="patch_connect_new_desc">Новият Patch се сдвоява.\nПоддържайте дистанцията между Patch и смарт устройството възможно най-малка</string>
     <string name="patch_remove_needle_cap">Подгответе се за закрепване на Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Отстранете залепващата лента и след това натиснете „Напред“.</string>
     <string name="patch_remove_needle_cap_desc_2">Ако иглата стърчи. натиснете \'Откажи\'.</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">Отнема около 30 секунди.</string>
     <string name="patch_safety_check_desc_2">За сигурност, не премахвайте защитата на иглата докато не мине проверката!</string>
     <string name="patch_rotate_knob">Поставяне на иглата</string>
-    <string name="patch_rotate_knob_desc_1">Завъртете лоста за действие на иглата на повече от 100°, за да поставите иглата и след това завъртете напълно, за да го махнете</string>
     <string name="patch_rotate_knob_desc_2">Проверете за 1 звуков сигнал и след това натиснете „Напред“.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Проверете за 1 звуков сигнал и след това натиснете „Повторен опит“.</string>
     <string name="patch_basal_schedule">Активирането на Patch завърши!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' програмата е активирана.</string>
     <string name="patch_basal_schedule_desc_2">Предупреждава ви, когато срокът на валидност на Patch наближи.\nПроменете времето за напомняне, ако е необходимо.</string>
     <string name="patch_expiration_reminder_setting_title">Напомняния за изтичане на Patch</string>
-    <string name="patch_activate_reminder_desc">Активирането на Patch не е завършено.\n Продължете.</string>
     <string name="patch_communication_check_helper_1">Доближете смарт устройството си до Patch.</string>
     <string name="patch_communication_check_helper_2">Моля, преместете се на друго място и опитайте отново.</string>
     <string name="patch_safety_check_failed_desc">Грешка при проверката за сигурност. Опитайте отново.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Успешно свързване</string>
     <string name="patch_communication_succeed_message">Свързано с пача.</string>
     <string name="patch_cancel_pairing">Отмени сдвояване</string>
-    <string name="insulin_suspend_msg1">При спиране, текущо доставяният болус &amp; Временният базал ще бъде отменен. \n\nСкорост: %1$s Е/час\nОставащо време: %2$s\n&amp; Оставащ инсулин: %3$.2f Е</string>
-    <string name="insulin_suspend_msg2">При спиране, доставяният в момента болус ще бъде отменен. \n\nОставащ инсулин: %1$.2f Е</string>
-    <string name="insulin_suspend_msg3">При спиране, доставяният в момента Временен базал ще бъде отменен. \n\nСкорост : %1$s Е/час\nОставащо време: %2$s</string>
     <string name="insulin_suspend_msg4">Доставянето на инсулин ще бъде спряно.</string>
     <string name="string_activate_patch">Активирай Patch</string>
     <string name="string_discard_patch">Изхвърлете Patch</string>
     <string name="string_running">Изпълнява</string>
     <string name="retry">Повтори</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Сигурни ли сте, че ще изхвърлите настоящия Patch?</string>
     <string name="needle_insertion_error_1">Грешка при поставяне на иглата.</string>
     <string name="needle_insertion_error_3">Натиснете „Отхвърляне“, за да деактивирате Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Време за спиране на базала</string>
