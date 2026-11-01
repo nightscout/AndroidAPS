@@ -17,9 +17,7 @@
     <string name="objectives_maxbasal_learned">Tenha cuidado com as funções de segurança e ajuste os parâmetros de segurança quando necessário.</string>
     <string name="objectives_maxiobzero_objective">Começar o loop fechado com Suspensão por Glicose Baixa</string>
     <string name="objectives_maxiobzero_gate">Use o loop fechado no modo de Suspensão por Glicose Baixa (ou seja, IA máxima = 0 é definida automaticamente) durante alguns dias, sem demasiados eventos SGB.</string>
-    <string name="objectives_maxiobzero_learned">Definir a maxIA para zero previne-o de hipoglicemias e não adicionará mais insulina acima da taxa basal (exceto situações com IA negativa)</string>
     <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IA máxima acima de 0 e reduzir gradualmente os alvos de glicose</string>
-    <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de GLIC baixa, antes de baixar GLIC</string>
     <string name="objectives_maxiob_learned">Atualize a IA máxima à medida que a criança cresce. Não deixe o sistema dar mais insulina do que consegue cobrir com comida = um valor muito alto é má ideia. A IA máxima é calculada automaticamente no modo simples</string>
     <string name="maxiobset">IA máxima definida corretamente (não é necessário no modo simples)</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, ative o Autosens</string>
@@ -53,7 +51,6 @@
     <string name="objectives_exam_learned_isf">Aprendeu o significado do valor FSI e como ele afeta a quantidade de insulina usada para corrigir a glicose.</string>
     <string name="objectives_exam_learned_ic">Aprendeu o significado do valor IHC e como ele afeta a quantidade de insulina necessária para cobrir os hidratos.</string>
     <string name="objectives_exam_learned_hypott">O alvo temporário de hipoglicemia serve apenas para evitar a sobrecorreção após uma hipoglicemia, quando normalmente há IA negativa acumulada. Devem ser avaliadas outras ações para evitar esta situação no futuro.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">Usar uma percentagem não afeta os alvos de glicose, mas a basal, o FSI e o IHC são ajustados para dar mais insulina (acima de 100%) ou menos insulina (abaixo de 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Com o deslocamento temporal na troca de perfil, pode adaptar o perfil circadiano a irregularidades, como acordar tarde.</string>
     <string name="objectives_exam_learned_profileswitch4">Editar o próprio perfil não é suficiente para fazer uma alteração. Ainda precisa de fazer uma troca de perfil para ativar as alterações.</string>
     <string name="objectives_exam_learned_exercise">Deve reduzir a quantidade de insulina no corpo pelo menos 1 hora antes de começar o exercício, selecionando um perfil abaixo de 100%.</string>
@@ -64,14 +61,10 @@
     <string name="objectives_exam_learned_sensitivity">A deteção de sensibilidade é a parte do algoritmo que permite adaptar a dose de insulina a diferentes situações.</string>
     <string name="objectives_exam_learned_objectives">O seu progresso nos Objetivos é guardado com as outras definições e deve ter uma cópia de segurança.</string>
     <string name="objectives_exam_learned_objectives2">Guarde sempre as definições exportadas e o APK gerado também fora do telefone. O telefone pode perder-se, estragar-se, etc. Um bom local é qualquer nuvem acessível a partir do telefone. Assim, pode restaurar o AAPS noutro dispositivo em poucos minutos. Também é boa prática guardar a senha mestre usada num local seguro. Sem ela, a sua cópia de segurança é inútil. O mesmo vale para as chaves de assinatura (ficheiro .jks) e as senhas usadas para compilar o AAPS. O resto não é importante - pode ser descarregado novamente da internet a qualquer momento.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Se introduziu dados errados no AAPS ou se eles não correspondem à realidade, corrija-os o mais rápido possível. Isso pode levar a uma sobredosagem. O AAPS deve ser sempre informado da melhor forma possível sobre hidratos, insulina, etc.</string>
-    <string name="objectives_exam_learned_iob">Para analisar se o AAPS funciona bem para si, observar o gráfico da IA pode dar-lhe muita informação útil.</string>
-    <string name="objectives_exam_learned_cob">O cálculo dos HCA depende da relação entre o FSI e o IHC. Aumentar o FSI ou diminuir o IHC leva a tempos de absorção mais longos. Mas uma troca de perfil com percentagem altera os dois valores ao mesmo tempo, e o tempo de absorção não é afetado.</string>
     <string name="objectives_exam_learned_breadgrams">Os hidratos de carbono só podem ser introduzidos em gramas.</string>
     <string name="objectives_exam_learned_ecarbs">Os hidratos-e substituem o bólus prolongado do mundo das bombas.</string>
     <string name="objectives_exam_learned_nsclient">Pode seguir o AAPS remotamente com o AAPSClient ou o Nightscout. Quando o AAPSClient está emparelhado com o telefone principal, também pode controlar o AAPS remotamente.</string>
     <string name="objectives_exam_learned_concentration1">Usar insulina U200 com um perfil a 50% obriga a uma conversão permanente: nos bólus externos com canetas; e todos os relatórios padrão do AAPS ou do NS ficam errados e têm de ser convertidos para UI para a equipa de saúde.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">Mudar de U200 com um perfil a 50% para U200 com a função de concentração de insulina obriga a criar um novo perfil mais forte, a desativar o FSI Dinâmico durante uma semana e a treinar o cérebro para pensar em unidades internacionais.</string>
     <string name="objectives_exam_learned_concentration3">A concentração de insulina só pode ser mudada quando se troca a insulina ou o patch. Mas, acima de tudo, sobretudo nas bombas com tubo, nunca use a interface da bomba para dar bólus diretamente a partir da bomba.</string>
     <string name="answerdisabledto">Responder desativado até: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
