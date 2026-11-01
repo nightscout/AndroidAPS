@@ -87,10 +87,10 @@
     <string name="menu_resync">סנכרון מחדש</string>
     <string name="menu_prime_fill">תיחול/מילוי</string>
     <string name="menu_install_watchface">התקנת פני שעון</string>
-    <string name="menu_installing_watchface">מתקין את תצוגת השעון…</string>
-    <string name="watchface_installed_active">עיצוב השעון הותקן והוגדר כפעיל</string>
-    <string name="watchface_installed_select">עיצוב השעון הותקן, יש לבחור אותו מתפריט עיצוב השעון</string>
-    <string name="watchface_install_failed">התקנת עיצוב השעון נכשלה</string>
+    <string name="menu_installing_watchface">מתקין את פני השעון…</string>
+    <string name="watchface_installed_active">פני השעון הותקנו והוגדרו כפעילים</string>
+    <string name="watchface_installed_select">פני השעון הותקנו, יש לבחור אותם בבורר פני השעון</string>
+    <string name="watchface_install_failed">התקנת פני השעון נכשלה</string>
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
@@ -253,7 +253,7 @@
     <string name="complication_blood_glucose_ext2">ערכי סוכר Ext2</string>
     <string name="complication_bg_graph">גרף סוכר</string>
     <string name="complication_cwf_image">פני שעון מותאמים אישית</string>
-    <string name="complication_cwf_ambient_bg">סוכר במצב תצוגה חסכונית בלוח שעון מותאם אישית</string>
+    <string name="complication_cwf_ambient_bg">סוכר במצב תצוגה חסכונית בפני שעון מותאמים אישית</string>
     <string name="complication_cwf_ambient_status">סטטוס במצב תמיד־פעיל – פני שעון מותאמים אישית</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_cwf_lower">רקע של פני שעון מותאמים אישית</string>
@@ -273,14 +273,14 @@
     <string name="complication_uploader_phone_battery">סוללת המעלה/הטלפון</string>
     <string name="running_mode_resume">חידוש הלולאה</string>
     <string name="running_mode_reconnect">חיבור המשאבה מחדש</string>
-    <string name="label_running_mode_title">מצב פעולה</string>
+    <string name="label_running_mode_title">מצב הפעלה</string>
     <string name="label_bg_graph_tile">גרף סוכר</string>
     <string name="tile_tap_action">פעולת הקשה</string>
     <string name="tile_graph_time_range">טווח זמן</string>
     <string name="tile_tap_bg_graph">גרף סוכר</string>
     <string name="tile_tap_main_menu">תפריט ראשי</string>
     <string name="tile_tap_loop_status">סטטוס הלולאה</string>
-    <string name="action_running_mode_selected">התבקש מצב פעולה</string>
+    <string name="action_running_mode_selected">התבקש מצב הפעלה</string>
     <string name="title_activity_disconnect_pump">ניתוק המשאבה</string>
     <string name="title_activity_suspend_loop">השהיית הלולאה</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d גר׳</string>
