@@ -19,7 +19,6 @@
     <string name="combov2_error_10">储液器错误。</string>
     <string name="combov2_error_11">输液器未预充</string>
     <string name="combov2_extended_bolus_not_supported">不支持扩展大剂量</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">与泵配对</string>
     <string name="combov2_unpair_pump_title">与泵取消配对</string>
     <string name="combov2_driver_state_label">驱动状态</string>
@@ -31,12 +30,6 @@
 2. 检查是否已有设备显示为已配对；若有，请前往\"删除设备\"泵界面删除/取消配对该设备\n
 3. 前往\"添加设备\"泵界面，并在泵上启动配对\n
 4. 点击下方的“开始配对”按钮以在 AndroidAPS 中启动配对\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">过了一会儿，手机名称会显示在泵的屏幕上；按下 CHECK 键确认。\n\n
-配对成功后，在泵上确认配对完成，并通过按下 CHECK 键两次返回主屏幕。\n\n
-如果超过~5 分钟仍无法建立连接：\n\n
-1. 按下返回键或\"取消配对\"按钮\n
-2. 在 Combo 上取消配对（同时按下 UP 和 MENU 以取消配对）\n
-3. 再试一次配对</string>
     <string name="combov2_enter_pin">输入PIN码</string>
     <string name="combov2_cancel_pairing">取消配对</string>
     <string name="combov2_confirm_cancel_pairing_message">您真的想要取消配对吗？</string>
@@ -106,7 +99,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">忽略冗余的 100% TBR 请求</string>
     <string name="combov2_hit_unexpected_tbr_limit">调整 TBR 时遇到意外限制：目标百分比为 %1$d%%，达到 %2$d%% 的限制</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基础胰岛素输注率为零，则无法设置绝对 TBR</string>
-    <string name="combov2_unpair_pump_summary">将 AndroidAPS 和 Android 从当前配对的 Accu-Chek Combo 泵中解除配对</string>
     <string name="combov2_unknown_tbr_detected">检测到未知的 TBR 并停止；百分比：%1$d%%；剩余时长：%2$s</string>
     <string name="combov2_connection_error">连接错误:%1$s</string>
     <string name="combov2_short_status_alert">警告: %s</string>
