@@ -26,22 +26,21 @@
     <string name="bluetooth_address">Bluetooth adresse</string>
     <string name="combov2_start_pairing">Start sammenkobling</string>
     <string name="combov2_pairing_in_progress">Combo-sammenkobling pågår</string>
-    <string name="combov2_pairing_start_steps">Trinn for å etablere sammenkobling med Combo:\n\n
-1. På pumpen, navigerer til Bluetooth innstillingene\n
-2. Kontroller om pumpen allerede vises som tilkoblet. Hvis ja, gå til pumpeskjermen \"Slett enhet\" for å slette/frakoble pumpen\n
-3. På pumpen, naviger til \"Legg til enhet\" og start sammenkobling av pumpen\n
-4. Klikk på \"Start paring\" knappen under for å starte oppkobling i AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Etter en stund vil telefonens navn vises på pumpens skjerm; trykk CHECK for å bekrefte.\n\n&#13;
-Når sammenkoblingen er fullført, bekreft den ferdige sammenkoblingen på pumpen og gå tilbake på hovedskjermen på pumpen ved å trykke på CHECK-knappen to ganger.\n\n&#13;
-Hvis ingen sammenkobling etableres etter mer enn ~5 minutter:\n\n&#13;
-1. Trykk Tilbake eller \"Avbryt paring\" knappen\n&#13;
-2. Avbryt sammenkoblingen på Combo (trykk både UP og MENU&#13;
-knappene samtidig for å avbryte parringen)\n&#13;
-3. Prøv å sammenkoble igjen</string>
+    <string name="combov2_pairing_start_steps">Trinn for å koble Combo sammen med AAPS:\n\n
+1. Gå til Bluetooth-innstillingene på pumpen\n
+2. Sjekk om en enhet allerede vises som sammenkoblet. I så fall går du til pumpeskjermen «Slett enhet» for å slette den\n
+3. Gå til pumpeskjermen «Legg til enhet» og start sammenkoblingen på pumpen\n
+4. Trykk på knappen «Start sammenkobling» nedenfor for å starte sammenkoblingen i AAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Etter en stund vil telefonens navn vises på pumpens skjerm; trykk CHECK for å bekrefte.\n\n
+Når sammenkoblingen er fullført, bekreft den ferdige sammenkoblingen på pumpen og gå tilbake til hovedskjermen på pumpen ved å trykke på CHECK-knappen to ganger.\n\n
+Hvis ingen forbindelse er opprettet etter mer enn ~5 minutter:\n\n
+1. Trykk Tilbake eller knappen «Avbryt sammenkobling»\n
+2. Avbryt sammenkoblingen på Combo (trykk både UP og MENU samtidig for å avbryte sammenkoblingen)\n
+3. Prøv å koble sammen igjen</string>
     <string name="combov2_enter_pin">Skriv inn PIN</string>
     <string name="combov2_cancel_pairing">Avbryt sammenkobling</string>
-    <string name="combov2_confirm_cancel_pairing_message">Vil du virkelig avbryte paringen?</string>
-    <string name="combov2_confirm_unpair_message">Vil du virkelig oppheve paringen av pumpen?</string>
+    <string name="combov2_confirm_cancel_pairing_message">Vil du virkelig avbryte sammenkoblingen?</string>
+    <string name="combov2_confirm_unpair_message">Vil du virkelig oppheve sammenkoblingen med pumpen?</string>
     <string name="combov2_pin_hint">10-sifret PIN</string>
     <string name="combov2_pairing_finished_successfully">Vellykket sammenkobling med Combo</string>
     <string name="combov2_pairing_cancelled">Sammenkobling med Combo avbrutt av brukeren</string>
