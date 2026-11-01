@@ -216,7 +216,7 @@
     <string name="pref_title_logs_amount">Numărul de jurnale de trimis</string>
     <!-- IntKey: Alert preferences -->
     <string name="pref_title_stale_data_threshold">Prag pentru date învechite</string>
-    <string name="pref_title_pump_unreachable_threshold">Prag pompă inaccesibilă</string>
+    <string name="pref_title_pump_unreachable_threshold">Prag pompă indisponibilă</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Număr implicit de zile pentru ajustare</string>
