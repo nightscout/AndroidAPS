@@ -173,7 +173,7 @@
     <string name="wear_action_tempt_range_error">Geçersiz aralık: Düşük hedef (%1$s), Yüksek hedeften (%2$s) büyük olamaz</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
-    <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
+    <string name="wear_custom_watchface_settings">Özel saat arayüzü ayarları</string>
     <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Yükleniyor…</string>
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Saatte Komplikasyonlu saat arayüzü gösteriliyor. %1$s öğesini saatte görmek için Özel saat arayüzünü seçin.</string>
@@ -187,7 +187,7 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/tr/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
-    <string name="wear_import_custom_watchface_title">Özel Saat arayüzü seçin</string>
+    <string name="wear_import_custom_watchface_title">Özel saat arayüzü seçin</string>
     <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
     <string name="cwf_infos_pref_required">Saat arayüzü için gerekli tercihlerin listesi</string>
     <string name="cwf_infos_view_title">Saat arayüzüne dahil edilen alanların listesi</string>
