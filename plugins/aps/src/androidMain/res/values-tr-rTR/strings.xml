@@ -14,6 +14,7 @@
     <string name="description_ama">2017\'de algoritmanın durumu</string>
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
+    <string name="description_auto_isf">OtoİDF eklentilerine sahip ileri düzey kullanıcılara yönelik deneysel algoritma</string>
     <string name="openapsma_last_run_label">Son Çalıştırma</string>
     <string name="openapsma_input_parameters_label">Girdi Parametreleri</string>
     <string name="openapsma_glucose_status_label">Glikoz durumu</string>
@@ -37,6 +38,7 @@
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sert sınır</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Tepe</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus iletildi, SMB atlandı</string>
     <string name="pump_not_initialized">Pompa başlatılmadı!</string>
@@ -48,6 +50,9 @@
     <string name="ignore30m">30dk yoksay</string>
     <string name="carbs_suggestion">Karbonhidrat Önerisi</string>
     <string name="open_loop_new_suggestion">Yeni öneri mevcut</string>
+    <string name="loop_notification_channel_name">Döngü önerileri</string>
+    <string name="loop_notification_channel_silent_name">Rahatsız Etmeyin modundayken döngü önerileri</string>
+    <string name="open_loop_suggestion_too_old">Bu öneri çok eski. Pompaya hiçbir şey gönderilmedi. Bir sonrakini bekleyin.</string>
     <string name="basal_set_correctly">Bazal doğru ayarlanmış</string>
     <string name="last_run_label">Son Çalıştırma</string>
     <string name="loop_aps_label">APS (YPS)</string>

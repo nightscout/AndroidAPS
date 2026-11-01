@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">DynamicISF justeringsfaktor %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="openapsma_disabled">Insticksprogram inaktiverat</string>
     <string name="openapsma_no_glucose_data">Ingen BG-data tillgänglig</string>
     <string name="openaps_no_as_data">Ingen data tillgänglig för autosens</string>
@@ -49,6 +51,8 @@
     <string name="carbs_suggestion">KH-förslag</string>
     <string name="open_loop_new_suggestion">Ny rekommendation tillgänglig</string>
     <string name="loop_notification_channel_name">Loopförslag</string>
+    <string name="loop_notification_channel_silent_name">Loopförslag under Stör ej</string>
+    <string name="open_loop_suggestion_too_old">Förslaget var för gammalt. Ingenting skickades till pumpen. Vänta tills nästa dyker upp.</string>
     <string name="basal_set_correctly">Basal justerad korrekt</string>
     <string name="last_run_label">Kördes senast</string>
     <string name="loop_aps_label">APS</string>
@@ -60,8 +64,10 @@
     <string name="loop_smb_request_time_label">Tid för SMB-begäran</string>
     <string name="loop_smb_execution_time_label">SMB körtid</string>
     <string name="loop_smb_set_by_pump_label">SMB påbörjad av pump</string>
+    <string name="fallback_smb_no_tdd">Faller tillbaka till SMB. Inte tillräckligt med TDD-data.</string>
     <string name="fallback_to_isf_no_tdd">Faller tillbaka till profilens känslighet. Inte tillräckligt med data. Anledning: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Hjälp för potentiella justeringar av profil (ISF, KH-kvoter och basaldoser)</string>
     <string name="autotune_default_tune_days_title">Antal dagar med data</string>
     <string name="autotune_tunedprofile_name">Justerad</string>
     <string name="autotune_profile">Profil :</string>
@@ -88,5 +94,8 @@
     <string name="autotune_update_local_profile_message">Uppdatera %1$s med Autotune-profil?</string>
     <string name="autotune_revert_local_profile_message">Återställ %1$s med angiven profil?</string>
     <string name="autotune_profile_invalid">Felaktig profil</string>
+    <string name="pump_disconnected">Pump frånkopplad</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">AutoISF-inställningar</string>
+    <string name="smb_delivery_settings_title">SMB leveransinställningar</string>
 </resources>

@@ -4,6 +4,7 @@
     <string name="dyn_isf_adjust_title" formatted="false">DynamicISF 조정 계수 %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">동적 ISF</string>
+    <string name="openaps_auto_isf">자동 ISF</string>
     <string name="openapsma_disabled">플러그인이 비활성화되어 있습니다</string>
     <string name="openapsma_no_glucose_data">혈당 데이터 없음</string>
     <string name="openaps_no_as_data">사용할 수 있는 Autosens 데이터가 없습니다.</string>
@@ -14,7 +15,7 @@
     <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
     <string name="description_smb_dynamic_isf">동적/자동 ISF를 사용하는 고급 사용자를 위한 최신 알고리즘</string>
     <string name="description_auto_isf">AutoISF 확장 기능이 있는 고급 사용자용 실험적 알고리즘</string>
-    <string name="openapsma_last_run_label">최근 실행</string>
+    <string name="openapsma_last_run_label">마지막 실행</string>
     <string name="openapsma_input_parameters_label">입력 변수</string>
     <string name="openapsma_glucose_status_label">혈당 상태</string>
     <string name="openapsma_current_temp_label">현재 임시 기저</string>

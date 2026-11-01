@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
+    <string name="smb_being_delivered">SMB מוזרק כעת. נא לנסות שוב לאחר סיום ההזרקה.</string>
     <string name="basal_value_below_minimum">ערך הבזאלי מתחת למינימום. הפרופיל לא הוגדר!</string>
-    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">הפרופיל הבזאלי במשאבה עודכן. המשאבה מעגלת את הבזאלי לצעד שלה: היא נותנת %1$s ליום במקום %2$s.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">פרופיל הבזאלי במשאבה עודכן. המשאבה מעגלת את הבזאלי לצעד שלה: היא נותנת %1$s ליום במקום %2$s.</string>
     <string name="basal_reported_far_from_profile">המשאבה מדווחת על בזאלי רחוק מהפרופיל. AAPS שומר על הבזאלי של הפרופיל. יש לבדוק את המינונים הבזאליים במשאבה.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">פחמימות</string>
@@ -20,10 +21,23 @@
     <string name="permission_notifications_title">התראות</string>
     <string name="permission_notifications_description">נדרש כדי להציג התראות, אזעקות ועדכוני מצב משאבה</string>
     <string name="permission_schedule_exact_alarm_title">שעונים מעוררים ותזכורות</string>
+    <string name="permission_schedule_exact_alarm_description">נדרש כדי שהתראות יוכלו להדליק את המסך כאשר AAPS פועל ברקע, וכדי שתזכורות יצלצלו בזמן</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">התראות AAPS</string>
+    <string name="alarm_channel_standard">התראה רגילה</string>
+    <string name="alarm_channel_bolus_error">שגיאת בולוס</string>
+    <string name="alarm_channel_error">שגיאה כללית</string>
+    <string name="alarm_channel_urgent">התראה דחופה</string>
     <string name="alarm_channel_eat_reminder">זמן לאכול</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (עוקף מצב נא לא להפריע)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (מכבד מצב נא לא להפריע)</string>
+    <string name="alarm_channel_silent_urgent">התראה דחופה (מצב הגברת עוצמת קול הדרגתית)</string>
+    <string name="alarm_channel_silent">התראה (מצב הגברת עוצמת קול הדרגתית)</string>
+    <string name="alarm_channel_silent_description">בשימוש כאשר האפשרות \'הגברת עוצמת הקול של ההתראות באופן הדרגתי\' מופעלת. מסך ההתראה משמיע את הצליל.</string>
+    <string name="ongoing_channel_name">מצב שוטף</string>
     <string name="eat_reminder_channel">ספירה לאחור של תזכורת האכילה</string>
     <string name="eat_reminder_channel_description">מציג את הזמן שנותר עד שיגיע הזמן לאכול. אין צליל; ההתראה בסוף משמיעה צליל.</string>
+    <string name="notifications_channel_name">הודעות AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

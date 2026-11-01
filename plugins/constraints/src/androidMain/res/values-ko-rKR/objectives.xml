@@ -29,7 +29,7 @@
     <string name="objectives_smb_gate">SMB가 잘 작동하려면 위키를 읽고 maxIOB를 올려야 합니다! 좋은 시작 값은 maxIOB = 평균 식사 볼러스 + 3 x 하루 최대 기저입니다. 간단 모드에서는 이 값이 위키의 권장 사항에 따라 계산되므로 설정할 필요가 없습니다.</string>
     <string name="objectives_smb_learned">SMB 사용이 목표입니다. Oref1 알고리즘은 볼러스에도 도움이 되도록 설계되었습니다. 음식에 대해 볼러스를 전부 주입하지 말고 일부만 주입한 뒤, 필요하면 나머지는 AAPS가 주입하게 하십시오. 이렇게 하면 탄수화물을 잘못 계산했을 때 여유가 더 생깁니다. 볼러스 계산기 결과의 백분율을 설정하여 볼러스 양을 줄일 수 있다는 것을 알고 계셨습니까?</string>
     <string name="objectives_auto_objective">자동화 사용</string>
-    <string name="objectives_auto_gate">자동화가 작동하는 방식에 대한 문서를 읽으십시오. 첫 번째 간단한 규칙을 설정하십시오. 실제 동작 대신 AAPS가 알림만 표시하게 하십시오. 자동화가 올바른 시간에 실행된다고 확신하면 알림을 실제 동작으로 바꾸십시오. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_gate">자동화가 작동하는 방식에 대한 문서를 읽으십시오. 첫 번째 간단한 규칙을 설정하십시오. 실제 동작 대신 AAPS가 알림만 표시하게 하십시오. 자동화가 올바른 시간에 실행된다고 확신하면 알림을 실제 동작으로 바꾸십시오. (https://wiki.aaps.app/ko/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">자동화는 좋은 도우미가 될 수도 있지만 나쁜 주인이 될 수도 있습니다. 과도하게 사용하지 마십시오. 기본 알고리즘을 대신하려고 하지 마십시오. 사용하기 전에 메시지만으로 규칙을 테스트하십시오. 결과는 규칙의 순서에 따라 달라집니다.</string>
     <string name="objectives_bgavailableinns">NS 또는 Tidepool에서 혈당 사용 가능</string>
     <string name="objectives_pumpstatusavailableinns">NS 또는 Tidepool에서 펌프 상태 사용 가능</string>
@@ -86,6 +86,7 @@
     <string name="failedretrievetime">시간을 가져오지 못했습니다</string>
     <string name="requirementnotmet">목표 요구 사항이 충족되지 않음</string>
     <string name="what_i_ve_learned">내가 배운 것들:</string>
+    <string name="verify_master_password">마스터 암호 확인</string>
     <string name="objectives_collapse">접기</string>
     <string name="objectives_expand">펼치기</string>
     <string name="objectives_no_learned">이 목표에 기록된 학습 내용이 없습니다.</string>

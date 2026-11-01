@@ -14,6 +14,7 @@
     <string name="cwf_comment_cob2_ext">ערך פחמימות פעילות (COB) (מ־AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">דלתא קצרת טווח של הסוכר (מ־AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">דלתא ממוצעת של הסוכר (15 דקות) (מ־AAPSClient או AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">TempTarget או TempTargetLow - TempTargetHigh (מ־AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">כמות האינסולין במכל (מ־AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">סוללת הלולאה הכוללת (%) (מ־AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">בזאלי (מ-AAPSClient או AAPSClient2)</string>

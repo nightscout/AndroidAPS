@@ -60,10 +60,10 @@
     <string name="pref_wizard_in_menu">Skaičiuotuvas meniu</string>
     <string name="pref_prime_in_menu">Užpildyti per meniu</string>
     <string name="pref_single_target">Pavienis tikslas</string>
-    <string name="pref_wizard_percentage">Skaičiuotuvas proc.</string>
+    <string name="pref_wizard_percentage">Skaičiuotuvo procentas</string>
     <string name="pref_wizard_carbs_type">Skaičiuotuvo maisto tipas</string>
     <string name="pref_wizard_carb_time">Skaičiuotuvo AV laikas</string>
-    <string name="pref_complication_tap_action">Elementų skirtuko veiksmai</string>
+    <string name="pref_complication_tap_action">Veiksmas palietus elementą</string>
     <string name="pref_complication_bg_graph_hours">KG grafiko laiko intervalas</string>
     <string name="duration_1_hour">1 val.</string>
     <string name="duration_3_hours">3 val.</string>
@@ -120,7 +120,7 @@
     <string name="action_duration_hours_minutes_format">%1$d val. %2$d min</string>
     <string name="action_minutes_format">%1$d min</string>
     <string name="ecarbs_start_format">%1$d min</string>
-    <string name="action_confirm_timeshift">Laiko poslinkis: %1$s</string>
+    <string name="action_confirm_timeshift">Laiko perstūmimas: %1$s</string>
     <string name="action_insulin">Insulinas</string>
     <string name="action_insulin_units">Insulinas [V]</string>
     <string name="action_preset_1">Ruošinys 1</string>
@@ -128,7 +128,7 @@
     <string name="action_preset_3">Ruošinys 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
-    <string name="action_timeshift_hours">Laiko poslinkis\n[val.]</string>
+    <string name="action_timeshift_hours">Laiko perstūmimas\n[val.]</string>
     <string name="bolus_progress">Leidžiamas bolusas</string>
     <string name="press_to_cancel">paspauskite, kad atšauktumėte</string>
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>
@@ -179,7 +179,7 @@
     <string name="cwf_complication_layout">Elementų išdėstymas</string>
     <string name="cwf_complication_layout_description">Iš įkelto pasirinktinio ciferblato paimtų elementų vieta ir dydis.</string>
     <string name="pref_include_external">Įtraukti išorinius rodinius į šabloną</string>
-    <string name="pref_switch_external">Įjungti išorinius duomenis ciferblate</string>
+    <string name="pref_switch_external">Sukeisti išorinius duomenis ciferblate</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
     <string name="digitalstyle_pref_your_style">Jūsų stilius</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>

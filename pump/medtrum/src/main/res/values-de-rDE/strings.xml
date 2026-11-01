@@ -11,6 +11,7 @@
     <string name="pump_is_suspended_day_max">Pumpe wird wegen Überschreitung des täglichen Höchstinsulins ausgesetzt</string>
     <string name="patch_not_active">Patch nicht aktiviert</string>
     <string name="pump_setting_failed">Einstellung der Benutzereinstellungen auf Pumpe fehlgeschlagen!</string>
+    <string name="pump_sync_error">Fehler beim Synchronisieren des Verlaufs der Pumpe, ein Datensatz wurde übersprungen. Überprüfen Sie die Behandlungstabelle, um zu überprüfen, ob der Bolus korrekt synchronisiert wurde. Schlummern und wenn der Fehler erneut auftritt, den Patch oder die Pumpenbasis austauschen.</string>
     <string name="patch_reset_after_primed_error">Der Patch wurde von selbst neu gestartet und hat seine Sitzung verloren. Er kann kein Insulin mehr liefern. Entferne den Patch und starte einen neuen.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktiver Bolus</string>

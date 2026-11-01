@@ -9,9 +9,11 @@
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_expiration_time">Utgångstid</string>
+    <string name="eopatch_not_activated">Inte aktiverad</string>
     <string name="eopatch_base_basal_rate">Profilens basaldos</string>
     <string name="eopatch_temp_basal_rate">Tillfällig basaldos</string>
     <string name="invalid_basal_rate">Profilens basaldos är mindre än 0,05 U/h. EOPatch har en lägsta basaldos på 0,05 U. Försök igen efter att profilen har ställts in till mer än så.</string>
+    <string name="no_profile_selected_try_again">Ingen profil vald. Vänligen välj en profil och försök igen.</string>
     <string name="symbol_day">dag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>

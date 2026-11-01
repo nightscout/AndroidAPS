@@ -91,10 +91,17 @@
     <string name="diacon_g8_blockreplaceneedle">החלפת מחט</string>
     <string name="diacon_g8_blockreplacesyringe">החלפת מכל</string>
     <string name="diaconn_g8_logalarmblock">חסימת הזרקה (%s)</string>
+    <string name="diaconn_g8_lgorelease">סיום השהיית הבזאלי (%s)</string>
     <string name="diaconn_g8_lgosuspend">השהיית בזאלי (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">החלק הרגיל של הבולוס המשולב הושלם בהצלחה</string>
+    <string name="diaconn_g8_logdualsquarestart">התחלת החלק הממושך של הבולוס המשולב</string>
+    <string name="diaconn_g8_logdualsquaresuccess">החלק הממושך של הבולוס המשולב הושלם בהצלחה</string>
+    <string name="diaconn_g8_logsquarestart">התחלת בולוס ממושך</string>
+    <string name="diaconn_g8_logsquaresuccess">הבולוס הממושך הושלם בהצלחה</string>
     <string name="diaconn_g8_logmealfail">בולוס ארוחה נכשל</string>
     <string name="diaconn_g8_logsuccess">הצלחה</string>
     <string name="diaconn_g8_logmealsuccess">בולוס ארוחה הצליח</string>
+    <string name="diaconn_g8_errorcode_1">לא ניתן לבצע שאילתה עקב שגיאת CRC בחבילת הנתונים.</string>
     <string name="diaconn_g8_errorcode_2">לא ניתן להגדיר - שגיאת פרמטר קלט.</string>
     <string name="diaconn_g8_errorcode_3">לא ניתן להגדיר - שגיאה במפרט הפרוטוקול.</string>
     <string name="diaconn_g8_errorcode_4">הארוחה נרשמה, לא ניתן להזריק.</string>

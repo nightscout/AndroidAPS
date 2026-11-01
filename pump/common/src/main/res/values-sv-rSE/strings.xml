@@ -11,9 +11,24 @@
     <string name="pump_status_suspended">Pausad</string>
     <string name="pump_status_executing_command">Kör kommando</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Hämta inställningar</string>
+    <string name="pump_cmd_desc_get_firmware">Hämta pumpens firmware</string>
+    <string name="pump_cmd_desc_get_basal_profile">Hämta basalprofil</string>
+    <string name="pump_cmd_desc_set_basal_profile">Ställ in basalprofil</string>
     <string name="pump_cmd_desc_get_tbr">Hämta tillfällig basal</string>
     <string name="pump_cmd_desc_cancel_tbr">Avbryt tillfällig basal</string>
     <string name="pump_cmd_desc_set_tbr">Ställ in tillfällig basal</string>
+    <string name="pump_cmd_desc_set_bolus">Ställ in bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Hämta bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Avbryt bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Hämta återstående insulinmängd</string>
+    <string name="pump_cmd_desc_get_battery_status">Hämta batteristatus</string>
+    <string name="pump_cmd_desc_get_time">Hämta tid</string>
+    <string name="pump_cmd_desc_set_time">Ställ in tid</string>
+    <string name="pump_cmd_desc_get_pump_status">Hämta pumpstatus</string>
+    <string name="pump_cmd_desc_get_history">Hämta historik</string>
+    <string name="pump_cmd_desc_get_history_params">Hämta historik %s</string>
+    <string name="pump_cmd_desc_custom">Egendefinierat kommando</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basaldoser</string>
     <string name="history_group_configuration">Konfigurationer</string>
@@ -35,6 +50,7 @@
     <string name="time_last_3_hours">Senaste 3 timmarna</string>
     <string name="time_last_6_hours">Senaste 6 timmarna</string>
     <string name="time_last_12_hours">Senaste 12 timmarna</string>
+    <string name="time_last_24_hours">Senaste 24 timmarna</string>
     <string name="time_last_2_days">Senaste 2 dagarna</string>
     <string name="time_last_4_days">Senaste 4 dagarna</string>
     <string name="time_last_week">Senaste veckan</string>

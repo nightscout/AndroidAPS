@@ -1,7 +1,9 @@
 package app.aaps.implementation.maintenance
 
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -11,6 +13,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.KeyCategory
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.ResolvedKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey
@@ -26,7 +29,9 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.implementation.maintenance.migration.FileKeyValueStore
+import app.aaps.implementation.maintenance.migration.InsulinMigration
 import app.aaps.implementation.maintenance.migration.PreferenceMigrations
+import app.aaps.implementation.maintenance.migration.ProfileDiaHarvest
 import app.aaps.implementation.sharedPreferences.PreferenceKeyResolverFactory
 import dev.zacsweers.metro.Inject
 import kotlin.math.max
@@ -67,7 +72,9 @@ class PreferenceImportApplier(
     private val config: Config,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
-    private val migrations: PreferenceMigrations
+    private val migrations: PreferenceMigrations,
+    private val insulinMigration: InsulinMigration,
+    private val insulinManager: InsulinManager
 ) {
 
     /** Works out what would change, and writes nothing. For the confirm screen. */
@@ -87,8 +94,44 @@ class PreferenceImportApplier(
      */
     suspend fun apply(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
         val migrated = FileKeyValueStore(prefs.values)
+        // Read BEFORE the migrations: `PreferenceMigrations.insulinPlugins` deletes the very names this
+        // reads. Same order as start-up, see MainApp.doMigrations.
+        val legacyInsulins = legacyInsulinsOf(migrated)
         migrations.migrate(migrated)
-        return run(migrated.asTextMap(), keepPumpSettings, write = true)
+        val outcome = run(migrated.asTextMap(), keepPumpSettings, write = true)
+        // After the write, so nothing the file carried can replace the catalogue afterwards.
+        val added = legacyInsulins.map { insulinManager.seedFromMigration(it).insulinLabel }
+        if (added.isNotEmpty()) aapsLogger.info(LTag.CORE, "Import: insulin from the v3 backup added to the list: $added")
+        return outcome.copy(importedInsulins = added)
+    }
+
+    /**
+     * The insulin a v3 (3.x) backup was using, rebuilt the same way start-up rebuilds it on a device.
+     *
+     * In v3 the insulin was a plugin selection plus the DIA of each local profile. v4 keeps both in one
+     * insulin list, and the migrations delete the old names, so without this a v3 backup imported into
+     * a new install silently kept the install's default insulin - a different curve, so different IOB.
+     * Start-up never sees the file: it reads the device's own store, which on a new install is empty.
+     *
+     * One insulin per distinct profile DIA, because v3 could run profiles with different DIAs on one
+     * insulin. A DIA is never guessed here: a file with no profile DIA gives nothing, and the default
+     * insulin stays as it was. Nothing on a client - its insulin list belongs to the master - and
+     * nothing for a v4 file, which carries the list itself.
+     */
+    private fun legacyInsulinsOf(file: KeyValueStore): List<ICfg> {
+        if (config.AAPSCLIENT || file.contains(StringNonKey.InsulinConfiguration.key)) return emptyList()
+        val harvest = insulinMigration.harvestProfileDia(file)
+        if (harvest.nameToDia.isEmpty()) return emptyList()
+        val legacy = insulinMigration.readLegacyInsulin(file)
+        return harvest.nameToDia.values.distinct().sorted().map { dia ->
+            insulinMigration.plan(recordICfg = null, legacy = legacy, harvest = ProfileDiaHarvest(mapOf(SINGLE to dia), emptyList()), activeProfileName = SINGLE).iCfg
+        }
+    }
+
+    private companion object {
+
+        /** Name for a one-entry harvest, so `ProfileDiaHarvest.diaFor` answers with exactly that DIA. */
+        const val SINGLE = "import"
     }
 
     private fun run(values: Map<String, String>, keepPumpSettings: Boolean, write: Boolean): ImportExportPrefs.ImportOutcome {

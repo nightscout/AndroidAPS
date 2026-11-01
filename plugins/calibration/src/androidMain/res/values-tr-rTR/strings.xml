@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Kalibrasyon yok</string>
     <string name="description_no_calibration">"Kalibrasyon düzeltmesi uygulanmaz. Sensör değerleri olduğu gibi kullanılır. Sensör fabrikada kalibre edilmişse ve doğru ölçüyorsa bunu kullanın."</string>
+    <string name="linear_calibration_name">Doğrusal kalibrasyon</string>
+    <string name="description_linear_calibration">"Parmak ucundan kan şekeri ölçümüyle girilen verilerden, sensöre özel doğrusal kalibrasyon düzeltmesi (eğim ve sapma değeri) hesaplanır. Yakın tarihli girişlere daha fazla ağırlık verilir. Bu düzeltme, mevcut sensör oturumu başladıktan sonra uygulanır; ilk 2 saatlik ısınma süresi hesaba dahil edilmez."</string>
     <string name="sensor_change_detected_text">Olası bir sensör değişikliği algılandı: %1$s. Yeni sensör olarak işaretlensin mi?</string>
+    <string name="sensor_change_detected_action">Sensör değişimini işaretle</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Kalibrasyonu etkinleştirmek için bir sensör değişikliği kaydı girin.</string>
+    <string name="cal_status_warmup">Sensör ısınması — %1$s sonra kalibrasyon etkinleşir.</string>
+    <string name="cal_status_need_more_entries">En az 2 parmak ucu ölçümü gerekiyor (şu anda %1$d).</string>
     <string name="cal_status_unsafe_fit">Kalibrasyon eğrisi güvenli aralığın dışında — kalibrasyon uygulanmadı.</string>
+    <string name="cal_status_applied">Kalibrasyon uygulandı.</string>
+    <string name="cal_status_applied_offset_only">Yalnızca ofset kalibrasyonu uygulandı — sensör aralığı eğim hesabı için fazla dar.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrasyon uygulandı — eğim güvenli aralıkla sınırlandırıldı. Esnetmek için daha fazla girdi ekleyin.</string>
+    <string name="cal_slope_offset">Eğim %1$.2f, orta aralık düzeltmesi %2$s</string>
+    <string name="cal_session_started">Oturum başlatıldı: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Sensör değişimini kaydet</string>
+    <string name="cal_add_calibration">Kalibrasyon ekle</string>
     <string name="cal_entries_header">Parmak ucu ölçümleri (%1$d)</string>
+    <string name="cal_no_entries">Henüz parmak ucu ölçümü yapılmadı.</string>
     <string name="cal_entry_pair">Parmak ucu %1$s → sensör %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Girdi %1$d/%2$d · %3$s · sensör %4$s → KŞ %5$s</string>
 </resources>

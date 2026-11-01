@@ -79,7 +79,7 @@
     <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_aps">APS</string>
-    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop">루프</string>
     <string name="configbuilder_sync">통신</string>
     <string name="configbuilder_general">일반</string>
     <string name="protection">보안</string>
@@ -145,7 +145,7 @@
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
-    <string name="basal_label">Basal</string>
+    <string name="basal_label">기저</string>
     <string name="target_label">목표</string>
     <string name="dia_long_label">인슐린 작용 시간</string>
     <string name="ic_long_label">인슐린 대 탄수화물 비율</string>
@@ -255,8 +255,8 @@
     <string name="site_location">부위 위치</string>
     <string name="overview_insulin_label">인슐린</string>
     <string name="stoptemptarget">임시 목표 중지</string>
-    <string name="closedloop">Closed Loop</string>
-    <string name="openloop">Open Loop</string>
+    <string name="closedloop">폐쇄 루프</string>
+    <string name="openloop">개방 루프</string>
     <string name="lowglucosesuspend">저혈당 주입 정지</string>
     <string name="pump_suspended">펌프 일시 중지됨</string>
     <string name="pump_suspend">펌프 일시 중지</string>
@@ -531,7 +531,7 @@
     <string name="glucosetype_sensor">센서</string>
     <string name="manual">수동</string>
     <string name="unknown">알 수 없음</string>
-    <string name="eatingsoon">식사직전</string>
+    <string name="eatingsoon">식사 직전</string>
     <string name="hypo">저혈당</string>
     <string name="activity">활동</string>
     <string name="wear">워치</string>
@@ -543,7 +543,7 @@
     <string name="activation">활성화</string>
     <string name="temp_target_management">임시 목표</string>
     <string name="revert_to_defaults">기본값으로 되돌리기</string>
-    <string name="loop">Loop</string>
+    <string name="loop">루프</string>
     <string name="ns">NS</string>
     <string name="location_front_right_upper_chest">오른쪽 가슴</string>
     <string name="location_front_left_upper_chest">왼쪽 가슴</string>
@@ -593,7 +593,7 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d 분 내에 %1$d g의 추가적인 탄수화물이 필요함</string>
-    <string name="basalrate">Basal</string>
+    <string name="basalrate">기저</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">총 일일 용량</string>
     <!--    Ntp-->
@@ -752,7 +752,7 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. 기저 정보가 오래되었습니다.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
-    <string name="basal">Basal</string>
+    <string name="basal">기저</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">민감도</string>
     <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens 꺼짐</string>
@@ -815,7 +815,7 @@
     <string name="child">어린이</string>
     <string name="teenage">청소년</string>
     <string name="adult">성인</string>
-    <string name="resistant_adult">인슐린 저항성을 나타내는 어른</string>
+    <string name="resistant_adult">인슐린 저항성이 있는 성인</string>
     <string name="pregnant">임신 중</string>
     <string name="patient_age_summary">안전한 제한 설정을 위해 환자 유형을 선택하십시오</string>
     <string name="max_bolus_title">최대 허용 볼러스 [U]</string>

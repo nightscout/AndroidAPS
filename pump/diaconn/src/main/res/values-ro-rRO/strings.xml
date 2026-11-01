@@ -31,7 +31,7 @@
     <string name="selectedpump">Pompa selectată</string>
     <string name="bolus_step">Pas bolus</string>
     <string name="basal_step">Pas bazală</string>
-    <string name="pairfirst">Vă rog să asociați pompa cu telefonul!</string>
+    <string name="pairfirst">Vă rugăm să asociați pompa cu telefonul!</string>
     <string name="processinghistory">Procesare eveniment</string>
     <string name="diaconn_g8_history_tempbasal">Bazală temporară</string>
     <string name="diaconng8_pump_settings">Setări pompă Diaconn</string>

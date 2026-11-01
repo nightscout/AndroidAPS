@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">Max basal på pumpen (U/h)</string>
     <string name="medtronic_custom_action_wake_and_tune">Väck och finjustera frekvens</string>
     <string name="medtronic_custom_action_clear_bolus_block">Ta bort bolusblockering</string>
+    <string name="medtronic_custom_action_reset_rileylink">Återställ RileyLink</string>
     <string name="medtronic_pump_battery_select">Batterityp (Power View)</string>
     <string name="medtronic_pump_battery_no">Ej vald (enkel vy)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaliskt (utökad vy)</string>
@@ -19,12 +20,22 @@
     <string name="medtronic_pump_battery_nimh">NiMH (utökad vy)</string>
     <!-- Pump type entries -->
     <string name="medtronic_pump_type_unsupported">Annan (stöds inte)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A eller lägre)</string>
     <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A eller lägre)</string>
     <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
     <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
     <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
     <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 sek</string>
+    <string name="medtronic_bolus_delay_10s">10 sek</string>
+    <string name="medtronic_bolus_delay_15s">15 sek</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink-batteri</string>
     <!-- MDT Errors -->

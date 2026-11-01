@@ -232,6 +232,7 @@
     <string name="complication_br">Basalrate</string>
     <string name="complication_target">Ziel</string>
     <string name="running_mode_reconnect">Pumpe erneut verbinden</string>
+    <string name="label_running_mode_title">AAPS-Modus</string>
     <string name="label_bg_graph_tile">Blutzucker-Verlauf</string>
     <string name="tile_graph_time_range">Zeitraum</string>
     <string name="tile_tap_bg_graph">Blutzucker-Verlauf</string>

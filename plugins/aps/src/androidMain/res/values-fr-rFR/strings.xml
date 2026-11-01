@@ -51,6 +51,7 @@
     <string name="carbs_suggestion">Suggestion de glucides</string>
     <string name="open_loop_new_suggestion">Nouvelle recommendation disponible</string>
     <string name="loop_notification_channel_name">Suggestions de la boucle</string>
+    <string name="loop_notification_channel_silent_name">Suggestions de la boucle pendant le mode Ne pas déranger</string>
     <string name="open_loop_suggestion_too_old">Cette suggestion est trop ancienne. Rien n\'a été envoyé à la pompe. Attendez la suivante.</string>
     <string name="basal_set_correctly">Basal configuré correctement</string>
     <string name="last_run_label">Dernière exécution</string>

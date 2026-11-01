@@ -27,7 +27,7 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
     <string name="omnipod_common_error_pod_suspended">Pod suspended</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Failed to play test beep</string>
-    <string name="omnipod_common_error_time_out_of_sync">The time on the Pod is out of sync. Please update the time in the Omnipod tab.</string>
+    <string name="omnipod_common_error_time_out_of_sync">The time on the Pod is out of sync. Please update the time on the pump screen.</string>
     <string name="omnipod_common_error_unexpected_exception">An unexpected error occurred. Please report! (%1$s: %2$s).</string>
 
     <!-- Omnipod - Confirmation -->
@@ -88,7 +88,7 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal beeps enabled</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB beeps enabled</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR beeps enabled</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Show Suspend Delivery button in Omnipod tab</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Show Suspend Delivery button on the pump screen</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Time zone detection enabled</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Expiration reminder enabled</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">When enabled the pod will beep when the specified time is reached</string>

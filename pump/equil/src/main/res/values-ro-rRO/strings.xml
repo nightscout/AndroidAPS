@@ -136,7 +136,7 @@
     <string name="equil_device_unpaired">Dispozitiv dezasociat</string>
     <string name="equil_assemble">Vă rugăm să asamblați pompa, rezervorul umplut și bateria încărcată</string>
     <string name="equil_pair_password_title">Introduceți parola pentru %1$s</string>
-    <string name="equil_insert">Vă rog să amorsați rezervorul până când se vede o picătură de insulină în vârful acului</string>
+    <string name="equil_insert">Vă rugăm să amorsați rezervorul până când se vede o picătură de insulină în vârful acului</string>
     <string name="equil_insert2">Pompa nu trebuie să fie pusă pe baza pompei.</string>
     <string name="equil_attach">Vă rugăm să atașați pompa de baza ei</string>
     <string name="equil_hint2">Amorsați canula</string>

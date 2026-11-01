@@ -14,4 +14,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngünün ne yaptığına dair kısa bir genel bakış içeren sürekli bir bildirim gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="notification_iob_short">%1$.1fÜ</string>
 </resources>

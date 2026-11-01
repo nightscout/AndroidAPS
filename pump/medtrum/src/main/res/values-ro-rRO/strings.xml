@@ -85,7 +85,7 @@
     <string name="press_next">Apăsați <b>Următor</b> pentru a continua.</string>
     <string name="press_next_to_start_activation">Apăsați <b>Următor</b> pentru a începe activarea.</string>
     <string name="remove_safety_lock">Scoateți siguranța. Atașați pompa pe corp. Apăsați butonul acului.</string>
-    <string name="activating_pump">Se activează pompa și se setează rata bazală inițială. Vă rog așteptați.</string>
+    <string name="activating_pump">Se activează pompa și se setează rata bazală inițială. Vă rugăm să așteptați.</string>
     <string name="activating_complete">Plasture nou activat. %.2f unități rămase.</string>
     <string name="can_export_settings">Puteți exporta setările pentru a putea recupera această sesiune de plasture mai târziu.</string>
     <string name="press_OK_to_return">Apăsați <b>OK</b> pentru a reveni la ecranul principal.</string>
@@ -93,14 +93,14 @@
     <string name="cancel_sure">Sigur doriți să anulați activarea?</string>
     <string name="medtrum_deactivate_pump_confirm">Sunteți sigur? Această acțiune nu este reversibilă!!</string>
     <string name="press_next_or_cancel">Apăsați <b>Următor</b> pentru a dezactiva sau <b>Renunțați</b> pentru a reveni la ecranul principal.</string>
-    <string name="deactivating_pump">Se dezactivează plasturele. Vă rog așteptați.</string>
+    <string name="deactivating_pump">Se dezactivează plasturele. Vă rugăm să așteptați.</string>
     <string name="deactivating_error">Dezactivarea nu a reușit, apăsați <b>Eliminați</b> pentru a uita plasturele.</string>
     <string name="retract_needle">Retrageți acul. Îndepărtați plasturele de pe corp.</string>
     <string name="remove_base_discard_patch">Îndepărtați baza pompei și înlăturați plasturele folosit în mod corespunzător.</string>
     <string name="press_next_or_OK">Apăsați <b>OK</b> pentru a reveni la ecranul principal. Apăsați <b>Următor</b> pentru a începe activarea unui nou plasture.</string>
     <string name="activation_in_progress">Oops! Ceva nu a funcționat, se pare că există deja o activare în desfășurare.</string>
     <string name="press_retry_or_discard">Apăsați <b>Următor</b> pentru a relua activarea sau <b>Eliminați</b> pentru a reseta starea activării.</string>
-    <string name="reading_activation_status">Vă rog așteptați. Se citește starea de activare din pompă.</string>
+    <string name="reading_activation_status">Vă rugăm să așteptați. Se citește starea de activare din pompă.</string>
     <!-- settings-->
     <string name="alarm_setting_title">Setări alarmă</string>
     <string name="alarm_setting_summary">Selectați setările preferate pentru alarma pompei.</string>

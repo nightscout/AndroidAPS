@@ -167,7 +167,7 @@
     <string name="slowabsorptiondetected_plain">!!!!! Slow carbs absorption detected: %1$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
-    <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="advisoralarm">Run alarm when it is time to eat</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>

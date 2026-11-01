@@ -67,7 +67,13 @@ fun ImportSettingsScreen(
     viewModel: ImportViewModel,
     prefFileList: PrefsFileInfo,
     rxBus: RxBus,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    /**
+     * Leaving after a successful apply. Separate from [onClose] (cancel, back) because the caller may have to
+     * leave more than this screen: an import started from the setup wizard replaces the wizard, so the wizard
+     * goes too.
+     */
+    onApplied: () -> Unit = onClose
 ) {
     val step by viewModel.importStep.collectAsStateWithLifecycle()
 
@@ -178,7 +184,7 @@ fun ImportSettingsScreen(
                 message = stringResource(CoreUiStrings.import_applied_message),
                 onDismiss = {
                     viewModel.finishApply()
-                    onClose()
+                    onApplied()
                 }
             )
         }

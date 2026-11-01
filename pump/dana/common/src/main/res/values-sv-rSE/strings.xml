@@ -10,8 +10,11 @@
     <string name="insulinlimitviolation">Insulingräns nådd</string>
     <string name="boluserrorcode">Begärt: %1$.2f U Levererat: %2$.2f U Felkod: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pumpen är inte förfylld</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Inte tillräckligt med insulin i reservoaren</string>
     <string name="danai2_bolus_error_easy_sleep">Easy Sleep-läget är på i pumpen</string>
     <string name="danai2_pump_check_error">Fel vid kontroll av pumpen</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Enkelt läge</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Autolås</string>
     <string name="danar_valuenotsetproperly">Misslyckades med inställning</string>
     <string name="danar_setbasalstep001">Ställ in basalsteg till 0,01 U/h</string>
     <string name="resetpairing">Återställ parkopplingen?</string>
@@ -95,6 +98,7 @@
     <string name="option_off">Av</string>
     <string name="danars_password_title">Pumplösenord (endast v1)</string>
     <string name="danar_password_title">Pumplösenord</string>
+    <string name="danar_useextended_title">Använd förlängd bolus för &gt;200%</string>
     <string name="bolus_speed_12">12 s/U</string>
     <string name="bolus_speed_30">30 s/U</string>
     <string name="bolus_speed_60">60 s/U</string>

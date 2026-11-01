@@ -5,7 +5,7 @@
     <string name="string_a004">Tıkanma\nPatch devre dışı bırakıldı ve insülin iletimi durduruldu. Patch\'i değiştirin.</string>
     <string name="string_a005">Açılışta otomatik test hatası\nPatch devre dışı bırakıldı. Şimdi Patch\'i değiştirin.</string>
     <string name="string_a007">Uygun olmayan sıcaklık\nİnsülin iletimi veya \"Patch Etkinleştir\" işlemi durduruldu. Şimdi aşırı sıcaklıktan kaçının.</string>
-    <string name="string_a016">İğne yerleştirme Hatası\nDüğme konumunu kontrol edin ve \'Yeniden Dene\'ye dokunun.</string>
+    <string name="string_a016">İğne yerleştirme Hatası\nDüğme konumunu kontrol edin ve \'Tekrar dene\'ye dokunun.</string>
     <string name="string_a018">Patch pil hatası\nPatch devre dışı bırakıldı ve\ninsülin iletimi durduruldu. Şimdi Patch\'i değiştirin.</string>
     <string name="string_a019">Patch pil hatası\nPatch devre dışı bırakıldı ve insülin iletimi durduruldu. Şimdi Patch\'i değiştirin.</string>
     <string name="string_a020">Patch etkinleştirme Hatası\n\'Patch Etkinleştir\' işleminin süresi doldu. Geçerli Patch\'i devre dışı bırakmak için \'Onayla\'ya dokunun. Şimdi Patch\'i değiştirin.</string>
@@ -23,7 +23,7 @@
     <string name="string_a117">Patch Hatası\nPatch devre dışı bırakıldı ve insülin iletimi durduruldu. Şimdi Patch\'i değiştirin.</string>
     <string name="string_a118">Patch Hatası\nPatch devre dışı bırakıldı ve insülin iletimi durduruldu. Şimdi Patch\'i değiştirin.</string>
     <string name="string_b000">Patch ömrü %s sona erecek. Patch\'i değiştirmeye hazır olun.</string>
-    <string name="string_b001">İnsülin askıya alma işleminin sonu\nİnsülin iletimini yeniden başlatmak için \'Devam Et\'e dokunun.</string>
+    <string name="string_b001">İnsülin askıya alma işleminin sonu\nİnsülin iletimini yeniden başlatmak için \'Pompayı devam ettir\'e dokunun.</string>
     <string name="string_b003">Düşük rezervuar\nPatch\'i yakında değiştirin.</string>
     <string name="string_b005">Patch çalışma ömrü doldu\nPatch\'i şimdi değiştirin.</string>
     <string name="string_b006">Patch yakında sona erecek\nPatch\'i şimdi değiştirin.</string>

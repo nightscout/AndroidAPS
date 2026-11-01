@@ -149,8 +149,8 @@
     <string name="record">הקלטה</string>
     <string name="bolus">בולוס</string>
     <string name="uel_extended_carbs">פחמימות ממושכות</string>
-    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
-    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
+    <string name="profile_low_target">היעד הנמוך של הפרופיל</string>
+    <string name="profile_high_target">היעד הגבוה של הפרופיל</string>
     <string name="profile_dia">ערך DIA של הפרופיל</string>
     <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
     <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>

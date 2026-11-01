@@ -6,6 +6,9 @@
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
     <string name="start_hypo_tt">Début Traitement Hypo</string>
     <string name="time_offset">Décalage horaire</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dj%2$dh</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dh</string>
     <!--    Widget-->
     <string name="configure">Configurer l’opacité</string>
     <string name="widget_description">Widget AAPS</string>
@@ -33,6 +36,7 @@
     <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
     <string name="agp_average">Moyenne</string>
     <string name="agp_median">Médiane</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
     <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
     <string name="agp_standard_deviation" comment="Standard deviation of glucose values">ET</string>
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>

@@ -14,7 +14,7 @@
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
     <string name="description_smb">Algoritmo più recente per utenti avanzati</string>
     <string name="description_smb_dynamic_isf">Algoritmo più recente per utenti avanzati con ISF dinamico/automatico</string>
-    <string name="description_auto_isf">Algoritmo più recente per utenti avanzati con estensione AutoISF</string>
+    <string name="description_auto_isf">Algoritmo sperimentale per utenti avanzati con estensioni AutoISF</string>
     <string name="openapsma_last_run_label">Ultima esecuzione</string>
     <string name="openapsma_input_parameters_label">Parametri di input</string>
     <string name="openapsma_glucose_status_label">Stato glicemia</string>
@@ -42,17 +42,17 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
     <string name="pump_not_initialized">Micro non inizializzato!</string>
-    <string name="zero_basal_not_set">Il micro non ha accettato la basale temporanea pari a zero. Potrebbe comunque somministrare insulina basale. Controllare il micro.</string>
+    <string name="zero_basal_not_set">Il micro non ha accettato la basale temporanea pari a zero. Potrebbe ancora erogare insulina basale. Controlla il micro.</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
     <string name="no_aps_selected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
-    <string name="ignore5m">Ignora | 5m</string>
-    <string name="ignore15m">Ignora | 15m</string>
-    <string name="ignore30m">Ignora | 30m</string>
+    <string name="ignore5m">Ignora 5m</string>
+    <string name="ignore15m">Ignora 15m</string>
+    <string name="ignore30m">Ignora 30m</string>
     <string name="carbs_suggestion">Suggerimento CHO</string>
     <string name="open_loop_new_suggestion">Nuovo suggerimento disponibile</string>
     <string name="loop_notification_channel_name">Suggerimenti Loop</string>
     <string name="loop_notification_channel_silent_name">Suggerimenti Loop durante Non Disturbare</string>
-    <string name="open_loop_suggestion_too_old">Questo suggerimento è troppo vecchio. Niente è stato inviato al micro. Attendere il prossimo.</string>
+    <string name="open_loop_suggestion_too_old">Questo suggerimento è troppo vecchio. Nulla è stato inviato al micro. Attendi il prossimo.</string>
     <string name="basal_set_correctly">Basale impostata correttamente</string>
     <string name="last_run_label">Ultima esecuzione</string>
     <string name="loop_aps_label">APS</string>

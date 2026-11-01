@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_button_activate_pod">Pod Etkinleştir</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Pod\'u Etkinleştir</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
-    <string name="omnipod_common_pod_management_button_discard_pod">Pod\'u Çıkart</string>
-    <string name="omnipod_common_pod_management_discard_pod_confirmation">Pod\'u çıkartırsanız, artık onunla iletişim kuramazsınız. Bunu yalnızca Pod ile tüm iletişim sürekli olarak başarısız olduğunda yapmalısınız. Hala Pod ile iletişim kurabiliyorsanız, lütfen <b>Pod\'u Devre Dışı Bırak</b> seçeneğini kullanın.\n\nDevam etmek istiyorsanız, lütfen Pod\'u vücudunuzdan çıkardığınızdan emin olun!</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Pod\'u Çıkar</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Pod\'u çıkarırsanız, artık onunla iletişim kuramazsınız. Bunu yalnızca Pod ile tüm iletişim sürekli olarak başarısız olduğunda yapmalısınız. Hâlâ Pod ile iletişim kurabiliyorsanız, lütfen <b>Pod\'u Devre Dışı Bırak</b> seçeneğini kullanın.\n\nDevam etmek istiyorsanız, lütfen Pod\'u vücudunuzdan çıkardığınızdan emin olun!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Test Bip Sesi Çal</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod Geçmişi</string>
     <!-- Omnipod - Error -->
@@ -47,7 +47,7 @@
     <string name="omnipod_common_overview_temp_basal_rate">Geçici Bazal Oranı</string>
     <string name="omnipod_common_overview_base_basal_rate">Bazal Oranı</string>
     <string name="omnipod_common_overview_pod_active_alerts">Etkin Pod Alarmları</string>
-    <string name="omnipod_common_overview_firmware_version">Firmware versiyonu</string>
+    <string name="omnipod_common_overview_firmware_version">Üretici yazılımı sürümü</string>
     <string name="omnipod_common_overview_time_on_pod">Pod saati</string>
     <string name="omnipod_common_uncertain">belirsiz</string>
     <!-- Omnipod - Wizard Base -->
@@ -58,7 +58,7 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Pod\'u Doldur</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Pod\'u Başlat</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Pod\'u Tak</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">İnfüzyon bölgesini hazırlayın. Pod\'un iğne kapağını ve yapışkan desteğini çıkarın ve Pod\'u infüzyon bölgesine takın.\n\nKanül dışarı çıkarsa, lütfen <b>İptal</b>\'e basın ve Pod\'unuzu atın.\n\nKanülü yerleştirmek ve bazal iletimini başlatmak için <b>İleri</b>\'ye basın.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">İnfüzyon bölgesini hazırlayın. Pod\'un iğne kapağını ve yapışkan desteğini çıkarın ve Pod\'u infüzyon bölgesine takın.\n\nKanül dışarı çıkarsa, lütfen <b>Vazgeç</b>\'e basın ve Pod\'unuzu atın.\n\nKanülü yerleştirmek ve bazal iletimini başlatmak için <b>İleri</b>\'ye basın.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text"><b>Tamam</b>\'a bastığınızda kanül yerleştirilecektir. Pod\'u infüzyon bölgenize taktığınızdan emin olun.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Kanül Yerleştir</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Başlangıç bazal programı ayarlanacak ve kanül yerleştirilecek.\n\nKanül başarıyla yerleştirildiğinde, <b>İleri</b>\'ye basabilirsiniz.</string>
@@ -75,7 +75,7 @@
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod Çıkarıldı</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Pod durumu silindi. Pod düzgün devre dışı bırakılmadığı için insülin iletimi askıya alınmadı!\n\nLütfen Pod\'u vücudunuzdan çıkarın ve geri dönüşüme atın.</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Pod\'u çıkartırsanız, artık onunla iletişim kuramazsınız. Bunu yalnızca Pod ile tüm iletişim sürekli olarak başarısız olduğunda yapmalısınız. Pod\'u çıkartmak istediğinizden emin misiniz?</string>
-    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Pod\'u Çıkart</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Pod\'u Çıkar</string>
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_bolus_beeps_enabled">Bolus bip seslerini etkinleştir</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Bazal bip seslerini etkinleştir</string>
@@ -142,7 +142,7 @@
     <string name="omnipod_common_cmd_cancel_bolus">Bolusu İptal Et</string>
     <string name="omnipod_common_cmd_set_tbr">GBO ayarla</string>
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">GBO İptal et</string>
-    <string name="omnipod_common_cmd_discard_pod">Pod\'u Çıkart</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod\'u Çıkar</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod Durumu</string>
     <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
     <string name="omnipod_common_cmd_configure_alerts">Alarmları Yapılandır</string>

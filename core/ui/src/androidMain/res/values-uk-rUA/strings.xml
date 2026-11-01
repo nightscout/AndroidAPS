@@ -1003,6 +1003,24 @@
     <string name="cta_dont_kill_my_app_info">Не закривати мій застосунок?</string>
     <string name="fabric_upload_disabled">Вивантаження журналів збоїв вимкнено!</string>
     <string name="about_link_urls">\n\nДокументація:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <plurals name="days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дні</item>
+        <item quantity="many">%1$d днів</item>
+        <item quantity="other">%1$d днів</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d година</item>
+        <item quantity="few">%1$d години</item>
+        <item quantity="many">%1$d годин</item>
+        <item quantity="other">%1$d годин</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d хвилина</item>
+        <item quantity="few">%1$d хвилини</item>
+        <item quantity="many">%1$d хвилин</item>
+        <item quantity="other">%1$d хвилин</item>
+    </plurals>
     <!--    Maintenance-->
     <string name="cleanup_db_confirm">Бажаєте очистити базу даних?\nЦе видалить відстежені зміни та історичні дані старші за 3 місяці.</string>
     <string name="cleanup_db_confirm_sync">Бажаєте очистити базу даних?\nЦе видалить відстежені зміни та історичні дані старші за 3 місяці.\nЦе значно прискорить повну синхронізацію.</string>

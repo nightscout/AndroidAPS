@@ -24,4 +24,14 @@
     <string name="password_not_changed">Lösenordet har inte ändrats</string>
     <string name="pin_not_changed">PIN-koden inte ändrad</string>
     <string name="pin_cleared">PIN-kod borttagen</string>
+    <string name="protection_password_hint">Ange lösenord här</string>
+    <string name="protection_pin_hint">Ange PIN-kod här</string>
+    <string name="auth_hint_master_password">Skriv in huvudlösenordet</string>
+    <string name="auth_hint_master_or_pin">Ange huvudlösenord eller PIN-kod</string>
+    <string name="auth_hint_master_or_password">Ange huvudlösenord eller anpassat lösenord</string>
+    <string name="use_pin_password">Använd PIN/Lösenord</string>
+    <string name="current_master_password">Nuvarande huvudlösenord</string>
+    <string name="master_password_not_set">Huvudlösenordet har inte angetts</string>
+    <string name="aaps_directory_not_selected">Katalogen för AAPS är inte vald</string>
+    <string name="aaps_directory_access_lost">Behörigheten till AAPS-katalogen är borta, så inställningar sparas inte längre till telefonen. Välj katalogen på nytt.</string>
 </resources>

@@ -66,6 +66,7 @@
     <string name="collapse">Replier</string>
     <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Terminé</string>
     <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Étendu</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Replié</string>
     <string name="no_compose_preferences">Pas de préférence disponibles pour ce plugin</string>
     <string name="confirm_password_hint">Confirmez le mot de passe</string>
     <string name="confirm_pin_hint">Confirmer le code PIN</string>
@@ -96,6 +97,8 @@
     <string name="treatments_iob_label_string">IA: </string>
     <string name="mute5min">Muet pendant 5 minutes</string>
     <string name="mute">Muet</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Arrêter l\'alarme</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Arrêter et fermer</string>
     <string name="success">Succès</string>
     <string name="advanced_settings_title">Paramètres Avancés</string>
     <string name="extended_bolus">Bolus étendu</string>
@@ -109,10 +112,13 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Objectifs</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="stop">Arrêt</string>
@@ -442,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">Terminer le scénario</string>
     <string name="clientcontrol_action_update_settings">Mettre à jour les paramètres</string>
     <string name="clientcontrol_action_deliver_bolus">Injecter bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Changer le rappel du repas</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Cet appareil n\'est pas associé à un maître.</string>
     <string name="clientcontrol_fail_not_reachable">Le maître est hors ligne.</string>
@@ -459,6 +466,8 @@
     <string name="clientcontrol_fail_cancelled">La commande a été annulée avant qu\'elle ne soit exécutée. Aucune commande n\'a été envoyée à la pompe.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus annulé. Aucune insuline n\'a été injectée.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Annulée</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Pas de SMB quand un bolus est en attente de confirmation</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Un SMB est en cours d\'injection. Vous pouvez confirmer quand il sera terminé.</string>
     <string name="clientcontrol_fail_control_disabled">La commande à distance est désactivée sur le maître.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Le rôle de ce téléphone sur le maître ne permet pas cela.</string>
     <string name="clientcontrol_fail_other_token">Le maître l\'a refusé: ce téléphone écrit sur Nightscout avec un autre jeton que le sien. Sur le maître, retirez ce téléphone et ajoutez-le à nouveau.</string>
@@ -778,6 +787,12 @@
     <string name="grant">Autoriser</string>
     <string name="set">Appliquer</string>
     <string name="wizard_set_alarm">Régler l\'alarme</string>
+    <string name="eat_reminder_title">Il est temps de manger</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Attente totale: %1$s</string>
+    <string name="eat_reminder_rung">Le temps est écoulé</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Le rappel pour manger n\'a pas pu être défini. Autorisez AAPS à définir des alarmes et des rappels dans les paramètres Android.</string>
     <string name="wizard_use_percentage">Utiliser pourcentage</string>
     <string name="wizard_include_bg">Inclure Gly</string>
     <string name="wizard_include_tt">Inclure Cible Temp</string>
@@ -847,6 +862,7 @@
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">limite de la pompe</string>
     <string name="limitingpercentrate">Limiter le pourcentage max à %1$d%% à cause de %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Le pourcentage %1$d%% recalculé en %2$s U/h avec le basal %3$s U/h actuel</string>
     <string name="itmustbepositivevalue">la valeur doit être positive</string>
     <string name="limitingbolus">Bolus limité à %1$.1f U à cause de %2$s</string>
     <!--    Dialogs-->
@@ -1136,6 +1152,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insuline Active</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insuline absolue</string>
+    <string name="graph_series_cob">Glucides actifs</string>
+    <string name="graph_series_bgi">Impact glycémique</string>
+    <string name="graph_series_deviations">Déviations</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Changement de la sensibilité</string>
+    <string name="graph_series_variable_sens">Sensibilité variable</string>
+    <string name="graph_series_deviation_slope">Pente de déviations</string>
+    <string name="graph_series_heart_rate">Fréquence Cardiaque</string>
+    <string name="graph_series_steps">Pas</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Activité</string>
+    <string name="graph_series_predictions">Prédictions</string>
     <string name="units_days">jours</string>
     <string name="units_format_days">%1$d jours</string>
     <string name="units_format_days_range">%1$d jours (%2$d - %3$d)</string>
@@ -1162,6 +1190,7 @@
     <string name="units_format_min">%1$d m</string>
     <string name="units_format_min_range">%1$d m (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d s</string>
     <string name="units_format_sec_range">%1$d s (%2$d - %3$d)</string>
@@ -1177,4 +1206,5 @@
     <string name="units_sec">s</string>
     <string name="units_years">a</string>
     <string name="prefs_range_title">Fourchette de visualisation</string>
+    <string name="secrets_not_protected">Aucun stockage de clés système n\'a été trouvé sur cet ordinateur. Les clés qui protègent vos paramètres et le jumelage avec le maître sont conservés dans les fichiers à côté des données, pour que tous ceux qui obtiennent une copie de vos fichiers les obtiennent aussi. Sous Linux, installez et lancez un trousseau de clés (par exemple GNOME Keyring ou KWallet), puis redémarrez AAPS.</string>
 </resources>

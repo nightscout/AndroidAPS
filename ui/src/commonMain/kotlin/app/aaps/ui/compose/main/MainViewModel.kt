@@ -88,6 +88,7 @@ import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
 import app.aaps.ui.compose.scenes.SceneIcons
+import app.aaps.ui.compose.scenes.revertSummaries
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import app.aaps.ui.compose.wizardDialog.showWizardBolusConfirmation
 import dev.zacsweers.metro.AppScope
@@ -969,7 +970,9 @@ class MainViewModel(
 
     private fun showSceneDeactivationConfirmation() = viewModelScope.launch {
         val activeState = activeSceneManager.getActiveState() ?: return@launch
-        val message = rh.gs(CoreUiStrings.scene_confirm_deactivate, activeState.scene.name)
+        // Same title and body as the Scenes screen: the question, then what ending the scene undoes.
+        val title = rh.gs(CoreUiStrings.scene_confirm_deactivate, activeState.scene.name)
+        val message = activeState.revertSummaries(rh).joinToString("\n") { "• $it" }
         // When the scene chains to a runnable follow-up, "Skip to <Next>" becomes the primary
         // action and "End Scene" the alternative — the chain represents the user's pre-declared
         // intent for what happens next, so it's the recommended path on early end. On master,
@@ -980,7 +983,7 @@ class MainViewModel(
         else sceneChainTargetResolver.resolveRunnableChainTarget(activeState.scene)
         _actionConfirmation.update {
             if (target != null) ActionConfirmation(
-                title = rh.gs(CoreUiStrings.scene_deactivate),
+                title = title,
                 message = message,
                 icon = sceneIcon(activeState.scene.icon),
                 onConfirmAction = ConfirmableAction.DeactivateAndChainScene(target.id),
@@ -989,7 +992,7 @@ class MainViewModel(
                 secondaryLabel = rh.gs(CoreUiStrings.scene_deactivate)
             )
             else ActionConfirmation(
-                title = rh.gs(CoreUiStrings.scene_deactivate),
+                title = title,
                 message = message,
                 icon = sceneIcon(activeState.scene.icon),
                 onConfirmAction = ConfirmableAction.DeactivateScene

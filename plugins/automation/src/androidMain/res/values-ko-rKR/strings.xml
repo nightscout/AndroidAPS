@@ -54,9 +54,9 @@
     <string name="startprofileforever">프로파일 %1$d%% 시작</string>
     <string name="sendsmsactionlabel">SMS 전송: %1$s</string>
     <string name="sendsmsactiondescription">모든 번호에 SMS 전송</string>
-    <string name="sendsmsactiontext">문자 포함된 SMS 보내기</string>
+    <string name="sendsmsactiontext">텍스트로 SMS 보내기</string>
     <string name="starttemptarget">임시 목표 시작</string>
-    <string name="islesser">보다 적은</string>
+    <string name="islesser">보다 작은</string>
     <string name="isequalorlesser">같거나 작은</string>
     <string name="isequal">같은</string>
     <string name="isequalorgreater">같거나 큰</string>
@@ -116,9 +116,11 @@
     <string name="triggerPumpBatteryAgeDesc">펌프 배터리 사용 기간 %1$s %2$.1f시간</string>
     <string name="triggerReservoirLevelLabel">레저버 잔량</string>
     <string name="triggerReservoirLevelDesc">레저버 잔량 %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">펌프 배터리 레벨</string>
+    <string name="triggerPumpBatteryLevelDesc">펌프 배터리 레벨 %1$s %2$.0f</string>
     <string name="recurringTime">반복 시간</string>
-    <string name="every">매일</string>
-    <string name="never">절대</string>
+    <string name="every">매주</string>
+    <string name="never">안 함</string>
     <string name="condition">조건:</string>
     <string name="action">동작:</string>
     <string name="taskname">작업명</string>

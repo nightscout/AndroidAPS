@@ -28,12 +28,15 @@
     <string name="alarm_channel_bolus_error">Erreur de bolus</string>
     <string name="alarm_channel_error">Erreur générale</string>
     <string name="alarm_channel_urgent">Alarme urgente</string>
+    <string name="alarm_channel_eat_reminder">Il est temps de manger</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (outrepasser Ne Pas Déranger)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respecter Ne Pas Déranger)</string>
     <string name="alarm_channel_silent_urgent">Alarme urgente (mode augmentation du volume)</string>
     <string name="alarm_channel_silent">Alarme (mode augmentation du volume)</string>
     <string name="alarm_channel_silent_description">Utilisé lorsque \'augmenter progressivement le volume de notification\' est activé. L\'écran d\'alarme joue le son.</string>
     <string name="ongoing_channel_name">État en cours</string>
+    <string name="eat_reminder_channel">Compte à rebours du rappel pour manger</string>
+    <string name="eat_reminder_channel_description">Montre le temps restant jusqu\'à ce qu\'il soit temps de manger. Il ne sonne pas ; l\'alarme à la fin sonne.</string>
     <string name="notifications_channel_name">Notifications AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>

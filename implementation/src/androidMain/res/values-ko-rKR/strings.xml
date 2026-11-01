@@ -55,6 +55,7 @@
     <string name="exported_failed">설정 내보내기에 실패했습니다!</string>
     <string name="filenotfound">파일을 찾을 수 없습니다</string>
     <string name="ue_exported">사용자 항목을 내보냈습니다</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s 전에 내보내기 함</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s에 내보내기 함</string>
     <string name="exported_less_than_hour_ago">내보내기 한지 1시간이 지나지 않았습니다.</string>
     <string name="metadata_warning_different_flavour">이 설정은 다른 AAPS 변형(%1$s)으로 만들어졌습니다. 현재 변형: %2$s.\n\n일부 설정이 없거나 잘못되었을 수 있습니다. 가져온 후 설정을 확인하고 업데이트하십시오.</string>

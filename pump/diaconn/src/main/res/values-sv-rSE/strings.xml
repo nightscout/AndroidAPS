@@ -134,4 +134,5 @@
     <string name="bolus_speed_7">7 U/min</string>
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Parkopplingen lyckades!</string>
+    <string name="diaconn_pairing_successful_message">Din pump är nu ansluten och redo att användas.</string>
 </resources>

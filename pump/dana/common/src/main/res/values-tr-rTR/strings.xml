@@ -13,6 +13,8 @@
     <string name="danai2_bolus_error_not_enough_insulin">Rezervuarda yeterli insülin yok</string>
     <string name="danai2_bolus_error_easy_sleep">Pompada Easy sleep modu açık</string>
     <string name="danai2_pump_check_error">Pompa kontrol hatası</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Kolay mod</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Otomatik Kilit</string>
     <string name="danar_valuenotsetproperly">Değer düzgün ayarlanmamış</string>
     <string name="danar_setbasalstep001">Bazal adımını 0,01 Ü/sa olarak ayarlayın</string>
     <string name="resetpairing">Eşleştirme bilgileri sıfırlansın mı?</string>
@@ -43,6 +45,7 @@
     <string name="gettingtempbasalstatus">Geçici bazal durumu alınıyor</string>
     <string name="gettingpumpsettings">Pompa ayarları alınıyor</string>
     <string name="gettingpumptime">Pompa zamanı alınıyor</string>
+    <string name="largetimedifftitle">Büyük zaman farkı</string>
     <string name="largetimediff">Büyük zaman farkı:\nPompadaki saat 1,5 saatten fazla farklı.\nLütfen pompadaki saati elle ayarlayın ve pompa geçmişinin okunmasının beklenmeyen davranışlara yol açmadığından emin olun.\nMümkünse saati değiştirmeden önce pompadaki geçmişi silin veya kapalı döngüyü son yanlış geçmiş girdisinden sonra bir İES boyunca, ama şu andan itibaren en az bir İES boyunca devre dışı bırakın.</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla eşleştirin!</string>
     <string name="approachingdailylimit">Günlük İnsülin limitine yaklaşıldı</string>
@@ -108,9 +111,18 @@
     <string name="num1pin">1: (12 basamak)</string>
     <string name="num2pin">2: (8 basamak)</string>
     <string name="basal_bolus_step">Bazal/bolus adımı</string>
+    <string name="connecting_to_pump">Pompaya bağlanılıyor...</string>
+    <string name="pairing_successful">Eşleştirme başarılı!</string>
+    <string name="pairing_successful_message">Pompanız bağlandı ve kullanıma hazır.</string>
+    <string name="cancel_pairing_title">Eşleştirme iptal edilsin mi?</string>
     <string name="cancel_pairing_message">Eşleştirme işlemi iptal edilecek.</string>
     <string name="done">Tamam</string>
     <string name="open_bluetooth_settings">Bluetooth ayarlarını aç</string>
+    <string name="enter_pump_password">Pompa parolasını girin</string>
+    <string name="select_paired_device">Eşleştirilmiş cihazı seçin</string>
+    <string name="no_paired_devices">Eşleşmiş Dana cihazı bulunamadı. Öncelikle pompanızı Android Bluetooth ayarlarından eşleştirin.</string>
+    <string name="password_hint">4 haneli şifre (0–9999)</string>
+    <string name="connecting_verifying">Bağlanılıyor ve parola doğrulanıyor…</string>
     <string name="password_ok">Parola başarıyla doğrulandı!</string>
     <string name="password_wrong">Yanlış parola. Geri dönün ve düzeltin.</string>
 </resources>

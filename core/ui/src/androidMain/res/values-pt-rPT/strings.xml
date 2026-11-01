@@ -105,6 +105,7 @@
     <string name="paused">Em pausa</string>
     <string name="running">A funcionar</string>
     <string name="tdd_total">TID Total</string>
+    <string name="tdd_old_data">Dados antigos</string>
     <string name="goingtodeliver">A ser administrado %1$.2f U</string>
     <string name="carbs_not_saved_after_bolus">Bólus administrado, mas não foi possível guardar os hidratos. Introduza os hidratos novamente.</string>
     <string name="androidaps_start">AAPS iniciado</string>
@@ -270,6 +271,7 @@
     <string name="virtualpump_uploadstatus_title">Enviar o estado da bomba para NS ou Tidepool</string>
     <string name="iob_label">Insulina ativa (IA)</string>
     <string name="loopstatus_targets">Alvos:</string>
+    <string name="loopstatus_OAPS_result">RESULTADO OAPS:</string>
     <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
     <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
     <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
@@ -743,7 +745,11 @@
     <string name="start_pump">Iniciar Bomba</string>
     <string name="stop_pump">Parar Bomba</string>
     <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d minuto</string>
+    <string name="temp_basal_percent">TEMP BASAL %1$d U/h %2$d minuto</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">ESTADO %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Estado desatualizado.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desatualizada.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
@@ -758,11 +764,15 @@
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens no algoritmo: %.0f%%</string>
     <!-- Autotune -->
+    <string name="autotune">Autoajuste</string>
     <string name="autotune_tune_days">Dias de ajuste:</string>
+    <string name="autotune_select_profile">Selecione o perfil para ajustar</string>
     <!-- Alerts -->
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Conselheiro de bólus</string>
+    <string name="bolus_advisor_message">Tem a glicemia alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bólus de correção agora e lembrar quando for hora de comer? Neste caso, nenhum Hidrato será registado e deve usar o assistente novamente quando lembrarmos.</string>
     <string name="wizard_bg_label">GLIC</string>
     <string name="wizard_correction">Correção</string>
     <string name="wizard_subtotal">Subtotal</string>
@@ -952,6 +962,7 @@
     <string name="nav_history_browser_desc">Navegar nos gráficos do histórico</string>
     <string name="appearance">Aparência</string>
     <string name="manage">Gerir</string>
+    <string name="localprofile">Perfil</string>
     <string name="nav_setupwizard">Assistente de Configuração</string>
     <string name="nav_setupwizard_desc">Configurar o AAPS passo a passo</string>
     <string name="statistics">Estatísticas</string>

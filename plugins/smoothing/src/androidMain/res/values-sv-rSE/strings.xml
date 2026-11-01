@@ -5,4 +5,7 @@
     <string name="avg_smoothing_name">Genomsnittlig utjämning</string>
     <string name="description_avg_smoothing">"Genomsnittlig utjämningsalgoritm, det nyaste värdet påverkas inte"</string>
     <string name="no_smoothing_name">Ingen utjämning</string>
+    <string name="description_no_smoothing">"Använd detta när du redan har filtrerat data, t.ex. från BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"Avancerad algoritm med automatisk brusjustering och RTS-utjämning."</string>
 </resources>

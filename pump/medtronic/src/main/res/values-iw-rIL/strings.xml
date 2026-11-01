@@ -28,6 +28,10 @@
     <string name="medtronic_pump_type_722">722</string>
     <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A או נמוך יותר)</string>
     <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A או נמוך יותר)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU קושחה &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU קושחה &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA קושחה &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA קושחה &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
     <string name="medtronic_bolus_delay_5s">5 שניות</string>
     <string name="medtronic_bolus_delay_10s">10 שניות</string>

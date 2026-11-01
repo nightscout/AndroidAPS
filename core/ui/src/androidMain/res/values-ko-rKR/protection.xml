@@ -31,6 +31,7 @@
     <string name="auth_hint_master_or_password">마스터 비밀번호 또는 사용자 지정 비밀번호를 입력하십시오</string>
     <string name="use_pin_password">PIN/비밀번호 사용</string>
     <string name="current_master_password">현재 마스터 비밀번호</string>
+    <string name="master_password_not_set">마스터 암호가 설정되지 않았습니다</string>
     <string name="aaps_directory_not_selected">AAPS 디렉터리가 선택되지 않았습니다</string>
     <string name="aaps_directory_access_lost">AAPS 디렉터리에 대한 접근 권한이 없어져 설정이 더 이상 휴대폰에 저장되지 않습니다. 디렉터리를 다시 선택하십시오.</string>
 </resources>

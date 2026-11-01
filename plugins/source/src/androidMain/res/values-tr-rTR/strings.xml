@@ -4,6 +4,7 @@
     <string name="ns_client_bg">NSClient KŞ</string>
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini indirir</string>
     <string name="source_xdrip">xDrip+ KŞ</string>
+    <string name="description_source_xdrip">xDrip+ ve uyumlu uygulamalardan (Juggluco vb.) KŞ değerlerini alın.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
     <string name="glimp">Glimp</string>
@@ -21,8 +22,14 @@
     <string name="random_bg">Rastgele KŞ</string>
     <string name="description_source_random_bg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Syai/Ottai uygulamasından glikoz verilerini alın.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI Uygulaması</string>
+    <string name="description_source_patched_si_app">Glikoz verilerini yamalı Sibionic SI uygulamasından veya Sibionics Uygulamasından alın.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino uygulaması</string>
+    <string name="description_source_patched_sino_app">Glikoz verilerini yamalı Sino uygulamasından alın.</string>
     <!-- Instara App -->
     <string name="instara_app">Instara</string>
     <string name="description_source_instara_app">Instara uygulamasından KŞ değerlerini alın.</string>

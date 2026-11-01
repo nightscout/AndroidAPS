@@ -112,6 +112,7 @@
     <string name="omnipod_common_pod_status_inactive">לא פעיל</string>
     <string name="omnipod_common_pod_status_pod_fault_description">תקלת פוד: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">התראת PDM</string>
     <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">קוד ייחוס: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see

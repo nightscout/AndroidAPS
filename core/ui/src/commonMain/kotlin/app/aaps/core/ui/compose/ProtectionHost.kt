@@ -1,6 +1,7 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,22 @@ fun ProtectionHost(
     showBiometricSimple: (title: String, onSuccess: () -> Unit, onFallback: () -> Unit, onCancel: () -> Unit) -> Unit =
         { _, _, onFallback, _ -> onFallback() }
 ) {
+    // A pending request's callback belongs to the screen that asked for it. When this host goes away
+    // (the activity is destroyed: rotation, a theme or language change, or Android closing it in the
+    // background) answer the request with CANCELLED. Otherwise the next host shows it again and, after
+    // the password, the old callback runs against the dead screen - it navigated on a destroyed
+    // NavController and crashed. The user just taps again on the new screen.
+    DisposableEffect(protectionCheck) {
+        onDispose {
+            protectionCheck.pendingAuthRequest.value?.let {
+                protectionCheck.completeAuthRequest(it.id, AuthorizationResult(null, ProtectionResult.CANCELLED))
+            }
+            protectionCheck.pendingRequest.value?.let {
+                protectionCheck.completeRequest(it.id, ProtectionResult.CANCELLED)
+            }
+        }
+    }
+
     // --- Hierarchical auth requests ---
     val authRequest by protectionCheck.pendingAuthRequest.collectAsStateWithLifecycle()
 
