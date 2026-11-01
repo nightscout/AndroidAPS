@@ -56,7 +56,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Kullanıcı</string>
     <string name="result">Sonuç</string>
     <string name="settings">Ayarlar</string>
-    <string name="open_plugin">Eklentiyi açın</string>
+    <string name="open_plugin">Eklentiyi aç</string>
     <string name="configbuilder_pick_one_hint">Birini seçin. Aynı anda yalnızca biri etkin olabilir.</string>
     <string name="configbuilder_pick_many_hint">Geçerli olanların tümünü seçin.</string>
     <string name="configbuilder_no_selection_warning">Bu kategoride hiçbir eklenti seçili değil.</string>
@@ -82,7 +82,7 @@
     <string name="configbuilder_loop">Döngü</string>
     <string name="configbuilder_sync">İletişim</string>
     <string name="configbuilder_general">Genel</string>
-    <string name="protection">Güvenlik</string>
+    <string name="protection">Koruma</string>
     <string name="value_unavailable_short">yok</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Kullanıcı Girişlerini Excel\'e Aktar (csv)</string>
@@ -97,7 +97,7 @@
     <string name="treatments_iob_label_string">AİNS:</string>
     <string name="mute5min">5 dakika sessize al</string>
     <string name="mute">Sessiz</string>
-    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Alarmları sessize al</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Alarmı sessize al</string>
     <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Sessize al ve kapat</string>
     <string name="success">Başarılı</string>
     <string name="advanced_settings_title">Gelişmiş Ayarlar</string>
@@ -355,7 +355,7 @@
     <string name="careportal_cgm_sensor_stop">Sensörü Durdur</string>
     <string name="careportal_dad_alert">D.A.D Alarmı</string>
     <string name="careportal_insulin_cartridge_change">İnsülin Rezervuar Değişimi</string>
-    <string name="careportal_profileswitch">Profil değiştir</string>
+    <string name="careportal_profileswitch">Profil değişimi</string>
     <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Aperatif Bolusu</string>
     <string name="careportal_mealbolus">Öğün Bolusu</string>
@@ -610,7 +610,7 @@
     <string name="uel_new_profile">YENİ PROFİL</string>
     <string name="uel_clone_profile">PROFİL KLONLA</string>
     <string name="uel_store_profile">PROFİLİ DEPOLA</string>
-    <string name="uel_profile_switch">PROFİLİ DEĞİŞTİR</string>
+    <string name="uel_profile_switch">PROFİL DEĞİŞİMİ</string>
     <string name="uel_profile_switch_cloned">KLONLANAN PROFİL DEĞİŞİMİ</string>
     <string name="uel_closed_loop_mode">KAPALI DÖNGÜ MODU</string>
     <string name="uel_lgs_loop_mode">LGS DÖNGÜ MODU</string>
@@ -1000,7 +1000,7 @@
     <!-- Site Rotation -->
     <string name="select_location">Bölge seçmek için aşağıya tıklayın</string>
     <!-- About -->
-    <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
+    <string name="cta_dont_kill_my_app_info">Uygulamamı kapatma?</string>
     <string name="fabric_upload_disabled">Çökme günlükleri yükleme devre dışı bırakıldı!</string>
     <string name="about_link_urls">\n\nDokümantasyon:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
