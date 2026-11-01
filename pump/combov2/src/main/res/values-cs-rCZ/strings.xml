@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Chyba zásobníku</string>
     <string name="combov2_error_11">Infuzní set není naplněný</string>
     <string name="combov2_extended_bolus_not_supported">Prodloužený bolus není podporován</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Párovat s pumpou</string>
     <string name="combov2_unpair_pump_title">Zrušit párování pumpy</string>
     <string name="combov2_driver_state_label">Stav ovladače</string>
@@ -31,12 +30,6 @@
 2. Zkontrolujte, zda je zařízení již zobrazeno jako spárované. pokud ano, přejděte na obrazovku pumpy \"Odstranit zařízení\" a odstranit/zrušit párování tohoto zařízení\n
 3. Přejděte na obrazovku pumpy \"Přidat zařízení\" a spárujte na pumpě\n
 4. Klikněte na tlačítko \"Spustit párování\" níže pro zahájení párování v AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Po nějaké době se na obrazovce pumpy zobrazí jméno telefonu; stiskněte KONTROLA pro potvrzení.\n\n
-Po úspěšném dokončení párování, potvrďte dokončení párování na vaší pumpě a vráťte se na hlavní obrazovku pumpy dvojím stisknutím tlačítka KONEC.\n\n
-Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
-1. Stiskněte tlačítko Zpět nebo tlačítko \"Zrušit párování\"\n
-2. Zrušte párování na Combo (současně stiskněte tlačítka „UP i MENU“ pro zrušení párování)\n
-3. Zkuste znovu spárovat</string>
     <string name="combov2_enter_pin">Vložte PIN</string>
     <string name="combov2_cancel_pairing">Zrušit párování</string>
     <string name="combov2_confirm_cancel_pairing_message">Opravdu chcete zrušit párování?</string>
@@ -106,7 +99,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorování požadavku 100% dočasného bazálu</string>
     <string name="combov2_hit_unexpected_tbr_limit">Při úpravě dočasného bazálu došlo k neočekávanému limitu: vyžadováno %1$d%%, dosažen limit %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nelze nastavit absolutní dočasný bazál, pokud je bazální dávka nulová</string>
-    <string name="combov2_unpair_pump_summary">Zrušit párování AndroidAPS a Androidu v současné době spárované Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Neznámý dočasný bazál byl zjištěn a zastaven. Procentuální hodnota: %1$d%%; zbývající doba trvání: %2$s</string>
     <string name="combov2_connection_error">Chyba připojení: %1$s</string>
     <string name="combov2_short_status_alert">Výstraha: %s</string>
