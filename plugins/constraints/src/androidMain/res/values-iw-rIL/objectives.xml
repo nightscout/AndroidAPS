@@ -17,9 +17,7 @@
     <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
     <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
     <string name="objectives_maxiobzero_gate">הפעילו לולאה סגורה במצב השהיה ברמת סוכר נמוכה (LGS) (כלומר, max IOB = 0 מוגדר באופן אוטומטי) למשך כמה ימים ללא אירועי LGS רבים מדי.</string>
-    <string name="objectives_maxiobzero_learned">איפוס ה-MaxIOB פועל למניעת היפוגליקמיה ולא יוסיף אינסולין מעל המינון בזאלי הקבוע בפרופיל (למעט במצב עם אינסולין פעיל שלילי)</string>
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, העלאת max IOB מעל 0 והורדה הדרגתית של ערכי היעד של רמת הסוכר</string>
-    <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעילו במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
     <string name="objectives_maxiob_learned">עדכנו את MaxIOB עם גדילת הילד. אל תאפשרו למערכת לתת יותר אינסולין מכפי שניתן לכסות באמצעות מזון — ערך גבוה מאוד הוא רעיון גרוע. Max IOB מחושב אוטומטית במצב פשוט.</string>
     <string name="maxiobset">IOB מרבי הוגדר כראוי (לא נדרש במצב פשוט)</string>
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
@@ -53,7 +51,6 @@
     <string name="objectives_exam_learned_isf">למדתם את משמעות הערך ISF וכיצד הוא משפיע על כמות האינסולין המשמשת לתיקון הסוכר בדם.</string>
     <string name="objectives_exam_learned_ic">למדתם את משמעות הערך IC וכיצד הוא משפיע על כמות האינסולין הדרושה לכיסוי פחמימות.</string>
     <string name="objectives_exam_learned_hypott">יעד זמני להיפו משמש רק כדי למנוע תיקון ביתר לאחר היפו, כאשר בדרך כלל יש אינסולין פעיל שלילי שהצטבר. יש לשקול לבצע פעולות נוספות כדי למנוע מצב כזה בעתיד.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">שימוש באחוזים אינו משפיע על יעדי הסוכר, אך הבזאלי, ISF ו־IC מותאמים כדי לתת יותר אינסולין (מעל 100%) או פחות אינסולין (מתחת ל־100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">על ידי שימוש בהיסט זמן בהחלפת הפרופיל, אתם יכולים להתאים את הפרופיל הצירקדי לאי סדרים כמו השכמה מאוחרת.</string>
     <string name="objectives_exam_learned_profileswitch4">עריכת הפרופיל עצמו אינה מספיקה כדי לבצע שינוי. אתם עדיין צריכים לבצע החלפת פרופיל כדי להפעיל שינויים.</string>
     <string name="objectives_exam_learned_exercise">עליכם להפחית את כמות האינסולין בגוף לפחות שעה אחת לפני תחילת האימון על ידי בחירת פרופיל מתחת ל-100%.</string>
@@ -64,14 +61,10 @@
     <string name="objectives_exam_learned_sensitivity">זיהוי רגישות הוא חלק מהאלגוריתם המאפשר להתאים את מינון האינסולין למצבים שונים.</string>
     <string name="objectives_exam_learned_objectives">ההתקדמות שלכם במשימות מאוחסנת יחד עם הגדרות אחרות ויש לבצע לה גיבויים.</string>
     <string name="objectives_exam_learned_objectives2">שמרו תמיד את ההגדרות המיוצאות ואת קובץ ה-APK מחוץ לטלפון. טלפון יכול ללכת לאיבוד, להינזק וכו\'. מקום טוב יכול להיות כל ענן שנגיש מהטלפון. במקרה זה תוכלו לשחזר את AAPS במכשיר אחר תוך מספר דקות. מומלץ לאחסן גם את הסיסמה הראשית במקום בטוח. בלעדיה הגיבוי חסר תועלת. אותו הדבר תקף עבור מפתחות חתימה (קובץ jks) וסיסמאות המשמשות לבניית AAPS. השאר לא קריטי - אפשר להוריד אותו שוב מהאינטרנט בכל עת.</string>
-    <string name="objectives_exam_learned_wrongcarbs">אם הזנתם נתונים שגויים ל-AAPS או שהוא לא תואם את המציאות, יש לפתור זאת בהקדם האפשרי. זה עלול להוביל למינון יתר. יש ליידע את AAPS תמיד בצורה הטובה ביותר לגבי פחמימות, אינסולין וכו\'.</string>
-    <string name="objectives_exam_learned_iob">כאשר אתם בודקים אם AAPS פועל היטב עבורכם, צפייה בגרף האינסולין הפעיל (IOB) יכולה לספק מידע שימושי רב.</string>
-    <string name="objectives_exam_learned_cob">חישוב הפחמימות הפעילות (COB) תלוי ביחס בין ISF ל־IC. הגדלת ISF או הקטנת IC תוביל לזמני ספיגה ארוכים יותר. עם זאת, החלפת פרופיל באמצעות אחוזים משנה את שני הערכים בו־זמנית, ולכן זמן הספיגה אינו מושפע.</string>
     <string name="objectives_exam_learned_breadgrams">הזנת פחמימות היא בגרמים בלבד.</string>
     <string name="objectives_exam_learned_ecarbs">פחמימות ממושכות הן תחליף לבולוס ממושך בעולם המשאבות.</string>
     <string name="objectives_exam_learned_nsclient">ניתן לעקוב אחר AAPS מרחוק באמצעות AAPSClient או Nightscout. כאשר AAPSClient מצומד לטלפון הראשי, ניתן גם לשלוט ב־AAPS מרחוק.</string>
     <string name="objectives_exam_learned_concentration1">שימוש באינסולין U200 עם פרופיל 50% דורש המרה קבועה: הבולוסים החיצוניים באמצעות עטים וכל הדוחות הרגילים שמספקים AAPS או NS יהיו שגויים ויהיה צורך להמירם ליחידות בינלאומיות (IU) עבור הצוות הרפואי.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">מעבר מ־U200 עם פרופיל 50% ל־U200 באמצעות תכונת ריכוז האינסולין דורש יצירת פרופיל חדש וחזק יותר, השבתת DynISF למשך שבוע והתרגלות לחשיבה ביחידות בינלאומיות.</string>
     <string name="objectives_exam_learned_concentration3">ניתן לשנות את ריכוז האינסולין רק כאשר מחליפים את האינסולין או את הפוד. אבל חשוב מכל, במיוחד עבור משאבות צינור, לעולם אל תשתמשו בממשק המשתמש של המשאבה כדי לספק בולוסים ישירות מהמשאבה.</string>
     <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
