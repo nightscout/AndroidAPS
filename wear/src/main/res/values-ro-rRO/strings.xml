@@ -3,7 +3,7 @@
     <string name="label_watchface_circle">AAPS(Cerc)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (Personalizat)</string>
-    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Personalizat) mereu activ</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Personalizat) mereu activ</string>
     <string name="label_actions_tile">Acțiuni</string>
     <string name="label_temp_target_tile">Țintă temporară</string>
     <string name="label_quick_wizard_tile">Asistent Rapid</string>
