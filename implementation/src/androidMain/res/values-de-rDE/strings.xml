@@ -17,7 +17,7 @@
     <string name="permission_battery_title">Akku-Optimierung</string>
     <string name="permission_battery_description">Anwendung muss von der Batterieoptimierung ausgeschlossen werden, um im Hintergrund zuverlässig zu funktionieren</string>
     <string name="permission_directory_title">AAPS-Verzeichnis</string>
-    <string name="permission_directory_description">Wählen Sie ein Verzeichnis für die Anwendungseinstellungen und Protokolldateien</string>
+    <string name="permission_directory_description">Wähle ein Verzeichnis für die Anwendungseinstellungen und Protokolldateien</string>
     <string name="permission_notifications_title">Benachrichtigungen</string>
     <string name="permission_notifications_description">Benötigt um Warnungen, Alarme und Pumpenstatus-Updates anzuzeigen</string>
     <string name="permission_schedule_exact_alarm_title">Alarme und Erinnerungen</string>
@@ -107,5 +107,5 @@
     <string name="google_drive_download_failed">Fehler beim Herunterladen der Datei</string>
     <string name="google_drive_download_error">Fehler beim Herunterladen der Datei: %1$s</string>
     <string name="google_drive_authorized">Google Drive autorisiert</string>
-    <string name="google_drive_reauth_required">Bitte löschen Sie die Einstellungen und autorisieren Sie Google Drive erneut</string>
+    <string name="google_drive_reauth_required">Bitte lösche die Einstellungen und autorisiere Google Drive erneut</string>
 </resources>
