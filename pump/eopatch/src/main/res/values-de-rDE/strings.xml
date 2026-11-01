@@ -8,9 +8,11 @@
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Seriennummer</string>
     <string name="eopatch_expiration_time">Ablaufzeit</string>
+    <string name="eopatch_not_activated">Nicht aktiviert</string>
     <string name="eopatch_base_basal_rate">Basis-Basalrate</string>
     <string name="eopatch_temp_basal_rate">Temporäre Basalrate</string>
     <string name="invalid_basal_rate">Die Basis des Profils ist weniger als 0,05 U/Std. EOPatch hat eine minimale Injektionseinheit von 0,05U. Bitte versuchen Sie es erneut, nachdem Sie das Profil auf mehr als die minimale Einspritzeinheit gesetzt haben.</string>
+    <string name="no_profile_selected_try_again">Kein Profil ausgewählt. Bitte wählen Sie ein Profil und versuchen Sie es erneut.</string>
     <string name="symbol_day">Tag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -35,17 +37,21 @@
     <string name="patch_wake_up">Insulin füllen</string>
     <string name="patch_wake_up_desc_1">Füllen Sie einen neuen Pod mit Insulin bei Raumtemperatur. Überprüfen Sie die Kanüle.</string>
     <string name="patch_wake_up_desc_2">Auf 1 Piepton warten.</string>
+    <string name="patch_wake_up_pairing_info">Während des Koppelns erscheinen zwei Android-System-Popups. Sie müssen beide bestätigen, um die Bluetooth-Kopplung abzuschließen.</string>
     <string name="patch_start_pairing">Kopplung starten</string>
     <string name="patch_connect_new">Pod koppeln</string>
     <string name="patch_connect_new_desc">Der neue Patch wird gepaart.\nHalte die Distanz zwischen dem Patch und dem Smartphone so nah wie möglich</string>
     <string name="patch_remove_needle_cap">Bereite dich auf das Anhängen des Patches vor</string>
     <string name="patch_remove_needle_cap_desc_1">Entfernen Sie das Klebeband und tippen Sie dann auf \"Weiter\".</string>
+    <string name="patch_remove_needle_cap_desc_2">Wenn eine Nadel aussticht, tippe auf \'Verwerfen\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">Wenn der Patch nass oder schmutzig ist, oder sein Klebeband gefaltet ist, tippen Sie auf \'Verwerfung\'.</string>
     <string name="patch_remove_protection_tape">Den Patch anhängen</string>
     <string name="patch_remove_protection_tape_desc_1">Säubern und trocknen Sie die Stelle fürs Anlegen und befestigen Sie den Patch an der Haut.</string>
     <string name="patch_remove_protection_tape_desc_2">Überprüfen Sie die Infusionsseite und tippen Sie dann auf \'Sicherheitsüberprüfung starten\'.</string>
     <string name="patch_start_safety_check">Sicherheitsprüfung starten</string>
     <string name="patch_safety_check">Sicherheitsprüfung…</string>
     <string name="patch_safety_check_desc_1">Es dauert etwa 30 Sekunden.</string>
+    <string name="patch_safety_check_desc_2">Für eine sichere Anwendung den Nadelbetätigungshebel erst entfernen, wenn die Sicherheitsprüfung abgeschlossen ist!</string>
     <string name="patch_rotate_knob">Einfügen der Nadel</string>
     <string name="patch_rotate_knob_desc_1">Drehen Sie den Aktionshebel der Nadel über 100 °, um die Nadel einzulegen und dann vollständig, um sie zu entfernen</string>
     <string name="patch_rotate_knob_desc_2">Prüfe auf 1 Piepton und tippe auf \'Weiter\'.</string>
@@ -57,6 +63,7 @@
     <string name="patch_activate_reminder_desc">Patch-Aktivierung wurde nicht abgeschlossen.\n Fortfahren.</string>
     <string name="patch_communication_check_helper_1">Bringen Sie Ihr Smartphone näher an den Pod.</string>
     <string name="patch_communication_check_helper_2">Bitte wechseln Sie zu einem anderen Ort und versuchen Sie es erneut.</string>
+    <string name="patch_safety_check_failed_desc">Sicherheitscheck fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
     <string name="patch_communication_failed">Kommunikationsfehler</string>
     <string name="patch_communication_succeed">Kommunikation erfolgreich</string>
     <string name="patch_communication_succeed_message">Verbunden mit dem Patch.</string>
@@ -74,8 +81,10 @@
     <string name="needle_insertion_error_3">Tippe auf \'Verwerfen\', um Patch zu deaktivieren.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal Suspendierung Zeit</string>
     <string name="string_resume_insulin_delivery_title">Insulinabgabe fortsetzen</string>
+    <string name="string_resume_insulin_delivery_message">Ende der Insulinpause.\nTippe auf \'Bestätigen\', um die Insulinabgabe fortzusetzen.\n\nDie Insulinabgabe wird erst fortgesetzt, wenn du auf \'Bestätigen, tippst.\nWenn du nicht auf \'Bestätigen\' tippst, kann dies zu einer Hyperglykämie (Überzuckerung) führen.</string>
     <string name="string_suspended_insulin_delivery_message">Insulinabgabe ist unterbrochen.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinabgabe wieder aufgenommen.</string>
     <string name="string_temp_basal_remained_hhmm">verbleibende Zeit: %1$s:%2$s</string>
+    <string name="string_pause_failed">Anhalten fehlgeschlagen.</string>
     <string name="string_resume_failed">Fortsetzen fehlgeschlagen.</string>
 </resources>
