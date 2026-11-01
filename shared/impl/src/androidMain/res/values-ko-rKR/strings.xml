@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">월명 (짧게)</string>
     <string name="cwf_comment_loop">루프 상태 및 경과 시간</string>
     <string name="cwf_comment_direction">방향 화살표</string>
-    <string name="cwf_comment_timestamp">마지막으로 받은 혈당 이후 경과 시간(분)</string>
     <string name="cwf_comment_sgv">혈당 값</string>
     <string name="cwf_comment_cover_plate">문자 앞의 표지 이미지 (다이얼...)</string>
     <string name="cwf_comment_hour_hand">시침 이미지 (아날로그 시계)</string>
