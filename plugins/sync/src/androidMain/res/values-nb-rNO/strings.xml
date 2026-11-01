@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Tilkoblingsinnstillinger</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synkroniserer dataene dine med Nightscout via v3-API-et</string>
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
@@ -121,7 +120,7 @@
     <string name="ns_alarm_options">Alarmvalg</string>
     <string name="ns_remote_control_options">Fjernkontroll</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for den vanlige</string>
+    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for de vanlige</string>
     <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
     <string name="title_tidepool_use_ns_connection">Bruk tilkoblingsinnstillingene for Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Slå av for å angi egne tilkoblingsinnstillinger for Tidepool</string>
