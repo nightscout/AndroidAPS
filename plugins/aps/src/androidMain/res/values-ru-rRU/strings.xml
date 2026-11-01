@@ -25,7 +25,6 @@
     <string name="constraints">Ограничения</string>
     <string name="openapsma_autosensdata_label">Данные autosens</string>
     <string name="openapsma_script_debug_data_label">Отладка скрипта</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Внимание!\n Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин.</string>
     <string name="increasing_max_basal">Повышаю максимальное значение базы т. к. оно меньше максимального в профиле</string>
     <string name="max_basal_multiplier">множитель макс базала</string>
     <string name="max_daily_basal_multiplier">множитель макс суточного базала</string>
