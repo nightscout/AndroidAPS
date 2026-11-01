@@ -57,10 +57,8 @@
     <string name="ue_exported">Uživatelské záznamy exportovány</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportováno před %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportováno v %1$s</string>
-    <string name="exported_less_than_hour_ago">exportováno před méně než hodinou</string>
     <string name="metadata_warning_different_flavour">Předvolby byly vytvořeny v jiné variantě AAPS (%1$s), zatímco vy máte: %2$s.\n\nNěkterá nastavení mohou chybět nebo být neplatná – po importu prosím zkontrolujte a aktualizujte své předvolby.</string>
     <string name="metadata_warning_different_device">Předvolby byly vytvořeny na jiném zařízení. Je to v pořádku, pokud importujete ze staršího/jiného telefonu, ale ujistěte se, že importované předvolby jsou správné!</string>
-    <string name="metadata_warning_old_export">Importované předvolby jsou již %1$s dnů staré! Možná máte aktuálnější předvolby nebo jste zvolili nesprávný soubor? Nezapomeňte předvolby pravidelně exportovat!</string>
     <string name="metadata_warning_date_format">Neplatný formát data a času!</string>
     <string name="metadata_warning_different_version">Předvolby z jiné vedlejší verze aplikace. Je to v pořádku, pokud importujete po aktualizaci, ale po importu zkontrolujte, zda jsou předvolby stále správné!</string>
     <string name="metadata_urgent_different_version">Předvolby z jiné hlavní verze aplikace. Hlavní verze se výrazně liší a mohou mít nekompatibilní předvolby! Po importu se ujistěte, že předvolby jsou stále správné!</string>
