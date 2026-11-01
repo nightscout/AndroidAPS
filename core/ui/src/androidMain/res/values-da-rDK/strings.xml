@@ -92,7 +92,6 @@
     <string name="notification">Notifikation</string>
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
     <string name="exists">eksisterer</string>
-    <string name="notexists">eksisterer ikke</string>
     <string name="glucose">Glukose</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -124,11 +123,9 @@
     <string name="a11y_inrange">inden for området</string>
     <string name="a11y_low">lav</string>
     <string name="activate_profile">Aktivér profil</string>
-    <string name="profileswitch_ismissing">Profilskift mangler. Venligst lav et profilskift eller tryk \"Aktiver profil\" i LokalProfil.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procentdel</string>
     <string name="timeshift_label">Tidsskift</string>
-    <string name="confirm_remove_multiple_items">Er du sikker på, at du vil fjerne %1$d elementer?</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opret ny profil fra denne profil?</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -192,9 +189,7 @@
     <string name="careportal_note">Notat</string>
     <string name="careportal_question">Spørgsmål</string>
     <string name="careportal_exercise">Motion</string>
-    <string name="careportal_announcement_message">Meddelelse : %1$s</string>
     <string name="careportal_note_message">Notat : %1$s</string>
-    <string name="careportal_question_message">Spørgsmål : %1$s</string>
     <string name="careportal_exercise_message">Motion: %1$s</string>
     <string name="careportal_pump_site_change">Skift indstikssted</string>
     <string name="careportal_dad_alert">Diabeteshund alarm</string>
@@ -299,7 +294,6 @@
     <string name="uel_ns_queue_cleared">NS KØ RYDDET</string>
     <string name="uel_ns_settings_copied">NS INDSTILLINGER KOPIERET</string>
     <string name="uel_error_dialog_ok">FEJLDIALOG OK</string>
-    <string name="uel_error_dialog_mute">FEJLDIALOG LYDLØS </string>
     <string name="uel_error_dialog_mute_5min">FEJLDIALOG LYDLØS 5MIN</string>
     <string name="uel_objective_started">MÅL STARTET</string>
     <string name="uel_objective_unstarted">MÅL EJ STARTET</string>
@@ -342,7 +336,6 @@
     <string name="error_in_isf_values">Fejl i ISF-værdier</string>
     <string name="error_in_basal_values">Fejl i basal rate værdier</string>
     <string name="error_in_target_values">Fejl i målværdier</string>
-    <string name="profile_name_contains_dot">Nogle af profilnavnene indeholder punktummer.\nDette understøttes ikke af NS.\nProfiler vil ikke blive uploadet til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s blev ikke accepteret fra NS</string>
     <string name="errors">Fejl</string>
     <!-- Command Queue + readStatus reasons -->
