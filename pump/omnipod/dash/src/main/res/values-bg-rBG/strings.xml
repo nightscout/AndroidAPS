@@ -22,17 +22,13 @@
     <string name="omnipod_dash_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Непотвърдена команда</string>
     <string name="requested_by_user" comment="26 characters max for translation">Заявено от потребителя</string>
-    <string name="suspend_delivery_is_unconfirmed">Спирането на доставката не е потвърдено! Моля, опреснете ръчно състоянието на Pod от раздела Omnipod и възобновете доставката, ако е необходимо.</string>
     <string name="insulin_delivery_suspended">Доставянето на инсулин е спряно</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Часовата зона на pod е различна от часовата зона на телефона. Базалната доза е неправилна. Превключете профила, за да коригирате</string>
     <string name="failed_to_set_the_new_basal_profile">Неуспешно задаване на новия базален профил. Доставката е спряна</string>
-    <string name="setting_basal_profile_might_have_failed">Задаването на базален профил може да е неуспешно. Доставката може да бъде спряна! Моля, опреснете ръчно състоянието на Pod от раздела Omnipod и възобновете доставката, ако е необходимо.</string>
     <string name="bolus_delivery_status_uncertain">Състоянието на доставка на болус е неопределено. Обновете състоянието на pod, за да потвърдите или отхвърлите.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Не може да се провери дали SMB (%1$s) е доставен. Обновете състоянието на пача, за да потвърдите или отхвърлите тази команда.</string>
     <string name="temp_basal_out_of_sync">Статус на временен базал не според очакванията! Ако преди това е изпълняван временен базал, той е отменен. Моля, проверете доставения инсулин и история на Pod.</string>
     <string name="checking_delivery_status">Проверка на състоянието на доставката</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Задаването на временен базал може да е неуспешно. Ако преди това е изпълняван временен базал, той е бил отменен. Моля, опреснете ръчно състоянието на Pod от раздела Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Отменянето временния базален резултат е неопределено</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Непотвърдена команда „Подновяване на доставката“. Моля, опреснете статуса на Pod.</string>
-    <string name="cancelling_temp_basal_might_have_failed">Спирането на временния базал може да е отпаднало. Ако временен базал е вървял преди, може да е бил отказан. Моля ръчно обновете статуса на пода от бутон Omnipod tab.</string>
 </resources>
