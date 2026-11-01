@@ -252,7 +252,7 @@
     <string name="complication_blood_glucose_ext1">Kan Şekeri Uzt.1</string>
     <string name="complication_blood_glucose_ext2">Kan Şekeri Uzt.2</string>
     <string name="complication_bg_graph">KŞ Grafiği</string>
-    <string name="complication_cwf_image">Özel Saat arayüzü</string>
+    <string name="complication_cwf_image">Özel saat arayüzü</string>
     <string name="complication_cwf_ambient_bg">Özel saat arayüzünde glikoz</string>
     <string name="complication_cwf_ambient_status">Özel saat arayüzünde durum</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
