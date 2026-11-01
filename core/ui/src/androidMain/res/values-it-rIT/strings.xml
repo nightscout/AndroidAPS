@@ -1162,7 +1162,7 @@
     <string name="graph_series_deviation_slope">Pendenza deviazione</string>
     <string name="graph_series_heart_rate">Frequenza cardiaca</string>
     <string name="graph_series_steps">Passi</string>
-    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Attività fisica</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Attività insulinica</string>
     <string name="graph_series_predictions">Previsioni</string>
     <string name="units_days">giorni</string>
     <string name="units_format_days">%1$d giorni</string>
