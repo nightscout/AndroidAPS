@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="dyn_isf_adjust_title" formatted="false">DinamikİDF Ayarlama Faktörü %</string>
+    <string name="dyn_isf_adjust_title" formatted="false">Dinamik İDF Ayarlama Faktörü %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
     <string name="openaps_auto_isf">OtoİDF</string>
