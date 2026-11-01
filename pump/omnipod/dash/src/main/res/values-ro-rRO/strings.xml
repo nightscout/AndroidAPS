@@ -22,17 +22,13 @@
     <string name="omnipod_dash_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comandă neconfirmată</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitat de utilizator</string>
-    <string name="suspend_delivery_is_unconfirmed">Suspendarea administrării nu este confirmată! Reîmprospătați manual starea pompei din fila Omnipod și reluați administrarea dacă este necesar.</string>
     <string name="insulin_delivery_suspended">Administrarea insulinei este suspendată</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Fusul orar al pompei este diferit de fusul orar de pe telefon. Rata bazală este incorectă. Comutați profilul pentru a remedia</string>
     <string name="failed_to_set_the_new_basal_profile">Setarea profilului bazalei a eșuat. Administrare suspendată</string>
-    <string name="setting_basal_profile_might_have_failed">Setarea profilului bazal s-ar putea să fi eșuat. Administrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea pompei din secțiunea Omnipod și să reluați administrarea dacă este necesar.</string>
     <string name="bolus_delivery_status_uncertain">Starea administrării bolusului este incertă. Reîmprospătați starea pompei pentru a confirma sau a infirma.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Nu s-a putut verifica dacă SMB (%1$s) a reușit. Reîmprospătați starea pompei pentru a confirma sau a infirma această comandă.</string>
     <string name="temp_basal_out_of_sync">Starea bazalei temporare nu este conform așteptărilor! Dacă o bazală temporară era anterior activată, aceasta a fost anulată. Vă rugăm să verificați doza de insulină administrată și istoricul pompei</string>
     <string name="checking_delivery_status">Verificare stare administrare</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Setarea bazalei temporare s-ar putea să fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea pompei din secțiunea Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Rezultat incert în anularea ratei bazale temporare.</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comanda resumeDelivery neconfirmată. Vă rugăm să reîmprospătați starea pompei</string>
-    <string name="cancelling_temp_basal_might_have_failed">Anularea bazalei temporare s-ar putea să fi eșuat. Dacă o bazală temporară era activă anterior, este posibil să fi fost anulată. Reîmprospătați manual starea pompei din secțiunea Omnipod.</string>
 </resources>
