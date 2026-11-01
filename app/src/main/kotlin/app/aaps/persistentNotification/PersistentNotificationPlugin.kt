@@ -1,5 +1,6 @@
 package app.aaps.persistentNotification
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -138,7 +139,7 @@ class PersistentNotificationPlugin(
     private val SAMSUNG_EXTRA_SECONDARY_INFO = "android.ongoingActivityNoti.secondaryInfo"
     private val SAMSUNG_EXTRA_CHIP_ICON = "android.ongoingActivityNoti.chipIcon"
 
-    // Text of the status bar chip. Without it the chip shows the primary info, which is the long drawer line.
+    // Keep the status bar chip text separate from the longer drawer and Now Bar texts.
     private val SAMSUNG_EXTRA_CHIP_EXPANDED_TEXT = "android.ongoingActivityNoti.chipExpandedText"
     private val SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO = "android.ongoingActivityNoti.nowbarPrimaryInfo"
     private val SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO = "android.ongoingActivityNoti.nowbarSecondaryInfo"
@@ -417,7 +418,7 @@ class PersistentNotificationPlugin(
         // notification below - it shows the lock-screen "Now Bar" and drawer "Live Notifications"
         // through its own proprietary extras, so that needs to be applied separately and does not
         // depend on the Android version gating below.
-        applySamsungLiveUpdate(builder, line1, line1WithDelta, line2, line3)
+        applySamsungLiveUpdate(builder, bgStatusChipText, line1, line1WithDelta, line2, line3)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
         builder.setRequestPromotedOngoing(true)
         if (!bgStatusChipText.isNullOrBlank()) {
@@ -442,20 +443,21 @@ class PersistentNotificationPlugin(
     // those three lines carry - see samsungLiveTexts.
     private fun applySamsungLiveUpdate(
         builder: NotificationCompat.Builder,
+        bgStatusChipText: String?,
         line1: String?,
         line1WithDelta: String?,
         line2: String?,
         line3: String?
     ) {
         if (!Build.MANUFACTURER.equals(SAMSUNG_MANUFACTURER, ignoreCase = true)) return
-        val texts = samsungLiveTexts(line1, line1WithDelta, line2, line3) ?: return
+        val texts = samsungLiveTexts(line1, line1WithDelta, line2, line3, bgStatusChipText) ?: return
         val extras = bundleOf(
             SAMSUNG_EXTRA_STYLE to SAMSUNG_LIVE_UPDATE_STANDARD_STYLE,
             SAMSUNG_EXTRA_PRIMARY_INFO to texts.primary,
             SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to texts.nowBarPrimary,
-            SAMSUNG_EXTRA_CHIP_EXPANDED_TEXT to texts.nowBarPrimary,
             SAMSUNG_EXTRA_CHIP_ICON to Icon.createWithResource(context, iconsProvider.getNotificationIcon())
         )
+        texts.chipText?.let { extras.putString(SAMSUNG_EXTRA_CHIP_EXPANDED_TEXT, it) }
         texts.secondary?.let { extras.putString(SAMSUNG_EXTRA_SECONDARY_INFO, it) }
         texts.nowBarSecondary?.let { extras.putString(SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO, it) }
         builder.addExtras(extras)
@@ -467,12 +469,13 @@ class PersistentNotificationPlugin(
         return round(this * multiplier) / multiplier
     }
 
-    /** The four texts One UI shows: two in the notification drawer, two in the Now Bar. */
+    /** The texts One UI shows in the drawer, Now Bar and status bar chip. */
     internal data class SamsungLiveTexts(
         val primary: String,
         val secondary: String?,
         val nowBarPrimary: String,
-        val nowBarSecondary: String?
+        val nowBarSecondary: String?,
+        val chipText: String?
     )
 
     internal companion object {
@@ -487,17 +490,24 @@ class PersistentNotificationPlugin(
          * (BG, delta and the basal rate or temp basal) with [line3] (the profile name) on the first
          * row, and [line2] (IOB and COB) on the second. One UI has no header or sub text field,
          * which is where the profile name was shown before, so the first row is the closest place.
-         * The Now Bar and the status bar chip are small, so they get [line1WithDelta] (no basal, no
-         * profile). The parts are joined with the same bullet the lines themselves use.
+         * The Now Bar gets [line1WithDelta] (no basal or profile). The status bar chip gets only
+         * [bgStatusChipText], since the longer Now Bar text may not fit. The parts are joined with
+         * the same bullet the lines themselves use.
          *
          * @return null when there is nothing to show
          */
-        fun samsungLiveTexts(line1: String?, line1WithDelta: String?, line2: String?, line3: String?): SamsungLiveTexts? {
+        fun samsungLiveTexts(line1: String?, line1WithDelta: String?, line2: String?, line3: String?, bgStatusChipText: String?): SamsungLiveTexts? {
             val nowBarPrimary = line1WithDelta?.trim().takeUnless { it.isNullOrEmpty() } ?: return null
             val fullLine1 = line1?.trim().takeUnless { it.isNullOrEmpty() } ?: nowBarPrimary
             val profile = line3?.trim().takeUnless { it.isNullOrEmpty() }
             val primary = if (profile != null) "$fullLine1 • $profile" else fullLine1
-            return SamsungLiveTexts(primary = primary, secondary = line2, nowBarPrimary = nowBarPrimary, nowBarSecondary = line2)
+            return SamsungLiveTexts(
+                primary = primary,
+                secondary = line2,
+                nowBarPrimary = nowBarPrimary,
+                nowBarSecondary = line2,
+                chipText = bgStatusChipText?.trim()?.takeIf { it.isNotEmpty() }
+            )
         }
     }
 }
