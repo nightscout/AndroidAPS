@@ -35,7 +35,7 @@
     <string name="pref_summary_alert_override_dnd">På: Alarmer utløses selv om telefonen er satt på lydløs eller Ikke forstyrr er aktivert. Av: Alarmene lager ikke lyd da. Når Ikke forstyrr er aktivert, vibrerer de bare.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Last opp BS-data til NS</string>
-    <string name="pref_title_bg_source_create_sensor_change">Logg sensorskifte</string>
+    <string name="pref_title_bg_source_create_sensor_change">Logg sensorbytte</string>
     <string name="pref_summary_bg_source_create_sensor_change">Opprett en sensorskiftehendelse når sensoren settes inn.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Bruk dynamisk sensitivitet</string>
@@ -144,7 +144,7 @@
     <string name="pref_title_wear_wizard_trend">Inkluder trend i kalkulatorberegninger</string>
     <string name="pref_title_wear_wizard_cob">Inkluder COB i kalkulatorberegninger</string>
     <string name="pref_title_wear_wizard_iob">Inkluder IOB i kalkulatorberegninger</string>
-    <string name="pref_title_wear_custom_watchface_authorization">Autoriser tilpassede urskiver</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Autoriser egendefinerte urskiver</string>
     <string name="pref_title_wear_pushed_watchface">Urskive installert på klokken</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Komplikasjons-urskive</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Egendefinert urskive</string>
@@ -264,7 +264,7 @@
     <string name="lang_ru">Russisk</string>
     <string name="lang_sk">Slovakisk</string>
     <string name="lang_sv">Svensk</string>
-    <string name="lang_tr">Tykrisk</string>
+    <string name="lang_tr">Tyrkisk</string>
     <string name="lang_zh_tw">Kinesisk, tradisjonell</string>
     <string name="lang_zh_cn">Kinesisk, forenklet</string>
     <string name="pref_title_patient_name">Instansnavn</string>
@@ -281,7 +281,7 @@
     <string name="pref_title_bolus_pin">Bolus-PIN</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Velg mørkt, lyst eller bruk systemtema</string>
-    <string name="pref_title_app_color_scheme">App fargevalg</string>
+    <string name="pref_title_app_color_scheme">Fargevalg for appen</string>
     <string name="pref_dark_theme">Mørkt tema</string>
     <string name="pref_light_theme">Lyst tema</string>
     <string name="pref_follow_system_theme">Bruk systemtema</string>
