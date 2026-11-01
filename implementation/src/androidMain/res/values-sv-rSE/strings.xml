@@ -57,10 +57,8 @@
     <string name="ue_exported">Användarposter exporterade</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporterades för %1$s sedan</string>
     <string name="exported_at" comment="at placeholder we add export date">exporterades vid %1$s</string>
-    <string name="exported_less_than_hour_ago">exporterades för mindre än en timme sedan</string>
     <string name="metadata_warning_different_flavour">Inställningarna skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller vara ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
     <string name="metadata_warning_different_device">Inställningar skapades på en annan enhet. Det är OK om du importerar från en äldre eller en annan telefon, men se till att importerade inställningar är korrekta!</string>
-    <string name="metadata_warning_old_export">Importerade inställningar är %1$s dagar gamla. Du kanske har mer aktuella inställningar eller valde du fel fil? Kom ihåg att exportera dina inställningar regelbundet!</string>
     <string name="metadata_warning_date_format">Ogiltigt datumformat!</string>
     <string name="metadata_warning_different_version">Inställningarna är sparade i en annan delversion av appen. Det är OK om du importerar efter uppgradering, men kontrollera att inställningarna fortfarande är korrekta efter import!</string>
     <string name="metadata_urgent_different_version">Inställningarna är sparade i en annan huvudversion av appen. Olika huvudversioner kan ha helt olika struktur vilket kan göra dem inkompatibla. Kontrollera inställningarna noggrant efter import!</string>
