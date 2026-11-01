@@ -21,8 +21,12 @@
     <string name="random_bg">Zufalls-BZ</string>
     <string name="description_source_random_bg">Zufalls-BZ: Generiert zufällige Blutzuckerdaten (nur im Demo-Modus)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Glukosewerte aus der Syai/Ottai-App empfangen.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
     <!-- Instara App -->
     <!-- Instara preferences -->
     <!-- Notification Reader -->
