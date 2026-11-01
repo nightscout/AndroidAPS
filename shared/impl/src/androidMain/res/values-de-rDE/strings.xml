@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Monatsname (kurz)</string>
     <string name="cwf_comment_loop">Loop-Status und Historie</string>
     <string name="cwf_comment_direction">Richtungspfeil</string>
-    <string name="cwf_comment_timestamp">Minuten vor dem letzten erhaltenen BG</string>
     <string name="cwf_comment_sgv">Blutzuckerwert</string>
     <string name="cwf_comment_cover_plate">Titelbild vor dem Text (wählen...)</string>
     <string name="cwf_comment_hour_hand">Bild des Stundenzeiger (Analog Uhr)</string>
