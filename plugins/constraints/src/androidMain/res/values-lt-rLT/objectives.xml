@@ -17,9 +17,7 @@
     <string name="objectives_maxbasal_learned">Būkite dėmesingi nustatydami saugumo parametrus ir derinkite juos, kai reikia.</string>
     <string name="objectives_maxiobzero_objective">Pradėkite LGS režimą su pompos stabdymu esant žemai glikemijai</string>
     <string name="objectives_maxiobzero_gate">Kelias dienas naudokite uždarą ciklą LGS (insulino tiekimo stabdymo esant žemai gliukozei) režimu. Maks AIO automatiškai nustatomas į 0. Stebėkite, kad LGS įvykių nebūtų per daug.</string>
-    <string name="objectives_maxiobzero_learned">Nustačius nulinį maks AIO, sistema saugos Jus nuo hipoglikemijų ir nedidins nustatytos bazės (išskyrus tas situacijas, kai AIO yra minusinis)</string>
     <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks AIO ir mažindami tikslinės glikemijos reikšmę</string>
-    <string name="objectives_maxiob_gate">Naudokite kelias dienas ir bent vieną naktį be įspėjimų apie žemą gliukozę, prieš mažindami gliukozės tikslą</string>
     <string name="objectives_maxiob_learned">Vaikui augant atnaujinkite maks AIO. Neleiskite sistemai suleisti daugiau insulino, nei galite kompensuoti maistu — labai didelė reikšmė yra blogas pasirinkimas. Paprastajame režime maks AIO reikšmė apskaičiuojama automatiškai, todėl jos nustatyti nereikia.</string>
     <string name="maxiobset">Maks AIO nustatytas tinkamai (paprastajame režime nebūtina)</string>
     <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją</string>
@@ -53,7 +51,6 @@
     <string name="objectives_exam_learned_isf">Sužinojote, kas yra JIF ir kaip jo dydis lemia insulino kiekio, naudojamo glikemijos korekcijoms, apskaičiavimus.</string>
     <string name="objectives_exam_learned_ic">Sužinojote, kas yra IA ir kaip jo dydis lemia insulino kiekio, naudojamo angliavandeniams padengti, apskaičiavimus.</string>
     <string name="objectives_exam_learned_hypott">Hipo laikinas tikslas naudojamas tam, kad sistema nepradėtų agresyviai koreguoti greitai kylančios glikemijos suvalgius AV hipoglikemijos metu, kai įprastai AIO būna minusinis. Tam, kad šios situacijos būtų išvengta ateityje, reikalingi papildomi veiksmai.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">Profilio procentas nekeičia glikemijos tikslo, tačiau bazė, JIF ir IA perskaičiuojami taip, kad, nustačius daugiau nei 100 %, insulino būtų suleidžiama daugiau, o mažiau nei 100 % – mažiau.</string>
     <string name="objectives_exam_learned_profileswitchtime">Laiko perstūmimas keičiant profilį padeda prisitaikyti prie cirkadinių ritmų pokyčių, pvz.: vėlyvo atsikėlimo.</string>
     <string name="objectives_exam_learned_profileswitch4">Vien pakeisti profilio reikšmių nepakanka, kad profilis įsigaliotų. Po bet kokių pakeitimų būtina aktyvuoti profilį.</string>
     <string name="objectives_exam_learned_exercise">Reikėtų sumažinti aktyvaus insulino kiekį organizme. Tam reikia bent 1 val. iki fizinio aktyvumo pakeisti profilį į mažesnį nei 100%.</string>
@@ -64,14 +61,10 @@
     <string name="objectives_exam_learned_sensitivity">Jautrumo nustatymo algoritmas padeda adaptuoti automatinį insulino dozavimą įvairioms situacijoms.</string>
     <string name="objectives_exam_learned_objectives">Jūsų pažanga mokymo programoje yra išsaugoma kartu su kitais nustatymais, kai sukuriate jų atsarginę kopiją.</string>
     <string name="objectives_exam_learned_objectives2">Eksportuotus nustatymus ir sukurtą APK failą visada laikykite ne tik telefone. Telefoną galima pamesti, jis gali sugesti ar būti sugadintas. Tinkama vieta atsarginei kopijai gali būti bet kuri iš telefono pasiekiama debesies saugykla. Tokiu atveju AAPS kitame įrenginyje galėsite atkurti vos per kelias minutes. Taip pat saugioje vietoje išsaugokite naudojamą pagrindinį slaptažodį. Be jo atsarginė nustatymų kopija bus bevertė. Tas pats galioja AAPS kūrimui naudojamiems pasirašymo raktams (.jks failui) ir slaptažodžiams. Kitus failus prireikus galima bet kada iš naujo atsisiųsti iš interneto.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Jei į AAPS įvedėte neteisingus duomenis arba jie neatitinka tikrosios situacijos, kuo greičiau juos ištaisykite. Priešingu atveju gali būti suleista per daug insulino. AAPS visada turėtų turėti kuo tikslesnę informaciją apie angliavandenius, insuliną ir kitus svarbius duomenis.</string>
-    <string name="objectives_exam_learned_iob">Analizuojant, ar gerai veikia AAPS, AIO grafiko stebėjimas gali suteikti daug naudingos informacijos.</string>
-    <string name="objectives_exam_learned_cob">AAO apskaičiavimas priklauso nuo JIF ir IA tarpusavio ryšio. Kuo didesnis JIF ar mažesnis IA, tuo angliavandeniai įsisavinami lėčiau. Tačiau profilio keitimas procentais abi reikšmes pakeičia proporcingai, todėl AV įsisavinimo laikas nepakinta.</string>
     <string name="objectives_exam_learned_breadgrams">Angliavandeniai įvedami tik gramais.</string>
     <string name="objectives_exam_learned_ecarbs">Ištęsti AV pakeičia pompose įprastai naudojamus ištęstus bolusus.</string>
     <string name="objectives_exam_learned_nsclient">AAPS veikimą nuotoliniu būdu galite stebėti naudodami AAPSClient arba Nightscout. Susiejus AAPSClient su pagrindiniu telefonu, AAPS taip pat galima valdyti nuotoliniu būdu.</string>
     <string name="objectives_exam_learned_concentration1">Naudojant U200 insuliną su 50 % profiliu, reikės nuolat perskaičiuoti dozes: tiek leidžiant insuliną švirkštikliu, tiek vertinant standartines AAPS ar Nightscout ataskaitas. Jose dozės bus rodomos neteisingai, todėl sveikatos priežiūros specialistams jas reikės perskaičiuoti į tarptautinius vienetus (V).</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">Pereinant nuo U200 insulino su 50 % profiliu prie U200 insulino naudojant insulino koncentracijos funkciją, reikės sukurti naują, stipresnį profilį, savaitei išjungti DynamicISF ir priprasti visas insulino dozes vertinti tarptautiniais vienetais (V).</string>
     <string name="objectives_exam_learned_concentration3">Insulino koncentraciją galima keisti tik keičiant rezervuarą. Svarbiausia – ypač naudojant pompas su vamzdeliais, – bolusų niekada neleiskite tiesiogiai per pačios pompos valdymo ekraną.</string>
     <string name="answerdisabledto">Atsakyti negalima iki: %1$s</string>
     <string name="wronganswer">Neteisingas atsakymas!</string>
