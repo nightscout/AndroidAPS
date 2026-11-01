@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">İğne Kapağını Çıkarın</string>
     <string name="carelevo_patch_connect_step_1_desc">Patch\'i blister ambalajdan alın ve iğne kapağını çıkarın.</string>
     <string name="carelevo_patch_connect_step_2_title">Açın ve Bağlanın</string>
-    <string name="carelevo_patch_connect_step_2_desc">Güç düğmesine 1 saniyeden uzun basın. Bip sesinden sonra aşağıdaki [Patch Ara] düğmesine dokunun.</string>
     <string name="carelevo_patch_safety_check_start_title">Güvenlik Kontrolü</string>
     <string name="carelevo_patch_safety_check_end_title">Güvenlik Kontrolü Tamamlandı</string>
     <string name="carelevo_patch_safety_check_start_desc">Patch başarıyla bağlandı.\nLütfen [Güvenlik Kontrolü] düğmesine basın.</string>
@@ -113,7 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Aşağıda bulunan Patch doğruysa lütfen Onayla düğmesine dokunun.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">İğne yerleştirildi, aplikatörü çıkarın</string>
     <string name="carelevo_dialog_connect_detached">Aplikatör Çıkarıldı</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">Aplikatörü Patch\'ten ayırmak için iki yanındaki tutamaçlara bastırın,\nardından `Aplikatör Çıkarıldı` düğmesine basın. İnsülin iletimi başlayacaktır.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth etkin değil. Lütfen kontrol edin.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Bağlı Patch yok.</string>
@@ -180,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">10 Ü\'den az insülin kaldı; insülin iletimi durduruldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Patch\'in süresi doldu; insülin iletimi durduruldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
     <string name="alarm_notification_desc_warning_low_battery">Düşük pil; insülin iletimi durduruldu. [Patch\'i Çıkar] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">İnsülin iletimi durduruldu. Hemen uygun sıcaklıkta bir ortama geçin (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">İnsülin iletimi durduruldu. [İnsülini Başlat] butonuna dokunun ve bazal iletimi yeniden başlatın.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Patch uygulama süresi doldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Tanılama başarısız oldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
