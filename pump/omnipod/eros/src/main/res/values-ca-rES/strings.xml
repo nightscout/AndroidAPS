@@ -9,7 +9,6 @@
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botó \"Registre de pols\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botó \"Estadístiques RileyLink\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activar registre de canvi de pila a Accions</string>
-    <string name="omnipod_eros_history_tbr_value">Basal: %1$.2f U, durada: %2$d minuts</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Error de comunicació: ha fallat la verificació de la integritat del missatge</string>
     <string name="omnipod_eros_error_invalid_packet_type">Error de comunicació: s\'ha rebut del pod un paquet no vàlid</string>
@@ -26,16 +25,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">RileyLink no respon</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interromput</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">El pod no respon</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Error en configurar el perfil basal. El lliurament d\'insulina podria suspendre\'s! Actualitzeu manualment l\'estat del pod des de la pestanya Ominipod i repreneu el lliurament si cal.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Possible error en configurar el perfil basal. El lliurament d\'insulina podria suspendre\'s! Actualitzeu l\'estat del pod des de la pestanya Omnipod i repreneu el lliurament si cal.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Error en configurar el perfil basal. S\'ha aturat el lliurament d\'insulina! Repreneu-lo manualment des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Possible error en cancel·lar basal temporal. Actualitzeu manualment l\'estat del pod des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Possible error en establir basal temporal. Si hi havia una basal temporal activa, pot haver estat cancel·lada. Actualitzeu manualment l\'estat del pod des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Possible error en establir basal temporal. Si hi havia una basal temporal activa, pot haver estat cancel·lada. Actualitzeu manualment l\'estat del pod des de la pestanya Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">La durada de la TBR ha de ser major que zero i múltiple de %1$s minuts.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Error en configurar la hora. El lliurament d\'insulina podria suspendre\'s! Actualitzeu manualment l\'estat del pod des de la pestanya Ominipod i repreneu el lliurament si cal.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Error en configurar la hora. S\'ha aturat el lliurament d\'insulina! Repreneu-lo manualment des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Error en el canvi d\'hora automàtic al pod. Haurieu de sincronitzar l\'hora a la pestanya Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">No s\'ha pogut verificar si el bolus ha estat lliurat. Verifiqueu manualment que el pod està lliurant bolus escoltant els clics. <b>Si esteu segurs que el bolus no s\'ha lliurat, haurieu d\'eliminar manualment el registre de bolus a Tractaments, fins i tot si ara feu \'Cancel·lar bolus\'!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">No s\'ha pogut verificar si el bolus SMB (%1$.2f U) ha estat lliurat. <b>Si esteu segurs que el bolus no s\'ha lliurat, haurieu d\'eliminar manualment el registre de SMB a Tractaments</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Hi ha una basal temporal en curs al pod, però AAPS no n\'és conscient. Si us plau cancel·leu la basal temporal manualment.</string>
