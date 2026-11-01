@@ -17,9 +17,7 @@
     <string name="objectives_maxbasal_learned">Chú ý đến các tính năng an toàn và điều chỉnh các tham số an toàn khi cần thiết.</string>
     <string name="objectives_maxiobzero_objective">Bắt đầu đóng vòng lặp với chế độ Tạm ngưng khi đường huyết thấp</string>
     <string name="objectives_maxiobzero_gate">Chạy ở chế độ vòng lặp kín với Chế độ Tạm ngưng khi đường huyết thấp (tức là IOB tối đa = 0 sẽ được đặt tự động) trong vài ngày mà không có quá nhiều sự kiện LGS.</string>
-    <string name="objectives_maxiobzero_learned">Đặt MaxIOB về 0 giúp ngăn hạ đường huyết và sẽ không bơm thêm insulin vượt quá tốc độ nền (trừ trường hợp IOB âm)</string>
     <string name="objectives_maxiob_objective">Điều chỉnh vòng lặp kín, tăng Max IOB lên trên 0 và dần dần hạ mục tiêu đường huyết</string>
-    <string name="objectives_maxiob_gate">Chạy trong vài ngày, và ít nhất một đêm không có cảnh báo hạ đường huyết, trước khi hạ mục tiêu BG</string>
     <string name="objectives_maxiob_learned">Cập nhật MaxIOB khi trẻ lớn lên. Đừng để hệ thống bơm nhiều insulin hơn lượng có thể bù bằng thức ăn = đặt giá trị quá cao là một ý tưởng tồi. Trong chế độ đơn giản, MaxIOB được tính tự động</string>
     <string name="maxiobset">Đặt IOB tối đa đúng cách (Không cần trong chế độ đơn giản)</string>
     <string name="objectives_autosens_objective">Điều chỉnh liều nền và các tỷ lệ nếu cần, sau đó bật auto-sens</string>
@@ -54,7 +52,6 @@
     <string name="objectives_exam_learned_isf">Bạn đã học được ý nghĩa của giá trị ISF và cách nó ảnh hưởng đến lượng insulin được sử dụng để điều chỉnh đường huyết.</string>
     <string name="objectives_exam_learned_ic">Bạn đã học được ý nghĩa của giá trị IC và cách nó ảnh hưởng đến lượng insulin cần thiết để bù cho lượng carbs.</string>
     <string name="objectives_exam_learned_hypott">Mục tiêu tạm thời Hypo (Hypo temp target) chỉ nên được sử dụng để tránh điều chỉnh quá mức sau hạ đường huyết, khi thường có IOB âm tích lũy. Cần xem xét thêm các biện pháp bổ sung để ngăn tình huống này lặp lại trong dự kiến.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">Việc sử dụng phần trăm không ảnh hưởng đến mục tiêu đường huyết, nhưng liều nền, ISF và IC sẽ được điều chỉnh để cấp nhiều insulin hơn (trên 100%) hoặc ít insulin hơn (dưới 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Bằng cách sử dụng dịch chuyển thời gian trong chuyển đổi cấu hình, bạn có thể điều chỉnh cấu hình theo nhịp sinh học để thích ứng với những thay đổi bất thường, như việc thức dậy muộn.</string>
     <string name="objectives_exam_learned_profileswitch4">Chỉ chỉnh sửa cấu hình thôi là chưa đủ để áp dụng thay đổi. Bạn vẫn cần thực hiện chuyển đổi cấu hình để kích hoạt các thay đổi.</string>
     <string name="objectives_exam_learned_exercise">Bạn nên giảm lượng insulin trong cơ thể ít nhất 1 giờ trước khi bắt đầu tập thể dục bằng cách chọn cấu hình dưới 100%.</string>
@@ -65,14 +62,10 @@
     <string name="objectives_exam_learned_sensitivity">Phát hiện độ nhạy là một phần của thuật toán, cho phép điều chỉnh liều insulin phù hợp với các tình huống khác nhau.</string>
     <string name="objectives_exam_learned_objectives">Tiến trình của bạn trong các Mục tiêu được lưu cùng với các thiết lập khác và cần được sao lưu.</string>
     <string name="objectives_exam_learned_objectives2">Luôn giữ bản xuất (export) cài đặt và file APK đã tạo ở ngoài điện thoại. Điện thoại có thể bị mất, hỏng, v.v. Một nơi tốt để lưu trữ có thể là bất kỳ dịch vụ lưu trữ đám mây nào có thể truy cập từ điện thoại. Trong trường hợp này, bạn có thể khôi phục AAPS trên thiết bị khác chỉ trong vài phút. Thực hành tốt là lưu giữ mật khẩu chính (master password) ở nơi an toàn, vì nếu không có nó thì bản sao lưu sẽ vô dụng. Điều tương tự cũng áp dụng cho các khóa ký (.jks file) và mật khẩu dùng để build AAPS. Những phần còn lại thì không quan trọng – bạn có thể tải lại từ internet bất cứ lúc nào.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Nếu bạn nhập sai dữ liệu vào AAPS hoặc dữ liệu không khớp với thực tế, hãy xử lý ngay lập tức. Điều này có thể dẫn đến nguy cơ tiêm quá liều insulin. AAPS luôn cần được cung cấp thông tin chính xác nhất có thể về carbohydrate, insulin, v.v.</string>
-    <string name="objectives_exam_learned_iob">Khi đánh giá AAPS có hoạt động tốt với bạn hay không, việc theo dõi biểu đồ IOB có thể cung cấp nhiều thông tin hữu ích.</string>
-    <string name="objectives_exam_learned_cob">Việc tính toán COB phụ thuộc vào mối tương quan giữa ISF và IC. Tăng ISF hoặc giảm IC sẽ làm kéo dài thời gian hấp thu. Tuy nhiên, khi chuyển đổi cấu hình với tỷ lệ phần trăm, cả hai giá trị đều thay đổi đồng thời nên thời gian hấp thu không bị ảnh hưởng.</string>
     <string name="objectives_exam_learned_breadgrams">Chỉ được phép nhập carbohydrate theo đơn vị gram.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs là sự thay thế cho bolus kéo dài trong thế giới bơm insulin.</string>
     <string name="objectives_exam_learned_nsclient">Bạn có thể theo dõi AAPS từ xa bằng AAPSClient hoặc Nightscout. Khi AAPSClient được ghép đôi với điện thoại chính, bạn cũng có thể điều khiển AAPS từ xa.</string>
     <string name="objectives_exam_learned_concentration1">Dùng insulin U200 với cấu hình 50% sẽ khiến bạn phải quy đổi liều mỗi lần tiêm bolus bằng bút bên ngoài AAPS. Các báo cáo tiêu chuẩn của AAPS hoặc Nightscout cũng sẽ không phản ánh đúng giá trị thực và cần được quy đổi về IU trước khi gửi cho đội ngũ y tế.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">Chuyển từ U200 với cấu hình 50% sang U200 bằng tính năng nồng độ insulin sẽ yêu cầu tạo một cấu hình mạnh hơn, tắt DynISF trong một tuần và rèn luyện để làm quen với việc tính theo đơn vị quốc tế.</string>
     <string name="objectives_exam_learned_concentration3">Chỉ có thể thay đổi nồng độ insulin khi thay insulin hoặc patch. Nhưng quan trọng nhất, đặc biệt với bơm có dây, tuyệt đối không sử dụng giao diện của bơm để tiêm bolus trực tiếp từ bơm.</string>
     <string name="answerdisabledto">Trả lời bị vô hiệu hóa cho đến: %1$s</string>
     <string name="wronganswer">Câu trả lời sai!</string>
