@@ -168,7 +168,6 @@
     <string name="notification">Oznámení</string>
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
     <string name="exists">existuje</string>
-    <string name="notexists">neexistuje</string>
     <string name="glucose">Glykémie</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -226,11 +225,9 @@
     <string name="pump_wizard_profile_gate_pick">Vyberte profil, který se použije při aktivaci.</string>
     <string name="pump_wizard_profile_gate_no_store">Není definován žádný profil. Otevřete Správu profilů a vytvořte profil, poté znovu spusťte aktivaci.</string>
     <string name="reset">Resetovat</string>
-    <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procenta</string>
     <string name="timeshift_label">Posun času</string>
-    <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hlavní zařízení nemá %1$d těchto záznamů. Nejsou odstraněny.</string>
     <string name="overview_treatment_label">Ošetření</string>
     <string name="copytolocalprofile">Vytvořit z tohoto profilu nový profil?</string>
@@ -342,9 +339,7 @@
     <string name="careportal_note">Poznámka</string>
     <string name="careportal_question">Otázka</string>
     <string name="careportal_exercise">Cvičení</string>
-    <string name="careportal_announcement_message">Oznámení: %1$s</string>
     <string name="careportal_note_message">Poznámka : %1$s</string>
-    <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičení : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Změna místa aplikace: %1$s</string>
     <string name="careportal_pump_site_change">Výměna setu</string>
@@ -661,7 +656,6 @@
     <string name="uel_ns_queue_cleared">FRONTA NS VYMAZÁNA</string>
     <string name="uel_ns_settings_copied">NASTAVENÍ NS ZKOPÍROVÁNO</string>
     <string name="uel_error_dialog_ok">DIALOGOVÉ OKNO CHYBY OK</string>
-    <string name="uel_error_dialog_mute">DIALOGOVÉ OKNO CHYBY ZTLUMENO</string>
     <string name="uel_error_dialog_mute_5min">DIALOGOVÉ OKNO CHYBY ZTLUMENO NA 5 MIN</string>
     <string name="uel_objective_started">CÍL ZAHÁJEN</string>
     <string name="uel_objective_unstarted">ZAHÁJENÍ CÍLE ZRUŠENO</string>
@@ -726,7 +720,6 @@
     <string name="error_in_isf_values">Chyba v hodnotách ISF</string>
     <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
     <string name="error_in_target_values">Chyba v hodnotách cíle</string>
-    <string name="profile_name_contains_dot">Některé názvy profilů obsahují tečky.\nToto není NS podporováno.\nProfily nebudou nahrány na NS.</string>
     <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebyl přijat z NS</string>
     <string name="errors">Chyby</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +884,6 @@
     <string name="export_result_message_exported">Nastavení exportováno</string>
     <string name="export_result_message_failed">Nastavení NEJSOU správně exportována!</string>
     <string name="export_result_message_about_to_expire">Nastavení exportováno: heslo brzy vyprší. Exportujte ručně a (znovu) zadejte heslo.</string>
-    <string name="export_result_message_expired">Export nastavení zrušen: heslo vypršelo. Exportujte ručně a (znovu) zadejte heslo!</string>
     <string name="export_result_message_disabled">Varování (automatizace): Není povolen export nastavení!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Export do cloudu úspěšný</string>
@@ -998,7 +990,6 @@
     <string name="cannula">Kanyla</string>
     <string name="patch_pump">Patch pumpa</string>
     <!-- Site Rotation -->
-    <string name="select_location">Klepnutím níže vyberte místo</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
     <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>
@@ -1053,7 +1044,6 @@
     <string name="unsaved_changes">Neuložené změny</string>
     <string name="unsaved_changes_message">Máte neuložené změny. Co chcete udělat?</string>
     <string name="discard">Zahodit</string>
-    <string name="ic_dynamic_label_warning">Váš algoritmus umí dynamický výpočet IC. Níže uvedené hodnoty lze použít pouze jako záloha v případě chybějících dat nebo jako referenční hodnota</string>
     <string name="isf_dynamic_label_warning">Váš algoritmus umí dynamický výpočet ISF. Níže uvedené hodnoty lze použít pouze jako záloha v případě chybějících dat nebo jako referenční hodnota</string>
     <string name="add_time_block">Přidat časový blok</string>
     <string name="remove_entry">Odstranit záznam</string>
