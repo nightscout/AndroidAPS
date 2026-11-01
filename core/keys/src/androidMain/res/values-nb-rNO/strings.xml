@@ -177,7 +177,7 @@
     <string name="pref_title_bolus_percentage">Bolusprosent</string>
     <string name="deliverpartofboluswizard">Bruk denne verdien på BS- og karbokorreksjonen i boluskalkulatorens resultat</string>
     <string name="pref_title_reset_bolus_percentage_time">Tilbakestill bolusprosenttid</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Lever full bolus (100%) hvis blodsukker er eldre enn</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Lever full bolus (100%) hvis BS-målingen er eldre enn</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Beskyttelsestidsavbrudd</string>
     <string name="pref_title_protection_type_application">Nivå 0: Appbeskyttelse</string>
@@ -330,7 +330,7 @@
     <string name="pref_title_ama_max_iob">Maks IOB for AMA</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Maks IOB i OpenAPS-sammenheng\nDette er maksimal insulin i [E] som APS kan levere på én gang. Verdien påvirkes også av pasienttype.</string>
     <string name="pref_title_max_daily_multiplier">Maks daglig sikkerhetsmultiplikator</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en grunnleggende sikkerhetsfunksjon i OpenAPS. Den begrenser basalraten til å være 3x den høyeste basalraten fra profilen. Du vil sannsynligvis ikke trenge å endre denne innstillingen, men du bør være klar over at det er dette som diskuteres som \"3x daglig; 4x nåværende\" som sikkerhetsfunksjoner.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3. Dette er en grunnleggende sikkerhetsfunksjon i OpenAPS. Den begrenser basalraten til å være 3x den høyeste basalraten fra profilen. Du vil sannsynligvis ikke trenge å endre denne innstillingen, men du bør være klar over at det er dette som diskuteres som \"3x daglig; 4x nåværende\" som sikkerhetsfunksjoner.</string>
     <string name="pref_title_current_basal_multiplier">Nåværende basal sikkerhetsmultiplikator</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4. Dette er den andre halvdelen av de viktige sikkerhetsbegrensningene i OpenAPS, “3x maks daglig; 4x nåværende”. Dette betyr at din midlertidige basaldose, uavhengig av maks basal som er satt på pumpen din, ikke kan være høyere enn dette tallet ganger det nåværende nivået på din profils basaldose. Dette er for å hindre at brukere havner i farlige situasjoner ved å sette altfor høye maks basaler før de forstår hvordan algoritmen fungerer. Igjen, standardverdien er 4x; de fleste trenger aldri å endre dette, og vil heller måtte justere andre innstillinger hvis de føler at de “stanger mot” denne sikkerhetsgrensen.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
@@ -365,7 +365,7 @@
     <string name="pref_title_dura_weight">Varighet ISF-vekt</string>
     <string name="openapsama_dura_ISF_weight_summary">Dette er vekten som tillegges over lengre forhøyet glukoseplatåer og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_smb_delivery_ratio">SMB leveringsratio</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Standardverdi: 0.5 Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir hvilken andel av den totale insulin som kreves kan leveres som SMB. Dette er for å forhindre at personer kommer inn i farlig territorium ved å sette SMB-forespørsler fra omsorgspersonens telefon samtidig. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standardverdi: 0.5. Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir hvilken andel av den totale insulin som kreves kan leveres som SMB. Dette er for å forhindre at personer kommer inn i farlig territorium ved å sette SMB-forespørsler fra omsorgspersonens telefon samtidig. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB leveringsratio min</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Standardverdi: 0.5. Den nedre enden av en lineært økende ratio i stedet for den faste verdien ovenfor.</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB leveringsratio maks</string>
