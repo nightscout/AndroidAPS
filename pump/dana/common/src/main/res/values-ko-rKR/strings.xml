@@ -8,7 +8,6 @@
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 오류</string>
     <string name="insulinlimitviolation">인슐린 제한 위반</string>
-    <string name="boluserrorcode">요청: %1$.2fU 주입: %2$.2fU 오류 코드: %3$s</string>
     <string name="danai2_bolus_error_no_prime">펌프가 프라임되지 않았습니다</string>
     <string name="danai2_bolus_error_not_enough_insulin">레저버에 인슐린이 부족합니다</string>
     <string name="danai2_bolus_error_easy_sleep">펌프에서 이지 수면 모드가 켜져 있습니다</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">선택된 펌프</string>
     <string name="rs_loginsulinchange_title">레저버 교체 기록</string>
     <string name="rs_loginsulinchange_summary">이력에서 발견되면 케어포털에 \"인슐린 교체\" 이벤트를 추가합니다</string>
-    <string name="rs_logcanulachange_title">캐뉼라 교체 기록</string>
     <string name="rs_logcanulachange_summary">이력에서 발견되면 케어포털에 \"위치 변경\" 이벤트를 추가합니다</string>
     <string name="press_ok_on_the_pump">펌프에서 OK를 누르고\n표시된 숫자 2개를 입력하십시오\n코드 입력을 마칠 때까지 빼기 버튼을 눌러 펌프 화면을 켜진 상태로 유지하십시오.</string>
     <string name="num1pin">1: (12자리)</string>
