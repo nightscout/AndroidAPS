@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Farklı insülin konsantrasyonları (U50, U200 vb.) için desteği etkinleştirin</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Ekranı açık tut</string>
-    <string name="pref_summary_keep_screen_on">Android\'in ekranı kapatmasını önleyin. Prize takılı değilken çok fazla enerji tüketir.</string>
     <string name="pref_title_show_treatment_button">Tedavi butonunu göster</string>
     <string name="pref_title_show_wizard_button">Sihirbaz butonunu göster</string>
     <string name="pref_title_show_insulin_button">İnsülin butonunu göster</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Bolus yüzdesi</string>
     <string name="deliverpartofboluswizard">Bu değeri bolus sihirbazının sonucundaki KŞ ve karb düzeltmesine uygulayın</string>
     <string name="pref_title_reset_bolus_percentage_time">Bolus yüzdesi süresini sıfırla</string>
-    <string name="deliver_part_of_boluswizard_reset_time">KŞ şu tarihten daha eskiyse tam bolus (%100) verin</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Koruma zaman aşımı</string>
     <string name="pref_title_protection_type_application">Seviye 0: Uygulama koruması</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">İzin verilen telefon numaraları</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Kodun sonunda ek zorunlu PIN</string>
-    <string name="smscommunicator_otp_pin_summary">Oluşturulan her tek kullanımlık şifrenin sonuna eklenmesi ve ezberlenmesi gereken ek rakamlar</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Pompa tipi</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">AMA için maks AİNS</string>
     <string name="openapsma_max_iob_summary">Bu değere OpenAPS bağlamında maks AİNS denir.\nAPS\'de bir kerede verilebilen maksimum insülin [Ü]. Değer, hasta tipinden etkilenir.</string>
     <string name="pref_title_max_daily_multiplier">Maks günlük güvenlik çarpanı</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'nin önemli bir güvenlik sınırıdır. Bu, bazal dozunuzu en yüksek bazal dozunuzun 3 katıyla sınırlandırır. Bunu değiştirmenize muhtemelen gerek kalmayacak, ancak güvenlik sınırları için \"günlük maksimumun 3 katı; mevcut dozun 4 katı\" ifadesinin ne anlama geldiğinin farkında olmalısınız.</string>
     <string name="pref_title_current_basal_multiplier">Mevcut bazal güvenlik çarpanı</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan değer: 4. Bu, OpenAPS\'in önemli güvenlik sınırlarının diğer yarısıdır, yani “günlük maksimumun 3 katı; mevcut değerin 4 katı” kuralının diğer yarısıdır. Pompanızda ayarlanan maksimum bazaldan bağımsız olarak, bazalınız mevcut bazal seviyenizin bu sayı ile çarpımından yüksek olamaz. Bu, algoritmanın nasıl çalıştığını anlamadan çok yüksek maksimum bazal değerleri ayarlayarak tehlikeli duruma düşmeyi önlemek içindir. Varsayılan değer yine 4 kattır; çoğu kişinin bunu değiştirmesi gerekmez. Bu güvenlik sınırına “takıldığını” düşünen kişilerin bunun yerine başka ayarları değiştirmesi gerekir.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus erteleme İES böleni</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Emilim kesme</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
     <string name="pref_title_absorption_maxtime">Emilim max süre</string>
-    <string name="absorption_max_time_summary">Yemekteki tüm karbonhidratların emilmesinin beklendiği saat cinsinden süre</string>
     <string name="pref_title_autosens_min">Otoduyarlılık min</string>
     <string name="openapsama_autosens_min_summary">Varsayılan değer: 0,7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
     <string name="pref_title_autosens_max">Otoduyarlılık maks</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Süre İDF ağırlığı</string>
     <string name="openapsama_dura_ISF_weight_summary">Daha uzun süreli, yüksek glikoz platoları sırasında uygulanan ve İDF\'yi güçlendirerek potansiyel olarak insülin iletimini artıran ağırlıktır.\n\nVarsayılan değer 0,0 bu etkiyi fiilen kapatır.</string>
     <string name="pref_title_smb_delivery_ratio">SMB iletim oranı</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Varsayılan değer: 0,5 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve toplam insülin ihtiyacının ne kadarının SMB olarak verilebileceğini belirtir. Aynı anda bakıcının telefonundan SMB istekleri ayarlayarak insanların tehlikeli bölgelere girmesini önlemek içindir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB iletim oranı min</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın alt ucudur.</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB iletim oranı maks</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın üst ucudur.</string>
     <string name="pref_title_smb_max_range_extension">SMB maks menzil genişletme</string>
     <string name="openapsama_smb_max_range_extension_summary">Varsayılan değer: 1 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve normalde 120 dakika olan maxSMB/maxUAM süresini hangi faktörle aşabileceğinizi belirtir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
     <!-- UnitDoubleKey: Overview preferences -->
