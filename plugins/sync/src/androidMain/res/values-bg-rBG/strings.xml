@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Настройки за свързване</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Синхронизира данните ви с Nightscout чрез API v3</string>
     <string name="blocked_by_charging">Блокирано от настройките за зареждане</string>
     <string name="blocked_by_connectivity">Блокирано от настройките за връзка</string>
@@ -116,12 +115,10 @@
     <string name="status_label">Статус:</string>
     <string name="clear_log">Изчисти лога</string>
     <string name="full_sync">Пълна синхронизация</string>
-    <string name="full_sync_comment">Пълна синхронизация? Може да отнеме много часове и докато не приключи, няма да виждате нови данни в NS.</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_alarm_options">Опции за аларми</string>
     <string name="ns_remote_control_options">Отдалечен контрол</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Данните да се изпращат към тестовите сървъри вместо към реалните</string>
     <string name="title_tidepool_dev_servers">Използвай тестовите сървъри</string>
     <string name="title_tidepool_use_ns_connection">Използвай настройките за връзка с Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Изключете, за да зададете отделни настройки за връзка с Tidepool</string>
@@ -230,16 +227,13 @@
     <string name="smscommunicator_tab_otp_label">Настройка на автентикатор</string>
     <string name="smscommunicator_code_verify_label">Проверка на кода:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">Кодът е 6-цифрен и идва от автентикатора (OTP), следван от PIN.</string>
     <string name="smscommunicator_otp_reset_btn">Нулирай автентикаторите</string>
     <string name="smscommunicator_otp_reset_title">Нулиране на ключа на автентикатора</string>
-    <string name="smscommunicator_otp_reset_prompt">Сигурни ли сте? Това ще направи конфигурираните автентикатори невалидни и ще трябва да ги настроите отново.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Инсталирайте автентикатор</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Сканирайте кода, за да настроите OTP кодовете на AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Тест на OTP кода</string>
     <string name="smscommunicator_otp_reset_header">Нулиране на автентикаторите</string>
     <string name="smscommunicator_otp_install_info">На всички проследяващи телефони инсталирайте автентикатор, който поддържа RFC 6238 TOTP токени. Безплатни са:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">При нулиране на автентикаторите текущите ще станат невалидни. Ще трябва да ги настроите отново!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">НЕВАЛИДЕН РАЗМЕР!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">ГРЕШЕН PIN</string>
@@ -250,7 +244,6 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">За пускане на болус за хранене от %1$.2fЕ отговорете с код %2$s</string>
     <string name="smscommunicator_temptarget_with_code">За задаване на временна цел %1$s, отговорете с код %2$s</string>
     <string name="smscommunicator_temptarget_cancel">За спиране на временна цел отговорете с код %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">За изключване на SMS команди отговорете с код %1$s.\n\nЩе можете да ги включите само от главния телефон.</string>
     <string name="smscommunicator_stopped_sms">Отдалечените SMS команди са спрени. Можете да ги включите само от главния телефон.</string>
     <string name="smscommunicator_calibration_reply_with_code">За да направите калибрация %1$.2f, отговорете с код %2$s</string>
     <string name="smscommunicator_bolus_failed">Болусът не е пуснат. Проверете дали е така чрез нова команда!</string>
@@ -281,7 +274,6 @@
     <string name="smscommunicator_restarting">AAPS се рестартира</string>
     <string name="smscommunicator_tempbasal_set">Временният базал от %1$.2fЕ/ч за %2$d мин е стартиран успешно</string>
     <string name="smscommunicator_extended_set">Удълженият болус %1$.2fЕ за %2$d мин е стартиран успешно</string>
-    <string name="smscommunicator_carbs_set">Въведени са %1$dг въглехидрати</string>
     <string name="smscommunicator_carbs_failed">Въвеждането на %1$dг въглехидрати е НЕУСПЕШНО</string>
     <string name="smscommunicator_tempbasal_set_percent">Временният базал от %1$d%% за %2$d мин е стартиран успешно</string>
     <string name="smscommunicator_tempbasal_failed">Неуспешно стартиране на временен базал</string>
