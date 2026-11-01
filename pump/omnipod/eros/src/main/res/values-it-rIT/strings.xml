@@ -12,7 +12,7 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Velocità: %1$.2f U, durata: %2$d minuti</string>
+    <string name="omnipod_eros_history_tbr_value">Velocità: %1$.2f U/h, durata: %2$d minuti</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Comunicazione fallita: verifica dell\'integrità del messaggio fallita</string>
     <string name="omnipod_eros_error_invalid_packet_type">Comunicazione fallita: ricevuto un pacchetto non valido dal pod</string>
@@ -29,14 +29,14 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Nessuna risposta da RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interrotto</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nessuna risposta dal pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Impostazione profilo basale fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">L\'impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod nella scheda Omnipod e riprendi l\'erogazione se necessario.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">L\'impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">L\'impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Impostazione profilo basale fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">L\'annullamento della basale temporanea potrebbe essere fallito. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata annullata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">L\'impostazione dell\'ora potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod nella scheda Omnipod e riprendi l\'erogazione se necessario.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">L\'impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Impossibile cambiare automaticamente l\'ora nel pod. Dovresti sincronizzare manualmente l\'ora nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Impossibile verificare se il bolo è riuscito. Verifica manualmente che il tuo pod stia erogando insulina ascoltando i click. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento del bolo dalla sezione Trattamenti, anche se tocchi \'Annulla bolo\' adesso!</b></string>
