@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day için Pompa Entegrasyonu</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Patch, bolusun sona erdiğini doğrulamadı. %1$s kaydedildi, ancak Patch daha fazlasını vermiş olabilir. Daha fazla insülin vermeden önce Patch\'i kontrol edin.</string>
-    <string name="low_reservoir">Düşük rezervuar Uyarısı</string>
-    <string name="patch_expiration_reminders">Patch Süre Sonu Hatırlatıcısı</string>
     <string name="patch_buzzer_reminders">Patch Sesli Hatırlatıcıları</string>
     <string name="eopatch_ble_status">BLE Durumu</string>
     <string name="eopatch_serial_number">Seri Numarası</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">Yeni Patch\'e geçmek için mevcut Patch çıkarılmalıdır. Patch\'ten yapılan tüm insülin iletimi iptal edilecektir.</string>
     <string name="patch_discard_complete_title">Patch çıkarma işlemi tamamlandı.</string>
     <string name="patch_discard_complete_desc">Patch devre dışı bırakıldı.\nPatch\'i atın.\nVücudunuza takılı Patch\'i çıkarın.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Şu anda bir bolus iletiliyor. İnsülin iletimini iptal etmek ve Patch\'i çıkarmak istiyor musunuz?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Şu anda bir geçici bazal iletiliyor. İnsülin iletimini iptal etmek ve Patch\'i çıkarmak istiyor musunuz?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Şu anda bolus ve geçici bazal iletiliyor. İnsülin iletimini iptal etmek ve Patch\'i çıkarmak istiyor musunuz?</string>
-    <string name="patch_change_confirm_desc">Patch\'i çıkarmak istediğinize emin misiniz?</string>
     <string name="patch_forced_discard">Çıkar</string>
     <string name="patch_comm_error_during_discard_desc_2">Tek taraflı devre dışı bırakma için \'Çıkar\'a dokunun.</string>
     <string name="patch_manually_turning_off_alarm_title">Patch\'in alarmını elle kapatma</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">Eşleştirme sırasında iki adet Android sistem açılır penceresi belirecektir. Bluetooth eşleştirmesini tamamlamak için her ikisini de onaylamanız gerekir.</string>
     <string name="patch_start_pairing">Eşleştirmeye başla</string>
     <string name="patch_connect_new">Patch eşleştirme</string>
-    <string name="patch_connect_new_desc">Yeni Patch eşleştiriliyor.\nPatch ile akıllı cihaz arasındaki mesafeyi mümkün olduğunca kısa tutun</string>
     <string name="patch_remove_needle_cap">Patch\'i takmaya hazırlanın</string>
     <string name="patch_remove_needle_cap_desc_1">Yapışkan bandı çıkarın ve ardından \'İleri\'ye dokunun.</string>
     <string name="patch_remove_needle_cap_desc_2">Eğer iğne dışarı çıkmışsa, \'Çıkar\' seçeneğine dokunun.</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">Yaklaşık 30 saniye sürer.</string>
     <string name="patch_safety_check_desc_2">Güvenli kullanım için, güvenlik kontrolü tamamlanana dek iğne hareket kolunu çıkarmayın!</string>
     <string name="patch_rotate_knob">İğneyi yerleştirme</string>
-    <string name="patch_rotate_knob_desc_1">İğneyi yerleştirmek için İğne hareket kolunu 100°\'den fazla çevirin ve ardından çıkarmak için tamamen döndürün</string>
     <string name="patch_rotate_knob_desc_2">1 bip sesini kontrol edin ve ardından \'İleri\'ye dokunun.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">1 bip sesini kontrol edin ve ardından \'Tekrar dene\'ye dokunun.</string>
     <string name="patch_basal_schedule">Patch etkinleştirme tamamlandı!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' program etkinleştirildi.</string>
     <string name="patch_basal_schedule_desc_2">Patch\'in kullanım süresi dolmak üzereyken sizi uyarır.\nGerekirse hatırlatma zamanını değiştirin.</string>
     <string name="patch_expiration_reminder_setting_title">Patch Süre Sonu Hatırlatıcıları</string>
-    <string name="patch_activate_reminder_desc">Patch etkinleştirmesi tamamlanmadı.\n Devam edin.</string>
     <string name="patch_communication_check_helper_1">Akıllı cihazınızı Patch\'e yaklaştırın.</string>
     <string name="patch_communication_check_helper_2">Lütfen başka bir konuma geçin ve tekrar deneyin.</string>
     <string name="patch_safety_check_failed_desc">Güvenlik kontrolü başarısız oldu. Lütfen tekrar deneyin.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Bağlantı başarılı</string>
     <string name="patch_communication_succeed_message">Patch\'e bağlandı.</string>
     <string name="patch_cancel_pairing">Eşleştirmeyi iptal et</string>
-    <string name="insulin_suspend_msg1">Askıya alındığında, şu anda iletilen Bolus &amp; Geçici bazal iptal edilecek. \n\nOran : %1$s Ü/sa\nKalan süre : %2$s\n&amp; Gidecek İnsülin: %3$.2f Ü</string>
-    <string name="insulin_suspend_msg2">Askıya alındığında, mevcut Bolus iptal edilecektir. \n\nGidecek İnsülin: %1$.2f Ü</string>
-    <string name="insulin_suspend_msg3">Askıya alındığında, şu anda iletilen Geçici Bazal iptal edilecek. \n\nOran : %1$s Ü/sa\nKalan süre : %2$s</string>
     <string name="insulin_suspend_msg4">İnsülin iletimi askıya alınacak.</string>
     <string name="string_activate_patch">Patch\'i Etkinleştir</string>
     <string name="string_discard_patch">Patch\'i Çıkar</string>
     <string name="string_running">Çalışıyor</string>
     <string name="retry">Tekrar dene</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Mevcut Patch\'i çıkarmak istediğinizden emin misiniz?</string>
     <string name="needle_insertion_error_1">İğne yerleştirme Hatası.</string>
     <string name="needle_insertion_error_3">Patch\'i devre dışı bırakmak için \'Çıkar\'a dokunun.</string>
     <string name="string_suspend_time_insulin_delivery_title">Bazal Askıya Alma Süresi</string>
