@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Integracja z pompą EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Patch nie potwierdził zakończenia bolusa. %1$s jest zapisane, ale patch mógł podać więcej. Sprawdź patch, zanim podasz więcej insuliny.</string>
-    <string name="low_reservoir">Alarmy niskiego poziomu zbiornika</string>
-    <string name="patch_expiration_reminders">Przypomnienie o wygaśnięciu Patcha</string>
     <string name="patch_buzzer_reminders">Alarmy akustyczne pompy</string>
     <string name="eopatch_ble_status">Status Bluetooth Low Energy</string>
     <string name="eopatch_serial_number">Numer seryjny</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">Aby zmienić na nowy Patch, obecny Patch musi zostać zdjęty. Cała podaż insuliny ze starego Patcha zostanie anulowana.</string>
     <string name="patch_discard_complete_title">Usuwanie Patcha zostało zakończone.</string>
     <string name="patch_discard_complete_desc">Patch został zdezaktywowany.\nOdrzuć Patch.\nOdklej plaster z ciała.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Trwa dostarczanie bolusa. Czy na pewno chcesz anulować podawanie insuliny i odrzucić Patch?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Trwa dostarczanie tymczasowej dawki bazowej. Czy na pewno chcesz anulować podawanie insuliny i odrzucić Patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Trwa dostarczanie tymczasowej dawki bazowej i bolusa. Czy na pewno chcesz anulować podawanie insuliny i odrzucić Patch?</string>
-    <string name="patch_change_confirm_desc">Czy na pewno chcesz odrzucić ten Patch?</string>
     <string name="patch_forced_discard">Odrzuć</string>
     <string name="patch_comm_error_during_discard_desc_2">Aby dezaktywować jednostronnie, kliknij \'Odrzuć\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Ręczne wyłączenie alarmu Patcha</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">Podczas parowania pojawią się dwa systemowe okna Androida. Musisz potwierdzić oba, aby zakończyć parowanie Bluetooth.</string>
     <string name="patch_start_pairing">Rozpocznij parowanie</string>
     <string name="patch_connect_new">Parowanie Patcha</string>
-    <string name="patch_connect_new_desc">Nowy Patch jest parowany.\nUtrzymuj urządzenie tak blisko telefonu jak to tylko możliwe</string>
     <string name="patch_remove_needle_cap">Przygotuj się do założenia Patcha</string>
     <string name="patch_remove_needle_cap_desc_1">Usuń taśmę samoprzylepną, a następnie naciśnij \"Dalej\".</string>
     <string name="patch_remove_needle_cap_desc_2">Jeśli igła wystaje, naciśnij \"Odrzuć\".</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">To zajmuje około 30 sekund.</string>
     <string name="patch_safety_check_desc_2">Dla bezpiecznego użytkowania nie usuwaj dźwigni akcji igły, dopóki kontrola bezpieczeństwa nie zostanie zakończona!</string>
     <string name="patch_rotate_knob">Wbijanie igły</string>
-    <string name="patch_rotate_knob_desc_1">Obrócić dźwignię igły o więcej niż 100°, aby wbić igłę, a następnie całkowicie obróć dźwignię, aby ją wyjąć.</string>
     <string name="patch_rotate_knob_desc_2">Odczekaj jeden sygnał, a następnie naciśnij \'Dalej\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Odczekaj jeden sygnał, a następnie naciśnij \'Ponów próbę\'.</string>
     <string name="patch_basal_schedule">Aktywacja Patcha zakończona!</string>
     <string name="patch_basal_schedule_desc_1">Program \'%1$s\' został włączony.</string>
     <string name="patch_basal_schedule_desc_2">Powiadamia Cię, gdy zbliża się czas wygaśnięcia Patcha.\nW razie potrzeby zmień czas przypomnienia.</string>
     <string name="patch_expiration_reminder_setting_title">Przypomnienia o wygaśnięciu Patcha</string>
-    <string name="patch_activate_reminder_desc">Aktywacja Patcha nie została zakończona.\n Kontynuuj.</string>
     <string name="patch_communication_check_helper_1">Przybliż telefon do Patcha.</string>
     <string name="patch_communication_check_helper_2">Przenieś się do innej lokalizacji i spróbuj ponownie.</string>
     <string name="patch_safety_check_failed_desc">Sprawdzenie bezpieczeństwa nie powiodło się. Spróbuj ponownie.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Komunikacja udana</string>
     <string name="patch_communication_succeed_message">Połączony z Patchem.</string>
     <string name="patch_cancel_pairing">Anuluj parowanie</string>
-    <string name="insulin_suspend_msg1">Po zawieszeniu, aktualnie dostarczany bolus &amp; tymczasowa baza zostaną anulowane. \n\nDawka: %1$s U/h\nPozostały czas: %2$s\n&amp; Insulina pozostała do podania: %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Po zawieszeniu aktualnie podawany bolus zostanie anulowany.\n\nInsulina pozostała do podania: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Po zawieszeniu, aktualna tymczasowa baza zostanie anulowana. \n\nDawka: %1$s U/h\nPozostały czas: %2$s</string>
     <string name="insulin_suspend_msg4">Podawanie insuliny zostanie wstrzymane.</string>
     <string name="string_activate_patch">Aktywuj Patch</string>
     <string name="string_discard_patch">Odrzuć Patch</string>
     <string name="string_running">W działaniu</string>
     <string name="retry">Ponów</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Czy na pewno chcesz odrzucić bieżący Patch?</string>
     <string name="needle_insertion_error_1">Błąd wkłuwania igły.</string>
     <string name="needle_insertion_error_3">Naciśnij \"Odrzuć\", aby dezaktywować Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Czas zawieszenia bazy</string>
