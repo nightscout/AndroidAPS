@@ -8,7 +8,6 @@
     <string name="commanderror">Opdracht fout</string>
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
-    <string name="boluserrorcode">Gevraagd: %1$.2fE Toegediend: %2$.2fE Error code: %3$s</string>
     <string name="danai2_bolus_error_no_prime">De pomp is niet voorgevuld</string>
     <string name="danai2_bolus_error_not_enough_insulin">Onvoldoende insuline in het reservoir</string>
     <string name="danai2_bolus_error_easy_sleep">De \'Easy Sleep\'-modus van de pomp is ingeschakeld.</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="rs_loginsulinchange_title">Reservoir wissel noteren</string>
     <string name="rs_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
-    <string name="rs_logcanulachange_title">Infuus wissel noteren</string>
     <string name="rs_logcanulachange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="press_ok_on_the_pump">Druk op OK op de pomp\nen voer 2 weergegeven nummers in.\nHoud het scherm vd pomp actief door de min-knop op de pomp ingedrukt te houden totdat je klaar bent met het invoeren van de codes.</string>
     <string name="num1pin">1: (12 cijfers)</string>
