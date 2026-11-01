@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
     <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
-    <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
+    <string name="smbalwaysdisabled">SMB întotdeauna și SMB după carbohidrați sunt dezactivate, deoarece sursa activă de glicemie nu suportă filtrarea avansată</string>
     <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="hardlimit">limită fizică</string>
