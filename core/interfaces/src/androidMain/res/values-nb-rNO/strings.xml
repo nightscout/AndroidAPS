@@ -50,7 +50,7 @@
     <string name="time_remaining_m">%1$dm gjenstår</string>
     <string name="later_today">Senere i dag</string>
     <string name="tomorrow">I morgen</string>
-    <string name="today">Idag</string>
+    <string name="today">I dag</string>
     <string name="yesterday">I går</string>
     <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
     <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
@@ -99,7 +99,7 @@
     <string name="pref_show_complication3">Vis komplikasjon 3</string>
     <string name="pref_show_complication4">Vis komplikasjon 4</string>
     <string name="pref_show_complication5">Vis komplikasjon 5</string>
-    <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTER MAL for å lage en mal</string>
+    <string name="default_custom_watchface_comment">Standard urskive, du kan trykke på knappen EKSPORTER MAL for å lage en mal</string>
     <string name="default_custom_watchface_external_comment">Standard urskive inkludert eksterne visninger for følgere, du kan klikke på knappen EKSPORTER URSKIVE for å generere en mal</string>
     <string name="wear_default_watchface">Standard urskive</string>
     <string name="wear_more_watchfaces">Flere urskiver</string>
