@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Maand (kort)</string>
     <string name="cwf_comment_loop">Loop status en tijd geleden</string>
     <string name="cwf_comment_direction">Richtingspijl</string>
-    <string name="cwf_comment_timestamp">Minuten geleden voor laatst ontvangen BG</string>
     <string name="cwf_comment_sgv">BG waarde</string>
     <string name="cwf_comment_cover_plate">Masker afbeelding over tekst (bijv. uren indicators)</string>
     <string name="cwf_comment_hour_hand">Afbeelding van uren wijzer (analoog horloge)</string>
