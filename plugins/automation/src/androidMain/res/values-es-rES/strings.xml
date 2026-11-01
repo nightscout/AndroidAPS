@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Enviar SMS a todos los números</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
     <string name="starttemptarget">Iniciar objetivo temporal</string>
-    <string name="islesser">es menor que</string>
-    <string name="isequalorlesser">es igual o menor que</string>
     <string name="isequal">es igual a</string>
     <string name="isequalorgreater">es igual o mayor que</string>
     <string name="isgreater">es mayor que</string>
@@ -88,7 +86,6 @@
     <string name="add_short">AÑADIR</string>
     <string name="temptargetcompared">Objetivo temporal %1$s</string>
     <string name="btdevicecompared">Conexión Bluetooth con el dispositivo %1$s %2$s</string>
-    <string name="btdevice">Conectar con dispositivo Bluetooth </string>
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
