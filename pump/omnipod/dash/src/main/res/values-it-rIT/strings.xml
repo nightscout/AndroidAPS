@@ -30,8 +30,8 @@
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Impossibile verificare se SMB (%1$s) ha avuto successo. Aggiorna lo stato pod per confermare o negare questo comando.</string>
     <string name="temp_basal_out_of_sync">Lo stato della basale temporanea non è come previsto! Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Controlla lo storico del pod e l\'insulina erogata</string>
     <string name="checking_delivery_status">Controllo stato erogazione</string>
-    <string name="setting_temp_basal_might_have_basal_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="setting_temp_basal_might_have_basal_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Annullamento basale temporanea: risultato incerto</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comando resumeDelivery non confermato. Aggiorna lo stato del pod</string>
-    <string name="cancelling_temp_basal_might_have_failed">L\'annullamento della basale temporanea potrebbe essere fallito. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata annullata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="cancelling_temp_basal_might_have_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
 </resources>
