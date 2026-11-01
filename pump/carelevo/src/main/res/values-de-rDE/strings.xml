@@ -31,6 +31,30 @@
     <string name="carelevo_pump_stop_duration_label_3_hour">3 Stunden</string>
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 Stunden 30 Minuten</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4 Stunden</string>
+    <string name="common_unit_value_day_hour_min">%1$d Tage %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d Min. %2$02d Sek. verbleibend</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Insulin-Anleitung</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Patch deaktivieren</string>
+    <string name="carelevo_btn_input_search_patch">Patch suchen</string>
+    <string name="carelevo_btn_retry">Erneut versuchen</string>
+    <string name="carelevo_btn_next">Weiter</string>
+    <string name="carelevo_btn_safety_check">Sicherheitsprüfung</string>
+    <string name="carelevo_btn_cancel">Abbrechen</string>
+    <string name="carelevo_btn_confirm">Bestätigen</string>
+    <string name="carelevo_btn_research">Erneut scannen</string>
+    <string name="carelevo_btn_needle_insert_check">Setzen bestätigen</string>
+    <string name="carelevo_state_none_value">Kein aktiver Patch</string>
+    <string name="carelevo_state_disconnected_value">Nicht verbunden</string>
+    <string name="carelevo_state_connected_value">Verbunden</string>
+    <string name="carelevo_overview_connect_btn_label">Patch aktivieren</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Pod verwerfen</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Abgabe unterbrechen</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Abgabe fortsetzen</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Füllmenge auswählen.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Bereich: %1$d ~ %2$d IE</string>
     <string name="carelevo_patch_attach_step4_desc">Tippe nach dem Anbringen des Patches auf „Weiter“.</string>
     <!-- Connection -->
     <!-- Profile -->
