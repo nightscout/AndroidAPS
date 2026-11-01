@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Skicka SMS till alla nummer</string>
     <string name="sendsmsactiontext">Skicka SMS med text</string>
     <string name="starttemptarget">Starta tillfälligt målvärde</string>
-    <string name="islesser">är mindre än</string>
-    <string name="isequalorlesser">är samma eller mindre än</string>
     <string name="isequal">är lika med</string>
     <string name="isequalorgreater">är samma eller större än</string>
     <string name="isgreater">är större än</string>
@@ -88,7 +86,6 @@
     <string name="add_short">LÄGG TILL</string>
     <string name="temptargetcompared">Tillfälligt målvärde %1$s</string>
     <string name="btdevicecompared">Bluetooth-anslutning till enhet %1$s %2$s</string>
-    <string name="btdevice">Anslutning till Bluetooth-enhet </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
