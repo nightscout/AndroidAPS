@@ -374,8 +374,8 @@
     <string name="pump_reconnect">Koble til pumpen på nytt</string>
     <string name="scene">Scene</string>
     <string name="scenes">Scener</string>
-    <string name="scene_desc">Forhåndsinnstillinger for situasjoner - aktivere flere hendelser på en gang</string>
-    <string name="scene_activate">Aktivere</string>
+    <string name="scene_desc">Forhåndsinnstillinger for situasjoner – utfør flere handlinger på en gang</string>
+    <string name="scene_activate">Aktiver</string>
     <string name="scene_deactivate">Avslutt scene</string>
     <string name="scene_active">Aktiv</string>
     <string name="scene_ended">Scene avsluttet</string>
