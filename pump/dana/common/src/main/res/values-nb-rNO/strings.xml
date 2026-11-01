@@ -8,7 +8,7 @@
     <string name="commanderror">Kommando feil</string>
     <string name="speederror">Hastighetsfeil</string>
     <string name="insulinlimitviolation">Insulingrensen nådd</string>
-    <string name="boluserrorcode">Forespurt: %1$.2fE Levert: %2$.2fE Feilkode: %3$s</string>
+    <string name="boluserrorcode">Forespurt: %1$.2f E Levert: %2$.2f E Feilkode: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pumpen er ikke primet</string>
     <string name="danai2_bolus_error_not_enough_insulin">Ikke nok insulin i reservoaret</string>
     <string name="danai2_bolus_error_easy_sleep">Enkel søvnmodus er aktivert på pumpen</string>
