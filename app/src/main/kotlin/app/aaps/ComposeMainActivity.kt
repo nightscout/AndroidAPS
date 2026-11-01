@@ -696,7 +696,13 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             } catch (_: Exception) {
             }
         },
-        onOpenUrl = { url -> startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
+        onOpenUrl = { url ->
+            // No usable browser (none installed, or blocked by Family Link): do nothing rather than crash
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+            } catch (_: ActivityNotFoundException) {
+            }
+        }
     )
 
     private fun handleNavigationRequest(request: NavigationRequest, navController: NavController) {
