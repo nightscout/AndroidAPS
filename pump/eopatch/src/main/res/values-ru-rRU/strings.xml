@@ -2,8 +2,6 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Интеграция помпы для EOPatch2 / GlucoMen Day</string>
-    <string name="low_reservoir">Оповещения о низком уровне инсулина в резервуаре</string>
-    <string name="patch_expiration_reminders">Напоминание об истечении срока патча</string>
     <string name="patch_buzzer_reminders">Напоминания зуммера патча</string>
     <string name="eopatch_ble_status">Статус BLE</string>
     <string name="eopatch_serial_number">Серийный номер</string>
@@ -21,10 +19,7 @@
     <string name="patch_safe_deactivation_desc">Для перехода на новый Patch, авершите пользование Патч-помпой. Подача инсулина этой Патч-помпой будет отменена.</string>
     <string name="patch_discard_complete_title">Пользование Patch\'ем завершено.</string>
     <string name="patch_discard_complete_desc">Patch деактивирован.\nЗавершите пользование Patch\'ем\nУдалите Patch с тела.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Подается болюс. Отменить подачу инсулина и завершить пользование Patch\'ем?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Подается временный базал. Отменить подачу инсулина и завершить пользование Patch\'ем?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Подается болюс и временный базал. Отменить подачу инсулина и завершить пользование Patch\'ем?</string>
-    <string name="patch_change_confirm_desc">Завершить пользование этим Patch\'ем?</string>
     <string name="patch_forced_discard">Завершить пользование</string>
     <string name="patch_comm_error_during_discard_desc_2">Для односторонней деактивации нажмите \'Завершить пользование\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Принудительное выключение оповещения Patch</string>
@@ -37,7 +32,6 @@
     <string name="patch_wake_up_desc_2">Дождитесь одиночного сигнала.</string>
     <string name="patch_start_pairing">Начните сопряжение</string>
     <string name="patch_connect_new">Идет сопряжение с Patch</string>
-    <string name="patch_connect_new_desc">Идет сопряжение с новым Patch\'ем. \n Держите расстояние между патчем и смарт-устройством как можно ближе</string>
     <string name="patch_remove_needle_cap">Подготовьтесь к установке Patch\'а</string>
     <string name="patch_remove_needle_cap_desc_1">Удалите клеевую ленту и нажмите «Далее».</string>
     <string name="patch_remove_protection_tape">Установка Patch</string>
@@ -47,29 +41,23 @@
     <string name="patch_safety_check">Проверка безопасности…</string>
     <string name="patch_safety_check_desc_1">Потребуется около 30 секунд.</string>
     <string name="patch_rotate_knob">Введение иглы</string>
-    <string name="patch_rotate_knob_desc_1">Поверните рычаг действия Иглы более чем на 100 градусов, чтобы вставить иглу, а затем поворачивайте рычаг дальше для ее снятия</string>
     <string name="patch_rotate_knob_desc_2">Дождитесь одиночного сигнала, затем нажмите \'Далее\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Дождитесь одиночного сигнала, затем нажмите \"Повторить\".</string>
     <string name="patch_basal_schedule">Активация Patch\'а завершена!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' программа включена.</string>
     <string name="patch_basal_schedule_desc_2">Уведомляет о завершении срока работы Patch\'а.\n Если необходимо, измените время напоминания.</string>
     <string name="patch_expiration_reminder_setting_title">Напоминания об истечении срока работы Patch\'а</string>
-    <string name="patch_activate_reminder_desc">Активация патча не была завершена.\n Продолжить.</string>
     <string name="patch_communication_check_helper_1">Поднесите смарт-устройство ближе к Patch\'у.</string>
     <string name="patch_communication_check_helper_2">Перейдите на другое место и повторите попытку.</string>
     <string name="patch_communication_failed">Ошибка связи</string>
     <string name="patch_communication_succeed">Коммуникация завершена успешно</string>
     <string name="patch_communication_succeed_message">Подключено к Patch.</string>
     <string name="patch_cancel_pairing">Отменить сопряжение</string>
-    <string name="insulin_suspend_msg1">После приостановки текущий болюс &amp; Временный базал будет отменен. \n\nСкорость базала: %1$s ед/ч\nОсталось времени: %2$s\n&amp; инсулина: %3$.2f U</string>
-    <string name="insulin_suspend_msg2">После приостановки текущий болюс будет отменен. \n\n Осталось инсулина: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">После приостановки текущий Временный базал будет отменен.\n\n Скорость базала: %1$s ед/ч\n Осталось времени: %2$s</string>
     <string name="insulin_suspend_msg4">Введение инсулина будет приостановлено.</string>
     <string name="string_activate_patch">Активировать Patch</string>
     <string name="string_discard_patch">Завершить пользование Patch\'ем</string>
     <string name="string_running">Выполняется</string>
     <string name="retry">Повторить попытку</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Завершить пользование этим Patch\'ем?</string>
     <string name="needle_insertion_error_1">Ошибка ввода иглы.</string>
     <string name="needle_insertion_error_3">Нажмите \'Завершить пользование Patch\'ем\', чтобы деактивировать Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Время приостановки базала</string>
