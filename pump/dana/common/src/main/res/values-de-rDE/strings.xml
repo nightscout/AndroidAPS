@@ -8,7 +8,6 @@
     <string name="commanderror">Fehler bei Befehl</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>
     <string name="insulinlimitviolation">Insulin-Beschränkung verletzt</string>
-    <string name="boluserrorcode">Angefragt: %1$.2f IE. Abgegeben: %2$.2f IE. Fehlercode: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pumpe ist nicht befüllt</string>
     <string name="danai2_bolus_error_not_enough_insulin">Nicht genug Insulin im Reservoir</string>
     <string name="danai2_bolus_error_easy_sleep">Der einfache Ruhemodus ist auf der Pumpe aktiviert</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="rs_loginsulinchange_title">Reservoirwechsel aufzeichnen</string>
     <string name="rs_loginsulinchange_summary">Reservoirwechsel im Careportal hinzufügen, falls dies in der Historie gefunden wird.</string>
-    <string name="rs_logcanulachange_title">Kanülenwechsel dokumentieren</string>
     <string name="rs_logcanulachange_summary">Kanülenwechsel im Careportal hinzufügen, falls dies in der Historie gefunden wird.</string>
     <string name="press_ok_on_the_pump">Drücke OK auf der Pumpe\nund gib die beiden angezeigten Ziffernfolgen ein.\nHalte das Pumpendisplay aktiv indem Du den Minus-Button gedrückt hälst, bis Du den Code eingegeben hast.</string>
     <string name="num1pin">1: (12 Zeichen)</string>
