@@ -153,7 +153,7 @@
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
     <string name="insulin_external_update_title">Insulinkonfigurasjonen er endret</string>
-    <string name="insulin_external_update_message">En paret klient har endret insulinkonfigurasjonen. Trykk OK for å laste inn endringene og forkaste ulagrede endringer, eller Avbryt for å fortsette redigeringen (neste lagring vil overskrive deres endringer).</string>
+    <string name="insulin_external_update_message">En sammenkoblet klient har endret insulinkonfigurasjonen. Trykk OK for å laste inn endringene og forkaste ulagrede endringer, eller Avbryt for å fortsette redigeringen (neste lagring vil overskrive deres endringer).</string>
     <string name="insulin_edit_target_gone">Denne insulinen ble fjernet et annet sted, så endringen kunne ikke lagres. Listen er lastet inn på nytt.</string>
     <string name="insulin_activation_applied">Insulinaktivering utført</string>
     <!-- Client→master round-trip pending dialog -->
@@ -253,7 +253,7 @@
     <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Standard profil</string>
     <string name="current_profile">Gjeldende profil</string>
-    <string name="available_profile">Tilgjengelige profiler</string>
+    <string name="available_profile">Tilgjengelig profil</string>
     <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f E</string>
     <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f E %3$d%%</string>
     <string name="format_with_weight">Alder: %1$d Vekt: %2$.0f kg</string>
