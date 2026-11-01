@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Užtenka tik redaguoti profilius, kad įsigaliotų visi atlikti pakeitimai.</string>
     <string name="profileswitch4_multi">Galima nustatyti ir pasirinkti kelis profilius, kad jie atitiktų besikeičiančias aplinkybes (pvz., hormoninius pokyčius, pamaininį darbą, darbo dienų/savaitgalių gyvenimo būdą).</string>
     <string name="other_medication_label">Kiti vaistai. Prašome perskaityti toliau pateiktą pranešimą ir pažymėti langelį, kad patvirtintumėte sutikimą.</string>
-    <string name="other_medication_text">AAPS sumažina bazę ar sustabdo insulino tiekimą, kad neištiktų hipoglikemija. SGLT2 inhibitorių grupės vaistai (gliflozinai) gali neleisti glikemijai padidėti, todėl dėl sistemos veiksmų gali atsirasti pavojingas insulino trūkumas ir diabetinė ketoacidozė.
- \nPrekių ženklų pavadinimai apima: „Invokana®“, „Forxiga®“, „Jardiance®“, „Steglatro®“, „Suglat®“, „Apleway®“, „Deberza®“, „Synjardy®“, „Vokanamet®“, „Xigduo®“.\n\n Pažadu nevartoti tokių vaistų naudodamas AAPS, arba prieš vartojant juos, išjungti uždarą ciklą.</string>
     <string name="concentration_feature_label">Insulino koncentracijos nustatymas</string>
     <string name="u200_with_profile">Kol AAPS nepalaikė skirtingų insulino koncentracijų, naudotojai U200 naudojo nustatę 50 % profilį, kad visos reikšmės būtų sumažintos perpus. Kurie teiginiai apie tokį nustatymą yra teisingi?</string>
     <string name="u200_with_profile_reports">AAPS duomenų bazėje ir Nightscout ataskaitose rodomos reikšmės tampa neteisingos – norint matyti tikrąsias dozes, visas reikšmes (bolusus, bazę dozes, BPD) reikės dauginti iš 2. Tai ypač svarbu gydytojams ir kitai gydymo komandai.</string>
