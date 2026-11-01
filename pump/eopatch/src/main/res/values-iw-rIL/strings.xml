@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">אינטגרציית משאבה עבור EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">הפאץ\' לא אישר את סיום הבולוס. %1$s נרשם, אך ייתכן שהפאץ\' סיפק יותר. יש לבדוק את הפאץ\' לפני מתן אינסולין נוסף.</string>
-    <string name="low_reservoir">התראות על כמות אינסולין נמוכה</string>
-    <string name="patch_expiration_reminders">תזכורת תפוגת הפאץ\'</string>
     <string name="patch_buzzer_reminders">תזכורות צפצוף של הפאץ\'</string>
     <string name="eopatch_ble_status">סטטוס BLE</string>
     <string name="eopatch_serial_number">מספר סידורי</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">כדי לעבור לפאץ\' חדש, יש להשליך את הפאץ\' הנוכחי. כל מתן האינסולין מהפאץ\' יבוטל.</string>
     <string name="patch_discard_complete_title">השלכת הפאץ\' הושלמה בהצלחה.</string>
     <string name="patch_discard_complete_desc">הפאץ\' הושבת.\nיש להשליך את הפאץ\'.\nיש להסיר את הפאץ\' המחובר לגוף.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">בולוס ניתן כעת. האם באמת לבטל את מתן האינסולין ולהשליך את הפאץ\'?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">בזאלי זמני פעיל כעת. האם באמת לבטל את מתן האינסולין ולהשליך את הפאץ\'?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">בולוס ובזאלי זמני פעילים כעת. האם באמת לבטל את מתן האינסולין ולהשליך את הפאץ\'?</string>
-    <string name="patch_change_confirm_desc">האם אתם בטוחים שברצונכם להשליך את הפאץ\'?</string>
     <string name="patch_forced_discard">השלכה</string>
     <string name="patch_comm_error_during_discard_desc_2">להשבתה חד־צדדית, לחצו על \'השלכה\'.</string>
     <string name="patch_manually_turning_off_alarm_title">כיבוי ידני של התראות הפאץ\'</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">במהלך הצימוד יופיעו שני חלונות קופצים של מערכת Android. יש לאשר את שניהם כדי להשלים את צימוד הבלוטות\'.</string>
     <string name="patch_start_pairing">התחלת צימוד</string>
     <string name="patch_connect_new">צימוד הפאץ\'</string>
-    <string name="patch_connect_new_desc">הפאץ\' החדש מבצע צימוד.\nשמרו על המרחק קרוב ככל האפשר בין הפאץ\' למכשיר החכם</string>
     <string name="patch_remove_needle_cap">הכנה לחיבור הפאץ\'</string>
     <string name="patch_remove_needle_cap_desc_1">הורידו את כיסוי הדבק ולאחר מכן הקישו \'הבא\'.</string>
     <string name="patch_remove_needle_cap_desc_2">אם מחט בולטת, לחצו על \'השלכה\'.</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">זה לוקח כ-30 שניות.</string>
     <string name="patch_safety_check_desc_2">לבטיחותכם, אל תסירו את מנוף החדרת המחט עד שבדיקת הבטיחות תושלם!</string>
     <string name="patch_rotate_knob">החדרת המחט</string>
-    <string name="patch_rotate_knob_desc_1">סובבו את מנוף החדרת המחט ליותר מ-100° על מנת להחדיר את המחט ולאחר מכן סובבו עד הסוף בכדי להסיר את המנוף</string>
     <string name="patch_rotate_knob_desc_2">חכו לצפצוף יחיד ולאחר מכן הקישו \'הבא\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">חכו לצפצוף אחד ולאחר מכן לחצו על \'ניסיון חוזר\'.</string>
     <string name="patch_basal_schedule">הפעלת הפאץ\' הושלמה!</string>
     <string name="patch_basal_schedule_desc_1">התוכנית \'%1$s\' הופעלה.</string>
     <string name="patch_basal_schedule_desc_2">מתריע כאשר הפאץ\' מתקרב לזמן התפוגה שלו.\nשנו את זמן התזכורת במידת הצורך.</string>
     <string name="patch_expiration_reminder_setting_title">תזכורות לתפוגת הפאץ\'</string>
-    <string name="patch_activate_reminder_desc">הפעלת הפאץ\' לא הושלמה.\n המשיכו.</string>
     <string name="patch_communication_check_helper_1">הביאו את המכשיר החכם קרוב יותר לפאץ\'.</string>
     <string name="patch_communication_check_helper_2">נא לעבור למקום אחר ולנסות שוב.</string>
     <string name="patch_safety_check_failed_desc">בדיקת הבטיחות נכשלה. נא לנסות שוב.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">התקשורת עם הפאץ\' בוצעה בהצלחה</string>
     <string name="patch_communication_succeed_message">מחובר לפאץ\'.</string>
     <string name="patch_cancel_pairing">ביטול צימוד</string>
-    <string name="insulin_suspend_msg1">עם ההשהיה, הבולוס &amp; הבזאלי הזמני הניתנים כעת יבוטלו. \n\nקצב: %1$s יח\'/שעה\nזמן שנותר: %2$s\n&amp; אינסולין שנותר: %3$.2f יח\'</string>
-    <string name="insulin_suspend_msg2">עם ההשהיה, הבולוס הניתן כעת יבוטל. \n\nאינסולין שנותר למתן: %1$.2f יח\'</string>
-    <string name="insulin_suspend_msg3">עם ההשהיה, הבזאלי הזמני הניתן כעת יבוטל. \n\nקצב: %1$s יח\'/שעה\nזמן שנותר: %2$s</string>
     <string name="insulin_suspend_msg4">מתן האינסולין יושהה.</string>
     <string name="string_activate_patch">הפעלת פאץ\'</string>
     <string name="string_discard_patch">השלכת הפאץ\'</string>
     <string name="string_running">פועל</string>
     <string name="retry">ניסיון חוזר</string>
-    <string name="string_are_you_sure_to_discard_current_patch">האם להשליך את הפאץ\' הנוכחי?</string>
     <string name="needle_insertion_error_1">שגיאה בהחדרת המחט.</string>
     <string name="needle_insertion_error_3">לחצו על \'השלכה\' כדי להשבית את הפאץ\'.</string>
     <string name="string_suspend_time_insulin_delivery_title">זמן השהיית הבזאלי</string>
