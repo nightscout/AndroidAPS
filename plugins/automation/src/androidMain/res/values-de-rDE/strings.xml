@@ -4,7 +4,7 @@
     <string name="automation_enabled">Aktiviert</string>
     <string name="automation_read_only">Nur Lesezugriff</string>
     <string name="automation_new_rule">Neue Regel</string>
-    <string name="automation_empty_desc">Erstellen Sie eine Regel, um Aktionen basierend auf Triggern (Auslösern) zu automatisieren.</string>
+    <string name="automation_empty_desc">Erstelle eine Regel, um Aktionen basierend auf Triggern (Auslösern) zu automatisieren.</string>
     <string name="automation_edit_rule">Regel bearbeiten</string>
     <string name="automation_discard_title">Änderungen verwerfen?</string>
     <string name="automation_discard_message">Die Regel ist unvollständig und kann nicht gespeichert werden. Änderungen verwerfen?</string>
@@ -161,7 +161,7 @@
     <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Glättung %1$s ist nicht aktiv</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Von Karte auswählen</string>
-    <string name="tap_to_select_location">Tippen Sie auf die Karte, um einen Ort auszuwählen</string>
+    <string name="tap_to_select_location">Tippe auf die Karte, um einen Ort auszuwählen</string>
     <string name="selected_coords">Ausgewählt: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
     <string name="permission_location_title">Standort</string>
