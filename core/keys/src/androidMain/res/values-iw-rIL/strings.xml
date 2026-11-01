@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">הפעלת תמיכה בריכוזי אינסולין שונים (U50, U200 וכו\')</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">השארת המסך דלוק</string>
-    <string name="pref_summary_keep_screen_on">מניעה מ-Android לכבות את המסך. הדבר צורך הרבה אנרגיה כאשר הטלפון אינו מחובר לחשמל.</string>
     <string name="pref_title_show_treatment_button">הצגת לחצן הטיפול</string>
     <string name="pref_title_show_wizard_button">הצגת לחצן האשף</string>
     <string name="pref_title_show_insulin_button">הצגת לחצן האינסולין</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">אחוז הבולוס</string>
     <string name="deliverpartofboluswizard">החלת ערך זה על תיקון רמת הסוכר והפחמימות בתוצאת אשף הבולוס</string>
     <string name="pref_title_reset_bolus_percentage_time">זמן איפוס אחוז הבולוס</string>
-    <string name="deliver_part_of_boluswizard_reset_time">מתן בולוס מלא (100%) אם ערך הסוכר בדם ישן יותר מ</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">זמן תפוגת ההגנה</string>
     <string name="pref_title_protection_type_application">רמה 0: הגנה על האפליקציה</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
-    <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">סוג משאבה</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">IOB מרבי עבור AMA</string>
     <string name="openapsma_max_iob_summary">ערך זה נקרא Max IOB בהקשר של OpenAPS.\nזוהי כמות האינסולין המרבית ביחידות [U] ש־APS יכול לתת בבת אחת. הערך מושפע גם מסוג המטופל.</string>
     <string name="pref_title_max_daily_multiplier">מכפיל בטיחות יומי מרבי</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="pref_title_current_basal_multiplier">מכפיל בטיחות לבזאלי הנוכחי</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
     <string name="pref_title_bolus_snooze_divisor">מחלק DIA למעכב בולוס</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">סף הפסקת חישוב ספיגה</string>
     <string name="absorption_cutoff_summary">משך זמן בו כל ארוחה תחשב כנספגה. לא תהיה התחשבות בפחמימות שנותרו.</string>
     <string name="pref_title_absorption_maxtime">זמן ספיגה מרבי</string>
-    <string name="absorption_max_time_summary">מספר השעות בהן צפוי שכל הפחמימות מארוחה ייספגו</string>
     <string name="pref_title_autosens_min">Autosens מינימלי</string>
     <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של Autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
     <string name="pref_title_autosens_max">Autosens מרבי</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">משקל ISF לפי משך</string>
     <string name="openapsama_dura_ISF_weight_summary">זהו המשקל שמוחל כאשר רמת הסוכר נשארת גבוהה ויציבה לאורך זמן, והוא מחזק את ISF ולכן עשוי להגדיל את מתן האינסולין.\n\nערך ברירת המחדל 0.0 למעשה מבטל השפעה זו.</string>
     <string name="pref_title_smb_delivery_ratio">יחס מתן SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">ערך ברירת מחדל: 0.5 זוהי מגבלת בטיחות נוספת של OpenAPS המגדירה איזה חלק מסך האינסולין הנדרש יכול להינתן כ-SMB. מגבלה זו נועדה למנוע כפילות הזרקת SMB הנגרמת מפקודות מהמטפל המרוחק בנוסף למכשיר הראשי. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
     <string name="pref_title_smb_delivery_ratio_min">יחס מתן SMB מינימלי</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">ערך ברירת מחדל: 0.5 זהו הקצה הנמוך של יחס שמתגבר באופן ליניארי ולא ערך קבוע כפי שמצוין לעיל.</string>
     <string name="pref_title_smb_delivery_ratio_max">יחס מתן SMB מרבי</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">ערך ברירת מחדל: 0.5. זהו הקצה העליון של יחס שעולה באופן ליניארי ולא ערך קבוע כפי שמתואר לעיל.</string>
     <string name="pref_title_smb_max_range_extension">הרחבת הטווח המרבי של SMB</string>
     <string name="openapsama_smb_max_range_extension_summary">ערך ברירת מחדל: 1. זהו מנגנון בטיחות מרכזי נוסף של OpenAPS, והוא מגדיר באיזה מכפיל ניתן לחרוג ממגבלת 120 הדקות הרגילה של maxSMB/maxUAM. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
     <!-- UnitDoubleKey: Overview preferences -->
