@@ -17,9 +17,7 @@
     <string name="objectives_maxbasal_learned">注意安全功能，必要時調整安全參數。</string>
     <string name="objectives_maxiobzero_objective">開始關閉循環，並啟用低血糖暫停功能</string>
     <string name="objectives_maxiobzero_gate">以低血糖暫停模式（即最大活性胰島素（Max IOB）自動設為 0）在閉環模式下運行幾天，並確保不會發生過多的**低血糖暫停（LGS）**事件。</string>
-    <string name="objectives_maxiobzero_learned">將MaxIOB設置為零可防止低血糖，且不會增加超過基礎速率的胰島素（除非IOB為負）。</string>
     <string name="objectives_maxiob_objective">調整閉環，將最大IOB提高到0以上，並逐步降低血糖目標</string>
-    <string name="objectives_maxiob_gate">運行幾天，並至少一晚沒有低血糖警報，然後再降低血糖目標</string>
     <string name="objectives_maxiob_learned">隨著孩子成長，請更新最大活性胰島素（MaxIOB）。請勿讓系統提供超過食物能覆蓋的胰島素劑量，設定過高的數值可能會帶來風險。在簡單模式下，最大活性胰島素會自動計算。</string>
     <string name="maxiobset">適當設定 最大活性胰島素（Max IOB）（在簡單模式下則無需手動設定）。</string>
     <string name="objectives_autosens_objective">如有需要，調整基礎速率和比率，然後啟用自動感應</string>
@@ -53,7 +51,6 @@
     <string name="objectives_exam_learned_isf">您已學會ISF值的含義及其如何影響用於血糖修正的胰島素量。</string>
     <string name="objectives_exam_learned_ic">您已學會IC值的含義及其如何影響覆蓋碳水化合物所需的胰島素量。</string>
     <string name="objectives_exam_learned_hypott">低血糖臨時目標僅用於防止低血糖後的過度修正，通常這時有疊加的負IOB。應評估額外措施以防止未來再次發生這種情況。</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">使用百分比不會影響目標血糖值，但會調整基礎率、 ISF 與 IC，使在超過 100% 時給予較多胰島素，低於 100% 時給予較少胰島素。</string>
     <string name="objectives_exam_learned_profileswitchtime">通過在設定檔切換中使用時間偏移，您可以將日夜節律設定檔適應不規則情況，如晚起床。</string>
     <string name="objectives_exam_learned_profileswitch4">編輯設定檔本身不足以進行更改。您仍然需要進行設定檔切換以啟用更改。</string>
     <string name="objectives_exam_learned_exercise">您應該在運動開始前至少1小時減少體內的胰島素量，選擇低於100%的設定檔。</string>
@@ -64,14 +61,10 @@
     <string name="objectives_exam_learned_sensitivity">敏感性偵測是算法的一部分，允許胰島素劑量適應不同情況。</string>
     <string name="objectives_exam_learned_objectives">您的目標進度與其他設置一起存儲，應該備份。</string>
     <string name="objectives_exam_learned_objectives2">始終將匯出的設置和生成的APK儲存在手機之外的地方。手機可能遺失、損壞等。好的存放地點可以是任何手機可查看的雲端。在這種情況下，您可以在另一個設備上幾分鐘內恢復AAPS。好的做法是將使用的主密碼存放在安全的地方。沒有它，您的備份無用。這同樣適用於簽章密鑰（.jks文件）和構建AAPS所用的密碼。其餘的並不重要 - 它們可以隨時從互聯網上下載。</string>
-    <string name="objectives_exam_learned_wrongcarbs">如果您向AAPS輸入了錯誤的訊息或與現實不符，盡快解決。這可能導致過量注射。應該盡可能告知AAPS碳水化合物、胰島素等的最佳方式。</string>
-    <string name="objectives_exam_learned_iob">若要分析 AAPS 是否對您運作良好，觀察活性胰島素（IOB）圖表能提供許多有用的資訊。</string>
-    <string name="objectives_exam_learned_cob">活性碳水化合物（COB）的計算取決於 ISF 與 IC 之間的關係。提高 ISF 或降低 IC 會導致吸收時間變長。但透過百分比切換設定檔會同時改變這兩個數值，因此吸收時間不受影響。</string>
     <string name="objectives_exam_learned_breadgrams">僅允許使用克作為碳水化合物輸入單位。</string>
     <string name="objectives_exam_learned_ecarbs">延長碳水化合物是幫浦世界中延長注射的替代品。</string>
     <string name="objectives_exam_learned_nsclient">您可以透過 AAPSClient 或 Nightscout 遠端追蹤 AAPS。當 AAPSClient 與主手機配對後，您也可以遠端控制 AAPS。</string>
     <string name="objectives_exam_learned_concentration1">使用 U200 胰島素並將設定檔設為 50% 將需要持續進行換算：對於使用筆進行的外部注射，以及 AAPS 或 NS 提供的所有標準報表都會變得不正確，且必須換算為 IU 提供給醫療團隊。</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">從使用 50% 設定檔的 U200 切換到使用胰島素濃度功能的 U200，將需要建立更強的設定檔、停用 DynISF 一週，並訓練自己以國際單位來思考。</string>
     <string name="objectives_exam_learned_concentration3">只有在更換胰島素或貼片時，才能變更胰島素濃度。但更重要的是，尤其對管路型幫浦，切勿透過幫浦本身的操作介面直接進行注射。</string>
     <string name="answerdisabledto">回答停用至：%1$s</string>
     <string name="wronganswer">答案錯誤！</string>
