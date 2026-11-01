@@ -234,7 +234,7 @@
     <string name="remove_label">Fjern</string>
     <string name="active_profile_indicator">AKTIV</string>
     <string name="confirm_remove_profile">Fjern profil \"%1$s\"?</string>
-    <string name="confirm_clone_profile">Klon profil \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Dupliser profil «%1$s»?</string>
     <string name="profile_no_longer_exists">Profillisten er endret i mellomtiden – prøv på nytt</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
@@ -261,7 +261,7 @@
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Knappetekst</string>
-    <string name="quick_wizard_mode_wizard">Hurtigknapp</string>
+    <string name="quick_wizard_mode_wizard">Kalkulator</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Karbo</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
@@ -295,7 +295,7 @@
     <string name="recalculate">Rekalkuler</string>
     <!--    Widget-->
     <string name="use_black_color">Bruk svart farge</string>
-    <string name="widget_configuration">Widget konfigurasjon</string>
+    <string name="widget_configuration">Widget-konfigurasjon</string>
     <string name="until_changed">Inntil endret</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Tillatelser kreves</string>
