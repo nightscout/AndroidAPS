@@ -11,6 +11,13 @@
     <string name="pump_status_suspended">Angehalten</string>
     <string name="pump_status_executing_command">Befehl ausführen</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_bolus">Bolus abrufen</string>
+    <string name="pump_cmd_desc_cancel_bolus">Bolus abbrechen</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Verbleibendes Insulin abrufen</string>
+    <string name="pump_cmd_desc_get_battery_status">Batteriestatus abrufen</string>
+    <string name="pump_cmd_desc_get_time">Uhrzeit abrufen</string>
+    <string name="pump_cmd_desc_set_time">Uhrzeit einstellen</string>
+    <string name="pump_cmd_desc_get_pump_status">Pumpenstatus abrufen</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basal</string>
     <string name="history_group_configuration">Konfigurationen</string>
