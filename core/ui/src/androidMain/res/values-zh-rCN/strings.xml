@@ -167,7 +167,6 @@
     <string name="notification">通知</string>
     <string name="noprofile">尚未从 NS 加载配置文件</string>
     <string name="exists">存在</string>
-    <string name="notexists">不存在</string>
     <string name="glucose">血糖</string>
     <string name="iob">IOB活性胰岛素</string>
     <string name="cob">COB活性碳水</string>
@@ -225,11 +224,9 @@
     <string name="pump_wizard_profile_gate_pick">选择激活时应用的配置文件。</string>
     <string name="pump_wizard_profile_gate_no_store">未定义任何配置文件。请打开配置文件管理创建一个，然后重新开始激活。</string>
     <string name="reset">重置</string>
-    <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">时间偏移</string>
-    <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主机上没有这些条目中的 %1$d 条。它们未被移除。</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
@@ -341,9 +338,7 @@
     <string name="careportal_note">备注</string>
     <string name="careportal_question">问题</string>
     <string name="careportal_exercise">运动</string>
-    <string name="careportal_announcement_message">公告: %1$s</string>
     <string name="careportal_note_message">备注： %1$s</string>
-    <string name="careportal_question_message">问题 : %1$s</string>
     <string name="careportal_exercise_message">运动 : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">泵注射部位更换：%1$s</string>
     <string name="careportal_pump_site_change">泵位置变更</string>
@@ -660,7 +655,6 @@
     <string name="uel_ns_queue_cleared">清除NS队列</string>
     <string name="uel_ns_settings_copied">复制NS设置</string>
     <string name="uel_error_dialog_ok">确认</string>
-    <string name="uel_error_dialog_mute">静音</string>
     <string name="uel_error_dialog_mute_5min">静音5分钟</string>
     <string name="uel_objective_started">目标已开始</string>
     <string name="uel_objective_unstarted">目标未开始</string>
@@ -724,7 +718,6 @@
     <string name="error_in_isf_values">ISF 数值错误</string>
     <string name="error_in_basal_values">基础率数值错误</string>
     <string name="error_in_target_values">目标值错误</string>
-    <string name="profile_name_contains_dot">一些配置文件名称包含点。\n NS不支持此功能。\n配置将不会上载到NS。</string>
     <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
     <string name="errors">错误</string>
     <!-- Command Queue + readStatus reasons -->
@@ -889,7 +882,6 @@
     <string name="export_result_message_exported">已导出设置</string>
     <string name="export_result_message_failed">设置导出失败！</string>
     <string name="export_result_message_about_to_expire">设置已导出：密码即将过期。请手动导出并（重新）输入密码。</string>
-    <string name="export_result_message_expired">设置导出已取消：密码过期。手动导出并（重新）输入！</string>
     <string name="export_result_message_disabled">警告（自动化）：未启用设置导出！</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">云导出成功</string>
@@ -996,7 +988,6 @@
     <string name="cannula">输注导管</string>
     <string name="patch_pump">贴片泵</string>
     <!-- Site Rotation -->
-    <string name="select_location">点击下面选择部位</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">不要关闭我的应用？</string>
     <string name="fabric_upload_disabled">已禁用崩溃日志上传！</string>
@@ -1042,7 +1033,6 @@
     <string name="unsaved_changes">未保存更改</string>
     <string name="unsaved_changes_message">您有未保存的更改。您想做什么？</string>
     <string name="discard">丢弃</string>
-    <string name="ic_dynamic_label_warning">您的算法可以提供动态的 IC。 下面的数值只能用作缺失数据时的回退或仅作为参考值</string>
     <string name="isf_dynamic_label_warning">您的算法可以提供ISF动态计算。 下面的值只能用作缺失数据时的回退或仅作为参考值</string>
     <string name="add_time_block">添加时间段</string>
     <string name="remove_entry">移除项目</string>
