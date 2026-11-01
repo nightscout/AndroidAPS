@@ -2,8 +2,6 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Pumpeintegration til EOPatch2 / GlucoMen Day</string>
-    <string name="low_reservoir">Lavt reservoir Alarmer</string>
-    <string name="patch_expiration_reminders">Patch Udløbspåmindelser</string>
     <string name="patch_buzzer_reminders">Patch buzzer-påmindelser</string>
     <string name="eopatch_ble_status">BLE-status</string>
     <string name="eopatch_serial_number">Serienummer</string>
@@ -21,10 +19,7 @@
     <string name="patch_safe_deactivation_desc">For at skifte til ny Patch skal den nuværende Patch kasseres. Al insulintilførsel fra Patchen annulleres.</string>
     <string name="patch_discard_complete_title">Bortskaffelse af Patch afsluttet.</string>
     <string name="patch_discard_complete_desc">Patch er blevet deaktiveret.\nKassér Patchen.\nFjern Patchen fastgjort til din krop.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">En bolus er i processen af at blive leveret. Vil du virkelig annullere insulintilførslen og kassere Patchen?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">En midlertidig basal er i processen af at blive leveret. Vil du virkelig annullere insulintilførslen og kassere Patchen?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">En bolus og en midlertidig basal er i processen af at blive leveret. Vil du virkelig annullere insulintilførslen og kassere Patchen?</string>
-    <string name="patch_change_confirm_desc">Er du sikker på at du vil kassere en Patch?</string>
     <string name="patch_forced_discard">Kassér</string>
     <string name="patch_comm_error_during_discard_desc_2">For ensidig deaktivering skal du trykke på \'Kassér\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Slukker manuelt for Patchens alarm</string>
@@ -37,7 +32,6 @@
     <string name="patch_wake_up_desc_2">Lyt efter ét bip.</string>
     <string name="patch_start_pairing">Start parring</string>
     <string name="patch_connect_new">Patch parrer</string>
-    <string name="patch_connect_new_desc">Den nye Patch parres.\nHold Patchen og mobilen så tæt på hinanden som muligt</string>
     <string name="patch_remove_needle_cap">Forberéd dig på vedhæftning af Patchen</string>
     <string name="patch_remove_needle_cap_desc_1">Fjern den klæbelige tape og tryk derefter på \'Næste\'.</string>
     <string name="patch_remove_protection_tape">Fastgøring af Patchen</string>
@@ -47,29 +41,23 @@
     <string name="patch_safety_check">Sikkerhedstjek…</string>
     <string name="patch_safety_check_desc_1">Det tager omkring 30 sekunder.</string>
     <string name="patch_rotate_knob">Indsætter nålen</string>
-    <string name="patch_rotate_knob_desc_1">Drej nåleaktionsgrebet mere end 100 ° for at stikke nålen ind, og drej derefter helt for at fjerne den</string>
     <string name="patch_rotate_knob_desc_2">Lyt efter 1 bip, og tryk derefter på \'Næste\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Lyt efter 1 bip, og tryk derefter på \'Prøv igen\'.</string>
     <string name="patch_basal_schedule">Patch-aktivering fuldført!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' program er blevet aktiveret.</string>
     <string name="patch_basal_schedule_desc_2">Advarer dig når Patchen nærmer sig sin udløbstid.\nÆndr påmindelsestiden hvis nødvendigt.</string>
     <string name="patch_expiration_reminder_setting_title">Patch Udløbspåmindelser</string>
-    <string name="patch_activate_reminder_desc">Patch-aktivering er ikke blevet fuldført.\n Fortsæt.</string>
     <string name="patch_communication_check_helper_1">Placér din mobil tættere på Patchen.</string>
     <string name="patch_communication_check_helper_2">Gå venligst til en anden lokation og prøv igen.</string>
     <string name="patch_communication_failed">Kommunikationsfejl</string>
     <string name="patch_communication_succeed">Kommunikation lykkedes</string>
     <string name="patch_communication_succeed_message">Forbundet med Patchen.</string>
     <string name="patch_cancel_pairing">Annullér parring</string>
-    <string name="insulin_suspend_msg1">Efter suspenderingen vil den nuværende leverende Bolus &amp; Midlertidig basal vil blive annulleret. \n\nRate : %1$s IE/t\nResterende tid : %2$s\n&amp; Insulin tilbage: %3$.2f IE</string>
-    <string name="insulin_suspend_msg2">Efter suspenderingen vil den aktuelt leverende Bolus blive annulleret. \n\nInsulin tilbage: %1$.2f IE</string>
-    <string name="insulin_suspend_msg3">Efter suspenderingen vil den nuværende leverende Midlertidige Basal blive annulleret. \nRate : %1$s IE/t\nResterende tid : %2$s</string>
     <string name="insulin_suspend_msg4">Insulintilførslen suspenderes.</string>
     <string name="string_activate_patch">Aktivér Patch</string>
     <string name="string_discard_patch">Kassér Patch</string>
     <string name="string_running">Kører</string>
     <string name="retry">Prøv igen</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil kassere den nuværende Patch?</string>
     <string name="needle_insertion_error_1">Nålindføringsfejl.</string>
     <string name="needle_insertion_error_3">Tryk på \'Kassér\' for at deaktivere Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal-suspenderingstid</string>
