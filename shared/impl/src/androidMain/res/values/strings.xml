@@ -49,7 +49,7 @@
     <string name="cwf_comment_month">Month name (short)</string>
     <string name="cwf_comment_loop">Loop status and ago</string>
     <string name="cwf_comment_direction">Direction arrow</string>
-    <string name="cwf_comment_timestamp">Mintutes ago for last received BG</string>
+    <string name="cwf_comment_timestamp">Minutes ago for last received BG</string>
     <string name="cwf_comment_sgv">BG value</string>
     <string name="cwf_comment_cover_plate">Cover image in front of text (dials…)</string>
     <string name="cwf_comment_hour_hand">Image of hour hand (Analog Watch)</string>
