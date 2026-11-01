@@ -6,13 +6,13 @@
     <string name="pref_summary_insulin_concentration">Schakel ondersteuning in voor verschillende insuline concentraties (U50, U200, enz.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Scherm aan houden</string>
-    <string name="pref_summary_keep_screen_on">Voorkom dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
+    <string name="pref_summary_keep_screen_on">Voorkomt dat Android het scherm uitschakelt. Dit verbruikt veel batterij wanneer het apparaat niet op een stopcontact is aangesloten.</string>
     <string name="pref_title_show_treatment_button">Toon behandelingsknop</string>
     <string name="pref_title_show_wizard_button">Toon wizard knop</string>
     <string name="pref_title_show_insulin_button">Toon insuline knop</string>
     <string name="pref_title_show_carbs_button">Toon koolhydraten knop</string>
     <string name="pref_title_show_cgm_button">Toon CGM knop</string>
-    <string name="pref_summary_show_cgm_button">Opent xDrip+ of de Dexcom App (je kunt de terug knop gebruiken om terug te keren naar AAPS).</string>
+    <string name="pref_summary_show_cgm_button">Opent xDrip+ of de Dexcom-app (met de terugknop kan worden teruggekeerd naar AAPS).</string>
     <string name="pref_title_show_calibration_button">Toon kalibratieknop</string>
     <string name="pref_summary_show_calibration_button">Verzend een kalibratie naar xDrip+ (zorg ervoor dat ‘Accepteer kalibraties’ is ingeschakeld onder ‘Instellingen Interapp’ in xDrip+).</string>
     <string name="pref_title_show_notes_in_dialogs">Notities weergeven in dialogen</string>
@@ -39,7 +39,7 @@
     <string name="pref_summary_bg_source_create_sensor_change">Maak een behandelgebeurtenis aan bij het plaatsen van een nieuwe sensor.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Gebruik dynamische gevoeligheid</string>
-    <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik DynamicISF voor het aanpassen van de insulinegevoeligheid in plaats van Autosens.</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik Dynamische ISF voor het aanpassen van de insulinegevoeligheid in plaats van Autosens.</string>
     <string name="pref_title_aps_use_autosens">Gebruik Autosens</string>
     <string name="pref_title_aps_use_smb">SMB toestaan</string>
     <string name="pref_summary_aps_use_smb">Schakel Super Micro Bolus in. SMB levert onmiddellijk insuline om te reageren op stijgende bloedglucose.</string>
@@ -61,10 +61,10 @@
     <string name="pref_summary_aps_resistance_lowers_target">Verlaag het streefdoel voor de bloedglucose wanneer insulineresistentie wordt vastgesteld.</string>
     <string name="pref_title_aps_always_use_short_deltas">Gebruik altijd korte gemiddelde delta</string>
     <string name="pref_summary_aps_always_use_short_deltas">Gebruik altijd korte gemiddelde delta in plaats van eenvoudige delta voor BG berekeningen.</string>
-    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF pas gevoeligheid aan</string>
-    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Pas gevoeligheid berekeningen aan bij gebruik van DynamicISF.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">Dynamische ISF past gevoeligheid aan</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Pas de gevoeligheidsberekeningen aan bij gebruik van Dynamische ISF.</string>
     <string name="pref_title_aps_autosens_adjust_targets">Autosens past doelen aan</string>
-    <string name="pref_summary_aps_autosens_adjust_targets">Sta Autosens toe om het BG doel aan te passen, aanvullend op basaal en ISF.</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Sta Autosens toe om naast de basaalstanden en ISF ook het streefdoel aan te passen.</string>
     <string name="pref_title_aps_high_tt_raises_sensitivity">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
     <string name="pref_summary_aps_high_tt_raises_sensitivity">Hoge tijdelijke streefdoelen zullen de insulinegevoeligheid verhogen.</string>
     <string name="pref_title_aps_low_tt_lowers_sensitivity">Laag tijdelijk streefdoel verlaagt gevoeligheid</string>
@@ -83,7 +83,7 @@
     <string name="pref_summary_autotune_categorize_uam_as_basal">Behandel niet aangekondigde maaltijden als basale insuline behoefte binnen Autotune berekeningen.</string>
     <string name="pref_title_autotune_tune_insulin_curve">Insuline curve aanpassen</string>
     <string name="pref_title_autotune_circadian_ic_isf">Circadiane IC/ISF gebruiken</string>
-    <string name="pref_summary_autotune_circadian_ic_isf">Pas dagritmeafhankelijke variaties in IC en ISF toe bij Autotune berekeningen.</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Pas dagritmevariatie toe op I/Kh en ISF in de Autotune-berekeningen.</string>
     <string name="pref_title_autotune_additional_log">Additionele logging</string>
     <!-- SMS preferences -->
     <string name="pref_title_sms_allow_remote_commands">Sta opdrachten via SMS toe</string>
@@ -174,10 +174,10 @@
     <string name="pref_title_res_critical">Kritiek reservoirniveau</string>
     <string name="pref_title_batt_warning">Waarschuwing batterijniveau pomp</string>
     <string name="pref_title_batt_critical">Kritiek batterijniveau pomp</string>
-    <string name="pref_title_bolus_percentage">Bolus percentage</string>
+    <string name="pref_title_bolus_percentage">Boluspercentage</string>
     <string name="deliverpartofboluswizard">Pas deze waarde toe op de bloedglucose- en koolhydraatcorrectie van de boluswizard.</string>
     <string name="pref_title_reset_bolus_percentage_time">Resetduur boluspercentage</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Volledige bolus (100%) leveren als glycemie ouder is dan</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Dien de volledige bolus (100%) toe als de BG waarde ouder is dan</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Time-out</string>
     <string name="pref_title_protection_type_application">Niveau 0: App-beveiliging</string>
@@ -198,9 +198,9 @@
     <string name="pref_title_open_mode_min_change">Minimum wijziging open loop</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <!-- IntKey: APS preferences -->
-    <string name="pref_title_smb_frequency">SMB interval</string>
-    <string name="pref_title_smb_max_minutes">Aantal minuten basale insuline waarop SMB’s worden begrensd</string>
-    <string name="pref_title_uam_smb_max_minutes">Aantal minuten basale insuline waarop SMB’s worden begrensd bij UAM</string>
+    <string name="pref_title_smb_frequency">SMB-interval</string>
+    <string name="pref_title_smb_max_minutes">Aantal minuten basale insuline waarop een SMB wordt begrensd</string>
+    <string name="pref_title_uam_smb_max_minutes">Aantal minuten basale insuline waarop een SMB wordt begrensd als er sprake is van UAM</string>
     <string name="uam_smb_max_minutes">UAM SMB max minuten</string>
     <string name="pref_title_carbs_request_threshold">Minimum benodigde koolhydraten</string>
     <string name="carbs_req_threshold_summary">Minimum gram benodigde koolhydraten waarbij een waarschuwing wordt gegeven. Wanneer er minder koolhydraten nodig zijn dan dit getal, wordt er geen waarschuwing gegeven.</string>
@@ -209,7 +209,7 @@
     <string name="pref_title_iob_threshold_percent">IOB drempelpercentage</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage van maxIOB waarbij SMB\'s worden uitgeschakeld.\nStandaardwaarde: 100%\nMet 100% wordt deze functie effectief uitgeschakeld.</string>
     <string name="pref_title_dynisf_adjustment_factor">Aanpassingsfactor Dynamische ISF</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">Aanpassingsfactor voor dynamische insulinegevoeligheid. Stel meer dan 100% in voor een agressievere correctie en minder dan 100% voor minder agressieve correctie.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Aanpassingsfactor voor dynamische insulinegevoeligheid. Stel de waarde in op meer dan 100% voor agressievere correcties en op minder dan 100% voor minder agressieve correcties.</string>
     <string name="pref_title_autosens_period">Autosens periode</string>
     <string name="openapsama_autosens_period_summary">Aantal uren in het verleden waarover de insulinegevoeligheid wordt bepaald (exclusief koolhydraatabsorptietijd)</string>
     <!-- IntKey: Maintenance preferences -->
@@ -299,7 +299,7 @@
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoonnummers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Extra verplichte PIN aan einde van token</string>
-    <string name="smscommunicator_otp_pin_summary">Extra cijfers die je moet onthouden, en aan het eind van elk gegenereerd eenmalig wachtwoord moet toevoegen.</string>
+    <string name="smscommunicator_otp_pin_summary">Extra cijfers die aan het einde van elk gegenereerd eenmalig wachtwoord moeten worden toegevoegd</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Soort pomp</string>
     <!-- StringKey: NS Client preferences -->
@@ -321,7 +321,7 @@
     <string name="pref_title_fill_button_2">Vulknop 2</string>
     <string name="pref_title_fill_button_3">Vulknop 3</string>
     <!-- DoubleKey: Safety preferences -->
-    <string name="pref_title_max_bolus">Maximum bolus</string>
+    <string name="pref_title_max_bolus">Maximale bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximale basaalstand</string>
     <string name="openapsma_max_basal_summary">Dit is de maximale waarde waarop het basaal door OpenAPS ingesteld kan worden</string>
@@ -330,7 +330,7 @@
     <string name="pref_title_ama_max_iob">Max. IOB voor AMA</string>
     <string name="openapsma_max_iob_summary">Deze waarde wordt in de context van OpenAPS Max IOB genoemd.\nDit is de maximale hoeveelheid insuline (in eenheden) die APS in één keer kan leveren. De waarde wordt ook beïnvloed door het patiënttype.</string>
     <string name="pref_title_max_daily_multiplier">Maximum op basis van profiel</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standaardwaarde: 3\nDit is een belangrijke veiligheidslimiet van OpenAPS. Hiermee wordt de basaalstand beperkt tot maximaal 3 keer de hoogste basaalstand van de gebruiker. Waarschijnlijk hoef je deze waarde niet aan te passen, maar het is goed om te weten dat dit de achtergrond is van de veiligheidslimieten die worden aangeduid met ‘3× maximaal dagtotaal; 4× huidige basaalstand’.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standaardwaarde: 3\nDit is een belangrijke veiligheidslimiet van OpenAPS. Hiermee wordt de basaalstand beperkt tot maximaal 3 keer de hoogste basaalstand van de gebruiker. Waarschijnlijk hoeft deze instelling nooit te worden gewijzigd. Het is wel goed om te weten dat hiermee wordt verwezen naar de veiligheidsbegrenzingen die worden aangeduid als ‘3x max daily; 4x current’.</string>
     <string name="pref_title_current_basal_multiplier">Maximum op basis van actuele basaal</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaardwaarde: 4\nDit is de andere helft van de belangrijke veiligheidslimieten van OpenAPS en vormt samen met de vorige limiet de combinatie ‘3× maximaal dagtotaal; 4× huidige basaalstand’. Dit betekent dat de basaalstand, ongeacht de maximale basaalstand die op je pomp is ingesteld, nooit hoger kan zijn dan 4 keer de huidige basaalstand. Dit voorkomt dat je in een gevaarlijke situatie terechtkomt doordat je de maximale basaalstand te hoog instelt voordat je begrijpt hoe het algoritme werkt. De meeste gebruikers hoeven deze waarde nooit aan te passen. Als je merkt dat je regelmatig tegen deze veiligheidslimiet aanloopt, is het waarschijnlijk verstandiger om andere instellingen na te lopen.</string>
     <string name="pref_title_bolus_snooze_divisor">DIA-deler voor bolus-snooze</string>
@@ -341,7 +341,7 @@
     <string name="pref_title_absorption_cutoff">Afkapmoment koolhydraatabsorptie</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen een maaltijd als volledig opgenomen wordt beschouwd. Eventueel resterende koolhydraten vervallen vanaf dat moment.</string>
     <string name="pref_title_absorption_maxtime">Maximale absorptietijd koolhydraten</string>
-    <string name="absorption_max_time_summary">Het verwachte aantal uren totdat alle koolhydraten uit een maaltijd zijn opgenomen</string>
+    <string name="absorption_max_time_summary">Tijd in uren waarbinnen naar verwachting alle koolhydraten uit een maaltijd zijn opgenomen</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Standaardwaarde: 0,7\nDit is de ondergrens van de veiligheidsmarges van Autosens. Deze instelling begrenst hoe sterk Autosens de basaalstanden kan verlagen en de ISF en het glucose-streefdoel kan verhogen.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
@@ -367,9 +367,9 @@
     <string name="pref_title_smb_delivery_ratio">SMB-toedieningsratio</string>
     <string name="openapsama_smb_delivery_ratio_summary">Standaardwaarde: 0,5\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt welk deel van de totale benodigde hoeveelheid insuline als SMB mag worden toegediend. Dit voorkomt dat een onveilige situatie ontstaat doordat tegelijkertijd SMB-opdrachten worden gegeven vanaf de telefoon van de zorgverlener. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
     <string name="pref_title_smb_delivery_ratio_min">Minimale SMB-toedieningsratio</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Standaardwaarde: 0,5\nDit is de ondergrens van een lineair oplopende SMB-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standaardwaarde: 0,5\nDit is de ondergrens van een lineair oplopende Smb-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
     <string name="pref_title_smb_delivery_ratio_max">Maximale SMB-toedieningsratio</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Standaard waarde: 0.5\nDit is het bovengrens van een lineair oplopende SMB-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standaard waarde: 0.5\nDit is het bovengrens van een lineair oplopende Smb-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
     <string name="pref_title_smb_max_range_extension">Overschrijdingsfactor maximaal SMB-bereik</string>
     <string name="openapsama_smb_max_range_extension_summary">Standaardwaarde: 1\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt met welke factor je de gebruikelijke limiet van 120 minuten voor maxSMB/maxUAM mag overschrijden. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
     <!-- UnitDoubleKey: Overview preferences -->
