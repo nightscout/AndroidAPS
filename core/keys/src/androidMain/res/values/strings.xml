@@ -7,7 +7,7 @@
 
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Keep screen on</string>
-    <string name="pref_summary_keep_screen_on">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
+    <string name="pref_summary_keep_screen_on">Prevent Android from turning the screen off. It will consume a lot of energy when not plugged in to a power outlet.</string>
     <string name="pref_title_show_treatment_button">Show treatment button</string>
     <string name="pref_title_show_wizard_button">Show wizard button</string>
     <string name="pref_title_show_insulin_button">Show insulin button</string>
@@ -192,7 +192,7 @@
     <string name="pref_title_bolus_percentage">Bolus percentage</string>
     <string name="deliverpartofboluswizard">Apply this value to BG and carbs correction in bolus wizard\'s result</string>
     <string name="pref_title_reset_bolus_percentage_time">Reset bolus percentage time</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Deliver full bolus (100%) if glycemia is older than</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Deliver full bolus (100%) if the BG reading is older than</string>
 
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Protection timeout</string>
@@ -336,7 +336,7 @@
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Additional mandatory PIN at token end</string>
-    <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and glued at end of each generated One Time Password</string>
+    <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and added at the end of each generated One Time Password</string>
 
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Pump type</string>
@@ -373,7 +373,7 @@
     <string name="pref_title_ama_max_iob">Max IOB for AMA</string>
     <string name="openapsma_max_iob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once. Value is affected by patient type too.</string>
     <string name="pref_title_max_daily_multiplier">Max daily safety multiplier</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3. This is a key OpenAPS safety cap. What this does is limit your basals to be 3x your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="pref_title_current_basal_multiplier">Current basal safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA divisor</string>
@@ -384,7 +384,7 @@
     <string name="pref_title_absorption_cutoff">Absorption cutoff</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
     <string name="pref_title_absorption_maxtime">Absorption max time</string>
-    <string name="absorption_max_time_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
+    <string name="absorption_max_time_summary">Time in hours by which all carbs from a meal are expected to be absorbed</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
@@ -408,11 +408,11 @@
     <string name="pref_title_dura_weight">Duration ISF weight</string>
     <string name="openapsama_dura_ISF_weight_summary">This is the weight applied during longer lasting, elevated glucose plateaus and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
     <string name="pref_title_smb_delivery_ratio">SMB delivery ratio</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Default value: 0.5 This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. This is to prevent people from getting into dangerous territory by setting SMB requests from the caregivers phone at the same time. Increase this experimental value slowly and with caution.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Default value: 0.5. This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. This is to prevent people from getting into dangerous territory by setting SMB requests from the caregivers phone at the same time. Increase this experimental value slowly and with caution.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB delivery ratio min</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Default value: 0.5 This is the lower end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Default value: 0.5. This is the lower end of a linearly increasing ratio rather than the fixed value above.</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB delivery ratio max</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Default value: 0.5 This is the upper end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Default value: 0.5. This is the upper end of a linearly increasing ratio rather than the fixed value above.</string>
     <string name="pref_title_smb_max_range_extension">SMB max range extension</string>
     <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
 
