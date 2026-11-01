@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Komplikationslayout</string>
     <string name="cwf_complication_layout_description">Position och storlek på komplikationerna, hämtade från den laddade anpassade urtavlan.</string>
     <string name="pref_include_external">Inkludera externa vyer i mallen</string>
-    <string name="pref_switch_external">Växla externa data i urtavlan</string>
     <string name="custom_pref_show_seconds">Visa sekunder</string>
     <string name="digitalstyle_pref_your_style">Din stil</string>
     <string name="digitalstyle_style_none">ingen stil</string>
