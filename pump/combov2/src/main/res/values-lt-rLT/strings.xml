@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Rezervuaro klaida</string>
     <string name="combov2_error_11">Infuzijos sistema neužpildyta</string>
     <string name="combov2_extended_bolus_not_supported">Ištęstas bolusas nepalaikomas</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Susieti pompą</string>
     <string name="combov2_unpair_pump_title">Atsieti pompą</string>
     <string name="combov2_driver_state_label">Valdiklio būsena</string>
@@ -31,12 +30,6 @@
 2. Patikrinkite, ar yra susietų įrenginių; jei taip, eikite į \"Delete device\" ir ištrinkite/atsiekite visus įrenginius\n
 3. Eikite į \"Add device\" ir pradėkite susiejimą pompoje\n
 4. Paspauskite \"Pradėti susiejimą\" ir pradėkite susiejimą AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Po kurio laiko telefono pavadinimas parodomas pompos ekrane; paspauskite CHECK patvirtinimui.\n\n
-Kai susiejimas sėkmingai baigtas, patvirtinkite baigtą susiejimą pompoje ir grįžkite į pagrindinį pompos ekraną du kartus paspaudę CHECK mygtuką.\n\n
-Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
-1. Paspauskite BACK arba \"Cancel Pairing\" mygtuką\n
-2. Atšaukite susiejimą Combo (vienu metu paspauskite UP ir MENU mygtukus susiejimui atšaukti)\n
-3. Bandykite susieti dar kartą</string>
     <string name="combov2_enter_pin">Įveskite PIN</string>
     <string name="combov2_cancel_pairing">Atšaukti susiejimą</string>
     <string name="combov2_confirm_cancel_pairing_message">Ar tikrai norite atšaukti susiejimą?</string>
@@ -106,7 +99,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoruoti perteklines 100% bazės užklausas</string>
     <string name="combov2_hit_unexpected_tbr_limit">Koreguojant laikiną bazę pasiekta netikėta riba: tikslinė reikšmė buvo %1$d%%, riba pasiekta ties %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Negalima nustatyti absoliučios laikinos bazės, jei pagrindinė bazė yra nulinė</string>
-    <string name="combov2_unpair_pump_summary">Atsieti AAPS ir Android nuo dabartinės susietos Accu-Chek Combo pompos</string>
     <string name="combov2_unknown_tbr_detected">Aptikta ir sustabdyta nežinoma laikina bazė: %1$d%%; likęs laikas: %2$s</string>
     <string name="combov2_connection_error">Sujungimo klaida: %1$s</string>
     <string name="combov2_short_status_alert">Perspėjimas: %s</string>
