@@ -5,13 +5,11 @@
     <string name="medtrum_pump_description">Integración de bombas de insulina Medtrum Nano y Medtrum 300U</string>
     <string name="medtrum_pump_setting">Ajustes de la bomba Medtrum</string>
     <string name="pump_error">Error de bomba: ¡¡ %1$s !! </string>
-    <string name="pump_warning">Advertencia de la bomba: %1$s</string>
     <string name="pump_is_suspended">Bomba suspendida</string>
     <string name="pump_is_suspended_hour_max">Bomba suspendida por superarse el máximo de insulina por hora</string>
     <string name="pump_is_suspended_day_max">Bomba suspendida por superar el máximo diario de insulina</string>
     <string name="patch_not_active">Parche no activado</string>
     <string name="pump_setting_failed">Error al configurar los ajustes del usuario en la bomba</string>
-    <string name="pump_sync_error">Error al sincronizar el historial de la bomba, se ha omitido un registro. Verifica la pestaña de tratamientos para asegurarse de que el bolo se haya sincronizado correctamente. Silencia y si el error sigue apareciendo, cambia el parche o la base de la bomba</string>
     <string name="patch_reset_after_primed_error">El parche se ha reanudado por sí solo y ha perdido la sesión. Ya no puede administrar insulina. Retira el parche e inicia uno nuevo</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Bolo activo</string>
