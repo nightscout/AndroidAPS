@@ -145,7 +145,6 @@
     <string name="slowabsorptiondetected_plain">!!!!! Виявлено повільне засвоєння вуглеводів: %1$d%% часу. Перевірте ваш розрахунок ще раз. COB може бути завищено, і тому може бути введено більше інсуліну !!!!!</string>
     <string name="bolus_constraint_applied_warn">Застосовано обмеження болюса: з %1$.2f Од до %2$.2f Од</string>
     <string name="bolus_recorded_only">Болюс буде лише записаний (не подається помпою)</string>
-    <string name="advisoralarm">Сигнал тривоги при настанні часу їжі</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d г / %2$d год (+%3$d хв)</string>
     <string name="format_insulin_units">%1$.2f Од</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
