@@ -17,9 +17,7 @@
     <string name="objectives_maxbasal_learned">안전 기능에 주의하고 필요하면 안전 매개 변수를 조정하십시오.</string>
     <string name="objectives_maxiobzero_objective">저혈당 주입 정지(LGS)로 폐쇄 루프 시작</string>
     <string name="objectives_maxiobzero_gate">저혈당 주입 정지 모드(LGS, 즉 최대 IOB = 0이 자동으로 설정됨)에서 폐쇄 루프로 며칠 동안 실행하십시오. LGS 이벤트가 너무 많지 않아야 합니다.</string>
-    <string name="objectives_maxiobzero_learned">MaxIOB를 0으로 설정하면 저혈당이 방지되며, 기저 주입량 이상으로 인슐린을 더 추가하지 않습니다 (음수 IOB인 경우 제외)</string>
     <string name="objectives_maxiob_objective">폐쇄 루프 조정: 최대 IOB를 0보다 높이고 혈당 목표를 서서히 낮추기</string>
-    <string name="objectives_maxiob_gate">혈당 목표를 낮추기 전에 며칠 동안 실행하고, 최소 하룻밤은 저혈당 알람 없이 지내십시오</string>
     <string name="objectives_maxiob_learned">아이가 자라면 최대 IOB를 업데이트하십시오. 음식으로 감당할 수 있는 것보다 많은 인슐린을 시스템이 주지 않게 하십시오. 너무 높은 값은 좋지 않습니다. 간단 모드에서는 최대 IOB가 자동으로 계산됩니다</string>
     <string name="maxiobset">최대 IOB가 올바르게 설정됨 (간단 모드에서는 필요 없음)</string>
     <string name="objectives_autosens_objective">필요하면 기저와 비율을 조정한 다음 Autosens 활성화</string>
@@ -53,7 +51,6 @@
     <string name="objectives_exam_learned_isf">ISF 값의 의미와 ISF가 혈당 교정에 쓰이는 인슐린 양에 어떻게 영향을 주는지 배웠습니다.</string>
     <string name="objectives_exam_learned_ic">IC 값의 의미와 IC가 탄수화물에 필요한 인슐린 양에 어떻게 영향을 주는지 배웠습니다.</string>
     <string name="objectives_exam_learned_hypott">저혈당 임시 목표는 저혈당 후 과잉 교정을 막기 위해서만 사용합니다. 이때는 보통 음수 IOB가 쌓여 있습니다. 앞으로 이런 상황이 다시 생기지 않도록 추가 조치를 검토해야 합니다.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">퍼센트를 사용해도 목표 혈당은 바뀌지 않지만, 기저, ISF, IC는 인슐린을 더 주도록(100% 초과) 또는 덜 주도록(100% 미만) 조정됩니다.</string>
     <string name="objectives_exam_learned_profileswitchtime">프로파일 전환의 시간 이동을 사용하면 하루 주기 프로파일을 늦은 기상 같은 불규칙한 일정에 맞출 수 있습니다.</string>
     <string name="objectives_exam_learned_profileswitch4">프로파일 편집 자체만으로는 변경할 수 없습니다. 변경한 내용을 활성화하려면 프로파일 전환을 진행해야 합니다.</string>
     <string name="objectives_exam_learned_exercise">프로파일을 100% 이하로 선택하여 운동을 시작하기 최소 1시간 전에 체내 인슐린 양을 줄여야합니다.</string>
@@ -64,14 +61,10 @@
     <string name="objectives_exam_learned_sensitivity">민감도 감지는 인슐린 용량을 다양한 상황에 적응시킬 수 있는 알고리즘의 일부 기능입니다.</string>
     <string name="objectives_exam_learned_objectives">목표 진행 상황은 다른 설정과 함께 저장되므로 백업해야 합니다.</string>
     <string name="objectives_exam_learned_objectives2">내보낸 설정과 생성된 APK는 항상 휴대폰 밖에도 보관하십시오. 휴대폰은 분실되거나 손상될 수 있습니다. 휴대폰에서 접근할 수 있는 클라우드가 좋은 보관 장소입니다. 그러면 몇 분 안에 다른 기기에서 AAPS를 복원할 수 있습니다. 사용한 마스터 암호도 안전한 곳에 보관하는 것이 좋습니다. 마스터 암호가 없으면 백업은 쓸모가 없습니다. AAPS 빌드에 사용한 서명 키(.jks 파일)와 암호도 마찬가지입니다. 나머지는 중요하지 않습니다. 언제든지 인터넷에서 다시 다운로드할 수 있습니다.</string>
-    <string name="objectives_exam_learned_wrongcarbs">AAPS에 잘못 입력했거나 입력이 실제와 맞지 않으면 가능한 한 빨리 바로잡으십시오. 과다 투여로 이어질 수 있습니다. AAPS에는 항상 탄수화물, 인슐린 등에 대한 정보를 가능한 한 정확하게 알려야 합니다.</string>
-    <string name="objectives_exam_learned_iob">AAPS가 잘 작동하는지 분석할 때 IOB 그래프를 보면 유용한 정보를 많이 얻을 수 있습니다.</string>
-    <string name="objectives_exam_learned_cob">COB 계산은 ISF와 IC의 관계에 따라 달라집니다. ISF를 높이거나 IC를 낮추면 흡수 시간이 길어집니다. 하지만 퍼센트로 프로파일을 전환하면 두 값이 동시에 바뀌므로 흡수 시간에는 영향이 없습니다.</string>
     <string name="objectives_exam_learned_breadgrams">탄수화물 입력에는 그램 단위만 사용할 수 있습니다.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs는 펌프의 확장 볼러스를 대신하는 기능입니다.</string>
     <string name="objectives_exam_learned_nsclient">AAPSClient나 Nightscout로 AAPS를 원격으로 모니터링할 수 있습니다. AAPSClient가 마스터 휴대폰과 페어링되어 있으면 AAPS를 원격으로 제어할 수도 있습니다.</string>
     <string name="objectives_exam_learned_concentration1">U200 인슐린을 50% 프로파일과 함께 사용하면 계속 환산해야 합니다. 펜으로 주는 외부 볼러스를 환산해야 하고, AAPS나 NS의 모든 표준 보고서가 잘못되므로 의료진을 위해 IU로 환산해야 합니다.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">50% 프로파일을 쓰는 U200에서 인슐린 농도 기능을 쓰는 U200으로 바꾸려면 더 강한 새 프로파일을 만들고, DynISF를 1주일 동안 비활성화하고, 국제 단위로 생각하는 연습을 해야 합니다.</string>
     <string name="objectives_exam_learned_concentration3">인슐린 농도는 인슐린이나 패치를 교체할 때만 바꿀 수 있습니다. 가장 중요한 것은, 특히 튜브 펌프의 경우, 펌프의 사용자 인터페이스로 펌프에서 직접 볼러스를 주입하면 절대 안 된다는 것입니다.</string>
     <string name="answerdisabledto">다음 시간까지 답변 불가능: %1$s</string>
     <string name="wronganswer">잘못된 답변!</string>
