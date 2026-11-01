@@ -27,6 +27,7 @@
     <string name="commanderror">Opdracht fout</string>
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
+    <string name="boluserrorcode">Gevraagd: %1$.2fE Toegediend: %2$.2fE Error code: %3$s</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
@@ -44,6 +45,7 @@
     <string name="diaconn_g8_screentimeout">LCD-aan tijd [seconden]</string>
     <string name="diaconn_g8_language">Taal</string>
     <string name="diaconn_g8_bolus_speed">Bolus snelheid</string>
+    <string name="diaconn_g8_pumplang_chiness">Chinees</string>
     <string name="diaconn_g8_pumplang_korean">Koreaans</string>
     <string name="diaconn_g8_pumplang_english">Engels</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -61,6 +63,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Zet \"Batterij wissel\" melding in Nightscout als deze in pomp geschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logbatterychange_title">Batterijwissel noteren</string>
     <string name="diaconn_g8_logsyncinprogress">Log synchronisatie in uitvoering</string>
+    <string name="diaconn_g8_loginsulinshorage">Insulinetekort</string>
     <string name="diaconn_g8_logbatteryshorage">Batterij bijna leeg</string>
     <string name="diaconn_g8_logneedleprime">Naald voorvullen :%1$.2fE</string>
     <string name="diaconn_g8_loginjectorprime">Injector voorvullen :%1$.2fE</string>
@@ -74,6 +77,7 @@
     <string name="diaconn_g8_reasoncomplete">Voltooid</string>
     <string name="diaconn_g8_reasoninjectonblock">Injectie Geblokkeerd</string>
     <string name="diaconn_g8_reasonbatteryshortage">Batterij bijna leeg</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Insuline tekort</string>
     <string name="diaconn_g8_reasonuserstop">Gebruikers stop</string>
     <string name="diaconn_g8_reasonsystemreset">Systeem opnieuw instellen</string>
     <string name="diaconn_g8_reasonother">Overige</string>
