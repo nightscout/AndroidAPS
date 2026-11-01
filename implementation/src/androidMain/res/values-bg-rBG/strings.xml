@@ -57,10 +57,8 @@
     <string name="ue_exported">Потребителските данни експортирани</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
-    <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
     <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни! След импортиране, моля, проверете и актуализирайте своите настройки.</string>
     <string name="metadata_warning_different_device">Настройките са създадени на друго устройство. Това е ОК, ако импортирате от по-стар/различен телефон, но се уверете, че тези настройки са правилни!</string>
-    <string name="metadata_warning_old_export">Импортираните настройки са на %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
     <string name="metadata_warning_date_format">Невалиден формат на датата!</string>
     <string name="metadata_warning_different_version">Настройки от различна подверсия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след импорта дали настройките са все още правилни!</string>
     <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорта настройките са все още правилни!</string>
