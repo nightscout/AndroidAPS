@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Název měsíce (krátký)</string>
     <string name="cwf_comment_loop">Stav smyčky a čas</string>
     <string name="cwf_comment_direction">Trendová šipka</string>
-    <string name="cwf_comment_timestamp">Před minutami pro poslední přijaté glykémie</string>
     <string name="cwf_comment_sgv">Hodnota glykémie</string>
     <string name="cwf_comment_cover_plate">Úvodní obrázek před textem (vytáčení...)</string>
     <string name="cwf_comment_hour_hand">Obrázek hodinové ručičky (Analogové hodinky)</string>
