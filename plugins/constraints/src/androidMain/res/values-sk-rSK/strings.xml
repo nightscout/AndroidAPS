@@ -9,7 +9,6 @@
     <string name="application_expired">Aplikácia expirovala</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
-    <string name="version_expire">Platnosť verzie %1$s vyprší dňa %2$s a prepne sa do režimu Ochrana pred nízkou glykémiou (LGS)</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Použité prepočítané dáta</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS vybrané</string>
     <string name="closedmodeenabled">Uzavretý okruh povolený</string>
     <string name="description_objectives">Vzdelávací program</string>
-    <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="objectives_button_unfinish">Zrušiť stav dokončenia</string>
     <string name="objectives_button_unstart">Zrušiť stav spustenia</string>
     <string name="bg_doubled_lgs">Režim LGS v dôsledku duplicitných hodnôt v zdroji glykémie</string>
