@@ -3,7 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Enkelmodus</string>
     <string name="pref_title_insulin_concentration">Støtte for insulinkonsentrasjon</string>
-    <string name="pref_summary_insulin_concentration">Aktiver støtte for ulike insulinkonsentrasjoner (U200, U300 osv.)</string>
+    <string name="pref_summary_insulin_concentration">Aktiver støtte for ulike insulinkonsentrasjoner (U50, U200 osv.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Hold skjermen på</string>
     <string name="pref_summary_keep_screen_on">Hindrer Android i å slå av skjermen. Dette bruker mye batteri når enheten ikke er koblet til strøm.</string>
@@ -80,10 +80,10 @@
     <string name="pref_title_autotune_auto_switch_profile">Bytt profil automatisk</string>
     <string name="pref_summary_autotune_auto_switch_profile">Bytt automatisk til den Autotune-genererte profilen etter beregning.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Kategoriser UAM som basal</string>
-    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandle uannonsert måltid som basalinsulinbehov for Autotune-beregninger.</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandle ikke-varslede måltider (UAM) som basalinsulinbehov i Autotune-beregninger.</string>
     <string name="pref_title_autotune_tune_insulin_curve">Tilpass insulinkurve</string>
-    <string name="pref_title_autotune_circadian_ic_isf">Bruk circadian IK/ISF</string>
-    <string name="pref_summary_autotune_circadian_ic_isf">Bruk circadian (døgnbasert) variasjon for IK og ISF i Autotune-beregninger.</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Bruk IK/ISF med døgnvariasjon</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Bruk døgnvariasjon for IK og ISF i Autotune-beregninger.</string>
     <string name="pref_title_autotune_additional_log">Ekstra logging</string>
     <!-- SMS preferences -->
     <string name="pref_title_sms_allow_remote_commands">Tillat fjernkommandoer via SMS</string>
