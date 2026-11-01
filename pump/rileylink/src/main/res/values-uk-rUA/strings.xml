@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">Програмне кодування 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Апаратне кодування 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">США та Канада (916 МГц)</string>
-    <string name="medtronic_pump_frequency_worldwide">Весь світ (868 МГц)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Сканування</string>
     <string name="riley_link_ble_config_connected_never">Ніколи</string>

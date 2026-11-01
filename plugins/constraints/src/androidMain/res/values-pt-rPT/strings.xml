@@ -9,7 +9,6 @@
     <string name="application_expired">A aplicação expirou</string>
     <string name="running_invalid_version">Detetamos que está a correr uma versão inválida. Loop desativado!</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
-    <string name="version_expire">A versão %1$s expira em %2$s e passará para o modo SGB</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Dados utilizados foram recalculados</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS selecionado</string>
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="doyouwantresetstart">Deseja repor o início do objetivo? Pode perder o seu progresso.</string>
     <string name="objectives_button_unfinish">Repor estado concluído</string>
     <string name="objectives_button_unstart">Repor estado iniciado</string>
     <string name="bg_doubled_lgs">Modo SGB devido a valores duplicados na fonte da glicose</string>

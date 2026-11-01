@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Retirar la tapa de la aguja</string>
     <string name="carelevo_patch_connect_step_1_desc">Saca el parche del blíster y retira la tapa de la aguja</string>
     <string name="carelevo_patch_connect_step_2_title">Encender y conectar</string>
-    <string name="carelevo_patch_connect_step_2_desc">Mantén pulsado el botón de encendido durante más de 1 segundo. Después del pitido, pulsa el botón [Buscar parche] que aparece abajo</string>
     <string name="carelevo_patch_safety_check_start_title">Comprobación de seguridad</string>
     <string name="carelevo_patch_safety_check_end_title">Comprobación de seguridad completada</string>
     <string name="carelevo_patch_safety_check_start_desc">El parche se ha conectado correctamente.\nPulsa el botón [Comprobación de seguridad]</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Si el parche detectado a continuación es correcto, pulsa el botón Confirmar</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Inserción de la aguja completada y retiro del aplicador</string>
     <string name="carelevo_dialog_connect_detached">Aplicador retirado</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Presiona los agarres a ambos lados del aplicador para desengancharlo del parche y,\n
-        a continuación, pulsa el botón «Aplicador retirado». Comenzará el suministro de insulina.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">El Bluetooth no está activado. Por favor, compruébalo</string>
     <string name="carelevo_toast_msg_patch_not_connected">Sin parche conectado</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Quedan menos de 10 U de insulina; se ha detenido la administración de insulina. Pulsa el botón [Desactivar parche] y cambia el parche ahora</string>
     <string name="alarm_notification_desc_warning_expired_patch">Parche caducado; se ha detenido la administración de insulina. Pulsa el botón [Desactivar parche] y cambia el parche ahora</string>
     <string name="alarm_notification_desc_warning_low_battery">Batería baja; se ha detenido la administración de insulina. Pulsa el botón [Descartar parche] y cambia el parche ahora</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Se ha detenido la administración de insulina. Trasládate a un lugar con una temperatura adecuada ahora (4 °C ~ 37 °C).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Se ha detenido la administración de insulina. Pulsa el botón [Iniciar insulina] y reinicia la administración basal</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Se ha agotado el tiempo de aplicación del parche. Pulsa el botón [Desactivar parche] y cambia el parche ahora</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Error en el autodiagnóstico. Toca el botón [Desactivar parche] y cambia el parche ahora</string>

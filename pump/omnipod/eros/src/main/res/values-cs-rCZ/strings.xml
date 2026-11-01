@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, SACH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Rychlost: %1$.2f U, doba trvání: %2$d minut</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Komunikace selhala: nezdařilo se ověření integrity zprávy</string>
     <string name="omnipod_eros_error_invalid_packet_type">Komunikace selhala: z podu byly přijaty neplatné pakety</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Žádná odpověď od RileyLinku</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink komunikace přerušena</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Žádná odezva z Podu</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Nastavení bazálního profilu se nezdařilo. Výdej může být pozastaven! Prosím ručně obnovte stav Podu na záložce Omnipod a obnovte výdej.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Nastavení bazálního profilu se možná nezdařilo. Výdej může být pozastaven! Prosím ručně obnovte stav Podu na záložce Omnipod a obnovte výdej pokud je to potřeba.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Nastavení bazální profilu se nezdařilo. Výdej je pozastaven! Ručně obnovte výdej z karty Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Zrušení dočasného bazálu se možná nezdařilo. Aktualizujte prosím stav Podu z karty Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Nastavení dočasného bazálu selhalo. Pokud byl dočasný bazál již dříve spuštěn, mohl být zrušen. Aktualizujte prosím ručně stav Podu z karty Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Nastavení dočasného bazálu mohlo být neúspěšné. Pokud již dočasný bazál dříve běžel, byl zrušen. Aktualizujte prosím ručně stav Podu na záložce Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Doba trvání TBR musí být větší než nula, a musí být násobkem %1$s minut.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Nastavení času se možná nezdařilo. Výdej může být pozastaven! Prosím ručně obnovte stav Podu na záložce Omnipod a obnovte výdej pokud je to potřeba.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Nastavení času se nezdařilo. Výdej je pozastaven! Ručně obnovte výdej z karty Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nezdařilo se automaticky změnit čas na Podu. Měli byste ručně synchronizovat čas na kartě Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nelze ověřit, zda bolus proběhl úspěšně. Ověřte prosím manuálně, zda je podáván bolus, nasloucháním kliků z Podu. <b>Pokud jste si jisti, že bolus nebyl úspěšný, byste měli ručně odstranit položku bolusu z ošetření, i když klepnete na tlačítko \'Zrušit bolus\' nyní!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nelze ověřit, zda byl bolus SMB (%1$.2f U) úspěšně vydán. <b>Pokud jste si jisti, že bolus nebyl vydán, měli byste ručně odstranit položku SMB z Ošetření.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Dočasný bazál běží na Podu, ale AAPS o tomto dočasném bazálu neví. Prosím zrušte svůj dočasný bazál ručně.</string>

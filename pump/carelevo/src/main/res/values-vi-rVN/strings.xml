@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Tháo nắp kim</string>
     <string name="carelevo_patch_connect_step_1_desc">Lấy miếng dán ra khỏi vỉ và tháo nắp kim.</string>
     <string name="carelevo_patch_connect_step_2_title">Bật thiết bị và kết nối</string>
-    <string name="carelevo_patch_connect_step_2_desc">Nhấn nút nguồn trong hơn 1 giây. Sau khi nghe tiếng bíp, nhấn nút [Tìm miếng dán] bên dưới.</string>
     <string name="carelevo_patch_safety_check_start_title">Kiểm tra an toàn</string>
     <string name="carelevo_patch_safety_check_end_title">Đã hoàn tất kiểm tra an toàn</string>
     <string name="carelevo_patch_safety_check_start_desc">Đã kết nối miếng dán thành công.\nVui lòng nhấn nút [Kiểm tra an toàn].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Nếu miếng dán được phát hiện bên dưới là đúng, vui lòng nhấn nút Xác nhận.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Đã hoàn tất đưa kim vào và tháo dụng cụ</string>
     <string name="carelevo_dialog_connect_detached">Đã tháo dụng cụ</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-Nhấn vào hai chỗ cầm ở hai bên dụng cụ đặt để tháo dụng cụ khỏi miếng dán,\n
-        và sau đó nhấn nút \'Đã tháo dụng cụ\'. Quá trình phân phối insulin sẽ bắt đầu.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth chưa được bật. Vui lòng kiểm tra.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Chưa kết nối miếng dán.</string>
@@ -183,7 +178,6 @@ Nhấn vào hai chỗ cầm ở hai bên dụng cụ đặt để tháo dụng c
     <string name="alarm_notification_desc_warning_low_insulin">Còn ít hơn 10 U insulin; phân phối insulin đã dừng. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Miếng dán đã hết hạn; phân phối insulin đã dừng. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
     <string name="alarm_notification_desc_warning_low_battery">Pin yếu; việc bơm insulin đã dừng. Nhấn nút [Hủy miếng dán] và thay miếng dán ngay.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Việc bơm insulin đã dừng. Hãy chuyển đến nơi có nhiệt độ phù hợp ngay (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Việc bơm insulin đã dừng. Nhấn nút [Khởi động insulin] và khởi động lại việc bơm liều nền.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Thời gian sử dụng miếng dán đã hết. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Tự chẩn đoán không thành công. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>

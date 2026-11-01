@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Свалете капачката на иглата</string>
     <string name="carelevo_patch_connect_step_1_desc">Извадете пача от блистера и свалете капачката на иглата.</string>
     <string name="carelevo_patch_connect_step_2_title">Включване и свързване</string>
-    <string name="carelevo_patch_connect_step_2_desc">Натиснете бутона за захранване за повече от 1 секунда. След звуковия сигнал натиснете бутона [Търси пач] по-долу.</string>
     <string name="carelevo_patch_safety_check_start_title">Проверка за безопасност</string>
     <string name="carelevo_patch_safety_check_end_title">Проверката за безопасност е завършена</string>
     <string name="carelevo_patch_safety_check_start_desc">Пачът е свързан успешно.\nМоля, натиснете бутона [Проверка за безопасност].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Ако откритият по-долу пач е правилен, моля, натиснете бутона Потвърди.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Поставянето на иглата е завършено; премахване на апликатора</string>
     <string name="carelevo_dialog_connect_detached">Апликаторът е премахнат</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Натиснете дръжките от двете страни на апликатора, за да го отделите от пача,\n
-        и след това натиснете бутона `Апликаторът е премахнат`. Подаването на инсулин ще започне.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth не е включен. Моля, проверете.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Няма свързан пач.</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Остават по-малко от 10 Ед инсулин; подаването на инсулин е спряно. Натиснете бутона [Деактивирай пача] и сменете пача веднага.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Пачът е изтекъл; подаването на инсулин е спряно. Натиснете бутона [Деактивирай пача] и сменете пача веднага.</string>
     <string name="alarm_notification_desc_warning_low_battery">Ниска батерия; подаването на инсулин е спряно. Натиснете бутона [Изхвърли пача] и сменете пача веднага.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Подаването на инсулин е спряно. Преместете се веднага на място с подходяща температура (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Подаването на инсулин е спряно. Натиснете бутона [Стартирай инсулина], за да възобновите базалното подаване.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Времето за поставяне на пача изтече. Натиснете бутона [Деактивирай пача] и сменете пача веднага.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Самодиагностиката е неуспешна. Натиснете бутона [Деактивирай пача] и сменете пача веднага.</string>

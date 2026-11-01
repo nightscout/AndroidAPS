@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Názov mesiaca (krátky)</string>
     <string name="cwf_comment_loop">Stav uzavretého okruhu a čas</string>
     <string name="cwf_comment_direction">Trendová šípka</string>
-    <string name="cwf_comment_timestamp">Pred koľkými minútami bola prijatá posledná glykémia</string>
     <string name="cwf_comment_sgv">Hodnota glykémie</string>
     <string name="cwf_comment_cover_plate">Krycí obrázok pred textom (ciferníky...)</string>
     <string name="cwf_comment_hour_hand">Obrázok hodinovej ručičky (Analógové hodinky)</string>

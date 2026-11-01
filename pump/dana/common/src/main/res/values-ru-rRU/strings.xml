@@ -7,7 +7,6 @@
     <string name="commanderror">Ошибка в команде</string>
     <string name="speederror">Ошибка в скорости</string>
     <string name="insulinlimitviolation">Нарушение лимита инсулина</string>
-    <string name="boluserrorcode">Запрошено: %1$.2f ед. Подано: %2$.2f ед. Код ошибки: %3$s</string>
     <string name="danar_valuenotsetproperly">величина не задана должным образом</string>
     <string name="danar_setbasalstep001">Установить шаг базала 0.01 ед/ч</string>
     <string name="resetpairing">Сбросить информацию о сопряжении?</string>
@@ -92,7 +91,6 @@
     <string name="selectedpump">Выбранная помпа</string>
     <string name="rs_loginsulinchange_title">Отслеживать замену резервуара</string>
     <string name="rs_loginsulinchange_summary">Добавить событие \"Замена инсулина\" в портал терапииl при обнаружении в хронологии</string>
-    <string name="rs_logcanulachange_title">Отслеживать замену катетера помпы в журнале</string>
     <string name="rs_logcanulachange_summary">Добавить событие \"Замена места катетера помпы\" в портал терапииl при обнаружении в журнале</string>
     <string name="press_ok_on_the_pump">Нажмите OK на помпе\nи введите 2 отображаемых номера\nДержите экран помпы включенным нажимая кнопку минус, пока не закончите ввод кода.</string>
     <string name="num1pin">1: (12 цифр)</string>

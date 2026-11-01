@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Rozloženie komplikácií</string>
     <string name="cwf_complication_layout_description">Poloha a veľkosť komplikácií prevzaté z načítaného vlastného ciferníka.</string>
     <string name="pref_include_external">Zahrnúť externé zobrazenia do šablóny</string>
-    <string name="pref_switch_external">Prehodiť externé dáta v ciferníku</string>
     <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš štýl</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>

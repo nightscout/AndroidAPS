@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Odstráňte kryt ihly</string>
     <string name="carelevo_patch_connect_step_1_desc">Vyberte náplasťovú pumpu z blistra a odstráňte kryt ihly.</string>
     <string name="carelevo_patch_connect_step_2_title">Zapnutie a pripojenie</string>
-    <string name="carelevo_patch_connect_step_2_desc">Podržte tlačidlo napájania stlačené dlhšie ako 1 sekundu. Po zaznení zvukového signálu ťuknite nižšie na tlačidlo [Vyhľadať náplasťovú pumpu].</string>
     <string name="carelevo_patch_safety_check_start_title">Bezpečnostná kontrola</string>
     <string name="carelevo_patch_safety_check_end_title">Bezpečnostná kontrola dokončená</string>
     <string name="carelevo_patch_safety_check_start_desc">Náplasťová pumpa bola úspešne pripojená.\nStlačte tlačidlo [Bezpečnostná kontrola].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Ak je nižšie uvedená náplasťová pumpa správna, klepnite na tlačidlo Potvrdiť.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Zavedenie ihly dokončené a aplikátor odstránený</string>
     <string name="carelevo_dialog_connect_detached">Aplikátor odstránený</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Stlačte úchytky na oboch stranách aplikátora, aby ste ho oddelili od náplasťovej pumpy,\n
-        a potom stlačte tlačidlo „Aplikátor odstránený“. Spustí sa podávanie inzulínu.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth nie je zapnutý. Skontrolujte to, prosím.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Nie je pripojená žiadna náplasťová pumpa.</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Zostáva menej ako 10 U; podávanie inzulínu bolo zastavené. Klepnite na tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Životnosť náplasťovej pumpy vypršala; podávanie inzulínu bolo zastavené. Klepnite na tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</string>
     <string name="alarm_notification_desc_warning_low_battery">Nízky stav batérie; podávanie inzulínu zastavené. Stlačte tlačidlo [Zahodiť náplasťovú pumpu] a ihneď ju vymeňte.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Podávanie inzulínu bolo zastavené. Ihneď prejdite do prostredia s vhodnou teplotou (4° C – 37° C).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Podávanie inzulínu bolo zastavené. Stlačte tlačidlo [Spustiť inzulín] a obnovte podávanie bazálnej dávky.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Čas na aplikáciu náplasťovej pumpy vypršal. Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnostika zlyhala. Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</string>

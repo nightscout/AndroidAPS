@@ -153,7 +153,7 @@
     <string name="nsclient_howcanyou">如何遠端追蹤與控制 AAPS（例如用於您的孩子）？</string>
     <string name="nsclient_nightscout">AAPSClient、Nightscout 應用程式與 Nightscout 網頁皆可讓您遠端追蹤 AAPS。</string>
     <string name="nsclient_dexcomfollow">其他應用程式（例如 Dexcom Follow，或以追蹤者模式運作的 xDrip+）可讓您遠端追蹤部分資料，例如血糖數值。它們可能不會顯示活性胰島素（IOB）或活性碳水化合物（COB），或其計算方式可能不同。</string>
-    <string name="nsclient_data">要遠端追蹤或控制 AAPS，兩支手機都需要可用的網路連線（例如 Wi‑Fi 或行動數據）。</string>
+    <string name="nsclient_data">要遠端追蹤或控制 AAPS，兩支手機都需要可用的網路連線（例如 Wi‑Fi 或行動網路）。</string>
     <string name="nsclient_fullcontrol">當 AAPSClient 與主手機完成配對後，您也可以遠端控制 AAPS，例如進行注射、輸入碳水、設定臨時目標、切換設定檔與循環模式。</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/zh-tw/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="nsclient_hint2">https://wiki.aaps.app/zh-tw/latest/RemoteFeatures/RemoteControl.html</string>
@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">編輯設定檔以更改值即可實施所做的更改。</string>
     <string name="profileswitch4_multi">可以設置多個設定檔並選擇以適應變化的情況（例如荷爾蒙變化、輪班工作、工作日/週末生活方式）。</string>
     <string name="other_medication_label">其他藥物。請閱讀以下聲明並勾選框以接受聲明。</string>
-    <string name="other_medication_text">AAPS會降低基礎速率或暫停胰島素輸送以提高血糖。SGLT2抑制劑類藥物（格列佛寧）可以防止血糖上升，從而可能導致危險的胰島素缺乏，引起DKA。
-\n常見的品牌名有：Invokana®、Forxiga®、Jardiance®、Steglatro®、Suglat®、Apleway®、Deberza®、Synjardy®、Vokanamet®、Xigduo®。\n\n我在此承諾，在使用AAPS時不會服用此類藥物，或在使用此類藥物之前停用循環。</string>
     <string name="concentration_feature_label">胰島素濃度管理</string>
     <string name="u200_with_profile">在 AAPS 支援胰島素濃度之前，用戶會將設定檔設為 50% 以把所有數值減半來使用 U200。於該設定下，哪些敘述是正確的？</string>
     <string name="u200_with_profile_reports">我的 AAPS 資料庫與 NS 報表會變得不正確。所有數值（注射、速率、TDD）都必須乘以 2 才能查看真實數值，尤其是在提供給醫師與醫療團隊時。</string>

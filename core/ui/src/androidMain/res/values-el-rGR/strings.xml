@@ -168,7 +168,6 @@
     <string name="notification">Ειδοποίηση</string>
     <string name="noprofile">Δεν φορτώθηκε προφίλ από το NS ακόμα</string>
     <string name="exists">υπάρχει</string>
-    <string name="notexists">δεν υπάρχει</string>
     <string name="glucose">Γλυκόζη</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -226,11 +225,9 @@
     <string name="pump_wizard_profile_gate_pick">Επιλέξτε το προφίλ που θα εφαρμοστεί κατά την ενεργοποίηση.</string>
     <string name="pump_wizard_profile_gate_no_store">Δεν έχει οριστεί προφίλ. Ανοίξτε τη Διαχείριση προφίλ για να δημιουργήσετε ένα και ξεκινήστε ξανά την ενεργοποίηση.</string>
     <string name="reset">Επαναφορά</string>
-    <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="profile">Προφίλ</string>
     <string name="percentage_label">Ποσοστό</string>
     <string name="timeshift_label">Χρονική μετατόπιση</string>
-    <string name="confirm_remove_multiple_items">Είστε βέβαιοι ότι θέλετε να καταργήσετε %1$d στοιχεία</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Η κύρια συσκευή δεν έχει %1$d από αυτές τις εγγραφές. Αυτές δεν αφαιρούνται.</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="copytolocalprofile">Δημιουργία νέου προφίλ από αυτό το προφίλ;</string>
@@ -342,9 +339,7 @@
     <string name="careportal_note">Σημείωση</string>
     <string name="careportal_question">Ερώτηση</string>
     <string name="careportal_exercise">Άσκηση</string>
-    <string name="careportal_announcement_message">Ανακοίνωση : %1$s</string>
     <string name="careportal_note_message">Σημείωση: %1$s</string>
-    <string name="careportal_question_message">Ερώτηση : %1$s</string>
     <string name="careportal_exercise_message">Άσκηση : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Αλλαγή σημείου αντλίας : %1$s</string>
     <string name="careportal_pump_site_change">Αλλαγή σημείου αντλίας</string>
@@ -661,7 +656,6 @@
     <string name="uel_ns_queue_cleared">ΕΚΚΑΘΑΡΙΣΗ ΟΥΡΑΣ NS</string>
     <string name="uel_ns_settings_copied">ΑΝΤΙΓΡΑΦΗ ΡΥΘΜΙΣΕΩΝ NS</string>
     <string name="uel_error_dialog_ok">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΟΚ</string>
-    <string name="uel_error_dialog_mute">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ </string>
     <string name="uel_error_dialog_mute_5min">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ 5ΛΕΠΤΑ</string>
     <string name="uel_objective_started">ΕΝΑΡΞΗ ΣΤΟΧΟΥ</string>
     <string name="uel_objective_unstarted">Ο ΣΤΟΧΟΣ ΔΕΝ ΕΧΕΙ ΞΕΚΙΝΗΣΕΙ</string>
@@ -726,7 +720,6 @@
     <string name="error_in_isf_values">Σφάλμα στις τιμές ISF</string>
     <string name="error_in_basal_values">Σφάλμα στις τιμές βασικού ρυθμού</string>
     <string name="error_in_target_values">Σφάλμα στις τιμές στόχου</string>
-    <string name="profile_name_contains_dot">Μερικά από τα ονόματα προφίλ περιέχουν τελείες.\nΑυτό δε υποστηρίζεται από NS.\nΤα προφίλ δε θα φορτωθούν στο NS.</string>
     <string name="invalid_profile_not_accepted">Μη έγκυρο προφίλ %1$s δεν είναι αποδεκτό από το NS</string>
     <string name="errors">Σφάλματα</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +884,6 @@
     <string name="export_result_message_exported">Έγινε εξαγωγή ρυθμίσεων</string>
     <string name="export_result_message_failed">ΑΠΟΤΥΧΙΑ εξαγωγής ρυθμίσεων!</string>
     <string name="export_result_message_about_to_expire">Έγινε εξαγωγή ρυθμίσεων: ο κωδικός λήγει σύντομα. Κάντε χειροκίνητη εξαγωγή και εισάγετε (ξανά) τον κωδικό.</string>
-    <string name="export_result_message_expired">Η εξαγωγή ρυθμίσεων ακυρώθηκε: ο κωδικός έληξε. Κάντε χειροκίνητη εξαγωγή και εισάγετε (ξανά) τον κωδικό!</string>
     <string name="export_result_message_disabled">Προειδοποίηση (αυτοματισμός): Η εξαγωγή ρυθμίσεων είναι απενεργοποιημένη!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Η εξαγωγή στο cloud έγινε με επιτυχία</string>
@@ -998,7 +990,6 @@
     <string name="cannula">Καθετήρας</string>
     <string name="patch_pump">Αυτοκόλλητη αντλία</string>
     <!-- Site Rotation -->
-    <string name="select_location">Πατήστε παρακάτω για να επιλέξετε σημείο</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Μην σκοτώσεις την εφαρμογή μου;</string>
     <string name="fabric_upload_disabled">Η μεταφόρτωση των αρχείων καταγραφής σφαλμάτων απενεργοποιήθηκε!</string>
@@ -1047,7 +1038,6 @@
     <string name="unsaved_changes">Μη αποθηκευμένες αλλαγές</string>
     <string name="unsaved_changes_message">Έχετε αλλαγές που δεν αποθηκεύτηκαν. Τι θέλετε να κάνετε;</string>
     <string name="discard">Απόρριψη</string>
-    <string name="ic_dynamic_label_warning">Ο αλγόριθμός σας μπορεί να υπολογίζει δυναμικά το IC. Οι παρακάτω τιμές μπορούν να χρησιμοποιηθούν μόνο ως εφεδρικές, αν λείπουν δεδομένα, ή μόνο ως τιμή αναφοράς</string>
     <string name="isf_dynamic_label_warning">Ο αλγόριθμός σας μπορεί να υπολογίζει δυναμικά το ISF. Οι παρακάτω τιμές μπορούν να χρησιμοποιηθούν μόνο ως εφεδρικές, αν λείπουν δεδομένα, ή μόνο ως τιμή αναφοράς</string>
     <string name="add_time_block">Προσθήκη χρονικού διαστήματος</string>
     <string name="remove_entry">Αφαίρεση εγγραφής</string>

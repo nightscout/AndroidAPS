@@ -9,7 +9,6 @@
     <string name="application_expired">Aplicación caducada</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
-    <string name="version_expire">La versión %1$s expira en %2$s y pasará a modo LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Datos recalculados usados</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS seleccionado</string>
     <string name="closedmodeenabled">Lazo cerrado activado</string>
     <string name="description_objectives">Programa de aprendizaje</string>
-    <string name="doyouwantresetstart">¿Quieres reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
     <string name="objectives_button_unstart">Restablecer estado iniciado</string>
     <string name="bg_doubled_lgs">Modo LGS debido a valores duplicados en la fuente de glucosa</string>

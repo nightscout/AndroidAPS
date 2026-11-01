@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">月份名稱（簡短）</string>
     <string name="cwf_comment_loop">循環狀態及時間</string>
     <string name="cwf_comment_direction">方向箭頭</string>
-    <string name="cwf_comment_timestamp">最後收到血糖的分鐘數</string>
     <string name="cwf_comment_sgv">血糖值</string>
     <string name="cwf_comment_cover_plate">文字前方的覆蓋圖片（錶盤等）</string>
     <string name="cwf_comment_hour_hand">時針圖片（類比手錶）</string>

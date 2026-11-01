@@ -21,16 +21,12 @@
     <string name="omnipod_dash_not_enough_insulin">储药器中的胰岛素不足</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>
     <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
-    <string name="suspend_delivery_is_unconfirmed">暂停输注尚未确认！请从 Omnipod 标签页手动刷新 Pod 状态，并在需要时恢复输注。</string>
     <string name="insulin_delivery_suspended">胰岛素输注已暂停</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Pod 上的时区与手机上的时区不同。基础速率不正确。请切换配置文件以解决问题</string>
     <string name="failed_to_set_the_new_basal_profile">无法设置新的基础配置文件。输注已暂停</string>
-    <string name="setting_basal_profile_might_have_failed">基础配置文件设置可能失败。输注可能已暂停！请从 Omnipod 标签页手动刷新 Pod 状态，并在需要时恢复输注。</string>
     <string name="bolus_delivery_status_uncertain">推注输送状态不确定。请刷新pod状态以确认或拒绝。</string>
     <string name="temp_basal_out_of_sync">临时基础状态不符合预期！如果之前正在运行临时基础，则已取消。请检查已输注的胰岛素和pod历史记录</string>
     <string name="checking_delivery_status">检查输注状态</string>
-    <string name="setting_temp_basal_might_have_basal_failed">设置临时基础可能失败。如果之前正在运行临时基础，则该基础已被取消。请从 Omnipod 选项卡手动刷新 Pod 状态。</string>
     <string name="cancel_temp_basal_result_is_uncertain">取消临时基础结果不确定</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">未确认的恢复输注命令。请刷新 Pod 状态</string>
-    <string name="cancelling_temp_basal_might_have_failed">取消临时基础可能失败。如果之前有临时基础正在运行，则可能已被取消。请从 Omnipod 选项卡手动刷新 Pod 状态。</string>
 </resources>

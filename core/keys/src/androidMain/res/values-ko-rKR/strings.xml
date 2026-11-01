@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">다른 인슐린 농도(U50, U200 등) 지원을 활성화합니다</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">화면 켜짐 유지</string>
-    <string name="pref_summary_keep_screen_on">Android가 화면을 끄지 못하게 합니다. 전원에 연결되어 있지 않으면 배터리를 많이 사용합니다.</string>
     <string name="pref_title_show_treatment_button">처치 버튼 표시</string>
     <string name="pref_title_show_wizard_button">마법사 버튼 표시</string>
     <string name="pref_title_show_insulin_button">인슐린 버튼 표시</string>
@@ -113,15 +112,15 @@
     <string name="pref_title_ns_receive_tbr_eb">NS에서 TBR/EB 받기</string>
     <string name="pref_summary_ns_receive_tbr_eb">Nightscout에서 임시 기저와 확장 볼러스를 받습니다.</string>
     <string name="pref_title_ns_notifications_from_alarms">NS 알람</string>
-    <string name="pref_title_ns_notifications_from_announcements">NS 알림</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS 공지</string>
     <string name="pref_title_ns_use_cellular">모바일 데이터 사용</string>
     <string name="pref_title_ns_use_roaming">로밍 사용</string>
     <string name="pref_title_ns_use_wifi">WiFi 사용</string>
     <string name="pref_title_ns_use_on_battery">배터리 사용 중 동기화</string>
     <string name="pref_title_ns_use_on_charging">충전 중 동기화</string>
     <string name="pref_title_ns_log_app_start">앱 시작 이벤트 기록</string>
-    <string name="pref_title_ns_create_announcements_from_errors">오류로 알림 생성</string>
-    <string name="pref_title_ns_create_announcements_from_carbs_req">필요 탄수화물로 알림 생성</string>
+    <string name="pref_title_ns_create_announcements_from_errors">오류로 공지 생성</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">필요 탄수화물로 공지 생성</string>
     <string name="pref_title_ns_slow_sync">느린 동기화 사용</string>
     <string name="pref_title_ns_use_ws">웹소켓 사용</string>
     <string name="pref_summary_ns_use_ws">Nightscout와의 실시간 통신에 웹소켓을 사용합니다.</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">볼러스 비율</string>
     <string name="deliverpartofboluswizard">이 값을 볼러스 마법사 결과의 혈당 교정과 탄수화물 교정에 적용합니다</string>
     <string name="pref_title_reset_bolus_percentage_time">볼러스 비율 초기화 시간</string>
-    <string name="deliver_part_of_boluswizard_reset_time">혈당 값이 다음보다 오래되면 전체 볼러스(100%) 주입</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">보안 시간 제한</string>
     <string name="pref_title_protection_type_application">레벨 0: 애플리케이션 보안</string>
@@ -270,7 +268,7 @@
     <string name="pref_title_patient_name">인스턴스 이름</string>
     <string name="pref_summary_patient_name">이 휴대폰을 사용하는 사람의 이름입니다. 보고서와 동기화에서 이 AAPS를 구별하는 데 사용됩니다.</string>
     <!-- StringKey: Directory preferences -->
-    <string name="pref_title_aaps_directory">AAPS 폴더</string>
+    <string name="pref_title_aaps_directory">AAPS 디렉터리</string>
     <!-- StringKey: Protection preferences -->
     <string name="pref_title_master_password">마스터 비밀번호</string>
     <string name="pref_title_settings_password">설정 비밀번호</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">허용된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">토큰 끝에 붙이는 추가 필수 PIN</string>
-    <string name="smscommunicator_otp_pin_summary">생성된 각 일회용 비밀번호 끝에 붙여야 하는 추가 숫자입니다. 이 숫자를 기억해야 합니다.</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">펌프 종류</string>
     <!-- StringKey: NS Client preferences -->
@@ -309,7 +306,7 @@
     <string name="ns_client_secret_summary">Nightscout API secret을 입력하십시오(최소 12자)</string>
     <string name="nsclient_token_title">Nightscout 액세스 토큰</string>
     <string name="nsclient_token_summary">Nightscout 액세스 토큰을 입력하십시오(최소 17자)</string>
-    <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_wifi_ssids_summary">허용된 SSID(세미콜론으로 구분)</string>
     <!-- DoubleKey: Overview preferences -->
     <string name="pref_title_insulin_button_increment_1">인슐린 버튼 증가량 1</string>
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">AMA용 Max IOB</string>
     <string name="openapsma_max_iob_summary">이 값은 OpenAPS에서 Max IOB라고 합니다\nAPS가 한 번에 주입할 수 있는 최대 인슐린 [U]입니다. 이 값은 환자 유형에 따라서도 달라집니다.</string>
     <string name="pref_title_max_daily_multiplier">최대 일일 안전 승수</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3 이 값은 중요한 OpenAPS 안전 한도입니다. 기저를 가장 큰 기저 주입량의 3배까지로 제한합니다. 이 값을 바꿀 필요는 거의 없지만, 안전 한도에서 말하는 “3x max daily; 4x current”가 이것이라는 점을 알아 두십시오.</string>
     <string name="pref_title_current_basal_multiplier">현재 기저 안전 배수</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4 이 값은 또 하나의 중요한 OpenAPS 안전 한도이며, “3x max daily; 4x current” 안전 한도의 나머지 절반입니다. 펌프에 설정된 최대 기저와 관계없이, 기저는 현재 기저 주입량에 이 값을 곱한 양보다 높을 수 없습니다. 알고리즘의 작동 방식을 이해하기 전에 최대 기저를 너무 높게 설정하여 위험한 상황이 되는 것을 막기 위한 것입니다. 다시 말하지만 기본값은 4배입니다. 대부분의 사람은 이 값을 조정할 필요가 없으며, 이 안전 한도에 “걸린다”고 느낀다면 다른 설정을 조정해야 할 가능성이 더 큽니다.</string>
     <string name="pref_title_bolus_snooze_divisor">볼러스 스누즈 DIA 제수</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">흡수 종료 시간</string>
     <string name="absorption_cutoff_summary">식사가 모두 흡수되었다고 간주되는 시간. 나머지 탄수화물은 모두 없어집니다.</string>
     <string name="pref_title_absorption_maxtime">최대 흡수 시간</string>
-    <string name="absorption_max_time_summary">식사로 섭취한 탄수화물이 모두 흡수될 것으로 예상되는 시간(시간 단위)</string>
     <string name="pref_title_autosens_min">Autosens 최소</string>
     <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 다른 쪽입니다. autosens가 기저를 얼마나 낮게, ISF와 혈당 목표를 얼마나 높게 조정할 수 있는지 제한합니다.</string>
     <string name="pref_title_autosens_max">Autosens 최대</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">지속 시간 ISF 가중치</string>
     <string name="openapsama_dura_ISF_weight_summary">높은 혈당이 오래 일정하게 유지될 때 적용되는 가중치입니다. ISF를 강하게 하므로 인슐린 주입이 늘어날 수 있습니다.\n\n기본값 0.0은 이 효과를 사실상 끕니다.</string>
     <string name="pref_title_smb_delivery_ratio">SMB 주입 비율</string>
-    <string name="openapsama_smb_delivery_ratio_summary">기본값: 0.5 이것은 또 하나의 중요한 OpenAPS 안전 한도이며, 필요한 총 인슐린 중 어느 정도를 SMB로 주입할 수 있는지 정합니다. 보호자의 휴대폰에서 동시에 SMB 요청을 설정하여 위험한 상황이 되는 것을 막기 위한 것입니다. 이 실험적인 값은 천천히 신중하게 높이십시오.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB 주입 비율 최소값</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">기본값: 0.5 위의 고정값 대신 선형으로 증가하는 비율의 하한입니다.</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB 주입 비율 최대값</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">기본값: 0.5 위의 고정값 대신 선형으로 증가하는 비율의 상한입니다.</string>
     <string name="pref_title_smb_max_range_extension">SMB 최대 범위 확장</string>
     <string name="openapsama_smb_max_range_extension_summary">기본값: 1 이것은 또 하나의 중요한 OpenAPS 안전 한도이며, 일반적인 120 maxSMB/maxUAM 분을 몇 배까지 넘을 수 있는지 정합니다. 이 실험적인 값은 천천히 신중하게 높이십시오.</string>
     <!-- UnitDoubleKey: Overview preferences -->

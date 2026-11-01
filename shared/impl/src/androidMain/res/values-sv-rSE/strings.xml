@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Månadens namn (kort)</string>
     <string name="cwf_comment_loop">Loopstatus och tid sedan</string>
     <string name="cwf_comment_direction">Riktningspil</string>
-    <string name="cwf_comment_timestamp">Minuter sedan senast mottaget BG</string>
     <string name="cwf_comment_sgv">BG-värde</string>
     <string name="cwf_comment_cover_plate">Omslagsbild framför text (visare...)</string>
     <string name="cwf_comment_hour_hand">Bild för timvisare (analog klocka)</string>

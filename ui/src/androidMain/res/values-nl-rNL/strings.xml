@@ -207,7 +207,7 @@
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glucose grafiek. Nieuwste waarden %1$s, %2$s, %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Toon bedieningselementen</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Meldingen: %1$d</string>
-    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">geen tijdelijke streefwaarde, profiel streefwaarde</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">geen tijdelijk streefdoel, profiel streefdoel</string>
     <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">aangepast door de loop</string>
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s om %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
@@ -248,7 +248,6 @@
     <string name="profile_switches">Profiel wisselingen</string>
     <string name="basal_pct_from_tdd_label">% van basaal</string>
     <string name="selected_profile">Geselecteerd:</string>
-    <string name="comparation">Vergelijken</string>
     <string name="profile_tab_1">Profiel 1</string>
     <string name="profile_tab_2">Profiel 2</string>
     <string name="motol_default_profile">Basis profiel</string>
@@ -336,7 +335,7 @@
     <string name="quick_launch_all_selected">Alle items geselecteerd</string>
     <string name="quick_launch_no_quick_wizard">Voeg Quick Wizard items toe om ze hier te gebruiken</string>
     <string name="quick_launch_no_automation">Maak gebruikers automatisering acties om ze hier te gebruiken</string>
-    <string name="quick_launch_no_tt_presets">Voeg tijdelijke streefwaarden voorinstellingen toe om ze hier te gebruiken</string>
+    <string name="quick_launch_no_tt_presets">Voeg voorinstellingen voor tijdelijke streefdoelen toe om ze hier te gebruiken</string>
     <string name="quick_launch_no_profiles">Maak profielen aan in het lokale profiel om ze hier te gebruiken</string>
     <string name="quick_launch_edit_profile_preset">Profielvoorinstelling bewerken</string>
     <string name="quick_launch_profile_permanent">Permanent</string>

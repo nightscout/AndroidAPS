@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">אימות התקדמות ההפעלה נכשל. אנא נסו שוב.</string>
     <string name="omnipod_common_error_pod_suspended">הפוד מושהה</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">השמעת צפצוף בדיקה נכשלה</string>
-    <string name="omnipod_common_error_time_out_of_sync">השעון בפוד אינו מסונכרן. בבקשה עדכנו את השעה בלשונית Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">אירעה שגיאה לא צפויה. נא לדווח! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">הגדרת ההתראות בפוד עודכנה.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">צפצופי בזאלי מופעלים</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">צפצופי SMB מופעלים</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">צפצופי בזאלי זמני מופעלים</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">הצגת לחצן \"השהיית מתן אינסולין\" בלשונית Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">זיהוי אזור זמן ושעון קיץ מופעל</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">תזכורת לתפוגה מופעלת</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">במצב מופעל, הפוד יצפצף בהגעה לשעה שהוגדרה</string>

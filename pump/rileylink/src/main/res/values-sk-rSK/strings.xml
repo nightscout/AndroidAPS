@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">Softvérové kódovanie 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardvérové kódovanie 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">USA a Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Celosvetové (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Vyhľadávanie</string>
     <string name="riley_link_ble_config_connected_never">Nikdy</string>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_watchface_circle">AAPS (sirkel)</string>
+    <string name="label_watchface_circle">AAPS(Sirkel)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
-    <string name="label_watchface_custom">AAPS(Tilpasset)</string>
+    <string name="label_watchface_custom">AAPS(Egendefinert)</string>
     <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Egendefinert) alltid-på</string>
     <string name="label_actions_tile">Handlinger</string>
     <string name="label_temp_target_tile">Midlertidig mål</string>
     <string name="label_quick_wizard_tile">Hurtigknapp</string>
     <string name="label_user_action_tile">Brukerhandling</string>
     <string name="label_scene_tile">Scene</string>
-    <string name="msg_warning_sync">Ingen data mottatt siden %1$s. Sjekk om AAPS på telefonen sender data</string>
-    <string name="msg_warning_old">AAPS-data er %1$s gamle! Sjekk din sensor, xDrip+, NS, AAPS konfigurasjon eller annet!</string>
+    <string name="msg_warning_sync">Ingen data mottatt siden %1$s! Sjekk om AAPS på telefonen sender data til klokken</string>
+    <string name="msg_warning_old">AAPS-data er %1$s gamle! Sjekk din sensor, xDrip+, NS, AAPS-konfigurasjon eller annet!</string>
     <string name="pref_vibrate_on_bolus">Vibrer ved bolus</string>
     <string name="units_short">E</string>
     <string name="pref_display_settings">Skjerm</string>
@@ -35,15 +35,15 @@
     <string name="pref_show_bg">Vis BS</string>
     <string name="pref_show_bgi">Vis BGI</string>
     <string name="pref_show_direction_arrow">Vis retningspil</string>
-    <string name="pref_show_ago">Vis siden</string>
+    <string name="pref_show_ago">Vis tid siden</string>
     <string name="pref_show_temp_basal">Vis midl. basal</string>
     <string name="pref_show_bolus">Vis bolus &amp; SMB</string>
     <string name="pref_show_grid">Vis rutenett</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
     <string name="pref_highlight_basals">Marker basaler</string>
     <string name="pref_prediction_lines">Vis prediksjoner</string>
-    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matchende avdeler</string>
-    <string name="pref_chart_timeframe">Tidsspenn for diagram</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matchende skillelinje</string>
+    <string name="pref_chart_timeframe">Tidsrom for graf</string>
     <string name="pref_1_hour">1 time</string>
     <string name="pref_2_hours">2 timer</string>
     <string name="pref_3_hours">3 timer</string>
@@ -59,12 +59,12 @@
     <string name="pref_animations">Animasjoner</string>
     <string name="pref_wizard_in_menu">Kalkulator i menyen</string>
     <string name="pref_prime_in_menu">Prime i menyen</string>
-    <string name="pref_single_target">Enkelt målverdi</string>
+    <string name="pref_single_target">Én målverdi</string>
     <string name="pref_wizard_percentage">Kalkulatorprosent</string>
-    <string name="pref_wizard_carbs_type">Kalkulator måltidstype</string>
-    <string name="pref_wizard_carb_time">Kalkulator karbotid</string>
+    <string name="pref_wizard_carbs_type">Måltidstype i kalkulatoren</string>
+    <string name="pref_wizard_carb_time">Karbotid i kalkulatoren</string>
     <string name="pref_complication_tap_action">Handling ved trykk på komplikasjon</string>
-    <string name="pref_complication_bg_graph_hours">BS-graf tidsintervall</string>
+    <string name="pref_complication_bg_graph_hours">Tidsrom for BS-graf</string>
     <string name="duration_1_hour">1 time</string>
     <string name="duration_3_hours">3 timer</string>
     <string name="duration_6_hours">6 timer</string>
@@ -152,7 +152,7 @@
     <string name="color_name_lightgreen">lysegrønn</string>
     <string name="color_name_lime">limegrønn</string>
     <string name="color_name_yellow">gul</string>
-    <string name="color_name_amber">rødbrun</string>
+    <string name="color_name_amber">ravgul</string>
     <string name="color_name_orange">oransje</string>
     <string name="color_name_deeporange">mørkeoransje</string>
     <string name="color_name_brown">brun</string>
@@ -179,26 +179,26 @@
     <string name="cwf_complication_layout">Komplikasjonslayout</string>
     <string name="cwf_complication_layout_description">Plassering og størrelse på komplikasjonene, hentet fra den innlastede egendefinerte urskiven.</string>
     <string name="pref_include_external">Inkluder eksterne visninger i mal</string>
-    <string name="pref_switch_external">Bytt ekstern dataer i urskiven</string>
+    <string name="pref_switch_external">Bytt eksterne data i urskiven</string>
     <string name="custom_pref_show_seconds">Vis sekunder</string>
     <string name="digitalstyle_pref_your_style">Stil</string>
     <string name="digitalstyle_style_none">ingen stil</string>
     <string name="digitalstyle_style_minimal">minimalistisk stil</string>
-    <string name="digitalstyle_style_shape">form-stil</string>
+    <string name="digitalstyle_style_shape">formstil</string>
     <string name="digitalstyle_style_full">full stil</string>
     <string name="digitalstyle_pref_your_color">Farge</string>
     <string name="digitalstyle_pref_your_color_saturation">Fargemetning</string>
-    <string name="digitalstyle_pref_your_color_opacity">Fargeopasitet</string>
+    <string name="digitalstyle_pref_your_color_opacity">Fargegjennomsiktighet</string>
     <string name="bolus_progress_channel_name">AAPS bolusfremdrift</string>
     <string name="bolus_progress_silent_channel_name">AAPS stille bolusfremdrift</string>
     <string name="bolus_progress_channel_description">Bolusfremdrift og avbryt</string>
-    <string name="bolus_progress_silent_channel_description">Bolusfremdrift og avbryt med mindre vibrasjoner</string>
+    <string name="bolus_progress_silent_channel_description">Bolusfremdrift og avbryt med færre vibrasjoner</string>
     <string name="open_loop_channel_name">AAPS Åpen loop</string>
     <string name="open_loop_channel_description">Varsel om forespørsel fra åpen loop</string>
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Under lading</string>
-    <string name="simple_ui_always_on">Alltid På modus</string>
-    <string name="simple_ui_always_on_charging">Alltid På og under lading</string>
+    <string name="simple_ui_always_on">Alltid på-modus</string>
+    <string name="simple_ui_always_on_charging">Alltid på og under lading</string>
     <string name="temp_target_eating_soon">Spise snart</string>
     <string name="temp_target_hypo">Hypo</string>
     <string name="temp_target_activity">Aktivitet</string>
@@ -206,12 +206,12 @@
     <string name="temp_target_cancel">Avbryt</string>
     <string name="tile_none">Ingen</string>
     <string name="tile_no_config">Ingen konfigurasjon tilgjengelig</string>
-    <string name="wear_control_not_enabled">Wear kontroller deaktivert</string>
+    <string name="wear_control_not_enabled">Styring fra klokke er deaktivert</string>
     <string name="wear_control_no_data">Ingen data tilgjengelig</string>
     <string name="abbreviation_average">snitt</string>
     <string name="no_iob_u">--E</string>
     <string name="no_cob_g">--g</string>
-    <string name="no_tmp_basal_u_h">-.--E/t</string>
+    <string name="no_tmp_basal_u_h">-,--E/t</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
@@ -241,8 +241,8 @@
     <string name="tile_scene_4">Scene 4</string>
     <string name="tile_scene_auto">Automatisk</string>
     <string name="tile_scene_unavailable">Utilgjengelig</string>
-    <string name="datalayer_notification_title">Datalag forgrunnstjeneste</string>
-    <string name="datalayer_notification_text">AAPS kjører i forgrunnen. For å skjule dette varslet gå til Utvikleralternativer, Appvarsler, Tillatte klokkeapper, velg AAPS, slå av \"Data Layer Foreground Service Channel\"-varslet.</string>
+    <string name="datalayer_notification_title">Datalag-forgrunnstjeneste</string>
+    <string name="datalayer_notification_text">AAPS kjører i forgrunnen. For å skjule dette varslet gå til Utvikleralternativer, Appvarsler, Tillatte klokkeapper, velg AAPS, slå av «Data Layer Foreground Service Channel»-varslet.</string>
     <string name="on">PÅ</string>
     <string name="off">AV</string>
     <string name="complication_full_status">Full status</string>
@@ -253,24 +253,24 @@
     <string name="complication_blood_glucose_ext2">BS Ekstern2</string>
     <string name="complication_bg_graph">BS-graf</string>
     <string name="complication_cwf_image">Egendefinert urskive</string>
-    <string name="complication_cwf_ambient_bg">Egendefinert urskive – glukose i omgivelsesmodus</string>
-    <string name="complication_cwf_ambient_status">Egendefinert urskive – status i omgivelsesmodus</string>
+    <string name="complication_cwf_ambient_bg">Egendefinert urskive – BS (alltid på)</string>
+    <string name="complication_cwf_ambient_status">Egendefinert urskive – status (alltid på)</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_cwf_lower">Egendefinert urskive – bakgrunn</string>
     <string name="complication_cwf_upper">Egendefinert urskive – klokke</string>
     <string name="complication_br_cob_iob">Basaldose, COB &amp; IOB</string>
-    <string name="complication_br_cob_iob_ext1">Basal, COB &amp; IOB Eks1</string>
-    <string name="complication_br_cob_iob_ext2">Basal, COB &amp; IOB Eks2</string>
+    <string name="complication_br_cob_iob_ext1">Basaldose, COB &amp; IOB Ekstern1</string>
+    <string name="complication_br_cob_iob_ext2">Basaldose, COB &amp; IOB Ekstern2</string>
     <string name="complication_br_iob">Basaldose &amp; IOB</string>
     <string name="complication_br">Basaldose</string>
     <string name="complication_br_tt">Basaldose &amp; Mål/TT</string>
     <string name="complication_target">Mål/TT</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
-    <string name="complication_cob_icon">COB</string>
-    <string name="complication_cob_detailed">COB-detaljert</string>
-    <string name="complication_iob_icon">IOB</string>
-    <string name="complication_iob_detailed">IOB-detaljert</string>
-    <string name="complication_uploader_phone_battery">Opplaster/mobilbatteri</string>
+    <string name="complication_cob_icon">COB-ikon</string>
+    <string name="complication_cob_detailed">Detaljert COB</string>
+    <string name="complication_iob_icon">IOB-ikon</string>
+    <string name="complication_iob_detailed">Detaljert IOB</string>
+    <string name="complication_uploader_phone_battery">Opplaster/telefonbatteri</string>
     <string name="running_mode_resume">Gjenoppta loop</string>
     <string name="running_mode_reconnect">Koble til pumpen på nytt</string>
     <string name="label_running_mode_title">Kjøremodus</string>
@@ -326,18 +326,18 @@
     <string name="loop_status_disabled">Loop deaktivert</string>
     <string name="loop_status_suspended">Loop pauset</string>
     <string name="loop_status_pump_suspended">Pumpe pauset</string>
-    <string name="loop_status_dst_suspended">Loop pauset av DST</string>
+    <string name="loop_status_dst_suspended">Pauset av sommertid</string>
     <string name="loop_status_disconnected">Pumpe frakoblet</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Ukjent</string>
     <string name="loop_status_result">Loop-resultat</string>
     <string name="loop_status_last_run_enact">Siste loop</string>
-    <string name="loop_status_last_run">Sist forespurt</string>
+    <string name="loop_status_last_run">Sist kjørt</string>
     <string name="loop_status_last_enact">Sist utført</string>
     <string name="loop_status_smb_text">SMB</string>
     <string name="loop_status_basal_rate">Basaldose</string>
     <string name="loop_status_duration">Varighet</string>
-    <string name="loop_status_oaps_reason">OpenAPS-resultat</string>
+    <string name="loop_status_oaps_reason">OpenAPS-årsak</string>
     <string name="loop_status_targets">Målverdier</string>
     <string name="loop_status_temp_target">Midlertidig mål</string>
     <string name="loop_status_target_range">Målområde</string>
@@ -372,7 +372,7 @@
     <string name="wizard_result_carbs">Karbo (%1$d g)</string>
     <string name="wizard_result_subtotal">Delsum</string>
     <string name="wizard_result_correction">Korreksjon</string>
-    <string name="wizard_result_total">Total</string>
+    <string name="wizard_result_total">Totalt</string>
     <string name="wizard_insulin_format">%1$s E</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>

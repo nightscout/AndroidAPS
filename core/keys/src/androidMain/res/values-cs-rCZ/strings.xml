@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Povolit podporu různých koncentrací inzulínu (U50, U200 atd.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Nechat obrazovku zapnutou</string>
-    <string name="pref_summary_keep_screen_on">Zabránit Androidu ve zhasínání obrazovky. Bez připojení k nabíječce rychle vybije baterii!</string>
     <string name="pref_title_show_treatment_button">Zobrazit tlačítko Ošetření</string>
     <string name="pref_title_show_wizard_button">Zobrazit tlačítko Kalkulačka</string>
     <string name="pref_title_show_insulin_button">Zobrazit tlačítko Inzulín</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Procento bolusu</string>
     <string name="deliverpartofboluswizard">Aplikovat tuto hodnotu na korekci glykémie a sacharidů ve výsledku bolusového průvodce</string>
     <string name="pref_title_reset_bolus_percentage_time">Čas resetu procenta bolusu</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Podat plný bolus (100 %), pokud je glykémie starší než</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Časový limit ochrany</string>
     <string name="pref_title_protection_type_application">Úroveň 0: Ochrana aplikace</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">Povolená telefonní čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+420XXXXXXX;+420YYYYYYY</string>
     <string name="smscommunicator_otp_pin">Další povinný PIN na konci tokenu</string>
-    <string name="smscommunicator_otp_pin_summary">Další číslice, které by měly být zapamatovány a připojeny na konec každého vygenerovaného jednorázového hesla</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Typ pumpy</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">Max IOB pro AMA</string>
     <string name="openapsma_max_iob_summary">Tato hodnota se v kontextu OpenAPS nazývá Max IOB\nToto je maximální množství inzulínu [U], které APS může najednou podat. Hodnota je také ovlivněna nastavením typu pacienta.</string>
     <string name="pref_title_max_daily_multiplier">Maximální denní bezpečnostní násobitel</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3. Jde o klíčový bezpečnostní limit OpenAPS. Omezuje vaše bazály na 3násobek vašeho nejvyššího bazálu. Pravděpodobně nebudete potřebovat tuto hodnotu měnit, ale měli byste vědět, že právě toto je míněno v diskuzi o bezpečnostních limitech „3× max denní; 4× aktuální“.</string>
     <string name="pref_title_current_basal_multiplier">Aktuální bezpečnostní násobitel bazálu</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4. Jde o druhou polovinu klíčových bezpečnostních limitů OpenAPS a druhou polovinu limitů „3× max denní; 4× aktuální“. Znamená to, že váš bazál bez ohledu na max. bazál nastavený v pumpě nemůže být vyšší než tento násobek aktuální úrovně vašeho bazálu. Cílem je zabránit tomu, aby se lidé dostali do nebezpečné oblasti nastavením příliš vysokých max. bazálů bez pochopení, jak algoritmus funguje. Výchozí hodnota je opět 4×; většina uživatelů ji nikdy nebude potřebovat měnit, a spíše bude třeba upravit jiná nastavení, pokud mají pocit, že do tohoto bezpečnostního limitu „narážejí“.</string>
     <string name="pref_title_bolus_snooze_divisor">Dělitel bolus snooze DIA</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Doba absorpce</string>
     <string name="absorption_cutoff_summary">Čas, po kterém je jakékoli jídlo považováno za absorbované. Zbylé sacharidy budou odříznuty.</string>
     <string name="pref_title_absorption_maxtime">Maximální doba absorpce</string>
-    <string name="absorption_max_time_summary">Čas v hodinách, kdy se očekává absorbování všech sacharidů z jídla</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Výchozí hodnota: 0,7\nDruhá strana bezpečnostních limitů Autosens, stanovuje dolní mez, jak nízko může Autosens upravit bazály a jak vysoko může upravit ISF a cíle glykémie.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Váha ISF podle trvání</string>
     <string name="openapsama_dura_ISF_weight_summary">Toto je váha uplatněná během déletrvajících zvýšených plateau glykémie, která zesiluje ISF a může tak zvýšit podávání inzulínu.\n\nVýchozí hodnota 0,0 tento efekt efektivně vypíná.</string>
     <string name="pref_title_smb_delivery_ratio">Poměr podávání SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Výchozí hodnota: 0.5. Toto je další klíčové bezpečnostní omezení OpenAPS a určuje, jaký podíl z celkového potřebného inzulínu lze podat jako SMB. Toto má zabránit uživatelům dostat se do nebezpečné oblasti nastavováním SMB požadavků z telefonu pečovatele současně. Tuto experimentální hodnotu zvyšujte pomalu a s opatrností.</string>
     <string name="pref_title_smb_delivery_ratio_min">Min poměr podávání SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Výchozí hodnota: 0.5. Toto je spodní konec lineárně rostoucího poměru namísto pevné hodnoty výše.</string>
     <string name="pref_title_smb_delivery_ratio_max">Max poměr podávání SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Výchozí hodnota: 0.5. Toto je horní konec lineárně rostoucího poměru namísto pevné hodnoty výše.</string>
     <string name="pref_title_smb_max_range_extension">SMB max rozšíření rozsahu</string>
     <string name="openapsama_smb_max_range_extension_summary">Výchozí hodnota: 1. Toto je další klíčové bezpečnostní omezení OpenAPS a určuje, o jaký faktor můžete překročit běžných 120 minut maxSMB/maxUAM. Tuto experimentální hodnotu zvyšujte pomalu a s opatrností.</string>
     <!-- UnitDoubleKey: Overview preferences -->

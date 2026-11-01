@@ -8,7 +8,6 @@
     <string name="commanderror">שגיאת פקודה</string>
     <string name="speederror">שגיאת מהירות</string>
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
-    <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
     <string name="danai2_bolus_error_no_prime">המשאבה לא תוחלה</string>
     <string name="danai2_bolus_error_not_enough_insulin">אין מספיק אינסולין במכל</string>
     <string name="danai2_bolus_error_easy_sleep">מצב Easy sleep מופעל במשאבה</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">המשאבה שנבחרה</string>
     <string name="rs_loginsulinchange_title">רישום החלפת מכל</string>
     <string name="rs_loginsulinchange_summary">הוספת אירוע \"החלפת אינסולין\" לפורטל הטיפולים כאשר הוא נמצא בהיסטוריה</string>
-    <string name="rs_logcanulachange_title">רישום החלפת צינורית</string>
     <string name="rs_logcanulachange_summary">הוספת אירוע \"החלפת צינורית\" לפורטל הטיפולים כאשר הוא נמצא בהיסטוריה</string>
     <string name="press_ok_on_the_pump">לחצו OK במשאבה\nוהכניסו את שני המספרים המוצגים\nהשאירו את מסך המשאבה מופעל ע\"י לחיצה על לחצן מינוס עד סיום הכנסת הקוד.</string>
     <string name="num1pin">1: (12 ספרות)</string>

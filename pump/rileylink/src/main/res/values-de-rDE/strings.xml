@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_sleeping">Schlafend</string>
     <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_error_comm">Kommunikationsfehler</string>
+    <string name="pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
+    <string name="pump_status_invalid_config">Ungültige Einstellung</string>
+    <string name="medtronic_pump_encoding_title">Medtronic Codierung</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codierung</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codierung</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Weltweit (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Scannt gerade</string>
     <string name="riley_link_ble_config_connected_never">Nie</string>

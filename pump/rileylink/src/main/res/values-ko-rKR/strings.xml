@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">소프트웨어 4b6b 인코딩</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">하드웨어 4b6b 인코딩</string>
     <string name="medtronic_pump_frequency_us_ca">미국 및 캐나다 (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">전 세계 (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">스캔중</string>
     <string name="riley_link_ble_config_connected_never">없음</string>

@@ -2,8 +2,8 @@
 <resources>
     <string name="biometric_title">Kimlik doğrulaması gerekli</string>
     <string name="biometric_description">Kimliğinizi doğrulamak için parmağınızı parmak izi okuyucunun üzerine yerleştirin</string>
-    <string name="settings_protection">Ayarların Güvenliği</string>
-    <string name="application_protection">Uygulama Güvenliği</string>
+    <string name="settings_protection">Ayar koruması</string>
+    <string name="application_protection">Uygulama koruması</string>
     <string name="bolus_protection">Bolus koruması</string>
     <string name="settings_password">Ayarlar parolası</string>
     <string name="settings_pin">Ayarlar PIN</string>
@@ -16,10 +16,10 @@
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Güvensiz Yedek</string>
     <string name="unsecure_fallback_descriotion_biometric">Biyometrik korumanın etkili olabilmesi için, geri dönüş için bir ana parola ayarlanması gerekir.\n\nLütfen bir ana parola belirleyin!</string>
-    <string name="password_set">Şifre belirlendi!</string>
+    <string name="password_set">Parola belirlendi!</string>
     <string name="datastore_password_cleared">Kayıtlı dışa aktarım şifresi silindi!</string>
     <string name="pin_set">PIN ayarlandı!</string>
-    <string name="password_not_set">Şifre ayarlanmamış</string>
+    <string name="password_not_set">Parola ayarlanmadı</string>
     <string name="pin_not_set">PIN kodu oluşturulmadı</string>
     <string name="password_not_changed">Şifre değiştirilmedi</string>
     <string name="pin_not_changed">PIN değiştirilmedi</string>

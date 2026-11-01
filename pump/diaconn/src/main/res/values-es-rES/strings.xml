@@ -27,7 +27,6 @@
     <string name="commanderror">Error del comando</string>
     <string name="speederror">Error de velocidad</string>
     <string name="insulinlimitviolation">Violación del límite de insulina</string>
-    <string name="boluserrorcode">Solicitado: %1$.2fU Entregado: %2$.2fU Código de error: %3$s</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="bolus_step">Incremento de bolo</string>
     <string name="basal_step">Paso Basal</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">Tiempo de encendido LCD [segundos]</string>
     <string name="diaconn_g8_language">Idioma</string>
     <string name="diaconn_g8_bolus_speed">Velocidad del bolo</string>
-    <string name="diaconn_g8_pumplang_chiness">Chino</string>
     <string name="diaconn_g8_pumplang_korean">Coreano</string>
     <string name="diaconn_g8_pumplang_english">Inglés</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">Añadir evento \"Cambio de batería\" al portal del cuidador, cuando se detecte en el historial</string>
     <string name="diaconn_g8_logbatterychange_title">Registrar cambio de batería</string>
     <string name="diaconn_g8_logsyncinprogress">Sincronización de registro en progreso</string>
-    <string name="diaconn_g8_loginsulinshorage">Falta de insulina</string>
     <string name="diaconn_g8_logbatteryshorage">Falta de batería</string>
     <string name="diaconn_g8_logneedleprime">Cebado de aguja :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Cebado del inyector :%1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">Completo</string>
     <string name="diaconn_g8_reasoninjectonblock">Inyección bloqueada</string>
     <string name="diaconn_g8_reasonbatteryshortage">Ausencia de batería</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Falta de insulina</string>
     <string name="diaconn_g8_reasonuserstop">Parada de usuario</string>
     <string name="diaconn_g8_reasonsystemreset">Reinicio del sistema</string>
     <string name="diaconn_g8_reasonother">Otro</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">Inyección Bloqueada (%s)</string>
     <string name="diaconn_g8_lgorelease">Lanzar basal (%s)</string>
     <string name="diaconn_g8_lgosuspend">Suspender basal (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Éxito en el doble bolo normal</string>
     <string name="diaconn_g8_logdualsquarestart">Inicio Doble Onda Cuadrada</string>
     <string name="diaconn_g8_logdualsquaresuccess">Doble Onda Cuadrada Correcta</string>
     <string name="diaconn_g8_logsquarestart">Inicio Doble Onda</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">Operación finalizada correctamente</string>
     <string name="diaconn_g8_logmealsuccess">Éxito en la comida</string>
     <string name="diaconn_g8_errorcode_1">No se puede buscar debido a un error CRC en el paquete.</string>
-    <string name="diaconn_g8_errorcode_2">No se puede establecer por un error en el parámetro de entrada.</string>
-    <string name="diaconn_g8_errorcode_3">No se puede establecer por un error de especificación de protocolo.</string>
     <string name="diaconn_g8_errorcode_4">Tiempo de comida, no puede inyectarse.</string>
     <string name="diaconn_g8_errorcode_6">Cancelado por la bomba</string>
     <string name="diaconn_g8_errorcode_7">Realizando otras acciones, limitando la configuración de la aplicación.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">La inyección no es posible debido a la poca batería.</string>
     <string name="diaconn_g8_errorcode_12">Insulina insuficiente, no se puede inyectar.</string>
     <string name="diaconn_g8_errorcode_13">No se puede inyectar porque excede el límite una vez.</string>
-    <string name="diaconn_g8_errorcode_14">La inyección no puede ser inyectada porque excede el volumen de inyección hoy.</string>
     <string name="diaconn_g8_errorcode_15">Después de completar la configuración basal, se puede realizar la inyección basal.</string>
     <string name="diaconn_g8_logtubechange_title">Registrar cambios de tubo</string>
     <string name="diaconn_g8_logtubechange_summary">Añadir evento \"Cambio de tubo\" al portal del cuidador, cuando se detecte en el historial</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">Durante la ejecución de LGS, la inyección está restringida</string>
     <string name="diaconn_g8_errorcode_33">El estado de suspensión por glucosa baja está activado (LGS). Se rechaza el comando de activación.</string>
     <string name="diaconn_g8_errorcode_34">El estado de suspensión por glucosa baja está desactivado (LGS). Se rechaza el comando de desactivación.</string>
-    <string name="diaconn_g8_errorcode_35">El inicio de una basal temporal es rechazado cuando se está ejecutando una basal temporal</string>
-    <string name="diaconn_g8_errorcode_36">La parada de una basal tempora es rechazada cuando una basal temporal no está ejecutándose</string>
     <string name="diaconn_g8_cloudsend_summary">Enviar los registros de la bomba a la nube de Diaconn.</string>
     <string name="diaconn_g8_cloudsend_title">Sincronización con la nube de Diaconn</string>
     <string name="bolus_speed_1">1 U/min</string>

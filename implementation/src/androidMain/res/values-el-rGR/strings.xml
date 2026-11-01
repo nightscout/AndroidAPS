@@ -57,10 +57,8 @@
     <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">εξήχθη πριν από %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">εξαγωγή στις %1$s</string>
-    <string name="exported_less_than_hour_ago">η εξαγωγή έγινε από λιγότερο από μία ώρα πριν</string>
     <string name="metadata_warning_different_flavour">Οι προτιμήσεις δημιουργήθηκαν με διαφορετική έκδοση του AAPS (%1$s) ενώ έχετε: %2$s.\n\nΟρισμένες ρυθμίσεις ενδέχεται να λείπουν ή να μην είναι έγκυρες - μετά την εισαγωγή παρακαλώ ελέγξτε και ενημερώστε τις προτιμήσεις σας.</string>
     <string name="metadata_warning_different_device">Οι προτιμήσεις δημιουργήθηκαν σε διαφορετική συσκευή. Είναι εντάξει αν κάνετε εισαγωγή από παλαιότερο/διαφορετικό τηλέφωνο, αλλά βεβαιωθείτε ότι οι εισαγόμενες προτιμήσεις είναι σωστές!</string>
-    <string name="metadata_warning_old_export">Οι εισαγόμενες προτιμήσεις είναι ήδη %1$s ημέρών! Ίσως έχετε πιο πρόσφατες-ενημερωμένες προτιμήσεις ή επιλέξατε λάθος αρχείο; Θυμηθείτε να εξάγετε τακτικά τις προτιμήσεις σας!</string>
     <string name="metadata_warning_date_format">Μη έγκυρη μορφή ημερομηνίας-ώρας!</string>
     <string name="metadata_warning_different_version">Προτιμήσεις από διαφορετική δευτερεύουσα έκδοση της εφαρμογής. Είναι εντάξει αν εισάγετε μετά από αναβάθμιση, αλλά ελέγξτε μετά την εισαγωγή αν οι προτιμήσεις είναι ακόμα σωστές!</string>
     <string name="metadata_urgent_different_version">Προτιμήσεις από διαφορετική σημαντική έκδοση της εφαρμογής. Οι μεγάλες εκδόσεις διαφέρουν σημαντικά και μπορεί να έχουν μη-συμβατές προτιμήσεις! Βεβαιωθείτε μετά την εισαγωγή ότι οι προτιμήσεις είναι ακόμα σωστές!</string>

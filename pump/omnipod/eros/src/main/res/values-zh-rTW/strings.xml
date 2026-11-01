@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">速率：%1$.2f U，持續時間：%2$d 分鐘</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">通訊失敗：訊息完整性驗證失敗</string>
     <string name="omnipod_eros_error_invalid_packet_type">通訊失敗：從 Pod 收到無效封包</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">RileyLink 無回應</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink 已中斷連線</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Pod 無回應</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">設定基礎輸送失敗。輸送可能已暫停！請手動重新整理 Omnipod 標籤中的 Pod 狀態並在需要時恢復輸送。</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">設定基礎輸送可能失敗。輸送可能已暫停！請手動重新整理 Omnipod 標籤中的 Pod 狀態並在需要時恢復輸送。</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">設定基礎輸送失敗。輸送已暫停！請從 Omnipod 標籤手動恢復輸送。</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">取消臨時基礎輸送可能失敗。請手動重新整理 Omnipod 標籤中的 Pod 狀態。</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">設定臨時基礎輸送失敗。如果之前運行了一個臨時基礎輸送，它可能已被取消。請手動重新整理 Omnipod 標籤中的 Pod 狀態。</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">設定臨時基礎輸送可能失敗。如果之前運行了一個臨時基礎輸送，它已被取消。請手動重新整理 Omnipod 標籤中的 Pod 狀態。</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">臨時基礎率持續時間必須大於零，且為 %1$s 分鐘的倍數。</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">設定時間可能失敗。輸送可能已暫停！請手動重新整理 Omnipod 標籤中的 Pod 狀態並在需要時恢復輸送。</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">設定時間失敗。輸送已暫停！請從 Omnipod 標籤手動恢復輸送。</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">無法自動更改 Pod 上的時間。你應該手動同步 Omnipod 標籤上的時間。</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">無法確認注射是否成功。請手動確認你的 Pod 是否正在注射，通過聆聽點擊聲。如果你確定注射未成功，你應該手動從治療中刪除注射條目，即使你現在點擊“取消注射”！</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">無法確認 SMB 注射 (%1$.2f U) 是否成功。如果你確定注射未成功，你應該手動從治療中刪除 SMB 條目。</string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod 正在運行臨時基礎輸送，但 AAPS 不知道這個臨時基礎輸送。請手動取消你的臨時基礎輸送。</string>

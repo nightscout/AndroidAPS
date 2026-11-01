@@ -26,7 +26,6 @@
     <string name="constraints">제한</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_script_debug_data_label">스크립트 디버그</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">주의!\n보통은 아래 값을 바꿀 필요가 없습니다. 이 값을 바꾸기 전에 반드시 여기를 클릭하여 글을 읽고 이해하십시오.</string>
     <string name="increasing_max_basal">설정값이 프로파일의 최대 기저보다 낮으므로 최대 기저 값을 높입니다</string>
     <string name="max_basal_multiplier">최대 기저 승수</string>
     <string name="max_daily_basal_multiplier">최대 일일 기저 승수</string>

@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Грешка на резервоара</string>
     <string name="combov2_error_11">Инфузионният сет не е напълнен</string>
     <string name="combov2_extended_bolus_not_supported">Удълженият болус не се поддържа</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Сдвояване с помпата</string>
     <string name="combov2_unpair_pump_title">Прекратяване на сдвояването с помпата</string>
     <string name="combov2_driver_state_label">Състояние на драйвера</string>
@@ -31,12 +30,6 @@
 2. Проверете дали устройството е вече сдвоено; ако е така, отидете на „Изтриване на устройство“, за да изтриете/отмените сдвояването на устройството\n
 3. Отидете на „Добавяне на устройство“ и започнете сдвояване на помпата\n
 4. Натиснете „Започване на сдвояване“ по-долу, за да започнете сдвояване в AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">След известно време името на телефона се показва на екрана на помпата; натиснете ПРОВЕРКА за потвърждение.\n\n
-Когато сдвояването завърши успешно, потвърдете го във вашата помпа и се върнете към главния екран, като натиснете два пъти бутона ПРОВЕРКА.\n\n
-Ако не се установи връзка след повече от ~5 минути:\n\n
-1. Натиснете Назад или бутона „Отмени сдвояване“\n
-2. Отменете сдвояването на Combo (натиснете едновременно бутоните НАГОРЕ и МЕНЮ, за да отмените сдвояването)\n
-3. Опитайте да сдвоите отново</string>
     <string name="combov2_enter_pin">Въведете PIN</string>
     <string name="combov2_cancel_pairing">Отмени сдвояване</string>
     <string name="combov2_confirm_cancel_pairing_message">Сигурни ли сте, че искате да прекратите сдвояването?</string>
@@ -106,7 +99,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнориране на излишна заявка за 100% Временен базал</string>
     <string name="combov2_hit_unexpected_tbr_limit">Достигнат е неочакван лимит при коригиране на Временния базал: целевият процент е %1$d%%, достигнатият лимит е %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Не може да се зададе абсолютен Временен базал, ако базалът е нула</string>
-    <string name="combov2_unpair_pump_summary">Прекратяване на сдвояването на AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Неизвестен Временен базал беше открит и спрян; процент: %1$d%%; оставаща продължителност: %2$s</string>
     <string name="combov2_connection_error">Грешка при свързване: %1$s</string>
     <string name="combov2_short_status_alert">Предупреждение: %s</string>

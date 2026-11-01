@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">連線設定</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">使用 v3 API 將您的資料與 Nightscout 同步</string>
     <string name="blocked_by_charging">被充電選項阻止</string>
     <string name="blocked_by_connectivity">被連線選項阻止</string>
@@ -116,12 +115,10 @@
     <string name="status_label">狀態:</string>
     <string name="clear_log">清除日誌</string>
     <string name="full_sync">完全同步</string>
-    <string name="full_sync_comment">完全同步？這可能需要很多小時，直到完成前您都不會看到新的資料在 NS 上。</string>
     <string name="ns_sync_options">同步選項</string>
     <string name="ns_alarm_options">警報選項</string>
     <string name="ns_remote_control_options">遠端控制</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">若啟用，資料上傳將會發送至測試伺服器，而非一般的伺服器。</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>
     <string name="title_tidepool_use_ns_connection">使用 Nightscout 連線設定</string>
     <string name="summary_tidepool_use_ns_connection">關閉以設定 Tidepool 的獨立連線設定</string>
@@ -231,16 +228,13 @@
     <string name="smscommunicator_tab_otp_label">驗證器設定</string>
     <string name="smscommunicator_code_verify_label">要檢查的代碼：</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">驗證代碼由驗證器應用程式顯示的 6 位數字（稱為 OTP）後接至少 3 位的必要 PIN 組成。</string>
     <string name="smscommunicator_otp_reset_btn">重設驗證器</string>
     <string name="smscommunicator_otp_reset_title">重設驗證器金鑰</string>
-    <string name="smscommunicator_otp_reset_prompt">確定要重設驗證器金鑰？這會使所有目前已設定的驗證器失效，您需要重新設定它們。</string>
     <string name="smscommunicator_otp_step1_install_header">1. 安裝驗證器</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. 掃描代碼以設定 AAPS 的 OTP 代碼</string>
     <string name="smscommunicator_otp_step3_test_header">3. 測試一次性密碼</string>
     <string name="smscommunicator_otp_reset_header">重設驗證器</string>
     <string name="smscommunicator_otp_install_info">在每台追蹤者智慧型手機上安裝支援 RFC 6238 TOTP 權杖的驗證器應用程式。常見的免費應用程式有：\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">重設驗證器會使所有已設定的驗證器失效。您需要重新設定它們！</string>
     <string name="smscommunicator_otp_verification_ok">確定</string>
     <string name="smscommunicator_otp_verification_ivalid_size">無效的大小！</string>
     <string name="smscommunicator_otp_verification_wrong_pin">PIN 錯誤</string>
@@ -251,7 +245,6 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">要執行餐前注射 %1$.2f U，請回覆代碼 %2$s</string>
     <string name="smscommunicator_temptarget_with_code">要設定臨時目標 %1$s，請回覆代碼 %2$s</string>
     <string name="smscommunicator_temptarget_cancel">要取消臨時目標，請回覆代碼 %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">要停用 SMS 遠端服務，請回覆代碼 %1$s。\n\n請注意，您只能在 AAPS 主智慧型手機上直接重新啟用它。</string>
     <string name="smscommunicator_stopped_sms">已停止 SMS 遠端服務。若要重新啟用，請在主智慧型手機上的 AAPS 中操作。</string>
     <string name="smscommunicator_calibration_reply_with_code">要送出校正 %1$.2f，請回覆代碼 %2$s</string>
     <string name="smscommunicator_bolus_failed">注射失敗。送出下一個指令前請先確認實際狀態！</string>
@@ -282,7 +275,6 @@
     <string name="smscommunicator_restarting">AAPS 正在重新啟動</string>
     <string name="smscommunicator_tempbasal_set">臨時基礎率 %1$.2f U/h，持續 %2$d 分鐘，已成功開始</string>
     <string name="smscommunicator_extended_set">延長注射 %1$.2f U，持續 %2$d 分鐘，已成功開始</string>
-    <string name="smscommunicator_carbs_set">已成功輸入碳水 %1$d g</string>
     <string name="smscommunicator_carbs_failed">輸入 %1$d g 碳水失敗</string>
     <string name="smscommunicator_tempbasal_set_percent">臨時基礎率 %1$d%%，持續 %2$d 分鐘，已成功開始</string>
     <string name="smscommunicator_tempbasal_failed">啟動臨時基礎率失敗</string>

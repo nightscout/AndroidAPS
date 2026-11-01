@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Aktivera stöd för olika insulinkoncentrationer (U50, U200, etc.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Håll skärmen påslagen</string>
-    <string name="pref_summary_keep_screen_on">Förhindra Android att stänga av skärmen. Det förbrukar mycket energi när telefonen inte är ansluten till eluttaget.</string>
     <string name="pref_title_show_treatment_button">Visa behandlingsknapp</string>
     <string name="pref_title_show_wizard_button">Visa kalkylatorknapp</string>
     <string name="pref_title_show_insulin_button">Visa insulinknapp</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Bolusprocent</string>
     <string name="deliverpartofboluswizard">Tillämpa detta värde på BG- och kolhydratkorrigeringar i kalkylatorns resultat</string>
     <string name="pref_title_reset_bolus_percentage_time">Återställ bolusprocenttid</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Leverera full bolus (100%) om BG-värde är äldre än</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Tidsgräns för skydd</string>
     <string name="pref_title_protection_type_application">Nivå 0: Applikationsskydd</string>
@@ -281,7 +279,7 @@
     <string name="pref_title_bolus_pin">PIN-kod för bolus</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Välj mörkt, ljust eller att följa systemets tema</string>
-    <string name="pref_title_app_color_scheme">App färgschema</string>
+    <string name="pref_title_app_color_scheme">Appens färgschema</string>
     <string name="pref_dark_theme">Mörkt tema</string>
     <string name="pref_light_theme">Ljust tema</string>
     <string name="pref_follow_system_theme">Använd systemets tema</string>
@@ -299,12 +297,11 @@
     <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Extra obligatorisk PIN-kod på slutet av token</string>
-    <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Pumptyp</string>
     <!-- StringKey: NS Client preferences -->
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_summary">Ange din Nightscout URL (dvs. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_url_title">Nightscout-URL</string>
+    <string name="ns_client_url_summary">Ange din Nightscout-URL (t.ex. https://yoursitename.yourplatform.dom)</string>
     <string name="ns_client_secret_title">Nightscout API-kod</string>
     <string name="ns_client_secret_summary">Ange din Nightscout API-kod (minst 12 tecken).</string>
     <string name="nsclient_token_title">Nightscout åtkomsttoken</string>
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">Max IOB för AMA</string>
     <string name="openapsma_max_iob_summary">Detta värde kallas Max IOB i OpenAPS-sammanhang\nDetta är maximal mängd insulin i [U] som APS kan leverera på en gång. Värdet påverkas även av vald patienttyp.</string>
     <string name="pref_title_max_daily_multiplier">Säkerhetsmultiplikator för max daglig basal</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardvärde: 3 Detta är en grundsten i OpenAPS säkerhet. Detta värde begränsar dina tillfälliga basaler till maximalt 3x ditt största basalvärde. Du behöver oftast inte ändra detta värde. Läs på och förstå skillnaden mellan 4x nuvarande och 3x daglig max som säkerhetsinställningar.</string>
     <string name="pref_title_current_basal_multiplier">Nuvarande basal säkerhetsmultiplikator</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardvärde: 4 Detta är den andra halvan av viktiga säkerhetsbegränsningar i OpenAPS, och den andra halvan av “3x max dagligen; 4x nuvarande“. Detta innebär att din basal, oavsett max basalinställning på pumpen, inte kan vara högre än detta värde multiplicerat med den nuvarande nivån på din basal. Detta förhindrar att du hamnar i farliga situationer genom att ställa in alltför höga max basaldoser innan du förstår hur algoritmen fungerar. Återigen är standard 4x; de flesta människor kommer aldrig att behöva justera detta utan kommer istället att justera andra inställningar om de känner att de “kör in i“ detta skyddstak.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Absorptionsgräns</string>
     <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
     <string name="pref_title_absorption_maxtime">Max absorptionstid</string>
-    <string name="absorption_max_time_summary">Tid i timmar när alla kolhydrater förväntas vara absorberade</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Standardvärde: 0,7\nDen andra sidan av autosens säkerhetsgränser, sätter ett tak på hur lågt autosens kan justera basaler, och hur högt den kan justera ISF- och BG-mål.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Varaktighet ISF vikt</string>
     <string name="openapsama_dura_ISF_weight_summary">Detta är en vikt som appliceras vid långvariga platåer med förhöjda blodsockervärden och som stärker ISF vilket potentiellt ökar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
     <string name="pref_title_smb_delivery_ratio">SMB leveransförhållande</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Standardvärde: 0,5 Detta är en annan viktig säkerhetsgräns för OpenAPS, och anger vilken andel av den totala insulinmängden som krävs, som får levereras som SMB. Detta för att förhindra farliga situationer vid mottagning av SMB-begäran från vårdgivarens telefon samtidigt. Öka detta experimentella värde långsamt och med försiktighet.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB leveransförhållande min</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Standardvärde: 0,5 Den nedre gränsen av ett linjärt ökande förhållande i stället för det fasta värdet ovan.</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB leveransförhållande max</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Standardvärde: 0,5 Den övre gränsen av ett linjärt ökande förhållande i stället för det fasta värdet ovan.</string>
     <string name="pref_title_smb_max_range_extension">Utökning av SMB maxintervall</string>
     <string name="openapsama_smb_max_range_extension_summary">Standardvärde: 1 Detta är en annan viktig säkerhetsgräns för OpenAPS, och anger med vilken faktor du kan överskrida de vanliga 120 maxSMB/maxUAM minuterna. Öka detta experimentella värde långsamt och med försiktighet.</string>
     <!-- UnitDoubleKey: Overview preferences -->

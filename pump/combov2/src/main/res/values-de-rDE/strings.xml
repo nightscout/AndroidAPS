@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Reservoir Fehler</string>
     <string name="combov2_error_11">Infusionsset nicht vorgefüllt</string>
     <string name="combov2_extended_bolus_not_supported">Erweiterter Bolus wird nicht unterstützt</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Mit Pumpe verbinden</string>
     <string name="combov2_unpair_pump_title">Pumpe trennen</string>
     <string name="combov2_driver_state_label">Treiberstatus</string>
@@ -31,13 +30,6 @@
 2. Überprüfen Sie, ob ein Gerät bereits als gepaart angezeigt wird; Wenn ja, gehen Sie auf den Pumpenbildschirm \"Gerät löschen\" um dieses Gerät zu löschen/zu entkoppeln\n
 3. Gehen Sie zum Pumpenbildschirm \"Gerät hinzufügen\" und starten Sie das Pairing auf der Pumpe\n
 4. Klicken Sie auf die Schaltfläche \"Pairing starten\", um das Pairing in AndroidAPS zu starten\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Nach einer Weile wird der Name des Telefons auf dem Bildschirm der Pumpe angezeigt; drücken Sie die Taste CHECK, um dies zu bestätigen.\n\n
-Wenn das Pairing erfolgreich abgeschlossen ist, bestätigen Sie das Pairing auf Ihrer Pumpe und kehren Sie zum Hauptpumpenbildschirm zurück, indem Sie zweimal die CHECK-Taste drücken.\n\n
-Wenn keine Verbindung nach mehr als ~5 Minuten hergestellt wird:\n\n
-1. Drücken Sie die Taste \"Pairing abbrechen\"\n
-2. Das Pairing auf dem Combo abbrechen (drücken Sie sowohl UP als auch MENU 
-Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
-3. Versuche erneut zu pairen</string>
     <string name="combov2_enter_pin">Geben Sie die PIN ein</string>
     <string name="combov2_cancel_pairing">Pairing abbrechen</string>
     <string name="combov2_pin_hint">10-stellige PIN</string>
@@ -96,7 +88,6 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoriere redundante 100% TBR-Anfrage</string>
     <string name="combov2_hit_unexpected_tbr_limit">Unerwartetes Limit beim Anpassen des TBR gefunden: Ziel Prozentsatz war %1$d%%, Limit bei %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Absolute TBR kann nicht gesetzt werden, wenn die Basisbasalrate 0 ist</string>
-    <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>
     <string name="combov2_unknown_tbr_detected">Unbekannte TBR wurde erkannt und gestoppt; Prozentsatz: %1$d%%; verbleibende Dauer: %2$s</string>
     <string name="combov2_connection_error">Verbindungsfehler: %1$s</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>

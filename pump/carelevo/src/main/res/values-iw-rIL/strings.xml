@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">הסרת מכסה המחט</string>
     <string name="carelevo_patch_connect_step_1_desc">הוציאו את הפאץ\' מהאריזה והסירו את מכסה המחט.</string>
     <string name="carelevo_patch_connect_step_2_title">הפעלה וחיבור</string>
-    <string name="carelevo_patch_connect_step_2_desc">לחצו על לחצן ההפעלה למשך יותר משנייה אחת. לאחר הצפצוף, הקישו על [חיפוש פאץ\'] למטה.</string>
     <string name="carelevo_patch_safety_check_start_title">בדיקת בטיחות</string>
     <string name="carelevo_patch_safety_check_end_title">בדיקת הבטיחות הושלמה</string>
     <string name="carelevo_patch_safety_check_start_desc">הפאץ\' חובר בהצלחה.\nנא ללחוץ על [בדיקת בטיחות].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">אם הפאץ\' שזוהה למטה הוא הנכון, לחצו על אישור.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">החדרת המחט הושלמה ומתקן ההחדרה הוסר</string>
     <string name="carelevo_dialog_connect_detached">מתקן ההחדרה הוסר</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        לחצו על האחיזות משני צדי מתקן ההחדרה כדי לנתק אותו מהפאץ\',\n
-        ולאחר מכן לחצו על `מתקן ההחדרה הוסר`. מתן האינסולין יתחיל.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth אינו מופעל. נא לבדוק.</string>
     <string name="carelevo_toast_msg_patch_not_connected">אין פאץ\' מחובר.</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">נותרו פחות מ־10 יח\' אינסולין; מתן האינסולין הופסק. לחצו על [השבתת הפאץ\'] והחליפו פאץ\' עכשיו.</string>
     <string name="alarm_notification_desc_warning_expired_patch">תוקף הפאץ\' הסתיים; מתן האינסולין הופסק. לחצו על [השבתת הפאץ\'] והחליפו פאץ\' עכשיו.</string>
     <string name="alarm_notification_desc_warning_low_battery">הסוללה חלשה; מתן האינסולין הופסק. לחצו על [השלכת הפאץ\'] והחליפו פאץ\' עכשיו.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">מתן האינסולין הופסק. עברו מיד לטמפרטורה מתאימה (40℉–99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">מתן האינסולין הופסק. לחצו על [התחלת מתן אינסולין] והפעילו מחדש את מתן הבזאלי.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">תם הזמן להדבקת הפאץ\'. לחצו על [השבתת הפאץ\'] והחליפו פאץ\' עכשיו.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">האבחון העצמי נכשל. לחצו על [השבתת הפאץ\'] והחליפו פאץ\' עכשיו.</string>

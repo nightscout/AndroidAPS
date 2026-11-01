@@ -14,7 +14,7 @@
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpen er ikke initialisert</string>
     <!--    Permissions-->
-    <string name="permission_battery_title">Batterioptimisering</string>
+    <string name="permission_battery_title">Batterioptimalisering</string>
     <string name="permission_battery_description">Appen må ekskluderes fra batterioptimalisering for å kjøre pålitelig i bakgrunnen</string>
     <string name="permission_directory_title">AAPS-mappe</string>
     <string name="permission_directory_description">Velg en mappe for appinnstillinger og loggfiler</string>
@@ -40,7 +40,7 @@
     <string name="notifications_channel_name">AAPS-varsler</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
-    <string name="insulin_concentration">E%1$d</string>
+    <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
     <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>

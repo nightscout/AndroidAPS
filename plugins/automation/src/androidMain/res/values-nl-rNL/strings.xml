@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">SMS verzenden naar alle nummers</string>
     <string name="sendsmsactiontext">Stuur SMS met tekst</string>
     <string name="starttemptarget">Start tijdelijk streefdoel</string>
-    <string name="islesser">is minder dan</string>
-    <string name="isequalorlesser">is gelijk aan of minder dan</string>
     <string name="isequal">is gelijk aan</string>
     <string name="isequalorgreater">is gelijk aan of groter dan</string>
     <string name="isgreater">is groter dan</string>
@@ -88,7 +86,6 @@
     <string name="add_short">TOEV</string>
     <string name="temptargetcompared">Tijdelijk streefdoel %1$s</string>
     <string name="btdevicecompared">Bluetooth verbinding met apparaat %1$s %2$s</string>
-    <string name="btdevice">Verbinding met Bluetooth apparaat </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Gevoeligheid %1$s %2$s %%</string>
     <string name="autosenslabel">Gevoeligheid %</string>

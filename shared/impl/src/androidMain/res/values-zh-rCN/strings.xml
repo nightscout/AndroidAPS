@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">月(短)</string>
     <string name="cwf_comment_loop">闭环状态及时间</string>
     <string name="cwf_comment_direction">方向箭头</string>
-    <string name="cwf_comment_timestamp">最后接收血糖分钟数</string>
     <string name="cwf_comment_sgv">血糖值</string>
     <string name="cwf_comment_cover_plate">封面图片位于文字之前（表盘……）</string>
     <string name="cwf_comment_hour_hand">时针图片 （模拟手表）</string>

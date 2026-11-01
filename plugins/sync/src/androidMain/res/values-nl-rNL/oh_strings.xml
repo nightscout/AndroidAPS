@@ -4,7 +4,6 @@
     <string name="open_humans_description">Met Open Humans kunt u uw diabetesgegevens uploaden en doneren aan wetenschappelijke projecten.</string>
     <string name="logout">Uitloggen</string>
     <string name="setup">Instellen</string>
-    <string name="setup_completed_info">Open Humans is ingesteld. Als u wilt stoppen met uploaden, klik dan op \'Uitloggen\'.</string>
     <string name="not_setup_info">Open Humans is momenteel inactief. Klik op \'Instellen\' om gegevens te uploaden.</string>
     <string name="project_member_id">Projectdeelnemer ID: %1$s</string>
     <string name="open_humans_uploading">Uploaden naar Open Humans…</string>

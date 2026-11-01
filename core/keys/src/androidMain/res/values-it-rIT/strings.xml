@@ -341,7 +341,7 @@
     <string name="pref_title_absorption_cutoff">Taglio di assorbimento</string>
     <string name="absorption_cutoff_summary">Tempo entro il quale ogni pasto si considera assorbito. Eventuali carboidrati rimanenti verranno tagliati fuori.</string>
     <string name="pref_title_absorption_maxtime">Tempo massimo di assorbimento</string>
-    <string name="absorption_max_time_summary">Tempo in ore in cui è previsto che tutti i carboidrati del pasto vengano assorbiti</string>
+    <string name="absorption_max_time_summary">Tempo in ore con cui si prevede che tutti i carboidrati di un pasto siano assorbiti</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Valore predefinito: 0,7\nL\'altro limite di sicurezza di autosens: limita quanto in basso autosens può regolare le basali e quanto in alto può regolare ISF e target glicemici.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
@@ -369,7 +369,7 @@
     <string name="pref_title_smb_delivery_ratio_min">Ratio di erogazione SMB min</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Valore predefinito: 0,5 Questo è il limite inferiore di un rapporto crescente lineare anziché il valore fisso soprastante.</string>
     <string name="pref_title_smb_delivery_ratio_max">Ratio di erogazione SMB max</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Valore predefinito: 0,5 Questo è il limite superiore di un rapporto che aumenta linearmente anziché il valore fisso sopra.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valore predefinito: 0,5 Questo è il limite inferiore di un rapporto crescente lineare anziché il valore fisso soprastante.</string>
     <string name="pref_title_smb_max_range_extension">Estensione range SMB massima</string>
     <string name="openapsama_smb_max_range_extension_summary">Valore predefinito: 1 Questo è un altro importante limite di sicurezza di OpenAPS e specifica di quale fattore puoi superare i normali 120 minuti di maxSMB/maxUAM. Aumenta questo valore sperimentale lentamente e con cautela.</string>
     <!-- UnitDoubleKey: Overview preferences -->

@@ -168,7 +168,6 @@
     <string name="notification">Сповіщення</string>
     <string name="noprofile">Ще немає профілю, завантаженого з NS</string>
     <string name="exists">існує</string>
-    <string name="notexists">не існує</string>
     <string name="glucose">Глюкоза</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -226,11 +225,9 @@
     <string name="pump_wizard_profile_gate_pick">Виберіть профіль, який буде застосовано під час активації.</string>
     <string name="pump_wizard_profile_gate_no_store">Профіль не визначено. Відкрийте керування профілями, щоб створити його, потім знову почніть активацію.</string>
     <string name="reset">Скинути</string>
-    <string name="profileswitch_ismissing">Немає перемикання профілю. Будь ласка, перемкніть профіль або натисніть \"Активувати профіль\" у LocalProfile.</string>
     <string name="profile">Профіль</string>
     <string name="percentage_label">Відсоток</string>
     <string name="timeshift_label">Зсув часу</string>
-    <string name="confirm_remove_multiple_items">Ви впевнені, що хочете видалити %1$d елементів</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Записів, яких немає на основному пристрої: %1$d. Їх не видалено.</string>
     <string name="overview_treatment_label">Терапія</string>
     <string name="copytolocalprofile">Створити новий профіль з цього профілю?</string>
@@ -342,9 +339,7 @@
     <string name="careportal_note">Примітка</string>
     <string name="careportal_question">Питання</string>
     <string name="careportal_exercise">Тренування</string>
-    <string name="careportal_announcement_message">Оголошення : %1$s</string>
     <string name="careportal_note_message">Примітка: %1$s</string>
-    <string name="careportal_question_message">Питання : %1$s</string>
     <string name="careportal_exercise_message">Тренування: %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Заміна канюлі : %1$s</string>
     <string name="careportal_pump_site_change">Заміна канюлі</string>
@@ -661,7 +656,6 @@
     <string name="uel_ns_queue_cleared">ЧЕРГУ NS ОЧИЩЕНО</string>
     <string name="uel_ns_settings_copied">НАЛАШТУВАННЯ NS СКОПІЙОВАНО</string>
     <string name="uel_error_dialog_ok">ДІАЛОГ ПОМИЛКИ: OK</string>
-    <string name="uel_error_dialog_mute">ДІАЛОГ ПОМИЛКИ: БЕЗ ЗВУКУ</string>
     <string name="uel_error_dialog_mute_5min">ДІАЛОГ ПОМИЛКИ: БЕЗ ЗВУКУ 5 ХВ</string>
     <string name="uel_objective_started">ЗАВДАННЯ РОЗПОЧАТО</string>
     <string name="uel_objective_unstarted">ЗАВДАННЯ НЕ ПОЧАТО</string>
@@ -726,7 +720,6 @@
     <string name="error_in_isf_values">Помилка у значеннях ISF</string>
     <string name="error_in_basal_values">Помилка у значеннях базалу</string>
     <string name="error_in_target_values">Помилка у значеннях цілей</string>
-    <string name="profile_name_contains_dot">Деякі назви профілів містять крапки.\nNS це не підтримує.\nПрофілі не буде вивантажено до NS.</string>
     <string name="invalid_profile_not_accepted">Недійсний профіль %1$s не прийнято з NS</string>
     <string name="errors">Помилки</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +884,6 @@
     <string name="export_result_message_exported">Налаштування експортовано</string>
     <string name="export_result_message_failed">Експорт налаштувань НЕ ВДАВСЯ!</string>
     <string name="export_result_message_about_to_expire">Налаштування експортовано: термін дії пароля скоро спливає. Експортуйте вручну та повторно введіть пароль.</string>
-    <string name="export_result_message_expired">Експорт налаштувань скасовано: термін дії пароля сплив. Експортуйте вручну та повторно введіть пароль!</string>
     <string name="export_result_message_disabled">Попередження (автоматизація): експорт налаштувань не ввімкнено!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Експорт у хмару виконано</string>
@@ -998,7 +990,6 @@
     <string name="cannula">Канюля</string>
     <string name="patch_pump">Patch-помпа</string>
     <!-- Site Rotation -->
-    <string name="select_location">Натисніть нижче, щоб вибрати місце введення</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Не закривати мій застосунок?</string>
     <string name="fabric_upload_disabled">Вивантаження журналів збоїв вимкнено!</string>
@@ -1053,7 +1044,6 @@
     <string name="unsaved_changes">Незбережені зміни</string>
     <string name="unsaved_changes_message">У вас є незбережені зміни. Що ви хочете зробити?</string>
     <string name="discard">Відкинути</string>
-    <string name="ic_dynamic_label_warning">Ваш алгоритм може динамічно розраховувати IC. Значення нижче можуть бути використані лише як резервні або довідкові.</string>
     <string name="isf_dynamic_label_warning">Ваш алгоритм може динамічно розраховувати ISF. Значення нижче можуть бути використані лише як резервні або довідкові.</string>
     <string name="add_time_block">Додати часовий блок</string>
     <string name="remove_entry">Видалити запис</string>

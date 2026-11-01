@@ -134,6 +134,4 @@
     <string name="profileswitch4_sufficient">Redigering af profiler til ændring af værdier er tilstrækkelig til at foretage ændringer.</string>
     <string name="profileswitch4_multi">Flere profiler kan oprettes og vælges til at tilpasse til skiftende omstændigheder (f.eks. hormonelle ændringer, skiftende arbejde, hverdags- / weekendlivsstil).</string>
     <string name="other_medication_label">Anden medicin. Læs venligst erklæringen nedenfor og check boksen for at acceptere den.</string>
-    <string name="other_medication_text">AAPS reducerer basalraten eller suspenderer insulintilførslen for at hæve blodsukkeret. Medicin i klassen SGLT-2-hæmmere (glifloziner) kan forhindre øgelsen in blodglukose og kan, af denne årsag, producere et farligt insulinmangel som leder til DKA.
-\nAlmindelige mærkenavne er: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nJeg lover hermed, at jeg ikke tager sådan medicin under brug af AAPS eller vil deaktivere loopet før sådan medicin tages i brug.</string>
 </resources>

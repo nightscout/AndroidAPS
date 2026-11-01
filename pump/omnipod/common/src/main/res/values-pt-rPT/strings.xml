@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Falha ao verificar o progresso da ativação. Por favor, tente novamente.</string>
     <string name="omnipod_common_error_pod_suspended">Pod suspenso</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Falha ao tocar beep</string>
-    <string name="omnipod_common_error_time_out_of_sync">A hora no Pod não está sincronizada. Por favor, atualize a hora no separador Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Ocorreu um erro inesperado. Por favor, reporte! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Configuração de alerta foi atualizada no Pod.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Beeps de basal ativados</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Beeps SMB ativados</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Beeps de basal temporária ativados</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar Botão Suspender Administração no separador Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Deteção de hora de verão/fuso horário ativada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração ativado</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Quando ativado, o Pod emite um beep quando a hora definida é atingida</string>

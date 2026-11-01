@@ -248,7 +248,6 @@
     <string name="profile_switches">프로파일 전환</string>
     <string name="basal_pct_from_tdd_label">기저의 %</string>
     <string name="selected_profile">선택:</string>
-    <string name="comparation">비교</string>
     <string name="profile_tab_1">프로파일 1</string>
     <string name="profile_tab_2">프로파일 2</string>
     <string name="motol_default_profile">기본 프로파일</string>

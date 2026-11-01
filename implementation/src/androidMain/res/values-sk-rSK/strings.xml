@@ -57,10 +57,8 @@
     <string name="ue_exported">Používateľské záznamy exportované</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
-    <string name="exported_less_than_hour_ago">exportované pred menej ako hodinou</string>
     <string name="metadata_warning_different_flavour">Nastavenia boli vytvorené inou variantou AAPS (%1$s), zatiaľ čo vy máte: %2$s.\n\nNiektoré nastavenia môžu chýbať alebo byť neplatné – po importe, prosím, skontrolujte a upravte nastavenia.</string>
     <string name="metadata_warning_different_device">Nastavenia boli vytvorené na inom zariadení. Je to v poriadku, keď importujete zo staršieho/iného telefónu, ale skontrolujte, že importované nastavenia sú správne!</string>
-    <string name="metadata_warning_old_export">Importované nastavenia sú staré už %1$s dní! Možno máte novšie nastavenia alebo ste zvolili nesprávny súbor? Nezabúdajte pravidelne exportovať nastavenia!</string>
     <string name="metadata_warning_date_format">Nesprávny formát dátumu a času!</string>
     <string name="metadata_warning_different_version">Nastavenia z inej vedľajšej verzie aplikácie. Je to v poriadku, ak importujete po aktualizácii, po importe však skontrolujte, či sú nastavenia stále správne!</string>
     <string name="metadata_urgent_different_version">Nastavenia z odlišnej hlavnej verzie aplikácie. Hlavná verzia sa výrazne líši a nemusia mať kompatibilné nastavenia. Po importe skontrolujte, či sú nastavenia stále správne!</string>

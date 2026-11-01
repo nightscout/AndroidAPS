@@ -19,6 +19,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
     <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
+    <string name="safety">Sicherheit</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
@@ -36,7 +37,7 @@
     <string name="apsselected">APS ausgewählt</string>
     <string name="closedmodeenabled">Closed mode aktiviert</string>
     <string name="description_objectives">Das Programm kennenlernen</string>
-    <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
     <string name="objectives_button_unstart">Ziel neu starten</string>
+    <string name="bg_doubled_lgs">LGS-Modus wegen doppelter Werte in der BZ-Quelle</string>
 </resources>

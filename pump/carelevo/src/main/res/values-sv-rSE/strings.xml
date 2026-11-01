@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Ta av nålskyddet</string>
     <string name="carelevo_patch_connect_step_1_desc">Ta ut podden ur blisterförpackningen och ta av nålskyddet.</string>
     <string name="carelevo_patch_connect_step_2_title">Slå på och anslut</string>
-    <string name="carelevo_patch_connect_step_2_desc">Håll strömknappen intryckt i mer än 1 sekund. Efter pipet, tryck på knappen [Sök pod] nedan.</string>
     <string name="carelevo_patch_safety_check_start_title">Säkerhetskontroll</string>
     <string name="carelevo_patch_safety_check_end_title">Säkerhetskontrollen är klar</string>
     <string name="carelevo_patch_safety_check_start_desc">Podden har anslutits.\nTryck på knappen [Säkerhetskontroll].</string>
@@ -113,7 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Om podden som hittades nedan är rätt, tryck på knappen Bekräfta.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Nålen är insatt och applikatorn borttagen</string>
     <string name="carelevo_dialog_connect_detached">Applikator borttagen</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">Tryck på greppen på båda sidor av applikatorn för att lossa den från podden,\noch tryck sedan på knappen `Applikator borttagen`. Insulinleveransen startar.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth är inte på. Kontrollera det.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Ingen pod ansluten.</string>
@@ -180,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Mindre än 10 U insulin kvar och insulinleveransen har stoppats. Tryck på knappen [Inaktivera pod] och byt pod nu.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Podden har gått ut och insulinleveransen har stoppats. Tryck på knappen [Inaktivera pod] och byt pod nu.</string>
     <string name="alarm_notification_desc_warning_low_battery">Låg batterinivå och insulinleveransen har stoppats. Tryck på knappen [Kassera pod] och byt pod nu.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Insulinleveransen har stoppats. Gå till en lämplig temperatur nu (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Insulinleveransen har stoppats. Tryck på knappen [Starta insulin] och starta basalleveransen igen.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Tiden för att sätta på podden har gått ut. Tryck på knappen [Inaktivera pod] och byt pod nu.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Självtestet misslyckades. Tryck på knappen [Inaktivera pod] och byt pod nu.</string>

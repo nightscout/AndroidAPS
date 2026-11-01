@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Úprava profilov za účelom zmeny hodnôt je dostatočná k vykonaniu všetkých urobených zmien.</string>
     <string name="profileswitch4_multi">Je možné nastaviť a vybrať z viacerých profilov za účelom prispôsobenia sa meniacim sa okolnostiam (napr. hormonálne zmeny, práca na smeny, pracovné dni/životný štýl cez víkend).</string>
     <string name="other_medication_label">Ostatné lieky. Prečítajte si prosím nižšie uvedené prehlásenie a potom zaškrtnite políčko pre prijatie prehlásenia.</string>
-    <string name="other_medication_text">AAPS znižuje bazály, alebo pozastavuje podávanie inzulínu, aby sa zvýšila hladina cukru v krvi. Lieky zo skupiny inhibítorov SGLT2 (gliflozíny) môžu zabrániť očakávanému zvýšeniu hodnoty glykémie a tak môžu spôsobiť nebezpečný nedostatok inzulínu vedúci k diabetickej ketoacidóze (DKA).
-\nBežné značky sú: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nTýmto sľubujem, že nebudem užívať takéto lieky pri používaní AAPS, alebo pred užitím takýchto liekov deaktivujem uzavretý okruh.</string>
     <string name="concentration_feature_label">Správa koncentrácie inzulínu</string>
     <string name="u200_with_profile">Kým AAPS začal podporovať koncentrácie inzulínu, užívatelia používali U200 nastavením 50% profilu, aby rozdelili všetky hodnoty na polovicu. Ktoré odpovede sú v tomto nastavení pravdivé?</string>
     <string name="u200_with_profile_reports">Údaje v mojej databáze AAPS a v prehľadoch NS sú nesprávne. Všetky hodnoty (bolusy, dávkovanie, TDD) treba vynásobiť 2, aby sa zobrazili skutočné hodnoty – čo je dôležité najmä pre lekárov a zdravotnícky tím.</string>

@@ -8,7 +8,6 @@
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
-    <string name="boluserrorcode">Įvesta: %1$.2fV Suleista: %2$.2fV. Klaidos kodas: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pompa neužpildyta</string>
     <string name="danai2_bolus_error_not_enough_insulin">Rezervuare nepakanka insulino</string>
     <string name="danai2_bolus_error_easy_sleep">Pompoje įjungtas supaprastintas miego režimas</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="rs_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>
     <string name="rs_loginsulinchange_summary">Aptikus istorijoje, pridėti į Terapiją įvykį „Insulino keitimas“.</string>
-    <string name="rs_logcanulachange_title">Įrašyti kaniulės keitimą</string>
     <string name="rs_logcanulachange_summary">Aptikus istorijoje, pridėti į Terapiją įvykį „Kaniulės keitimas“.</string>
     <string name="press_ok_on_the_pump">Paspauskite pompos mygtuką OK\n ir įveskite 2 rodomus skaičius\nĮjunkite pompos ekraną spausdami minuso mygtuką, kol baigsite įvesti kodą.</string>
     <string name="num1pin">1: (12 skaitmenų)</string>

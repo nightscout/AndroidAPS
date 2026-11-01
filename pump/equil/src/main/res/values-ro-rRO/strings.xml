@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Pompă plasture Equil 5.3 sau mai nouă </string>
     <!--  start  -->
     <string name="equil_basal_speed">Rată bazală de bază</string>
     <string name="equil_dressing">Schimbare rezervor</string>
@@ -77,7 +76,6 @@
     <string name="equil_common_cmd_resume_delivery">Reluați administrarea</string>
     <string name="equil_common_cmd_pair">Asociați Equil</string>
     <string name="equil_common_cmd_insert_cannula">Inserați canula</string>
-    <string name="equil_common_cmd_unpair">Dezasociați Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Setați bolusul extins</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Anulați bolusul extins</string>
     <!--    推杆回退-->
@@ -93,9 +91,7 @@
     <string name="equil_command_connect_error">Conectarea la pompă a eșuat</string>
     <string name="equil_command_connect_no_response">Niciun răspuns de la pompă</string>
     <string name="equil_command__unknown">Starea necunoscută a comenzii</string>
-    <string name="equil_install">Implantați pompa în corp</string>
     <string name="equil_settings_alarm_battery">Alarmă baterie descărcată</string>
-    <string name="equil_settings_alarm_insulin">Alarmă nivel scăzut de insulină</string>
     <string name="equil_init_insulin_error">Inițializarea rezervorului nu este completă</string>
     <string name="equil_history_group_all">Toate</string>
     <string name="equil_history_group_pair">Asociere</string>
@@ -111,7 +107,6 @@
     <string name="equil_history_item3">Blocaj infuzare detectat</string>
     <string name="equil_history_item4">Inversare motor detectată</string>
     <string name="equil_history_item5">Defecțiune motor detectată</string>
-    <string name="equil_history_item6">Începere întrerupere injecție</string>
     <string name="equil_history_item7">Injecția a fost deja întreruptă</string>
     <string name="equil_history_item8">Oprire automată iminentă</string>
     <string name="equil_history_item9">Oprire automată!</string>

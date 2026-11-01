@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Retirer le capuchon de l\'aiguille</string>
     <string name="carelevo_patch_connect_step_1_desc">Sortez le patch de sa coque et retirez le capuchon de l\'aiguille.</string>
     <string name="carelevo_patch_connect_step_2_title">Allumer et connecter</string>
-    <string name="carelevo_patch_connect_step_2_desc">Appuyez sur le bouton d\'alimentation pendant plus d\'1 seconde. Après le bip, appuyez sur le bouton [Rechercher le patch] ci-dessous.</string>
     <string name="carelevo_patch_safety_check_start_title">Contrôle de sécurité</string>
     <string name="carelevo_patch_safety_check_end_title">Contrôle de sécurité terminé</string>
     <string name="carelevo_patch_safety_check_start_desc">Le patch est bien connecté.\nAppuyez sur le bouton [Contrôle de sécurité].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Si le patch détecté ci-dessous est le bon, appuyez sur le bouton Confirmer.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Insertion de l\'aiguille terminée et applicateur retiré</string>
     <string name="carelevo_dialog_connect_detached">Applicateur retiré</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Appuyez sur les prises des deux côtés de l\'applicateur pour le retirer du patch,\n
-        puis appuyez sur le bouton `Applicateur retiré`. L\'injection d\'insuline va commencer.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Le Bluetooth n\'est pas activé. Vérifiez-le.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Aucun patch connecté.</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Il reste moins de 10 U d\'insuline ; injection d\'insuline arrêtée. Appuyez sur le bouton [Désactiver le patch] et changez le patch maintenant.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Patch expiré ; injection d\'insuline arrêtée. Appuyez sur le bouton [Désactiver le patch] et changez le patch maintenant.</string>
     <string name="alarm_notification_desc_warning_low_battery">Batterie faible ; injection d\'insuline arrêtée. Appuyez sur le bouton [Jeter le patch] et changez le patch maintenant.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Injection d\'insuline arrêtée. Allez maintenant dans un lieu à température adaptée (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Injection d\'insuline arrêtée. Appuyez sur le bouton [Démarrer l\'insuline] pour redémarrer l\'injection du basal.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Le délai de pose du patch est dépassé. Appuyez sur le bouton [Désactiver le patch] et changez le patch maintenant.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Échec de l\'autodiagnostic. Appuyez sur le bouton [Désactiver le patch] et changez le patch maintenant.</string>

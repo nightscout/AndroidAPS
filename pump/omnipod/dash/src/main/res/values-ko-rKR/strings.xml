@@ -21,17 +21,13 @@
     <string name="omnipod_dash_not_enough_insulin">레저버에 남은 인슐린이 충분하지 않음</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">확인되지 않은 명령</string>
     <string name="requested_by_user" comment="26 characters max for translation">사용자에 의해 요청됨</string>
-    <string name="suspend_delivery_is_unconfirmed">주입 중지가 확인되지 않았습니다! Omnipod 탭에서 Pod 상태를 수동으로 새로 고치고, 필요하면 주입을 재개하십시오.</string>
     <string name="insulin_delivery_suspended">인슐린 주입이 중지됨</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Pod의 시간대가 휴대폰의 시간대와 다릅니다. 기저 주입량이 정확하지 않습니다. 해결하려면 프로파일을 전환하십시오.</string>
     <string name="failed_to_set_the_new_basal_profile">새 기저 프로파일을 설정하지 못했습니다. 주입이 중지되었습니다.</string>
-    <string name="setting_basal_profile_might_have_failed">기저 프로파일 설정이 실패했을 수 있습니다. 주입이 중지되었을 수 있습니다! Omnipod 탭에서 Pod 상태를 수동으로 새로 고치고, 필요하면 주입을 재개하십시오.</string>
     <string name="bolus_delivery_status_uncertain">볼러스 주입 상태가 불확실합니다. Pod 상태를 새로 고쳐 성공 여부를 확인하십시오.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">SMB(%1$s)가 성공했는지 확인할 수 없습니다. Pod 상태를 새로 고쳐 이 명령의 성공 여부를 확인하십시오.</string>
     <string name="temp_basal_out_of_sync">임시 기저 상태가 예상과 다릅니다! 임시 기저가 실행 중이었다면 취소되었습니다. 주입된 인슐린과 Pod 이력을 확인하십시오.</string>
     <string name="checking_delivery_status">주입 상태 확인 중</string>
-    <string name="setting_temp_basal_might_have_basal_failed">임시 기저 설정이 실패했을 수 있습니다. 임시 기저가 실행 중이었다면 취소되었습니다. Omnipod 탭에서 Pod 상태를 수동으로 새로 고치십시오.</string>
     <string name="cancel_temp_basal_result_is_uncertain">임시 기저 취소 결과가 불확실합니다.</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">확인되지 않은 주입 재개 명령입니다. Pod 상태를 새로 고치십시오.</string>
-    <string name="cancelling_temp_basal_might_have_failed">임시 기저 취소가 실패했을 수 있습니다. 임시 기저가 실행 중이었다면 취소되었을 수 있습니다. Omnipod 탭에서 Pod 상태를 수동으로 새로 고치십시오.</string>
 </resources>

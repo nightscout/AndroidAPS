@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Befehl wird zurzeit ausgeführt</string>
+    <string name="smb_being_delivered">Ein SMB wird gerade abgegeben. Versuche es erneut, sobald die Abgabe abgeschlossen ist.</string>
     <string name="basal_value_below_minimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalratenprofil in der Pumpe aktualisiert. Die Pumpe rundet die Basalraten entsprechend ihrer Schrittweite. Dadurch gibt sie %1$s statt %2$s pro Tag ab.</string>
+    <string name="basal_reported_far_from_profile">Die von der Pumpe angegebene Basalrate weicht deutlich vom Basalratenprofil ab. AAPS behält die Basalrate aus dem Profil. Überprüfe die Basalraten in der Pumpe.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">KHs</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Letzte Verb.: vor %1$d Min</string>
+    <string name="short_status_last_bolus">Letzter Bolus: %1$s @ %2$s</string>
+    <string name="short_status_temp_basal">Temp: %1$s</string>
+    <string name="short_status_battery">Batt: %1$d%%</string>
+    <string name="short_status_not_initialized">Pumpe nicht initialisiert</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Akku-Optimierung</string>
+    <string name="permission_battery_description">Anwendung muss von der Batterieoptimierung ausgeschlossen werden, um im Hintergrund zuverlässig zu funktionieren</string>
+    <string name="permission_directory_title">AAPS-Verzeichnis</string>
+    <string name="permission_directory_description">Wähle ein Verzeichnis für die Anwendungseinstellungen und Protokolldateien</string>
+    <string name="permission_notifications_title">Benachrichtigungen</string>
+    <string name="permission_notifications_description">Benötigt um Warnungen, Alarme und Pumpenstatus-Updates anzuzeigen</string>
+    <string name="permission_schedule_exact_alarm_title">Alarme und Erinnerungen</string>
+    <string name="permission_schedule_exact_alarm_description">Benötigt, damit der Bildschirm aufgeweckt werden kann, während AAPS im Hintergrund läuft, und Erinnerungen angezeigt werden können.</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS Alarme</string>
+    <string name="alarm_channel_standard">Standardalarm</string>
+    <string name="alarm_channel_bolus_error">Bolusfehler</string>
+    <string name="alarm_channel_error">Allgemeiner Fehler</string>
+    <string name="alarm_channel_urgent">Dringender Alarm</string>
+    <string name="alarm_channel_eat_reminder">Zeit zu essen</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (Nicht stören ignorieren)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respektiert Nicht stören)</string>
+    <string name="alarm_channel_silent_urgent">Dringender Alarm (ansteigende Lautstärke)</string>
+    <string name="alarm_channel_silent">Alarm (ansteigende Lautstärke)</string>
+    <string name="alarm_channel_silent_description">Wird verwendet, wenn Benachrichtigungslautstärke schrittweise erhöhen eingeschaltet ist. Der Alarmbildschirm spielt den Ton ab.</string>
+    <string name="ongoing_channel_name">Laufender Status</string>
+    <string name="eat_reminder_channel">Verbleibende Zeit bis zum Essen</string>
+    <string name="eat_reminder_channel_description">Zeigt die verbleibende Zeit bis zum Essen an. Der Countdown ist lautlos. Erst am Ende ertönt ein Alarm.</string>
+    <string name="notifications_channel_name">AAPS Benachrichtigung</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0IE (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">IE%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0KH/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Einstellungen wurden erfolgreich in den Cloud-Speicher exportiert</string>
+    <string name="export_to_cloud_failed">Export in den Cloud-Speicher fehlgeschlagen</string>
+    <string name="csv_uploaded_to_cloud">Benutzereinträge CSV erfolgreich in den Cloud-Speicher hochgeladen</string>
     <string name="exported">Einstellungen exportiert</string>
+    <string name="exported_failed">Export der Einstellungen fehlgeschlagen!</string>
     <string name="filenotfound">Datei nicht gefunden</string>
     <string name="ue_exported">Benutzereinträge exportiert</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">Vor %1$s exportiert</string>
     <string name="exported_at" comment="at placeholder we add export date">am %1$s exportiert</string>
-    <string name="exported_less_than_hour_ago">vor weniger als einer Stunde exportiert</string>
     <string name="metadata_warning_different_flavour">Einstellungen wurden mit einer anderen Variante von AAPS erstellt (%1$s). Du nutzt: %2$s.\n\nEinige Einstellungen können fehlen oder ungültig sein - überprüfe und aktualisiere Deine Einstellungen nach dem Import .</string>
     <string name="metadata_warning_different_device">Einstellungen wurden auf einem anderen Gerät erstellt. Das ist OK, wenn Du von einem älteren/anderen Handy importierst. Stelle aber sicher, dass die importierten Einstellungen korrekt sind!</string>
-    <string name="metadata_warning_old_export">Die importierten Einstellungen sind bereits %1$s Tage alt! Hast Du aktuellere Einstellungen oder evtl. die falsche Datei gewählt? Denke daran, die Einstellungen regelmäßig zu exportieren.</string>
     <string name="metadata_warning_date_format">Ungültiges Datums-/Zeitformat!</string>
     <string name="metadata_warning_different_version">Einstellungen stammen aus einer Vorgängerversion (Nebenversion). Du kannst diese importieren, prüfe aber unbedingt nach dem Import, ob diese noch korrekt sind!</string>
     <string name="metadata_urgent_different_version">Einstellungen stammen aus einer Vorgängerversion (Hauptversion). Hauptversionen unterscheiden sich deutlich und die Einstellungen können daher nicht kompatibel sein! Prüfe nach dem Import unbedingt, ob diese noch korrekt sind!</string>
@@ -31,6 +73,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Entschlüsselungsfehler. Das angegebene Passwort ist ungültig oder die Einstellungsdatei wurde verändert! Evtl. wurde die importierte Datei mit einem anderen Master-Passwort exportiert.</string>
     <string name="prefdecrypt_issue_wrong_format">Fehlende Verschlüsselungskonfiguration, Einstellungsformat ist ungültig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nicht unterstützter oder nicht angegebener Verschlüsselungsalgorithmus!</string>
+    <string name="metadata_label_format">Dateiformat</string>
     <string name="metadata_label_created_at">Erstellt am</string>
     <string name="metadata_label_aaps_version">AAPS-Version</string>
     <string name="metadata_label_aaps_flavour">Build-Variante</string>
@@ -39,4 +82,28 @@
     <string name="metadata_label_encryption">Dateiverschlüsselung</string>
     <string name="metadata_format_new">Neues verschlüsseltes Format</string>
     <string name="metadata_format_other">Unbekanntes Export-Format</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Fehler beim Zugriff auf das Dateisystem. Wähle das AAPS-Verzeichnis korrekt aus.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Auf Google Drive sichern</string>
+    <string name="csv_upload_failed">Fehler beim Hochladen der Benutzereinträge CSV in den Cloud-Speicher</string>
+    <string name="csv_upload_error">Fehler beim Hochladen der CSV in die Cloud</string>
+    <string name="uploading_to_cloud">Lade gerade in Cloud hoch...</string>
+    <string name="cloud_directory_path">Cloud-Verzeichnis: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Google Drive Zugriffstoken konnte nicht aktualisiert werden</string>
+    <string name="google_drive_token_refresh_error">Google Drive Zugriffstoken %1$s konnte nicht aktualisiert werden</string>
+    <string name="google_drive_connection_test_failed">Google-Drive-Verbindungstest fehlgeschlagen</string>
+    <string name="google_drive_connect_error">Keine Verbindung zu Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Fehler beim Auflisten der Google Drive-Ordner</string>
+    <string name="google_drive_list_folders_error">Fehler beim Auflisten der Ordner: %1$s</string>
+    <string name="google_drive_upload_no_id">Upload erfolgreich, aber keine ID zurückgegeben</string>
+    <string name="google_drive_upload_verify_failed">Upload-Verifizierung fehlgeschlagen</string>
+    <string name="google_drive_upload_failed">Upload fehlgeschlagen: %1$s</string>
+    <string name="google_drive_upload_error">Fehler beim Hochladen der Datei: %1$s</string>
+    <string name="google_drive_folder_access_error">Kann Zielordner nicht erstellen oder darauf zugreifen: %1$s</string>
+    <string name="google_drive_list_settings_failed">Fehler beim Auflisten der Einstellungsdateien</string>
+    <string name="google_drive_list_settings_error">Fehler beim Auflisten der Einstellungsdateien: %1$s</string>
+    <string name="google_drive_download_failed">Fehler beim Herunterladen der Datei</string>
+    <string name="google_drive_download_error">Fehler beim Herunterladen der Datei: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorisiert</string>
+    <string name="google_drive_reauth_required">Bitte lösche die Einstellungen und autorisiere Google Drive erneut</string>
 </resources>

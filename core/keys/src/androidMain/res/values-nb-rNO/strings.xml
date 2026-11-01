@@ -3,7 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Enkelmodus</string>
     <string name="pref_title_insulin_concentration">Støtte for insulinkonsentrasjon</string>
-    <string name="pref_summary_insulin_concentration">Aktiver støtte for ulike insulinkonsentrasjoner (U200, U300 osv.)</string>
+    <string name="pref_summary_insulin_concentration">Aktiver støtte for ulike insulinkonsentrasjoner (U50, U200 osv.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Hold skjermen på</string>
     <string name="pref_summary_keep_screen_on">Hindrer Android i å slå av skjermen. Dette bruker mye batteri når enheten ikke er koblet til strøm.</string>
@@ -35,7 +35,7 @@
     <string name="pref_summary_alert_override_dnd">På: Alarmer utløses selv om telefonen er satt på lydløs eller Ikke forstyrr er aktivert. Av: Alarmene lager ikke lyd da. Når Ikke forstyrr er aktivert, vibrerer de bare.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Last opp BS-data til NS</string>
-    <string name="pref_title_bg_source_create_sensor_change">Logg sensorskifte</string>
+    <string name="pref_title_bg_source_create_sensor_change">Logg sensorbytte</string>
     <string name="pref_summary_bg_source_create_sensor_change">Opprett en sensorskiftehendelse når sensoren settes inn.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Bruk dynamisk sensitivitet</string>
@@ -80,10 +80,10 @@
     <string name="pref_title_autotune_auto_switch_profile">Bytt profil automatisk</string>
     <string name="pref_summary_autotune_auto_switch_profile">Bytt automatisk til den Autotune-genererte profilen etter beregning.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Kategoriser UAM som basal</string>
-    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandle uannonsert måltid som basalinsulinbehov for Autotune-beregninger.</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandle ikke-varslede måltider (UAM) som basalinsulinbehov i Autotune-beregninger.</string>
     <string name="pref_title_autotune_tune_insulin_curve">Tilpass insulinkurve</string>
-    <string name="pref_title_autotune_circadian_ic_isf">Bruk circadian IK/ISF</string>
-    <string name="pref_summary_autotune_circadian_ic_isf">Bruk circadian (døgnbasert) variasjon for IK og ISF i Autotune-beregninger.</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Bruk IK/ISF med døgnvariasjon</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Bruk døgnvariasjon for IK og ISF i Autotune-beregninger.</string>
     <string name="pref_title_autotune_additional_log">Ekstra logging</string>
     <!-- SMS preferences -->
     <string name="pref_title_sms_allow_remote_commands">Tillat fjernkommandoer via SMS</string>
@@ -144,7 +144,7 @@
     <string name="pref_title_wear_wizard_trend">Inkluder trend i kalkulatorberegninger</string>
     <string name="pref_title_wear_wizard_cob">Inkluder COB i kalkulatorberegninger</string>
     <string name="pref_title_wear_wizard_iob">Inkluder IOB i kalkulatorberegninger</string>
-    <string name="pref_title_wear_custom_watchface_authorization">Autoriser tilpassede urskiver</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Autoriser egendefinerte urskiver</string>
     <string name="pref_title_wear_pushed_watchface">Urskive installert på klokken</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Komplikasjons-urskive</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Egendefinert urskive</string>
@@ -177,7 +177,7 @@
     <string name="pref_title_bolus_percentage">Bolusprosent</string>
     <string name="deliverpartofboluswizard">Bruk denne verdien på BS- og karbokorreksjonen i boluskalkulatorens resultat</string>
     <string name="pref_title_reset_bolus_percentage_time">Tilbakestill bolusprosenttid</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Lever full bolus (100%) hvis blodsukker er eldre enn</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Lever full bolus (100%) hvis BS-målingen er eldre enn</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Beskyttelsestidsavbrudd</string>
     <string name="pref_title_protection_type_application">Nivå 0: Appbeskyttelse</string>
@@ -264,7 +264,7 @@
     <string name="lang_ru">Russisk</string>
     <string name="lang_sk">Slovakisk</string>
     <string name="lang_sv">Svensk</string>
-    <string name="lang_tr">Tykrisk</string>
+    <string name="lang_tr">Tyrkisk</string>
     <string name="lang_zh_tw">Kinesisk, tradisjonell</string>
     <string name="lang_zh_cn">Kinesisk, forenklet</string>
     <string name="pref_title_patient_name">Instansnavn</string>
@@ -281,7 +281,7 @@
     <string name="pref_title_bolus_pin">Bolus-PIN</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Velg mørkt, lyst eller bruk systemtema</string>
-    <string name="pref_title_app_color_scheme">App fargevalg</string>
+    <string name="pref_title_app_color_scheme">Fargevalg for appen</string>
     <string name="pref_dark_theme">Mørkt tema</string>
     <string name="pref_light_theme">Lyst tema</string>
     <string name="pref_follow_system_theme">Bruk systemtema</string>
@@ -330,7 +330,7 @@
     <string name="pref_title_ama_max_iob">Maks IOB for AMA</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Maks IOB i OpenAPS-sammenheng\nDette er maksimal insulin i [E] som APS kan levere på én gang. Verdien påvirkes også av pasienttype.</string>
     <string name="pref_title_max_daily_multiplier">Maks daglig sikkerhetsmultiplikator</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en grunnleggende sikkerhetsfunksjon i OpenAPS. Den begrenser basalraten til å være 3x den høyeste basalraten fra profilen. Du vil sannsynligvis ikke trenge å endre denne innstillingen, men du bør være klar over at det er dette som diskuteres som \"3x daglig; 4x nåværende\" som sikkerhetsfunksjoner.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3. Dette er en grunnleggende sikkerhetsfunksjon i OpenAPS. Den begrenser basalraten til å være 3x den høyeste basalraten fra profilen. Du vil sannsynligvis ikke trenge å endre denne innstillingen, men du bør være klar over at det er dette som diskuteres som \"3x daglig; 4x nåværende\" som sikkerhetsfunksjoner.</string>
     <string name="pref_title_current_basal_multiplier">Nåværende basal sikkerhetsmultiplikator</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4. Dette er den andre halvdelen av de viktige sikkerhetsbegrensningene i OpenAPS, “3x maks daglig; 4x nåværende”. Dette betyr at din midlertidige basaldose, uavhengig av maks basal som er satt på pumpen din, ikke kan være høyere enn dette tallet ganger det nåværende nivået på din profils basaldose. Dette er for å hindre at brukere havner i farlige situasjoner ved å sette altfor høye maks basaler før de forstår hvordan algoritmen fungerer. Igjen, standardverdien er 4x; de fleste trenger aldri å endre dette, og vil heller måtte justere andre innstillinger hvis de føler at de “stanger mot” denne sikkerhetsgrensen.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
@@ -365,7 +365,7 @@
     <string name="pref_title_dura_weight">Varighet ISF-vekt</string>
     <string name="openapsama_dura_ISF_weight_summary">Dette er vekten som tillegges over lengre forhøyet glukoseplatåer og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_smb_delivery_ratio">SMB leveringsratio</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Standardverdi: 0.5 Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir hvilken andel av den totale insulin som kreves kan leveres som SMB. Dette er for å forhindre at personer kommer inn i farlig territorium ved å sette SMB-forespørsler fra omsorgspersonens telefon samtidig. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standardverdi: 0.5. Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir hvilken andel av den totale insulin som kreves kan leveres som SMB. Dette er for å forhindre at personer kommer inn i farlig territorium ved å sette SMB-forespørsler fra omsorgspersonens telefon samtidig. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB leveringsratio min</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Standardverdi: 0.5. Den nedre enden av en lineært økende ratio i stedet for den faste verdien ovenfor.</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB leveringsratio maks</string>

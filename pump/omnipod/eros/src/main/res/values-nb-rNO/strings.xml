@@ -6,13 +6,13 @@
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adressen er ugyldig.</string>
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Pulslogg knappen i Pod menyen</string>
-    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Pulslogg-knappen i Pod-menyen</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis RileyLink-statistikk-knappen i Pod-menyen</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Handlinger</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Dose: %1$.2f E, varighet: %2$d min</string>
+    <string name="omnipod_eros_history_tbr_value">Dose: %1$.2f E/t, varighet: %2$d min</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Kommunikasjonsfeil: klarte ikke å verifisere meldingen</string>
     <string name="omnipod_eros_error_invalid_packet_type">Kommunikasjonsfeil: mottok en ugyldig datapakke fra Pod</string>
@@ -29,21 +29,21 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Ingen respons fra RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Koblingen til RileyLink avbrutt</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Ingen svar fra Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Endring av basalprofil mislyktes. Insulinlevering kan bli pauset! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Endring av basalprofil kan ha feilet. Insulinlevering kan bli pauset! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Endring av basalprofil mislyktes. Insulinlevering er pauset! Velg gjenoppta levering manuelt fra Omnipod-menyen.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere midlertidig basal. Vennligst oppdater Pod-status manuelt fra Omnipod-menyen.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Endring av midlertidig basal var mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting av midlertidig basal kan ha feilet. Hvis en midlertidig basal allerede var aktiv så er den nå avbrutt. Vennligst oppdater Pod-status manuelt fra Omnipod-menyen.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Endring av basalprofil mislyktes. Insulinlevering kan være pauset! Oppdater Pod-status manuelt på pumpeskjermen, og gjenoppta leveringen hvis nødvendig.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Endring av basalprofil kan ha mislyktes. Insulinlevering kan være pauset! Oppdater Pod-status manuelt på pumpeskjermen, og gjenoppta leveringen hvis nødvendig.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Endring av basalprofil mislyktes. Insulinlevering er pauset! Gjenoppta leveringen manuelt på pumpeskjermen.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Avbryting av midlertidig basal kan ha mislyktes. Oppdater Pod-status manuelt på pumpeskjermen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Innstilling av midlertidig basal mislyktes. Hvis en midlertidig basal var aktiv, kan den ha blitt avbrutt. Oppdater Pod-status manuelt på pumpeskjermen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Innstilling av midlertidig basal kan ha mislyktes. Hvis en midlertidig basal var aktiv, er den avbrutt. Oppdater Pod-status manuelt på pumpeskjermen.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Midlertidig basalvarighet må være større enn null og et multiplum av %1$s minutter.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være pauset! Oppdater statusen manuelt fra fanen Omnipod og gjenoppta levering hvis nødvendig.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er pauset! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Feilet i forsøket på å endre tid på Pod. Du må gå inn i Omnipod menyen og manuelt synkronisere tiden.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være pauset! Oppdater Pod-status manuelt på pumpeskjermen, og gjenoppta leveringen hvis nødvendig.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Innstilling av tid mislyktes. Insulinlevering er pauset! Gjenoppta leveringen manuelt på pumpeskjermen.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Kunne ikke endre tiden på poden automatisk. Synkroniser tiden manuelt på pumpeskjermen.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Kan ikke kontrollere om bolusdosen ble gitt. Kontroller at Pod\'en gir bolus ved å lytte etter klikkk. <b>Dersom du er sikker på at bolusen ikke var vellykket, bør du manuelt slette bolusoppføring fra Behandlingene, selv om du klikker \'Avbryt bolus\' nå!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Klarte ikke å bekrefte om SMB bolus (%1$.2f E) ble gitt. <b>Hvis du er helt sikker på at Bolus ikke ble levert, da bør du manuelt slette SMB-oppføringen fra Behandlinger.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En midlertidig basal utføres på Pod, men AAPS har ingen informasjon om denne midlertidige basalen. Vennligst avbryt midlertidig basal manuelt.</string>
     <!-- Omnipod Eros - Pod Management -->
-    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink statistikk</string>
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink-statistikk</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Tilbakestill RileyLink</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulslogg (kopiert til utklippstavlen)</string>

@@ -36,7 +36,6 @@
     <string name="alarm">Riasztás</string>
     <string name="notification">Értesítés</string>
     <string name="exists">létezik</string>
-    <string name="notexists">nem létezik</string>
     <string name="glucose">Glükóz</string>
     <string name="cob">COB</string>
     <string name="name_short">Név:</string>

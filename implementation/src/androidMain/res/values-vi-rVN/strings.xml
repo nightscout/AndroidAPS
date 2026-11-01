@@ -57,10 +57,8 @@
     <string name="ue_exported">Dữ liệu người dùng đã được xuất</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">đã xuất dữ liệu cách đây %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">đã xuất dữ liệu vào lúc %1$s</string>
-    <string name="exported_less_than_hour_ago">đã xuất dưới 1 giờ trước</string>
     <string name="metadata_warning_different_flavour">Các tùy chọn cài đặt được tạo bằng phiên bản AAPS khác (%1$s), trong khi bạn đang dùng: %2$s.\n\nMột số cài đặt có thể bị thiếu hoặc không hợp lệ – sau khi nhập, vui lòng kiểm tra và cập nhật lại tùy chọn của bạn.</string>
     <string name="metadata_warning_different_device">Các tùy chọn cài đặt được tạo trên thiết bị khác. Điều này không sao nếu bạn đang nhập từ điện thoại cũ hoặc thiết bị khác, nhưng hãy chắc chắn rằng các tùy chọn được nhập là chính xác!</string>
-    <string name="metadata_warning_old_export">Các tùy chọn cài đặt nhập vào đã cũ %1$s ngày! Có thể bạn có các tùy chọn mới hơn hoặc đã chọn nhầm tệp? Hãy nhớ xuất tùy chọn đều đặn!</string>
     <string name="metadata_warning_date_format">Định dạng ngày-giờ không hợp lệ!</string>
     <string name="metadata_warning_different_version">Các tùy chọn cài đặt từ phiên bản nhỏ khác của ứng dụng. Điều này không sao nếu bạn đang nhập sau khi nâng cấp, nhưng hãy kiểm tra sau khi nhập xem các tùy chọn có vẫn chính xác không!</string>
     <string name="metadata_urgent_different_version">Các tùy chọn cài đặt từ phiên bản chính khác của ứng dụng. Các phiên bản chính khác nhau đáng kể và có thể không tương thích với nhau! Hãy chắc chắn rằng các tùy chọn vẫn chính xác sau khi nhập!</string>

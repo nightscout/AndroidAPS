@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Bật hỗ trợ các nồng độ insulin khác nhau (U50, U200, v.v.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Giữ màn hình bật</string>
-    <string name="pref_summary_keep_screen_on">Ngăn Android tắt màn hình. Tính năng này sẽ tiêu thụ rất nhiều năng lượng khi không cắm nguồn.</string>
     <string name="pref_title_show_treatment_button">Hiển thị nút điều trị</string>
     <string name="pref_title_show_wizard_button">Hiển thị nút wizard</string>
     <string name="pref_title_show_insulin_button">Hiển thị nút Insulin</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Phần trăm liều bolus</string>
     <string name="deliverpartofboluswizard">Áp dụng giá trị này cho hiệu chỉnh đường huyết và carb trong kết quả của bolus wizard\'s</string>
     <string name="pref_title_reset_bolus_percentage_time">Đặt lại thời gian áp dụng phần trăm bolus</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Cung cấp bolus đầy đủ (100%) nếu dữ liệu đường huyết đã cũ hơn</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Thời gian chờ bảo vệ</string>
     <string name="pref_title_protection_type_application">Mức 0: Bảo vệ ứng dụng</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">Các số điện thoại được phép</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Mã PIN bắt buộc bổ sung ở cuối token</string>
-    <string name="smscommunicator_otp_pin_summary">Các chữ số bổ sung cần được ghi nhớ và gắn vào cuối mỗi mật khẩu dùng một lần (Otp) được tạo</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Loại Bơm</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
     <string name="openapsma_max_iob_summary">Giá trị này được gọi là Max IOB trong ngữ cảnh OpenAPS.\nĐây là lượng insulin tối đa [U] mà APS có thể cung cấp trong một lần. Giá trị này cũng bị ảnh hưởng bởi loại bệnh nhân.</string>
     <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Giá trị mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Thiết lập này giới hạn liều nền tối đa ở mức gấp 3 lần tốc độ liều nền cao nhất của bạn (đối với người này). Bạn có thể sẽ không cần thay đổi giá trị này, nhưng nên biết rằng đây chính là điều được nhắc đến trong giới hạn an toàn “3x tối đa hằng ngày; 4x hiện tại”.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Giá trị mặc định: 4. Đây là nửa còn lại của các giới hạn an toàn quan trọng trong OpenAPS, đồng thời là phần còn lại của giới hạn an toàn “3x tối đa hằng ngày; 4x hiện tại”. Điều này có nghĩa là liều nền của bạn, bất kể mức liều nền tối đa được cài trên bơm, sẽ không thể cao hơn số lần này nhân với mức liều nền hiện tại của bạn. Mục đích là để ngăn người dùng rơi vào tình huống nguy hiểm do đặt mức basal tối đa quá cao trước khi hiểu cách thuật toán hoạt động. Một lần nữa, giá trị mặc định là 4x; hầu hết mọi người sẽ không cần điều chỉnh giá trị này mà thay vào đó có nhiều khả năng cần điều chỉnh các cài đặt khác nếu cảm thấy mình thường xuyên chạm tới giới hạn an toàn này.</string>
     <string name="pref_title_bolus_snooze_divisor">Hệ số chia DIA khi hoãn bolus</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Ngưỡng hấp thu</string>
     <string name="absorption_cutoff_summary">Thời điểm mà mọi bữa ăn được coi là đã hấp thụ xong. Lượng carb còn lại sẽ bị cắt bỏ.</string>
     <string name="pref_title_absorption_maxtime">Thời gian hấp thu tối đa</string>
-    <string name="absorption_max_time_summary">Thời gian (giờ) mà dự kiến toàn bộ carb từ bữa ăn sẽ được hấp thụ</string>
     <string name="pref_title_autosens_min">Autosens tối thiểu</string>
     <string name="openapsama_autosens_min_summary">Giá trị mặc định: 0,7\nĐây là giới hạn an toàn còn lại của Autosens, đặt mức giới hạn cho việc Autosens có thể giảm liều nền xuống thấp đến mức nào, đồng thời tăng ISF và mục tiêu BG lên cao đến mức nào.</string>
     <string name="pref_title_autosens_max">Autosens tối đa</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Hệ số ISF theo thời gian tác dụng (dura)</string>
     <string name="openapsama_dura_ISF_weight_summary">Đây là hệ số được áp dụng trong các giai đoạn đường huyết tăng cao kéo dài, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_smb_delivery_ratio">Tỷ lệ phân phối SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <string name="pref_title_smb_delivery_ratio_min">Tỷ lệ SMB tối thiểu</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Giá trị mặc định: 0,5. Đây là giới hạn thấp của một tỷ lệ tăng tuyến tính, thay vì giá trị cố định ở bên trên.</string>
     <string name="pref_title_smb_delivery_ratio_max">Tỷ lệ SMB tối đa</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Giá trị mặc định: 0.5. Đây là giá trị giới hạn trên của một tỷ lệ tăng tuyến tính, thay vì là giá trị cố định như bên trên.</string>
     <string name="pref_title_smb_max_range_extension">Mở rộng phạm vi SMB tối đa</string>
     <string name="openapsama_smb_max_range_extension_summary">Giá trị mặc định: 1. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định hệ số cho phép bạn vượt quá giới hạn thông thường 120 phút maxSMB/maxUAM. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <!-- UnitDoubleKey: Overview preferences -->

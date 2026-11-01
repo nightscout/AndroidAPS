@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Îndepărtați capacul acului</string>
     <string name="carelevo_patch_connect_step_1_desc">Scoateți plasturele din blister și îndepărtați capacul acului.</string>
     <string name="carelevo_patch_connect_step_2_title">Porniți și conectați</string>
-    <string name="carelevo_patch_connect_step_2_desc">Apăsați butonul de pornire mai mult de 1 secundă. După semnalul sonor, apăsați butonul [Căutați plasturele] de mai jos.</string>
     <string name="carelevo_patch_safety_check_start_title">Verificare de siguranță</string>
     <string name="carelevo_patch_safety_check_end_title">Verificare de siguranță finalizată</string>
     <string name="carelevo_patch_safety_check_start_desc">Plasturele a fost conectat cu succes.\nApăsați butonul [Verificare de siguranță].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Dacă plasturele găsit mai jos este cel corect, apăsați butonul Confirmați.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Inserarea acului este finalizată și aplicatorul este îndepărtat</string>
     <string name="carelevo_dialog_connect_detached">Aplicator îndepărtat</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Apăsați clemele de pe ambele părți ale aplicatorului pentru a-l desprinde de plasture,\n
-        apoi apăsați butonul `Aplicator îndepărtat`. Administrarea insulinei va începe.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth nu este pornit. Verificați.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Niciun plasture conectat.</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Au rămas mai puțin de 10 U de insulină; administrarea insulinei a fost oprită. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Plasturele a expirat; administrarea insulinei a fost oprită. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
     <string name="alarm_notification_desc_warning_low_battery">Baterie aproape descărcată; administrarea insulinei a fost oprită. Apăsați butonul [Eliminați plasturele] și schimbați plasturele acum.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Administrarea insulinei a fost oprită. Mergeți acum într-un loc cu temperatură potrivită (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Administrarea insulinei a fost oprită. Apăsați butonul [Porniți insulina] și reporniți administrarea bazalei.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Timpul de aplicare a plasturelui a expirat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnosticarea a eșuat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>

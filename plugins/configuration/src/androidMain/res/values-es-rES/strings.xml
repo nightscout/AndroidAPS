@@ -6,7 +6,6 @@
     <string name="previous_button">Anterior</string>
     <string name="setupwizard_finish">FINALIZAR</string>
     <string name="welcome">Bienvenido</string>
-    <string name="welcometosetupwizard">Bienvenido al asistente de configuración. Te guiará a través del proceso de configuración\n</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA EN EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES, PROPORCIONAN EL PROGRAMA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES TUYO. SI EL PROGRAMA TUVIERA UN ERROR, TÚ ASUMES EL COSTE DE TODOS LOS SERVICIOS, REPARACIONES O CORRECCIONES NECESARIAS.</string>
     <string name="end_user_license_agreement_i_understand">LO ENTIENDO Y ACEPTO</string>
@@ -27,7 +26,6 @@
     <string name="exitwizard">Saltar asistente de configuración</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados del más antiguo al más reciente. Normalmente, el algoritmo más nuevo es más potente. No olvides leer la documentación de OpenAPS y configurarlo antes de su uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configura tu RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puedes continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
@@ -57,7 +55,6 @@
     <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AAPS?</string>
     <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
     <string name="configbuilder_sync_description">Complementos de carga de datos, sincronización y comunicación.</string>
-    <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
     <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
     <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="nsclient_version_does_not_match">La versión de AAPSClient no coincide con la versión de AAPS. Por favor, actualízala.</string>

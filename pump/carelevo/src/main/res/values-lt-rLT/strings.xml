@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Nuimkite adatos dangtelį</string>
     <string name="carelevo_patch_connect_step_1_desc">Išimkite pompą iš lizdinės pakuotės ir nuimkite adatos dangtelį.</string>
     <string name="carelevo_patch_connect_step_2_title">Įjungimas ir prijungimas</string>
-    <string name="carelevo_patch_connect_step_2_desc">Palaikykite maitinimo mygtuką ilgiau nei 1 sekundę. Išgirdę pyptelėjimą, paspauskite mygtuką [Ieškoti pompos] apačioje.</string>
     <string name="carelevo_patch_safety_check_start_title">Saugos patikra</string>
     <string name="carelevo_patch_safety_check_end_title">Saugos patikra baigta</string>
     <string name="carelevo_patch_safety_check_start_desc">Pompa sėkmingai prijungta.\nPaspauskite mygtuką [Saugos patikra].</string>
@@ -113,10 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Jei žemiau aptikta pompa yra tinkama, paspauskite mygtuką Patvirtinti.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Adata įvesta, galima nuimti aplikatorių</string>
     <string name="carelevo_dialog_connect_detached">Aplikatorius nuimtas</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Suspauskite aplikatoriaus laikiklius abiejose pusėse, kad atskirtumėte jį nuo pompos,\n
-        tada paspauskite mygtuką `Aplikatorius nuimtas`. Prasidės insulino tiekimas.
-    </string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth neįjungtas. Patikrinkite nustatymus.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Pompa neprijungta</string>
@@ -183,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Liko mažiau nei 10 V insulino; insulino tiekimas sustabdytas. Paspauskite [Išjungti pompą] ir nedelsdami ją pakeiskite.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Pompos naudojimo laikas baigėsi; insulino tiekimas sustabdytas. Paspauskite [Išjungti pompą] ir nedelsdami ją pakeiskite.</string>
     <string name="alarm_notification_desc_warning_low_battery">Senka baterija; insulino tiekimas sustabdytas. Spauskite [Pašalinti pompą] ir pakeiskite pompą.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Insulino tiekimas sustabdytas. Nedelsdami pereikite į tinkamos temperatūros aplinką (5 °C–37 °C).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Insulino tiekimas sustabdytas. Paspauskite [Pradėti insulino tiekimą] ir atnaujinkite bazės tiekimą.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Baigėsi pompos uždėjimo laikas. Paspauskite [Išjungti pompą] ir nedelsdami ją pakeiskite.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Savidiagnostika nepavyko. Paspauskite [Išjungti pompą] ir nedelsdami ją pakeiskite.</string>

@@ -26,7 +26,6 @@
     <string name="constraints">Omezení</string>
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_script_debug_data_label">Ladící informace</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Pozor!\nZa normálních okolností tyto hodnoty nemusíte měnit. Klikněte ZDE, PŘEČTĚTE si informace a UJISTĚTE se, že jim rozumíte dříve, než je začnete měnit.</string>
     <string name="increasing_max_basal">Zvýšena hodnota maximálního bazálu, protože nastavení je nižší než Vaše maximální hodnota bazální profilu</string>
     <string name="max_basal_multiplier">maximální násobek bazálu</string>
     <string name="max_daily_basal_multiplier">maximální násobek nejvyššího bazálu</string>

@@ -4,11 +4,10 @@
     <string name="open_humans_description">Open Humans leidžia įkelti diabeto valdymo duomenis ir skirti juos moksliniams projektams.</string>
     <string name="logout">Atsijungti</string>
     <string name="setup">Sąranka</string>
-    <string name="setup_completed_info">Open Humans buvo nustatytas. Jei norite sustabdyti įkėlimą, spustelėkite „Atsijungti“.</string>
     <string name="not_setup_info">Open Humans neaktyvus. Norėdami pradėti duomenų įkėlimą, spustelėkite „Sąranka\".</string>
     <string name="project_member_id">Projekto nario ID: %1$s</string>
     <string name="open_humans_uploading">Įkeliama į Open Humans…</string>
-    <string name="open_humans_notifications">Open Humans Pranešimai</string>
+    <string name="open_humans_notifications">Open Humans pranešimai</string>
     <string name="uploading_to_open_humans">AAPS įkelia duomenis į Open Humans. Tai gali šiek tiek užtrukti.</string>
     <string name="you_have_been_signed_out_of_open_humans">Jūs buvote atjungtas iš Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
@@ -25,8 +24,8 @@
     <string name="extended_boluses">Ištęsti bolusai</string>
     <string name="carbohydrates">AV</string>
     <string name="careportal_events">Terapijos įrašai (išskyrus pastabas)</string>
-    <string name="profile_switches">Profilio keitimas</string>
-    <string name="total_daily_doses">Bendra Paros Dozė</string>
+    <string name="profile_switches">Profilio keitimai</string>
+    <string name="total_daily_doses">Bendros paros dozės</string>
     <string name="temporary_basal_rates">Laikina bazė</string>
     <string name="temporary_targets">Laikini tikslai</string>
     <string name="settings">Parametrai</string>

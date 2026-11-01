@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Увімкнути підтримку різних концентрацій інсуліну (U50, U200 тощо)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Не вимикати екран</string>
-    <string name="pref_summary_keep_screen_on">Не дає Android вимикати екран. Це витрачає багато енергії, коли телефон не підключено до зарядки.</string>
     <string name="pref_title_show_treatment_button">Показувати кнопку терапії</string>
     <string name="pref_title_show_wizard_button">Показувати кнопку калькулятора</string>
     <string name="pref_title_show_insulin_button">Показувати кнопку інсуліну</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Відсоток болюсу</string>
     <string name="deliverpartofboluswizard">Застосувати це значення до корекції на ГК і вуглеводи в результаті калькулятора болюса</string>
     <string name="pref_title_reset_bolus_percentage_time">Час скидання відсотка болюсу</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Вводити повний болюс (100%), якщо дані про глюкозу старші ніж</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Тайм-аут захисту</string>
     <string name="pref_title_protection_type_application">Рівень 0: Захист застосунку</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">Дозволені номери телефонів</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Додатковий обов’язковий PIN у кінці токена</string>
-    <string name="smscommunicator_otp_pin_summary">Додаткові цифри, які необхідно запам’ятати та додавати в кінці кожного згенерованого одноразового пароля</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Тип помпи</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">Макс. IOB для AMA</string>
     <string name="openapsma_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nЦе максимальна кількість інсуліну в [Од], яку APS може ввести за один раз. Значення також залежить від типу пацієнта.</string>
     <string name="pref_title_max_daily_multiplier">Безпечний множник макс. добового базалу</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Значення за замовчуванням: 3. Це ключове обмеження безпеки OpenAPS. Воно обмежує ваш базал до 3x вашої найбільшої базальної швидкості. Імовірно, вам не потрібно це змінювати, але знайте, що саме це мається на увазі під правилом «3x максимальний добовий; 4x поточний».</string>
     <string name="pref_title_current_basal_multiplier">Безпечний множник поточного базалу</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Значення за замовчуванням: 4. Це друга половина ключових обмежень безпеки OpenAPS, друга частина правила «3x максимальний добовий; 4x поточний». Ваш базал, незалежно від максимального базалу, встановленого на помпі, не може бути вищим за це число, помножене на поточний рівень базалу. Це захищає людей від небезпечних значень, якщо вони встановлять надто високий максимальний базал, ще не розуміючи, як працює алгоритм. За замовчуванням 4x; більшості людей ніколи не потрібно це змінювати. Якщо вам здається, що ви «впираєтеся» в це обмеження, скоріше потрібно змінити інші налаштування.</string>
     <string name="pref_title_bolus_snooze_divisor">Дільник DIA для паузи після болюсу</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Межа засвоєння</string>
     <string name="absorption_cutoff_summary">Час, після якого вважається, що їжа повністю засвоєна. Решта вуглеводів не враховується.</string>
     <string name="pref_title_absorption_maxtime">Максимальний час засвоєння</string>
-    <string name="absorption_max_time_summary">Час у годинах, протягом якого очікується повне засвоєння всіх вуглеводів з прийому їжі</string>
     <string name="pref_title_autosens_min">Autosens мін.</string>
     <string name="openapsama_autosens_min_summary">Значення за замовчуванням: 0.7\nМінімальний коефіцієнт для autosens, що обмежує, наскільки низько може впасти регулювання базальної швидкості, і наскільки можна підвищити ISF та цільовий рівень глюкози.</string>
     <string name="pref_title_autosens_max">Autosens макс.</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Вага ISF за тривалістю</string>
     <string name="openapsama_dura_ISF_weight_summary">Вага, яка застосовується під час тривалих підвищених плато глюкози, і яка посилює ISF, потенційно збільшуючи доставку інсуліну.\n\nЗначення за замовчуванням 0.0 фактично вимикає цей ефект.</string>
     <string name="pref_title_smb_delivery_ratio">Коефіцієнт подачі SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Значення за замовчуванням: 0.5. Це ще одне ключове обмеження безпеки OpenAPS. Воно визначає, яку частку від усього потрібного інсуліну можна ввести як SMB. Це захищає від небезпечних ситуацій, коли запити SMB надходять одночасно з телефону доглядача. Збільшуйте це експериментальне значення повільно та обережно.</string>
     <string name="pref_title_smb_delivery_ratio_min">Мін. коефіцієнт подачі SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Значення за замовчуванням: 0.5. Це нижній кінець лінійно зростаючого співвідношення, а не фіксоване значення вище.</string>
     <string name="pref_title_smb_delivery_ratio_max">Макс. коефіцієнт подачі SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Значення за замовчуванням: 0.5. Це верхній кінець лінійно зростаючого співвідношення, а не фіксоване значення вище.</string>
     <string name="pref_title_smb_max_range_extension">Макс. розширення діапазону SMB</string>
     <string name="openapsama_smb_max_range_extension_summary">Значення за замовчуванням: 1. Це ще один ключовий обмежувач безпеки OpenAPS і визначає, у скільки разів можна перевищити стандартні 120 хв maxSMB/maxUAM. Збільшуйте обережно.</string>
     <!-- UnitDoubleKey: Overview preferences -->

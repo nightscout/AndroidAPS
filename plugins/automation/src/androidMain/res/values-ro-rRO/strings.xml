@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Trimiteți SMS către toate numerele</string>
     <string name="sendsmsactiontext">Trimiteți SMS cu text</string>
     <string name="starttemptarget">Porniți o țintă temporară</string>
-    <string name="islesser">este mai mică decât</string>
-    <string name="isequalorlesser">este mai mică sau egală cu</string>
     <string name="isequal">este egală cu</string>
     <string name="isequalorgreater">este mai mare sau egală cu</string>
     <string name="isgreater">este mai mare decât</string>
@@ -88,7 +86,6 @@
     <string name="add_short">ADĂUGAȚI</string>
     <string name="temptargetcompared">Țintă temporară %1$s</string>
     <string name="btdevicecompared">Conexiune Bluetooth cu dispozitivul %1$s %2$s</string>
-    <string name="btdevice">Conexiune la dispozitivul Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

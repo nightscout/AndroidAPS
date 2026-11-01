@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">Mã hóa 4b6b phần mềm</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Mã hóa 4b6b phần cứng</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Đang quét</string>
     <string name="riley_link_ble_config_connected_never">Không bao giờ</string>

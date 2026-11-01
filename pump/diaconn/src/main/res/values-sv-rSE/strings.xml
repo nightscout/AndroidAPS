@@ -27,7 +27,6 @@
     <string name="commanderror">Kommandofel</string>
     <string name="speederror">Felaktig hastighet</string>
     <string name="insulinlimitviolation">Insulingräns nådd</string>
-    <string name="boluserrorcode">Angivet: %1$.2f enheter. Levererat: %2$.2f enheter. Felkod: %3$s</string>
     <string name="selectedpump">Vald pump</string>
     <string name="bolus_step">Bolussteg</string>
     <string name="basal_step">Basalsteg</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">LCD på, tid [sekunder]</string>
     <string name="diaconn_g8_language">Språk</string>
     <string name="diaconn_g8_bolus_speed">Bolushastighet</string>
-    <string name="diaconn_g8_pumplang_chiness">Kinesiska</string>
     <string name="diaconn_g8_pumplang_korean">Koreanska</string>
     <string name="diaconn_g8_pumplang_english">Engelska</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">Logga batteribyte automatiskt när det upptäcks i historiken</string>
     <string name="diaconn_g8_logbatterychange_title">Logga batteribyten</string>
     <string name="diaconn_g8_logsyncinprogress">Synkronisering pågår</string>
-    <string name="diaconn_g8_loginsulinshorage">Nivåvarning insulinreservoar</string>
     <string name="diaconn_g8_logbatteryshorage">Nivåvarning pumpbatteri</string>
     <string name="diaconn_g8_logneedleprime">Förfyllning nål:%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Förfyllning :%1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">Slutförd</string>
     <string name="diaconn_g8_reasoninjectonblock">Bolusblockering</string>
     <string name="diaconn_g8_reasonbatteryshortage">Pumpbatteri slut</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Slut på insulin</string>
     <string name="diaconn_g8_reasonuserstop">Användaren pausat</string>
     <string name="diaconn_g8_reasonsystemreset">Systemåterställning</string>
     <string name="diaconn_g8_reasonother">Övrigt</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">Ocklusion (%s)</string>
     <string name="diaconn_g8_lgorelease">basal återupptagen (%s)</string>
     <string name="diaconn_g8_lgosuspend">basal pausad (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Normal slutförd</string>
     <string name="diaconn_g8_logdualsquarestart">Kombi startad</string>
     <string name="diaconn_g8_logdualsquaresuccess">Kombi slutförd</string>
     <string name="diaconn_g8_logsquarestart">Förlängd startad</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">Slutfört</string>
     <string name="diaconn_g8_logmealsuccess">Lyckades ange måltid</string>
     <string name="diaconn_g8_errorcode_1">Kan inte kontrollera pga CRC-fel i överföringen.</string>
-    <string name="diaconn_g8_errorcode_2">Kan inte ställas in pga indatafel.</string>
-    <string name="diaconn_g8_errorcode_3">Kan inte ställas in pga ett protokollspecifikationsfel.</string>
     <string name="diaconn_g8_errorcode_4">Måltiden tidsmäts. Kan inte ta bolus.</string>
     <string name="diaconn_g8_errorcode_6">Avbruten av pumpen</string>
     <string name="diaconn_g8_errorcode_7">Pumpen utför andra åtgärder. Appinställningar begränsas.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">Bolus är inte möjlig på grund av lågt batteri.</string>
     <string name="diaconn_g8_errorcode_12">Bolus inte tillåten pga låg reservoarnivå.</string>
     <string name="diaconn_g8_errorcode_13">Bolus blockerad eftersom det kommer överskrida gränsen.</string>
-    <string name="diaconn_g8_errorcode_14">Bolus blockerad eftersom den kommer överstiga max daglig dos.</string>
     <string name="diaconn_g8_errorcode_15">Efter att konfigurationen är klar, kan basaldosen påbörjas.</string>
     <string name="diaconn_g8_logtubechange_title">Logga slangbyte</string>
     <string name="diaconn_g8_logtubechange_summary">Lägg till händelse \"slangbyte\" när den upptäcks i historiken</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">Under LGS är bolus begränsad</string>
     <string name="diaconn_g8_errorcode_33">LGS är redan PÅ. PÅ-kommandot avvisas.</string>
     <string name="diaconn_g8_errorcode_34">LGS är redan AV. AV-kommandot avvisas.</string>
-    <string name="diaconn_g8_errorcode_35">\"Tillfällig basal start\" avvisas när en tillfällig basal redan pågår</string>
-    <string name="diaconn_g8_errorcode_36">\"Tillfällig basal stopp\" avvisas när ingen tillfällig basal pågår</string>
     <string name="diaconn_g8_cloudsend_summary">Skicka pumploggar till Diaconns moln.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Molnsynkronisering</string>
     <string name="bolus_speed_1">1 U/min</string>

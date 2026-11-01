@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Chỉ cần chỉnh sửa cấu hình để thay đổi các giá trị là đủ để áp dụng các thay đổi.</string>
     <string name="profileswitch4_multi">Có thể thiết lập nhiều cấu hình và lựa chọn chúng để thích ứng với các tình huống thay đổi (ví dụ: thay đổi hormone, làm việc theo ca, lối sống ngày thường/cuối tuần).</string>
     <string name="other_medication_label">Thuốc khác. Vui lòng đọc tuyên bố dưới đây và đánh dấu vào ô để chấp nhận cam kết.</string>
-    <string name="other_medication_text">AAPS giảm basal hoặc tạm ngừng bơm insulin để làm tăng đường huyết. Các thuốc thuộc nhóm ức chế SGLT2 (gliflozin) có thể ngăn sự tăng đường huyết và do đó có thể gây ra tình trạng thiếu insulin nguy hiểm dẫn đến DKA.
-\nCác tên thương mại thường gặp: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nTôi cam kết rằng sẽ không sử dụng các thuốc này khi đang dùng AAPS hoặc sẽ tắt vòng lặp (loop) trước khi sử dụng các thuốc đó.</string>
     <string name="concentration_feature_label">Quản lý nồng độ insulin</string>
     <string name="u200_with_profile">Trước khi AAPS hỗ trợ các nồng độ insulin, người dùng sử dụng U200 bằng cách đặt cấu hình 50% để giảm một nửa tất cả các giá trị. Trong thiết lập đó, những lựa chọn nào là đúng?</string>
     <string name="u200_with_profile_reports">Cơ sở dữ liệu AAPS và các báo cáo Nightscout của tôi bị sai lệch. Tất cả các giá trị (bolus, tốc độ liều nền, TDD) phải được nhân với 2 để phản ánh đúng giá trị thực tế, đặc biệt khi cung cấp cho bác sĩ và đội ngũ y tế.</string>

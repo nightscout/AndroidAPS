@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans cho phép bạn tải dữ liệu bệnh tiểu đường của mình lên và quyên góp cho các dự án khoa học.</string>
     <string name="logout">Đăng xuất</string>
     <string name="setup">Cài đặt</string>
-    <string name="setup_completed_info">Open Humans đã được thiết lập. Nếu bạn muốn dừng việc tải dữ liệu lên, hãy nhấp vào \'Đăng xuất\'.</string>
     <string name="not_setup_info">Open Humans hiện đang không hoạt động. Để bắt đầu tải dữ liệu lên, hãy nhấp vào \'Cài đặt\'.</string>
     <string name="project_member_id">ID thành viên dự án: %1$s</string>
     <string name="open_humans_uploading">Đang tải lên Open Humans…</string>

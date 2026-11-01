@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Błąd ampułki</string>
     <string name="combov2_error_11">Zestaw infuzyjny nienapełniony</string>
     <string name="combov2_extended_bolus_not_supported">Bolus przedłużony nie jest obsługiwany</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Paruj z pompą</string>
     <string name="combov2_unpair_pump_title">Usuń sparowanie z pompą</string>
     <string name="combov2_driver_state_label">Stan sterownika</string>
@@ -31,12 +30,6 @@
 2. Sprawdź, czy pompa pokazuje już sparowane urządzenie; jeśli tak, przejdź na pompie do ekranu \"Usuń urządzenie\" aby usunąć/odparować to urządzenie\n
 3. Na pompie przejdź do ekranu \"Dodaj urządzenie\" i rozpocznij parowanie na pompie\n
 4. W aplikacji na telefonie kliknij przycisk \"Rozpocznij parowanie\", aby rozpocząć parowanie w AAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Po pewnym czasie nazwa telefonu zostanie pokazana na ekranie pompy; naciśnij przycisk potwierdzenia (✓), aby potwierdzić wybór.\n\n
-Kiedy parowanie zakończy się pomyślnie, potwierdź zakończenie parowania na pompie i wróć do ekranu głównej pompy dwukrotnie naciskając przycisk potwierdzenia (✓).\n\n
-Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
-1. W aplikacji naciśnij wstecz lub przycisk \"Anuluj parowanie\"\n
-2. Na pompie Combo anuluj parowanie używając przycisków (wciśnij jednocześnie zarówno klawisz ▲ \"W górę\", jak i ❐ \"Menu\", aby anulować parowanie)\n
-3. Spróbuj sparować ponownie</string>
     <string name="combov2_enter_pin">Wprowadź PIN</string>
     <string name="combov2_cancel_pairing">Anuluj parowanie</string>
     <string name="combov2_confirm_cancel_pairing_message">Czy na pewno chcesz anulować parowanie?</string>
@@ -106,7 +99,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorowanie zbędnego żądania o 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">Napotkano nieoczekiwany limit podczas dostosowywania TBR: oczekiwany docelowy procent %1$d%%, osiągnął limit przy %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie można ustawić bezwzględnego TBR, jeśli wyjściowa dawka bazowa jest zerowa</string>
-    <string name="combov2_unpair_pump_summary">Usuń parowanie AAPS i Androida z aktualnie sparowanej pompy Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Nieznany TBR został wykryty i zatrzymany; procent: %1$d%%; pozostały czas trwania: %2$s</string>
     <string name="combov2_connection_error">Błąd połączenia: %1$s</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>

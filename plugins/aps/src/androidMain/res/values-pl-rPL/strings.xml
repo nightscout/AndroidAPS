@@ -26,7 +26,6 @@
     <string name="constraints">Ograniczenia</string>
     <string name="openapsma_autosensdata_label">Dane Autosens</string>
     <string name="openapsma_script_debug_data_label">Debugowanie skryptów</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">UWAGA!\nZwykle nie trzeba zmieniać tych wartości. Proszę NACIŚNIJ TUTAJ i PRZECZYTAJ tekst i upewnij się, że ROZUMIESZ go przed zmianą którejś z tych wartości.</string>
     <string name="increasing_max_basal">Zwiększanie maksymalnej wartości bazowej ponieważ ustawienia są poniżej maxymalnej wartości bazy w profilu</string>
     <string name="max_basal_multiplier">mnożnik maksymalnej dawki bazowej</string>
     <string name="max_daily_basal_multiplier">mnożnik maksymalnej dziennej dawki bazowej</string>

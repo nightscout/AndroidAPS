@@ -9,7 +9,6 @@
     <string name="application_expired">Applicatie is verlopen</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
-    <string name="version_expire">Versie %1$s vervalt op %2$s en schakelt dan naar LGS modus</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Herberekende data gebruikt</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS geslecteerd</string>
     <string name="closedmodeenabled">Closed modus actief</string>
     <string name="description_objectives">Leerprogramma</string>
-    <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
     <string name="objectives_button_unstart">Start wissen</string>
     <string name="bg_doubled_lgs">LGS modus als gevolg van dubbele waarden in de BG bron</string>

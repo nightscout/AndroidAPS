@@ -4,6 +4,7 @@
     <string name="ns_client_bg">Nightscout-Client BZ</string>
     <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
     <string name="source_xdrip">xDrip+ BZ</string>
+    <string name="description_source_xdrip">BZ-Werte von xDrip+ oder ähnlicher App (Juggluco etc.) empfangen.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
@@ -21,10 +22,34 @@
     <string name="random_bg">Zufalls-BZ</string>
     <string name="description_source_random_bg">Zufalls-BZ: Generiert zufällige Blutzuckerdaten (nur im Demo-Modus)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Glukosewerte aus der Syai/Ottai-App empfangen.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">BZ-Werte von der Patched Sibionic SI App oder von der Sibionics App.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Glukosedaten von der modifizierten Sino App empfangen.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Erhalte BZ Werte von der Instara App.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara Anfrage für historische Daten</string>
+    <string name="pref_summary_instara_history_request">Möglicherweise fehlende historische Daten im Hintergrund anfordern</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Benachrichtigungsleser</string>
+    <string name="description_source_notification_reader">BZ-Werte aus Benachrichtigungen offizieller CGM-Apps (Dexcom, Medtronic, Eversense etc.) auslesen.</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Die Anwendung benötigt die Berechtigung, CGM Daten von der Dexcom-App zu erhalten</string>
+    <string name="permission_notification_listener_title">Zugriff auf Benachrichtigungen</string>
+    <string name="permission_notification_listener_description">Erforderlich, um Glukosewerte aus CGM-App-Benachrichtigungen zu lesen</string>
+    <string name="aidex">MicroTech CGM-App</string>
+    <string name="description_source_aidex">CGM-Werte von LinX, LinX vista, Equil G, Smart 2, Diaexpert 2 etc. empfangen.</string>
+    <string name="aidex_sensor_expired">Sensor abgelaufen, bitte durch einen neuen Sensor ersetzen</string>
+    <string name="aidex_sensor_error">Sensorfehler, bitte überprüfe den Sensor-Status.</string>
+    <string name="aidex_sensor_stabilizing">Der Sensor stabilisiert sich, bitte warten…</string>
+    <string name="aidex_sensor_replace">Sensorwechsel erforderlich. Bitte so bald wie möglich durch einem neuen Sensor ersetzen.</string>
+    <string name="aidex_signal_lost">Sensorsignal verloren. Bitte überprüfe die Verbindung.</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">doppelter Messwert</string>
 </resources>

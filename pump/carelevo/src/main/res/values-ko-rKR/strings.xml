@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">바늘 보호캡 제거하기</string>
     <string name="carelevo_patch_connect_step_1_desc">패치를 포장재에서 꺼낸 후 바늘 보호캡을 제거해 주세요.</string>
     <string name="carelevo_patch_connect_step_2_title">전원 켜기 및 연결</string>
-    <string name="carelevo_patch_connect_step_2_desc">전원 버튼을 1초 이상 길게 눌러 부팅음이 확인 되면 아래 패치 검색 버튼을 눌러주세요.</string>
     <string name="carelevo_patch_safety_check_start_title">안전점검</string>
     <string name="carelevo_patch_safety_check_end_title">안전점검 완료</string>
     <string name="carelevo_patch_safety_check_start_desc">패치가 정상적으로 연결되었습니다.\n[안전점검]버튼을 눌러주세요.</string>
@@ -113,7 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">아래 검색된 패치가 있다면 확인 버튼을 눌러 주세요.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">바늘 삽입 완료 및 어플리케이터 분리</string>
     <string name="carelevo_dialog_connect_detached">분리 완료</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">어플리케이터 양 옆 손잡이를 눌러 패치에서 분리하고\n<b>[분리 완료]</b> 버튼을 눌러주세요. 주입이 시작됩니다.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">블루투스가 활성화되어 있지 않습니다. 확인해 주세요.</string>
     <string name="carelevo_toast_msg_patch_not_connected">패치가 연결되어 있지 않습니다.</string>
@@ -180,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">패치에 인슐린이 10 U 미만으로, 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
     <string name="alarm_notification_desc_warning_expired_patch">패치 사용 및 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
     <string name="alarm_notification_desc_warning_low_battery">패치 배터리가 부족하여 인슐린 주입이 중단되었습니다. 강제 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">인슐린 주입이 중단되었습니다. 즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</string>
     <string name="alarm_notification_desc_warning_not_used_app">인슐린 주입이 중단되었습니다. 주입 재개 버튼을 눌러 기저 주입을 다시 시작해 보세요.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">패치 적용 시간이 만료되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">안전점검이 실패했습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>

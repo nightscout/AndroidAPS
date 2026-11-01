@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">활성화 과정 확인 실패함. 재시도하십시오.</string>
     <string name="omnipod_common_error_pod_suspended">Pod 중지됨</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">테스트 신호음 작동 실패함</string>
-    <string name="omnipod_common_error_time_out_of_sync">Pod의 시간이 맞지 않습니다. Omnipod 탭에서 시간을 업데이트 하십시오.</string>
     <string name="omnipod_common_error_unexpected_exception">예상치 못한 오류가 발생하였습니다. 보고 부탁드립니다! (%1$s: %2$s)</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod에서 경고 설정 업데이트 됨</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">기저 신호음 활성화됨</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB 신호음 활성화됨</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR 신호음 활성화됨</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod 탭에서 주입 중지 버튼을 나타내기</string>
     <string name="omnipod_common_preferences_time_change_enabled">섬머타임제/시간대 감지 활성화됨</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">만료일 알림 활성화됨</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">켜면 지정한 시간이 되었을 때 Pod가 신호음을 냅니다</string>

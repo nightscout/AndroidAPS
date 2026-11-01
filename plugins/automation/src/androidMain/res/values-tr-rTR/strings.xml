@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Tüm numaralara SMS gönder</string>
     <string name="sendsmsactiontext">Metin ile SMS gönder</string>
     <string name="starttemptarget">Geçici hedefi başlat</string>
-    <string name="islesser">küçükse</string>
-    <string name="isequalorlesser">eşit veya küçükse</string>
     <string name="isequal">eşitse</string>
     <string name="isequalorgreater">eşit veya büyükse</string>
     <string name="isgreater">büyükse</string>
@@ -88,7 +86,6 @@
     <string name="add_short">EKLE</string>
     <string name="temptargetcompared">Geçici hedef %1$s</string>
     <string name="btdevicecompared">%1$s cihazına Bluetooth bağlantısı: %2$s</string>
-    <string name="btdevice">Bluetooth cihazına bağlantı </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Otoduyarlılık %1$s %2$s %%</string>
     <string name="autosenslabel">Otoduyarlılık %</string>

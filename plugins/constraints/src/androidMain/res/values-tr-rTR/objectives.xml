@@ -2,7 +2,7 @@
 <resources>
     <string name="objectives_button_start">Başlat</string>
     <string name="objectives_button_verify">Doğrula</string>
-    <string name="nth_objective">Görev %1$d.</string>
+    <string name="nth_objective">%1$d. Görev</string>
     <string name="objectivenotstarted">Görev %1$d başlanmadı</string>
     <string name="objectivenotfinished">Görev %1$d tamamlanmadı</string>
     <string name="objectives_0_objective">Görselleştirme ve izlemeyi kurma, bazalları ve oranları analiz etme</string>
@@ -17,12 +17,10 @@
     <string name="objectives_maxbasal_learned">Güvenlik özelliklerine dikkat edin ve gerektiğinde güvenlik parametrelerini ayarlayın.</string>
     <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Duraklatma modunda başlatılıyor</string>
     <string name="objectives_maxiobzero_gate">Birkaç gün boyunca, çok fazla LGS olayı olmadan, Düşük Glikoz Duraklatma (LGS) modunda (yani maks. AİNS = 0 otomatik olarak ayarlanır) kapalı döngüde çalıştırın.</string>
-    <string name="objectives_maxiobzero_learned">MaksAİNS\'i sıfıra ayarlamak, sizi hipodan korur ve bazal oranın üzerine daha fazla insülin eklemez (negatif AİNS durumu hariç)</string>
     <string name="objectives_maxiob_objective">Kapalı döngüde ince ayar: maks. AİNS\'i 0\'ın üzerine yükseltme ve KŞ hedeflerini yavaş yavaş düşürme</string>
-    <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
     <string name="objectives_maxiob_learned">Çocuk büyüdükçe MaksAİNS\'i güncelleyin. Sistemin size karbonhidrat hesabından daha fazla insülin vermesine izin vermeyin = yüksek değer gerçekten kötü bir fikirdir. Maks. AİNS basit modda otomatik olarak hesaplanır</string>
     <string name="maxiobset">Maksimum AİNS düzgün bir şekilde ayarlandı (Basit modda gerekli değildir)</string>
-    <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i (otoduyarlılık) etkinleştirin</string>
+    <string name="objectives_autosens_objective">Gerekirse bazal ve oranları ayarlayın, ardından Otoduyarlılık\'ı etkinleştirin</string>
     <string name="objectives_autosens_gate">Düzenli karbonhidrat girişiyle 1 hafta başarılı gündüz döngüsü. Basit modda otoduyarlılık varsayılan olarak etkindir.</string>
     <string name="objectives_autosens_learned">Otoduyarlılık sonucunuz %100 civarında dalgalanmıyorsa, profiliniz muhtemelen yanlıştır.</string>
     <string name="objectives_smb_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
@@ -35,7 +33,7 @@
     <string name="objectives_pumpstatusavailableinns">Pompa durumu NS veya Tidepool\'da mevcut</string>
     <string name="objectives_manualenacts">Manuel eylemler</string>
     <string name="accomplished">Başarıldı: %1$s</string>
-    <string name="objectives_usage_objective">AAPS\'yi nasıl kontrol edeceğinizi öğrenin</string>
+    <string name="objectives_usage_objective">AAPS\'i nasıl kontrol edeceğinizi öğrenin</string>
     <string name="objectives_usage_gate">AAPS\'de farklı eylemler gerçekleştirin</string>
     <string name="objectives_usage_learned">AAPS\'in temel kullanımını öğrendiniz. Kontrollerin çoğu Genel bakış ekranındadır. Diğer işlemler ekranın altındaki Tedaviler ve Yönet menülerinde ve yan menüdedir.</string>
     <string name="objectives_useprofileswitch">Profili 10 dk için %90 olarak ayarlayın</string>
@@ -53,7 +51,6 @@
     <string name="objectives_exam_learned_isf">İDF değerinin anlamını ve KŞ düzeltmesi için kullanılan insülin miktarını nasıl etkilediğini öğrendiniz.</string>
     <string name="objectives_exam_learned_ic">IC değerinin anlamını ve karbonhidratları karşılamak için gereken insülin miktarını nasıl etkilediğini öğrendiniz.</string>
     <string name="objectives_exam_learned_hypott">Hipo geçici hedefi yalnızca genellikle birikmiş negatif AİNS olduğunda, hipodan sonra aşırı düzeltmeyi önlemek için kullanılır. Gelecekte bu durumu tekrar önlemek için ek eylemler değerlendirilmelidir.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">Yüzde kullanımı hedef KŞ değerlerini etkilemez, ancak bazal, İDF ve IC değerleri daha fazla (%100\'ün üzerinde) veya daha az (%100\'ün altında) insülin verecek şekilde ayarlanır.</string>
     <string name="objectives_exam_learned_profileswitchtime">Profil değişimindeki zaman kaydırmayı kullanarak sirkadiyen profilini geç uyanma gibi düzensizliklere uyarlayabilirsiniz.</string>
     <string name="objectives_exam_learned_profileswitch4">Değişiklik yapmak için profili düzenlemek yeterli değildir. Değişiklikleri etkinleştirmek için yine de bir profil değiştirme yapmanız gerekir.</string>
     <string name="objectives_exam_learned_exercise">%100\'ün altında bir profil seçerek egzersize başlamadan en az 1 saat önce vücuttaki insülin miktarını azaltmalısınız.</string>
@@ -64,14 +61,10 @@
     <string name="objectives_exam_learned_sensitivity">Duyarlılık tespiti, insülin dozajının farklı durumlara uyarlanmasına izin veren algoritmanın bir parçasıdır.</string>
     <string name="objectives_exam_learned_objectives">Görevlerdeki ilerlemeniz, diğer ayarlarla birlikte saklanır ve yedeklenmesi gerekir.</string>
     <string name="objectives_exam_learned_objectives2">Her zaman dışa aktarılan ayarları ve oluşturulan APK\'yı telefonun dışında bir yere de kaydedin. Telefon kaybolabilir, hasar görebilir vb. Telefondan erişilebilen herhangi bir bulut iyi bir yer olabilir. Bu durumda AAPS\'i başka bir cihaza birkaç dakika içinde geri yükleyebilirsiniz. En iyisi, kullanılan ana parolayı da güvenli bir yerde saklamaktır. Onsuz yedeklemeniz işe yaramaz. Aynısı, AAPS oluşturmak için kullanılan imzalama anahtarları (.jks dosyası) ve parolalar için de geçerlidir. Gerisi önemli değil - her zaman internetten tekrar indirilebilir.</string>
-    <string name="objectives_exam_learned_wrongcarbs">AAPS\'e yanlış giriş yaptıysanız veya gerçekle uyuşmuyorsa bir an önce düzeltin. Aşırı doza yol açabilir. AAPS her zaman karbonhidratlar, insülin vb. hakkında mümkün olan en iyi şekilde bilgilendirilmelidir.</string>
-    <string name="objectives_exam_learned_iob">AAPS\'in sizin için ne kadar iyi çalıştığını analiz etmek istiyorsanız, AİNS grafiğini incelemek size birçok yararlı bilgi sağlayabilir.</string>
-    <string name="objectives_exam_learned_cob">AKRB hesaplaması, İDF ile IC arasındaki ilişkiye bağlıdır. Artan İDF veya azalan IC, daha uzun emilim sürelerine yol açacaktır. Ancak yüzdeli profil değiştirme, her iki değeri aynı anda değiştirir ve emilim süresi etkilenmez.</string>
     <string name="objectives_exam_learned_breadgrams">Karbonhidratların girişinde sadece grama izin verilir.</string>
     <string name="objectives_exam_learned_ecarbs">Y-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
     <string name="objectives_exam_learned_nsclient">AAPS\'i AAPSClient veya Nightscout aracılığıyla uzaktan takip edebilirsiniz. AAPSClient ana telefonla eşleştirildiğinde, AAPS\'i uzaktan kontrol etmeniz de mümkündür.</string>
     <string name="objectives_exam_learned_concentration1">%50 profilli U200 insülin kullanımı, kalıcı bir dönüştürme işlemi gerektirecektir: kalemlerle yapılan harici boluslar için ve AAPS ya da NS tarafından sunulan tüm standart raporlar hatalı hale geleceğinden, sağlık ekibi için bu verilerin IU cinsine dönüştürülmesi gerekecektir.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">%50 profilli U200\'den insülin konsantrasyonu özelliğiyle U200 kullanımına geçiş; daha güçlü yeni bir profil oluşturmayı, DinamikİDF\'yi bir hafta kapatmayı ve zihni Uluslararası Birim (IU) ile düşünmeye alıştırmayı gerektirir.</string>
     <string name="objectives_exam_learned_concentration3">İnsülin konsantrasyonu yalnızca insülin veya patch değişiminde değiştirilebilir. Ancak en önemlisi, özellikle hortumlu insülin pompaları için, asla doğrudan pompa üzerindeki kullanıcı arayüzünü kullanarak bolus dozları uygulamayın.</string>
     <string name="answerdisabledto">Yanıtlama şu zamana kadar devre dışı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>

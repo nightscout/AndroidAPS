@@ -5,13 +5,11 @@
     <string name="medtrum_pump_description">Tích hợp Bơm Medtrum Nano và Medtrum 300U</string>
     <string name="medtrum_pump_setting">Cài đặt Bơm Medtrum</string>
     <string name="pump_error">Lỗi Bơm: %1$s !! </string>
-    <string name="pump_warning">Cảnh báo Bơm: %1$s </string>
     <string name="pump_is_suspended">Bơm đã tạm dừng</string>
     <string name="pump_is_suspended_hour_max">Bơm bị tạm dừng do vượt quá giới hạn insulin tối đa theo giờ</string>
     <string name="pump_is_suspended_day_max">Bơm bị tạm dừng do vượt quá giới hạn insulin tối đa trong ngày</string>
     <string name="patch_not_active">Patch chưa được kích hoạt</string>
     <string name="pump_setting_failed">Thiết lập cài đặt người dùng cho Bơm thất bại!</string>
-    <string name="pump_sync_error">Lỗi khi đồng bộ lịch sử từ Bơm, một bản ghi đã bị bỏ qua. Kiểm tra tab Điều trị để xem bolus đã được đồng bộ chính xác chưa. Tạm bỏ qua, và nếu lỗi tiếp tục xuất hiện, hãy thay Patch hoặc PumpBase.</string>
     <string name="patch_reset_after_primed_error">Miếng dán đã tự khởi động lại và mất phiên hoạt động. Miếng dán không thể tiếp tục phân phối insulin. Hãy tháo miếng dán và bắt đầu sử dụng miếng dán mới.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Đang tiêm Bolus</string>

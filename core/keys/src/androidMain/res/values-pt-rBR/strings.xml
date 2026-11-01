@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Ativar suporte para diferentes concentrações de insulina (U50, U200 etc.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Manter a tela ligada</string>
-    <string name="pref_summary_keep_screen_on">Impedir que o Android desligue a tela. Isso consumirá muita energia quando o dispositivo não estiver conectado a uma tomada.</string>
     <string name="pref_title_show_treatment_button">Mostrar botão de tratamento</string>
     <string name="pref_title_show_wizard_button">Mostrar botão da calculadora</string>
     <string name="pref_title_show_insulin_button">Mostrar botão de insulina</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Porcentagem do bólus</string>
     <string name="deliverpartofboluswizard">Aplicar este valor à correção de glicemia e carboidratos no resultado da calculadora de bólus</string>
     <string name="pref_title_reset_bolus_percentage_time">Tempo para redefinir a porcentagem do bólus</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Administrar o bólus completo (100%) se a glicemia for mais antiga que</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Tempo limite de proteção</string>
     <string name="pref_title_protection_type_application">Nível 0: proteção do aplicativo</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">Números de telefone permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">PIN adicional obrigatório no fim do token</string>
-    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e adicionados ao final de cada senha de uso único (OTP) gerada</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Tipo de bomba</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">Max IOB para AMA</string>
     <string name="openapsma_max_iob_summary">Este valor é chamado de Max IOB no contexto do OpenAPS\nEsta é a quantidade máxima de insulina, em [U], que o APS pode administrar de uma vez. O valor também é afetado pelo tipo de paciente.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicador máximo de segurança diária</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Esta é uma chave de segurança OpenAPS. O que isso faz é limitar seus basais para serem 3x (neste caso) sua maior taxa basal. Provavelmente você não precisará alterar isso, mas você deve estar ciente de que é o que se discute sobre \"3x máximo diário; 4x atual\" para chaves de segurança.</string>
     <string name="pref_title_current_basal_multiplier">Multiplicador de segurança da basal atual</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra metade da chave OpenAPS de segurança, e a outra metade de \"3x diário máximo; 4x atual\" das tampas de segurança. Isso significa que o seu basal, independentemente do nível máximo de basal definido na bomba, não pode ser maior do que este número vezes o nível atual do seu basal. Isso é para evitar que as pessoas entrem em território perigoso, definindo basais excessivamente altos antes de entender como funciona o algoritmo. Novamente, o padrão é 4x; a maioria das pessoas nunca precisará ajustar isso e, em vez disso, precisará ajustar outras configurações se sentirem que estão \"batendo\" nessa tampa de segurança.</string>
     <string name="pref_title_bolus_snooze_divisor">Divisor de DIA do Bolus Snooze</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Limite de absorção</string>
     <string name="absorption_cutoff_summary">Tempo após o qual qualquer refeição é considerada absorvida. Os carboidratos restantes serão descartados.</string>
     <string name="pref_title_absorption_maxtime">Tempo máximo de absorção</string>
-    <string name="absorption_max_time_summary">Tempo em horas em que se espera que todos os carboidratos da refeição sejam absorvidos</string>
     <string name="pref_title_autosens_min">Mínimo do Autosens</string>
     <string name="openapsama_autosens_min_summary">Valor padrão: 0,7\nO outro lado dos limites de segurança do Autosens: limita o quanto o Autosens pode reduzir as basais e o quanto pode aumentar o ISF e os alvos de glicemia.</string>
     <string name="pref_title_autosens_max">Máximo do Autosens</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Peso do ISF de duração</string>
     <string name="openapsama_dura_ISF_weight_summary">Este é o peso aplicado durante platôs de glicose elevados e prolongados e que fortalece o ISF, podendo aumentar a administração de insulina.\n\nO valor padrão 0.0 praticamente desativa esse efeito.</string>
     <string name="pref_title_smb_delivery_ratio">Proporção de administração de SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Valor padrão: 0.5. Este é outro limite de segurança importante do OpenAPS e especifica qual parcela da insulina total necessária pode ser administrada como SMB. Isso evita que as pessoas entrem em uma situação perigosa ao definir solicitações de SMB no telefone do cuidador ao mesmo tempo. Aumente este valor experimental lentamente e com cautela.</string>
     <string name="pref_title_smb_delivery_ratio_min">Mínimo da proporção de administração de SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Valor padrão: 0.5. Esta é a extremidade inferior de uma proporção que aumenta linearmente, em vez do valor fixo acima.</string>
     <string name="pref_title_smb_delivery_ratio_max">Máximo da proporção de administração de SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Valor padrão: 0.5. Esta é a extremidade superior de uma proporção que aumenta linearmente, em vez do valor fixo acima.</string>
     <string name="pref_title_smb_max_range_extension">Extensão máxima da faixa de SMB</string>
     <string name="openapsama_smb_max_range_extension_summary">Valor padrão: 1. Este é outro limite de segurança importante do OpenAPS e especifica por qual fator você pode exceder os 120 minutos regulares de maxSMB/maxUAM. Aumente este valor experimental lentamente e com cautela.</string>
     <!-- UnitDoubleKey: Overview preferences -->

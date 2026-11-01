@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">값을 바꾸려고 프로파일을 편집하는 것만으로 모든 변경 사항이 적용됩니다.</string>
     <string name="profileswitch4_multi">변화하는 상황 (예를들어, 호르몬 변화, 교대 근무, 평일/주말 생활 방식)에 적응하기 위해 여러 개의 프로파일을 만들어서 선택할 수 있습니다.</string>
     <string name="other_medication_label">기타 의약품. 아래의 설명을 읽고 내용을 수락하면 상자에 체크 표시를 하십시오.</string>
-    <string name="other_medication_text">AAPS는 혈당을 올리기 위해 기저 주입량을 줄이거나 인슐린 주입을 중단합니다. SGLT2 억제제(글리플로진) 계열의 약물은 혈당 상승을 막을 수 있으므로, DKA로 이어지는 위험한 인슐린 결핍을 일으킬 수 있습니다.
-\n흔한 상품명: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\n본인은 AAPS를 사용하는 동안 이러한 약물을 복용하지 않거나, 이러한 약물을 사용하기 전에 루프를 비활성화할 것을 약속합니다.</string>
     <string name="concentration_feature_label">인슐린 농도 관리</string>
     <string name="u200_with_profile">AAPS가 인슐린 농도를 지원하기 전에는 U200 사용자가 50% 프로파일로 모든 값을 절반으로 줄였습니다. 이 설정에서 맞는 답은 무엇입니까?</string>
     <string name="u200_with_profile_reports">AAPS 데이터베이스와 NS 보고서가 잘못됩니다. 실제 값을 보려면 모든 값(볼러스, 주입량, TDD)에 2를 곱해야 합니다. 특히 의사와 의료진에게 중요합니다.</string>

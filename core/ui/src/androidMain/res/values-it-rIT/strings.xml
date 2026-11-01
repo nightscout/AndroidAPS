@@ -3,9 +3,9 @@
     <string name="error_field_must_not_be_empty">Il campo non deve essere vuoto</string>
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Client autorizzati</string>
-    <string name="authorized_clients_manage_desc">Gestisci i dispositivi client accoppiati che controllano questo master.</string>
-    <string name="pair_with_master_manage_label">Accoppia con master</string>
-    <string name="pair_with_master_manage_desc">Inserisci il PIN di accoppiamento di un master per consentire a questo client di inviare comandi firmati.</string>
+    <string name="authorized_clients_manage_desc">Gestisci i dispositivi client associati che controllano questo master.</string>
+    <string name="pair_with_master_manage_label">Associa al master</string>
+    <string name="pair_with_master_manage_desc">Inserisci il PIN di associazione di un master per consentire a questo client di inviare comandi firmati.</string>
     <!--    General-->
     <string name="treatments">Trattamenti</string>
     <string name="treatments_history">Cronologia trattamenti</string>
@@ -176,7 +176,7 @@
     <string name="time">Ora</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Caricamento…</string>
-    <string name="waiting_for_pump">In attesa del micro...</string>
+    <string name="waiting_for_pump">In attesa del micro…</string>
     <string name="initialization_failed">Inizializzazione non riuscita</string>
     <string name="notes_label">Note</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
@@ -230,7 +230,7 @@
     <string name="profile">Profilo</string>
     <string name="percentage_label">Percentuale</string>
     <string name="timeshift_label">Sfasamento temporale</string>
-    <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
+    <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Il master non ha %1$d di queste voci. Queste non sono state rimosse.</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
@@ -344,7 +344,7 @@
     <string name="careportal_exercise">Esercizio fisico</string>
     <string name="careportal_announcement_message">Avviso: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
-    <string name="careportal_question_message">Domanda : %1$s</string>
+    <string name="careportal_question_message">Domanda: %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio sito micro: %1$s</string>
     <string name="careportal_pump_site_change">Cambio posizione cannula</string>
@@ -661,7 +661,7 @@
     <string name="uel_ns_queue_cleared">CODA NS CANCELLATA</string>
     <string name="uel_ns_settings_copied">IMPOSTAZIONI NS COPIATE</string>
     <string name="uel_error_dialog_ok">FINESTRA DI ERRORE OK</string>
-    <string name="uel_error_dialog_mute">FINESTRA DI ERRORE SILENZIA </string>
+    <string name="uel_error_dialog_mute">SILENZIA FINESTRA DI ERRORE</string>
     <string name="uel_error_dialog_mute_5min">FINESTRA DI ERRORE SILENZIA 5MIN</string>
     <string name="uel_objective_started">OBIETTIVO AVVIATO</string>
     <string name="uel_objective_unstarted">OBIETTIVO NON AVVIATO</string>
@@ -780,7 +780,7 @@
     <string name="carbs_type_cake">Ravioli, pasta, cucina asiatica ricca di carboidrati e grassi, dolci e prodotti lievitati, cereali, porridge di cereali, miele, marmellata</string>
     <string name="carbs_type_pizza">Lasagne, pizza, hamburger, patatine fritte, patate al forno, chips e snack simili</string>
     <string name="wizard_total">Totale</string>
-    <string name="wizard_carb_time">Tempo Carbo</string>
+    <string name="wizard_carb_time">Tempo carboidrati</string>
     <string name="carb_time_now">Adesso</string>
     <string name="change">Cambia</string>
     <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
@@ -910,7 +910,7 @@
     <string name="file_management">Gestione dei file</string>
     <string name="database_management">Gestione del database</string>
     <string name="data_choices">Scelta dei dati</string>
-    <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
+    <string name="unattended_settings_export">Esportazione automatica delle impostazioni</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configura i livelli di verbosità log</string>
     <string name="maintenance_send_logs_desc">Condividi i file di log per la risoluzione dei problemi</string>
@@ -954,7 +954,7 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferenze plugin</string>
     <!-- Navigation -->
-    <string name="nav_about">Informazioni su</string>
+    <string name="nav_about">Informazioni</string>
     <string name="nav_about_desc">Visualizza la versione e le informazioni dell\'app</string>
     <string name="nav_exit">Esci</string>
     <string name="open_navigation">Apri navigazione</string>
@@ -998,7 +998,7 @@
     <string name="cannula">Cannula</string>
     <string name="patch_pump">Micro a patch</string>
     <!-- Site Rotation -->
-    <string name="select_location">Clicca qui sotto per selezionare il sito</string>
+    <string name="select_location">Tocca qui sotto per selezionare il sito</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
@@ -1094,7 +1094,7 @@
     <string name="import_setting">Importa impostazioni</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Decifra e verifica</string>
-    <string name="import_decrypt">Decripta</string>
+    <string name="import_decrypt">Decifra</string>
     <string name="import_master_password">Password Master</string>
     <string name="import_decryption_password">Password di decifratura</string>
     <string name="import_different_password_hint">Il file è stato crittografato con una password diversa</string>
@@ -1110,6 +1110,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Impostazioni da cambiare: %1$d. I plugin che sono cambiati verranno riavviati.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Impostazioni da cambiare: %1$d. Impostazioni del micro mantenute: %2$d, così il micro continua a funzionare.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Le impostazioni importate non selezionano nessun micro presente su questo telefono. %1$s è ora attivo — controlla le impostazioni del micro.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Aggiunto alla tua lista di insulina dal backup: %1$s. Non ancora in uso: seleziona quello giusto quando attivi il tuo profilo, e fai questo prima che Nightscout scarichi i tuoi vecchi trattamenti.</string>
     <string name="import_applying">Applicazione delle impostazioni…</string>
     <string name="import_replace_pump_settings">Sostituisci anche le impostazioni del micro</string>
     <string name="import_replace_pump_settings_summary">Lascialo disattivato per mantenere il micro associato a questo telefono. Attivalo quando ripristini su un nuovo telefono con lo stesso micro.</string>
@@ -1124,7 +1125,7 @@
     <string name="import_load_more">Carica altro</string>
     <string name="import_no_files">Nessun file di impostazioni trovato</string>
     <string name="import_decrypt_ok">Decifratura riuscita. Pronto per l\'importazione.</string>
-    <string name="import_decrypt_warn">Decrittografia riuscita, ma ci sono avvertimenti.</string>
+    <string name="import_decrypt_warn">Decifratura riuscita, ma ci sono degli avvisi.</string>
     <string name="import_decrypt_error">Decifratura riuscita, ma l\'importazione non è possibile.</string>
     <string name="reset_aps_results">Resetta i risultati di APS</string>
     <string name="database_cleanup">Pulizia database</string>
@@ -1162,7 +1163,7 @@
     <string name="graph_series_deviation_slope">Pendenza deviazione</string>
     <string name="graph_series_heart_rate">Frequenza cardiaca</string>
     <string name="graph_series_steps">Passi</string>
-    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Attività fisica</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Attività insulinica</string>
     <string name="graph_series_predictions">Previsioni</string>
     <string name="units_days">giorni</string>
     <string name="units_format_days">%1$d giorni</string>

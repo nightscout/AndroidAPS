@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Bố cục Tiện ích</string>
     <string name="cwf_complication_layout_description">Vị trí và kích thước của các Tiện ích, được lấy từ mặt đồng hồ tùy chỉnh đã tải.</string>
     <string name="pref_include_external">Thêm các hiển thị bên ngoài vào mẫu</string>
-    <string name="pref_switch_external">Chuyển đổi dữ liệu bên ngoài trên mặt đồng hồ</string>
     <string name="custom_pref_show_seconds">Hiển thị giây</string>
     <string name="digitalstyle_pref_your_style">Phong cách</string>
     <string name="digitalstyle_style_none">no style</string>

@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">A eșuat verificarea progresului activării. Vă rugăm să reîncercați.</string>
     <string name="omnipod_common_error_pod_suspended">Pompă suspendată</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Nu s-a reușit redarea semnalului sonor de test</string>
-    <string name="omnipod_common_error_time_out_of_sync">Timpul de pe pompă nu este sincronizat. Vă rugăm să actualizați timpul din secțiunea Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">A apărut o eroare neașteptată. Vă rugăm să o raportați! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Setările pentru alarme au fost actualizate în pompă.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Semnal sonor pentru bazală activat</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Semnal sonor pentru SMB activat</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Semnal sonor pentru RBT activat</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Afișați buton de Suspendare Administrare în secțiunea Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detectare oră de vară/fus orar activată</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Memento de expirare activat</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Când este activat, pompa va emite un semnal sonor când timpul specificat va fi atins</string>

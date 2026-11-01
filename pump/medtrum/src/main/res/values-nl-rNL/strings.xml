@@ -5,13 +5,11 @@
     <string name="medtrum_pump_description">Pomp integratie voor Medtrum Nano en Medtrum 300U</string>
     <string name="medtrum_pump_setting">Medtrum pomp instellingen</string>
     <string name="pump_error">Pomp fout: %1$s!! </string>
-    <string name="pump_warning">Pomp waarschuwing: %1$s </string>
     <string name="pump_is_suspended">Pomp is onderbroken</string>
     <string name="pump_is_suspended_hour_max">Pomp is onderbroken als gevolg van overschrijding max insuline per uur</string>
     <string name="pump_is_suspended_day_max">Pomp is onderbroken als gevolg van overschrijding max insuline per dag</string>
     <string name="patch_not_active">Patch niet geactiveerd</string>
     <string name="pump_setting_failed">Gebruikersinstellingen instellen op de pomp mislukt!</string>
-    <string name="pump_sync_error">Fout bij het synchroniseren van de geschiedenis van de pomp: een record is overgeslagen. Controleer in het behandeling tabblad of de bolus correct is gesynchroniseerd. Stel het alarm uit en vervang als de fout blijft terugkomen de patch of pompbasis.</string>
     <string name="patch_reset_after_primed_error">De patch is zelf opnieuw gestart, heeft zijn sessie verloren en kan geen insuline meer aanleveren. Verwijder de patch en start een nieuwe patch.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Actieve bolus</string>

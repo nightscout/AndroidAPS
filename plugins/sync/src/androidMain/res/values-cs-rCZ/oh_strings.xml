@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans vám umožňuje nahrát data z diabetu a darovat je vědeckým projektům.</string>
     <string name="logout">Odhlásit</string>
     <string name="setup">Nastavení</string>
-    <string name="setup_completed_info">Opem Humans byl nastaven. Pokud chcete přestat nahrávat, klikněte na \"Odhlásit\".</string>
     <string name="not_setup_info">Open Humans je momentálně neaktivní. Chcete-li začít nahrávat data, klepněte na tlačítko \"Nastavit\".</string>
     <string name="project_member_id">ID člena projektu: %1$s</string>
     <string name="open_humans_uploading">Nahrávání na Open Humans…</string>

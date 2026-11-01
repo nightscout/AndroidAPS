@@ -113,10 +113,7 @@
     <string name="carelevo_dialog_patch_connect_message_title">Se la patch rilevata di seguito è corretta, toccare il pulsante Conferma.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Inserimento dell’ago completo e rimozione dell’applicatore</string>
     <string name="carelevo_dialog_connect_detached">Applicatore Rimosso</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Premere le impugnature su entrambi i lati dell\'applicatore per staccarlo dalla patch,\n
-        e quindi premere il pulsante `Applicatore Rimosso`. Inizierà l\'erogazione di insulina.
-    </string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Premere le impugnature su entrambi i lati dell\'applicatore per staccarlo dalla patch,\nquindi premere il pulsante `Applicatore Rimosso`. Inizierà l\'erogazione di insulina.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth non è abilitato. Si prega di controllare.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Nessuna patch collegata.</string>

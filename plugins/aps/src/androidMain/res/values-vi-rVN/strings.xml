@@ -26,7 +26,6 @@
     <string name="constraints">Yếu tố hạn chế</string>
     <string name="openapsma_autosensdata_label">Dữ liệu Autosens</string>
     <string name="openapsma_script_debug_data_label">Gỡ lỗi script</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Chú ý!\nThông thường bạn không cần thay đổi các giá trị bên dưới. Vui lòng BẤM VÀO ĐÂY và ĐỌC kỹ nội dung, đảm bảo bạn HIỂU trước khi thay đổi bất kỳ giá trị nào.</string>
     <string name="increasing_max_basal">Tăng liều nền tối đa vì thiết lập nhỏ hơn liều nền tối đa trong cấu hình</string>
     <string name="max_basal_multiplier">hệ số nhân liều nền tối đa</string>
     <string name="max_daily_basal_multiplier">hệ số nhân liều nền tối đa theo ngày</string>
@@ -67,7 +66,7 @@
     <string name="fallback_smb_no_tdd">Chuyển sang SMB. Không đủ dữ liệu TDD.</string>
     <string name="fallback_to_isf_no_tdd">Chuyển sang cấu hình độ nhạy insulin. Không đủ dữ liệu. Lý do: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Hướng dẫn hỗ trợ điều chỉnh cấu hình (ISF, tỷ lệ carb và liều nền)</string>
+    <string name="autotune_description">Hỗ trợ điều chỉnh cấu hình (ISF, tỷ lệ carb và liều nền)</string>
     <string name="autotune_default_tune_days_title">Số ngày dữ liệu</string>
     <string name="autotune_tunedprofile_name">Đã tinh chỉnh</string>
     <string name="autotune_profile">Cấu hình:</string>

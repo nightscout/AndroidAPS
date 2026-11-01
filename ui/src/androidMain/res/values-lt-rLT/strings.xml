@@ -63,7 +63,7 @@
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
     <string name="bg_meter">Matuoklis</string>
-    <string name="bg_sensor">Sensorius</string>
+    <string name="bg_sensor">Jutiklis</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
     <string name="edit_site">Redaguoti</string>
@@ -248,7 +248,6 @@
     <string name="profile_switches">Profilio keitimas</string>
     <string name="basal_pct_from_tdd_label">% bazės</string>
     <string name="selected_profile">Parinkta:</string>
-    <string name="comparation">Palyginimas</string>
     <string name="profile_tab_1">1 profilis</string>
     <string name="profile_tab_2">2 profilis</string>
     <string name="motol_default_profile">Numatytasis profilis</string>

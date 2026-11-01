@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Kreis)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Benutzerdefiniert) immer eingeschaltet</string>
     <string name="label_actions_tile">Aktionen</string>
     <string name="label_temp_target_tile">Temporäres Ziel</string>
     <string name="label_quick_wizard_tile">Schnellassistent</string>
@@ -15,6 +16,7 @@
     <string name="pref_display_settings">Anzeige</string>
     <string name="pref_graph_settings">Diagramm</string>
     <string name="pref_interface_settings">Aussehen</string>
+    <string name="pref_tile_settings">Kachel</string>
     <string name="pref_others_settings">Sonstiges</string>
     <string name="pref_complication_settings">Komplikation</string>
     <string name="pref_show_date">Datum anzeigen</string>
@@ -59,7 +61,10 @@
     <string name="pref_prime_in_menu">Befüllung im Menü</string>
     <string name="pref_single_target">Einzelzielwert</string>
     <string name="pref_wizard_percentage">Rechner Prozentsatz</string>
+    <string name="pref_wizard_carbs_type">Rechner Mahlzeitentyp</string>
+    <string name="pref_wizard_carb_time">KH-Zeit-Rechner</string>
     <string name="pref_complication_tap_action">Tipp Komplikation</string>
+    <string name="pref_complication_bg_graph_hours">Zeitbereich des BZ-Diagramms</string>
     <string name="duration_1_hour">1 Stunde</string>
     <string name="duration_3_hours">3 Stunden</string>
     <string name="duration_6_hours">6 Stunden</string>
@@ -78,6 +83,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Einstellung</string>
     <string name="menu_status">Status</string>
+    <string name="menu_bg_graph">BZ-Verlauf</string>
     <string name="menu_resync">Erneut synchronisieren</string>
     <string name="menu_prime_fill">(Vor-)Füllen</string>
     <string name="menu_install_watchface">Watchface installieren</string>
@@ -91,6 +97,7 @@
     <string name="action_tempt_confirmation">Temp Target angefordert</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard angefordert</string>
     <string name="action_user_action_confirmation">Benutzeraktion angefordert</string>
+    <string name="action_scene_confirmation">Szene angefordert</string>
     <string name="scene_end">Ende</string>
     <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Überspringen</string>
     <string name="action_treatment_confirmation">Behandlung angefordert</string>
@@ -111,13 +118,17 @@
     <string name="action_duration_hours">Dauer\n[hours]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
     <string name="ecarbs_start_format">%1$d min</string>
+    <string name="action_confirm_timeshift">Zeitverschiebung: %1$s</string>
     <string name="action_insulin">Insulin</string>
+    <string name="action_insulin_units">Insulin [IE]</string>
     <string name="action_preset_1">Voreinstellung 1</string>
     <string name="action_preset_2">Voreinstellung 2</string>
     <string name="action_preset_3">Voreinstellung 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
+    <string name="action_timeshift_hours">Zeitverschiebung\n[hours]</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>
@@ -158,12 +169,16 @@
     <string name="pref_complication_4">Komplikation 4</string>
     <string name="pref_complication_5">Komplikation 5</string>
     <string name="complication_summary_none">Tippen, um eine Datenquelle auszuwählen</string>
+    <string name="pref_complication_type_priority">Priorität von Komplikationstypen</string>
     <string name="pref_complication_type_priority_all">Standard für alle Slots</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Eine hier vorgenommene Änderung wird erst wirksam, wenn Sie das nächste Mal eine Datenquelle auswählen. Es reicht nicht aus, dieselbe Datenquelle erneut auszuwählen: Wählen Sie zunächst eine andere Datenquelle aus und anschließend diejenige, die Sie tatsächlich verwenden möchten.</string>
+    <string name="complication_type_priority_value">Wert oder Messgerät</string>
     <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Icon</string>
     <string name="complication_type_priority_use_default">Standard verwenden</string>
     <string name="cwf_complication_layout">Komplikations-Layout</string>
+    <string name="cwf_complication_layout_description">Position und Größe der Komplikationen, übernommen vom geladenen benutzerdefinierten Zifferblatt.</string>
     <string name="pref_include_external">Externe Ansichten in Vorlage einbeziehen</string>
-    <string name="pref_switch_external">Externe Daten in Watchface umschalten</string>
     <string name="custom_pref_show_seconds">Sekunden anzeigen</string>
     <string name="digitalstyle_pref_your_style">Dein Stil</string>
     <string name="digitalstyle_style_none">ohne Stil</string>
@@ -178,6 +193,7 @@
     <string name="bolus_progress_channel_description">Bolus-Fortschritt und Abbruch</string>
     <string name="bolus_progress_silent_channel_description">Bolus Fortschritt und Abbruch mit weniger Vibrationen</string>
     <string name="open_loop_channel_name">AAPS Open Loop</string>
+    <string name="open_loop_channel_description">Benachrichtigung zu Open-Loop-Anfrage</string>
     <string name="simple_ui_off">Aus</string>
     <string name="simple_ui_charging">Während des Ladevorgangs</string>
     <string name="simple_ui_always_on">Immer im Modus</string>
@@ -224,66 +240,140 @@
     <string name="tile_scene_4">Szene 4</string>
     <string name="tile_scene_auto">Automatisch</string>
     <string name="tile_scene_unavailable">Nicht verfügbar</string>
+    <string name="datalayer_notification_title">Datenebene Vordergrunddienst</string>
+    <string name="datalayer_notification_text">AAPS läuft im Vordergrund. Um die Benachrichtigung zu verbergen, gehen Sie zu Entwickler-Optionen, App-Benachrichtigungen, Erlaubte Uhr-Apps, wählen Sie AAPS, deaktivieren Sie Data Layer Vordergrund Service Channel Benachrichtigung.</string>
     <string name="on">EIN</string>
     <string name="off">AUS</string>
+    <string name="complication_full_status">Vollständiger Status</string>
+    <string name="complication_full_status_flipped">Vollständiger Status (umgekehrt)</string>
     <string name="complication_blood_glucose">Blutzucker</string>
+    <string name="complication_blood_glucose_large">Blutzucker (ausführlich)</string>
+    <string name="complication_blood_glucose_ext1">Blutglucose Ext1</string>
+    <string name="complication_blood_glucose_ext2">Blutglucose Ext2</string>
+    <string name="complication_bg_graph">BZ-Kurve</string>
     <string name="complication_cwf_image">Benutzerdefiniertes Watchface</string>
+    <string name="complication_cwf_ambient_bg">Benutzerdefiniertes Zifferblatt Umgebung Blutzucker</string>
+    <string name="complication_cwf_ambient_status">Benutzerdefiniertes Zifferblatt Umgebung Status</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Benutzerdefiniertes Zifferblatt Hintergrund</string>
+    <string name="complication_cwf_upper">Benutzerdefiniertes Zifferblatt Uhr</string>
+    <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
+    <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
+    <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Basalrate</string>
+    <string name="complication_br_tt">BR &amp; Zielwert</string>
     <string name="complication_target">Ziel</string>
+    <string name="complication_cob_iob">CoB &amp; IoB</string>
+    <string name="complication_cob_icon">CoB-Icon</string>
+    <string name="complication_cob_detailed">CoB detailliert</string>
+    <string name="complication_iob_icon">IoB-Icon</string>
+    <string name="complication_iob_detailed">IoB detailliert</string>
+    <string name="complication_uploader_phone_battery">Uploader/Smartphone-Akkustand</string>
+    <string name="running_mode_resume">Loop fortsetzen</string>
     <string name="running_mode_reconnect">Pumpe erneut verbinden</string>
     <string name="label_running_mode_title">AAPS-Modus</string>
     <string name="label_bg_graph_tile">Blutzucker-Verlauf</string>
+    <string name="tile_tap_action">Tippen-Aktion</string>
     <string name="tile_graph_time_range">Zeitraum</string>
     <string name="tile_tap_bg_graph">Blutzucker-Verlauf</string>
     <string name="tile_tap_main_menu">Hauptmenü</string>
     <string name="tile_tap_loop_status">Loop-Status</string>
+    <string name="action_running_mode_selected">Ausführungsmodus angefordert</string>
     <string name="title_activity_disconnect_pump">Pumpe trennen</string>
     <string name="title_activity_suspend_loop">Loop pausieren</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="wizard_carbs_type">Mahlzeitentyp</string>
+    <string name="wizard_carbs_type_bread">Brot</string>
     <string name="wizard_carbs_type_cake">Kuchen</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">KH-Zeit\n[min]</string>
     <string name="wizard_carb_time_now">Jetzt</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
+    <string name="wizard_set_alarm">Alarm einstellen</string>
     <string name="eat_reminder_title">Zeit zum Essen</string>
+    <string name="eat_reminder_silence">Stille</string>
+    <string name="eat_reminder_stop">Stopp</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Alarm um %1$s</string>
+    <string name="eat_reminder_countdown_channel">\'Zeit zu essen\' läuft</string>
+    <string name="eat_reminder_channel_silent">\'Zeit zu essen\' während der „Bitte nicht stören“-Zeit</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarme vom Telefon</string>
+    <string name="phone_alarm_channel_silent">Alarm vom Smartphone während der „Bitte nicht stören“-Zeit</string>
+    <string name="phone_alarm_silence">Stille</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">%1$d min. stummschalten</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
+    <string name="insulin_unit_short">IE</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f IE</string>
     <string name="wizard_confirmation_sent">Gesendet</string>
+    <string name="contacting_master">Kontaktiere Master…</string>
     <string name="contacting_master_unknown">Status unbekannt — Telefon überprüfen</string>
+    <string name="tile_settings">Kacheleinstellungen</string>
+    <string name="loop_status_error">Status konnte nicht aktualisiert werden.</string>
     <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
+    <string name="loop_status_tbr_rate">%1$.2f IE/h (%2$d%%)</string>
     <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s verbleibend</string>
+    <string name="loop_status_tbr_continues">Temp Basal wird fortgeführt</string>
+    <string name="loop_status_tbr_cancel">Standard Basal aktivieren</string>
+    <string name="loop_status_smb">%1$.2f IE</string>
+    <string name="loop_status_no_last_run">N/A</string>
     <string name="loop_status_closed">Closed Loop</string>
     <string name="loop_status_open">Open Loop</string>
+    <string name="loop_status_lgs">Unterbrechung bei niedrigem BZ (LGS)</string>
     <string name="loop_status_disabled">Loop deaktiviert</string>
     <string name="loop_status_suspended">Loop pausiert</string>
     <string name="loop_status_pump_suspended">Pumpe pausiert</string>
+    <string name="loop_status_dst_suspended">Loop wegen Sommerzeit ausgesetzt</string>
     <string name="loop_status_disconnected">Pumpe getrennt</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Unbekannt</string>
     <string name="loop_status_result">Ergebnis des Loop</string>
     <string name="loop_status_last_run_enact">Letzter Lauf &amp; Ausführung</string>
     <string name="loop_status_last_run">Zuletzt ausgeführt</string>
+    <string name="loop_status_last_enact">Letzte Abgabe</string>
+    <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Rate</string>
     <string name="loop_status_duration">Dauer</string>
+    <string name="loop_status_oaps_reason">OpenAPS Begründung</string>
     <string name="loop_status_targets">Ziele</string>
     <string name="loop_status_temp_target">Temporäres Ziel</string>
     <string name="loop_status_target_range">Bereich</string>
     <string name="loop_status_target">Ziel</string>
     <string name="loop_status_adjusted_target">Anpasstes Ziel</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Szene läuft bis sie manuell gestoppt wird</string>
     <string name="loop_status_scene_ended">Beendet</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Nächste Szene</string>
     <string name="loop_status_profile">Profil</string>
     <string name="loop_status_no_profile">Kein Profil gesetzt</string>
     <string name="loop_status_profile_percentage">Prozentsatz</string>
     <string name="loop_status_profile_timeshift">Zeitverschiebung</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Zurück zu</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
     <string name="loop_status_sensitivity">Sensitivität</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Von der aktiven Szene gesetzt</string>
     <string name="loop_status">Loop Status</string>
     <string name="loop_status_refresh">Aktualisieren</string>
     <string name="confirm">Bestätigen</string>
     <string name="request">Anfordern</string>
+    <string name="constraint_applied">Beschränkung angewendet!</string>
     <string name="wizard_total_insulin">Gesamtinsulin</string>
     <string name="wizard_calculation">Berechnung</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
     <string name="wizard_result_bg">BZ</string>
     <string name="wizard_result_bg_tt">BZ (TT: %1$s)</string>
     <string name="wizard_result_trend">15\'-Trend</string>
     <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Neues IOB: %1$s IE</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">KH (%1$d g)</string>
+    <string name="wizard_result_subtotal">Zwischensumme</string>
     <string name="wizard_result_correction">Korrektur</string>
     <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s IE</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
     <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Ay adı (kısa)</string>
     <string name="cwf_comment_loop">Döngü durumu ve geçen süre</string>
     <string name="cwf_comment_direction">Yön oku</string>
-    <string name="cwf_comment_timestamp">Son alınan KŞ\'den bu yana geçen dakika</string>
     <string name="cwf_comment_sgv">KŞ değeri</string>
     <string name="cwf_comment_cover_plate">Metnin önündeki kapak resmi (kadranlar...)</string>
     <string name="cwf_comment_hour_hand">Akrep şekli (Analog Saat)</string>

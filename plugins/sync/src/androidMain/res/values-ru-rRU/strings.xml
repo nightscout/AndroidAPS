@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Параметры подключения</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="no_connectivity">Нет подключения</string>
@@ -20,11 +19,9 @@
     <string name="queue">очередь</string>
     <string name="clear_log">очистка лога</string>
     <string name="full_sync">Полная синхронизация</string>
-    <string name="full_sync_comment">Полная синхронизация? Это может занять много часов и до завершения вы не увидите новые данные в NS.</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_alarm_options">опции оповещения</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Если включено, выгрузка будет направлена на тестовые серверы вместо обычных</string>
     <string name="title_tidepool_dev_servers">Использовать серверы интеграции (тест)</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
@@ -106,16 +103,13 @@
     <string name="smscommunicator_tab_otp_label">Настройка аутентификации</string>
     <string name="smscommunicator_code_verify_label">Код для проверки:</string>
     <string name="smscommunicator_code_verify_hint">OTP + ПИН-код</string>
-    <string name="smscommunicator_code_verify_info">Проверочный код состоит из 6 цифр, отображаемых приложением Authenticator (известным как OTP), за которым следует 3 или более цифр обязательного PIN-кода.</string>
     <string name="smscommunicator_otp_reset_btn">Сбросить аутентификаторы</string>
     <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
-    <string name="smscommunicator_otp_reset_prompt">Вы действительно хотите сбросить ключ аутентификации? Все сконфигурированные в настоящее время ключи станут недопустимы, и придется их настроить заново.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Установить Аутентификатор</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Сканируйте код для настройки OTP кодов AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Проверьте одноразовый пароль</string>
     <string name="smscommunicator_otp_reset_header">Сбросить авторизацию</string>
     <string name="smscommunicator_otp_install_info">На каждом отслеживающем телефоне установите приложение Authenticator, поддерживающее маркеры TOTP RFC 6238. Популярные бесплатные приложения: \n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">После сброса аутентификатора вы делаете все созданные идентификаторы недействительными. Вам нужно будет снова создать их!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">НЕВЕРНЫЙ РАЗМЕР!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">НЕВЕРНЫЙ PIN-КОД</string>
@@ -126,7 +120,6 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Для подачи болюса %1$.2fед ответьте кодом %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Чтобы установить временную цель %1$s ответьте кодом %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Чтобы отменить временную цель ответьте кодом %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
     <string name="smscommunicator_stopped_sms">Удаленная служба SMS остановлена. Для ее реактивации используйте AAPS на главном смартфоне.</string>
     <string name="smscommunicator_calibration_reply_with_code">Чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
     <string name="smscommunicator_bolus_failed">Ошибка болюса. Проверьте его реальное состояние перед отправкой следующей команды.</string>
@@ -157,7 +150,6 @@
     <string name="smscommunicator_restarting">AAPS перезапускается</string>
     <string name="smscommunicator_tempbasal_set">Врем. базал %1$.2f%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_extended_set">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
-    <string name="smscommunicator_carbs_set">Углеводы %1$d г введены успешно</string>
     <string name="smscommunicator_carbs_failed">Не удалось ввести %1$d г углеводов</string>
     <string name="smscommunicator_tempbasal_set_percent">Врем. базал %1$d%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_tempbasal_failed">Не удалось запустить временный базал</string>

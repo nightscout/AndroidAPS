@@ -93,7 +93,7 @@
     <string name="diaconn_g8_logalarmblock">Blocco erogazione (%s)</string>
     <string name="diaconn_g8_lgorelease">rilascio basale (%s)</string>
     <string name="diaconn_g8_lgosuspend">sospensione basale (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Bolo normale doppio: OK</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Doppio Successo Normale</string>
     <string name="diaconn_g8_logdualsquarestart">Avvio bolo onda quadra doppia</string>
     <string name="diaconn_g8_logdualsquaresuccess">Bolo onda quadra doppia: OK</string>
     <string name="diaconn_g8_logsquarestart">Avvio bolo onda quadra</string>

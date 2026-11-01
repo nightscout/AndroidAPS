@@ -62,8 +62,8 @@
     <string name="pref_single_target">Enkelt målvärde</string>
     <string name="pref_wizard_percentage">Kalkylator Procent</string>
     <string name="pref_wizard_carbs_type">Kalkylator måltidstyp</string>
-    <string name="pref_wizard_carb_time">Kalkylator kolhydratstid</string>
-    <string name="pref_complication_tap_action">Åtgärd för komplikation \"tryck\"</string>
+    <string name="pref_wizard_carb_time">Kolhydrattid i kalkylatorn</string>
+    <string name="pref_complication_tap_action">Tryckåtgärd för komplikation</string>
     <string name="pref_complication_bg_graph_hours">Tidsintervall BG-graf</string>
     <string name="duration_1_hour">1 timme</string>
     <string name="duration_3_hours">3 timmar</string>
@@ -176,10 +176,9 @@
     <string name="complication_type_priority_text">Text</string>
     <string name="complication_type_priority_icon">Ikon</string>
     <string name="complication_type_priority_use_default">Använd standard</string>
-    <string name="cwf_complication_layout">Komplikation layout</string>
+    <string name="cwf_complication_layout">Komplikationslayout</string>
     <string name="cwf_complication_layout_description">Position och storlek på komplikationerna, hämtade från den laddade anpassade urtavlan.</string>
     <string name="pref_include_external">Inkludera externa vyer i mallen</string>
-    <string name="pref_switch_external">Växla externa data i urtavlan</string>
     <string name="custom_pref_show_seconds">Visa sekunder</string>
     <string name="digitalstyle_pref_your_style">Din stil</string>
     <string name="digitalstyle_style_none">ingen stil</string>
@@ -247,7 +246,7 @@
     <string name="off">AV</string>
     <string name="complication_full_status">Full status</string>
     <string name="complication_full_status_flipped">Full status (vänd)</string>
-    <string name="complication_blood_glucose">Glukosvärde</string>
+    <string name="complication_blood_glucose">Blodsocker</string>
     <string name="complication_blood_glucose_large">Blodsocker (stor)</string>
     <string name="complication_blood_glucose_ext1">Blodsocker Ext1</string>
     <string name="complication_blood_glucose_ext2">Blodsocker Ext2</string>
@@ -266,16 +265,16 @@
     <string name="complication_br_tt">BR &amp; mål</string>
     <string name="complication_target">Mål</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
-    <string name="complication_cob_icon">CoB Ikon</string>
+    <string name="complication_cob_icon">CoB-ikon</string>
     <string name="complication_cob_detailed">CoB Detaljerad</string>
-    <string name="complication_iob_icon">IoB Ikon</string>
+    <string name="complication_iob_icon">IoB-ikon</string>
     <string name="complication_iob_detailed">IoB Detaljerad</string>
     <string name="complication_uploader_phone_battery">Uppladdare/telefonbatteri</string>
     <string name="running_mode_resume">Återuppta loop</string>
     <string name="running_mode_reconnect">Återanslut pump</string>
     <string name="label_running_mode_title">Körläge</string>
     <string name="label_bg_graph_tile">BG-graf</string>
-    <string name="tile_tap_action">Klickåtgärd</string>
+    <string name="tile_tap_action">Tryckåtgärd</string>
     <string name="tile_graph_time_range">Tidsintervall</string>
     <string name="tile_tap_bg_graph">BG-graf</string>
     <string name="tile_tap_main_menu">Huvudmeny</string>
@@ -309,7 +308,7 @@
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Skickat</string>
-    <string name="contacting_master">Kontaktar huvudenhet...</string>
+    <string name="contacting_master">Kontaktar huvudenheten…</string>
     <string name="contacting_master_unknown">Okänd status - kontrollera telefon</string>
     <string name="tile_settings">Brickinställningar</string>
     <string name="loop_status_error">Misslyckades att visa status</string>
@@ -330,7 +329,7 @@
     <string name="loop_status_disconnected">Pump frånkopplad</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Okänd</string>
-    <string name="loop_status_result">Loop resultat</string>
+    <string name="loop_status_result">Loopresultat</string>
     <string name="loop_status_last_run_enact">Senaste körning &amp; utförande</string>
     <string name="loop_status_last_run">Senaste körning</string>
     <string name="loop_status_last_enact">Senast utförd</string>

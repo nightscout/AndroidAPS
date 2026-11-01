@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Ошибка резервуара</string>
     <string name="combov2_error_11">Инфузионный набор не заполнен</string>
     <string name="combov2_extended_bolus_not_supported">Пролонгированный болюс не поддерживается</string>
-    <string name="combov2_title">Accu Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Сопряжение с помпой</string>
     <string name="combov2_unpair_pump_title">Разорвать сопряжение с помпой</string>
     <string name="combov2_driver_state_label">Статус драйвера помпы</string>
@@ -31,12 +30,6 @@
 2. Проверьте, есть ли здесь ранее сопряженное устройство; если да, то перейдите на экран «Удалить устройство» и удалите его\n
 3. Перейдите на экран помпы «Добавить устройство» и запустите процесс сопряжение\n
 4. Нажмите на кнопку «Начать подключение» ниже, чтобы начать сопряжение в AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Через некоторое время имя телефона отображается на экране насоса, нажмите кнопку-галочку CHECK для подтверждения.\n\n
-При успешно завершенном подключении, подтвердите это на помпе и вернитесь в главное окно помпы дважды нажав кнопку CHECK.\n\n
-Если соединение не установлено более чем через ~5 минут:\n\n
-1. Нажмите кнопку \"Назад\" или кнопку \"Отменить сопряжение\"\n
-2. Отмените сопряжение на Combo (нажав кнопку ВВЕРХ и кнопку МЕНЮ одновременно)\n
-3. Повторите процедуру сопряжения заново</string>
     <string name="combov2_enter_pin">Введите PIN-код</string>
     <string name="combov2_cancel_pairing">Отменить сопряжение</string>
     <string name="combov2_confirm_cancel_pairing_message">Вы действительно хотите отменить сопряжение?</string>
@@ -101,7 +94,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнорирование избыточного запроса на 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">При настройке ВБС: обнаружен непредвиденный предел: целевой процент %1$d%%, достиг предела %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Невозможно установить абсолютный TBR, если базовая скорость равна нулю</string>
-    <string name="combov2_unpair_pump_summary">Отключить AndroidAPS и AndroidAPS от помпы Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Обнаружена и остановлена неизвестная временная базальная скоростьTBR; в процентах: %1$d%%; оставшаяся продолжительность: %2$s</string>
     <string name="combov2_connection_error">Ошибка соединения: %1$s</string>
     <string name="combov2_short_status_alert">Предупреждение: %s</string>

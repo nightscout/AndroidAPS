@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Editar os perfis para alterar valores é suficiente para aplicar as alterações feitas.</string>
     <string name="profileswitch4_multi">Vários perfis podem ser configurados e selecionados para todas as mudanças de circunstância (por exemplo, alterações hormonais, mudança de trabalho, dia de semana/fim de semana).</string>
     <string name="other_medication_label">Outra Medicação. Por favor, leia a declaração abaixo e marque a caixa para aceitá-la.</string>
-    <string name="other_medication_text">O AAPS reduz as taxas de basal ou suspende a administração de insulina para aumentar a quantidade de açúcar no sangue. Os medicamentos da classe inibidores SGLT2 (gliflozinas) podem evitar aumentos da glicose no sangue e, por conseguinte, podem produzir uma perigosa deficiência de insulina que leva à cetoacidose diabética.
-\nOs nomes comuns são: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nPrometo pelo presente que não tomarei tal medicação ao utilizar o AAPS ou que desativarei o loop antes de usar tais medicamentos.</string>
     <string name="concentration_feature_label">Gestão da concentração da insulina</string>
     <string name="u200_with_profile">Antes de o AAPS suportar concentrações de insulina, os utilizadores usavam U200 com um perfil a 50% para reduzir todos os valores para metade. Nessa configuração, que respostas são verdadeiras?</string>
     <string name="u200_with_profile_reports">A minha base de dados do AAPS e os relatórios do NS ficam errados. Todos os valores (bólus, débitos, TID) têm de ser multiplicados por 2 para ver os valores reais, sobretudo para os médicos e a equipa de saúde.</string>

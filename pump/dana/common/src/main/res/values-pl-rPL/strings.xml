@@ -8,7 +8,6 @@
     <string name="commanderror">Błąd polecenia</string>
     <string name="speederror">Błąd prędkości</string>
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
-    <string name="boluserrorcode">Zadano: %1$.2fU Dostarczono: %2$.2fU Kod błędu: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pompa nie jest napełniona</string>
     <string name="danai2_bolus_error_not_enough_insulin">Za mało insuliny w zbiorniku</string>
     <string name="danai2_bolus_error_easy_sleep">Tryb Easy sleep jest włączony w pompie.</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Wybrana pompa</string>
     <string name="rs_loginsulinchange_title">Zapisz zmianę zbiorniczka</string>
     <string name="rs_loginsulinchange_summary">Dodaj zdarzenie \"Zmiana zasobnika insuliny\" do portalu opieki Nightscout, gdy wykryto je w historii pompy</string>
-    <string name="rs_logcanulachange_title">Zapisz zmianę wkłucia</string>
     <string name="rs_logcanulachange_summary">Dodaj zdarzenie \"Zmiana miejsca wkłucia\" do portalu opieki Nightscout, gdy wykryto je w historii pompy</string>
     <string name="press_ok_on_the_pump">Naciśnij OK na pompie\ni wpisz 2 wyświetlone numery\nUtrzymuj wyświetlacz pompy włączony poprzez naciskanie przycisku minus, aż do momentu zakończenia przepisywania kodu.</string>
     <string name="num1pin">1: (12 cyfr)</string>

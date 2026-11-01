@@ -4,9 +4,8 @@
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
     <string name="next_button">İleri</string>
     <string name="previous_button">Önceki</string>
-    <string name="setupwizard_finish">BİTTİ</string>
+    <string name="setupwizard_finish">BİTİR</string>
     <string name="welcome">Hoş geldiniz</string>
-    <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
@@ -27,7 +26,6 @@
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/tr/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Daha yeni algoritma genellikle daha güçlüdür. Kullanmadan önce OpenAPS belgelerini okumayı ve yapılandırmayı unutmayın.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
     <string name="startobjective">İlk görevinize başlayın</string>
@@ -36,7 +34,7 @@
     <string name="setupwizard_profile_info">Bazal oranlarınız, IC, İDF ve hedef değerlerinizle bir profil oluşturun. Daha sonra birden fazla profil ekleyebilirsiniz.</string>
     <string name="setupwizard_permissions_info">AAPS\'in düzgün çalışabilmesi için depolama erişimine ve izinlere ihtiyacı vardır. Lütfen aşağıda istenen izinleri verin.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink durumu:</string>
-    <string name="setupwizard_client_control_title">İstemci denetimi</string>
+    <string name="setupwizard_client_control_title">İstemci kontrolü</string>
     <string name="setupwizard_client_control_info">İstemci cihazları, Nightscout üzerinden bu ana birime imzalı komutlar gönderebilecek şekilde eşleştirin. AAPS\'i uzaktan kontrol etmek için önerilen yeni yöntem budur.</string>
     <string name="setupwizard_ns_receive_info">Nightscout üzerinden doğrudan tedavi ve veri kabul etme özelliği (daha az güvenli bir yöntemdir) artık varsayılan olarak kapalıdır. Eğer hâlâ bu özelliğe ihtiyaç duyuyorsanız, aşağıdaki ayarlardan etkinleştirebilirsiniz. Nightscout veya üçüncü taraf uygulamalar aracılığıyla veri girişi yapmanız gerekiyorsa bu özellik gereklidir.</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout veri kabulü</string>
@@ -57,7 +55,6 @@
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
     <string name="configbuilder_sync_description">Veri yükleme, senkronizasyon ve iletişim eklentileri.</string>
-    <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelleyin.</string>

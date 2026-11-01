@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Rozvržení komplikace</string>
     <string name="cwf_complication_layout_description">Pozice a velikost komplikací, převzatých z vlastního ciferníku.</string>
     <string name="pref_include_external">Zahrnout do šablony externí zobrazení</string>
-    <string name="pref_switch_external">Přepnout externí data ve watchface</string>
     <string name="custom_pref_show_seconds">Zobrazovat sekundy</string>
     <string name="digitalstyle_pref_your_style">Styl</string>
     <string name="digitalstyle_style_none">bez stylu</string>

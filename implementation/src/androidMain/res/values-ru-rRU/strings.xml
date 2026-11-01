@@ -22,10 +22,8 @@
     <string name="ue_exported">Записи пользователя экспортированы</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
     <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
-    <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
     <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
     <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
-    <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
     <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
     <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
     <string name="metadata_urgent_different_version">Параметры из другой основной версии приложения. Основные версии существенно различаются и могут иметь несовместимые настройки! После импорта убедитесь, что параметры все еще верны!</string>

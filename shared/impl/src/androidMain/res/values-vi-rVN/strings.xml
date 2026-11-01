@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Tên tháng (viết tắt)</string>
     <string name="cwf_comment_loop">Trạng thái vòng lặp và trước đó</string>
     <string name="cwf_comment_direction">Mũi tên xu hướng</string>
-    <string name="cwf_comment_timestamp">Số phút từ lần nhận BG gần nhất</string>
     <string name="cwf_comment_sgv">Giá trị BG</string>
     <string name="cwf_comment_cover_plate">Hình ảnh phủ phía trước văn bản (mặt số...)</string>
     <string name="cwf_comment_hour_hand">Kim giờ (đồng hồ kim)</string>

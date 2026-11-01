@@ -157,7 +157,6 @@
     <string name="slowabsorptiondetected_plain">!!!!! Засечено бавно усвояване на въглехидрати: %1$d%% от времето. Проверете калкулацията. Въглехидратите може би са прекалено много и това ще доведе до много инсулин !!!!!</string>
     <string name="bolus_constraint_applied_warn">Приложено болус ограничение: %1$.2f Е към %2$.2f Е</string>
     <string name="bolus_recorded_only">Само запиши (без да го стартираш в помпата)</string>
-    <string name="advisoralarm">Аларма, когато е време за хранене</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">Уд. въглехидрати %1$d г / %2$d ч (+%3$d мин)</string>
     <string name="format_insulin_units">%1$.2fЕ</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>

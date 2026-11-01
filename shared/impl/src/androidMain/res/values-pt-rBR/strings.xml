@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Nome do mês (abreviado)</string>
     <string name="cwf_comment_loop">Status do loop e tempo decorrido</string>
     <string name="cwf_comment_direction">Seta de direção</string>
-    <string name="cwf_comment_timestamp">Minutos desde o último BG recebido</string>
     <string name="cwf_comment_sgv">Valor de glicemia</string>
     <string name="cwf_comment_cover_plate">Imagem de cobertura à frente do texto (mostradores…)</string>
     <string name="cwf_comment_hour_hand">Imagem do ponteiro das horas (relógio analógico)</string>

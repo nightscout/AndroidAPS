@@ -27,7 +27,6 @@
     <string name="commanderror">Lỗi lệnh</string>
     <string name="speederror">Lỗi tốc độ</string>
     <string name="insulinlimitviolation">Vi phạm giới hạn insulin</string>
-    <string name="boluserrorcode">Yêu cầu: %1$.2fU Đã tiêm: %2$.2fU Mã lỗi: %3$s</string>
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">Thời gian LCD bật [giây]</string>
     <string name="diaconn_g8_language">Ngôn ngữ</string>
     <string name="diaconn_g8_bolus_speed">Tốc độ liều Bolus</string>
-    <string name="diaconn_g8_pumplang_chiness">Tiếng Trung</string>
     <string name="diaconn_g8_pumplang_korean">Tiếng Hàn</string>
     <string name="diaconn_g8_pumplang_english">Tiếng Anh</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">Thêm sự kiện \"Thay pin\" vào careportal khi phát hiện trong lịch sử</string>
     <string name="diaconn_g8_logbatterychange_title">Ghi lại thay đổi Pin</string>
     <string name="diaconn_g8_logsyncinprogress">Đang đồng bộ nhật ký</string>
-    <string name="diaconn_g8_loginsulinshorage">Thiếu insulin</string>
     <string name="diaconn_g8_logbatteryshorage">Thiếu pin</string>
     <string name="diaconn_g8_logneedleprime">Mồi Kim: %1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Mồi Injecto: %1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">Hoàn thành</string>
     <string name="diaconn_g8_reasoninjectonblock">Không thể tiêm</string>
     <string name="diaconn_g8_reasonbatteryshortage">Thiếu pin</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Thiếu insulin</string>
     <string name="diaconn_g8_reasonuserstop">Người dùng dừng</string>
     <string name="diaconn_g8_reasonsystemreset">Đặt lại hệ thống</string>
     <string name="diaconn_g8_reasonother">Khác</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">Không thể tiêm (%s)</string>
     <string name="diaconn_g8_lgorelease">giải phóng liều nền (%s)</string>
     <string name="diaconn_g8_lgosuspend">tạm dừng liều nền (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Dual Nomarl thành công</string>
     <string name="diaconn_g8_logdualsquarestart">Bắt đầu Dual Square</string>
     <string name="diaconn_g8_logdualsquaresuccess">Dual Square thành công</string>
     <string name="diaconn_g8_logsquarestart">Bắt đầu Square</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">Thành công</string>
     <string name="diaconn_g8_logmealsuccess">Nhập bữa ăn thành công</string>
     <string name="diaconn_g8_errorcode_1">Không thể tra cứu do lỗi gói tin CRC.</string>
-    <string name="diaconn_g8_errorcode_2">Không thể đặt thành lỗi tham số đầu vào.</string>
-    <string name="diaconn_g8_errorcode_3">Không thể đặt thành lỗi kỹ thuật giao thức.</string>
     <string name="diaconn_g8_errorcode_4">Đang ở chế độ bữa ăn, không thể tiêm.</string>
     <string name="diaconn_g8_errorcode_6">Bị hủy bởi máy bơm</string>
     <string name="diaconn_g8_errorcode_7">Đang thực hiện thao tác khác, các cài đặt ứng dụng bị hạn chế.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">Không thể tiêm do pin yếu.</string>
     <string name="diaconn_g8_errorcode_12">Không thể tiêm do insulin không đủ.</string>
     <string name="diaconn_g8_errorcode_13">Không thể tiêm, vượt quá giới hạn.</string>
-    <string name="diaconn_g8_errorcode_14">Không thể tiêm vì đã vượt quá tổng lượng tiêm cho hôm nay.</string>
     <string name="diaconn_g8_errorcode_15">Sau khi thiết lập liều nền hoàn tất, có thể thực hiện tiêm liều nền.</string>
     <string name="diaconn_g8_logtubechange_title">Ghi lại thay đổi Tube</string>
     <string name="diaconn_g8_logtubechange_summary">Thêm sự kiện ‘Thay Tube’ vào Ghi chú khi phát hiện trong lịch sử</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">Khi LGS đang chạy, việc tiêm bị hạn chế</string>
     <string name="diaconn_g8_errorcode_33">Trạng thái LGS đang BẬT, lệnh BẬT bị từ chối.</string>
     <string name="diaconn_g8_errorcode_34">Trạng thái LGS đang TẮT, lệnh TẮT bị từ chối.</string>
-    <string name="diaconn_g8_errorcode_35">Không thể bắt đầu liều nền tạm thời này khi một basal tạm thời khác đang chạy</string>
-    <string name="diaconn_g8_errorcode_36">Dừng liều nền tạm thời bị từ chối khi liều nền tạm thời không hoạt động</string>
     <string name="diaconn_g8_cloudsend_summary">Gửi nhật ký bơm lên Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Đông bộ Diaconn Cloud</string>
     <string name="bolus_speed_1">1 U/phút</string>

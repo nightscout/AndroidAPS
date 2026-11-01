@@ -6,8 +6,7 @@
     <string name="previous_button">이전</string>
     <string name="setupwizard_finish">완료</string>
     <string name="welcome">환영합니다</string>
-    <string name="welcometosetupwizard">설정 마법사에 오신 것을 환영합니다. 설정 과정을 안내해 드립니다.\n</string>
-    <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
+    <string name="end_user_license_agreement">최종 사용자 라이선스 계약</string>
     <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
     <string name="display_settings">화면 설정</string>
@@ -27,7 +26,6 @@
     <string name="exitwizard">설정 마법사 건너뛰기</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도 감지와 COB 계산에 사용됩니다. 자세한 정보는 다음을 참조하십시오:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ko/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하십시오. 오래된 것부터 새것 순서로 정렬되어 있습니다. 보통 새 알고리즘이 더 강력합니다. 사용하기 전에 OpenAPS 문서를 읽고 설정하십시오.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">아래에서 RileyLink를 설정하십시오. RileyLink를 선택한 후 RileyLink 상태가 \"연결됨\"이 되면 설정을 계속할 수 있습니다. 1분 정도 걸릴 수 있습니다.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>참고:</b> 펌프 설정이 끝나면 설정을 계속할 수 있습니다.\n</string>
     <string name="startobjective">첫 번째 목표를 시작하십시오</string>
@@ -57,7 +55,6 @@
     <string name="configbuilder_pump_description">어떤 펌프를 AAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_aps_description">어떤 APS 알고리즘이 치료를 조정해야 합니까?</string>
     <string name="configbuilder_sync_description">데이터 업로드, 동기화 및 통신 플러그인.</string>
-    <string name="configbuilder_bgsource_description">AAPS가 어디에서 데이터를 가져옵니까?</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
     <string name="allow_hardware_pump_text">주의: 하드웨어 펌프를 활성화하고 연결하면 AAPS가 프로파일의 기저 설정을 펌프로 복사하여 펌프에 저장된 기존 기저 주입량을 덮어씁니다. AAPS의 기저 설정이 올바른지 확인하십시오. 확실하지 않거나 펌프의 기저 설정을 덮어쓰고 싶지 않으면 취소를 누르고 나중에 다시 펌프로 전환하십시오.</string>
     <string name="nsclient_version_does_not_match">AAPSClient 버전이 AAPS 버전과 일치하지 않습니다. 업데이트하십시오.</string>

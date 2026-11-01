@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Definições de ligação</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Sincroniza os seus dados com o Nightscout através da API v3</string>
     <string name="blocked_by_charging">Bloqueado pelas opções de carregamento</string>
     <string name="blocked_by_connectivity">Bloqueado pelas opções de conectividade</string>
@@ -116,12 +115,10 @@
     <string name="status_label">Estado:</string>
     <string name="clear_log">Limpar Registo</string>
     <string name="full_sync">Sincronização completa</string>
-    <string name="full_sync_comment">Sincronização completa? Pode levar muitas horas até terminar e não irá ver dados novos no NS.</string>
     <string name="ns_sync_options">Sincronização</string>
     <string name="ns_alarm_options">Opções de alarme</string>
     <string name="ns_remote_control_options">Controlo remoto</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Se ativado, os envios vão para os servidores de teste em vez dos servidores normais</string>
     <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
     <string name="title_tidepool_use_ns_connection">Usar as definições de ligação do Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Desative para definir definições de ligação próprias para o Tidepool</string>
@@ -230,16 +227,13 @@
     <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_code_verify_label">Código para verificar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pela app Authenticator (conhecido como OTP) seguido de 3 ou mais dígitos de PIN obrigatório.</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor chave do Autenticador</string>
-    <string name="smscommunicator_otp_reset_prompt">Tem a certeza de que quer repor a chave do Autenticador? Todos os Autenticadores configurados ficam inválidos e terá de os configurar novamente.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Digitalize o código para configurar os códigos OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instale em cada telefone seguidor uma app de autenticação que suporte tokens RFC 6238 TOTP. Apps gratuitas populares:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Ao repor o autenticador, torna inválidos todos os autenticadores já inseridos. Precisará de os configurar novamente!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">TAMANHO INVÁLIDO!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">PIN ERRADO</string>
@@ -250,7 +244,6 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Para administrar o bólus de refeição de %1$.2fU, responda com o código %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Para definir o Alvo Temporário %1$s responda com o código %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Para cancelar Alvo Temporário responda com o código %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">Para desativar o Serviço Remoto SMS, responda com o código %1$s.\n\nTenha em mente que será capaz de o reativar diretamente apenas a partir do telefone principal do AAPS.</string>
     <string name="smscommunicator_stopped_sms">Serviço Remoto SMS parado. Para o reativar, use o AAPS no telefone principal.</string>
     <string name="smscommunicator_calibration_reply_with_code">Para enviar calibração %1$.2f responder com código %2$s</string>
     <string name="smscommunicator_bolus_failed">O bólus falhou. Verifique o estado real antes de enviar outro comando!</string>
@@ -281,7 +274,6 @@
     <string name="smscommunicator_restarting">O AAPS está a reiniciar</string>
     <string name="smscommunicator_tempbasal_set">Basal temporária de %1$.2fU/h por %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extended_set">Bólus prolongado de %1$.2fU por %2$d min iniciado com êxito</string>
-    <string name="smscommunicator_carbs_set">Hidratos %1$d  g inseridos com sucesso</string>
     <string name="smscommunicator_carbs_failed">Introdução de %1$dg de hidratos falhou</string>
     <string name="smscommunicator_tempbasal_set_percent">Basal temporária de %1$d%% por %2$d min iniciada com êxito</string>
     <string name="smscommunicator_tempbasal_failed">Início basal temporária falhou</string>

@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 胰島素幫浦整合</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Pod 未確認此次注射已結束。已記錄 %1$s，但 Pod 可能實際給得更多。再次注射胰島素前，請先檢查 Pod。</string>
-    <string name="low_reservoir">儲液盒低警報</string>
-    <string name="patch_expiration_reminders">貼片過期提醒</string>
     <string name="patch_buzzer_reminders">貼片嗶聲提醒</string>
     <string name="eopatch_ble_status">藍牙狀態</string>
     <string name="eopatch_serial_number">序列號</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">若要更換新貼片，必須先放棄目前貼片。所有來自貼片的胰島素供應將被取消。</string>
     <string name="patch_discard_complete_title">貼片放棄完成。</string>
     <string name="patch_discard_complete_desc">貼片已停用。\n請放棄貼片。\n移除附在您身上的貼片。</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">目前正在輸送一次注射。您確定要取消胰島素供應並放棄貼片嗎？</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">目前正在輸送一次臨時基礎速率。您確定要取消胰島素供應並放棄貼片嗎？</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">目前正在輸送一次注射和臨時基礎速率。您確定要取消胰島素供應並放棄貼片嗎？</string>
-    <string name="patch_change_confirm_desc">您確定要放棄目前貼片嗎？</string>
     <string name="patch_forced_discard">放棄</string>
     <string name="patch_comm_error_during_discard_desc_2">若要單方面停用，請點擊“放棄”。</string>
     <string name="patch_manually_turning_off_alarm_title">手動關閉貼片警報</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">配對期間會出現兩個 Android 系統彈出視窗。您必須全部確認，才能完成藍牙配對。</string>
     <string name="patch_start_pairing">開始配對</string>
     <string name="patch_connect_new">貼片配對</string>
-    <string name="patch_connect_new_desc">新貼片正在配對中。\n保持貼片與智慧設備之間的距離儘量接近</string>
     <string name="patch_remove_needle_cap">準備貼片</string>
     <string name="patch_remove_needle_cap_desc_1">移除膠帶，然後點擊“下一步”。</string>
     <string name="patch_remove_needle_cap_desc_2">若有針頭外露，請點選「放棄」。</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">這大約需要30秒。</string>
     <string name="patch_safety_check_desc_2">為了安全使用，在完成安全檢查之前請勿取下針頭操作桿！</string>
     <string name="patch_rotate_knob">植入針頭</string>
-    <string name="patch_rotate_knob_desc_1">旋轉針頭動作桿超過100°以植入針頭，然後完全旋轉以移除它</string>
     <string name="patch_rotate_knob_desc_2">檢查是否有一聲嗶聲，然後點擊“下一步”。</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">檢查是否有一聲嗶聲，然後點擊“重試”。</string>
     <string name="patch_basal_schedule">貼片啟動完成！</string>
     <string name="patch_basal_schedule_desc_1">已啟用\'%1$s\'計畫。</string>
     <string name="patch_basal_schedule_desc_2">貼片接近到期時間時會提醒您。\n如有需要，請更改提醒時間。</string>
     <string name="patch_expiration_reminder_setting_title">貼片過期提醒</string>
-    <string name="patch_activate_reminder_desc">貼片啟動未完成。\n繼續。</string>
     <string name="patch_communication_check_helper_1">將您的智慧設備靠近貼片。</string>
     <string name="patch_communication_check_helper_2">請移動到另一個位置並重試。</string>
     <string name="patch_safety_check_failed_desc">安全檢查失敗。請再試一次。</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">通訊成功</string>
     <string name="patch_communication_succeed_message">已與貼片連線。</string>
     <string name="patch_cancel_pairing">取消配對</string>
-    <string name="insulin_suspend_msg1">暫停後，目前正在輸送的注射和臨時基礎速率將被取消。 \n\n速率 : %1$s U/hr\n剩餘時間 : %2$s\n&amp; 剩餘胰島素 : %3$.2f U</string>
-    <string name="insulin_suspend_msg2">暫停後，目前正在輸送的注射將被取消。 \n\n剩餘胰島素 : %1$.2f U</string>
-    <string name="insulin_suspend_msg3">暫停後，目前正在輸送的臨時基礎速率將被取消。 \n\n速率 : %1$s U/hr\n剩餘時間 : %2$s</string>
     <string name="insulin_suspend_msg4">胰島素供應將被暫停。</string>
     <string name="string_activate_patch">啟動貼片</string>
     <string name="string_discard_patch">放棄貼片</string>
     <string name="string_running">運行中</string>
     <string name="retry">重試</string>
-    <string name="string_are_you_sure_to_discard_current_patch">您確定要放棄目前貼片嗎？</string>
     <string name="needle_insertion_error_1">針頭植入錯誤。</string>
     <string name="needle_insertion_error_3">點擊“放棄”以停用貼片。</string>
     <string name="string_suspend_time_insulin_delivery_title">基礎速率暫停時間</string>

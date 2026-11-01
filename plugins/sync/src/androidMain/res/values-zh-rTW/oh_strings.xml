@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans 允許您上傳糖尿病資料並捐贈給科學項目。</string>
     <string name="logout">登出</string>
     <string name="setup">設定</string>
-    <string name="setup_completed_info">Open Humans 已經設定完成。如果您想停止上傳，請點擊「登出」。</string>
     <string name="not_setup_info">Open Humans 目前處於非活動狀態。要開始上傳資料，請點擊「設定」。</string>
     <string name="project_member_id">項目成員ID: %1$s</string>
     <string name="open_humans_uploading">正在上傳到 Open Humans…</string>

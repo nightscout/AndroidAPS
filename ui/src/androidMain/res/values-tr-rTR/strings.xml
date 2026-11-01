@@ -229,7 +229,7 @@
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Çalıştır</string>
     <string name="add_new_profile">Yeni profil ekle</string>
     <string name="edit_label">Düzenle</string>
-    <string name="activate_label">Aktive et</string>
+    <string name="activate_label">Etkinleştir</string>
     <string name="activate_profile">Profil etkinleştir</string>
     <string name="remove_label">Kaldır</string>
     <string name="active_profile_indicator">AKTİF</string>
@@ -245,10 +245,9 @@
     <string name="profile_parameters">Profil Parametreleri</string>
     <string name="active_profile">Aktif Profil</string>
     <string name="available_profiles">Mevcut Profiller</string>
-    <string name="profile_switches">Profil Geçişleri</string>
+    <string name="profile_switches">Profil değişimleri</string>
     <string name="basal_pct_from_tdd_label">Bazal yüzdesi</string>
     <string name="selected_profile">Seçili:</string>
-    <string name="comparation">Karşılaştırma</string>
     <string name="profile_tab_1">Profil 1</string>
     <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Varsayılan profil</string>

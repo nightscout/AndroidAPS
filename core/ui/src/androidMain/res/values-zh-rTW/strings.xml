@@ -168,7 +168,6 @@
     <string name="notification">通知</string>
     <string name="noprofile">尚未從 NS 載入設定檔</string>
     <string name="exists">存在</string>
-    <string name="notexists">不存在</string>
     <string name="glucose">血糖</string>
     <string name="iob">IOB 活性胰島素</string>
     <string name="cob">COB 活性碳水</string>
@@ -226,11 +225,9 @@
     <string name="pump_wizard_profile_gate_pick">請選擇要在啟用時套用的設定檔。</string>
     <string name="pump_wizard_profile_gate_no_store">未建立任何設定檔。請開啟設定檔管理以建立一個，然後請再次開始啟用。</string>
     <string name="reset">重設</string>
-    <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
     <string name="profile">檔案</string>
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">時間偏移</string>
-    <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主手機沒有這些記錄中的 %1$d 筆，因此不會將其移除。</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
@@ -342,9 +339,7 @@
     <string name="careportal_note">備註</string>
     <string name="careportal_question">問題</string>
     <string name="careportal_exercise">運動</string>
-    <string name="careportal_announcement_message">公告：%1$s</string>
     <string name="careportal_note_message">備註：%1$s</string>
-    <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">幫浦注射部位更換：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
@@ -663,7 +658,6 @@
     <string name="uel_ns_queue_cleared">NS 佇列已清除</string>
     <string name="uel_ns_settings_copied">NS 設定已複製</string>
     <string name="uel_error_dialog_ok">錯誤對話框確定</string>
-    <string name="uel_error_dialog_mute">錯誤對話框靜音</string>
     <string name="uel_error_dialog_mute_5min">錯誤對話框靜音 5 分鐘</string>
     <string name="uel_objective_started">目標已開始</string>
     <string name="uel_objective_unstarted">目標未開始</string>
@@ -728,7 +722,6 @@
     <string name="error_in_isf_values">ISF 數值錯誤</string>
     <string name="error_in_basal_values">基礎率數值錯誤</string>
     <string name="error_in_target_values">目標值錯誤</string>
-    <string name="profile_name_contains_dot">部分設定檔名稱包含點號。\nNS 不支援此格式。\n將不會把設定檔上傳到 NS。</string>
     <string name="invalid_profile_not_accepted">來自 NS 的無效設定檔 %1$s 未被接受</string>
     <string name="errors">錯誤</string>
     <!-- Command Queue + readStatus reasons -->
@@ -893,7 +886,6 @@
     <string name="export_result_message_exported">設定已匯出</string>
     <string name="export_result_message_failed">設定匯出失敗!</string>
     <string name="export_result_message_about_to_expire">設定已匯出: 密碼即將過期。請手動匯出並（重新）輸入密碼。</string>
-    <string name="export_result_message_expired">設定匯出已取消: 密碼已過期。請手動匯出並（重新）輸入!</string>
     <string name="export_result_message_disabled">警告（自動化）: 設定匯出未啟用!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">雲端匯出成功</string>
@@ -1000,7 +992,6 @@
     <string name="cannula">套管</string>
     <string name="patch_pump">貼片式幫浦</string>
     <!-- Site Rotation -->
-    <string name="select_location">請點選下方以選擇部位</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">不要關閉我的應用程式？</string>
     <string name="fabric_upload_disabled">異常日誌上傳已停用！</string>
@@ -1046,7 +1037,6 @@
     <string name="unsaved_changes">未儲存的變更</string>
     <string name="unsaved_changes_message">你有未儲存的變更。要如何處理？</string>
     <string name="discard">捨棄</string>
-    <string name="ic_dynamic_label_warning">你的演算法可提供 IC 的動態計算。以下數值僅能在缺少資料時作為備援，或僅供參考</string>
     <string name="isf_dynamic_label_warning">你的演算法可提供 ISF 的動態計算。以下數值僅能在缺少資料時作為備援，或僅供參考</string>
     <string name="add_time_block">新增時段</string>
     <string name="remove_entry">移除項目</string>

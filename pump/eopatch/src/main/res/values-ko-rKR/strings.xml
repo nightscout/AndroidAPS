@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day를 위한 펌프 통합</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">패치가 볼러스 종료를 확인하지 않았습니다. %1$s이(가) 기록되었지만, 패치가 더 많이 주입했을 수 있습니다. 인슐린을 더 주입하기 전에 패치를 확인하십시오.</string>
-    <string name="low_reservoir">레저버 부족 경고</string>
-    <string name="patch_expiration_reminders">패치 만료 알림</string>
     <string name="patch_buzzer_reminders">패치 신호 알림</string>
     <string name="eopatch_ble_status">블루투스 상태</string>
     <string name="eopatch_serial_number">일련번호</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">새 패치로 교체하려면 현재 패치를 폐기해야 합니다. 패치의 모든 인슐린 주입이 취소됩니다.</string>
     <string name="patch_discard_complete_title">패치 폐기가 완료되었습니다.</string>
     <string name="patch_discard_complete_desc">패치가 비활성화되었습니다.\n패치를 폐기하십시오.\n몸에 부착된 패치를 제거하십시오.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">현재 볼러스가 주입되고 있습니다. 인슐린 주입을 취소하고 패치를 폐기하시겠습니까?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">현재 임시 기저가 주입되고 있습니다. 인슐린 주입을 취소하고 패치를 폐기하시겠습니까?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">현재 볼러스와 임시 기저가 주입되고 있습니다. 인슐린 주입을 취소하고 패치를 폐기하시겠습니까?</string>
-    <string name="patch_change_confirm_desc">패치를 폐기하시겠습니까?</string>
     <string name="patch_forced_discard">폐기</string>
     <string name="patch_comm_error_during_discard_desc_2">일방적으로 비활성화하려면 \'폐기\'를 누르십시오.</string>
     <string name="patch_manually_turning_off_alarm_title">패치 알람 수동으로 끄기</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">페어링 중에 Android 시스템 팝업이 두 번 나타납니다. 블루투스 페어링을 완료하려면 두 팝업을 모두 확인해야 합니다.</string>
     <string name="patch_start_pairing">페어링 시작</string>
     <string name="patch_connect_new">패치 페어링</string>
-    <string name="patch_connect_new_desc">새 패치를 페어링하는 중입니다.\n패치와 스마트 기기를 최대한 가까이 두십시오.</string>
     <string name="patch_remove_needle_cap">패치 부착 준비</string>
     <string name="patch_remove_needle_cap_desc_1">접착 테이프를 제거한 뒤, \'다음\'을 누릅니다.</string>
     <string name="patch_remove_needle_cap_desc_2">바늘이 튀어나와 있으면 \'폐기\'를 누르십시오.</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">약 30초 걸립니다.</string>
     <string name="patch_safety_check_desc_2">안전한 사용을 위해 안전 점검이 끝날 때까지 바늘 작동 레버를 제거하지 마십시오!</string>
     <string name="patch_rotate_knob">바늘 삽입</string>
-    <string name="patch_rotate_knob_desc_1">바늘 작동 레버를 100 ° 이상 회전시켜서 바늘을 삽입한 뒤, 레버를 완전히 돌려서 제거하십시오.</string>
     <string name="patch_rotate_knob_desc_2">삐 소리 1번을 확인한 후 \'다음\'을 누르십시오.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">삐 소리 1번을 확인한 후 \'재시도\'를 누르십시오.</string>
     <string name="patch_basal_schedule">패치 활성화가 완료되었습니다!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' 프로그램이 활성화되었습니다.</string>
     <string name="patch_basal_schedule_desc_2">패치 만료 시간이 다가오면 알려 줍니다.\n필요하면 알림 시간을 변경하십시오.</string>
     <string name="patch_expiration_reminder_setting_title">패치 만료 알림</string>
-    <string name="patch_activate_reminder_desc">패치 활성화가 완료되지 않았습니다.\n 계속하십시오.</string>
     <string name="patch_communication_check_helper_1">스마트 기기를 패치에 더 가까이 가져오십시오.</string>
     <string name="patch_communication_check_helper_2">다른 장소로 이동하여 다시 시도하십시오.</string>
     <string name="patch_safety_check_failed_desc">안전 점검에 실패했습니다. 다시 시도하십시오.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">통신 성공</string>
     <string name="patch_communication_succeed_message">패치와 연결됨</string>
     <string name="patch_cancel_pairing">페어링 취소</string>
-    <string name="insulin_suspend_msg1">중지하면 현재 주입 중인 볼러스 &amp; 임시 기저가 취소됩니다. \n\n주입량 : %1$s U/hr\n남은 시간  : %2$s\n&amp; 남은 인슐린 : %3$.2f U</string>
-    <string name="insulin_suspend_msg2">중지하면 현재 주입 중인 볼러스가 취소됩니다. \n\n남은 인슐린 : %1$.2f U</string>
-    <string name="insulin_suspend_msg3">중지하면 현재 주입 중인 임시 기저가 취소됩니다. \n\n주입량 : %1$s U/hr\n남은 시간  : %2$s</string>
     <string name="insulin_suspend_msg4">인슐린 주입이 중지됩니다.</string>
     <string name="string_activate_patch">패치 활성화</string>
     <string name="string_discard_patch">패치 폐기</string>
     <string name="string_running">실행 중</string>
     <string name="retry">재시도</string>
-    <string name="string_are_you_sure_to_discard_current_patch">현재 패치를 폐기하시겠습니까?</string>
     <string name="needle_insertion_error_1">바늘 삽입 오류</string>
     <string name="needle_insertion_error_3">패치를 비활성화하려면 \'폐기\'를 누르십시오.</string>
     <string name="string_suspend_time_insulin_delivery_title">기저 중지 시간</string>

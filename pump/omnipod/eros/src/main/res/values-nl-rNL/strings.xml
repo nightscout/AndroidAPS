@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Basaal: %1$.2f E, Duur: %2$d min</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd</string>
     <string name="omnipod_eros_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Geen reactie van RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink onderbroken</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Geen reactie van de Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Instellen van basaal profiel is mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod tabblad en hervat de toediening indien nodig.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Instellen van basaal profiel is misschien mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod-tabblad en hervat de toediening indien nodig.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Instellen van basaal profiel is mislukt. Insulinetoediening is onderbroken! Hervat de toediening handmatig vanaf het Omnipod tabblad.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Het annuleren van de tijdelijk basaal is mogelijk mislukt. Vernieuw de Pod-status handmatig vanaf het Omnipod-tabblad.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Het instellen van een tijdelijke basaal is mislukt. Als een tijdelijk basaal eerder actief was, is deze mogelijk geannuleerd. Vernieuw de Pod-status handmatig vanaf het Omnipod tabblad.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Het instellen van een tijdelijk basaal is mogelijk mislukt. Als een tijdelijke basaal eerder actief was, is deze geannuleerd. Vernieuw de Pod-status handmatig vanaf het Omnipod tabblad.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Instellen van de tijd is misschien mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod tabblad en hervat de toediening indien nodig.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Het instellen van de tijd is mislukt. Insulinetoediening is onderbroken! Hervat de toediening handmatig vanaf het Omnipod tabblad.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Het automatisch wijzigen van de tijd op de Pod is mislukt. Synchroniseer de tijd handmatig via het Omnipod-tabblad.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer handmatig of de Pod aan het bolussen is door te luisteren naar klik-geluidjes van de Pod. <b>Als je zeker weet dat de bolus niet is geslaagd, moet je deze bolus handmatig uit \'Behandelingen\' verwijderen, zelfs als je nu op \'Annuleren\' drukt!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Kan niet controleren of SMB bolus (%1$.2f E) geslaagd is. <b>Als je zeker weet dat de bolus niet is geslaagd, moet je deze handmatig verwijderen uit \'Behandelingen\'.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Er loopt een tijdelijk basaal op de Pod, maar AAPS is zich niet bewust van deze tijdelijke basaal. Annuleer de tijdelijke basal handmatig.</string>

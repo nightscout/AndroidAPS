@@ -7,5 +7,5 @@
     <string name="description_sensitivity_oref1">Sensitivitet beregnes fra 8t og 24t historiske data (velger alltid det resultatet som gir høyest insulinsensitivitet). Karbohydrater (som ikke er absorbert) blir avsluttet etter tiden som er angitt i innstillinger. Plugin beregner også UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitivitet beregnes som en vektet gjennomsnittsverdi av avvikene. Ferske avvik har høyere vekting. Minimum opptak av karbohydrater beregnes ut fra maks opptakstid for karbohydrater angitt i dine innstillinger. Denne algoritmen er den raskeste for å justere endringer i sensitivitet.</string>
     <string name="uam_disabled_oref1_not_selected">UAM deaktivert fordi den trenger Oref1 sensitivitetsplugin</string>
-    <string name="absorption_settings_title">Absorberingsinnstillinger</string>
+    <string name="absorption_settings_title">Absorpsjonsinnstillinger</string>
 </resources>

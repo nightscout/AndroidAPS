@@ -9,7 +9,6 @@
     <string name="application_expired">應用已過期</string>
     <string name="running_invalid_version">偵測到您正在運行無效版本。已停用循環！</string>
     <string name="versionavailable">版本 %1$s 可用</string>
-    <string name="version_expire">版本 %1$s 將於 %2$s 到期，並會轉為低血糖暫停(LGS)模式</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">使用重新計算的資料</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">已選擇APS</string>
     <string name="closedmodeenabled">閉環模式已啟用</string>
     <string name="description_objectives">學習計劃</string>
-    <string name="doyouwantresetstart">您想要重置目標開始嗎？您可能會失去進度。</string>
     <string name="objectives_button_unfinish">重置完成狀態</string>
     <string name="objectives_button_unstart">重置開始狀態</string>
     <string name="bg_doubled_lgs">由於血糖來源的數值加倍，已進入 LGS 模式</string>

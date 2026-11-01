@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Ενεργοποίηση υποστήριξης για διαφορετικές συγκεντρώσεις ινσουλίνης (U50, U200 κ.λπ.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Οθόνη πάντα αναμμένη</string>
-    <string name="pref_summary_keep_screen_on">Εμποδίζει το Android να σβήσει την οθόνη. Θα καταναλώνει πολλή ενέργεια όταν το τηλέφωνο δεν είναι στο ρεύμα.</string>
     <string name="pref_title_show_treatment_button">Εμφάνιση κουμπιού θεραπείας</string>
     <string name="pref_title_show_wizard_button">Εμφάνιση κουμπιού οδηγού</string>
     <string name="pref_title_show_insulin_button">Εμφάνιση κουμπιού ινσουλίνης</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Ποσοστό bolus</string>
     <string name="deliverpartofboluswizard">Εφαρμογή αυτής της τιμής στη διόρθωση γλυκόζης και υδατανθράκων στο αποτέλεσμα του Οδηγού Bolus</string>
     <string name="pref_title_reset_bolus_percentage_time">Χρόνος επαναφοράς ποσοστού bolus</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Χορήγησε το πλήρες bolus (100%) εάν η γλυκαιμία είναι παλαιότερη από</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Χρόνος λήξης προστασίας</string>
     <string name="pref_title_protection_type_application">Επίπεδο 0: Προστασία εφαρμογής</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">Επιτρεπόμενοι αριθμοί τηλεφώνου</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Πρόσθετο υποχρεωτικό PIN στο τέλος του token</string>
-    <string name="smscommunicator_otp_pin_summary">Πρόσθετα ψηφία που θα πρέπει να απομνημονεύονται και να τοποθετηθούν στο τέλος κάθε παραγόμενου κωδικού πρόσβασης μιας φοράς</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Τύπος αντλίας</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">Μέγιστο IOB για AMA</string>
     <string name="openapsma_max_iob_summary">Αυτή η τιμή ονομάζεται Max IOB στο OpenAPS\nΕίναι η μέγιστη ινσουλίνη σε [U] που μπορεί να χορηγήσει το APS με μία φορά. Η τιμή εξαρτάται και από τον τύπο ασθενή.</string>
     <string name="pref_title_max_daily_multiplier">Μέγιστος ημερήσιος πολλαπλασιαστής ασφαλείας</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα βασικό όριο ασφαλείας του OpenAPS. Περιορίζει τον βασικό ρυθμό σε 3x (για τους περισσότερους ανθρώπους) τον μεγαλύτερο βασικό ρυθμό σας. Πιθανότατα δεν θα χρειαστεί να το αλλάξετε, αλλά πρέπει να ξέρετε ότι αυτό εννοείται με το “3x μέγιστο ημερήσιο, 4x τρέχον” για τα όρια ασφαλείας.</string>
     <string name="pref_title_current_basal_multiplier">Πολλαπλασιαστής ασφαλείας τρέχοντος βασικού ρυθμού</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Προεπιλεγμένη τιμή: 4 Αυτό είναι το μισό του θέματος ασφαλείας του OpenAPS, και το άλλο μισό του «3 x μέγιστο ημέρας: 4 x τρέχων» των θεμάτων ασφαλείας. Αυτό σημαίνει ότι ο βασικός ρυθμός, ανεξάρτητα από την μέγιστη τιμή βασικού ρυθμού στην αντλία σας, δεν μπορεί να είναι υψηλότερος από το πολλαπλάσιο αυτού του αριθμού. Αυτό γίνεται για να αποτρέψει τους ανθρώπους από το να μπουν σε επικίνδυνες καταστάσεις θέτωντας υψηλό βασικό πριν κατανοήσουν πλήρως πώς λειτουργεί ο αλγόριθμος. Και πάλι, η προεπιλεγμένη τιμή είναι 4x: οι περισσότεροι άνθρωποι ποτέ δεν θα χρειαστεί να το προσαρμόσουν και αντίθετα είναι πιο πιθανό να χρειαστεί να προσαρμόσουν άλλες ρυθμίσεις αν αισθάνονται ότι κινούνται με ασφάλεια.</string>
     <string name="pref_title_bolus_snooze_divisor">Διαιρέτης DIA για αναβολή bolus</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Όριο απορρόφησης</string>
     <string name="absorption_cutoff_summary">Χρόνος κατά τον οποίο οποιοδήποτε γεύμα θεωρείται απορροφημένο. Οι υπόλοιποι υδατάνθρακες θα αποκοπούν.</string>
     <string name="pref_title_absorption_maxtime">Μέγιστος χρόνος απορρόφησης</string>
-    <string name="absorption_max_time_summary">Χρόνος σε ώρες που περιμένουμε να απορροφηθούν όλοι οι υδατάνθρακες ενός γεύματος</string>
     <string name="pref_title_autosens_min">Autosens ελάχιστο</string>
     <string name="openapsama_autosens_min_summary">Προεπιλεγμένη τιμή: 0.7\nΗ άλλη πλευρά των ορίων ασφαλείας του autosens: θέτει όριο στο πόσο χαμηλά μπορεί το autosens να προσαρμόσει τους βασικούς ρυθμούς και πόσο ψηλά μπορεί να προσαρμόσει την ISF και τους στόχους BG.</string>
     <string name="pref_title_autosens_max">Autosens μέγιστο</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Βάρος ISF για διάρκεια</string>
     <string name="openapsama_dura_ISF_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη μένει για πολύ ώρα σταθερά υψηλή. Ενισχύει την ISF και έτσι μπορεί να αυξήσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
     <string name="pref_title_smb_delivery_ratio">Λόγος χορήγησης SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Προεπιλεγμένη τιμή: 0,5 Αυτό είναι ένα ακόμη βασικό όριο ασφαλείας του OpenAPS. Ορίζει ποιο μέρος της συνολικής απαιτούμενης ινσουλίνης μπορεί να χορηγηθεί ως SMB. Έτσι αποφεύγεται ο κίνδυνος να ζητηθούν SMB την ίδια στιγμή και από το τηλέφωνο του φροντιστή. Αυξάνετε αυτή την πειραματική τιμή αργά και με προσοχή.</string>
     <string name="pref_title_smb_delivery_ratio_min">Ελάχιστος λόγος χορήγησης SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Προεπιλεγμένη τιμή: 0,5 Αυτό είναι το κάτω άκρο ενός γραμμικά αυξανόμενου λόγου, αντί για τη σταθερή τιμή παραπάνω.</string>
     <string name="pref_title_smb_delivery_ratio_max">Μέγιστος λόγος χορήγησης SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Προεπιλεγμένη τιμή: 0,5 Αυτό είναι το πάνω άκρο ενός γραμμικά αυξανόμενου λόγου, αντί για τη σταθερή τιμή παραπάνω.</string>
     <string name="pref_title_smb_max_range_extension">Επέκταση μέγιστου εύρους SMB</string>
     <string name="openapsama_smb_max_range_extension_summary">Προεπιλεγμένη τιμή: 1 Αυτό είναι ένα ακόμη βασικό όριο ασφαλείας του OpenAPS. Ορίζει με ποιον συντελεστή μπορείτε να ξεπεράσετε τα κανονικά 120 λεπτά maxSMB/maxUAM. Αυξάνετε αυτή την πειραματική τιμή αργά και με προσοχή.</string>
     <!-- UnitDoubleKey: Overview preferences -->

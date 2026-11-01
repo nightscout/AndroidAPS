@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Mėnuo (sutrump.)</string>
     <string name="cwf_comment_loop">Ciklo būsena</string>
     <string name="cwf_comment_direction">Tendencijos rodyklė</string>
-    <string name="cwf_comment_timestamp">Prieš kiek minučių gauta glikemijos reikšmė</string>
     <string name="cwf_comment_sgv">Glikemija</string>
     <string name="cwf_comment_cover_plate">Paveiksliukas prieš tekstą (skambučius...)</string>
     <string name="cwf_comment_hour_hand">Analoginio laikrodžio valandinė rodyklė</string>

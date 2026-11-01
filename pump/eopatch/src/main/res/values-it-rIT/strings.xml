@@ -41,7 +41,7 @@
     <string name="patch_wake_up_pairing_info">Durante l\'associazione, appariranno due popup di sistema Android. Devi confermarli entrambi per completare l\'associazione Bluetooth.</string>
     <string name="patch_start_pairing">Avvia associazione</string>
     <string name="patch_connect_new">Associazione patch</string>
-    <string name="patch_connect_new_desc">La nuova patch è in fase di associazione.\nMantieni la distanza tra la patch e il dispositivo il più vicino possibile</string>
+    <string name="patch_connect_new_desc">La nuova patch è in fase di associazione.\nMantieni la distanza tra la patch e il dispositivo il più vicino possibile.</string>
     <string name="patch_remove_needle_cap">Preparazione per il fissaggio della patch</string>
     <string name="patch_remove_needle_cap_desc_1">Rimuovi il nastro adesivo e poi tocca \'Avanti\'.</string>
     <string name="patch_remove_needle_cap_desc_2">Se l\'ago sporge, tocca \'Scarta\'.</string>
@@ -54,7 +54,7 @@
     <string name="patch_safety_check_desc_1">Ci vogliono circa 30 secondi.</string>
     <string name="patch_safety_check_desc_2">Per un uso sicuro, non rimuovere la leva di azionamento dell\'ago fino al completamento del controllo di sicurezza!</string>
     <string name="patch_rotate_knob">Inserimento dell’ago</string>
-    <string name="patch_rotate_knob_desc_1">Ruota la leva di azionamento dell\'ago a più di 100° per inserire l’ago e quindi ruota completamente per rimuoverlo</string>
+    <string name="patch_rotate_knob_desc_1">Ruota la leva di azionamento dell\'ago a più di 100° per inserire l’ago e quindi ruota completamente per rimuoverlo.</string>
     <string name="patch_rotate_knob_desc_2">Controlla se c\'è 1 BIP e quindi tocca \'Avanti\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Controlla se c\'è 1 BIP e quindi tocca \'Riprova\'.</string>
     <string name="patch_basal_schedule">Attivazione patch completata!</string>
@@ -69,15 +69,15 @@
     <string name="patch_communication_succeed">Comunicazione riuscita</string>
     <string name="patch_communication_succeed_message">Connesso con la patch</string>
     <string name="patch_cancel_pairing">Annulla associazione</string>
-    <string name="insulin_suspend_msg1">Al momento della sospensione, il bolo &amp; la basale temporanea attualmente in erogazione verranno annullati. \n\nVelocità : %1$s U/hr\nTempo rimanente  : %2$s\n&amp; Insulina da erogare : %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Al momento della sospensione, il bolo attualmente in erogazione verrà annullato. \n\nInsulina da erogare : %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Al momento della sospensione, la basale temporanea attualmente in erogazione verrà annullata. \n\nVelocità : %1$s U/hr\nTempo rimanente  : %2$s</string>
+    <string name="insulin_suspend_msg1">Al momento della sospensione, il bolo &amp; la basale temporanea attualmente in erogazione verranno annullati. \n\nVelocità: %1$s U/hr\nTempo rimanente: %2$s\n Insulina da erogare: %3$.2f U</string>
+    <string name="insulin_suspend_msg2">Al momento della sospensione, il bolo attualmente in erogazione verrà annullato. \n\nInsulina da erogare: %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Al momento della sospensione, la basale temporanea attualmente in erogazione verrà annullata. \n\nVelocità: %1$s U/hr\nTempo rimanente: %2$s</string>
     <string name="insulin_suspend_msg4">L\'erogazione di insulina sarà sospesa.</string>
     <string name="string_activate_patch">Attiva patch</string>
     <string name="string_discard_patch">Scarta patch</string>
     <string name="string_running">In esecuzione</string>
     <string name="retry">Riprova</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di voler scartare la patch corrente?</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di voler scartare la patch?</string>
     <string name="needle_insertion_error_1">Errore inserimento ago.</string>
     <string name="needle_insertion_error_3">Tocca \'Scarta\' per disattivare la patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Tempo sospensione basale</string>

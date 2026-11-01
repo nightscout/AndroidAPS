@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">שליחת מסרונים לכל המספרים</string>
     <string name="sendsmsactiontext">שליחת מסרון עם טקסט</string>
     <string name="starttemptarget">הפעלת יעד זמני</string>
-    <string name="islesser">פחות מ-</string>
-    <string name="isequalorlesser">שווה או פחות מ-</string>
     <string name="isequal">שווה ל-</string>
     <string name="isequalorgreater">שווה או גדול מ-</string>
     <string name="isgreater">גדול מ-</string>
@@ -88,7 +86,6 @@
     <string name="add_short">הוספה</string>
     <string name="temptargetcompared">יעד זמני %1$s</string>
     <string name="btdevicecompared">חיבור בלוטות\' להתקן %1$s %2$s</string>
-    <string name="btdevice">‏התחברות למכשיר בלוטות\' </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

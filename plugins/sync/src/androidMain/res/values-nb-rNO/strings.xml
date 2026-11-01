@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Tilkoblingsinnstillinger</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synkroniserer dataene dine med Nightscout via v3-API-et</string>
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
@@ -79,7 +78,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Flere sammenkoblinger samsvarte med denne PIN-koden. Be hovedenheten generere en ny og prøv igjen.</string>
     <string name="pair_with_master_error_expired">Denne sammenkoblingen har utløpt. Generer en ny PIN-kode på hovedenheten.</string>
     <string name="pair_with_master_error_network">Kan ikke koble til Nightscout. Kontroller forbindelsen og prøv igjen.</string>
-    <string name="pair_with_master_error_secret_store">Paringshemmeligheten kunne ikke lagres, så paringen ble avbrutt. Ingenting ble endret. Prøv igjen, og hvis det fortsatt ikke fungerer, start appen på nytt.</string>
+    <string name="pair_with_master_error_secret_store">Sammenkoblingsnøkkelen kunne ikke lagres, så sammenkoblingen ble avbrutt. Ingenting ble endret. Prøv igjen, og hvis det fortsatt ikke fungerer, start appen på nytt.</string>
     <string name="pair_with_master_retry">Prøv igjen</string>
     <string name="pair_with_master_already_paired_title">Allerede sammenkoblet</string>
     <string name="pair_with_master_already_paired_master">Er allerede koblet til hovedenhet %1$s. Koble fra først for å angi en ny PIN-kode.</string>
@@ -121,7 +120,7 @@
     <string name="ns_alarm_options">Alarmvalg</string>
     <string name="ns_remote_control_options">Fjernkontroll</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for den vanlige</string>
+    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for de vanlige</string>
     <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
     <string name="title_tidepool_use_ns_connection">Bruk tilkoblingsinnstillingene for Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Slå av for å angi egne tilkoblingsinnstillinger for Tidepool</string>
@@ -166,7 +165,7 @@
     <string name="scene_not_available">Scene %1$s finnes ikke lenger</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Fjernkommandoer for insulin er deaktivert i AAPSClient-modus</string>
     <string name="wear_phone_not_ready">Telefonen starter fortsatt opp eller tar i bruk innstillinger. Prøv igjen om litt.</string>
-    <string name="wear_control_disabled">Kontroller fra klokke er deaktivert i Klokke-innstillingene på telefonen.</string>
+    <string name="wear_control_disabled">Styr fra klokke er slått av i Klokke-innstillingene på telefonen.</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
@@ -216,7 +215,7 @@
     <string name="last_run">Siste beregning</string>
     <string name="last_enact">Siste utført</string>
     <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fE %2$.0f%%</string>
-    <string name="today">Idag</string>
+    <string name="today">I dag</string>
     <string name="weighted">vektlagt</string>
     <string name="full_xdrip_sync_comment">Full synkronisering? Det kan ta en stund og før den er ferdig vil du ikke se nye data i xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Vennligst prøv igjen.</string>
@@ -234,7 +233,7 @@
     <string name="smscommunicator_otp_reset_btn">Tilbakestill autentiseringsfunksjoner</string>
     <string name="smscommunicator_otp_reset_title">Tilbakestill autentiseringsnøkkel</string>
     <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil tilbakestille autentiseringsnøkkelen? Det vil gjøre alle autentiseringsverktøy som er konfigurert ugyldige, og du må konfigurere dem på nytt.</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Installer Autentisering</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installer en autentiseringsapp</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skann koden for å sette opp AAPS OTP-koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>
     <string name="smscommunicator_otp_reset_header">Tilbakestill autentiseringsfunksjoner</string>
@@ -250,7 +249,7 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">For å levere måltidsbolus %1$.2fE, svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_with_code">For å angi det midlertidige målet %1$s, svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_cancel">For å avbryte midlertidig mål, svar med koden %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">For å deaktivere SMS-svartjenesten svar med koden %1$s.\n\nHusk at du bare kan aktivere den på nytt direkte fra AAPS-hovedtelefonen.</string>
+    <string name="smscommunicator_stops_ns_with_code">For å deaktivere SMS-fjerntjenesten svar med koden %1$s.\n\nHusk at du bare kan aktivere den på nytt direkte fra AAPS-hovedtelefonen.</string>
     <string name="smscommunicator_stopped_sms">SMS-fjerntjenesten er stoppet. For å aktivere den på nytt, bruk AAPS på hovedtelefonen.</string>
     <string name="smscommunicator_calibration_reply_with_code">For å sende kalibrering %1$.2f svar med koden %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolus mislyktes. Bekreft faktisk tilstand før du sender en ny kommando!</string>

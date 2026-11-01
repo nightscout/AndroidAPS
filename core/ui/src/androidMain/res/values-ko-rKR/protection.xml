@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="biometric_title">인증이 필요합니다.</string>
+    <string name="biometric_title">인증 필요</string>
     <string name="biometric_description">본인 확인을 위해 지문 센서에 손가락을 대십시오.</string>
     <string name="settings_protection">설정 보안</string>
     <string name="application_protection">애플리케이션 보안</string>
@@ -10,8 +10,8 @@
     <string name="application_password">애플리케이션 비밀번호</string>
     <string name="application_pin">애플리케이션 PIN</string>
     <string name="bolus_password">볼러스 비밀번호</string>
-    <string name="bolus_pin">Bolus PIN</string>
-    <string name="protection_timeout_title">암호 및 PIN 보존 [s]</string>
+    <string name="bolus_pin">볼러스 PIN</string>
+    <string name="protection_timeout_title">비밀번호 및 PIN 보존 [s]</string>
     <string name="protection_timeout_summary">암호 또는 PIN을 입력하기 전까지의 시간</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">안전하지 않은 대비책</string>

@@ -27,7 +27,6 @@
     <string name="commanderror">שגיאה בפקודה</string>
     <string name="speederror">שגיאת מהירות</string>
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
-    <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
     <string name="selectedpump">משאבה נבחרת</string>
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="basal_step">צעד במינון בזאלי</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">זמן הפעלת מסך [שניות]</string>
     <string name="diaconn_g8_language">שפה</string>
     <string name="diaconn_g8_bolus_speed">מהירות הזרקת הבולוס</string>
-    <string name="diaconn_g8_pumplang_chiness">סינית</string>
     <string name="diaconn_g8_pumplang_korean">קוריאנית</string>
     <string name="diaconn_g8_pumplang_english">אנגלית</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">הוספת אירוע \"החלפת סוללה\" לפורטל הטיפולים כאשר הוא נמצא בהיסטוריה</string>
     <string name="diaconn_g8_logbatterychange_title">רישום החלפת סוללה</string>
     <string name="diaconn_g8_logsyncinprogress">סנכרון היומן מתבצע</string>
-    <string name="diaconn_g8_loginsulinshorage">מחסור באינסולין</string>
     <string name="diaconn_g8_logbatteryshorage">סוללה חלשה</string>
     <string name="diaconn_g8_logneedleprime">תיחול מחט: %1$.2f יח\'</string>
     <string name="diaconn_g8_loginjectorprime">תיחול מזרק: %1$.2f יח\'</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">הושלם</string>
     <string name="diaconn_g8_reasoninjectonblock">חסימת הזרקה</string>
     <string name="diaconn_g8_reasonbatteryshortage">סוללה חלשה</string>
-    <string name="diaconn_g8_reasoninsulinshortage">מחסור באינסולין</string>
     <string name="diaconn_g8_reasonuserstop">עצירה ע\"י המשתמש</string>
     <string name="diaconn_g8_reasonsystemreset">אתחול מערכת</string>
     <string name="diaconn_g8_reasonother">אחר</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">חסימת הזרקה (%s)</string>
     <string name="diaconn_g8_lgorelease">סיום השהיית הבזאלי (%s)</string>
     <string name="diaconn_g8_lgosuspend">השהיית בזאלי (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">החלק הרגיל של הבולוס המשולב הושלם בהצלחה</string>
     <string name="diaconn_g8_logdualsquarestart">התחלת החלק הממושך של הבולוס המשולב</string>
     <string name="diaconn_g8_logdualsquaresuccess">החלק הממושך של הבולוס המשולב הושלם בהצלחה</string>
     <string name="diaconn_g8_logsquarestart">התחלת בולוס ממושך</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">הצלחה</string>
     <string name="diaconn_g8_logmealsuccess">בולוס ארוחה הצליח</string>
     <string name="diaconn_g8_errorcode_1">לא ניתן לבצע שאילתה עקב שגיאת CRC בחבילת הנתונים.</string>
-    <string name="diaconn_g8_errorcode_2">לא ניתן להגדיר - שגיאת פרמטר קלט.</string>
-    <string name="diaconn_g8_errorcode_3">לא ניתן להגדיר - שגיאה במפרט הפרוטוקול.</string>
     <string name="diaconn_g8_errorcode_4">הארוחה נרשמה, לא ניתן להזריק.</string>
     <string name="diaconn_g8_errorcode_6">בוטל על ידי המשאבה</string>
     <string name="diaconn_g8_errorcode_7">בביצוע פעולות אחרות - הגבלת הגדרות האפליקציה.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">ההזרקה לא אפשרית עקב סוללה חלשה.</string>
     <string name="diaconn_g8_errorcode_12">חסר אינסולין, לא ניתן להזריק.</string>
     <string name="diaconn_g8_errorcode_13">לא ניתן להזריק, כי הכמות חורגת מהמגבלה להזרקה אחת.</string>
-    <string name="diaconn_g8_errorcode_14">ההזרקה לא אפשרית כי היא חורגת מהמינון היומי המותר.</string>
     <string name="diaconn_g8_errorcode_15">לאחר סיום תצורת הבזאלי, תותר הזרקתו.</string>
     <string name="diaconn_g8_logtubechange_title">רישום החלפת צינורית</string>
     <string name="diaconn_g8_logtubechange_summary">הוספת אירוע \"החלפת צינורית\" להערות כאשר הוא נמצא בהיסטוריה</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">בעת השהייה עקב סוכר נמוך, ההזרקה מוגבלת</string>
     <string name="diaconn_g8_errorcode_33">מצב השהייה עקב סוכר נמוך מופעל, פקודת ON נדחתה.</string>
     <string name="diaconn_g8_errorcode_34">מצב השהייה עקב סוכר נמוך כבוי, פקודת OFF נדחתה.</string>
-    <string name="diaconn_g8_errorcode_35">התחלת בזאלי זמני חדש נדחית כאשר בזאלי זמני אחר כבר פעיל</string>
-    <string name="diaconn_g8_errorcode_36">הפסקת בזאלי זמני נדחית כאשר אין בזאלי זמני פעיל</string>
     <string name="diaconn_g8_cloudsend_summary">שליחת יומני משאבה לענן Diaconn.</string>
     <string name="diaconn_g8_cloudsend_title">סנכרון Diaconn Cloud </string>
     <string name="bolus_speed_1">1 יחידות/דקה</string>

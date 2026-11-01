@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">Programinis 4b6b kodavimas</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Aparatinis 4b6b kodavimas</string>
     <string name="medtronic_pump_frequency_us_ca">JAV &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Pasaulinis (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Skanuojama</string>
     <string name="riley_link_ble_config_connected_never">Niekada</string>

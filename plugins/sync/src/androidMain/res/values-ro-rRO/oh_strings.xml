@@ -4,9 +4,8 @@
     <string name="open_humans_description">Open Humans vă permite să încărcați datele dumneavoastră despre diabet și să le donați proiectelor științifice.</string>
     <string name="logout">Deconectați-vă</string>
     <string name="setup">Configurare</string>
-    <string name="setup_completed_info">Open Humans a fost configurat. În cazul în care doriți să încetați încărcarea, apăsați \"Deconectați-vă\".</string>
     <string name="not_setup_info">Open Humans este deocamdată inactiv. Pentru a începe încărcarea datelor, apăsați \"Configurare\".</string>
-    <string name="project_member_id">ID Membru proiect: %1$s</string>
+    <string name="project_member_id">ID membru proiect: %1$s</string>
     <string name="open_humans_uploading">Se încarcă în Open Humans…</string>
     <string name="open_humans_notifications">Notificări Open Humans</string>
     <string name="uploading_to_open_humans">AAPS încarcă datele în Open Humans. Poate dura ceva timp.</string>
@@ -42,7 +41,7 @@
     <string name="agree">Înțeleg și sunt de acord.</string>
     <string name="login_open_humans">Conectare la Open Humans</string>
     <string name="final_touches">Retușuri finale</string>
-    <string name="uploading_proceed">Mai aveți doar un pas până să încărcați datele în Open Humans. Vreți să continuați?</string>
+    <string name="uploading_proceed">Mai aveți doar un pas până să încărcați datele în Open Humans. Doriți să continuați?</string>
     <string name="cancel">Renunțați</string>
     <string name="proceed">Continuați</string>
     <string name="finishing">Finalizare...</string>

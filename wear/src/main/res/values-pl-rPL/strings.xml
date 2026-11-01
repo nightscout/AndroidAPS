@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Układ komplikacji</string>
     <string name="cwf_complication_layout_description">Położenie i rozmiar komplikacji, pobrane z załadowanej własnej tarczy zegarka.</string>
     <string name="pref_include_external">Uwzględnij zewnętrzne widoki w szablonie</string>
-    <string name="pref_switch_external">Przełącz dane zewnętrzne na tarczy</string>
     <string name="custom_pref_show_seconds">Pokaż sekundy</string>
     <string name="digitalstyle_pref_your_style">Twój styl</string>
     <string name="digitalstyle_style_none">brak stylu</string>

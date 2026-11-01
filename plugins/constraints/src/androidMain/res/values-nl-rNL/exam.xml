@@ -154,13 +154,13 @@
     <string name="nsclient_nightscout">Met AAPSClient, de Nightscout-app en de Nightscout-webpagina kun je AAPS allemaal op afstand volgen.</string>
     <string name="nsclient_dexcomfollow">Andere apps (zoals Dexcom Follow of xDrip+ in \'follower\'-modus) maken het mogelijk om bepaalde gegevens, zoals glucosewaarden, op afstand te volgen. Deze apps tonen mogelijk geen IOB of COB, of berekenen deze op een andere manier.</string>
     <string name="nsclient_data">Om AAPS op afstand te volgen of te bedienen, hebben beide telefoons internettoegang nodig (bijvoorbeeld wifi of mobiele data).</string>
-    <string name="nsclient_fullcontrol">Wanneer AAPSClient is gekoppeld aan de AAPS-telefoon, kun je AAPS ook op afstand bedienen, bijvoorbeeld voor bolussen, koolhydraten, tijdelijke streefwaarden, profielwisselingen en de loop-modus.</string>
+    <string name="nsclient_fullcontrol">Wanneer AAPSClient is gekoppeld aan een AAPS-mastertelefoon, kan AAPS ook op afstand worden bediend. Zo kunnen bolussen worden toegediend, koolhydraten worden geregistreerd, tijdelijke streefdoelen worden ingesteld, van profiel worden gewisseld en de bedrijfsmodus worden gewijzigd.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="nsclient_hint2">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Insulinegevoeligheidsfactor (ISF)</string>
     <string name="isf_increasingvalue">Het verhogen van de ISF-waarde zal leiden tot meer insulinetoediening om een dezelfde hoeveelheid koolhydraten te dekken.</string>
     <string name="isf_decreasingvalue">Het verlagen van de ISF-waarde leidt tot meer insulinetoediening om een verhoogde bloedglucose te corrigeren.</string>
-    <string name="isf_noeffect">Verhoging of verlaging van de ISF heeft geen effect op de insulinetoediening wanneer de bloedglucosespiegel lager is dan de streefwaarde.</string>
+    <string name="isf_noeffect">Verhoging of verlaging van de ISF heeft geen effect op de insulinetoediening wanneer de bloedglucosespiegel lager is dan het streefdoel.</string>
     <string name="isf_preferences">ISF moet worden ingevoerd in je AAPS-voorkeuren.</string>
     <string name="isf_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="ic_multiple">Je kunt meer dan één waarde voor KH-ratio in je profiel gebruiken.</string>
@@ -178,7 +178,7 @@
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="profileswitch2_label">Profielwissels</string>
     <string name="profileswitch2_pctwillchange">Welke antwoorden zijn correct bij het opgeven van een 120% profielwissel?</string>
-    <string name="profileswitch2_bghigher">De streefwaarde wordt 20% hoger.</string>
+    <string name="profileswitch2_bghigher">Het streefdoel wordt 20% verhoogd.</string>
     <string name="profileswitch2_basalhigher">De basaalstanden worden 20% hoger.</string>
     <string name="profileswitch2_bgunchanged">Het BG streefdoel blijft ongewijzigd.</string>
     <string name="profileswitch2_isfhigher">De ISF-waarde wordt 20% hoger.</string>
@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Een profiel bewerken is voldoende om eventuele wijzigingen door te voeren.</string>
     <string name="profileswitch4_multi">Er kunnen meerdere profielen worden ingesteld en geselecteerd om tegemoet te komen aan veranderende omstandigheden (bijvoorbeeld hormonale veranderingen, onregelmatig werk-, weekdagen/weekendlevensstijl).</string>
     <string name="other_medication_label">Andere medicijnen. Lees de verklaring hieronder en vink het vakje aan om de verklaring te accepteren.</string>
-    <string name="other_medication_text">AAPS vermindert de basaalstanden of stopt de insulinetoediening om de bloedsuiker te verhogen. Medicijnen in de klasse SGLT2-remmers (gliflozines) kunnen een stijging van bloedglucose voorkomen en kunnen daardoor een gevaarlijk insulinetekort veroorzaken dat leidt tot diabetische ketoacidose.
-\nBekende merknamen zijn: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nIk verklaar dat ik dergelijke medicijnen niet zal gebruiken wanneer ik AAPS gebruik, of dat ik de loop zal deactiveren voordat ik met deze medicijnen start.</string>
     <string name="concentration_feature_label">Insuline Concentratie Management</string>
     <string name="u200_with_profile">Voordat AAPS insulineconcentraties ondersteunde, paste gebruikers U200 toe door een profiel van 50% in te stellen om alle waarden te halveren. In dat systeem zijn welke antwoorden waar?</string>
     <string name="u200_with_profile_reports">De gegevens in mijn AAPS-database en NS-rapporten kloppen niet meer. Alle waarden (boli, doseringssnelheden, TDD) moeten met 2 worden vermenigvuldigd om de werkelijke waarden te zien, vooral voor artsen en het zorgteam.</string>

@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatisierung</string>
+    <string name="automation_enabled">Aktiviert</string>
+    <string name="automation_read_only">Nur Lesezugriff</string>
+    <string name="automation_new_rule">Neue Regel</string>
+    <string name="automation_empty_desc">Erstelle eine Regel, um Aktionen basierend auf Triggern (Auslösern) zu automatisieren.</string>
+    <string name="automation_edit_rule">Regel bearbeiten</string>
+    <string name="automation_discard_title">Änderungen verwerfen?</string>
+    <string name="automation_discard_message">Die Regel ist unvollständig und kann nicht gespeichert werden. Änderungen verwerfen?</string>
+    <string name="automation_discard_confirm">Verwerfen</string>
+    <string name="automation_category_time">Zeit &amp; Zeitplan</string>
+    <string name="automation_category_glucose">Glukose &amp; Behandlung</string>
+    <string name="automation_category_device">Gerätestatus</string>
+    <string name="automation_category_sensors">Sensoren &amp; Verbindung</string>
+    <string name="automation_category_other">Andere</string>
+    <string name="automation_choose_trigger">Trigger( Auslöser) hinzufügen</string>
+    <string name="automation_add_group">Gruppe</string>
+    <string name="automation_choose_action">Aktion hinzufügen</string>
+    <string name="automation_category_targets">Ziele</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Loop &amp; Insulin</string>
+    <string name="automation_category_alerts">Warnungen</string>
+    <string name="automation_category_system">System</string>
+    <string name="automation_category_scenes">Szenen</string>
+    <string name="action_run_scene">Szene ausführen</string>
+    <string name="action_run_scene_short">Szene ausführen: %1$s</string>
+    <string name="action_enable_scene">Szene aktivieren</string>
+    <string name="action_enable_scene_short">Szene aktivieren: %1$s</string>
+    <string name="action_disable_scene">Szene deaktivieren</string>
+    <string name="action_disable_scene_short">Szene deaktivieren: %1$s</string>
+    <string name="action_scene_label">Szene</string>
+    <string name="trigger_scene_active">Szene</string>
+    <string name="trigger_scene_active_compared">Szene %1$s</string>
+    <string name="action_scene_not_found">Szene nicht gefunden</string>
+    <string name="action_scene_disabled">Szene ist deaktiviert</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">BPM</string>
     <string name="automation_missing_task_name">Gib einen Namen für die Aufgabe ein.</string>
     <string name="automation_missing_trigger">Mindestens eine auslösende Bedingung angeben.</string>
     <string name="automation_missing_action">Mindestens eine Aktion angeben.</string>
+    <string name="exportsettings_message">Export der Einstellungen: %1$s</string>
+    <string name="export_settings_short">Text in Behandlungen:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Nachricht:</string>
@@ -19,8 +56,6 @@
     <string name="sendsmsactiondescription">SMS an alle Nummern senden</string>
     <string name="sendsmsactiontext">SMS mit Text senden</string>
     <string name="starttemptarget">Tempöräres Ziel (TT) starten</string>
-    <string name="islesser">ist kleiner als</string>
-    <string name="isequalorlesser">ist gleich oder kleiner als</string>
     <string name="isequal">ist gleich</string>
     <string name="isequalorgreater">ist gleich oder größer als</string>
     <string name="isgreater">ist größer als</string>
@@ -51,7 +86,6 @@
     <string name="add_short">HINZUFÜGEN</string>
     <string name="temptargetcompared">Temporäres Ziel %1$s</string>
     <string name="btdevicecompared">Bluetooth-Verbindung mit Gerät %1$s %2$s</string>
-    <string name="btdevice">Mit Bluetooth-Gerät verbinden</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -65,6 +99,22 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Herzfrequenz</string>
     <string name="triggerHeartRateDesc">HF %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensoralter</string>
+    <string name="triggerSensorAgeDesc">Sensoralter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerCannulaAgeLabel">Kanülenalter</string>
+    <string name="triggerCannulaAgeDesc">Kanülenalter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerPodChangeLabel">Pod-Aktivierung</string>
+    <string name="triggerPodChangeDesc">Pod aktiviert</string>
+    <string name="triggerUnknownLabel">Unbekannter Auslöser</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Unbekannter Auslöser %1$s - niemals wahr</string>
+    <string name="triggerInsulinAgeLabel">Insulinalter</string>
+    <string name="triggerInsulinAgeDesc">Insulinalter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerPumpBatteryAgeLabel">Alter der Pumpenbatterie</string>
+    <string name="triggerPumpBatteryAgeDesc">Pumpenbatteriealter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerReservoirLevelLabel">Reservoirstand</string>
+    <string name="triggerReservoirLevelDesc">Reservoirstand %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pumpenbatterie-Stand</string>
+    <string name="triggerPumpBatteryLevelDesc">Pumpenbatterie-Stand %1$s %2$.0f</string>
     <string name="recurringTime">Wiederholungszeit</string>
     <string name="every">Jeder/jede/jedes</string>
     <string name="never">Nie</string>
@@ -83,15 +133,35 @@
     <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="error_setting_reminder">Fehler beim Setzen des zukünftigen Alarms</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune Profil %1$s</string>
     <string name="autotune_run">Autotune ausführen</string>
     <string name="autotune_run_without_autoswitch">Autotune wurde ohne Profilwechsel ausgeführt</string>
     <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil wurde automatisch gewechselt</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Schritte</string>
+    <string name="triggerStepsCountDesc">Anzahl der Schritte pro %1$s Minuten %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Messdauer</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Aktiviere/Deaktiviere SMB</string>
+    <string name="changeSmbTo">SMB auf %1$s ändern</string>
+    <string name="newSmbMode">Neuer SMB-Modus:</string>
+    <string name="on">EIN</string>
+    <string name="off">AUS</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Glättung ändern</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Glättung ändern auf %1$s</string>
+    <string name="smoothing_label">Glättung</string>
+    <string name="precondition_smoothing_not_active_name">Glättung nicht aktiv</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Glättung %1$s ist nicht aktiv</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Von Karte auswählen</string>
+    <string name="tap_to_select_location">Tippe auf die Karte, um einen Ort auszuwählen</string>
+    <string name="selected_coords">Ausgewählt: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Standort</string>
+    <string name="permission_location_description">Benötigt für standortbasierte Automatisierungsauslöser und WiFi-Netzwerk-Identifikation</string>
+    <string name="permission_background_location_description">Benötigt um Automatisierungsauslöser zu aktivieren, wenn die App im Hintergrund ist</string>
 </resources>

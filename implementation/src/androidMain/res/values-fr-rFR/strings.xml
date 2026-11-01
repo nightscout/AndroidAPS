@@ -57,10 +57,8 @@
     <string name="ue_exported">Entrées utilisateur exportées</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporté il y a %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exporté le %1$s</string>
-    <string name="exported_less_than_hour_ago">exporté il y a moins d\'une heure</string>
     <string name="metadata_warning_different_flavour">Les préférences ont été créées avec différentes variantes d\'AAPS (%1$s) alors que vous avez: %2$s.\n\nCertains paramètres peuvent être manquants ou invalides - après avoir importé veuillez vérifier et mettre à jour vos préférences.</string>
     <string name="metadata_warning_different_device">Les préférences ont été créées sur un autre périphérique. C\'est OK si vous importez à partir d\'un téléphone ancien/différent, mais vérifiez que les préférences importées sont correctes !</string>
-    <string name="metadata_warning_old_export">Les préférences importées ont déjà %1$s jours ! Vous avez peut-être des préférences plus récentes ou vous avez sélectionné un mauvais fichier ? N\'oubliez pas d\'exporter vos préférences régulièrement !</string>
     <string name="metadata_warning_date_format">Format date et heure non valide !</string>
     <string name="metadata_warning_different_version">Préférences d\'une autre version mineure, différente de l\'application. C\'est OK si vous importez après la mise à jour, mais vérifiez après l\'importation si les préférences sont toujours correctes !</string>
     <string name="metadata_urgent_different_version">Préférences d\'une autre version majeure, différente de l\'application. Les versions majeures diffèrent significativement et peuvent avoir des préférences incompatibles ! Vérifiez bien après l\'import que les préférences sont toujours correctes !</string>

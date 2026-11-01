@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="unsupported_action_in_pump">펌프에서 지원되지 않는 작업입니다. AndroidAPS UI만 사용하십시오!</string>
     <string name="waiting_1_minute">새 연결 시도 전 대기 중 %1$d/%2$d초</string>
 </resources>

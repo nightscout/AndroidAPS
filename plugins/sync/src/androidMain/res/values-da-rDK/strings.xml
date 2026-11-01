@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Indstillinger for forbindelse</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="blocked_by_charging">Blokeret af opladningsmuligheder</string>
     <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
     <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
@@ -18,7 +17,6 @@
     <string name="queue">Kø:</string>
     <string name="clear_log">Ryd log</string>
     <string name="full_sync">Fuld synkronisering</string>
-    <string name="full_sync_comment">Fuld synkronisering? Det kan tage mange timer, og indtil du er færdig, vil du ikke se nye data i NS.</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_alarm_options">Indstillinger for alarm</string>
     <!-- Tidepool -->
@@ -91,16 +89,13 @@
     <string name="smscommunicator_tab_otp_label">Authenticator opsætning</string>
     <string name="smscommunicator_code_verify_label">Kode, der skal kontrolleres:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">Bekræftelseskoden består af 6 cifre som vises af Autentificerings-app (kendt som OTP) efterfulgt af 3 eller flere cifre i obligatorisk PIN-kode.</string>
     <string name="smscommunicator_otp_reset_btn">Nulstil Autentificering</string>
     <string name="smscommunicator_otp_reset_title">Nulstil Autentificeringsnøgle</string>
-    <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil nulstille autentificeringsnøgle? Det vil gøre alle aktuelt konfigurerede autentificatorer ugyldige, og du bliver nødt til at sætte dem op igen.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installer Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan kode for at opsætte AAPS OTP-koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Engangsadgangskode</string>
     <string name="smscommunicator_otp_reset_header">Nulstil Autentificering</string>
     <string name="smscommunicator_otp_install_info">På hver follower telefon installeres Authenticator app, der understøtter RFC 6238 TOTP tokens. Populære gratis apps er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Ved at nulstille autentificeringen gør du alle allerede tilvejebragte authenticatorer ugyldige. Du vil bliver nødt til at opsætte dem igen!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">FORKERT STØRRELSE!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">FORKERT PIN</string>
@@ -111,7 +106,6 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">For at levere måltidsbolus %1$.2fE svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_with_code">For at indstille midlertidig mål %1$s svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_cancel">For at annullere midlertidig mål, svar med koden %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">For at deaktivere SMS fjernstyring svar med koden %1$s.\n\nHusk på, at du kun vil være i stand til at genaktivere den direkte fra AAPS-master-smartphone.</string>
     <string name="smscommunicator_stopped_sms">SMS fjernstyring stoppet. For at genaktivere det, brug AAPS på master smartphone.</string>
     <string name="smscommunicator_calibration_reply_with_code">For at sende kalibrering %1$.2f svar med kode %2$s</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2fIE leveret succesfuldt</string>
@@ -138,7 +132,6 @@
     <string name="smscommunicator_loop_disable_reply_with_code">For at deaktivere loop, svar med kode %1$s</string>
     <string name="smscommunicator_tempbasal_set">Temp basal %1$.2fE/t i %2$d min startet med succes</string>
     <string name="smscommunicator_extended_set">Udvidet bolus %1$.2f IE for %2$d min er startet succesfuldt</string>
-    <string name="smscommunicator_carbs_set">Kulhydrater %1$d g angivet med succes</string>
     <string name="smscommunicator_carbs_failed">Indtastning af %1$dg kulhydrater mislykkedes</string>
     <string name="smscommunicator_tempbasal_set_percent">Midlertidig basal %1$d%% i %2$d min startet med succes</string>
     <string name="smscommunicator_tempbasal_failed">Midlertidig basal start mislykkedes</string>

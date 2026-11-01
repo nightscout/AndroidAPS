@@ -24,7 +24,7 @@
     <string name="patch_expiry_label">Patch utløper</string>
     <string name="patch_activation_time_label">Aktivering</string>
     <string name="reset_alarms_label">Nullstill alarmer</string>
-    <string name="change_patch_label">Bytte Patch</string>
+    <string name="change_patch_label">Bytt patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
     <string name="expiry_not_enabled">Ikke aktivert</string>
     <!-- Alarm strings -->
@@ -71,7 +71,7 @@
     <string name="step_deactivate">Deaktivere patch</string>
     <string name="step_deactivating">Deaktiverer...</string>
     <string name="step_deactivate_complete">Patch deaktivert</string>
-    <string name="unpair_confirm_message">Dette vil slette det lagrede pumpens serienummer og koble fra. Aktiver en ny patch for å skanne etter en pumpe.</string>
+    <string name="unpair_confirm_message">Dette sletter det lagrede serienummeret til pumpen og kobler fra. Aktiver en ny patch for å skanne etter en pumpe.</string>
     <string name="step_retry_activation">Aktivering pågår</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
     <string name="ble_scan_connect_pump_base_first">Koble pumpebasen til et nytt patch for å slå den på, og velg den deretter fra listen nedenfor.</string>
@@ -114,9 +114,9 @@
     <string name="alarm_setting_silent">Stille</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
     <string name="pump_warning_notification_summary">Vis varsel om ikke-kritisk pumpeadvarsel: lavt batteri, lavt reservoar (20 enheter) og utløper snart. Anbefales og la være aktivert når pumpealarmer er satt til stillemodus.</string>
-    <string name="pump_warning_expiry_hour_title">Utløpsvarsel om pumpe</string>
+    <string name="pump_warning_expiry_hour_title">Utløpsvarsel om pumpe [timer]</string>
     <string name="pump_warning_expiry_hour_summary">Vis varsel på angitt time etter aktivering.</string>
-    <string name="patch_expiration_title">Patch utløpsdato</string>
+    <string name="patch_expiration_title">Patch-utløp</string>
     <string name="patch_expiration_summary">Når aktivert vil plasteret utløpe etter 3 dager, med en nådeperiode på 8 timer etter det.</string>
     <string name="hourly_max_insulin_title">Maks insulin per time [Enheter]</string>
     <string name="hourly_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per time. Hvis overskredet vil pumpen suspendere.</string>

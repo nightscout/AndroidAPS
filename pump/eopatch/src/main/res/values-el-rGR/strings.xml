@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Ολοκλήρωση αντλίας για EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Το Patch δεν επιβεβαίωσε το τέλος του bolus. Καταγράφηκε ποσότητα %1$s, αλλά το Patch μπορεί να χορήγησε περισσότερη ινσουλίνη. Ελέγξτε το Patch πριν δώσετε περισσότερη ινσουλίνη.</string>
-    <string name="low_reservoir">Ειδοποιήσεις χαμηλής δεξαμενής</string>
-    <string name="patch_expiration_reminders">Υπενθύμιση λήξης Patch</string>
     <string name="patch_buzzer_reminders">Υπενθυμίσεις βομβητή Patch</string>
     <string name="eopatch_ble_status">Κατάσταση BLE</string>
     <string name="eopatch_serial_number">Σειριακός Αριθμός</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">Για να αλλάξετε σε νέο Patch, το τρέχον Patch πρέπει να απορριφθεί. Θα ακυρωθεί όλη η χορήγηση ινσουλίνης από το Patch.</string>
     <string name="patch_discard_complete_title">Η απόρριψη του patch ολοκληρώθηκε.</string>
     <string name="patch_discard_complete_desc">Το Patch απενεργοποιήθηκε.\nΑπορρίψτε το Patch.\nΑφαιρέστε το Patch από το σώμα σας.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Ένα bolus χορηγείται αυτή τη στιγμή. Θέλετε πραγματικά να ακυρώσετε τη χορήγηση ινσουλίνης και να απορρίψετε το Patch;</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Ένας προσωρινός βασικός ρυθμός χορηγείται αυτή τη στιγμή. Θέλετε πραγματικά να ακυρώσετε τη χορήγηση ινσουλίνης και να απορρίψετε το Patch;</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Ένα bolus και ένας προσωρινός βασικός ρυθμός χορηγούνται τώρα. Θέλετε πραγματικά να ακυρώσετε τη χορήγηση ινσουλίνης και να απορρίψετε το Patch;</string>
-    <string name="patch_change_confirm_desc">Είστε σίγουροι ότι θα απορρίψετε ένα Patch;</string>
     <string name="patch_forced_discard">Απόρριψη</string>
     <string name="patch_comm_error_during_discard_desc_2">Για μονομερή απενεργοποίηση, πατήστε \'Απόρριψη\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Χειροκίνητη απενεργοποίηση του συναγερμού του Patch</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">Κατά τη σύζευξη θα εμφανιστούν δύο αναδυόμενα παράθυρα του Android. Πρέπει να επιβεβαιώσετε και τα δύο για να ολοκληρωθεί η σύζευξη Bluetooth.</string>
     <string name="patch_start_pairing">Έναρξη σύζευξης</string>
     <string name="patch_connect_new">Σύζευξη Patch</string>
-    <string name="patch_connect_new_desc">Γίνεται σύζευξη με το νέο Patch.\nΚρατήστε το Patch όσο πιο κοντά γίνεται στην έξυπνη συσκευή</string>
     <string name="patch_remove_needle_cap">Προετοιμασία για την τοποθέτηση του Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Αφαιρέστε την αυτοκόλλητη ταινία και πατήστε \'Επόμενο\'.</string>
     <string name="patch_remove_needle_cap_desc_2">Αν εξέχει βελόνα, πατήστε \'Απόρριψη\'.</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">Χρειάζονται περίπου 30 δευτερόλεπτα.</string>
     <string name="patch_safety_check_desc_2">Για ασφαλή χρήση, μην αφαιρέσετε τον μοχλό δράσης της βελόνας μέχρι να ολοκληρωθεί ο έλεγχος ασφαλείας!</string>
     <string name="patch_rotate_knob">Εισαγωγή της βελόνας</string>
-    <string name="patch_rotate_knob_desc_1">Περιστρέψτε τον μοχλό δράσης της βελόνας πάνω από 100 ° για να εισαγάγετε τη βελόνα και στη συνέχεια περιστρέψτε τον πλήρως για να τον αφαιρέσετε</string>
     <string name="patch_rotate_knob_desc_2">Ελέγξτε για 1 μπιπ και στη συνέχεια πατήστε \'Επόμενο\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Ελέγξτε για 1 μπιπ και στη συνέχεια πατήστε \'Επανάληψη\'.</string>
     <string name="patch_basal_schedule">Ολοκλήρωση ενεργοποίησης Patch!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' πρόγραμμα έχει ενεργοποιηθεί.</string>
     <string name="patch_basal_schedule_desc_2">Σας ειδοποιεί όταν το Patch πλησιάζει τον χρόνο λήξης του.\nΑλλάξτε τον χρόνο υπενθύμισης εάν είναι απαραίτητο.</string>
     <string name="patch_expiration_reminder_setting_title">Υπενθύμιση λήξης Patch</string>
-    <string name="patch_activate_reminder_desc">Η ενεργοποίηση του Patch δεν έχει ολοκληρωθεί.\n Συνέχεια.</string>
     <string name="patch_communication_check_helper_1">Φέρτε την έξυπνη συσκευή σας πιο κοντά στο Patch.</string>
     <string name="patch_communication_check_helper_2">Παρακαλώ μετακινήστε σε άλλη τοποθεσία και προσπαθήστε ξανά.</string>
     <string name="patch_safety_check_failed_desc">Ο έλεγχος ασφαλείας απέτυχε. Προσπαθήστε ξανά.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Επιτυχής επικοινωνία</string>
     <string name="patch_communication_succeed_message">Συνδεδεμένο με το Patch.</string>
     <string name="patch_cancel_pairing">Ακύρωση σύζευξης</string>
-    <string name="insulin_suspend_msg1">Μετά την αναστολή, το τρέχων Bolus &amp; Προσωρινός Ρυθμός θα ακυρωθεί. \n\nΡυθμός : %1$s U/hr\nΧρόνος που απομένει : %2$s\n&amp; Ινσουλίνη για χορήγηση: %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Μετά την αναστολή, το τρέχον Bolus θα ακυρωθεί. \n\nΙνσουλίνη για χορήγηση: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Μετά την αναστολή, ο ΠροσωρινόςΒασικός Ρυθμός θα ακυρωθεί. \n\nΡυθμός : %1$s U/hr\nΥπολοιπόμενος Χρόνος : %2$s</string>
     <string name="insulin_suspend_msg4">Αναστολή χορήγησης ινσουλίνης.</string>
     <string name="string_activate_patch">Ενεργοποίηση Patch</string>
     <string name="string_discard_patch">Απόρριψη Patch</string>
     <string name="string_running">Σε λειτουργία</string>
     <string name="retry">Επανάληψη</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Είστε βέβαιοι να απορρίψετε το τρέχον Patch;</string>
     <string name="needle_insertion_error_1">Σφάλμα εισαγωγής βελόνας.</string>
     <string name="needle_insertion_error_3">Πατήστε \'Απόρριψη\' για να απενεργοποιήσετε το Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Χρόνος Αναστολής Βασικού</string>

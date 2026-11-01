@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans ви позволява да качите данните за вашия диабет и да ги дарите за научни проекти.</string>
     <string name="logout">Изход</string>
     <string name="setup">Настройка</string>
-    <string name="setup_completed_info">Open Humans беше настроен. В случай че искате да спрете качването на данни, натиснете \'Изход\'.</string>
     <string name="not_setup_info">Open Humans в момента е неактивна. За да започнете да качвате данни, моля натиснете \'Настройка\'.</string>
     <string name="project_member_id">Номер на участник в проекта: %1$s</string>
     <string name="open_humans_uploading">Качване на данни към Open Humans…</string>

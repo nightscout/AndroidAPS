@@ -4,9 +4,8 @@
     <string name="setupwizard_units_prompt">Välj enheter du vill visa värden i</string>
     <string name="next_button">Nästa</string>
     <string name="previous_button">Föregående</string>
-    <string name="setupwizard_finish">Avsluta</string>
+    <string name="setupwizard_finish">Slutför</string>
     <string name="welcome">Välkommen</string>
-    <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
     <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS PROGRAMMET I BEFINTLIGT SKICK UTAN GARANTIER AV NÅGOT SLAG, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT STÅR ANVÄNDAREN FÖR HELA KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
     <string name="end_user_license_agreement_i_understand">JAG FÖRSTÅR OCH GODKÄNNER</string>
@@ -27,7 +26,6 @@
     <string name="exitwizard">Hoppa över installationsguiden</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att upptäcka insulinkänslighet och för att beräkna aktiva kolhydrater (COB). För mer information, besök:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Välj en av de tillgängliga algoritmerna. De är sorterade från äldst till nyast. En nyare algoritm är oftast mer kraftfull. Glöm inte att läsa OpenAPS-dokumentationen och konfigurera den innan användning.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din RileyLink nedan. När du har valt en RileyLink kan du fortsätta installationen när RileyLink-status är \"Ansluten\". Det här kan ta en minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Obs!</b> Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
@@ -57,7 +55,6 @@
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AAPS?</string>
     <string name="configbuilder_aps_description">Vilken APS-algoritm ska justera behandlingen?</string>
     <string name="configbuilder_sync_description">Insticksprogram för datauppladdning, synkronisering och kommunikation.</string>
-    <string name="configbuilder_bgsource_description">Var ska AAPS få sitt data ifrån?</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump kommer AAPS skriva över pumpens basalprofil med den aktiva profilen i AAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
     <string name="nsclient_version_does_not_match">AAPSClient-versionen matchar inte AAPS-versionen. Uppdatera.</string>

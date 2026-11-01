@@ -6,7 +6,6 @@
     <string name="previous_button">Späť</string>
     <string name="setupwizard_finish">Dokončiť</string>
     <string name="welcome">Vitajte</string>
-    <string name="welcometosetupwizard">Vitajte v sprievodcovi nastavením. Prevedie vás procesom nastavenia\n</string>
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
     <string name="end_user_license_agreement_text">NESMIE SA POUŽÍVAŤ NA ROBENIE ZDRAVOTNÝCH ROZHODNUTÍ. NA PROGRAM SA NEVZŤAHUJE ŽIADNA ZÁRUKA V ROZSAHU, KTORÝ POVOĽUJÚ PLATNÉ ZÁKONY. POKIAĽ NIE JE PÍSOMNE UVEDENÉ INAK, DRŽITELIA AUTORSKÝCH PRÁV A/ALEBO INÉ STRANY POSKYTUJÚ PROGRAM „TAK, AKO JE“, BEZ AKEJKOĽVEK ZÁRUKY, VÝSLOVNEJ ALEBO PREDPOKLADANEJ, VRÁTANE, ALE NIE VÝHRADNE, PREDPOKLADANÝCH ZÁRUK PREDAJNOSTI A VHODNOSTI NA KONKRÉTNY ÚČEL. CELÉ RIZIKO TÝKAJÚCE SA KVALITY A FUNGOVANIA PROGRAMU NESIETE VY. AK SA PROGRAM UKÁŽE AKO CHYBNÝ, ZNÁŠATE NÁKLADY NA VŠETKY POTREBNÉ SERVISNÉ SLUŽBY, OPRAVY ALEBO NÁPRAVY.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM A SÚHLASÍM</string>
@@ -27,7 +26,6 @@
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_sensitivity_description">Plugin citlivosti slúži na detekciu citlivosti a na výpočet COB. Viac informácií nájdete tu:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Vyberte jeden z dostupných algoritmov. Sú zoradené od najstaršieho po najnovší. Novší algoritmus je zvyčajne výkonnejší. Nezabudnite si prečítať dokumentáciu OpenAPS a pred použitím ho nastaviť.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
@@ -57,7 +55,6 @@
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AAPS?</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
     <string name="configbuilder_sync_description">Pluginy na nahrávanie dát, synchronizáciu a komunikáciu.</string>
-    <string name="configbuilder_bgsource_description">Odkiaľ má AAPS získavať dáta?</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
     <string name="allow_hardware_pump_text">Pozor: Ak aktivujete a pripojíte skutočnú pumpu, AAPS skopíruje nastavenie bazálu z profilu do pumpy a prepíše bazálnu dávku uloženú v pumpe. Overte si, že máte v AAPS správne nastavenie bazálu. Ak si nie ste istí alebo nechcete prepísať nastavenie bazálu v pumpe, stlačte Zrušiť a zopakujte prepnutie na pumpu neskôr.</string>
     <string name="nsclient_version_does_not_match">Verzia AAPSClient nesúhlasí s verziou AAPS. Prosím, aktualizujte ju.</string>

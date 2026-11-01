@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Att redigera profiler för att ändra värden är tillräckligt för att genomföra eventuella ändringar.</string>
     <string name="profileswitch4_multi">Flera profiler kan ställas in och väljas för att hantera förändrade omständigheter (t.ex. hormonella förändringar, skiftarbete, livsstilsskillnader för vardagar/helg).</string>
     <string name="other_medication_label">Annan medicin. Läs nedanstående deklaration och markera rutan för att acceptera.</string>
-    <string name="other_medication_text">AAPS sänker basaldosen eller pausar insulinleveransen för att höja blodsockret. Läkemedel av typen SGLT2-hämmare (glifloziner) kan förhindra att blodsockret stiger och kan därför ge en farlig insulinbrist som leder till ketoacidos (DKA).
-\nVanliga märken är: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nJag lovar härmed att inte ta sådana läkemedel när jag använder AAPS, eller att inaktivera loopen innan jag tar sådana läkemedel.</string>
     <string name="concentration_feature_label">Hantering av insulinkoncentration</string>
     <string name="u200_with_profile">Innan AAPS stöttade insulinkoncentrationer, körde användare med U200 insulin genom att ställa in en 50% profil för att halvera alla värden. I den inställningen, vilka svar är sanna?</string>
     <string name="u200_with_profile_reports">Min AAPS-databas och mina NS-rapporter blir felaktiga. Alla värden (bolusar, basaldoser, TDD) måste multipliceras med 2 för att visa de verkliga värdena, särskilt för läkare och vårdteam.</string>

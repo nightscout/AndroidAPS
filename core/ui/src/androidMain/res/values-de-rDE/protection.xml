@@ -33,5 +33,5 @@
     <string name="current_master_password">Aktuelles Master-Passwort</string>
     <string name="master_password_not_set">Master-Passwort nicht festgelegt</string>
     <string name="aaps_directory_not_selected">AAPS Verzeichnis nicht ausgewählt</string>
-    <string name="aaps_directory_access_lost">Der Zugriff auf das AAPS-Verzeichnis ist verloren, so dass die Einstellungen nicht mehr auf dem Telefon gespeichert werden. Wählen Sie das Verzeichnis erneut aus.</string>
+    <string name="aaps_directory_access_lost">Der Zugriff auf das AAPS-Verzeichnis ist verloren, so dass die Einstellungen nicht mehr auf dem Telefon gespeichert werden. Wähle das Verzeichnis erneut aus.</string>
 </resources>

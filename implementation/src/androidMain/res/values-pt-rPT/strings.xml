@@ -57,10 +57,8 @@
     <string name="ue_exported">Registos do utilizador exportados</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado há %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado às %1$s</string>
-    <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
     <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas definições podem estar ausentes ou inválidas - após a importação, por favor verifique e atualize as suas preferências.</string>
     <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
-    <string name="metadata_warning_old_export">Preferências importadas já são %1$s dias antigas! Talvez tenha preferências mais atualizadas ou escolheu o ficheiro errado? Lembre-se de exportar preferências regularmente!</string>
     <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
     <string name="metadata_warning_different_version">Preferências de uma versão menor diferente de aplicação. Está OK se está a importar após o upgrade, mas verifique após a importação se as preferências ainda estão corretas!</string>
     <string name="metadata_urgent_different_version">Preferências de uma versão principal diferente de aplicação. As principais versões diferem significativamente e podem ter preferências incompatíveis! Certifique-se depois de importar que as preferências ainda estão corretas!</string>

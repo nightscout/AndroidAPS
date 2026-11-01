@@ -5,13 +5,11 @@
     <string name="medtrum_pump_description">Интеграция за помпи Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки за помпа Medtrum</string>
     <string name="pump_error">Грешка в помпа: %1$s !! </string>
-    <string name="pump_warning">Предупреждение от помпата: %1$s </string>
     <string name="pump_is_suspended">Помпата е спряна</string>
     <string name="pump_is_suspended_hour_max">Помпата е спряна поради превишено максимално количество инсулин за час</string>
     <string name="pump_is_suspended_day_max">Помпата е спряна поради превишено максимално количество инсулин за ден</string>
     <string name="patch_not_active">Пач помпата не е активирана</string>
     <string name="pump_setting_failed">Неуспешно зареждане на потребителските настройки в помпата!</string>
-    <string name="pump_sync_error">Грешка при синхронизацията с историята на помпата, един запис е пропуснат. Проверете в Лечения дали болусите са синхронизирани правилно. Отложете и ако грешката продължава да се появява, сменете пач помпата или базата на помпата.</string>
     <string name="patch_reset_after_primed_error">Пача се е рестартирал сам. Не може да доставя инсулин повече. Махнете пача и стартирайте нов.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Активен болус</string>

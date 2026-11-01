@@ -273,14 +273,14 @@
     <string name="complication_uploader_phone_battery">Uploader/Telefoon Batterij</string>
     <string name="running_mode_resume">Hervat loop</string>
     <string name="running_mode_reconnect">Pomp opnieuw verbinden</string>
-    <string name="label_running_mode_title">Bedrijfsmodus</string>
+    <string name="label_running_mode_title">Loopmodus</string>
     <string name="label_bg_graph_tile">BG Grafiek</string>
     <string name="tile_tap_action">Tik actie</string>
     <string name="tile_graph_time_range">Tijdsinterval</string>
     <string name="tile_tap_bg_graph">BG Grafiek</string>
     <string name="tile_tap_main_menu">Hoofdmenu</string>
     <string name="tile_tap_loop_status">Loop status</string>
-    <string name="action_running_mode_selected">Bedrijfsmodus aangevraagd</string>
+    <string name="action_running_mode_selected">Loopmodus aangevraagd</string>
     <string name="title_activity_disconnect_pump">Verbreek verbinding met de pomp</string>
     <string name="title_activity_suspend_loop">Onderbreek loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
