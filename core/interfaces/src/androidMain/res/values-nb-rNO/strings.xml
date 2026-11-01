@@ -155,7 +155,7 @@
     <string name="basal_value">Basalverdi</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected_plain">!!!!! Langsom karboabsorpsjon oppdaget: %1$d%% av tiden. Dobbeltsjekk beregningen din. COB kan overestimeres, og dermed kan mer insulin gis !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
+    <string name="bolus_constraint_applied_warn">Bolusbegrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eKarbo %1$d g / %2$d t (+%3$d min)</string>
