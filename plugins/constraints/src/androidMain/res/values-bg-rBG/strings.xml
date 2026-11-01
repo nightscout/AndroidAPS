@@ -9,7 +9,6 @@
     <string name="application_expired">Приложението е твърде старо!</string>
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
-    <string name="version_expire">Версия %1$s изтича на %2$s и ще превключи на LGS режим</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">Избран APS</string>
     <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
     <string name="description_objectives">Разучаване на програмата</string>
-    <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
     <string name="objectives_button_unfinish">Изчисти завършените</string>
     <string name="objectives_button_unstart">Изчисти стартираните</string>
     <string name="bg_doubled_lgs">LGS режим поради дублирани данни за КЗ</string>
