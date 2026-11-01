@@ -77,6 +77,9 @@ enum class StringNonKey(
     ComposeGraphConfig("compose_graphconfig", ""),
     // The tab the Statistics screen opens on: the last one used (per-device UI state, not a user-facing preference)
     StatsTab(key = "stats_tab", defaultValue = "", exportable = false),
+    // The last searches made in the overview search bar, newest first, as a JSON array of strings.
+    // Per-device UI state like [StatsTab]: not exported and not synced, so a shared backup does not carry it.
+    SearchHistory(key = "search_history", defaultValue = "[]", exportable = false),
 
     // Synthetic mirror of the active plugin per single-select category (value = plugin pluginId, defaults to
     // javaClass.simpleName). Bidirectional for APS/SENSITIVITY/SMOOTHING/CALIBRATION (a client may switch the

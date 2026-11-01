@@ -425,6 +425,7 @@ rs_logcanulachange|DanaBooleanKey|true
 rs_loginsulinchange|DanaBooleanKey|true
 scan_on_connection_error|MedtrumBooleanKey|true
 scene_definitions|StringNonKey|true
+search_history|StringNonKey|false
 sensitivity_raises_target|BooleanKey|true
 set_neutral_temps|MedtronicBooleanPreferenceKey|true
 settings_password|StringKey|true
