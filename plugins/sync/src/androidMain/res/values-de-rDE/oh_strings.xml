@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans ermöglicht Dir, Deine Diabetesdaten in eine große Datenbank hochzuladen und wissenschaftlichen Projekten zur Verfügung zu stellen.</string>
     <string name="logout">Ausloggen</string>
     <string name="setup">Einrichtung</string>
-    <string name="setup_completed_info">Open Humans wurde eingerichtet. Wenn Du den Upload stoppen willst, klicke auf \'Logout\'.</string>
     <string name="not_setup_info">Open Humans ist inaktiv. Klicke auf \'Setup\', um den Upload zu starten.</string>
     <string name="project_member_id">Project Member ID: %1$s</string>
     <string name="open_humans_uploading">Upload zu Open Humans läuft...</string>
