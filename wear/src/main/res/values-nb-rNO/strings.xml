@@ -42,7 +42,7 @@
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
     <string name="pref_highlight_basals">Marker basaler</string>
     <string name="pref_prediction_lines">Vis prediksjoner</string>
-    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matchende avdeler</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matchende skillelinje</string>
     <string name="pref_chart_timeframe">Tidsspenn for diagram</string>
     <string name="pref_1_hour">1 time</string>
     <string name="pref_2_hours">2 timer</string>
