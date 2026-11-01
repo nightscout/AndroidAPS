@@ -57,10 +57,8 @@
     <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
     <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
-    <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
     <string name="metadata_warning_different_flavour">Ustawienia zostały utworzone z innym wariantem AAPS (%1$s) gdy masz %2$s.\n\nNiektóre ustawienia mogą być brakujące lub nieprawidłowe - po zaimportowaniu proszę sprawdzić i zaktualizować swoje ustawienia.</string>
     <string name="metadata_warning_different_device">Preferencje zostały utworzone na innym urządzeniu. Import ze starszego/innego telefonu jest OK, ale upewnij się, że importowane preferencje są poprawne!</string>
-    <string name="metadata_warning_old_export">Zaimportowane ustawienia mają już %1$s dni! Może masz bardziej aktualne ustawienia lub wybierzesz niewłaściwy plik? Pamiętaj o regularnym eksporcie ustawień!</string>
     <string name="metadata_warning_date_format">Niepoprawny format daty i czasu!</string>
     <string name="metadata_warning_different_version">Importujesz ustawienia z innej, nieco starszej wersji aplikacji. Prawdopodobnie to jest OK bo np.: importujesz ustawienia po aktualizacji do nowej wersji, ale sprawdź po zaimportowaniu, czy ustawienia są nadal poprawne!</string>
     <string name="metadata_urgent_different_version">Importujesz ustawienia ze znacząco innej wersji aplikacji. Zmiana głównego numeru wersji aplikacji oznacza znaczące zmiany, i może oznaczać niekompatybilność niektórych ustawień. Upewnij się po imporcie, że ustawienia są nadal poprawne!</string>
