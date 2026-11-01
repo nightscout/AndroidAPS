@@ -204,7 +204,7 @@
     <string name="uam_smb_max_minutes">UAM SMB max minuten</string>
     <string name="pref_title_carbs_request_threshold">Minimum benodigde koolhydraten</string>
     <string name="carbs_req_threshold_summary">Minimum gram benodigde koolhydraten waarbij een waarschuwing wordt gegeven. Wanneer er minder koolhydraten nodig zijn dan dit getal, wordt er geen waarschuwing gegeven.</string>
-    <string name="pref_title_half_basal_exercise_target">Halve basaal voor beweging streefwaarde</string>
+    <string name="pref_title_half_basal_exercise_target">Beweging/sportdoel met halve basaal</string>
     <string name="half_basal_exercise_target_summary">Stel een getal in, bijvoorbeeld 160. Dit betekent dat wanneer het tijdelijke streefdoel is ingesteld op 160 mg/dL en ‘Hoog tijdelijk streefdoel verhoogt de insulinegevoeligheid’ is ingeschakeld, op dit niveau 50%% van de basale insulinetoediening wordt gebruikt (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">IOB drempelpercentage</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage van maxIOB waarbij SMB\'s worden uitgeschakeld.\nStandaardwaarde: 100%\nMet 100% wordt deze functie effectief uitgeschakeld.</string>
