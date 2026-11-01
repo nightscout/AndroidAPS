@@ -1099,7 +1099,7 @@
     <string name="import_decryption_password">Dekrypteringspassord</string>
     <string name="import_different_password_hint">Filen ble kryptert med et annet passord</string>
     <string name="import_wrong_password">Feil passord</string>
-    <string name="import_btn">Import</string>
+    <string name="import_btn">Importer</string>
     <string name="import_anyway_btn">Importer uansett</string>
     <string name="import_apply_title">Bruk importerte innstillinger?</string>
     <!--
