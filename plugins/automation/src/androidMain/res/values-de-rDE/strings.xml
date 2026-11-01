@@ -3,7 +3,16 @@
     <string name="automation">Automatisierung</string>
     <string name="automation_category_device">Gerätestatus</string>
     <string name="automation_category_other">Andere</string>
+    <string name="automation_add_group">Gruppe</string>
+    <string name="automation_choose_action">Aktion hinzufügen</string>
     <string name="automation_category_targets">Ziele</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Loop &amp; Insulin</string>
+    <string name="automation_category_alerts">Warnungen</string>
+    <string name="automation_category_system">System</string>
+    <string name="automation_category_scenes">Szenen</string>
+    <string name="action_run_scene">Szene ausführen</string>
+    <string name="action_run_scene_short">Szene ausführen: %1$s</string>
     <string name="automation_missing_task_name">Gib einen Namen für die Aufgabe ein.</string>
     <string name="automation_missing_trigger">Mindestens eine auslösende Bedingung angeben.</string>
     <string name="automation_missing_action">Mindestens eine Aktion angeben.</string>
@@ -68,6 +77,22 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Herzfrequenz</string>
     <string name="triggerHeartRateDesc">HF %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensoralter</string>
+    <string name="triggerSensorAgeDesc">Sensoralter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerCannulaAgeLabel">Kanülenalter</string>
+    <string name="triggerCannulaAgeDesc">Kanülenalter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerPodChangeLabel">Pod-Aktivierung</string>
+    <string name="triggerPodChangeDesc">Pod aktiviert</string>
+    <string name="triggerUnknownLabel">Unbekannter Auslöser</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Unbekannter Auslöser %1$s - niemals wahr</string>
+    <string name="triggerInsulinAgeLabel">Insulinalter</string>
+    <string name="triggerInsulinAgeDesc">Insulinalter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerPumpBatteryAgeLabel">Alter der Pumpenbatterie</string>
+    <string name="triggerPumpBatteryAgeDesc">Pumpenbatteriealter %1$s %2$.1f Stunde(n)</string>
+    <string name="triggerReservoirLevelLabel">Reservoirstand</string>
+    <string name="triggerReservoirLevelDesc">Reservoirstand %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pumpenbatterie-Stand</string>
+    <string name="triggerPumpBatteryLevelDesc">Pumpenbatterie-Stand %1$s %2$.0f</string>
     <string name="recurringTime">Wiederholungszeit</string>
     <string name="every">Jeder/jede/jedes</string>
     <string name="never">Nie</string>
@@ -86,14 +111,19 @@
     <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="error_setting_reminder">Fehler beim Setzen des zukünftigen Alarms</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune Profil %1$s</string>
     <string name="autotune_run">Autotune ausführen</string>
     <string name="autotune_run_without_autoswitch">Autotune wurde ohne Profilwechsel ausgeführt</string>
     <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil wurde automatisch gewechselt</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountDesc">Anzahl der Schritte pro %1$s Minuten %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Messdauer</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Aktiviere/Deaktiviere SMB</string>
+    <string name="changeSmbTo">SMB auf %1$s ändern</string>
+    <string name="newSmbMode">Neuer SMB-Modus:</string>
     <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
