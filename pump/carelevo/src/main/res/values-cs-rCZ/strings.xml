@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Sundat kryt jehly</string>
     <string name="carelevo_patch_connect_step_1_desc">Vyndejte patch z blistru a sundejte kryt jehly.</string>
     <string name="carelevo_patch_connect_step_2_title">Zapnout a připojit</string>
-    <string name="carelevo_patch_connect_step_2_desc">Stiskněte tlačítko napájení na déle než 1 sekundu. Po pípnutí klepněte níže na tlačítko [Hledat patch].</string>
     <string name="carelevo_patch_safety_check_start_title">Bezpečnostní kontrola</string>
     <string name="carelevo_patch_safety_check_end_title">Bezpečnostní kontrola dokončena</string>
     <string name="carelevo_patch_safety_check_start_desc">Patch byl úspěšně připojen.\nStiskněte tlačítko [Bezpečnostní kontrola].</string>
@@ -113,7 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Pokud je níže nalezený patch ten správný, klepněte na tlačítko Potvrdit.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Jehla zavedena a aplikátor odstraněn</string>
     <string name="carelevo_dialog_connect_detached">Aplikátor odstraněn</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">Stiskněte úchyty na obou stranách aplikátoru a oddělte ho od patche,\na pak stiskněte tlačítko `Aplikátor odstraněn`. Začne výdej inzulínu.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth není zapnutý. Zkontrolujte ho.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Žádný patch není připojen.</string>
@@ -180,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Zbývá méně než 10 U inzulínu, výdej inzulínu byl zastaven. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Platnost patche vypršela, výdej inzulínu byl zastaven. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
     <string name="alarm_notification_desc_warning_low_battery">Slabá baterie, výdej inzulínu byl zastaven. Klepněte na tlačítko [Zahodit patch] a patch hned vyměňte.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Výdej inzulínu byl zastaven. Hned se přesuňte na místo s vhodnou teplotou (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Výdej inzulínu byl zastaven. Klepněte na tlačítko [Spustit inzulín] a znovu spusťte výdej bazálu.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Vypršel čas na aplikaci patche. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnostika selhala. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
