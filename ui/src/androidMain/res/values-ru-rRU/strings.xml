@@ -188,7 +188,6 @@
     <string name="profile_switches">Переключения профиля</string>
     <string name="basal_pct_from_tdd_label">% базального</string>
     <string name="selected_profile">Выбрано:</string>
-    <string name="comparation">Сравнение</string>
     <string name="profile_tab_1">Профиль 1</string>
     <string name="profile_tab_2">Профиль 2</string>
     <string name="motol_default_profile">Профиль по умолчанию</string>
