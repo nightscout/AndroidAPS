@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Nazwa miesiąca (krótka)</string>
     <string name="cwf_comment_loop">Status pętli i aktualność</string>
     <string name="cwf_comment_direction">Strzałka trendu</string>
-    <string name="cwf_comment_timestamp">Minut od ostatniego otrzymania glikemii</string>
     <string name="cwf_comment_sgv">Wartość glikemii</string>
     <string name="cwf_comment_cover_plate">Obraz nakładki przed tekstem (tarcze...)</string>
     <string name="cwf_comment_hour_hand">Obraz lub wskazówka godzinowa (Tarcza Analogowa)</string>
