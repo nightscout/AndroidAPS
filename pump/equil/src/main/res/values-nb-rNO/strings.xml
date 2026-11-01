@@ -19,7 +19,7 @@
     <string name="equil_title_assemble">Monter pumpen</string>
     <string name="equil_title_serial">Koble sammen enheten</string>
     <string name="equil_title_fill">Prime / fylling</string>
-    <string name="equil_title_attach">Koble til pumpen</string>
+    <string name="equil_title_attach">Fest pumpen</string>
     <string name="equil_title_air">Prime kanylen</string>
     <string name="equil_title_unpair_detach">Løsne pumpen</string>
     <string name="equil_title_history_events">Historiske hendelser</string>
@@ -55,7 +55,7 @@
     <string name="equil_reservoir_empty">Insulinreservoaret er tomt. Pumpen leverer ikke lenger insulin.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpen stoppet under bolusen. Gitt: %1$s av %2$s</string>
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
-    <string name="equil_pair">Paring</string>
+    <string name="equil_pair">Koble sammen</string>
     <string name="equil_pair_error">Paringsfeil</string>
     <string name="equil_fill">Prime/fylling</string>
     <string name="equil_air">Tøm luft</string>
