@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Надіслати SMS на всі номери</string>
     <string name="sendsmsactiontext">Надіслати SMS з текстом</string>
     <string name="starttemptarget">Запустити тимчасову ціль</string>
-    <string name="islesser">менше ніж</string>
-    <string name="isequalorlesser">дорівнює або менше ніж</string>
     <string name="isequal">дорівнює</string>
     <string name="isequalorgreater">дорівнює або більше ніж</string>
     <string name="isgreater">більше ніж</string>
@@ -88,7 +86,6 @@
     <string name="add_short">ДОД</string>
     <string name="temptargetcompared">Тимчасова ціль %1$s</string>
     <string name="btdevicecompared">Підключення Bluetooth до пристрою %1$s %2$s</string>
-    <string name="btdevice">Підключення до Bluetooth пристрою </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
