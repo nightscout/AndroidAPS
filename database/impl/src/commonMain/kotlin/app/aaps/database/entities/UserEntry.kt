@@ -170,6 +170,7 @@ data class UserEntry(
         Glunovo,
         Intelligo,
         Xdrip,
+        Libre3Native,
         Insulin,            //From Insulin plugin
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin

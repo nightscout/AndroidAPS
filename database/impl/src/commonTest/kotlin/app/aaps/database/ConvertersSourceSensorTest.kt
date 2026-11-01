@@ -76,4 +76,11 @@ class ConvertersSourceSensorTest {
         assertEquals(GlucoseValue.SourceSensor.UNKNOWN, converters.toSourceSensor("SOMETHING_REMOVED_LATER"))
         assertNull(converters.toSourceSensor(null))
     }
+
+    @Test
+    fun `libre 3 native is stored by its name`() {
+        // The column holds the entry name, so a new entry needs no database migration.
+        assertEquals("LIBRE_3_NATIVE", converters.fromSourceSensor(GlucoseValue.SourceSensor.LIBRE_3_NATIVE))
+        assertEquals(GlucoseValue.SourceSensor.LIBRE_3_NATIVE, converters.toSourceSensor("LIBRE_3_NATIVE"))
+    }
 }

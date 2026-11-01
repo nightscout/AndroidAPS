@@ -42,6 +42,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Glunovo             -> Sources.Glunovo
         UserEntry.Sources.Intelligo           -> Sources.Intelligo
         UserEntry.Sources.Xdrip               -> Sources.Xdrip
+        UserEntry.Sources.Libre3Native        -> Sources.Libre3Native
         UserEntry.Sources.Insulin             -> Sources.Insulin
         UserEntry.Sources.Ottai               -> Sources.Ottai
         UserEntry.Sources.SyaiTag             -> Sources.SyaiTag
@@ -131,6 +132,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Glunovo             -> UserEntry.Sources.Glunovo
         Sources.Intelligo           -> UserEntry.Sources.Intelligo
         Sources.Xdrip               -> UserEntry.Sources.Xdrip
+        Sources.Libre3Native        -> UserEntry.Sources.Libre3Native
         Sources.Ottai               -> UserEntry.Sources.Ottai
         Sources.SyaiTag             -> UserEntry.Sources.SyaiTag
         Sources.SiBionic            -> UserEntry.Sources.SiBionic

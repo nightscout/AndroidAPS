@@ -150,6 +150,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val uiInteraction get() = metroGraphs.uiInteraction
     private val processLifecycleListener get() = metroGraphs.processLifecycleListener
     private val localAlertUtils get() = metroGraphs.localAlertUtils
+    private val periodicMaintenance get() = metroGraphs.periodicMaintenance
     private val notificationManager get() = metroGraphs.notificationManager
     private val rh get() = metroGraphs.resourceHelper
     private val loop get() = metroGraphs.loop
@@ -511,6 +512,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         )
         postSetupNotifications()
         KeepAliveWorker.schedule(this@MainApp)
+        // The worker runs the periodic pass. This adds the check on each new reading, which iOS and
+        // desktop get from PeriodicMaintenance.start, so a low is not held back until the next pass.
+        periodicMaintenance.startGlucoseAlarmTrigger(appScope)
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.preSnoozeAlarms()
 

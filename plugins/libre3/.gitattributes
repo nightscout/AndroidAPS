@@ -1,0 +1,3 @@
+# The pairing tables and the phone certificate are raw bytes. Git must never change their line
+# endings (core.autocrlf on Windows would break the pairing), so they are marked binary.
+*.bin binary

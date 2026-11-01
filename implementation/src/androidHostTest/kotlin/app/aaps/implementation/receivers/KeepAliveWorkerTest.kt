@@ -101,7 +101,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             commandQueue = commandQueue,
             // The real shared component, not a mock: the assertions below were written against the
             // work this worker used to do inline, and they all still have to pass now it is shared.
-            periodicMaintenance = PeriodicMaintenance(aapsLogger, localAlertUtils, persistenceLayer, maintenance, preferences, dateUtil),
+            periodicMaintenance = PeriodicMaintenance(aapsLogger, localAlertUtils, persistenceLayer, maintenance, preferences, dateUtil, rxBus),
             rh = rh,
             preferences = preferences,
             dstHelper = dstHelper,

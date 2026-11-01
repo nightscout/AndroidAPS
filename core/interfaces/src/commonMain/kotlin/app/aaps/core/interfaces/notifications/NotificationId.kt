@@ -261,7 +261,27 @@ enum class NotificationId(
     // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
     // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
     // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
-    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP);
+    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
+
+    // A pre-soak sensor of a native CGM driver was made the production sensor by the app itself, without the
+    // user pressing the promote button. Appended at the END for the same reason as above.
+    CGM_STAGING_AUTO_PROMOTED(NORMAL, CGM),
+
+    // Glucose alarms the user sets up (low, high, rapid fall). They work for every BG source and only
+    // notify; they never change dosing. Appended at the END for the same reason as above.
+    BG_HYPO(URGENT, CGM),
+    BG_HYPER(IMPORTANT, CGM),
+    BG_RAPID_FALL(URGENT, CGM),
+
+    // Sensor state alarms, raised for a BG source that implements
+    // [app.aaps.core.interfaces.source.CgmSensorAlertProvider]. They only notify; they never change
+    // dosing. Appended at the END for the same reason as above.
+    CGM_SENSOR_FAILED(URGENT, CGM),
+    CGM_SENSOR_EXPIRED(URGENT, CGM),
+    CGM_SENSOR_EXPIRING(IMPORTANT, CGM),
+    CGM_SIGNAL_LOST(IMPORTANT, CGM),
+    CGM_WARMUP_DONE(NORMAL, CGM),
+    CGM_SECOND_SENSOR_READY(NORMAL, CGM);
 
     companion object {
 
