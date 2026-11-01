@@ -3,9 +3,7 @@
     <string name="sensitivity_oref1">민감도 Oref1</string>
     <string name="sensitivity_aaps">민감도 AAPS</string>
     <string name="sensitivity_weighted_average">민감도 가중평균</string>
-    <string name="description_sensitivity_aaps">민감도는 Oref0와 같은 방법으로 계산되지만, 과거의 시간 범위를 지정할 수 있습니다. 최소 탄수화물 흡수는 설정의 최대 탄수화물 흡수 시간으로부터 계산됩니다.</string>
     <string name="description_sensitivity_oref1">민감도는 과거 8시간 또는 24시간의 데이터로 계산됩니다(둘 중 더 민감한 쪽을 사용합니다). 흡수되지 않은 탄수화물은 설정에서 지정한 시간이 지나면 제외됩니다. 이 플러그인은 UAM도 계산합니다.</string>
     <string name="description_sensitivity_weighted_average">민감도는 편차의 가중 평균으로 계산됩니다. 최근 편차일수록 가중치가 높습니다. 최소 탄수화물 흡수는 설정의 최대 탄수화물 흡수 시간으로부터 계산됩니다. 이 알고리즘은 민감도 변화를 가장 빠르게 따라갑니다.</string>
-    <string name="uam_disabled_oref1_not_selected">UAM은 Oref1 민감도 플러그인이 필요하므로 비활성화되었습니다</string>
     <string name="absorption_settings_title">흡수 설정</string>
 </resources>
