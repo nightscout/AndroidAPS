@@ -128,6 +128,7 @@
     <string name="action_preset_3">Voreinstellung 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
+    <string name="action_timeshift_hours">Zeitverschiebung\n[hours]</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>
@@ -279,6 +280,7 @@
     <string name="tile_tap_bg_graph">Blutzucker-Verlauf</string>
     <string name="tile_tap_main_menu">Hauptmenü</string>
     <string name="tile_tap_loop_status">Loop-Status</string>
+    <string name="action_running_mode_selected">Ausführungsmodus angefordert</string>
     <string name="title_activity_disconnect_pump">Pumpe trennen</string>
     <string name="title_activity_suspend_loop">Loop pausieren</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
@@ -333,29 +335,46 @@
     <string name="loop_status_last_run">Zuletzt ausgeführt</string>
     <string name="loop_status_last_enact">Letzte Abgabe</string>
     <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Rate</string>
     <string name="loop_status_duration">Dauer</string>
+    <string name="loop_status_oaps_reason">OpenAPS Begründung</string>
     <string name="loop_status_targets">Ziele</string>
     <string name="loop_status_temp_target">Temporäres Ziel</string>
     <string name="loop_status_target_range">Bereich</string>
     <string name="loop_status_target">Ziel</string>
     <string name="loop_status_adjusted_target">Anpasstes Ziel</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Szene läuft bis sie manuell gestoppt wird</string>
     <string name="loop_status_scene_ended">Beendet</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Nächste Szene</string>
     <string name="loop_status_profile">Profil</string>
     <string name="loop_status_no_profile">Kein Profil gesetzt</string>
     <string name="loop_status_profile_percentage">Prozentsatz</string>
     <string name="loop_status_profile_timeshift">Zeitverschiebung</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Zurück zu</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
     <string name="loop_status_sensitivity">Sensitivität</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Von der aktiven Szene gesetzt</string>
     <string name="loop_status">Loop Status</string>
     <string name="loop_status_refresh">Aktualisieren</string>
     <string name="confirm">Bestätigen</string>
     <string name="request">Anfordern</string>
+    <string name="constraint_applied">Beschränkung angewendet!</string>
     <string name="wizard_total_insulin">Gesamtinsulin</string>
     <string name="wizard_calculation">Berechnung</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
     <string name="wizard_result_bg">BZ</string>
     <string name="wizard_result_bg_tt">BZ (TT: %1$s)</string>
     <string name="wizard_result_trend">15\'-Trend</string>
     <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Neues IOB: %1$s IE</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">KH (%1$d g)</string>
+    <string name="wizard_result_subtotal">Zwischensumme</string>
     <string name="wizard_result_correction">Korrektur</string>
     <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s IE</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
     <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
