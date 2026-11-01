@@ -179,7 +179,7 @@
     <string name="waiting_for_pump">Venter på pumpen…</string>
     <string name="initialization_failed">Initialiseringen mislyktes</string>
     <string name="notes_label">Merknader</string>
-    <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
+    <string name="wrong_pump_data">Data kommer fra en annen pumpe. Bytt pumpedriver for å nullstille pumpens tilstand.</string>
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
@@ -238,7 +238,7 @@
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="invalid">UGYLDIG</string>
-    <string name="login">Login</string>
+    <string name="login">Logg inn</string>
     <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
     <string name="prime_not_available">Denne pumpen fyller og primer seg selv under aktivering. Funksjonen for prime/fylling fra AAPS er ikke tilgjengelig.</string>
@@ -437,7 +437,7 @@
     <string name="client_roles_info_open">Om roller</string>
     <string name="client_roles_info">Hver sammenkoblet telefon har en rolle. Hovedenheten kontrollerer rollen for hver kommando, og telefonen viser bare det rollen gir tilgang til. En ny rolle trer i kraft umiddelbart, uten at telefonen må sammenkobles på nytt.\n\nKun lesing: Telefonen forblir sammenkoblet, men viser bare data.\n\nMåltider: Bolus, boluskalkulator, hurtigknapper og karbohydrater. Den kan også stoppe en pågående bolus. Karbohydrater som registreres her, kan føre til at loop gir mer insulin.\n\nOmsorgsperson: Alt en bruker kan gjøre i AAPS, for eksempel sette midlertidige mål, bytte profil og insulin, endre kjøremodus, angi midlertidig basaldose, forlenget bolus, scener og Helseportal-hendelser, kalibrere og fjerne oppføringer. Rollen gir ikke tilgang til å endre innstillinger eller forhåndsinnstillinger.\n\nAdministrator: Alt, inkludert innstillinger og forhåndsinnstillinger (hurtigknapper, forhåndsinnstillinger for midlertidige mål, scener, profiler, automatisering og insulin).</string>
     <string name="client_read_only_banner">Denne telefonen er i kun lesing modus på hovedenheten.</string>
-    <string name="hardened_mode_info">Hovedenheten godtar bare endringer fra sammenkoblede klienter. Den godtar ikke behandlinger, midlertidige mål, profilendringer, endringer i kjøremodus eller slettinger som gjøres direkte i Nightscout, for eksempel på nettstedet eller i andre apper. Innstillingene for å godta data fra Nightscout er skjult når herdet modus er aktivert. SMS-kommandoer påvirkes ikke.\n\nHovedenheten laster fortsatt opp alle data til Nightscout, inkludert blodsukkerverdier. Hvis den henter blodsukkerverdier fra Nightscout, fortsetter den å hente dem derfra.\n\nFor å laste inn historikken på en ny hovedenhet bruker du Full synkronisering i NSClient. Full synkronisering henter alt som finnes i Nightscout, inkludert profiler.\n\nFjernstyring fra klienter krever en fungerende WebSocket-forbindelse til Nightscout, både på hovedenheten og på de sammenkoblede klientene. Enkel modus aktiverer alltid herdet modus. For å deaktivere herdet modus må du avslutte enkel modus og slå av klientstyring på hovedenheten.</string>
+    <string name="hardened_mode_info">Hovedenheten godtar bare endringer fra sammenkoblede klienter. Den godtar ikke behandlinger, midlertidige mål, profilendringer, endringer i kjøremodus eller slettinger som gjøres direkte i Nightscout, for eksempel på nettstedet eller i andre apper. Innstillingene for å godta data fra Nightscout er skjult når herdet modus er aktivert. SMS-kommandoer påvirkes ikke.\n\nHovedenheten laster fortsatt opp alle data til Nightscout, inkludert blodsukkerverdier. Hvis den henter blodsukkerverdier fra Nightscout, fortsetter den å hente dem derfra.\n\nFor å laste inn historikken på en ny hovedenhet bruker du Full synkronisering i NSClient. Full synkronisering henter alt som finnes i Nightscout, inkludert profiler.\n\nFjernstyring fra klienter krever en fungerende WebSocket-forbindelse til Nightscout, både på hovedenheten og på de sammenkoblede klientene. Enkelmodus aktiverer alltid herdet modus. For å deaktivere herdet modus må du avslutte Enkelmodus og slå av klientstyring på hovedenheten.</string>
     <string name="scene_lock_reason_master_offline">Hovedenheten er frakoblet</string>
     <string name="scene_lock_reason_control_disabled">Fjernstyring deaktivert</string>
     <string name="scene_lock_reason_scene_active">Avslutt den aktive scenen først</string>
@@ -846,7 +846,7 @@
     <string name="connection_error">Tilkoblingsfeil til pumpe</string>
     <string name="reading_pump_history">Leser pumpehistorikk</string>
     <string name="password_cleared">Passordet er fjernet!</string>
-    <string name="pairing">Sammenkobler</string>
+    <string name="pairing">Sammenkobling</string>
     <string name="initializing">Initialiserer…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advarsel</string>
@@ -944,9 +944,9 @@
     <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Koble sammen</string>
-    <string name="pump_unpair">Opphev paring</string>
-    <string name="pump_unpair_confirm_title">Fjern paring av pumpen?</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
+    <string name="pump_unpair">Opphev sammenkobling</string>
+    <string name="pump_unpair_confirm_title">Fjerne sammenkoblingen med pumpen?</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe er sammenkoblet</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
@@ -1112,7 +1112,7 @@
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">De importerte innstillingene valgte ingen pumpe som finnes på denne telefonen. %1$s er nå aktiv – kontroller pumpeinnstillingene.</string>
     <string name="import_applying">Aktiverer innstillinger…</string>
     <string name="import_replace_pump_settings">Bytt også ut pumpeinnstillingene</string>
-    <string name="import_replace_pump_settings_summary">La dette være avslått for å beholde pumpen som denne telefonen er paret med. Slå det på når du gjenoppretter innstillinger på en ny telefon med samme pumpe.</string>
+    <string name="import_replace_pump_settings_summary">La dette være avslått for å beholde pumpen som denne telefonen er sammenkoblet med. Slå det på når du gjenoppretter innstillinger på en ny telefon med samme pumpe.</string>
     <string name="import_apply_waiting">Venter på pumpen…</string>
     <string name="import_apply_pump_busy">Pumpen er fortsatt opptatt, så innstillingene ble ikke tatt i bruk.</string>
     <string name="import_apply_retry_question">Prøve på nytt nå?</string>
@@ -1206,5 +1206,5 @@
     <string name="units_sec">sek</string>
     <string name="units_years">år</string>
     <string name="prefs_range_title">Område for visualisering</string>
-    <string name="secrets_not_protected">Det ble ikke funnet noe systemlager for nøkler på denne datamaskinen. Nøklene som beskytter innstillingene dine og paringen med hovedenheten, lagres i filer sammen med dataene; det betyr at alle som får en kopi av filene dine, også får tilgang til disse nøklene. På Linux må du installere og starte en nøkkelring (for eksempel GNOME Keyring eller KWallet), og deretter starte AAPS på nytt.</string>
+    <string name="secrets_not_protected">Det ble ikke funnet noe systemlager for nøkler på denne datamaskinen. Nøklene som beskytter innstillingene dine og sammenkoblingen med hovedenheten, lagres i filer sammen med dataene; det betyr at alle som får en kopi av filene dine, også får tilgang til disse nøklene. På Linux må du installere og starte en nøkkelring (for eksempel GNOME Keyring eller KWallet), og deretter starte AAPS på nytt.</string>
 </resources>
