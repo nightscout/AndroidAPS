@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Không thể kích hoạt. Vui lòng thử lại.</string>
     <string name="omnipod_common_error_pod_suspended">Pod đã tạm dừng</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Không phát được tiếng bíp</string>
-    <string name="omnipod_common_error_time_out_of_sync">Thời gian trên Pod không đồng bộ. Vui lòng cập nhật lại thời gian trong Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Đã xảy ra lỗi không mong đợi. Vui lòng báo cáo! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Cài đặt cảnh báo đã được cập nhật trên Pod.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Âm báo liều nền được bật</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Đã bật tiếng bíp SMB</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Đã bật tiếng bíp TBR</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Hiển thị nút Tạm dừng truyền insulin trong thẻ Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Đã bật phát hiện múi giờ/giờ mùa hè (DST)</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Đã bật cảnh báo hết hạn</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Khi bật, Pod sẽ phát tiếng bíp khi đến thời gian đã đặt</string>
