@@ -248,7 +248,6 @@
     <string name="profile_switches">Profilbyten</string>
     <string name="basal_pct_from_tdd_label">% av basal</string>
     <string name="selected_profile">Vald:</string>
-    <string name="comparation">Jämförelse</string>
     <string name="profile_tab_1">Profil 1</string>
     <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Standardprofil</string>
