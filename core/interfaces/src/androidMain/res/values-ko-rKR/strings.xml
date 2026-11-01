@@ -145,7 +145,6 @@
     <string name="slowabsorptiondetected_plain">!!!!! 느린 탄수화물 흡수가 감지되었습니다: 시간의 %1$d%%. 계산을 다시 확인하십시오. COB가 실제보다 크게 계산되어 인슐린이 더 많이 주입될 수 있습니다 !!!!!</string>
     <string name="bolus_constraint_applied_warn">볼러스 제한 적용됨: %1$.2f U → %2$.2f U</string>
     <string name="bolus_recorded_only">볼러스는 기록만 됩니다(펌프로 주입하지 않음).</string>
-    <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d시간 (+%3$d분)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
