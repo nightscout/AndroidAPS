@@ -27,7 +27,6 @@
     <string name="commanderror">指令錯誤</string>
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
-    <string name="boluserrorcode">請求: %1$.2fU 輸送: %2$.2fU 錯誤碼: %3$s</string>
     <string name="selectedpump">選擇的幫浦</string>
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">LCD 開啟時間 [秒]</string>
     <string name="diaconn_g8_language">語言</string>
     <string name="diaconn_g8_bolus_speed">注射速度</string>
-    <string name="diaconn_g8_pumplang_chiness">中文</string>
     <string name="diaconn_g8_pumplang_korean">韓文</string>
     <string name="diaconn_g8_pumplang_english">英文</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">當在歷史紀錄中偵測到時，添加 “電池更換” 事件至 careportal</string>
     <string name="diaconn_g8_logbatterychange_title">紀錄電池更換</string>
     <string name="diaconn_g8_logsyncinprogress">同步進行中</string>
-    <string name="diaconn_g8_loginsulinshorage">胰島素短缺</string>
     <string name="diaconn_g8_logbatteryshorage">電池短缺</string>
     <string name="diaconn_g8_logneedleprime">針頭注射準備: %1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">注射器注射準備: %1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">完成</string>
     <string name="diaconn_g8_reasoninjectonblock">注射阻塞</string>
     <string name="diaconn_g8_reasonbatteryshortage">電池短缺</string>
-    <string name="diaconn_g8_reasoninsulinshortage">胰島素短缺</string>
     <string name="diaconn_g8_reasonuserstop">用戶停止</string>
     <string name="diaconn_g8_reasonsystemreset">系統重設</string>
     <string name="diaconn_g8_reasonother">其他</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">注射阻塞 (%s)</string>
     <string name="diaconn_g8_lgorelease">基礎速率釋放 (%s)</string>
     <string name="diaconn_g8_lgosuspend">基礎速率暫停 (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">雙重普通成功</string>
     <string name="diaconn_g8_logdualsquarestart">雙重方形開始</string>
     <string name="diaconn_g8_logdualsquaresuccess">雙重方形成功</string>
     <string name="diaconn_g8_logsquarestart">方形開始</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">成功</string>
     <string name="diaconn_g8_logmealsuccess">餐時成功</string>
     <string name="diaconn_g8_errorcode_1">由於封包 CRC 錯誤，無法查詢。</string>
-    <string name="diaconn_g8_errorcode_2">無法設置為輸入參數錯誤。</string>
-    <string name="diaconn_g8_errorcode_3">無法設置為協議規範錯誤。</string>
     <string name="diaconn_g8_errorcode_4">用餐時間，無法注射。</string>
     <string name="diaconn_g8_errorcode_6">被幫浦取消</string>
     <string name="diaconn_g8_errorcode_7">執行其他操作，限制應用設置。</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">由於電池電量不足，無法注射。</string>
     <string name="diaconn_g8_errorcode_12">胰島素不足無法注射。</string>
     <string name="diaconn_g8_errorcode_13">因為超過一次限量，無法注射。</string>
-    <string name="diaconn_g8_errorcode_14">因為超過當日注射量，無法注射。</string>
     <string name="diaconn_g8_errorcode_15">基礎速率設置完成後，才能進行基礎速率注射。</string>
     <string name="diaconn_g8_logtubechange_title">紀錄管道更換</string>
     <string name="diaconn_g8_logtubechange_summary">當在歷史紀錄中偵測到時，添加 “管道更換” 事件至備註</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">在 LGS 運行期間，限制注射</string>
     <string name="diaconn_g8_errorcode_33">LGS 狀態為開啟，拒絕開啟命令。</string>
     <string name="diaconn_g8_errorcode_34">LGS 狀態為關閉，拒絕關閉命令。</string>
-    <string name="diaconn_g8_errorcode_35">在臨時基礎速率運行時拒絕臨時基礎速率開始</string>
-    <string name="diaconn_g8_errorcode_36">在臨時基礎速率未運行時拒絕臨時基礎速率停止</string>
     <string name="diaconn_g8_cloudsend_summary">將幫浦日誌發送到 Diaconn 雲端。</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn 雲端同步</string>
     <string name="bolus_speed_1">1 單位/分鐘</string>
