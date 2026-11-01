@@ -228,7 +228,7 @@
     <string name="reset">Tilbakestill</string>
     <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="profile">Profil</string>
-    <string name="percentage_label">Percentage</string>
+    <string name="percentage_label">Prosent</string>
     <string name="timeshift_label">Tidsforskyving</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hovedenheten har ikke %1$d av disse oppføringene. De blir ikke fjernet.</string>
@@ -745,7 +745,7 @@
     <string name="start_pump">Start pumpen</string>
     <string name="stop_pump">Stopp pumpen</string>
     <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
-    <string name="temp_basal_percent">MIDL. BASAL %1$d E/t %2$d min</string>
+    <string name="temp_basal_percent">MIDL. BASAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">LESESTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
@@ -806,7 +806,7 @@
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
     <string name="wizard_carbs_constraint">Brudd på karbo-begrensninger!</string>
-    <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
+    <string name="wizard_trend_detail">Trend 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulinbegrensning nådd!\nKan ikke levere %1$.2fE</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
     <string name="quick_wizard_not_available">Valgt Hurtigknapp er ikke lenger tilgjengelig. Oppdater flisen</string>
