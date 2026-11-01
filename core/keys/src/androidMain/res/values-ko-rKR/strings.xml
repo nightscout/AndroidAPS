@@ -309,7 +309,7 @@
     <string name="ns_client_secret_summary">Nightscout API secret을 입력하십시오(최소 12자)</string>
     <string name="nsclient_token_title">Nightscout 액세스 토큰</string>
     <string name="nsclient_token_summary">Nightscout 액세스 토큰을 입력하십시오(최소 17자)</string>
-    <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_wifi_ssids_summary">허용된 SSID(세미콜론으로 구분)</string>
     <!-- DoubleKey: Overview preferences -->
     <string name="pref_title_insulin_button_increment_1">인슐린 버튼 증가량 1</string>
