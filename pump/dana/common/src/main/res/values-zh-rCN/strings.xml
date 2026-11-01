@@ -8,7 +8,6 @@
     <string name="commanderror">命令错误</string>
     <string name="speederror">速度错误</string>
     <string name="insulinlimitviolation">违反胰岛素限制</string>
-    <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
     <string name="danai2_bolus_error_no_prime">泵未预充</string>
     <string name="danai2_bolus_error_not_enough_insulin">储药器中胰岛素不足</string>
     <string name="danai2_bolus_error_easy_sleep">泵上的简易睡眠模式已开启</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">已选择的泵</string>
     <string name="rs_loginsulinchange_title">记录储药器更换</string>
     <string name="rs_loginsulinchange_summary">在历史记录中检测到时，在护理中添加\"胰岛素更换\" 事件</string>
-    <string name="rs_logcanulachange_title">记录输注导管更换</string>
     <string name="rs_logcanulachange_summary">在历史记录中检测到时，在护理中添加\"输注位置变更\" 事件</string>
     <string name="press_ok_on_the_pump">在泵上按确定键\n并输入 2 个显示的数字\n保持泵处于显示状态，按减号键直到您完成输入代码。</string>
     <string name="num1pin">1: (12位数字)</string>
