@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Інтеграція помпи для EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Патч не підтвердив завершення болюсу. Записано %1$s, але патч міг ввести більше. Перевірте патч, перш ніж вводити ще інсулін.</string>
-    <string name="low_reservoir">Попередження про низький резервуар</string>
-    <string name="patch_expiration_reminders">Нагадування про закінчення терміну патча</string>
     <string name="patch_buzzer_reminders">Звукові нагадування патча</string>
     <string name="eopatch_ble_status">Стан BLE</string>
     <string name="eopatch_serial_number">Серійний номер</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">Щоб перейти на новий патч, поточний патч потрібно викинути. Усе введення інсуліну з патча буде скасовано.</string>
     <string name="patch_discard_complete_title">Патч викинуто.</string>
     <string name="patch_discard_complete_desc">Патч деактивовано.\nВикиньте патч.\nЗніміть патч, прикріплений до тіла.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Зараз вводиться болюс. Ви справді хочете скасувати введення інсуліну та викинути патч?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Зараз працює тимчасовий базал. Ви справді хочете скасувати введення інсуліну та викинути патч?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Зараз вводяться болюс і тимчасовий базал. Ви справді хочете скасувати введення інсуліну та викинути патч?</string>
-    <string name="patch_change_confirm_desc">Ви впевнені, що хочете викинути патч?</string>
     <string name="patch_forced_discard">Викинути</string>
     <string name="patch_comm_error_during_discard_desc_2">Щоб деактивувати патч без зв’язку з ним, натисніть «Викинути».</string>
     <string name="patch_manually_turning_off_alarm_title">Ручне вимкнення тривоги патча</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">Під час спарювання відкриються два системні вікна Android. Підтвердьте обидва, щоб завершити спарювання Bluetooth.</string>
     <string name="patch_start_pairing">Почати спарювання</string>
     <string name="patch_connect_new">Спарювання патча</string>
-    <string name="patch_connect_new_desc">Новий патч спарюється.\nТримайте патч якомога ближче до пристрою</string>
     <string name="patch_remove_needle_cap">Підготовка до прикріплення патча</string>
     <string name="patch_remove_needle_cap_desc_1">Зніміть захисну плівку з клейкої стрічки, потім натисніть «Далі».</string>
     <string name="patch_remove_needle_cap_desc_2">Якщо голка виступає назовні, натисніть «Викинути».</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">Це триває приблизно 30 секунд.</string>
     <string name="patch_safety_check_desc_2">Для безпеки не знімайте важіль голки, доки перевірку безпеки не завершено!</string>
     <string name="patch_rotate_knob">Введення голки</string>
-    <string name="patch_rotate_knob_desc_1">Поверніть важіль голки більш ніж на 100 °, щоб ввести голку, потім поверніть його до кінця, щоб її вийняти</string>
     <string name="patch_rotate_knob_desc_2">Дочекайтеся 1 звукового сигналу, потім натисніть «Далі».</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Дочекайтеся 1 звукового сигналу, потім натисніть «Повторити».</string>
     <string name="patch_basal_schedule">Активацію патча завершено!</string>
     <string name="patch_basal_schedule_desc_1">Програму «%1$s» увімкнено.</string>
     <string name="patch_basal_schedule_desc_2">Попереджає вас, коли термін роботи патча наближається до кінця.\nЗа потреби змініть час нагадування.</string>
     <string name="patch_expiration_reminder_setting_title">Нагадування про закінчення терміну патча</string>
-    <string name="patch_activate_reminder_desc">Активацію патча не завершено.\n Продовжте.</string>
     <string name="patch_communication_check_helper_1">Піднесіть свій пристрій ближче до патча.</string>
     <string name="patch_communication_check_helper_2">Перейдіть в інше місце та спробуйте ще раз.</string>
     <string name="patch_safety_check_failed_desc">Перевірка безпеки не вдалася. Спробуйте ще раз.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Зв’язок встановлено</string>
     <string name="patch_communication_succeed_message">З’єднано з патчем.</string>
     <string name="patch_cancel_pairing">Скасувати спарювання</string>
-    <string name="insulin_suspend_msg1">Під час призупинення поточний болюс &amp; тимчасовий базал буде скасовано. \n\nШвидкість: %1$s Од/год\nЗалишок часу: %2$s\n&amp; Залишок інсуліну: %3$.2f Од</string>
-    <string name="insulin_suspend_msg2">Під час призупинення поточний болюс буде скасовано. \n\nЗалишок інсуліну: %1$.2f Од</string>
-    <string name="insulin_suspend_msg3">Під час призупинення поточний тимчасовий базал буде скасовано. \n\nШвидкість: %1$s Од/год\nЗалишок часу: %2$s</string>
     <string name="insulin_suspend_msg4">Введення інсуліну буде призупинено.</string>
     <string name="string_activate_patch">Активувати патч</string>
     <string name="string_discard_patch">Викинути патч</string>
     <string name="string_running">Працює</string>
     <string name="retry">Повторити спробу</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Ви дійсно хочете викинути поточний патч?</string>
     <string name="needle_insertion_error_1">Помилка введення голки.</string>
     <string name="needle_insertion_error_3">Натисніть «Викинути», щоб деактивувати патч.</string>
     <string name="string_suspend_time_insulin_delivery_title">Час призупинення базалу</string>
