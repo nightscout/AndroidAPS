@@ -26,7 +26,6 @@
     <string name="constraints">Begränsningar</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
     <string name="openapsma_script_debug_data_label">Debug</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Viktigt!\nNormalt behöver du inte ändra dessa värden. Vg KLICKA HÄR och LÄS texten och försäkra dig om att du FÖRSTÅTT innan du ändrar dessa värden.</string>
     <string name="increasing_max_basal">Ökar max basaldos eftersom inställningen är lägre än din maximala basal i profilen</string>
     <string name="max_basal_multiplier">multiplikator för max basal</string>
     <string name="max_daily_basal_multiplier">multiplikator för daglig max basal</string>
