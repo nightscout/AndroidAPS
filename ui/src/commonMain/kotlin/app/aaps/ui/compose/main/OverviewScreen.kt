@@ -203,7 +203,13 @@ fun OverviewScreen(
             if (active) searchViewModel.onSearchModeActivated()
             else searchViewModel.onSearchModeDeactivated()
         },
-        onSearchResultClick = onSearchResultClick,
+        onSearchResultClick = { entry ->
+            // A search that led to a result is worth remembering; opening the result stays with the activity.
+            searchViewModel.recordCurrentQuery()
+            onSearchResultClick(entry)
+        },
+        onSearchHistoryClick = { searchViewModel.onQueryChanged(it) },
+        onSearchHistoryRemove = { searchViewModel.removeFromHistory(it) },
         onSearchPluginToggle = { plugin -> searchViewModel.togglePlugin(plugin) },
         onConfirmSearchPluginSwitch = { searchViewModel.confirmPluginSwitch() },
         onDismissSearchPluginSwitch = { searchViewModel.dismissPluginSwitch() },
