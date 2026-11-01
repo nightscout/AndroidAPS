@@ -54,7 +54,6 @@
     <string name="scene_template_blank">빈 장면</string>
     <string name="scene_wizard_blank_desc">미리 선택된 동작 없이 처음부터 시작합니다.</string>
     <!-- Scene wizard: action step education -->
-    <string name="scene_wizard_profile_info" formatted="false">프로파일 전환은 기저 주입량, 인슐린 민감도(ISF), 인슐린 대 탄수화물 비율(IC)을 한 번에 바꿉니다. 모든 값을 백분율로 조정할 수 있습니다 — 예를 들어 110%는 기저 주입, 볼러스 계산, 탄수화물 흡수 속도를 10% 높입니다. 특정 상황을 위한 다른 프로파일이 있다면 그 프로파일로 완전히 바꿀 수도 있습니다.</string>
     <string name="scene_wizard_tt_info">임시 목표는 정해진 시간 동안 알고리즘이 다른 혈당 수준을 목표로 하도록 합니다. 목표가 높으면 알고리즘은 상승하는 혈당에 더 천천히 반응하고 전체적으로 더 높은 값을 목표로 합니다 — 인슐린 주입이 줄어 운동 중 저혈당을 막는 데 도움이 됩니다. 목표가 낮으면 알고리즘이 더 빨리 반응하고 더 많은 인슐린을 주입합니다 — 식사에 미리 대비할 때 유용합니다. 아래 프리셋 중 하나를 선택하십시오 — 목표 값과 이유는 이미 설정되어 있습니다.</string>
     <string name="scene_wizard_smb_info">SMB(Super Micro Bolus)는 알고리즘이 인슐린을 작은 볼러스로 미리 주입하고, 이를 보완하기 위해 기저 주입을 잠시 멈추게 합니다 — 사실상 미래의 인슐린을 앞당겨 써서 더 빠르게 반응합니다. SMB를 끄면 이것을 막고 알고리즘이 기저 주입량만 조정하도록 제한합니다. 반응이 더 느리고 완만해지며, 운동이나 수면 중에는 이것이 더 나은 경우가 많습니다.</string>
     <string name="scene_wizard_loop_mode_info">실행 모드는 알고리즘이 얼마나 스스로 결정할 수 있는지 정합니다. 폐쇄 루프에서는 인슐린 주입을 자동으로 조정합니다. LGS (Low Glucose Suspend, 저혈당 시 중지)는 혈당이 저혈당 쪽으로 떨어질 때만 인슐린을 줄이거나 멈춥니다 — 주입을 늘리지 않습니다. 개방 루프는 제안을 계산하지만 각 제안을 사용자가 확인할 때까지 기다립니다.</string>
