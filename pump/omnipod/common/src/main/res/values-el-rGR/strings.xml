@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Αποτυχία επαλήθευσης προόδου ενεργοποίησης. Παρακαλώ προσπαθήστε ξανά.</string>
     <string name="omnipod_common_error_pod_suspended">Αναστολή Pod</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Αποτυχία αναπαραγωγής δοκιμαστικού μπιπ</string>
-    <string name="omnipod_common_error_time_out_of_sync">Η ώρα στο Pod δεν είναι συγχρονισμένη. Παρακαλούμε ενημερώστε την ώρα στην καρτέλα Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Παρουσιάστηκε μη αναμενόμενο σφάλμα. Παρακαλούμε να το αναφέρετε! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Οι ρυθμίσεις ειδοποιήσεων έχουν ενημερωθεί στο Pod.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Ηχητικά σήματα βασικού ενεργοποιημένα</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Ηχητικά σήματα SMB ενεργοποιημένα</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Ηχητικά σήματα TBR ενεργοποιημένα</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Εμφάνιση κουμπιού Αναστολής Έγχυσης στην καρτέλα Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Ανίχνευση ζώνης ώρας ενεργοποιημένη</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Ενεργοποιημένη υπενθύμιση λήξης</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Όταν είναι ενεργοποιημένο, το Pod θα ηχήσει όταν φτάσει η καθορισμένη ώρα</string>
