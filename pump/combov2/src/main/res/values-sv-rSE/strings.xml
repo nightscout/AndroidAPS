@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Reservoarfel</string>
     <string name="combov2_error_11">Infusionsset är inte förfyllt</string>
     <string name="combov2_extended_bolus_not_supported">Förlängd bolus stöds inte</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Parkoppla med pump</string>
     <string name="combov2_unpair_pump_title">Ta bort parkoppling med pump</string>
     <string name="combov2_driver_state_label">Drivrutinsstatus</string>
@@ -31,13 +30,6 @@
 2. Kontrollera om en enhet redan visas som parkopplad; Om så är fallet, gå till \"Ta bort enhet\" skärmen på pumpen för att ta bort/koppla ifrån den enheten\n
 3. Gå till pumpskärmen \"Lägg till enhet\" och starta parkoppling på pumpen\n
 4. Klicka på knappen \"Påbörja parkoppling\" nedan för att initiera parkoppling i AAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Efter ett tag visas telefonens namn på pumpens skärm; tryck på CHECK för att bekräfta.\n\n
-När parkopplingen är slutförd, bekräfta den färdiga parkopplingen på pumpen och återgå till pumpens startskärm genom att trycka på CHECK-knappen två gånger.\n\n
-Om ingen anslutning är etablerad efter mer än ~5 minuter:\n\n
-1. Tryck på Tillbaka eller på \"Avbryt parkoppling\"\n
-2. Avbryt parkopplingen på Combo (tryck på både UP- och MENU-knapparna
-samtidigt för att avbryta parkoppling)\n
-3. Försök parkoppla igen</string>
     <string name="combov2_enter_pin">Ange PIN-kod</string>
     <string name="combov2_cancel_pairing">Avbryt parkoppling</string>
     <string name="combov2_confirm_cancel_pairing_message">Vill du verkligen avbryta parkopplingen?</string>
@@ -107,7 +99,6 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorerar överflödig begäran av 100% tillfällig basal</string>
     <string name="combov2_hit_unexpected_tbr_limit">Oväntad gräns påträffades vid justering av tillfällig basal: målprocenten var %1$d%%, nådde en gräns vid %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan inte ställa in absolut tillfällig basal om basaldosen är noll</string>
-    <string name="combov2_unpair_pump_summary">Ta bort parkopplingen mellan AAPS/Android och den parkopplade Accu-Chek Combo-pumpen</string>
     <string name="combov2_unknown_tbr_detected">Okänd tillfällig basal upptäcktes och stoppades; procentsats: %1$d%%; återstående varaktighet: %2$s</string>
     <string name="combov2_connection_error">Anslutningsfel: %1$s</string>
     <string name="combov2_short_status_alert">Varning: %s</string>
