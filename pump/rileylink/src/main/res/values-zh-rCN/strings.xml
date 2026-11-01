@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">软件 4b6b 编码</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">硬件 4b6b 编码</string>
     <string name="medtronic_pump_frequency_us_ca">美国 &amp; 加拿大 (916MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">全球 (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">扫描中</string>
     <string name="riley_link_ble_config_connected_never">从不</string>
