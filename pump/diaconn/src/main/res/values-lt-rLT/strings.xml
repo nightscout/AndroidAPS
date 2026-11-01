@@ -27,7 +27,6 @@
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
-    <string name="boluserrorcode">Įvesta: %1$.2fV Suleista: %2$.2fV. Klaidos kodas: %3$s</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">Ekrano aktyvumo laikas [second]</string>
     <string name="diaconn_g8_language">Kalba</string>
     <string name="diaconn_g8_bolus_speed">Boluso greitis</string>
-    <string name="diaconn_g8_pumplang_chiness">Kinų</string>
     <string name="diaconn_g8_pumplang_korean">Korėjiečių</string>
     <string name="diaconn_g8_pumplang_english">Anglų</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">Įtraukti į terapijos skiltį įvykį „Baterijos pakeitimas“, jei jis aptinkamas istorijoje</string>
     <string name="diaconn_g8_logbatterychange_title">Įrašyti baterijos pakeitimą</string>
     <string name="diaconn_g8_logsyncinprogress">Įrašyti sinchronizacijos įvykius</string>
-    <string name="diaconn_g8_loginsulinshorage">Insulino trūkumas</string>
     <string name="diaconn_g8_logbatteryshorage">Nepakankama baterijos įkrova</string>
     <string name="diaconn_g8_logneedleprime">Užpildyti kaniulę: %1$.2fV</string>
     <string name="diaconn_g8_loginjectorprime">Užpildyti injektorių: %1$.2fV</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">Atlikta</string>
     <string name="diaconn_g8_reasoninjectonblock">Užblokuotas leidimas</string>
     <string name="diaconn_g8_reasonbatteryshortage">Nepakankama baterijos įkrova</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Insulino trūkumas</string>
     <string name="diaconn_g8_reasonuserstop">Sustabdyta naudotojo</string>
     <string name="diaconn_g8_reasonsystemreset">Sistemos atstatymas</string>
     <string name="diaconn_g8_reasonother">Kita</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">Užblokuotas leidimas(%s)</string>
     <string name="diaconn_g8_lgorelease">bazės leidimas (%s)</string>
     <string name="diaconn_g8_lgosuspend">bazė sustabdyta (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Dvigubas normalus suleistas sėkmingai</string>
     <string name="diaconn_g8_logdualsquarestart">Dvigubas normalus pradėtas</string>
     <string name="diaconn_g8_logdualsquaresuccess">Dvigubas daugiabangis suleistas sėkmingai</string>
     <string name="diaconn_g8_logsquarestart">Daugiabangis pradėtas</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">Atlikta</string>
     <string name="diaconn_g8_logmealsuccess">Maistas įrašytas</string>
     <string name="diaconn_g8_errorcode_1">Negalima ieškoti dėl CRC paketo klaidos.</string>
-    <string name="diaconn_g8_errorcode_2">Neįmanoma nustatyti dėl įvesties parametro klaidos.</string>
-    <string name="diaconn_g8_errorcode_3">Neįmanoma nustatyti dėl protokolo specifikacijos klaidos.</string>
     <string name="diaconn_g8_errorcode_4">Nustatytas valgymo laikas. Insulino leisti negalima.</string>
     <string name="diaconn_g8_errorcode_6">Atšaukta pompos</string>
     <string name="diaconn_g8_errorcode_7">Atliekami kiti veiksmai, apribojami programos nustatymai.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">Suleidimas neįmanomas dėl per žemos baterijos įkrovos.</string>
     <string name="diaconn_g8_errorcode_12">Negalima suleisti, nes nepakanka insulino.</string>
     <string name="diaconn_g8_errorcode_13">Suleidimas negalimas, nes viršijamas limitas.</string>
-    <string name="diaconn_g8_errorcode_14">Suleidimas negalimas, nes viršijama dienos riba.</string>
     <string name="diaconn_g8_errorcode_15">Po bazės nustatymo galima pradėti leisti bazę.</string>
     <string name="diaconn_g8_logtubechange_title">Įrašyti infuzijos vamzdelio pakeitimą</string>
     <string name="diaconn_g8_logtubechange_summary">Įtraukti į Pastabas įvykį „Infuzijos vamzdelio pakeitimas“, jei jis aptinkamas istorijoje</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">Negalima leisti insulino kol veikia LGS režimas</string>
     <string name="diaconn_g8_errorcode_33">Aktyvus LGS režimas, komanda ĮJUNGTI atmesta.</string>
     <string name="diaconn_g8_errorcode_34">Išjungtas LGS režimas, komanda IŠJUNGTI atmesta.</string>
-    <string name="diaconn_g8_errorcode_35">Laikinos bazės paleidimas atmestas, nes jau veikia nustatyta laikina bazė</string>
-    <string name="diaconn_g8_errorcode_36">Laikinos bazės stabdymas atmestas, nes nėra nustatyta laikina bazė</string>
     <string name="diaconn_g8_cloudsend_summary">Siųsti pompos įrašus į Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
     <string name="bolus_speed_1">1 V/min</string>
