@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Rezervuar hatası</string>
     <string name="combov2_error_11">İnfüzyon seti kullanıma hazır değil</string>
     <string name="combov2_extended_bolus_not_supported">Yayma bolus desteklenmiyor</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Pompayla eşleştir</string>
     <string name="combov2_unpair_pump_title">Pompayla eşleşmeyi kaldır</string>
     <string name="combov2_driver_state_label">Sürücü durumu</string>
@@ -31,12 +30,6 @@
 2. Halihazırda eşleştirilmiş bir cihaz olup olmadığını kontrol edin; varsa, o cihazı silmek/eşleşmesini kaldırmak için pompada \"Cihazı sil\" ekranına gidin\n
 3. Pompada \"Cihaz ekle\" ekranına gidin ve pompada eşleştirmeyi başlatın\n
 4. AAPS\'de eşleştirmeyi başlatmak için aşağıdaki \"Eşleştirmeye başla\" düğmesine dokunun\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Bir süre sonra pompanın ekranında telefonun adı beliriyor; onaylamak için CHECK düğmesine basın.\n\n
-Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmeyi onaylayın ve CHECK düğmesine iki kez basarak ana pompa ekranına dönün.\n\n
-~5 dakikadan uzun bir süre bağlantı kurulmazsa:\n\n
-1. Geri\'ye veya \"Eşleştirmeyi İptal Et\" düğmesine basın\n
-2. Combo\'da eşleştirmeyi iptal edin (UP ve MENU düğmelerine aynı anda basarak eşleştirmeyi iptal edin)\n
-3. Tekrar eşleştirmeyi deneyin</string>
     <string name="combov2_enter_pin">PIN\'i girin</string>
     <string name="combov2_cancel_pairing">Eşleştirmeyi iptal et</string>
     <string name="combov2_confirm_cancel_pairing_message">Eşleştirmeyi iptal etmek istiyor musunuz?</string>
@@ -106,7 +99,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_ignoring_redundant_100_tbr">Gereksiz %100 GBO isteği yoksayılıyor</string>
     <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %2$d%%\'de bir sınıra ulaştı</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Temel bazal oran sıfırsa mutlak GBO ayarlanamaz</string>
-    <string name="combov2_unpair_pump_summary">AAPS ve Android\'in şu anda eşleştirilmiş Accu-Chek Combo pompasıyla eşleşmesini kaldırın</string>
     <string name="combov2_unknown_tbr_detected">Bilinmeyen GBO tespit edildi ve durduruldu; yüzde: %1$d%%; kalan süre: %2$s</string>
     <string name="combov2_connection_error">Bağlantı Hatası: %1$s</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>
