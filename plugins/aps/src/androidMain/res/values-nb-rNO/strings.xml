@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="dyn_isf_adjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
+    <string name="dyn_isf_adjust_title" formatted="false">DynamiskISF-justeringsfaktor %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
     <string name="openaps_auto_isf">AutoISF</string>
