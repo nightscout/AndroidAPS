@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Gửi SMS đến tất cả các số</string>
     <string name="sendsmsactiontext">Gửi SMS với nội dung</string>
     <string name="starttemptarget">Bắt đầu mục tiêu tạm thời</string>
-    <string name="islesser">thấp hơn</string>
-    <string name="isequalorlesser">bằng hoặc nhỏ hơn</string>
     <string name="isequal">bằng với</string>
     <string name="isequalorgreater">bằng hoặc lớn hơn</string>
     <string name="isgreater">lớn hơn</string>
@@ -88,7 +86,6 @@
     <string name="add_short">THÊM</string>
     <string name="temptargetcompared">Mục tiêu tạm thời %1$s</string>
     <string name="btdevicecompared">Kết nối Bluetooth đến thiết bị %1$s %2$s</string>
-    <string name="btdevice">Kết nối đến thiết bị Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
