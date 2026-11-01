@@ -19,13 +19,13 @@
     <string name="combov2_error_10">Reservoarfeil</string>
     <string name="combov2_error_11">Infusjonssettet er ikke primet</string>
     <string name="combov2_extended_bolus_not_supported">Forlenget bolus støttes ikke</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Tilkoble pumpe</string>
     <string name="combov2_unpair_pump_title">Koble fra pumpe</string>
     <string name="combov2_driver_state_label">Driverstatus</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
     <string name="combov2_start_pairing">Start sammenkobling</string>
-    <string name="combov2_pairing_in_progress">Kombo sammenkobling pågår</string>
+    <string name="combov2_pairing_in_progress">Combo-sammenkobling pågår</string>
     <string name="combov2_pairing_start_steps">Trinn for å etablere sammenkobling med Combo:\n\n
 1. På pumpen, navigerer til Bluetooth innstillingene\n
 2. Kontroller om pumpen allerede vises som tilkoblet. Hvis ja, gå til pumpeskjermen \"Slett enhet\" for å slette/frakoble pumpen\n
@@ -79,7 +79,7 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_cannot_deliver_pump_suspended">Kan ikke sende behandling - pumpen er pauset</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Ikke nok insulin i reservoaret</string>
     <string name="combov2_bolus_cancelled">Bolus avbrutt</string>
-    <string name="combov2_bolus_delivery_failed">Bolus avbrutt. Det virker som ingen bolus er levert. For å være sikker, sjekk pumpen for å unngå levering av dobbel bolus og gjør evt et nytt forsøk. For å unngå feil vil systemet aldri prøve å levere ny bolus.</string>
+    <string name="combov2_bolus_delivery_failed">Boluslevering mislyktes. Det virker som ingen bolus ble levert. For å være sikker, kontroller pumpen for å unngå dobbel bolus, og gi så bolusen på nytt. Som vern mot feil prøves boluser aldri på nytt automatisk.</string>
     <string name="combov2_bolus_not_delivered">Bolus ikke levert</string>
     <string name="combov2_cannot_access_pump_data">Kan ikke lese data fra pumpen; pumpen må sammenkobles igjen</string>
     <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Tilkoblingen til pumpen ble brutt under bolusen. Pumpen hadde da levert %1$s, og den kan fortsatt levere resten. Ikke gi en ny bolus. AAPS henter den faktiske mengden fra pumpen ved neste tilkobling.</string>
@@ -107,11 +107,11 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorerer redundant 100% TBR forespørsel</string>
     <string name="combov2_hit_unexpected_tbr_limit">Uventet begrensning oppsto ved justering av TBR: målprosenten var %1$d%%, nådde grense på %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan ikke sette absolutt TBR hvis basaldosen er null</string>
-    <string name="combov2_unpair_pump_summary">Koble fra AndroidAPS og Android fra den ilkoblede Accu-Chek Combo pumpen</string>
+    <string name="combov2_unpair_pump_summary">Opphev sammenkoblingen av den tilkoblede Accu-Chek Combo-pumpen med AAPS og Android</string>
     <string name="combov2_unknown_tbr_detected">Ukjent TBR ble oppdaget og stoppet; prosent: %1$d%%, gjenværende varighet: %2$s</string>
     <string name="combov2_connection_error">Tilkoblingsfeil: %1$s</string>
     <string name="combov2_short_status_alert">Varsel: %s</string>
-    <string name="combov2_automatic_reservoir_entry">Autodetekter og automatisk registrer bytte av insulireservoar</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetekter og automatisk registrer bytte av insulinreservoar</string>
     <string name="combov2_automatic_battery_entry">Autodetekter og automatisk registrer batteribytte</string>
     <string name="combov2_timezone_changed">Tidssone endret</string>
     <string name="combov2_datetime_changed">Dato og/eller klokkeslett endret</string>
