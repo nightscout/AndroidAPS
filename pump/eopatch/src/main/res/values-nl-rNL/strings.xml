@@ -3,6 +3,8 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Pomp integratie voor EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">De patch heeft het einde van de bolus niet bevestigd. %1$s is geregistreerd, maar de patch heeft mogelijk meer toegediend. Controleer de patch voordat u meer insuline toedient.</string>
+    <string name="low_reservoir">Waarschuwingen bij leeg reservoir</string>
+    <string name="patch_expiration_reminders">Herinnering aan het verlopen van de Patch</string>
     <string name="patch_buzzer_reminders">Patch buzzer herinneringen</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
@@ -22,7 +24,10 @@
     <string name="patch_safe_deactivation_desc">Om naar nieuwe patch te wisselen moet de huidige patch verwijderd worden. Alle insuline toediening van Patch zal worden geannuleerd.</string>
     <string name="patch_discard_complete_title">Het verwijderen van de patch is voltooid.</string>
     <string name="patch_discard_complete_desc">Patch is gedeactiveerd.\nVerwijder de patch.\nVerwijder de patch die op uw lichaam zit aangebracht.</string>
+    <string name="patch_change_confirm_bolus_is_active_desc">Er wordt momenteel een bolus toegediend. Insulinetoediening annuleren en de Patch verwijderen?</string>
+    <string name="patch_change_confirm_temp_basal_is_active_desc">Er is een tijdelijk basaalstand actief. Insulinetoediening annuleren en de Patch verwijderen?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Er wordt op dit moment een bolus en een tijdelijk basaal uitgevoerd. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
+    <string name="patch_change_confirm_desc">Patch verwijderen?</string>
     <string name="patch_forced_discard">Verwijder</string>
     <string name="patch_comm_error_during_discard_desc_2">Voor unilaterale deactivering, Tik op \'Verwijderen\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Handmatig het alarm van Patch uitschakelen</string>
@@ -36,6 +41,7 @@
     <string name="patch_wake_up_pairing_info">Tijdens het koppelen worden twee Android systeem pop-ups weergegeven. U moet beide bevestigen om de Bluetooth koppeling te voltooien.</string>
     <string name="patch_start_pairing">Begin met koppelen</string>
     <string name="patch_connect_new">Patch koppelen</string>
+    <string name="patch_connect_new_desc">De nieuwe patch wordt gekoppeld.\nHoud de afstand tussen de patch en de telefoon zo klein mogelijk.</string>
     <string name="patch_remove_needle_cap">Bereid je voor om patch aan te brengen</string>
     <string name="patch_remove_needle_cap_desc_1">Verwijder de plakker en druk op \'Volgende\'.</string>
     <string name="patch_remove_needle_cap_desc_2">Als een naald uitsteekt tik dan op \'Verwijderen\'.</string>
@@ -48,12 +54,14 @@
     <string name="patch_safety_check_desc_1">Het duurt ongeveer dertig seconden.</string>
     <string name="patch_safety_check_desc_2">Voor veilig gebruik, van de naald bedieningshendel afblijven en eerst de veiligheidscheck uitvoeren!</string>
     <string name="patch_rotate_knob">De naald inbrengen</string>
+    <string name="patch_rotate_knob_desc_1">Draai de naaldhendel meer dan 100° om de canule in te brengen. Draai de hendel vervolgens helemaal rond om deze te verwijderen.</string>
     <string name="patch_rotate_knob_desc_2">Controleer op 1 piep en druk op \'Volgende\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Controleer op 1 piep en druk op \'Opnieuw proberen\'.</string>
     <string name="patch_basal_schedule">Patch activering voltooid!</string>
     <string name="patch_basal_schedule_desc_1">Het programma \'%1$s\' is ingeschakeld.</string>
     <string name="patch_basal_schedule_desc_2">Waarschuwt je wanneer de patch zijn einde houdbaarheid nadert.\nWijzig de herinneringstijd indien nodig.</string>
     <string name="patch_expiration_reminder_setting_title">Patch houdbaarheid Herinnering</string>
+    <string name="patch_activate_reminder_desc">Patch activatie is niet afgerond.\nDoorgaan.</string>
     <string name="patch_communication_check_helper_1">Breng je \"smart device\" dichter bij de Patch.</string>
     <string name="patch_communication_check_helper_2">Ga naar een andere locatie en probeer het opnieuw.</string>
     <string name="patch_safety_check_failed_desc">Veiligheidscontrole mislukt. Probeer het opnieuw.</string>
