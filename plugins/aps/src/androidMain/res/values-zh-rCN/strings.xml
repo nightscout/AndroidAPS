@@ -26,7 +26,6 @@
     <string name="constraints">约束条件</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
     <string name="openapsma_script_debug_data_label">脚本调试</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
     <string name="increasing_max_basal">增加最大基础率，因为设置参数低于你配置文件中的最大基础率</string>
     <string name="max_basal_multiplier">最大基础率倍数</string>
     <string name="max_daily_basal_multiplier">最大日基础率倍数</string>
