@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Poslat SMS na všechna čísla</string>
     <string name="sendsmsactiontext">Odeslat SMS s textem</string>
     <string name="starttemptarget">Start dočasného cíle</string>
-    <string name="islesser">je menší než</string>
-    <string name="isequalorlesser">je rovno nebo menší než</string>
     <string name="isequal">je rovno</string>
     <string name="isequalorgreater">je rovno nebo větší než</string>
     <string name="isgreater">je větší než</string>
@@ -88,7 +86,6 @@
     <string name="add_short">PŘIDAT</string>
     <string name="temptargetcompared">Dočasný cíl %1$s</string>
     <string name="btdevicecompared">Připojení Bluetooth k zařízení %1$s %2$s</string>
-    <string name="btdevice">Připojení k zařízení Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
