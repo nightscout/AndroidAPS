@@ -21,17 +21,13 @@
     <string name="omnipod_dash_not_enough_insulin">Inte tillräckligt med insulin kvar i reservoaren</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Obekräftat kommando</string>
     <string name="requested_by_user" comment="26 characters max for translation">Begärt av användare</string>
-    <string name="suspend_delivery_is_unconfirmed">Pausad leverans är inte bekräftad! Uppdatera podstatus manuellt från Omnipod-fliken och återuppta leveransen vid behov.</string>
     <string name="insulin_delivery_suspended">Insulinleverans är pausad</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Poddens tidszon skiljer sig från telefonens. Basaldosen är felaktig. Gör ett profilbyte för att åtgärda</string>
     <string name="failed_to_set_the_new_basal_profile">Det gick inte att spara den nya basalprofilen. Leverans pausad</string>
-    <string name="setting_basal_profile_might_have_failed">Inställningen av basalprofilen kan ha misslyckats. Leveransen kan vara pausad! Uppdatera podstatus manuellt från Omnipod-fliken och återuppta leveransen vid behov.</string>
     <string name="bolus_delivery_status_uncertain">Osäker status för bolusleverans. Uppdatera podstatus för att bekräfta eller avvisa.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Det går inte att bekräfta att SMB (%1$s) gavs. Uppdatera poddens status för att bekräfta eller avvisa detta kommando.</string>
     <string name="temp_basal_out_of_sync">Oväntad status för tillfällig basal! Om en tillfällig basal var aktiv tidigare har den avbrutits. Kontrollera levererat insulin och poddens historik</string>
     <string name="checking_delivery_status">Kontrollerar leveransstatus</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Inställningen av tillfällig basal kan ha misslyckats. Om en tillfällig basal var aktiv tidigare har den avbrutits. Uppdatera podstatus manuellt från Omnipod-fliken.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Osäkert om den tillfälliga basalen verkligen avbröts</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Fick inte bekräftelse på återupptagen leverans. Vänligen uppdatera podstatus</string>
-    <string name="cancelling_temp_basal_might_have_failed">Avbrytandet av tillfällig basal kan ha misslyckats. Om en tillfällig basal var aktiv tidigare kan den ha avbrutits. Uppdatera podstatus manuellt från Omnipod-fliken.</string>
 </resources>
