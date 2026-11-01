@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">驗證啟動進度失敗。請重試。</string>
     <string name="omnipod_common_error_pod_suspended">Pod 已暫停</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">播放測試嗶聲失敗</string>
-    <string name="omnipod_common_error_time_out_of_sync">Pod 上的時間不同步。請在 Omnipod 標籤中更新時間。</string>
     <string name="omnipod_common_error_unexpected_exception">發生意外錯誤。請回報！（%1$s：%2$s）。</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">警報配置已在 Pod 中更新。</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">啟用設定檔基礎時，發出嗶聲</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">啟用 SMB 時，發出嗶聲</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">啟用臨時基礎率時，發出嗶聲</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">在 Omnipod 標籤中顯示暫停輸送按鈕</string>
     <string name="omnipod_common_preferences_time_change_enabled">啟用 DST/時區偵測</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">啟用到期提醒</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">啟用時，當到達指定時間時，Pod 將發出嗶聲提醒</string>
