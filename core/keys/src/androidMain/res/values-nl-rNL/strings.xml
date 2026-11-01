@@ -71,8 +71,8 @@
     <string name="pref_summary_aps_low_tt_lowers_sensitivity">Lage tijdelijke streefdoelen zullen de insulinegevoeligheid verlagen.</string>
     <string name="pref_title_aps_use_autoisf_weights">AutoISF Inschakelen</string>
     <string name="pref_summary_aps_use_autoisf_weights">ISF-aanpassingen op basis van AutoISF-gewichten inschakelen.</string>
-    <string name="pref_title_aps_smb_on_even_target">SMB toestaan bij even streefwaarde</string>
-    <string name="pref_summary_aps_smb_on_even_target">Alternatieve activering van SMB altijd gebaseerd op de glucose streefwaarde.</string>
+    <string name="pref_title_aps_smb_on_even_target">SMB inschakelen bij een even streefdoel</string>
+    <string name="pref_summary_aps_smb_on_even_target">Alternatieve manier om SMB altijd in te schakelen op basis van de glucose-streefdoel.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">Inschakelen van interne crash rapportage</string>
     <string name="pref_title_maintenance_enable_export_automation">Schakel automatische instellingen export in</string>
@@ -205,7 +205,7 @@
     <string name="pref_title_carbs_request_threshold">Minimum benodigde koolhydraten</string>
     <string name="carbs_req_threshold_summary">Minimum gram benodigde koolhydraten waarbij een waarschuwing wordt gegeven. Wanneer er minder koolhydraten nodig zijn dan dit getal, wordt er geen waarschuwing gegeven.</string>
     <string name="pref_title_half_basal_exercise_target">Halve basaal voor beweging streefwaarde</string>
-    <string name="half_basal_exercise_target_summary">Stel in op nummer, b.v. 160, wat betekent dat wanneer een tijdelijk streefdoel op 160 mg/dL is ingesteld en \"Hoog tijdelijk streefdoel verhoogt gevoeligheid\"=aan, zal basaal op 50%% worden ingesteld (120 = 75%%; 140 = 60%%).</string>
+    <string name="half_basal_exercise_target_summary">Stel een getal in, bijvoorbeeld 160. Dit betekent dat wanneer het tijdelijke streefdoel is ingesteld op 160 mg/dL en ‘Hoog tijdelijk streefdoel verhoogt de insulinegevoeligheid’ is ingeschakeld, op dit niveau 50%% van de basale insulinetoediening wordt gebruikt (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">IOB drempelpercentage</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage van maxIOB waarbij SMB\'s worden uitgeschakeld.\nStandaardwaarde: 100%\nMet 100% wordt deze functie effectief uitgeschakeld.</string>
     <string name="pref_title_dynisf_adjustment_factor">Aanpassingsfactor Dynamische ISF</string>
@@ -343,9 +343,9 @@
     <string name="pref_title_absorption_maxtime">Maximale absorptietijd koolhydraten</string>
     <string name="absorption_max_time_summary">Het verwachte aantal uren totdat alle koolhydraten uit een maaltijd zijn opgenomen</string>
     <string name="pref_title_autosens_min">Autosens min</string>
-    <string name="openapsama_autosens_min_summary">Standaardwaarde: 0,7\nDit is de andere kant van de veiligheidslimieten van Autosens. Deze instelling begrenst hoe sterk Autosens de basaalstanden naar beneden kan aanpassen en de ISF en BG-streefwaarden naar boven kan aanpassen.</string>
+    <string name="openapsama_autosens_min_summary">Standaardwaarde: 0,7\nDit is de ondergrens van de veiligheidsmarges van Autosens. Deze instelling begrenst hoe sterk Autosens de basaalstanden kan verlagen en de ISF en het glucose-streefdoel kan verhogen.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
-    <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor die de bovengrens voor Autosens (en binnenkort ook Autotune) bepaalt. Hiermee wordt de Autosens-ratio begrensd tot maximaal 20%% boven de standaardwaarde. Deze ratio bepaalt op zijn beurt hoe sterk Autosens de basaalstanden naar boven kan aanpassen, de ISF naar beneden kan aanpassen en de BG-streefwaarden kan verlagen.</string>
+    <string name="openapsama_autosens_max_summary">Standaardwaarde: 1,2\nDit is een bovengrens voor de vermenigvuldigingsfactor van Autosens (en binnenkort ook Autotune). De Autosens-ratio kan hierdoor maximaal 20%% boven de standaardwaarde uitkomen. Deze ratio bepaalt hoe sterk Autosens de basaalstanden kan verhogen, de ISF kan verlagen en het glucose-streefdoel kan verlagen.</string>
     <string name="pref_title_autoisf_min">AutoISF min</string>
     <string name="openapsama_autoISF_min_summary">Vergelijkbaar met autosens_min definieert dit hoe zwak ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.</string>
     <string name="pref_title_autoisf_max">AutoISF max</string>
@@ -355,9 +355,9 @@
     <string name="pref_title_bg_brake_weight">ISF-aanpassingsfactor bij vertragende BG</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose minder snel begint te veranderen. Hierdoor wordt de ISF verzwakt, wat mogelijk kan leiden tot een lagere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_low_bg_weight">ISF-aanpassingsfactor bij lage BG</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose onder de streefwaarde ligt. Hierdoor wordt de ISF verzwakt, wat mogelijk kan leiden tot een lagere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose onder het streefdoel ligt. Hierdoor wordt de ISF verzwakt, wat mogelijk kan leiden tot een lagere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_high_bg_weight">ISF-aanpassingsfactor bij hoge BG</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose boven de streefwaarde ligt. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose boven het streefdoel ligt. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">SMB toedieningsratio BG range</string>
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standaardwaarde: 0.\nDe SMB-toedieningsratio neemt lineair toe binnen het glucosebereik [target_bg, target_bg + bg_range].\nBij target_bg is de SMB-ratio gelijk aan smb_delivery_ratio_min. Bij target_bg + bg_range is deze gelijk aan smb_delivery_ratio_max. Bij de waarde 0 is deze lineaire toename van de SMB-ratio uitgeschakeld en wordt de vaste smb_delivery_ratio gebruikt. smb_delivery_ratio gebruikt.</string>
     <string name="pref_title_pp_weight">ISF-aanpassingsfactor na de maaltijd</string>
