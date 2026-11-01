@@ -8,7 +8,6 @@
     <string name="commanderror">Σφάλμα εντολής</string>
     <string name="speederror">Σφάλμα ταχύτητας</string>
     <string name="insulinlimitviolation">Υπέρβαση του ορίου ινσουλίνης</string>
-    <string name="boluserrorcode">Απαιτείται: %1$.2fU Παραδόθηκε: %2$.2fU Κωδικός σφάλματος: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Δεν έχει γίνει πλήρωση της αντλίας</string>
     <string name="danai2_bolus_error_not_enough_insulin">Δεν υπάρχει αρκετή ινσουλίνη στη δεξαμενή</string>
     <string name="danai2_bolus_error_easy_sleep">Η λειτουργία Easy sleep είναι ενεργή στην αντλία</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Επιλεγμένη αντλία</string>
     <string name="rs_loginsulinchange_title">Καταγραφή αλλαγής δεξαμενής</string>
     <string name="rs_loginsulinchange_summary">Προσθήκη συμβάντος \"Αλλαγή ινσουλίνης\" στο careportal όταν ανιχνευθεί στο ιστορικό</string>
-    <string name="rs_logcanulachange_title">Καταγραφή αλλαγής καθετήρα</string>
     <string name="rs_logcanulachange_summary">Προσθήκη συμβάντος \"Αλλαγή Σημείου\" στο careportal όταν ανιχνευθεί στο ιστορικό</string>
     <string name="press_ok_on_the_pump">Πατήστε OK στην αντλία\nκαι εισάγετε τους 2 αριθμούς που βλέπετε\nΚρατήστε την οθόνη στην αντλία ενεργή, πατώντας το κουμπί μείον μέχρι να ολοκληρώσετε την εισαγωγή των αριθμών.</string>
     <string name="num1pin">1: (12 ψηφία)</string>
