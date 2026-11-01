@@ -27,7 +27,7 @@
     <string name="commanderror">Kommandofeil</string>
     <string name="speederror">Hastighetsfeil</string>
     <string name="insulinlimitviolation">Insulingrense nådd</string>
-    <string name="boluserrorcode">Forespurt: %1$.2fE Levert: %2$.2fE Feilkode: %3$s</string>
+    <string name="boluserrorcode">Forespurt: %1$.2f E Levert: %2$.2f E Feilkode: %3$s</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="bolus_step">Bolus trinn</string>
     <string name="basal_step">Basal trinn</string>
