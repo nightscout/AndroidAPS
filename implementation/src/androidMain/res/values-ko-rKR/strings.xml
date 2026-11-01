@@ -57,10 +57,8 @@
     <string name="ue_exported">사용자 항목을 내보냈습니다</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s 전에 내보내기 함</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s에 내보내기 함</string>
-    <string name="exported_less_than_hour_ago">내보내기 한지 1시간이 지나지 않았습니다.</string>
     <string name="metadata_warning_different_flavour">이 설정은 다른 AAPS 변형(%1$s)으로 만들어졌습니다. 현재 변형: %2$s.\n\n일부 설정이 없거나 잘못되었을 수 있습니다. 가져온 후 설정을 확인하고 업데이트하십시오.</string>
     <string name="metadata_warning_different_device">환경설정은 다른 기기에서 설정되었습니다. 다른 혹은 전에 쓰던 기기에서 환경설정을 가져오는 건 괜찮지만 가져온 후 환경설정이 올바르게 설정되었는지 확인해주시기 바랍니다.</string>
-    <string name="metadata_warning_old_export">가져온 설정은 이미 %1$s일 지났습니다! 더 최신 설정이 있거나 잘못된 파일을 선택한 것은 아닙니까? 설정을 정기적으로 내보내십시오!</string>
     <string name="metadata_warning_date_format">잘못된 날짜 형식입니다.</string>
     <string name="metadata_warning_different_version">다른 하위 버전 어플의 설정입니다. 업그레이드 후에 설정을 불러오는 것은 괜찮지만, 설정이 올바른지 확인하십시오!</string>
     <string name="metadata_urgent_different_version">다른 상위 버전 어플의 설정입니다. 상위 버전은 매우 상이하며, 호환되지 않는 설정일 수 있습니다! 설정을 불러온 후 올바른지 반드시 확인하십시오!</string>
