@@ -46,7 +46,7 @@
     <string name="carelevo_btn_confirm">Bekreft</string>
     <string name="carelevo_btn_research">Skann på nytt</string>
     <string name="carelevo_btn_needle_insert_check">Bekreft innsetting</string>
-    <string name="carelevo_state_none_value">Inget aktivt patch</string>
+    <string name="carelevo_state_none_value">Ingen aktiv patch</string>
     <string name="carelevo_state_disconnected_value">Frakoblet</string>
     <string name="carelevo_state_connected_value">Tilkoblet</string>
     <string name="carelevo_overview_connect_btn_label">Aktiver patch</string>
@@ -72,7 +72,7 @@
     <string name="carelevo_connect_safety_check_title">Sikkerhetskontroll</string>
     <string name="carelevo_connect_patch_attach_title">Fest patch</string>
     <string name="carelevo_connect_needle_check_title">Sett inn nål</string>
-    <string name="carelevo_patch_buzzer_alarm_title">Patchinfo alarm</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patchinfo-alarm</string>
     <string name="carelevo_low_reservoir_reminders_title_value">Varsel-innstilling for lavt insulin</string>
     <string name="carelevo_patch_expiration_reminders_title_value">Varsel-innstilling for patchbruk</string>
     <string name="carelevo_title_fill_insulin">Fyll patch med insulin</string>
@@ -104,10 +104,10 @@
     <string name="carelevo_patch_needle_insertion_step2_desc">Trykk applikatorknappen helt ned. Det høres et pip når innsettingen er fullført.</string>
     <string name="carelevo_patch_needle_insertion_desc_warning">Trykk og hold inne i 10 sekunder.</string>
     <string name="carelevo_dialog_patch_needle_retry_count">%d gjenværende forsøk på nåleinnføring.</string>
-    <string name="carelevo_dialog_patch_discard_message_title">Deaktivere patch og starte et nytt patch?</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deaktivere patchen og starte en ny?</string>
     <string name="carelevo_dialog_patch_discard_message_desc">Hvis du trykker på [OK], stoppes insulintilførselen.</string>
     <string name="carelevo_dialog_patch_discard_unused_title">Avslutte uten å starte insulintilførsel?</string>
-    <string name="carelevo_dialog_patch_discard_unused_desc">Hvis du trykker på [OK], blir dette patch ubrukelig.</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Hvis du trykker på [OK], blir denne patchen ubrukelig.</string>
     <string name="carelevo_dialog_patch_activation_cancel_title">Avbryt aktivering av patch?</string>
     <string name="carelevo_dialog_patch_activation_cancel_desc">Hvis du trykker på [OK], forkastes det du har angitt.</string>
     <string name="carelevo_dialog_patch_connect_message_title">Hvis oppdateringen nedenfor er riktig, vennligst trykk på Bekreft-knappen.</string>
@@ -121,7 +121,7 @@
     <string name="carelevo_toast_msg_patch_not_connected">Ingen patch tilkoblet.</string>
     <string name="carelevo_toast_msg_not_connected_waiting_retry">Patch er ikke tilkoblet ennå. Prøv igjen om et øyeblikk.</string>
     <string name="carelevo_toast_msg_scan_failed">Skanning mislyktes. Prøv igjen.</string>
-    <string name="carelevo_toast_msg_patch_not_found">Fant ikke noe patch. Prøv igjen.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Fant ingen patch. Prøv igjen.</string>
     <string name="carelevo_toast_msg_connect_failed">Tilkobling til patch mislyktes. Prøv igjen.</string>
     <!-- Profile -->
     <string name="carelevo_toast_msg_profile_not_set">Profil er ikke angitt.</string>
@@ -150,7 +150,7 @@
     <string name="alarm_feat_title_warning_needle_injection_error">Feil ved nåleinnsetting</string>
     <!-- Alert Titles -->
     <string name="alarm_feat_title_alert_low_insulin">Lite insulin</string>
-    <string name="alarm_feat_title_alert_expired_patch_phase2">Patch sin brukstid er utløpt</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Patchens brukstid er utløpt</string>
     <string name="alarm_feat_title_alert_expired_patch_phase1">Patch utløper snart</string>
     <string name="alarm_feat_title_alert_low_battery">Lavt batteri</string>
     <string name="alarm_feat_title_alert_invalid_temperature">For høy/lav temperatur</string>
@@ -161,7 +161,7 @@
     <string name="alarm_feat_title_alert_off_bluetooth">Slå på Bluetooth</string>
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_low_insulin">Lite insulin</string>
-    <string name="alarm_feat_title_notice_expired_patch">Varsel om patch sin brukstid</string>
+    <string name="alarm_feat_title_notice_expired_patch">Varsel om patchens brukstid</string>
     <string name="alarm_feat_title_notice_check_patch">Varsel om kontroll av patch</string>
     <string name="alarm_feat_title_notice_change_time_zone">Tidssoneendring</string>
     <string name="alarm_feat_title_notice_check_bg">Kontroller blodsukker</string>
