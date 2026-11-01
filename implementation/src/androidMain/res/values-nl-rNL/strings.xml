@@ -57,10 +57,8 @@
     <string name="ue_exported">Gebruikers invoer geëxporteerd</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
     <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
-    <string name="exported_less_than_hour_ago">minder dan uur geleden geëxporteerd</string>
     <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn - controleer aub jouw instellingen na het importeren en corrigeer ze zonodig.</string>
     <string name="metadata_warning_different_device">Instellingen zijn gemaakt op een ander apparaat. Het is OK als ze zijn geïmporteerd van een oude/andere telefoon, maar zorg ervoor dat de geïmporteerde instellingen correct zijn!</string>
-    <string name="metadata_warning_old_export">Geïmporteerde instellingen zijn al %1$s dagen oud! Misschien heb je een meer recente versie of heb je het verkeerde bestand gekozen? Vergeet niet om regelmatig jouw instellingen te exporteren!</string>
     <string name="metadata_warning_date_format">Ongeldige notatie voor datum/tijd!</string>
     <string name="metadata_warning_different_version">Instellingen zijn afkomstig van een vorige minor versie van de AAPS app. Het is OK als je deze importeert na een app upgrade, maar controleer na importeren dan wel of de instellingen nog steeds correct zijn!</string>
     <string name="metadata_urgent_different_version">Instellingen van een andere major versie van de AAPS app. Deze versies kunnen aanzienlijk verschillen en kunnen instellingen hebben die incompatibel zijn! Zorg ervoor dat na het importeren alle instellingen nog steeds correct zijn!</string>
