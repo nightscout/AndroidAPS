@@ -14,7 +14,7 @@
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpen er ikke initialisert</string>
     <!--    Permissions-->
-    <string name="permission_battery_title">Batterioptimisering</string>
+    <string name="permission_battery_title">Batterioptimalisering</string>
     <string name="permission_battery_description">Appen må ekskluderes fra batterioptimalisering for å kjøre pålitelig i bakgrunnen</string>
     <string name="permission_directory_title">AAPS-mappe</string>
     <string name="permission_directory_description">Velg en mappe for appinnstillinger og loggfiler</string>
