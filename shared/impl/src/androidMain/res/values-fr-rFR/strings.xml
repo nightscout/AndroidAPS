@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Nom du mois (court)</string>
     <string name="cwf_comment_loop">État de la boucle et délais</string>
     <string name="cwf_comment_direction">Flèche de direction</string>
-    <string name="cwf_comment_timestamp">Minutes depuis la dernière Glycémie reçue</string>
     <string name="cwf_comment_sgv">Valeur de Ia Glycémie</string>
     <string name="cwf_comment_cover_plate">Image de couverture devant le texte (cadrans...)</string>
     <string name="cwf_comment_hour_hand">Image de l\'aiguille de l\'heure (Montre Analogique)</string>
