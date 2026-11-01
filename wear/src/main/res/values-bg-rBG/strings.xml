@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Изглед на усложнение</string>
     <string name="cwf_complication_layout_description">Позиция и размер на усложненията, взето от последния циферблат.</string>
     <string name="pref_include_external">Включвай външни изгледи в шаблона</string>
-    <string name="pref_switch_external">Включи външни данни в циферблата</string>
     <string name="custom_pref_show_seconds">Показвай секунди</string>
     <string name="digitalstyle_pref_your_style">Вашият стил</string>
     <string name="digitalstyle_style_none">Няма избран стил</string>
