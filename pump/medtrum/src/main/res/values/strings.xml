@@ -5,13 +5,13 @@
     <string name="medtrum_pump_description">Pump integration for Medtrum Nano and Medtrum 300U</string>
     <string name="medtrum_pump_setting">Medtrum pump settings</string>
     <string name="pump_error">Pump error: %1$s !! </string>
-    <string name="pump_warning">Pump warning: %1$s </string>
+    <string name="pump_warning">Pump warning: %1$s</string>
     <string name="pump_is_suspended">Pump is suspended</string>
     <string name="pump_is_suspended_hour_max">Pump is suspended due to hourly max insulin exceeded</string>
     <string name="pump_is_suspended_day_max">Pump is suspended due to daily max insulin exceeded</string>
     <string name="patch_not_active">Patch not activated</string>
     <string name="pump_setting_failed">Setting user settings to pump failed!</string>
-    <string name="pump_sync_error">Error while syncing history from pump, a record has been skipped. Check treatment tab to check if bolus is synced correctly. Snooze and if error keep coming back change patch or pumpbase.</string>
+    <string name="pump_sync_error">Error while syncing history from pump, a record has been skipped. Check treatment tab to check if bolus is synced correctly. Snooze, and if the error keeps coming back, change patch or pump base.</string>
     <string name="patch_reset_after_primed_error">The patch restarted by itself and lost its session. It cannot deliver insulin any more. Remove the patch and start a new one.</string>
 
     <!-- overview fragment -->
