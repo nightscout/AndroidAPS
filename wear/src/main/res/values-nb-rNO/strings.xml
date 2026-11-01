@@ -179,7 +179,7 @@
     <string name="cwf_complication_layout">Komplikasjonslayout</string>
     <string name="cwf_complication_layout_description">Plassering og størrelse på komplikasjonene, hentet fra den innlastede egendefinerte urskiven.</string>
     <string name="pref_include_external">Inkluder eksterne visninger i mal</string>
-    <string name="pref_switch_external">Bytt ekstern dataer i urskiven</string>
+    <string name="pref_switch_external">Bytt eksterne data i urskiven</string>
     <string name="custom_pref_show_seconds">Vis sekunder</string>
     <string name="digitalstyle_pref_your_style">Stil</string>
     <string name="digitalstyle_style_none">ingen stil</string>
