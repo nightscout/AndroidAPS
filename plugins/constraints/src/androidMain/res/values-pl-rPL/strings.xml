@@ -9,7 +9,6 @@
     <string name="application_expired">Aplikacja wygasła</string>
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
-    <string name="version_expire">Wersja %1$s wygasa dnia %2$s, po czym nastąpi przejście w tryb LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">Wybrano APS</string>
     <string name="closedmodeenabled">Tryb zamknięty włączony</string>
     <string name="description_objectives">Program do nauki</string>
-    <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="objectives_button_unfinish">Resetuj stan zakończenia</string>
     <string name="objectives_button_unstart">Resetuj stan rozpoczęcia</string>
     <string name="bg_doubled_lgs">Tryb LGS z powodu zduplikowanych wartości w źródle glikemii</string>
