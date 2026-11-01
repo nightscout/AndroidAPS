@@ -144,7 +144,7 @@
     <string name="pref_title_wear_wizard_trend">הכללת מגמה באשף</string>
     <string name="pref_title_wear_wizard_cob">הכללת COB באשף</string>
     <string name="pref_title_wear_wizard_iob">הכללת IOB באשף</string>
-    <string name="pref_title_wear_custom_watchface_authorization">אישור תצוגות שעון מותאמות אישית</string>
+    <string name="pref_title_wear_custom_watchface_authorization">אישור פני שעון מותאמים אישית</string>
     <string name="pref_title_wear_pushed_watchface">פני השעון שמותקנים בשעון</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">פני שעון עם רכיבים (Complications)</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">פני שעון מותאמים אישית</string>
