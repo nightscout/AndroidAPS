@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cwf_comment_background">תמונת רקע</string>
-    <string name="cwf_comment_chart">גרפים (רמת הסוכר בדם, בזאלי, קווי תחזיות...)</string>
+    <string name="cwf_comment_chart">גרפים (רמת הסוכר בדם, בזאלי, קווי תחזית...)</string>
     <string name="cwf_comment_cover_chart">תמונה בחזית הגרף ומאחורי שדות הטקסט</string>
     <string name="cwf_comment_complication">אזור תצוגה לרכיב</string>
     <string name="cwf_comment_freetext1">טקסט חופשי 1</string>
@@ -35,7 +35,7 @@
     <string name="cwf_comment_reservoir">כמות האינסולין במכל</string>
     <string name="cwf_comment_uploader_battery">סוללת הטלפון (%)</string>
     <string name="cwf_comment_rig_battery">סוללת הלולאה הכוללת (%)</string>
-    <string name="cwf_comment_basalRate">מינון בזאלי</string>
+    <string name="cwf_comment_basalRate">קצב בזאלי</string>
     <string name="cwf_comment_bgi">השפעת רמת הסוכר בדם</string>
     <string name="cwf_comment_status">סיכום מצב</string>
     <string name="cwf_comment_time">זמן (שעות:דקות או שעות:דקות:שניות)</string>
