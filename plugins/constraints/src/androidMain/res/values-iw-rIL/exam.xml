@@ -171,7 +171,7 @@
     <string name="ic_hint1">https://wiki.aaps.app/he/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="profileswitch_label">החלפת פרופילים</string>
     <string name="profileswitch_pctwillchange">בעת החלפה לפרופיל 90%, מהם כל ההיגדים הנכונים?</string>
-    <string name="profileswitch_basallower">המינון הבזאלי יהיה נמוך ב-10%.</string>
+    <string name="profileswitch_basallower">הקצב הבזאלי יהיה נמוך ב-10%.</string>
     <string name="profileswitch_isfhigher">ערך יחס התיקון (ISF) יהיה גבוה ב-10%.</string>
     <string name="profileswitch_iclower">ערך יחס הפחמימות יהיה נמוך ב-10%.</string>
     <string name="profileswitch_unchanged">ערכי יחס התיקון ויחס הפחמימות לא ישתנו.</string>
@@ -179,7 +179,7 @@
     <string name="profileswitch2_label">החלפת פרופילים</string>
     <string name="profileswitch2_pctwillchange">בעת החלפה לפרופיל 120%, מהם כל ההיגדים הנכונים?</string>
     <string name="profileswitch2_bghigher">יעד רמת הסוכר בדם יהיה גבוה ב-20%.</string>
-    <string name="profileswitch2_basalhigher">המינון הבזאלי יהיה גבוה ב-20%.</string>
+    <string name="profileswitch2_basalhigher">הקצב הבזאלי יהיה גבוה ב-20%.</string>
     <string name="profileswitch2_bgunchanged">יעד רמת הסוכר לא ישתנה.</string>
     <string name="profileswitch2_isfhigher">ערך יחס התיקון (ISF) יהיה גבוה ב-20%.</string>
     <string name="profileswitchtime_label">החלפת פרופיל</string>
