@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">發送簡訊到所有號碼</string>
     <string name="sendsmsactiontext">發送簡訊內容</string>
     <string name="starttemptarget">開始臨時目標</string>
-    <string name="islesser">小於</string>
-    <string name="isequalorlesser">等於或小於</string>
     <string name="isequal">等於</string>
     <string name="isequalorgreater">等於或大於</string>
     <string name="isgreater">大於</string>
@@ -88,7 +86,6 @@
     <string name="add_short">新增</string>
     <string name="temptargetcompared">臨時目標 %1$s</string>
     <string name="btdevicecompared">藍牙連線到設備 %1$s %2$s</string>
-    <string name="btdevice">連線到藍牙設備</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">自動敏感度 %1$s %2$s %%</string>
     <string name="autosenslabel">自動敏感度 %</string>
