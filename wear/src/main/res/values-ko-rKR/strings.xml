@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">컴플리케이션 배치</string>
     <string name="cwf_complication_layout_description">불러온 사용자 지정 워치 페이스에서 가져온 컴플리케이션의 위치와 크기입니다.</string>
     <string name="pref_include_external">템플릿에 외부 보기 포함</string>
-    <string name="pref_switch_external">워치 페이스에서 외부 데이터 전환</string>
     <string name="custom_pref_show_seconds">초 표시하기</string>
     <string name="digitalstyle_pref_your_style">내 스타일</string>
     <string name="digitalstyle_style_none">형식 없음</string>
