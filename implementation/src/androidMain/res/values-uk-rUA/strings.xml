@@ -57,10 +57,8 @@
     <string name="ue_exported">Записи користувача експортовано</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">експортовано %1$s тому</string>
     <string name="exported_at" comment="at placeholder we add export date">експортовано %1$s</string>
-    <string name="exported_less_than_hour_ago">експортовано менш ніж годину тому</string>
     <string name="metadata_warning_different_flavour">Налаштування створено у іншому варіанті AAPS (%1$s), а у вас: %2$s.\n\nДеякі параметри можуть бути відсутні або некоректні — перевірте налаштування після імпорту.</string>
     <string name="metadata_warning_different_device">Налаштування створено на іншому пристрої. Це нормально, якщо імпортуєте зі старого/іншого телефону. Переконайтеся, що імпортовані налаштування коректні!</string>
-    <string name="metadata_warning_old_export">Імпортованим налаштуванням уже %1$s днів! Можливо, у вас є новіші налаштування або ви обрали неправильний файл? Не забувайте регулярно експортувати налаштування!</string>
     <string name="metadata_warning_date_format">Некоректний формат дати!</string>
     <string name="metadata_warning_different_version">Налаштування з іншої мінорної версії. Це нормально після оновлення, але перевірте налаштування після імпорту!</string>
     <string name="metadata_urgent_different_version">Налаштування з іншої мажорної версії. Можлива несумісність! Переконайтеся, що після імпорту все налаштовано правильно!</string>
