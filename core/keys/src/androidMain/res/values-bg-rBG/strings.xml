@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">Включи поддръжка за различни концентрации на инсулин (U50, U200, др.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Винаги включен екран</string>
-    <string name="pref_summary_keep_screen_on">Андроид няма да изключва екрана. Ще консумира много батерия когато телефона не е включен на зарядно.</string>
     <string name="pref_title_show_treatment_button">Покажи бутона Лечения</string>
     <string name="pref_title_show_wizard_button">Покажи бутона Калкулатор</string>
     <string name="pref_title_show_insulin_button">Покажи бутона Инсулин</string>
@@ -177,7 +176,6 @@
     <string name="pref_title_bolus_percentage">Болус процент</string>
     <string name="deliverpartofboluswizard">Използвай тази стойност при корекция на болуса за КЗ и въгл в болус съветника</string>
     <string name="pref_title_reset_bolus_percentage_time">Нулиране на времето за болус процент</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Пускай пълния болус (100%) ако захарта е по-стара от</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Таймаут за Защита</string>
     <string name="pref_title_protection_type_application">Ниво 0: Защита на приложението</string>
@@ -299,7 +297,6 @@
     <string name="smscommunicator_allowednumbers">Разрешени мобилни номера</string>
     <string name="smscommunicator_allowednumbers_summary">+359XXXXXXXXX;+359YYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Допълнителен задължителен ПИН в края на токен</string>
-    <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които трябва да запомните и добавяте в края на всяка еднократна парола</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Тип помпа</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +327,6 @@
     <string name="pref_title_ama_max_iob">Макс IOB за AMA</string>
     <string name="openapsma_max_iob_summary">Нарича се Max IOB в OpenAPS context\nТова е максимален инсулин (в единици) APS ще доставя при една намеса. Стойността се влияе и от възрастта на пациента.</string>
     <string name="pref_title_max_daily_multiplier">Макс дневен множител</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3. Това е ключов елемет в OpenAPS сигурността.Какво прави - лимитира базалите то 3 пъти тези от профила. Сигурно няма да има нужда да го променяте.</string>
     <string name="pref_title_current_basal_multiplier">Множител за текущия базал</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Основна стойност: 4. Това е другата част от границите на сигурността на OpenAPS. Значи че базала (независимо от този зададен в помпата) не може да надвиши текущия базал от профила по този множител. Използва се за да ви предпази от прекалено големи базали преди да знаете как работи алгоритъма. Повечето хора нямат нужда да го променят.</string>
     <string name="pref_title_bolus_snooze_divisor">Делител на DIA за отлагане на болус</string>
@@ -341,7 +337,6 @@
     <string name="pref_title_absorption_cutoff">Максимална абсорбция</string>
     <string name="absorption_cutoff_summary">Времето след което всяко хранене се счита за поето. Оставащите въглехидрати ще бъдат премахнати.</string>
     <string name="pref_title_absorption_maxtime">Максимално Време за абсорбция</string>
-    <string name="absorption_max_time_summary">Времето в часове, за което се очаква всички въглехидрати от храненето да са абсорбирани.</string>
     <string name="pref_title_autosens_min">Аутосенс минимум</string>
     <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДолната граница на сигурността за това до колко аутосенс може да регулира базалите и колко високо може да настройва ISF и целите.</string>
     <string name="pref_title_autosens_max">Аутосенс максимум</string>
@@ -365,11 +360,8 @@
     <string name="pref_title_dura_weight">Тежест при продължителност върху ISF</string>
     <string name="openapsama_dura_ISF_weight_summary">Това е тежестта прилагана при КЗ над целта за продължително време и високи плата, което намалява ISF и увеличава доставката на инсулин.\n\nПо подразбиране: 0, което изключва този ефект.</string>
     <string name="pref_title_smb_delivery_ratio">Съотношение на прилагания SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">По подразбиране: 0.5. Това е друга ключова стойност за сигурност и определя каква част от нужния инсулин да се доставя като SMB. Това е за да предотврати опасни SMB намеси от контролиращ телефон. В същото време увеличавайте тази стойност бавно и внимателно.</string>
     <string name="pref_title_smb_delivery_ratio_min">Минималлно съотнешение на прилагания SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">По подразбиране: 0.5. Това е долната граница на линейно ускоряващото се съотношение отколкото фиксираната стойнот по-горе.</string>
     <string name="pref_title_smb_delivery_ratio_max">Максимално съотнешение на прилагания SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">По подразбиране: 0.5. Това е горната граница на линейно ускоряващото се съотношение отколкото фиксираната стойнот по-горе.</string>
     <string name="pref_title_smb_max_range_extension">SMB максимален диапазон</string>
     <string name="openapsama_smb_max_range_extension_summary">По подразбиране: 1. Друг ключов елемент на сигурността на OpenAPS който определя с колко може да бъде надвишено ограничението 120 maxSMB/maxUAM минуто. Увеличавайте тази стойност внимателно и с малки стъпки.</string>
     <!-- UnitDoubleKey: Overview preferences -->
