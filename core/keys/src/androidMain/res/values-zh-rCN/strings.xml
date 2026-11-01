@@ -6,7 +6,6 @@
     <string name="pref_summary_insulin_concentration">启用对不同的胰岛素浓度支持（U50、U200等）</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">保持屏幕常亮</string>
-    <string name="pref_summary_keep_screen_on">阻止 Android 系统关闭手机屏幕。这将非常耗电。</string>
     <string name="pref_title_show_treatment_button">显示治疗按钮</string>
     <string name="pref_title_show_wizard_button">显示向导按钮</string>
     <string name="pref_title_show_insulin_button">显示胰岛素按钮</string>
@@ -176,7 +175,6 @@
     <string name="pref_title_bolus_percentage">大剂量百分比</string>
     <string name="deliverpartofboluswizard">将此数值应用于大剂量向导计算结果中的血糖及碳水化合物校正</string>
     <string name="pref_title_reset_bolus_percentage_time">重置大剂量百分比时间</string>
-    <string name="deliver_part_of_boluswizard_reset_time">如果血糖数据超时（早于）该时间，则输注全额大剂量（100%）</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">保护超时</string>
     <string name="pref_title_protection_type_application">0 级：应用保护</string>
@@ -298,7 +296,6 @@
     <string name="smscommunicator_allowednumbers">允许的手机号码</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">验证码末尾强制附加的PIN码</string>
-    <string name="smscommunicator_otp_pin_summary">在每次生成的一次性随机密码末尾，需要记住并强制附加的数字</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">泵类型</string>
     <!-- StringKey: NS Client preferences -->
@@ -329,7 +326,6 @@
     <string name="pref_title_ama_max_iob">AMA 最大 IOB 上限</string>
     <string name="openapsma_max_iob_summary">该数值在 OpenAPS 中称为最大活性胰岛素（Max IOB）。\n这是 APS 单次可以输注的胰岛素的最大值[U]。该数值同时受患者类型影响。</string>
     <string name="pref_title_max_daily_multiplier">最大日基础率安全倍数</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3 这是 OpenAPS 中一项关键的安全上限设置。作用是将你的基础率限制为最高基础率的 3 倍（当前示例为 3 倍）。你通常无需修改此值，但需要了解：这就是相关说明中提到的 “最大每日 3 倍、当前 4 倍” 安全上限机制。</string>
     <string name="pref_title_current_basal_multiplier">当前基础率安全倍数</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值：4 这是 OpenAPS 另一项关键安全上限，也就是 “最大每日 3 倍、当前 4 倍” 中的后半部分。该设置表示：无论你在泵中设置了多高的基础率上限，实际基础率都不会超过当前基础率的该倍数。此设计用于防止用户在尚未完全理解算法逻辑前，因设置过高的基础率上限而陷入危险。同样，默认值为 4 倍；大多数人完全不需要调整此项。如果感觉触发了该安全限制，通常应优先调整其他参数，而非修改本项。</string>
     <string name="pref_title_bolus_snooze_divisor">大剂量延迟胰岛素作用时长除数</string>
@@ -340,7 +336,6 @@
     <string name="pref_title_absorption_cutoff">吸收截止时间</string>
     <string name="absorption_cutoff_summary">任何膳食被认为完全吸收的时间。 剩余的碳水化合物将被忽略。</string>
     <string name="pref_title_absorption_maxtime">吸收最长时间</string>
-    <string name="absorption_max_time_summary">预计膳食中所有的碳水化合物被吸收的时间，以小时为单位</string>
     <string name="pref_title_autosens_min">自动敏感系数优化(Autosens)最小值</string>
     <string name="openapsama_autosens_min_summary">默认值：0.7\n这是 自动灵敏度（Autosens）安全限制的下限，用于约束 autosens 对基础率的下调幅度，以及对 ISF（胰岛素敏感系数）和血糖目标值的上调幅度。</string>
     <string name="pref_title_autosens_max">自动敏感系数优化(Autosens)最大值</string>
@@ -364,11 +359,8 @@
     <string name="pref_title_dura_weight">持续时间 ISF 权重</string>
     <string name="openapsama_dura_ISF_weight_summary">这是在较长时间升高的血糖平稳期的权重影响，它可以增强 ISF（胰岛素敏感系数），从而可能增加胰岛素输送。\n\n默认值 0.0 可有效关闭此效果。</string>
     <string name="pref_title_smb_delivery_ratio">SMB 输注比例</string>
-    <string name="openapsama_smb_delivery_ratio_summary">默认值：0.5 这是 OpenAPS 的另一个关键安全上限，用于指定所需胰岛素总量中有多少比例可以通过 SMB（微型大剂量）输送。这是为了防止人们同时通过护理人员的手机设置 SMB 请求而陷入危险境地。请缓慢且谨慎地增加此实验值。</string>
     <string name="pref_title_smb_delivery_ratio_min">最小SMB 输注比例</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">默认值：0.5 这是线性增加比率的下限，而不是上面的固定值。</string>
     <string name="pref_title_smb_delivery_ratio_max">最大SMB 输注比例</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">默认值：0.5 这是线性增加比率的上限，而不是上面的固定值。</string>
     <string name="pref_title_smb_max_range_extension">SMB 最大范围扩展</string>
     <string name="openapsama_smb_max_range_extension_summary">默认值：1 这是 OpenAPS 的另一个关键安全上限，指定了您可以将常规的 maxSMB/maxUAM（最大微型大剂量/最大未通知的用餐） 时间限制超过 120 分钟。请缓慢且谨慎地增加此实验值。</string>
     <!-- UnitDoubleKey: Overview preferences -->
