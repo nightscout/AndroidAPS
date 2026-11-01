@@ -11,6 +11,14 @@
     <string name="pump_status_suspended">Angehalten</string>
     <string name="pump_status_executing_command">Befehl ausführen</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Einstellungen abrufen</string>
+    <string name="pump_cmd_desc_get_firmware">Pump-Firmware abrufen</string>
+    <string name="pump_cmd_desc_get_basal_profile">Basalprofil abrufen</string>
+    <string name="pump_cmd_desc_set_basal_profile">Basalprofil setzen</string>
+    <string name="pump_cmd_desc_get_tbr">Temporäre Basalrate abrufen</string>
+    <string name="pump_cmd_desc_cancel_tbr">Temporäre Basalrate abbrechen</string>
+    <string name="pump_cmd_desc_set_tbr">Temporäre Basalrate setzen</string>
+    <string name="pump_cmd_desc_set_bolus">Bolus abgeben</string>
     <string name="pump_cmd_desc_get_bolus">Bolus abrufen</string>
     <string name="pump_cmd_desc_cancel_bolus">Bolus abbrechen</string>
     <string name="pump_cmd_desc_get_remaining_insulin">Verbleibendes Insulin abrufen</string>
@@ -18,6 +26,9 @@
     <string name="pump_cmd_desc_get_time">Uhrzeit abrufen</string>
     <string name="pump_cmd_desc_set_time">Uhrzeit einstellen</string>
     <string name="pump_cmd_desc_get_pump_status">Pumpenstatus abrufen</string>
+    <string name="pump_cmd_desc_get_history">Verlauf abrufen</string>
+    <string name="pump_cmd_desc_get_history_params">Verlauf %s abrufen</string>
+    <string name="pump_cmd_desc_custom">Benutzerdefinierter Befehl</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basal</string>
     <string name="history_group_configuration">Konfigurationen</string>
@@ -39,6 +50,7 @@
     <string name="time_last_3_hours">Letzte 3 Stunden</string>
     <string name="time_last_6_hours">Letzte 6 Stunden</string>
     <string name="time_last_12_hours">Letzte 12 Stunden</string>
+    <string name="time_last_24_hours">Letzte 24 Stunden</string>
     <string name="time_last_2_days">Letzte 2 Tage</string>
     <string name="time_last_4_days">Letzte 4 Tage</string>
     <string name="time_last_week">Letzte Woche</string>
