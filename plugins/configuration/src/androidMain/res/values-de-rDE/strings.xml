@@ -20,6 +20,7 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
     <string name="syncinfotext">Synchronisiere Daten mit der Cloud. Du kannst diesen Teil jetzt überspringen, aber Du wirst keine Ziele überschreiten können, bis Du die Synchronisierung mit Nightscout oder Tidepool eingerichtet hast.</string>
+    <string name="status_label">Status:</string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
@@ -29,6 +30,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
+    <string name="setupwizard_permissions">Berechtigungen</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="readstatus">Status lesen</string>
     <!-- Provider-agnostic cloud export/import strings -->
@@ -50,6 +52,8 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Wird geladen …</string>
+    <string name="warning_wrong_directory_selected">Falsches Verzeichnis ausgewählt</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
