@@ -57,10 +57,8 @@
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">יוצא ב-%1$s</string>
-    <string name="exported_less_than_hour_ago">יוצא לפני פחות משעה</string>
     <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s), ואילו אצלכם: %2$s.\n\nחלק מההגדרות עלולות להיות חסרות או לא תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
     <string name="metadata_warning_different_device">ההעדפות נוצרו במכשיר אחר. זה בסדר אם ייבאתם אותן ממכשיר ישן או שונה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_warning_old_export">ההעדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם העדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
     <string name="metadata_warning_date_format">פורמט תאריך ושעה לא חוקי!</string>
     <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית אחרת של AAPS. זה בסדר אם הייבוא נעשה לאחר שדרוג, אך יש לבדוק לאחר הייבוא שההעדפות עדיין נכונות!</string>
     <string name="metadata_urgent_different_version">ההעדפות נוצרו בגרסה ראשית אחרת של AAPS. גרסאות ראשיות הן שונות מאוד והגדרותיהן עלולות להיות לא תואמות אחת לשניה. נא לוודא שההעדפות שהובאו נכונות!</string>
