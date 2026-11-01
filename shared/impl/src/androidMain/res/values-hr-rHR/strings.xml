@@ -26,7 +26,6 @@
     <string name="cwf_comment_month">Ime mjeseca (kratko)</string>
     <string name="cwf_comment_loop">Status petlje i vrijeme</string>
     <string name="cwf_comment_direction">Strelica smjera</string>
-    <string name="cwf_comment_timestamp">Prije nekoliko minuta za zadnji primljeni BG</string>
     <string name="cwf_comment_sgv">BG vrijednost</string>
     <string name="cwf_comment_hour_hand">Slika satne kazaljke (analogni sat)</string>
     <string name="cwf_comment_minute_hand">Slika kazaljke za minute (analogni sat)</string>
