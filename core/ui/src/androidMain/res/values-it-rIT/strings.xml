@@ -230,7 +230,7 @@
     <string name="profile">Profilo</string>
     <string name="percentage_label">Percentuale</string>
     <string name="timeshift_label">Sfasamento temporale</string>
-    <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
+    <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Il master non ha %1$d di queste voci. Queste non sono state rimosse.</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
@@ -344,7 +344,7 @@
     <string name="careportal_exercise">Esercizio fisico</string>
     <string name="careportal_announcement_message">Avviso: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
-    <string name="careportal_question_message">Domanda : %1$s</string>
+    <string name="careportal_question_message">Domanda: %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio sito micro: %1$s</string>
     <string name="careportal_pump_site_change">Cambio posizione cannula</string>
@@ -661,7 +661,7 @@
     <string name="uel_ns_queue_cleared">CODA NS CANCELLATA</string>
     <string name="uel_ns_settings_copied">IMPOSTAZIONI NS COPIATE</string>
     <string name="uel_error_dialog_ok">FINESTRA DI ERRORE OK</string>
-    <string name="uel_error_dialog_mute">FINESTRA DI ERRORE SILENZIA </string>
+    <string name="uel_error_dialog_mute">SILENZIA FINESTRA DI ERRORE</string>
     <string name="uel_error_dialog_mute_5min">FINESTRA DI ERRORE SILENZIA 5MIN</string>
     <string name="uel_objective_started">OBIETTIVO AVVIATO</string>
     <string name="uel_objective_unstarted">OBIETTIVO NON AVVIATO</string>
@@ -998,7 +998,7 @@
     <string name="cannula">Cannula</string>
     <string name="patch_pump">Micro a patch</string>
     <!-- Site Rotation -->
-    <string name="select_location">Clicca qui sotto per selezionare il sito</string>
+    <string name="select_location">Tocca qui sotto per selezionare il sito</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
