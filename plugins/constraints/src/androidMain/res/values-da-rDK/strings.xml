@@ -36,7 +36,6 @@
     <string name="apsselected">APS valgt</string>
     <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
     <string name="description_objectives">Oplæringsprogram</string>
-    <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
     <string name="objectives_button_unfinish">Nulstil færdig tilstand</string>
     <string name="objectives_button_unstart">Nulstil startet tilstand</string>
 </resources>
