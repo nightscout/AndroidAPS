@@ -22,13 +22,16 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcCalibration
 import app.aaps.plugins.calibration.compose.CalibrationComposeContent
+import app.aaps.plugins.calibration.keys.CalibrationLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -57,15 +60,20 @@ class LinearCalibrationPlugin(
     notificationManager: NotificationManager,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val rxBus: RxBus,
-    private val config: Config
-) : PluginBase(
-    PluginDescription()
+    private val config: Config,
+    preferences: Preferences
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .pluginName(CalibrationStrings.linear_calibration_name)
         .description(CalibrationStrings.description_linear_calibration)
         .composeContent { CalibrationComposeContent() },
-    aapsLogger, rh, notificationManager
+    ownPreferences = CalibrationLongKey.entries,
+    aapsLogger = aapsLogger,
+    rh = rh,
+    preferences = preferences,
+    notificationManager = notificationManager
 ), Calibration {
 
     private var scope: CoroutineScope? = null
@@ -85,6 +93,8 @@ class LinearCalibrationPlugin(
         // change-tracking flow above — observe the dedicated cleared signal so the graph recomputes.
         scope?.launch {
             persistenceLayer.databaseClearedFlow.collect {
+                // The cut belongs to the data that was just wiped. Kept, it would hide new entries.
+                preferences.remove(CalibrationLongKey.EntriesValidFrom)
                 rxBus.send(EventCalibrationChanged())
             }
         }
@@ -121,7 +131,7 @@ class LinearCalibrationPlugin(
             return data
         }
 
-        val entries = persistenceLayer.getValidCalibrationEntriesSince(sessionStart)
+        val entries = entriesForFit(sessionStart)
         val fit = fitLinearCalibration(entries, now)
         if (fit == null) {
             aapsLogger.debug(LTag.GLUCOSE) { "LinearCalibration: ${entries.size} entries (<$MIN_ENTRIES_FOR_FIT), identity" }
@@ -163,7 +173,7 @@ class LinearCalibrationPlugin(
             // fit is in place, so its magnitude scales with slope. Scale the raw-units threshold
             // by the active slope so a sensor rate of e.g. 5 mg/dL/5min (the "stable enough"
             // bar) is treated identically whether or not calibration is multiplying the signal.
-            val activeFit = fitLinearCalibration(persistenceLayer.getValidCalibrationEntriesSince(sessionStart), timestamp)
+            val activeFit = fitLinearCalibration(entriesForFit(sessionStart), timestamp)
             val effectiveThreshold = if (activeFit != null && activeFit.isApplicable) {
                 DELTA_GATE_MGDL_PER_5MIN * activeFit.slope
             } else {
@@ -197,6 +207,25 @@ class LinearCalibrationPlugin(
         }
         return AddEntryResult.Accepted
     }
+
+    override suspend fun ignoreEntriesBefore(timestamp: Long) {
+        val now = dateUtil.now()
+        if (timestamp > now + MAX_CUT_AHEAD_MS) {
+            // A cut in the future would leave every new fingerstick out of the fit until that time.
+            aapsLogger.warn(LTag.GLUCOSE, "LinearCalibration: cut $timestamp is in the future (now $now), ignored")
+            return
+        }
+        val current = preferences.get(CalibrationLongKey.EntriesValidFrom)
+        if (timestamp <= current) return
+        preferences.put(CalibrationLongKey.EntriesValidFrom, timestamp)
+        aapsLogger.info(LTag.GLUCOSE, "LinearCalibration: entries before $timestamp are no longer fitted")
+        // The fit changed, so the BG graph must be computed again.
+        rxBus.send(EventCalibrationChanged())
+    }
+
+    /** The entries of the session that the fit may use. See [ignoreEntriesBefore]. */
+    private suspend fun entriesForFit(sessionStart: Long): List<CAL> =
+        persistenceLayer.getValidCalibrationEntriesSince(fitStart(sessionStart, preferences.get(CalibrationLongKey.EntriesValidFrom)))
 
     private suspend fun detectAndNotifyGap(data: List<InMemoryGlucoseValue>, sessionStart: Long?) {
         // Only the master asks. Its button writes a sensor change, and on a client that would stay on the client.
@@ -259,5 +288,9 @@ class LinearCalibrationPlugin(
         const val DELTA_GATE_MGDL_PER_5MIN = 5.0
         const val SENSOR_CHANGE_PROXIMITY_MS = 60L * 60L * 1000L
         const val PAIR_LOOKBACK_MS = 10L * 60L * 1000L
+
+        // How far after now a cut from ignoreEntriesBefore may be. Allows small clock steps between
+        // the caller and dateUtil; anything later is treated as a bad value.
+        const val MAX_CUT_AHEAD_MS = 5L * 60L * 1000L
     }
 }

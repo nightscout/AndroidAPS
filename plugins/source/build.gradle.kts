@@ -42,6 +42,11 @@ kotlin {
 
         androidMain {
             dependencies {
+                // The Dexcom ONE+ / G7 BLE driver. Android only: the driver has no other target yet,
+                // so the plugin, its host and its screens live in androidMain. commonMain keeps only
+                // the ONE+ code that does not need the driver.
+                implementation(project(":plugins:dexcom_oneplus"))
+
                 implementation(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.compose.material3)
                 implementation(libs.androidx.compose.runtime)

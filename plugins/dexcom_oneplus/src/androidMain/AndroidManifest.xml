@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The app needs Android 12 or newer, so the old BLUETOOTH and BLUETOOTH_ADMIN permissions are
+         not needed. The scan never finds the phone's location, the same as in the app and the pumps. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+
+</manifest>

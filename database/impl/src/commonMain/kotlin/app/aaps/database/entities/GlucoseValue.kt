@@ -72,6 +72,7 @@ data class GlucoseValue(
         DEXCOM_UNKNOWN,
         DEXCOM_G6,
         DEXCOM_G7,
+        DEXCOM_ONEPLUS_NATIVE,
         LIBRE_1,
         LIBRE_2,
         LIBRE_3,
