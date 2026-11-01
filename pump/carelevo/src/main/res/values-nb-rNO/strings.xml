@@ -113,9 +113,7 @@
     <string name="carelevo_dialog_patch_connect_message_title">Hvis oppdateringen nedenfor er riktig, vennligst trykk på Bekreft-knappen.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Nåleinnsetting fullført og applikator fjernes</string>
     <string name="carelevo_dialog_connect_detached">Applikator fjernet</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">        Trykk på gripeflatene på begge sider av applikatoren for å løsne den fra plasteret, \n
-        og trykk deretter på knappen «Applikator fjernet». Insulinleveringen starter.
-    </string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Trykk på gripeflatene på begge sider av applikatoren for å løsne den fra patchen,\nog trykk deretter på knappen «Applikator fjernet». Insulinleveringen starter.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth er ikke aktivert. Kontroller dette.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Ingen patch tilkoblet.</string>
@@ -182,7 +180,7 @@
     <string name="alarm_notification_desc_warning_low_insulin">Mindre enn 10 E insulin gjenstår; insulintilførselen er stoppet. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Patch sin levetid er utløpt; insulintilførselen er stoppet. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
     <string name="alarm_notification_desc_warning_low_battery">Lavt batterinivå; insulintilførselen er stoppet. Trykk på knappen [Forkast patch] og bytt patch nå.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Insulintilførselen er stoppet. Flytt enheten til et sted med passende temperatur (4,4 °C og 37,2 °C) nå.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulintilførselen er stoppet. Flytt enheten til et sted med passende temperatur (4,4 °C–37,2 °C) nå.</string>
     <string name="alarm_notification_desc_warning_not_used_app">Insulintilførselen er stoppet. Trykk på knappen [Start insulin] og start basaltilførselen på nytt.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Tiden for bruk av patch har utløpt. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Selvdiagnose mislyktes. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
