@@ -8,7 +8,6 @@
     <string name="commanderror">Eroare comandă</string>
     <string name="speederror">Eroare viteză</string>
     <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
-    <string name="boluserrorcode">Solicitat: %1$.2fU Administrat: %2$.2fU Cod eroare: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pompa nu este amorsată</string>
     <string name="danai2_bolus_error_not_enough_insulin">Insulină insuficientă în rezervor</string>
     <string name="danai2_bolus_error_easy_sleep">Modul Easy sleep este pornit în pompă</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Pompa selectată</string>
     <string name="rs_loginsulinchange_title">Înregistrați schimbarea rezervorului</string>
     <string name="rs_loginsulinchange_summary">Adăugați evenimentul \"Schimbare insulină\" în Careportal când este detectat în istoric</string>
-    <string name="rs_logcanulachange_title">Înregistrați schimbarea canulei</string>
     <string name="rs_logcanulachange_summary">Adăugați evenimentul \"Schimbare set\" în Careportal când este detectat în istoric</string>
     <string name="press_ok_on_the_pump">Apăsați OK pe pompă\nși introduceți cele 2 numere afișate\nPăstrați ecranul pompei ACTIV apăsând butonul minus până când terminați introducerea codului.</string>
     <string name="num1pin">1: (12 cifre)</string>
