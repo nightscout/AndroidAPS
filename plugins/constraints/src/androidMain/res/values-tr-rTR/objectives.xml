@@ -2,7 +2,7 @@
 <resources>
     <string name="objectives_button_start">Başlat</string>
     <string name="objectives_button_verify">Doğrula</string>
-    <string name="nth_objective">Görev %1$d.</string>
+    <string name="nth_objective">%1$d. Görev</string>
     <string name="objectivenotstarted">Görev %1$d başlanmadı</string>
     <string name="objectivenotfinished">Görev %1$d tamamlanmadı</string>
     <string name="objectives_0_objective">Görselleştirme ve izlemeyi kurma, bazalları ve oranları analiz etme</string>
@@ -71,7 +71,7 @@
     <string name="objectives_exam_learned_ecarbs">Y-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
     <string name="objectives_exam_learned_nsclient">AAPS\'i AAPSClient veya Nightscout aracılığıyla uzaktan takip edebilirsiniz. AAPSClient ana telefonla eşleştirildiğinde, AAPS\'i uzaktan kontrol etmeniz de mümkündür.</string>
     <string name="objectives_exam_learned_concentration1">%50 profilli U200 insülin kullanımı, kalıcı bir dönüştürme işlemi gerektirecektir: kalemlerle yapılan harici boluslar için ve AAPS ya da NS tarafından sunulan tüm standart raporlar hatalı hale geleceğinden, sağlık ekibi için bu verilerin IU cinsine dönüştürülmesi gerekecektir.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">%50 profilli U200\'den insülin konsantrasyonu özelliğiyle U200 kullanımına geçiş; daha güçlü yeni bir profil oluşturmayı, DinamikİDF\'yi bir hafta kapatmayı ve zihni Uluslararası Birim (IU) ile düşünmeye alıştırmayı gerektirir.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">%50 profilli U200\'den insülin konsantrasyonu özelliğiyle U200 kullanımına geçiş; daha güçlü yeni bir profil oluşturmayı, Dinamik İDF\'yi bir hafta kapatmayı ve zihni Uluslararası Birim (IU) ile düşünmeye alıştırmayı gerektirir.</string>
     <string name="objectives_exam_learned_concentration3">İnsülin konsantrasyonu yalnızca insülin veya patch değişiminde değiştirilebilir. Ancak en önemlisi, özellikle hortumlu insülin pompaları için, asla doğrudan pompa üzerindeki kullanıcı arayüzünü kullanarak bolus dozları uygulamayın.</string>
     <string name="answerdisabledto">Yanıtlama şu zamana kadar devre dışı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>
