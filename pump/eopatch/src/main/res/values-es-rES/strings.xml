@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Integración de bombas de insulina EOPatch2/GlucoMen Day Pump</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">El parche no ha confirmado el fin del bolo. Se ha registrado %1$s, pero es posible que el parche haya administrado más. Comprueba el parche antes de administrar más insulina</string>
-    <string name="low_reservoir">Alertas de reservorio bajo</string>
-    <string name="patch_expiration_reminders">Recordatorio de expiración del parche</string>
     <string name="patch_buzzer_reminders">Recordatorios de sonidos del parche</string>
     <string name="eopatch_ble_status">Estado del bluetooth</string>
     <string name="eopatch_serial_number">Número de serie</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">Para cambiar al nuevo parche, el parche actual debe ser descartado. Todo suministro de insulina por parte del parche será cancelado.</string>
     <string name="patch_discard_complete_title">El parche se ha desactivado por completo.</string>
     <string name="patch_discard_complete_desc">El parche ha sido desactivado.\nDescarta el parche.\nElimina el parche pegado a tu cuerpo.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Se ha administrado un bolo en este momento. ¿Realmente quieres cancelar la administración de insulina y descartar el parche?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">En este momento se está administrando una basal temporal. ¿Realmente quieres cancelar la administración de insulina y desechar el parche?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Un bolo y un basal temporal han sido suministrados en este momento. ¿Realmente quieres cancelar el suministro insulina y remover el parche?</string>
-    <string name="patch_change_confirm_desc">¿Estás seguro de descartar el parche?</string>
     <string name="patch_forced_discard">Descartar</string>
     <string name="patch_comm_error_during_discard_desc_2">Para desactivar unilateralmente, pulsa \"Descartar\".</string>
     <string name="patch_manually_turning_off_alarm_title">Apagar manualmente la alarma del parche</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">Durante la vinculación, aparecerán dos ventanas emergentes del sistema Android. Debes confirmar ambas para completar la conexión Bluetooth.</string>
     <string name="patch_start_pairing">Iniciar el emparejamiento</string>
     <string name="patch_connect_new">Emparejamiento del parche</string>
-    <string name="patch_connect_new_desc">El nuevo parche está siendo emparejado.\nMantén la distancia entre el parche y el dispositivo inteligente lo más cerca posible</string>
     <string name="patch_remove_needle_cap">Prepárate para colocar el parche</string>
     <string name="patch_remove_needle_cap_desc_1">Retira la cinta adhesiva y luego pulsa \'Siguiente\'.</string>
     <string name="patch_remove_needle_cap_desc_2">Si sobresale una aguja, pulsa \"Descartar\".</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">Tardará unos 30 segundos</string>
     <string name="patch_safety_check_desc_2">Para un uso seguro, ¡no retires la palanca de acción de la aguja hasta que se haya completado la comprobación de seguridad!</string>
     <string name="patch_rotate_knob">Inserción de la aguja</string>
-    <string name="patch_rotate_knob_desc_1">Gira la palanca de accionamiento de la aguja más de 100° para insertar la aguja y, a continuación, gírala completamente para extraerla</string>
     <string name="patch_rotate_knob_desc_2">Comprueba si suena 1 pitido y luego pulsa en \"Siguiente\".</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Comprueba si suena 1 pitido y luego pulsa en \"Reintentar\".</string>
     <string name="patch_basal_schedule">¡Activación del parche completada!</string>
     <string name="patch_basal_schedule_desc_1">El programa \'%1$s\' ha sido habilitado.</string>
     <string name="patch_basal_schedule_desc_2">Te avisa cuando el parche está a punto de caducar.\nCambia la hora del recordatorio si es necesario</string>
     <string name="patch_expiration_reminder_setting_title">Recordatorio de expiración del parche</string>
-    <string name="patch_activate_reminder_desc">La activación del parche no se ha completado.\n Continuar.</string>
     <string name="patch_communication_check_helper_1">Acerca tu dispositivo inteligente al parche.</string>
     <string name="patch_communication_check_helper_2">Por favor, muévete a otra ubicación e inténtalo de nuevo.</string>
     <string name="patch_safety_check_failed_desc">La comprobación de seguridad ha fallado. Por favor, inténtalo de nuevo.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Comunicación exitosa</string>
     <string name="patch_communication_succeed_message">Conectado con el parche.</string>
     <string name="patch_cancel_pairing">Cancelar emparejamiento</string>
-    <string name="insulin_suspend_msg1">Al suspender, se cancelará la entrega de bolo actual &amp; La basal temporal se cancelará. \n\nTasa: %1$s U/hr \nTiempo restante: %2$s\n&amp; Insulina por administrar: %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Al suspender, se cancelará el bolo que se esté administrando en ese momento \n\nInsulina para completar: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Al suspender, se cancelará la basal temporal que se esté suministrando en ese momento \n\nTasa : %1$s U/hr\nTiempo restante: %2$s</string>
     <string name="insulin_suspend_msg4">Se suspenderá la administración de insulina</string>
     <string name="string_activate_patch">Activar parche</string>
     <string name="string_discard_patch">Descartar parche</string>
     <string name="string_running">Funcionando</string>
     <string name="retry">Reintentar</string>
-    <string name="string_are_you_sure_to_discard_current_patch">¿Estás seguro de descartar el parche actual?</string>
     <string name="needle_insertion_error_1">Error de inserción de la aguja</string>
     <string name="needle_insertion_error_3">Pulsa \'Descartar\' para desactivar el parche</string>
     <string name="string_suspend_time_insulin_delivery_title">Tiempo de suspensión basal</string>
