@@ -25,7 +25,7 @@
     <string name="insulin_delivery_suspended">Insulinlevering er pauset</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Tidssone på pod er forskjellig fra tidssonen på telefon. Basaldoser er feil. Bytt profil for å korrigere</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke sette ny basalprofil. Insulinlevering er pauset</string>
-    <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha feilet. Insulinlevering kan bli pauset! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
+    <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha mislyktes. Insulinlevering kan bli pauset! Trykk på Oppdater på DASH-pumpeskjermen for å hente Pod-status, og velg Gjenoppta levering hvis nødvendig.</string>
     <string name="bolus_delivery_status_uncertain">Status for levering av bolus er usikker. Oppdater podstatus for å bekrefte eller avkrefte.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Kunne ikke bekrefte om SMB (%1$s) ble utført. Oppdater pod-statusen for å bekrefte om kommandoen ble utført eller avvist.</string>
     <string name="temp_basal_out_of_sync">Midlertidig basalstatus er ikke som forventet! Dersom en midlertidig basal tidligere kjørte, har den blitt avbrutt. Kontroller levert insulin og pod historikk</string>
