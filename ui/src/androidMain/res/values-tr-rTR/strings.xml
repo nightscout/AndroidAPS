@@ -248,7 +248,6 @@
     <string name="profile_switches">Profil değişimleri</string>
     <string name="basal_pct_from_tdd_label">Bazal yüzdesi</string>
     <string name="selected_profile">Seçili:</string>
-    <string name="comparation">Karşılaştırma</string>
     <string name="profile_tab_1">Profil 1</string>
     <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Varsayılan profil</string>
