@@ -8,7 +8,6 @@
     <string name="commanderror">Помилка команди</string>
     <string name="speederror">Помилка швидкості</string>
     <string name="insulinlimitviolation">Порушення ліміту інсуліну</string>
-    <string name="boluserrorcode">Запитано: %1$.2f Од Введено: %2$.2f Од Код помилки: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Помпу не підготовлено</string>
     <string name="danai2_bolus_error_not_enough_insulin">Недостатньо інсуліну в резервуарі</string>
     <string name="danai2_bolus_error_easy_sleep">На помпі увімкнено режим Easy sleep</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Вибрана помпа</string>
     <string name="rs_loginsulinchange_title">Записувати заміну резервуара</string>
     <string name="rs_loginsulinchange_summary">Додавати подію «Заміна інсуліну» в Careportal, коли її знайдено в історії</string>
-    <string name="rs_logcanulachange_title">Записувати заміну канюлі</string>
     <string name="rs_logcanulachange_summary">Додавати подію «Заміна канюлі» в Careportal, коли її знайдено в історії</string>
     <string name="press_ok_on_the_pump">Натисніть OK на помпі\nі введіть 2 показані числа\nЩоб екран помпи не вимкнувся, натискайте кнопку мінус, доки не закінчите введення коду.</string>
     <string name="num1pin">1: (12 цифр)</string>
