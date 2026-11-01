@@ -195,8 +195,6 @@
     <string name="profileswitch4_sufficient">Een profiel bewerken is voldoende om eventuele wijzigingen door te voeren.</string>
     <string name="profileswitch4_multi">Er kunnen meerdere profielen worden ingesteld en geselecteerd om tegemoet te komen aan veranderende omstandigheden (bijvoorbeeld hormonale veranderingen, onregelmatig werk-, weekdagen/weekendlevensstijl).</string>
     <string name="other_medication_label">Andere medicijnen. Lees de verklaring hieronder en vink het vakje aan om de verklaring te accepteren.</string>
-    <string name="other_medication_text">AAPS vermindert de basaalstanden of stopt de insulinetoediening om de bloedsuiker te verhogen. Medicijnen in de klasse SGLT2-remmers (gliflozines) kunnen een stijging van bloedglucose voorkomen en kunnen daardoor een gevaarlijk insulinetekort veroorzaken dat leidt tot diabetische ketoacidose.
-\nBekende merknamen zijn: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nIk verklaar dat ik dergelijke medicijnen niet zal gebruiken wanneer ik AAPS gebruik, of dat ik de loop zal deactiveren voordat ik met deze medicijnen start.</string>
     <string name="concentration_feature_label">Insuline Concentratie Management</string>
     <string name="u200_with_profile">Voordat AAPS insulineconcentraties ondersteunde, paste gebruikers U200 toe door een profiel van 50% in te stellen om alle waarden te halveren. In dat systeem zijn welke antwoorden waar?</string>
     <string name="u200_with_profile_reports">De gegevens in mijn AAPS-database en NS-rapporten kloppen niet meer. Alle waarden (boli, doseringssnelheden, TDD) moeten met 2 worden vermenigvuldigd om de werkelijke waarden te zien, vooral voor artsen en het zorgteam.</string>
