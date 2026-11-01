@@ -68,7 +68,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.inputProfileName = InputProfileName("Test")
         sut.doAction().let {
             assertThat(it.success).isFalse()
-            assertThat(it.comment).isEqualTo("not exists")
+            assertThat(it.comment).isEqualTo("does not exist")
         }
 
         // do profile switch

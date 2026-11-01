@@ -164,7 +164,7 @@ class EquilActivationWizardUiTest {
             // alarm → basal → time → firmware tail into CONFIRM. Retry "Next" until CONFIRM appears —
             // each attempt's wait outlasts the tail chain, so it never double-fires finishAirStep.
             click("Purge air")
-            openVia("Next", expect = "Implant the pump", attempts = 6)  // AIR → CONFIRM
+            openVia("Next", expect = "Attach the pump", attempts = 6)  // AIR → CONFIRM
 
             // CONFIRM: "Finish" runs insulin → model → final settings → saveActivation → COMPLETED,
             // then the wizard closes back to the (now paired) overview.

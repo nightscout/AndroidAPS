@@ -64,10 +64,10 @@
     <string name="ue_exported">User Entries exported</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
     <string name="exported_at" comment="at placeholder we add export date">exported at %1$s</string>
-    <string name="exported_less_than_hour_ago">exported less than hour ago</string>
+    <string name="exported_less_than_hour_ago">exported less than an hour ago</string>
     <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
     <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
-    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
+    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you chose the wrong file? Remember to export preferences regularly!</string>
     <string name="metadata_warning_date_format">Invalid date-time format!</string>
     <string name="metadata_warning_different_version">Preferences from different minor version of application. It is OK if you are importing after upgrade, but check after import if preferences are still correct!</string>
     <string name="metadata_urgent_different_version">Preferences from different major version of application. Major versions differ significantly and may have incompatible preferences! Make sure after import that preferences are still correct!</string>

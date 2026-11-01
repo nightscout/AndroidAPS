@@ -168,7 +168,7 @@
     <string name="notification">Notification</string>
     <string name="noprofile">No profile loaded from NS yet</string>
     <string name="exists">exists</string>
-    <string name="notexists">not exists</string>
+    <string name="notexists">does not exist</string>
     <string name="glucose">Glucose</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Select the profile to apply on activation.</string>
     <string name="pump_wizard_profile_gate_no_store">No profile defined. Open Profile Management to create one, then start activation again.</string>
     <string name="reset">Reset</string>
-    <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
+    <string name="profileswitch_ismissing">Profile switch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
     <string name="percentage_label">Percentage</string>
     <string name="timeshift_label">Time shift</string>
-    <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">The master does not have %1$d of these entries. They are not removed.</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
@@ -351,9 +351,9 @@
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Exercise</string>
-    <string name="careportal_announcement_message">Announcement : %1$s</string>
+    <string name="careportal_announcement_message">Announcement: %1$s</string>
     <string name="careportal_note_message">Note : %1$s</string>
-    <string name="careportal_question_message">Question : %1$s</string>
+    <string name="careportal_question_message">Question: %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Pump Site Change : %1$s</string>
     <string name="careportal_pump_site_change">Pump Site Change</string>
@@ -679,7 +679,7 @@
     <string name="uel_ns_queue_cleared">NS QUEUE CLEARED</string>
     <string name="uel_ns_settings_copied">NS SETTINGS COPIED</string>
     <string name="uel_error_dialog_ok">ERROR DIALOG OK</string>
-    <string name="uel_error_dialog_mute">ERROR DIALOG MUTE </string>
+    <string name="uel_error_dialog_mute">ERROR DIALOG MUTE</string>
     <string name="uel_error_dialog_mute_5min">ERROR DIALOG MUTE 5MIN</string>
     <string name="uel_objective_started">OBJECTIVE STARTED</string>
     <string name="uel_objective_unstarted">OBJECTIVE UNSTARTED</string>
@@ -747,7 +747,7 @@
     <string name="error_in_isf_values">Error in ISF values</string>
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
-    <string name="profile_name_contains_dot">Some of profile names contains dots.\nThis is not supported by NS.\nProfiles will not be uploaded to NS.</string>
+    <string name="profile_name_contains_dot">Some profile names contain dots.\nThis is not supported by NS.\nProfiles will not be uploaded to NS.</string>
     <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
     <string name="errors">Errors</string>
 
@@ -928,7 +928,7 @@
     <string name="export_result_message_exported">Settings exported</string>
     <string name="export_result_message_failed">Settings export FAILED!</string>
     <string name="export_result_message_about_to_expire">Settings exported: password about to expire soon. Export manually and (re)enter password.</string>
-    <string name="export_result_message_expired">Settings export canceled: password expired. Export manually and (re)enter!</string>
+    <string name="export_result_message_expired">Settings export canceled: password expired. Export manually and enter the password again!</string>
     <string name="export_result_message_disabled">Warning (automation): Settings export not enabled!</string>
 
     <!-- Cloud export -->
@@ -1051,7 +1051,7 @@
     <string name="patch_pump">Patch pump</string>
 
     <!-- Site Rotation -->
-    <string name="select_location">Click below to select Site</string>
+    <string name="select_location">Tap below to select the site</string>
 
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
@@ -1107,7 +1107,7 @@
     <string name="unsaved_changes">Unsaved changes</string>
     <string name="unsaved_changes_message">You have unsaved changes. What would you like to do?</string>
     <string name="discard">Discard</string>
-    <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below cen be used only as a fallback in case of missing data or as a reference value only</string>
+    <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
     <string name="isf_dynamic_label_warning">Your algorithm can provide dynamic calculation of ISF. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
     <string name="add_time_block">Add time block</string>
     <string name="remove_entry">Remove entry</string>

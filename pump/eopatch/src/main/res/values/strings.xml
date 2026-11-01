@@ -3,8 +3,8 @@
     <string name="eopatch_pump_description">Pump integration for EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">The patch did not confirm the end of the bolus. %1$s is recorded, but the patch may have given more. Check the patch before you give more insulin.</string>
 
-    <string name="low_reservoir">Low reservoir Alerts</string>
-    <string name="patch_expiration_reminders">Patch expiration Reminder</string>
+    <string name="low_reservoir">Low Reservoir Alerts</string>
+    <string name="patch_expiration_reminders">Patch Expiration Reminder</string>
     <string name="patch_buzzer_reminders">Patch buzzer Reminders</string>
 
     <string name="eopatch_ble_status">BLE Status</string>
@@ -30,10 +30,10 @@
     <string name="patch_safe_deactivation_desc">To change to new Patch, the current Patch must be discarded. All insulin delivery from Patch will be canceled.</string>
     <string name="patch_discard_complete_title">Discarding the patch is completed.</string>
     <string name="patch_discard_complete_desc">Patch has been deactivated.\nDiscard the patch.\nRemove the patch attached to your body.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">A bolus has been delivering right now. Do you really want to cancel the insulin delivery and discard the Patch?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">A temp basal has been delivering right now. Do you really want to cancel the insulin delivery and discard the Patch?</string>
+    <string name="patch_change_confirm_bolus_is_active_desc">A bolus is being delivered right now. Do you really want to cancel the insulin delivery and discard the Patch?</string>
+    <string name="patch_change_confirm_temp_basal_is_active_desc">A temp basal is being delivered right now. Do you really want to cancel the insulin delivery and discard the Patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">A bolus and temp basal have been delivering right now. Do you really want to cancel the insulin delivery and discard the Patch?</string>
-    <string name="patch_change_confirm_desc">Are you sure to discard a Patch?</string>
+    <string name="patch_change_confirm_desc">Are you sure you want to discard the Patch?</string>
     <string name="patch_forced_discard">Discard</string>
     <string name="patch_comm_error_during_discard_desc_2">For unilateral deactivation, Tap \'Discard\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Manually turning off the Patch\'s Alarm</string>
@@ -47,7 +47,7 @@
     <string name="patch_wake_up_pairing_info">During pairing, two Android system popups will appear. You must confirm both to complete the Bluetooth pairing.</string>
     <string name="patch_start_pairing">Start pairing</string>
     <string name="patch_connect_new">Patch pairing</string>
-    <string name="patch_connect_new_desc">The new Patch is being paired.\nKeep the distance between the Patch and the smart device as close as possible</string>
+    <string name="patch_connect_new_desc">The new Patch is being paired.\nKeep the distance between the Patch and the smart device as close as possible.</string>
     <string name="patch_remove_needle_cap">Prepare for attaching the Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Remove the adhesive tape and then Tap \'Next\'.</string>
     <string name="patch_remove_needle_cap_desc_2">If a needle sticks out, Tap \'Discard\'.</string>
@@ -60,14 +60,14 @@
     <string name="patch_safety_check_desc_1">It takes about 30 seconds.</string>
     <string name="patch_safety_check_desc_2">For safe use, do not remove the Needle action lever until the safety check is completed!</string>
     <string name="patch_rotate_knob">Inserting the needle</string>
-    <string name="patch_rotate_knob_desc_1">Rotate the Needle action lever more than 100 ° to insert the needle and then rotate fully to remove it</string>
+    <string name="patch_rotate_knob_desc_1">Rotate the Needle action lever more than 100° to insert the needle and then rotate fully to remove it.</string>
     <string name="patch_rotate_knob_desc_2">Check for 1 beep and then Tap \'Next\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Check for 1 beep and then Tap \'Retry\'.</string>
     <string name="patch_basal_schedule">Patch activation completed!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' program has been enabled.</string>
     <string name="patch_basal_schedule_desc_2">Alerts you when the Patch nears its expiration time.\nChange the Reminder time if necessary.</string>
     <string name="patch_expiration_reminder_setting_title">Patch expiration Reminders</string>
-    <string name="patch_activate_reminder_desc">Patch activation has not been completed.\n Continue.</string>
+    <string name="patch_activate_reminder_desc">Patch activation has not been completed.\nContinue.</string>
     <string name="patch_communication_check_helper_1">Bring your smart device closer to the Patch.</string>
     <string name="patch_communication_check_helper_2">Please move to another location and try again.</string>
     <string name="patch_safety_check_failed_desc">Safety check failed. Please try again.</string>
@@ -75,15 +75,15 @@
     <string name="patch_communication_succeed">Communication success</string>
     <string name="patch_communication_succeed_message">Connected with the Patch.</string>
     <string name="patch_cancel_pairing">Cancel pairing</string>
-    <string name="insulin_suspend_msg1">Upon the suspend, the currently delivering Bolus &amp; Temp basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s\n&amp; Insulin to go : %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Upon the suspend, the currently delivering Bolus will be canceled. \n\nInsulin to go : %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Upon the suspend, the currently delivering Temp Basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s</string>
+    <string name="insulin_suspend_msg1">Upon the suspend, the currently delivering Bolus &amp; Temp basal will be canceled.\n\nRate: %1$s U/hr\nRemaining time: %2$s\nInsulin to go: %3$.2f U</string>
+    <string name="insulin_suspend_msg2">Upon the suspend, the currently delivering Bolus will be canceled.\n\nInsulin to go: %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Upon the suspend, the currently delivering Temp Basal will be canceled.\n\nRate: %1$s U/hr\nRemaining time: %2$s</string>
     <string name="insulin_suspend_msg4">Insulin delivery will be suspended.</string>
     <string name="string_activate_patch">Activate Patch</string>
     <string name="string_discard_patch">Discard Patch</string>
     <string name="string_running">Running</string>
     <string name="retry">Retry</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Are you sure to discard the current Patch?</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Are you sure you want to discard the current Patch?</string>
     <string name="needle_insertion_error_1">Needle insertion Error.</string>
     <string name="needle_insertion_error_3">Tap \'Discard\' to deactivate Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal Suspending Time</string>
