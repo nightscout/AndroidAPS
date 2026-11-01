@@ -27,7 +27,6 @@
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 오류</string>
     <string name="insulinlimitviolation">인슐린 제한 초과</string>
-    <string name="boluserrorcode">요청: %1$.2fU 주입됨: %2$.2fU 오류 코드: %3$s</string>
     <string name="selectedpump">선택된 펌프</string>
     <string name="bolus_step">볼러스 단위</string>
     <string name="basal_step">기저 단위</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">조명지속시간[초]</string>
     <string name="diaconn_g8_language">언어설정</string>
     <string name="diaconn_g8_bolus_speed">볼러스 주입 속도</string>
-    <string name="diaconn_g8_pumplang_chiness">중국어</string>
     <string name="diaconn_g8_pumplang_korean">한국어</string>
     <string name="diaconn_g8_pumplang_english">영어</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">로그 동기화 시 케어포털 \"배터리 교체\" 정보 자동 업로드</string>
     <string name="diaconn_g8_logbatterychange_title">배터리 교체 기록</string>
     <string name="diaconn_g8_logsyncinprogress">로그 동기화 진행 중</string>
-    <string name="diaconn_g8_loginsulinshorage">인슐린 부족 경고</string>
     <string name="diaconn_g8_logbatteryshorage">배터리 부족</string>
     <string name="diaconn_g8_logneedleprime">바늘 프라임 :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">주사기 프라임 :%1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">완료</string>
     <string name="diaconn_g8_reasoninjectonblock">주입 막힘</string>
     <string name="diaconn_g8_reasonbatteryshortage">배터리 부족</string>
-    <string name="diaconn_g8_reasoninsulinshortage">인슐린 부족</string>
     <string name="diaconn_g8_reasonuserstop">사용자 중지</string>
     <string name="diaconn_g8_reasonsystemreset">시스템 리셋</string>
     <string name="diaconn_g8_reasonother">기타</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">주입막힘 (%s)</string>
     <string name="diaconn_g8_lgorelease">기저 재개 (%s)</string>
     <string name="diaconn_g8_lgosuspend">기저 중지 (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">듀얼 일반 성공</string>
     <string name="diaconn_g8_logdualsquarestart">듀얼 스퀘어 시작</string>
     <string name="diaconn_g8_logdualsquaresuccess">듀얼 스퀘어 성공</string>
     <string name="diaconn_g8_logsquarestart">스퀘어 시작</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">성공</string>
     <string name="diaconn_g8_logmealsuccess">식사 성공</string>
     <string name="diaconn_g8_errorcode_1">패킷 CRC 오류로 조회 불가합니다.</string>
-    <string name="diaconn_g8_errorcode_2">입력 파라미터 오류로 설정 불가합니다.</string>
-    <string name="diaconn_g8_errorcode_3">프로토콜 규격 오류로 설정 불가합니다.</string>
     <string name="diaconn_g8_errorcode_4">식사 시간제한 상태로, 주입할 수 없습니다.</string>
     <string name="diaconn_g8_errorcode_6">펌프에서 취소 하였습니다.</string>
     <string name="diaconn_g8_errorcode_7">타 작업중으로, 앱 설정 기능이 제한됩니다.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">배터리 부족으로 주입할 수 없습니다.</string>
     <string name="diaconn_g8_errorcode_12">인슐린 부족으로 주입할 수 없습니다.</string>
     <string name="diaconn_g8_errorcode_13">1회 제한량 초과로 주입할 수 없습니다.</string>
-    <string name="diaconn_g8_errorcode_14">금일 주입량 초과로 주입할 수 없습니다.</string>
     <string name="diaconn_g8_errorcode_15">기저설정 완료 후, 기저주입할 수 있습니다.</string>
     <string name="diaconn_g8_logtubechange_title">튜브 교체 기록</string>
     <string name="diaconn_g8_logtubechange_summary">로그 동기화 시 \"튜브 교체\" 노트 정보 자동 업로드</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">LGS 동작 중 볼러스 주입 거절</string>
     <string name="diaconn_g8_errorcode_33">LGS ON일때, ON 거절</string>
     <string name="diaconn_g8_errorcode_34">LGS OFF일 때, OFF 거절</string>
-    <string name="diaconn_g8_errorcode_35">임시 기저 설정 중인 상태일 때, 임시 기저 시작 명령 거절</string>
-    <string name="diaconn_g8_errorcode_36">임시 기저 설정이 안 된 상태일 때, 임시 기저 중지 명령 거절</string>
     <string name="diaconn_g8_cloudsend_summary">Diaconn Cloud에 펌프 로그 보내기</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud 동기화</string>
     <string name="bolus_speed_1">1 U/min</string>
