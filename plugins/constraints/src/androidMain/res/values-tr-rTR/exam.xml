@@ -206,7 +206,7 @@
     <string name="switch_u200_profile">U200 ile %50 profil çözümünü kullanıyordunuz ve İnsülin Konsantrasyonu özelliğine geçmek istiyorsunuz. Hangi cevaplar doğrudur?</string>
     <string name="switch_u200_profile_any_time">Pompamda zaten doğru U200 insülin olduğu için istediğim zaman geçiş yapabilirim.</string>
     <string name="switch_u200_profile_ps">İki kat agresif bir profil (mevcut varsayılan profile göre %200) hazırlamam ve bu yeni profili, U200 insülin seçiliyken bir sonraki Patch/Rezervuar değişikliğinden sonra senkronize etmem gerekir.</string>
-    <string name="switch_u200_profile_dynisf">GTD\'nin, Uluslararası Birim olarak hesaplanan gerçek GTD değeriyle tam olarak uyumlu olması için DinamikİDF özelliğini en az bir hafta kapatmam gerekir.</string>
+    <string name="switch_u200_profile_dynisf">GTD\'nin, Uluslararası Birim olarak hesaplanan gerçek GTD değeriyle tam olarak uyumlu olması için Dinamik İDF özelliğini en az bir hafta kapatmam gerekir.</string>
     <string name="switch_u200_profile_mental">Geçişten sonra, bolus, bazal oran ve GTD değerlerini uluslararası birim olarak düşünmeye alışmak için birkaç hafta boyunca çok dikkatli olmam gerekecek.</string>
     <string name="switch_u100_u200">Hâlihazırda U100 kullanıyorsunuz ve İnsülin Konsantrasyonu özelliğini kullanarak başka bir konsantrasyona geçmeyi planlıyorsunuz. Hangi cevaplar doğrudur?</string>
     <string name="switch_u100_u200_profile">Profilimi değiştirmem gerekiyor.</string>
