@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>
     <string name="sendsmsactiontext">Išsiųsti SMS žinutę su tekstu</string>
     <string name="starttemptarget">Pradėti laikiną tikslą</string>
-    <string name="islesser">mažiau nei</string>
-    <string name="isequalorlesser">lygu arba mažiau nei</string>
     <string name="isequal">lygu</string>
     <string name="isequalorgreater">lygu arba daugiau nei</string>
     <string name="isgreater">daugiau nei</string>
@@ -88,7 +86,6 @@
     <string name="add_short">PRIDĖTI</string>
     <string name="temptargetcompared">Laikinas tikslas %1$s</string>
     <string name="btdevicecompared">Bluetooth ryšys su įrenginiu %1$s %2$s</string>
-    <string name="btdevice">Ryšys su Bluetooth įrenginiu </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
