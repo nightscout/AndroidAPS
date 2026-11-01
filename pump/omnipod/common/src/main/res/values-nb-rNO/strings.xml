@@ -26,7 +26,7 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Klarte ikke å verifisere fremdrift i aktiveringen. Prøv på nytt.</string>
     <string name="omnipod_common_error_pod_suspended">Pod er pauset</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Kunne ikke spille av testlyd</string>
-    <string name="omnipod_common_error_time_out_of_sync">Tid på Pod er ikke synkronisert. Vennligst oppdater tiden i Omnipod-fanen.</string>
+    <string name="omnipod_common_error_time_out_of_sync">Tiden på poden er ikke synkronisert. Oppdater tiden på pumpeskjermen.</string>
     <string name="omnipod_common_error_unexpected_exception">En uventet feil oppstod. Vennligst rapporter! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Varselinnstillinger har blitt oppdatert på Pod.</string>
@@ -81,7 +81,7 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal-lyd aktivert</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-lyd aktivert</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR-lyd aktivert</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knapp for å pause insulinlevering i Omnipod-fanen</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knappen Pause levering på pumpeskjermen</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Tidssone-deteksjon aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Når aktivert, vil Pod\'en pipe når tidspunktet er nådd</string>
