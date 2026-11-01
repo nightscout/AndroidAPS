@@ -9,7 +9,6 @@
     <string name="application_expired">Uygulamanın süresi doldu</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
-    <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde dolacak ve LGS moduna geçecek</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Yeniden hesaplanan veriler kullanıldı</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS Seçildi</string>
     <string name="closedmodeenabled">Kapalı mod etkin</string>
     <string name="description_objectives">Eğitim programı</string>
-    <string name="doyouwantresetstart">Görevin başlangıcını sıfırlamak istiyor musunuz? İlerlemenizi kaybedebilirsiniz.</string>
     <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>
     <string name="objectives_button_unstart">Başlatılmış durumu sıfırla</string>
     <string name="bg_doubled_lgs">KŞ kaynağında iki katına çıkmış değerler nedeniyle LGS modu</string>
