@@ -8,6 +8,12 @@ enum class BleCommandType(val value: Byte) {
     SUCCESS(0x04.toByte()),
     FAIL(0x05.toByte()),
     HELLO(0x06.toByte()),
+
+    /** O5-only: an intermediate "still working" status the pod can send on the CMD
+     *  characteristic while preparing a response, before the real expected command
+     *  (e.g. SUCCESS). Matches OmnipodKit's PodCommand.PAIR_STATUS - see
+     *  PeripheralManager.waitForCommand(), which loops past it instead of failing. */
+    PAIR_STATUS(0x08.toByte()),
     INCORRECT(0x09.toByte());
 
     companion object {

@@ -13,12 +13,13 @@ class DataBleIO(
     characteristic: BluetoothGattCharacteristic,
     incomingPackets: BlockingQueue<ByteArray>,
     gatt: BluetoothGatt,
-    bleCommCallbacks: BleCommCallbacks
+    bleCommCallbacks: BleCommCallbacks,
+    type: CharacteristicType = CharacteristicType.DATA
 ) : BleIO(
     logger,
     characteristic,
     incomingPackets,
     gatt,
     bleCommCallbacks,
-    CharacteristicType.DATA
+    type
 ), DataBleIOInterface
