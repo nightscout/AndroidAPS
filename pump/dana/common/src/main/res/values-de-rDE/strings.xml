@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Zeitüberschreitung beim Pairing</string>
+    <string name="danars_bonding_failed">Bluetooth-Kopplung mit der Pumpe fehlgeschlagen oder abgebrochen. Versuche es erneut und gib die auf der Pumpe angezeigte PIN ein.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Pumpen-Integration für Dana Diabecare RS und Dana-i Pumpen</string>
     <string name="maxbolusviolation">Max. Bolus überschritten</string>
@@ -8,6 +9,12 @@
     <string name="speederror">Geschwindigkeits-Fehler</string>
     <string name="insulinlimitviolation">Insulin-Beschränkung verletzt</string>
     <string name="boluserrorcode">Angefragt: %1$.2f IE. Abgegeben: %2$.2f IE. Fehlercode: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pumpe ist nicht befüllt</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Nicht genug Insulin im Reservoir</string>
+    <string name="danai2_bolus_error_easy_sleep">Der einfache Ruhemodus ist auf der Pumpe aktiviert</string>
+    <string name="danai2_pump_check_error">Fehler Pumpenüberprüfung</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Einfacher Modus</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatische Sperre</string>
     <string name="danar_valuenotsetproperly">Wert nicht korrekt gesetzt</string>
     <string name="danar_setbasalstep001">Setze Basalschritt auf 0.01 IE/h</string>
     <string name="resetpairing">Pairing zurücksetzen?</string>
