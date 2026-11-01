@@ -4,7 +4,7 @@
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
     <string name="next_button">İleri</string>
     <string name="previous_button">Önceki</string>
-    <string name="setupwizard_finish">BİTTİ</string>
+    <string name="setupwizard_finish">BİTİR</string>
     <string name="welcome">Hoş geldiniz</string>
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
