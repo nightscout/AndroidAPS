@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Tilbakestille paringsinformasjonen?</string>
-    <string name="diaconn_pairing">Diaconn pumpe sammenkobling</string>
+    <string name="resetpairing">Tilbakestill sammenkoblingsinformasjon?</string>
+    <string name="diaconn_pairing">Diaconn-pumpesammenkobling</string>
     <string name="diaconn_g8_history_alarm">Alarmer</string>
     <string name="diaconn_g8_history_basalhours">Basal timer</string>
     <string name="diaconn_g8_history_bolus">Boluser</string>
@@ -44,7 +44,7 @@
     <string name="diaconn_g8_pumpalarm_intensity_high">høy</string>
     <string name="diaconn_g8_screentimeout">LCD påslått [second]</string>
     <string name="diaconn_g8_language">Språk</string>
-    <string name="diaconn_g8_bolus_speed">Bolus hastighet</string>
+    <string name="diaconn_g8_bolus_speed">Bolushastighet</string>
     <string name="diaconn_g8_pumplang_chiness">Kinesisk</string>
     <string name="diaconn_g8_pumplang_korean">Koreansk</string>
     <string name="diaconn_g8_pumplang_english">Engelsk</string>
@@ -56,12 +56,12 @@
     <string name="insulinlackwarning">Advarsel: lavt insulinnivå</string>
     <string name="needbatteryreplace">Bytte av batteri er nødvendig</string>
     <string name="needinsullinreplace">Påfyll av insulin er nødvendig</string>
-    <string name="diaconn_g8_loginsulinchange_title">Logg reservoar bytte</string>
+    <string name="diaconn_g8_loginsulinchange_title">Logg reservoarbytte</string>
     <string name="diaconn_g8_loginsulinchange_summary">Legg til \"Insulinbytte\" i Helseportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logcanulachange_title">Logg bytte av kanyle</string>
     <string name="diaconn_g8_logcanulachange_summary">Legg til \"Bytte av injeksjonssted\" i Helseportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logbatterychange_summary">Legg til \"Bytte av batteri\" i Helseportal når den oppdages i historikken</string>
-    <string name="diaconn_g8_logbatterychange_title">Logg batteri bytte</string>
+    <string name="diaconn_g8_logbatterychange_title">Logg batteribytte</string>
     <string name="diaconn_g8_logsyncinprogress">Logg synkronisering pågår</string>
     <string name="diaconn_g8_loginsulinshorage">Lavt insulinnivå</string>
     <string name="diaconn_g8_logbatteryshorage">Lavt batterinivå</string>
