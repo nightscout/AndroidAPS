@@ -6,10 +6,10 @@
     <string name="setup">Oppsett</string>
     <string name="setup_completed_info">Open Humans er konfigurert. Hvis du vil stoppe opplastinger, klikk \"Logg ut\".</string>
     <string name="not_setup_info">Open Humans er inaktiv. For å starte opplasting av data, klikk på \"Oppsett\".</string>
-    <string name="project_member_id">Prosjektmedlems ID: %1$s</string>
+    <string name="project_member_id">Prosjektmedlems-ID: %1$s</string>
     <string name="open_humans_uploading">Laster opp til Open Humans…</string>
     <string name="open_humans_notifications">Open Humans varsler</string>
-    <string name="uploading_to_open_humans">AndroidAPS laster opp til Open Humans. Dette kan ta en stund.</string>
+    <string name="uploading_to_open_humans">AAPS laster opp til Open Humans. Dette kan ta en stund.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har blitt logget ut fra Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klikk her for å logge inn igjen hvis dette ikke var hensikten.</string>
     <string name="next">Neste</string>
@@ -27,7 +27,7 @@
     <string name="careportal_events">Helseportal-hendelser (unntatt notater)</string>
     <string name="profile_switches">Profilbytter</string>
     <string name="total_daily_doses">Totale daglige doser</string>
-    <string name="temporary_basal_rates">Midlertidige basal doser</string>
+    <string name="temporary_basal_rates">Midlertidige basaldoser</string>
     <string name="temporary_targets">Midlertidige mål</string>
     <string name="settings">Innstillinger</string>
     <string name="application_version">Programversjon</string>
