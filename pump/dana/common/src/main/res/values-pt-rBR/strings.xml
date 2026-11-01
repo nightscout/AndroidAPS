@@ -8,7 +8,6 @@
     <string name="commanderror">Erro no comando</string>
     <string name="speederror">Erro velocidade</string>
     <string name="insulinlimitviolation">Transgressão limite insulina</string>
-    <string name="boluserrorcode">Pedido: %1$.2fU Entregue: %2$.2fU Código Erro: %3$s</string>
     <string name="danai2_bolus_error_no_prime">A bomba não foi purgada</string>
     <string name="danai2_bolus_error_not_enough_insulin">Insulina insuficiente no reservatório</string>
     <string name="danai2_bolus_error_easy_sleep">O modo Easy sleep está ativado na bomba</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Bomba selecionada</string>
     <string name="rs_loginsulinchange_title">Mudança do reservatório do log</string>
     <string name="rs_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao portal de cuidados, quando detectado no histórico</string>
-    <string name="rs_logcanulachange_title">Mudança do log da cânula</string>
     <string name="rs_logcanulachange_summary">Adicionar evento \"Mudança de local\" ao portal de cuidados, quando detectado no histórico</string>
     <string name="press_ok_on_the_pump">Pressione OK na bomba\ne digite 2 números exibidos\nMantenha a exibição ligada na bomba pressionando o botão menos até terminar de digitar o código.</string>
     <string name="num1pin">1: (12 dígitos)</string>
