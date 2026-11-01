@@ -15,6 +15,7 @@
     <string name="pref_display_settings">Anzeige</string>
     <string name="pref_graph_settings">Diagramm</string>
     <string name="pref_interface_settings">Aussehen</string>
+    <string name="pref_tile_settings">Kachel</string>
     <string name="pref_others_settings">Sonstiges</string>
     <string name="pref_complication_settings">Komplikation</string>
     <string name="pref_show_date">Datum anzeigen</string>
