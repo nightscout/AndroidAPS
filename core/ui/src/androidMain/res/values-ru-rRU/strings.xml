@@ -90,7 +90,6 @@
     <string name="notification">Уведомление</string>
     <string name="noprofile">Профиль еще не загружен из NS</string>
     <string name="exists">существует</string>
-    <string name="notexists">не существует</string>
     <string name="glucose">Гликемия</string>
     <string name="iob">IOB (актИнс)</string>
     <string name="cob">COB (актУгл)</string>
@@ -130,7 +129,6 @@
     <string name="profile">Профиль</string>
     <string name="percentage_label">В процентах</string>
     <string name="timeshift_label">Сдвиг по времени</string>
-    <string name="confirm_remove_multiple_items">Вы уверены, что хотите удалить %1$d элемент</string>
     <string name="overview_treatment_label">Терапия</string>
     <string name="copytolocalprofile">Создать новый профиль из этого профиля?</string>
     <string name="bolus_iob_label">Болюс IOB</string>
@@ -207,9 +205,7 @@
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
     <string name="careportal_exercise">Нагрузка</string>
-    <string name="careportal_announcement_message">Оповещение: %1$s</string>
     <string name="careportal_note_message">Примечание: %1$s</string>
-    <string name="careportal_question_message">Вопрос: %1$s</string>
     <string name="careportal_exercise_message">Нагрузка: %1$s</string>
     <string name="careportal_pump_site_change">Смена места катетера помпы</string>
     <string name="careportal_pump_site_management">Места установки помпы</string>
@@ -352,7 +348,6 @@
     <string name="uel_ns_queue_cleared">ОЧЕРЕДЬ NS ОЧИЩЕНА</string>
     <string name="uel_ns_settings_copied">ПАРАМЕТРЫ NS СКОПИРОВАНЫ</string>
     <string name="uel_error_dialog_ok">ОШИБКА В ДИАЛОГОВОМ ОКНЕ OK</string>
-    <string name="uel_error_dialog_mute">ОШИБКА В ДИАЛОГОВОМ ОКНЕ ОТЛОЖИТЬ </string>
     <string name="uel_error_dialog_mute_5min">ОШИБКА В ДИАЛОГОВОМ ОКНЕ ОТЛОЖИТЬ НА 5 МИН</string>
     <string name="uel_objective_started">НАЧАТО ПРОХОЖДЕНИЕ ЦЕЛИ</string>
     <string name="uel_objective_unstarted">ПРОХОЖДЕНИЕ ЦЕЛИ НЕ НАЧАТО</string>
@@ -400,7 +395,6 @@
     <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
     <string name="error_in_basal_values">Ошибка в величине базала</string>
     <string name="error_in_target_values">Ошибка в целевых значениях</string>
-    <string name="profile_name_contains_dot">В некоторых наименованиях профиля содержатся точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
     <string name="errors">Ошибки</string>
     <!-- Command Queue + readStatus reasons -->
@@ -510,7 +504,6 @@
     <string name="export_result_message_exported">Настройки экспортированы</string>
     <string name="export_result_message_failed">ОШИБКА экспорта настроек!</string>
     <string name="export_result_message_about_to_expire">Настройки были экспортированы: пароль скоро перестанет действовать. Экспортируйте их вручную и (заново) введите пароль.</string>
-    <string name="export_result_message_expired">Экспорт настроек отменен: пароль перестал действовать. Экспортируйте их вручную и введите его заново!</string>
     <string name="export_result_message_disabled">Предупреждение (автоматизация): Экспорт настроек выключен!</string>
     <!-- Cloud export -->
     <string name="cloud_directory">Облачная директория</string>
@@ -603,7 +596,6 @@
     <string name="target_short">ЦЕЛЬ</string>
     <string name="profile_name">Название профиля:</string>
     <string name="units_colon">Единицы:</string>
-    <string name="ic_dynamic_label_warning">Алгоритм может обеспечить динамический расчет углеводного коэффициента IC. Значения ниже можно использовать только в качестве запасного варианта в случае отсутствия данных или только в качестве эталонного значения</string>
     <string name="isf_dynamic_label_warning">Алгоритм может обеспечить динамический расчет ISF. Значения ниже можно использовать только в качестве запасного варианта в случае отсутствия данных или только в качестве эталонного значения</string>
     <!--    Search-->
     <!--    Food Management -->
