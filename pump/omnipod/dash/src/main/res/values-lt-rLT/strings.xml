@@ -21,17 +21,13 @@
     <string name="omnipod_dash_not_enough_insulin">Rezervuare nepakanka insulino</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
     <string name="requested_by_user" comment="26 characters max for translation">Naudotojo užklausa</string>
-    <string name="suspend_delivery_is_unconfirmed">Insulino tiekimo sustabdymas nepatvirtintas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="insulin_delivery_suspended">Insulino tiekimas sustabdytas</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Pod laiko juosta skiriasi nuo telefono. Bazė neteisinga. Atlikite profilio keitimą</string>
     <string name="failed_to_set_the_new_basal_profile">Klaida nustatant naują bazės profilį. Insulinas netiekiamas</string>
-    <string name="setting_basal_profile_might_have_failed">Gali būti, kad bazės profilis nebuvo nustatytas. Insulino tiekimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="bolus_delivery_status_uncertain">Boluso suleidimo būklė nežinoma. Atnaujinkite Pod būklę.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Nepavyko patikrinti, ar SMB (%1$s) suleistas. Atnaujinkite Pod būklę, kad patvirtintumėte arba paneigtumėte šią komandą.</string>
     <string name="temp_basal_out_of_sync">Nenumatyta laikinos bazės būklė! Jei iki šiol veikė laikina bazė, ji atšaukta. Patikrinkite suleisto insulino kiekį ir Pod istoriją</string>
     <string name="checking_delivery_status">Tikrinama insulino tiekimo būklė</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Gali būti, kad nepavyko nustatyti laikinos valandinės bazės. Jei laikina bazė buvo nustatyta anksčiau, ji yra atšaukta. Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Laikinos bazės atšaukimo rezultatas nežinomas</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Komanda Atnaujinti insulino tiekimą nepatvirtinta. Atnaujinkite Pod statusą</string>
-    <string name="cancelling_temp_basal_might_have_failed">Gali būti, kad nepavyko atšaukti laikinos bazės. Jei laikina bazė buvo pradėta anksčiau, ji gali būti jau atšaukta. Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke.</string>
 </resources>
