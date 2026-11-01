@@ -9,7 +9,6 @@
     <string name="application_expired">Aplicația a expirat</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
-    <string name="version_expire">Versiunea %1$s expiră la %2$s și va trece în modul Suspendare la glicemie scăzută</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Date recalculate utilizate</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS selectat</string>
     <string name="closedmodeenabled">Mod buclă închisă activat</string>
     <string name="description_objectives">Program de învățare</string>
-    <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
     <string name="objectives_button_unfinish">Resetare stare finalizată</string>
     <string name="objectives_button_unstart">Resetare stare de început</string>
     <string name="bg_doubled_lgs">Modul Suspendare la glicemie scăzută din cauza valorilor dublate în sursa de glicemie</string>
