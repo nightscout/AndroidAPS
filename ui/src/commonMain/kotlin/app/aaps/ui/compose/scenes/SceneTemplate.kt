@@ -67,7 +67,11 @@ enum class SceneTemplate(
         infoResId = CoreUiStrings.scene_wizard_info_sleep,
         icon = "sleep",
         defaultDurationMinutes = 480, // 8 hours
-        defaultActions = emptyList()
+        defaultActions = listOf(
+            // No built-in preset has a sleep reason, so this pre-selects the user's Custom preset if there is one;
+            // otherwise the user picks a preset in the temp target step.
+            SceneAction.TempTarget(reason = TT.Reason.CUSTOM, targetMgdl = 100.0)
+        )
     ),
 
     POST_EXERCISE_NIGHT(
