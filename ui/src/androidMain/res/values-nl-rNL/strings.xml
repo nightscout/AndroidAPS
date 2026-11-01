@@ -248,7 +248,6 @@
     <string name="profile_switches">Profiel wisselingen</string>
     <string name="basal_pct_from_tdd_label">% van basaal</string>
     <string name="selected_profile">Geselecteerd:</string>
-    <string name="comparation">Vergelijken</string>
     <string name="profile_tab_1">Profiel 1</string>
     <string name="profile_tab_2">Profiel 2</string>
     <string name="motol_default_profile">Basis profiel</string>
