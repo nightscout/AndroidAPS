@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Elementų išdėstymas</string>
     <string name="cwf_complication_layout_description">Iš įkelto pasirinktinio ciferblato paimtų elementų vieta ir dydis.</string>
     <string name="pref_include_external">Įtraukti išorinius rodinius į šabloną</string>
-    <string name="pref_switch_external">Sukeisti išorinius duomenis ciferblate</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
     <string name="digitalstyle_pref_your_style">Jūsų stilius</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>
