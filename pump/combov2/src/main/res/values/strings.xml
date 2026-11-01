@@ -19,7 +19,7 @@
     <string name="combov2_error_10">Reservoir error</string>
     <string name="combov2_error_11">Infusion set not primed</string>
     <string name="combov2_extended_bolus_not_supported">Extended bolus is not supported</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Pair with pump</string>
     <string name="combov2_unpair_pump_title">Unpair pump</string>
     <string name="combov2_driver_state_label">Driver state</string>
@@ -35,8 +35,7 @@
 When pairing is successfully completed, confirm the finished pairing on your pump and return to the main pump screen by pressing the CHECK button twice.\n\n
 If no connection is established after more than ~5 minutes:\n\n
 1. Press Back or the "Cancel Pairing" button\n
-2. Cancel the pairing on the Combo (press both UP and MENU
-buttons at the same time to cancel pairing)\n
+2. Cancel the pairing on the Combo (press both UP and MENU buttons at the same time to cancel pairing)\n
 3. Try to pair again</string>
     <string name="combov2_enter_pin">Enter PIN</string>
     <string name="combov2_cancel_pairing">Cancel pairing</string>
@@ -107,7 +106,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoring redundant 100% TBR request</string>
     <string name="combov2_hit_unexpected_tbr_limit">Unexpected limit encountered while adjusting TBR: target percentage was %1$d%%, hit a limit at %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Cannot set absolute TBR if base basal rate is zero</string>
-    <string name="combov2_unpair_pump_summary">Unpair AndroidAPS and Android from the currently paired Accu-Chek Combo pump</string>
+    <string name="combov2_unpair_pump_summary">Unpair AAPS and Android from the currently paired Accu-Chek Combo pump</string>
     <string name="combov2_unknown_tbr_detected">Unknown TBR was detected and stopped; percentage: %1$d%%; remaining duration: %2$s</string>
     <string name="combov2_connection_error">Connection error: %1$s</string>
     <string name="combov2_short_status_alert">Alert: %s</string>
