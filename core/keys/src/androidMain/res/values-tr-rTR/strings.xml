@@ -39,7 +39,7 @@
     <string name="pref_summary_bg_source_create_sensor_change">Sensör takıldığında sensör değişimi tedavi etkinliği oluşturun.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Dinamik hassasiyet kullanın</string>
-    <string name="pref_summary_aps_use_dynamic_sensitivity">Hassasiyet ayarı için otoduyarlılık yerine DinamikİDF kullanın.</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Hassasiyet ayarı için otoduyarlılık yerine Dinamik İDF kullanın.</string>
     <string name="pref_title_aps_use_autosens">Otoduyarlılık kullanın</string>
     <string name="pref_title_aps_use_smb">SMB etkinleştir</string>
     <string name="pref_summary_aps_use_smb">Süper Mikro Bolus özelliğini etkinleştirin. SMB, yükselen kan şekerine yanıt olarak insülini anında verir.</string>
@@ -51,7 +51,7 @@
     <string name="pref_summary_aps_use_smb_with_cob">Vücutta karb. bulunduğunda SMB\'ye izin verin.</string>
     <string name="pref_title_aps_use_smb_with_low_tt">Düşük geçici hedefle SMB\'yi etkinleştir</string>
     <string name="pref_summary_aps_use_smb_with_low_tt">Düşük geçici hedef etkin olduğunda SMB\'ye izin verir.</string>
-    <string name="pref_title_aps_use_smb_after_carbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Karbonhidratlardan sonra SMB\'yi etkinleştir</string>
     <string name="pref_summary_aps_use_smb_after_carbs">Karbonhidratlar girildikten sonra bir süre boyunca SMB\'ye izin verin.</string>
     <string name="pref_title_aps_use_uam">UAM (Bildirilmemiş Öğünler) etkinleştir</string>
     <string name="pref_summary_aps_use_uam">Bildirilmemiş öğünlerin tespitini ve tedavisini etkinleştirir.</string>
@@ -61,8 +61,8 @@
     <string name="pref_summary_aps_resistance_lowers_target">Direnç tespit edildiğinde glikoz hedefini düşürün.</string>
     <string name="pref_title_aps_always_use_short_deltas">Her zaman kısa ortalama delta kullanın</string>
     <string name="pref_summary_aps_always_use_short_deltas">KŞ değişim hesaplamalarında, basit delta yerine her zaman kısa ortalama delta değerini kullanın.</string>
-    <string name="pref_title_aps_dynisf_adjust_sensitivity">DinamikİDF hassasiyet ayarı</string>
-    <string name="pref_summary_aps_dynisf_adjust_sensitivity">DinamikİDF kullanırken hassasiyet hesaplamalarını ayarlayın.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">Dinamik İDF hassasiyet ayarı</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Dinamik İDF kullanırken hassasiyet hesaplamalarını ayarlayın.</string>
     <string name="pref_title_aps_autosens_adjust_targets">Otoduyarlılık hedefleri ayarlar</string>
     <string name="pref_summary_aps_autosens_adjust_targets">Otoduyarlılığın bazal ve İDF\'nin yanı sıra hedef glikoz değerini de ayarlamasına izin verin.</string>
     <string name="pref_title_aps_high_tt_raises_sensitivity">Yüksek geçici hedefler duyarlılığı artırır</string>
@@ -92,36 +92,36 @@
     <!-- Virtual pump preferences -->
     <string name="pref_title_virtual_pump_status_upload">Nightscout\'a pompa durumunu aktar</string>
     <!-- NS Client preferences -->
-    <string name="pref_title_ns_upload_data">Verileri NS\'a yükleyin</string>
+    <string name="pref_title_ns_upload_data">Verileri NS\'ye yükle</string>
     <string name="pref_summary_ns_upload_data">Tedavileri, geçici bazal dozları ve diğer verileri Nightscout\'a yükler.</string>
-    <string name="pref_title_ns_receive_cgm">NS\'den CGM verilerini alın</string>
+    <string name="pref_title_ns_receive_cgm">NS\'den CGM verilerini al</string>
     <string name="pref_summary_ns_receive_cgm">Nightscout\'tan CGM ölçümlerini kabul eder.</string>
     <string name="pref_title_ns_receive_profile_store">NS\'den profil deposunu al</string>
     <string name="pref_summary_ns_receive_profile_store">Nightscout\'tan profil deposu güncellemelerini kabul eder.</string>
     <string name="pref_title_ns_receive_temp_target">NS\'den geçici hedefleri al</string>
     <string name="pref_summary_ns_receive_temp_target">Nightscout\'tan gelen geçici hedef değişikliklerini kabul eder.</string>
-    <string name="pref_title_ns_receive_profile_switch">NS\'den profil geçişlerini al</string>
+    <string name="pref_title_ns_receive_profile_switch">NS\'den profil değişimlerini al</string>
     <string name="pref_summary_ns_receive_profile_switch">Nightscout\'tan profil değişimi etkinliklerini kabul eder.</string>
-    <string name="pref_title_ns_receive_insulin">NS\'den insülin verilerini alın</string>
+    <string name="pref_title_ns_receive_insulin">NS\'den insülin verilerini al</string>
     <string name="pref_summary_ns_receive_insulin">Nightscout\'tan insülin tedavilerini kabul eder.</string>
-    <string name="pref_title_ns_receive_carbs">NS\'den karbonhidratları alın</string>
+    <string name="pref_title_ns_receive_carbs">NS\'den karbonhidratları al</string>
     <string name="pref_summary_ns_receive_carbs">Nightscout\'tan karbonhidrat girişlerini kabul eder.</string>
-    <string name="pref_title_ns_receive_therapy_event">NS\'den terapi etkinliklerini alın</string>
+    <string name="pref_title_ns_receive_therapy_event">NS\'den terapi etkinliklerini al</string>
     <string name="pref_summary_ns_receive_therapy_event">Nightscout\'tan tedavi etkinliklerini kabul eder.</string>
     <string name="pref_title_ns_receive_running_mode">NS\'den çalışma modunu al</string>
     <string name="pref_summary_ns_receive_running_mode">Nightscout\'tan gelen çalışma modu değişikliklerini kabul eder.</string>
-    <string name="pref_title_ns_receive_tbr_eb">NS\'den GBO/EB alın</string>
+    <string name="pref_title_ns_receive_tbr_eb">NS\'den GBO/EB al</string>
     <string name="pref_summary_ns_receive_tbr_eb">Nightscout\'tan geçici bazal oranlarını ve yayma boluslarını kabul eder.</string>
     <string name="pref_title_ns_notifications_from_alarms">NS alarmları</string>
     <string name="pref_title_ns_notifications_from_announcements">NS duyuruları</string>
     <string name="pref_title_ns_use_cellular">Hücresel veri kullan</string>
-    <string name="pref_title_ns_use_roaming">Roaming kullanın</string>
-    <string name="pref_title_ns_use_wifi">WiFi kullanın</string>
+    <string name="pref_title_ns_use_roaming">Roaming kullan</string>
+    <string name="pref_title_ns_use_wifi">WiFi kullan</string>
     <string name="pref_title_ns_use_on_battery">Pildeyken senk. yap</string>
     <string name="pref_title_ns_use_on_charging">Şarj olurken senk. yap</string>
     <string name="pref_title_ns_log_app_start">Uygulama başlatma olayını günlüğe kaydet</string>
     <string name="pref_title_ns_create_announcements_from_errors">Hatalardan duyurular oluştur</string>
-    <string name="pref_title_ns_create_announcements_from_carbs_req">Gereken karbonhidratlardan duyurular oluşturun</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Gereken karbonhidratlardan duyurular oluştur</string>
     <string name="pref_title_ns_slow_sync">Yavaş senk. kullan</string>
     <string name="pref_title_ns_use_ws">Websocket\'leri kullan</string>
     <string name="pref_summary_ns_use_ws">Nightscout ile gerçek zamanlı iletişim için WebSocket\'leri kullanın.</string>
@@ -129,7 +129,7 @@
     <string name="pref_summary_ns_allow_client_control">Eşleştirilmiş istemci cihazların, Nightscout üzerinden imzalı komutlar (örneğin senaryo başlatma/durdurma) göndermesine olanak tanır. Bu aynı zamanda \"güçlendirilmiş mod\"u devreye sokar. Doğrudan Nightscout üzerinde yapılan değişiklikler artık kabul edilmez.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Sadece WiFi</string>
-    <string name="pref_title_openhumans_charging_only">Yalnızca Şarj</string>
+    <string name="pref_title_openhumans_charging_only">Yalnızca şarj olurken</string>
     <!-- xDrip preferences -->
     <string name="pref_title_xdrip_send_status">Durumu xDrip+\'a gönder</string>
     <string name="pref_title_xdrip_send_detailed_iob">Ayrıntılı AİNS gönder</string>
@@ -137,17 +137,17 @@
     <string name="pref_title_xdrip_send_bgi">KŞ Etkisi Göster</string>
     <string name="pref_summary_xdrip_send_bgi">Kan şekeri etkisini xDrip+ durum satırında göster.</string>
     <!-- Wear preferences -->
-    <string name="pref_title_wear_control">Wear kontrol</string>
+    <string name="pref_title_wear_control">Wear kontrolü</string>
     <string name="pref_summary_wear_control">AAPS\'i Android Wear saat üzerinden kontrol edin.</string>
     <string name="pref_title_wear_wizard_bg">Sihirbaza KŞ\'yi dahil et</string>
-    <string name="pref_title_wear_wizard_tt">Sihirbaza geçici hedef ekle</string>
+    <string name="pref_title_wear_wizard_tt">Sihirbaza geçici hedefi dahil et</string>
     <string name="pref_title_wear_wizard_trend">Sihirbaza eğilimi dahil et</string>
     <string name="pref_title_wear_wizard_cob">Sihirbaza AKRB dahil et</string>
     <string name="pref_title_wear_wizard_iob">Sihirbaza AİNS dahil et</string>
     <string name="pref_title_wear_custom_watchface_authorization">Özel saat arayüzlerine izin ver</string>
-    <string name="pref_title_wear_pushed_watchface">Saat arayüzü saate yüklendi</string>
+    <string name="pref_title_wear_pushed_watchface">Saatte yüklü saat arayüzü</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Komplikasyonlu saat arayüzü</string>
-    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Özel Saat arayüzü</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Özel saat arayüzü</string>
     <string name="pref_title_wear_notify_on_smb">SMB\'yi bildir</string>
     <string name="pref_summary_wear_notify_on_smb">SMB iletildiğinde saate bildirim gönder.</string>
     <string name="pref_title_wear_broadcast_data">Verileri saate yayınla</string>
@@ -208,8 +208,8 @@
     <string name="half_basal_exercise_target_summary">Örneğin 160 gibi bir sayıya ayarlayın; bunun anlamı, geçici hedef 160 mg/dL olduğunda ve Yüksek geçici hedef duyarlılığı artırır = doğru olduğunda, bu seviyede %%50 bazal çalışır (120 = %%75; 140 = %%60).</string>
     <string name="pref_title_iob_threshold_percent">AİNS yüzde eşiği</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB\'lerin devre dışı bırakılacağı maksAİNS yüzdesi.\nVarsayılan değer: %100\n Bu özellik %100 değeri ile devre dışıdır.</string>
-    <string name="pref_title_dynisf_adjustment_factor">DinamikİDF ayarlama faktörü</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'ün üzerine, daha az agresif düzeltmeler için %100\'ün altına ayarlayın.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Dinamik İDF ayarlama faktörü</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Dinamik İDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'ün üzerine, daha az agresif düzeltmeler için %100\'ün altına ayarlayın.</string>
     <string name="pref_title_autosens_period">Otoduyarlılık periyodu</string>
     <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için kullanılan geçmiş saat sayısı (karbonhidrat emilim süresi hariç)</string>
     <!-- IntKey: Maintenance preferences -->
