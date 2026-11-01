@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">פריסת רכיבים</string>
     <string name="cwf_complication_layout_description">המיקום והגודל של הרכיבים, כפי שנלקחו מפני השעון המותאמים אישית שנטענו.</string>
     <string name="pref_include_external">הכללת תצוגות חיצוניות בתבנית</string>
-    <string name="pref_switch_external">החלפת נתונים חיצוניים בפני השעון</string>
     <string name="custom_pref_show_seconds">הצגת שניות</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלך</string>
     <string name="digitalstyle_style_none">ללא סגנון</string>
