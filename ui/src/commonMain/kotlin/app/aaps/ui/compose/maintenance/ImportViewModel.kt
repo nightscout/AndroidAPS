@@ -433,6 +433,22 @@ class ImportViewModel(
     }
 
     /**
+     * Says which insulin a 3.x backup brought, and that it is not in use yet.
+     *
+     * The import adds it to the insulin list but does not switch to it: that would be a profile switch,
+     * a therapy change the user did not confirm. Without this message the backup's insulin sat in the list
+     * unnoticed while the install's default curve ran - and Nightscout gives downloaded treatments that have
+     * no insulin of their own the RUNNING one, so the order of the next steps matters.
+     */
+    private fun notifyImportedInsulin(labels: List<String>) {
+        if (labels.isEmpty()) return
+        notificationManager.post(
+            id = NotificationId.IMPORTED_INSULIN_ADDED,
+            text = rh.gs(CoreUiStrings.import_insulin_added, labels.joinToString())
+        )
+    }
+
+    /**
      * "Also replace pump settings", from the review screen.
      *
      * Only ever set before anything is written - the answer is read once, in [confirmImport], and
@@ -525,12 +541,13 @@ class ImportViewModel(
                         // hold that command queues behind the apply instead of racing it.
                         // Which pump was in charge BEFORE, so the fallback below can be spotted.
                         val pumpBefore = activePlugin.activePumpInternal
-                        config.whileReconfiguring {
+                        val outcome = config.whileReconfiguring {
                             importExportPrefs.executeImport(confirmed.prefs, confirmed.keepPumpSettings)
-                            importExportPrefs.prepareImportedSettings()
+                                .also { importExportPrefs.prepareImportedSettings() }
                         }
                         applySettings()
                         notifyIfPumpFellBackToVirtual(pumpBefore)
+                        notifyImportedInsulin(outcome.importedInsulins)
                         // Every plugin in THIS build now has an explicit stored enabled value, rather
                         // than an absent one that the next start would fill from a default. The file
                         // cannot name plugins it never had, so without this an import from a smaller
