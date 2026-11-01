@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Е, Вх=%2$.1f гр</string>
-    <string name="omnipod_eros_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Неуспешна комуникация: проверката на цялостта на съобщението е неуспешна</string>
     <string name="omnipod_eros_error_invalid_packet_type">Неуспешна комуникация: получен невалиден пакет от Pod</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Няма отговор от RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink прекъснат</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Няма отговор от Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Неуспешно задаване на базален профил. Доставката на инсулин може да бъде спряна! Моля, ръчно опреснете състоянието на Pod от раздел Omnipod и възобновете доставката, ако е необходимо.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Задаването на базалния профил може да е неуспешно. Доставката на инсулин може да бъде спряна! Моля, ръчно опреснете състоянието на Pod от раздел Omnipod и възобновете доставката, ако е необходимо.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Неуспешно задаване на базален профил. Инсулинът е спрян! Моля, ръчно подновяване на доставката от раздела Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Отменянето на временния базал може да е неуспешно. Моля, ръчно опреснете статуса на Pod от раздел Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Задаването на временен базал е неуспешно. Ако преди това е изпълнявал временен базал, може да е бил отменен. Моля, ръчно опреснете статуса на Pod от раздела Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Задаването на временен базал е неуспешно. Ако преди това е имало временен базал, може да е бил отменен. Моля, ръчно опреснете статуса на Pod от раздела Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Продължителността трябва да бъде по-голяма от нула и кратно на %1$s минути.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Задаването на времето може да е неуспешно. Доставката на инсулин може да бъде спряна! Моля, ръчно опреснете състоянието на Pod от раздел Omnipod и възобновете доставката, ако е необходимо.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Неуспешно задаване на време. Инсулинът е спрян! Моля, ръчно подновяване на доставката от раздела Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Неуспешно променяне на времето на под. Трябва ръчно да синхронизирате времето в раздела Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Не може да се провери дали болусът е успешен. Моля, проверете ръчно дали вашият Pod подава болус, като слушате за щракания. <b>Ако сте сигурни, че болусът не е успешен, трябва ръчно да изтриете записа за болуса от Лечения, дори ако сега натиснете \'Отказ от болус\'!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Не може да се провери дали SMB болус(%1$.2f Е) е успешен. <b>Ако сте сигурни, че не е успял, трябва ръчно да изтриете запис SMB от леченията.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">В Pod има пуснат временен базал но AAPS не знае за него. Моля, отменете временния си базал ръчно.</string>
