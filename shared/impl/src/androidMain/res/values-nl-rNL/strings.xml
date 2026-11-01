@@ -14,7 +14,7 @@
     <string name="cwf_comment_cob2_ext">COB waarde (van AAPSClient of AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Korte BG delta (van AAPSClient of AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Gemiddelde BG delta (15min) (van AAPSClient of AAPSClient2)</string>
-    <string name="cwf_comment_temp_target_ext">Tijdelijke streefwaarde of Tijdelijk streefwaarde Laag - Hoog (van AAPSClient of AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">TempTarget of TempTargetLow – TempTargetHigh (vanuit AAPSClient of AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">Reservoir niveau (van AAPSClient of AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Globale batterij in loop (%) (van AAPSClient of AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Basaal instelling (van AAPSClient of AAPSClient2)</string>
@@ -31,7 +31,7 @@
     <string name="cwf_comment_cob2">COB waarde</string>
     <string name="cwf_comment_delta">Korte BG delta</string>
     <string name="cwf_comment_avg_delta">Gemiddelde BG delta (15min)</string>
-    <string name="cwf_comment_temp_target">Tijdelijke streefwaarde of Tijdelijk streefwaarde Laag - Hoog</string>
+    <string name="cwf_comment_temp_target">TempTarget of TempTargetLow – TempTargetHigh</string>
     <string name="cwf_comment_reservoir">Reservoir niveau</string>
     <string name="cwf_comment_uploader_battery">Batterij Telefoon (%)</string>
     <string name="cwf_comment_rig_battery">Globale loop batterij (%)</string>
