@@ -26,7 +26,6 @@
     <string name="constraints">Apribojimai</string>
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
     <string name="openapsma_script_debug_data_label">Scenarijų derinimas</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Dėmesio!\nPaprastai neturėtumėte keisti šių, žemiau esančių, reikšmių. Prašome PASPAUSTI ČIA ir PERSKAITYKITE tekstą ir įsitikinkite, kad SUPRANTATE prieš keisdami bet kurią iš šių verčių.</string>
     <string name="increasing_max_basal">Didinama maksimali valandinės bazės reikšmė, nes nustatytoji reikšmė yra mažesnė nei profilio maksimali val. bazės reikšmė</string>
     <string name="max_basal_multiplier">maksimalus bazės daugiklis</string>
     <string name="max_daily_basal_multiplier">maksimalus paros bazės daugiklis</string>
