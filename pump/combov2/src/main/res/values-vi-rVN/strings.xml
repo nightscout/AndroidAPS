@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Lỗi bình chứa</string>
     <string name="combov2_error_11">Bộ dây truyền chưa được làm đầy</string>
     <string name="combov2_extended_bolus_not_supported">Không hỗ trợ liều bolus kéo dài</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Ghép nối với bơm</string>
     <string name="combov2_unpair_pump_title">Hủy ghép nối bơm</string>
     <string name="combov2_driver_state_label">Trạng thái điều khiển</string>
@@ -31,12 +30,6 @@
 2. Kiểm tra xem có thiết bị nào đã được ghép nối chưa; nếu có, vào màn hình \"Delete device\" trên bơm để delete/unpair thiết bị đó.\n
 3. Vào màn hình \"Add device\" trên bơm và bắt đầu quá trình ghép nối trên bơm.\n
 4. Nhấn nút \"Start pairing\" bên dưới để khởi động quá trình ghép nối trong AndroidAPS.\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Sau một lúc, tên điện thoại sẽ hiển thị trên màn hình bơm; nhấn nút CHECK để xác nhận.\n\n
-Khi quá trình ghép đôi hoàn tất, xác nhận ghép đôi thành công trên bơm và quay lại màn hình chính của bơm bằng cách nhấn nút CHECK hai lần.\n\n
-Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
-1. Nhấn Back hoặc nút \"Cancel Pairing\".\n
-2. Hủy ghép nối trên bơm Combo (nhấn đồng thời hai nút UP và MENU để hủy ghép đôi).\n
-3. Thử ghép nối lại từ đầu</string>
     <string name="combov2_enter_pin">Nhập PIN</string>
     <string name="combov2_cancel_pairing">Hủy ghép nối</string>
     <string name="combov2_confirm_cancel_pairing_message">Bạn có thực sự muốn hủy ghép nối không?</string>
@@ -106,7 +99,6 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Bỏ qua yêu cầu TBR 100% dư thừa</string>
     <string name="combov2_hit_unexpected_tbr_limit">Gặp giới hạn bất ngờ khi điều chỉnh TBR: phần trăm mục tiêu là %1$d%%, nhưng đạt giới hạn ở %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Không thể đặt TBR tuyệt đối khi basal nền bằng 0</string>
-    <string name="combov2_unpair_pump_summary">Hủy ghép nối AndroidAPS và Android khỏi bơm Accu-Chek Combo đã ghép nối</string>
     <string name="combov2_unknown_tbr_detected">Phát hiện TBR không xác định và đã dừng; phần trăm: %1$d%%; thời gian còn lại: %2$s</string>
     <string name="combov2_connection_error">Lỗi kết nối: %1$s</string>
     <string name="combov2_short_status_alert">Cảnh báo: %s</string>
