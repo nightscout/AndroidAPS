@@ -417,7 +417,16 @@ fun NavGraphBuilder.appNavGraph(
             viewModel = importViewModel,
             prefFileList = prefFileList,
             rxBus = rxBus,
-            onClose = { navController.safePopBackStack() }
+            onClose = { navController.safePopBackStack() },
+            // The import marks the wizard processed (prepareImportedSettings): the imported settings replace
+            // it. Going back into it restarted it at Welcome after the import's UI rebuild, and the user had
+            // to skip 18 steps that would now change what was just restored. So it goes too, as in 3.x, where
+            // the import restarted the app and the wizard did not open again.
+            onApplied = {
+                if (navController.previousBackStackEntry?.destination?.route == AppRoute.SetupWizard.route)
+                    navController.popBackStack(AppRoute.SetupWizard.route, inclusive = true)
+                else navController.safePopBackStack()
+            }
         )
     }
 
