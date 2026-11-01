@@ -5,13 +5,11 @@
     <string name="medtrum_pump_description">Pumpintegration för Medtrum Nano och Medtrum 300U</string>
     <string name="medtrum_pump_setting">Inställningar för Medtrum-pump</string>
     <string name="pump_error">Pumpfel: %1$s !! </string>
-    <string name="pump_warning">Pumpvarning: %1$s </string>
     <string name="pump_is_suspended">Pumpen är pausad</string>
     <string name="pump_is_suspended_hour_max">Pumpen är pausad på grund av att din maximala dos per timme är överskriden</string>
     <string name="pump_is_suspended_day_max">Pumpen är pausad på grund av att din maximala dos per dygn är överskriden</string>
     <string name="patch_not_active">Podden är inte aktiverad</string>
     <string name="pump_setting_failed">Kunde inte spara användarinställningarna till pumpen!</string>
-    <string name="pump_sync_error">Fel vid synkronisering av historik från pumpen, en post har hoppats över. Kontrollera i fliken Behandlingar om bolusen är korrekt synkroniserad. Snooza, och om felet kommer tillbaka, byt pod eller pumpbas.</string>
     <string name="patch_reset_after_primed_error">Podden startades om av sig själv och förlorade sin session. Den kan inte leverera insulin längre. Ta bort podden och starta en ny.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktiv bolus</string>
