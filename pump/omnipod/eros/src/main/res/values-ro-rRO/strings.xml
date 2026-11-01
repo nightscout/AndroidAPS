@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Rata: %1$.2f U, durata: %2$d min</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Comunicarea a eșuat: verificarea integrității mesajului a eșuat</string>
     <string name="omnipod_eros_error_invalid_packet_type">Comunicarea a eșuat: a fost primit un pachet invalid de la pompă</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Niciun răspuns de la RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink întrerupt</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nu s-a primit răspuns de la pompă</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Setarea profilului bazal a eșuat. Administrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea pompei din fila Omnipod și să reluați administrarea dacă este necesar.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Setarea profilului bazal s-ar putea să fi eșuat. Administrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea pompei din fila Omnipod și să reluați administrarea dacă este necesar.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Setarea profilului bazal a eșuat. Administrarea este suspendată! Vă rugăm să reluați manual administrarea din secțiunea Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Este posibil ca anularea bazalei temporare să fi eșuat. Vă rugăm să actualizați manual starea pompei din fila Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setarea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, ar fi putut fi anulată. Reîmprospătați manual starea pompei din fila Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setarea bazalei temporare s-ar putea să fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea pompei din fila Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Durata RBT trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Setarea timpului s-ar putea să fi eșuat. Administrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea pompei din secțiunea Omnipod și să continuați administrarea dacă este necesar.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Setarea timpului a eșuat. Administrarea este suspendată! Vă rugăm să reluați manual administrarea din secțiunea Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Eroare la schimbarea automată a orei în pompă. Ar trebui să sincronizați manual timpul în secțiunea Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nu se poate verifica dacă bolusul a reușit. Vă rugăm să verificați manual că pompa administrează bolusul, ascultând clicurile. <b>Dacă sunteți sigur că bolusul nu a reușit, ar trebui să ștergeți manual intrarea bolus din Tratamente, chiar dacă apăsați acum pe \'Anulați bolusul\'!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nu s-a putut verifica dacă bolusul SMB (%1$.2f U) a reușit. <b>Dacă sunteți sigur că bolusul nu a reușit, ar trebui să ștergeți manual intrarea SMB din Tratamente.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">O rată bazală temporară rulează în pompă, dar AAPS nu este la curent cu această bazală temporară. Vă rugăm să anulați manual bazala temporară.</string>
