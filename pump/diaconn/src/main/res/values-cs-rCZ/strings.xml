@@ -27,7 +27,6 @@
     <string name="commanderror">Chyba příkazu</string>
     <string name="speederror">Chyba rychlosti</string>
     <string name="insulinlimitviolation">Překročen limit inzulínu</string>
-    <string name="boluserrorcode">Požadováno: %1$.2fU Doručeno: %2$.2fU Chyba: %3$s</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
@@ -45,7 +44,6 @@
     <string name="diaconn_g8_screentimeout">Čas před vypnutím displeje [second]</string>
     <string name="diaconn_g8_language">Jazyk</string>
     <string name="diaconn_g8_bolus_speed">Rychlost bolusu</string>
-    <string name="diaconn_g8_pumplang_chiness">Čínština</string>
     <string name="diaconn_g8_pumplang_korean">Korejština</string>
     <string name="diaconn_g8_pumplang_english">Angličtina</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +61,6 @@
     <string name="diaconn_g8_logbatterychange_summary">Přidat událost \"Výměna baterie\" do portálu pěče, pokud je zjištěna v historii</string>
     <string name="diaconn_g8_logbatterychange_title">Zaznamenat výměnu baterie</string>
     <string name="diaconn_g8_logsyncinprogress">Probíhá synchronizace logu</string>
-    <string name="diaconn_g8_loginsulinshorage">Nedostatek inzulínu</string>
     <string name="diaconn_g8_logbatteryshorage">Slabá baterie</string>
     <string name="diaconn_g8_logneedleprime">Plnění jehly :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Plnění zásobníku: %1$.2fU</string>
@@ -77,7 +74,6 @@
     <string name="diaconn_g8_reasoncomplete">Dokončeno</string>
     <string name="diaconn_g8_reasoninjectonblock">Zablokované vydávání</string>
     <string name="diaconn_g8_reasonbatteryshortage">Slabá baterie</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Nedostatek inzulínu</string>
     <string name="diaconn_g8_reasonuserstop">Uživatelské vypnutí</string>
     <string name="diaconn_g8_reasonsystemreset">Reset systému</string>
     <string name="diaconn_g8_reasonother">Jiné</string>
@@ -93,7 +89,6 @@
     <string name="diaconn_g8_logalarmblock">Zablokované vydávání (%s)</string>
     <string name="diaconn_g8_lgorelease">vydání bazálu (%s)</string>
     <string name="diaconn_g8_lgosuspend">pozastavení bazálu (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Dual Nomal úspěch</string>
     <string name="diaconn_g8_logdualsquarestart">Kombinovaný bolus start</string>
     <string name="diaconn_g8_logdualsquaresuccess">Kombinovaný bolus úspěch</string>
     <string name="diaconn_g8_logsquarestart">Kombinovaný bolus start</string>
@@ -102,8 +97,6 @@
     <string name="diaconn_g8_logsuccess">Úspěch</string>
     <string name="diaconn_g8_logmealsuccess">Bolus úspěšný</string>
     <string name="diaconn_g8_errorcode_1">Nemohu vyhledat kvůli chybě CRC paketu.</string>
-    <string name="diaconn_g8_errorcode_2">Chyba parametru.</string>
-    <string name="diaconn_g8_errorcode_3">Chyba protokolu.</string>
     <string name="diaconn_g8_errorcode_4">Časový limit vypršel.</string>
     <string name="diaconn_g8_errorcode_6">Zrušeno pumpou</string>
     <string name="diaconn_g8_errorcode_7">Přijímání dalších akcí, omezení nastavení aplikace.</string>
@@ -113,7 +106,6 @@
     <string name="diaconn_g8_errorcode_11">Nízký stav baterie.</string>
     <string name="diaconn_g8_errorcode_12">Nedostatek inzulínu.</string>
     <string name="diaconn_g8_errorcode_13">Překročen limit.</string>
-    <string name="diaconn_g8_errorcode_14">Překročen denní limit inzulínu.</string>
     <string name="diaconn_g8_errorcode_15">Po dokončení nastavení může být bazál spuštěn.</string>
     <string name="diaconn_g8_logtubechange_title">Zaznamenat výměnu hadičky</string>
     <string name="diaconn_g8_logtubechange_summary">Přidat událost \"Výměna setu\" do portálu pěče, pokud je zjištěna v historii</string>
@@ -121,8 +113,6 @@
     <string name="diaconn_g8_errorcode_32">Během LGS je podávání izulínu omezeno</string>
     <string name="diaconn_g8_errorcode_33">LGS status je zapnutý, ON příkaz je odmítnut.</string>
     <string name="diaconn_g8_errorcode_34">LGS status je vypnutý, OFF příkaz je odmítnut.</string>
-    <string name="diaconn_g8_errorcode_35">Spuštění dočasného bazálu je odmítnuto, pokud je již spuštěn jiný</string>
-    <string name="diaconn_g8_errorcode_36">Zastavení dočasného bazálu je odmítnuto, pokud žádný není spuštěn</string>
     <string name="diaconn_g8_cloudsend_summary">Odeslat protokoly pumpy do Diaconn Cloudu.</string>
     <string name="diaconn_g8_cloudsend_title">Synchronizace do Diaconn cloudu</string>
     <string name="bolus_speed_1">1 U/min</string>
