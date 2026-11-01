@@ -66,4 +66,10 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="notconnected">Keine Verbindung zum Internet</string>
     <string name="requirementnotmet">Anforderungen des Zieles nicht erfüllt</string>
     <string name="what_i_ve_learned">Was ich gelernt habe:</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Gesperrt</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">Richtige Antwort</string>
+    <string name="objectives_exam_previous">Vorherige</string>
+    <string name="objectives_exam_next">Nächste</string>
+    <string name="objectives_exam_next_unanswered">Nächste unbeantwortete</string>
+    <string name="objectives_show_hint">Hinweis</string>
 </resources>
