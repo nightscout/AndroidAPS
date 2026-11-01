@@ -26,7 +26,6 @@
     <string name="constraints">Beperkingen</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_script_debug_data_label">Script debug</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Opgelet!\n Onderstaande waardes moeten normaal gezien niet worden aangepast. KLIK HIER en LEES de tekst zodat je alles volledig BEGRIJPT voordat je een waarde wijzigt.</string>
     <string name="increasing_max_basal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
     <string name="max_basal_multiplier">Max basaal vermenigvuldiger</string>
     <string name="max_daily_basal_multiplier">Max dagelijks basaal vermenigvuldiger</string>
