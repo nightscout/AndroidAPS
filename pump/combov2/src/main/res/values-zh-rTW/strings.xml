@@ -19,7 +19,6 @@
     <string name="combov2_error_10">儲液器錯誤</string>
     <string name="combov2_error_11">輸液組未灌注</string>
     <string name="combov2_extended_bolus_not_supported">不支援延長注射</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">與幫浦配對</string>
     <string name="combov2_unpair_pump_title">取消幫浦配對</string>
     <string name="combov2_driver_state_label">驅動狀態</string>
@@ -31,12 +30,6 @@
 2. 檢查是否已顯示一個設備作為已配對；如果是，請前往幫浦螢幕的“刪除設備”以刪除/取消配對該設備\n
 3. 前往幫浦螢幕的“添加設備”，並在幫浦上開始配對\n
 4. 點擊下方的“開始配對”按鈕，以在 AndroidAPS 中啟動配對\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">一段時間後，幫浦螢幕上顯示電話的名稱；按 CHECK 以確認。\n\n
-當配對成功完成後，請在幫浦上確認完成的配對，並按兩次 CHECK 按鈕返回主幫浦螢幕。\n\n
-如果在超過 ~5 分鐘後仍未建立連線：\n\n
-1. 按返回或“取消配對”按鈕\n
-2. 在 Combo 上取消配對（同時按下 UP 和 MENU 按鈕以取消配對）\n
-3. 再次嘗試配對</string>
     <string name="combov2_enter_pin">輸入 PIN</string>
     <string name="combov2_cancel_pairing">取消配對</string>
     <string name="combov2_confirm_cancel_pairing_message">確定要取消配對嗎？</string>
@@ -106,7 +99,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">忽略多餘的 100% 臨時基礎率請求</string>
     <string name="combov2_hit_unexpected_tbr_limit">調整臨時基礎率時遇到意外限制：目標百分比為 %1$d%%，達到 %2$d%% 的限制</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基礎速率為零，則無法設定絕對臨時基礎率</string>
-    <string name="combov2_unpair_pump_summary">將 AndroidAPS 和 Android 與目前配對的 Accu-Chek Combo 幫浦取消配對</string>
     <string name="combov2_unknown_tbr_detected">偵測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
     <string name="combov2_connection_error">連線錯誤：%1$s</string>
     <string name="combov2_short_status_alert">警報：%s</string>
