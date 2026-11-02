@@ -8,6 +8,7 @@
     <string name="commanderror">Opdracht fout</string>
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
+    <string name="boluserrorcode">Gevraagd: %1$.2f E Toegediend: %2$.2f E Fout code: %3$s</string>
     <string name="danai2_bolus_error_no_prime">De pomp is niet voorgevuld</string>
     <string name="danai2_bolus_error_not_enough_insulin">Onvoldoende insuline in het reservoir</string>
     <string name="danai2_bolus_error_easy_sleep">De \'Easy Sleep\'-modus van de pomp is ingeschakeld.</string>
