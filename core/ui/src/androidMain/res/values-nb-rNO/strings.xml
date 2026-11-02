@@ -746,7 +746,7 @@
     <string name="stop_pump">Stopp pumpen</string>
     <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
     <string name="temp_basal_percent">MIDL. BASAL %1$d%% %2$d min</string>
-    <string name="insight_set_tbr_over_notification">INSIGHT SETT TBR VIA VARSEL</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT SETT VARSEL FOR SLUTT PÅ TBR</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">LESESTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
@@ -768,7 +768,7 @@
     <string name="autotune_tune_days">Antall dager:</string>
     <string name="autotune_select_profile">Velg profil du vil justere</string>
     <!-- Alerts -->
-    <string name="urgent_alarm">Kritisk alarm</string>
+    <string name="urgent_alarm">Viktig varsel</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusrådgiver</string>
