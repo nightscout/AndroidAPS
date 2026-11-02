@@ -60,13 +60,13 @@
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Du kansellerte bolusen etter at den var satt på pumpen. Siden Medtronic-pumper ikke støtter kansellering, må dette gjøres manuelt. STOPP pumpen og velg GJENOPPTA (hvis du fortsatt ønsker å kansellere). Appen vil lese inn endringen ved neste pumpeavlesing (innen 5 minutter).</string>
-    <string name="medtronic_cmd_cant_read_tbr">Kunne ikke lese gjeldende TBR.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Kunne ikke avbryte gjeldende TBR. Stopper operasjonen.</string>
+    <string name="medtronic_cmd_cant_read_tbr">Kunne ikke lese gjeldende midlertidig basal.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Kunne ikke avbryte gjeldende midlertidig basal. Stopper operasjonen.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Kunne ikke angi profilen fordi disse mønstrene har for høy basaldose: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolusen kunne ikke leveres.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus kunne ikke leveres fordi tilgjengelig insulinmengde (%1$.2f) er mindre enn nødvendig bolus (%2$.2f).</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR kunne ikke settes.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr">Kunne ikke avbryte gjeldende TBR.</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">Midlertidig basal kunne ikke settes.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Kunne ikke avbryte gjeldende midlertidig basal.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Basalprofilen kunne ikke settes.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Basalprofilen er den samme, så den blir ikke satt igjen.</string>
     <string name="medtronic_cmd_desc_get_history">Henter historikk - side %1$d (%2$d/16)</string>
