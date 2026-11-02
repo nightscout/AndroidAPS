@@ -115,10 +115,12 @@
     <string name="status_label">Status:</string>
     <string name="clear_log">Logboek wissen</string>
     <string name="full_sync">Volledige synchronisatie</string>
+    <string name="full_sync_comment">Volledige synchronisatie uitvoeren? Dit kan een aantal uren duren. Totdat de synchronisatie is voltooid, zijn er geen nieuwe gegevens zichtbaar in NS.</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_alarm_options">Alarm opties</string>
     <string name="ns_remote_control_options">Afstandsbediening</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_dev_servers">Indien ingeschakeld, worden uploads naar testservers verzonden in plaats van naar de reguliere servers</string>
     <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
     <string name="title_tidepool_use_ns_connection">Gebruik Nightscout-verbindingsinstellingen</string>
     <string name="summary_tidepool_use_ns_connection">Schakel dit uit om aparte verbindingsinstellingen voor Tidepool in te stellen</string>
@@ -227,13 +229,16 @@
     <string name="smscommunicator_tab_otp_label">Authenticatie instellingen</string>
     <string name="smscommunicator_code_verify_label">Te controleren code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">De verificatiecode bestaat uit de 6 cijfers die worden weergegeven in de Authenticator-app (de eenmalige code, OTP), gevolgd door 3 of meer cijfers van de verplichte pincode.</string>
     <string name="smscommunicator_otp_reset_btn">Reset Authenticatie</string>
     <string name="smscommunicator_otp_reset_title">Reset Authenticatie-sleutel</string>
+    <string name="smscommunicator_otp_reset_prompt">Authenticator-sleutel resetten? Alle ingestelde authenticatie-instellingen op verbonden apparaten worden hierdoor ongeldig en moeten opnieuw worden ingesteld.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authenticatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Door de authenticator te resetten, worden alle ingestelde authenticators ongeldig. Deze moeten daarna opnieuw worden ingesteld!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">ONGELDIGE LENGTE!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">FOUTIEVE PIN</string>
@@ -244,6 +249,7 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Om een maaltijd bolus van %1$.2fE te geven antwoord met de code %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Om tijdelijk streefdoel %1$s in te stellen antwoord met code %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Om tijdelijk streefdoel te annuleren antwoord met code %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Antwoord met de code %1$s om de SMS Remote Service uit te schakelen.\n\nHoud er rekening mee dat deze alleen opnieuw kan worden geactiveerd vanaf de AAPS-mastertelefoon zelf.</string>
     <string name="smscommunicator_stopped_sms">De controle via SMS is uitgezet. Gebruik AAPS op de master smartphone om deze weer te aan te zetten.</string>
     <string name="smscommunicator_calibration_reply_with_code">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolus is mislukt. Controleer werkelijke status voordat je een andere opdracht verzendt!</string>
@@ -274,6 +280,7 @@
     <string name="smscommunicator_restarting">AAPS wordt opnieuw opgestart</string>
     <string name="smscommunicator_tempbasal_set">Tijdelijk basaal %1$.2fE/uur voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_extended_set">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>
+    <string name="smscommunicator_carbs_set">%1$d g koolhydraten succesvol ingevoerd</string>
     <string name="smscommunicator_carbs_failed">Invoeren van %1$dg koolhydraten is mislukt</string>
     <string name="smscommunicator_tempbasal_set_percent">Tijdelijk basaal van %1$d%% voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_tempbasal_failed">Start tijdelijk basaal mislukt</string>
