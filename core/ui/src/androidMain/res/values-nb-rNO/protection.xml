@@ -5,12 +5,6 @@
     <string name="settings_protection">Sikkerhet for innstillinger</string>
     <string name="application_protection">Sikkerhet for app</string>
     <string name="bolus_protection">Sikkerhet for bolus</string>
-    <string name="settings_password">Passord for innstillinger</string>
-    <string name="settings_pin">PIN-kode for innstillinger</string>
-    <string name="application_password">Applikasjonspassord</string>
-    <string name="application_pin">PIN-kode for app</string>
-    <string name="bolus_password">Bolus-passord</string>
-    <string name="bolus_pin">PIN-kode for bolus</string>
     <string name="protection_timeout_title">Varighet for passord og PIN [s]</string>
     <string name="protection_timeout_summary">Tid før passord eller PIN-kode må angis</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
