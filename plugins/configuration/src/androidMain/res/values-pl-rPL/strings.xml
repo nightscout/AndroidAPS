@@ -16,7 +16,7 @@
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
-    <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je i przechowuj w bezpiecznym miejscu (np.: managerze haseł).</string>
+    <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i wyłączenia zabezpieczeń w aplikacji. Zapamiętaj je i przechowuj w bezpiecznym miejscu (np.: managerze haseł).</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
     <string name="syncinfotext">Synchronizuj dane z chmurą. Możesz teraz pominąć ten krok, ale nie będziesz w stanie przejść zadań dopóki nie skonfigurujesz połączenia z Nightscout lub Tidepool.</string>
