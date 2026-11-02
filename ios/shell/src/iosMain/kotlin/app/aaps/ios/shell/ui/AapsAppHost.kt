@@ -1,8 +1,14 @@
 package app.aaps.ios.shell.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -14,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.window.ComposeUIViewController
@@ -372,7 +379,10 @@ private fun AapsApp(app: StartedApp) {
             // Nothing is drawn until it is granted. Showing the app behind the prompt would make
             // the protection cosmetic - the screen it is meant to hide would be readable through
             // the dialog, and on iOS it would also be in the app-switcher snapshot.
-            if (!unlocked) return@AapsAppRoot
+            if (!unlocked) {
+                AppLockedScreen(showRetry = !asking, onRetry = requestUnlock)
+                return@AapsAppRoot
+            }
 
             // Everything the shared screens ask a platform for that iOS cannot answer ends up in
             // one of these two. Until now they only wrote a line in the log, so from the user's
@@ -591,6 +601,27 @@ private fun AAPSLogger.notWiredYet(what: String) = error(LTag.CORE, "Not wired u
  * A fallback rather than nothing on screen: the About dialog and the drawer both have a place for
  * it, and an empty space there reads as a broken screen.
  */
+/**
+ * What is shown instead of the app while it is locked. An iOS app should not close itself, so after a
+ * refusal the user needs a way to ask again: a blank screen looks like a broken app.
+ */
+@Composable
+private fun AppLockedScreen(showRetry: Boolean, onRetry: () -> Unit) {
+    Surface(Modifier.fillMaxSize()) {
+        // While the prompt is up, it says everything already
+        if (showRetry) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(stringResource(CoreUiStrings.biometric_title), style = MaterialTheme.typography.titleLarge)
+                TextButton(onClick = onRetry) { Text(stringResource(CoreUiStrings.retry)) }
+            }
+        }
+    }
+}
+
 @Composable
 private fun AppIconImage(icon: ImageBitmap?, modifier: Modifier) {
     if (icon != null) Image(bitmap = icon, contentDescription = null, modifier = modifier)
