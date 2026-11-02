@@ -339,4 +339,105 @@ class ProtectionCheckImplTest : TestBase() {
         sut.requestProtection(ProtectionCheck.Protection.NONE) { result = it }
         assertThat(result).isEqualTo(ProtectionResult.GRANTED)
     }
+
+    // --- A custom password or PIN that was never entered is no protection (#5462) ---
+
+    private fun assertGrantedWithoutPrompt(protection: ProtectionCheck.Protection) {
+        var result: ProtectionResult? = null
+        sut.requestProtection(protection) { result = it }
+        assertThat(result).isEqualTo(ProtectionResult.GRANTED)
+        assertThat(sut.pendingRequest.value).isNull()
+    }
+
+    private fun stubMasterPasswordAlwaysAsk() {
+        `when`(preferences.get(StringKey.ProtectionMasterPassword)).thenReturn("secret")
+        `when`(preferences.get(IntKey.ProtectionTimeout)).thenReturn(0)
+        `when`(dateUtil.now()).thenReturn(1000_000L)
+    }
+
+    @Test
+    fun `requestProtection grants APPLICATION when custom password was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionApplicationPassword)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.APPLICATION)
+    }
+
+    @Test
+    fun `requestProtection grants APPLICATION when custom PIN was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionApplicationPin)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.APPLICATION)
+    }
+
+    @Test
+    fun `requestProtection grants BOLUS when custom password was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionBolusPassword)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.BOLUS)
+    }
+
+    @Test
+    fun `requestProtection grants BOLUS when custom PIN was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionBolusPin)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.BOLUS)
+    }
+
+    @Test
+    fun `requestProtection grants PREFERENCES when custom password was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeSettings)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionSettingsPassword)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.PREFERENCES)
+    }
+
+    @Test
+    fun `requestProtection grants PREFERENCES when custom PIN was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeSettings)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionSettingsPin)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.PREFERENCES)
+    }
+
+    @Test
+    fun `requestProtection still asks when custom password is set`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionApplicationPassword)).thenReturn("hash")
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingRequest.value).isNotNull()
+    }
+
+    @Test
+    fun `requestProtection still asks when custom PIN is set`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionBolusPin)).thenReturn("hash")
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.BOLUS) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingRequest.value).isNotNull()
+    }
+
+    @Test
+    fun `requestProtection still asks for master password type`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(2) // MASTER_PASSWORD
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingRequest.value).isNotNull()
+    }
 }
