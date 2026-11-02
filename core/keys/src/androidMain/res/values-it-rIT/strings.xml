@@ -369,7 +369,7 @@
     <string name="pref_title_smb_delivery_ratio_min">Ratio di erogazione SMB min</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Valore predefinito: 0,5 Questo è il limite inferiore di un rapporto crescente lineare anziché il valore fisso soprastante.</string>
     <string name="pref_title_smb_delivery_ratio_max">Ratio di erogazione SMB max</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Valore predefinito: 0,5 Questo è il limite inferiore di un rapporto crescente lineare anziché il valore fisso soprastante.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valore predefinito: 0,5. Questo è il limite superiore di un rapporto che aumenta linearmente, invece del valore fisso sopra.</string>
     <string name="pref_title_smb_max_range_extension">Estensione range SMB massima</string>
     <string name="openapsama_smb_max_range_extension_summary">Valore predefinito: 1 Questo è un altro importante limite di sicurezza di OpenAPS e specifica di quale fattore puoi superare i normali 120 minuti di maxSMB/maxUAM. Aumenta questo valore sperimentale lentamente e con cautela.</string>
     <!-- UnitDoubleKey: Overview preferences -->
