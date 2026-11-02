@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Kopplungsinformation zurücksetzen?</string>
     <string name="diaconn_pairing">Diaconn Pumpe verbinden</string>
     <string name="diaconn_g8_history_alarm">Alarme</string>
     <string name="diaconn_g8_history_basalhours">Basal-Stunden</string>
@@ -14,6 +15,7 @@
     <string name="approachingdailylimit">Tagesinsulin-Limit wird bald erreicht</string>
     <string name="startingbolus">Bolus-Abgabe gestartet</string>
     <string name="waitingforbolusend">Warten auf das Ende des geschätzten Bolus</string>
+    <string name="gettingbolusstatus">Bolusstatus abrufen</string>
     <string name="stoppingtempbasal">TBR wird abgebrochen</string>
     <string name="settingtempbasal">TBR wird gesetzt</string>
     <string name="settingextendedbolus">Verzögerter Bolus wird gesetzt</string>
@@ -122,4 +124,5 @@
     <string name="bolus_speed_7">7 IE/min</string>
     <string name="bolus_speed_8">8 IE/min</string>
     <string name="diaconn_pairing_successful">Verbindung erfolgreich!</string>
+    <string name="diaconn_pairing_successful_message">Deine Pumpe ist jetzt verbunden und einsatzbereit.</string>
 </resources>
