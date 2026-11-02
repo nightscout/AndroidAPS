@@ -15,7 +15,7 @@
     <string name="alert_m20_title">Ampulle ikke satt inn</string>
     <string name="alert_m21_title">Ampulle tom</string>
     <string name="alert_m22_title">Batteri tomt</string>
-    <string name="alert_m23_title">Automatisk av - pumpe stoppet</string>
+    <string name="alert_m23_title">Automatisk av – pumpen stoppet</string>
     <string name="alert_m24_title">Okklusjon</string>
     <string name="alert_m25_title">Lånetid over - drift stoppes</string>
     <string name="alert_m26_title">Bytte av ampulle ikke fullført</string>
