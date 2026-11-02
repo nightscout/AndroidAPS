@@ -135,6 +135,45 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
 
     private fun RT.console(): String = (consoleLog.orEmpty() + consoleError.orEmpty()).joinToString(" ")
 
+    private fun runAt(bg: Double, delta: Double, currentBasal: Double = 1.0, activity: Double = 0.0): RT =
+        sut.determine_basal(
+            glucose_status = GlucoseStatusSMB(glucose = bg, noise = 0.0, delta = delta, shortAvgDelta = delta, longAvgDelta = delta, date = currentTime),
+            currenttemp = CurrentTemp(0, 0.0, null),
+            iob_data_array = iobArray().also { ticks -> ticks.forEach { it.activity = activity } },
+            profile = profile().copy(current_basal = currentBasal),
+            autosens_data = AutosensResult(ratio = 1.0),
+            meal_data = noMeal(),
+            microBolusAllowed = false,
+            currentTime = currentTime,
+            flatBGsDetected = false,
+            autoIsfMode = false,
+            loop_wanted_smb = "AAPS",
+            profile_percentage = 100,
+            smb_ratio = 0.5,
+            smb_max_range_extension = 1.0,
+            iob_threshold_percent = 100,
+            auto_isf_consoleError = mutableListOf(),
+            auto_isf_consoleLog = mutableListOf()
+        )
+
+    /** Dividing by the basal gave Infinity, and every such loop run was reported as a non-finite value. */
+    @Test
+    fun `a basal of 0 is not reported as a non-finite value and still gives a zero temp`() {
+        listOf(100.0 to 0.0, 100.0 to -5.0, 60.0 to -5.0).forEach { (bg, delta) ->
+            val rT = runAt(bg, delta, currentBasal = 0.0)
+
+            assertThat(rT.toString()).doesNotContain("roundNonFinite")
+            assertThat(rT.rate).isEqualTo(0.0)
+            assertThat(rT.duration).isEqualTo(30)
+        }
+    }
+
+    /** `round()` is called from many places. A report must say which value broke, or it cannot find the bug. */
+    @Test
+    fun `a non-finite value is reported with the name of the value`() {
+        assertThat(runAt(150.0, 5.0, activity = Double.NaN).toString()).contains("roundNonFinite_deviation=NaN")
+    }
+
     /**
      * `DetermineBasalResult.stoppedEarly` takes a result without eventual BG for the return of the CGM data
      * checks, and such a result is not stored (#5413). That return has none, a full run has one.

@@ -36,7 +36,7 @@ internal class ReportNonFiniteRtTest {
             RT(
                 algorithm = APSResult.Algorithm.SMB,
                 runningDynamicIsf = false,
-                consoleError = mutableListOf("round(): non-finite value substituted with 0 (roundNonFinite=NaN)")
+                consoleError = mutableListOf("round(): non-finite value substituted with 0 (roundNonFinite_deviation=NaN)")
             )
         )
     }
