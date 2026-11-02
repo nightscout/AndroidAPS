@@ -302,7 +302,7 @@
     <string name="smscommunicator_message_body">גוף ההודעה אינו חוקי</string>
     <string name="smscommunicator_set_lgs_reply_with_code">על מנת להחליף מצב לולאה ל-LGS (השהיה בסוכר נמוך) השיבו עם הקוד %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">כדי להחליף את מצב הלולאה ללולאה סגורה השיבו עם הקוד %1$s</string>
-    <string name="smscommunicator_current_loop_mode">מצב הפעולה הנוכחי: %1$s</string>
+    <string name="smscommunicator_current_loop_mode">מצב ההפעלה הנוכחי: %1$s</string>
     <string name="wrong_format">פורמט שגוי</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">ערך סוכר אחרון:</string>
