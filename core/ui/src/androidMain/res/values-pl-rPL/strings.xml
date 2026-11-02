@@ -1116,6 +1116,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Ustawienia do zmiany: %1$d. Zmienione wtyczki zostaną uruchomione ponownie.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Ustawienia do zmiany: %1$d. Zachowano ustawienia pompy: %2$d, więc pompa nadal będzie działać.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Zaimportowane ustawienia nie wskazywały żadnej pompy dostępnej na tym telefonie. Aktywna jest teraz %1$s - sprawdź ustawienia pompy.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Dodano do listy insulin z kopii zapasowej: %1$s. Jeszcze nieużywana: wybierz właściwą podczas aktywowania profilu i zrób to, zanim Nightscout pobierze starsze wpisy leczenia.</string>
     <string name="import_applying">Stosowanie ustawień…</string>
     <string name="import_replace_pump_settings">Także zastąp ustawienia pompy</string>
     <string name="import_replace_pump_settings_summary">Pozostaw wyłączone, aby zachować pompę, z którą ten telefon jest sparowany. Włącz, gdy przywracasz ustawienia na nowy telefon z tą samą pompą.</string>
