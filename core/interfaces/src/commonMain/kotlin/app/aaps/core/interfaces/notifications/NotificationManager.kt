@@ -67,6 +67,21 @@ interface NotificationManager {
      */
     fun muteAllAlarms()
 
+    /**
+     * Runs button [index] of the notification [instanceKey] and then dismisses it, as a tap on that button in the
+     * notification list does. Used by the watch, which shows the buttons of the alarm that rings. Returns false and
+     * does nothing when that notification or button is gone, so a late tap on the watch runs nothing.
+     *
+     * The button runs outside any lock of the manager: a button may post or dismiss notifications itself.
+     */
+    fun runAction(instanceKey: Int, index: Int): Boolean {
+        val notification = notifications.value.firstOrNull { it.instanceKey == instanceKey } ?: return false
+        val action = notification.actions.getOrNull(index) ?: return false
+        action.action()
+        dismiss(NotificationHandle(instanceKey))
+        return true
+    }
+
     companion object {
 
         /**

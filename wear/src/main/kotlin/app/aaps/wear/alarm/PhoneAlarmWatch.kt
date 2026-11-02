@@ -39,6 +39,10 @@ import dev.zacsweers.metro.SingleIn
  *
  * While the watch is in Do Not Disturb and the phone's "Override Do Not Disturb mode" is off, the notification
  * only vibrates, as the phone's alarm does then, see [DoNotDisturbRule].
+ *
+ * An alarm that has buttons on the phone, as a Nightscout alarm with Snooze 15, 30 and 60 min, shows those buttons
+ * here instead, in the same order, and a swipe presses the first. Silence would only stop the sound: it does not tell
+ * Nightscout the alarm was answered, so Nightscout sent the same alarm again a minute later.
  */
 @SingleIn(AppScope::class)
 @Inject
@@ -60,7 +64,9 @@ class PhoneAlarmWatch(
         sp.putString(R.string.key_phone_alarm_text, alarm.status)
         sp.putLong(R.string.key_phone_alarm_since, System.currentTimeMillis())
         sp.putBoolean(R.string.key_phone_alarm_can_mute, alarm.canMute)
-        post(alarm.title, alarm.status, alarm.canMute)
+        sp.putInt(R.string.key_phone_alarm_key, alarm.alarmKey)
+        sp.putString(R.string.key_phone_alarm_actions, alarm.actions.joinToString(ACTIONS_SEPARATOR))
+        post(alarm.title, alarm.status, alarm.canMute, alarm.actions)
         scheduleRepeat()
     }
 
@@ -70,10 +76,20 @@ class PhoneAlarmWatch(
         post(
             sp.getString(R.string.key_phone_alarm_title, ""),
             sp.getString(R.string.key_phone_alarm_text, ""),
-            sp.getBoolean(R.string.key_phone_alarm_can_mute, false)
+            sp.getBoolean(R.string.key_phone_alarm_can_mute, false),
+            storedActions()
         )
         scheduleRepeat()
     }
+
+    /** A button of the phone's notification, or the swipe (the first button): the phone runs the same button. */
+    fun runAction(index: Int) {
+        rxBus.send(EventWearToMobile(EventData.AlarmAction(System.currentTimeMillis(), sp.getInt(R.string.key_phone_alarm_key, 0), index)))
+        clear()
+    }
+
+    private fun storedActions(): List<String> =
+        sp.getString(R.string.key_phone_alarm_actions, "").split(ACTIONS_SEPARATOR).filter { it.isNotEmpty() }
 
     /** Silence, or a swipe: the alarm on the phone stops and its screen closes. */
     fun silence() {
@@ -95,6 +111,8 @@ class PhoneAlarmWatch(
         sp.remove(R.string.key_phone_alarm_text)
         sp.remove(R.string.key_phone_alarm_since)
         sp.remove(R.string.key_phone_alarm_can_mute)
+        sp.remove(R.string.key_phone_alarm_key)
+        sp.remove(R.string.key_phone_alarm_actions)
     }
 
     private fun scheduleRepeat() {
@@ -104,10 +122,11 @@ class PhoneAlarmWatch(
     }
 
     /**
-     * Silence, and Mute 5 min when the phone can honour it, as buttons, and a swipe silences. Posted again on every
+     * Silence, and Mute 5 min when the phone can honour it, as buttons, and a swipe silences. When the phone's
+     * notification has buttons of its own, those replace them, and a swipe presses the first. Posted again on every
      * repeat, so the watch vibrates again: not alert-once on purpose. Our own cancel does not fire the delete intent.
      */
-    private fun post(title: String, text: String, canMute: Boolean) {
+    private fun post(title: String, text: String, canMute: Boolean, actions: List<String>) {
         notificationManager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, context.getString(R.string.phone_alarm_channel), NotificationManager.IMPORTANCE_HIGH).apply {
                 enableVibration(true)
@@ -129,19 +148,29 @@ class PhoneAlarmWatch(
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDeleteIntent(actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
-            .addAction(0, context.getString(R.string.phone_alarm_silence), actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
-        if (canMute)
-            builder.addAction(0, context.getString(R.string.phone_alarm_mute, UiInteraction.MUTE_MINUTES), actionIntent(PhoneAlarmReceiver.ACTION_MUTE, MUTE_REQUEST_CODE))
+        if (actions.isNotEmpty()) {
+            builder.setDeleteIntent(phoneButtonIntent(0))
+            actions.forEachIndexed { index, label -> builder.addAction(0, label, phoneButtonIntent(index)) }
+        } else {
+            builder
+                .setDeleteIntent(actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
+                .addAction(0, context.getString(R.string.phone_alarm_silence), actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
+            if (canMute)
+                builder.addAction(0, context.getString(R.string.phone_alarm_mute, UiInteraction.MUTE_MINUTES), actionIntent(PhoneAlarmReceiver.ACTION_MUTE, MUTE_REQUEST_CODE))
+        }
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun repeatIntent(): PendingIntent = actionIntent(PhoneAlarmReceiver.ACTION_REPEAT, REPEAT_REQUEST_CODE)
 
-    private fun actionIntent(action: String, requestCode: Int): PendingIntent =
+    /** One request code per button: the code, not the extra, is what keeps their PendingIntents apart. */
+    private fun phoneButtonIntent(index: Int): PendingIntent =
+        actionIntent(PhoneAlarmReceiver.ACTION_PHONE_BUTTON, PHONE_BUTTON_REQUEST_CODE + index) { putExtra(PhoneAlarmReceiver.EXTRA_INDEX, index) }
+
+    private fun actionIntent(action: String, requestCode: Int, extras: Intent.() -> Unit = {}): PendingIntent =
         PendingIntent.getBroadcast(
             context, requestCode,
-            Intent(context, PhoneAlarmReceiver::class.java).setAction(action),
+            Intent(context, PhoneAlarmReceiver::class.java).setAction(action).apply(extras),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -153,6 +182,12 @@ class PhoneAlarmWatch(
         const val REPEAT_REQUEST_CODE = 4730
         const val SILENCE_REQUEST_CODE = 4731
         const val MUTE_REQUEST_CODE = 4732
+
+        /** The phone's buttons take this code and the ones after it, one each (a Nightscout alarm has three). */
+        const val PHONE_BUTTON_REQUEST_CODE = 4740
+
+        /** Between the button texts in preferences. A button text has no line break. */
+        const val ACTIONS_SEPARATOR = "\n"
 
         /** The notification is posted again this often, for this long after the alarm rang, until it is answered. */
         const val REPEAT_MS = 30_000L

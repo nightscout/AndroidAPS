@@ -14,9 +14,10 @@ class PhoneAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         context.injectMetroMembers(this)
         when (intent.action) {
-            ACTION_REPEAT  -> phoneAlarmWatch.repeat()
-            ACTION_SILENCE -> phoneAlarmWatch.silence()
-            ACTION_MUTE    -> phoneAlarmWatch.mute()
+            ACTION_REPEAT       -> phoneAlarmWatch.repeat()
+            ACTION_SILENCE      -> phoneAlarmWatch.silence()
+            ACTION_MUTE         -> phoneAlarmWatch.mute()
+            ACTION_PHONE_BUTTON -> phoneAlarmWatch.runAction(intent.getIntExtra(EXTRA_INDEX, 0))
         }
     }
 
@@ -25,5 +26,9 @@ class PhoneAlarmReceiver : BroadcastReceiver() {
         const val ACTION_REPEAT = "app.aaps.wear.phoneAlarm.REPEAT"
         const val ACTION_SILENCE = "app.aaps.wear.phoneAlarm.SILENCE"
         const val ACTION_MUTE = "app.aaps.wear.phoneAlarm.MUTE"
+
+        /** A button of the phone's own notification, as a Nightscout snooze. [EXTRA_INDEX] says which. */
+        const val ACTION_PHONE_BUTTON = "app.aaps.wear.phoneAlarm.PHONE_BUTTON"
+        const val EXTRA_INDEX = "index"
     }
 }
