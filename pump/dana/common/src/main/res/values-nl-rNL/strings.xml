@@ -105,6 +105,7 @@
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="rs_loginsulinchange_title">Reservoir wissel noteren</string>
     <string name="rs_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
+    <string name="rs_logcanulachange_title">Canulewissel registreren</string>
     <string name="rs_logcanulachange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="press_ok_on_the_pump">Druk op OK op de pomp\nen voer 2 weergegeven nummers in.\nHoud het scherm vd pomp actief door de min-knop op de pomp ingedrukt te houden totdat je klaar bent met het invoeren van de codes.</string>
     <string name="num1pin">1: (12 cijfers)</string>
