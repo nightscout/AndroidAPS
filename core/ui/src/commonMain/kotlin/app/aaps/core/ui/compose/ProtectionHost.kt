@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -14,6 +16,7 @@ import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.UnifiedAuthDialog
+import kotlinx.coroutines.flow.first
 
 /**
  * Renders the password, PIN and biometric prompts that `ProtectionCheck` asks for.
@@ -66,7 +69,11 @@ fun ProtectionHost(
         val biometricTitle = stringResource(CoreUiStrings.biometric_title)
 
         if (req.hasBiometric && !showDialog) {
+            val lifecycle = LocalLifecycleOwner.current.lifecycle
             LaunchedEffect(req.id) {
+                // A request can come while another activity is on top, for example the Dexcom permission
+                // activity at app start. A prompt started then is dropped by the system, so wait.
+                lifecycle.currentStateFlow.first { it.isAtLeast(Lifecycle.State.RESUMED) }
                 showBiometricSimple(
                     biometricTitle,
                     {

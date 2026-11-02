@@ -51,7 +51,10 @@ object BiometricCheck {
             .build()
 
         runOnUiThread {
-            biometricPrompt.authenticate(promptInfo)
+            // While the activity is stopped, authenticate() only writes a log line and calls nothing back.
+            // The caller would wait for ever and the app would stay open without its lock.
+            if (activity.supportFragmentManager.isStateSaved) onFallback?.run()
+            else biometricPrompt.authenticate(promptInfo)
         }
     }
 
