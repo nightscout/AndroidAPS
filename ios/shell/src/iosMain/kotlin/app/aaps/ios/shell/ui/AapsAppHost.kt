@@ -540,7 +540,6 @@ private fun AapsApp(app: StartedApp) {
                             commandQueue = graph.commandQueue,
                             pumpCommunicationStatus = graph.pumpCommunicationStatus,
                             appName = appName,
-                            authorizationFailedMessage = "Authorization failed",
                             onNavigate = { request -> navigator.handleNavigationRequest(request) },
                             onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },
                             onNotificationActionClick = { n -> navigator.handleNotificationAction(n.id) },
@@ -572,7 +571,6 @@ private fun AapsApp(app: StartedApp) {
                             onBringToForeground = { graph.authBrowser.dismiss() },
                             // No activity to recreate. A Compose scene is not restarted this way.
                             onRecreateActivity = { logger.debug(LTag.CORE, "Nothing to recreate on iOS after a database reset") },
-                            onAuthorizationFailed = { logger.error(LTag.CORE, "Authorization failed") },
                             autoShowNotificationSheet = false,
                             onAutoShowConsumed = {}
                         )

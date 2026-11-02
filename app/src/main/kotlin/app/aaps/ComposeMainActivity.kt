@@ -103,6 +103,8 @@ import app.aaps.settingsstore.SettingsUnreadableActivity
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
+import app.aaps.ui.compose.main.AppLockGate
+import app.aaps.ui.compose.main.AppLockState
 import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.main.OverviewScreen
 import app.aaps.ui.compose.maintenance.ImportViewModel
@@ -452,7 +454,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             }
         }
 
-        if (permState.showSheet) {
+        // A sheet is a window of its own, so the lock cover cannot hide it
+        if (permState.showSheet && appLock.value == AppLockState.OPEN) {
             PermissionsSheet(
                 items = permState.items,
                 snackbarHostState = permissionsSnackbarHostState,
@@ -461,8 +464,17 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             )
         }
 
-        val state by mainViewModel.uiState.collectAsStateWithLifecycle()
+        AppLockGate(
+            state = appLock.value,
+            refusedMessage = stringResource(R.string.authorizationfailed),
+            onRefused = { finish() }
+        ) {
+            AppNavHost(navController)
+        }
+    }
 
+    @Composable
+    private fun AppNavHost(navController: NavHostController) {
         NavHost(
             navController = navController,
             startDestination = AppRoute.Main.route
@@ -539,7 +551,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                         commandQueue = commandQueue,
                         pumpCommunicationStatus = pumpCommunicationStatus,
                         appName = stringResource(R.string.app_name),
-                        authorizationFailedMessage = stringResource(R.string.authorizationfailed),
                         onNavigate = { request -> handleNavigationRequest(request, navController) },
                         onSearchResultClick = { entry -> handleSearchResultClick(entry, navController) },
                         onNotificationActionClick = { notification -> handleNotificationAction(notification.id, navController) },
@@ -573,8 +584,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                             startActivity(intent)
                         },
                         onRecreateActivity = { recreate() },
-                        onAuthorizationFailed = { finish() },
-                        autoShowNotificationSheet = _autoShowNotifications.value,
+                        autoShowNotificationSheet = _autoShowNotifications.value && appLock.value == AppLockState.OPEN,
                         onAutoShowConsumed = { _autoShowNotifications.value = false }
                     )
                 },
@@ -585,6 +595,9 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     private var isProtectionCheckActive = false
 
+    /** Starts covered, so nothing is readable in the frames before the first check. */
+    private val appLock = mutableStateOf(AppLockState.CHECKING)
+
     private fun refreshOnResume() {
         manageViewModel.refreshState()
         permissionsViewModel.refresh()
@@ -593,11 +606,11 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         }
         if (!isProtectionCheckActive) {
             isProtectionCheckActive = true
+            // Covered before asking, or the app is readable behind the prompt
+            appLock.value = AppLockState.CHECKING
             protectionCheck.requestProtection(ProtectionCheck.Protection.APPLICATION) { result ->
                 isProtectionCheckActive = false
-                if (result != ProtectionResult.GRANTED) {
-                    mainViewModel.setShowAuthFailedDialog(true)
-                }
+                appLock.value = if (result == ProtectionResult.GRANTED) AppLockState.OPEN else AppLockState.REFUSED
             }
         }
     }
