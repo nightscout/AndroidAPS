@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.protection
 
-import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -53,18 +52,6 @@ data class HierarchicalProtectionRequest(
     val onResult: (AuthorizationResult) -> Unit
 )
 
-/**
- * Represents a pending protection request for Compose-based UI (legacy single-level).
- * Observed by ProtectionHost composable to show appropriate dialogs.
- */
-data class ProtectionRequest(
-    val id: Long,
-    val protection: ProtectionCheck.Protection,
-    val type: ProtectionType,
-    val title: TextRef,
-    val onResult: (ProtectionResult) -> Unit
-)
-
 interface ProtectionCheck {
 
     /**
@@ -90,8 +77,11 @@ interface ProtectionCheck {
     fun resetAuthorization()
 
     /**
-     * Compose-friendly protection query (legacy single-level).
-     * The protection dialog is shown via ProtectionHost composable observing [pendingRequest].
+     * Asks for [protection] and answers only with the result.
+     *
+     * It decides on the stored setting of [protection] alone, so a bolus lock still asks when the
+     * settings level has no protection. The prompt is the same as for [requestAuthorization]: the
+     * master password always works, so a forgotten password or PIN can never lock the user out.
      */
     fun requestProtection(protection: Protection, onResult: (ProtectionResult) -> Unit)
 
@@ -103,21 +93,10 @@ interface ProtectionCheck {
     fun requestAuthorization(minimumLevel: Protection, onResult: (AuthorizationResult) -> Unit)
 
     /**
-     * Observable state for legacy ProtectionHost composable (single-level requests).
-     * When non-null, ProtectionHost shows the appropriate protection dialog.
-     */
-    val pendingRequest: StateFlow<ProtectionRequest?>
-
-    /**
-     * Observable state for hierarchical auth requests.
-     * When non-null, ProtectionHost shows the unified auth dialog.
+     * Observable state for auth requests.
+     * When non-null, ProtectionHost shows the biometric prompt or the unified auth dialog.
      */
     val pendingAuthRequest: StateFlow<HierarchicalProtectionRequest?>
-
-    /**
-     * Called by ProtectionHost after legacy password/PIN dialog completes.
-     */
-    fun completeRequest(requestId: Long, result: ProtectionResult)
 
     /**
      * Called by ProtectionHost after unified auth dialog completes.

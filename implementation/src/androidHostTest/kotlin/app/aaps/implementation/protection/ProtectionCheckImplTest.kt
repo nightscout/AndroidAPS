@@ -1,7 +1,6 @@
 package app.aaps.implementation.protection
 
 import app.aaps.core.interfaces.protection.AuthorizationResult
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.utils.DateUtil
@@ -18,14 +17,13 @@ import org.mockito.Mockito.`when`
 class ProtectionCheckImplTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var passwordCheck: PasswordCheck
     @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var sut: ProtectionCheckImpl
 
     @BeforeEach
     fun setup() {
-        sut = ProtectionCheckImpl(preferences, passwordCheck, dateUtil)
+        sut = ProtectionCheckImpl(preferences, dateUtil)
     }
 
     /** Configure SETTINGS protection as prerequisite for BOLUS tests (hierarchy enforcement). */
@@ -346,7 +344,7 @@ class ProtectionCheckImplTest : TestBase() {
         var result: ProtectionResult? = null
         sut.requestProtection(protection) { result = it }
         assertThat(result).isEqualTo(ProtectionResult.GRANTED)
-        assertThat(sut.pendingRequest.value).isNull()
+        assertThat(sut.pendingAuthRequest.value).isNull()
     }
 
     private fun stubMasterPasswordAlwaysAsk() {
@@ -413,7 +411,7 @@ class ProtectionCheckImplTest : TestBase() {
         sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
 
         assertThat(result).isNull()
-        assertThat(sut.pendingRequest.value).isNotNull()
+        assertThat(sut.pendingAuthRequest.value).isNotNull()
     }
 
     @Test
@@ -426,7 +424,7 @@ class ProtectionCheckImplTest : TestBase() {
         sut.requestProtection(ProtectionCheck.Protection.BOLUS) { result = it }
 
         assertThat(result).isNull()
-        assertThat(sut.pendingRequest.value).isNotNull()
+        assertThat(sut.pendingAuthRequest.value).isNotNull()
     }
 
     @Test
@@ -438,6 +436,91 @@ class ProtectionCheckImplTest : TestBase() {
         sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
 
         assertThat(result).isNull()
-        assertThat(sut.pendingRequest.value).isNotNull()
+        assertThat(sut.pendingAuthRequest.value).isNotNull()
+    }
+
+    // --- The master password always works, so a forgotten password or PIN is no lockout ---
+
+    @Test
+    fun `requestProtection offers the master password next to a custom PIN`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionApplicationPin)).thenReturn("pinHash")
+
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) {}
+
+        val hashes = sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }
+        assertThat(hashes).containsExactly("pinHash", "secret")
+    }
+
+    @Test
+    fun `requestProtection offers the master password next to a custom password`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionApplicationPassword)).thenReturn("passwordHash")
+
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) {}
+
+        val hashes = sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }
+        assertThat(hashes).containsExactly("passwordHash", "secret")
+    }
+
+    @Test
+    fun `requestProtection answers with the outcome of the prompt`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(2) // MASTER_PASSWORD
+
+        for ((grantedLevel, outcome) in listOf(
+            ProtectionCheck.Protection.MASTER to ProtectionResult.GRANTED,
+            null to ProtectionResult.DENIED,
+            null to ProtectionResult.CANCELLED
+        )) {
+            var result: ProtectionResult? = null
+            sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
+            sut.completeAuthRequest(sut.pendingAuthRequest.value!!.id, AuthorizationResult(grantedLevel, outcome))
+
+            assertThat(result).isEqualTo(outcome)
+            assertThat(sut.pendingAuthRequest.value).isNull()
+        }
+    }
+
+    /** The only behaviour `requestProtection` keeps apart from `requestAuthorization`. */
+    @Test
+    fun `requestProtection asks for a bolus lock with its own PIN when settings level is off`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeSettings)).thenReturn(0) // NONE
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionBolusPin)).thenReturn("pinHash")
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.BOLUS) { result = it }
+
+        assertThat(result).isNull()
+        val hashes = sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }
+        assertThat(hashes).containsExactly("pinHash", "secret")
+    }
+
+    @Test
+    fun `requestProtection offers biometric when the level uses it`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(1) // BIOMETRIC
+
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) {}
+
+        val request = sut.pendingAuthRequest.value!!
+        assertThat(request.hasBiometric).isTrue()
+        assertThat(request.biometricGrantsLevel).isEqualTo(ProtectionCheck.Protection.APPLICATION)
+        assertThat(request.availableMethods.map { it.credentialHash }).contains("secret")
+    }
+
+    @Test
+    fun `requestProtection for MASTER asks for the master password`() {
+        stubMasterPasswordAlwaysAsk()
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.MASTER) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }).containsExactly("secret")
     }
 }

@@ -319,10 +319,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             // The biometric prompt is the only platform-specific part of protection. The host used
             // to be handed the activity; it captures it here instead, which is what let the host
             // itself move to commonMain.
-            showBiometric = { title, onGranted, onCancelled, onDenied ->
-                if (activity != null) BiometricCheck.biometricPrompt(activity, title, rxBus, onGranted, onCancelled, onDenied, passwordCheck)
-                else onCancelled()
-            },
             showBiometricSimple = { title, onSuccess, onFallback, onCancel ->
                 if (activity != null) BiometricCheck.biometricPromptSimple(activity, title, rxBus, onSuccess, onFallback, onCancel)
                 else onFallback()

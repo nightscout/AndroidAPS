@@ -3,7 +3,6 @@ package app.aaps.ios.shell.ui
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.HierarchicalProtectionRequest
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.protection.ProtectionRequest
 import app.aaps.core.interfaces.protection.ProtectionResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,9 +42,7 @@ class GuardedByTest {
 
         override fun isLocked(protection: ProtectionCheck.Protection): Boolean = false
         override fun resetAuthorization() {}
-        override val pendingRequest: StateFlow<ProtectionRequest?> = MutableStateFlow(null)
         override val pendingAuthRequest: StateFlow<HierarchicalProtectionRequest?> = MutableStateFlow(null)
-        override fun completeRequest(requestId: Long, result: ProtectionResult) {}
         override fun completeAuthRequest(requestId: Long, result: AuthorizationResult) {}
     }
 
