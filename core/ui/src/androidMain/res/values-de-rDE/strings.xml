@@ -313,7 +313,7 @@
     <string name="record_insulin_hint">Wenn du mit einem Pen verabreichtes Insulin einträgst, wähle unten den passenden Insulintyp aus. Die Dosis wird immer in Internationalen Einheiten angegeben.</string>
     <!--       Stats -->
     <string name="average">Durchschnitt</string>
-    <string name="tir">Zeit im Zielbereich</string>
+    <string name="tir">TIR</string>
     <string name="below" comment="below &quot;in range&quot;">Unter</string>
     <string name="in_range">Im Zielbereich</string>
     <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
@@ -432,7 +432,7 @@
     <string name="client_roles_info_open">​Über Rollen</string>
     <string name="client_roles_info">Jedes gekoppelte Telefon hat eine Rolle. Das Haupttelefon prüft diese bei jedem Befehl. Auf dem gekoppelten Telefon werden nur die Funktionen angezeigt, die seine Rolle erlaubt. Eine neue Rolle gilt sofort, ohne erneute Kopplung.\n\nNur lesen: Das Telefon bleibt gekoppelt, zeigt aber ausschließlich Daten an.\n\nMahlzeiten: Bolus, Bolusrechner, QuickWizard und Kohlenhydrate. Ein laufender Bolus kann ebenfalls gestoppt werden. Hier eingetragene Kohlenhydrate können dazu führen, dass der Loop mehr Insulin abgibt.\n\nBetreuung: Alle Bedienfunktionen in AAPS, etwa temporäre Ziele, Profil- und Insulinwechsel, Loop-Modus, temporäre Basalraten, verlängerte Boli, Szenen, Careportal-Ereignisse, Kalibrierungen und das Entfernen von Einträgen. Einstellungen und Voreinstellungen können nicht geändert werden.\n\nAdmin: Vollzugriff, einschließlich Einstellungen und Voreinstellungen (QuickWizard, Voreinstellungen für temporäre Ziele, Szenen, Profile, Automatisierung und Insulin).</string>
     <string name="client_read_only_banner">Dieses Telefon ist auf dem Haupttelefon auf „Nur lesen“ gesetzt.</string>
-    <string name="hardened_mode_info">Das Haupttelefon nimmt Änderungen nur von gekoppelten Clients an. Behandlungen, temporäre Ziele, Profilwechsel, Änderungen des Betriebsmodus oder Löschungen, die direkt in Nightscout vorgenommen werden, etwa über die Website oder andere Apps, werden nicht übernommen. Im abgesicherten Modus sind die Einst ellungen zur Übernahme von Daten aus Nightscout ausgeblendet. SMS-Befehle sind davon nicht betroffen.\n\nDas Haupttelefon lädt weiterhin alle Daten einschließlich der Glukosewerte zu Nightscout hoch. Wenn es seine Glukosewerte aus Nightscout bezieht, empfängt es diese weiterhin von dort.\n\nUm den Verlauf auf ein neues Haupttelefon zu laden, verwende die vollständige Synchronisierung in NSClient. Dabei werden alle in Nightscout vorhandenen Daten einschließlich der Profile übernommen.\n\nDie Fernsteuerung über Clients erfordert sowohl auf dem Haupttelefon als auch auf den gekoppelten Clients eine funktionierende WebSocket-Verbindung zu Nightscout. Der einfache Modus aktiviert immer den abgesicherten Modus. Um den abgesicherten Modus auszuschalten, verlasse den einfachen Modus und deaktiviere die Client-Steuerung auf dem Haupttelefon.</string>
+    <string name="hardened_mode_info">Das Haupttelefon nimmt Änderungen nur von gekoppelten Clients an. Behandlungen, temporäre Ziele, Profilwechsel, Änderungen des AAPS-Modus oder Löschungen, die direkt in Nightscout vorgenommen werden, etwa über die Website oder andere Apps, werden nicht übernommen. Im abgesicherten Modus sind die Einst ellungen zur Übernahme von Daten aus Nightscout ausgeblendet. SMS-Befehle sind davon nicht betroffen.\n\nDas Haupttelefon lädt weiterhin alle Daten einschließlich der Glukosewerte zu Nightscout hoch. Wenn es seine Glukosewerte aus Nightscout bezieht, empfängt es diese weiterhin von dort.\n\nUm den Verlauf auf ein neues Haupttelefon zu laden, verwende die vollständige Synchronisierung in NSClient. Dabei werden alle in Nightscout vorhandenen Daten einschließlich der Profile übernommen.\n\nDie Fernsteuerung über Clients erfordert sowohl auf dem Haupttelefon als auch auf den gekoppelten Clients eine funktionierende WebSocket-Verbindung zu Nightscout. Der einfache Modus aktiviert immer den abgesicherten Modus. Um den abgesicherten Modus auszuschalten, verlasse den einfachen Modus und deaktiviere die Client-Steuerung auf dem Haupttelefon.</string>
     <string name="scene_lock_reason_master_offline">Master nicht verbunden</string>
     <string name="scene_lock_reason_control_disabled">Fernsteuerung deaktiviert</string>
     <string name="scene_lock_reason_scene_active">Beende zuerst die aktive Szene</string>
@@ -730,7 +730,7 @@
     <string name="clear_alarms">ALARME LÖSCHEN</string>
     <string name="deactivate">DEAKTIVIEREN</string>
     <string name="update_time">ZEIT AKTUALIEREN</string>
-    <string name="load_history">HISTORIE LADEN %1$d</string>
+    <string name="load_history">VERLAUF LADEN %1$d</string>
     <string name="load_tdds">Lade TDDs</string>
     <string name="set_profile">PROFIL SETZEN</string>
     <string name="set_user_settings">NUTZER-EINSTELLUNGEN SETZEN</string>
@@ -904,7 +904,7 @@
     <string name="data_choices">Datenübermittlung</string>
     <string name="unattended_settings_export">Automatischer Einstellungsexport</string>
     <!-- Maintenance bottom sheet descriptions -->
-    <string name="maintenance_log_settings_desc">Detailgrad der Protokollierung einstellen</string>
+    <string name="maintenance_log_settings_desc">Umfang der Protokollierung festlegen</string>
     <string name="maintenance_send_logs_desc">Protokolldateien zur Fehleranalyse teilen</string>
     <string name="maintenance_delete_logs_desc">Alte Protokolldateien löschen</string>
     <string name="maintenance_aaps_directory_desc">Lokalen Speicherordner auswählen</string>
@@ -946,13 +946,12 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- Navigation -->
-    <string name="nav_about">Über</string>
+    <string name="nav_about">Über AAPS</string>
     <string name="nav_about_desc">App-Version und Informationen anzeigen</string>
     <string name="nav_exit">Schließen</string>
     <string name="open_navigation">Menü öffnen</string>
-    <string name="nav_history_browser">Historie</string>
-    <string name="nav_history_browser_desc">Historische Diagramme durchsuchen</string>
-    <string name="appearance">Darstellung</string>
+    <string name="nav_history_browser">Verlauf</string>
+    <string name="nav_history_browser_desc">Frühere Diagramme anzeigen</string>
     <string name="manage">Verwalten</string>
     <string name="localprofile">Profil</string>
     <string name="nav_setupwizard">Einrichtungsassistent</string>
@@ -1072,11 +1071,11 @@
     <string name="label_protein_g">Proteine (g)</string>
     <string name="label_energy_kj">Energie (kJ)</string>
     <!--    Log Settings-->
-    <string name="nav_logsettings">Protokollierungseinstellungen</string>
+    <string name="nav_logsettings">Protokoll-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <!--    Maintenance-->
     <string name="maintenance">Wartung</string>
-    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
+    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Protokollen oder Löschen dieser)</string>
     <string name="log_files">Log Dateien</string>
     <string name="delete_logs">Logs löschen</string>
     <string name="logs_deleted">Protokolle gelöscht</string>
