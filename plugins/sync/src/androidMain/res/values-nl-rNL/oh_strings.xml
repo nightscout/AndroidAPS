@@ -48,6 +48,6 @@
     <string name="finishing">Voltooien...</string>
     <string name="this_may_take_a_few_seconds">Dit kan enkele seconden duren.</string>
     <string name="we_re_done">We zijn klaar!</string>
-    <string name="silently_upload_date_note">Voortaan zal je telefoon zo nu en dan op de achtergrond gegevens uploaden.</string>
+    <string name="silently_upload_date_note">Vanaf nu uploadt de telefoon af en toe automatisch gegevens op de achtergrond.</string>
     <string name="close">Sluiten</string>
 </resources>
