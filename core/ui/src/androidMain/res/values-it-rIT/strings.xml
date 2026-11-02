@@ -891,7 +891,7 @@
     <string name="export_result_message_exported">Impostazioni esportate</string>
     <string name="export_result_message_failed">Esportazione Impostazioni FALLITA!</string>
     <string name="export_result_message_about_to_expire">Impostazioni esportate: la password sta per scadere presto. Esporta manualmente e (re)inserisci la password.</string>
-    <string name="export_result_message_expired">Esportazione impostazioni annullata: password scaduta. Esporta manualmente e (re)inserisci!</string>
+    <string name="export_result_message_expired">Esportazione impostazioni annullata: password scaduta. Esporta manualmente e inserisci di nuovo la password!</string>
     <string name="export_result_message_disabled">Attenzione (automazione): Esportazione impostazioni non abilitata!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Esportazione cloud riuscita</string>
