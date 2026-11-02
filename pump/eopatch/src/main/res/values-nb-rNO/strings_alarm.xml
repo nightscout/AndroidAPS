@@ -5,10 +5,10 @@
     <string name="string_a004">Blokkering oppdaget\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
     <string name="string_a005">Feil i selvtest ved oppstart\nPatch har blitt deaktivert. Bytt patch nå.</string>
     <string name="string_a007">Upassende temperatur\nInsulintilførsel eller \'Aktiver patch\' prosess har stoppet. Unngå ekstrem temperatur nå.</string>
-    <string name="string_a016">Feil ved innsetting av kanyle\nSjekk knott-posisjon og trykk på \"Prøv på nytt\".</string>
+    <string name="string_a016">Feil ved innsetting av kanyle\nSjekk posisjonen til knotten og trykk på «Prøv igjen».</string>
     <string name="string_a018">Patch-batterifeil\nPatch er deaktivert og tilførselen\nav insulin stoppet. Skift patch nå.</string>
     <string name="string_a019">Patch-batterifeil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
-    <string name="string_a020">Patch-aktiveringsfeil\nProsessen «Aktiver patch» har utløpt. Trykk på «Bekreft» for å deaktivere gjeldende patch. Skift patch.</string>
+    <string name="string_a020">Patch-aktiveringsfeil\nProsessen «Aktiver patch» har utløpt. Trykk på «Bekreft» for å deaktivere gjeldende patch. Bytt patch nå.</string>
     <string name="string_a022">Patchfeil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
     <string name="string_a023">Patchfeil\nPatch er deaktivert og tilførselen\nav insulin stoppet. Skift patch nå.</string>
     <string name="string_a034">Patchfeil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
