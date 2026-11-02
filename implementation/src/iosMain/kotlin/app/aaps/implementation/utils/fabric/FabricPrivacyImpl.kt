@@ -23,10 +23,9 @@ import dev.zacsweers.metro.SingleIn
  *
  * ## The opt-out
  *
- * [fabricEnabled] reads the same stored key as Android, but **defaults to false** where Android
- * defaults to true. Reporting from iPhones is new, so it starts off and the user turns it on, rather
- * than starting on under a switch that Simple Mode hides. A value the user has actually set is
- * honoured either way, including one that arrives through a settings import from an Android phone.
+ * [fabricEnabled] reads the same stored key with the same default as Android, so reporting is on until
+ * the user turns it off. A value the user has actually set is honoured, including one that arrives
+ * through a settings import from an Android phone.
  *
  * The flag is re-applied to Crashlytics on every start rather than trusted to stick, because
  * Crashlytics keeps its own copy in its own `UserDefaults`, outside the AAPS store - so a "start
@@ -41,8 +40,9 @@ class FabricPrivacyImpl(
     private val crashReporter: CrashReporter
 ) : FabricPrivacy {
 
+    // A build without GoogleService-Info.plist can upload nothing, and the About dialog must say so
     override fun fabricEnabled(): Boolean =
-        store.getBoolean(BooleanKey.MaintenanceEnableFabric.key, OFF_UNTIL_ASKED)
+        crashReporter.isAvailable() && store.getBoolean(BooleanKey.MaintenanceEnableFabric.key, BooleanKey.MaintenanceEnableFabric.defaultValue)
 
     override fun setUserProperty(key: String, value: String) {
         aapsLogger.debug(LTag.CORE, "Analytics user property (not sent): $key = $value")
@@ -85,17 +85,5 @@ class FabricPrivacyImpl(
                 "manufacturer=${wearException.manufacturer} product=${wearException.product} " +
                 "sdk=${wearException.sdk} fingerprint=${wearException.fingerprint}"
         )
-    }
-
-    private companion object {
-
-        /**
-         * The iOS default for `MaintenanceEnableFabric`, deliberately not the shared one.
-         *
-         * `BooleanKey.MaintenanceEnableFabric.defaultValue` is true, which is the state of the
-         * Android fleet and not a decision this platform has to repeat. Changing the shared default
-         * would turn reporting off for every existing Android user, so the difference lives here.
-         */
-        private const val OFF_UNTIL_ASKED = false
     }
 }

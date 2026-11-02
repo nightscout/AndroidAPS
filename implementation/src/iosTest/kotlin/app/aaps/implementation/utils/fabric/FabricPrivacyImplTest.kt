@@ -18,10 +18,8 @@ import kotlin.test.assertTrue
 /**
  * The reporting opt-out on iOS, which is the part of this that must never drift.
  *
- * Two things are pinned. Reporting is **off** until the user asks for it, unlike Android where the
- * same stored key defaults to on - a phone that has never been asked must not start uploading. And
- * when it is off, nothing reaches the reporter at all, so an opt-out means opted out rather than
- * merely quieter.
+ * Two things are pinned. Reporting follows the shared default, the same as Android. And when it is
+ * off, nothing reaches the reporter at all, so an opt-out means opted out rather than merely quieter.
  */
 @OptIn(ExperimentalForeignApi::class)
 class FabricPrivacyImplTest {
@@ -128,6 +126,16 @@ class FabricPrivacyImplTest {
         }
     }
 
+    @Test
+    fun `a build that cannot report says that reporting is off`() {
+        val noReporter = object : CrashReporter by reporter {
+            override fun isAvailable(): Boolean = false
+        }
+        store.putBoolean(BooleanKey.MaintenanceEnableFabric.key, true)
+
+        assertFalse(FabricPrivacyImpl(AAPSLoggerIos(fileName = fileName), store, noReporter).fabricEnabled())
+    }
+
     private val fileName = "unit-test-fabric.log"
     private val reporter = RecordingReporter()
     private val store = FakeStore()
@@ -140,15 +148,8 @@ class FabricPrivacyImplTest {
     }
 
     @Test
-    fun `reporting is off on a phone that has never been asked`() {
-        assertFalse(fabric.fabricEnabled(), "iOS must not start uploading before the user says so")
-    }
-
-    /** The shared key still says true. iOS deliberately does not follow it, and that is the point. */
-    @Test
-    fun `the shared default is not the one iOS uses`() {
-        assertTrue(BooleanKey.MaintenanceEnableFabric.defaultValue, "the shared default changed - revisit the iOS one")
-        assertFalse(fabric.fabricEnabled())
+    fun `reporting follows the shared default on a phone with nothing stored`() {
+        assertEquals(BooleanKey.MaintenanceEnableFabric.defaultValue, fabric.fabricEnabled())
     }
 
     @Test
@@ -167,6 +168,8 @@ class FabricPrivacyImplTest {
 
     @Test
     fun `nothing reaches the reporter while reporting is off`() {
+        store.putBoolean(BooleanKey.MaintenanceEnableFabric.key, false)
+
         fabric.logMessage("a breadcrumb")
         fabric.logException(IllegalStateException("the pump said no"))
         fabric.setUserProperty("Pump", "Virtual")

@@ -116,12 +116,11 @@ class IosProbeGraphTest {
     }
 
     @Test
-    fun `the graph builds FabricPrivacy and nothing is uploaded from iOS`() {
+    fun `the graph builds FabricPrivacy and a build without a reporter uploads nothing`() {
         val fabric = graph().fabricPrivacy
 
-        // False on purpose: it reports whether anything is uploaded, and on iOS nothing is. This is
-        // what puts "Crash logs upload disabled!" in the About dialog. If a Firebase bridge is ever
-        // added, this assertion is the one that should fail first and make someone think.
+        // False on purpose: this graph has `NoCrashReporter`, so nothing can be uploaded, whatever the
+        // default of the setting is. This is what puts "Crash logs upload disabled!" in the About dialog.
         assertEquals(false, fabric.fabricEnabled())
         fabric.logMessage("probe")
     }
