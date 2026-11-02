@@ -77,7 +77,7 @@
     <string name="string_discard_patch">Scarta patch</string>
     <string name="string_running">In esecuzione</string>
     <string name="retry">Riprova</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di voler scartare la patch?</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di voler scartare la patch corrente?</string>
     <string name="needle_insertion_error_1">Errore inserimento ago.</string>
     <string name="needle_insertion_error_3">Tocca \'Scarta\' per disattivare la patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Tempo sospensione basale</string>
