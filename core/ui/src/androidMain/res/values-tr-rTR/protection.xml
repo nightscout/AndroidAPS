@@ -5,12 +5,6 @@
     <string name="settings_protection">Ayar koruması</string>
     <string name="application_protection">Uygulama koruması</string>
     <string name="bolus_protection">Bolus koruması</string>
-    <string name="settings_password">Ayarlar parolası</string>
-    <string name="settings_pin">Ayarlar PIN</string>
-    <string name="application_password">Uygulama şifresi</string>
-    <string name="application_pin">Uygulama PIN</string>
-    <string name="bolus_password">Bolus parolası</string>
-    <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Şifre ve PIN saklama [sn]</string>
     <string name="protection_timeout_summary">Parola veya PIN girilmeden önceki süre</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
