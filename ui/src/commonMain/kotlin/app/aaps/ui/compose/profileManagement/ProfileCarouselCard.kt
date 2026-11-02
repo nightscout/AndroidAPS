@@ -126,15 +126,17 @@ internal fun ProfileCarouselCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Profile name
+                // Profile name. The card has a fixed height: the name takes what the other lines leave,
+                // so with a large font it loses lines and the sum and the active state stay visible.
                 Text(
                     text = profileName,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = contentColor,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
