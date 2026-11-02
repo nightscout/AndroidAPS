@@ -1,11 +1,7 @@
 import kotlin.math.min
 
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as :core:keys, :core:data, :core:utils, :core:interfaces and :core:ui.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
 }
@@ -13,7 +9,6 @@ plugins {
 kotlin {
     android {
         namespace = "app.aaps.core.graph"
-        compileSdk = Versions.compileSdk
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)
         androidResources { enable = true }
         // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
@@ -21,21 +16,7 @@ kotlin {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     sourceSets {
         commonMain {

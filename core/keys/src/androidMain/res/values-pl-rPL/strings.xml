@@ -32,7 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Do pilnych alarmów użyj powiadomień Androida</string>
     <string name="pref_title_alert_increase_volume">Stopniowo zwiększaj głośność powiadomień</string>
     <string name="pref_title_alert_override_dnd">Powiadamiaj pomimo tryby Nie przeszkadzać</string>
-    <string name="pref_summary_alert_override_dnd">Ustawienie tej opcji sprawi, że alarmy będą działać nawet przy włączonym trybie \"Nie przeszkadzać\". Jesli nie włączono - alarmy są w tym trybie wyciszone.</string>
+    <string name="pref_summary_alert_override_dnd">Włączone: alarmy dzwonią nawet wtedy, gdy telefon jest wyciszony lub w trybie \"Nie przeszkadzać\". Wyłączone: alarmy nie dzwonią. W trybie \"Nie przeszkadzać\" tylko wibracja.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Przekaż glikemię do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Odnotuj zmianę sensora</string>
@@ -125,7 +125,7 @@
     <string name="pref_title_ns_slow_sync">Użyj powolnej synchronizacji</string>
     <string name="pref_title_ns_use_ws">Użyj websockets</string>
     <string name="pref_summary_ns_use_ws">Użyj websockets do komunikacji w czasie rzeczywistym z Nightscout.</string>
-    <string name="pref_title_ns_allow_client_control">Zezwalaj na kontrolę klienta</string>
+    <string name="pref_title_ns_allow_client_control">Zezwalaj na sterowanie z urządzenia opiekuna</string>
     <string name="pref_summary_ns_allow_client_control">Umożliwia sparowanym urządzeniom opiekuna wysyłanie podpisanych poleceń (np. uruchamianie i zatrzymywanie scen) przez Nightscout. To włącza też tryb silniejszych zabezpieczeń: zmiany wprowadzone bezpośrednio w Nightscout nie będą już uwzględniane.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Tylko przez WiFi</string>

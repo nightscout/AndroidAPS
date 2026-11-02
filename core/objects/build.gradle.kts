@@ -1,24 +1,15 @@
 import kotlin.math.min
 
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    alias(libs.plugins.android.kmp.library)
-    kotlin("plugin.allopen")
+    id("kmp-android-library")
+    id("all-open-dependencies")
     // Metro, a Kotlin compiler plugin - no KSP, no generated sources.
     alias(libs.plugins.metro)
-}
-
-// Restated from all-open-dependencies, which applies com.android.library and cannot be used here.
-allOpen {
-    annotation("app.aaps.annotations.OpenForTesting")
 }
 
 kotlin {
     android {
         namespace = "app.aaps.core.objects"
-        compileSdk = Versions.compileSdk
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)
         // This module owns no resources, but its tests read R classes from :core:interfaces and
         // :core:ui through :shared:tests. Without this the R jars never reach the test classpath and
@@ -28,20 +19,7 @@ kotlin {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     // CryptoUtil is plain javax.crypto with no Android in it, and its output is a STORED format, so
     // Android and desktop share the one implementation rather than keeping two that could drift.

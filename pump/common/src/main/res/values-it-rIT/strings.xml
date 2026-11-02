@@ -16,11 +16,11 @@
     <string name="pump_cmd_desc_get_basal_profile">Ottieni profilo basale</string>
     <string name="pump_cmd_desc_set_basal_profile">Imposta profilo basale</string>
     <string name="pump_cmd_desc_get_tbr">Ottieni basale temporanea</string>
-    <string name="pump_cmd_desc_cancel_tbr">Cancella basale temporanea</string>
+    <string name="pump_cmd_desc_cancel_tbr">Annulla basale temporanea</string>
     <string name="pump_cmd_desc_set_tbr">Imposta basale temporanea</string>
     <string name="pump_cmd_desc_set_bolus">Imposta bolo</string>
     <string name="pump_cmd_desc_get_bolus">Ottieni boli</string>
-    <string name="pump_cmd_desc_cancel_bolus">Cancella bolo</string>
+    <string name="pump_cmd_desc_cancel_bolus">Annulla bolo</string>
     <string name="pump_cmd_desc_get_remaining_insulin">Ottieni insulina rimanente</string>
     <string name="pump_cmd_desc_get_battery_status">Ottieni stato batteria</string>
     <string name="pump_cmd_desc_get_time">Ottieni ora</string>

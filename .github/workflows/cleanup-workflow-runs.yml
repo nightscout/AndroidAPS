@@ -26,9 +26,7 @@ jobs:
       actions: write
     steps:
       - name: Cleanup old workflow runs
-        uses: actions/github-script@v7
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Ensure we're using Node 24 for GitHub Script'
+        uses: actions/github-script@v8
         with:
           script: |
             const workflowName = '${{ inputs.workflow_name }}';

@@ -2,26 +2,13 @@ package app.aaps.implementation.protection
 
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.AuthenticationResult
-import androidx.biometric.BiometricPrompt.ERROR_CANCELED
-import androidx.biometric.BiometricPrompt.ERROR_HW_NOT_PRESENT
-import androidx.biometric.BiometricPrompt.ERROR_HW_UNAVAILABLE
-import androidx.biometric.BiometricPrompt.ERROR_LOCKOUT
-import androidx.biometric.BiometricPrompt.ERROR_LOCKOUT_PERMANENT
 import androidx.biometric.BiometricPrompt.ERROR_NEGATIVE_BUTTON
-import androidx.biometric.BiometricPrompt.ERROR_NO_BIOMETRICS
-import androidx.biometric.BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL
-import androidx.biometric.BiometricPrompt.ERROR_NO_SPACE
-import androidx.biometric.BiometricPrompt.ERROR_TIMEOUT
-import androidx.biometric.BiometricPrompt.ERROR_UNABLE_TO_PROCESS
 import androidx.biometric.BiometricPrompt.ERROR_USER_CANCELED
-import androidx.biometric.BiometricPrompt.ERROR_VENDOR
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
 import app.aaps.core.ui.extensions.runOnUiThread
 
@@ -64,70 +51,10 @@ object BiometricCheck {
             .build()
 
         runOnUiThread {
-            biometricPrompt.authenticate(promptInfo)
-        }
-    }
-
-    fun biometricPrompt(activity: FragmentActivity, title: String, rxBus: RxBus, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
-        val executor = ContextCompat.getMainExecutor(activity)
-
-        val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                when (errorCode) {
-                    ERROR_UNABLE_TO_PROCESS,
-                    ERROR_TIMEOUT,
-                    ERROR_CANCELED,
-                    ERROR_LOCKOUT,
-                    ERROR_VENDOR,
-                    ERROR_LOCKOUT_PERMANENT,
-                    ERROR_USER_CANCELED        -> {
-                        rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
-                        // fallback to master password
-                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                    }
-
-                    ERROR_NEGATIVE_BUTTON      ->
-                        cancel?.run()
-
-                    ERROR_NO_DEVICE_CREDENTIAL -> {
-                        rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
-                        // no pin set
-                        // fallback to master password
-                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                    }
-
-                    ERROR_NO_SPACE,
-                    ERROR_HW_UNAVAILABLE,
-                    ERROR_HW_NOT_PRESENT,
-                    ERROR_NO_BIOMETRICS        ->
-                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-                }
-            }
-
-            override fun onAuthenticationSucceeded(result: AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                // Called when a biometric is recognized.
-                ok?.run()
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                // Called when a biometric is valid but not recognized.
-                fail?.run()
-            }
-        })
-
-        val promptInfo = PromptInfo.Builder()
-            .setTitle(title)
-            .setDescription(activity.getString(R.string.biometric_title))
-            .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed
-            .setConfirmationRequired(false)
-//            .setDeviceCredentialAllowed(true) // setDeviceCredentialAllowed creates new activity when PIN is requested, activity.fragmentManager crash afterwards
-            .build()
-
-        runOnUiThread {
-            biometricPrompt.authenticate(promptInfo)
+            // While the activity is stopped, authenticate() only writes a log line and calls nothing back.
+            // The caller would wait for ever and the app would stay open without its lock.
+            if (activity.supportFragmentManager.isStateSaved) onFallback?.run()
+            else biometricPrompt.authenticate(promptInfo)
         }
     }
 

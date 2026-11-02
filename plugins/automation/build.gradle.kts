@@ -1,69 +1,31 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as the :core modules and the other converted plugins.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
 }
 
-// Generates AutomationStrings (commonMain) and AutomationStringIds (androidMain) from this module's
-// strings.xml, the same generator :ui, :core:ui, :core:keys and :implementation use. It lets a trigger
-// or action name its user text instead of numbering it, which is what commonMain code needs. The
-// strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
-val generateAutomationStrings = tasks.register<GenerateKeyStringsTask>("generateAutomationStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.automation")
-    owner.set("automation")
-    objectName.set("AutomationStrings")
-    idsObjectName.set("AutomationStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/automationStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
-    // both properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/android"))
-}
-
+registerKeyStrings("automation")
 
 kotlin {
     android {
         namespace = "app.aaps.plugins.automation"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
 
-    // Keeping the targets is what stops an android-only import from quietly reaching common code as
-    // files move across. commonMain holds the platform ports so far, such as PairedBtDevices.
-    //
-    // Rule for that move: the action or trigger class itself is shared, and only the call it cannot
-    // make everywhere is lifted out behind an interface implemented per platform. ActionSendSMS needs
-    // nothing here - it already goes through the SmsCommunicator interface.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
+    // Rule for moving to commonMain: the action or trigger class itself is shared, and only the call it
+    // cannot make everywhere is lifted out behind an interface implemented per platform, as
+    // PairedBtDevices does. ActionSendSMS needs nothing here - it already goes through the
+    // SmsCommunicator interface.
 
     sourceSets {
         // The triggers, the actions and their screens live here. androidMain inherits all of this,
         // so nothing below is repeated there.
         commonMain {
-            kotlin.srcDir(generateAutomationStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -98,8 +60,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateAutomationStrings.flatMap { it.androidOutputDir })
             dependencies {
                 api(libs.com.google.android.gms.playservices.location)
                 implementation(libs.kotlin.reflect)
@@ -147,15 +107,5 @@ kotlin {
                 runtimeOnly(libs.org.junit.platform.launcher)
             }
         }
-    }
-}
-
-
-tasks.withType<Test> {
-    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
-    // specific here. Restated from jacoco-module-dependencies, which applies com.android.library.
-    extensions.configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
     }
 }

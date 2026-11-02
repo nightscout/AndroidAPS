@@ -203,11 +203,11 @@ screen.** Write down the two options and ask.
 
 ### Android `R` needs the strings generator
 
-`R.string.x` cannot exist in commonMain. If the module has no generator, add one - copy the
-`GenerateKeyStringsTask` registration from `plugins/sync/build.gradle.kts`, wire
-`kotlin.srcDir(...)` into both source sets, then **register the owner in BOTH
-`MainApp.registerStringOwners()` and `app/src/androidTest/.../BaseTestApp.kt`**. They must match. A
-missing registration renders blank text and fails as "not displayed", nowhere near the cause.
+`R.string.x` cannot exist in commonMain. If the module has no generator, add one: one line for the
+module in `StringOwnerModules.ALL` (buildSrc), then `val generateXxxStrings = registerKeyStrings("xxx")`
+in its build file, as `plugins/sync/build.gradle.kts` does, and wire `kotlin.srcDir(...)` into both
+source sets. The owner is registered in every shell from that list, so there is no hand written
+registration to keep in step.
 
 Do NOT add a `:shared:tests` dependency to make a test string resolve - `TextRefStubs` documents that
 unclaimed owners fall back to the raw name on purpose.

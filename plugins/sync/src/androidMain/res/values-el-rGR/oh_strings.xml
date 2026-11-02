@@ -5,13 +5,13 @@
     <string name="logout">Αποσύνδεση</string>
     <string name="setup">Ρύθμιση</string>
     <string name="setup_completed_info">Το Open Humans έχει ρυθμιστεί. Σε περίπτωση που θέλετε να σταματήσετε να ανεβάζετε δεδομένα, κάντε κλικ στο κουμπί \'Αποσύνδεση\'.</string>
-    <string name="not_setup_info">Το Open Humans είναι προς το παρόν ανενεργό. Για να ξεκινήσετε το ανέβασμα δεδομένων, κάντε κλικ στο κουμπί \'Ρυθμίσεις\'.</string>
+    <string name="not_setup_info">Το Open Humans είναι προς το παρόν ανενεργό. Για να ξεκινήσετε το ανέβασμα δεδομένων, κάντε κλικ στο κουμπί \'Ρύθμιση\'.</string>
     <string name="project_member_id">ID Μέλους Έργου: %1$s</string>
     <string name="open_humans_uploading">Μεταφόρτωση στο Open Humans…</string>
     <string name="open_humans_notifications">Ειδοποιήσεις Open Humans</string>
     <string name="uploading_to_open_humans">Το AAPS μεταφορτώνει στο Open Humans. Αυτό μπορεί να διαρκέσει λίγο.</string>
     <string name="you_have_been_signed_out_of_open_humans">Έχετε αποσυνδεθεί από το Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Κάντε κλικ εδώ για να συνδεθείτε ξανά αν αυτό δεν ήταν σε σκοπό.</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Κάντε κλικ εδώ για να συνδεθείτε ξανά αν αυτό δεν ήταν σκόπιμο.</string>
     <string name="next">Επόμενο</string>
     <string name="welcome_to_open_humans">Καλώς ήρθατε στο Open Humans</string>
     <string name="setup_data_upload">Για να ρυθμίσετε τη μεταφόρτωση δεδομένων, κάντε κλικ στο κουμπί \'Επόμενο\'.</string>
@@ -40,7 +40,7 @@
     <string name="nightscout_api_secret">Nightscout API Secret</string>
     <string name="free_text_fields">Πεδία Ελεύθερου Κειμένου</string>
     <string name="agree">Καταλαβαίνω και συμφωνώ.</string>
-    <string name="login_open_humans">Μεταφόρτωση στο Open Humans</string>
+    <string name="login_open_humans">Σύνδεση στο Open Humans</string>
     <string name="final_touches">Τελικές πινελιές</string>
     <string name="uploading_proceed">Είστε μόνο ένα βήμα μακριά από το ανέβασμα των δεδομένων σας στο Open Humans. Θέλετε να προχωρήσετε;</string>
     <string name="cancel">Ακύρωση</string>

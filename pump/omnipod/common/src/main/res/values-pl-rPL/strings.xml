@@ -4,7 +4,7 @@
     <string name="omnipod_common_pod_management_button_activate_pod">Aktywuj Poda</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Odłącz Poda</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Usuń Poda</string>
-    <string name="omnipod_common_pod_management_discard_pod_confirmation">Jeśli usuniesz Poda, nie będziesz już mógł się z nim komunikować. Powinieneś to zrobić tylko wtedy, gdy komunikacja z Podem nieustannie zawodzi. Jeśli komunikacja jest nadal możliwa, użyj opcji <b>Deaktywuj Poda</b>.\n\nJeśli chcesz kontynuować, pamiętaj, aby usunąć Poda ze swojego ciała!</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Jeśli usuniesz Poda, nie będziesz już mógł się z nim komunikować. Zrób to tylko wtedy, gdy komunikacja z Podem stale zawodzi. Jeśli komunikacja jest nadal możliwa, użyj opcji <b>Odłącz Poda</b>.\n\nJeśli chcesz kontynuować, pamiętaj, aby zdjąć Poda z ciała!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Odtwarzaj test dźwięku</string>
     <string name="omnipod_common_pod_management_button_pod_history">Historia Poda</string>
     <!-- Omnipod - Error -->
@@ -58,8 +58,8 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Wypełnij Poda</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Zainicjalizuj Poda</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Zamocuj Poda</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">\nPrzygotuj miejsca wkłucia. Zdejmij osłonkę igły, zabezpieczenie plastra i przymocuj Pod do skóry w miejscu wkłucia.\n\nJeśli kaniula odkleja się, proszę wciśnij <b>Anuluj</b> i odczep Poda.\n\nNaciśnij <b>Dalej</b> w celu wprowadzenia kaniuli i rozpoczęcia podawania dawki bazowej.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Po naciśnięciu <b>OK</b>zostanie wprowadzone wkłucie. Należy upewnić się, że podpięto Poda do miejsca wkłucia.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Przygotuj miejsce wkłucia. Zdejmij osłonkę igły i zabezpieczenie plastra, a następnie przymocuj Poda do skóry w miejscu wkłucia.\n\nJeśli kaniula wystaje, naciśnij <b>Anuluj</b> i wyrzuć Poda.\n\nNaciśnij <b>Dalej</b>, aby wprowadzić kaniulę i rozpocząć podawanie dawki bazowej.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Po naciśnięciu <b>OK</b> zostanie wprowadzona kaniula. Upewnij się, że Pod jest przymocowany w miejscu wkłucia.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Załóż wkłucie</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Próbuję ustawić początkowy plan dawki bazowej i wprowadzić wkłucie.\n\nKiedy wkłucie zostanie prawidłowo wprowadzone, możesz nacisnąć <b>Dalej</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod aktywowany</string>
@@ -85,10 +85,10 @@
     <string name="omnipod_common_preferences_time_change_enabled">Włączone wykrywanie strefy czasowej DST</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Przypomnienie o utracie ważności włączone</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Jeśli włączono, pod zapiszczy po osiągnięciu określonego czasu</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Przypomnienie na 72 godziny przed upływem terminu ważności</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Przypomnienie: godziny przed upływem ważności (72 godz.)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Alarm upływu terminu ważności włączony</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Jeśli włączono, pod zapiszczy po osiągnięciu określonego czasu i na godzinę przed wyłączeniem się poda</string>
-    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alarm na 80 godzin przed wyłączeniem się poda</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alarm: godziny przed wyłączeniem Poda (80 godz.)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Włączony alert o niskim poziomie w zbiorniczku</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Liczba jednostek</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Automatycznie wycisz alarmy Poda</string>
@@ -136,7 +136,7 @@
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_initialize_pod">Zainicjalizuj Poda</string>
     <string name="omnipod_common_cmd_insert_cannula">Załóż wkłucie</string>
-    <string name="omnipod_common_cmd_deactivate_pod">Odłącz Pod</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Odłącz Poda</string>
     <string name="omnipod_common_cmd_set_basal_schedule">Ustaw harmonogram Dawki bazowej</string>
     <string name="omnipod_common_cmd_set_bolus">Podanie bolusa</string>
     <string name="omnipod_common_cmd_cancel_bolus">Anulowanie bolusa</string>

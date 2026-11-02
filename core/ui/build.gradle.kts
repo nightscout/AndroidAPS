@@ -1,11 +1,7 @@
 import kotlin.math.min
 
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as :core:keys, :core:data, :core:utils and :core:interfaces.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     // The Compose COMPILER, which ships with Kotlin and compiles @Composable for every target.
     alias(libs.plugins.compose.compiler)
     // The Compose Multiplatform framework. The compiler plugin above is applied per project rather
@@ -13,28 +9,11 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
 }
 
-// One task, not one per variant: a multiplatform module has no product flavours, and a Kotlin source
-// set takes a task provider directly. Same generator as :core:keys and :core:interfaces, pointed at
-// this module's strings. The strings themselves do not move, and AAPT keeps resolving them on
-// Android exactly as before.
-val generateCoreUiStrings = tasks.register<GenerateKeyStringsTask>("generateCoreUiStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.core.ui")
-    owner.set("coreUi")
-    objectName.set("CoreUiStrings")
-    idsObjectName.set("CoreUiStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/coreUiStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only applies a convention derived from the task
-    // name, so both properties would land on one directory and the second file written would delete
-    // the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/coreUiStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/coreUiStrings/android"))
-}
+registerKeyStrings("coreUi")
 
 kotlin {
     android {
         namespace = "app.aaps.core.ui"
-        compileSdk = Versions.compileSdk
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // Compatible with wear module
         // Off by default for a multiplatform library, unlike a plain android library. This module is
         // where most of the app's strings, drawables and raw alarm sounds live, so it must be on.
@@ -42,39 +21,15 @@ kotlin {
         // Creates the androidHostTest compilation, which also pulls in commonTest.
         // isIncludeAndroidResources is what makes Robolectric work: the Compose UI tests here need a
         // real merged resource table and the manifest that holds the activity createComposeRule()
-        // launches. Restated from test-module-dependencies, which this module can no longer apply.
+        // launches.
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        // Restated from android-module-dependencies, which this module can no longer apply. Without
-        // it MissingTranslation would switch on for the first time here and every locale file that
-        // is incomplete today would fail a release build.
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    // Apple klibs cross compile on Windows. Linking and running still need a Mac, and those tasks
-    // report SKIPPED rather than failing. Keeping the target is what stops an android-only import
-    // from quietly reaching commonMain later.
-    //
-    // Deliberately no jvm() target, as in :core:interfaces: it pulls in the desktop Compose surface
-    // (skiko-awt) and gives the module another way to fail without saying anything about iOS.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     sourceSets {
         commonMain {
-            kotlin.srcDir(generateCoreUiStrings.flatMap { it.commonOutputDir })
             dependencies {
                 api(project(":core:data"))
                 api(project(":core:interfaces"))
@@ -102,8 +57,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateCoreUiStrings.flatMap { it.androidOutputDir })
             dependencies {
                 // Everything here was `api` on the old android library and the consumer modules
                 // resolve it transitively, so it must stay exported.
@@ -160,9 +113,3 @@ kotlin {
         }
     }
 }
-
-// The JaCoCo/Robolectric setting that used to be restated here now lives in `kmp-test-defaults`, so
-// every multiplatform module gets it instead of only the ones that remembered. This module was the
-// only one that did remember: :core:graph and :plugins:calibration lost it when they flipped to
-// multiplatform and reported 0% and 33.5% for Compose screens their Robolectric tests were already
-// driving.

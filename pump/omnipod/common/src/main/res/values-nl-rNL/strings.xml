@@ -16,7 +16,7 @@
     <string name="omnipod_common_error_unsupported_custom_command">Niet-ondersteunde aangepaste opdracht: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Verversen van status is mislukt</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Status vernieuwen mislukt bij opstarten</string>
-    <string name="omnipod_common_error_failed_to_silence_alerts">Meldingen negeren mislukt</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Alarmen dempen mislukt</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Onderbreken van insulinetoediening is mislukt</string>
     <string name="omnipod_common_error_failed_to_set_time">Instellen van de tijd is mislukt</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Hervatten van insulinetoediening is mislukt</string>
@@ -35,7 +35,7 @@
     <string name="omnipod_common_overview_button_set_time">Tijd instellen</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="omnipod_common_overview_button_resume_delivery">Toediening hervatten</string>
-    <string name="omnipod_common_overview_button_silence_alerts">Alarmen Stil</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Alarmen dempen</string>
     <string name="omnipod_common_overview_pod_status">Pod Status</string>
     <string name="omnipod_common_overview_total_delivered">Totaal toegediend</string>
     <string name="omnipod_common_overview_pod_unique_id">Uniek ID</string>
@@ -59,7 +59,7 @@
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Pod initialiseren</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Plaats de Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Bereid het plaatsen voor. Verwijder de beschermkap van de naald en haal de papiertjes van de sticker.\n\nMocht je zien dat de canule uitsteekt, druk dan op <b>Annuleren</b> en begin opnieuw met een andere Pod.\n\nBevestig de Pod op de huid. Druk op <b>Volgende</b> om de canule te gaan inschieten en de insulinetoediening te laten starten.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Als je op <b>OK</b>drukt, wordt de canule ingebracht. Zorg ervoor dat de Pod op de huid geplakt is.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Als je op <b>OK</b> drukt, wordt de canule ingebracht. Zorg ervoor dat de Pod op de huid geplakt is.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Canule inbrengen</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">De basaalstand wordt ingesteld en de canule wordt ingebracht.\n\nWanneer de canule succesvol is ingebracht, kun je op <b>Volgende</b> drukken.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod geactiveerd</string>
@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deactiveer Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Druk op <b>Volgende</b> om de Pod te deactiveren.\n\n<b>Opmerking:</b> Hiermee wordt de insulinetoediening gestopt en wordt de Pod gedeactiveerd.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Een gedeactiveerde Pod kan niet opnieuw worden gebruikt. Nu deze Pod deactiveren?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod wordt gedeactiveerd</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">De Pod wordt gedeactiveerd.\n\nWanneer de Pod succesvol gedeactiveerd is, kan er op <b>Volgende</b> worden gedrukt.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod gedeactiveerd</string>
@@ -98,6 +99,9 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Geluid voor onzekere TBR notificaties ingeschakeld</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Geluid voor onzekere SMB notificaties ingeschakeld</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Geluid voor onzekere bolus notificaties ingeschakeld</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Geluid voor levering onderbroken notificatie ingeschakeld</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth bonding</string>
+    <string name="omnipod_dash_use_bonding_summary">Probeer dit alleen als de pod geen stabiele verbinding kan behouden. De telefoon toont een koppelingsverzoek dat je moet accepteren. Schakel dit niet in als de pod goed verbinding maakt. Heeft geen effect bij versies ouder dan Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Geen actieve Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Setup wordt uitgevoerd (in afwachting van Pod activering)</string>
@@ -108,9 +112,21 @@
     <string name="omnipod_common_pod_status_inactive">Inactief</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod foutmelding: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM-melding</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Leeg reservoir</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulinetoediening gestopt. Vervang de Pod nu.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Automatische uitschakeling</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulinetoediening gestopt. Uw PDM en Pod hebben de afgelopen 4 uur geen contact met elkaar gehad. Vervang de Pod nu om de insulinetoediening te hervatten.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod verlopen</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulinetoediening gestopt. Vervang de Pod nu.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Verstopping gedetecteerd</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulinetoediening gestopt. Vervang de Pod nu. Controleer uw bloedglucose</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod-fout</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulinetoediening gestopt. Vervang de Pod nu.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod verloopt binnenkort</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod verloopt binnenkort</string>
@@ -124,6 +140,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Basaalprofiel instellen</string>
     <string name="omnipod_common_cmd_set_bolus">Bolus instellen</string>
     <string name="omnipod_common_cmd_cancel_bolus">Annuleer Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">TBR instellen</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annuleer TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Pod verwerpen</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod status verversen</string>
     <string name="omnipod_common_cmd_set_time">Tijd instellen</string>
@@ -132,10 +150,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Pulslog uitlezen</string>
     <string name="omnipod_common_cmd_suspend_delivery">Onderbreek toediening</string>
     <string name="omnipod_common_cmd_resume_delivery">Toediening hervatten</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Annuleer TBR (gebruiker)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod info verversen</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nep onderbroken TBR instellen</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Nep onderbroken TBR annuleren</string>
+    <string name="omnipod_common_cmd_split_tbr">Splitsen TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Test pieptoon afspelen</string>
     <string name="omnipod_common_cmd_unknown_entry">Onbekende invoer</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Zet onderbreking waarschuwingen uit</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Herinnering koppeling afronden</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Zojuist</string>
@@ -158,7 +183,18 @@
         <item quantity="one">Pod Alarm: %1$s</item>
         <item quantity="other">Pod Alarmen: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Harde einddatum Pod</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f E/u, %2$d minuten</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Basaal correctie</string>
+    <string name="omnipod_common_bolus_type_priming">Vullen</string>
     <string name="omnipod_common_history_total_delivered">Totaal toegediend: %1$.2f E</string>
+    <string name="omnipod_common_failed_to_send">Het verzenden van de opdracht is mislukt</string>
+    <string name="omnipod_common_command_not_sent">Opdracht niet verzonden</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Opdracht niet ontvangen door de pod</string>
+    <string name="omnipod_common_unknown">Onbekende status voor de opdracht</string>
 </resources>

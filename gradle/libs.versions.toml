@@ -3,12 +3,12 @@
 gradlePlugin = "9.5.0"
 kotlin = "2.4.21"
 room = "2.8.5"
-metro = "1.5.0"
+metro = "1.5.1"
 mockito = "5.24.0"
 junit = "6.1.3"
 okhttp = "5.5.1"
 retrofit = "3.0.0"
-ktor = "3.6.0"
+ktor = "3.6.1"
 # cryptography-kotlin: HMAC-SHA256, PBKDF2 and AES-256-GCM for the client-control signing and
 # pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
 # than implementing the algorithms, which is what we want in a signing path.
@@ -185,7 +185,7 @@ org-robolectric = { group = "org.robolectric", name = "robolectric", version = "
 
 com-madgag-spongycastle = { group = "com.madgag.spongycastle", name = "core", version = "1.58.0.0" }
 com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version = "1.4" }
-net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.15.0" }
+net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.15.1" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.15.1" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 # Test-only oracle. On Android `org.json` comes from the platform, so a plain JVM test has no real

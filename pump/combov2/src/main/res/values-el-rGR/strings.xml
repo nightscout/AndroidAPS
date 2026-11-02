@@ -19,7 +19,7 @@
     <string name="combov2_error_10">Σφάλμα δεξαμενής</string>
     <string name="combov2_error_11">Μη προετοιμασμένο σετ έγχυσης</string>
     <string name="combov2_extended_bolus_not_supported">Το εκτεταμένο bolus δεν υποστηρίζεται</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Σύζευξη με αντλία</string>
     <string name="combov2_unpair_pump_title">Αποσύζευξη αντλίας</string>
     <string name="combov2_driver_state_label">Κατάσταση οδηγού</string>
@@ -40,6 +40,8 @@
 3. Προσπαθήστε να κάνετε σύζευξη ξανά</string>
     <string name="combov2_enter_pin">Εισαγωγή PIN</string>
     <string name="combov2_cancel_pairing">Ακύρωση σύζευξης</string>
+    <string name="combov2_confirm_cancel_pairing_message">Θέλετε πραγματικά να ακυρώσετε τη σύζευξη;</string>
+    <string name="combov2_confirm_unpair_message">Θέλετε πραγματικά να καταργήσετε τη σύζευξη της αντλίας;</string>
     <string name="combov2_pin_hint">10-ψήφιο PIN</string>
     <string name="combov2_pairing_finished_successfully">Επιτυχής σύζευξη με Combo</string>
     <string name="combov2_pairing_cancelled">Η σύζευξη με Combo ακυρώθηκε από το χρήστη</string>
@@ -70,16 +72,22 @@
     <string name="combov2_updating_pump_status_cmddesc">Ενημέρωση κατάστασης αντλίας</string>
     <string name="combov2_pairing_pin_failure">Το PIN δεν λειτούργησε. Ελέγξτε αν υπάρχει τυπογραφικό λάθος. Εάν αυτό συνεχίζει να συμβαίνει, ακυρώστε και προσπαθήστε να κάνετε νέα σύζευξη.</string>
     <string name="combov2_discovery_duration">Διάρκεια εξεύρεσης (σε δευτερόλεπτα)</string>
-    <string name="combov2_verbose_logging">Ενεργοποίηση λεπτομερής καταγραφή Combo</string>
+    <string name="combov2_verbose_logging">Ενεργοποίηση λεπτομερούς καταγραφής Combo</string>
     <string name="combov2_getting_basal_profile">Λήψη βασικού προφίλ, ανάγνωση %1$d παράγοντα(ων)</string>
     <string name="combov2_setting_basal_profile">Ρύθμιση βασικού προφίλ, γράφτηκαν %1$d παράγοντας(ες)</string>
     <string name="combov2_delivering_bolus">Χορήγηση bolus (%1$.1f από %2$.1f U χορηγήθηκε)</string>
     <string name="combov2_cannot_deliver_pump_suspended">Δεν μπορεί να χορηγηθεί ινσουλίνη - η αντλία έχει ανασταλεί</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Ανεπαρκής ινσουλίνη στο ρεζερβουάρ</string>
     <string name="combov2_bolus_cancelled">Bolus ακυρώθηκε</string>
-    <string name="combov2_bolus_delivery_failed">Η έγχυση bolus απέτυχε. Δεν φαίνεται να παραδόθηκε κάποιο bolus. Για να σιγουρευτείτε, ελέγξτε την αντλία για να αποφευχθεί διπλό bolus. Για ασφάλεια σε λάθος του προγράμματος, δεν επιτρέπετε ξανά bolus αυτόματα.</string>
+    <string name="combov2_bolus_delivery_failed">Η χορήγηση bolus απέτυχε. Φαίνεται ότι δεν χορηγήθηκε bolus. Για να είστε σίγουροι, ελέγξτε την αντλία ώστε να αποφύγετε διπλό bolus και μετά χορηγήστε ξανά bolus. Για προστασία από σφάλματα, τα bolus δεν επαναλαμβάνονται αυτόματα.</string>
     <string name="combov2_bolus_not_delivered">Το Bolus δεν παραδόθηκε</string>
     <string name="combov2_cannot_access_pump_data">Δεν είναι δυνατή η πρόσβαση στα δεδομένα της αντλίας. Η αντλία πρέπει να συζευχθεί ξανά</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Η σύνδεση με την αντλία χάθηκε κατά τη διάρκεια του bolus. Μέχρι τότε η αντλία είχε χορηγήσει %1$s και μπορεί να χορηγήσει ακόμα το υπόλοιπο. Μην κάνετε ξανά bolus. Το AAPS θα διαβάσει την πραγματική ποσότητα από την αντλία στην επόμενη σύνδεση.</string>
+    <string name="combov2_bolus_stopped_history_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Η αντλία σταμάτησε το bolus μετά από %1$s. Μετά η σύνδεση χάθηκε, οπότε το AAPS δεν μπόρεσε να διαβάσει το ιστορικό της αντλίας. Το AAPS θα διαβάσει την πραγματική ποσότητα στην επόμενη σύνδεση. Ελέγξτε την αντλία πριν από το επόμενο bolus.</string>
+    <string name="combov2_bolus_stopped_after_error" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Το bolus σταμάτησε λόγω σφάλματος μετά από %1$s. Ελέγξτε την αντλία πριν από το επόμενο bolus.</string>
+    <string name="combov2_bolus_request_outcome_unknown">Η σύνδεση με την αντλία χάθηκε ενώ το AAPS έστελνε το bolus, οπότε δεν είναι γνωστό αν η αντλία το έλαβε. Ελέγξτε το ιστορικό bolus στην αντλία πριν από το επόμενο bolus. Το AAPS θα διαβάσει την πραγματική ποσότητα από την αντλία στην επόμενη σύνδεση.</string>
+    <string name="combov2_unknown_bolus_in_history">Στο ιστορικό της αντλίας υπάρχει ένα bolus που το AAPS δεν γνώριζε. Το bolus που ζητήθηκε δεν χορηγήθηκε, επειδή υπολογίστηκε χωρίς αυτή την ινσουλίνη. Ελέγξτε το ιστορικό bolus στην αντλία και το IOB στο AAPS. Αν χρειάζεται ακόμα bolus, υπολογίστε το ξανά.</string>
+    <string name="combov2_bolus_given_other_boluses_found">Το bolus χορηγήθηκε, αλλά στο ιστορικό της αντλίας υπήρχαν και άλλα bolus που το AAPS δεν γνώριζε. Έχουν καταγραφεί τώρα. Ελέγξτε το IOB πριν από το επόμενο bolus.</string>
     <string name="combov2_incorrect_active_basal_profile">Λανθασμένο ενεργό προφίλ βασικού ρυθμού, το προφίλ 1 πρέπει να είναι ενεργό, όχι το προφίλ %1$d</string>
     <string name="combov2_unrecognized_alert">Μη αναγνωρίσιμη ειδοποίηση Combo</string>
     <string name="combov2_combo_alert">Ειδοποίηση Combo</string>
@@ -87,6 +95,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (μένει λιγότερο από 1 λεπτό)</string>
     <string name="combov2_load_tdds_cancelled">Η φόρτωση των TDD ακυρώθηκε</string>
     <string name="combov2_retrieving_tdds_failed">Η ανάκτηση των TDD απέτυχε</string>
+    <string name="combov2_battery_empty">Άδεια</string>
+    <string name="combov2_battery_low">Χαμηλή</string>
+    <string name="combov2_battery_full">Γεμάτη</string>
     <string name="combov2_battery_low_warning">Η μπαταρία της αντλίας είναι χαμηλά</string>
     <string name="combov2_reservoir_low_warning">Το επίπεδο δεξαμενής αντλίας είναι χαμηλό</string>
     <string name="combov2_setting_tbr_succeeded">Η ρύθμιση TBR ολοκληρώθηκε</string>

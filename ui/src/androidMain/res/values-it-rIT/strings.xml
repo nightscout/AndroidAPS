@@ -13,7 +13,7 @@
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">Grafico di glicemia AAPS</string>
-    <string name="widget_glucose_circle_description">AAPS cerchio glucosio</string>
+    <string name="widget_glucose_circle_description">Cerchio glicemia AAPS</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compatto)</string>
     <string name="widget_small_description">AAPS Small</string>
     <!--     Activities-->
@@ -27,7 +27,7 @@
     <string name="agp_no_data">Non sono disponibili dati sul glucosio per questo intervallo.</string>
     <string name="agp_load_failed">Impossibile caricare le statistiche AGP. Riprova.</string>
     <string name="agp_chart_description">Grafico percentile del glucosio</string>
-    <string name="agp_tir_chart">Tempo nel grafico dell\'intervallo</string>
+    <string name="agp_tir_chart">Grafico del tempo nell\'intervallo</string>
     <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
     <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
     <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
@@ -42,7 +42,7 @@
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">Giorni</string>
     <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
-    <string name="cgp_title">Glucosio Pentagon (CGP) — 14 giorni</string>
+    <string name="cgp_title">Pentagono del glucosio (CGP) — 14 giorni</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Ipoglicemia</string>
@@ -69,15 +69,15 @@
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
     <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
-    <string name="record_site_note">Note: %1$s</string>
+    <string name="record_site_note">Nota: %1$s</string>
     <string name="delete_site_note">Nota eliminata</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
-    <string name="fill_prime_amount">Quantità inizializzazione</string>
-    <string name="fill_pump_units_note">La quantità iniziale è nelle unità del micro</string>
-    <string name="fill_insulin_change">Cambia insulina a: %1$s (verrà applicato lo switch del profilo)</string>
+    <string name="fill_prime_amount">Quantità di caricamento</string>
+    <string name="fill_pump_units_note">La quantità di caricamento è in unità del micro</string>
+    <string name="fill_insulin_change">Cambia insulina in: %1$s (verrà applicato un cambio profilo)</string>
     <!-- Scene -->
     <string name="scene_cat_aaps">AAPS</string>
     <string name="scene_cat_activity">Attività</string>
@@ -88,7 +88,7 @@
     <string name="scene_cat_wellness">Benessere</string>
     <string name="scene_cat_general">Generale</string>
     <string name="aaps_tt_high_icon_label">Target Temporaneo</string>
-    <string name="aaps_tt_activity_icon_label">Attività TT</string>
+    <string name="aaps_tt_activity_icon_label">TT Attività fisica</string>
     <string name="aaps_tt_eating_icon_label">TT Pasto a breve</string>
     <string name="aaps_tt_hypo_icon_label">TT Ipoglicemia</string>
     <string name="aaps_tt_manual_icon_label">TT Manuale</string>
@@ -98,11 +98,10 @@
     <string name="aaps_bolus_icon_label">Bolo</string>
     <string name="aaps_carbs_icon_label">Carboidrati</string>
     <string name="aaps_tbr_icon_label">Basale temporanea</string>
-    <string name="aaps_activity_icon_label">Esercizio</string>
     <string name="aaps_note_icon_label">Nota</string>
     <string name="aaps_automation_icon_label">Automazione</string>
     <string name="aaps_calibration_icon_label">Calibrazione</string>
-    <string name="exercise_icon_label">Esegui</string>
+    <string name="exercise_icon_label">Corsa</string>
     <string name="fitness_icon_label">Allenamento</string>
     <string name="swim_icon_label">Nuoto</string>
     <string name="hiking_icon_label">Escursionismo</string>
@@ -160,19 +159,19 @@
     <!-- Client→master round-trip pending dialog -->
     <string name="clientcontrol_pending_working_title">Applicazione…</string>
     <string name="clientcontrol_pending_working_text">In attesa che il master confermi…</string>
-    <string name="clientcontrol_pending_rejected_title">Non Applicato</string>
-    <string name="clientcontrol_pending_failed_format">%1$s non può essere fatto.\n%2$s</string>
+    <string name="clientcontrol_pending_rejected_title">Non applicato</string>
+    <string name="clientcontrol_pending_failed_format">Impossibile eseguire %1$s.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Parzialmente applicato</string>
     <!-- %1$s = action label -->
-    <string name="clientcontrol_pending_partial_format">%1$s è stato applicato, ma alcune azioni non possono esserlo.\nControlla lo stato attivo.</string>
+    <string name="clientcontrol_pending_partial_format">%1$s è stato applicato, ma alcune azioni non sono riuscite.\nControlla lo stato attivo.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Impossibile confermare</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s è stato inviato, ma non è tornata alcuna conferma.\n%2$s\nApparirà qui se/quando il master lo applica.</string>
     <string name="clientcontrol_pending_stop_waiting">Smetti di aspettare</string>
     <string name="a11y_add_new_insulin">Aggiungi nuova insulina</string>
     <string name="a11y_delete_current_insulin">Elimina insulina corrente</string>
-    <string name="load_peak_from">Picco di carico da</string>
+    <string name="load_peak_from">Carica picco da</string>
     <string name="cannot_delete_last_insulin">Impossibile cancellare l\'ultima insulina</string>
     <string name="cannot_delete_active_insulin">Impossibile eliminare l\'insulina attiva</string>
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
@@ -195,7 +194,7 @@
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% carboidrati immediati, senza carboidrati estesi</string>
     <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carboidrati ridotti di %1$d%%, aggiunto eCarbs %2$d%% ritardato %3$d min per %4$d h</string>
-    <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glucosio nel sangue (ON all\'inizio)\n• TT — obiettivo temporaneo (ON all\'inizio)\n• Tendenza — Tendenza glicemica (ultima condizione ricordata)\n• IOB — insulina a bordo (ON all\'inizio)\n• COB — carboidrati a bordo (ultimo stato ricordato)</string>
+    <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glicemia (ON all\'inizio)\n• TT — target temporaneo (ON all\'inizio)\n• Tendenza — tendenza glicemica (ultimo stato ricordato)\n• IOB — insulina attiva (ON all\'inizio)\n• COB — carboidrati attivi (ultimo stato ricordato)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -207,26 +206,26 @@
     <string name="clone_label">Clona</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Grafico del glucosio. Valori recenti %1$s. %2$s. %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Visualizza controlli</string>
-    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notifica: %1$d</string>
-    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">nessun target temporaneo, obiettivo del profilo</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notifiche: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">nessun target temporaneo, target del profilo</string>
     <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">regolato dal loop</string>
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s a %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">lettura vecchia</string>
     <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Grafico del glucosio. Valori recenti %1$s</string>
-    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Predizioni. %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Previsioni. %1$s</string>
     <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s sale a %2$s.</string>
     <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s scende a %2$s.</string>
     <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s rimane a %2$s.</string>
     <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">Previsione IOB</string>
-    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">Previsione IOB</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">Previsione COB</string>
     <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Previsione COB assorbiti</string>
     <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">Previsione UAM</string>
-    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Predizione zero temp</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Previsione basale temporanea zero</string>
     <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">azione necessaria</string>
-    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d disponibile</string>
-    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d di %2$d fatto</string>
+    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d disponibili</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d di %2$d completati</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Esegui</string>
     <string name="add_new_profile">Aggiungi nuovo profilo</string>
     <string name="edit_label">Modifica</string>
@@ -236,7 +235,7 @@
     <string name="active_profile_indicator">ATTIVO</string>
     <string name="confirm_remove_profile">Rimuovere profilo \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clonare profilo \"%1$s\"?</string>
-    <string name="profile_no_longer_exists">Elenco di profili cambiato nel frattempo — si prega di riprovare</string>
+    <string name="profile_no_longer_exists">Elenco dei profili cambiato nel frattempo — riprova</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
@@ -244,7 +243,7 @@
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo profilo</string>
     <string name="profile_parameters">Parametri Del Profilo</string>
-    <string name="active_profile">Attiva profilo</string>
+    <string name="active_profile">Profilo attivo</string>
     <string name="available_profiles">Profili disponibili</string>
     <string name="profile_switches">Cambi profilo</string>
     <string name="basal_pct_from_tdd_label">% di basale</string>
@@ -262,7 +261,7 @@
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Testo del pulsante</string>
-    <string name="quick_wizard_mode_wizard">Procedura guidata</string>
+    <string name="quick_wizard_mode_wizard">Calcolatore</string>
     <string name="quick_wizard_mode_insulin">Insulina</string>
     <string name="quick_wizard_mode_carbs">Carboidrati</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
@@ -292,7 +291,7 @@
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="carbs_constraint_violation">Carboidrati limitati da vincoli</string>
     <string name="insulin_constraint_violation">Insulina limitata da vincoli</string>
-    <string name="confirm_treatment">Si prega di confermare il trattamento</string>
+    <string name="confirm_treatment">Conferma il trattamento</string>
     <string name="recalculate">Ricalcola</string>
     <!--    Widget-->
     <string name="use_black_color">Usa colore nero</string>
@@ -302,22 +301,22 @@
     <string name="permission_sheet_title">Permessi richiesti</string>
     <string name="permission_sheet_subtitle">Sono necessari alcuni permessi affinché l\'app funzioni correttamente</string>
     <string name="permission_grant">Concedi</string>
-    <string name="permission_change">Cambiare</string>
-    <string name="permission_denied_go_to_settings">Permesso definitivamente negato. Si prega di attivarlo nelle impostazioni dell\'app.</string>
+    <string name="permission_change">Cambia</string>
+    <string name="permission_denied_go_to_settings">Permesso negato in modo definitivo. Attivalo nelle impostazioni dell\'app.</string>
     <string name="permission_open_settings">Impostazioni</string>
     <string name="permission_directory_picker_error">Impossibile avviare il selettore di directory. Solitamente problema di Android o Family Link.</string>
     <string name="permission_nav_label">Permessi</string>
     <!--    TDD Cycle Pattern -->
     <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Ciclo</string>
     <string name="cycle_offset">Scostamento ciclo</string>
-    <string name="raw_tdd">Tdd Grezzo</string>
-    <string name="cleaned_tdd">Tdd Pulito</string>
+    <string name="raw_tdd">TDD grezzo</string>
+    <string name="cleaned_tdd">TDD pulito</string>
     <string name="cleaned_tdd_explanation">TDD meno insulina per carboidrati.</string>
     <string name="cycle_lines_legend">Cicli individuali</string>
     <string name="cycles_found">%1$d cicli (%2$d giorni)</string>
     <string name="cycle_day1_date">Giorno 1 = %1$s</string>
     <string name="calculation_in_progress_percent">Calcolo… %1$d%%</string>
-    <string name="not_enough_data_for_cycles">Dati insufficienti (richiedono almeno 56 giorni per 2 cicli)</string>
+    <string name="not_enough_data_for_cycles">Dati insufficienti (servono almeno 56 giorni per 2 cicli)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>
@@ -329,15 +328,15 @@
     <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Rimuovi %1$s</string>
     <string name="quick_launch_no_dynamic_items">Nessun elemento disponibile</string>
     <string name="quick_launch_category_treatment">Trattamento</string>
-    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_care">Careportale</string>
     <string name="quick_launch_category_profile">Profilo</string>
-    <string name="quick_launch_category_temp_target">Temp Target Presets</string>
-    <string name="quick_launch_category_quick_wizard">Procedura Guidata Veloce</string>
+    <string name="quick_launch_category_temp_target">Preimpostazioni target temporaneo</string>
+    <string name="quick_launch_category_quick_wizard">Assistente Rapido</string>
     <string name="quick_launch_category_automation">Automazione</string>
     <string name="quick_launch_all_selected">Tutti gli elementi selezionati</string>
-    <string name="quick_launch_no_quick_wizard">Aggiungi le voci della procedura guidata veloce per usarle qui</string>
+    <string name="quick_launch_no_quick_wizard">Aggiungi voci Assistente Rapido per usarle qui</string>
     <string name="quick_launch_no_automation">Crea azioni di automazione utente per usarle qui</string>
-    <string name="quick_launch_no_tt_presets">Aggiungi preset Temp Target per usarli qui</string>
+    <string name="quick_launch_no_tt_presets">Aggiungi preimpostazioni di target temporaneo per usarle qui</string>
     <string name="quick_launch_no_profiles">Crea profili in Profilo Locale per usarli qui</string>
     <string name="quick_launch_edit_profile_preset">Modifica preimpostazione profilo</string>
     <string name="quick_launch_profile_permanent">Permanente</string>
@@ -353,7 +352,7 @@
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Sensore ancora in riscaldamento. Calibrazione disponibile in %1$s.</string>
     <string name="cal_precheck_no_session">Nessuna sessione del sensore è attiva.</string>
-    <string name="cal_precheck_no_pair">Nessuna lettura CGM negli ultimi 10 minuti. Controllare la connessione del sensore.</string>
+    <string name="cal_precheck_no_pair">Nessuna lettura CGM negli ultimi 10 minuti. Controlla la connessione del sensore.</string>
     <string name="cal_precheck_delta_too_high">Il glucosio sta cambiando troppo velocemente (Δ %1$s %3$s per 5 minuti, limite %2$s). Attendi stabilità.</string>
     <string name="cal_precheck_mark_sensor_change">Registra cambio sensore</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>

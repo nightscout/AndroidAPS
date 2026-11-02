@@ -6,7 +6,7 @@
     <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Vlastní) vždy zapnuto</string>
     <string name="label_actions_tile">Akce</string>
     <string name="label_temp_target_tile">Dočasný cíl</string>
-    <string name="label_quick_wizard_tile">Rychlý průvodce</string>
+    <string name="label_quick_wizard_tile">Rychlý bolus</string>
     <string name="label_user_action_tile">Uživatelská akce</string>
     <string name="label_scene_tile">Scéna</string>
     <string name="msg_warning_sync">Od %1$s nebyla obdržena žádná data! Zkontrolujte, zda AAPS na telefonu odesílá data ke sledování</string>
@@ -88,7 +88,7 @@
     <string name="menu_prime_fill">Plnění/doplňování</string>
     <string name="menu_install_watchface">Nainstalovat ciferník</string>
     <string name="menu_installing_watchface">Instalace ciferníku…</string>
-    <string name="watchface_installed_active">Cifrerník byl nainstalován a nastaven jako aktivní</string>
+    <string name="watchface_installed_active">Ciferník byl nainstalován a nastaven jako aktivní</string>
     <string name="watchface_installed_select">Ciferník byl nainstalován, vyberte ho v seznamu ciferníků</string>
     <string name="watchface_install_failed">Instalace ciferníku se nezdařila</string>
     <string name="menu_none">Nic</string>
@@ -298,7 +298,12 @@
     <string name="eat_reminder_stop">Zastavit</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Vyzvánění v %1$s</string>
     <string name="eat_reminder_countdown_channel">Čas na jídlo, běží</string>
+    <string name="eat_reminder_channel_silent">Čas k jídlu během režimu Nerušit</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmy z telefonu</string>
+    <string name="phone_alarm_channel_silent">Alarmy z telefonu během režimu Nerušit</string>
+    <string name="phone_alarm_silence">Ztišit</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Ztlumit na %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>

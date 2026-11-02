@@ -58,7 +58,7 @@
     <string name="status_active">Aktyvi</string>
     <string name="status_stopped">Sustabdyta</string>
     <!-- wizard-->
-    <string name="retry">Kartoti</string>
+    <string name="retry">Bandyti dar kartą</string>
     <string name="step_prepare_patch">Įjungti rezervuarą</string>
     <string name="step_prepare_patch_connect">Prijungti ir užpildyti</string>
     <string name="step_select_insulin">Pasirinkite insuliną</string>

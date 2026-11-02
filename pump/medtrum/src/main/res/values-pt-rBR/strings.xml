@@ -11,10 +11,10 @@
     <string name="pump_is_suspended_day_max">A bomba é suspensa devido à insulina máxima diária excedida</string>
     <string name="patch_not_active">Patch não ativado</string>
     <string name="pump_setting_failed">Falha ao definir as configurações do usuário para a bomba!</string>
-    <string name="pump_sync_error">Erro ao sincronizar o histórico da bomba; um registro foi ignorado. Verifique a aba Tratamentos para confirmar se o bolus foi sincronizado corretamente. Adie o aviso e, se o erro continuar aparecendo, troque o patch ou a base da bomba.</string>
+    <string name="pump_sync_error">Erro ao sincronizar o histórico da bomba; um registro foi ignorado. Verifique a aba Tratamentos para confirmar se o bólus foi sincronizado corretamente. Adie o aviso e, se o erro continuar aparecendo, troque o patch ou a base da bomba.</string>
     <string name="patch_reset_after_primed_error">O patch foi reiniciado sozinho e perdeu a sessão. Ele não pode mais administrar insulina. Remova o patch e inicie um novo.</string>
     <!-- overview fragment -->
-    <string name="active_bolus_label">Bolus ativo</string>
+    <string name="active_bolus_label">Bólus ativo</string>
     <string name="pump_state_label">Estado da Bomba</string>
     <string name="active_alarms_label">Alarmes ativos</string>
     <string name="basal_type_label">Tipo de basal</string>
@@ -47,7 +47,7 @@
     <string name="alarm_battery_out">Bateria descarregada</string>
     <string name="alarm_no_calibration">Sem calibração</string>
     <string name="pump_time_update_failed">Falha ao atualizar o fuso horário da bomba; adie o aviso e atualize manualmente.</string>
-    <string name="bolus_error">Erro no bolus</string>
+    <string name="bolus_error">Erro no bólus</string>
     <!-- Status strings -->
     <string name="status_idle">Ocioso</string>
     <string name="status_filled">Preenchido</string>
@@ -62,7 +62,7 @@
     <string name="step_prepare_patch">Ativar patch</string>
     <string name="step_prepare_patch_connect">Conectar e preencher</string>
     <string name="step_select_insulin">Selecionar insulina</string>
-    <string name="step_prime">Preencher</string>
+    <string name="step_prime">Purgar</string>
     <string name="step_priming">Preenchendo</string>
     <string name="step_priming_complete">Preenchimento concluído</string>
     <string name="step_attach">Conectar patch</string>
@@ -118,23 +118,23 @@
     <string name="pump_warning_expiry_hour_summary">Exibir notificação na hora especificada após a ativação.</string>
     <string name="patch_expiration_title">Expiração do patch</string>
     <string name="patch_expiration_summary">Quando ativado, o patch expirará após 3 dias, com um período de tolerância de 8 horas depois disso.</string>
-    <string name="hourly_max_insulin_title">Insulina máxima por hora[Units]</string>
+    <string name="hourly_max_insulin_title">Insulina máxima por hora [unidades]</string>
     <string name="hourly_max_insulin_summary">Especifique o número máximo de unidades de insulina permitido por hora. Se excedido, a bomba será suspensa.</string>
-    <string name="daily_max_insulin_title">Insulina máxima diária[Units]</string>
+    <string name="daily_max_insulin_title">Insulina máxima diária [unidades]</string>
     <string name="daily_max_insulin_summary">Especifique o número máximo de unidades de insulina permitido por dia. Se excedido, a bomba será suspensa.</string>
     <string name="scan_on_connection_error_title">Buscar em caso de erro de conexão</string>
     <string name="scan_on_connection_error_summary">AVISO: Ative somente se você tiver problemas de conexão. Quando ativado, o driver busca a bomba novamente antes de tentar reconectar-se a ela. Verifique se a permissão de localização está definida como \"Permitir sempre\".</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Obtendo o status da bomba</string>
     <string name="syncing_records">Sincronizando registros; faltam %1$d.</string>
-    <string name="getting_bolus_status">Obtendo o status do bolus</string>
+    <string name="getting_bolus_status">Obtendo o status do bólus</string>
     <string name="getting_temp_basal_status">Obtendo o status da basal temporária</string>
     <string name="setting_pump_settings">Definindo opções do usuário</string>
     <!-- bolus-->
-    <string name="bolus_error_reason_user">Bolus cancelado pelo usuário</string>
+    <string name="bolus_error_reason_user">Bólus cancelado pelo usuário</string>
     <string name="bolus_error_reason_not_connected">Bomba não conectada</string>
-    <string name="bolus_error_reason_already_in_progress">Bolus já em andamento</string>
-    <string name="bolus_error_reason_unable_to_send_command">Não foi possível enviar o comando de bolus</string>
-    <string name="bolus_error_reason_communication_lost">Tempo limite excedido ao obter o status do bolus</string>
+    <string name="bolus_error_reason_already_in_progress">Bólus já em andamento</string>
+    <string name="bolus_error_reason_unable_to_send_command">Não foi possível enviar o comando de bólus</string>
+    <string name="bolus_error_reason_communication_lost">Tempo limite excedido ao obter o status do bólus</string>
     <string name="bolus_error_reason_pump_error">Erro da bomba</string>
 </resources>

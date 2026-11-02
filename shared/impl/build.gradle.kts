@@ -1,16 +1,12 @@
 import kotlin.math.min
 
 plugins {
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    alias(libs.plugins.android.kmp.library)
-    id("kmp-test-defaults")
+    id("kmp-android-library")
 }
 
 kotlin {
     android {
         namespace = "app.aaps.shared.impl"
-        compileSdk = Versions.compileSdk
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // shared with :wear
         // Off by default for a multiplatform library. This module owns the watchface view key strings
         // and a manifest <queries> block, so it must be on.
@@ -22,24 +18,7 @@ kotlin {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        // Restated from android-module-dependencies, which this module can no longer apply.
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    // Apple klibs cross compile on Windows; linking and running still need a Mac. Keeping the targets
-    // is what stops an Android import from quietly reaching commonMain later.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     sourceSets {
         commonMain {

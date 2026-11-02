@@ -35,7 +35,7 @@
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
     <string name="bluetooth_address">Bluetooth adresas</string>
     <string name="manufacturing_date">Pagaminimo data</string>
-    <string name="log_site_changes">Įrašyti adatos pakeitimą</string>
+    <string name="log_site_changes">Įrašyti infuzijos vietos keitimus</string>
     <string name="log_reservoir_changes">Įrašyti rezervuaro keitimus</string>
     <string name="log_tube_changes">Įrašyti infuzijos vamzdelio pakeitimą</string>
     <string name="log_battery_changes">Įrašyti baterijos pakeitimą</string>

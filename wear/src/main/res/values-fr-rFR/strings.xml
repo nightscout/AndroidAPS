@@ -62,6 +62,7 @@
     <string name="pref_single_target">Cible Unique</string>
     <string name="pref_wizard_percentage">Pourcentage de l\'Assistant</string>
     <string name="pref_wizard_carbs_type">Calculatrice Type de repas</string>
+    <string name="pref_wizard_carb_time">Calculatrice durée des glucides</string>
     <string name="pref_complication_tap_action">Action Appui Complication</string>
     <string name="pref_complication_bg_graph_hours">Intervalle de temps du graphique glycémie</string>
     <string name="duration_1_hour">1 heure</string>
@@ -214,7 +215,7 @@
     <string name="cob_000g">000 g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 U</string>
-    <string name="snooze_alert">AAPS Mise en veille Alerte</string>
+    <string name="snooze_alert">AAPS Mettre en veille l\'alerte</string>
     <string name="sending_snooze">Envoi Mise en veille à AAPS</string>
     <string name="week_short">s</string>
     <string name="day_short">j</string>
@@ -252,6 +253,8 @@
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
     <string name="complication_bg_graph">Graphique Gly</string>
     <string name="complication_cwf_image">Cadran personnalisé</string>
+    <string name="complication_cwf_ambient_bg">Glycémie du cadran personnalisé en mode ambiant</string>
+    <string name="complication_cwf_ambient_status">État du cadran personnalisé en mode ambiant</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_cwf_lower">Arrière-plan du cadran personnalisé</string>
     <string name="complication_cwf_upper">Horloge du cadran personnalisé</string>
@@ -260,7 +263,7 @@
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
     <string name="complication_br_iob">Basal &amp; IA</string>
     <string name="complication_br">Débit Basal</string>
-    <string name="complication_br_tt">Gly &amp; Cible</string>
+    <string name="complication_br_tt">Basal &amp; Cible</string>
     <string name="complication_target">Cible</string>
     <string name="complication_cob_iob">GA &amp; IA</string>
     <string name="complication_cob_icon">Icône GA</string>
@@ -285,7 +288,22 @@
     <string name="wizard_carbs_type_bread">Pain</string>
     <string name="wizard_carbs_type_cake">Gâteau</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Durée de glucides\n[min]</string>
+    <string name="wizard_carb_time_now">Maintenant</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
     <string name="wizard_set_alarm">Régler l\'alarme</string>
+    <string name="eat_reminder_title">Il est temps de manger</string>
+    <string name="eat_reminder_silence">Silence</string>
+    <string name="eat_reminder_stop">Arrêt</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Sonne à %1$s</string>
+    <string name="eat_reminder_countdown_channel">Temps pour manger, en cours d\'exécution</string>
+    <string name="eat_reminder_channel_silent">Temps pour le repas en mode Ne pas déranger</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmes du téléphone</string>
+    <string name="phone_alarm_channel_silent">Alarmes du téléphone pendant le mode Ne pas déranger</string>
+    <string name="phone_alarm_silence">Silence</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Muet pendant %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>

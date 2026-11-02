@@ -45,7 +45,7 @@
     <string name="exerciseprofile_switchprofilebelow100">Wykonaj zmianę profilu na poniżej 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Wykonaj zmianę profilu na powyżej 100%.</string>
     <string name="exerciseprofile_leaveat100">Pozostaw profil ustawiony na 100%.</string>
-    <string name="exerciseprofile_suspendloop">Wstrzymaj pętle.</string>
+    <string name="exerciseprofile_suspendloop">Wstrzymaj pętlę.</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Ćwiczenie fizyczne i cele tymczasowe</string>
     <string name="exercise_whattodo">Jak wykorzystać cele tymczasowe, aby jak najlepiej pomóc systemowi radzić sobie z ćwiczeniami aerobowymi?</string>
@@ -109,7 +109,7 @@
     <string name="wrongcarbs_label">Błędy wprowadzania węglowodanów</string>
     <string name="wrongcarbs_whattodo">Co powinieneś zrobić, gdy wprowadziłeś niewłaściwą ilość węglowodanów?</string>
     <string name="wrongcarbs_treatmentstab">Usuń błędny wpis z historii leczenia i wpisz poprawną wartość węglowodanów.</string>
-    <string name="wrongcarbs_addinsulin">Bolus z insuliną za pomocą menu Rozpocznij/Wypełnij.</string>
+    <string name="wrongcarbs_addinsulin">Podaj bolus insuliny za pomocą menu Napełnij/Wypełnij.</string>
     <string name="wrongcarbs_donothing">Nic nie rób - AAPS dokona odpowiednich zmian.</string>
     <string name="wrongcarbs_bolus">Bolus z insuliną za pomocą przycisku „Insulina” w menu Leczenie.</string>
     <string name="wronginsulin_label">Błędy w dostarczaniu/wpisywaniu insuliny</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_history_browser">Ιστορικό περιήγησης</string>
+    <string name="nav_history_browser">Εξερεύνηση ιστορικού</string>
     <string name="sensor_label">Αισθητήρας</string>
     <string name="insulin_label">Ινσουλίνη</string>
     <string name="pb_label">Μπαταρία αντλίας</string>
@@ -9,8 +9,10 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
     <string name="old_data">Παλιά Δεδομένα</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>

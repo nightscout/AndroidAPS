@@ -203,7 +203,7 @@ class ProfileRepositoryImpl(
         runCatching {
             withContext(aapsIoDispatcher) {
                 val original = profilesList[index]
-                profilesList.add(original.copy(name = original.name + " copy"))
+                profilesList.add(original.copy(name = rh.gs(CoreUiStrings.profile_clone_name, original.name)))
                 storeSettingsInternal(timestamp = dateUtil.now())
             }
             snapshot()

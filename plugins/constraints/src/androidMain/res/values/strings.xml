@@ -14,7 +14,7 @@
     <string name="application_expired">Application expired</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
-    <string name="version_expire">Version %1$s expire on %2$s and will turn into LGS mode</string>
+    <string name="version_expire">Version %1$s expires on %2$s and will turn into LGS mode</string>
 
     <!-- Signature verifier -->
     <string name="signature_verifier" translatable="false">Signature verifier</string>
@@ -50,7 +50,7 @@
     <string name="apsselected">APS selected</string>
     <string name="closedmodeenabled">Closed mode enabled</string>
     <string name="description_objectives">Learning program</string>
-    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
+    <string name="doyouwantresetstart">Do you want to reset objective start? You may lose your progress.</string>
     <string name="objectives_button_unfinish">Reset finished state</string>
     <string name="objectives_button_unstart">Reset started state</string>
     <string name="bg_doubled_lgs">LGS mode due to doubled values in BG source</string>

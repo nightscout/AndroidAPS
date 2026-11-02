@@ -97,7 +97,6 @@
     <string name="carelevo_patch_attach_step2_desc">从吸塑包装中取出贴片，并取下针帽。</string>
     <string name="carelevo_patch_attach_step3_title">贴上贴片</string>
     <string name="carelevo_patch_attach_step3_desc">将贴片贴到皮肤上，使标记点朝上。</string>
-    <string name="carelevo_patch_attach_step4_desc">贴附贴片后，请按下就绪按钮。</string>
     <string name="carelevo_patch_needle_insertion_step1_title">取下安全帽</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">沿箭头方向旋转安全帽并取下。</string>
     <string name="carelevo_patch_needle_insertion_step2_title">插入针头</string>

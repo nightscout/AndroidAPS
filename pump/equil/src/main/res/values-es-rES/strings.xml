@@ -5,7 +5,7 @@
     <!--  start  -->
     <string name="equil_basal_speed">Basal base</string>
     <string name="equil_dressing">Cambiar reservorio</string>
-    <string name="equil_dressing_onkey_msg">Desplazamiento automático del émbolo hasta el fondo del depósito. Se detendrá automáticamente al llegar al fondo. Haga clic en \"Detener\" para interrumpir si es necesario.</string>
+    <string name="equil_dressing_onkey_msg">Desplazamiento automático del émbolo hasta el fondo del depósito. Se detendrá automáticamente al llegar al fondo. Haz clic en \"Detener\" para interrumpir si es necesario.</string>
     <string name="equil_hint_dressing">Esta operación detendrá la infusión de insulina y hará que el émbolo de la bomba se retraiga hasta el fondo</string>
     <string name="equil_insulin_reservoir">Reservorio de insulina</string>
     <string name="equil_mode">Modo de funcionamiento</string>
@@ -38,14 +38,14 @@
     <string name="equil_ble_config_confirmation_title">Emparejar bomba parche Equil</string>
     <string name="equil_error">Error de conexión</string>
     <string name="equil_change">Cambiar bomba</string>
-    <string name="equil_change_content">Desmonte la bomba de la placa base.</string>
+    <string name="equil_change_content">Desmonta la bomba de la placa base.</string>
     <string name="equil_new_infusion_set_question">¿Colocará también un nuevo equipo de infusión (base y cánula)?</string>
     <string name="equil_new_infusion_set_yes">Sí, nuevo equipo de infusión</string>
     <string name="equil_new_infusion_set_no">No, solo reservorio o batería</string>
     <string name="equil_same_infusion_set_hint">No se cebará la cánula y no se registrará ningún cambio de cánula</string>
     <string name="equil_unpair_alert">¿Estás seguro de que quieres renunciar al control sobre %1$s?</string>
-    <string name="equil_record_basal">Tasa basal %1$s U/H</string>
-    <string name="equil_record_basal_temp">Tasa basal temporal %1$s U/H</string>
+    <string name="equil_record_basal">Tasa basal %1$s U/h</string>
+    <string name="equil_record_basal_temp">Tasa basal temporal %1$s U/h</string>
     <string name="equil_record_bolus">Bolo %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La duración de la TBR debe ser mayor que cero y múltiplo de %1$s minutos.</string>
     <string name="equil_basal_exceeds_max">La tasa basal del perfil %1$s U/h supera el máximo basal de la bomba %2$s U/h. Aumenta el ajuste del máximo basal y vuelve a conectar la bomba.</string>
@@ -64,7 +64,7 @@
     <string name="equil_firmware_version">Versión del firmware</string>
     <string name="equil_shutdown_be">Equil se apagará automáticamente</string>
     <string name="equil_shutdown">Apagado automático de Equil</string>
-    <string name="equil_common_history_tbr_value">Ratio： %1$.2f U/H，duración： %2$d minutos</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Tasa: %1$.2f U/h, duración: %2$d minutos</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Establecer bolo</string>
@@ -129,7 +129,7 @@
     <string name="equil_common_wizard_exit_confirmation_text">Aún no has completado todos los pasos. ¿Estás seguro de que quieres salir?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Salir</string>
     <string name="equil_support_error">Versión del firmware demasiado baja. No compatible</string>
-    <string name="equil_password_tips">Opcionalmente, establezca una contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se usará para desvincularla en el futuro, así que asegúrese de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
+    <string name="equil_password_tips">Opcionalmente, establece una contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se usará para desvincularla en el futuro, así que asegúrate de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Establecer la contraseña de emparejamiento</string>
     <string name="equil_hint1">Después de instalar la bomba en su base, selecciona si deseas purgar el aire de la aguja.</string>
     <string name="equil_unbind">Desemparejar dispositivo</string>
@@ -141,6 +141,6 @@
     <string name="equil_attach">Por favor, añade la bomba a su base</string>
     <string name="equil_hint2">Cebado de cánula</string>
     <string name="equil_pump_updated">Bomba actualizada</string>
-    <string name="equil_replace_reservoir">El reservorio está vacío. Por favor, sustituya el reservorio</string>
+    <string name="equil_replace_reservoir">El reservorio está vacío. Por favor, sustituye el reservorio</string>
     <string name="equil_removed_anyway">Comando de desemparejamiento fallido. La bomba se eliminará de todos modos. La contraseña establecida durante el emparejamiento no se eliminará de la bomba.</string>
 </resources>

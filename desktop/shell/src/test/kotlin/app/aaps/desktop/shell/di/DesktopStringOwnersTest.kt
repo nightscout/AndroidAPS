@@ -8,8 +8,16 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
 import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.plugins.aps.ApsStrings
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.plugins.calibration.CalibrationStrings
+import app.aaps.plugins.configuration.ConfigurationStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.main.MainStrings
+import app.aaps.plugins.sensitivity.SensitivityStrings
+import app.aaps.plugins.smoothing.SmoothingStrings
+import app.aaps.plugins.source.SourceStrings
 import app.aaps.plugins.sync.SyncStrings
+import app.aaps.pump.virtual.VirtualStrings
 import app.aaps.ui.UiStrings
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -18,16 +26,16 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
 /**
- * That every owner the desktop shell registers is spelled the way its module spells it.
+ * That every module the desktop shell registers really resolves to its text.
  *
- * This is the one part of the string wiring a compiler cannot check. The owner is a plain String on
- * both sides - `owner.set("coreUi")` in the module's build file, `register("coreUi")` in
- * `GeneratedStringOwners` - so a typo compiles, and the only symptom is a screen showing string
- * **names** instead of words. That reads like unfinished UI rather than like a bug, which is how it
- * would survive review.
+ * The build makes sure each module is in `GeneratedStringOwners`: the module and the registry both
+ * read the same entry in `StringOwnerModules.ALL`. What the build cannot see is whether the
+ * registration reaches the text at run time, and the only symptom of that failing is a screen showing
+ * string **names** instead of words. That reads like unfinished UI rather than like a bug, which is
+ * how it would survive review.
  *
- * Each case takes its owner from that module's own generated object instead of repeating the
- * literal, so a module that renames its owner fails here rather than going quiet.
+ * Each case takes its name from that module's own generated object instead of repeating the owner
+ * as a literal, so it asks with the owner exactly as the module generated it.
  */
 class DesktopStringOwnersTest {
 
@@ -49,14 +57,22 @@ class DesktopStringOwnersTest {
     @Test fun `every registered owner resolves one of its own strings`() {
         // One case per registration, so a single misspelled owner fails rather than only the first.
         listOf(
-            CoreUiStrings.configbuilder_general,
-            KeysStrings.absorption_cutoff_summary,
-            UiStrings.a11y_add_new_insulin,
             InterfacesStrings.advisoralarm,
+            KeysStrings.absorption_cutoff_summary,
+            CoreUiStrings.configbuilder_general,
             ImplementationStrings.backup_to_google_drive,
+            UiStrings.a11y_add_new_insulin,
             ApsStrings.array_of_elements,
+            AutomationStrings.automation,
+            CalibrationStrings.no_calibration_name,
+            ConfigurationStrings.units,
+            ConstraintsStrings.dst_plugin_name,
             MainStrings.basal_shortname,
-            SyncStrings.a11y_otp_qr_code
+            SensitivityStrings.sensitivity_oref1,
+            SmoothingStrings.no_smoothing_name,
+            SourceStrings.ns_client_bg,
+            SyncStrings.a11y_otp_qr_code,
+            VirtualStrings.virtual_pump_type
         ).forEach { ref ->
             val named = ref as TextRef.Named
             assertNotEquals(

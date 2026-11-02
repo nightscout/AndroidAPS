@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
-    <string name="omnipod_eros_pump_description">Integrazione del microinfusore Omnipod Eros (il modello più vecchio con la protezione ago di colore trasparente). Richiede un dispositivo RileyLink con almeno la versione firmware 2.0.</string>
+    <string name="omnipod_eros_pump_description">Integrazione del micro Omnipod Eros (il modello più vecchio con la protezione dell\'ago trasparente). Richiede un dispositivo RileyLink con almeno la versione firmware 2.0.</string>
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">Indirizzo RileyLink non valido.</string>
@@ -12,7 +12,7 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
+    <string name="omnipod_eros_history_tbr_value">Velocità: %1$.2f U, durata: %2$d minuti</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Comunicazione fallita: verifica dell\'integrità del messaggio fallita</string>
     <string name="omnipod_eros_error_invalid_packet_type">Comunicazione fallita: ricevuto un pacchetto non valido dal pod</string>
@@ -24,7 +24,7 @@
     <string name="omnipod_eros_error_nonce_resync_failed">Comunicazione fallita: risincronizzazione \'nonce\' non riuscita</string>
     <string name="omnipod_eros_error_nonce_out_of_sync">Comunicazione fallita: \'nonce\' non sincronizzato</string>
     <string name="omnipod_eros_error_not_enough_data">Comunicazione fallita: non abbastanza dati ricevuti dal pod</string>
-    <string name="omnipod_eros_error_pod_fault">È stato rilevato un guasto al pod (%1$03d %2$s). Disattiva il tuo pod e avviane uno nuovo</string>
+    <string name="omnipod_eros_error_pod_fault">È stato rilevato un guasto al pod (%1$03d %2$s). Disattiva il tuo pod e attivane uno nuovo</string>
     <string name="omnipod_eros_error_pod_returned_error_response">Comunicazione fallita: il pod ha restituito una risposta di errore</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Nessuna risposta da RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interrotto</string>
@@ -32,16 +32,16 @@
     <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Impostazione profilo basale fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">L\'impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod nella scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Impostazione profilo basale fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione nella scheda Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">La cancellazione della basale temporanea potrebbe essere fallita. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata cancellata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">L\'annullamento della basale temporanea potrebbe essere fallito. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata annullata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata annullata. Aggiorna manualmente lo stato del pod nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">L\'impostazione dell\'ora potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod nella scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione nella scheda Omnipod.</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Impossibile cambiare automaticamente l\'ora nel pod. Dovresti sincronizzare manualmente l\'ora nella scheda Omnipod.</string>
-    <string name="omnipod_eros_error_bolus_failed_uncertain">Impossibile verificare se il bolo è riuscito. Verifica manualmente che il tuo pod stia erogando insulina ascoltando i click. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento del bolo dalla sezione Trattamenti, anche se fai click su \'Cancella bolo\' in questo momento!</b></string>
-    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Impossibile verificare che il bolo SMB (%1$.2f U) sia riuscito. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento dalla sezione Trattamenti.</b></string>
-    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Una basale temporanea è in esecuzione sul pod, ma AAPS non ne è a conoscenza. Cancella manualmente la tua basale temporanea.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Impossibile verificare se il bolo è riuscito. Verifica manualmente che il tuo pod stia erogando insulina ascoltando i click. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento del bolo dalla sezione Trattamenti, anche se tocchi \'Annulla bolo\' adesso!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Impossibile verificare se il bolo SMB (%1$.2f U) è riuscito. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento SMB dalla sezione Trattamenti.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Una basale temporanea è in esecuzione sul pod, ma AAPS non ne è a conoscenza. Annulla manualmente la tua basale temporanea.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Statistiche RileyLink</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Reset RileyLink</string>
