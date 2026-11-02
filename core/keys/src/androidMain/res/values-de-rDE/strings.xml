@@ -337,6 +337,7 @@
     <string name="pref_title_absorption_cutoff">Absorptionscutoff</string>
     <string name="absorption_cutoff_summary">Zeit, nach der jede Mahlzeit mit Sicherheit absorbiert ist. Verbleibende Kohlenhydrate werden danach nicht mehr berücksichtigt.</string>
     <string name="pref_title_absorption_maxtime">Maximale Absorptionsdauer</string>
+    <string name="absorption_max_time_summary">Zeit in Stunden, nach der alle Kohlenhydrate einer Mahlzeit voraussichtlich aufgenommen sind</string>
     <string name="pref_title_autosens_min">Autosens-Minimum</string>
     <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
     <string name="pref_title_autosens_max">Autosens-Maximum</string>
