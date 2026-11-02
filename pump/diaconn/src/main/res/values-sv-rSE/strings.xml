@@ -27,6 +27,7 @@
     <string name="commanderror">Kommandofel</string>
     <string name="speederror">Felaktig hastighet</string>
     <string name="insulinlimitviolation">Insulingräns nådd</string>
+    <string name="boluserrorcode">Begärt: %1$.2f U Levererat: %2$.2f U Felkod: %3$s</string>
     <string name="selectedpump">Vald pump</string>
     <string name="bolus_step">Bolussteg</string>
     <string name="basal_step">Basalsteg</string>
@@ -89,6 +90,7 @@
     <string name="diaconn_g8_logalarmblock">Ocklusion (%s)</string>
     <string name="diaconn_g8_lgorelease">basal återupptagen (%s)</string>
     <string name="diaconn_g8_lgosuspend">basal pausad (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Dubbel normal slutförd</string>
     <string name="diaconn_g8_logdualsquarestart">Kombi startad</string>
     <string name="diaconn_g8_logdualsquaresuccess">Kombi slutförd</string>
     <string name="diaconn_g8_logsquarestart">Förlängd startad</string>
@@ -97,6 +99,8 @@
     <string name="diaconn_g8_logsuccess">Slutfört</string>
     <string name="diaconn_g8_logmealsuccess">Lyckades ange måltid</string>
     <string name="diaconn_g8_errorcode_1">Kan inte kontrollera pga CRC-fel i överföringen.</string>
+    <string name="diaconn_g8_errorcode_2">Kan inte ställas in: fel i indataparameter.</string>
+    <string name="diaconn_g8_errorcode_3">Kan inte ställas in: fel i protokollspecifikation.</string>
     <string name="diaconn_g8_errorcode_4">Måltiden tidsmäts. Kan inte ta bolus.</string>
     <string name="diaconn_g8_errorcode_6">Avbruten av pumpen</string>
     <string name="diaconn_g8_errorcode_7">Pumpen utför andra åtgärder. Appinställningar begränsas.</string>
@@ -113,6 +117,8 @@
     <string name="diaconn_g8_errorcode_32">Under LGS är bolus begränsad</string>
     <string name="diaconn_g8_errorcode_33">LGS är redan PÅ. PÅ-kommandot avvisas.</string>
     <string name="diaconn_g8_errorcode_34">LGS är redan AV. AV-kommandot avvisas.</string>
+    <string name="diaconn_g8_errorcode_35">Start av tillfällig basal avvisas när en tillfällig basal redan pågår</string>
+    <string name="diaconn_g8_errorcode_36">Stopp av tillfällig basal avvisas när ingen tillfällig basal pågår</string>
     <string name="diaconn_g8_cloudsend_summary">Skicka pumploggar till Diaconns moln.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Molnsynkronisering</string>
     <string name="bolus_speed_1">1 U/min</string>
