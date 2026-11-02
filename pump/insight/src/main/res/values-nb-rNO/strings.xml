@@ -5,7 +5,7 @@
     <string name="not_paired">Ikke sammenkoblet</string>
     <string name="recovering">Gjenoppretter</string>
     <string name="insight_status">Status</string>
-    <string name="recovery_duration">Tilkoblingsforsøk</string>
+    <string name="recovery_duration">Gjenopprettingstid</string>
     <string name="last_connected">Siste tilkobling</string>
     <string name="start_pump">Start pumpe</string>
     <string name="stop_pump">Stopp pumpe</string>
@@ -29,7 +29,7 @@
     <string name="disable_vibration_summary">For bolus og forlenget bolus (bare tilgjengelig med Insight-fastvare 3.x)</string>
     <string name="disable_vibration_auto">Slå av vibrasjoner ved levering av automatisk bolus</string>
     <string name="disable_vibration_auto_summary">For SMB og midlertidig basal med TBR-emulering (bare tilgjengelig med Insight-fastvare 3.x)</string>
-    <string name="timeout_during_handshake">Tidsavbrudd under sammenkobling – start Bluetooth på nytt</string>
+    <string name="timeout_during_handshake">Tidsavbrudd under håndtrykk – tilbakestill Bluetooth</string>
     <string name="pump_stopped">Pumpen stoppet</string>
     <string name="pump_started">Pumpen startet</string>
     <string name="release_software_version">Programvareversjon</string>
