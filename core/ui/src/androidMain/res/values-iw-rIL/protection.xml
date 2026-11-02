@@ -5,12 +5,6 @@
     <string name="settings_protection">הגנה על הגדרות</string>
     <string name="application_protection">הגנת האפליקציה</string>
     <string name="bolus_protection">הגנת בולוס</string>
-    <string name="settings_password">סיסמת ההגדרות</string>
-    <string name="settings_pin">קוד PIN של ההגדרות</string>
-    <string name="application_password">סיסמת האפליקציה</string>
-    <string name="application_pin">PIN היישום</string>
-    <string name="bolus_password">סיסמת בולוס</string>
-    <string name="bolus_pin">PIN בולוס</string>
     <string name="protection_timeout_title">משך שמירת הסיסמה וה-PIN [שניות]</string>
     <string name="protection_timeout_summary">זמן לפני בקשת סיסמה או PIN</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
