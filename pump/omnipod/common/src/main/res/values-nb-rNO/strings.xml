@@ -13,7 +13,7 @@
     <string name="omnipod_common_error_bolus_did_not_succeed">Bolus var mislykket.</string>
     <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Kunne ikke lagre basalprofil: mottok en tom profil. Kontroller at du har aktivert profilen.</string>
     <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ingen basalprofil er aktiv. Sørg for å aktivere din basalprofil.</string>
-    <string name="omnipod_common_error_unsupported_custom_command">Ukjent kommando: %1$s</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Egendefinert kommando støttes ikke: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Kunne ikke oppdatere status</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Kunne ikke oppdatere status ved oppstart</string>
     <string name="omnipod_common_error_failed_to_silence_alerts">Kunne ikke dempe varsler</string>
@@ -58,7 +58,7 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Fyll Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Initialiser Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Fest Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Klargjør infusjonsstedet. Fjern Pod\'ens kanylebeskyttelse og papirfolien, og fest Pod til infusjonsstedet.\n\nHvis du oppdager feil med kanylen, trykk <b>Avbryt</b> og forkast Pod.\n\nTrykk <b>Neste</b> for å sette inn kanyle og starte basallevering.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Klargjør infusjonsstedet. Fjern kanylehetten og papirfolien fra podden, og fest podden på infusjonsstedet.\n\nHvis kanylen stikker ut, trykker du <b>Avbryt</b> og forkaster podden.\n\nTrykk <b>Neste</b> for å sette inn kanylen og starte basalleveringen.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Når du trykker <b>OK</b>, vil kanylen settes inn. Pass på at du har festet Pod\'en på infusjonsstedet.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Sett inn kanyle</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Prøver å angi basalprogram og setter inn kanylen.\n\nNår kanylen er på plass kan du trykke på <b>Neste</b>.</string>
@@ -100,8 +100,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for ubekreftet SMB</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Lydvarsel for ubekreftet bolus</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Lyd når varsling om pauset levering er aktivert</string>
-    <string name="omnipod_dash_use_bonding">Bluetooth-paring</string>
-    <string name="omnipod_dash_use_bonding_summary">Prøv dette bare hvis pod-en ikke klarer å opprettholde en stabil forbindelse. Telefonen vil vise forespørsler om paring som du må godta. La dette være avslått hvis pod-en kobler til uten problemer. Har ingen effekt på versjoner under Android 15.</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth-binding (bonding)</string>
+    <string name="omnipod_dash_use_bonding_summary">Prøv dette bare hvis podden ikke klarer å opprettholde en stabil forbindelse. Telefonen vil vise forespørsler om sammenkobling som du må godta. La dette være avslått hvis podden kobler til uten problemer. Har ingen effekt på versjoner under Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod-aktivering)</string>
@@ -156,7 +156,7 @@
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Avbryt falsk pauset TBR</string>
     <string name="omnipod_common_cmd_split_tbr">Del opp TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Spill av testlyd</string>
-    <string name="omnipod_common_cmd_unknown_entry">Ukjent inntasting</string>
+    <string name="omnipod_common_cmd_unknown_entry">Ukjent oppføring</string>
     <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Deaktiver varsler om pauset insulinlevering</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Påminnelse om fullføring av paring</string>
@@ -183,7 +183,7 @@
         <item quantity="one">Pod varsel: %1$s</item>
         <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
-    <string name="omnipod_common_overview_pod_hard_end_date">Pod avslutter</string>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod stopper helt</string>
     <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f E/t, %2$d minutter</string>
