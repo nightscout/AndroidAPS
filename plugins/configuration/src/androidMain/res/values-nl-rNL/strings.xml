@@ -19,7 +19,7 @@
     <string name="master_password_summary">Het hoofdwachtwoord wordt gebruikt om back-ups te versleutelen en om risicovolle handelingen in de app te bevestigen. Onthoud het wachtwoord goed of bewaar het op een veilige plek.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
-    <string name="syncinfotext">Gegevens naar de cloud synchroniseren. Je kan dit deel nu overslaan, maar je kan pas verder met de doelen wanneer je een Nightscout of Tidepool client hebt ingesteld.</string>
+    <string name="syncinfotext">Gegevens synchroniseren met de cloud. Dit onderdeel kan nu worden overgeslagen, maar de leerdoelen kunnen pas worden afgerond als Nightscout of Tidepool is ingesteld.</string>
     <string name="status_label">Status:</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="profile">Profiel</string>
@@ -29,7 +29,7 @@
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Kies een algoritme. De algoritmes zijn gerangschikt van oud naar nieuw. Een nieuwer algoritme is doorgaans krachtiger. Lees vóór gebruik de OpenAPS-documentatie en configureer het algoritme volgens de instructies.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Het installatieproces kan worden voortgezet zodra de pomp is ingesteld.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
     <string name="open_objectives">Open Doelen</string>
     <string name="setupwizard_permissions">Machtigingen</string>
@@ -59,8 +59,8 @@
     <string name="configbuilder_sync_description">Data upload, synchroniseren en communicatie plugins.</string>
     <string name="configbuilder_bgsource_description">Waar moet AAPS de gegevens vandaan halen?</string>
     <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
-    <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
-    <string name="nsclient_version_does_not_match">NSClient versie en AAPS versie komen niet overeen. Update alsjeblieft.</string>
+    <string name="allow_hardware_pump_text">Let op: Bij het activeren en verbinden van een hardwarepomp kopieert AAPS de basaalinstellingen uit het profiel naar de pomp. De bestaande basaalstanden in de pomp worden daarbij overschreven. Controleer of de juiste basaalinstellingen in AAPS zijn ingesteld. Bij twijfel, of als de bestaande basaalinstellingen in de pomp niet mogen worden overschreven, druk op Annuleren en schakel op een later moment over naar de pomp.</string>
+    <string name="nsclient_version_does_not_match">De versie van AAPSClient komt niet overeen met de versie van AAPS. Werk AAPSClient bij.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -73,7 +73,7 @@
     <!-- Import source selection dialog -->
     <string name="loading">Laden…</string>
     <string name="warning_wrong_directory_selected">Verkeerde map geselecteerd</string>
-    <string name="warning_wrong_directory_message">U heeft de \"%1$s\" submap geselecteerd in plaats van de AAPS hoofdmap. Selecteer de bovenliggende AAPS map. De app zal automatisch submappen aanmaken en beheren.</string>
+    <string name="warning_wrong_directory_message">De submap ‘%1$s’ is geselecteerd in plaats van de hoofdmap van AAPS. Selecteer de bovenliggende AAPS-map. De app maakt de submappen automatisch aan en beheert deze zelf.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
