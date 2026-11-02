@@ -78,4 +78,6 @@
     <string name="alarm_feat_btn_patch_discard">Patch deaktivieren</string>
     <!-- General Messages -->
     <!--    notification -->
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Ein Bolus, der nicht aufgezeichnet wurde, wurde jetzt hinzugefügt. Überprüfen Sie IOB und versuchen Sie es dann erneut.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Der Patch hat den Stopp nicht bestätigt. Der vollständige Bolus von %1$s wurde aufgezeichnet.</string>
 </resources>
