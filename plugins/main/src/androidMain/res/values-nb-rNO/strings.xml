@@ -5,14 +5,14 @@
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpebatteri</string>
     <string name="cannula">Kanyle</string>
-    <string name="patch_pump">Patchpumpe</string>
+    <string name="patch_pump">Patch-pumpe</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
     <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
+    <string name="description_persistent_notification">Viser et vedvarende varsel med en kort oppsummering av hva loopen gjør</string>
     <string name="old_data">GAMLE DATA</string>
     <string name="notification_iob_short">%1$.1fE</string>
 </resources>
