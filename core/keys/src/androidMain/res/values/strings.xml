@@ -270,33 +270,7 @@
     <!-- Formatted unit strings with value only -->
 
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Language</string>
     <string name="lang_default">System default</string>
-    <string name="lang_en">English</string>
-    <string name="lang_af">Afrikaans</string>
-    <string name="lang_bg">Bulgarian</string>
-    <string name="lang_cs">Czech</string>
-    <string name="lang_de">German</string>
-    <string name="lang_dk">Danish</string>
-    <string name="lang_fr">French</string>
-    <string name="lang_nl">Dutch</string>
-    <string name="lang_es">Spanish</string>
-    <string name="lang_el">Greek</string>
-    <string name="lang_ga">Irish</string>
-    <string name="lang_it">Italian</string>
-    <string name="lang_ko">Korean</string>
-    <string name="lang_lt">Lithuanian</string>
-    <string name="lang_nb">Norwegian</string>
-    <string name="lang_pl">Polish</string>
-    <string name="lang_pt">Portuguese</string>
-    <string name="lang_pt_br">Portuguese, Brazilian</string>
-    <string name="lang_ro">Romanian</string>
-    <string name="lang_ru">Russian</string>
-    <string name="lang_sk">Slovak</string>
-    <string name="lang_sv">Swedish</string>
-    <string name="lang_tr">Turkish</string>
-    <string name="lang_zh_tw">Chinese, Traditional</string>
-    <string name="lang_zh_cn">Chinese, Simplified</string>
     <string name="pref_title_patient_name">Instance name</string>
     <string name="pref_summary_patient_name">Name of the person using this phone. It tells this AAPS instance apart in reports and sync.</string>
 

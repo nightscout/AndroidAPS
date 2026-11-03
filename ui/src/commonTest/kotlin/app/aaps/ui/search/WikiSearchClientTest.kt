@@ -72,6 +72,7 @@ class WikiSearchClientTest {
             "zh_TW" to "androidaps-zh-tw",
             "de-AT" to "androidaps-de",
             "he-IL" to "androidaps-he",
+            "he" to "androidaps-he",
             "cs" to "androidaps-cs",
             // The language setting holds "nb", and the Norwegian wiki is registered as "nb-no" (#5455)
             "nb" to "androidaps-nb",
