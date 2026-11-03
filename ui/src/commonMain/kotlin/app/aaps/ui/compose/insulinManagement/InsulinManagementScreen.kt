@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
@@ -64,6 +63,9 @@ import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsFloatingToolbar
+import app.aaps.core.ui.compose.AapsFloatingToolbarDeleteButton
+import app.aaps.core.ui.compose.AapsFloatingToolbarRow
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.keys.interfaces.ClientRole
@@ -436,39 +438,22 @@ fun InsulinManagementScreen(
 
             // Floating toolbar + FAB at bottom
             if (cardCount > 0) {
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                AapsFloatingToolbarRow(modifier = Modifier.align(Alignment.BottomCenter)) {
                     if (!isPlayMode) {
                         // Toolbar pill (only in EDIT mode)
-                        Surface(
-                            shape = RoundedCornerShape(percent = 50),
-                            tonalElevation = 3.dp,
-                            shadowElevation = 3.dp
-                        ) {
-                            Row(modifier = Modifier.padding(horizontal = 4.dp)) {
-                                // Add
-                                IconButton(onClick = { viewModel.addNewInsulin() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Add,
-                                        contentDescription = stringResource(UiStrings.a11y_add_new_insulin)
-                                    )
-                                }
-                                // Delete
-                                IconButton(
-                                    onClick = { showDeleteDialog = true },
-                                    enabled = canDelete
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = stringResource(UiStrings.a11y_delete_current_insulin)
-                                    )
-                                }
+                        AapsFloatingToolbar {
+                            // Add
+                            IconButton(onClick = { viewModel.addNewInsulin() }) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = stringResource(UiStrings.a11y_add_new_insulin)
+                                )
                             }
+                            AapsFloatingToolbarDeleteButton(
+                                onClick = { showDeleteDialog = true },
+                                enabled = canDelete,
+                                contentDescription = stringResource(UiStrings.a11y_delete_current_insulin)
+                            )
                         }
                     }
                     val currentIcfgConcentration = uiState.insulins.getOrNull(uiState.currentCardIndex)?.concentration ?: 0.0

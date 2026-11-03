@@ -118,6 +118,26 @@ class TempTargetManagementViewModel(
         _uiState.update { it.copy(screenMode = mode) }
     }
 
+    /**
+     * Set while a confirmed activate/cancel commits. The screen is about to close, so reloading on
+     * the TT change the commit causes would only flash the new state (yellow card, cancel button)
+     * during the exit animation. Cleared again if the commit fails, so the screen keeps updating,
+     * or by [onScreenClosed], which then does the skipped reload out of sight.
+     */
+    private var closing = false
+
+    /**
+     * Called when the screen leaves the composition. This view model is activity scoped, so without
+     * the reload skipped by [closing] the next visit would open on the old selection instead of the
+     * target that was just activated.
+     */
+    fun onScreenClosed() {
+        if (closing) {
+            closing = false
+            loadData()
+        }
+    }
+
     init {
         loadData()
         observeTempTargetChanges()
@@ -233,8 +253,8 @@ class TempTargetManagementViewModel(
         persistenceLayer
             .observeChanges<TT>()
             .onEach {
-                // Reload data when TT changes in database
-                loadData()
+                // Reload data when TT changes in database, unless that change is our own commit
+                if (!closing) loadData()
             }
             .launchIn(viewModelScope)
     }
@@ -744,10 +764,11 @@ class TempTargetManagementViewModel(
                             icon = ElementType.TEMP_TARGET_MANAGEMENT.icon(),
                             onOk = {
                                 appScope.launch {
+                                    closing = true
                                     if (batchExecutor.commit(prepared.id, Sources.TTDialog, label) is ActionProgress.Applied) {
                                         if (durationMinutes == 10) preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
                                         withContext(Dispatchers.Main) { onSuccess() }
-                                    }
+                                    } else closing = false
                                 }
                             }
                         )
@@ -780,8 +801,10 @@ class TempTargetManagementViewModel(
                             icon = ElementType.TEMP_TARGET_MANAGEMENT.icon(),
                             onOk = {
                                 appScope.launch {
+                                    closing = true
                                     if (batchExecutor.commit(prepared.id, Sources.TTDialog, label) is ActionProgress.Applied)
                                         withContext(Dispatchers.Main) { onSuccess() }
+                                    else closing = false
                                 }
                             }
                         )

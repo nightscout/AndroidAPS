@@ -1270,6 +1270,14 @@ data class IobLineStyles(
     val extBolusLine: LineCartesianLayer.Line
 )
 
+/**
+ * One size for the bolus and carbs labels on the graphs. Vico gives a label no more width than the
+ * gap to its neighbour in the same series and ends it with "..." when the text is wider. The bolus
+ * labels used 16 sp and lost that race far more often than the 14 sp carbs labels, so both use the
+ * smaller size now.
+ */
+private val TREATMENT_LABEL_FONT_SIZE = 14.sp
+
 @Composable
 fun rememberIobLineStyles(): IobLineStyles {
     val iobColor = AapsTheme.generalColors.iobPrediction
@@ -1278,13 +1286,13 @@ fun rememberIobLineStyles(): IobLineStyles {
     val decimalFormatter = LocalDecimalFormatter.current
 
     val bolusLabelComponent = remember(smbColor) {
-        TextComponent(textStyle = TextStyle(color = smbColor, fontSize = 16.sp))
+        TextComponent(textStyle = TextStyle(color = smbColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
     }
     val bolusValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
     }
     val extBolusLabelComponent = remember(extBolusColor) {
-        TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = 16.sp))
+        TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
     }
     val extBolusValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
@@ -1359,7 +1367,7 @@ fun rememberCobLineStyles(): CobLineStyles {
     val decimalFormatter = LocalDecimalFormatter.current
 
     val carbsLabelComponent = remember(carbsColor) {
-        TextComponent(textStyle = TextStyle(color = carbsColor, fontSize = 14.sp))
+        TextComponent(textStyle = TextStyle(color = carbsColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
     }
     val carbsValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatCarbsLabel(value, decimalFormatter) }

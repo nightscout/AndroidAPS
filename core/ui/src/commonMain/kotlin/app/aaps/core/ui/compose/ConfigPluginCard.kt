@@ -93,10 +93,12 @@ fun ConfigPluginCard(
         SelectionMode.MULTI_SELECT  -> true
     }
 
+    // Not an AapsCard: it is a checkbox or radio button with its own semantics, a border and an enabled
+    // state. The same container colour as AapsCard, so it stands out from the background as much.
     val colors = if (selected) {
         CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     } else {
-        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
     }
     val border = if (selected) {
         BorderStroke(2.dp, MaterialTheme.colorScheme.primary)

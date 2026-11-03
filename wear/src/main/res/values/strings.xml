@@ -216,6 +216,7 @@
     <string name="key_user_action_data" translatable="false">user_action_data</string>
     <string name="key_scene_data" translatable="false">scene_data</string>
     <string name="key_active_scene_state" translatable="false">active_scene_state</string>
+    <string name="key_temp_target_active" translatable="false">temp_target_active</string>
     <string name="key_prime_fill" translatable="false">primefill</string>
     <string name="key_show_wizard" translatable="false">showWizard</string>
     <string name="key_single_target" translatable="false">singletarget</string>
