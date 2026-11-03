@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -181,7 +182,8 @@ fun BgInfoSection(
                 bgInfo.deltaText?.let { delta ->
                     Text(
                         text = delta,
-                        style = AapsTheme.typography.bgSecondary,
+                        // Left to right also in a right-to-left language, or "+0.4" shows as "0.4+"
+                        style = AapsTheme.typography.bgSecondary.copy(textDirection = TextDirection.Ltr),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
