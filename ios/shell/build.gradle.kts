@@ -129,12 +129,49 @@ fun buildStamp(): String {
     }
     return "$commit-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
 }
+
+/** Runs a git command and returns its trimmed output, or null if git is not usable here. */
+fun git(vararg args: String): String? = try {
+    val out = File.createTempFile("git-ios", "")
+    ProcessBuilder(listOf("git") + args).redirectOutput(out).start().waitFor()
+    out.readText().trim()
+} catch (_: Exception) {
+    null
+}
+
+/** The short commit, the same shape `:app` puts in BuildConfig.HEAD. */
+fun gitHead(): String = git("describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*") ?: "NoGitSystemAvailable"
+
+/** Where this was cloned from, so a crash report can say whether it came from a fork. */
+fun gitRemoteUrl(): String = git("remote", "get-url", "origin")?.takeIf { it.isNotEmpty() } ?: "NoGitSystemAvailable"
+
+/**
+ * Whether the working tree was clean, by the same rule `:app` uses.
+ *
+ * Untracked files do not count - a clone usually has some, and treating them as changes would mark
+ * every build dirty and make the flag say nothing. Returns false when git cannot be reached, so an
+ * unknown answer never reads as "clean".
+ */
+fun allCommitted(): Boolean {
+    val status = git("status", "-s") ?: return false
+    return status
+        .replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea/codeStyles/.*?\s*$"""), "")
+        .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "")
+        .trim()
+        .isEmpty()
+}
+
 /** The version this build reports, from the same constant the Android app uses. */
 val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBuildInfo") {
     version.set(Versions.appVersion)
     buildStamp.set(buildStamp())
     platform.set("iOS")
     packageName.set("app.aaps.ios.shell.config")
+    // So a crash report names the commit, the repository and whether the tree was clean - the three
+    // things that tell an upstream report from a fork's. Android has sent these since 2019.
+    head.set(gitHead())
+    gitRemote.set(gitRemoteUrl())
+    committed.set(allCommitted())
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
 }
 
