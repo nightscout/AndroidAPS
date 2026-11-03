@@ -61,7 +61,7 @@
     <string name="patch_communication_succeed_message">Verbunden mit dem Patch.</string>
     <string name="patch_cancel_pairing">Kopplung abbrechen</string>
     <string name="insulin_suspend_msg4">Die Insulinlieferung wird ausgesetzt.</string>
-    <string name="string_activate_patch">Pod aktivieren</string>
+    <string name="string_activate_patch">Patch aktivieren</string>
     <string name="string_discard_patch">Pod verwerfen</string>
     <string name="string_running">In Betrieb</string>
     <string name="retry">Erneut versuchen</string>
