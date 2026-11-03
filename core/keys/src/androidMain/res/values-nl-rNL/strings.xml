@@ -17,11 +17,11 @@
     <string name="pref_summary_show_calibration_button">Verzend een kalibratie naar xDrip+ (zorg ervoor dat ‘Accepteer kalibraties’ is ingeschakeld onder ‘Instellingen Interapp’ in xDrip+).</string>
     <string name="pref_title_show_notes_in_dialogs">Notities weergeven in dialogen</string>
     <string name="pref_title_use_bolus_advisor">Gebruik de bolusadviseur</string>
-    <string name="pref_summary_use_bolus_advisor">Schakelt de bolusadviseur in, die helpt bij het berekenen van bolussen bij hogere bloedglucosewaarden.</string>
-    <string name="pref_title_use_bolus_reminder">Gebruik bolus herinnering</string>
-    <string name="pref_summary_use_bolus_reminder">Activeert meldingen die je eraan herinneren een bolus toe te dienen.</string>
-    <string name="pref_title_use_super_bolus">Gebruik super bolus</string>
-    <string name="pref_summary_use_super_bolus">Inschakelen van super bolus functie die insuline leent van basaal voor onmiddellijke levering.</string>
+    <string name="pref_summary_use_bolus_advisor">Activeert de bolusadviseur, die helpt bij het berekenen van bolussen bij hogere bloedglucosewaarden.</string>
+    <string name="pref_title_use_bolus_reminder">Gebruik bolusherinnering</string>
+    <string name="pref_summary_use_bolus_reminder">Activeert herinneringen om een bolus toe te dienen.</string>
+    <string name="pref_title_use_super_bolus">Gebruik superbolus</string>
+    <string name="pref_summary_use_super_bolus">Activeert de superbolus-functie, waarbij insuline aan de basale insulinetoediening wordt onttrokken om deze direct toe te dienen.</string>
     <!-- Pump preferences -->
     <string name="pref_title_bt_watchdog">BT Watchdog</string>
     <string name="pref_summary_bt_watchdog">Schakelt de bluetooth van de telefoon kort uit als er geen verbinding met de pomp tot stand kan worden gebracht. Dit kan helpen bij bepaalde telefoons waarbij de bluetoothverbinding vastloopt.</string>
@@ -30,13 +30,13 @@
     <string name="pref_title_alert_pump_unreachable">Waarschuw als de pomp niet bereikbaar is</string>
     <string name="pref_title_alert_carbs_required">Waarschuw als koolhydraten nodig zijn</string>
     <string name="pref_title_alert_urgent_as_android_notification">Geef dringende alarmen als Android meldingen</string>
-    <string name="pref_title_alert_increase_volume">Geleidelijk volume voor meldingen verhogen</string>
+    <string name="pref_title_alert_increase_volume">Volume van meldingen geleidelijk verhogen</string>
     <string name="pref_title_alert_override_dnd">Niet storen-stand negeren</string>
-    <string name="pref_summary_alert_override_dnd">Aan: alarmen ook als de telefoon stil is of in niet storen. Uitgeschakeld: geen geluids alarmen, trillen bij niet storen.</string>
+    <string name="pref_summary_alert_override_dnd">Aan: Alarmen klinken ook wanneer de telefoon op stil staat of de modus Niet storen is ingeschakeld. Uit: Alarmen klinken dan niet. Wanneer de modus Niet storen is ingeschakeld, trillen ze alleen.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG-gegevens naar NS</string>
-    <string name="pref_title_bg_source_create_sensor_change">Log plaatsen nieuwe sensor</string>
-    <string name="pref_summary_bg_source_create_sensor_change">Maak een behandelgebeurtenis aan bij het plaatsen van een nieuwe sensor.</string>
+    <string name="pref_title_bg_source_create_sensor_change">Registreer sensorwissel</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Registreer het plaatsen van een nieuwe sensor.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Gebruik dynamische gevoeligheid</string>
     <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik Dynamische ISF voor het aanpassen van de insulinegevoeligheid in plaats van Autosens.</string>
@@ -119,7 +119,7 @@
     <string name="pref_title_ns_use_wifi">Wifi gebruiken</string>
     <string name="pref_title_ns_use_on_battery">Synchroniseer op batterij</string>
     <string name="pref_title_ns_use_on_charging">Synchroniseer tijdens opladen</string>
-    <string name="pref_title_ns_log_app_start">Log het starten van de app</string>
+    <string name="pref_title_ns_log_app_start">Registreer het starten van de app</string>
     <string name="pref_title_ns_create_announcements_from_errors">Meldingen aanmaken bij fouten</string>
     <string name="pref_title_ns_create_announcements_from_carbs_req">Meldingen aanmaken voor benodigde koolhydraten</string>
     <string name="pref_title_ns_slow_sync">Langzaam synchroniseren</string>
@@ -242,7 +242,7 @@
     <!-- Formatted unit strings with value and range -->
     <string name="lang_default">Systeemtaal</string>
     <string name="pref_title_patient_name">Naam van dit exemplaar</string>
-    <string name="pref_summary_patient_name">Naam van de persoon die deze telefoon gebruikt. Het vertelt dit AAPS exemplaar uit rapporten en synchronisatie.</string>
+    <string name="pref_summary_patient_name">Naam van de persoon die deze telefoon gebruikt, voor herkenbaarheid van de AAPS instantie in rapporten en synchronisatie.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS map</string>
     <!-- StringKey: Protection preferences -->
@@ -272,7 +272,7 @@
     <!-- StringKey: SMS preferences -->
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoonnummers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_otp_pin">Extra verplichte PIN aan einde van token</string>
+    <string name="smscommunicator_otp_pin">Extra verplichte PIN-code aan het einde van het token</string>
     <string name="smscommunicator_otp_pin_summary">Extra cijfers die aan het einde van elk gegenereerd eenmalig wachtwoord moeten worden toegevoegd</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Soort pomp</string>
@@ -311,7 +311,7 @@
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Standaardwaarde: 2.\nDe bolus-snooze wordt geactiveerd nadat een maaltijdbolus is toegediend. Dit voorkomt dat de loop kort na het eten reageert met een verlaagde tijdelijke basaal. Bij de standaardwaarde van 2 en een DIA van 3 uur wordt de bolus-snooze geleidelijk afgebouwd gedurende 1,5 uur (3 uur DIA / 2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5 m koolhydraten impact</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5 m koolhydraten impact</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB).\nDeze instelling bepaalt de minimale koolhydraatabsorptie per 5 minuten. De standaardwaarde komt overeen met een verwachte glucoseverandering van 3 mg/dl per 5 minuten. Dit beïnvloedt hoe snel de hoeveelheid actieve koolhydraten (COB) afneemt en hoeveel koolhydraatabsorptie wordt aangenomen bij het berekenen van toekomstige bloedglucosewaarden. Dit speelt een rol wanneer de bloedglucose sterker daalt dan verwacht of minder sterk stijgt dan verwacht.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB).\nDeze instelling bepaalt de minimale koolhydraatabsorptie per 5 minuten. De standaardwaarde komt overeen met een verwachte glucoseverandering van 3 mg/dl (0,17 mmol/L) per 5 minuten. Dit beïnvloedt hoe snel de hoeveelheid actieve koolhydraten (COB) afneemt en hoeveel koolhydraatabsorptie wordt aangenomen bij het berekenen van toekomstige bloedglucosewaarden. Dit speelt een rol wanneer de bloedglucose sterker daalt dan verwacht of minder sterk stijgt dan verwacht.</string>
     <string name="pref_title_absorption_cutoff">Afkapmoment koolhydraatabsorptie</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen een maaltijd als volledig opgenomen wordt beschouwd. Eventueel resterende koolhydraten vervallen vanaf dat moment.</string>
     <string name="pref_title_absorption_maxtime">Maximale absorptietijd koolhydraten</string>
