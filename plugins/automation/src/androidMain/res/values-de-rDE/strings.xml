@@ -55,7 +55,7 @@
     <string name="sendsmsactionlabel">SMS senden: %1$s</string>
     <string name="sendsmsactiondescription">SMS an alle Nummern senden</string>
     <string name="sendsmsactiontext">SMS mit Text senden</string>
-    <string name="starttemptarget">Tempöräres Ziel (TT) starten</string>
+    <string name="starttemptarget">Temporäres Ziel (TT) starten</string>
     <string name="islesser">Ist kleiner als</string>
     <string name="isequalorlesser">Ist gleich oder kleiner als</string>
     <string name="isequal">ist gleich</string>
