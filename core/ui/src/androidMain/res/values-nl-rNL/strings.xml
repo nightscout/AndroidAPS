@@ -143,7 +143,7 @@
     <string name="concentration_label">Concentratie</string>
     <string name="peak_label">Piek</string>
     <string name="dia_label">DIA</string>
-    <string name="ic_label">I/Kh</string>
+    <string name="ic_label">Kh-ratio</string>
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basaal</string>
     <string name="target_label">Streefdoel</string>
@@ -264,7 +264,7 @@
     <string name="mode_reverted">Modus teruggezet</string>
     <string name="select_insulin">Selecteer insuline</string>
     <string name="dia">DIA</string>
-    <string name="ic_short">I/Kh</string>
+    <string name="ic_short">Kh-ratio</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Annuleren van tijdelijke basaal mislukt</string>
     <string name="canceling_eb_failed">Annuleren van vertraagde bolus is mislukt</string>
@@ -722,7 +722,7 @@
     <string name="profile_basal_not_compatible_with_pump">Basaalstand is niet compatibel met de huidige pomp en kan niet worden geactiveerd. Verminder het percentage of pas de basaalstand aan.</string>
     <string name="profile_basal_below_pump_minimum">Basaal ratio is onder het minimum van de huidige pomp en kan niet geactiveerd worden. Verhoog het percentage of pas de totaalstand aan.</string>
     <string name="profile_pump_incompatible_label">Pomp limiet</string>
-    <string name="error_in_ic_values">Fout in I/Kh-verhoudingen</string>
+    <string name="error_in_ic_values">Fout in de koolhydraatratio\'s</string>
     <string name="error_in_isf_values">Fout in ISF-waarden</string>
     <string name="error_in_basal_values">Fout in basaal waarden</string>
     <string name="error_in_target_values">Fout in streefdoel</string>
@@ -1047,7 +1047,7 @@
     <string name="unsaved_changes">Niet opgeslagen wijzigingen</string>
     <string name="unsaved_changes_message">Er zijn niet-opgeslagen wijzigingen. Wat moet ermee gebeuren?</string>
     <string name="discard">Weggooien</string>
-    <string name="ic_dynamic_label_warning">Het algoritme kan de I/Kh-verhouding dynamisch bepalen. De onderstaande waarden worden alleen gebruikt wanneer gegevens ontbreken of als referentiewaarde</string>
+    <string name="ic_dynamic_label_warning">Het algoritme kan de insuline-koolhydraatverhouding dynamisch bepalen. De onderstaande waarden worden alleen gebruikt wanneer gegevens ontbreken of als referentiewaarde</string>
     <string name="isf_dynamic_label_warning">Het algoritme kan de ISF dynamisch bepalen. De onderstaande waarden worden alleen gebruikt wanneer gegevens ontbreken of als referentiewaarde</string>
     <string name="add_time_block">Tijdblok toevoegen</string>
     <string name="remove_entry">Record verwijderen</string>
