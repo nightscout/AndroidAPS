@@ -153,7 +153,15 @@ class AAPSLoggerIos(
         val path = logPath() ?: return
         val manager = NSFileManager.defaultManager
         rotateIfNeeded(manager, path)
-        if (!manager.fileExistsAtPath(path)) manager.createFileAtPath(path, null, null)
+        if (!manager.fileExistsAtPath(path)) {
+            // The folder is not guaranteed to be there. A real phone always has Documents, but a
+            // simulator that has just been created does not, and `createFileAtPath` then fails
+            // without saying anything - so every line was dropped, including the crash this logger
+            // exists to record. It went unnoticed locally, where the folder had long since been
+            // made, and turned the iOS CI red for a day.
+            manager.createDirectoryAtPath(path.substringBeforeLast('/'), withIntermediateDirectories = true, attributes = null, error = null)
+            manager.createFileAtPath(path, null, null)
+        }
 
         val data = (line + "\n").let { NSString.create(string = it) }.dataUsingEncoding(NSUTF8StringEncoding) ?: return
         val handle = NSFileHandle.fileHandleForWritingAtPath(path) ?: return

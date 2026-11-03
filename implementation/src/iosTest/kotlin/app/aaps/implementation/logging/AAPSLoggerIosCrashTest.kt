@@ -32,13 +32,19 @@ class AAPSLoggerIosCrashTest {
 
     private val fileName = "unit-test-crash.log"
 
-    private fun path(): String? =
-        (NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstOrNull() as? String)
-            ?.let { "$it/$fileName" }
+    /** A folder that does not exist yet, to prove the logger makes the one it needs. */
+    private val missingFolder = "unit-test-missing-folder"
+
+    private fun documents(): String? =
+        NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstOrNull() as? String
+
+    private fun path(name: String = fileName): String? = documents()?.let { "$it/$name" }
 
     @AfterTest
     fun removeTheFile() {
-        path()?.let { NSFileManager.defaultManager.removeItemAtPath(it, null) }
+        val manager = NSFileManager.defaultManager
+        path()?.let { manager.removeItemAtPath(it, null) }
+        documents()?.let { manager.removeItemAtPath("$it/$missingFolder", null) }
     }
 
     /** Thrown and caught, so it carries a real stack rather than a constructed one. */
@@ -78,5 +84,28 @@ class AAPSLoggerIosCrashTest {
         val written = NSString.stringWithContentsOfFile(path()!!, NSUTF8StringEncoding, null)
         assertTrue(written != null, "nothing was written to $fileName")
         assertTrue(written.contains("the pump said no"), "a disabled tag swallowed the crash")
+    }
+
+    /**
+     * The folder has to be made, not assumed.
+     *
+     * A phone always has a Documents folder, so this never showed up on a device - but a simulator
+     * that has just been created does not, `createFileAtPath` fails there without saying so, and
+     * every line was dropped while `NSLog` still printed it. That is the worst shape for this bug:
+     * the console looks right and the file that "Send logs" shares is empty. It turned the iOS CI
+     * red for a day and passed on every machine where the folder already existed.
+     */
+    @Test
+    fun `the log folder is created when it is missing`() {
+        val manager = NSFileManager.defaultManager
+        val folder = "${documents()!!}/$missingFolder"
+        manager.removeItemAtPath(folder, null)
+        assertTrue(!manager.fileExistsAtPath(folder), "the folder has to be absent for this to test anything")
+
+        AAPSLoggerIos(fileName = "$missingFolder/crash.log").error(LTag.CORE, "Uncaught exception, the app is stopping", thrown())
+
+        val written = NSString.stringWithContentsOfFile(path("$missingFolder/crash.log")!!, NSUTF8StringEncoding, null)
+        assertTrue(written != null, "the folder was not created, so nothing was written")
+        assertTrue(written.contains("the pump said no"), "the crash did not reach the file in the new folder")
     }
 }
