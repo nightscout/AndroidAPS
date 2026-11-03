@@ -238,33 +238,7 @@
     <string name="pref_title_units">Одиниці</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Мова</string>
     <string name="lang_default">Як у системі</string>
-    <string name="lang_en">Англійська</string>
-    <string name="lang_af">Африкаанс</string>
-    <string name="lang_bg">Болгарська</string>
-    <string name="lang_cs">Чеська</string>
-    <string name="lang_de">Німецька</string>
-    <string name="lang_dk">Данська</string>
-    <string name="lang_fr">Французька</string>
-    <string name="lang_nl">Нідерландська</string>
-    <string name="lang_es">Іспанська</string>
-    <string name="lang_el">Грецька</string>
-    <string name="lang_ga">Ірландська</string>
-    <string name="lang_it">Італійська</string>
-    <string name="lang_ko">Корейська</string>
-    <string name="lang_lt">Литовська</string>
-    <string name="lang_nb">Норвезька</string>
-    <string name="lang_pl">Польська</string>
-    <string name="lang_pt">Португальська</string>
-    <string name="lang_pt_br">Португальська (Бразилія)</string>
-    <string name="lang_ro">Румунська</string>
-    <string name="lang_ru">Російська</string>
-    <string name="lang_sk">Словацька</string>
-    <string name="lang_sv">Шведська</string>
-    <string name="lang_tr">Турецька</string>
-    <string name="lang_zh_tw">Китайська (традиційна)</string>
-    <string name="lang_zh_cn">Китайська (спрощена)</string>
     <string name="pref_title_patient_name">Назва екземпляра</string>
     <string name="pref_summary_patient_name">Ім’я людини, яка користується цим телефоном. Воно відрізняє цей екземпляр AAPS у звітах і синхронізації.</string>
     <!-- StringKey: Directory preferences -->
