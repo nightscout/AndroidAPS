@@ -132,10 +132,12 @@ fun O5CredentialWebViewScreen(
                     }
                 },
                 onRelease = { webView ->
-                    WebViewCompat.removeWebMessageListener(webView, BRIDGE_NAME)
+                    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
+                        WebViewCompat.removeWebMessageListener(webView, BRIDGE_NAME)
+                    }
                     webView.stopLoading()
                     webView.webChromeClient = null
-                    webView.webViewClient = null
+                    webView.webViewClient = WebViewClient()
                     webView.destroy()
                 }
             )
