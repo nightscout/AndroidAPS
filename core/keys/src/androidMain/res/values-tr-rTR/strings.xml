@@ -240,33 +240,7 @@
     <string name="pref_title_units">Birimler</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Dil</string>
     <string name="lang_default">Sistem varsayılanı</string>
-    <string name="lang_en">İngilizce</string>
-    <string name="lang_af">Afrikaca</string>
-    <string name="lang_bg">Bulgarca</string>
-    <string name="lang_cs">Çekçe</string>
-    <string name="lang_de">Almanca</string>
-    <string name="lang_dk">Danca</string>
-    <string name="lang_fr">Fransızca</string>
-    <string name="lang_nl">Flemenkçe</string>
-    <string name="lang_es">İspanyolca</string>
-    <string name="lang_el">Yunanca</string>
-    <string name="lang_ga">İrlandaca</string>
-    <string name="lang_it">İtalyanca</string>
-    <string name="lang_ko">Korece</string>
-    <string name="lang_lt">Litvanyaca</string>
-    <string name="lang_nb">Norveçce</string>
-    <string name="lang_pl">Polonyaca</string>
-    <string name="lang_pt">Portekizce</string>
-    <string name="lang_pt_br">Portekizce (Brezilya)</string>
-    <string name="lang_ro">Romence</string>
-    <string name="lang_ru">Rusça</string>
-    <string name="lang_sk">Slovakça</string>
-    <string name="lang_sv">İsveççe</string>
-    <string name="lang_tr">Türkçe</string>
-    <string name="lang_zh_tw">Geleneksel Çince</string>
-    <string name="lang_zh_cn">Basitleştirilmiş Çince</string>
     <string name="pref_title_patient_name">Kurulum adı</string>
     <string name="pref_summary_patient_name">Bu telefonu kullanan kişinin adı. Bu ad, raporlarda ve eşitlemede bu AAPS kurulumunu diğerlerinden ayırır.</string>
     <!-- StringKey: Directory preferences -->
