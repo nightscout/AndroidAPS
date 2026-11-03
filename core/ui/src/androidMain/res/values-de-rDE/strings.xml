@@ -773,7 +773,7 @@
     <string name="carbs_type_cake">Knödel, Nudeln, kohlenhydrat- und fettreiche asiatische Gerichte, Süß- und Hefegebäck, Frühstückscerealien, Getreidebrei, Honig, Marmelade</string>
     <string name="carbs_type_pizza">Lasagne, Pizza, Hamburger, Pommes, gebackene Kartoffeln, Chips und ähnliche Snacks</string>
     <string name="wizard_total">Gesamtsumme</string>
-    <string name="wizard_carb_time">Zeitpunkt der KH-Aufnamhe</string>
+    <string name="wizard_carb_time">Zeitpunkt der KH-Aufnahme</string>
     <string name="carb_time_now">Jetzt</string>
     <string name="change">Ändern</string>
     <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
