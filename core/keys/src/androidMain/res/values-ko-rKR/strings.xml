@@ -240,33 +240,7 @@
     <string name="pref_title_units">단위</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">언어</string>
     <string name="lang_default">시스템 기본값</string>
-    <string name="lang_en">영어</string>
-    <string name="lang_af">아프리칸스어</string>
-    <string name="lang_bg">불가리아어</string>
-    <string name="lang_cs">체코어</string>
-    <string name="lang_de">독일어</string>
-    <string name="lang_dk">덴마크어</string>
-    <string name="lang_fr">프랑스어</string>
-    <string name="lang_nl">네덜란드어</string>
-    <string name="lang_es">스페인어</string>
-    <string name="lang_el">그리스어</string>
-    <string name="lang_ga">아일랜드어</string>
-    <string name="lang_it">이탈리아어</string>
-    <string name="lang_ko">한국어</string>
-    <string name="lang_lt">리투아니아어</string>
-    <string name="lang_nb">노르웨이어</string>
-    <string name="lang_pl">폴란드어</string>
-    <string name="lang_pt">포르투갈어</string>
-    <string name="lang_pt_br">포르투갈어(브라질)</string>
-    <string name="lang_ro">루마니아어</string>
-    <string name="lang_ru">러시아어</string>
-    <string name="lang_sk">슬로바키아어</string>
-    <string name="lang_sv">스웨덴어</string>
-    <string name="lang_tr">터키어</string>
-    <string name="lang_zh_tw">중국어(번체)</string>
-    <string name="lang_zh_cn">중국어(간체)</string>
     <string name="pref_title_patient_name">인스턴스 이름</string>
     <string name="pref_summary_patient_name">이 휴대폰을 사용하는 사람의 이름입니다. 보고서와 동기화에서 이 AAPS를 구별하는 데 사용됩니다.</string>
     <!-- StringKey: Directory preferences -->
