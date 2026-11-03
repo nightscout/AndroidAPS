@@ -33,7 +33,7 @@
     <string name="startobjective">Start je eerste Doel</string>
     <string name="open_objectives">Open Doelen</string>
     <string name="setupwizard_permissions">Machtigingen</string>
-    <string name="setupwizard_profile_info">Maak een profiel aan met jouw basaalstanden, IC, ISF en doelwaarden. Je kan later meerdere profielen toevoegen.</string>
+    <string name="setupwizard_profile_info">Maak een profiel aan met de basaalstanden, koolhydraatratio\'s, ISF en streefdoelen. Er kunnen later meerdere profielen worden toegevoegd.</string>
     <string name="setupwizard_permissions_info">AAPS heeft toegang nodig tot de opslag en permissies om goed te werken. Verleen de vereiste machtigingen hieronder.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="setupwizard_client_control_title">Client besturing</string>
