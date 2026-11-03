@@ -238,33 +238,7 @@
     <string name="pref_title_units">Unités</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Langue</string>
     <string name="lang_default">Système</string>
-    <string name="lang_en">Anglais</string>
-    <string name="lang_af">Africain</string>
-    <string name="lang_bg">Bulgare</string>
-    <string name="lang_cs">Tchèque</string>
-    <string name="lang_de">Allemand</string>
-    <string name="lang_dk">Danois</string>
-    <string name="lang_fr">Français</string>
-    <string name="lang_nl">Hollandais</string>
-    <string name="lang_es">Espagnol</string>
-    <string name="lang_el">Grec</string>
-    <string name="lang_ga">Irlandais</string>
-    <string name="lang_it">Italien</string>
-    <string name="lang_ko">Coréen</string>
-    <string name="lang_lt">Lithuanien</string>
-    <string name="lang_nb">Norvégien</string>
-    <string name="lang_pl">Polonais</string>
-    <string name="lang_pt">Portugais</string>
-    <string name="lang_pt_br">Portugais, brésilien</string>
-    <string name="lang_ro">Roumain</string>
-    <string name="lang_ru">Russe</string>
-    <string name="lang_sk">Slovaque</string>
-    <string name="lang_sv">Suédois</string>
-    <string name="lang_tr">Turque</string>
-    <string name="lang_zh_tw">Chinois traditionnel</string>
-    <string name="lang_zh_cn">Chinois simplifié</string>
     <string name="pref_title_patient_name">Nom de l\'instance</string>
     <string name="pref_summary_patient_name">Nom de la personne qui utilise ce téléphone. Il différencie cette instance d\'AAPS dans les rapports et la synchronisation.</string>
     <!-- StringKey: Directory preferences -->
