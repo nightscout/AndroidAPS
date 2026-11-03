@@ -240,33 +240,7 @@
     <string name="pref_title_units">Jednotky</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Jazyk</string>
     <string name="lang_default">Predvolený systémom</string>
-    <string name="lang_en">Angličtina</string>
-    <string name="lang_af">Afrikánčina</string>
-    <string name="lang_bg">Bulharčina</string>
-    <string name="lang_cs">Čeština</string>
-    <string name="lang_de">Nemčina</string>
-    <string name="lang_dk">Dánčina</string>
-    <string name="lang_fr">Francúzština</string>
-    <string name="lang_nl">Holandčina</string>
-    <string name="lang_es">Španielčina</string>
-    <string name="lang_el">Gréčtina</string>
-    <string name="lang_ga">Írčina</string>
-    <string name="lang_it">Taliančina</string>
-    <string name="lang_ko">Kórejčina</string>
-    <string name="lang_lt">Litovčina</string>
-    <string name="lang_nb">Nórčina</string>
-    <string name="lang_pl">Poľština</string>
-    <string name="lang_pt">Portugalčina</string>
-    <string name="lang_pt_br">Portugalčina (Brazília)</string>
-    <string name="lang_ro">Rumunčina</string>
-    <string name="lang_ru">Ruština</string>
-    <string name="lang_sk">Slovenčina</string>
-    <string name="lang_sv">Švédčina</string>
-    <string name="lang_tr">Turečtina</string>
-    <string name="lang_zh_tw">Čínština (tradičná)</string>
-    <string name="lang_zh_cn">Čínština (zjednodušená)</string>
     <string name="pref_title_patient_name">Názov inštancie</string>
     <string name="pref_summary_patient_name">Meno osoby používajúcej tento telefón. Slúži na odlíšenie tejto inštancie AAPS v prehľadoch a pri synchronizácii.</string>
     <!-- StringKey: Directory preferences -->
