@@ -344,7 +344,7 @@
 				// multitasking, and a multitasking app has to survive being any shape.
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -386,7 +386,7 @@
 				// multitasking, and a multitasking app has to survive being any shape.
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -449,7 +449,7 @@
 				// multitasking, and a multitasking app has to survive being any shape.
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -491,7 +491,7 @@
 				// multitasking, and a multitasking app has to survive being any shape.
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
