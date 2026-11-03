@@ -9,14 +9,14 @@
     <string name="objectives_0_gate">Controleer of de bloedglucosegegevens beschikbaar zijn in Nightscout en of de insulinegegevens van de pomp naar Nightscout worden verzonden</string>
     <string name="objectives_0_learned">De basisconfiguratie van het AAPS-ecosysteem is voltooid. Nightscout (NS) is niet noodzakelijk om AAPS te gebruiken, maar is handig voor rapportages en het op afstand volgen van patiënten. Bij gebruik voor eigen monitoring is een permanente verbinding met NS niet nodig. Stel bijvoorbeeld in dat gegevens alleen via de wifi thuis worden verzonden om batterij te besparen.</string>
     <string name="objectives_openloop_objective">Starten met de Open Loop modus</string>
-    <string name="objectives_openloop_gate">Draai enkele dagen In Open Loop modus en voer meermaals handmatig tijdelijke basalen uit. Stel standaard en aangepaste tijdelijke streefdoelen in (bv. bij sporten of koolhydraten inname bij hypo)</string>
-    <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen, als je een pomp hebt die niet geschikt is voor AAPS of als je de loop niet wilt sluiten.</string>
-    <string name="objectives_maxbasal_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basalen</string>
-    <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen, beslis wat het maximale basaal mag zijn en stel dit in op de pomp en in de instellingen. In de eenvoudige modus wordt deze waarde berekend volgens de aanbeveling in de wiki en hoef je deze niet in te stellen.</string>
-    <string name="objectives_maxbasal">Actie uitvoeren om aanbeveling uit te voeren</string>
+    <string name="objectives_openloop_gate">Laat AAPS enkele dagen in de open-loopmodus draaien en pas meermaals tijdelijke basaalstanden toe. Stel tijdelijke en standaard tijdelijke streefdoelen in en gebruik deze (bijvoorbeeld voor lichamelijke inspanning of koolhydraten bij de behandeling van een hypo)</string>
+    <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen als er geen compatibele pomp beschikbaar is of als er nog niet kan worden overgeschakeld naar de closed-loopmodus.</string>
+    <string name="objectives_maxbasal_objective">Het begrijpen van de open-loopmodus, inclusief de aanbevelingen voor tijdelijke basaalstanden</string>
+    <string name="objectives_maxbasal_gate">Bepaal op basis van de opgedane ervaring wat de maximale basaalstand moet zijn en stel deze in op de pomp en in de AAPS-instellingen. In de eenvoudige modus wordt deze waarde berekend volgens de aanbevelingen in de wiki en hoeft deze niet handmatig te worden ingesteld.</string>
+    <string name="objectives_maxbasal">Voer de aanbevolen actie uit</string>
     <string name="objectives_maxbasal_learned">Ga zorgvuldig om met de veiligheidsfuncties en pas de veiligheidsparameters aan indien nodig.</string>
-    <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
-    <string name="objectives_maxiobzero_gate">Closed loop uitvoeren in Stop bij laag-modus (d. w. z. max IOB = 0 wordt automatisch ingesteld) gedurende enkele dagen zonder te veel LGS-gebeurtenissen.</string>
+    <string name="objectives_maxiobzero_objective">Begin met het gebruik van de loopmodus Low Glucose Suspend (LGS)</string>
+    <string name="objectives_maxiobzero_gate">Laat AAPS enkele dagen in de loopmodus Low Glucose Suspend (LGS, \'stop bij laag\') draaien (waarbij MaxIOB automatisch op 0 wordt ingesteld), zonder dat de insulinetoediening te vaak door de loop wordt onderbroken.</string>
     <string name="objectives_maxiobzero_learned">Door MaxIOB op 0 te stellen, wordt het risico op hypo’s verkleind. Ook wordt voorkomen dat er meer insuline wordt toegediend dan de basaalstand toestaat (behalve bij een negatieve IOB)</string>
     <string name="objectives_maxiob_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat geleidelijk het streef BG dalen</string>
     <string name="objectives_maxiob_gate">Laat de loop enkele dagen draaien, waaronder ten minste één nacht zonder hypo-alarmen, alvorens het streefdoel voor de bloedglucose te verlagen</string>
