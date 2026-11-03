@@ -240,33 +240,7 @@
     <string name="pref_title_units">Jednostki</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Język</string>
     <string name="lang_default">Domyślny (systemowy)</string>
-    <string name="lang_en">Angielski</string>
-    <string name="lang_af">Afrikaans</string>
-    <string name="lang_bg">Bułgarski</string>
-    <string name="lang_cs">Czeski</string>
-    <string name="lang_de">Niemiecki</string>
-    <string name="lang_dk">Duński</string>
-    <string name="lang_fr">Francuski</string>
-    <string name="lang_nl">Niderlandzki</string>
-    <string name="lang_es">Hiszpański</string>
-    <string name="lang_el">Grecki</string>
-    <string name="lang_ga">Irlandzki</string>
-    <string name="lang_it">Włoski</string>
-    <string name="lang_ko">Koreański</string>
-    <string name="lang_lt">Litewski</string>
-    <string name="lang_nb">Norweski</string>
-    <string name="lang_pl">Polski</string>
-    <string name="lang_pt">Portugalski</string>
-    <string name="lang_pt_br">Portugalski (brazylijski)</string>
-    <string name="lang_ro">Rumuński</string>
-    <string name="lang_ru">Rosyjski</string>
-    <string name="lang_sk">Słowacki</string>
-    <string name="lang_sv">Szwedzki</string>
-    <string name="lang_tr">Turecki</string>
-    <string name="lang_zh_tw">Chiński (tradycyjny)</string>
-    <string name="lang_zh_cn">Chiński (uproszczony)</string>
     <string name="pref_title_patient_name">Nazwa pacjenta</string>
     <string name="pref_summary_patient_name">Imię osoby korzystającej z tego telefonu. Pozwala odróżnić tę instancję AAPS w raportach i synchronizacji.</string>
     <!-- StringKey: Directory preferences -->
