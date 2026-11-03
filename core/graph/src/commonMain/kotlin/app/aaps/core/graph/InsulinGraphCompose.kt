@@ -16,6 +16,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.iobCalc
 import app.aaps.core.data.time.T
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LeftToRight
 import app.aaps.core.ui.compose.stringResource
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
@@ -113,79 +114,81 @@ fun InsulinGraphCompose(
     val activityLegendIcon = rememberShapeComponent(fill = Fill(ActivityColor))
     val iobLegendIcon = rememberShapeComponent(fill = Fill(IobColor))
 
-    CartesianChartHost(
-        chart = rememberCartesianChart(
-            // Layer 0: IOB (primary, left Y-axis with labels)
-            rememberLineCartesianLayer(
-                lineProvider = LineCartesianLayer.LineProvider.series(
-                    LineCartesianLayer.Line(
-                        fill = remember { LineCartesianLayer.LineFill.single(Fill(IobColor)) },
-                        areaFill = remember {
-                            LineCartesianLayer.AreaFill.single(
-                                Fill(
-                                    Brush.verticalGradient(
-                                        listOf(
-                                            IobColor.copy(alpha = 0.2f),
-                                            Color.Transparent
+    LeftToRight {
+        CartesianChartHost(
+            chart = rememberCartesianChart(
+                // Layer 0: IOB (primary, left Y-axis with labels)
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.Line(
+                            fill = remember { LineCartesianLayer.LineFill.single(Fill(IobColor)) },
+                            areaFill = remember {
+                                LineCartesianLayer.AreaFill.single(
+                                    Fill(
+                                        Brush.verticalGradient(
+                                            listOf(
+                                                IobColor.copy(alpha = 0.2f),
+                                                Color.Transparent
+                                            )
                                         )
                                     )
                                 )
-                            )
-                        }
-                    )
-                ),
-                rangeProvider = remember { CartesianLayerRangeProvider.fixed(minY = 0.0, maxY = 1.0) },
-                verticalAxisPosition = Axis.Position.Vertical.Start
-            ),
-            // Layer 1: Activity (no dedicated axis, scaled to IOB range)
-            rememberLineCartesianLayer(
-                lineProvider = LineCartesianLayer.LineProvider.series(
-                    LineCartesianLayer.Line(
-                        fill = remember { LineCartesianLayer.LineFill.single(Fill(ActivityColor)) },
-                        areaFill = remember {
-                            LineCartesianLayer.AreaFill.single(
-                                Fill(
-                                    Brush.verticalGradient(
-                                        listOf(
-                                            ActivityColor.copy(alpha = 0.3f),
-                                            Color.Transparent
-                                        )
-                                    )
-                                )
-                            )
-                        }
-                    )
-                ),
-                rangeProvider = remember { CartesianLayerRangeProvider.fixed(minY = 0.0, maxY = 1.0) },
-                verticalAxisPosition = Axis.Position.Vertical.Start
-            ),
-            startAxis = VerticalAxis.rememberStart(label = labelComponent),
-            bottomAxis = HorizontalAxis.rememberBottom(
-                label = labelComponent,
-                valueFormatter = remember {
-                    CartesianValueFormatter { _, value, _ -> "${(value / 60).toInt()}h" }
-                },
-                itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 12 }) }
-            ),
-            legend = rememberHorizontalLegend(
-                items = { extraStore ->
-                    extraStore[InsulinLegendLabelKey].forEachIndexed { index, label ->
-                        add(
-                            LegendItem(
-                                if (index == 0) iobLegendIcon else activityLegendIcon,
-                                labelComponent,
-                                label,
-                            )
+                            }
                         )
-                    }
-                },
-                padding = Insets(top = 8.dp, start = 8.dp),
-            )
-        ),
-        modelProducer = modelProducer,
-        zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content),
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    )
+                    ),
+                    rangeProvider = remember { CartesianLayerRangeProvider.fixed(minY = 0.0, maxY = 1.0) },
+                    verticalAxisPosition = Axis.Position.Vertical.Start
+                ),
+                // Layer 1: Activity (no dedicated axis, scaled to IOB range)
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.Line(
+                            fill = remember { LineCartesianLayer.LineFill.single(Fill(ActivityColor)) },
+                            areaFill = remember {
+                                LineCartesianLayer.AreaFill.single(
+                                    Fill(
+                                        Brush.verticalGradient(
+                                            listOf(
+                                                ActivityColor.copy(alpha = 0.3f),
+                                                Color.Transparent
+                                            )
+                                        )
+                                    )
+                                )
+                            }
+                        )
+                    ),
+                    rangeProvider = remember { CartesianLayerRangeProvider.fixed(minY = 0.0, maxY = 1.0) },
+                    verticalAxisPosition = Axis.Position.Vertical.Start
+                ),
+                startAxis = VerticalAxis.rememberStart(label = labelComponent),
+                bottomAxis = HorizontalAxis.rememberBottom(
+                    label = labelComponent,
+                    valueFormatter = remember {
+                        CartesianValueFormatter { _, value, _ -> "${(value / 60).toInt()}h" }
+                    },
+                    itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 12 }) }
+                ),
+                legend = rememberHorizontalLegend(
+                    items = { extraStore ->
+                        extraStore[InsulinLegendLabelKey].forEachIndexed { index, label ->
+                            add(
+                                LegendItem(
+                                    if (index == 0) iobLegendIcon else activityLegendIcon,
+                                    labelComponent,
+                                    label,
+                                )
+                            )
+                        }
+                    },
+                    padding = Insets(top = 8.dp, start = 8.dp),
+                )
+            ),
+            modelProducer = modelProducer,
+            zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        )
+    }
 }

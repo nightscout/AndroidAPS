@@ -32,7 +32,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.io.OutputStream
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -71,6 +70,9 @@ class SignatureVerifierPlugin(
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = 1.days.inWholeMilliseconds
 
+    /** A usable line holds only hex digits, in pairs. Anything else cannot be decoded. */
+    private val HEX_LINE = Regex("^([0-9a-fA-F]{2})+$")
+
     private val lock: Any = arrayOfNulls<Any>(0)
     private var revokedCertsFile: File? = null
     private var revokedCerts: List<ByteArray>? = null
@@ -79,15 +81,22 @@ class SignatureVerifierPlugin(
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         revokedCertsFile = File(context.filesDir, "revoked_certs.txt")
         handler?.post {
-            loadLocalRevokedCerts()
-            if (shouldDownloadCerts()) {
-                try {
-                    downloadAndSaveRevokedCerts()
-                } catch (e: IOException) {
-                    aapsLogger.error("Could not download revoked certs", e)
+            // This runs on a plain HandlerThread. Anything that escapes here is an uncaught
+            // exception and kills the whole app, so nothing may leave this block.
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                loadLocalRevokedCerts()
+                if (shouldDownloadCerts()) {
+                    try {
+                        downloadAndSaveRevokedCerts()
+                    } catch (e: IOException) {
+                        aapsLogger.error("Could not download revoked certs", e)
+                    }
                 }
+                if (hasIllegalSignature()) showNotification()
+            } catch (e: Exception) {
+                aapsLogger.error("Error in SignatureVerifierPlugin", e)
             }
-            if (hasIllegalSignature()) showNotification()
         }
     }
 
@@ -188,26 +197,46 @@ class SignatureVerifierPlugin(
 
     @Throws(IOException::class) private fun downloadAndSaveRevokedCerts() {
         val download = downloadRevokedCerts()
+        // Check the answer before it is stored. A captive portal or a block page answers with
+        // HTTP 200 and HTML, so the download itself does not fail. The saved file is preferred
+        // over the list in the assets on every later start, so a bad answer must never be saved.
+        val parsed = parseRevokedCertsFile(download)
+        if (parsed.isEmpty()) {
+            aapsLogger.error("Downloaded revoked certs file holds no usable line, keeping the old list")
+            return
+        }
         saveRevokedCerts(download)
         preferences.put(SignatureVerifierLongKey.LastRevokedCertCheck, System.currentTimeMillis())
-        synchronized(lock) { revokedCerts = parseRevokedCertsFile(download) }
+        synchronized(lock) { revokedCerts = parsed }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun loadLocalRevokedCerts() {
         try {
-            var revokedCerts = readCachedDownloadedRevokedCerts()
-            if (revokedCerts == null) revokedCerts = readRevokedCertsInAssets()
-            synchronized(lock) { this.revokedCerts = parseRevokedCertsFile(revokedCerts) }
-        } catch (e: IOException) {
+            val cached = readCachedDownloadedRevokedCerts()
+            synchronized(lock) { this.revokedCerts = parseRevokedCertsFile(cached ?: readRevokedCertsInAssets()) }
+        } catch (e: Exception) {
             aapsLogger.error("Error in SignatureVerifierPlugin", e)
+            // The saved file cannot be read. Drop it and use the list shipped in the assets, so
+            // the next start does not fail in the same way again.
+            runCatching { revokedCertsFile?.delete() }
+            runCatching {
+                synchronized(lock) { this.revokedCerts = parseRevokedCertsFile(readRevokedCertsInAssets()) }
+            }
         }
     }
 
     @Throws(IOException::class)
     private fun saveRevokedCerts(revokedCerts: String) {
-        val outputStream: OutputStream = FileOutputStream(revokedCertsFile)
-        outputStream.write(revokedCerts.toByteArray(StandardCharsets.UTF_8))
-        outputStream.close()
+        val target = revokedCertsFile ?: return
+        // Write to a temporary file and rename it. A download that stops half way then leaves the
+        // old, working file in place instead of a half written one.
+        val temp = File(target.parentFile, target.name + ".tmp")
+        FileOutputStream(temp).use { it.write(revokedCerts.toByteArray(StandardCharsets.UTF_8)) }
+        if (!temp.renameTo(target)) {
+            temp.delete()
+            throw IOException("Could not replace the revoked certs file")
+        }
     }
 
     @Throws(IOException::class) private fun downloadRevokedCerts(): String {
@@ -241,11 +270,25 @@ class SignatureVerifierPlugin(
         return if (!revokedCertsFile!!.exists()) null else readInputStream(FileInputStream(revokedCertsFile))
     }
 
+    /**
+     * Reads the certificate hashes out of the revoked certs file.
+     *
+     * The text can come from the network or from a file on disk, so it can be damaged. A line that
+     * cannot be read is skipped and logged. It is never thrown, because one bad line must not stop
+     * the app from starting.
+     */
     private fun parseRevokedCertsFile(file: String?): List<ByteArray> {
         val revokedCerts: MutableList<ByteArray> = ArrayList()
-        for (line in file!!.split("\n").toTypedArray()) {
-            if (line.startsWith("#")) continue
-            revokedCerts.add(Hex.decode(line.replace(" ", "").replace(":", "")))
+        for (rawLine in (file ?: "").split("\n")) {
+            // trim() also removes the \r of a Windows line ending, which Hex.decode would reject.
+            val trimmed = rawLine.trim()
+            if (trimmed.isEmpty() || trimmed.startsWith("#")) continue
+            val line = trimmed.replace(" ", "").replace(":", "")
+            if (!HEX_LINE.matches(line)) {
+                aapsLogger.error("Skipping a damaged line in the revoked certs file")
+                continue
+            }
+            revokedCerts.add(Hex.decode(line))
         }
         return revokedCerts
     }

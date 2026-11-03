@@ -366,10 +366,14 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
      *
      * A language is two or three lower case letters, optionally followed by `-r` and a region. That
      * shape is what separates `de-rDE` from `sw600dp` and `night`.
+     *
+     * Hebrew is in `values-iw-rIL`, with the old code that Android still accepts in a folder name. The
+     * tag has to be `he`: that is what the language setting holds and what iOS reports for the phone.
      */
     private fun String.toBcp47(): String? {
         val match = Regex("^([a-z]{2,3})(?:-r([A-Za-z]{2}|[0-9]{3}))?$").matchEntire(this) ?: return null
-        val (language, region) = match.destructured
+        val (folderLanguage, region) = match.destructured
+        val language = if (folderLanguage == "iw") "he" else folderLanguage
         return if (region.isEmpty()) language else "$language-${region.uppercase()}"
     }
 

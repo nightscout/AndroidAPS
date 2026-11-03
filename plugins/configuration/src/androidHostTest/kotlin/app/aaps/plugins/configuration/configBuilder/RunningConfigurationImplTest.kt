@@ -286,4 +286,44 @@ internal class RunningConfigurationImplTest {
         assertEquals(0, result.size)
         verify(activePlugin, never()).activePump
     }
+
+    private fun pumpThatIsInitialized(initialized: Boolean): PumpWithConcentration {
+        val pump = mock<PumpWithConcentration>()
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(config.VERSION_NAME).thenReturn("4.0.0")
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isInitialized()).thenReturn(initialized)
+        whenever(pump.model()).thenReturn(PumpType.GENERIC_AAPS)
+        val autosens = mock<Constraint<Boolean>>().also { whenever(it.value()).thenReturn(false) }
+        whenever(constraintsChecker.isAutosensModeEnabled()).thenReturn(autosens)
+        return pump
+    }
+
+    /**
+     * A pod change, or a pump not paired yet, must not stop the doc. The client-control switch travels in `syncedPrefs`:
+     * without it a client shows a master that is online as offline, or says that client control is off.
+     */
+    @Test
+    fun aPumpThatIsNotInitializedLeavesOutOnlyWhatComesFromThePump() {
+        pumpThatIsInitialized(false)
+
+        val doc = sut.configuration()
+
+        assertTrue("syncedPrefs" in doc)
+        assertEquals(JsonPrimitive("4.0.0"), doc["version"])
+        assertEquals(JsonPrimitive(false), doc["usedAutosensOnMainPhone"])
+        assertNull(doc["pump"])
+        assertNull(doc["isFakingTempsByExtendedBoluses"])
+    }
+
+    @Test
+    fun anInitializedPumpSendsItsTypeAndFakingFlag() {
+        val pump = pumpThatIsInitialized(true)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(true)
+
+        val doc = sut.configuration()
+
+        assertEquals(JsonPrimitive(PumpType.GENERIC_AAPS.description), doc["pump"])
+        assertEquals(JsonPrimitive(true), doc["isFakingTempsByExtendedBoluses"])
+    }
 }

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.wear.compose
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -174,7 +175,11 @@ internal fun WearScreen(
                     onInfosWatchface = { viewModel.showCwfInfos() },
                     onExportTemplate = { viewModel.exportCustomWatchface() },
                     onMoreWatchfaces = {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, moreWatchfacesUrl.toUri()))
+                        // No usable browser (none installed, or blocked by Family Link): do nothing rather than crash
+                        try {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, moreWatchfacesUrl.toUri()))
+                        } catch (_: ActivityNotFoundException) {
+                        }
                     },
                     onSelectPushedWatchface = { viewModel.selectPushedWatchface(it) },
                     onDismissCustomWatchfaceNotShown = { viewModel.dismissCustomWatchfaceNotShown() },

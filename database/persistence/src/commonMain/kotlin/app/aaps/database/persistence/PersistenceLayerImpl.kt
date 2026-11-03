@@ -2681,7 +2681,9 @@ class PersistenceLayerImpl(
 
     override suspend fun insertOrUpdateApsResult(apsResult: APSResult): PersistenceLayer.TransactionResult<APSResult> = withContext(aapsIoDispatcher) {
         try {
-            reportNonFiniteRtFields(apsResult)
+            // A client only stores what the master calculated and already reported. Reporting it again adds
+            // nothing, and it would send the master's data, often a child's, from the phone of a follower.
+            if (!config.AAPSCLIENT) reportNonFiniteRtFields(apsResult)
             val result = repository.runTransactionForResultSuspend(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
             val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
             // Identity only: the entity's toString holds all seven JSON columns, several KB per loop run

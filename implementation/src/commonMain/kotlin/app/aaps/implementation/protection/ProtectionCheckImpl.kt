@@ -3,16 +3,13 @@ package app.aaps.implementation.protection
 import app.aaps.core.interfaces.protection.AuthMethod
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.HierarchicalProtectionRequest
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.protection.ProtectionRequest
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -31,7 +28,6 @@ import kotlin.time.Duration.Companion.seconds
 @Inject
 class ProtectionCheckImpl(
     private val preferences: Preferences,
-    private val passwordCheck: PasswordCheck,
     private val dateUtil: DateUtil
 ) : ProtectionCheck {
 
@@ -40,9 +36,7 @@ class ProtectionCheckImpl(
     @Volatile private var sessionTimestamp: Long = 0L
 
     private val requestIdCounter = AtomicLong(0L)
-    private val _pendingRequest = MutableStateFlow<ProtectionRequest?>(null)
     private val _pendingAuthRequest = MutableStateFlow<HierarchicalProtectionRequest?>(null)
-    override val pendingRequest: StateFlow<ProtectionRequest?> = _pendingRequest.asStateFlow()
     override val pendingAuthRequest: StateFlow<HierarchicalProtectionRequest?> = _pendingAuthRequest.asStateFlow()
 
     // Maps from Protection level to preference keys
@@ -62,18 +56,6 @@ class ProtectionCheckImpl(
         ProtectionCheck.Protection.PREFERENCES to StringKey.ProtectionSettingsPin,
         ProtectionCheck.Protection.APPLICATION to StringKey.ProtectionApplicationPin,
         ProtectionCheck.Protection.BOLUS to StringKey.ProtectionBolusPin
-    )
-
-    private val titlePassKeys = mapOf(
-        ProtectionCheck.Protection.PREFERENCES to CoreUiStrings.settings_password,
-        ProtectionCheck.Protection.APPLICATION to CoreUiStrings.application_password,
-        ProtectionCheck.Protection.BOLUS to CoreUiStrings.bolus_password
-    )
-
-    private val titlePinKeys = mapOf(
-        ProtectionCheck.Protection.PREFERENCES to CoreUiStrings.settings_pin,
-        ProtectionCheck.Protection.APPLICATION to CoreUiStrings.application_pin,
-        ProtectionCheck.Protection.BOLUS to CoreUiStrings.bolus_pin
     )
 
     // --- Helpers ---
@@ -184,6 +166,10 @@ class ProtectionCheckImpl(
             return
         }
 
+        publishAuthRequest(minimumLevel, onResult)
+    }
+
+    private fun publishAuthRequest(minimumLevel: ProtectionCheck.Protection, onResult: (AuthorizationResult) -> Unit) {
         // Cancel any pending request before emitting a new one
         _pendingAuthRequest.value?.let { pending ->
             pending.onResult(AuthorizationResult(null, ProtectionResult.CANCELLED))
@@ -218,7 +204,9 @@ class ProtectionCheckImpl(
         // Check each configurable level at or above the minimum
         for ((level, typeKey) in protectionTypeKeys) {
             if (level.level < minimumLevel.level) continue
-            if (!isProtectionConfigured(level)) continue // Respects hierarchy enforcement
+            // Respects hierarchy enforcement. The requested level is checked by the caller: requestProtection
+            // asks for a bolus lock also when the settings level is off, and its own PIN must work then.
+            if (level != minimumLevel && !isProtectionConfigured(level)) continue
             val type = protectionTypeFor(typeKey)
 
             // Skip levels configured as MASTER_PASSWORD — the always-added MASTER entry covers them
@@ -250,7 +238,7 @@ class ProtectionCheckImpl(
         }
     }
 
-    // --- Legacy single-level API (checks only the requested level, not hierarchical) ---
+    // --- Single-level API (decides on the requested level only, the prompt is the shared one) ---
 
     override fun requestProtection(protection: ProtectionCheck.Protection, onResult: (ProtectionResult) -> Unit) {
         if (protection == ProtectionCheck.Protection.NONE) {
@@ -271,49 +259,15 @@ class ProtectionCheckImpl(
             return
         }
 
-        // Check only the requested level's protection type
-        val typeKey = protectionTypeKeys[protection]
-        if (typeKey == null) {
-            onResult(ProtectionResult.GRANTED)
-            return
-        }
-        val type = protectionTypeFor(typeKey)
-        if (type == ProtectionType.NONE) {
+        // A custom password or PIN that was never entered is the same as no protection. Asking for it
+        // would lock the user out, because no input can match an empty value (#5462).
+        // MASTER has no setting of its own: it always needs the master password.
+        if (protection != ProtectionCheck.Protection.MASTER && !isLevelConfigured(protection)) {
             onGranted(protection)
             onResult(ProtectionResult.GRANTED)
             return
         }
 
-        // Cancel any pending request before emitting a new one
-        _pendingRequest.value?.let { pending ->
-            pending.onResult(ProtectionResult.CANCELLED)
-        }
-
-        // Emit legacy request for ProtectionHost
-        val titleRes = when (type) {
-            ProtectionType.CUSTOM_PIN -> titlePinKeys[protection] ?: CoreUiStrings.settings_pin
-            else                      -> titlePassKeys[protection] ?: CoreUiStrings.settings_password
-        }
-
-        _pendingRequest.value = ProtectionRequest(
-            id = requestIdCounter.addAndFetch(1L),
-            protection = protection,
-            type = type,
-            title = titleRes,
-            onResult = { result ->
-                if (result == ProtectionResult.GRANTED) onGranted(protection)
-                _pendingRequest.value = null
-                onResult(result)
-            }
-        )
+        publishAuthRequest(protection) { result -> onResult(result.outcome) }
     }
-
-    override fun completeRequest(requestId: Long, result: ProtectionResult) {
-        _pendingRequest.value?.let { request ->
-            if (request.id == requestId) {
-                request.onResult(result)
-            }
-        }
-    }
-
 }

@@ -100,7 +100,7 @@
     <string name="carelevo_patch_connect_step_1_title">Remove Needle Cap</string>
     <string name="carelevo_patch_connect_step_1_desc">Take out patch from blister and remove needle cap.</string>
     <string name="carelevo_patch_connect_step_2_title">Power On and Connect</string>
-    <string name="carelevo_patch_connect_step_2_desc">Press the power button for more than 1 second. After the beep, Tap the [Search Patch] button below.</string>
+    <string name="carelevo_patch_connect_step_2_desc">Press the power button for more than 1 second. After the beep, tap the [Search Patch] button below.</string>
 
     <string name="carelevo_patch_safety_check_start_title">Safety Check</string>
     <string name="carelevo_patch_safety_check_end_title">Safety Check Completed</string>
@@ -137,10 +137,7 @@
 
     <string name="carelevo_dialog_connect_detached">Applicator Removed</string>
 
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Press the grips on both sides of the applicator to detach it from the patch,\n
-        and then press the `Applicator removed` button. Insulin delivery will begin.
-    </string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Press the grips on both sides of the applicator to detach it from the patch,\nand then press the `Applicator removed` button. Insulin delivery will begin.</string>
 
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth is not enabled. Please check.</string>
@@ -221,7 +218,7 @@
     <string name="alarm_notification_desc_warning_low_insulin">Less than 10 U insulin remaining; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Patch expired; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
     <string name="alarm_notification_desc_warning_low_battery">Low battery; insulin delivery stopped. Tap the [Discard Patch] button and change patch now.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Insulin delivery stopped. Move to a suitable temperature now (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulin delivery stopped. Move to a suitable temperature now (40℉–99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Insulin delivery stopped. Tap the [Start Insulin] button and restart basal delivery.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Patch application time ran out. Tap the [Deactivate Patch] button and change patch now.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Self-diagnosis failed. Tap the [Deactivate Patch] button and change patch now.</string>

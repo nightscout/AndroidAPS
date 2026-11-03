@@ -536,7 +536,6 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                             commandQueue = graph.commandQueue,
                             pumpCommunicationStatus = graph.pumpCommunicationStatus,
                             appName = appName,
-                            authorizationFailedMessage = "Authorization failed",
                             onNavigate = { request -> navigator.handleNavigationRequest(request) },
                             onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },
                             onNotificationActionClick = { n -> navigator.handleNotificationAction(n.id) },
@@ -549,7 +548,6 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                             onLaunchBrowser = { url -> graph.authBrowser.show(url) },
                             onBringToForeground = { logger.debug(LTag.CORE, "Desktop window is already in front") },
                             onRecreateActivity = { logger.notWiredYet("window recreate") },
-                            onAuthorizationFailed = { logger.error(LTag.CORE, "Authorization failed") },
                             autoShowNotificationSheet = false,
                             onAutoShowConsumed = {}
                         )

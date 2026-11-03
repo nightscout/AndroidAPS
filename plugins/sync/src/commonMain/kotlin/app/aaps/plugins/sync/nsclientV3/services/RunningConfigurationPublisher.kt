@@ -188,12 +188,12 @@ class RunningConfigurationPublisher(
     }
 
     // Cold doc: full plugin/overview/definition config + the authorized-clients roster.
-    // Returns true if a doc was published, false if it was not (pump not initialized yet, no Nightscout client, or the
+    // Returns true if a doc was published, false if it was not (app not initialized yet, no Nightscout client, or the
     // upload failed).
     private suspend fun publishCold(): Boolean {
         val base = runningConfiguration.configuration()
         if (base.isEmpty()) {
-            aapsLogger.debug(LTag.NSCLIENT, "Running configuration empty: the pump is not initialized yet")
+            aapsLogger.debug(LTag.NSCLIENT, "Running configuration empty: the app is not initialized yet")
             return false
         }
         // Append the authorized-clients roster directly on the runningConfig doc — the

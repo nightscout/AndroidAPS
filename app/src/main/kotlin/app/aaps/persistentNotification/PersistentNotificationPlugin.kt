@@ -48,6 +48,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.round
+import app.aaps.core.ui.compose.leftToRightText
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
@@ -278,8 +279,9 @@ class PersistentNotificationPlugin(
                 line1 = bgStatusChipText + (trendSymbol?.let { " $it" } ?: "")
                 line1WithDelta = bgStatusChipText + (trendSymbol?.let { " $it" } ?: "")
                 if (glucoseStatus != null) {
-                    line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
-                    line1WithDelta += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
+                    val delta = leftToRightText(profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta))
+                    line1 += " $delta"
+                    line1WithDelta += " $delta"
                 } else {
                     line1 += " " + rh.gs(R.string.old_data)
                 }

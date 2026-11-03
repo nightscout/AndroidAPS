@@ -196,8 +196,7 @@
     <string name="profileswitch4_multi">Multiple profiles can be set up and selected to accommodate changing circumstances (e.g., hormonal changes, shift working, weekdays/weekend lifestyle).</string>
     <string name="blank"></string>
     <string name="other_medication_label">Other Medication. Please read the statement below and check the box to accept the declaration.</string>
-    <string name="other_medication_text">AAPS reduces basal rates or suspends insulin delivery to raise blood sugar. Drugs in the class SGLT2 inhibitors (gliflozins) can prevent increases in blood glucose and, thus, can produce a dangerous insulin deficiency leading to DKA.
-\nCommon brand names are: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI hereby promise that I will not take such drugs when using AAPS or will deactivate the loop before using such drugs.</string>
+    <string name="other_medication_text">AAPS reduces basal rates or suspends insulin delivery to raise blood sugar. Drugs in the class SGLT2 inhibitors (gliflozins) can prevent increases in blood glucose and, thus, can produce a dangerous insulin deficiency leading to DKA.\nCommon brand names are: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI hereby promise that I will not take such drugs when using AAPS or will deactivate the loop before using such drugs.</string>
     <string name="concentration_feature_label">Insulin Concentration Management</string>
     <string name="u200_with_profile">Before AAPS supported insulin concentrations, users ran U200 by setting a 50% profile to halve all values. In that setup, which answers are true?</string>
     <string name="u200_with_profile_reports">My AAPS database and NS reports become wrong. All values (boluses, rates, TDD) must be multiplied by 2 to see the real values, especially for doctors and the health team.</string>

@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Connection settings</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synchronizes your data with Nightscout using v3 API</string>
     <string name="blocked_by_charging">Blocked by charging options</string>
     <string name="blocked_by_connectivity">Blocked by connectivity options</string>
@@ -121,13 +120,13 @@
     <string name="status_label">Status:</string>
     <string name="clear_log">Clear log</string>
     <string name="full_sync">Full synchronization</string>
-    <string name="full_sync_comment">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
+    <string name="full_sync_comment">Full synchronization? It may take many hours and until it finishes you will not see new data in NS.</string>
     <string name="ns_sync_options">Synchronization</string>
     <string name="ns_alarm_options">Alarm options</string>
     <string name="ns_remote_control_options">Remote control</string>
 
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">If enabled, uploads will go to test servers instead of the regular</string>
+    <string name="summary_tidepool_dev_servers">If enabled, uploads will go to test servers instead of the regular ones</string>
     <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
     <string name="title_tidepool_use_ns_connection">Use Nightscout connection settings</string>
     <string name="summary_tidepool_use_ns_connection">Turn off to set separate connection settings for Tidepool</string>
@@ -245,16 +244,16 @@
     <string name="smscommunicator_tab_otp_label">Authenticator setup</string>
     <string name="smscommunicator_code_verify_label">Code to check:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">The verification code consist of 6 digits displayed by Authenticator app (known as OTP) followed by 3 or more digits of mandatory PIN.</string>
+    <string name="smscommunicator_code_verify_info">The verification code consists of 6 digits displayed by Authenticator app (known as OTP) followed by 3 or more digits of mandatory PIN.</string>
     <string name="smscommunicator_otp_reset_btn">Reset Authenticators</string>
     <string name="smscommunicator_otp_reset_title">Reset Authenticator Key</string>
-    <string name="smscommunicator_otp_reset_prompt">Are you sure to reset Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
+    <string name="smscommunicator_otp_reset_prompt">Are you sure you want to reset the Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AAPS OTP codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
     <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set them up again!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">INVALID SIZE!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">WRONG PIN</string>
@@ -265,7 +264,7 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">To deliver meal bolus %1$.2fU reply with code %2$s</string>
     <string name="smscommunicator_temptarget_with_code">To set the Temp Target %1$s reply with code %2$s</string>
     <string name="smscommunicator_temptarget_cancel">To cancel Temp Target reply with code %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">To disable the SMS Remote Service reply with code %1$s.\n\nKeep in mind that you\'ll able to reactivate it directly from the AAPS master smartphone only.</string>
+    <string name="smscommunicator_stops_ns_with_code">To disable the SMS Remote Service reply with code %1$s.\n\nKeep in mind that you\'ll be able to reactivate it directly from the AAPS master smartphone only.</string>
     <string name="smscommunicator_stopped_sms">SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.</string>
     <string name="smscommunicator_calibration_reply_with_code">To send calibration %1$.2f reply with code %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolus failed. Verify real state before sending another command!</string>
@@ -296,7 +295,7 @@
     <string name="smscommunicator_restarting">AAPS is restarting</string>
     <string name="smscommunicator_tempbasal_set">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extended_set">Extended bolus %1$.2fU for %2$d min started successfully</string>
-    <string name="smscommunicator_carbs_set">Carbs %1$d  g entered successfully</string>
+    <string name="smscommunicator_carbs_set">Carbs %1$d g entered successfully</string>
     <string name="smscommunicator_carbs_failed">Entering %1$dg of carbs failed</string>
     <string name="smscommunicator_tempbasal_set_percent">Temp basal %1$d%% for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasal_failed">Temp basal start failed</string>

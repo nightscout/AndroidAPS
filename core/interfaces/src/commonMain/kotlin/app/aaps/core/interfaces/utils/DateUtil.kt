@@ -322,6 +322,13 @@ interface DateUtil {
     fun timeStringFromSeconds(seconds: Int): String
 
     /**
+     * The hour alone, for a place where every time is a whole hour and the room is small.
+     * @param seconds The number of seconds past midnight.
+     * @return "13" with a 24-hour clock, "1 PM" with a 12-hour clock.
+     */
+    fun hourStringFromSeconds(seconds: Int): String
+
+    /**
      * Formats a duration in milliseconds into a human-readable string with hours and minutes.
      * @param timeInMillis The duration in milliseconds.
      * @param rh Resource helper for localized units (e.g., "h").
