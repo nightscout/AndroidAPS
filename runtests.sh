@@ -3,4 +3,4 @@
 #  - testFullDebugUnitTest: the flavoured modules, which are only :app and the :wear ones.
 #  - testDebugUnitTest: the Android libraries. They have no flavours, so there is no "Full" task.
 #  - allTests: multiplatform modules, which have no build variants at all.
-./gradlew -Pcoverage -PfirebaseDisable testFullDebugUnitTest testDebugUnitTest allTests
+./gradlew -Pcoverage testFullDebugUnitTest testDebugUnitTest allTests

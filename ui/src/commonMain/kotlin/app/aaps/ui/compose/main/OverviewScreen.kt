@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.stringResource
@@ -60,11 +59,11 @@ import app.aaps.ui.search.SearchViewModel
  * ## What is still per platform
  *
  * The callbacks at the end, and only those: opening a browser, opening a directory picker, bringing
- * the window to the front, recreating the activity, and quitting after a failed authorization. Each
- * is a sentence of platform code, and each is passed in rather than guessed at.
+ * the window to the front and recreating the activity. Each is a sentence of platform code, and each
+ * is passed in rather than guessed at.
  *
- * [appName] and [authorizationFailedMessage] are parameters because they live in the app module's
- * own resources - the name differs per flavour - and this module cannot see them.
+ * [appName] is a parameter because it lives in the app module's own resources - the name differs per
+ * flavour - and this module cannot see it.
  */
 @Composable
 @Suppress("LongParameterList", "LongMethod")
@@ -95,7 +94,6 @@ fun OverviewScreen(
     pumpCommunicationStatus: PumpCommunicationStatus,
     // Text the app module owns
     appName: String,
-    authorizationFailedMessage: String,
     // Navigation, which the platform routes because it holds the controller
     onNavigate: (NavigationRequest) -> Unit,
     onSearchResultClick: (SearchIndexEntry) -> Unit,
@@ -107,7 +105,6 @@ fun OverviewScreen(
     onLaunchBrowser: (String) -> Unit,
     onBringToForeground: () -> Unit,
     onRecreateActivity: () -> Unit,
-    onAuthorizationFailed: () -> Unit,
     // Notification sheet, opened from outside when something important arrives
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit
@@ -171,18 +168,6 @@ fun OverviewScreen(
             uiInteraction.runAlarm(comment, title, AlarmSound.BOLUS_ERROR)
         },
     )
-
-    // Authorization failed dialog
-    if (state.showAuthFailedDialog) {
-        OkDialog(
-            title = "",
-            message = authorizationFailedMessage,
-            onDismiss = {
-                mainViewModel.setShowAuthFailedDialog(false)
-                onAuthorizationFailed()
-            }
-        )
-    }
 
     MainScreen(
         mainViewModel = mainViewModel,

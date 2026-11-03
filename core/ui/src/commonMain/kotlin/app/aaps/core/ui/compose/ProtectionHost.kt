@@ -7,16 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
-import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.UnifiedAuthDialog
+import kotlinx.coroutines.flow.first
 
 /**
  * Renders the password, PIN and biometric prompts that `ProtectionCheck` asks for.
@@ -39,16 +39,12 @@ import app.aaps.core.ui.compose.dialogs.UnifiedAuthDialog
  * prevent.
  *
  * @param checkPassword verifies an entered password against the stored hash
- * @param showBiometric prompt for a request that asked for biometric specifically
- * @param showBiometricSimple prompt that may fall back to a password, for a hierarchical request
+ * @param showBiometricSimple biometric prompt that may fall back to the password dialog
  */
 @Composable
 fun ProtectionHost(
     protectionCheck: ProtectionCheck,
-    preferences: Preferences,
     checkPassword: (password: String, hash: String) -> Boolean,
-    showBiometric: (title: String, onGranted: () -> Unit, onCancelled: () -> Unit, onDenied: () -> Unit) -> Unit =
-        { _, _, onCancelled, _ -> onCancelled() },
     showBiometricSimple: (title: String, onSuccess: () -> Unit, onFallback: () -> Unit, onCancel: () -> Unit) -> Unit =
         { _, _, onFallback, _ -> onFallback() }
 ) {
@@ -62,13 +58,9 @@ fun ProtectionHost(
             protectionCheck.pendingAuthRequest.value?.let {
                 protectionCheck.completeAuthRequest(it.id, AuthorizationResult(null, ProtectionResult.CANCELLED))
             }
-            protectionCheck.pendingRequest.value?.let {
-                protectionCheck.completeRequest(it.id, ProtectionResult.CANCELLED)
-            }
         }
     }
 
-    // --- Hierarchical auth requests ---
     val authRequest by protectionCheck.pendingAuthRequest.collectAsStateWithLifecycle()
 
     authRequest?.let { req ->
@@ -77,7 +69,11 @@ fun ProtectionHost(
         val biometricTitle = stringResource(CoreUiStrings.biometric_title)
 
         if (req.hasBiometric && !showDialog) {
+            val lifecycle = LocalLifecycleOwner.current.lifecycle
             LaunchedEffect(req.id) {
+                // A request can come while another activity is on top, for example the Dexcom permission
+                // activity at app start. A prompt started then is dropped by the system, so wait.
+                lifecycle.currentStateFlow.first { it.isAtLeast(Lifecycle.State.RESUMED) }
                 showBiometricSimple(
                     biometricTitle,
                     {
@@ -111,83 +107,4 @@ fun ProtectionHost(
             )
         }
     }
-
-    // --- Single level requests ---
-    val request by protectionCheck.pendingRequest.collectAsStateWithLifecycle()
-
-    request?.let { req ->
-        val reqTitle = stringResource(req.title)
-        when (req.type) {
-            ProtectionType.NONE            -> {
-                LaunchedEffect(req.id) {
-                    protectionCheck.completeRequest(req.id, ProtectionResult.GRANTED)
-                }
-            }
-
-            ProtectionType.BIOMETRIC       -> {
-                LaunchedEffect(req.id) {
-                    // No fallback here: this request asked for biometric specifically. The default
-                    // lambda cancels, so a platform without biometrics refuses rather than grants.
-                    showBiometric(
-                        reqTitle,
-                        { protectionCheck.completeRequest(req.id, ProtectionResult.GRANTED) },
-                        { protectionCheck.completeRequest(req.id, ProtectionResult.CANCELLED) },
-                        { protectionCheck.completeRequest(req.id, ProtectionResult.DENIED) }
-                    )
-                }
-            }
-
-            ProtectionType.MASTER_PASSWORD -> {
-                val storedHash = preferences.get(StringKey.ProtectionMasterPassword)
-                QueryPasswordDialog(
-                    title = reqTitle,
-                    pinInput = false,
-                    onConfirm = { enteredPassword ->
-                        protectionCheck.completeRequest(req.id, resultFor(checkPassword(enteredPassword, storedHash)))
-                    },
-                    onCancel = { protectionCheck.completeRequest(req.id, ProtectionResult.CANCELLED) }
-                )
-            }
-
-            ProtectionType.CUSTOM_PASSWORD -> {
-                val passwordKey = when (req.protection) {
-                    ProtectionCheck.Protection.PREFERENCES -> StringKey.ProtectionSettingsPassword
-                    ProtectionCheck.Protection.APPLICATION -> StringKey.ProtectionApplicationPassword
-                    ProtectionCheck.Protection.BOLUS       -> StringKey.ProtectionBolusPassword
-                    else                                   -> return // should never reach here
-                }
-                val storedHash = preferences.get(passwordKey)
-                QueryPasswordDialog(
-                    title = reqTitle,
-                    pinInput = false,
-                    onConfirm = { enteredPassword ->
-                        protectionCheck.completeRequest(req.id, resultFor(checkPassword(enteredPassword, storedHash)))
-                    },
-                    onCancel = { protectionCheck.completeRequest(req.id, ProtectionResult.CANCELLED) }
-                )
-            }
-
-            ProtectionType.CUSTOM_PIN      -> {
-                val pinKey = when (req.protection) {
-                    ProtectionCheck.Protection.PREFERENCES -> StringKey.ProtectionSettingsPin
-                    ProtectionCheck.Protection.APPLICATION -> StringKey.ProtectionApplicationPin
-                    ProtectionCheck.Protection.BOLUS       -> StringKey.ProtectionBolusPin
-                    else                                   -> return // should never reach here
-                }
-                val storedHash = preferences.get(pinKey)
-                QueryPasswordDialog(
-                    title = reqTitle,
-                    pinInput = true,
-                    onConfirm = { enteredPin ->
-                        protectionCheck.completeRequest(req.id, resultFor(checkPassword(enteredPin, storedHash)))
-                    },
-                    onCancel = { protectionCheck.completeRequest(req.id, ProtectionResult.CANCELLED) }
-                )
-            }
-        }
-    }
 }
-
-/** Granted only on a match. Wrong credentials are denied, which is not the same as cancelled. */
-private fun resultFor(matches: Boolean): ProtectionResult =
-    if (matches) ProtectionResult.GRANTED else ProtectionResult.DENIED

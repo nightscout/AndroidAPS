@@ -54,14 +54,19 @@ class DetermineBasalSMB(
     }
 
     fun Double.withoutZeros(): String = NumberFormat.UP_TO_2_DECIMALS.format(this)
-    fun round(value: Double): Int =
+    fun round(value: Double, label: String): Int =
         // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
         // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire
         // (PersistenceLayerImpl) surfaces to Crashlytics, so laundering here does not hide the real bug.
         if (!value.isFinite()) {
-            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite=$value)")
+            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite_$label=$value)")
             0
         } else value.roundToInt()
+
+    // A profile can have a basal of 0 for some hours. There is then no basal to make up for with a zero temp:
+    // dividing by 0 here gave Infinity and a false non-finite report. The result was 0 before too.
+    private fun zeroTempMinutes(worstCaseInsulinReq: Double, currentBasal: Double, label: String): Int =
+        if (currentBasal <= 0.0) 0 else round(60 * worstCaseInsulinReq / currentBasal, label)
 
     // kotlin.math.max and Double.coerceAtLeast both propagate NaN. This variant pins
     // NaN/±Infinity to `minimum` and otherwise behaves like coerceAtLeast.
@@ -341,9 +346,9 @@ class DetermineBasalSMB(
         val tick: String
 
         tick = if (glucose_status.delta > -0.5) {
-            "+" + round(glucose_status.delta)
+            "+" + round(glucose_status.delta, "delta")
         } else {
-            round(glucose_status.delta).toString()
+            round(glucose_status.delta, "delta").toString()
         }
         val minDelta = min(glucose_status.delta, glucose_status.shortAvgDelta)
         val minAvgDelta = min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta)
@@ -367,13 +372,13 @@ class DetermineBasalSMB(
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
         val bgi = round((-iob_data.activity * sens * 5), 2)
         // project deviations for 30 minutes
-        var deviation = round(30 / 5 * (minDelta - bgi))
+        var deviation = round(30 / 5 * (minDelta - bgi), "deviation")
         // don't overreact to a big negative delta: use minAvgDelta if deviation is negative
         if (deviation < 0) {
-            deviation = round((30 / 5) * (minAvgDelta - bgi))
+            deviation = round((30 / 5) * (minAvgDelta - bgi), "deviationAvg")
             // and if deviation is still negative, use long_avgdelta
             if (deviation < 0) {
-                deviation = round((30 / 5) * (glucose_status.longAvgDelta - bgi))
+                deviation = round((30 / 5) * (glucose_status.longAvgDelta - bgi), "deviationLongAvg")
             }
         }
 
@@ -512,14 +517,14 @@ class DetermineBasalSMB(
             // if carbs * assumedCarbAbsorptionRate > remainingCATimeMin, raise it
             // so <= 90g is assumed to take 3h, and 120g=4h
             remainingCATimeMin = max(remainingCATimeMin, meal_data.mealCOB / assumedCarbAbsorptionRate)
-            val lastCarbAge = round((systemTime - meal_data.lastCarbTime) / 60000.0)
+            val lastCarbAge = round((systemTime - meal_data.lastCarbTime) / 60000.0, "lastCarbAge")
             //console.error(meal_data.lastCarbTime, lastCarbAge);
 
             val fractionCOBAbsorbed = (meal_data.carbs - meal_data.mealCOB) / meal_data.carbs
             remainingCATime = remainingCATimeMin + 1.5 * lastCarbAge / 60
             remainingCATime = round(remainingCATime, 1)
             //console.error(fractionCOBAbsorbed, remainingCATimeAdjustment, remainingCATime)
-            consoleError.add("Last carbs " + lastCarbAge + "minutes ago; remainingCATime:" + remainingCATime + "hours;" + round(fractionCOBAbsorbed * 100) + "% carbs absorbed")
+            consoleError.add("Last carbs " + lastCarbAge + "minutes ago; remainingCATime:" + remainingCATime + "hours;" + round(fractionCOBAbsorbed * 100, "fractionCOBAbsorbed") + "% carbs absorbed")
         }
 
         // calculate the number of carbs absorbed over remainingCATime hours at current CI
@@ -646,8 +651,8 @@ class DetermineBasalSMB(
                 return abortNonFinite("remainingCI=$remainingCI", rT, currenttemp, basal, deliverAt)
             }
             remainingCItotal += predCI + remainingCI
-            remainingCIs.add(round(remainingCI))
-            predCIs.add(round(predCI))
+            remainingCIs.add(round(remainingCI, "remainingCI"))
+            predCIs.add(round(predCI, "predCI"))
             //console.log(round(predCI,1)+"+"+round(remainingCI,1)+" ");
             COBpredBG = COBpredBGs[COBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predCI + remainingCI
             aCOBpredBG = aCOBpredBGs[aCOBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predACI
@@ -673,8 +678,8 @@ class DetermineBasalSMB(
             if (UAMpredBGs.size < 48) UAMpredBGs.add(UAMpredBG)
             if (ZTpredBGs.size < 48) ZTpredBGs.add(ZTpredBG)
             // calculate minGuardBGs without a wait from COB, UAM, IOB predBGs
-            if (COBpredBG < minCOBGuardBG) minCOBGuardBG = round(COBpredBG).toDouble()
-            if (UAMpredBG < minUAMGuardBG) minUAMGuardBG = round(UAMpredBG).toDouble()
+            if (COBpredBG < minCOBGuardBG) minCOBGuardBG = round(COBpredBG, "COBpredBG").toDouble()
+            if (UAMpredBG < minUAMGuardBG) minUAMGuardBG = round(UAMpredBG, "UAMpredBG").toDouble()
             if (IOBpredBG < minIOBGuardBG) minIOBGuardBG = IOBpredBG
             if (ZTpredBG < minZTGuardBG) minZTGuardBG = round(ZTpredBG, 0)
 
@@ -707,7 +712,7 @@ class DetermineBasalSMB(
             else IOBpredBGs.removeAt(IOBpredBGs.lastIndex)
         }
         rT.predBGs?.IOB = IOBpredBGs.map { it.toInt() }
-        lastIOBpredBG = round(IOBpredBGs[IOBpredBGs.size - 1]).toDouble()
+        lastIOBpredBG = round(IOBpredBGs[IOBpredBGs.size - 1], "lastIOBpredBG").toDouble()
         ZTpredBGs = ZTpredBGs.map { round(min(401.0, it.coerceAtLeastFinite(39.0)), 0) }.toMutableList()
         for (i in ZTpredBGs.size - 1 downTo 7) {
             // stop displaying ZTpredBGs once they're rising and above target
@@ -969,8 +974,8 @@ class DetermineBasalSMB(
         val zeroTempEffectDouble = profile.current_basal * sens * zeroTempDuration / 60
         // don't count the last 25% of COB against carbsReq
         val COBforCarbsReq = max(0.0, meal_data.mealCOB - 0.25 * meal_data.carbs)
-        val carbsReq = round(((bgUndershoot - zeroTempEffectDouble) / csf - COBforCarbsReq))
-        val zeroTempEffect = round(zeroTempEffectDouble)
+        val carbsReq = round(((bgUndershoot - zeroTempEffectDouble) / csf - COBforCarbsReq), "carbsReq")
+        val zeroTempEffect = round(zeroTempEffectDouble, "zeroTempEffect")
         consoleError.add("naive_eventualBG: $naive_eventualBG bgUndershoot: $bgUndershoot zeroTempDuration $zeroTempDuration zeroTempEffect: $zeroTempEffect carbsReq: $carbsReq")
         if (carbsReq >= profile.carbsReqThreshold && minutesAboveThreshold <= 45) {
             rT.carbsReq = carbsReq
@@ -987,8 +992,8 @@ class DetermineBasalSMB(
             rT.reason.append("minGuardBG ${convert_bg(minGuardBG)} < ${convert_bg(threshold)}")
             bgUndershoot = target_bg - minGuardBG
             val worstCaseInsulinReq = bgUndershoot / sens
-            var durationReq = round(60 * worstCaseInsulinReq / profile.current_basal)
-            durationReq = round(durationReq / 30.0) * 30
+            var durationReq = zeroTempMinutes(worstCaseInsulinReq, profile.current_basal, "durationReqLowGlucose")
+            durationReq = round(durationReq / 30.0, "durationReqSteps") * 30
             // always set a 30-120m zero temp (oref0-pump-loop will let any longer SMB zero temp run)
             durationReq = min(120, max(30, durationReq))
             return setTempBasal(0.0, durationReq, profile, rT, currenttemp)
@@ -1061,12 +1066,12 @@ class DetermineBasalSMB(
                 if (rate <= 0) {
                     bgUndershoot = (target_bg - naive_eventualBG)
                     val worstCaseInsulinReq = bgUndershoot / sens
-                    var durationReq = round(60 * worstCaseInsulinReq / profile.current_basal)
+                    var durationReq = zeroTempMinutes(worstCaseInsulinReq, profile.current_basal, "durationReqLowTemp")
                     if (durationReq < 0) {
                         durationReq = 0
                         // don't set a temp longer than 120 minutes
                     } else {
-                        durationReq = round(durationReq / 30.0) * 30
+                        durationReq = round(durationReq / 30.0, "durationReqSteps") * 30
                         durationReq = min(120, max(0, durationReq))
                     }
                     //console.error(durationReq);
@@ -1170,7 +1175,7 @@ class DetermineBasalSMB(
                 // calculate a long enough zero temp to eventually correct back up to target
                 val smbTarget = target_bg
                 val worstCaseInsulinReq = (smbTarget - (naive_eventualBG + minIOBPredBG) / 2.0) / sens
-                var durationReq = round(60 * worstCaseInsulinReq / profile.current_basal)
+                var durationReq = zeroTempMinutes(worstCaseInsulinReq, profile.current_basal, "durationReqSmb")
 
                 // if insulinReq > 0 but not enough for a microBolus, don't set an SMB zero temp
                 if (insulinReq > 0 && microBolus < profile.bolus_increment) {
@@ -1182,7 +1187,7 @@ class DetermineBasalSMB(
                     durationReq = 0
                     // don't set an SMB zero temp longer than 60 minutes
                 } else if (durationReq >= 30) {
-                    durationReq = round(durationReq / 30.0) * 30
+                    durationReq = round(durationReq / 30.0, "durationReqSteps") * 30
                     durationReq = min(60, max(0, durationReq))
                 } else {
                     // if SMB durationReq is less than 30m, set a nonzero low temp

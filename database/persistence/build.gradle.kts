@@ -38,6 +38,7 @@ kotlin {
             dependencies {
                 implementation(libs.org.junit.jupiter)
                 implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.kotlin)
                 runtimeOnly(libs.org.junit.platform.launcher)
             }
         }

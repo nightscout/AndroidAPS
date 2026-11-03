@@ -188,7 +188,7 @@ class RunningConfigurationPublisherTest {
     }
 
     @Test
-    fun `a cold doc skipped while the pump is not ready is published by the retry`() = runTest {
+    fun `a cold doc skipped while the app is not ready is published by the retry`() = runTest {
         stubPollMode()
         whenever(authorizedRepository.current(any())).thenReturn(listOf(client("new", ClientState.Active)))
         // Not initialized at start (empty), ready by the retry.

@@ -16,6 +16,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
@@ -102,7 +103,8 @@ fun DialogStatusBar(
                 bg.deltaText?.let { delta ->
                     Text(
                         text = delta,
-                        style = MaterialTheme.typography.bodyMedium,
+                        // Left to right also in a right-to-left language, or "+0.4" shows as "0.4+"
+                        style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
                         color = bgColor,
                         maxLines = 1,
                         // Spoken as part of the glucose value above.

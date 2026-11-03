@@ -8,10 +8,8 @@ import app.aaps.core.interfaces.protection.AuthMethod
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.HierarchicalProtectionRequest
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.protection.ProtectionRequest
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
-import app.aaps.core.keys.interfaces.Preferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
 import org.junit.Test
@@ -44,17 +42,16 @@ class ProtectionHostDisposeTest {
         onResult = {}
     )
 
-    private fun protectionCheck(auth: HierarchicalProtectionRequest?, single: ProtectionRequest?): ProtectionCheck = mock<ProtectionCheck>().also {
+    private fun protectionCheck(auth: HierarchicalProtectionRequest?): ProtectionCheck = mock<ProtectionCheck>().also {
         whenever(it.pendingAuthRequest).thenReturn(MutableStateFlow(auth))
-        whenever(it.pendingRequest).thenReturn(MutableStateFlow(single))
     }
 
     @Test
     fun pendingAuthRequestIsCancelledWhenTheHostLeaves() {
-        val check = protectionCheck(authRequest, null)
+        val check = protectionCheck(authRequest)
         var shown by mutableStateOf(true)
         compose.setContent {
-            if (shown) ProtectionHost(protectionCheck = check, preferences = mock<Preferences>(), checkPassword = { _, _ -> false })
+            if (shown) ProtectionHost(protectionCheck = check, checkPassword = { _, _ -> false })
         }
         compose.waitForIdle()
         verify(check, never()).completeAuthRequest(any(), any())
@@ -67,15 +64,14 @@ class ProtectionHostDisposeTest {
 
     @Test
     fun noPendingRequestNothingToCancel() {
-        val check = protectionCheck(null, null)
+        val check = protectionCheck(null)
         var shown by mutableStateOf(true)
         compose.setContent {
-            if (shown) ProtectionHost(protectionCheck = check, preferences = mock<Preferences>(), checkPassword = { _, _ -> false })
+            if (shown) ProtectionHost(protectionCheck = check, checkPassword = { _, _ -> false })
         }
         shown = false
         compose.waitForIdle()
 
         verify(check, never()).completeAuthRequest(any(), any())
-        verify(check, never()).completeRequest(any(), any())
     }
 }

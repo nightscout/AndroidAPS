@@ -68,23 +68,27 @@ class RunningConfigurationImpl(
     override fun configuration(): JsonObject {
         // Before init completes no pump is selected yet, and activePump.isInitialized() would throw
         // "No pump selected" (PluginStore.activePumpInternal) instead of returning false. Treat
-        // "app not initialized" as an earlier "pump not ready" state and return the empty doc —
+        // "app not initialized" as the one state with nothing to send and return the empty doc —
         // RunningConfigurationPublisher skips an empty payload and retries once init completes.
         if (!config.appInitialized) return JsonObject(emptyMap())
         val pumpInterface = activePlugin.activePump
 
-        if (!pumpInterface.isInitialized()) return JsonObject(emptyMap())
         // Plugin selection + settings + scene definitions all ride the generic key-sync path now
         // (ActivePlugin* keys + the flat syncedPrefs cold block).
         return buildJsonObject {
             put("syncedPrefs", buildSyncedPrefs())
-            put("pump", pumpInterface.model().description)
-            // Mirror the master's active-pump faking flag READ-ONLY to clients (so a follower's VirtualPump shows the
-            // right EB capability + interprets emulated-temp EBs correctly) — computed here on the master, never on the client.
-            // Reads activePump (the wrapper, which delegates to the real pump on the master); applyCold instead casts
-            // activePumpInternal because a client only has VirtualPump (not the PumpWithConcentration wrapper).
-            // Stays a real JSON boolean, as it was with org.json - everything under syncedPrefs is a string, this is not.
-            put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
+            // A pump that is not initialized (a pod change, nothing paired yet) only leaves out what comes from the
+            // pump. A client keeps its own values then. The rest must still go out: without the client-control switch
+            // in syncedPrefs and the roster, a client shows a master that is online as offline.
+            if (pumpInterface.isInitialized()) {
+                put("pump", pumpInterface.model().description)
+                // Mirror the master's active-pump faking flag READ-ONLY to clients (so a follower's VirtualPump shows the
+                // right EB capability + interprets emulated-temp EBs correctly) — computed here on the master, never on the client.
+                // Reads activePump (the wrapper, which delegates to the real pump on the master); applyCold instead casts
+                // activePumpInternal because a client only has VirtualPump (not the PumpWithConcentration wrapper).
+                // Stays a real JSON boolean, as it was with org.json - everything under syncedPrefs is a string, this is not.
+                put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
+            }
             // Computed from cold settings (the autosens and dynamic ISF switches, the APS plugin), so it goes in the cold
             // doc, which is sent when they change. The hot doc is sent only when the scene changes.
             put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())

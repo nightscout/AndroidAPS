@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.captureToImage
@@ -23,7 +25,10 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.style.ResolvedTextDirection
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
@@ -115,6 +120,22 @@ class BgInfoSectionTest {
         compose.onNodeWithText("120").assertIsDisplayed()
         compose.onNodeWithText("+2").assertIsDisplayed()
         compose.onNodeWithText("2 min").assertIsDisplayed()
+    }
+
+    /** In a right-to-left language the sign moved behind the number: "+2" showed as "2+" and "-2" as "2-". */
+    @Test
+    fun theDeltaStaysLeftToRightInARightToLeftLanguage() {
+        compose.setContent {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                MaterialTheme {
+                    BgInfoSection(bgInfo = bgInfo(deltaText = "-2"), timeAgoText = "2 min")
+                }
+            }
+        }
+
+        val results = mutableListOf<TextLayoutResult>()
+        compose.onNodeWithText("-2").fetchSemanticsNode().config[SemanticsActions.GetTextLayoutResult].action?.invoke(results)
+        assertThat(results.single().getParagraphDirection(0)).isEqualTo(ResolvedTextDirection.Ltr)
     }
 
     @Test

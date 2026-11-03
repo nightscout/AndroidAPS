@@ -202,6 +202,11 @@ enum class BooleanKey(
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
 
+    // Simple Mode uploads with no switch, and that is the decision, not an oversight: `defaultedBySM`
+    // hides the row and `hideParentScreenIfHidden` takes the whole Data choices screen with it. Two
+    // separate reviews have read this as a bug and proposed dropping the flags - please do not.
+    // The stored value is still honoured: both FabricPrivacyImpl classes read the raw KeyValueStore,
+    // not `Preferences.get`, so an opt-out made in Advanced mode keeps working back in Simple Mode.
     MaintenanceEnableFabric("enable_fabric2", true, KeysStrings.pref_title_maintenance_enable_fabric, defaultedBySM = true, hideParentScreenIfHidden = true),
 
     // Master-only (not a follower client): unattended settings export backs up the local config, which on a

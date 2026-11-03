@@ -105,6 +105,7 @@ class EquilManager(
 
     /** Guards the one-time read in [init]. */
     private var podStateLoaded = false
+    private val podStateLock = Any()
 
     val lastConnectionFlow = MutableStateFlow(0L)
     val lastBolusTimeFlow = MutableStateFlow<Long?>(null)
@@ -126,9 +127,11 @@ class EquilManager(
      * [equilBLE] still initialises on every start; only the read is once.
      */
     fun init() {
-        if (!podStateLoaded) {
-            loadPodState()
-            podStateLoaded = true
+        synchronized(podStateLock) {
+            if (!podStateLoaded) {
+                loadPodState()
+                podStateLoaded = true
+            }
         }
         equilBLE.init(this)
     }
@@ -567,12 +570,22 @@ class EquilManager(
         storePodState(podState)
     }
 
+    /**
+     * Resets the pod state, in memory and in preferences.
+     *
+     * Under the same lock as the load in [init], and it counts as that load. Without this, `onStart` on
+     * its background coroutine could read the old state before the reset and publish it after, or read
+     * something stale after it. Memory then says COMPLETED while preferences hold the clean state.
+     */
     fun clearPodState() {
-        this.equilState = EquilState()
-        val podState = gsonInstance.toJson(equilState)
-        aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: $podState")
-        storePodState(podState)
-        syncOverviewFlows()
+        synchronized(podStateLock) {
+            this.equilState = EquilState()
+            podStateLoaded = true
+            val podState = gsonInstance.toJson(equilState)
+            aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: $podState")
+            storePodState(podState)
+            syncOverviewFlows()
+        }
     }
 
     private fun storePodState(podState: String) {
