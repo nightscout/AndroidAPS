@@ -73,7 +73,7 @@
     <string name="autotune_profile">Profiel :</string>
     <string name="autotune_last_run">Laatste berekening :</string>
     <string name="autotune_warning">Waarschuwing :</string>
-    <string name="autotune_ic_warning">Het geselecteerde profiel bevat %1$d I/Kh-verhoudingen. Autotune gebruikt %2$.2f g/E</string>
+    <string name="autotune_ic_warning">Het geselecteerde profiel bevat %1$d koolhydraatratio\'s. Autotune gebruikt %2$.2f g/E</string>
     <string name="autotune_isf_warning">Het geselecteerde profiel bevat %1$d ISF waarden. Autotune gebruikt %2$.1f %3$s/E</string>
     <string name="autotune_error">Fout in invoergegevens, probeer autotune opnieuw te starten of het aantal dagen te verminderen</string>
     <string name="autotune_error_more_days">Fout in invoergegevens, verhoog het aantal dagen</string>
