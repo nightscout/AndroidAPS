@@ -17,3 +17,13 @@ import androidx.compose.ui.unit.LayoutDirection
 fun LeftToRight(content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr, content = content)
 }
+
+/**
+ * [text] marked as left to right, for a number with a sign in a place without a Compose style: a
+ * notification or a widget. Without this, Hebrew text in the same line turns the line around, and
+ * "+0.4" shows as "0.4+".
+ *
+ * Only for what is shown on a screen. It is an invisible character, and one in an SMS makes the phone
+ * send the whole message in a longer encoding.
+ */
+fun leftToRightText(text: String): String = "‎$text"
