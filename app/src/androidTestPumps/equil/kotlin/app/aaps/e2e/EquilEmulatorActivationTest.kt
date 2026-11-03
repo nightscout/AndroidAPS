@@ -134,16 +134,15 @@ class EquilEmulatorActivationTest {
         // coroutine.
         equilPumpPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
 
-        // EquilManager is @Singleton, so its in-memory equilState survives across @Test methods: a pod
-        // activated by a prior method leaves activationProgress = COMPLETED behind. Reset it explicitly and
-        // synchronously here. Use clearPodState() (write-through) NOT loadPodState() (read-only), so the
-        // reset reaches preferences as well as memory.
+        // Every test has a new graph and so a new EquilManager, but the settings store is shared, and
+        // something from the previous test can still write a COMPLETED pod to it. Reset explicitly here.
+        // Use clearPodState() (write-through) NOT loadPodState() (read-only), so the reset reaches
+        // preferences as well as memory.
         //
-        // This used to be the whole story and it was not enough: the plugin's real onStart runs on a
-        // background coroutine and called loadPodState() again, which raced this reset and flaked shard C
-        // both ways - a stale COMPLETED surviving, or a finished activation being reset so the wizard
-        // waited forever (#5040). That is fixed in EquilManager itself now: the state is read once per
-        // process and published in a single assignment. See EquilManagerStateTest.
+        // The plugin's real onStart runs on a background coroutine and loads the state too, which flaked
+        // shard C both ways - a stale COMPLETED surviving, or a finished activation being reset so the
+        // wizard waited forever (#5040). That is fixed in EquilManager itself: the state is read once,
+        // and a reset counts as that read under the same lock. See EquilManagerStateTest.
         equilManager.clearPodState()
 
         // A profile must be active before activation: setProfile() programs the basal schedule from it,
