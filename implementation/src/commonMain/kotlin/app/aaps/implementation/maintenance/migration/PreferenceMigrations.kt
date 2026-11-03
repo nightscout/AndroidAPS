@@ -141,6 +141,8 @@ class PreferenceMigrations(
             sp.remove("ConfigBuilder_INSULIN_${plugin}_Enabled")
             sp.remove("ConfigBuilder_INSULIN_${plugin}_Visible")
             sp.remove("ConfigBuilder_Enabled_INSULIN_$plugin")
+            // The renamed visibility row too, or an import lists all four as names it does not know
+            sp.remove("ConfigBuilder_Visible_INSULIN_$plugin")
         }
         sp.remove("insulin_oref_peak")
     }

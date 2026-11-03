@@ -24,6 +24,7 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.ios.shell.ShellInfo
 import app.aaps.ios.shell.di.IosProbeGraph
+import app.aaps.ios.shell.di.NoCrashReporter
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import platform.UIKit.UIViewController
@@ -50,7 +51,7 @@ import platform.UIKit.UIViewController
 fun aapsComposeViewController(): UIViewController {
     // Built once, outside the composition: a graph rebuilt on every recomposition would hand out a
     // new Preferences each time.
-    val preferences = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings).preferences
+    val preferences = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoCrashReporter).preferences
     return ComposeUIViewController {
         CompositionLocalProvider(LocalPreferences provides preferences) {
             AapsTheme {

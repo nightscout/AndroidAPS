@@ -73,7 +73,7 @@ class SmallWidget : AppWidgetProvider() {
                     }
 
                     views.setTextViewText(R.id.time_ago, state.timeAgoText)
-                    views.setTextViewText(R.id.delta, "Δ " + state.deltaText)
+                    views.setTextViewText(R.id.delta, context.getString(R.string.widget_delta, state.deltaText))
                     views.setTextViewText(R.id.iob, state.iobText)
                     views.setTextViewText(R.id.cob, state.cobText)
 

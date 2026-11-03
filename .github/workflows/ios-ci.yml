@@ -161,9 +161,12 @@ jobs:
       # The part that only exists here. commonTest runs through Kotlin/Native against the real
       # NSNumberFormatter and NSTimeZone, which is what no other host can do.
       #
-      # Only :core:data has commonTest today, so it is the one module asserted below. The other two
-      # are still run: if either grows shared tests later they start executing here with no change to
-      # this file, and until then they are simply NO-SOURCE.
+      # Modules with no shared tests yet are still listed: if one grows them later it starts
+      # executing here with no change to this file, and until then it is simply NO-SOURCE.
+      #
+      # `:core:keys` is in that state today. `:core:interfaces`, `:plugins:aps` and
+      # `:plugins:automation` were NOT - they had 26 Apple-only tests between them that ran on no
+      # machine at all, which is what the unlisted check at the end of this job now prevents.
       - name: Run the shared tests on the iOS simulator
         # GitHub's macOS runners are UTC, and at UTC every assertion in SystemTimeZoneTest passes
         # trivially - the offset is zero whatever unit it is in, so a seconds-instead-of-milliseconds
@@ -177,8 +180,10 @@ jobs:
           echo "Running with TZ=$TZ"
           ./gradlew --console=plain --no-daemon \
             :core:data:iosSimulatorArm64Test :core:nssdk:iosSimulatorArm64Test :core:keys:iosSimulatorArm64Test \
+            :core:interfaces:iosSimulatorArm64Test \
             :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
-            :plugins:sync:iosSimulatorArm64Test \
+            :plugins:sync:iosSimulatorArm64Test :plugins:aps:iosSimulatorArm64Test \
+            :plugins:automation:iosSimulatorArm64Test \
             | tee test.log
 
       # Every module that HAS iOS tests is checked by name. A module added to the run above but not
@@ -206,9 +211,32 @@ jobs:
               "$dir"/build/test-results/iosSimulatorArm64Test/TEST-*.xml || true
           }
           check ":core:data" core/data
+          check ":core:interfaces" core/interfaces
           check ":implementation" implementation
           check ":ios:shell" ios/shell
           check ":plugins:sync" plugins/sync
+          check ":plugins:aps" plugins/aps
+          check ":plugins:automation" plugins/automation
+          exit $fail
+
+      # The list above is written by hand, which is how three modules came to be missed: a module
+      # gains an `iosTest` source set and nobody remembers this file. This step needs no list. It
+      # finds every module that HAS Apple-only tests and insists each one produced results, so the
+      # next module to grow an `iosTest` fails here until it is added above, instead of passing
+      # quietly for months.
+      - name: Assert no module with Apple-only tests was left out
+        run: |
+          fail=0
+          for src in $(find . -maxdepth 4 -type d -name iosTest -not -path "*/build/*" | sed 's|^\./||'); do
+            dir="${src%/src/iosTest}"
+            # An empty source-set directory still exists for some modules - only populated ones count.
+            if [ -z "$(find "$src" -name '*.kt' 2>/dev/null | head -1)" ]; then continue; fi
+            FOUND=$(find "$dir/build/test-results/iosSimulatorArm64Test" -name "TEST-*.xml" 2>/dev/null | wc -l)
+            if [ "$FOUND" -le 0 ]; then
+              echo "::error::$dir has iosTest sources but produced no iOS test results. Add :$(echo "$dir" | tr '/' ':'):iosSimulatorArm64Test to the run step and a check() line above."
+              fail=1
+            fi
+          done
           exit $fail
 
       - name: Upload test results

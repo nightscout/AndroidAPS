@@ -261,7 +261,7 @@ class SceneListViewModel(
     fun requestDeactivation() {
         val activeState = activeSceneManager.getActiveState() ?: return
         viewModelScope.launch {
-            val revertSummaries = buildRevertSummaries(activeState)
+            val revertSummaries = activeState.revertSummaries(rh)
             // Same chain detection MainViewModel.requestSceneDeactivation uses. On master we want
             // the runtime-aware check (don't offer chain when loop suspended / pump down /
             // profile cleared); on AAPSClient we use the catalog-only check (local runtime
@@ -349,44 +349,5 @@ class SceneListViewModel(
         }
 
         return conflicts
-    }
-
-    private fun buildRevertSummaries(activeState: ActiveSceneState): List<String> {
-        val summaries = mutableListOf<String>()
-        var hasCarePortal = false
-
-        for (action in activeState.scene.actions) {
-            when (action) {
-                is SceneAction.TempTarget      -> {
-                    summaries.add(rh.gs(CoreUiStrings.scene_revert_tt))
-                }
-
-                is SceneAction.ProfileSwitch   -> {
-                    summaries.add(rh.gs(CoreUiStrings.scene_revert_profile))
-                }
-
-                is SceneAction.SmbToggle       -> {
-                    val wasEnabled = activeState.priorSmb ?: true
-                    summaries.add(
-                        if (wasEnabled) rh.gs(CoreUiStrings.scene_revert_smb_on)
-                        else rh.gs(CoreUiStrings.scene_revert_smb_off)
-                    )
-                }
-
-                is SceneAction.LoopModeChange  -> {
-                    summaries.add(rh.gs(CoreUiStrings.scene_revert_loop_mode))
-                }
-
-                is SceneAction.CarePortalEvent -> {
-                    hasCarePortal = true
-                }
-            }
-        }
-
-        if (hasCarePortal) {
-            summaries.add(rh.gs(CoreUiStrings.scene_careportal_no_revert))
-        }
-
-        return summaries
     }
 }

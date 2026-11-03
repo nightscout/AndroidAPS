@@ -9,22 +9,30 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
+import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
+import platform.UIKit.UIActivityViewController
+import platform.UIKit.UIApplication
+import platform.UIKit.UIViewController
+import platform.UIKit.popoverPresentationController
 
 /*
  * Maintenance and cloud export.
  *
- * Both sit on top of things iOS has no version of yet - the log directory and mail composer, and
- * Google Drive through its Android SDK - so both report "nothing here" rather than guessing.
+ * Maintenance is real now - sending and deleting logs both work. Cloud export still sits on Google
+ * Drive through its Android SDK, which iOS has no version of, so it reports "nothing here" rather
+ * than guessing.
  *
  * Screen usage statistics used to be here too. They moved to `platform` because a client is not
  * meant to collect them at all, which makes an empty answer correct rather than unfinished.
  */
 
-/** Sending logs needs a mail composer, which is not wired up on iOS. Deleting them is real. */
+/** Sending logs through the iOS share sheet, and deleting the rotated ones. Both are real. */
 @OptIn(ExperimentalForeignApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
@@ -35,8 +43,84 @@ class IosMaintenance(
     private val logDirectory: String? = defaultLogDirectory()
 ) : Maintenance {
 
-    override suspend fun executeSendLogs(): ExportResult =
-        aapsLogger.failNotOnIosYet("Maintenance.executeSendLogs")
+    /**
+     * Hands the log files to the iOS share sheet - mail, Files, AirDrop, whatever the user has.
+     *
+     * No mail composer and no zip. `MFMailComposeViewController` would force one way of sending and
+     * needs an account set up; the share sheet asks the user instead. The files go as they are,
+     * because the logger already bounds them at about 10 MB in total.
+     *
+     * Returns success once the sheet is on screen, which is what Android reports too: there
+     * `startActivity` on the mail intent is the last thing it can see, so "sent" has always meant
+     * "handed over", not "delivered".
+     *
+     * Presented on the main thread on purpose - [app.aaps.core.interfaces.maintenance.Maintenance]
+     * is called from an IO dispatcher, and UIKit may only be touched from the main one.
+     */
+    override suspend fun executeSendLogs(): ExportResult = withContext(Dispatchers.Main) {
+        val files = logFiles()
+        if (files.isEmpty()) {
+            aapsLogger.error(LTag.CORE, "There is no log file to send")
+            return@withContext ExportResult(localSuccess = false)
+        }
+        val host = topViewController()
+        if (host == null) {
+            aapsLogger.error(LTag.CORE, "There is no screen to show the share sheet over")
+            return@withContext ExportResult(localSuccess = false)
+        }
+
+        val share = UIActivityViewController(activityItems = files, applicationActivities = null)
+        // An iPad shows this as a popover, and presenting one with nowhere to point it raises.
+        share.popoverPresentationController?.let { popover ->
+            host.view?.let { view ->
+                popover.sourceView = view
+                popover.sourceRect = view.bounds
+            }
+        }
+        host.presentViewController(share, animated = true, completion = null)
+        aapsLogger.debug(LTag.CORE, "Offered ${files.size} log file(s) to share")
+        ExportResult(localSuccess = true)
+    }
+
+    /**
+     * The live log first, then the rotated ones newest first - the same order [deleteLogs] keeps.
+     *
+     * The live file is included even though it is open for writing: `AAPSLoggerIos` appends whole
+     * lines and closes the handle each time, so a copy taken now is complete up to the last line.
+     * That is the whole point here - the interesting part of a log is usually its end.
+     */
+    private fun logFiles(): List<NSURL> {
+        val directory = logDirectory ?: return emptyList()
+        val manager = NSFileManager.defaultManager
+
+        @Suppress("UNCHECKED_CAST")
+        val names = manager.contentsOfDirectoryAtPath(directory, null) as? List<String> ?: return emptyList()
+
+        val rotated = names
+            .mapNotNull { name -> name.removePrefix("$LOG_NAME.").toIntOrNull()?.takeIf { name != it.toString() }?.let { it to name } }
+            .sortedBy { (index, _) -> index }
+            .map { (_, name) -> name }
+
+        return (listOf(LOG_NAME) + rotated)
+            .map { "$directory/$it" }
+            .filter { manager.fileExistsAtPath(it) }
+            .map { NSURL.fileURLWithPath(it) }
+    }
+
+    /**
+     * The screen currently in front.
+     *
+     * Walking down from the root rather than presenting on the root itself: the maintenance sheet is
+     * already open when this runs, and presenting on a controller that is itself covered does
+     * nothing at all - silently, which is the worst way for this to fail. Same reasoning as
+     * `IosAuthBrowser`.
+     */
+    private fun topViewController(): UIViewController? {
+        var controller = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return null
+        while (true) {
+            controller = controller.presentedViewController ?: return controller
+        }
+    }
 
     /**
      * Removes rotated log files, keeping the newest [keep] of them.

@@ -1121,7 +1121,7 @@ UI to act on. The prompting lives in `ProtectionHost`, which is a different ques
 
 **The trap: moving the impl alone would make iOS worse, not better.** `IosProtectionCheck` currently
 grants everything, which is wrong but at least passable while iOS reaches no pump. The real impl
-publishes to `pendingRequest` / `pendingAuthRequest` and waits for a host to call back. `AapsAppRoot`
+publishes to `pendingAuthRequest` and waits for a host to call back. `AapsAppRoot`
 places `PasswordCheckHost` but **not** `ProtectionHost` - only `ComposeMainActivity` does. So on iOS
 the request would be published, nothing would render it, and the callback would never fire: every
 protected action would hang rather than be granted or refused. That is worse than either.
