@@ -237,33 +237,7 @@
     <string name="pref_title_units">单位</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">语言</string>
     <string name="lang_default">系统默认</string>
-    <string name="lang_en">英语</string>
-    <string name="lang_af">南非语</string>
-    <string name="lang_bg">保加利亚语</string>
-    <string name="lang_cs">捷克语</string>
-    <string name="lang_de">德语</string>
-    <string name="lang_dk">丹麦语</string>
-    <string name="lang_fr">法语</string>
-    <string name="lang_nl">荷兰语</string>
-    <string name="lang_es">西班牙语</string>
-    <string name="lang_el">希腊语</string>
-    <string name="lang_ga">爱尔兰语</string>
-    <string name="lang_it">意大利语</string>
-    <string name="lang_ko">韩语</string>
-    <string name="lang_lt">立陶宛语</string>
-    <string name="lang_nb">挪威语</string>
-    <string name="lang_pl">波兰语</string>
-    <string name="lang_pt">葡萄牙语</string>
-    <string name="lang_pt_br">葡萄牙语 (巴西)</string>
-    <string name="lang_ro">罗马尼亚语</string>
-    <string name="lang_ru">俄语</string>
-    <string name="lang_sk">斯洛伐克语</string>
-    <string name="lang_sv">瑞典语</string>
-    <string name="lang_tr">土耳其语</string>
-    <string name="lang_zh_tw">繁体中文</string>
-    <string name="lang_zh_cn">简体中文</string>
     <string name="pref_title_patient_name">实例名称</string>
     <string name="pref_summary_patient_name">使用此手机的人员姓名。它用于在报告和同步中区分此 AAPS 实例。</string>
     <!-- StringKey: Directory preferences -->
