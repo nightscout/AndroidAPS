@@ -19,6 +19,7 @@
     <string name="combov2_error_10">Reservoir Fehler</string>
     <string name="combov2_error_11">Infusionsset nicht vorgefüllt</string>
     <string name="combov2_extended_bolus_not_supported">Erweiterter Bolus wird nicht unterstützt</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Mit Pumpe verbinden</string>
     <string name="combov2_unpair_pump_title">Pumpe trennen</string>
     <string name="combov2_driver_state_label">Treiberstatus</string>
