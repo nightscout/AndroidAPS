@@ -240,33 +240,7 @@
     <string name="pref_title_units">單位</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">語系</string>
     <string name="lang_default">系統預設</string>
-    <string name="lang_en">英文</string>
-    <string name="lang_af">南非語</string>
-    <string name="lang_bg">保加利亞語</string>
-    <string name="lang_cs">捷克語</string>
-    <string name="lang_de">德文</string>
-    <string name="lang_dk">丹麥語</string>
-    <string name="lang_fr">法文</string>
-    <string name="lang_nl">荷蘭語</string>
-    <string name="lang_es">西班牙文</string>
-    <string name="lang_el">希臘語</string>
-    <string name="lang_ga">愛爾蘭語</string>
-    <string name="lang_it">義大利文</string>
-    <string name="lang_ko">韓文</string>
-    <string name="lang_lt">立陶宛語</string>
-    <string name="lang_nb">挪威語</string>
-    <string name="lang_pl">波蘭語</string>
-    <string name="lang_pt">葡萄牙語</string>
-    <string name="lang_pt_br">巴西葡萄牙語</string>
-    <string name="lang_ro">羅馬尼亞語</string>
-    <string name="lang_ru">俄語</string>
-    <string name="lang_sk">斯洛伐克語</string>
-    <string name="lang_sv">瑞典語</string>
-    <string name="lang_tr">土耳其語</string>
-    <string name="lang_zh_tw">繁體中文</string>
-    <string name="lang_zh_cn">簡體中文</string>
     <string name="pref_title_patient_name">執行個體名稱</string>
     <string name="pref_summary_patient_name">使用此手機者的名稱。用於在報表與同步中區分此 AAPS 執行個體。</string>
     <!-- StringKey: Directory preferences -->
