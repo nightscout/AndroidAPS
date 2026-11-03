@@ -125,8 +125,8 @@
     <string name="pref_title_ns_slow_sync">שימוש בסנכרון איטי</string>
     <string name="pref_title_ns_use_ws">שימוש ב־WebSockets</string>
     <string name="pref_summary_ns_use_ws">שימוש ב־WebSockets לתקשורת בזמן אמת עם Nightscout.</string>
-    <string name="pref_title_ns_allow_client_control">מתן אפשרות לשליטה ממכשיר לקוח</string>
-    <string name="pref_summary_ns_allow_client_control">מאפשר למכשירי לקוח מצומדים לשלוח פקודות חתומות (למשל הפעלה/עצירה של תרחישים) דרך Nightscout. זה גם מפעיל מצב מוקשח: שינויים שנעשים ישירות ב-Nightscout כבר לא מתקבלים.</string>
+    <string name="pref_title_ns_allow_client_control">מתן אפשרות לשליטה ממכשיר עוקב</string>
+    <string name="pref_summary_ns_allow_client_control">מאפשר למכשירי עוקב מצומדים לשלוח פקודות חתומות (למשל הפעלה/עצירה של תרחישים) דרך Nightscout. זה גם מפעיל מצב מוקשח: שינויים שנעשים ישירות ב-Nightscout כבר לא מתקבלים.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Wi‑Fi בלבד</string>
     <string name="pref_title_openhumans_charging_only">רק בזמן טעינה</string>
@@ -240,33 +240,7 @@
     <string name="pref_title_units">יחידות</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">שפה</string>
     <string name="lang_default">ברירת המחדל של המערכת</string>
-    <string name="lang_en">אנגלית</string>
-    <string name="lang_af">אפריקאנס</string>
-    <string name="lang_bg">בולגרית</string>
-    <string name="lang_cs">צ׳כית</string>
-    <string name="lang_de">גרמנית</string>
-    <string name="lang_dk">דנית</string>
-    <string name="lang_fr">צרפתית</string>
-    <string name="lang_nl">הולנדית</string>
-    <string name="lang_es">ספרדית</string>
-    <string name="lang_el">יוונית</string>
-    <string name="lang_ga">אירית</string>
-    <string name="lang_it">איטלקית</string>
-    <string name="lang_ko">קוריאנית</string>
-    <string name="lang_lt">ליטאית</string>
-    <string name="lang_nb">נורווגית</string>
-    <string name="lang_pl">פולנית</string>
-    <string name="lang_pt">פורטוגזית</string>
-    <string name="lang_pt_br">פורטוגזית (ברזיל)</string>
-    <string name="lang_ro">רומנית</string>
-    <string name="lang_ru">רוסית</string>
-    <string name="lang_sk">סלובקית</string>
-    <string name="lang_sv">שוודית</string>
-    <string name="lang_tr">טורקית</string>
-    <string name="lang_zh_tw">סינית מסורתית</string>
-    <string name="lang_zh_cn">סינית מפושטת</string>
     <string name="pref_title_patient_name">שם המופע</string>
     <string name="pref_summary_patient_name">שם האדם שמשתמש בטלפון זה. השם מבדיל את מופע AAPS הזה מאחרים בדוחות ובסנכרון.</string>
     <!-- StringKey: Directory preferences -->
