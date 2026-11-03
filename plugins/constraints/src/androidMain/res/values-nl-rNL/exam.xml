@@ -122,10 +122,10 @@
     <string name="cob_longer">Het verhogen van de ISF zorgt voor een langere berekende opnametijd van koolhydraten.</string>
     <string name="cob_shorter">Een verhoging van de ISF zorgt voor een kortere berekende opnametijd van koolhydraten.</string>
     <string name="cob_no_effect">Het verhogen van de ISF heeft geen invloed op de berekende koolhydraatabsorptie.</string>
-    <string name="cob2_question">Welke invloed heeft het wijzigen van de IC-waarde op de COB-berekening?</string>
-    <string name="cob2_longer">Een hogere IC-waarde zorgt ervoor dat de berekende koolhydraatabsorptietijd langer wordt.</string>
-    <string name="cob2_shorter">Een hogere IC-waarde verkort de berekende koolhydraatabsorptietijd.</string>
-    <string name="cob2_no_effect">Een verhoging van de IC heeft geen invloed op de berekende koolhydraatabsorptie.</string>
+    <string name="cob2_question">Welke invloed heeft het wijzigen van de koolhydraatratio (IC) op de COB-berekening?</string>
+    <string name="cob2_longer">Een hogere koolhydraatratio (IC) zorgt ervoor dat de berekende koolhydraatabsorptietijd langer wordt.</string>
+    <string name="cob2_shorter">Een hogere koolhydraatratio (IC) verkort de berekende koolhydraatabsorptietijd.</string>
+    <string name="cob2_no_effect">Een verhoging van de koolhydraatratio (IC) heeft geen invloed op de berekende koolhydraatabsorptie.</string>
     <string name="cob3_question">Welke invloed heeft het wijzigen van het profielpercentage op de COB-berekening?</string>
     <string name="cob3_longer">Door het profiel op 150% in te stellen, wordt de berekende opnametijd van koolhydraten verlengd.</string>
     <string name="cob3_shorter">Door het profiel op 150% in te stellen, wordt de berekende opnametijd van koolhydraten korter.</string>
