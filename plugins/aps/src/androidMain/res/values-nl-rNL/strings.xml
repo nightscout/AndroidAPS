@@ -67,7 +67,7 @@
     <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
     <string name="fallback_to_isf_no_tdd">Teruggevallen op de insulinegevoeligheid uit het profiel. Onvoldoende gegevens: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Hulp bij mogelijke profielaanpassingen (ISF, I/Kh-verhoudingen en basaalstanden)</string>
+    <string name="autotune_description">Hulp bij mogelijke profielaanpassingen (ISF, insuline-koolhydraatverhouding en basaalstanden)</string>
     <string name="autotune_default_tune_days_title">Aantal dagen data</string>
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profiel :</string>
