@@ -36,7 +36,7 @@
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
-    <string name="hardlimit">max limiet (SC)</string>
+    <string name="hardlimit">harde limiet</string>
     <!--    Autotune   -->
     <string name="autotune_peak">Piek</string>
     <!--    Loop -->
