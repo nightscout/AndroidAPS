@@ -238,33 +238,7 @@
     <string name="pref_title_units">Đơn vị</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Ngôn ngữ</string>
     <string name="lang_default">Mặc định hệ thống</string>
-    <string name="lang_en">Tiếng Anh</string>
-    <string name="lang_af">Tiếng Nam Phi</string>
-    <string name="lang_bg">Tiếng Bulgaria</string>
-    <string name="lang_cs">Tiếng Séc</string>
-    <string name="lang_de">Tiếng Đức</string>
-    <string name="lang_dk">Tiếng Đan Mạch</string>
-    <string name="lang_fr">Tiếng Pháp</string>
-    <string name="lang_nl">Tiếng Hà Lan</string>
-    <string name="lang_es">Tiếng Tây Ban Nha</string>
-    <string name="lang_el">Tiếng Hy Lạp</string>
-    <string name="lang_ga">Tiếng Ai-len</string>
-    <string name="lang_it">Tiếng Ý</string>
-    <string name="lang_ko">Tiếng Hàn</string>
-    <string name="lang_lt">Tiếng Lít-va</string>
-    <string name="lang_nb">Tiếng Na Uy</string>
-    <string name="lang_pl">Tiếng Ba Lan</string>
-    <string name="lang_pt">Tiếng Bồ Đào Nha</string>
-    <string name="lang_pt_br">Tiếng Bồ Đào Nha, Brazil</string>
-    <string name="lang_ro">Tiếng Ru-ma-ni</string>
-    <string name="lang_ru">Tiếng Nga</string>
-    <string name="lang_sk">Tiếng Slovakia</string>
-    <string name="lang_sv">Tiếng Thuỵ Điển</string>
-    <string name="lang_tr">Tiếng Thổ Nhĩ Kỳ</string>
-    <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
-    <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
     <string name="pref_title_patient_name">Tên người dùng</string>
     <string name="pref_summary_patient_name">Tên người sử dụng điện thoại này. Tên này giúp phân biệt phiên bản AAPS trên thiết bị trong các báo cáo và quá trình đồng bộ hóa.</string>
     <!-- StringKey: Directory preferences -->
