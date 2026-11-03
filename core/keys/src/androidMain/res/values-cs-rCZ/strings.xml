@@ -240,33 +240,7 @@
     <string name="pref_title_units">Jednotky</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Jazyk</string>
     <string name="lang_default">Výchozí systémový</string>
-    <string name="lang_en">Angličtina</string>
-    <string name="lang_af">Afrikánština</string>
-    <string name="lang_bg">Bulharština</string>
-    <string name="lang_cs">Čeština</string>
-    <string name="lang_de">Němčina</string>
-    <string name="lang_dk">Dánština</string>
-    <string name="lang_fr">Francouzština</string>
-    <string name="lang_nl">Nizozemština</string>
-    <string name="lang_es">Španělština</string>
-    <string name="lang_el">Řečtina</string>
-    <string name="lang_ga">Irština</string>
-    <string name="lang_it">Italština</string>
-    <string name="lang_ko">Korejština</string>
-    <string name="lang_lt">Litevština</string>
-    <string name="lang_nb">Norština</string>
-    <string name="lang_pl">Polština</string>
-    <string name="lang_pt">Portugalština</string>
-    <string name="lang_pt_br">Portugalština (brazilská)</string>
-    <string name="lang_ro">Rumunština</string>
-    <string name="lang_ru">Ruština</string>
-    <string name="lang_sk">Slovenština</string>
-    <string name="lang_sv">Švédština</string>
-    <string name="lang_tr">Turečtina</string>
-    <string name="lang_zh_tw">Čínština (tradiční)</string>
-    <string name="lang_zh_cn">Čínština (zjednodušená)</string>
     <string name="pref_title_patient_name">Název instance</string>
     <string name="pref_summary_patient_name">Jméno osoby, která používá tento telefon.</string>
     <!-- StringKey: Directory preferences -->
