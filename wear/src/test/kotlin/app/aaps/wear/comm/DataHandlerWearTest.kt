@@ -62,8 +62,9 @@ internal class DataHandlerWearTest : WearTestBase() {
         rxBus.send(alarm)
         verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).show(alarm)
 
-        rxBus.send(EventData.AlarmStopped(0L))
-        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).clear()
+        val stopped = EventData.AlarmStopped(0L)
+        rxBus.send(stopped)
+        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).stop(stopped)
     }
 
     @Test

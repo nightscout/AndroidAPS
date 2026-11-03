@@ -174,7 +174,7 @@ class DataHandlerWear(
             (context.getSystemService(WearableListenerService.NOTIFICATION_SERVICE) as NotificationManager).cancel(DataLayerListenerServiceWear.CHANGE_NOTIF_ID)
         }
         onEvent<EventData.AlarmRinging>(detail = { " ${it.title}: ${it.status}" }) { phoneAlarmWatch.show(it) }
-        onEvent<EventData.AlarmStopped> { phoneAlarmWatch.clear() }
+        onEvent<EventData.AlarmStopped> { phoneAlarmWatch.stop(it) }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
             // The Display screen holds the settings of the code-based faces. With the complications
