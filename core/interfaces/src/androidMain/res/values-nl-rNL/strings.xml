@@ -150,7 +150,7 @@
     <string name="profile_high_target">Profiel hoog doel</string>
     <string name="profile_dia">Profiel DIA waarde</string>
     <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>
-    <string name="profile_carbs_ratio_value">Insuline-koolhydraatverhouding in het profiel</string>
+    <string name="profile_carbs_ratio_value">Koolhydraatratio\'s in het profiel</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is buiten de harde limiet</string>
     <string name="basal_value">Basaal waarde</string>
     <string name="cobvsiob">COB vs IOB</string>
