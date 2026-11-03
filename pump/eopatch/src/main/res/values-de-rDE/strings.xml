@@ -2,6 +2,8 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Pumpen-Integration für EOPatch2 / GlucoMen Day</string>
+    <string name="low_reservoir">Niedrige Reservoir-Warnungen</string>
+    <string name="patch_expiration_reminders">Patch-Ablauf-Erinnerung</string>
     <string name="patch_buzzer_reminders">Patch Ton zur Erinnerung</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Seriennummer</string>
@@ -21,7 +23,10 @@
     <string name="patch_safe_deactivation_desc">Um zu einem neuen Patch zu wechseln, muss der aktuelle Patch verworfen werden. Alle Insulinlieferungen von Patch werden abgebrochen.</string>
     <string name="patch_discard_complete_title">Das Entfernen des Patches ist abgeschlossen.</string>
     <string name="patch_discard_complete_desc">Patch wurde deaktiviert.\nVerwirf den Patch.\nEntferne den Patch, der an Deinem Körper angehängt ist.</string>
+    <string name="patch_change_confirm_bolus_is_active_desc">Gerade wird ein Bolus abgegeben. Möchten Sie die Insulinabgabe wirklich abbrechen und den Patch verwerfen?</string>
+    <string name="patch_change_confirm_temp_basal_is_active_desc">Eine temporäre Basalrate wird gerade abgegeben. Möchtest du wirklich die Insulinabgabe abbrechen und den Patch verwerfen?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Ein Bolus und temporäre Basalrate werden gerade ausgeliefert. Möchtest du wirklich die Insulinlieferung abbrechen und den Patch verwerfen?</string>
+    <string name="patch_change_confirm_desc">Bist du sicher, dass du den Patch verwerfen möchtest?</string>
     <string name="patch_forced_discard">Verwerfen</string>
     <string name="patch_comm_error_during_discard_desc_2">Tippe auf \'Verwerfen\' für die einseitige Deaktivierung.</string>
     <string name="patch_manually_turning_off_alarm_title">Manuell den Patch-Alarm deaktivieren</string>
