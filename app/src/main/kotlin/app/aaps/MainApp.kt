@@ -37,6 +37,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
+import app.aaps.core.utils.gitRemoteShort
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.GeneratedStringOwners
@@ -528,15 +529,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("doInit end")
     }
 
-    /** The build this is, in short form - "github:owner/repo". */
-    private val gitRemoteShort: String
-        get() = config.REMOTE.lowercase(Locale.getDefault())
-            .replace("https://", "")
-            .replace("http://", "")
-            .replace(".git", "")
-            .replace(".com/", ":")
-            .replace(".org/", ":")
-            .replace(".net/", ":")
+    /** The build this is, in short form - "github:owner/repo". Shared with iOS, which sends the same key. */
+    private val remoteShort: String
+        get() = gitRemoteShort(config.REMOTE)
 
     /**
      * Which build is running. All of it is known from BuildConfig before anything starts, so it is set as
@@ -548,7 +543,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             setCustomKey("Version", config.VERSION_NAME)
             setCustomKey("BuildType", config.BUILD_TYPE)
             setCustomKey("BuildFlavor", config.FLAVOR)
-            setCustomKey("Remote", gitRemoteShort)
+            setCustomKey("Remote", remoteShort)
             setCustomKey("Committed", config.COMMITTED)
         }
     }
@@ -560,7 +555,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.setUserProperty("HEAD", BuildConfig.BUILDVERSION)
-        fabricPrivacy.setUserProperty("Remote", gitRemoteShort)
+        fabricPrivacy.setUserProperty("Remote", remoteShort)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
         activePlugin.activePumpInternal.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
