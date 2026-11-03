@@ -27,6 +27,8 @@
 		AA1000100000000000000 /* ClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ClientApp.swift; path = Shared/ClientApp.swift; sourceTree = "<group>"; };
 		AA1000200000000000000 /* AapsShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AapsShared.framework; path = ../shell/build/bin/iosSimulatorArm64/debugFramework/AapsShared.framework; sourceTree = "<group>"; };
 		AA1000300000000000000 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		AA1009600000000000000 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "AAPSClient/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AA1009700000000000000 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "AAPSClient2/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AA1009800000000000000 /* CrashlyticsCrashReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrashlyticsCrashReporter.swift; path = Shared/CrashlyticsCrashReporter.swift; sourceTree = "<group>"; };
 		AA1009900000000000000 /* NsSocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NsSocketBridge.swift; path = Shared/NsSocketBridge.swift; sourceTree = "<group>"; };
 		AA2000100000000000000 /* AAPSClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AAPSClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +65,8 @@
 			isa = PBXGroup;
 			children = (
 				AA1000100000000000000 /* ClientApp.swift */,
+				AA1009600000000000000 /* GoogleService-Info.plist */,
+				AA1009700000000000000 /* GoogleService-Info.plist */,
 				AA1009800000000000000 /* CrashlyticsCrashReporter.swift */,
 				AA1009900000000000000 /* NsSocketBridge.swift */,
 				AA2001200000000000000 /* AAPSClient */,
@@ -109,6 +113,7 @@
 				AA2000600000000000000 /* Sources */,
 				AA2000700000000000000 /* Frameworks */,
 				AA2000800000000000000 /* Resources */,
+				AA2009500000000000000 /* Copy the Firebase config */,
 			);
 			buildRules = (
 			);
@@ -131,6 +136,7 @@
 				AA3000600000000000000 /* Sources */,
 				AA3000700000000000000 /* Frameworks */,
 				AA3000800000000000000 /* Resources */,
+				AA3009500000000000000 /* Copy the Firebase config */,
 			);
 			buildRules = (
 			);
@@ -210,7 +216,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
+			shellScript = "# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
 		};
 		AA3000900000000000000 /* Build shared framework */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -224,7 +230,39 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
+			shellScript = "# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
+		};
+		AA2009500000000000000 /* Copy the Firebase config */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(TARGET_NAME)/GoogleService-Info.plist",
+			);
+			name = "Copy the Firebase config";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Each target gets the plist from its own folder, keyed on TARGET_NAME.\n# A missing file is a warning, not an error: a clone without the config must still build and\n# simply not report, which is what CrashlyticsCrashReporter.start() is written to do.\nSRC=\"$SRCROOT/$TARGET_NAME/GoogleService-Info.plist\"\nDST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/GoogleService-Info.plist\"\nif [ -f \"$SRC\" ]; then\n  cp \"$SRC\" \"$DST\"\nelse\n  # Remove a copy an earlier build left behind. Without this, deleting the config does\n  # not stop reporting: the stale plist stays in the bundle and the warning below lies.\n  rm -f \"$DST\"\n  echo \"warning: no $TARGET_NAME/GoogleService-Info.plist, so this build has no crash reporting\"\nfi\n";
+		};
+		AA3009500000000000000 /* Copy the Firebase config */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(TARGET_NAME)/GoogleService-Info.plist",
+			);
+			name = "Copy the Firebase config";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Each target gets the plist from its own folder, keyed on TARGET_NAME.\n# A missing file is a warning, not an error: a clone without the config must still build and\n# simply not report, which is what CrashlyticsCrashReporter.start() is written to do.\nSRC=\"$SRCROOT/$TARGET_NAME/GoogleService-Info.plist\"\nDST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/GoogleService-Info.plist\"\nif [ -f \"$SRC\" ]; then\n  cp \"$SRC\" \"$DST\"\nelse\n  # Remove a copy an earlier build left behind. Without this, deleting the config does\n  # not stop reporting: the stale plist stays in the bundle and the warning below lies.\n  rm -f \"$DST\"\n  echo \"warning: no $TARGET_NAME/GoogleService-Info.plist, so this build has no crash reporting\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
