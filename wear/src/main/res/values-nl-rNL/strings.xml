@@ -362,7 +362,7 @@
     <string name="constraint_applied">Beperking toegepast!</string>
     <string name="wizard_total_insulin">Totaal Insuline</string>
     <string name="wizard_calculation">Berekening</string>
-    <string name="wizard_settings_format">Kh/I:%1$s | ISF %2$s</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">15 min trend</string>
