@@ -240,33 +240,7 @@
     <string name="pref_title_units">Eenheid</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Taal</string>
     <string name="lang_default">Systeemtaal</string>
-    <string name="lang_en">Engels</string>
-    <string name="lang_af">Afrikaans</string>
-    <string name="lang_bg">Bulgaars</string>
-    <string name="lang_cs">Tsjechisch</string>
-    <string name="lang_de">Duits</string>
-    <string name="lang_dk">Deens</string>
-    <string name="lang_fr">Frans</string>
-    <string name="lang_nl">Nederlands</string>
-    <string name="lang_es">Spaans</string>
-    <string name="lang_el">Grieks</string>
-    <string name="lang_ga">Iers</string>
-    <string name="lang_it">Italiaans</string>
-    <string name="lang_ko">Koreaans</string>
-    <string name="lang_lt">Litouws</string>
-    <string name="lang_nb">Noors</string>
-    <string name="lang_pl">Pools</string>
-    <string name="lang_pt">Portugees</string>
-    <string name="lang_pt_br">Portugees, Braziliaans</string>
-    <string name="lang_ro">Roemeens</string>
-    <string name="lang_ru">Russisch</string>
-    <string name="lang_sk">Slowaaks</string>
-    <string name="lang_sv">Zweeds</string>
-    <string name="lang_tr">Turks</string>
-    <string name="lang_zh_tw">Chinees, traditioneel</string>
-    <string name="lang_zh_cn">Chinees, vereenvoudigd</string>
     <string name="pref_title_patient_name">Naam van dit exemplaar</string>
     <string name="pref_summary_patient_name">Naam van de persoon die deze telefoon gebruikt. Het vertelt dit AAPS exemplaar uit rapporten en synchronisatie.</string>
     <!-- StringKey: Directory preferences -->
