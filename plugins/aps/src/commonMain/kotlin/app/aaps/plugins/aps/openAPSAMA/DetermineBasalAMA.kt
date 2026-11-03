@@ -47,12 +47,12 @@ class DetermineBasalAMA(
     }
 
     fun Double.withoutZeros(): String = NumberFormat.UP_TO_2_DECIMALS.format(this)
-    fun round(value: Double): Int =
+    fun round(value: Double, label: String): Int =
         // Crash backstop: roundToInt() throws on NaN and saturates at Int.MAX_VALUE on ±Infinity.
         // Substitute 0, but record a token that the reportNonFiniteRtFields tripwire
         // (PersistenceLayerImpl) surfaces to Crashlytics, so laundering here does not hide the real bug.
         if (!value.isFinite()) {
-            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite=$value)")
+            consoleError.add("round(): non-finite value substituted with 0 (roundNonFinite_$label=$value)")
             0
         } else value.roundToInt()
 
@@ -161,7 +161,7 @@ class DetermineBasalAMA(
             } else {
                 min_bg = round((min_bg - 60) / autosens_data.ratio, 0) + 60
                 max_bg = round((max_bg - 60) / autosens_data.ratio, 0) + 60
-                val new_target_bg = round((target_bg - 60) / autosens_data.ratio) + 60.0
+                val new_target_bg = round((target_bg - 60) / autosens_data.ratio, "newTargetBg") + 60.0
                 if (target_bg == new_target_bg) {
                     consoleError.add("target_bg unchanged: $new_target_bg")
                 } else {
@@ -177,9 +177,9 @@ class DetermineBasalAMA(
         val tick: String
 
         if (glucose_status.delta > -0.5) {
-            tick = "+" + round(glucose_status.delta)
+            tick = "+" + round(glucose_status.delta, "delta")
         } else {
-            tick = round(glucose_status.delta).toString()
+            tick = round(glucose_status.delta, "delta").toString()
         }
         val minDelta = min(glucose_status.delta, min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta))
         val minAvgDelta = min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta)
@@ -192,10 +192,10 @@ class DetermineBasalAMA(
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
         val bgi = round((-iob_data.activity * sens * 5), 2)
         // project deviations for 30 minutes
-        var deviation = round(30 / 5 * (minDelta - bgi))
+        var deviation = round(30 / 5 * (minDelta - bgi), "deviation")
         // don't overreact to a big negative delta: use minAvgDelta if deviation is negative
         if (deviation < 0) {
-            deviation = round((30 / 5) * (minAvgDelta - bgi))
+            deviation = round((30 / 5) * (minAvgDelta - bgi), "deviationAvg")
         }
 
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
@@ -246,7 +246,7 @@ class DetermineBasalAMA(
         val cid: Double
         // calculate current carb absorption rate, and how long to absorb all carbs
         // CI = current carb impact on BG in mg/dL/5m
-        ci = round((minDelta - bgi) * 10) / 10.0
+        ci = round((minDelta - bgi) * 10, "ci") / 10.0
         if (meal_data.mealCOB * 2 > meal_data.carbs) {
             // set ci to a minimum of 3mg/dL/5m (default) if less than half of carbs have absorbed
             ci = max(profile.min_5m_carbimpact, ci)

@@ -202,6 +202,7 @@
     <string name="u200_with_profile_reports">Ma base de données interne d\'AAPS et les rapports NS sont devenus incorrects, toutes les valeurs (bolus, débits, DTQ) doivent être multipliées par 2 pour voir les valeurs réelles, en particulier pour les médecins et l\'équipe de santé.</string>
     <string name="u200_with_profile_pens">Je n\'ai pas à gérer de conversion entre AAPS et le stylo, si j\'utilise un stylo U200 pour injecter un bolus externe.</string>
     <string name="u200_with_profile_pens2">Quel que soit le stylo utilisé pour injecter un bolus externe (U100 ou U200), je dois convertir entre le montant calculé par AAPS et le montant que je sélectionne sur le stylo pour chaque bolus externe.</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">Vous utilisiez la solution de contournement avec un profil à 50 % pour utiliser de l\'U200 et vous souhaitez passer à la nouvelle fonction de concentration d\'insuline. Quelles réponses sont vraies ?</string>
     <string name="switch_u200_profile_any_time">Je peux changer à tout moment, j\'ai déjà l\'insuline U200 dans ma pompe.</string>
     <string name="switch_u200_profile_ps">Je dois préparer un profil deux fois plus agressif (200% par rapport au profil par défaut actuel) et synchroniser ce nouveau profil après le prochain changement de patch/réservoir lorsque l\'insuline U200 est sélectionnée.</string>

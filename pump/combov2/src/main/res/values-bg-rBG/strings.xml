@@ -78,7 +78,7 @@
     <string name="combov2_cannot_deliver_pump_suspended">Не може да се извърши доставяне - помпата е спряна</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Недостатъчно количество инсулин в резервоара</string>
     <string name="combov2_bolus_cancelled">Болусът е отменен</string>
-    <string name="combov2_bolus_delivery_failed">Доставянето на болуса е неуспешно. Моля, проверете помпата, за да избегнете повторение на вече доставен болус. От съображения за безопасност болусите не се повтарят автоматично.</string>
+    <string name="combov2_bolus_delivery_failed">Доставянето на болуса е неуспешно. Изглежда, че болус не е подаден. За да сте сигурни, моля, проверете помпата, за да избегнете двоен болус, и след това подайте болуса отново. За защита от грешки болусите не се повтарят автоматично.</string>
     <string name="combov2_bolus_not_delivered">Болусът не е доставен</string>
     <string name="combov2_cannot_access_pump_data">Няма достъп до данните на помпата; помпата трябва да се сдвои отново</string>
     <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Връзката с помпата прекъсна по време на болуса. Дотогава помпата е доставила %1$s и може все още да достави остатъка. Не поставяйте болус отново. AAPS прочита реалното количество от помпата при следващото свързване.</string>

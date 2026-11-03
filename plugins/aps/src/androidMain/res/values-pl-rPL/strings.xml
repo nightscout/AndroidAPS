@@ -51,6 +51,7 @@
     <string name="carbs_suggestion">Sugestia węglowodanów</string>
     <string name="open_loop_new_suggestion">Dostępna nowa sugestia</string>
     <string name="loop_notification_channel_name">Sugestie pętli</string>
+    <string name="loop_notification_channel_silent_name">Sugestie pętli w trybie Nie przeszkadzać</string>
     <string name="open_loop_suggestion_too_old">Ta sugestia jest zbyt stara. Nic nie zostało wysłane do pompy. Poczekaj na następną.</string>
     <string name="basal_set_correctly">Baza ustawiona prawidłowo</string>
     <string name="last_run_label">Ostatnie uruchomienie</string>

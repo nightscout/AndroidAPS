@@ -3,12 +3,33 @@
     <!--    Dialogs-->
     <string name="confirmation">Επιβεβαίωση</string>
     <!--    Events-->
+    <string name="bolus_delivering">Χορήγηση %1$.2fU</string>
+    <string name="bolus_delivered_so_far">Χορηγήθηκαν %1$.2fU / %2$.2fU</string>
+    <string name="bolus_delivered_successfully">Το bolus %1$.2fU χορηγήθηκε επιτυχώς</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Ο οδηγός της αντλίας άλλαξε.</string>
     <!--    DateUtil-->
+    <string name="minago">πριν %1$d λεπ.</string>
+    <string name="secago">πριν %1$d δευτ.</string>
+    <string name="min_plus">(+%1$d λεπ.)</string>
+    <string name="sec_plus">(+%1$d δευτ.)</string>
     <string name="minago_long">%1$d λεπτά πριν</string>
+    <string name="hoursago">πριν από %1$.1f ώρ.</string>
     <string name="days_ago">%1$.1f ημέρες πριν</string>
     <string name="days_ago_round">%1$.0f ημέρες πριν</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">πριν από %1$s ημέρα %2$s ώρες</item>
+        <item quantity="other">πριν από %1$s ημέρες %2$s ώρες</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">πριν από %1$s ώρα</item>
+        <item quantity="other">πριν από %1$s ώρες</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">μόλις τώρα</item>
+        <item quantity="other">πριν από %1$s λεπτά</item>
+    </plurals>
+    <string name="seconds_ago">πριν λίγα δευτερόλεπτα</string>
     <string name="in_days">σε %1$.0f ημέρες</string>
     <string name="in_days_round">σε %1$.0f ημέρες</string>
     <string name="shorthour">h</string>
@@ -25,14 +46,25 @@
     <string name="unit_days">ημέρες</string>
     <string name="unit_weeks">εβδομάδες</string>
     <string name="shortminute">m</string>
+    <string name="time_remaining_h_m">Απομένουν %1$d ώρ. %2$d λεπ.</string>
+    <string name="time_remaining_m">Απομένουν %1$d λεπ.</string>
     <string name="later_today">Αργότερα σήμερα</string>
     <string name="tomorrow">Αύριο</string>
     <string name="today">Σήμερα</string>
     <string name="yesterday">Χθες</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dώ %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Σύνδεση για %1$d δευτερόλεπτα</string>
     <string name="handshaking">Δημιουργία σύνδεσης</string>
     <string name="connected">Συνδέθηκε</string>
+    <string name="authorized">Εξουσιοδοτήθηκε</string>
     <string name="disconnecting">Αποσυνδέεται</string>
     <string name="waiting_for_disconnection">Αναμονή για αποσύνδεση</string>
     <!-- Custom Watchface -->
@@ -49,6 +81,8 @@
     <string name="pref_show_delta">Εμφάνιση Διαφοράς</string>
     <string name="pref_show_detailed_delta">Εμφάνιση λεπτομερούς Διαφοράς</string>
     <string name="pref_show_avgdelta">Εμφάνιση Μέσης Διαφοράς</string>
+    <string name="pref_show_tempTarget">Εμφάνιση προσωρινού στόχου</string>
+    <string name="pref_show_reservoir_level">Εμφάνιση επιπέδου δεξαμενής</string>
     <string name="pref_show_phone_battery">Εμφάνιση Μπαταρίας Τηλεφώνου</string>
     <string name="pref_show_rig_battery">Εμφάνιση Μπαταρίας Rig</string>
     <string name="pref_show_basal_rate">Εμφάνιση Βασικού Ρυθμού</string>
@@ -58,28 +92,61 @@
     <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
     <string name="pref_show_ago">Εμφάνιση Πριν</string>
     <string name="pref_show_week_number">Εμφάνιση αριθμού Εβδομάδας</string>
+    <string name="pref_show_date">Εμφάνιση ημερομηνίας</string>
+    <string name="pref_show_seconds">Εμφάνιση δευτερολέπτων</string>
+    <string name="pref_show_complication1">Εμφάνιση Complication 1</string>
+    <string name="pref_show_complication2">Εμφάνιση Complication 2</string>
+    <string name="pref_show_complication3">Εμφάνιση Complication 3</string>
+    <string name="pref_show_complication4">Εμφάνιση Complication 4</string>
+    <string name="pref_show_complication5">Εμφάνιση Complication 5</string>
     <string name="default_custom_watchface_comment">Προεπιλεγμένη πρόσοψη ρολογιού, μπορείτε να κάνετε κλικ στο κουμπί ΕΞΑΓΩΓΗ ΠΡΟΣΟΨΗΣ για να δημιουργήσετε ένα πρότυπο</string>
-    <string name="wear_default_watchface">Προεπιλεγμένη πρόσοψη ρολογιού</string>
+    <string name="default_custom_watchface_external_comment">Προεπιλεγμένο Watchface με εξωτερικές προβολές για ακόλουθους. Πατήστε το κουμπί ΕΞΑΓΩΓΗ WATCHFACE για να δημιουργήσετε ένα πρότυπο</string>
+    <string name="wear_default_watchface">Προεπιλεγμένο Watchface</string>
+    <string name="wear_more_watchfaces">Περισσότερα Watchface</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">Ε %1$.2f U/h @%2$s %3$d/%4$d λεπ.</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Η εφαρμογή χρειάζεται άδεια Bluetooth για να επικοινωνεί με την αντλία</string>
     <!-- Insulin -->
+    <string name="unknown">Άγνωστη</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Μέγιστο καμπύλης [λεπτά]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Υδατάνθρακες</string>
     <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
+    <string name="pump_disconnected">Αντλία αποσυνδεδεμένη</string>
+    <string name="basalprofilenotaligned">Οι τιμές του βασικού ρυθμού δεν είναι ευθυγραμμισμένες σε ακέραιες ώρες: %1$s</string>
     <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %1$s</string>
     <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d λεπ.</string>
     <string name="record">Εγγραφή</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">ΕΚΤΕΤΑΜΕΝΟΙ ΥΔΑΤΑΝΘΡΑΚΕΣ</string>
+    <string name="profile_low_target">Κάτω στόχος προφίλ</string>
     <string name="profile_high_target">Υψηλός στόχος προφίλ</string>
     <string name="profile_dia">Τιμή DIA του προφίλ</string>
     <string name="profile_sensitivity_value">Τιμή ευαισθησίας προφίλ</string>
@@ -87,8 +154,14 @@
     <string name="value_out_of_hard_limits">Η τιμή »%1$s« %2$.2f είναι εκτός ορίων</string>
     <string name="basal_value">Τιμή Βασικού ρυθμού</string>
     <string name="cobvsiob">COB vs IOB (ενεργοί υδατάνθρακες vs ενεργή ινσουλίνη)</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Εντοπίστηκε αργή απορρόφηση υδατανθράκων: %1$d%% του χρόνου. Ελέγξτε ξανά τον υπολογισμό σας. Το COB μπορεί να είναι υπερεκτιμημένο και έτσι να δοθεί περισσότερη ινσουλίνη !!!!!</string>
     <string name="bolus_constraint_applied_warn">Ορίστηκε περιορισμός Bolus: %1$.2f U σε %2$.2f U</string>
     <string name="bolus_recorded_only">Το Bolus μόνο θα καταγραφεί (δε θα χορηγηθεί από την αντλία)</string>
     <string name="advisoralarm">Εκτέλεση συναγερμού όταν έρθει η ώρα να φάτε</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d ώρ. (+%3$d λεπ.)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Το πρόσθετο %1$s δεν ξεκίνησε και ίσως δεν λειτουργεί. Κάντε επανεκκίνηση του AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Στο πρόσθετο %1$s έγινε σφάλμα και ένα μέρος του σταμάτησε. Κάντε επανεκκίνηση του AAPS.</string>
 </resources>

@@ -28,6 +28,7 @@
     <string name="alarm_channel_bolus_error">Грешка при болус</string>
     <string name="alarm_channel_error">Обща грешка</string>
     <string name="alarm_channel_urgent">Спешна аларма</string>
+    <string name="alarm_channel_eat_reminder">Време е за ядене</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (заобикаля „Не безпокойте“)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (спазва „Не безпокойте“)</string>
     <string name="alarm_channel_silent_urgent">Спешна аларма (режим с нарастваща сила на звука)</string>

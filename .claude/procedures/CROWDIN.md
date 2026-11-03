@@ -219,6 +219,92 @@ wrong number (`%1$d` twice), a broken placeholder (`%2$小時`) or a single `%` 
 string, and the build stays silent. These need a placeholder comparison against English.
 `rh.gs()` catches the error and shows English instead; `stringResource()` in Compose crashes.
 
+## Checking a "New Crowdin updates" pull request before merge
+
+No CI runs on the `l10n_dev` pull requests, so nothing else checks them. Run this from the repo
+root, with the merge base and the fetched branch:
+
+```bash
+git fetch origin dev l10n_dev
+node crowdin-pr-check.js $(git merge-base origin/dev origin/l10n_dev) origin/l10n_dev > check.log
+```
+
+It looks only at translations the pull request changes and compares each with English in the same
+module: placeholders (index and type), a missing placeholder, a `%` that starts no valid
+placeholder in a string that has arguments, more than one unnumbered placeholder, and an
+unescaped apostrophe. No API token is needed.
+
+Read every line yourself, many are harmless:
+
+- **A literal `%` in a text without arguments is fine**, like `70%` or `50 %-profil`. The text is
+  shown without arguments, so it is never formatted. The script does not know how the code uses a
+  string; check with `git grep` when English has no placeholders either.
+- **A missing placeholder does not crash**, the value is only not shown (German `a11y_bg_delta`
+  was `Delta` without `%1$s`, 2026-10-31). Fix it in Crowdin anyway.
+- **"type differs" with `s` in the translation is harmless**: `%1$s` prints a number too. `d` or
+  `f` where English has `s` crashes in Compose.
+
+Also check that the English files the pull request changes ("Update source file strings.xml") are
+the same as in `dev` (`git diff origin/dev origin/l10n_dev -- '*/values/*.xml'` must be empty),
+and that `git merge-tree --write-tree origin/dev origin/l10n_dev` merges cleanly. Crowdin copies
+the English sources from `dev`; a difference means `dev` was not fetched or moved on since.
+
+```js
+// node crowdin-pr-check.js <base ref> <head ref>
+const { execFileSync } = require('child_process')
+const [base, head] = process.argv.slice(2)
+const git = (...a) => execFileSync('git', a, { encoding: 'utf8', maxBuffer: 1 << 28 })
+const show = (ref, p) => { try { return git('show', `${ref}:${p}`) } catch { return null } }
+
+// name -> { text, attrs }; a plural item as name#quantity
+function parse(xml) {
+  const out = new Map()
+  if (!xml) return out
+  for (const m of xml.matchAll(/<string\s+([^>]*?)(?:\/>|>([\s\S]*?)<\/string>)/g)) {
+    const name = /name="([^"]+)"/.exec(m[1])?.[1]
+    if (name) out.set(name, { text: m[2] ?? '', attrs: m[1] })
+  }
+  for (const m of xml.matchAll(/<plurals\s+([^>]*)>([\s\S]*?)<\/plurals>/g)) {
+    const name = /name="([^"]+)"/.exec(m[1])?.[1]
+    for (const i of m[2].matchAll(/<item\s+quantity="([^"]+)"\s*>([\s\S]*?)<\/item>/g))
+      out.set(`${name}#${i[1]}`, { text: i[2], attrs: m[1], plural: true })
+  }
+  return out
+}
+
+// aapt drops the backslash of an unknown escape, so \%2$d is still a placeholder at run time
+const SPEC = /%(?:(\d+)\$)?[-#+0,(<]*\d*(?:\.\d+)?([sdfxXcegob])/g
+const LONE = /%(?!(\d+\$)?[-#+0,(<]*\d*(\.\d+)?[sdfxXcegob])/g
+const kind = t => ('s'.includes(t) ? 's' : 'dxXo'.includes(t) ? 'd' : 'feg'.includes(t) ? 'f' : t)
+const keys = text => [...text.replace(/%%/g, '').matchAll(SPEC)].map(m => `${m[1] ?? '-'}${kind(m[2])}`)
+
+const files = git('diff', '--name-only', base, head).split('\n')
+  .filter(f => /\/values-[a-z]{2,3}(-r[A-Z]{2})?\/[^/]+\.xml$/.test(f))
+let checked = 0
+for (const f of files) {
+  const xml = show(head, f)
+  if (xml == null) continue
+  if (!/<\/resources>\s*$/.test(xml)) console.log(`${f} | - | <resources> not closed`)
+  const tr = parse(xml), old = parse(show(base, f)), en = parse(show(head, f.replace(/\/values-[^/]+\//, '/values/')))
+  for (const [name, { text }] of tr) {
+    if (old.get(name)?.text === text) continue // not changed by this pull request
+    checked++
+    const say = msg => console.log(`${f} | ${name} | ${msg}: ${text.slice(0, 80)}`)
+    const english = en.get(name) || en.get(`${name.split('#')[0]}#other`)
+    if (!english) { say('no English string'); continue }
+    if (text.replace(/\\./g, '').replace(/"[^"]*"/g, '').includes("'")) say('unescaped apostrophe')
+    if (/formatted="false"/.test(english.attrs)) continue
+    const e = keys(english.text), t = keys(text)
+    if (e.length && (text.replace(/%%/g, '').match(LONE) || []).length) say('% that is no placeholder')
+    if (t.filter(k => k.startsWith('-')).length > 1) say('several unnumbered placeholders')
+    for (const k of t) if (!e.includes(k))
+      say(e.some(x => x.slice(0, -1) === k.slice(0, -1)) ? `type differs: ${k}, English ${e}` : `not in English: ${k}`)
+    if (!english.plural) for (const k of e) if (!t.includes(k)) say(`missing placeholder ${k}`)
+  }
+}
+console.log(`${files.length} files, ${checked} changed strings checked`)
+```
+
 ## Moving a source file
 
 The version that worked, on the stale Omnipod files in 2026-09-18. Each sync came a minute or

@@ -1,7 +1,6 @@
 package app.aaps.implementation.protection
 
 import app.aaps.core.interfaces.protection.AuthorizationResult
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.utils.DateUtil
@@ -18,14 +17,13 @@ import org.mockito.Mockito.`when`
 class ProtectionCheckImplTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var passwordCheck: PasswordCheck
     @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var sut: ProtectionCheckImpl
 
     @BeforeEach
     fun setup() {
-        sut = ProtectionCheckImpl(preferences, passwordCheck, dateUtil)
+        sut = ProtectionCheckImpl(preferences, dateUtil)
     }
 
     /** Configure SETTINGS protection as prerequisite for BOLUS tests (hierarchy enforcement). */
@@ -338,5 +336,191 @@ class ProtectionCheckImplTest : TestBase() {
         var result: ProtectionResult? = null
         sut.requestProtection(ProtectionCheck.Protection.NONE) { result = it }
         assertThat(result).isEqualTo(ProtectionResult.GRANTED)
+    }
+
+    // --- A custom password or PIN that was never entered is no protection (#5462) ---
+
+    private fun assertGrantedWithoutPrompt(protection: ProtectionCheck.Protection) {
+        var result: ProtectionResult? = null
+        sut.requestProtection(protection) { result = it }
+        assertThat(result).isEqualTo(ProtectionResult.GRANTED)
+        assertThat(sut.pendingAuthRequest.value).isNull()
+    }
+
+    private fun stubMasterPasswordAlwaysAsk() {
+        `when`(preferences.get(StringKey.ProtectionMasterPassword)).thenReturn("secret")
+        `when`(preferences.get(IntKey.ProtectionTimeout)).thenReturn(0)
+        `when`(dateUtil.now()).thenReturn(1000_000L)
+    }
+
+    @Test
+    fun `requestProtection grants APPLICATION when custom password was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionApplicationPassword)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.APPLICATION)
+    }
+
+    @Test
+    fun `requestProtection grants APPLICATION when custom PIN was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionApplicationPin)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.APPLICATION)
+    }
+
+    @Test
+    fun `requestProtection grants BOLUS when custom password was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionBolusPassword)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.BOLUS)
+    }
+
+    @Test
+    fun `requestProtection grants BOLUS when custom PIN was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionBolusPin)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.BOLUS)
+    }
+
+    @Test
+    fun `requestProtection grants PREFERENCES when custom password was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeSettings)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionSettingsPassword)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.PREFERENCES)
+    }
+
+    @Test
+    fun `requestProtection grants PREFERENCES when custom PIN was never entered`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeSettings)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionSettingsPin)).thenReturn("")
+        assertGrantedWithoutPrompt(ProtectionCheck.Protection.PREFERENCES)
+    }
+
+    @Test
+    fun `requestProtection still asks when custom password is set`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionApplicationPassword)).thenReturn("hash")
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingAuthRequest.value).isNotNull()
+    }
+
+    @Test
+    fun `requestProtection still asks when custom PIN is set`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionBolusPin)).thenReturn("hash")
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.BOLUS) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingAuthRequest.value).isNotNull()
+    }
+
+    @Test
+    fun `requestProtection still asks for master password type`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(2) // MASTER_PASSWORD
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingAuthRequest.value).isNotNull()
+    }
+
+    // --- The master password always works, so a forgotten password or PIN is no lockout ---
+
+    @Test
+    fun `requestProtection offers the master password next to a custom PIN`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionApplicationPin)).thenReturn("pinHash")
+
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) {}
+
+        val hashes = sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }
+        assertThat(hashes).containsExactly("pinHash", "secret")
+    }
+
+    @Test
+    fun `requestProtection offers the master password next to a custom password`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(3) // CUSTOM_PASSWORD
+        `when`(preferences.get(StringKey.ProtectionApplicationPassword)).thenReturn("passwordHash")
+
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) {}
+
+        val hashes = sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }
+        assertThat(hashes).containsExactly("passwordHash", "secret")
+    }
+
+    @Test
+    fun `requestProtection answers with the outcome of the prompt`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(2) // MASTER_PASSWORD
+
+        for ((grantedLevel, outcome) in listOf(
+            ProtectionCheck.Protection.MASTER to ProtectionResult.GRANTED,
+            null to ProtectionResult.DENIED,
+            null to ProtectionResult.CANCELLED
+        )) {
+            var result: ProtectionResult? = null
+            sut.requestProtection(ProtectionCheck.Protection.APPLICATION) { result = it }
+            sut.completeAuthRequest(sut.pendingAuthRequest.value!!.id, AuthorizationResult(grantedLevel, outcome))
+
+            assertThat(result).isEqualTo(outcome)
+            assertThat(sut.pendingAuthRequest.value).isNull()
+        }
+    }
+
+    /** The only behaviour `requestProtection` keeps apart from `requestAuthorization`. */
+    @Test
+    fun `requestProtection asks for a bolus lock with its own PIN when settings level is off`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeSettings)).thenReturn(0) // NONE
+        `when`(preferences.get(IntKey.ProtectionTypeBolus)).thenReturn(4) // CUSTOM_PIN
+        `when`(preferences.get(StringKey.ProtectionBolusPin)).thenReturn("pinHash")
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.BOLUS) { result = it }
+
+        assertThat(result).isNull()
+        val hashes = sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }
+        assertThat(hashes).containsExactly("pinHash", "secret")
+    }
+
+    @Test
+    fun `requestProtection offers biometric when the level uses it`() {
+        stubMasterPasswordAlwaysAsk()
+        `when`(preferences.get(IntKey.ProtectionTypeApplication)).thenReturn(1) // BIOMETRIC
+
+        sut.requestProtection(ProtectionCheck.Protection.APPLICATION) {}
+
+        val request = sut.pendingAuthRequest.value!!
+        assertThat(request.hasBiometric).isTrue()
+        assertThat(request.biometricGrantsLevel).isEqualTo(ProtectionCheck.Protection.APPLICATION)
+        assertThat(request.availableMethods.map { it.credentialHash }).contains("secret")
+    }
+
+    @Test
+    fun `requestProtection for MASTER asks for the master password`() {
+        stubMasterPasswordAlwaysAsk()
+
+        var result: ProtectionResult? = null
+        sut.requestProtection(ProtectionCheck.Protection.MASTER) { result = it }
+
+        assertThat(result).isNull()
+        assertThat(sut.pendingAuthRequest.value!!.availableMethods.map { it.credentialHash }).containsExactly("secret")
     }
 }

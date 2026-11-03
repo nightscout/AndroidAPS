@@ -29,6 +29,7 @@ import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.DarkGeneralColors
+import app.aaps.core.ui.compose.leftToRightText
 import app.aaps.core.ui.compose.loopColor
 import app.aaps.core.ui.compose.ttReasonColor
 import app.aaps.core.ui.extensions.directionToDescription
@@ -78,7 +79,7 @@ class WidgetStateLoader(
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         val unavailable = rh.gs(CoreUiStrings.value_unavailable_short)
-        val deltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.delta) } ?: unavailable
+        val deltaText = glucoseStatus?.let { leftToRightText(profileUtil.fromMgdlToSignedStringInUnits(it.delta)) } ?: unavailable
         val timeAgoText = dateUtil.minAgo(rh, lastBg?.timestamp)
 
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()

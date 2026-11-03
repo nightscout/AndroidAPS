@@ -1,29 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
+    <string name="ns_client_bg">NSClient 혈당</string>
+    <string name="description_source_ns_client">Nightscout에서 혈당 데이터를 다운로드합니다</string>
     <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">xDrip+ 및 호환 앱(Juggluco 등)에서 혈당 값을 받습니다.</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="description_source_dexcom">\'자신만의 덱스콤 앱 만들기(BYODA)\'에서 BG 값을 수신합니다.</string>
-    <string name="glimp">보기</string>
-    <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
+    <string name="description_source_dexcom">\'Build Your Own Dexcom App\'(BYODA)에서 혈당 값을 받습니다.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Glimp에서 혈당 값을 받습니다.</string>
     <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
+    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당 값을 받습니다.</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
+    <string name="description_source_poctech">Poctech 앱에서 혈당 값을 받습니다</string>
     <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Glunovo에서 값 받기</string>
+    <string name="description_source_glunovo">Glunovo 앱에서 값을 받습니다</string>
     <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Intelligo 앱에서 값 받기</string>
+    <string name="description_source_intelligo">Intelligo 앱에서 값을 받습니다</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
-    <string name="random_bg">무작위 BG</string>
-    <string name="description_source_random_bg">무작위로 BG 데이터를 생성합니다 (데모 버전 전용)</string>
+    <string name="description_source_tomato">Tomato 앱(MiaoMiao 기기)에서 혈당 값을 받습니다</string>
+    <string name="random_bg">무작위 혈당</string>
+    <string name="description_source_random_bg">무작위 혈당 데이터를 생성합니다(데모 모드 전용)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Syai/Ottai 앱에서 혈당 데이터를 받습니다.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI 앱</string>
+    <string name="description_source_patched_si_app">패치된 Sibionic SI 앱 또는 Sibionics 앱에서 혈당 데이터를 받습니다.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino 앱</string>
+    <string name="description_source_patched_sino_app">패치된 Sino 앱에서 혈당 데이터를 받습니다.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Instara 앱에서 혈당 값을 받습니다.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara 과거 데이터 요청</string>
+    <string name="pref_summary_instara_history_request">빠졌을 수 있는 과거 데이터를 백그라운드에서 요청합니다</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">알림 읽기</string>
+    <string name="description_source_notification_reader">공식 CGM 앱(Dexcom, Medtronic, Eversense 등)이 표시하는 알림에서 혈당 값을 읽습니다.</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Dexcom 앱에서 CGM 데이터를 받으려면 앱에 권한이 필요합니다</string>
+    <string name="permission_notification_listener_title">알림 접근</string>
+    <string name="permission_notification_listener_description">CGM 앱 알림에서 혈당 값을 읽는 데 필요합니다</string>
+    <string name="aidex">MicroTech CGM 앱</string>
+    <string name="description_source_aidex">LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 등에서 CGM 값을 받습니다.</string>
+    <string name="aidex_sensor_expired">센서가 만료되었습니다. 새 센서로 교체하십시오</string>
+    <string name="aidex_sensor_error">센서 오류입니다. 센서 상태를 확인하십시오</string>
+    <string name="aidex_sensor_stabilizing">센서가 안정화 중입니다. 기다려 주십시오…</string>
+    <string name="aidex_sensor_replace">센서 교체가 필요합니다. 가능한 빨리 새 센서로 교체하십시오</string>
+    <string name="aidex_signal_lost">센서 신호가 끊겼습니다. 연결을 확인하십시오</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">중복된 측정값</string>
 </resources>

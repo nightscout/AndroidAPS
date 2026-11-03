@@ -41,7 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Luteální fáze</string>
     <string name="scene_wizard_luteal_phase_desc">Zvýšený profil pro zvládnutí inzulínové rezistence před menstruací.</string>
-    <string name="scene_wizard_info_luteal_phase" formatted="false">Mnoho žen zažívá zvýšenou odolnost vůči inzulínu během fáze (zhruba 1–2 týdny před jejich obdobím). To je způsobeno zvyšováním progresivních úrovní, které snižují citlivost inzulínu. Účinek se mezi jednotlivci nesmírně liší – někteří si všimli zvýšení potřeb inzulínu o 10 až 30 %, jiní vidí minimální změnu. Začněte s konzervativním nárůstem (115 %) a přizpůsobte se podle vašich vlastních vzorů po několik cyklů. Sledování na CarePortálu pomáhá identifikovat váš osobní rytmus.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Mnoho žen má během luteální fáze (zhruba 1–2 týdny před menstruací) vyšší inzulínovou rezistenci. Způsobuje ji stoupající hladina progesteronu, která snižuje citlivost na inzulín. Účinek se u každé ženy velmi liší – některé potřebují o 10–30 % více inzulínu, u jiných je změna malá. Začněte opatrným zvýšením (115 %) a během několika cyklů ho upravte podle svých zkušeností. Záznamy v Péči vám pomohou najít váš osobní rytmus.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Horké počasí</string>
     <string name="scene_wizard_hot_weather_desc">Snížený profil — teplo urychluje vstřebávání inzulínu.</string>

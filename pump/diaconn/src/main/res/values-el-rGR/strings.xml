@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Επαναφορά στοιχείων σύζευξης;</string>
     <string name="diaconn_pairing">Σύζευξη Αντλίας Diaconn</string>
     <string name="diaconn_g8_history_alarm">Συναγερμοί</string>
     <string name="diaconn_g8_history_basalhours">Ώρες Βασικού</string>
@@ -10,12 +11,15 @@
     <string name="gettingpumpsettings">Λήψη ρυθμίσεων αντλίας</string>
     <string name="gettingpumptime">Λήψη ώρας αντλίας</string>
     <string name="largetimediff">Μεγάλη χρονική διαφορά:\nΗ ώρα στην αντλία διαφέρει περισσότερο από 1,5 ώρες. \nΠαρακαλώ ρυθμίστε την ώρα χειροκίνητα στην αντλία και βεβαιωθείτε ότι η ανάγνωση του ιστορικού από την αντλία δεν προκαλεί απροσδόκητη συμπεριφορά. \nΑν είναι δυνατόν, αφαιρέστε το ιστορικό από την αντλία πριν την αλλαγή της ώρας ή κλείστε το κλειστό κύκλωμα για μία DIA μετά την τελευταία λάθος καταχώρηση ιστορικού αλλά κατ΄ελάχιστο μία DIA από τώρα.</string>
+    <string name="largetimedifftitle">Μεγάλη χρονική διαφορά</string>
     <string name="approachingdailylimit">Φτάνετε το ημερήσιο όριο ινσουλίνης</string>
     <string name="startingbolus">Έναρξη bolus</string>
+    <string name="waitingforbolusend">Αναμονή για το εκτιμώμενο τέλος του bolus</string>
+    <string name="gettingbolusstatus">Λήψη κατάστασης bolus</string>
     <string name="stoppingtempbasal">Σταμάτημα Προσ Ρυθμού</string>
     <string name="settingtempbasal">Ρύθμιση Προσ Ρυθμού</string>
-    <string name="settingextendedbolus">Ρύθμιση εκτεταμμένου bolus</string>
-    <string name="stoppingextendedbolus">Σταμάτημα εκτεταμμένου bolus</string>
+    <string name="settingextendedbolus">Ρύθμιση εκτεταμένου bolus</string>
+    <string name="stoppingextendedbolus">Διακοπή εκτεταμένου bolus</string>
     <string name="updatingbasalrates">Ενημέρωση Βασικού ρυθμού</string>
     <string name="description_pump_diaconn_g8">Ενσωμάτωση Αντλιών Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
@@ -28,6 +32,7 @@
     <string name="bolus_step">Βήμα Bolus</string>
     <string name="basal_step">Βήμα Βασικού</string>
     <string name="pairfirst">Παρακαλώ συνδέστε την αντλία στο τηλέφωνο!</string>
+    <string name="processinghistory">Επεξεργασία συμβάντος</string>
     <string name="diaconn_g8_history_tempbasal">Προσωρινός βασικός ρυθμός</string>
     <string name="diaconng8_pump_settings">Ρυθμίσεις Αντλίας Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Ήχος</string>
@@ -99,7 +104,7 @@
     <string name="diaconn_g8_errorcode_1">Δεν είναι δυνατή η αναζήτηση λόγω σφάλματος CRC πακέτου.</string>
     <string name="diaconn_g8_errorcode_2">Δεν μπορεί να οριστεί σε ένα σφάλμα παραμέτρου εισόδου.</string>
     <string name="diaconn_g8_errorcode_3">Δεν μπορεί να οριστεί σε σφάλμα προδιαγραφής πρωτοκόλλου.</string>
-    <string name="diaconn_g8_errorcode_4">Χρόνος φαγητού, δεν γίνετε έγχυση.</string>
+    <string name="diaconn_g8_errorcode_4">Ώρα φαγητού, δεν γίνεται έγχυση.</string>
     <string name="diaconn_g8_errorcode_6">Ακυρώθηκε από την αντλία</string>
     <string name="diaconn_g8_errorcode_7">Λήψη άλλων ενεργειών, περιορισμός ρυθμίσεων εφαρμογής.</string>
     <string name="diaconn_g8_errorcode_8">Κατά τη διάρκεια μιας άλλης έγχυσης Bolus, η έγχυση είναι περιορισμένη.</string>
@@ -107,7 +112,7 @@
     <string name="diaconn_g8_errorcode_10">Ακυρώθηκε λόγω μη απόκρισης της αντλίας.</string>
     <string name="diaconn_g8_errorcode_11">Η έγχυση δεν είναι δυνατή λόγω χαμηλής μπαταρίας.</string>
     <string name="diaconn_g8_errorcode_12">Δεν είναι δυνατή η έγχυση λόγω ανεπάρκειας ινσουλίνης.</string>
-    <string name="diaconn_g8_errorcode_13">Δεν είναι δυνατή η έγχυση επειδή γίνετε υπέρβαση του ορίου.</string>
+    <string name="diaconn_g8_errorcode_13">Δεν είναι δυνατή η έγχυση επειδή γίνεται υπέρβαση του ορίου.</string>
     <string name="diaconn_g8_errorcode_14">Δεν είναι δυνατή η έγχυση επειδή υπερβαίνει τον ημερήσιο όγκο εγχύσεων.</string>
     <string name="diaconn_g8_errorcode_15">Μετά την ολοκλήρωση της ρύθμισης του βασικού ρυθμού, μπορεί να πραγματοποιηθεί έγχυση βασική.</string>
     <string name="diaconn_g8_logtubechange_title">Καταγραφή αλλαγής σωλήνωσης</string>
@@ -120,4 +125,14 @@
     <string name="diaconn_g8_errorcode_36">Η διακοπή προσωρινού ρυθμού απορρίπτεται όταν δεν τρέχει ο προσωρινός ρυθμός</string>
     <string name="diaconn_g8_cloudsend_summary">Αποστολή αρχείων καταγραφής αντλίας στο Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Συγχρονισμός Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Η σύζευξη πέτυχε!</string>
+    <string name="diaconn_pairing_successful_message">Η αντλία σας είναι τώρα συνδεδεμένη και έτοιμη για χρήση.</string>
 </resources>

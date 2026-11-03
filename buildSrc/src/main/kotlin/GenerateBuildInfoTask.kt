@@ -63,12 +63,38 @@ abstract class GenerateBuildInfoTask : DefaultTask() {
     @get:Input
     abstract val client: Property<Int>
 
+    /**
+     * The short commit this was built from, the same value Android puts in `BuildConfig.HEAD`.
+     *
+     * A crash report is read against a commit: without one, a report from a three month old fork
+     * looks exactly like a report from today's `dev`.
+     */
+    @get:Input
+    abstract val head: Property<String>
+
+    /** The clone URL this was built from, shortened for display by `gitRemoteShort`. */
+    @get:Input
+    abstract val gitRemote: Property<String>
+
+    /**
+     * Whether the working tree had no uncommitted changes.
+     *
+     * Defaults to **false**, which is the safe way round: a build that never asked cannot promise
+     * its sources match the commit it names, and a crash report that wrongly claims "committed"
+     * sends the reader looking at code that was never built.
+     */
+    @get:Input
+    abstract val committed: Property<Boolean>
+
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
 
     init {
         // So the iOS shell, and any build that does not care, needs to say nothing.
         client.convention(1)
+        head.convention("unknown")
+        gitRemote.convention("unknown")
+        committed.convention(false)
     }
 
     @TaskAction
@@ -107,6 +133,15 @@ abstract class GenerateBuildInfoTask : DefaultTask() {
             |     * directory it uses, so two clients never share one database.
             |     */
             |    const val CLIENT: Int = ${client.get()}
+            |
+            |    /** Short commit, the same value Android reports as `BuildConfig.HEAD`. */
+            |    const val HEAD: String = "${head.get()}"
+            |
+            |    /** Clone URL this was built from. Shorten it with `gitRemoteShort` before showing it. */
+            |    const val REMOTE: String = "${gitRemote.get()}"
+            |
+            |    /** True only if the working tree had no uncommitted changes when this was built. */
+            |    const val COMMITTED: Boolean = ${committed.get()}
             |}
             |
             """.trimMargin()

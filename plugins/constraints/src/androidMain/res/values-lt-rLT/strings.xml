@@ -38,8 +38,8 @@
     <string name="apsselected">DKS pasirinkta</string>
     <string name="closedmodeenabled">Uždaras ciklas aktyvus</string>
     <string name="description_objectives">Mokymosi programa</string>
-    <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
-    <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
-    <string name="objectives_button_unstart">Išvalyti pradėtus</string>
+    <string name="doyouwantresetstart">Ar norite iš naujo nustatyti mokymo etapo pradžią? Galite prarasti savo pažangą.</string>
+    <string name="objectives_button_unfinish">Išvalyti užbaigimą</string>
+    <string name="objectives_button_unstart">Išvalyti pradžią</string>
     <string name="bg_doubled_lgs">Įjungtas LGS režimas dėl dubliuojamų gliukozės duomenų</string>
 </resources>

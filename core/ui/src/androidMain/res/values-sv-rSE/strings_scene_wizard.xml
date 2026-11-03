@@ -1,22 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Välj en startpunkt. Mallarna är förifyllda med rekommenderade åtgärder för de vanligaste situationerna – du kan justera allt i följande steg.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Träning</string>
+    <string name="scene_wizard_exercise_desc">Höj målvärdet, minska profilen till 70%, stäng av SMB för att förhindra låga värden vid rörelse och motion.</string>
+    <string name="scene_wizard_info_exercise">Under fysisk aktivitet förbrukar musklerna glukos snabbare och insulinkänsligheten ökar. Att höja det tillfälliga målvärdet i förväg ger algoritmen ett försprång. Den börjar minska insulinet tidigare och bygger upp en buffert mot träningsinducerad hypoglykemi. Det rekommenderas också att stänga av SMB, eftersom korrigeringsbolusar under träning kan orsaka snabba blodsockerfall. För bästa resultat, aktivera denna scen 1 till 2 timmar innan du börjar träna, så att algoritmen har tid att minska ditt aktiva insulin.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Sjukdag</string>
+    <string name="scene_wizard_sick_day_desc">Starkare profil (150%) för att hantera ökad insulinresistens vid sjukdom.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Sjukdom, feber och stresshormoner kan dramatiskt öka insulinresistensen, ibland med 50 procent eller mer. En starkare profil (t.ex. 150%) talar om för algoritmen att leverera mer insulin i alla beräkningar — basaldoser, bolusförslag och korrigeringsfaktorer. Du kan också lägga till ett tillfälligt målvärde eller justera körläge i följande steg. Övervaka noga och justera när din kropp återhämtar sig.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Sjukdag — Kräkningar</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Minskad profil med LGS – motsatsen till vanlig sjukdag när man inte kan ta upp mat.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">När du inte kan hålla nere maten kan den vanliga sjukdagsmetoden att öka insulinet vara farlig. Kräkningar innebär att kolhydrater inte absorberas, så blodsockret kan sjunka snarare än att stiga. En reducerad profil (60 %) sänker insulintillförseln, och LGS-läget ger ett extra säkerhetsnät genom att pausa insulinet om glukosnivåerna sjunker. Att inaktivera SMB förhindrar extra bolusar. Övervaka ofta – kontrollera blodsockret var 1–2 timme och ketoner var 2–4 timme. Sök läkarhjälp om kräkningarna kvarstår i mer än några timmar eller om ketoner stiger över 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Sömn</string>
+    <string name="scene_wizard_sleep_desc">Snävare målvärde för bättre kontroll över natten.</string>
+    <string name="scene_wizard_info_sleep">Många får oupptäckta höga eller låga värden under natten. Ett något snävare mål under natten gör att algoritmen kan göra exaktare justeringar medan du sover. För bästa resultat kombinera detta med en profil som återspeglar dina basalbehov under natten.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Natt efter träning</string>
+    <string name="scene_wizard_post_exercise_night_desc">Lägre basalprofil, högre målvärde, SMB avstängt — skyddar mot fördröjda låga värden under natten efter aktivitet.</string>
+    <string name="scene_wizard_info_post_exercise_night">Efter fysisk aktivitet fyller musklerna kontinuerligt på glykogenlagren i många timmar – insulinkänsligheten kan förbli förhöjd i 24–48 timmar, med störst risk för nattlig hypoglykemi 6–12 timmar efter träning. En reducerad profil minskar basaltillförseln under natten, ett högre tillfälligt målvärde ger algoritmen en säkerhetsbuffert, och att inaktivera SMB förhindrar att algoritmen överkorrigerar kortvariga stigningar. Aktivera denna scen vid sänggåendet på träningsdagar, särskilt efter långa träningspass eller när du lagt till nya aktiviteter. Ha snabbverkande kolhydrater till hands och överväg att ställa ett alarm för att göra en blodsockerkontroll mitt i natten.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Innan måltid</string>
+    <string name="scene_wizard_pre_meal_desc">Sänk målvärdet för att förebygga en blodsockertopp efter maten.</string>
+    <string name="scene_wizard_info_pre_meal">Genom att sätta ett lägre mål på 30–60 minuter före måltid kan algoritmen börja bygga upp aktivt insulin i kroppen innan kolhydraterna anländer. Detta hjälper till att motverka den blodsockertopp som uppstår när maten når blodomloppet snabbare än insulinet hinner verka. Används bäst när du vet att du snart ska äta.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkohol</string>
+    <string name="scene_wizard_alcohol_desc">LGS-läge, lägre basalprofil, SMB avstängt — skyddar mot fördröjda känningar efter alkohol.</string>
+    <string name="scene_wizard_info_alcohol">Alkohol är en av de farligaste situationerna för människor med typ 1-diabetes. Levern prioriterar nedbrytning av alkohol framför att frigöra glukos, vilket kan orsaka fördröjd hypoglykemi 6-24 timmar senare, ofta under natten medan du sover. LGS-läge förhindrar att för höga insulinnivåer byggs upp genom att endast minska tillförseln när blodsockret sjunker. En lägre basalprofil och inaktiverad SMB minskar ytterligare insulinet ombord. Kontrollera alltid ditt blodsocker innan du somnar och överväg att sätta ett larm för en blodsockerkontroll mitt i natten.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Bilkörning</string>
+    <string name="scene_wizard_driving_desc">Något högre målvärde för att hålla sig säker bakom ratten.</string>
+    <string name="scene_wizard_info_driving">Säker bilkörning kräver stabilt blodsocker över 5,0 mmol/L (90 mg/dL). I vissa länder är kontroll före och under långa körningar ett lagkrav. Ett något högre mål ger algoritmen en säkerhetsbuffert — det kommer att hjälpa dig att hålla dig över den nivå där koncentration och reaktionstid börjar minska. Om du får lågt blodsocker medan du kör, kör omedelbart åt sidan, behandla känningen, och vänta minst 45 minuter efter att blodsockret återgått till normalt innan du fortsätter.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Bad</string>
+    <string name="scene_wizard_bathing_desc">Koppla från pumpen för dusch, simning, bad, eller någon annan vattenaktivitet.</string>
+    <string name="scene_wizard_info_bathing">När du kopplar från pumpen avbryts insulintillförseln helt – ingen basal, inga bolusar, ingen korrigering. Algoritmen växlar till frånkopplat läge och slutar göra justeringar. Detta är normalt under korta perioder som dusch, bad eller simning. När scenen är slut återansluts pumpen och algoritmen återupptas automatiskt. Håll frånkopplingarna korta – utan basalinsulin börjar blodsockret stiga inom 1 till 2 timmar.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Lutealfas</string>
+    <string name="scene_wizard_luteal_phase_desc">Ökad profil för att hantera premenstruell insulinresistens.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Många kvinnor upplever ökad insulinresistens under lutealfasen (cirka 1 till 2 veckor före mensen). Detta beror på stigande progesteronnivåer, vilket minskar insulinkänsligheten. Effekten varierar kraftigt från person till person; vissa ser en ökning av insulinbehovet med 10 till 30 %, medan andra upplever minimal förändring. Börja med en försiktig ökning (115 %) och justera baserat på dina individuella behov under flera cykler. Att registrera detta i CarePortal hjälper till att identifiera din personliga rytm.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Varmt väder</string>
+    <string name="scene_wizard_hot_weather_desc">Minskad profil — värme accelererar insulinabsorption.</string>
+    <string name="scene_wizard_info_hot_weather">Höga temperaturer gör att blodkärlen vidgas, vilket påskyndar insulinupptaget – samma dos verkar kraftfullare och snabbare. Detta kan leda till oväntade låga värden, särskilt vid utomhusaktiviteter. En måttlig profilminskning (85 %) kompenserar för det snabbare upptaget. Håll dig hydrerad, kontrollera ditt blodsocker oftare och var medveten om att insulin som förvaras i en varm pump eller penna kan brytas ner. Om du också tränar i värme, överväg att kombinera detta med träningsscenen för extra skydd.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Medicinskt ingrepp</string>
+    <string name="scene_wizard_medical_procedure_desc">Öppen loop med SMB avstängt för kirurgi eller medicinska ingrepp.</string>
+    <string name="scene_wizard_info_medical_procedure">Under operationer eller medicinska ingrepp gör narkos och stresshormoner blodsockret oförutsägbart. Öppen loop-läge rekommenderas eftersom algoritmen inte tillförlitligt kan förutsäga vad din kropp kommer att göra under dessa förhållanden. Ett högre mål 8,3 mmol/L (150 mg/dl) ger en säkerhetsmarginal mot hypoglykemi under operation. Att inaktivera SMB förhindrar oväntad insulintillförsel under ingreppet. Informera alltid sjukvårdspersonalen om att du bär en insulinpump och CGM. För ingrepp som varar längre än 3 timmar kan ditt team byta till intravenöst insulin.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Tom</string>
+    <string name="scene_wizard_blank_desc">Börja från början utan några förvalda åtgärder.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Ett profilbyte ändrar dina basalnivåer, insulinkänslighetsfaktor (ISF) och KH-kvot (IC) på en gång. Du kan skala allt på en gång i procent – till exempel, 110% ökar basalleverans, bolusberäkningar och kolhydratabsorptionshastigheter med 10%. Du kan också byta till en annan profil om du har en färdigskapad för en särskild situation.</string>
+    <string name="scene_wizard_tt_info">Ett tillfälligt målvärde talar om för algoritmen att den ska sikta på en annan blodsockernivå under en given period. Med ett högre målvärde reagerar algoritmen långsammare på stigande blodsocker och siktar på ett högre blodsockervärde, vilket minskar insulintillförseln och hjälper till att förhindra hypoglykemi under träning. Med ett lägre mål reagerar algoritmen snabbare och ger mer insulin – användbart för att ge insulinet försprång inför en måltid. Välj en av dina förinställningar nedan – målvärdet och orsaken är redan konfigurerade.</string>
+    <string name="scene_wizard_smb_info">Super Micro Boluses (SMB) låter algoritmen ge insulin i förväg som små bolusar och samtidigt tillfälligt stoppa basalleveransen för att kompensera – den lånar alltså insulin från framtiden för ett snabbare svar. Att inaktivera SMB förhindrar detta och begränsar algoritmen till att endast justera basaldoserna. Svaret blir långsammare och mer gradvis, vilket ofta föredras under träning eller sömn.</string>
+    <string name="scene_wizard_loop_mode_info">Körläget avgör hur autonomt algoritmen arbetar. I sluten loop justerar den automatiskt insulinleveransen. LGS (Paus vid lågt blodsocker) minskar eller stoppar endast insulinleveransen när blodsockret sjunker mot ett lågt värde – den ökar aldrig leveransen. Öppen loop beräknar förslag men väntar på att du ska bekräfta varje förslag.</string>
+    <string name="scene_wizard_careportal_info">En CarePortal-händelse är en loggpost — det ändrar inte insulinleverans eller algoritmens beteende. Använd den för att markera aktiviteter, situationer, eller anteckningar i din behandlingstidslinje. Du kan granska dessa poster i Behandlingar - CarePortal och i Nightscout, det hjälper dig och din doktor att hitta mönster i datat.</string>
+    <string name="scene_wizard_duration_info">Varaktigheten styr hur länge denna scen är aktiv. När tiden tar slut upphör tidsstyrda åtgärder (tillfälligt målvärde, profilbyte, körläge) av sig själva, medan bestående ändringar (som SMB-reglaget) automatiskt återställs till sina tidigare värden. Om varaktigheten är 0 är scenen aktiv utan tidsgräns – alla åtgärder är aktiva tills du avslutar scenen manuellt.</string>
+    <string name="scene_wizard_name_info">Välj ett namn och en ikon som gör denna scen lätt att känna igen. Du kommer att se dessa på aktiveringsknappen och i den aktiva scenbannern på översiktsskärmen.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Inkludera %1$s i scenen</string>
+    <string name="scene_wizard_finish">Slutför</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Uppföljningsscen</string>
+    <string name="scene_wizard_chain_info">Du kan om du vill länka ytterligare en scen som aktiveras automatiskt när denna löper ut. Du kan också hoppa till den om den här scenen avslutas i förtid. Den efterföljande scenen startar endast om målscenen är aktiverad och pumpen är tillgänglig. Om så inte är fallet visas en förklaring i bannern för den avslutade scenen till varför den inte startade.</string>
+    <string name="scene_chain_none">Ingen</string>
+    <string name="scene_skip_to_format">Hoppa till %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Länkad scen har tagits bort</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Uppföljning startade inte: %1$s</string>
+    <string name="scene_chain_skipped_deleted">målscenen har tagits bort</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" är inaktiverad</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d av %4$d åtgärder misslyckades</string>
 </resources>

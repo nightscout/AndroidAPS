@@ -54,7 +54,7 @@ interface ProfileRepository {
     val revision: StateFlow<Long>
 
     /**
-     * Clone the profile at [index]. The clone is appended with " copy" suffixed to its name.
+     * Clone the profile at [index]. The clone gets the translated "<name> copy" name.
      *
      * @return [Result.success] if the clone was created, or [Result.failure] with
      *         [IndexOutOfBoundsException] if [index] is no longer valid (e.g. profiles were

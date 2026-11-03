@@ -50,8 +50,10 @@
     <string name="authorized_clients_not_added_title">Nie dodano urządzenia opiekuna</string>
     <string name="authorized_clients_token_problem_not_connected">Ten telefon pacjenta nie jest połączony z Nightscout, więc nie może utworzyć tokenu dla urządzenia opiekuna.</string>
     <string name="authorized_clients_token_problem_not_allowed">Token Nightscout tego telefonu nie jest tokenem administratora, więc nie może utworzyć tokenu dla klienta. Użyj tutaj tokenu administratora albo dodaj klienta za pomocą PIN.</string>
-    <string name="authorized_clients_token_problem_name_taken">Nightscout ma już token o takiej samej nazwie ale innych uprawnieniach. Wybierz inną nazwę.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout ma już token o takiej samej nazwie, ale z innymi uprawnieniami. Wybierz inną nazwę.</string>
     <string name="authorized_clients_token_problem_name_in_use">Klient o tej nazwie znajduje się już na liście. Wybierz inną nazwę albo najpierw usuń tego klienta.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout nie wyświetlił nowego tokena, więc został ponownie usunięty, nic nie pozostawiając. Spróbuj ponownie.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout nie wyświetlił nowego tokenu i nie udało się go ponownie usunąć. Usuń token %1$s w Nightscout, a następnie spróbuj ponownie.</string>
     <string name="authorized_clients_tokens_header">Tylko odczyt Nightscout</string>
     <string name="authorized_clients_token_unpaired">Własny token Nightscout, niesparowany</string>
     <string name="authorized_clients_token_show_qr">Pokaż kod QR</string>
@@ -70,7 +72,7 @@
     <string name="pair_with_master_fetching">Sprawdzanie zaproszeń parowania…</string>
     <string name="pair_with_master_confirm_title">Sparować z tym urządzeniem pacjenta?</string>
     <string name="pair_with_master_confirm_master">Urządzenie pacjenta: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Po sparowaniu to urządzenie pacjenta będzie mogło wysyłać do tego urządzenia podpisane polecenia.</string>
+    <string name="pair_with_master_confirm_warning">Po sparowaniu to urządzenie będzie mogło wysyłać podpisane polecenia do tego urządzenia pacjenta.</string>
     <string name="pair_with_master_confirm_pair">Sparuj</string>
     <string name="pair_with_master_error_title">Nie można sparować</string>
     <string name="pair_with_master_error_wrong_pin">Nie znaleziono zaproszenia dla tego PIN-u. Sprawdź PIN na urządzeniu pacjenta i spróbuj ponownie.</string>
@@ -128,7 +130,7 @@
     <string name="upload_now">Prześlij teraz</string>
     <string name="tidepool_purge_data">Wyczyść wszystkie dane</string>
     <string name="tidepool_purge_data_confirm">Usunąć WSZYSTKIE dane, które AAPS przesłało do Tidepool? Tej operacji nie można cofnąć. Użyj jej, aby usunąć dane uszkodzone przez starszą wersję, a następnie uruchom „Pełna synchronizacja”, aby przesłać je ponownie.</string>
-    <string name="tidepool_full_sync_comment">Pełna synchronizacja? AAPS ponownie przesreśle wszystkie dane do Tidepool. Może to chwilę potrwać.</string>
+    <string name="tidepool_full_sync_comment">Pełna synchronizacja? AAPS ponownie prześle wszystkie dane do Tidepool. Może to chwilę potrwać.</string>
     <string name="tidepool_logout_confirm">Wylogować się z Tidepool? Wysyłanie danych zostanie wstrzymane, dopóki ponownie się nie zalogujesz.</string>
     <string name="tidepool_status_not_logged_in">Nie zalogowano</string>
     <string name="tidepool_status_no_session">Zalogowano, brak połączenia</string>
@@ -272,7 +274,7 @@
     <string name="smscommunicator_extended_reply_with_code">Aby rozpocząć bolus przedłużony %1$.2f U przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Aby wprowadzić %1$dg o %2$s odeślij w SMS kod %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Aby rozpocząć bazę %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
-    <string name="smscommunicator_suspend_reply_with_code">Aby wstrzymać pętle na %1$d minut odpowiedz kodem %2$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Aby wstrzymać pętlę na %1$d minut, odpowiedz kodem %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Aby wznowić pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Aby wyłączyć pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_restart_reply_with_code">Aby zrestartować AAPS, odpowiedz kodem %1$s</string>

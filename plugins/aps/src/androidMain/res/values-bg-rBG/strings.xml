@@ -26,7 +26,7 @@
     <string name="constraints">Ограничения</string>
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_script_debug_data_label">От скрипта</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Внимание!\nОбикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
     <string name="increasing_max_basal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
     <string name="max_basal_multiplier">множител на макс. базал</string>
     <string name="max_daily_basal_multiplier">множител на макс. дневен базал</string>
@@ -42,7 +42,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
     <string name="pump_not_initialized">Помпата не е инициализирана!</string>
-    <string name="zero_basal_not_set">Помпата не приема нулев временен базал. Все още доставя базалния инсулин. Проверете помпата.</string>
+    <string name="zero_basal_not_set">Помпата не прие нулевия временен базал. Възможно е все още да подава базален инсулин. Проверете помпата.</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="no_aps_selected">НЕ Е ИЗБРАН APS ИЛИ НАМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="ignore5m">Игнориране за 5 мин</string>
@@ -50,8 +50,9 @@
     <string name="ignore30m">Игнориране за 30 мин</string>
     <string name="carbs_suggestion">Предложение за въглехидрати</string>
     <string name="open_loop_new_suggestion">Има ново предложение</string>
-    <string name="loop_notification_channel_name">Предложения на цикъла</string>
-    <string name="open_loop_suggestion_too_old">Това предложение и е твърде старо. Нищо не е приложено в помпата. Изчакайте следващото предложение.</string>
+    <string name="loop_notification_channel_name">Предложения на кръга</string>
+    <string name="loop_notification_channel_silent_name">Предложения на кръга при „Не безпокойте“</string>
+    <string name="open_loop_suggestion_too_old">Това предложение е твърде старо. Нищо не е изпратено към помпата. Изчакайте следващото предложение.</string>
     <string name="basal_set_correctly">Базалът е зададен коректно</string>
     <string name="last_run_label">Последно стартиран</string>
     <string name="loop_aps_label">Алгоритъм за APS</string>

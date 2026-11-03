@@ -98,7 +98,6 @@
     <string name="aaps_bolus_icon_label">注射</string>
     <string name="aaps_carbs_icon_label">碳水</string>
     <string name="aaps_tbr_icon_label">臨時基礎率</string>
-    <string name="aaps_activity_icon_label">運動</string>
     <string name="aaps_note_icon_label">備註</string>
     <string name="aaps_automation_icon_label">自動化</string>
     <string name="aaps_calibration_icon_label">校準</string>

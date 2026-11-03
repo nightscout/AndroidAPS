@@ -1,25 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
+    <string name="executing_right_now">Komut şu anda çalıştırılıyor</string>
+    <string name="smb_being_delivered">Şu anda bir SMB iletiliyor. İşlem tamamlandığında tekrar deneyin.</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Pompadaki bazal profili güncellendi. Pompa, bazal değerini kendi artış birimine göre yuvarlar: günlük %2$s yerine %1$s değerini uygular.</string>
+    <string name="basal_reported_far_from_profile">Pompa, profilden oldukça farklı bir bazal değer bildiriyor. AAPS profildeki bazal değerini koruyor. Pompadaki bazal oranları kontrol edin.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Karbonhidrat</string>
     <!--    PumpStatusGenerator-->
-    <string name="short_status_last_connection">Son bağl: %1$d dak. önce</string>
+    <string name="short_status_last_connection">Son bağl: %1$d dk önce</string>
     <string name="short_status_last_bolus">SonBolus: %1$sÜ @ %2$s</string>
     <string name="short_status_temp_basal">Geçici: %1$s</string>
     <string name="short_status_battery">Pil: %1$d%%</string>
-    <string name="short_status_not_initialized">Pompa başlatılamadı</string>
+    <string name="short_status_not_initialized">Pompa başlatılmadı</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Pil optimizasyonu</string>
+    <string name="permission_battery_description">Uygulamanın arka planda güvenilir bir şekilde çalışabilmesi için pil optimizasyonu kapsamı dışında tutulması gerekir</string>
+    <string name="permission_directory_title">AAPS Dizini</string>
+    <string name="permission_directory_description">Uygulama ayarları ve kayıt dosyaları için bir dizin seçin</string>
+    <string name="permission_notifications_title">Bildirimler</string>
+    <string name="permission_notifications_description">Uyarıları, alarmları ve pompa durumu güncellemelerini göstermek için gereklidir</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmlar ve hatırlatıcılar</string>
+    <string name="permission_schedule_exact_alarm_description">AAPS arka planda çalışırken alarmların ekranı uyandırabilmesi ve hatırlatıcıların zamanında çalabilmesi için gereklidir</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS alarmları</string>
+    <string name="alarm_channel_standard">Standart alarm</string>
+    <string name="alarm_channel_bolus_error">Bolus hatası</string>
+    <string name="alarm_channel_error">Genel hata</string>
+    <string name="alarm_channel_urgent">Acil durum alarmı</string>
+    <string name="alarm_channel_eat_reminder">Yemek zamanı</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (Rahatsız Etmeyin modunu geçersiz kıl)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (Rahatsız Etmeyin modunu dikkate alır)</string>
+    <string name="alarm_channel_silent_urgent">Acil durum alarmı (sesi kademeli artan mod)</string>
+    <string name="alarm_channel_silent">Alarm (sesi kademeli artan mod)</string>
+    <string name="alarm_channel_silent_description">\'Bildirim ses düzeyini kademeli olarak artır\' özelliği açık olduğunda kullanılır. Alarm ekranı aynı zamanda sesi çalar.</string>
+    <string name="ongoing_channel_name">Devam eden durum</string>
+    <string name="eat_reminder_channel">Yemek hatırlatıcı geri sayımı</string>
+    <string name="eat_reminder_channel_description">Yemek vaktine ne kadar süre kaldığını gösterir. Kendisi ses çıkarmaz; süre dolduğunda alarm çalar.</string>
+    <string name="notifications_channel_name">AAPS bildirimleri</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0Ü (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CÜ/sa</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Ayarlar bulut depolama alanına başarıyla aktarıldı</string>
+    <string name="export_to_cloud_failed">Bulut depolama alanına aktarma başarısız oldu</string>
+    <string name="csv_uploaded_to_cloud">Kullanıcı Girişleri CSV dosyası bulut depolama alanına başarıyla yüklendi</string>
     <string name="exported">Tercihler dışa aktarıldı</string>
     <string name="exported_failed">Tercihler dışa aktarılamadı!</string>
     <string name="filenotfound">Dosya bulunamadı</string>
     <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s önce dışa aktarıldı</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s\'de dışa aktarıldı</string>
-    <string name="exported_less_than_hour_ago">bir süre önce dışa aktarıldı</string>
+    <string name="exported_less_than_hour_ago">bir saatten kısa süre önce dışa aktarıldı</string>
     <string name="metadata_warning_different_flavour">Sizde: %2$s varken, farklı AAPS (%1$s) türeviyle tercihler oluşturuldu.\n\nBazı ayarlar eksik veya geçersiz olabilir - içe aktardıktan sonra lütfen tercihlerinizi kontrol edin ve güncelleyin.</string>
     <string name="metadata_warning_different_device">Tercihler farklı bir cihazda oluşturuldu. Daha eski/farklı bir telefondan içe aktarıyorsanız sorun değil, ancak içe aktarılan tercihlerin doğru olduğundan emin olun!</string>
     <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçiyorsunuz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
@@ -28,22 +66,46 @@
     <string name="metadata_urgent_different_version">Uygulamanın farklı ana sürümünden tercihler. Ana sürümler önemli ölçüde farklılık gösterir ve uyumsuz tercihlere sahip olabilir! İçe aktardıktan sonra tercihlerin hala doğru olduğundan emin olun!</string>
     <string name="prefdecrypt_settings_tampered">Ayarlar dosyası kurcalanmış</string>
     <string name="prefdecrypt_settings_secure">Ayarlar dosyası güvenli</string>
-    <string name="prefdecrypt_settings_unencrypted">Güvenli olmayan, şifrelenmemiş ayar biçimi kullanma</string>
+    <string name="prefdecrypt_settings_unencrypted">Güvenli olmayan, şifrelenmemiş ayar biçimi kullanılıyor</string>
     <string name="prefdecrypt_wrong_json">JSON biçim hatası, gerekli alan eksik (biçim, içerik, meta veri veya güvenlik)</string>
     <string name="prefdecrypt_wrong_password">Şifre çözme hatası, verilen şifre dosyayı çözemiyor</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Dosya sağlama eksik, ayarların gerçekliğini doğrulayamıyor!</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Dosya sağlama toplamı (hash) eksik, ayarların gerçekliği doğrulanamıyor!</string>
     <string name="prefdecrypt_issue_modified">Dosya dışa aktarıldıktan sonra değiştirildi!</string>
     <string name="prefdecrypt_issue_parsing">Şifre çözme hatası, tercihler ayrıştırılamadı!</string>
     <string name="prefdecrypt_issue_wrong_pass">Şifre çözme hatası, sağlanan şifre geçersiz veya ayar dosyası değiştirildi! İçe aktarılan dosya farklı bir Ana parola ile dışa aktarılmış olabilir.</string>
     <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
+    <string name="metadata_label_format">Dosya formatı</string>
     <string name="metadata_label_created_at">Oluşturulma tarihi</string>
     <string name="metadata_label_aaps_version">AAPS Versiyonu</string>
     <string name="metadata_label_aaps_flavour">Yapı Varyantı</string>
-    <string name="metadata_label_device_name">Cihaz hasta adını dışa aktarma</string>
-    <string name="metadata_label_device_model">Cihaz modelini dışa aktarma</string>
+    <string name="metadata_label_device_name">Dışa aktaran cihazın hasta adı</string>
+    <string name="metadata_label_device_model">Dışa aktaran cihazın modeli</string>
     <string name="metadata_label_encryption">Dosya şifreleme</string>
     <string name="metadata_format_new">Yeni şifrelenmiş format</string>
     <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Dosya sistemine erişim hatası. Lütfen AAPS dizinini doğru seçin.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Google Drive\'a yedekleme</string>
+    <string name="csv_upload_failed">Kullanıcı Girişleri CSV dosyası bulut depolama alanına yüklenemedi</string>
+    <string name="csv_upload_error">CSV buluta yüklenirken hata oluştu</string>
+    <string name="uploading_to_cloud">Buluta yükleniyor...</string>
+    <string name="cloud_directory_path">Bulut dizini: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Google Drive erişim belirteci yenilenemiyor</string>
+    <string name="google_drive_token_refresh_error">Google Drive erişim belirteci yenilenemiyor: %1$s</string>
+    <string name="google_drive_connection_test_failed">Google Drive bağlantı testi başarısız</string>
+    <string name="google_drive_connect_error">Google Drive\'a bağlanılamıyor: %1$s</string>
+    <string name="google_drive_list_folders_failed">Google Drive klasörleri listelenemedi</string>
+    <string name="google_drive_list_folders_error">Klasörler listelenirken hata oluştu: %1$s</string>
+    <string name="google_drive_upload_no_id">Yükleme başarılı oldu ancak herhangi bir kimlik dönmedi</string>
+    <string name="google_drive_upload_verify_failed">Yükleme doğrulanamadı</string>
+    <string name="google_drive_upload_failed">Yükleme başarısız: %1$s</string>
+    <string name="google_drive_upload_error">Dosya yükleme hatası: %1$s</string>
+    <string name="google_drive_folder_access_error">Hedef klasör oluşturulamıyor veya bu klasöre erişilemiyor: %1$s</string>
+    <string name="google_drive_list_settings_failed">Ayarlar dosyaları listelenemedi</string>
+    <string name="google_drive_list_settings_error">Ayarlar dosyaları listelenirken hata oluştu: %1$s</string>
+    <string name="google_drive_download_failed">Dosya indirilemedi</string>
+    <string name="google_drive_download_error">Dosya indirilirken hata oluştu: %1$s</string>
+    <string name="google_drive_authorized">Google Drive Yetkilendirildi</string>
+    <string name="google_drive_reauth_required">Lütfen ayarları temizleyin ve Google Drive\'ı yeniden yetkilendirin</string>
 </resources>

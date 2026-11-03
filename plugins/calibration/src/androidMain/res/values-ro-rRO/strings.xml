@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Fără calibrare</string>
+    <string name="description_no_calibration">"Nu se aplică nicio calibrare. Valorile senzorului sunt folosite așa cum sunt. Folosiți această opțiune când senzorul este deja calibrat din fabrică și este precis."</string>
+    <string name="linear_calibration_name">Calibrare liniară</string>
+    <string name="description_linear_calibration">"Calibrare liniară pentru fiecare senzor (pantă și decalaj), calculată din măsurările dumneavoastră din deget. Măsurările recente au o pondere mai mare. Calibrarea se aplică după pornirea sesiunii senzorului curent; primele 2 ore sunt omise ca perioadă de încălzire."</string>
+    <string name="sensor_change_detected_text">Posibilă schimbare a senzorului detectată la %1$s. Marcați ca senzor nou?</string>
+    <string name="sensor_change_detected_action">Înregistrați schimbarea senzorului</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Înregistrați o schimbare a senzorului pentru a activa calibrarea.</string>
+    <string name="cal_status_warmup">Senzorul este în perioada de încălzire — calibrarea va fi activă după %1$s.</string>
+    <string name="cal_status_need_more_entries">Sunt necesare cel puțin 2 măsurări din deget (în prezent %1$d).</string>
+    <string name="cal_status_unsafe_fit">Ajustarea este în afara intervalului sigur — calibrarea nu a fost aplicată.</string>
+    <string name="cal_status_applied">Calibrare aplicată.</string>
+    <string name="cal_status_applied_offset_only">Calibrare aplicată doar cu decalaj — intervalul senzorului este prea îngust pentru pantă.</string>
+    <string name="cal_status_applied_slope_clamped">Calibrare aplicată — panta a fost limitată la un interval sigur. Adăugați mai multe măsurări pentru a relaxa limita.</string>
+    <string name="cal_slope_offset">Pantă %1$.2f, corecție la mijlocul intervalului %2$s</string>
+    <string name="cal_session_started">Sesiune pornită: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Înregistrați schimbarea senzorului</string>
+    <string name="cal_add_calibration">Adăugați calibrare</string>
+    <string name="cal_entries_header">Măsurări din deget (%1$d)</string>
+    <string name="cal_no_entries">Încă nu există măsurări din deget.</string>
+    <string name="cal_entry_pair">Din deget %1$s → senzor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Intrarea %1$d/%2$d · %3$s · senzor %4$s → glicemie %5$s</string>
 </resources>

@@ -9,6 +9,7 @@
     <string name="application_expired">Η εφαρμογή έχει λήξει</string>
     <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
+    <string name="version_expire">Η έκδοση %1$s λήγει στις %2$s και θα περάσει σε λειτουργία LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Χρησιμοποιούνται επανυπολογισμένα δεδομένα</string>
@@ -19,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Περιορίζεται το εκτεταμένο bolus σε %1$.1f U λόγω %2$s</string>
     <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
+    <string name="safety">Ασφάλεια</string>
     <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
     <string name="closed_loop_disabled_with_eb">Το κλειστό κύκλωμα απενεργοποιήθηκε λόγω εκτέλεσης εκτεταμένου bolus</string>
@@ -39,4 +41,5 @@
     <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
     <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>
     <string name="objectives_button_unstart">Επαναφορά κατάστασης εκκίνησης</string>
+    <string name="bg_doubled_lgs">Λειτουργία LGS λόγω διπλών τιμών στην πηγή γλυκόζης</string>
 </resources>

@@ -9,10 +9,10 @@
     <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
     <string name="pump_status_invalid_config">Configurazione non valida</string>
     <string name="medtronic_pump_encoding_title">Codifica Medtronic</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codifica hardware 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codifica software 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica hardware 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">USA &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Mondo (868 Mhz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mondo (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Scansione</string>
     <string name="riley_link_ble_config_connected_never">Mai</string>
@@ -39,8 +39,8 @@
     <string name="rileylink_pump_frequency">Frequenza micro:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
-    <string name="rileylink_state_bt_init">Inizializzazione bluetooth…</string>
-    <string name="rileylink_state_bt_error">Errore bluetooth</string>
+    <string name="rileylink_state_bt_init">Inizializzazione Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Errore Bluetooth</string>
     <string name="rileylink_state_bt_ready">Bluetooth pronto</string>
     <string name="rileylink_state_not_started">Non avviato</string>
     <string name="rileylink_state_rl_init">Inizializzazione RileyLink…</string>
@@ -53,7 +53,7 @@
     <string name="rileylink_error_not_rl">Il dispositivo non è RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink irraggiungibile</string>
     <string name="rileylink_error_bt_disabled">Bluetooth disabilitato</string>
-    <string name="rileylink_error_no_bt_adapter">Nessun adattatore bluetooth</string>
+    <string name="rileylink_error_no_bt_adapter">Nessun adattatore Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Sintonizzazione fallita</string>
     <string name="rileylink_error_pod_unreachable">Pod irraggiungibile</string>
     <!-- RileyLink - Common -->

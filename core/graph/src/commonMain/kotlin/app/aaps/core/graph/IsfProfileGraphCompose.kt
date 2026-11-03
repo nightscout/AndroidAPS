@@ -16,6 +16,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LeftToRight
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
@@ -93,76 +94,78 @@ fun IsfProfileGraphCompose(
     val labelComponent = rememberTextComponent(style = TextStyle(color = MaterialTheme.colorScheme.onSurface))
     val legendIcon1 = rememberShapeComponent(fill = Fill(profile1Color))
     val legendIcon2 = rememberShapeComponent(fill = Fill(profile2Color))
-    CartesianChartHost(
-        chart = rememberCartesianChart(
-            rememberLineCartesianLayer(
-                lineProvider = if (profile2 != null) {
-                    LineCartesianLayer.LineProvider.series(
-                        LineCartesianLayer.Line(
-                            fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            interpolator = Square
-                        ),
-                        LineCartesianLayer.Line(
-                            fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            areaFill = remember {
-                                LineCartesianLayer.AreaFill.single(
-                                    Fill(
-                                        Brush.verticalGradient(
-                                            listOf(
-                                                profile1Color.copy(alpha = 0.3f),
-                                                Color.Transparent
+    LeftToRight {
+        CartesianChartHost(
+            chart = rememberCartesianChart(
+                rememberLineCartesianLayer(
+                    lineProvider = if (profile2 != null) {
+                        LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.Line(
+                                fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
+                                interpolator = Square
+                            ),
+                            LineCartesianLayer.Line(
+                                fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
+                                areaFill = remember {
+                                    LineCartesianLayer.AreaFill.single(
+                                        Fill(
+                                            Brush.verticalGradient(
+                                                listOf(
+                                                    profile1Color.copy(alpha = 0.3f),
+                                                    Color.Transparent
+                                                )
                                             )
                                         )
                                     )
-                                )
-                            },
-                            interpolator = Square
-                        )
-                    )
-                } else {
-                    LineCartesianLayer.LineProvider.series(
-                        LineCartesianLayer.Line(
-                            fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            areaFill = remember {
-                                LineCartesianLayer.AreaFill.single(
-                                    Fill(
-                                        Brush.verticalGradient(
-                                            listOf(
-                                                profile1Color.copy(alpha = 0.3f),
-                                                Color.Transparent
-                                            )
-                                        )
-                                    )
-                                )
-                            },
-                            interpolator = Square
-                        )
-                    )
-                }
-            ),
-            startAxis = VerticalAxis.rememberStart(label = labelComponent),
-            bottomAxis = HorizontalAxis.rememberBottom(label = labelComponent),
-            legend = if (profile2 != null) {
-                rememberHorizontalLegend(
-                    items = { extraStore ->
-                        extraStore[LegendLabelKey].forEachIndexed { index, label ->
-                            add(
-                                LegendItem(
-                                    if (index == 0) legendIcon1 else legendIcon2,
-                                    labelComponent,
-                                    label,
-                                )
+                                },
+                                interpolator = Square
                             )
-                        }
-                    },
-                    padding = Insets(top = 8.dp, start = 8.dp),
-                )
-            } else null
-        ),
-        modelProducer = modelProducer,
-        zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content),
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    )
+                        )
+                    } else {
+                        LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.Line(
+                                fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
+                                areaFill = remember {
+                                    LineCartesianLayer.AreaFill.single(
+                                        Fill(
+                                            Brush.verticalGradient(
+                                                listOf(
+                                                    profile1Color.copy(alpha = 0.3f),
+                                                    Color.Transparent
+                                                )
+                                            )
+                                        )
+                                    )
+                                },
+                                interpolator = Square
+                            )
+                        )
+                    }
+                ),
+                startAxis = VerticalAxis.rememberStart(label = labelComponent),
+                bottomAxis = HorizontalAxis.rememberBottom(label = labelComponent),
+                legend = if (profile2 != null) {
+                    rememberHorizontalLegend(
+                        items = { extraStore ->
+                            extraStore[LegendLabelKey].forEachIndexed { index, label ->
+                                add(
+                                    LegendItem(
+                                        if (index == 0) legendIcon1 else legendIcon2,
+                                        labelComponent,
+                                        label,
+                                    )
+                                )
+                            }
+                        },
+                        padding = Insets(top = 8.dp, start = 8.dp),
+                    )
+                } else null
+            ),
+            modelProducer = modelProducer,
+            zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        )
+    }
 }

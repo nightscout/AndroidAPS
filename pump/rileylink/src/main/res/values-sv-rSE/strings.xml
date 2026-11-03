@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Aldrig ansluten</string>
+    <string name="pump_status_sleeping">Sover</string>
+    <string name="pump_status_waking_up">Väcker</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_error_comm">Kommunikationsfel</string>
+    <string name="pump_status_timeout_comm">Kommunikationstimeout</string>
+    <string name="pump_status_invalid_config">Felaktig konfiguration</string>
+    <string name="medtronic_pump_encoding_title">Medtronic-kodning</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Programvara 4b6b-kodning</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hårdvara 4b6b-kodning</string>
+    <string name="medtronic_pump_frequency_us_ca">USA &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Resten av världen (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Söker</string>
     <string name="riley_link_ble_config_connected_never">Aldrig</string>
     <!-- RL Status Page -->
-    <string name="rileylink_status">Riley Link Status</string>
+    <string name="rileylink_status">RileyLink-status</string>
     <string name="medtronic_pump_status">Pumpstatus</string>
-    <string name="rileylink_title">Riley Link</string>
+    <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adress:</string>
     <string name="rileylink_name">Namn:</string>
     <string name="rileylink_battery_level">Batterinivå:</string>
@@ -31,15 +43,15 @@
     <string name="rileylink_state_bt_error">Bluetoothfel</string>
     <string name="rileylink_state_bt_ready">Bluetooth redo</string>
     <string name="rileylink_state_not_started">Inte startad</string>
-    <string name="rileylink_state_rl_init">Riley Link initierar…</string>
-    <string name="rileylink_state_rl_error">Riley Link-fel</string>
-    <string name="rileylink_state_pc_tune_up">Justerar Riley Link mot pump</string>
+    <string name="rileylink_state_rl_init">RileyLink initierar…</string>
+    <string name="rileylink_state_rl_error">RileyLink-fel</string>
+    <string name="rileylink_state_pc_tune_up">Justerar RileyLink mot pump</string>
     <string name="rileylink_state_pc_error">Problem att ansluta till pumpen</string>
     <string name="rileylink_state_connected">Ansluten</string>
-    <string name="rileylink_state_rl_ready">Riley Link redo</string>
+    <string name="rileylink_state_rl_ready">RileyLink redo</string>
     <!-- RL Errors -->
-    <string name="rileylink_error_not_rl">Enheten är inte en Riley Link</string>
-    <string name="rileylink_error_unreachable">Riley Link kan inte nås</string>
+    <string name="rileylink_error_not_rl">Enheten är inte en RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink kan inte nås</string>
     <string name="rileylink_error_bt_disabled">Bluetooth avstängt</string>
     <string name="rileylink_error_no_bt_adapter">Ingen bluetoothadapter</string>
     <string name="rileylink_error_tuneup_failed">Frekvensjustering misslyckades</string>
@@ -48,8 +60,8 @@
     <string name="rileylink_target_device_medtronic">Medtronicpump</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Visa batterinivå som rapporteras av OrangeLink/EmaLink</string>
-    <string name="riley_link_show_battery_level_summary">Fungerar inte med original Riley Link. Fungerar eventuellt inte med alla motsvarigheter heller.</string>
+    <string name="riley_link_show_battery_level">Visa batterinivå som rapporteras av OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">Fungerar INTE med original-RileyLink. Fungerar eventuellt inte med andra RileyLink-alternativ.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
@@ -60,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Använd sökning</string>
     <string name="orange_use_scanning_level_summary">Gör en sökning innan du ansluter till OrangeLink. Det bör förbättra anslutningarna (kan även användas med andra RileyLink-kloner om det behövs)</string>
+    <string name="rileylink_pair">Parkoppla RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink-parkoppling lyckades</string>
+    <string name="rileylink_config_reset">RileyLink-konfiguration återställd</string>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Bomba de patch Equil 5.3 ou mais recente</string>
     <!--  start  -->
     <string name="equil_basal_speed">Taxa basal de base</string>
@@ -17,12 +18,18 @@
     <string name="equil_title_dressing">Trocar cartucho</string>
     <string name="equil_title_assemble">Montar a bomba</string>
     <string name="equil_title_serial">Parear dispositivo</string>
-    <string name="equil_title_fill">Preencher / encher</string>
+    <string name="equil_title_fill">Purgar / Preencher</string>
     <string name="equil_title_attach">Conectar a bomba</string>
-    <string name="equil_title_air">Preencher a cânula</string>
+    <string name="equil_title_air">Purgar a cânula</string>
     <string name="equil_title_unpair_detach">Desconectar a bomba</string>
     <string name="equil_title_history_events">Eventos do histórico</string>
     <string name="equil_tone">Tom do alerta</string>
+    <string name="equil_bolus_speed">Velocidade do bólus</string>
+    <string name="equil_bolus_speed_summary">Um bólus mais rápido pode causar mais alarmes de oclusão.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (padrão)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Silencioso</string>
     <string name="equil_tone_mode_shake">Somente vibração</string>
     <string name="equil_tone_mode_tone">Somente som</string>
@@ -32,26 +39,36 @@
     <string name="equil_error">Erro de conexão</string>
     <string name="equil_change">Trocar bomba</string>
     <string name="equil_change_content">Desconecte a bomba da placa de base.</string>
+    <string name="equil_new_infusion_set_question">Você também vai colocar um novo conjunto de infusão (base e cânula)?</string>
+    <string name="equil_new_infusion_set_yes">Sim, novo conjunto de infusão</string>
+    <string name="equil_new_infusion_set_no">Não, somente reservatório ou bateria</string>
+    <string name="equil_same_infusion_set_hint">A cânula não será preenchida e nenhuma troca de cânula será registrada.</string>
     <string name="equil_unpair_alert">Tem certeza de que deseja liberar o controle de %1$s?</string>
-    <string name="equil_record_basal">Taxa basal %1$s U/H</string>
-    <string name="equil_record_basal_temp">Taxa basal temporária %1$s U/H</string>
+    <string name="equil_record_basal">Taxa basal %1$s U/h</string>
+    <string name="equil_record_basal_temp">Taxa basal temporária %1$s U/h</string>
+    <string name="equil_record_bolus">Bólus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">A duração da TBR deve ser maior que zero e um múltiplo de %1$s minutos.</string>
     <string name="equil_basal_exceeds_max">A taxa basal do perfil %1$s U/h excede a basal máxima da bomba %2$s U/h. Aumente a configuração de basal máxima e reconecte a bomba.</string>
     <string name="equil_not_enough_insulin">Não há insulina suficiente no reservatório</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Bateria fraca: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Não há insulina suficiente no reservatório: %1$s</string>
+    <string name="equil_reservoir_empty">O reservatório está vazio. A bomba não administra mais insulina.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">A bomba parou durante o bólus. Administrado: %1$s de %2$s</string>
     <string name="equil_pump_not_run">Bomba não está em operação</string>
     <string name="equil_pair">Parear</string>
     <string name="equil_pair_error">Erro ao parear</string>
-    <string name="equil_fill">Preencher/Encher</string>
+    <string name="equil_fill">Purgar/Preencher</string>
     <string name="equil_air">Purgar ar</string>
     <string name="equil_temp_basal_rate">Basal temporária</string>
     <string name="equil_total_delivered">Total administrado</string>
     <string name="equil_firmware_version">Versão do firmware</string>
     <string name="equil_shutdown_be">A Equil será desligada automaticamente</string>
     <string name="equil_shutdown">Desligamento automático da Equil</string>
-    <string name="equil_common_history_tbr_value">Taxa: %1$.2f U/H, duração: %2$d minutos</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Taxa: %1$.2f U/h, duração: %2$d minutos</string>
+    <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
-    <string name="equil_common_cmd_set_bolus">Definir bolus</string>
-    <string name="equil_common_cmd_cancel_bolus">Cancelar bolus</string>
+    <string name="equil_common_cmd_set_bolus">Definir bólus</string>
+    <string name="equil_common_cmd_cancel_bolus">Cancelar bólus</string>
     <string name="equil_common_cmd_set_tbr">Definir basal temporária</string>
     <string name="equil_common_cmd_cancel_tbr">Cancelar basal temporária</string>
     <string name="equil_common_cmd_set_basal_schedule">Definir programação basal</string>
@@ -61,8 +78,8 @@
     <string name="equil_common_cmd_pair">Parear Equil</string>
     <string name="equil_common_cmd_insert_cannula">Inserir cânula</string>
     <string name="equil_common_cmd_unpair">Desfazer pareamento do Equil</string>
-    <string name="equil_common_cmd_set_extended_bolus">Definir bolus estendido</string>
-    <string name="equil_common_cmd_cancel_extended_bolus">Cancelar bolus estendido</string>
+    <string name="equil_common_cmd_set_extended_bolus">Definir bólus estendido</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Cancelar bólus estendido</string>
     <!--    推杆回退-->
     <string name="equil_common_change_insulin">Retração da haste</string>
     <string name="equil_common_set_alarm_tone">Configurar somente som de notificação</string>
@@ -82,7 +99,7 @@
     <string name="equil_init_insulin_error">A inicialização do reservatório não foi concluída</string>
     <string name="equil_history_group_all">Todos</string>
     <string name="equil_history_group_pair">Pareamento</string>
-    <string name="equil_history_group_bolus">Bolus</string>
+    <string name="equil_history_group_bolus">Bólus</string>
     <string name="equil_history_group_basal">Basais</string>
     <string name="equil_history_group_configuration">Configurações</string>
     <string name="equil_tab_action">Ação do histórico</string>
@@ -98,9 +115,9 @@
     <string name="equil_history_item7">A administração já está pausada</string>
     <string name="equil_history_item8">Desligamento automático iminente</string>
     <string name="equil_history_item9">Desligamento automático!</string>
-    <string name="equil_history_item10">Preencher reservatório</string>
+    <string name="equil_history_item10">Purgar reservatório</string>
     <string name="equil_history_item11">Rebobinagem da bomba</string>
-    <string name="equil_history_item12">Início do bolus rápido</string>
+    <string name="equil_history_item12">Início do bólus rápido</string>
     <string name="equil_history_item13">Início da basal temporária</string>
     <string name="equil_history_item14">Fim da basal temporária</string>
     <string name="equil_history_item15">Nível baixo da bateria</string>
@@ -122,7 +139,7 @@
     <string name="equil_insert">Preencha o reservatório até que haja uma gota de insulina na ponta da agulha</string>
     <string name="equil_insert2">A bomba não pode estar na base da bomba.</string>
     <string name="equil_attach">Conecte a bomba à base</string>
-    <string name="equil_hint2">Preencher a cânula</string>
+    <string name="equil_hint2">Purgar a cânula</string>
     <string name="equil_pump_updated">Bomba atualizada</string>
     <string name="equil_replace_reservoir">O reservatório está vazio. Substitua o reservatório</string>
     <string name="equil_removed_anyway">Falha no comando de desfazer pareamento. A bomba será removida mesmo assim. A senha definida durante o pareamento não será removida da bomba.</string>

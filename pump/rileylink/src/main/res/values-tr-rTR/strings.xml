@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Hiçbir bağlantı yok</string>
+    <string name="pump_status_never_contacted">Hiç bağlantı kurulmadı</string>
     <string name="pump_status_sleeping">Uyku modunda</string>
     <string name="pump_status_waking_up">Uyanıyor</string>
     <string name="pump_status_active">Aktif</string>
@@ -12,7 +12,7 @@
     <string name="medtronic_pump_encoding_4b6b_local">Yazılım 4b6b Kodlama</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Donanım 4b6b Kodlama</string>
     <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Dünya geneli (868 Mhz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Dünya geneli (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Taranıyor</string>
     <string name="riley_link_ble_config_connected_never">Hiçbir zaman</string>
@@ -32,7 +32,7 @@
     <string name="rileylink_connected_device_model">Bağlı Cihaz Modeli:</string>
     <string name="rileylink_last_used_frequency">Son Kullanılan Frekans:</string>
     <string name="rileylink_last_device_contact">Son Cihaz İletişimi:</string>
-    <string name="rileylink_firmware_version">Firmware versiyonu:</string>
+    <string name="rileylink_firmware_version">Üretici yazılımı sürümü:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Pompa Seri Numarası:</string>
@@ -74,5 +74,5 @@
     <string name="orange_use_scanning_level_summary">OrangeLink\'e bağlanmadan önce tarayın, bağlantıları iyileştirebilir (gerekirse diğer RileyLink klonlarıyla da kullanılabilir)</string>
     <string name="rileylink_pair">RileyLink\'i Eşleştir</string>
     <string name="rileylink_pair_success">RileyLink başarıyla eşleştirildi</string>
-    <string name="rileylink_config_reset">RileyLink yapılandırmasını sıfırla</string>
+    <string name="rileylink_config_reset">RileyLink yapılandırması sıfırlandı</string>
 </resources>

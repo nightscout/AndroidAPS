@@ -13,4 +13,13 @@
     <string name="migrating_boluses">Perkeliami bolusai…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Senesniuose įrašuose nebuvo insulino konfigūracijos ir nebuvo aktyvaus profilio, todėl jiems naudotas %1$s. Patikrinkite insulino nustatymus — jau perkelti įrašai vėliau neatnaujinami.</string>
     <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Senesniuose įrašuose nebuvo nurodyta insulino veikimo trukmė, todėl %1$.1f val. trukmė buvo pritaikyta %2$s. Patikrinkite insulino nustatymus – jau perkelti įrašai vėliau neatnaujinami.</string>
+    <string name="settings_unreadable_title">Nepavyko nuskaityti AAPS nustatymų</string>
+    <string name="settings_unreadable_key_explanation">AAPS nustatymai yra užšifruoti raktu, kurį saugo Android sistema, tačiau šiuo raktu jų nebegalima atrakinti. Taip gali nutikti, jei telefone buvo iš naujo nustatyta raktų saugykla.</string>
+    <string name="settings_unreadable_keystore_explanation">Telefono raktų saugykla neatsako, todėl AAPS nepavyko atidaryti nustatymų.</string>
+    <string name="settings_unreadable_not_running">AAPS neveikia ir pompos nevaldo. Jei šiuo metu veikia laikina bazė, ji tęsis iki nustatyto laiko pabaigos, o tada pompa grįš prie savo bazinio insulino tiekimo.</string>
+    <string name="settings_unreadable_what_to_do">Paspaudus \'Bandyti dar kartą\' AAPS bus uždaryta ir paleista iš naujo. Jei tai nepadeda, perkraukite telefoną. \'Pradėti iš naujo\' rinkitės tik tada, kai niekas kitas nepadeda: neperskaitomi nustatymai bus atidėti, o AAPS paleista su tuščiais nustatymais. Tada sąrankos vedlyje importuokite paskutinę eksportuotą nustatymų kopiją.</string>
+    <string name="settings_unreadable_start_fresh">Pradėti iš naujo</string>
+    <string name="settings_unreadable_confirm_title">Pradėti su tuščiais nustatymais?</string>
+    <string name="settings_unreadable_confirm_text">Neperskaitomas nustatymų failas bus pervadintas ir išsaugotas. Visi nustatymai bus atkurti į numatytąsias reikšmes. Tada AAPS reikės nustatyti iš naujo arba importuoti anksčiau eksportuotus nustatymus.</string>
+    <string name="settings_unreadable_notification">AAPS neveikia. Atidarykite AAPS ir patikrinkite, ką reikia padaryti.</string>
 </resources>

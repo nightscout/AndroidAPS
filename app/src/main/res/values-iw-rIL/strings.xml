@@ -2,8 +2,8 @@
 <resources>
     <string name="authorizationfailed">ההרשאה נכשלה</string>
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
-    <string name="select">בחר</string>
-    <string name="set">הגדר</string>
+    <string name="select">בחירה</string>
+    <string name="set">הגדרה</string>
     <string name="migrating_preferences">מעביר העדפות…</string>
     <string name="optimizing_database">מבצע אופטימיזציה של מסד הנתונים…</string>
     <string name="initializing_plugins">מאתחל תוספים…</string>
@@ -11,6 +11,15 @@
     <string name="migrating_profile_switches">מעביר מתגי פרופיל…</string>
     <string name="migrating_effective_profile_switches">מעביר מתגי פרופיל אפקטיביים…</string>
     <string name="migrating_boluses">מעביר בולוסים…</string>
-    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">בנתונים ישנים יותר לא הייתה הגדרת אינסולין ולא היה פרופיל פעיל, לכן %1$s שימש עבורם. יש לבדוק את הגדרות האינסולין שלך — נתונים שכבר הועברו לא מתעדכנות לאחר מכן.</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">בנתונים ישנים יותר לא הייתה הגדרת אינסולין ולא היה פרופיל פעיל, לכן נעשה בהם שימוש ב-%1$s. יש לבדוק את הגדרות האינסולין — נתונים שכבר הועברו לא מתעדכנים לאחר מכן.</string>
     <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">בנתונים ישנים יותר לא נרשם משך פעולת אינסולין, לכן נרשמו %1$.1f שעות עבור %2$s. יש לבדוק את הגדרות האינסולין שלכם — נתונים שכבר הועברו לא מתעדכנים לאחר מכן.</string>
+    <string name="settings_unreadable_title">לא ניתן לקרוא את הגדרות AAPS</string>
+    <string name="settings_unreadable_key_explanation">ההגדרות בטלפון זה מוצפנות במפתח ש-Android שומר עבור AAPS, והמפתח הזה כבר לא פותח אותן. זה יכול לקרות לאחר איפוס של מאגר המפתחות של הטלפון.</string>
+    <string name="settings_unreadable_keystore_explanation">מאגר המפתחות של הטלפון לא הגיב, ולכן AAPS לא הצליח לפתוח את ההגדרות שלו.</string>
+    <string name="settings_unreadable_not_running">AAPS לא פועל ואינו שולט במשאבה. בזאלי זמני שפועל כעת יסתיים בזמנו, ולאחר מכן המשאבה תיתן את הבזאלי שלה עצמה.</string>
+    <string name="settings_unreadable_what_to_do">ניסיון חוזר סוגר את AAPS ומפעיל אותו שוב. אם זה לא עוזר, יש להפעיל מחדש את הטלפון. יש לבחור התחלה מחדש רק כאשר שום דבר אחר לא עוזר: הפעולה מעבירה הצידה את ההגדרות שלא ניתן לקרוא, ו-AAPS מתחיל עם הגדרות ריקות. לאחר מכן יש לייבא את ייצוא ההגדרות האחרון באשף ההתקנה.</string>
+    <string name="settings_unreadable_start_fresh">התחלה מחדש</string>
+    <string name="settings_unreadable_confirm_title">להתחיל עם הגדרות ריקות?</string>
+    <string name="settings_unreadable_confirm_text">קובץ ההגדרות שלא ניתן לקרוא יקבל שם חדש ויישמר. כל ההגדרות יחזרו לערכי ברירת המחדל. לאחר מכן יש להגדיר את AAPS מחדש או לייבא ייצוא הגדרות.</string>
+    <string name="settings_unreadable_notification">AAPS לא פועל. יש לפתוח את AAPS כדי לראות מה לעשות.</string>
 </resources>

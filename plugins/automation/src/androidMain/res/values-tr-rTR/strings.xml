@@ -1,9 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Otomasyon</string>
+    <string name="automation_enabled">Etkin</string>
+    <string name="automation_read_only">Salt okunur</string>
+    <string name="automation_new_rule">Yeni kural</string>
+    <string name="automation_empty_desc">Tetikleyicilere dayalı eylemleri otomatikleştirmek için bir kural oluşturun.</string>
+    <string name="automation_edit_rule">Kuralı düzenle</string>
+    <string name="automation_discard_title">Değişiklikler yok sayılsın mı?</string>
+    <string name="automation_discard_message">Kural eksik ve kaydedilemez. Değişiklikler yok sayılsın mı?</string>
+    <string name="automation_discard_confirm">Vazgeç</string>
+    <string name="automation_category_time">Zaman &amp; program</string>
+    <string name="automation_category_glucose">Glikoz &amp; tedavi</string>
+    <string name="automation_category_device">Cihaz durumu</string>
+    <string name="automation_category_sensors">Sensörler &amp; bağlantı</string>
+    <string name="automation_category_other">Diğer</string>
+    <string name="automation_choose_trigger">Tetikleyici ekle</string>
+    <string name="automation_add_group">Grup</string>
+    <string name="automation_choose_action">Eylem ekle</string>
+    <string name="automation_category_targets">Hedefler</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Döngü &amp; insülin</string>
+    <string name="automation_category_alerts">Alarmlar</string>
+    <string name="automation_category_system">Sistem</string>
+    <string name="automation_category_scenes">Senaryolar</string>
+    <string name="action_run_scene">Senaryoyu çalıştır</string>
+    <string name="action_run_scene_short">Senaryoyu çalıştır: %1$s</string>
+    <string name="action_enable_scene">Senaryoyu etkinleştir</string>
+    <string name="action_enable_scene_short">Senaryoyu etkinleştir: %1$s</string>
+    <string name="action_disable_scene">Senaryoyu devre dışı bırak</string>
+    <string name="action_disable_scene_short">Senaryoyu devre dışı bırak: %1$s</string>
+    <string name="action_scene_label">Senaryo</string>
+    <string name="trigger_scene_active">Senaryo</string>
+    <string name="trigger_scene_active_compared">Senaryo %1$s</string>
+    <string name="action_scene_not_found">Senaryo bulunamadı</string>
+    <string name="action_scene_disabled">Senaryo devre dışı</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
     <string name="automation_missing_trigger">Lütfen en az bir tetikleyici belirtin.</string>
-    <string name="automation_missing_action">Lütfen en az bir işlem belirtin.</string>
+    <string name="automation_missing_action">Lütfen en az bir eylem belirtin.</string>
     <string name="exportsettings_message">Ayarlar Dışa Aktarılıyor: %1$s</string>
     <string name="export_settings_short">Tedavi metinleri:</string>
     <string name="alarm_message">Alarm: %1$s</string>
@@ -16,7 +51,7 @@
     <string name="automation_trigger_pump_last_connection_compared">Pompayla son bağlantı %1$s %2$s dakika önce</string>
     <string name="alreadyset">Zaten ayarlanmış</string>
     <string name="profilepercentage">Profil yüzdesi</string>
-    <string name="startprofileforever">Profil %1$d%% başladı</string>
+    <string name="startprofileforever">Profili başlat: %%%1$d</string>
     <string name="sendsmsactionlabel">SMS gönder: %1$s</string>
     <string name="sendsmsactiondescription">Tüm numaralara SMS gönder</string>
     <string name="sendsmsactiontext">Metin ile SMS gönder</string>
@@ -28,8 +63,8 @@
     <string name="isgreater">büyükse</string>
     <string name="isnotavailable">mevcut değil</string>
     <string name="glucoseisnotavailable">Glikoz verileri mevcut değil</string>
-    <string name="glucosecomparedmgdl">Glukoz %1$s %2$.0f %3$s</string>
-    <string name="glucosecomparedmmol">Glukoz %1$s %2$.1f %3$s</string>
+    <string name="glucosecomparedmgdl">Glikoz %1$s %2$.0f %3$s</string>
+    <string name="glucosecomparedmmol">Glikoz %1$s %2$.1f %3$s</string>
     <string name="notemptarget">Geçici Hedef mevcut değil</string>
     <string name="temptargetcomparedmgdl">Geçici Hedef %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Geçici Hedef %1$s %2$.1f %3$s</string>
@@ -49,10 +84,10 @@
     <string name="location_going_in">Adlı alana girdiğinizde</string>
     <string name="location_going_out">Adlı alandan ayrıldığınızda</string>
     <string name="time_range">Zaman aralığı</string>
-    <string name="timerange_value">%1$s ile %2$s arasında</string>
+    <string name="timerange_value">Saat %1$s ile %2$s arasında</string>
     <string name="add_short">EKLE</string>
     <string name="temptargetcompared">Geçici hedef %1$s</string>
-    <string name="btdevicecompared">%1$s %2$s cihazına Bluetooth bağlantısı</string>
+    <string name="btdevicecompared">%1$s cihazına Bluetooth bağlantısı: %2$s</string>
     <string name="btdevice">Bluetooth cihazına bağlantı </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Otoduyarlılık %1$s %2$s %%</string>
@@ -61,7 +96,7 @@
     <string name="deltalabel">KŞ farkı</string>
     <string name="currentlocation">Mevcut konum</string>
     <string name="location">Konum</string>
-    <string name="lastboluslabel">Son bolus önce</string>
+    <string name="lastboluslabel">Son bolustan bu yana geçen süre</string>
     <string name="lastboluscompared">Son bolus zamanı %1$s %2$s dakika önce</string>
     <string name="triggercoblabel">AKRB</string>
     <string name="cobcompared">AKRB %1$s %2$.0f</string>
@@ -73,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Kanül yaşı %1$s %2$.1f saat</string>
     <string name="triggerPodChangeLabel">Pod aktivasyonu</string>
     <string name="triggerPodChangeDesc">Pod Etkinleştirildi</string>
+    <string name="triggerUnknownLabel">Bilinmeyen tetikleyici</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Bilinmeyen tetikleyici %1$s - asla doğru değil</string>
     <string name="triggerInsulinAgeLabel">İnsülin yaşı</string>
     <string name="triggerInsulinAgeDesc">İnsülin yaşı %1$s %2$.1f saat</string>
     <string name="triggerPumpBatteryAgeLabel">Pompa pil yaşı</string>
@@ -89,7 +126,7 @@
     <string name="taskname">Görev adı</string>
     <string name="edit_short">DÜZENLE</string>
     <string name="preconditions">Ön koşullar:</string>
-    <string name="user_action">Kullanıcı onayı ile</string>
+    <string name="user_action">Kullanıcı eylemi</string>
     <string name="system_automation">Sistem otomasyonu</string>
     <string name="run_automations">Otomasyonları çalıştır</string>
     <string name="add_automation">Kural ekle</string>
@@ -100,19 +137,34 @@
     <string name="error_setting_reminder">Gelecek alarmı ayarlanırken hata oluştu</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">OtoAyar profili %1$s</string>
-    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
+    <string name="autotune_run">OtoAyar\'ı Çalıştır</string>
     <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştı</string>
     <string name="autotune_run_with_autoswitch">OtoAyar çalıştı ve profil otomatik olarak değiştirildi</string>
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
     <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <!--    Steps count-->
     <string name="triggerStepsCountLabel">Adım Sayacı</string>
-    <string name="triggerStepsCountDesc">Her %1$s dakikadaki %2$s %3$.0f Adım sayısı</string>
+    <string name="triggerStepsCountDesc">%1$s dakikadaki adım sayısı %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Ölçüm Süresi</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">SMB\'yi etkinleştir/devre dışı bırak</string>
+    <string name="changeSmbTo">SMB\'yi %1$s olarak değiştirin</string>
+    <string name="newSmbMode">Yeni SMB modu:</string>
     <string name="on">AÇIK</string>
     <string name="off">KAPALI</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Yumuşatmayı değiştir</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Yumuşatmayı %1$s olarak değiştir</string>
+    <string name="smoothing_label">Yumuşatma</string>
+    <string name="precondition_smoothing_not_active_name">Yumuşatma etkin değil</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Yumuşatma %1$s etkin değil</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Haritadan seç</string>
+    <string name="tap_to_select_location">Bir konum seçmek için haritaya dokunun</string>
+    <string name="selected_coords">Seçilen: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Konum</string>
+    <string name="permission_location_description">Konum tabanlı otomasyon tetikleyicileri ve WiFi ağı tanımlama için gereklidir</string>
+    <string name="permission_background_location_description">Uygulama arka plandayken otomasyon tetikleyicilerinin çalışabilmesi için gereklidir</string>
 </resources>

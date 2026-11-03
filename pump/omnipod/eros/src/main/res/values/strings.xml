@@ -18,7 +18,7 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Rate: %1$.2f U, duration: %2$d minutes</string>
+    <string name="omnipod_eros_history_tbr_value">Rate: %1$.2f U/h, duration: %2$d minutes</string>
 
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Communication failed: message integrity verification failed</string>
@@ -36,16 +36,16 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">No response from RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interrupted</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">No response from Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Cancelling temp basal might have failed. Please manually refresh the Pod status from the Omnipod tab.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp basal might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile failed. Delivery might be suspended! Please manually refresh the Pod status on the pump screen and resume delivery if needed.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status on the pump screen and resume delivery if needed.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please manually resume delivery on the pump screen.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Cancelling temp basal might have failed. Please manually refresh the Pod status on the pump screen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status on the pump screen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp basal might have failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status on the pump screen.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR duration must be greater than zero and a multiple of %1$s minutes.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Failed to automatically change time on the Pod. You should manually synchronize the time on the Omnipod tab.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please manually refresh the Pod status on the pump screen and resume delivery if needed.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please manually resume delivery on the pump screen.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Failed to automatically change time on the Pod. You should manually synchronize the time on the pump screen.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please manually verify that your Pod is bolusing by listening to clicks. <b>If you are sure that the bolus didn\'t succeed, you should manually delete the bolus entry from Treatments, even if you click \'Cancel bolus\' now!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Unable to verify whether SMB bolus (%1$.2f U) succeeded. <b>If you are sure that the Bolus didn\'t succeed, you should manually delete the SMB entry from Treatments.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">A temporary basal is running on the Pod, but AAPS is unaware of this temporary basal. Please cancel your temporary basal manually.</string>

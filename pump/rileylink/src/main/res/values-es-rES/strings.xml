@@ -28,7 +28,7 @@
     <string name="rileylink_connection_error">Error de conexión:</string>
     <string name="rileylink_device">Dispositivo</string>
     <string name="rileylink_device_type">Tipo de dispositivo:</string>
-    <string name="rileylink_configured_device_model">Configurar Modelo de Dispositivo:</string>
+    <string name="rileylink_configured_device_model">Modelo de dispositivo configurado:</string>
     <string name="rileylink_connected_device_model">Modelo de dispositivo conectado:</string>
     <string name="rileylink_last_used_frequency">Última frecuencia usada:</string>
     <string name="rileylink_last_device_contact">Último contacto del dispositivo:</string>
@@ -60,7 +60,7 @@
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Mostar el nivel de batería notificado por OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level">Mostrar el nivel de batería notificado por OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NO funciona con el RileyLink original. Puede que no funcione con otras alternativas de RiyeyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d día</item>
@@ -74,5 +74,5 @@
     <string name="orange_use_scanning_level_summary">Escanear antes de conectarse a OrangeLink, debería mejorar las conexiones (también se puede utilizar con otros clones de RileyLink, si es necesario)</string>
     <string name="rileylink_pair">Emparejar RileyLink</string>
     <string name="rileylink_pair_success">RileyLink emparejado correctamente</string>
-    <string name="rileylink_config_reset">Configuración de RileyLink restablecida\"</string>
+    <string name="rileylink_config_reset">Configuración de RileyLink restablecida</string>
 </resources>

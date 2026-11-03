@@ -1,2 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="enable_tbr_over_notification">Увімкнути сповіщення про завершення TBR\n(налаштування помпи)</string>
+    <string name="disable_tbr_over_notification">Вимкнути сповіщення про завершення TBR\n(налаштування помпи)</string>
+    <string name="not_paired">Не спарено</string>
+    <string name="recovering">Відновлення</string>
+    <string name="insight_status">Статус</string>
+    <string name="recovery_duration">Тривалість відновлення</string>
+    <string name="last_connected">Останнє підключення</string>
+    <string name="start_pump">Запустити помпу</string>
+    <string name="stop_pump">Зупинити помпу</string>
+    <string name="started">Запущено</string>
+    <string name="stopped">Зупинено</string>
+    <string name="operating_mode">Робочий режим</string>
+    <string name="description_pump_insight_local">Інтеграція помп Accu-Chek Insight</string>
+    <string name="not_inserted">Не вставлено</string>
+    <string name="tdd_bolus">TDD болюс</string>
+    <string name="tdd_basal">TDD базал</string>
+    <string name="multiwave_bolus">Багатохвильовий болюс</string>
+    <string name="searching_for_devices">Пошук пристроїв…</string>
+    <string name="pairing_completed">Спарювання завершено</string>
+    <string name="code_compare">Чи збігаються коди на цьому пристрої та на вашій помпі?</string>
+    <string name="insight_pairing">Спарювання Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
+    <string name="tube_changed">Трубку замінено</string>
+    <string name="insight_alert_notification_channel">Тривоги помпи Insight</string>
+    <string name="disable_vibration">Вимкнути вібрацію при ручному введенні болюсу</string>
+    <string name="disable_vibration_summary">Для болюсу і подовженого болюсу (лише з прошивкою Insight 3.x)</string>
+    <string name="disable_vibration_auto">Вимкнути вібрацію при автоматичному введенні болюсу</string>
+    <string name="disable_vibration_auto_summary">Для SMB і тимчасового базалу з емуляцією TBR (лише з прошивкою Insight 3.x)</string>
+    <string name="timeout_during_handshake">Час очікування під час встановлення з\'єднання вичерпано - перезапустіть Bluetooth</string>
+    <string name="pump_stopped">Помпу зупинено</string>
+    <string name="pump_started">Помпу запущено</string>
+    <string name="release_software_version">Версія ПЗ випуску</string>
+    <string name="bluetooth_address">Адреса Bluetooth</string>
+    <string name="manufacturing_date">Дата виготовлення</string>
+    <string name="log_site_changes">Записувати заміну місця введення</string>
+    <string name="log_reservoir_changes">Записувати заміну резервуара</string>
+    <string name="log_tube_changes">Записувати заміну трубки</string>
+    <string name="log_battery_changes">Записувати заміну батареї</string>
+    <string name="log_operating_mode_changes">Записувати зміну робочого режиму</string>
+    <string name="log_alerts">Записувати тривоги</string>
+    <string name="enable_tbr_emulation">Увімкнути емуляцію TBR</string>
+    <string name="enable_tbr_emulation_summary">Використовувати подовжені болюси замість TBR, щоб обійти обмеження 250%%</string>
+    <string name="disconnect_delay">Затримка відключення [с]</string>
+    <string name="max_recovery_duration">Макс. тривалість відновлення [с]</string>
+    <string name="min_recovery_duration">Мін. тривалість відновлення [с]</string>
+    <string name="pump_alert">Тривога помпи</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Розпарувати</string>
+    <string name="reset_pairing">Скинути дані спарювання?</string>
+    <string name="reservoir_level">Рівень резервуара</string>
+</resources>

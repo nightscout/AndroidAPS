@@ -27,7 +27,7 @@
     <string name="constraints">Constraints</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_script_debug_data_label">Script debug</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before changing any of these values.</string>
     <string name="openapsama_link_to_preference_json_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
 
     <string name="increasing_max_basal">Increasing max basal value because setting is lower than your max basal in profile</string>

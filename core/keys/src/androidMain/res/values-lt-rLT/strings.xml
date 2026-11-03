@@ -32,7 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Rodyti skubius įspėjimus kaip Android pranešimus</string>
     <string name="pref_title_alert_increase_volume">Palaipsniui didinti pranešimų garsumą</string>
     <string name="pref_title_alert_override_dnd">Nepaisyti netrukdymo režimo</string>
-    <string name="pref_summary_alert_override_dnd">Įjungus šią parinktį AAPS įspėjimai skambės net nutildžius telefoną arba įjungus netrukdymo režimą. Išjungus parinktį šiais režimais įspėjimai bus be garso.</string>
+    <string name="pref_summary_alert_override_dnd">Įjungta: aliarmai skamba, net kai telefonas nutildytas arba įjungtas netrukdymo režimas. Išjungta: tada aliarmai neskamba. Netrukdymo režimu jie tik vibruoja.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Įkelti glikemijos duomenis į NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Įrašyti jutiklio pakeitimą</string>
@@ -94,7 +94,7 @@
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Įkelti duomenis į NS</string>
     <string name="pref_summary_ns_upload_data">Įkelti terapijos įrašus, laikinas bazes ir kitus duomenis į Nightscout.</string>
-    <string name="pref_title_ns_receive_cgm">Gauti CGM duomenis iš NS</string>
+    <string name="pref_title_ns_receive_cgm">Gauti NGJ duomenis iš NS</string>
     <string name="pref_summary_ns_receive_cgm">Priimti CGM rodmenis iš Nightscout.</string>
     <string name="pref_title_ns_receive_profile_store">Gauti profilius iš NS</string>
     <string name="pref_summary_ns_receive_profile_store">Priimti profilių saugyklos naujinius iš Nightscout.</string>
@@ -139,7 +139,7 @@
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Valdymas per Wear</string>
     <string name="pref_summary_wear_control">Valdyti AAPS iš „Android Wear“ laikrodžio.</string>
-    <string name="pref_title_wear_wizard_bg">Įtraukti glikemiją į boluso skaičiuoklę</string>
+    <string name="pref_title_wear_wizard_bg">Įtraukti glikemiją į boluso skaičiuotuvą</string>
     <string name="pref_title_wear_wizard_tt">Įtraukti laikiną tikslą į skaičiuotuvą</string>
     <string name="pref_title_wear_wizard_trend">Įtraukti tendenciją į skaičiuotuvą</string>
     <string name="pref_title_wear_wizard_cob">Įtraukti AAO į skaičiuotuvą</string>
@@ -176,7 +176,7 @@
     <string name="pref_title_batt_critical">Kritinė pompos baterijos lygio riba</string>
     <string name="pref_title_bolus_percentage">Boluso procentas</string>
     <string name="deliverpartofboluswizard">Taikyti šią reikšmę gliukozės ir angliavandenių korekcijai boluso skaičiuotuvo rezultate.</string>
-    <string name="pref_title_reset_bolus_percentage_time">Laikas iki boliuso procento atkūrimo</string>
+    <string name="pref_title_reset_bolus_percentage_time">Laikas iki boluso procento atkūrimo</string>
     <string name="deliver_part_of_boluswizard_reset_time">Suleisti 100% bolusą, jei glikemijos duomenys senesni nei</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Laikas iki pakartotinio užrakinimo</string>
@@ -213,7 +213,7 @@
     <string name="pref_title_autosens_period">Autosens laikotarpis</string>
     <string name="openapsama_autosens_period_summary">Valandų skaičius praeityje jautrumo nustatymui (angliavandenių įsisavinimo laikas neįtrauktas)</string>
     <!-- IntKey: Maintenance preferences -->
-    <string name="pref_title_logs_amount">Siunčiamų įrašų skaičius</string>
+    <string name="pref_title_logs_amount">Siunčiamų žurnalų skaičius</string>
     <!-- IntKey: Alert preferences -->
     <string name="pref_title_stale_data_threshold">Pasenusių duomenų riba</string>
     <string name="pref_title_pump_unreachable_threshold">Perspėjimo apie nepasiekiamą pompą riba</string>
@@ -267,7 +267,7 @@
     <string name="lang_tr">Turkish</string>
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
-    <string name="pref_title_patient_name">Vardas</string>
+    <string name="pref_title_patient_name">Egzemplioriaus pavadinimas</string>
     <string name="pref_summary_patient_name">Šį telefoną naudojančio asmens vardas. Jis padeda atskirti šią AAPS sistemą ataskaitose ir sinchronizuojant.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS aplankas</string>
@@ -296,7 +296,7 @@
     <string name="automation_location_network">Nustatyti vietą pagal tinklą</string>
     <string name="automation_location_gps">Nustatyti vietą naudojant GPS</string>
     <!-- StringKey: SMS preferences -->
-    <string name="smscommunicator_allowednumbers">Patvirtinti telefono numeriai</string>
+    <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
     <string name="smscommunicator_allowednumbers_summary">+370XXXXXXXX; +370YYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Papildomas privalomas PIN kodas žymeklio gale</string>
     <string name="smscommunicator_otp_pin_summary">Papildomi skaitmenys, kuriuos reikia atsiminti ir pridėti kiekvieno sugeneruoto slaptažodžio pabaigoje</string>
@@ -333,7 +333,7 @@
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
     <string name="pref_title_current_basal_multiplier">Dabartinės bazės saugos daugiklis</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
-    <string name="pref_title_bolus_snooze_divisor">IVT daliklis laikotarpiui po boliuso</string>
+    <string name="pref_title_bolus_snooze_divisor">IVT daliklis laikotarpiui po boluso</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Numatytoji reikšmė: 2\nAtidėjimas po boluso aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų laikinų bazių iškart po valgio. Pvz.: jei IVT yra 3 val, tai atidėjimas po boluso pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA minimalus 5 min angliavandenių poveikis</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB minimalus 5 min angliavandenių poveikis</string>
@@ -365,7 +365,7 @@
     <string name="pref_title_dura_weight">JIF kitimo laike koeficientas</string>
     <string name="openapsama_dura_ISF_weight_summary">Tai svoris, kuris taikomas per ilgesnės trukmės aukštą glikemiją, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="pref_title_smb_delivery_ratio">SMB dozės dalis</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai yra dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kokią dalį viso reikalingo insulino galima skirti kaip SMB. Šis apribojimas skirtas išvengti pavojingų situacijų, kai SMB užklausos siunčiamos tuo pačiu metu sekėjo globėjo telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai dar viena svarbi OpenAPS saugos riba, nustatanti, kokia viso apskaičiuoto reikiamo insulino dalis gali būti suleista kaip SMB. Ji padeda išvengti pavojingo perdozavimo, pavyzdžiui, kai tuo pačiu metu SMB komandos siunčiamos ir iš prižiūrinčio asmens telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
     <string name="pref_title_smb_delivery_ratio_min">Mažiausia SMB dozės dalis</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Numatytoji reikšmė: 0,5. Tai apatinė tiesiškai didėjančios SMB dozės dalies riba, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
     <string name="pref_title_smb_delivery_ratio_max">Didžiausia SMB dozės dalis</string>

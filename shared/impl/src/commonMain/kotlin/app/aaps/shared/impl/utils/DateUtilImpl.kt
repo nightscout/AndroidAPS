@@ -245,6 +245,9 @@ class DateUtilImpl(
     override fun timeStringFromSeconds(seconds: Int): String =
         timeStrings.getOrPut(seconds) { timeString(secondsOfTheDayToMilliseconds(seconds)) }
 
+    override fun hourStringFromSeconds(seconds: Int): String =
+        platform.format(secondsOfTheDayToMilliseconds(seconds), if (platform.is24Hour()) "HH" else "h a")
+
     override fun timeFrameString(timeInMillis: Long, rh: TextResolver, withParentheses: Boolean): String {
         val duration = timeInMillis.milliseconds
         // A time frame over about 146 million years, like the one to the end of a target without an end, is an

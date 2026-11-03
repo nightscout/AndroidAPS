@@ -4,9 +4,9 @@
     <string name="automation_enabled">Abilitato</string>
     <string name="automation_read_only">Sola lettura</string>
     <string name="automation_new_rule">Nuova regola</string>
-    <string name="automation_empty_desc">Creare una regola per automatizzare le azioni in base ai trigger.</string>
+    <string name="automation_empty_desc">Crea una regola per automatizzare le azioni in base ai trigger.</string>
     <string name="automation_edit_rule">Modifica regola</string>
-    <string name="automation_discard_title">Annullare modifiche?</string>
+    <string name="automation_discard_title">Scartare le modifiche?</string>
     <string name="automation_discard_message">La regola è incompleta e non può essere salvata. Scartare le modifiche?</string>
     <string name="automation_discard_confirm">Scarta</string>
     <string name="automation_category_time">Tempo &amp; pianificazione</string>
@@ -17,7 +17,7 @@
     <string name="automation_choose_trigger">Aggiungi trigger</string>
     <string name="automation_add_group">Gruppo</string>
     <string name="automation_choose_action">Aggiungi azione</string>
-    <string name="automation_category_targets">Obiettivi</string>
+    <string name="automation_category_targets">Target</string>
     <string name="automation_category_profile">Profilo</string>
     <string name="automation_category_loop">Loop &amp; insulina</string>
     <string name="automation_category_alerts">Avvisi</string>
@@ -31,7 +31,7 @@
     <string name="action_disable_scene_short">Disabilita scena: %1$s</string>
     <string name="action_scene_label">Scena</string>
     <string name="trigger_scene_active">Scena</string>
-    <string name="trigger_scene_active_compared">Scene %1$s</string>
+    <string name="trigger_scene_active_compared">Scena %1$s</string>
     <string name="action_scene_not_found">Scena non trovata</string>
     <string name="action_scene_disabled">La scena è disabilitata</string>
     <string name="automation_unit_meters">m</string>
@@ -55,7 +55,7 @@
     <string name="sendsmsactionlabel">Invia SMS: %1$s</string>
     <string name="sendsmsactiondescription">Invia SMS a tutti i numeri</string>
     <string name="sendsmsactiontext">Invia SMS con testo</string>
-    <string name="starttemptarget">Avvia temp-target</string>
+    <string name="starttemptarget">Avvia target temporaneo</string>
     <string name="islesser">è inferiore a</string>
     <string name="isequalorlesser">è uguale o inferiore a</string>
     <string name="isequal">è uguale a</string>
@@ -66,17 +66,17 @@
     <string name="glucosecomparedmgdl">Glicemia %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicemia %1$s %2$.1f %3$s</string>
     <string name="notemptarget">Il target temporaneo non è impostato</string>
-    <string name="temptargetcomparedmgdl">Temp-Target %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">Temp-Target %1$s %2$.1f %3$s</string>
+    <string name="temptargetcomparedmgdl">Target temporaneo %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Target temporaneo %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">PCT profilo %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">O (OR)</string>
     <string name="xor">O (esclusivo - XOR)</string>
-    <string name="atspecifiedtime">A %1$s</string>
+    <string name="atspecifiedtime">Alle %1$s</string>
     <string name="onconnect">Alla connessione</string>
     <string name="ondisconnect">Alla disconnessione</string>
-    <string name="short_avgdelta">Delta medio ridotto</string>
-    <string name="long_avgdelta">Delta medio esteso</string>
+    <string name="short_avgdelta">Delta medio breve</string>
+    <string name="long_avgdelta">Delta medio lungo</string>
     <string name="delta">Delta</string>
     <string name="locationis">%1$s %2$s</string>
     <string name="location_inside">Quando sei all\'interno dell\'area</string>
@@ -84,9 +84,9 @@
     <string name="location_going_in">Quando accedi all\'area denominata</string>
     <string name="location_going_out">Quando lasci l\'area denominata</string>
     <string name="time_range">Intervallo di tempo</string>
-    <string name="timerange_value">L\'intervallo di tempo è compreso tra %1$s e %2$s</string>
-    <string name="add_short">AGG</string>
-    <string name="temptargetcompared">Temp-Target %1$s</string>
+    <string name="timerange_value">L\'ora è compresa tra %1$s e %2$s</string>
+    <string name="add_short">AGGIUNGI</string>
+    <string name="temptargetcompared">Target temporaneo %1$s</string>
     <string name="btdevicecompared">Connessione Bluetooth a dispositivo %1$s %2$s</string>
     <string name="btdevice">Connessione a dispositivo Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
@@ -130,10 +130,10 @@
     <string name="system_automation">Automazione sistema</string>
     <string name="run_automations">Esegui automazioni</string>
     <string name="add_automation">Aggiungi regola</string>
-    <string name="stop_processing">Interrompere l\'elaborazione</string>
+    <string name="stop_processing">Interrompi l\'elaborazione</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
-    <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
+    <string name="time_to_eat">È ora di mangiare!\nApri il Calcolatore e rifai il calcolo.</string>
+    <string name="time_to_bolus">È ora del bolo!\nApri il Calcolatore e rifai il calcolo.</string>
     <string name="error_setting_reminder">Errore nell\'impostare l\'allarme futuro</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">Profilo Autotune %1$s</string>
@@ -154,11 +154,11 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <!--    Smoothing-->
-    <string name="change_smoothing">Cambia lisciatura</string>
-    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Cambia lisciatura in %1$s</string>
-    <string name="smoothing_label">Lisciatura</string>
-    <string name="precondition_smoothing_not_active_name">Lisciatura non attiva</string>
-    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">La lisciatura %1$s non è attiva</string>
+    <string name="change_smoothing">Cambia smoothing</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Cambia smoothing in %1$s</string>
+    <string name="smoothing_label">Smoothing</string>
+    <string name="precondition_smoothing_not_active_name">Smoothing non attivo</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Lo smoothing %1$s non è attivo</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Scegli dalla mappa</string>
     <string name="tap_to_select_location">Tocca la mappa per selezionare una posizione</string>
@@ -166,5 +166,5 @@
     <!-- Permission rationales -->
     <string name="permission_location_title">Posizione</string>
     <string name="permission_location_description">Necessario per automazione basata sulla posizione e sulla identificazione della rete WiFi</string>
-    <string name="permission_background_location_description">Necessario per attivare l\'automazione per funzionare quando l\'applicazione è in background</string>
+    <string name="permission_background_location_description">Necessario perché i trigger dell\'automazione funzionino quando l\'app è in background</string>
 </resources>
