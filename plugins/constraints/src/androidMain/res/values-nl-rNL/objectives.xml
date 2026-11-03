@@ -2,12 +2,12 @@
 <resources>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verifieer</string>
-    <string name="nth_objective">%1$d. Doel</string>
-    <string name="objectivenotstarted">Doel %1$d niet gestart</string>
-    <string name="objectivenotfinished">Doel %1$d niet gereed</string>
-    <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyseren van basalen en ratio\'s</string>
-    <string name="objectives_0_gate">Verifieer dat BG beschikbaar is in Nightscout, en dat de insuline gegevens van de pomp worden geüpload</string>
-    <string name="objectives_0_learned">Je hebt de basisinstellingen van het AAPS ecosysteem aangemaakt. Nightscout is niet nodig om AAPS uit te voeren, maar het is wel erg nuttig voor rapportage\'s en monitoren. Het is niet nodig om constant met NS verbonden te zijn als je NS alleen voor jezelf gebruikt. Bijvoorbeeld met alleen uploaden via de thuis wifi kan je de batterij sparen.</string>
+    <string name="nth_objective">%1$d. Leerdoel</string>
+    <string name="objectivenotstarted">Leerdoel %1$d niet gestart</string>
+    <string name="objectivenotfinished">Leerdoel %1$d niet afgerond</string>
+    <string name="objectives_0_objective">Visualisatie en monitoring instellen, basaalstanden en ratio’s analyseren</string>
+    <string name="objectives_0_gate">Controleer of de bloedglucosegegevens beschikbaar zijn in Nightscout en of de insulinegegevens van de pomp naar Nightscout worden verzonden</string>
+    <string name="objectives_0_learned">De basisconfiguratie van het AAPS-ecosysteem is voltooid. Nightscout (NS) is niet noodzakelijk om AAPS te gebruiken, maar is handig voor rapportages en het op afstand volgen van patiënten. Bij gebruik voor eigen monitoring is een permanente verbinding met NS niet nodig. Stel bijvoorbeeld in dat gegevens alleen via de wifi thuis worden verzonden om batterij te besparen.</string>
     <string name="objectives_openloop_objective">Starten met de Open Loop modus</string>
     <string name="objectives_openloop_gate">Draai enkele dagen In Open Loop modus en voer meermaals handmatig tijdelijke basalen uit. Stel standaard en aangepaste tijdelijke streefdoelen in (bv. bij sporten of koolhydraten inname bij hypo)</string>
     <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen, als je een pomp hebt die niet geschikt is voor AAPS of als je de loop niet wilt sluiten.</string>
