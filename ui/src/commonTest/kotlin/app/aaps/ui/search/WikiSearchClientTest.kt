@@ -72,12 +72,25 @@ class WikiSearchClientTest {
             "zh_TW" to "androidaps-zh-tw",
             "de-AT" to "androidaps-de",
             "he-IL" to "androidaps-he",
-            "cs" to "androidaps-cs"
+            "cs" to "androidaps-cs",
+            // The language setting holds "nb", and the Norwegian wiki is registered as "nb-no" (#5455)
+            "nb" to "androidaps-nb",
+            "nb-NO" to "androidaps-nb"
         )
         for ((language, project) in expected) {
             searched.value = emptyList()
             client(language).search("carbs")
             assertEquals(setOf(project, "androidaps"), searched.value.toSet(), language)
+        }
+    }
+
+    /** The first `zh-` wiki can be in the other script, so only a plain language code may find a wiki with a region. */
+    @Test
+    fun `a tag with a script or another region does not take the first wiki of its language`() = runTest {
+        for (language in listOf("zh-Hant", "zh-Hans", "zh-HK")) {
+            searched.value = emptyList()
+            client(language).search("carbs")
+            assertEquals(listOf("androidaps"), searched.value, language)
         }
     }
 
@@ -150,6 +163,7 @@ class WikiSearchClientTest {
             {"slug":"androidaps-cs","language":{"code":"cs"}},
             {"slug":"androidaps-de","language":{"code":"de"}},
             {"slug":"androidaps-he","language":{"code":"he"}},
+            {"slug":"androidaps-nb","language":{"code":"nb-no"}},
             {"slug":"androidaps-zh-cn","language":{"code":"zh-cn"}},
             {"slug":"androidaps-zh-tw","language":{"code":"zh-tw"}}]}}"""
     }

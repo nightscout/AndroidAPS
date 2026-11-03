@@ -182,6 +182,9 @@ internal class WikiSearchClient(
          *
          * Language and region first, so `zh-Hant-TW` finds `zh-tw` and not `zh-cn`. Then the language
          * alone, so `de-AT` finds `de`. A stored value like `zh_TW` uses `_`, which is read the same way.
+         *
+         * Last, a plain language code finds a wiki that has a region, so `nb` finds `nb-no`. Only a plain
+         * code: `zh-Hant` must not end up on the first `zh-` wiki, which can be the wrong script.
          */
         private fun translationFor(languageTag: String?, translations: List<WikiTranslation>): String? {
             val parts = languageTag?.lowercase()?.split('-', '_') ?: return null
@@ -190,6 +193,7 @@ internal class WikiSearchClient(
             val region = parts.drop(1).firstOrNull { it.length == 2 }
             return translations.firstOrNull { region != null && it.languageCode == "$language-$region" }?.slug
                 ?: translations.firstOrNull { it.languageCode == language }?.slug
+                ?: translations.firstOrNull { parts.size == 1 && it.languageCode.startsWith("$language-") }?.slug
         }
 
         /** The page path without its "/<language>/<version>/" start: `/de/latest/A/B.html` is `A/B.html`. */
