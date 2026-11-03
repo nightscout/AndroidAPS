@@ -72,7 +72,10 @@ interface NotificationManager {
      * notification list does. Used by the watch, which shows the buttons of the alarm that rings. Returns false and
      * does nothing when that notification or button is gone, so a late tap on the watch runs nothing.
      *
-     * The button runs outside any lock of the manager: a button may post or dismiss notifications itself.
+     * The button runs outside any lock of the manager: a button may post or dismiss notifications itself. It runs on
+     * the caller's thread, from the watch that is the message collector and not the main thread: a button that must
+     * touch the UI has to switch to it by itself. A notification posted later under the same id, as the next
+     * Nightscout alarm, has the same [instanceKey]: a late press then runs the button of that newer one.
      */
     fun runAction(instanceKey: Int, index: Int): Boolean {
         val notification = notifications.value.firstOrNull { it.instanceKey == instanceKey } ?: return false

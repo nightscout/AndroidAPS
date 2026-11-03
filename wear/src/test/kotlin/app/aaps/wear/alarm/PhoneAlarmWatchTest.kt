@@ -183,6 +183,26 @@ internal class PhoneAlarmWatchTest {
     }
 
     @Test
+    fun `a button text with a line break keeps its place on a repeat`() {
+        val texts = listOf("Snooze\n15m", "", "Snooze 60m")
+        sut.show(ringing(texts))
+        notificationManager.cancelAll()
+
+        sut.repeat()
+
+        assertThat(posted().actions.map { it.title.toString() }).containsExactlyElementsIn(texts).inOrder()
+    }
+
+    @Test
+    fun `a stop when nothing is shown changes nothing`() {
+        sut.stop(stopped())
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(2))
+
+        verifyNoInteractions(rxBus)
+        assertThat(shadowOf(notificationManager).allNotifications).isEmpty()
+    }
+
+    @Test
     fun `an alarm without buttons keeps Silence`() {
         sut.show(ringing(emptyList()))
 

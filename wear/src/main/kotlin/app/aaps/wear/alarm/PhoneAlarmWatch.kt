@@ -152,8 +152,9 @@ class PhoneAlarmWatch(
 
     private fun isShown(): Boolean = sp.getLong(R.string.key_phone_alarm_since, 0L) != 0L
 
+    /** Every text in its place, also an empty one: the index is what the phone runs. No buttons are the empty string. */
     private fun storedActions(): List<String> =
-        sp.getString(R.string.key_phone_alarm_actions, "").split(ACTIONS_SEPARATOR).filter { it.isNotEmpty() }
+        sp.getString(R.string.key_phone_alarm_actions, "").let { if (it.isEmpty()) emptyList() else it.split(ACTIONS_SEPARATOR) }
 
     /** Silence: the alarm on the phone stops and its screen closes. */
     fun silence(): Unit = synchronized(lock) {
@@ -255,8 +256,8 @@ class PhoneAlarmWatch(
         /** The phone's buttons take this code and the ones after it, one each (a Nightscout alarm has three). */
         const val PHONE_BUTTON_REQUEST_CODE = 4740
 
-        /** Between the button texts in preferences. A button text has no line break. */
-        const val ACTIONS_SEPARATOR = "\n"
+        /** Between the button texts in preferences: a control character no text has, so a text with a line break keeps its place. */
+        const val ACTIONS_SEPARATOR = "\u001F"
 
         /** The notification is posted again this often, for this long after the alarm rang, until it is answered. */
         const val REPEAT_MS = 30_000L

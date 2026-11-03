@@ -647,7 +647,8 @@ sealed class EventData : Event() {
      * Wear -> Mobile: a button of the phone's alarm notification ([AlarmRinging.actions]), pressed on the watch, or
      * the swipe, which presses the first one. The phone runs that button of the notification [alarmKey], as a tap on
      * it on the phone does: for a Nightscout alarm, the snooze, which also tells Nightscout the alarm was answered.
-     * Ignored when that notification is gone, or was replaced by one with other buttons.
+     * Ignored when that notification is gone. A notification posted later under the same id, as the next Nightscout
+     * alarm, has the same key: a press on a watch notification that is older than it runs the button of the newer one.
      */
     @Serializable
     data class AlarmAction(val timeStamp: Long, val alarmKey: Int, val index: Int) : EventData()
