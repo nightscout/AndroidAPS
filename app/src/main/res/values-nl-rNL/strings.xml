@@ -5,7 +5,7 @@
     <string name="select">Selecteer</string>
     <string name="set">Stel in</string>
     <string name="migrating_preferences">Instellingen migreren…</string>
-    <string name="optimizing_database">Gegevensverzameling optimaliseren…</string>
+    <string name="optimizing_database">Database optimaliseren…</string>
     <string name="initializing_plugins">Initialiseren plug-ins…</string>
     <string name="initializing">Initialiseren…</string>
     <string name="migrating_profile_switches">Profielwisselingen migreren…</string>
@@ -21,5 +21,5 @@
     <string name="settings_unreadable_start_fresh">Opnieuw beginnen</string>
     <string name="settings_unreadable_confirm_title">Starten met lege instellingen?</string>
     <string name="settings_unreadable_confirm_text">Het onleesbare instellingenbestand is onder een andere naam opgeslagen. De standaardinstellingen zijn teruggezet. Stel AAPS opnieuw in of importeer een export van de instellingen.</string>
-    <string name="settings_unreadable_notification">AAPS is niet actief. Open AAPS om te zien wat er moet gebeuren.</string>
+    <string name="settings_unreadable_notification">AAPS is niet actief. Open AAPS voor meer informatie.</string>
 </resources>
