@@ -240,33 +240,7 @@
     <string name="pref_title_units">Enheter</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Språk</string>
     <string name="lang_default">Systemstandard</string>
-    <string name="lang_en">Engelska</string>
-    <string name="lang_af">Afrikaans</string>
-    <string name="lang_bg">Bulgariska</string>
-    <string name="lang_cs">Tjeckiska</string>
-    <string name="lang_de">Tyska</string>
-    <string name="lang_dk">Danska</string>
-    <string name="lang_fr">Franska</string>
-    <string name="lang_nl">Nederländska</string>
-    <string name="lang_es">Spanska</string>
-    <string name="lang_el">Grekiska</string>
-    <string name="lang_ga">Irländska</string>
-    <string name="lang_it">Italienska</string>
-    <string name="lang_ko">Koreanska</string>
-    <string name="lang_lt">Litauiska</string>
-    <string name="lang_nb">Norska</string>
-    <string name="lang_pl">Polska</string>
-    <string name="lang_pt">Portugisiska</string>
-    <string name="lang_pt_br">Portugisiska (brasiliansk)</string>
-    <string name="lang_ro">Rumänska</string>
-    <string name="lang_ru">Ryska</string>
-    <string name="lang_sk">Slovakiska</string>
-    <string name="lang_sv">Svenska</string>
-    <string name="lang_tr">Turkiska</string>
-    <string name="lang_zh_tw">Kinesiska (traditionell)</string>
-    <string name="lang_zh_cn">Kinesiska (förenklad)</string>
     <string name="pref_title_patient_name">Instansnamn</string>
     <string name="pref_summary_patient_name">Namnet på personen som använder denna telefon. Det skiljer denna AAPS-instans från andra i rapporter och synkronisering.</string>
     <!-- StringKey: Directory preferences -->
