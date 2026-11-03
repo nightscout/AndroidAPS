@@ -185,31 +185,6 @@ jobs:
             -authenticationKeyIssuerID "$ISSUER_ID" \
             archive | tee archive.log
 
-      # Without this a crash report is a list of hex addresses. Crashlytics can only put names to
-      # them with the dSYM that belongs to this exact binary, and nobody else will ever have it -
-      # a self-builder's dSYM stays on their machine. The Kotlin framework is linked statically, so
-      # its DWARF is folded into the app's own dSYM and this one upload covers the shared code too.
-      #
-      # Not the Crashlytics `run` build phase: it uploads detached and discards its errors, so a
-      # broken upload looks like a green build. Not `uploadSymbols` in ExportOptions either - that
-      # only covers the symbols inside the App Store package, which is a different thing.
-      - name: Upload the debug symbols to Crashlytics
-        run: |
-          set -eu
-          PLIST="ios/app/${{ matrix.scheme }}/GoogleService-Info.plist"
-          UPLOAD="$RUNNER_TEMP/spm/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols"
-          DSYMS="$RUNNER_TEMP/${{ matrix.scheme }}.xcarchive/dSYMs"
-          # The same rule the build itself follows: no config means no reporting, never no build.
-          if [ ! -f "$PLIST" ]; then
-            echo "::warning::no $PLIST, so this build has no crash reporting and nothing to symbolicate"
-            exit 0
-          fi
-          if [ ! -x "$UPLOAD" ]; then
-            echo "::error::upload-symbols is not at $UPLOAD - the SwiftPM checkout layout changed"
-            exit 1
-          fi
-          "$UPLOAD" -gsp "$PLIST" -p ios "$DSYMS"
-
       - name: Export and upload to TestFlight
         env:
           KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
@@ -240,6 +215,61 @@ jobs:
             -authenticationKeyID "$KEY_ID" \
             -authenticationKeyIssuerID "$ISSUER_ID" | tee export.log
 
+      # A crash report is a list of hex addresses without this. Crashlytics can only put names to
+      # them with the dSYM that belongs to this exact binary, and nobody else will ever have it -
+      # a self-builder's dSYM stays on their machine. The Kotlin framework is linked statically, so
+      # its DWARF is folded into the app's own dSYM and this one upload covers the shared code too.
+      #
+      # After the upload to TestFlight rather than before it: a symbol problem must never stop a
+      # finished, signed build from reaching testers. The job still turns red, so nothing is hidden.
+      #
+      # Not the Crashlytics `run` build phase: it uploads detached and discards its errors, so a
+      # broken upload looks like a green build. Not `uploadSymbols` in ExportOptions either - that
+      # only covers the symbols inside the App Store package, which is a different thing.
+      - name: Upload the debug symbols to Crashlytics
+        run: |
+          set -euo pipefail
+          PLIST="ios/app/${{ matrix.scheme }}/GoogleService-Info.plist"
+          UPLOAD="$RUNNER_TEMP/spm/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols"
+          DSYMS="$RUNNER_TEMP/${{ matrix.scheme }}.xcarchive/dSYMs"
+          # The same rule the build itself follows: no config means no reporting, never no build.
+          if [ ! -f "$PLIST" ]; then
+            echo "::warning::no $PLIST, so this build has no crash reporting and nothing to symbolicate"
+            exit 0
+          fi
+          if [ ! -x "$UPLOAD" ]; then
+            echo "::error::upload-symbols is not at $UPLOAD - the SwiftPM checkout layout changed"
+            exit 1
+          fi
+          if [ ! -d "$DSYMS" ]; then
+            echo "::error::the archive has no dSYMs folder at $DSYMS"
+            exit 1
+          fi
+          # Counted first on purpose. upload-symbols exits 0 when it finds nothing to do, so without
+          # this the step could stay green while doing the one thing it exists to prevent.
+          FOUND=$(find "$DSYMS" -maxdepth 1 -name '*.dSYM' | wc -l | tr -d ' ')
+          if [ "$FOUND" -eq 0 ]; then
+            echo "::error::the archive carries no dSYM - check DEBUG_INFORMATION_FORMAT for Release"
+            exit 1
+          fi
+          echo "uploading $FOUND dSYM bundle(s) from $DSYMS"
+          "$UPLOAD" -gsp "$PLIST" -p ios "$DSYMS" 2>&1 | tee upload-symbols.log
+          # Matched against what upload-symbols really prints, read out of the binary itself. It
+          # treats an empty dSYM and a failed submission as warnings and still exits 0, so the exit
+          # code alone would let a build ship that nobody can read a crash from.
+          #
+          # "does not contain DWARF content" is deliberately NOT one of these: it is printed while
+          # walking the folder, for sibling bundles, and the upload then succeeds anyway.
+          if grep -qE "without any symbols|Could not complete submission|Failed to submit cSYM" upload-symbols.log; then
+            echo "::error::upload-symbols could not take a dSYM, so this build cannot be symbolicated"
+            exit 1
+          fi
+          # And say so positively, rather than trusting the absence of a complaint.
+          if ! grep -q "Successfully submitted symbols" upload-symbols.log; then
+            echo "::error::upload-symbols reported no successful submission, so nothing was uploaded"
+            exit 1
+          fi
+
       # The key is a credential with upload rights; do not leave it on a runner that may be reused.
       - name: Remove the API key
         if: always()
@@ -254,4 +284,5 @@ jobs:
             ios-test.log
             archive.log
             export.log
+            upload-symbols.log
           retention-days: 7
