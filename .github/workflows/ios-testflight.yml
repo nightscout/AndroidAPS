@@ -178,11 +178,37 @@ jobs:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/${{ matrix.scheme }}.xcarchive" \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/spm" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${KEY_ID}.p8" \
             -authenticationKeyID "$KEY_ID" \
             -authenticationKeyIssuerID "$ISSUER_ID" \
             archive | tee archive.log
+
+      # Without this a crash report is a list of hex addresses. Crashlytics can only put names to
+      # them with the dSYM that belongs to this exact binary, and nobody else will ever have it -
+      # a self-builder's dSYM stays on their machine. The Kotlin framework is linked statically, so
+      # its DWARF is folded into the app's own dSYM and this one upload covers the shared code too.
+      #
+      # Not the Crashlytics `run` build phase: it uploads detached and discards its errors, so a
+      # broken upload looks like a green build. Not `uploadSymbols` in ExportOptions either - that
+      # only covers the symbols inside the App Store package, which is a different thing.
+      - name: Upload the debug symbols to Crashlytics
+        run: |
+          set -eu
+          PLIST="ios/app/${{ matrix.scheme }}/GoogleService-Info.plist"
+          UPLOAD="$RUNNER_TEMP/spm/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols"
+          DSYMS="$RUNNER_TEMP/${{ matrix.scheme }}.xcarchive/dSYMs"
+          # The same rule the build itself follows: no config means no reporting, never no build.
+          if [ ! -f "$PLIST" ]; then
+            echo "::warning::no $PLIST, so this build has no crash reporting and nothing to symbolicate"
+            exit 0
+          fi
+          if [ ! -x "$UPLOAD" ]; then
+            echo "::error::upload-symbols is not at $UPLOAD - the SwiftPM checkout layout changed"
+            exit 1
+          fi
+          "$UPLOAD" -gsp "$PLIST" -p ios "$DSYMS"
 
       - name: Export and upload to TestFlight
         env:
