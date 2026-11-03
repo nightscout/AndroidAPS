@@ -238,33 +238,7 @@
     <string name="pref_title_units">Μονάδες</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Γλώσσα</string>
     <string name="lang_default">Προεπιλογή συστήματος</string>
-    <string name="lang_en">Αγγλικά</string>
-    <string name="lang_af">Αφρικάανς</string>
-    <string name="lang_bg">Βουλγαρικά</string>
-    <string name="lang_cs">Τσεχικά</string>
-    <string name="lang_de">Γερμανικά</string>
-    <string name="lang_dk">Δανικά</string>
-    <string name="lang_fr">Γαλλικά</string>
-    <string name="lang_nl">Ολλανδικά</string>
-    <string name="lang_es">Ισπανικά</string>
-    <string name="lang_el">Ελληνικά</string>
-    <string name="lang_ga">Ιρλανδικά</string>
-    <string name="lang_it">Ιταλικά</string>
-    <string name="lang_ko">Κορεατικά</string>
-    <string name="lang_lt">Λιθουανικά</string>
-    <string name="lang_nb">Νορβηγικά</string>
-    <string name="lang_pl">Πολωνικά</string>
-    <string name="lang_pt">Πορτογαλικά</string>
-    <string name="lang_pt_br">Πορτογαλικά (Βραζιλίας)</string>
-    <string name="lang_ro">Ρουμανικά</string>
-    <string name="lang_ru">Ρωσικά</string>
-    <string name="lang_sk">Σλοβακικά</string>
-    <string name="lang_sv">Σουηδικά</string>
-    <string name="lang_tr">Τουρκικά</string>
-    <string name="lang_zh_tw">Κινεζικά (παραδοσιακά)</string>
-    <string name="lang_zh_cn">Κινεζικά (απλοποιημένα)</string>
     <string name="pref_title_patient_name">Όνομα εγκατάστασης</string>
     <string name="pref_summary_patient_name">Όνομα του ατόμου που χρησιμοποιεί αυτό το τηλέφωνο. Ξεχωρίζει αυτό το AAPS στις αναφορές και στον συγχρονισμό.</string>
     <!-- StringKey: Directory preferences -->
