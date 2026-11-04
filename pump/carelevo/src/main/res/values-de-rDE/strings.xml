@@ -55,6 +55,7 @@
     <string name="carelevo_overview_pump_resume_btn_label">Abgabe fortsetzen</string>
     <string name="patch_prepare_dialog_title_insulin_amount">Füllmenge auswählen.</string>
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Bereich: %1$d ~ %2$d IE</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Fülle den Patch mit Insulin (%1$d–%2$d IE) und berücksichtige dabei die Nutzungsdauer (bis zu 168 Stunden). Tippe auf [Füllmenge], um die eingefüllte Insulinmenge anzugeben.</string>
     <string name="carelevo_patch_attach_step4_desc">Tippe nach dem Anbringen des Patches auf „Weiter“.</string>
     <!-- Connection -->
     <!-- Profile -->
