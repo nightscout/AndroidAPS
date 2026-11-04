@@ -297,7 +297,7 @@
     <string name="smscommunicator_loop_suspended">Loop pausiert</string>
     <string name="smscommunicator_loop_resumed">Loop wurde fortgesetzt</string>
     <string name="smscommunicator_invalid_phone_number">Falsche/ungültige Telefonnummer</string>
-    <string name="smscommunicator_calibration_sent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein+.</string>
+    <string name="smscommunicator_calibration_sent">Kalibrierung gesendet. Das Empfangen von Kalibrierungen muss in xDrip+ aktiviert sein.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ erhält keine Kalibrierungen</string>
     <string name="smscommunicator_message_body">Ungültiger Inhalt</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Um den Loop Modus auf LGS (Low Glucose Suspend) zu wechseln, antworte mit dem Code %1$s</string>
