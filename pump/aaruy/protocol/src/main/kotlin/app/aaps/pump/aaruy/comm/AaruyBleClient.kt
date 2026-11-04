@@ -3,26 +3,22 @@ package app.aaps.pump.aaruy.comm
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import no.nordicsemi.android.ble.BleManager
-import no.nordicsemi.android.ble.ConnectRequest
-import no.nordicsemi.android.ble.EmulatorGattLink
-import no.nordicsemi.android.ble.data.Data
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.util.UUID
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
@@ -33,10 +29,14 @@ import javax.crypto.spec.SecretKeySpec
  * Recovered from the vendor library `mylibrary-release.aar`. It should do the same things in the same order.
  * Commands that the driver did not use are left out.
  */
-class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
+class AaruyBleClient(
+    context: Context,
+    private val aapsLogger: AAPSLogger,
+    private var transport: AaruyBleTransport = AaruyBleTransportImpl(context, aapsLogger)
+) {
 
     private val appContext = context
-    private val bleManager = PumpBleManager(context)
+    private val link = PumpLink()
     private val scanner = AaruyScanner()
 
     private var prepareStartBolus = false
@@ -140,27 +140,32 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "createBond")
             device.createBond()
         } else {
-            bleManager.connectDevice(device)
+            link.connectDevice(device.address)
         }
     }
 
     /** For the emulator: `bindDevice` asks Android to bond an unbonded device, which cannot happen without a radio. */
-    fun connectWithoutBonding(device: BluetoothDevice) = bleManager.connectDevice(device)
+    fun connectWithoutBonding(device: BluetoothDevice) = link.connectDevice(device.address)
 
-    fun setOnBleListener(listener: AaruyBleListener) {
-        bleManager.listener = listener
+    /** TEMPORARY: the driver finds out late that the emulator is wanted. The final hook is planned for the v4 driver. */
+    fun useTransport(transport: AaruyBleTransport) {
+        this.transport = transport
     }
 
-    fun getOnBleListener(): AaruyBleListener? = bleManager.listener
+    fun setOnBleListener(listener: AaruyBleListener) {
+        link.listener = listener
+    }
+
+    fun getOnBleListener(): AaruyBleListener? = link.listener
 
     fun getPumpVersionNum(): String {
-        bleManager.readVersion()
+        link.readVersion()
         SystemClock.sleep(500L)
         return pumpVersionNum
     }
 
     fun setupBasicParamInfo(param: BasicParam) {
-        val pumpType = bleManager.pumpType
+        val pumpType = link.pumpType
         val packet = BasicParamPacket().apply {
             settingTime = AaruyPumpTime.now()
             bolusStep = param.bolusStep.toByte()
@@ -183,7 +188,7 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
             dailyLimit = 0
             timeZoneCorrection = 0
         }
-        bleManager.write(AaruyParamId.BASIC_PARAM, packet.toBytes())
+        link.write(AaruyParamId.BASIC_PARAM, packet.toBytes())
     }
 
     fun setupBasalInfo(basalInfo: BasalInfo) {
@@ -205,13 +210,13 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
             curIndex = 0
             basalInfoBytes = info.toBytes()
         }
-        bleManager.write(AaruyParamId.BASAL_SETTING, packet.toBytes())
+        link.write(AaruyParamId.BASAL_SETTING, packet.toBytes())
     }
 
     fun confirmReply(errorType: Int) {
         val type = errorType.toByte()
         val value: Byte = if (type.toInt() != 1 && type.toInt() != 3) 1 else 0
-        bleManager.write(AaruyParamId.CONFIRM_WARN, byteArrayOf(value))
+        link.write(AaruyParamId.CONFIRM_WARN, byteArrayOf(value))
     }
 
     fun startBasal() {
@@ -223,12 +228,12 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
                     needRestoreUnRunState = false
                     restoreUnRunState()
                 } else {
-                    bleManager.listener?.onRunReplaceFirst(status)
+                    link.listener?.onRunReplaceFirst(status)
                 }
 
             0    -> {
                 prepareStartBasal = false
-                bleManager.write(AaruyParamId.BASAL_CONTROL, BasalControlPacket(AaruyPumpTime.now(), 1).toBytes())
+                link.write(AaruyParamId.BASAL_CONTROL, BasalControlPacket(AaruyPumpTime.now(), 1).toBytes())
             }
 
             7    -> continueInject()
@@ -248,7 +253,7 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
     fun setupAndStartBolus(now: Double, delayed: Double, delayMinutes: Int, isSmb: Boolean) {
         val status = runningStatus
         isSmbType = isSmb
-        val listener = bleManager.listener
+        val listener = link.listener
         when {
             status == 0                                                -> listener?.onRunBasalFirst(status)
             status == 7                                                -> listener?.onRunReplaceFirst(status)
@@ -256,7 +261,7 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
 
             else                                                       -> {
                 val total = delayed + now
-                val maxBolus = bleManager.maxBolus
+                val maxBolus = link.maxBolus
                 if (total > maxBolus) {
                     listener?.onBolusValueTooHigh(total, maxBolus)
                 } else if (status == 1 || status == 2) {
@@ -266,19 +271,19 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
                         bolusNow = now.toThousandths()
                         bolusDelayTime = delayMinutes.toShort()
                     }
-                    bleManager.write(AaruyParamId.BOLUS_SETTING, packet.toBytes())
+                    link.write(AaruyParamId.BOLUS_SETTING, packet.toBytes())
                 }
             }
         }
     }
 
     private fun startBolus() {
-        val listener = bleManager.listener
+        val listener = link.listener
         when (val status = runningStatus) {
             1, 2 -> {
                 val type: Byte = if (isSmbType) 2 else 0
                 isSmbType = false
-                bleManager.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 1, type).toBytes(protocolVersion))
+                link.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 1, type).toBytes(protocolVersion))
             }
 
             3    -> listener?.onBolusIsRunning(status)
@@ -287,18 +292,18 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
     }
 
     fun cancelBolus() {
-        bleManager.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 0).toBytes(protocolVersion))
+        link.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 0).toBytes(protocolVersion))
     }
 
     fun startTempBasal(rate: Double, durationMinutes: Int) {
-        val listener = bleManager.listener
+        val listener = link.listener
         if (durationMinutes > 0 && durationMinutes % 30 != 0) {
             listener?.onInjectTimeError(durationMinutes)
             return
         }
         when (val status = runningStatus) {
             7    -> listener?.onRunReplaceFirst(status)
-            1    -> bleManager.write(
+            1    -> link.write(
                 AaruyParamId.TEMP_BASAL_CONTROL,
                 TempBasalControlPacket(AaruyPumpTime.now(), 1, rate.toThousandths(), durationMinutes.toShort()).toBytes()
             )
@@ -309,17 +314,17 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
 
     fun cancelTempBasal() {
         when (val status = runningStatus) {
-            2    -> bleManager.write(AaruyParamId.TEMP_BASAL_CONTROL, TempBasalControlPacket(AaruyPumpTime.now(), 0, 0, 0).toBytes())
-            else -> bleManager.listener?.onRunTempBasalFirst(status ?: UNKNOWN_STATUS)
+            2    -> link.write(AaruyParamId.TEMP_BASAL_CONTROL, TempBasalControlPacket(AaruyPumpTime.now(), 0, 0, 0).toBytes())
+            else -> link.listener?.onRunTempBasalFirst(status ?: UNKNOWN_STATUS)
         }
     }
 
     fun setClosedMode(mode: Int) {
-        bleManager.write(AaruyParamId.CLOSED_MODE, byteArrayOf(if (mode == 0) 0 else 1))
+        link.write(AaruyParamId.CLOSED_MODE, byteArrayOf(if (mode == 0) 0 else 1))
     }
 
     fun continueInject() {
-        val listener = bleManager.listener
+        val listener = link.listener
         when (val status = runningStatus) {
             8    -> if (needRestoreUnRunState) restoreUnRunState() else listener?.onRunReplaceFirst(status)
             0, 7 -> sendTotalControl(AaruyTotalControl.CONTINUE)
@@ -342,99 +347,151 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
     fun needlePushAir(softNeedleType: Byte) = sendTotalControl(AaruyTotalControl.PUSH_AIR, softNeedleType)
 
     private fun sendTotalControl(action: Byte, extra: Byte = 0) {
-        bleManager.write(AaruyParamId.TOTAL_CONTROL, ControlPacket(AaruyPumpTime.now(), action, extra).toBytes(protocolVersion))
+        link.write(AaruyParamId.TOTAL_CONTROL, ControlPacket(AaruyPumpTime.now(), action, extra).toBytes(protocolVersion))
     }
 
     fun getHistoryDailyData(lastTime: Long) {
         val start = if (lastTime > AaruyPumpTime.BASE_TIME_MS) ((lastTime - AaruyPumpTime.BASE_TIME_MS) / (AaruyPumpTime.DAY_SECONDS * 1000)).toInt() else 0
-        bleManager.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 1).toBytes())
+        link.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 1).toBytes())
     }
 
     fun getHistoryLogData(lastTime: Long) {
         val start = if (lastTime > AaruyPumpTime.BASE_TIME_MS) ((lastTime - AaruyPumpTime.BASE_TIME_MS) / 1000).toInt() else 0
-        bleManager.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 0).toBytes())
+        link.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 0).toBytes())
     }
 
-    /** As in the vendor library, the request is made but not enqueued, so the link stays up. */
+    /** As in the vendor library, this does not drop the link. It only made a request and never sent it. */
     fun disconnectDevice() {
-        bleManager.disconnect()
+        aapsLogger.debug(LTag.PUMPBTCOMM, "disconnectDevice: the link stays up")
     }
 
     fun unbindDevice() {
-        bleManager.write(AaruyParamId.UNBIND, byteArrayOf(1))
+        link.write(AaruyParamId.UNBIND, byteArrayOf(1))
     }
 
-    fun updatePumpTime() = bleManager.syncTime()
+    fun updatePumpTime() = link.syncTime()
 
     fun getCurStatus(): Int? {
-        bleManager.read(AaruyParamId.CURRENT_STATUS)
-        bleManager.read(AaruyParamId.REAL_DATA)
+        link.read(AaruyParamId.CURRENT_STATUS)
+        link.read(AaruyParamId.REAL_DATA)
         return runningStatus
     }
 
     private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0))
 
-    private inner class PumpBleManager(context: Context) : BleManager(context), EmulatorGattLink.CharacteristicsTarget {
+    /**
+     * The connection and the command queue. Runs the steps the vendor library got from its BLE library:
+     * connect with a timeout and retries, wait, discover services, ask for a large MTU, enable notifications.
+     * Events come from any thread and are handled on the main thread, as they were there.
+     */
+    private inner class PumpLink : BleTransportListener, AaruyTransportExtras {
 
-        /** The emulator has no real `BluetoothGatt` for `isRequiredServiceSupported`, so it gives these directly. */
-        override fun setCharacteristics(
-            notify: BluetoothGattCharacteristic,
-            write: BluetoothGattCharacteristic,
-            hardware: BluetoothGattCharacteristic,
-            firmware: BluetoothGattCharacteristic
-        ) {
-            notifyCharacteristic = notify
-            writeCharacteristic = write
-            hardwareCharacteristic = hardware
-            firmwareCharacteristic = firmware
-        }
+        private val main = Handler(Looper.getMainLooper())
+        private val connectTimeout = Runnable { onConnectFailed("timeout") }
+        private var address: String? = null
+        private var retriesLeft = 0
+        private var servicesFound = false
 
-        private var notifyCharacteristic: BluetoothGattCharacteristic? = null
-        private var writeCharacteristic: BluetoothGattCharacteristic? = null
-        private var hardwareCharacteristic: BluetoothGattCharacteristic? = null
-        private var firmwareCharacteristic: BluetoothGattCharacteristic? = null
+        /** Commands may be sent. It is set when the setup is complete. */
+        private var ready = false
         private var sequence: Short = 0
         private var writing = false
         private val queue = ConcurrentLinkedQueue<Request>()
+        private val inFlight = ConcurrentLinkedQueue<Short>()
         private var status = BleStatus.DISCONNECTED
-        private var connectRequest: ConnectRequest? = null
-        private var device: BluetoothDevice? = null
 
         var listener: AaruyBleListener? = null
         var maxBolus = 0.0
         var pumpType = DEFAULT_PUMP_TYPE
 
-        fun connectDevice(device: BluetoothDevice) {
+        fun connectDevice(address: String) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "connectDevice status=$status")
-            this.device = device
+            this.address = address
             if (status == BleStatus.CONNECTED) {
                 listener?.onBleStatusChanged(status)
                 return
             }
-            if (status == BleStatus.CONNECTING) connectRequest?.cancel()
+            main.removeCallbacks(connectTimeout)
             status = BleStatus.CONNECTING
             listener?.onBleStatusChanged(status)
-            connectRequest = connect(device).useAutoConnect(false).timeout(15000L).retry(2, 1000)
-            connectRequest?.enqueue()
+            retriesLeft = CONNECT_RETRIES
+            startConnect()
         }
 
-        override fun initialize() {
-            super.initialize()
-            beginAtomicRequestQueue()
-                .add(
-                    requestMtu(517)
-                        .with { _, mtu -> aapsLogger.debug(LTag.PUMPBTCOMM, "mtu: $mtu") }
-                        .fail { _, error -> aapsLogger.error(LTag.PUMPBTCOMM, "mtu failed: $error") }
-                )
-                .add(enableNotifications(notifyCharacteristic))
-                .done { }
-                .enqueue()
-            setNotificationCallback(notifyCharacteristic).with { _, data -> data.value?.let { handleFrame(it) } }
+        private fun startConnect() {
+            val target = address ?: return
+            servicesFound = false
+            transport.setListener(this)
+            transport.setExtrasListener(this)
+            main.removeCallbacks(connectTimeout)
+            main.postDelayed(connectTimeout, CONNECT_TIMEOUT_MS)
+            if (!transport.gatt.connect(target)) onConnectFailed("connect refused")
         }
 
-        override fun onDeviceReady() {
-            super.onDeviceReady()
+        /** The status stays CONNECTING: the driver asks to connect again, as it did with the vendor library. */
+        private fun onConnectFailed(reason: String) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "connect failed: $reason, retries left: $retriesLeft")
+            main.removeCallbacks(connectTimeout)
+            transport.gatt.close()
+            if (retriesLeft > 0) {
+                retriesLeft--
+                main.postDelayed({ startConnect() }, CONNECT_RETRY_DELAY_MS)
+            }
+        }
+
+        override fun onConnectionStateChanged(connected: Boolean) {
+            main.post {
+                if (connected) onConnected() else onDisconnected()
+            }
+        }
+
+        private fun onConnected() {
+            main.removeCallbacks(connectTimeout)
+            val bonded = address?.let { transport.adapter.isDeviceBonded(it) } == true
+            main.postDelayed({ transport.gatt.discoverServices() }, if (bonded) DISCOVERY_DELAY_BONDED_MS else DISCOVERY_DELAY_MS)
+        }
+
+        private fun onDisconnected() {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "disconnected, servicesFound=$servicesFound")
+            transport.gatt.close()
+            if (!servicesFound) {
+                onConnectFailed("link lost during setup")
+                return
+            }
+            servicesFound = false
+            ready = false
+            writing = false
+            inFlight.clear()
+            status = BleStatus.DISCONNECTED
+            listener?.onBleStatusChanged(status)
+        }
+
+        override fun onServicesDiscovered(success: Boolean) {
+            main.post {
+                if (success && transport.gatt.findCharacteristics()) {
+                    servicesFound = true
+                    transport.requestMtu(REQUESTED_MTU)
+                } else {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "The pump services are missing")
+                    transport.gatt.disconnect()
+                }
+            }
+        }
+
+        override fun onMtuChanged(mtu: Int) {
+            main.post {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "mtu: $mtu")
+                transport.gatt.enableNotifications()
+            }
+        }
+
+        override fun onDescriptorWritten() {
+            main.post { onReady() }
+        }
+
+        private fun onReady() {
             status = BleStatus.CONNECTED
+            ready = true
             sendReportDevice()
             CoroutineScope(Dispatchers.IO).launch {
                 delay(500L)
@@ -442,35 +499,30 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
             }
         }
 
-        override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
-            val pumpService = gatt.getService(SERVICE_PUMP) ?: return false
-            notifyCharacteristic = pumpService.getCharacteristic(CHARACTERISTIC_NOTIFY)
-            writeCharacteristic = pumpService.getCharacteristic(CHARACTERISTIC_WRITE)
-            gatt.getService(SERVICE_DEVICE_INFO)?.characteristics?.forEach { characteristic ->
-                val uuid = characteristic.uuid.toString()
-                if (uuid.contains("2a26", ignoreCase = true)) firmwareCharacteristic = characteristic
-                if (uuid.contains("2a27", ignoreCase = true)) hardwareCharacteristic = characteristic
-            }
-            return notifyCharacteristic != null && writeCharacteristic != null
+        override fun onCharacteristicChanged(data: ByteArray) {
+            main.post { handleFrame(data) }
         }
 
-        override fun onServicesInvalidated() {
-            super.onServicesInvalidated()
-            status = BleStatus.DISCONNECTED
-            listener?.onBleStatusChanged(status)
-            notifyCharacteristic = null
-            writeCharacteristic = null
-            hardwareCharacteristic = null
+        override fun onCharacteristicWritten() {
+            main.post { inFlight.poll()?.let { onWriteDone(it) } }
+        }
+
+        override fun onWriteFailed() {
+            main.post { inFlight.poll()?.let { onWriteFailed(it) } }
+        }
+
+        override fun onFirmwareVersionRead(data: ByteArray) {
+            if (data.isNotEmpty()) pumpVersionNum = String(data, Charsets.UTF_8)
         }
 
         fun read(paramId: Short) {
-            if (writeCharacteristic == null) return
+            if (!ready) return
             queue.add(Request(paramId, isRead = true))
             sendNextIfIdle()
         }
 
         fun write(paramId: Short, data: ByteArray) {
-            if (writeCharacteristic == null) return
+            if (!ready) return
             queue.add(Request(paramId, isRead = false, data = data))
             sendNextIfIdle()
         }
@@ -492,42 +544,24 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
             write(AaruyParamId.REPORT_DEVICE, packet.toBytes())
         }
 
-        fun readVersion() {
-            val firmware = firmwareCharacteristic
-            val hardware = hardwareCharacteristic
-            if (firmware == null || hardware == null) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "version characteristic is missing")
-                return
-            }
-            readCharacteristic(firmware).with { _, data: Data ->
-                data.value?.takeIf { it.isNotEmpty() }?.let { pumpVersionNum = String(it, Charsets.UTF_8) }
-            }.enqueue()
-            readCharacteristic(hardware).enqueue()
-        }
+        fun readVersion() = transport.readFirmwareVersion()
 
         private fun send(request: Request) {
             sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
             val frame =
                 if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
                 else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
-            val characteristic = writeCharacteristic ?: return
             writing = true
-            writeCharacteristic(characteristic, frame, BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE)
-                .done { onWriteDone(request.paramId) }
-                .fail { _, _ ->
-                    writing = false
-                    listener?.onRequestResult(false, request.paramId.unsigned())
-                }
-                .enqueue()
+            inFlight.add(request.paramId)
+            transport.gatt.writeCharacteristic(frame)
         }
 
-        @SuppressLint("MissingPermission")
         private fun onWriteDone(paramId: Short) {
             if (paramId == AaruyParamId.UNBIND) {
-                device?.let { unbound ->
+                address?.let { unbound ->
                     CoroutineScope(Dispatchers.IO).launch {
                         delay(3000L)
-                        removeBond(unbound)
+                        transport.adapter.removeBond(unbound)
                     }
                 }
             } else if (paramId == AaruyParamId.BOLUS_SETTING && prepareStartBolus) {
@@ -539,13 +573,9 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
             queue.poll()?.let { send(it) }
         }
 
-        /** `removeBond` is hidden in the Android API, so it can only be reached by reflection. */
-        private fun removeBond(device: BluetoothDevice) {
-            try {
-                device.javaClass.getMethod("removeBond").invoke(device)
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "removeBond failed", e)
-            }
+        private fun onWriteFailed(paramId: Short) {
+            writing = false
+            listener?.onRequestResult(false, paramId.unsigned())
         }
 
         private fun handleFrame(frame: ByteArray) {
@@ -632,6 +662,12 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
 
     companion object {
 
+        private const val CONNECT_TIMEOUT_MS = 15_000L
+        private const val CONNECT_RETRIES = 2
+        private const val CONNECT_RETRY_DELAY_MS = 1_000L
+        private const val DISCOVERY_DELAY_MS = 300L
+        private const val DISCOVERY_DELAY_BONDED_MS = 1_600L
+        private const val REQUESTED_MTU = 517
         private const val DEVICE_NAME = "aaruy"
         private const val DEFAULT_PIN = "210101"
         private const val DEFAULT_PUMP_TYPE = 131
@@ -646,10 +682,6 @@ class AaruyBleClient(context: Context, private val aapsLogger: AAPSLogger) {
         /** Used only so that a missing status is logged and does not crash. */
         private const val UNKNOWN_STATUS = -1
 
-        private val SERVICE_PUMP: UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
-        private val CHARACTERISTIC_WRITE: UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
-        private val CHARACTERISTIC_NOTIFY: UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
-        private val SERVICE_DEVICE_INFO: UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb")
 
         private fun pinCode(char: Char): Char = when (char) {
             '0'  -> '3'

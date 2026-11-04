@@ -55,7 +55,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import no.nordicsemi.android.ble.EmulatorGattLink
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -272,7 +271,7 @@ class AaruyBLE @Inject internal constructor(
         val emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
         val transport = AaruyEmulatorBleTransport(emulator)
         emulatorTransport = transport
-        EmulatorGattLink.activate(transport)
+        aaBleUtil.useTransport(transport)
         // For tests: adb shell am broadcast -a app.aaps.pump.aaruy.emulator.OUT_OF_RANGE --ez value true
         ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {

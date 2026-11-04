@@ -4,13 +4,15 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Looper
-import com.aaruy.mylibrary.AABleUtil
-import com.aaruy.mylibrary.open.data.BasalInfo
-import com.aaruy.mylibrary.open.data.BasalItem
-import com.aaruy.mylibrary.open.data.BasalItems
-import com.aaruy.mylibrary.open.data.BasicParam
-import com.aaruy.mylibrary.open.interfaces.MyBleListener
-import no.nordicsemi.android.ble.EmulatorGattLink
+import app.aaps.pump.aaruy.comm.AaruyBleClient
+import app.aaps.pump.aaruy.comm.BasalInfo
+import app.aaps.pump.aaruy.comm.BasalItem
+import app.aaps.pump.aaruy.comm.BasalItems
+import app.aaps.pump.aaruy.comm.BasicParam
+import app.aaps.pump.aaruy.comm.AaruyBleListener
+import app.aaps.pump.aaruy.comm.aaruyFrameKey
+import app.aaps.core.interfaces.logging.AAPSLogger
+import org.mockito.Mockito.mock
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -27,15 +29,15 @@ import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
- * The unmodified vendor AAR against the emulator, through the BLE library. If the emulator's frames were
- * wrong, the AAR's own parsers would show it here. It does not prove the firmware behaves the same.
+ * The Kotlin protocol against the emulator, through the BLE library: the same scenarios as `AarOnEmulatorTest`,
+ * so both must behave the same. It does not prove the firmware behaves the same.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
-class AarOnEmulatorTest {
+class ClientOnEmulatorTest {
 
     private val log = CopyOnWriteArrayList<String>()
-    private lateinit var util: AABleUtil
+    private lateinit var util: AaruyBleClient
     private lateinit var transport: AaruyEmulatorBleTransport
     private lateinit var emulator: AaruyPumpEmulator
 
@@ -47,7 +49,7 @@ class AarOnEmulatorTest {
     private fun waitFor(what: String, condition: () -> Boolean) {
         val end = System.currentTimeMillis() + 30_000
         while (!condition()) {
-            assertTrue("Timeout waiting for: $what. status=${emulator.runningStatus} log=${log.takeLast(12)}", System.currentTimeMillis() < end)
+            assertTrue("Timeout waiting for: $what. status=${emulator.runningStatus} reservoir=${emulator.reservoir} log=${log.takeLast(12)}", System.currentTimeMillis() < end)
             drain()
         }
     }
@@ -61,19 +63,14 @@ class AarOnEmulatorTest {
         val device = adapter.getRemoteDevice(AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         shadowOf(device).setBondState(BluetoothDevice.BOND_BONDED)
 
-        var holder: AABleUtil? = null
-        emulator = AaruyPumpEmulator(keyProvider = {
-            holder!!.javaClass.getDeclaredField("key").apply { isAccessible = true }.get(holder) as ByteArray
-        })
+        emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
         transport = AaruyEmulatorBleTransport(emulator)
-        EmulatorGattLink.activate(transport)
-        util = AABleUtil(context)
-        holder = util
+        util = AaruyBleClient(context, mock(AAPSLogger::class.java), transport)
         util.setOnBleListener(
-            Proxy.newProxyInstance(javaClass.classLoader, arrayOf(MyBleListener::class.java)) { _, method, args ->
+            Proxy.newProxyInstance(javaClass.classLoader, arrayOf(AaruyBleListener::class.java)) { _, method, args ->
                 log.add(method.name + "(" + args.orEmpty().joinToString() + ")")
                 Unit
-            } as MyBleListener
+            } as AaruyBleListener
         )
         util.bindDevice(device)
         waitFor("connected") { logged("onBleStatusChanged(CONNECTED") }
@@ -85,7 +82,6 @@ class AarOnEmulatorTest {
 
     @After
     fun disconnect() {
-        EmulatorGattLink.activate(null)
         transport.shutdown()
     }
 
@@ -169,8 +165,8 @@ class AarOnEmulatorTest {
 
     @Test
     fun sequenceErrorRecoversThroughSerialRead() {
-        val manager = util.javaClass.getDeclaredField("myBleManager").apply { isAccessible = true }.get(util)
-        manager.javaClass.getField("g").set(manager, 500.toShort())
+        val manager = util.javaClass.getDeclaredField("link").apply { isAccessible = true }.get(util)
+        manager.javaClass.getDeclaredField("sequence").apply { isAccessible = true }.set(manager, 500.toShort())
         log.clear()
         util.getCurStatus()
         waitFor("error seen") { logged("onReceiveErrorData(28, 128") }
@@ -195,7 +191,8 @@ class AarOnEmulatorTest {
     @Test
     fun lowReservoirRaisesAlarmOnce() {
         log.clear()
-        emulator.reservoir = 19.0
+        // On the pump thread: its tick would overwrite a value set from here.
+        transport.onPumpThread { emulator.reservoir = 19.0 }
         waitFor("low reservoir") { logged("onReceiveErrorData(3, 129") }
         Thread.sleep(600)
         drain()

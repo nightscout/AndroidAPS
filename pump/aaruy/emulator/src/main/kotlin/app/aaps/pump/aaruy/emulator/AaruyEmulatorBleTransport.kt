@@ -3,10 +3,11 @@ package app.aaps.pump.aaruy.emulator
 import app.aaps.core.interfaces.pump.ble.BleAdapter
 import app.aaps.core.interfaces.pump.ble.BleGatt
 import app.aaps.core.interfaces.pump.ble.BleScanner
-import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.pump.aaruy.comm.AaruyBleTransport
+import app.aaps.pump.aaruy.comm.AaruyTransportExtras
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -19,12 +20,13 @@ import java.util.concurrent.TimeUnit
  * The radio side of [AaruyPumpEmulator]. Everything runs on one thread with radio-like delays: a write is
  * confirmed first and the pump answers later, because the driver has windows that real delays can break.
  */
-class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : BleTransport {
+class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTransport {
 
     private val thread: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { Thread(it, "AaruyEmulator").apply { isDaemon = true } }
 
     @Volatile private var listener: BleTransportListener? = null
     @Volatile private var connected = false
+    @Volatile private var extras: AaruyTransportExtras? = null
 
     /** Every frame written by the app, in order. */
     val writes: MutableList<ByteArray> = java.util.Collections.synchronizedList(ArrayList())
@@ -57,6 +59,11 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : BleTransport 
                 listener?.onConnectionStateChanged(false)
             }
         }
+    }
+
+    /** Runs on the thread that owns the emulator. The emulator is not thread safe. */
+    fun onPumpThread(block: () -> Unit) {
+        later(0, block)
     }
 
     /** Sends a message from the pump now, for example an alarm. */
@@ -132,6 +139,18 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : BleTransport 
 
     override fun updatePairingState(state: PairingState) {
         this.state.value = state
+    }
+
+    override fun setExtrasListener(listener: AaruyTransportExtras?) {
+        extras = listener
+    }
+
+    override fun requestMtu(mtu: Int) {
+        later(RADIO_MS) { extras?.onMtuChanged(mtu) }
+    }
+
+    override fun readFirmwareVersion() {
+        later(RADIO_MS) { extras?.onFirmwareVersionRead("emulator".toByteArray()) }
     }
 
     override fun setListener(listener: BleTransportListener?) {

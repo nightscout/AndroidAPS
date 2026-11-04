@@ -18,8 +18,6 @@ import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
-import no.nordicsemi.android.ble.EmulatorGattLink
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -32,15 +30,10 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import java.time.Duration
 
-/** The driver's `AaruyBLE` on the unmodified AAR and the emulator. */
+/** The driver's `AaruyBLE` on the Kotlin client and the emulator. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 class AaruyBleReconnectTest {
-
-    @After
-    fun deactivate() {
-        EmulatorGattLink.activate(null)
-    }
 
     private fun waitFor(what: String, condition: () -> Boolean) {
         val end = System.currentTimeMillis() + 20_000
@@ -52,7 +45,7 @@ class AaruyBleReconnectTest {
     }
 
     /**
-     * The AAR is still connected, because `disconnectDevice` does not drop the link. It reports CONNECTED at once
+     * The client is still connected, because `disconnectDevice` does not drop the link. It reports CONNECTED at once
      * when asked to connect, and that must not be overwritten by CONNECTING.
      */
     @Test
@@ -90,7 +83,7 @@ class AaruyBleReconnectTest {
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED && ble.isConnected }
 
-        // This is what `disconnect` leaves behind: the driver thinks it is off, the AAR is still on.
+        // This is what `disconnect` leaves behind: the driver thinks it is off, the client is still on.
         ble.isConnected = false
 
         ble.connect("retrying connection", AaruyEmulatorBleTransport.DEVICE_ADDRESS)

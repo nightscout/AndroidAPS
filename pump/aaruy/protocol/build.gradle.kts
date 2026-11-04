@@ -17,5 +17,8 @@ dependencies {
 
     // The vendor library is not in the app any more. It stays as the reference for AarDifferentialTest.
     testImplementation(files("libs/mylibrary-release.aar"))
+    testImplementation("no.nordicsemi.android:ble:2.7.2")
+    testImplementation("org.robolectric:robolectric:4.17")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.1")
     testImplementation(project(":shared:tests"))
 }

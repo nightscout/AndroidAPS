@@ -1,4 +1,4 @@
-package app.aaps.pump.aaruy.ble
+package app.aaps.pump.aaruy.comm
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
@@ -30,9 +30,9 @@ import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * Keeps the real Bluetooth path working while the BLE library sources are changed.
+ * The reference for `AaruyBleTransportImplTest`: what the vendor AAR does on the real Bluetooth path.
  *
- * The vendor AAR runs on the BLE library sources, down to Android's `BluetoothGatt`. Robolectric
+ * The vendor AAR runs on the published Nordic BLE library, down to Android's `BluetoothGatt`. Robolectric
  * plays the Android side and this test plays the pump. Nothing of the AAR or the library is mocked.
  */
 @RunWith(RobolectricTestRunner::class)

@@ -36,7 +36,6 @@ dependencies {
 
     implementation("no.nordicsemi.android.support.v18:scanner:1.6.0")
     implementation(libs.com.google.code.gson)
-    testImplementation(files("protocol/libs/mylibrary-release.aar"))
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))

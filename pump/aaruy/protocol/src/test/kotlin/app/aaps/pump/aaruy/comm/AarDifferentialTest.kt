@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.RETURNS_DEEP_STUBS
 import org.mockito.Mockito.mock
 import java.io.OutputStream
 import java.io.PrintStream
@@ -314,13 +315,13 @@ class AarDifferentialTest {
     private inner class NewPump : Pump {
 
         val log = mutableListOf<String>()
-        val client = AaruyBleClient(mock(Context::class.java), mock(AAPSLogger::class.java))
-        val manager: Any = client.javaClass.getDeclaredField("bleManager").apply { isAccessible = true }.get(client)
+        val client = AaruyBleClient(mock(Context::class.java), mock(AAPSLogger::class.java), mock(AaruyBleTransport::class.java, RETURNS_DEEP_STUBS))
+        val manager: Any = client.javaClass.getDeclaredField("link").apply { isAccessible = true }.get(client)
         val writing = manager.javaClass.getDeclaredField("writing").apply { isAccessible = true }
 
         init {
             client.setOnBleListener(recorder(AaruyBleListener::class.java, log) as AaruyBleListener)
-            manager.javaClass.getDeclaredField("writeCharacteristic").apply { isAccessible = true }.set(manager, mock(BluetoothGattCharacteristic::class.java))
+            manager.javaClass.getDeclaredField("ready").apply { isAccessible = true }.setBoolean(manager, true)
         }
 
         override fun receive(frame: ByteArray) {
