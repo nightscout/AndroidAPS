@@ -12,6 +12,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -98,6 +99,7 @@ class AaruyPlugin(
     private val aaruyBle: AaruyBLE,
     private val blePreCheck: BlePreCheck,
     private val pumpSync: PumpSync,
+    private val ch: ConcentrationHelper,
     notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
@@ -252,7 +254,7 @@ class AaruyPlugin(
         result.comment = when (outcome) {
             AaruyBolusOutcome.FINISHED    -> rh.gs(app.aaps.core.ui.R.string.ok)
             AaruyBolusOutcome.NOT_STARTED -> rh.gs(R.string.alarm_bolus_run_fail)
-            AaruyBolusOutcome.UNKNOWN     -> rh.gs(R.string.aaruy_bolus_outcome_unknown, rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, result.bolusDelivered))
+            AaruyBolusOutcome.UNKNOWN     -> rh.gs(R.string.aaruy_bolus_outcome_unknown, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))
         }
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: $outcome. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
