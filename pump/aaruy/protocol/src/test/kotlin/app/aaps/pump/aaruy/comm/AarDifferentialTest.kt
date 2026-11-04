@@ -19,7 +19,7 @@ import java.nio.ByteOrder
 import java.util.Queue
 import kotlin.random.Random
 
-/** TEMPORARY: compares the Kotlin port with the vendor AAR on the classpath. Not for the repo. */
+/** Compares the Kotlin port with the vendor AAR on the test classpath. */
 class AarDifferentialTest {
 
     private val random = Random(20261104)
