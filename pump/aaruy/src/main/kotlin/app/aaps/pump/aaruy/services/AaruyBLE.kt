@@ -320,8 +320,8 @@ class AaruyBLE @Inject internal constructor(
                     aaruyPump.connectionState = ConnectionState.CONNECTED
                     // Anything can have happened while the link was down, a bolus may have ended.
                     syncPumpStatus()
-                    // The scan screen asks for the first history, and the emulator replaces that screen.
-                    if (emulatorTransport != null && !aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
+                    // The scan screen asks for the first history only once, and a reply that was lost must not leave history off.
+                    if (!aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 } else if(status == BleStatus.DISCONNECTED) {
                     // A stop with no answer on this link says nothing about how a bolus ended while the link was down.
@@ -506,6 +506,8 @@ class AaruyBLE @Inject internal constructor(
                 }
 
                 if (logInfo.curPage == logInfo.totalPage && logInfo.curPage == 0) {
+                    // A real pump has no history after pairing. Nothing else would turn history on, and then it is never read.
+                    aaruyPump.canSaveHistory = true
                     readDailyData(aaruyPump.lastHistoryDailyTime)
                     receivingHistory = false
                 }

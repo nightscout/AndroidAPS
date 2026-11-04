@@ -68,12 +68,9 @@ class AaruyPumpEmulator(
     private var lastTickAt = clock()
     private var lowReservoirSent = false
     private var noReservoirSent = false
-    private val history = ArrayList<History>()
 
-    init {
-        // UNVERIFIED: a pump that has been used has history. The driver only starts to save history after a reply that has some.
-        history.add(History(pumpTime() - EARLIER_HISTORY_SECONDS, HISTORY_BASAL, DEFAULT_BASAL))
-    }
+    /** Seen on a real pump (firmware 1.1.0.01): the first request after pairing gets an empty reply. */
+    private val history = ArrayList<History>()
 
     private class BolusSetting(val total: Int, val now: Int, val delayMinutes: Int)
 
@@ -548,7 +545,6 @@ class AaruyPumpEmulator(
         private const val HISTORY_ITEM_SIZE = 12
         private const val HISTORY_PAGE_SIZE = 10
         private const val DAILY_DAYS_KEPT = 10
-        private const val EARLIER_HISTORY_SECONDS = 3600
 
         private const val BASAL_AREAS_OFFSET = 12
         private const val BASAL_AREA_SIZE = 3

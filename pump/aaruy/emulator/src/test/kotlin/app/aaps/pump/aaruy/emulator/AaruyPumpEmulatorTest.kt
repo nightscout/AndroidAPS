@@ -235,12 +235,10 @@ class AaruyPumpEmulatorTest {
     }
 
     @Test
-    fun newHistoryStartsWithAnEarlierEntry() {
+    fun newHistoryIsEmptyAsOnARealPump() {
         val log = write(PARAM_HISTORY, buffer(8).putInt(0).array()).single()
-        val reader = log.reader()
-        assertEquals(1, reader.short.toInt())
-        assertEquals(1, reader.get().toInt())
-        assertEquals(0, reader.get().toInt())
+        assertEquals(PARAM_HISTORY_LOG, log.paramId)
+        assertEquals(listOf<Byte>(0, 0, 0, 0, 0), log.payload.toList())
     }
 
     @Test
@@ -259,7 +257,7 @@ class AaruyPumpEmulatorTest {
         assertEquals(3, pages.size)
         assertEquals(listOf(0, 1, 2), pages.map { it.payload[3].toInt() })
         assertTrue(pages.all { it.payload[2].toInt() == 3 })
-        assertEquals(listOf(10, 10, 6), pages.map { it.payload[4].toInt() })
+        assertEquals(listOf(10, 10, 5), pages.map { it.payload[4].toInt() })
     }
 
     @Test

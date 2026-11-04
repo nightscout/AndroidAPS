@@ -5,6 +5,7 @@ import android.os.Looper
 import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -26,6 +27,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockingDetails
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -181,6 +183,72 @@ class AaruyBleReconnectTest {
         assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
         assertTrue("the bolus is over", pump.bolusDone)
         assertEquals("the link was never lost", false, pump.bolusEndNotSeen)
+        transport.shutdown()
+    }
+
+    /**
+     * A real pump has an empty history after pairing. If that keeps history off, a stopped bolus stays in the
+     * database with the amount that was asked for.
+     */
+    @Test
+    fun emptyHistoryAtPairingStillGivesTheRealAmountOfAStoppedBolus() {
+        val preferences = mock(Preferences::class.java)
+        val logger = mock(AAPSLogger::class.java)
+        val pumpSync = mock(PumpSync::class.java)
+        val pump = AaruyPump(
+            logger,
+            mock(ResourceHelper::class.java),
+            preferences,
+            mock(DateUtil::class.java),
+            pumpSync,
+            mock(TemporaryBasalStorage::class.java),
+            mock(DecimalFormatter::class.java)
+        )
+        val extraDir = mock(DocumentFile::class.java)
+        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
+        val files = mock(FileListProvider::class.java)
+        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
+        val ble = AaruyBLE(
+            logger,
+            RuntimeEnvironment.getApplication() as Context,
+            pump,
+            mock(DateUtil::class.java),
+            mock(RxBus::class.java),
+            preferences,
+            mock(HistoryUnitInfoDao::class.java),
+            mock(HistoryDailyUnitInfoDao::class.java),
+            mock(DetailedBolusInfoStorage::class.java),
+            pumpSync,
+            files
+        )
+        ble.startEmulatorIfRequested()
+        val transport = ble.emulatorTransport!!
+
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        waitFor("history is on after the empty reply") { pump.canSaveHistory }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        pump.bolusDone = false
+        Thread { ble.setBolus(3.0, false) }.start()
+        waitFor("the driver saw the bolus") { pump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING }
+        waitFor("some of the bolus is delivered") { BolusProgressData.delivered > 0.0 }
+        pump.bolusStopRequested = true
+        Thread { ble.cancelBolus() }.start()
+
+        waitFor("the pump history gave the amount") {
+            mockingDetails(pumpSync).invocations.any { it.method.name == "syncBolusWithPumpId" }
+        }
+        val amount = mockingDetails(pumpSync).invocations.first { it.method.name == "syncBolusWithPumpId" }.getArgument<Double>(1)
+        assertTrue("delivered, not asked: $amount", amount > 0.0 && amount < 3.0)
         transport.shutdown()
     }
 
