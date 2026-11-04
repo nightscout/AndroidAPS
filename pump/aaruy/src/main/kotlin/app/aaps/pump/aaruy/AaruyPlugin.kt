@@ -378,7 +378,7 @@ class AaruyPlugin(
     override fun manufacturer(): ManufacturerType = ManufacturerType.Aaruy
     override fun model(): PumpType = aaruyPump.pumpType()
     override fun serialNumber(): String = aaruyPump.pumpSN
-    override val pumpDescription = PumpDescription().fillFor(aaruyPump.pumpType())
+    override val pumpDescription: PumpDescription get() = PumpDescription().fillFor(aaruyPump.pumpType())
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
     override suspend fun loadTDDs(): PumpEnactResult {
