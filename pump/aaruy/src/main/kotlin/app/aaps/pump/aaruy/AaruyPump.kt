@@ -533,6 +533,9 @@ class AaruyPump(
     fun deliveredBasal(): List<Profile.ProfileValue>? =
         readBasalInPump()?.basalItems?.basalItemList?.map { Profile.ProfileValue(it.startTime * SECONDS_PER_HALF_HOUR, it.basalSpeed) }
 
+    /** The rate the pump holds for this time of day, as the running profile says. A temp basal or a bolus does not change it. 0 when no profile is known. */
+    fun baseBasalRateAt(secondsOfDay: Int): Double = deliveredBasal()?.lastOrNull { it.timeAsSeconds <= secondsOfDay }?.value ?: 0.0
+
     private fun readBasalInPump(): BasalInfo? = try {
         Gson().fromJson(String(actualBasalProfile), BasalInfo::class.java)
     } catch (e: Exception) {

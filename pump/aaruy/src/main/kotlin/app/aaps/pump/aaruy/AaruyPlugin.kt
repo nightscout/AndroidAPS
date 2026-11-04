@@ -76,6 +76,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import java.util.Calendar
 
 // Pump plugin registration: @IntKey range 1000-1200, see AppRootGraph for the overview
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
@@ -233,7 +234,7 @@ class AaruyPlugin(
     override fun deliveredBasal(): List<Profile.ProfileValue>? = aaruyPump.deliveredBasal()
 
     override val baseBasalRate: PumpRate
-        get() = PumpRate(if (aaruyPump.lastBasalRate < 0.025) 0.025 else aaruyPump.lastBasalRate)
+        get() = Calendar.getInstance().let { PumpRate(aaruyPump.baseBasalRateAt(it.get(Calendar.HOUR_OF_DAY) * 3600 + it.get(Calendar.MINUTE) * 60)) }
     override val reservoirLevel: StateFlow<PumpInsulin> = aaruyPump.reservoirFlow.mapState(::PumpInsulin)
     override val batteryLevel: StateFlow<Int?> = aaruyPump.remainBatteryFlow.mapState { it.toInt() }
     override val lastDataTime: StateFlow<Long> = aaruyPump.lastConnectionFlow

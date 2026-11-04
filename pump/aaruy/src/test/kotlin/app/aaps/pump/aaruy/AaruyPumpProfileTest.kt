@@ -12,6 +12,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasalItem
 import app.aaps.pump.aaruy.comm.BasalItems
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -50,6 +51,21 @@ class AaruyPumpProfileTest {
     fun aDailyTotalCutToOneDecimalIsStillTheSameProfile() {
         pump.actualBasalProfile = inPump(3.8, 0.15)
         assertTrue(pump.isBasalInPump(profile(0.16)))
+    }
+
+    @Test
+    fun theBaseRateFollowsTheTimeOfDayAndNotWhatIsDeliveredNow() {
+        val items = listOf(BasalItem(0, 0.5), BasalItem(16, 1.0)) // 1.0 U/h from 08:00
+        pump.actualBasalProfile = pump.dataClassToByteArray(BasalInfo(BasalItems(18.0, 2, items)))
+        pump.handleBasalStatusUpdate(3.0) // a temp basal runs
+        assertEquals(0.5, pump.baseBasalRateAt(7 * 3600 + 59 * 60), 0.0)
+        assertEquals(1.0, pump.baseBasalRateAt(8 * 3600), 0.0)
+    }
+
+    @Test
+    fun noKnownProfileGivesNoBaseRate() {
+        pump.actualBasalProfile = ByteArray(0)
+        assertEquals(0.0, pump.baseBasalRateAt(0), 0.0)
     }
 
     @Test
