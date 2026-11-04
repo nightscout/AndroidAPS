@@ -27,6 +27,7 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
     @Volatile private var listener: BleTransportListener? = null
     @Volatile private var connected = false
     @Volatile private var extras: AaruyTransportExtras? = null
+    private var nextFrameAt = 0L
 
     /** Every frame written by the app, in order. */
     val writes: MutableList<ByteArray> = java.util.Collections.synchronizedList(ArrayList())
@@ -40,10 +41,19 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
 
     private fun tick() {
         try {
-            val messages = emulator.tick()
-            if (connected) messages.forEach { listener?.onCharacteristicChanged(it) }
+            deliver(emulator.tick())
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    /** Seen on a real pump: it sends one frame about every 100 ms, so all its settings take close to a second. */
+    private fun deliver(messages: List<ByteArray>) {
+        messages.forEach { message ->
+            val now = System.currentTimeMillis()
+            val at = maxOf(now, nextFrameAt)
+            nextFrameAt = at + FRAME_GAP_MS
+            later(at - now) { if (connected) listener?.onCharacteristicChanged(message) }
         }
     }
 
@@ -68,7 +78,7 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
 
     /** Sends a message from the pump now, for example an alarm. */
     fun pumpSends(message: ByteArray) {
-        later(0) { if (connected) listener?.onCharacteristicChanged(message) }
+        later(0) { deliver(listOf(message)) }
     }
 
     override val adapter: BleAdapter = object : BleAdapter {
@@ -127,8 +137,7 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
             later(RADIO_MS) {
                 listener?.onCharacteristicWritten()
                 later(PUMP_ANSWER_MS) {
-                    val answers = emulator.handle(data)
-                    if (connected) answers.forEach { listener?.onCharacteristicChanged(it) }
+                    deliver(emulator.handle(data))
                 }
             }
         }
@@ -171,6 +180,7 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
         private const val CONNECT_MS = 200L
         private const val DISCOVER_MS = 100L
         private const val RADIO_MS = 15L
-        private const val PUMP_ANSWER_MS = 30L
+        private const val PUMP_ANSWER_MS = 60L
+        private const val FRAME_GAP_MS = 100L
     }
 }
