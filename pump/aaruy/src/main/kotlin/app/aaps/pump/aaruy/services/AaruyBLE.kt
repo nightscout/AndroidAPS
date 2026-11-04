@@ -179,13 +179,13 @@ class AaruyBLE @Inject internal constructor(
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = if (emulatorTransport != null) AaruyEmulatorBleTransport.DEVICE_NAME else device.name
-        connectDevice(device)
-
         isConnected = false
         isConnecting = true
         aaruyPump.connectionState = ConnectionState.CONNECTING
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
         connectCount = 1
+        // Last: if the link is still up the AAR reports CONNECTED during this call, and nothing may overwrite that.
+        connectDevice(device)
         return true
     }
 
