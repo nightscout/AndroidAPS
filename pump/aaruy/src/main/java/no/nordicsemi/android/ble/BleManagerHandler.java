@@ -595,7 +595,7 @@ abstract class BleManagerHandler extends RequestHandler {
 
 	private boolean internalConnect(@NonNull final BluetoothDevice device,
 									@Nullable final ConnectRequest connectRequest) {
-		final boolean bluetoothEnabled = BluetoothAdapter.getDefaultAdapter().isEnabled();
+		final boolean bluetoothEnabled = EmulatorGattLink.isActive() || BluetoothAdapter.getDefaultAdapter().isEnabled();
 		if (connected || !bluetoothEnabled) {
 			final BluetoothDevice currentDevice = bluetoothDevice;
 			if (bluetoothEnabled && currentDevice != null && currentDevice.equals(device)) {
@@ -704,6 +704,10 @@ abstract class BleManagerHandler extends RequestHandler {
 		postCallback(c -> c.onDeviceConnecting(device));
 		postConnectionStateChange(o -> o.onDeviceConnecting(device));
 		connectionTime = SystemClock.elapsedRealtime();
+		if (EmulatorGattLink.isActive()) {
+			bluetoothGatt = new EmulatorGattLink(device, gattCallback, handler);
+			return bluetoothGatt.connect();
+		}
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
 			// connectRequest will never be null here.
 			final int preferredPhy = connectRequest.getPreferredPhy();
@@ -2266,7 +2270,10 @@ abstract class BleManagerHandler extends RequestHandler {
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				log(Log.INFO, () -> "Services discovered");
 				servicesDiscovered = true;
-				if (manager.isRequiredServiceSupported(gatt.realGatt())) {
+				final boolean requiredServiceSupported = gatt instanceof EmulatorGattLink
+						? ((EmulatorGattLink) gatt).fillManagerCharacteristics(manager)
+						: manager.isRequiredServiceSupported(gatt.realGatt());
+				if (requiredServiceSupported) {
 					log(Log.VERBOSE, () -> "Primary service found");
 					deviceNotSupported = false;
 					final boolean optionalServicesFound = manager.isOptionalServiceSupported(gatt.realGatt());
