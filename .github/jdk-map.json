@@ -1,0 +1,12 @@
+{
+  "_comment": "AAPS version wildcard patterns → JDK version. Patterns are matched in order, first match wins. To support a new AAPS release, add an entry to mappings.",
+  "mappings": [
+    { "pattern": "2.*",   "jdk": 11 },
+    { "pattern": "3.0.*", "jdk": 11 },
+    { "pattern": "3.1.*", "jdk": 17 },
+    { "pattern": "3.2.*", "jdk": 17 },
+    { "pattern": "3.3.*", "jdk": 21 },
+    { "pattern": "3.4.*", "jdk": 21 }
+  ],
+  "default": 21
+}
