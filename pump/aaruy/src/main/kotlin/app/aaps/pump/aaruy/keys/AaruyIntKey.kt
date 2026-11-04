@@ -29,6 +29,7 @@ enum class AaruyIntKey(
     PumpType("key_param_pump_type", 0, 0, 8),
 
     PumpPrefBolusStep("pref_aaruy_bolus_step", 1, 0, 1),
-    PumpPrefSoundRemind("pref_aaruy_sound_remind", 1, 0, 1),
-    PumpPrefSoundAlarm("pref_aaruy_sound_alarm", 1, 0, 1),
+    // 0 is on and 1 is off: the value goes to the pump as "close the sound".
+    PumpPrefSoundRemind("pref_aaruy_sound_remind", 0, 0, 1),
+    PumpPrefSoundAlarm("pref_aaruy_sound_alarm", 0, 0, 1),
 }
