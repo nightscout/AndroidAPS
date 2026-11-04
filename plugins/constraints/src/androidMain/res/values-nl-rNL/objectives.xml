@@ -40,7 +40,7 @@
     <string name="objectives_usage_learned">De basis van AAPS is nu bekend. De meeste bedieningsmogelijkheden bevinden zich op het scherm Overzicht. Meer acties zijn te vinden in de menu’s Behandelingen en Beheren onderaan het scherm en in het zijmenu.</string>
     <string name="objectives_useprofileswitch">Stel het profiel in op 90% gedurende 10 min</string>
     <string name="objectives_usedisconnectpump">Simuleer douchen. Koppel de pomp gedurende 1 uur los</string>
-    <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>
+    <string name="objectives_usereconnectpump">… en sluit de pomp daarna weer aan</string>
     <string name="objectives_usetemptarget">Maak een aangepast, tijdelijk streefdoel met een duur van 10 minuten</string>
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
     <string name="objectives_usescale">Gebruik scrollen of zoomen op de bloedglucosegrafiek</string>
@@ -57,7 +57,7 @@
     <string name="objectives_exam_learned_profileswitchtime">Met de tijdverschuiving bij een profielwissel kan het profiel worden aangepast aan afwijkingen in het dagritme, zoals later wakker worden.</string>
     <string name="objectives_exam_learned_profileswitch4">Alleen het bewerken van het profiel is niet voldoende om wijzigingen door te voeren. Voer ook een profielwissel uit om de wijzigingen te activeren.</string>
     <string name="objectives_exam_learned_exercise">Verlaag de hoeveelheid insuline in het lichaam door minstens één uur voor het sporten een profiel van minder dan 100% te kiezen.</string>
-    <string name="objectives_exam_learned_exercise2">Het instellen van een hoger tijdelijk streefdoel minstens 1 uur voor de oefening helpt ook om de hoeveelheid insuline in het lichaam te verminderen.</string>
+    <string name="objectives_exam_learned_exercise2">Een andere manier om de hoeveelheid insuline in het lichaam te verminderen, is door minstens één uur voor het sporten een hoger tijdelijk streefdoel in te stellen.</string>
     <string name="objectives_exam_learned_noisycgm">Als de CGM-waarden niet betrouwbaar zijn, mag de loop niet onbeheerd worden gebruikt.</string>
     <string name="objectives_exam_learned_pumpdisconnect">Om de IOB correct te kunnen berekenen, moet AAPS weten wanneer de pomp is afgekoppeld.</string>
     <string name="objectives_exam_learned_insulin">Om de IOB correct te kunnen berekenen, moet AAPS weten welke insuline zich in de pomp bevindt.</string>
@@ -84,9 +84,9 @@
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Niet verbonden met het internet</string>
     <string name="failedretrievetime">Tijd kon niet worden opgehaald</string>
-    <string name="requirementnotmet">Vereisten van doel niet behaald</string>
+    <string name="requirementnotmet">Niet voldaan aan de vereisten van het leerdoel</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
-    <string name="verify_master_password">Verifieer dat u het hoofdwachtwoord kent</string>
+    <string name="verify_master_password">Bevestig het hoofdwachtwoord</string>
     <string name="objectives_collapse">Minder</string>
     <string name="objectives_expand">Meer</string>
     <string name="objectives_no_learned">Er zijn geen lessen geregistreerd voor dit leerdoel.</string>
