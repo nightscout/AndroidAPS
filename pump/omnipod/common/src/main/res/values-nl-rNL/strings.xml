@@ -118,15 +118,15 @@
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <string name="omnipod_common_pdm_notification_header_reservoir_empty">Leeg reservoir</string>
-    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulinetoediening gestopt. Vervang de Pod nu.</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulinetoediening gestopt.\nVervang de Pod nu meteen.</string>
     <string name="omnipod_common_pdm_notification_header_auto_off">Automatische uitschakeling</string>
     <string name="omnipod_common_pdm_notification_text_auto_off">Insulinetoediening gestopt. Uw PDM en Pod hebben de afgelopen 4 uur geen contact met elkaar gehad. Vervang de Pod nu om de insulinetoediening te hervatten.</string>
     <string name="omnipod_common_pdm_notification_header_pod_expired">Pod verlopen</string>
-    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulinetoediening gestopt. Vervang de Pod nu.</string>
-    <string name="omnipod_common_pdm_notification_header_occluded">Verstopping gedetecteerd</string>
-    <string name="omnipod_common_pdm_notification_text_occluded">Insulinetoediening gestopt. Vervang de Pod nu. Controleer uw bloedglucose</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulinetoediening gestopt.\nVervang de Pod nu meteen.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Verstopping gevonden</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulinetoediening gestopt.\nVervang de Pod nu meteen.\nControleer uw BG.</string>
     <string name="omnipod_common_pdm_notification_header_pod_error">Pod-fout</string>
-    <string name="omnipod_common_pdm_notification_text_pod_error">Insulinetoediening gestopt. Vervang de Pod nu.</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulinetoediening gestopt.\nVervang de Pod nu meteen.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod verloopt binnenkort</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod verloopt binnenkort</string>
