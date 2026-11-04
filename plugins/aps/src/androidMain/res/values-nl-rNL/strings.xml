@@ -10,7 +10,7 @@
     <string name="openaps_no_as_data">Geen autosens-gegevens beschikbaar</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
+    <string name="array_of_elements">Lijst van %1$d elementen. \nActuele waarde:</string>
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
