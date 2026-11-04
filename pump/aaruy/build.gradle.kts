@@ -38,6 +38,8 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
+    testImplementation("org.robolectric:robolectric:4.17")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.1")
 
     api(libs.androidx.room)
     api(libs.androidx.room.runtime)
