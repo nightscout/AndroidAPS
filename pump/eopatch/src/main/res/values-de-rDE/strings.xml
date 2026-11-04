@@ -32,7 +32,7 @@
     <string name="patch_manually_turning_off_alarm_title">Manuell den Patch-Alarm deaktivieren</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Wenn der Patch einseitig deaktiviert wird während eines Kommunikationsfehlers, kann der Alarm ggf. nicht vom Patch beendet werden.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">In diesem Fall können Sie es komplett beenden, indem Sie den manuellen Alarm-Port wie folgt auf dem Patch drücken:</string>
-    <string name="patch_manually_turning_off_alarm_step_1">Entfernen Sie den Patch von Ihrem Körper und entfernen Sie das Klebeband.</string>
+    <string name="patch_manually_turning_off_alarm_step_1">1. Entfernen Sie den Patch von Ihrem Körper und entfernen Sie das Klebeband.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Benutzen Sie einen Clip, um das Loch neben dem Insulinfüll-Port stark zu drücken.</string>
     <string name="patch_wake_up">Insulin füllen</string>
     <string name="patch_wake_up_desc_1">Füllen Sie einen neuen Pod mit Insulin bei Raumtemperatur. Überprüfen Sie die Kanüle.</string>
