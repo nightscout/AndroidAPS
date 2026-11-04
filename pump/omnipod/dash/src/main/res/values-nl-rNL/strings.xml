@@ -24,7 +24,7 @@
     <string name="suspend_delivery_is_unconfirmed">Het onderbreken van de insulinetoediening is niet bevestigd! Werk de Pod-status handmatig bij via het pompvenster en hervat zo nodig de insulinetoediening.</string>
     <string name="insulin_delivery_suspended">Insulinelevering onderbroken</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">De tijdzone van de Pod wijkt af van de tijdzone van de telefoon. De basaalstanden zijn daardoor onjuist. Wissel van profiel om dit te corrigeren</string>
-    <string name="failed_to_set_the_new_basal_profile">Het instellen van het nieuwe basaal profiel is mislukt. Levering onderbroken</string>
+    <string name="failed_to_set_the_new_basal_profile">Nieuw basaalprofiel instellen mislukt. De insulinetoediening is onderbroken</string>
     <string name="setting_basal_profile_might_have_failed">Het instellen van het basaalprofiel is mogelijk mislukt. De insulinetoediening kan onderbroken zijn! Werk de Pod-status handmatig bij via het pompvenster en hervat zo nodig de insulinetoediening.</string>
     <string name="bolus_delivery_status_uncertain">Het is niet zeker of de bolus is toegediend. Werk de Pod-status handmatig bij via het pompvenster om na te gaan of de opdracht is uitgevoerd.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Het is niet zeker of de SMB (%1$s) is toegediend. Werk de Pod-status handmatig bij via het pompvenster om na te gaan of de opdracht is uitgevoerd.</string>
