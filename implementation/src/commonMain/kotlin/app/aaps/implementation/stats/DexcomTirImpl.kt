@@ -1,8 +1,8 @@
 package app.aaps.implementation.stats
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.stats.DexcomTIR
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -130,7 +130,7 @@ class DexcomTirImpl : DexcomTIR {
     fun add(time: Long, valueMgdl: Double) {
         // Local hour of day, as Calendar.getInstance() gave: the hour picks the day or night high
         // threshold, so it has to follow the user`s zone rather than UTC.
-        val hour = Instant.fromEpochMilliseconds(time).toLocalDateTime(TimeZone.currentSystemDefault()).hour
+        val hour = Instant.fromEpochMilliseconds(time).toLocalDateTime(SystemTimeZone.current()).hour
         when {
             valueMgdl < 39                -> error()
             valueMgdl < veryLowTirMgdl    -> veryLow(valueMgdl)

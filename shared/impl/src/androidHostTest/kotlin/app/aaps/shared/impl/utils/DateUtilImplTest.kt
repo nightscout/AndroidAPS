@@ -2,6 +2,7 @@ package app.aaps.shared.impl.utils
 
 import android.content.Context
 import android.text.format.DateFormat
+import app.aaps.core.data.time.SystemTimeZone
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.joda.time.DateTimeZone
@@ -44,6 +45,9 @@ class DateUtilImplTest {
     fun setUp() {
         TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"))
         DateTimeZone.setDefault(DateTimeZone.forID("America/New_York"))
+        // DateUtilImpl asks SystemTimeZone, which answers from its last read, so a default zone moved
+        // by a test has to be reported - as a device reports one through `TimeDateOrTZChangeReceiver`.
+        SystemTimeZone.invalidate()
         Locale.setDefault(Locale.US)
         fixedClock = Clock.fixed(fixedInstant, fixedZone)
         dateUtilImpl = DateUtilImpl(mockContext)
@@ -1319,6 +1323,7 @@ class DateUtilImplTest {
             // The redundant qualifiers have been removed as requested.
             TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"))
             DateTimeZone.setDefault(DateTimeZone.forID("Europe/Berlin"))
+            SystemTimeZone.invalidate()
 
             // 3. Re-instantiate the classes to make them pick up the new default zone
             val localDateUtil = DateUtilImpl(mockContext)
@@ -1346,6 +1351,7 @@ class DateUtilImplTest {
             // 4. CRITICAL: Always reset the global defaults to not affect other tests.
             TimeZone.setDefault(originalZone)
             DateTimeZone.setDefault(originalJodaZone)
+            SystemTimeZone.invalidate()
         }
     }
     //endregion

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -57,6 +58,8 @@ class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
 
             Intent.ACTION_TIMEZONE_CHANGED == action -> {
                 aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::Timezone changed. Notifying pump driver.")
+                // First, so that everything woken by the event below already reads the new zone.
+                SystemTimeZone.invalidate()
                 appScope.launch { activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged) }
                 // The IOB calculation reads the basal profile in the current time zone, so its cached
                 // values for the past are stale now.

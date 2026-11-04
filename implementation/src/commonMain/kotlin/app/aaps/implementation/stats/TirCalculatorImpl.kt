@@ -1,6 +1,7 @@
 package app.aaps.implementation.stats
 
 import androidx.collection.LongSparseArray
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.interfaces.stats.TirCalculator
@@ -84,13 +85,13 @@ class TirCalculatorImpl(
     override suspend fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
-        val startTime = MidnightTime.calcDaysBack(days)
-        val endTime = MidnightTime.calc(dateUtil.now())
+        val startTime = MidnightTime.daysBack(days, SystemTimeZone.current())
+        val endTime = MidnightTime.before(dateUtil.now(), SystemTimeZone.current())
 
         val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true)
         val result = LongSparseArray<TIR>()
         for (bg in bgReadings) {
-            val midnight = MidnightTime.calc(bg.timestamp)
+            val midnight = MidnightTime.before(bg.timestamp, SystemTimeZone.current())
             var tir = result[midnight]
             if (tir == null) {
                 tir = TirImpl(midnight, lowMgdl, highMgdl)
