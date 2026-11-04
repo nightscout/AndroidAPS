@@ -20,7 +20,7 @@
     <string name="omnipod_common_error_failed_to_suspend_delivery">Insulinabgabe konnte nicht unterbrochen werden.</string>
     <string name="omnipod_common_error_failed_to_set_time">Zeiteinstellung fehlgeschlagen</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Insulinabgabe konnte nicht gestartet werden.</string>
-    <string name="omnipod_common_error_failed_to_initialize_pod">Pod konnte nicht initalisiert werden.</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Pod konnte nicht initialisiert werden.</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Kanüle konnte nicht eingeführt werden.</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Die Aktivierungszeit des Pods wurde überschritten. Dieser Pod kann nicht mehr aktiviert werden.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Überprüfen des Aktivierungsfortschritts gescheitert. Bitte erneut versuchen.</string>
