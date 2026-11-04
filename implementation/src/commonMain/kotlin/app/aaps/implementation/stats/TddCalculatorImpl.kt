@@ -6,6 +6,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -85,7 +86,7 @@ class TddCalculatorImpl(
         calculate(dateUtil.now(), days, allowMissingDays)
 
     override suspend fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
-        val firstDay = MidnightTime.calcDaysBack(timestamp, days)
+        val firstDay = MidnightTime.daysBack(timestamp, days, SystemTimeZone.current())
         var startTime = firstDay
         val endTime = addDaysInLocalZone(startTime, days)
 
@@ -93,7 +94,7 @@ class TddCalculatorImpl(
         // Try to load cached values
         while (startTime < endTime) {
             persistenceLayer.getCalculatedTotalDailyDose(startTime)?.let { result.put(startTime, it) } ?: break
-            startTime = MidnightTime.calc(startTime + T.hours(27).msecs()) // be sure we find correct midnight during DST change
+            startTime = MidnightTime.before(startTime + T.hours(27).msecs(), SystemTimeZone.current()) // be sure we find correct midnight during DST change
         }
         val cachedDays = result.size()
 
@@ -103,7 +104,7 @@ class TddCalculatorImpl(
                 val tdd = calculateInterval(midnight, midnight + T.hours(24).msecs(), allowMissingData = false)
                 aapsLogger.debug(LTag.APS, "Calculated TotalDailyDose for ${dateUtil.dateString(midnight)} $tdd")
                 if (tdd != null) result.put(midnight, tdd)
-                midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
+                midnight = MidnightTime.before(midnight + T.hours(27).msecs(), SystemTimeZone.current()) // be sure we find correct midnight
             }
         }
         // One line per call. The loop asks for 1 and 7 days on every run, and a line per cached day
@@ -135,7 +136,7 @@ class TddCalculatorImpl(
     }
 
     override suspend fun calculateToday(): TDD? {
-        val startTime = MidnightTime.calc(dateUtil.now())
+        val startTime = MidnightTime.before(dateUtil.now(), SystemTimeZone.current())
         val endTime = dateUtil.now()
         return calculateInterval(startTime, endTime, allowMissingData = true)
     }
@@ -167,8 +168,8 @@ class TddCalculatorImpl(
         // (the part days at both ends, a day that is not stored) is summed in 5-minute steps as before.
         var segmentStart = startTime
         while (segmentStart < endTime) {
-            val midnight = MidnightTime.calc(segmentStart)
-            val nextMidnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight during DST change
+            val midnight = MidnightTime.before(segmentStart, SystemTimeZone.current())
+            val nextMidnight = MidnightTime.before(midnight + T.hours(27).msecs(), SystemTimeZone.current()) // be sure we find correct midnight during DST change
             val segmentEnd = min(nextMidnight, endTime)
             // A stored day always covers 24 hours from its midnight (see `calculate`). On a DST change day,
             // which is 23 or 25 hours long, that is not the same as this day, so it is summed instead.
@@ -281,5 +282,5 @@ class TddCalculatorImpl(
  * Replaced `java.time`'s `Instant.ofEpochMilli(startMs).atZone(zone).plusDays(days)`, which cannot be
  * used outside the JVM. `TddCalculatorImplTest` pins the two against each other.
  */
-internal fun addDaysInLocalZone(startMs: Long, days: Long, zone: TimeZone = TimeZone.currentSystemDefault()): Long =
+internal fun addDaysInLocalZone(startMs: Long, days: Long, zone: TimeZone = SystemTimeZone.current()): Long =
     Instant.fromEpochMilliseconds(startMs).plus(days, DateTimeUnit.DAY, zone).toEpochMilliseconds()

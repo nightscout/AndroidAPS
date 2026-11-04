@@ -24,6 +24,7 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.ui.MarkerTier
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.CartesianMeasuringContext
@@ -46,7 +47,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -112,7 +112,7 @@ fun axisLongerThan(timeRange: Pair<Long, Long>, windowMinutes: Double): Boolean 
  */
 @Composable
 fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
-    val timeZone = TimeZone.currentSystemDefault()
+    val timeZone = SystemTimeZone.current()
     return remember(minTimestamp, timeZone) {
         CartesianValueFormatter { _, value, _ ->
             val timestamp = minTimestamp + (value * 60000).toLong()
@@ -134,7 +134,7 @@ fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
 @OptIn(ExperimentalTime::class)
 @Composable
 fun rememberBottomAxisItemPlacer(minTimestamp: Long): HorizontalAxis.ItemPlacer {
-    val timeZone = TimeZone.currentSystemDefault()
+    val timeZone = SystemTimeZone.current()
     return remember(minTimestamp, timeZone) {
         val instant = Instant.fromEpochMilliseconds(minTimestamp)
         val localDateTime = instant.toLocalDateTime(timeZone)

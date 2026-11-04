@@ -47,7 +47,7 @@ class TddCalculatorImplTest : TestBase() {
     private lateinit var tddCalculator: TddCalculatorImpl
 
     private val now = 1000000000L
-    private val midnight = MidnightTime.calc(now)
+    private val midnight = MidnightTime.before(now, TimeZone.currentSystemDefault())
 
     @BeforeEach
     fun setup() {
@@ -695,8 +695,8 @@ class TddCalculatorImplTest : TestBase() {
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
         givenTemporaryBasals { absolute(1.0) }
 
-        val windowStart = MidnightTime.calcDaysBack(now, 7)
-        val profileFrom = MidnightTime.calc(windowStart + T.days(profileAvailableFromDay.toLong()).msecs())
+        val windowStart = MidnightTime.daysBack(now, 7, TimeZone.currentSystemDefault())
+        val profileFrom = MidnightTime.before(windowStart + T.days(profileAvailableFromDay.toLong()).msecs(), TimeZone.currentSystemDefault())
         whenever(profileFunction.getProfile(any())).thenAnswer { invocation ->
             if (invocation.getArgument<Long>(0) >= profileFrom) profile else null
         }
