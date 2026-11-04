@@ -314,6 +314,8 @@ class AaruyBLE @Inject internal constructor(
                     }
                     preferences.put(AaruyStringKey.PumpBoundAddress, preferences.get(AaruyStringKey.MacAddress))
                     aaruyPump.connectionState = ConnectionState.CONNECTED
+                    // The scan screen asks for the first history, and the emulator replaces that screen.
+                    if (emulatorTransport != null && !aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 } else if(status == BleStatus.DISCONNECTED) {
                     isConnected = false

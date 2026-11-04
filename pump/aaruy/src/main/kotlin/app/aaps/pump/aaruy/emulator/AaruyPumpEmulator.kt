@@ -70,6 +70,11 @@ class AaruyPumpEmulator(
     private var noReservoirSent = false
     private val history = ArrayList<History>()
 
+    init {
+        // UNVERIFIED: a pump that has been used has history. The driver only starts to save history after a reply that has some.
+        history.add(History(pumpTime() - EARLIER_HISTORY_SECONDS, HISTORY_BASAL, DEFAULT_BASAL))
+    }
+
     private class BolusSetting(val total: Int, val now: Int, val delayMinutes: Int)
 
     /** Handles one frame from the app. @return what the pump sends back, in order. */
@@ -272,7 +277,8 @@ class AaruyPumpEmulator(
     /** UNVERIFIED: the list always has today, because the driver reads the last item without a check. */
     private fun dailyMessages(startDay: Int): List<ByteArray> {
         val today = (pumpTime().toLong() / DAY_SECONDS).toInt()
-        val first = min(startDay, today)
+        // UNVERIFIED: how many days the pump keeps. Without a limit a start of 0 means every day since 2021.
+        val first = maxOf(startDay, today - DAILY_DAYS_KEPT + 1).coerceAtMost(today)
         val days = (first..today).map { day ->
             val inDay = history.filter { (it.time.toLong() and 0xFFFFFFFFL) / DAY_SECONDS == day.toLong() && it.type == HISTORY_BOLUS }
             val bolusTenths = inDay.sumOf { it.data } / 100
@@ -542,6 +548,8 @@ class AaruyPumpEmulator(
         private const val HISTORY_HEADER = 5
         private const val HISTORY_ITEM_SIZE = 12
         private const val HISTORY_PAGE_SIZE = 10
+        private const val DAILY_DAYS_KEPT = 10
+        private const val EARLIER_HISTORY_SECONDS = 3600
 
         private const val BASAL_AREAS_OFFSET = 12
         private const val BASAL_AREA_SIZE = 3
