@@ -5,13 +5,17 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -269,6 +273,15 @@ class AaruyBLE @Inject internal constructor(
         val transport = AaruyEmulatorBleTransport(emulator)
         emulatorTransport = transport
         EmulatorGattLink.activate(transport)
+        // For tests: adb shell am broadcast -a app.aaps.pump.aaruy.emulator.OUT_OF_RANGE --ez value true
+        ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val outOfRange = intent.getBooleanExtra("value", true)
+                aapsLogger.warn(LTag.PUMPCOMM, "Aaruy emulator: out of range = $outOfRange")
+                transport.outOfRange = outOfRange
+                if (outOfRange) transport.loseConnection()
+            }
+        }, IntentFilter("app.aaps.pump.aaruy.emulator.OUT_OF_RANGE"), ContextCompat.RECEIVER_EXPORTED)
         preferences.put(AaruyStringKey.MacAddress, AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         preferences.put(AaruyStringKey.PumpBoundAddress, AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         preferences.put(AaruyStringKey.PumpName, AaruyEmulatorBleTransport.DEVICE_NAME)
