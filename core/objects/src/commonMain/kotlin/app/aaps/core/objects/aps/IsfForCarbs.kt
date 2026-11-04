@@ -1,5 +1,6 @@
 package app.aaps.core.objects.aps
 
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.Profile
@@ -67,7 +68,7 @@ class IsfForCarbs(rows: List<PersistenceLayer.LoopSensitivity>) {
      *   time of a bucket's own BG reading here, a little before [timestamp], see `PrepareGraphDataRunner`.
      */
     fun isfMgdl(profile: Profile, timestamp: Long, resultsUntil: Long = timestamp): Double =
-        averageMgdl(resultsUntil) ?: profile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(timestamp))
+        averageMgdl(resultsUntil) ?: profile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(timestamp, SystemTimeZone.current()))
 
     private fun lastIndexAtOrBefore(timestamp: Long): Int {
         var low = 0

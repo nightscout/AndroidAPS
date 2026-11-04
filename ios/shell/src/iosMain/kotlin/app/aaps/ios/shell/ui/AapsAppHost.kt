@@ -57,6 +57,7 @@ import app.aaps.core.ui.compose.rememberOwnViewModelStoreOwner
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.utils.gitRemoteShort
 import app.aaps.implementation.lifecycle.IosProtectionLifecycle
+import app.aaps.implementation.receivers.IosTimeDateOrTZChangeWatcher
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.protection.KeychainUnavailableException
 import app.aaps.ios.shell.IosAppStartup
@@ -281,6 +282,11 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     // Clears a granted PIN or biometric session when the app is backgrounded, which is what Android
     // gets from `ProcessLifecycleListener.onPause`. Same placement and the same UIKit reason.
     IosProtectionLifecycle(logger, graph.protectionCheck).start()
+
+    // Sends EventTimeZoneChanged and tells the pump driver, which is what Android gets from
+    // `TimeDateOrTZChangeReceiver`. Without it a flight left the IOB of the last hours calculated in
+    // the old zone. Same placement: it attaches to the notification centre.
+    IosTimeDateOrTZChangeWatcher(logger, graph.activePlugin, graph.appScope, graph.rxBus).start()
 
     // Read once, outside the composition, for the same reason as the graph: decoding the icon on
     // every recomposition would be work for nothing.

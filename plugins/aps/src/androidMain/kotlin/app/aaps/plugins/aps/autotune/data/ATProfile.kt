@@ -4,6 +4,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -97,7 +98,7 @@ class ATProfile(
         return this
     }
 
-    fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp) / 3600]
+    fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp, SystemTimeZone.current()) / 3600]
 
     // for local profile synchronisation
     // kotlinx, not org.json: these feed blockFromJson in AutotunePlugin, the last caller the org.json

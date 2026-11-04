@@ -2,6 +2,7 @@ package app.aaps.implementation.receivers
 
 import android.content.Intent
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -40,6 +41,8 @@ class TimeDateOrTZChangeReceiverTest : TestBaseWithProfile() {
     fun restoreTimeZone() {
         // DST tests mutate the JVM default timezone; restore it so other tests are unaffected.
         TimeZone.setDefault(defaultTimeZone)
+        // SystemTimeZone keeps its last read, so the zone pinned above would outlive this test.
+        SystemTimeZone.invalidate()
     }
 
     // Unconfined dispatcher runs the launched coroutine synchronously so the suspend pump call is
@@ -76,6 +79,24 @@ class TimeDateOrTZChangeReceiverTest : TestBaseWithProfile() {
         sut.processIntent(intent)
 
         assertThat(events).hasSize(1)
+    }
+
+    /**
+     * The whole app reads the zone through `SystemTimeZone`, which answers from its last read. The
+     * receiver is what makes a zone change take effect at once instead of within ten seconds, and
+     * everything woken by the event has to already see the new zone.
+     */
+    @Test
+    fun `timezone change makes the system zone be read again`() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        SystemTimeZone.invalidate()
+        assertThat(SystemTimeZone.current().id).isEqualTo("Europe/Prague")
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/London"))
+        whenever(intent.action).thenReturn(Intent.ACTION_TIMEZONE_CHANGED)
+
+        sut.processIntent(intent)
+
+        assertThat(SystemTimeZone.current().id).isEqualTo("Europe/London")
     }
 
     /** A clock change keeps every past timestamp on the same time of day, so nothing to reset. */

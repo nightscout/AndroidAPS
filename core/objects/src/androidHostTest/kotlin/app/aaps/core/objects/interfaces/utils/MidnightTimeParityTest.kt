@@ -1,5 +1,6 @@
 package app.aaps.core.objects.interfaces.utils
 
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.utils.MidnightTime
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.AfterEach
@@ -34,10 +35,14 @@ class MidnightTimeParityTest {
     @BeforeEach fun pinZone() {
         original = TimeZone.getDefault()
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        // MidnightTime asks SystemTimeZone, which answers from its last read, so a default zone moved
+        // by a test has to be reported - as a device reports one through `TimeDateOrTZChangeReceiver`.
+        SystemTimeZone.invalidate()
     }
 
     @AfterEach fun restoreZone() {
         TimeZone.setDefault(original)
+        SystemTimeZone.invalidate()
     }
 
     // ------------------------------------------------------------------ the reference

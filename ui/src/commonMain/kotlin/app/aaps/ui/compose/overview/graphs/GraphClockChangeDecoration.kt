@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.ui.compose.AapsSpacing
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
@@ -62,7 +63,7 @@ internal fun rememberClockChangeDecoration(
     readings: List<BgDataPoint>,
     showIcon: Boolean = false
 ): GraphClockChangeDecoration {
-    val timeZone = TimeZone.currentSystemDefault()
+    val timeZone = SystemTimeZone.current()
     val changes = remember(minTimestamp, maxTimestamp, timeZone, readings) {
         graphClockChanges(minTimestamp, maxTimestamp, timeZone, readings)
     }

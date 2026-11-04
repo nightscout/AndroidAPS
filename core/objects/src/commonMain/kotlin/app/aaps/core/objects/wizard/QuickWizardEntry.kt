@@ -3,6 +3,7 @@ package app.aaps.core.objects.wizard
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -48,7 +49,7 @@ class QuickWizardEntry(
     @OpenForTesting
     class Time {
 
-        fun secondsFromMidnight(): Int = MidnightUtils.secondsFromMidnight()
+        fun secondsFromMidnight(): Int = MidnightUtils.secondsFromMidnight(SystemTimeZone.current())
 
     }
 

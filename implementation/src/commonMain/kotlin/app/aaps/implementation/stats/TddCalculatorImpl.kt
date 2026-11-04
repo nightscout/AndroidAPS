@@ -6,6 +6,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -281,5 +282,5 @@ class TddCalculatorImpl(
  * Replaced `java.time`'s `Instant.ofEpochMilli(startMs).atZone(zone).plusDays(days)`, which cannot be
  * used outside the JVM. `TddCalculatorImplTest` pins the two against each other.
  */
-internal fun addDaysInLocalZone(startMs: Long, days: Long, zone: TimeZone = TimeZone.currentSystemDefault()): Long =
+internal fun addDaysInLocalZone(startMs: Long, days: Long, zone: TimeZone = SystemTimeZone.current()): Long =
     Instant.fromEpochMilliseconds(startMs).plus(days, DateTimeUnit.DAY, zone).toEpochMilliseconds()

@@ -11,6 +11,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.datetime.TimeZone as KotlinxTimeZone
 
 class MidnightUtilsTest {
 
@@ -18,18 +19,28 @@ class MidnightUtilsTest {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Amsterdam"))
     }
 
+    /**
+     * The zone every call below passes, read fresh each time.
+     *
+     * The alias is needed because this file also uses `java.util.TimeZone` to move the default zone.
+     * Reading it per call is what keeps the "moved the zone, see it at once" cases below honest - the
+     * app passes `SystemTimeZone.current()` instead, which keeps its last read, but this module has no
+     * dependency on it and `MidnightUtils` does not care which of the two it is given.
+     */
+    private fun zone() = KotlinxTimeZone.currentSystemDefault()
+
     @Test
     fun secondsFromMidnight() {
         val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        assertTrue((MidnightUtils.secondsFromMidnight(time)) in (0..24 * 3600))
+        assertTrue((MidnightUtils.secondsFromMidnight(time, zone())) in (0..24 * 3600))
     }
 
     @Test
     fun testSecondsFromMidnight() {
         val midnight = LocalDate.now().atTime(LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        assertEquals(0, MidnightUtils.secondsFromMidnight(midnight))
+        assertEquals(0, MidnightUtils.secondsFromMidnight(midnight, zone()))
         val oneHourAfter = LocalDateTime.ofInstant(Instant.ofEpochMilli(midnight), ZoneId.systemDefault()).atZone(ZoneId.systemDefault()).plusHours(1).toInstant().toEpochMilli()
-        assertEquals(3600, MidnightUtils.secondsFromMidnight(oneHourAfter))
+        assertEquals(3600, MidnightUtils.secondsFromMidnight(oneHourAfter, zone()))
     }
 
     /**
@@ -41,8 +52,8 @@ class MidnightUtilsTest {
     fun aMomentKeepsItsTimeOfDayAcrossDstSwitch() {
         val beforeSwitch = ZonedDateTime.of(2026, 3, 28, 19, 0, 0, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli() // UTC+1
         val afterSwitch = ZonedDateTime.of(2026, 3, 30, 19, 0, 0, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli() // UTC+2
-        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(beforeSwitch))
-        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(afterSwitch))
+        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(beforeSwitch, zone()))
+        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(afterSwitch, zone()))
     }
 
     /**
@@ -53,42 +64,42 @@ class MidnightUtilsTest {
     @Test
     fun aMomentMovesToAnotherTimeOfDayAfterTimeZoneChange() {
         val moment = ZonedDateTime.of(2026, 1, 15, 19, 0, 0, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli()
-        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(moment))
+        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(moment, zone()))
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/London"))
-        assertEquals(18 * 3600, MidnightUtils.secondsFromMidnight(moment))
+        assertEquals(18 * 3600, MidnightUtils.secondsFromMidnight(moment, zone()))
     }
 
     @Test
     fun milliSecFromMidnight() {
         val midnight = LocalDate.now().atTime(LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        assertEquals(0, MidnightUtils.secondsFromMidnight(midnight))
+        assertEquals(0, MidnightUtils.secondsFromMidnight(midnight, zone()))
         val oneHourAfter = LocalDateTime.ofInstant(Instant.ofEpochMilli(midnight), ZoneId.systemDefault()).atZone(ZoneId.systemDefault()).plusHours(1).toInstant().toEpochMilli()
-        assertEquals(3600 * 1000, MidnightUtils.milliSecFromMidnight(oneHourAfter))
+        assertEquals(3600 * 1000, MidnightUtils.milliSecFromMidnight(oneHourAfter, zone()))
     }
 
     @Test fun testDateTimeToDuration() {
         val dateTime = ZonedDateTime.of(1991, 8, 13, 23, 5, 1, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli()
-        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime))
-        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime))
+        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime, zone()))
+        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime, zone()))
     }
 
     @Test fun testDateTimeToDurationAtDstChange() {
         val dateTime = ZonedDateTime.of(2020, 10, 25, 23, 5, 1, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli()
-        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime))
-        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime))
+        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime, zone()))
+        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime, zone()))
     }
 
     @Test fun testDateTimeToDurationAtDstReverseChange() {
         val dateTime = ZonedDateTime.of(2020, 3, 29, 23, 5, 1, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli()
-        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime))
-        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime))
+        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime, zone()))
+        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime, zone()))
     }
 
     @Test fun testDateTimeInOtherZone() {
         TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"))
         assertEquals("America/Los_Angeles", ZoneId.systemDefault().id)
         val dateTime = ZonedDateTime.of(2020, 3, 29, 23, 5, 1, 0, ZoneId.of("America/Los_Angeles")).toInstant().toEpochMilli()
-        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime))
-        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime))
+        assertEquals(83101, MidnightUtils.secondsFromMidnight(dateTime, zone()))
+        assertEquals(83101 * 1000L, MidnightUtils.milliSecFromMidnight(dateTime, zone()))
     }
 }

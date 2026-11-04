@@ -1,9 +1,9 @@
 package app.aaps.core.interfaces.utils
 
+import app.aaps.core.data.time.SystemTimeZone
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
@@ -13,7 +13,7 @@ import kotlin.time.Instant
 
 object MidnightTime {
 
-    private fun zone() = TimeZone.currentSystemDefault()
+    private fun zone() = SystemTimeZone.current()
 
     /**
      * Epoch time of last midnight

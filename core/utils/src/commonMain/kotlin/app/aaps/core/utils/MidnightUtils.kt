@@ -13,6 +13,12 @@ import kotlin.time.Instant
 
 /**
  * Midnight time conversion
+ *
+ * The zone is a parameter and is never read here. These functions are called millions of times per
+ * IOB calculation, and reading the system zone per call is a file read per call on Apple targets, so
+ * the caller passes one it already has - normally `SystemTimeZone.current()`, which keeps its last
+ * read. Deliberately without a default value: a default would be evaluated in this module, which
+ * would quietly put that per-call read back for every caller that left the argument out.
  */
 object MidnightUtils {
 
@@ -93,28 +99,31 @@ object MidnightUtils {
      * Actual passed seconds from midnight ignoring DST change
      * (thus always having 24 hours in a day, not 23 or 25 in days where DST changes)
      *
+     * @param tz time zone to read the time of day in
      * @return seconds
      */
-    fun secondsFromMidnight(): Int =
-        secondsFrom(Clock.System.now().toEpochMilliseconds(), TimeZone.currentSystemDefault())
+    fun secondsFromMidnight(tz: TimeZone): Int =
+        secondsFrom(Clock.System.now().toEpochMilliseconds(), tz)
 
     /**
      * Passed seconds from midnight for specified time ignoring DST change
      * (thus always having 24 hours in a day, not 23 or 25 in days where DST changes)
      *
      * @param timestamp time
+     * @param tz time zone to read the time of day in
      * @return seconds
      */
-    fun secondsFromMidnight(timestamp: Long): Int =
-        secondsFrom(timestamp, TimeZone.currentSystemDefault())
+    fun secondsFromMidnight(timestamp: Long, tz: TimeZone): Int =
+        secondsFrom(timestamp, tz)
 
     /**
      * Passed milliseconds from midnight for specified time ignoring DST change
      * (thus always having 24 hours in a day, not 23 or 25 in days where DST changes)
      *
      * @param timestamp time
+     * @param tz time zone to read the time of day in
      * @return milliseconds
      */
-    fun milliSecFromMidnight(timestamp: Long): Long =
-        millisFrom(timestamp, TimeZone.currentSystemDefault())
+    fun milliSecFromMidnight(timestamp: Long, tz: TimeZone): Long =
+        millisFrom(timestamp, tz)
 }
