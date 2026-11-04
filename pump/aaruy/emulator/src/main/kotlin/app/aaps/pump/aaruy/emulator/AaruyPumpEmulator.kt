@@ -123,6 +123,9 @@ class AaruyPumpEmulator(
         else               -> emptyList()
     }
 
+    /** How much later than usual the last answer comes. Seen on a real pump: about a second for a new profile. */
+    var answerDelayMs = 0L
+
     private fun handleWrite(paramId: Short, payload: ByteArray): List<ByteArray> = when (paramId) {
         PARAM_REPORT_DEVICE -> handleReportDevice()
         PARAM_BASIC         -> {
@@ -197,6 +200,7 @@ class AaruyPumpEmulator(
             position += BASAL_AREA_SIZE
         }
         if (areas.isNotEmpty()) schedule = areas
+        answerDelayMs = BASAL_ANSWER_MS
         return listOf(message(PARAM_BASAL, payload))
     }
 
@@ -646,6 +650,7 @@ class AaruyPumpEmulator(
         private const val HISTORY_ITEM_SIZE = 12
         private const val HISTORY_PAGE_SIZE = 10
         private const val DAILY_DAYS_KEPT = 10
+        private const val BASAL_ANSWER_MS = 1000L
 
         private const val BASAL_AREAS_OFFSET = 12
         private const val BASAL_AREA_SIZE = 3

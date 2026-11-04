@@ -137,7 +137,9 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
             later(RADIO_MS) {
                 listener?.onCharacteristicWritten()
                 later(PUMP_ANSWER_MS) {
-                    deliver(emulator.handle(data))
+                    val answer = emulator.handle(data)
+                    later(emulator.answerDelayMs) { deliver(answer) }
+                    emulator.answerDelayMs = 0
                     if (emulator.unbindRequested) {
                         emulator.unbindRequested = false
                         later(UNBIND_DROP_MS) { loseConnection() }

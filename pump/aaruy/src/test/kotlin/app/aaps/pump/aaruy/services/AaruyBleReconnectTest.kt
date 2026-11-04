@@ -15,6 +15,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.BasicParam
+import app.aaps.pump.aaruy.comm.BasalInfo
+import app.aaps.pump.aaruy.comm.BasalItem
+import app.aaps.pump.aaruy.comm.BasalItems
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
@@ -26,6 +29,7 @@ import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.concurrent.thread
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockingDetails
@@ -298,6 +302,50 @@ class AaruyBleReconnectTest {
         assertEquals(ConnectionState.CONNECTED, pump.connectionState)
         assertTrue("driver must know it is connected", ble.isConnected)
         assertEquals("not connecting", false, ble.isConnecting)
+        ble.emulatorTransport?.shutdown()
+    }
+
+    /** Seen on a real pump: the answer to a new profile comes after a second, and a false failure raised an urgent alarm. */
+    @Test
+    fun aProfileThePumpAnswersLateIsNotAFailure() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger,
+            mock(ResourceHelper::class.java),
+            preferences,
+            mock(DateUtil::class.java),
+            mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java),
+            mock(DecimalFormatter::class.java),
+            mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger,
+            RuntimeEnvironment.getApplication() as Context,
+            pump,
+            mock(DateUtil::class.java),
+            mock(RxBus::class.java),
+            preferences,
+            mock(HistoryUnitInfoDao::class.java),
+            mock(HistoryDailyUnitInfoDao::class.java),
+            mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java)
+        )
+        ble.startEmulatorIfActive()
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        val settled = System.currentTimeMillis() + 2000
+        waitFor("the settings of the connect have come") { System.currentTimeMillis() > settled }
+
+        var accepted: Boolean? = null
+        thread { accepted = ble.updateBasalsInPump(BasalInfo(BasalItems(4.8, 1, listOf(BasalItem(0, 0.2))))) }
+        waitFor("the answer") { accepted != null }
+
+        assertEquals(true, accepted)
+        assertEquals(0.2, pump.baseBasalRateAt(0), 0.0)
         ble.emulatorTransport?.shutdown()
     }
 }

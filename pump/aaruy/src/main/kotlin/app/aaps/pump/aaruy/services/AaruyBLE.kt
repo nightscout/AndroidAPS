@@ -84,6 +84,7 @@ class AaruyBLE(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
+    private val COMMAND_ANSWER_TIMEOUT_MS = 5000L
     private val HISTORY_TEMP_BASAL = 1
     private val HISTORY_ALARM = 3
     private val SAME_ENTRY_MS = 60_000L
@@ -100,12 +101,12 @@ class AaruyBLE(
     val emulatorTransport: AaruyEmulatorBleTransport? = transport as? AaruyEmulatorBleTransport
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
-    private var sendBasalsInfoOk = false
+    @Volatile private var sendBasalsInfoOk = false
     private var sendBolusOk = false
-    private var sendExtendedBolusOk = false
+    @Volatile private var sendExtendedBolusOk = false
     private var cancelBolusOk = false
-    private var sendTmpBasalOk = false
-    private var cancelTmpBasalOk = false
+    @Volatile private var sendTmpBasalOk = false
+    @Volatile private var cancelTmpBasalOk = false
     private var startBasalOk = false
     private var isUnbinding = false
     private var bolusType: Int = 0
@@ -629,11 +630,17 @@ class AaruyBLE(
         }
     }
 
+    /** Seen on a real pump: a new profile is answered after a full second. A fixed short wait calls a good command failed, and the pump then does what AAPS does not know. */
+    private fun waitForAnswer(answered: () -> Boolean): Boolean {
+        val end = System.currentTimeMillis() + COMMAND_ANSWER_TIMEOUT_MS
+        while (!answered() && System.currentTimeMillis() < end) SystemClock.sleep(50)
+        return answered()
+    }
+
     fun updateBasalsInPump(basalInfo: BasalInfo): Boolean {
         sendBasalsInfoOk = false
         aaBleUtil.setupBasalInfo(basalInfo)
-        SystemClock.sleep(500)
-        return sendBasalsInfoOk
+        return waitForAnswer { sendBasalsInfoOk }
     }
 
     fun setBolus(insulin: Double, isSmb: Boolean = true): Boolean {
@@ -671,7 +678,7 @@ class AaruyBLE(
         SystemClock.sleep(200)
         val startTime = dateUtil.now()
         aaBleUtil.startTempBasal(absoluteRate, durationInMinutes)
-        SystemClock.sleep(500)
+        waitForAnswer { sendTmpBasalOk }
         if (sendTmpBasalOk) {
             aaruyPump.syncTBRWithPumpId(startTime, absoluteRate,durationInMinutes.toLong()*60*1000)
         }
@@ -684,7 +691,7 @@ class AaruyBLE(
         cancelTmpBasalOk = false
         val endTime = dateUtil.now()
         aaBleUtil.cancelTempBasal()
-        SystemClock.sleep(500)
+        waitForAnswer { cancelTmpBasalOk }
         if (cancelTmpBasalOk) {
             aaruyPump.syncStopTBRWithPumpId(endTime)
         }
@@ -696,7 +703,7 @@ class AaruyBLE(
         sendExtendedBolusOk = false
         val startTime = dateUtil.now()
         aaBleUtil.setupAndStartBolus(0.0, insulin, durationInMinutes, false)
-        SystemClock.sleep(500)
+        waitForAnswer { sendExtendedBolusOk }
         if(sendExtendedBolusOk) {
             aaruyPump.syncExtendedWithPumpId(startTime, insulin, durationInMinutes.toLong()*60*1000)
         }
