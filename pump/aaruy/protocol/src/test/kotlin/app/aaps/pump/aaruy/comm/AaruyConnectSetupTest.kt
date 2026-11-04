@@ -1,5 +1,7 @@
 package app.aaps.pump.aaruy.comm
 
+import android.content.Intent
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Looper
@@ -91,6 +93,18 @@ class AaruyConnectSetupTest {
 
         verify(gatt, atLeastOnce()).close()
         verify(gatt, times(2)).connect(address)
+    }
+
+    /** Seen on a real phone: no GATT event comes when Bluetooth is turned off. */
+    @Test
+    fun bluetoothTurnedOffEndsTheLink() {
+        client.bindDevice(device())
+        linkUp()
+
+        RuntimeEnvironment.getApplication().sendBroadcast(Intent(BluetoothAdapter.ACTION_STATE_CHANGED).putExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_TURNING_OFF))
+        passTime(1)
+
+        verify(gatt, atLeastOnce()).close()
     }
 
     @Test

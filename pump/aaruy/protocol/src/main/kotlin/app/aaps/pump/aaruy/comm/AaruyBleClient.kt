@@ -62,8 +62,12 @@ class AaruyBleClient(
             val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
             aapsLogger.debug(LTag.PUMPBTCOMM, "onReceive action=$action")
             when (action) {
-                BluetoothAdapter.ACTION_STATE_CHANGED     ->
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "blueState=${intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0)}")
+                BluetoothAdapter.ACTION_STATE_CHANGED     -> {
+                    val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0)
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "blueState=$state")
+                    // Seen on a real phone: no GATT event comes for this, and the driver stays connected to a dead link.
+                    if (state == BluetoothAdapter.STATE_TURNING_OFF || state == BluetoothAdapter.STATE_OFF) link.onAdapterOff()
+                }
 
                 BluetoothDevice.ACTION_FOUND              -> onDeviceFound(device)
                 BluetoothDevice.ACTION_PAIRING_REQUEST    -> onPairingRequest(device, intent)
@@ -458,6 +462,10 @@ fun setOnBleListener(listener: AaruyBleListener) {
             events.postDelayed(setupTimeout, SETUP_TIMEOUT_MS)
             val bonded = address?.let { transport.adapter.isDeviceBonded(it) } == true
             events.postDelayed({ transport.gatt.discoverServices() }, if (bonded) DISCOVERY_DELAY_BONDED_MS else DISCOVERY_DELAY_MS)
+        }
+
+        fun onAdapterOff() {
+            events.post { if (status == BleStatus.CONNECTED || connecting) onDisconnected() }
         }
 
         private fun onDisconnected() {

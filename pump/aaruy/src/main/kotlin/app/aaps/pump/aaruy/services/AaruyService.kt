@@ -283,7 +283,7 @@ class AaruyService : MetroService() {
             val waitTime = expectedEnd - dateUtil.now()
             bolusProgressData.updateProgress(
                 percent = (aaruyPump.bolusDelivered / aaruyPump.bolusAmountToBeDelivered * 100).toInt().coerceAtMost(99),
-                status = TextRef.Literal(rh.gs(R.string.aaruy_wait_bolus_time_tip, waitTime / 1000)),
+                status = TextRef.Literal(rh.gs(R.string.aaruy_wait_bolus_time_tip, (waitTime / 1000).toInt())),
                 delivered = PumpInsulin(aaruyPump.bolusDelivered)
             )
             SystemClock.sleep(1000)
