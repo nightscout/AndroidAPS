@@ -3,6 +3,7 @@ package app.aaps.plugins.source.compose
 import androidx.compose.runtime.Composable
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
+import app.aaps.plugins.dexcomoneplus.session.OnePlusAuthRefusalPolicy
 import app.aaps.plugins.source.SourceStrings
 
 /**
@@ -39,6 +40,14 @@ object DexcomOnePlusUiLabels {
                 stringResource(SourceStrings.dexcom_oneplus_msg_tx_session)
             raw == "egv_loop_exit" || raw == "disconnect" || raw == "shutdown" || raw == "cancelled" ->
                 stringResource(SourceStrings.dexcom_oneplus_msg_session_down)
+            // Before the generic auth line: these two say what the user has to do.
+            raw.startsWith(OnePlusAuthRefusalPolicy.MESSAGE_LOCKED) ->
+                stringResource(
+                    SourceStrings.dexcom_oneplus_error_refused_stopped,
+                    OnePlusAuthRefusalPolicy.MAX_REFUSALS_IN_A_ROW,
+                )
+            raw.startsWith(OnePlusAuthRefusalPolicy.MESSAGE_PAUSED) ->
+                stringResource(SourceStrings.dexcom_oneplus_msg_refused_pause)
             raw.startsWith("ONEPLUS_AUTH") || raw.contains("bond", ignoreCase = true) ->
                 stringResource(SourceStrings.dexcom_oneplus_error_auth_bond)
             raw.startsWith("ONEPLUS_GATT") || raw.startsWith("ONEPLUS_EGV") ||

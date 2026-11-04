@@ -2,6 +2,7 @@ package app.aaps.plugins.dexcomoneplus.identity
 
 import app.aaps.plugins.dexcomoneplus.OnePlusLog
 import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
+import app.aaps.plugins.dexcomoneplus.session.OnePlusAuthRefusals
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -206,6 +207,30 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
         prefs.edit { clear() }
     }
 
+    /** Refusals in a row of this slot's sensor, see [OnePlusAuthRefusals]. Empty when none recorded. */
+    fun loadAuthRefusals(): OnePlusAuthRefusals = OnePlusAuthRefusals(
+        address = prefs.getString(KEY_REFUSAL_MAC)?.takeIf { it.isNotBlank() },
+        count = prefs.getInt(KEY_REFUSAL_COUNT, 0),
+        lastAtMs = prefs.getLong(KEY_REFUSAL_AT, 0L),
+        lastWithSavedKey = prefs.getBoolean(KEY_REFUSAL_SAVED_KEY, false),
+    )
+
+    fun saveAuthRefusals(refusals: OnePlusAuthRefusals) {
+        prefs.edit {
+            if (refusals.count <= 0) {
+                remove(KEY_REFUSAL_MAC)
+                remove(KEY_REFUSAL_COUNT)
+                remove(KEY_REFUSAL_AT)
+                remove(KEY_REFUSAL_SAVED_KEY)
+            } else {
+                putString(KEY_REFUSAL_MAC, refusals.address)
+                putInt(KEY_REFUSAL_COUNT, refusals.count)
+                putLong(KEY_REFUSAL_AT, refusals.lastAtMs)
+                putBoolean(KEY_REFUSAL_SAVED_KEY, refusals.lastWithSavedKey)
+            }
+        }
+    }
+
     /**
      * Adopt another sensor's stored session into this store — used on staging→production promotion so
      * the production driver durably resumes the promoted sensor after a restart. Copies identity / MAC
@@ -296,5 +321,9 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
         private const val KEY_SLOT_PRESENT = "slot_present"
         private const val KEY_SLOT_EGV_COUNT = "slot_valid_egv_count"
         private const val KEY_SLOT_WARMUP_DONE = "slot_warmup_done"
+        private const val KEY_REFUSAL_MAC = "auth_refusal_mac"
+        private const val KEY_REFUSAL_COUNT = "auth_refusal_count"
+        private const val KEY_REFUSAL_AT = "auth_refusal_at_ms"
+        private const val KEY_REFUSAL_SAVED_KEY = "auth_refusal_saved_key"
     }
 }

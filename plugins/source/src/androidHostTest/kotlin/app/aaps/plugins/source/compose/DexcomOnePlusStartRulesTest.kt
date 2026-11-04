@@ -105,6 +105,31 @@ class DexcomOnePlusStartRulesTest {
         assertEquals(devices.map { it.address }.toSet(), ranked.map { it.address }.toSet())
     }
 
+    @Test
+    fun `a free sensor is offered before one another phone holds`() {
+        val heldNear = OnePlusScanResult(address = "AA:AA:AA:AA:AA:AA", name = "DX02aa", rssi = -40, phoneSlotHeld = true)
+        val freeFar = OnePlusScanResult(address = "BB:BB:BB:BB:BB:BB", name = "DX02bb", rssi = -90, phoneSlotHeld = false)
+        val ranked = DexcomOnePlusStartRules.rank(listOf(heldNear, freeFar), hint = null)
+        assertEquals(freeFar.address, ranked.first().address)
+    }
+
+    @Test
+    fun `the stored sensor stays first even when its slot is held`() {
+        val mine = OnePlusScanResult(address = "AA:AA:AA:AA:AA:AA", name = null, rssi = -90, phoneSlotHeld = true)
+        val other = OnePlusScanResult(address = "BB:BB:BB:BB:BB:BB", name = null, rssi = -40, phoneSlotHeld = false)
+        val ranked = DexcomOnePlusStartRules.rank(listOf(other, mine), stored(mac = "AA:AA:AA:AA:AA:AA"))
+        assertEquals(mine.address, ranked.first().address)
+    }
+
+    @Test
+    fun `the held label is shown for another sensor and not for the stored one`() {
+        val held = OnePlusScanResult(address = "AA:AA:AA:AA:AA:AA", name = null, rssi = -60, phoneSlotHeld = true)
+        assertTrue(DexcomOnePlusStartRules.showsSlotHeld(held, storedMac = null))
+        assertTrue(DexcomOnePlusStartRules.showsSlotHeld(held, storedMac = "BB:BB:BB:BB:BB:BB"))
+        assertFalse(DexcomOnePlusStartRules.showsSlotHeld(held, storedMac = "aa:aa:aa:aa:aa:aa"))
+        assertFalse(DexcomOnePlusStartRules.showsSlotHeld(held.copy(phoneSlotHeld = null), storedMac = null))
+    }
+
     // ------------ adoptsAnotherSensor(): when the screen asks before overwriting ------------
 
     @Test

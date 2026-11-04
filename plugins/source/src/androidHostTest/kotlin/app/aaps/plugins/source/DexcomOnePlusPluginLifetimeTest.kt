@@ -14,6 +14,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriverStub
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseSample
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseWatcher
+import app.aaps.plugins.dexcomoneplus.OnePlusInstalledApps
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorPrefs
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
@@ -262,6 +263,7 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
             stores.getOrPut(namespace) { OnePlusSensorStore(MemoryPrefs()) }
 
         override val stagingNamespace: String = "staging"
+        override val installedApps: OnePlusInstalledApps? = null
         override fun productionDriver(): OnePlusCgmDriver = driver.also { driverRequests++ }
         override fun stagingDriver(): OnePlusCgmDriver = driver.also { driverRequests++ }
         override fun existingProductionDriver(): OnePlusCgmDriver? = driver.takeIf { built }

@@ -14,6 +14,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusLog
 import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
 import app.aaps.plugins.dexcomoneplus.gatt.OnePlusGattUuids
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusAdvCandidate
+import app.aaps.plugins.dexcomoneplus.identity.OnePlusAdvSlot
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusStoredSession
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
@@ -407,14 +408,20 @@ class OnePlusBleScannerAndroid(
         val sticky = !hint?.lastMac.isNullOrBlank() || !hint?.lastDeviceName.isNullOrBlank()
         if (sticky && !candidate && febcOk && !nameMatches(name)) return
 
-        val hit = OnePlusScanResult(address = address, name = name, rssi = result.rssi)
+        // Android hands the manufacturer data over without the company id in front.
+        val slotHeld = OnePlusAdvSlot.phoneSlotHeld(
+            result.scanRecord?.getManufacturerSpecificData(OnePlusAdvSlot.DEXCOM_COMPANY_ID),
+        )
+        val hit = OnePlusScanResult(address = address, name = name, rssi = result.rssi, phoneSlotHeld = slotHeld)
             .apply { seenElapsedMs = SystemClock.elapsedRealtime() }
         val previous = seen.put(address, hit)
-        if (previous == null || previous.rssi != hit.rssi || previous.name != hit.name) {
-            val score = OnePlusAdvCandidate.rankScore(name, address, hit.rssi, hint)
+        if (previous == null || previous.rssi != hit.rssi || previous.name != hit.name ||
+            previous.phoneSlotHeld != hit.phoneSlotHeld
+        ) {
+            val score = OnePlusAdvCandidate.rankScore(name, address, hit.rssi, hint, slotHeld)
             OnePlusLog.d(
                 "${OnePlusLogMarkers.SCAN}: [$slot] device name=${name ?: "?"} rssi=${hit.rssi} " +
-                    "score=$score addr=***${address.takeLast(5)}",
+                    "slotHeld=${slotHeld ?: "?"} score=$score addr=***${address.takeLast(5)}",
             )
             listener?.onDevice(hit)
         }

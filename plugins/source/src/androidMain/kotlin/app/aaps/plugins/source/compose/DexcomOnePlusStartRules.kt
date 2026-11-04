@@ -39,10 +39,21 @@ object DexcomOnePlusStartRules {
 
     /**
      * The scan list in the order the screen draws it: the sensor the code on screen points at
-     * first, then by how well each hit matches, then by signal.
+     * first, then by how well each hit matches, then free sensors before the ones another phone
+     * holds, then by signal.
      */
     fun rank(devices: List<OnePlusScanResult>, hint: OnePlusStoredSession?): List<OnePlusScanResult> =
-        devices.sortedByDescending { OnePlusAdvCandidate.rankScore(it.name, it.address, it.rssi, hint) }
+        devices.sortedByDescending {
+            OnePlusAdvCandidate.rankScore(it.name, it.address, it.rssi, hint, it.phoneSlotHeld)
+        }
+
+    /**
+     * Whether the row says "in use by another phone".
+     *
+     * Not for the stored sensor: the phone that holds its slot is normally this one.
+     */
+    fun showsSlotHeld(device: OnePlusScanResult, storedMac: String?): Boolean =
+        device.phoneSlotHeld == true && storedMac?.equals(device.address, ignoreCase = true) != true
 
     /**
      * Signal strength as bars.

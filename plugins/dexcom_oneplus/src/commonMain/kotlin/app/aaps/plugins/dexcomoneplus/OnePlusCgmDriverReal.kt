@@ -14,6 +14,9 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScanner
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScannerStub
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanListener
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanResult
+import app.aaps.plugins.dexcomoneplus.session.OnePlusAuthRefusalLedger
+import app.aaps.plugins.dexcomoneplus.session.OnePlusAuthRefusalPolicy
+import app.aaps.plugins.dexcomoneplus.session.OnePlusAuthRefusals
 import app.aaps.plugins.dexcomoneplus.session.OnePlusBleSession
 import app.aaps.plugins.dexcomoneplus.session.OnePlusMacArbiter
 import app.aaps.plugins.dexcomoneplus.session.OnePlusBleSessionSkeleton
@@ -340,6 +343,26 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
         scanner.updateSessionHint(store?.load())
     }
 
+    private val refusalPolicy = OnePlusAuthRefusalPolicy()
+
+    /**
+     * The refusal count of the slot this instance owns **right now**, read and written through the
+     * live [sensorStore] for the same reason as [savedSharedKey]: a promotion rebinds the store
+     * under a running link.
+     */
+    private val refusalLedger = object : OnePlusAuthRefusalLedger {
+        override fun load(): OnePlusAuthRefusals = sensorStore?.loadAuthRefusals() ?: OnePlusAuthRefusals()
+
+        override fun save(refusals: OnePlusAuthRefusals) {
+            sensorStore?.saveAuthRefusals(refusals)
+        }
+    }
+
+    /** True when the stored sensor refused us so often that only the user may start it again. */
+    private fun refusedTooOften(address: String): Boolean =
+        refusalPolicy.decide(refusalLedger.load(), address, Clock.System.now().toEpochMilliseconds()) ==
+            OnePlusAuthRefusalPolicy.Decision.Locked
+
     override fun addWatcher(watcher: OnePlusGlucoseWatcher) {
         watchersLock.withLock {
             if (!watchers.contains(watcher)) watchers.add(watcher)
@@ -398,6 +421,16 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
         // A new pairing is a new sensor, or a new session on it.
         dropPendingCalibration("new pairing")
         lastReading = null
+        // The user pressed Connect. Another code or another sensor starts the refusal count again;
+        // the same pair gets one more try, still not sooner than the pause. See OnePlusAuthRefusalPolicy.
+        val previousPin = sensorStore?.load()?.identity?.pin
+        refusalLedger.save(
+            refusalPolicy.afterUserStart(
+                refusals = refusalLedger.load(),
+                address = deviceAddress,
+                codeChanged = previousPin == null || previousPin != pairingCode,
+            ),
+        )
         sensorStore?.saveIdentity(
             OnePlusSensorIdentity(
                 pin = pairingCode,
@@ -466,6 +499,14 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             return false
         }
         val deviceAddress = stored?.lastMac ?: return false
+        // Never on our own after the sensor refused us too often: the next refusal could lock it.
+        if (refusedTooOften(deviceAddress)) {
+            OnePlusLog.w(
+                "${OnePlusLogMarkers.SESSION}: [$slot] auto-resume skipped — the sensor refused us " +
+                    "${refusalLedger.load().count} times in a row; the user has to start it again",
+            )
+            return false
+        }
         // The path that reproduced the collision on every plugin start for an install whose two
         // stores already held the same MAC. Claim before queueing anything.
         if (!OnePlusMacArbiter.claim(deviceAddress, arbiterOwner)) {
@@ -596,8 +637,29 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
         OnePlusLog.i("${OnePlusLogMarkers.SESSION}: [$slot] shutdown")
     }
 
-    override fun warmupState(): OnePlusWarmupState =
-        session?.warmupState() ?: OnePlusWarmupState(phase = OnePlusWarmupState.Phase.IDLE)
+    /**
+     * With no session, a sensor that refused us too often still says so, also after a restart:
+     * otherwise the screens would show "idle" and the user would not know why nothing comes in.
+     */
+    override fun warmupState(): OnePlusWarmupState {
+        session?.let { return it.warmupState() }
+        // A status read must never throw: a store that cannot be read only hides the refusal note.
+        // The count names its own sensor, and a Connect to another sensor clears it, so the stored
+        // session does not have to be read here.
+        val locked = try {
+            val refusedMac = refusalLedger.load().address
+            refusedMac != null && refusedTooOften(refusedMac)
+        } catch (_: Throwable) {
+            false
+        }
+        if (locked) {
+            return OnePlusWarmupState(
+                phase = OnePlusWarmupState.Phase.FAILED,
+                message = OnePlusAuthRefusalPolicy.MESSAGE_LOCKED,
+            )
+        }
+        return OnePlusWarmupState(phase = OnePlusWarmupState.Phase.IDLE)
+    }
 
     override fun isSessionUp(): Boolean = session?.isUp() == true
 
@@ -662,6 +724,8 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             onCalibrationState = { state, matchesSent -> onCalibrationState(state, matchesSent) },
             calibrationSendCheck = { glucoseMgdl, bloodAtMs, nowMs -> calibrationSendCheck(glucoseMgdl, bloodAtMs, nowMs) },
             onCalibrationNotSent = { reason -> onCalibrationNotSent(reason) },
+            refusalLedger = refusalLedger,
+            refusalPolicy = refusalPolicy,
         )
         return created
     }

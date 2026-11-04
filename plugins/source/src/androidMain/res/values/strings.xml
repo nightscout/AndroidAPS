@@ -174,6 +174,8 @@
     <string name="dexcom_oneplus_msg_tx_session">Sensor session detected on transmitter.</string>
     <string name="dexcom_oneplus_msg_session_down">Session ended or disconnected.</string>
     <string name="dexcom_oneplus_error_auth_bond">Authentication or Bluetooth pairing failed. Accept the system pairing prompt and retry.</string>
+    <string name="dexcom_oneplus_error_refused_stopped" comment="%1$d=how many refusals in a row, for example 3">The sensor refused this phone %1$d times in a row. AAPS stopped trying, because one more refusal locks the sensor for a while. Check the pairing code, close the Dexcom app, xDrip+ or Juggluco if one of them uses the sensor, then start the sensor again.</string>
+    <string name="dexcom_oneplus_msg_refused_pause">The sensor refused this phone. AAPS waits 15 minutes before it asks again, because refusals in a row lock the sensor. Check the pairing code and close other apps that use the sensor.</string>
     <string name="dexcom_oneplus_error_connection">Connection or sensor session error. Check the Bluetooth connection and try again.</string>
     <string name="dexcom_oneplus_status_message_generic">If the problem continues, open the driver log on this screen.</string>
     <string name="dexcom_oneplus_warmup_done">Warm-up complete — source active</string>
@@ -235,6 +237,9 @@
     <string name="dexcom_oneplus_section_sensors_nearby">Sensors nearby</string>
     <string name="dexcom_oneplus_scan_rescan">Rescan</string>
     <string name="dexcom_oneplus_scan_last_used">last used</string>
+    <string name="dexcom_oneplus_scan_slot_held" comment="Short label under a sensor in the scan list. Another phone or app is connected to this sensor now.">in use by another phone</string>
+    <string name="dexcom_oneplus_competing_apps_title">Other sensor apps on this phone</string>
+    <string name="dexcom_oneplus_competing_apps_message">These apps are installed and can connect to the sensor themselves. A sensor talks to one app at a time, so the sensor may refuse AAPS while one of them uses it. Close it or turn off its sensor connection before you start.</string>
     <string name="dexcom_oneplus_scan_signal" comment="%1$d=signal strength in dBm, always negative. Example: Signal −67 dBm">Signal %1$d dBm</string>
     <string name="dexcom_oneplus_scan_empty">No sensor found yet. Press Scan and keep the phone right next to the sensor.</string>
     <string name="dexcom_oneplus_connect_target" comment="%1$s=sensor name or Bluetooth address. Example: Connect adopts DX02ABCD and opens warm-up.">Connect adopts %1$s and opens warm-up.</string>

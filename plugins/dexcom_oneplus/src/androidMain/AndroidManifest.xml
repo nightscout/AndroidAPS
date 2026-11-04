@@ -8,4 +8,14 @@
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
 
+    <!-- Apps that connect to a G7 / ONE+ themselves (OnePlusCompetingApps.KNOWN). Declared so the
+         start screen can warn when one is installed: from Android 11 other packages are hidden. -->
+    <queries>
+        <package android:name="com.dexcom.g7" />
+        <package android:name="com.dexcom.dexcomone" />
+        <package android:name="com.dexcom.one" />
+        <package android:name="com.dexcom.stelo" />
+        <package android:name="com.eveningoutpost.dexdrip" />
+        <package android:name="tk.glucodata" />
+    </queries>
 </manifest>

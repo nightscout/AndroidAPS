@@ -27,6 +27,14 @@ data class AuthResult(
      * (short-auth rejected / bond failure / missing certs).
      */
     val invalidateSharedKey: Boolean = false,
+    /**
+     * The sensor itself said no: its AuthStatus was not "authenticated", or its challenge did not
+     * match ours (wrong code or stale key). Counted by [OnePlusAuthRefusalPolicy], because refusals
+     * in a row lock a sensor. A lost link, a timeout or a bond problem is not a refusal.
+     */
+    val refusedBySensor: Boolean = false,
+    /** The refused attempt used a saved shared key (short auth), not the full pairing with the code. */
+    val refusedSavedKey: Boolean = false,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -34,7 +42,9 @@ data class AuthResult(
         return ok == other.ok &&
             message == other.message &&
             sharedKey.contentEquals(other.sharedKey) &&
-            invalidateSharedKey == other.invalidateSharedKey
+            invalidateSharedKey == other.invalidateSharedKey &&
+            refusedBySensor == other.refusedBySensor &&
+            refusedSavedKey == other.refusedSavedKey
     }
 
     override fun hashCode(): Int {
@@ -42,6 +52,8 @@ data class AuthResult(
         result = 31 * result + (message?.hashCode() ?: 0)
         result = 31 * result + (sharedKey?.contentHashCode() ?: 0)
         result = 31 * result + invalidateSharedKey.hashCode()
+        result = 31 * result + refusedBySensor.hashCode()
+        result = 31 * result + refusedSavedKey.hashCode()
         return result
     }
 }

@@ -122,29 +122,36 @@ object OnePlusAdvCandidate {
      *
      * Every part is a boost, never a filter — see the note on this object. Feed it the session from
      * [scanHintFor], not the raw store, or a new sensor is ranked with the old sensor's fingerprint.
+     *
+     * A sensor whose phone slot another phone holds ([phoneSlotHeld], from [OnePlusAdvSlot]) goes
+     * below the free ones, because it will refuse us and refusals in a row lock a sensor. The
+     * penalty is larger than any signal difference and smaller than the serial hint. It never
+     * applies to the stored sensor (sticky name or MAC match): the phone holding that slot is
+     * normally this one.
      */
     fun rankScore(
         name: String?,
         address: String?,
         rssi: Int,
         session: OnePlusStoredSession?,
+        phoneSlotHeld: Boolean? = null,
     ): Int {
         var score = rssi
-        if (!session?.lastDeviceName.isNullOrBlank() &&
+        val nameSticky = !session?.lastDeviceName.isNullOrBlank() &&
             name.equals(session?.lastDeviceName, ignoreCase = true)
-        ) {
-            score += 10_000
-        }
-        if (!session?.lastMac.isNullOrBlank() &&
+        val macSticky = !session?.lastMac.isNullOrBlank() &&
             address.equals(session?.lastMac, ignoreCase = true)
-        ) {
-            score += 5_000
-        }
+        if (nameSticky) score += 10_000
+        if (macSticky) score += 5_000
         val serial = session?.identity?.serial
         if (!serial.isNullOrBlank() && name?.contains(serial, ignoreCase = true) == true) {
             score += 1_000
         }
         if (isG7FamilyName(name)) score += 100
+        if (phoneSlotHeld == true && !nameSticky && !macSticky) score -= SLOT_HELD_PENALTY
         return score
     }
+
+    /** What a held phone slot costs in [rankScore]. More than any RSSI gap, less than the serial hint. */
+    const val SLOT_HELD_PENALTY = 500
 }
