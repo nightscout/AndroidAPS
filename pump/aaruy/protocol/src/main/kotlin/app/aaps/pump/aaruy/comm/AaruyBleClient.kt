@@ -399,6 +399,7 @@ class AaruyBleClient(
 
         /** Commands may be sent. It is set when the setup is complete. */
         private var ready = false
+        private val sendLock = Any()
         private var sequence: Short = 0
         private var writing = false
         private val queue = ConcurrentLinkedQueue<Request>()
@@ -544,7 +545,9 @@ class AaruyBleClient(
         }
 
         private fun sendNextIfIdle() {
-            if (!writing) queue.poll()?.let { send(it) }
+            synchronized(sendLock) {
+                if (!writing) queue.poll()?.let { send(it) }
+            }
         }
 
         fun syncTime() {
@@ -562,15 +565,18 @@ class AaruyBleClient(
 
         fun readVersion() = transport.readFirmwareVersion()
 
+        /** Writes come from the main thread and from coroutines. The pump refuses a frame whose sequence is out of order. */
         private fun send(request: Request) {
-            sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
-            val frame =
-                if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
-                else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "TX ${if (request.isRead) "read" else "write"} param=${request.paramId} seq=${sequence.unsigned()} data=${if (request.isRead) "" else request.data.toHexText()}")
-            writing = true
-            inFlight.add(request.paramId)
-            transport.gatt.writeCharacteristic(frame)
+            synchronized(sendLock) {
+                sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
+                val frame =
+                    if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
+                    else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "TX ${if (request.isRead) "read" else "write"} param=${request.paramId} seq=${sequence.unsigned()} data=${if (request.isRead) "" else request.data.toHexText()}")
+                writing = true
+                inFlight.add(request.paramId)
+                transport.gatt.writeCharacteristic(frame)
+            }
         }
 
         private fun onWriteDone(paramId: Short) {
@@ -615,7 +621,7 @@ class AaruyBleClient(
                 AaruyParamId.REPORT_DEVICE                                 -> handleReportDevice(payload)
 
                 AaruyParamId.SERIAL                                        ->
-                    if (payload.size == 2) sequence = AaruyByteReader(payload).u16()
+                    if (payload.size == 2) synchronized(sendLock) { sequence = AaruyByteReader(payload).u16() }
 
                 AaruyParamId.BASIC_PARAM                                   -> {
                     val param = BasicParamPacket.parse(payload).toBasicParam()
@@ -664,7 +670,7 @@ class AaruyBleClient(
 
         private fun handleReportDevice(payload: ByteArray) {
             val packet = ReportDevicePacket.parse(payload)
-            sequence = packet.serial
+            synchronized(sendLock) { sequence = packet.serial }
             protocolVersion = packet.version.toInt()
             if (packet.deviceType.toInt() == REPORT_DEVICE_ACCEPTED) {
                 syncTime()

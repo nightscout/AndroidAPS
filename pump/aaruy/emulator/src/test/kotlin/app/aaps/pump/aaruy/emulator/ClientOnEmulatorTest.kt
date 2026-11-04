@@ -27,6 +27,7 @@ import org.robolectric.annotation.Config
 import java.lang.reflect.Proxy
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.CountDownLatch
 
 /**
  * The Kotlin protocol against the emulator, through the BLE library: the same scenarios as `AarOnEmulatorTest`,
@@ -89,6 +90,29 @@ class ClientOnEmulatorTest {
     fun connectGivesStatusAndParamsTheAarUnderstands() {
         assertTrue(log.toString(), log.any { it.contains("maxBolus=10.0") && it.contains("bolusStep=2") })
         assertTrue(log.toString(), log.any { it.contains("runningStatus=1") && it.contains("basalStatus=BasalStatus(") })
+    }
+
+    /** The driver writes from the main thread and from coroutines. A frame sent out of order is refused by the pump. */
+    @Test
+    fun writesFromManyThreadsKeepTheSequenceInOrder() {
+        val start = CountDownLatch(1)
+        val threads = List(8) {
+            Thread {
+                start.await()
+                repeat(50) { util.getCurStatus() }
+            }.apply { start() }
+        }
+        start.countDown()
+        waitFor("all writes queued") { threads.none { it.isAlive } }
+        var seen = -1
+        waitFor("all frames sent") {
+            val now = transport.writes.size
+            val settled = now == seen
+            seen = now
+            repeat(10) { drain() }
+            settled
+        }
+        assertEquals("no sequence errors", 0, emulator.rejectedFrames)
     }
 
     @Test
