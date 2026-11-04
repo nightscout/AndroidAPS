@@ -14,7 +14,7 @@
     <string name="automation_category_device">Gerätestatus</string>
     <string name="automation_category_sensors">Sensoren &amp; Verbindung</string>
     <string name="automation_category_other">Andere</string>
-    <string name="automation_choose_trigger">Trigger( Auslöser) hinzufügen</string>
+    <string name="automation_choose_trigger">Auslöser hinzufügen</string>
     <string name="automation_add_group">Gruppe</string>
     <string name="automation_choose_action">Aktion hinzufügen</string>
     <string name="automation_category_targets">Ziele</string>
