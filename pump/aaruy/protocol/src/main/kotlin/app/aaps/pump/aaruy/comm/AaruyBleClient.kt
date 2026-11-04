@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.Locale
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
@@ -551,6 +552,7 @@ class AaruyBleClient(
             val frame =
                 if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
                 else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "TX ${if (request.isRead) "read" else "write"} param=${request.paramId} seq=${sequence.unsigned()} data=${if (request.isRead) "" else request.data.toHexText()}")
             writing = true
             inFlight.add(request.paramId)
             transport.gatt.writeCharacteristic(frame)
@@ -580,7 +582,12 @@ class AaruyBleClient(
 
         private fun handleFrame(frame: ByteArray) {
             try {
-                val message = AaruyFrame.parse(frame) ?: return
+                val message = AaruyFrame.parse(frame)
+                if (message == null) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "RX frame not made of full blocks: ${frame.toHexText()}")
+                    return
+                }
+                aapsLogger.debug(LTag.PUMPBTCOMM, "RX param=${message.paramId} data=${message.payload.toHexText()}")
                 if (message.paramId != AaruyParamId.SERIAL) queue.poll()?.let { send(it) }
                 handleMessage(message.paramId, message.payload)
             } catch (e: Exception) {
@@ -715,6 +722,8 @@ class AaruyBleClient(
         }
     }
 }
+
+private fun ByteArray.toHexText(): String = joinToString(" ") { "%02X".format(Locale.ROOT, it) }
 
 /** The encrypted frame around each packet. */
 /** The AES key of the BLE frames. The emulator needs it too. */
