@@ -168,6 +168,7 @@
     <string name="notification">Notificación</string>
     <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
+    <string name="notexists">no existe</string>
     <string name="glucose">Glucosa</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -225,9 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Selecciona el perfil que se aplicará al activar</string>
     <string name="pump_wizard_profile_gate_no_store">No hay ningún perfil definido. Abre la Gestión de perfiles para crear uno y, a continuación, inicia la activación de nuevo</string>
     <string name="reset">Restablecer</string>
+    <string name="profileswitch_ismissing">Falta el cambio de perfil. Por favor, realice un cambio de perfil o pulse «Activar perfil» en LocalProfile</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Porcentaje</string>
     <string name="timeshift_label">Desplazamiento de hora</string>
+    <string name="confirm_remove_multiple_items">¿Está seguro de que desea eliminar %1$d elementos?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">El máster no tiene %1$d de estas entradas. No se han eliminado</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
@@ -339,7 +342,9 @@
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Pregunta</string>
     <string name="careportal_exercise">Ejercicio</string>
+    <string name="careportal_announcement_message">Anuncio: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
+    <string name="careportal_question_message">Pregunta: %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio de zona de la bomba: %1$s</string>
     <string name="careportal_pump_site_change">Cambio de zona de la bomba</string>
@@ -656,6 +661,7 @@
     <string name="uel_ns_queue_cleared">COLA NS LIMPIADA</string>
     <string name="uel_ns_settings_copied">CONFIGURACIONES NS COPIADAS</string>
     <string name="uel_error_dialog_ok">DIÁLOGO DE ERROR OK</string>
+    <string name="uel_error_dialog_mute">SILENCIAR DIÁLOGO DE ERROR</string>
     <string name="uel_error_dialog_mute_5min">SILENCIAR ERROR DE DIÁLOGO DURANTE 5 MINUTOS</string>
     <string name="uel_objective_started">OBJETIVO INICIADO</string>
     <string name="uel_objective_unstarted">OBJETIVO NO INICIADO</string>
@@ -720,6 +726,7 @@
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
     <string name="error_in_target_values">Error en los valores de objetivo</string>
+    <string name="profile_name_contains_dot">Algunos nombres de perfil contienen puntos.\nNS no admite esto.\nLos perfiles no se cargarán en NS</string>
     <string name="invalid_profile_not_accepted">Perfil inválido %1$s no aceptado desde Nightscout</string>
     <string name="errors">Errores</string>
     <!-- Command Queue + readStatus reasons -->
@@ -884,6 +891,7 @@
     <string name="export_result_message_exported">Ajustes exportados</string>
     <string name="export_result_message_failed">¡Exportación de configuraciónes FALLIDA!</string>
     <string name="export_result_message_about_to_expire">Configuración exportada: la contraseña expirará pronto. Exporta manualmente y (re)introduce la contraseña.</string>
+    <string name="export_result_message_expired">Exportación de ajustes cancelada: la contraseña ha caducado. ¡Exporte manualmente e introduzca la contraseña de nuevo!</string>
     <string name="export_result_message_disabled">Advertencia (automatización): Exportación de configuración no activada!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Exportación a la nube realizada con éxito</string>
@@ -990,6 +998,7 @@
     <string name="cannula">Cánula</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Site Rotation -->
+    <string name="select_location">Pulse abajo para seleccionar la zona</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="fabric_upload_disabled">¡Carga de registros de fallos desactivada!</string>
@@ -1038,6 +1047,7 @@
     <string name="unsaved_changes">Cambios sin guardar</string>
     <string name="unsaved_changes_message">Tienes cambios sin guardar. ¿Qué te gustaría hacer?</string>
     <string name="discard">Descartar</string>
+    <string name="ic_dynamic_label_warning">Su algoritmo puede proporcionar un cálculo dinámico del IC. Los valores a continuación solo se pueden utilizar como alternativa en caso de que falten datos o únicamente como valor de referencia</string>
     <string name="isf_dynamic_label_warning">Tu algoritmo puede proporcionar un cálculo dinámico del ISF. Los valores a continuación solo se utilizarán como reserva en caso de falta de datos o únicamente como valor de referencia</string>
     <string name="add_time_block">Añadir tramo horario</string>
     <string name="remove_entry">Eliminar entrada</string>
