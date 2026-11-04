@@ -1,0 +1,210 @@
+package app.aaps.core.ui.compose
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import kotlin.math.roundToInt
+
+/**
+ * Compact `[ − ] [ editable value ] [ + ]` stepper for inline numeric editing.
+ *
+ * The TextField commits its value on focus loss or IME Done — any action button on the
+ * same screen that depends on the value must call `focusManager.clearFocus()` first to
+ * flush pending text. Long-pressing +/- auto-repeats; range boundaries disable the
+ * corresponding button.
+ *
+ * @param value Current numeric value
+ * @param onValueChange Called with the new value (already coerced into [valueRange])
+ * @param valueRange Allowed value range; values outside are clamped on commit
+ * @param step Step size for +/- buttons
+ * @param valueFormat Format for the displayed text
+ * @param unitLabel Unit label, shown as the field's trailing icon
+ * @param enabled Whether the stepper is interactive
+ * @param label Spoken name of the value, e.g. "Basal 08:00". Not drawn: the stepper sits in a row
+ *   that shows its context next to it, but a screen reader reads the field on its own and heard
+ *   only "0.85, edit box" and "decrement" - on every one of 24 basal rows.
+ * @param modifier Modifier for the row container
+ */
+@Composable
+fun PlusMinusEdit(
+    value: Double,
+    onValueChange: (Double) -> Unit,
+    valueRange: ClosedFloatingPointRange<Double>,
+    step: Double,
+    valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
+    unitLabel: TextRef? = null,
+    enabled: Boolean = true,
+    label: String? = null,
+    modifier: Modifier = Modifier
+) {
+    val focusManager = LocalFocusManager.current
+    val minValue = valueRange.start
+    val maxValue = valueRange.endInclusive
+
+    var isFocused by remember { mutableStateOf(false) }
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(valueFormat.format(value)))
+    }
+    var isError by remember { mutableStateOf(false) }
+
+    // Sync external value → text when not focused (e.g., +/- buttons or external update).
+    LaunchedEffect(value) {
+        if (!isFocused) {
+            textFieldValue = TextFieldValue(valueFormat.format(value))
+            isError = false
+        }
+    }
+
+    val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
+
+    // Same wording as NumberInputRow: "decrement Basal 08:00 by 0.01 U/h".
+    val stepNumber = valueFormat.format(step)
+    val stepText =
+        if (resolvedUnitLabel.isNotEmpty()) stringResource(CoreUiStrings.value_with_unit, stepNumber, resolvedUnitLabel)
+        else stepNumber
+    val decreaseDescription =
+        if (label != null) stringResource(CoreUiStrings.a11y_min_button_description, label, stepText)
+        else stringResource(CoreUiStrings.decrement)
+    val increaseDescription =
+        if (label != null) stringResource(CoreUiStrings.a11y_plus_button_description, label, stepText)
+        else stringResource(CoreUiStrings.increment)
+
+    fun validateAndCommit(text: String) {
+        val cleaned = text.trim().replace(",", ".")
+        val parsed = cleaned.toDoubleOrNull()
+        if (parsed == null) {
+            isError = true
+        } else {
+            isError = false
+            onValueChange(parsed.coerceIn(minValue, maxValue))
+        }
+    }
+
+    // Flush pending text when leaving composition (back press without tapping Done).
+    val latestTextProvider by rememberUpdatedState({ textFieldValue.text })
+    val latestIsFocused by rememberUpdatedState(isFocused)
+    DisposableEffect(Unit) {
+        onDispose {
+            if (latestIsFocused) validateAndCommit(latestTextProvider())
+        }
+    }
+
+    fun stepValue(direction: Int) {
+        val newValue = stepFromShown(value, direction, step, valueFormat, valueRange)
+        textFieldValue = TextFieldValue(valueFormat.format(newValue))
+        isError = false
+        onValueChange(newValue)
+    }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        RepeatingIconButton(
+            onClick = { stepValue(-1) },
+            enabled = enabled && value > minValue,
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Remove,
+                contentDescription = decreaseDescription,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+
+        TextField(
+            value = textFieldValue,
+            onValueChange = { newValue ->
+                textFieldValue = newValue
+                if (isError) isError = false
+            },
+            singleLine = true,
+            enabled = enabled,
+            isError = isError,
+            trailingIcon = if (resolvedUnitLabel.isNotEmpty()) {
+                { Text(resolvedUnitLabel) }
+            } else null,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = if (step != step.roundToInt().toDouble())
+                    KeyboardType.Decimal else KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    validateAndCommit(textFieldValue.text)
+                    focusManager.clearFocus()
+                }
+            ),
+            modifier = Modifier
+                .weight(1f)
+                .then(if (label != null) Modifier.semantics { contentDescription = label } else Modifier)
+                .onFocusChanged { focusState ->
+                    if (isFocused && !focusState.isFocused) {
+                        validateAndCommit(textFieldValue.text)
+                    }
+                    if (!isFocused && focusState.isFocused) {
+                        textFieldValue = textFieldValue.copy(
+                            selection = TextRange(0, textFieldValue.text.length)
+                        )
+                    }
+                    isFocused = focusState.isFocused
+                }
+        )
+
+        RepeatingIconButton(
+            onClick = { stepValue(1) },
+            enabled = enabled && value < maxValue,
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = increaseDescription,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+    }
+}
+
+/**
+ * The value one [step] up ([direction] 1) or down (-1) from [value] as [valueFormat] shows it.
+ *
+ * Not from the stored value: one with more digits than the field shows moved the shown digit by two, or
+ * did not move it at all. Autotune writes basal rates with three decimals, and 1.125 is shown as 1.12
+ * but stepped from 1.13 (#5401).
+ */
+internal fun stepFromShown(value: Double, direction: Int, step: Double, valueFormat: NumberFormat, valueRange: ClosedFloatingPointRange<Double>): Double {
+    val shown = valueFormat.format(value, NumberFormatPlatform.SEPARATOR_DOT).toDoubleOrNull() ?: value
+    return roundToStep(shown + direction * step, step).coerceIn(valueRange.start, valueRange.endInclusive)
+}

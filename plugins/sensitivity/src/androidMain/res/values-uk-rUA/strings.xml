@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Sensitivity Oref1</string>
+    <string name="sensitivity_aaps">Sensitivity AAPS</string>
+    <string name="sensitivity_weighted_average">Зважена середня чутливість</string>
+    <string name="description_sensitivity_aaps">Чутливість розраховується так само, як у Oref0, але можна вказати часовий проміжок у минулому. Мінімальне засвоєння вуглеводів визначається з максимальної тривалості засвоєння з налаштувань.</string>
+    <string name="description_sensitivity_oref1">Чутливість розраховується за даними за останні 8 або 24 години (береться більш чутливе значення). Якщо вуглеводи не засвоєні, вони враховуються тільки до часу, зазначеного в налаштуваннях. Плагін також розраховує UAM.</string>
+    <string name="description_sensitivity_weighted_average">Чутливість розраховується як зважене середнє від відхилень. Новіші відхилення мають більшу вагу. Мінімальне засвоєння вуглеводів береться з максимальної тривалості засвоєння з налаштувань. Цей алгоритм найшвидше реагує на зміни чутливості.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM вимкнено, бо він залежить від плагіна чутливості Oref1</string>
+    <string name="absorption_settings_title">Налаштування засвоєння</string>
+</resources>

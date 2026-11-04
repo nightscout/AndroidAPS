@@ -1,0 +1,172 @@
+package app.aaps.ui.activities
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
+
+/**
+ * Modal-style screen rendered over a scrim by [ErrorActivity] when an urgent alarm fires.
+ * Displays the alarm title/status and three actions, each saying what it does: mute for 5 minutes
+ * (+5 min for the "time to eat" timer), silence, and silence and close.
+ *
+ * Audio (MediaPlayer + volume ramp) is owned by [ErrorActivity] itself — the [onStart]
+ * callback fires once on first composition so the activity can begin playback when the
+ * screen is shown.
+ *
+ * @see ErrorScreenPreview
+ * @see ErrorScreenShortPreview
+ */
+@Composable
+fun ErrorScreen(
+    title: String,
+    status: String,
+    appIcon: Int,
+    onOk: () -> Unit,
+    onMute: () -> Unit,
+    onMute5Min: () -> Unit,
+    onStart: () -> Unit,
+    /** The alarm of the "time to eat" timer: the first button moves the timer 5 minutes instead of muting for 5 minutes. */
+    eatReminder: Boolean = false
+) {
+    DisposableEffect(Unit) {
+        onStart()
+        onDispose { }
+    }
+
+    // Semi-transparent background
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(enabled = false) { }
+            .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)),
+        contentAlignment = Alignment.Center
+    ) {
+        // Dialog-style card
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Error icon with app icon badge
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    // Main error icon
+                    Icon(
+                        imageVector = Icons.Filled.Error,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(48.dp)
+                    )
+                    // App icon badge in bottom-right corner
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .size(24.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = CircleShape
+                            )
+                            .padding(2.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = appIcon),
+                            contentDescription = "App icon",
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Title
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Status message
+                Text(
+                    text = status,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Mute 5 min button (+5 min for the eat timer)
+                Button(
+                    onClick = onMute5Min,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        if (eatReminder) stringResource(CoreUiStrings.eat_reminder_extend, EatReminder.EXTEND_MINUTES)
+                        else stringResource(CoreUiStrings.mute5min)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Silence button: the sound stops, this screen stays open
+                Button(
+                    onClick = onMute,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(CoreUiStrings.alarm_silence))
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Silence and close button
+                Button(
+                    onClick = onOk,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(CoreUiStrings.alarm_silence_and_close))
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,268 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+plugins {
+    kotlin("multiplatform")
+    // Metro, because this module does not only link the migrated code, it builds a graph from it.
+    alias(libs.plugins.metro)
+    // Compose, because this module also hosts AAPS's UI in a UIViewController. Declaring the
+    // dependency transitively through :core:ui is not enough: the declarations resolve at compile
+    // time, then `ComposeUIViewController` is missing at link time, which surfaces only when the
+    // app runs, as an IrLinkageError.
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
+}
+
+// A framework that links every module already migrated to Kotlin Multiplatform.
+//
+// This module ships no features. It exists to answer one question that compiling klibs cannot:
+// does the migrated code actually LINK into an iOS binary? Compilation only checks each module on
+// its own, while linking resolves the whole graph at once, so it is the step that finds a missing
+// `actual`, a dependency with no Apple artifact, or a symbol nothing provides.
+val migratedModules = listOf(
+    ":appshell",
+    ":core:data",
+    ":core:graph",
+    ":core:interfaces",
+    ":core:keys",
+    ":core:nssdk",
+    ":core:objects",
+    ":core:ui",
+    ":core:utils",
+    ":database:impl",
+    ":database:persistence",
+    ":implementation",
+    ":plugins:aps",
+    ":plugins:automation",
+    ":plugins:calibration",
+    ":plugins:configuration",
+    ":plugins:constraints",
+    ":plugins:main",
+    ":plugins:sensitivity",
+    ":plugins:smoothing",
+    ":plugins:source",
+    ":plugins:sync",
+    ":pump:virtual",
+    ":shared:clientbindings",
+    ":shared:impl",
+    ":ui",
+    ":workflow"
+)
+
+// Whether the migrated API is written into the framework header for Swift to call.
+//
+// On. Exporting generates an Objective-C header for every public declaration, which is a stricter
+// check than linking: a name that is legal in Kotlin can still be illegal in Objective-C. It caught
+// `QuickWizardEntry.YES` and `NO`, since both are macros there, and the header came out as
+// `int32_t __objc_no`. Those are now ALWAYS and NEVER.
+//
+// Swift callers see every exported name at once, so a Kotlin class can shadow a system type. AAPS
+// has a `Scene`, which hides SwiftUI's, and the app writes `SwiftUI.Scene` to say which it means. A
+// real app would export a smaller, chosen surface instead of every module.
+val exportMigratedApi = true
+
+// Fails the build when a module gains iOS targets and is not listed above.
+//
+// The list is written by hand, which is fine for reviewing but useless for noticing. When
+// :implementation became multiplatform, this framework carried on linking fourteen modules and
+// reported success, so a passing build quietly meant less than it had the day before. That is the
+// failure this catches: not a broken build, a shrinking one.
+//
+// It reads the sibling build files as text rather than inspecting other Gradle projects, because
+// inspecting them would couple this module's configuration to theirs and cost project isolation.
+val checkMigratedModules = tasks.register("checkMigratedModules") {
+    val listed = migratedModules.toSet()
+    val buildFiles = rootProject.projectDir.walkTopDown()
+        .onEnter { it.name != "build" && it.name != ".git" }
+        .filter { it.name == "build.gradle.kts" }
+        .toList()
+    val rootDir = rootProject.projectDir
+
+    doLast {
+        val withIosTargets = buildFiles
+            // Skip comment lines: a doc line that merely mentions the target used to count as
+            // declaring it, which is how a KDoc in :appshell once made this fail.
+            // A module builds for iOS when it declares the target itself, or applies
+            // kmp-android-library, which declares it for the module.
+            .filter { f ->
+                f.readLines().any { line ->
+                    val t = line.trimStart()
+                    !t.startsWith("//") && !t.startsWith("*") && !t.startsWith("/*") &&
+                        (t.contains("iosArm64()") || t.contains("id(\"kmp-android-library\")"))
+                }
+            }
+            .map { ":" + it.parentFile.relativeTo(rootDir).invariantSeparatorsPath.replace('/', ':') }
+            // :ios:shell is this module. :shared:tests builds for iOS so that shared test fixtures
+            // are available to common tests, but it is fixtures, not product - linking it would put
+            // test helpers into the framework header Swift sees.
+            .filterNot { it == ":ios:shell" || it == ":shared:tests" }
+            .toSet()
+
+        val missing = withIosTargets - listed
+        val stale = listed - withIosTargets
+        check(missing.isEmpty() && stale.isEmpty()) {
+            buildString {
+                appendLine("ios/shell no longer covers every module that builds for iOS.")
+                if (missing.isNotEmpty()) appendLine("  add to migratedModules:    " + missing.sorted().joinToString())
+                if (stale.isNotEmpty()) appendLine("  no longer builds for iOS:  " + stale.sorted().joinToString())
+                append("Keep ShellInfo.LINKED_MODULES in step as well.")
+            }
+        }
+    }
+}
+
+tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { dependsOn(checkMigratedModules) }
+
+/**
+ * The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date.
+ *
+ * Takes the commit from [gitHead] rather than asking git again, so the stamp and
+ * `GeneratedBuildInfo.HEAD` can never disagree about which commit this is. They did: this had its
+ * own copy of the call that ignored the exit code, so a build outside a work tree stamped itself
+ * "-2026.11.03" with no commit at all while HEAD correctly said the commit was unknown.
+ */
+fun buildStamp(): String = gitHead() + "-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
+
+/**
+ * Runs a git command and returns its trimmed output, or null if the command did not succeed.
+ *
+ * The exit code is what decides, not the output. git that is installed but has nothing to say -
+ * run outside a work tree, or asked for an `origin` that is not configured - exits non-zero with
+ * an empty stdout, and reading that as an answer gave an empty commit and an empty `status` that
+ * looked like a clean tree.
+ *
+ * Empty output with a zero exit is still an answer, and a real one: that is exactly what
+ * `git status -s` prints for a clean tree. So the two cases have to be told apart here rather than
+ * by looking at the text, which is the trap this used to fall into.
+ */
+fun git(vararg args: String): String? = try {
+    val out = File.createTempFile("git-ios", "")
+    val process = ProcessBuilder(listOf("git") + args).redirectOutput(out).start()
+    if (process.waitFor() == 0) out.readText().trim() else null
+} catch (_: Exception) {
+    null
+}
+
+/**
+ * The short commit, the same shape `:app` puts in BuildConfig.HEAD.
+ *
+ * `--exclude=ios-testflight-*` for the same reason as in `:app`. It is tempting to keep these on
+ * the iOS side, since the tag was made by this platform's own release - but the tag names one past
+ * submission, not this build. `git describe` reports the nearest one whatever the distance, so a
+ * build 53 commits later still called itself "ios-testflight-20260906-085036-53-g4dddae0", which
+ * reads as that TestFlight build and is not.
+ */
+fun gitHead(): String = git("describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")?.ifEmpty { null } ?: "NoGitSystemAvailable"
+
+/** Where this was cloned from, so a crash report can say whether it came from a fork. */
+fun gitRemoteUrl(): String = git("remote", "get-url", "origin")?.ifEmpty { null } ?: "NoGitSystemAvailable"
+
+/**
+ * Whether the working tree was clean, by the same rule `:app` uses.
+ *
+ * Untracked files do not count - a clone usually has some, and treating them as changes would mark
+ * every build dirty and make the flag say nothing. Returns false when git cannot be reached, so an
+ * unknown answer never reads as "clean".
+ */
+fun allCommitted(): Boolean {
+    val status = git("status", "-s") ?: return false
+    return status
+        .replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea/codeStyles/.*?\s*$"""), "")
+        .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "")
+        .trim()
+        .isEmpty()
+}
+
+/** The version this build reports, from the same constant the Android app uses. */
+val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBuildInfo") {
+    version.set(Versions.appVersion)
+    buildStamp.set(buildStamp())
+    platform.set("iOS")
+    packageName.set("app.aaps.ios.shell.config")
+    // So a crash report names the commit, the repository and whether the tree was clean - the three
+    // things that tell an upstream report from a fork's. Android has sent these since 2019.
+    head.set(gitHead())
+    gitRemote.set(gitRemoteUrl())
+    committed.set(allCommitted())
+    outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
+}
+
+/**
+ * The version numbers Xcode reads, written where `Signing.xcconfig` includes them.
+ *
+ * Not committed - it is generated, and a stale committed copy would be a build number that no longer
+ * increases. Run this before archiving for TestFlight; `Signing.xcconfig` includes it optionally, so
+ * a clone that has never run it still builds with the project's own defaults.
+ */
+val generateIosVersionXcconfig = tasks.register<GenerateVersionXcconfigTask>("generateIosVersionXcconfig") {
+    version.set(Versions.appVersion)
+    buildNumber.set(GenerateVersionXcconfigTask.buildNumberFor(System.currentTimeMillis()))
+    // Read, not written: the task checks that the version typed into the targets as the fallback
+    // still matches this one, because nothing else would notice when they drift apart.
+    projectFile.set(layout.projectDirectory.file("../app/AAPSClient.xcodeproj/project.pbxproj"))
+    // Hard failure on CI, a warning on a developer's machine. Every CI provider sets this.
+    strict.set(providers.environmentVariable("CI").map { it.isNotBlank() }.orElse(false))
+    outputFile.set(layout.projectDirectory.file("../app/Version.xcconfig"))
+    outputs.upToDateWhen { false } // the build number is the clock; never reuse a previous run
+}
+
+/**
+ * Which module owns which strings, generated rather than hand written.
+ *
+ * The list is `StringOwnerModules.ALL`, shared with `:app` and the desktop shell, so the three
+ * platforms cannot drift - which they had: the desktop copy carried five of sixteen modules.
+ */
+val generateIosStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateIosStringOwners") {
+    owners.set(StringOwnerModules.ALL)
+    packageName.set("app.aaps.ios.shell.di")
+    objectName.set("GeneratedStringOwners")
+    // Text, not resource ids: there is no AAPT table on Apple.
+    useResourceIds.set(false)
+    outputDir.set(layout.buildDirectory.dir("generated/stringOwners"))
+}
+
+kotlin {
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { target ->
+        target.binaries.framework {
+            baseName = "AapsShared"
+            // Static: nothing here is loaded at runtime by another framework, and a static link
+            // reports an unresolved symbol as a build error instead of deferring it to app start.
+            isStatic = true
+
+            if (exportMigratedApi) {
+                migratedModules.forEach { export(project.dependencies.project(it)) }
+            }
+        }
+    }
+
+    sourceSets {
+        iosMain { kotlin.srcDir(generateIosStringOwners); kotlin.srcDir(generateIosBuildInfo) }
+
+        commonMain {
+            dependencies {
+                // `api`, not `implementation`: a module can only be exported to the framework when
+                // it is part of this module's own API, and `exportMigratedApi` turns that on.
+                migratedModules.forEach { api(project.dependencies.project(it)) }
+
+                // Named here rather than inherited, so the iOS parts of Compose are in the link.
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.foundation)
+                implementation(libs.jetbrains.compose.ui)
+                implementation(libs.jetbrains.compose.material3)
+            }
+        }
+
+        // Runs on the simulator through :ios:shell:iosSimulatorArm64Test. These cover the same
+        // ground the on screen checks do, but a machine reads the result instead of a person.
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+                // runTest, because everything the repository exposes is a suspend function.
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+    }
+}

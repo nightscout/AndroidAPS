@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
-    <string name="nav_exit">Konec</string>
-    <string name="delta">Rozdíl</string>
-    <string name="save">Uložit</string>
-    <string name="wear">Wear</string>
-    <string name="nav_about">O aplikaci</string>
-    <string name="sensitivity_warning">Při zapnuté detekci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
-    <string name="invalid">NEPLATNÝ</string>
-    <string name="gradually_increase_notification_volume">Postupně zvyšovat hlasitost výstrah a oznámení</string>
-    <string name="localalertsettings_title">Místní výstrahy</string>
-    <string name="enable_missed_bg_readings_alert">Výstraha při nedostupných glykémiích</string>
-    <string name="enable_pump_unreachable_alert">Výstraha při nedostupné pumpě</string>
-    <string name="pump_unreachable_threshold">Limit pro nedostupnost pumpy [min]</string>
-    <string name="enable_carbs_req_alert">Výstraha, jsou-li vyžadovány sacharidy</string>
-    <string name="open_navigation">Otevřít menu</string>
-    <string name="close_navigation">Zavřít menu</string>
-    <string name="remove_items">Odstranit položky</string>
-    <string name="sort_items">Seřadit položky</string>
-    <string name="unitsnosemicolon">Jednotky</string>
     <string name="authorizationfailed">Autorizace selhala</string>
-    <string name="cannula">Kanyla</string>
     <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Odstranit zvolené položky</string>
-    <string name="count_selected">Vybráno: %1$d</string>
-    <string name="sort_label">Seřadit</string>
-    <string name="search">Hledat</string>
-    <string name="simple_mode">Zjednodušený režim</string>
     <string name="select">Vybrat</string>
     <string name="set">Nastavit</string>
+    <string name="migrating_preferences">Migrace nastavení…</string>
+    <string name="optimizing_database">Optimalizace databáze…</string>
+    <string name="initializing_plugins">Inicializace pluginů…</string>
+    <string name="initializing">Inicializace…</string>
+    <string name="migrating_profile_switches">Migrace změn profilu…</string>
+    <string name="migrating_effective_profile_switches">Migrace efektivních změn profilu…</string>
+    <string name="migrating_boluses">Migrace bolusů…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Starší záznamy neměly konfiguraci inzulínu a nebyl aktivní profil, takže pro ně byl použit %1$s. Zkontrolujte nastavení inzulínu - již migrované záznamy nejsou následně aktualizovány.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Starší záznamy neměly dobu působnosti inzulínu, proto bylo pro %2$s použito %1$.1f hodin. Zkontrolujte nastavení inzulínu — již převedené záznamy se dodatečně neaktualizují.</string>
+    <string name="settings_unreadable_title">Nastavení AAPS nelze načíst</string>
+    <string name="settings_unreadable_key_explanation">Vaše nastavení na tomto telefonu jsou šifrována klíčem, který Android udržuje pro AAPS a který je již neotevírá. To se může stát po resetování úložiště klíčů telefonu.</string>
+    <string name="settings_unreadable_keystore_explanation">Úložiště klíčů telefonu neodpovědělo, takže aplikace AAPS nemohla otevřít jeho nastavení.</string>
+    <string name="settings_unreadable_not_running">Aplikace AAPS není spuštěna a neovládá pumpu. Až zkončí dočasný bazál, pumpa přejde na bazální profil.</string>
+    <string name="settings_unreadable_what_to_do">Zkuste aplikaci AAPS zavřít a znovu spustit. Pokud to nepomůže, restartujte telefon. Vyberte Začít nově pouze v případě, že nic jiného nepomůže: odstaví se nečitelná nastavení a AAPS začne s prázdným nastavením. Poté importujte své poslední nastavení v průvodci nastavením.</string>
+    <string name="settings_unreadable_start_fresh">Začít nově</string>
+    <string name="settings_unreadable_confirm_title">Začít s prázdnými nastavením?</string>
+    <string name="settings_unreadable_confirm_text">Nečitelný soubor nastavení je přejmenován a uchováván. Všechna nastavení začínají od jejich výchozího nastavení. Poté znovu nastavte AAPS nebo importujte nastavení.</string>
+    <string name="settings_unreadable_notification">Aplikace AAPS není spuštěna. Otevřete AAPS a zjistěte, co dělat.</string>
 </resources>

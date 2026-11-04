@@ -1,2 +1,18 @@
 github_checks:
     annotations: false
+
+# Coverage arrives in two uploads for one commit: the unit suite from GitHub Actions and the
+# instrumented suite from CircleCI. Codecov merges uploads sharing a commit SHA, so a line covered by
+# either counts as covered.
+#
+# after_n_builds matters: without it the status posts as soon as the first upload lands and reports a
+# number missing half the data, which reads as a large coverage drop on every pull request.
+codecov:
+    notify:
+        after_n_builds: 2
+
+flags:
+    unit:
+        joined: true
+    instrumented:
+        joined: true

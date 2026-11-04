@@ -13,13 +13,14 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.roundToLong
 
 /**
  * This class is intended to be run by the Service, for the Service. Not intended for clients to run.
  */
-class InitializePumpManagerTask @Inject constructor(
+@Inject
+class InitializePumpManagerTask(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rileyLinkServiceData: RileyLinkServiceData,
@@ -38,7 +39,7 @@ class InitializePumpManagerTask @Inject constructor(
         } else lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: 0.0
 
         val rileyLinkCommunicationManager = pumpDevice?.rileyLinkService?.deviceCommunicationManager
-        if (activePlugin.activePump.manufacturer() === ManufacturerType.Medtronic) {
+        if (activePlugin.activePumpInternal.manufacturer() === ManufacturerType.Medtronic) {
             if (lastGoodFrequency > 0.0 && rileyLinkCommunicationManager?.isValidFrequency(lastGoodFrequency) == true) {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.RileyLinkReady)
                 aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to $lastGoodFrequency MHz")

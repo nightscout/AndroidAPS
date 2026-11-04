@@ -1,6 +1,6 @@
 package app.aaps.pump.medtronic.comm.history.pump
 
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.pump.medtronic.MedtronicTestBase
 import app.aaps.pump.medtronic.comm.history.RawHistoryPage
@@ -10,15 +10,12 @@ import app.aaps.pump.medtronic.util.MedtronicUtil
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 
 /**
  * Created by andy on 11/1/18.
  */
 @Suppress("SpellCheckingInspection")
 class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
-
-    @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var medtronicPumpStatus: MedtronicPumpStatus
 
@@ -27,7 +24,7 @@ class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
 
     @BeforeEach fun setup() {
         medtronicPumpStatus = MedtronicPumpStatus(preferences, rxBus, rileyLinkUtil)
-        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
+        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, notificationManager)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }
 
@@ -172,6 +169,32 @@ class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
             MedtronicDeviceType.Medtronic_522_722
         )
         assertThat(pumpHistoryEntries).hasSize(41)
+    }
+
+    /**
+     * A Medtronic 723 after a pump reset (#1398). The records 0x50, 0x54 and 0x55 were read with the wrong length, so
+     * the rest of them was read as more records. One of them was a suspend dated 30.00.2060, and AAPS showed the pump
+     * as suspended.
+     */
+    @Test @Throws(Exception::class) fun historyProblem_1398_diyaps() {
+        val pumpHistoryEntries = readAndParseHistoryPage(
+            "09 00 00 40 40 81 07 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 26 00 00 40 00 81 07 27 00 00 00 00 00 00 28 00 00 00 00 00 00 83 00 00 40 00 81 07 53 00 00 40 00 81 07 00 52 00 00 40 00 81 07 51 02 00 40 00 81 07 55 11 00 40 00 81 07 00 0F 0F 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 0F 0F 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 50 00 00 40 00 81 07 20 01 1E 00 3C 14 00 1E 3C FF FF FF B4 46 00 20 01 1E 00 3C 14 00 1E 3C FF FF FF B4 46 00 54 FC 00 40 20 81 07 FF FC FF 00 F0 50 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF FC FF FC FF 00 F0 50 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 00 FF FF 44 01 56 00 00 40 00 81 07 28 28 00 28 28 64 01 09 40 00 01 07 17 00 25 40 00 01 07 18 00 80 8F 08 10 16 07 00 00 00 00 01 87 00 00 00 6E 01 87 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21 00 86 8F 08 10 16 03 00 00 00 00 9D 8F 28 10 16 06 3D 01 8F B5 8F 28 F0 16 0C 3D B8 8F 08 10 16 7B 00 B8 8F 08 10 16 00 00 00 24 06 95 90 48 10 16 2C C8 89 91 08 10 16 62 00 98 91 08 10 16 63 04 AB 91 08 10 16 26 01 B9 91 08 10 16 27 00 00 00 00 00 00 28 00 00 00 00 00 00 26 01 84 92 08 10 16 27 01 B2 07 00 00 00 28 00 00 00 00 00 00 17 00 B2 A4 08 50 16 18 00 80 A6 08 50 16 1E 01 AD A9 08 10 16 7B 00 B4 A9 08 10 16 00 00 00 1F 20 B4 A9 08 10 16 1E 01 96 B1 08 10 16 7B 00 9A B1 08 10 16 00 00 00 1F 20 9A B1 08 10 16 1E 01 BB B1 08 10 16 7B 00 83 B2 08 10 16 00 00 00 1F 20 83 B2 08 10 16 1E 01 86 B2 08 10 16 7B 00 8A B2 08 10 16 00 00 00 1F 20 8B B2 08 10 16 1E 01 84 B3 08 10 16 7B 00 89 B3 08 10 16 00 00 00 1F 20 89 B3 08 10 16 1E 01 A7 B9 08 10 16 7B 00 AB B9 08 10 16 00 00 00 1F 20 AB B9 08 10 16 01 00 40 00 40 00 00 00 B7 AE 29 70 16 01 00 3C 00 3C 00 0C 00 90 93 2E 70 16 01 00 38 00 38 00 24 00 96 B2 30 70 16 01 00 40 00 40 00 30 00 9A B7 32 70 16 01 00 3C 00 3C 00 5C 00 8D B0 33 70 16 01 00 2C 00 2C 00 48 00 AB 84 36 70 16 07 00 00 01 5C B0 16 00 0F 08 6E B0 16 05 00 00 00 00 00 00 00 01 5C 00 00 00 01 5C 64 00 00 00 00 00 00 00 00 01 5C 00 00 00 06 F0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 40 01 00 30 00 30 00 00 00 98 BA 28 71 16 01 00 34 00 34 00 10 00 B0 AE 2C 71 16 01 00 38 00 38 00 40 00 84 B6 2C 71 16 01 00 34 00 34 00 78 00 BA 82 2D 71 16 01 00 34 00 34 00 98 00 86 B5 2D 71 16 01 00 30 00 30 00 18 00 81 92 32 71 16 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 D1 4D",
+            MedtronicDeviceType.Medtronic_723_Revel
+        )
+        assertThat(pumpHistoryEntries).hasSize(56)
+        // Only the date of the reset (01.01.2007) and the real dates (2022). Nothing read from the wrong place.
+        assertThat(pumpHistoryEntries.filter { it.atechDateTime != 0L }.map { DateTimeUtil.getYear(it.atechDateTime) }.toSet())
+            .containsExactly(2007, 2022)
+    }
+
+    /** The bytes of the suspend dated 30.00.2060 00:20:60 from #1398: month 0 and 60 seconds do not exist. */
+    @Test fun historyProblem_1398_recordWithDateThatDoesNotExist() {
+        medtronicUtil.medtronicPumpModel = MedtronicDeviceType.Medtronic_723_Revel
+        medtronicUtil.isModelSet = true
+
+        val pumpHistoryEntries = decoder.createRecords(ByteUtil.createByteArrayFromString("1E 00 3C 14 00 1E 3C").toMutableList())
+
+        assertThat(pumpHistoryEntries).isEmpty()
     }
 
     @Throws(Exception::class)

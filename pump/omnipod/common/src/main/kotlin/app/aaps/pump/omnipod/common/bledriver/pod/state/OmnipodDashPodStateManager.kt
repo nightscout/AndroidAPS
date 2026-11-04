@@ -1,12 +1,12 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.data.model.BS
 import app.aaps.pump.omnipod.common.bledriver.comm.Id
 import app.aaps.pump.omnipod.common.bledriver.comm.pair.PairResult
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.SoftwareVersion
@@ -77,6 +77,7 @@ interface OmnipodDashPodStateManager {
     val minutesSinceActivation: Short?
     val activeAlerts: EnumSet<AlertType>?
     val alarmType: AlarmType?
+    val pdmRef: String? // PDM-style "Ref: TT-VVVHH-IIIRR-FFF" fault reference, captured at the time the fault occurred
 
     var tempBasal: TempBasal?
     val tempBasalActive: Boolean
@@ -110,7 +111,7 @@ interface OmnipodDashPodStateManager {
     fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
-    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BS.Type)
+    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
 
@@ -147,7 +148,11 @@ interface OmnipodDashPodStateManager {
         val createdRealtime: Long,
         var sentRealtime: Long = 0,
         val historyId: Long,
-        var sendError: Throwable?,
+        // Runtime-only: set on a failed send and read back immediately from the in-memory command in the
+        // confirm path; never restored from persistence. @Transient keeps Gson from serializing it — a
+        // Throwable can't round-trip through JSON (and on JDK 17+ makeAccessible on Throwable#detailMessage
+        // throws, flooding test logs).
+        @Transient var sendError: Throwable?,
         var basalProgram: BasalProgram?,
         val tempBasal: TempBasal?,
         val requestedBolus: Double?
@@ -162,7 +167,7 @@ interface OmnipodDashPodStateManager {
         var bolusUnitsRemaining: Double,
         var deliveryComplete: Boolean,
         val historyId: Long,
-        val bolusType: BS.Type
+        val bolusType: BolusType
     ) {
 
         fun deliveredUnits(): Double? {

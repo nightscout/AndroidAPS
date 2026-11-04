@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Title colour of a preference row, dimmed when the row is disabled - which is what happens to a
+     row whose android:dependency is off. The preference library only calls setEnabled(false) on the
+     row; showing that is the layout's job, so a plain colour would leave a disabled row looking
+     exactly like an enabled one. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#66FFFFFF" android:state_enabled="false" />
+    <item android:color="#FFFFFF" />
+</selector>

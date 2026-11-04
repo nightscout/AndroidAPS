@@ -1,7 +1,8 @@
 package info.nightscout.pump.combov2
 
 import android.content.Context
-import app.aaps.core.interfaces.androidPermissions.AndroidPermission
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -32,6 +33,10 @@ fun AAPSProfile.toComboCtlBasalProfile(): BasalProfile {
     return BasalProfile(factors)
 }
 
+/** The rates of a Combo basal profile, one per hour from midnight, in IU per hour (#2454). */
+internal fun BasalProfile.toHourlyProfileValues(): List<AAPSProfile.ProfileValue> =
+    factors.mapIndexed { hour, factor -> AAPSProfile.ProfileValue(hour * 60 * 60, factor.cctlBasalToIU()) }
+
 internal class RetryPermissionCheckException : ComboException("retry permission check")
 
 // Utility function to perform Android permission checks before running a block.
@@ -58,7 +63,7 @@ internal class RetryPermissionCheckException : ComboException("retry permission 
 //
 // Additionally, the block might perform other checks that are not directly
 // permissions but related to them. One example is a check to see if the
-// Bluetooth adapter is enabled in addition to checking for Bluetooth
+// Bluetooth adapter is enabled in addition to check for Bluetooth
 // permissions. When such custom checks fail, they can throw
 // RetryPermissionCheckException to inform this function that it should
 // retry its run, just as if a permission hadn't been granted.
@@ -66,7 +71,6 @@ internal suspend fun <T> runWithPermissionCheck(
     context: Context,
     config: Config,
     aapsLogger: AAPSLogger,
-    androidPermission: AndroidPermission,
     permissionsToCheckFor: Collection<String>,
     block: suspend () -> T
 ): T {
@@ -75,7 +79,7 @@ internal suspend fun <T> runWithPermissionCheck(
         try {
             if (config.PUMPDRIVERS) {
                 val notAllPermissionsGranted = permissions.fold(initial = false) { currentResult, permission ->
-                    return@fold if (androidPermission.permissionNotGranted(context, permission)) {
+                    return@fold if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                         aapsLogger.debug(LTag.PUMP, "permission $permission was not granted by the user")
                         true
                     } else

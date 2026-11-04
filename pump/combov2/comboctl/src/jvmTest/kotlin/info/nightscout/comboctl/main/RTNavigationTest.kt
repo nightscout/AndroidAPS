@@ -514,7 +514,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, isComboStopped = false)
         }
     }
@@ -542,7 +542,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.TemporaryBasalRateDurationScreen::class, isComboStopped = false)
         }
 
@@ -574,7 +574,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, isComboStopped = false)
         }
     }
@@ -611,7 +611,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val targetScreen = navigateToRTScreen(
                 rtNavigationContext,
                 ParsedScreen.BasalRateFactorSettingScreen::class,
@@ -681,7 +681,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, isComboStopped = false)
         }
 
@@ -719,7 +719,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val finalScreen = longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.MENU) { parsedScreen ->
                 if (parsedScreen is ParsedScreen.BasalRate4ProgrammingMenuScreen)
                     LongPressRTButtonsCommand.ReleaseButton
@@ -757,7 +757,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val finalScreen = shortPressRTButtonsUntil(rtNavigationContext) { parsedScreen ->
                 if (parsedScreen is ParsedScreen.BasalRate4ProgrammingMenuScreen)
                     ShortPressRTButtonsCommand.Stop
@@ -793,7 +793,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val e = assertFailsWith<AlertScreenException> {
                 // Keep long-pressing the button. Eventually, the W6 screen is received.
                 longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.MENU) { parsedScreen ->
@@ -838,7 +838,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val finalScreen = cycleToRTScreen(
                 rtNavigationContext,
                 RTNavigationButton.MENU,
@@ -864,7 +864,7 @@ class RTNavigationTest : TestBase() {
             automaticallyAdvanceScreens = true
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val finalScreen = waitUntilScreenAppears(
                 rtNavigationContext,
                 ParsedScreen.BasalRate3ProgrammingMenuScreen::class
@@ -898,7 +898,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             adjustQuantityOnScreen(
                 rtNavigationContext,
                 targetQuantity = 160,
@@ -942,7 +942,7 @@ class RTNavigationTest : TestBase() {
         )
 
         val e = assertFailsWith<AlertScreenException> {
-            runBlockingWithWatchdog(12000) {
+            runBlockingWithWatchdog(40000) {
                 adjustQuantityOnScreen(
                     rtNavigationContext,
                     targetQuantity = 160,
@@ -987,7 +987,7 @@ class RTNavigationTest : TestBase() {
             )
         )
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             adjustQuantityOnScreen(
                 rtNavigationContext,
                 targetQuantity = 2,

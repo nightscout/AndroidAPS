@@ -11,6 +11,24 @@
     <string name="pump_status_suspended">挂起</string>
     <string name="pump_status_executing_command">正在执行指令</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">获取设置</string>
+    <string name="pump_cmd_desc_get_firmware">获取泵固件</string>
+    <string name="pump_cmd_desc_get_basal_profile">获取基础率配置文件</string>
+    <string name="pump_cmd_desc_set_basal_profile">设置基础率配置文件</string>
+    <string name="pump_cmd_desc_get_tbr">获取临时基础率</string>
+    <string name="pump_cmd_desc_cancel_tbr">取消临时基础率</string>
+    <string name="pump_cmd_desc_set_tbr">设置临时基础率</string>
+    <string name="pump_cmd_desc_set_bolus">设置大剂量</string>
+    <string name="pump_cmd_desc_get_bolus">获取大剂量</string>
+    <string name="pump_cmd_desc_cancel_bolus">取消大剂量</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">获取剩余胰岛素</string>
+    <string name="pump_cmd_desc_get_battery_status">获取电池状态</string>
+    <string name="pump_cmd_desc_get_time">获取时间</string>
+    <string name="pump_cmd_desc_set_time">设定时间</string>
+    <string name="pump_cmd_desc_get_pump_status">获取泵状态</string>
+    <string name="pump_cmd_desc_get_history">获取历史记录</string>
+    <string name="pump_cmd_desc_get_history_params">获取历史记录 %s</string>
+    <string name="pump_cmd_desc_custom">自定义指令</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">基础率</string>
     <string name="history_group_configuration">配置</string>
@@ -32,30 +50,10 @@
     <string name="time_last_3_hours">过去3小时</string>
     <string name="time_last_6_hours">过去6小时</string>
     <string name="time_last_12_hours">过去12小时</string>
+    <string name="time_last_24_hours">过去24小时</string>
     <string name="time_last_2_days">过去2天</string>
     <string name="time_last_4_days">过去4天</string>
     <string name="time_last_week">过去一周</string>
     <string name="time_last_month">上个月</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">扫描</string>
-    <string name="ble_config_scan_stop">停止</string>
-    <string name="ble_config_scan_selected">已选中</string>
-    <string name="ble_config_scan_scanning">扫描中</string>
-    <string name="ble_config_scan_finished">扫描完成</string>
-    <string name="ble_config_scan_error">扫描错误: %1$d</string>
-    <string name="ble_config_remove">删除</string>
     <!-- Pump History -->
-    <string name="pump_history_type">类型：</string>
-    <plurals name="duration_days">
-        <item quantity="other">%1$d 天</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="other">%1$d 小时</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="other">%1$d 小时前</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="other">%1$d 天前</item>
-    </plurals>
 </resources>

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General preferences -->
+    <string name="pref_title_simple_mode">Enkelt läge</string>
+    <string name="pref_title_insulin_concentration">Stöd för insulinkoncentration</string>
+    <string name="pref_summary_insulin_concentration">Aktivera stöd för olika insulinkoncentrationer (U50, U200, etc.)</string>
+    <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Håll skärmen påslagen</string>
+    <string name="pref_summary_keep_screen_on">Förhindra Android att stänga av skärmen. Det förbrukar mycket energi när telefonen inte är ansluten till eluttaget.</string>
+    <string name="pref_title_show_treatment_button">Visa behandlingsknapp</string>
+    <string name="pref_title_show_wizard_button">Visa kalkylatorknapp</string>
+    <string name="pref_title_show_insulin_button">Visa insulinknapp</string>
+    <string name="pref_title_show_carbs_button">Visa kolhydratknapp</string>
+    <string name="pref_title_show_cgm_button">Visa CGM-knapp</string>
+    <string name="pref_summary_show_cgm_button">Öppnar xDrip+ eller Dexcom-appen (du kan använda bakåtknappen för att återgå till AAPS).</string>
+    <string name="pref_title_show_calibration_button">Visa kalibreringsknapp</string>
+    <string name="pref_summary_show_calibration_button">Skickar en kalibrering till xDrip+ (se till att \"Acceptera kalibreringar\" är aktiverat i xDrip+ under Inter-app-inställningar).</string>
+    <string name="pref_title_show_notes_in_dialogs">Visa anteckningar i dialogrutor</string>
+    <string name="pref_title_use_bolus_advisor">Använd bolusguide</string>
+    <string name="pref_summary_use_bolus_advisor">Aktivera bolusguide som hjälper med bolusberäkningar vid högt blodsocker.</string>
+    <string name="pref_title_use_bolus_reminder">Aktivera boluspåminnelse</string>
+    <string name="pref_summary_use_bolus_reminder">Aktivera boluspåminnelser som hjälper dig att följa upp insulindosering.</string>
+    <string name="pref_title_use_super_bolus">Använd superbolus</string>
+    <string name="pref_summary_use_super_bolus">Aktivera superbolus som levererar insulin snabbare genom att låna från basal.</string>
+    <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Stänger av telefonens bluetooth i en sekund om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
+    <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Varna om BG-data saknas</string>
+    <string name="pref_title_alert_pump_unreachable">Varna om pumpen inte går att nå</string>
+    <string name="pref_title_alert_carbs_required">Varna om kolhydrater behövs</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Visa akuta larm som Android-aviseringar</string>
+    <string name="pref_title_alert_increase_volume">Öka aviseringsvolymen gradvis</string>
+    <string name="pref_title_alert_override_dnd">Ignorera Stör ej-läge</string>
+    <string name="pref_summary_alert_override_dnd">Påslaget: larm låter även när telefonen är Tyst eller Stör Ej. Avslaget: larm låter inte vid de inställningarna. I Stör Ej vibrerar endast telefonen.</string>
+    <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Ladda upp BG-data till NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Logga sensorbyte</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Skapa sensorbyteshändelse när sensorn sätts in.</string>
+    <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Använd dynamisk känslighet</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Använd DynamicISF för känslighetsjustering istället för Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Använd Autosens</string>
+    <string name="pref_title_aps_use_smb">Aktivera SMB</string>
+    <string name="pref_summary_aps_use_smb">Aktivera Super Micro Bolus. SMB levererar insulin omedelbart för att svara på stigande blodsocker.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Aktivera SMB vid högt tillfälligt målvärde</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Tillåt SMB när högt tillfälligt målvärde är aktivt.</string>
+    <string name="pref_title_aps_use_smb_always">Aktivera SMB alltid</string>
+    <string name="pref_summary_aps_use_smb_always">Aktivera SMB under alla förhållanden, oavsett bolus eller COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Aktivera SMB med COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Tillåt SMB när det finns aktiva kolhydrater.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Aktivera SMB vid lågt tillfälligt målvärde</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Tillåt SMB när lågt tillfälligt målvärde är aktivt.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Aktivera SMB efter kolhydrater</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Tillåt SMB ett tag efter att kolhydrater har angetts.</string>
+    <string name="pref_title_aps_use_uam">Aktivera UAM</string>
+    <string name="pref_summary_aps_use_uam">Aktivera detektering och behandling av oannonserade måltider.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Känslighet höjer målvärdet</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">När insulinkänslighet upptäcks, höj målglukosvärdet.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Insulinresistens sänker målvärdet</string>
+    <string name="pref_summary_aps_resistance_lowers_target">När insulinresistens upptäcks, sänk målglukosvärdet.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Använd alltid kort genomsnittligt delta</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Använd alltid kort genomsnittligt delta istället för enkelt delta för beräkningar av BG-förändringar.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF justera känslighet</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Justera känslighetsberäkningar vid användning av DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens justerar målvärden</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Tillåt Autosens att justera målglukos utöver basal och ISF.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Högt tillfälligt målvärde höjer känsligheten</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Högt tillfälligt målvärde ökar insulinkänsligheten.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Lågt tillfälligt målvärde sänker känsligheten</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Lågt tillfälligt målvärde sänker insulinkänsligheten.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Aktivera AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Aktivera AutoISF viktbaserade ISF-justeringar.</string>
+    <string name="pref_title_aps_smb_on_even_target">Aktivera SMB vid jämnt målvärde</string>
+    <string name="pref_summary_aps_smb_on_even_target">Alternativ aktivering av SMB alltid baserad på målglukosvärde.</string>
+    <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Aktivera Fabric kraschrapportering</string>
+    <string name="pref_title_maintenance_enable_export_automation">Aktivera automatisk export av inställningar</string>
+    <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Byt profil automatiskt</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Växla automatiskt till Autotune-genererad profil efter beräkning.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Kategorisera UAM som basal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandla oannonserade måltider som basalinsulinbehov vid Autotune-beräkningar.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Justera insulinkurvan</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Använd dygnsbaserad IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Använd dygnsbaserad variation på IC och ISF i Autotune-beräkningar.</string>
+    <string name="pref_title_autotune_additional_log">Extra loggning</string>
+    <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Tillåt fjärrkommandon via SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Rapportera om pumpen inte kan nås via SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Skicka SMS-avisering när pumpen blir oåtkomlig.</string>
+    <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Ladda upp pumpstatus till NS</string>
+    <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Ladda upp data till NS</string>
+    <string name="pref_summary_ns_upload_data">Ladda upp behandlingar, tillfälliga basaldoser och andra data till Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Ta emot CGM-data från NS</string>
+    <string name="pref_summary_ns_receive_cgm">Acceptera blodsockeravläsningar från Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Ta emot profiler från NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Acceptera profiluppdateringar från Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Ta emot tillfälliga målvärden från NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Acceptera förändringar av tillfälliga målvärden från Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Ta emot profilbyten från NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Acceptera profilbyteshändelser från Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Ta emot insulin från NS</string>
+    <string name="pref_summary_ns_receive_insulin">Acceptera insulinbehandlingar från Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Ta emot kolhydrater från NS</string>
+    <string name="pref_summary_ns_receive_carbs">Acceptera kolhydratregistreringar från Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Ta emot loggade behandlingar från NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Acceptera loggade behandlingar från Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Ta emot körläge från NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Acceptera ändringar av körläge (sluten loop, öppen loop, ...) från Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Ta emot TBR/EB från NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Acceptera tillfälliga basalhastigheter och förlängda bolusar från Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS-alarm</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS-notiser</string>
+    <string name="pref_title_ns_use_cellular">Använd mobildata</string>
+    <string name="pref_title_ns_use_roaming">Använd roaming</string>
+    <string name="pref_title_ns_use_wifi">Använd WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Synkronisera på batteri</string>
+    <string name="pref_title_ns_use_on_charging">Synkronisera vid laddning</string>
+    <string name="pref_title_ns_log_app_start">Logga appstart</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Skapa notiser vid fel</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Skapa notiser vid behov av kolhydrater</string>
+    <string name="pref_title_ns_slow_sync">Använd långsam synkronisering</string>
+    <string name="pref_title_ns_use_ws">Använd websockets</string>
+    <string name="pref_summary_ns_use_ws">Använd websockets för realtidskommunikation med Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Tillåt klientstyrning</string>
+    <string name="pref_summary_ns_allow_client_control">Låt parkopplade klientenheter skicka signerade kommandon (t.ex. starta/stoppa scener) över Nightscout. Detta aktiverar också härdat läge: ändringar som görs direkt i Nightscout tas inte längre emot.</string>
+    <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Endast WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Endast vid laddning</string>
+    <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Skicka status till xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Skicka detaljerad IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Skicka detaljerad IOB information till xDrip+ för visning på urtavlor.</string>
+    <string name="pref_title_xdrip_send_bgi">Visa BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">Visa blodglukospåverkan i statusraden xDrip+.</string>
+    <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Kontrollera från Wear-klocka</string>
+    <string name="pref_summary_wear_control">Styr AAPS från Android Wear-klocka.</string>
+    <string name="pref_title_wear_wizard_bg">Inkludera BG i kalkylatorberäkningar</string>
+    <string name="pref_title_wear_wizard_tt">Inkludera tillfälligt målvärde i kalkylatorberäkningar</string>
+    <string name="pref_title_wear_wizard_trend">Inkludera trend i kalkylatorberäkningar</string>
+    <string name="pref_title_wear_wizard_cob">Inkludera COB i kalkylatorberäkningar</string>
+    <string name="pref_title_wear_wizard_iob">Inkludera IOB i kalkylatorberäkningar</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Tillåt anpassade urtavlor</string>
+    <string name="pref_title_wear_pushed_watchface">Urtavla installerad på klockan</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Urtavla med komplikationer</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Anpassad urtavla</string>
+    <string name="pref_title_wear_notify_on_smb">Avisera vid SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Skicka aviseringar till klockan när SMB levereras.</string>
+    <string name="pref_title_wear_broadcast_data">Sänd data till klocka</string>
+    <string name="pref_summary_wear_broadcast_data">Sänd AAPS-data till tredjeparts klockappar via intent.</string>
+    <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Hantera pumpplatsrotation</string>
+    <string name="pref_title_site_rotation_manage_cgm">Hantera CGM-sensorplatsrotation</string>
+    <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Kolhydratknapp ökning 1</string>
+    <string name="pref_title_carbs_button_increment_2">Kolhydratknapp ökning 2</string>
+    <string name="pref_title_carbs_button_increment_3">Kolhydratknapp ökning 3</string>
+    <string name="carb_increment_button_message">Antal kolhydrater som läggs till när man trycker på knappen</string>
+    <string name="pref_title_cage_warning">Tröskelvärde varning för kanylålder</string>
+    <string name="pref_title_cage_critical">Tröskelvärde akut varning för kanylålder</string>
+    <string name="pref_title_iage_warning">Tröskelvärde varning för insulinålder</string>
+    <string name="pref_title_iage_critical">Tröskelvärde akut varning för insulinålder</string>
+    <string name="pref_title_sage_warning">Tröskelvärde varning för sensorålder</string>
+    <string name="pref_title_sage_critical">Tröskelvärde akut varning för sensorålder</string>
+    <string name="pref_title_sbat_warning">Tröskelvärde varning för sensorbatterinivå</string>
+    <string name="pref_title_sbat_critical">Tröskelvärde akut varning för sensorbatterinivå</string>
+    <string name="pref_title_bage_warning">Tröskelvärde varning för pumpbatteriålder</string>
+    <string name="pref_title_bage_critical">Tröskelvärde akut varning för pumpbatteriålder</string>
+    <string name="pref_title_res_warning">Tröskelvärde varning för reservoarnivå</string>
+    <string name="pref_title_res_critical">Tröskelvärde akut varning för reservoarnivå</string>
+    <string name="pref_title_batt_warning">Tröskelvärde varning för pumpbatterinivå</string>
+    <string name="pref_title_batt_critical">Tröskelvärde akut varning för pumpbatterinivå</string>
+    <string name="pref_title_bolus_percentage">Bolusprocent</string>
+    <string name="deliverpartofboluswizard">Tillämpa detta värde på BG- och kolhydratkorrigeringar i kalkylatorns resultat</string>
+    <string name="pref_title_reset_bolus_percentage_time">Återställ bolusprocenttid</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Leverera full bolus (100%) om BG-värde är äldre än</string>
+    <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Tidsgräns för skydd</string>
+    <string name="pref_title_protection_type_application">Nivå 0: Applikationsskydd</string>
+    <string name="pref_summary_protection_type_application">Vid appstart och när du återvänder till appen. Oberoende av andra nivåer</string>
+    <string name="pref_title_protection_type_bolus">Nivå 1: Bolusskydd</string>
+    <string name="pref_summary_protection_type_bolus">Behandlingar, profilaktivering. Kräver nivå 2</string>
+    <string name="pref_title_protection_type_settings">Nivå 2: Inställningsskydd</string>
+    <string name="pref_summary_protection_type_settings">Redigering av profiler, inställningar</string>
+    <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Inget skydd</string>
+    <string name="biometric">Biometrisk</string>
+    <string name="master_password">Huvudlösenord</string>
+    <string name="custom_password">Egendefinierat lösenord</string>
+    <string name="custom_pin">Egen PIN-kod</string>
+    <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maximalt antal kolhydrater tillåtna</string>
+    <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Minsta ändring i öppen loop</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Öppen loop kommer bara visa nya ändringsförslag om ändringen är större än detta värde i %. Standardvärdet är 20%</string>
+    <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">SMB-intervall</string>
+    <string name="pref_title_smb_max_minutes">Max antal minuter med basal som kan bli SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Max antal minuter med basal som kan bli SMB vid UAM</string>
+    <string name="uam_smb_max_minutes">UAM SMB max minuter</string>
+    <string name="pref_title_carbs_request_threshold">Tröskelvärde för förslag om behov av kolhydrater</string>
+    <string name="carbs_req_threshold_summary">Minsta antal gram kolhydrater för att visa ett förslag om kolhydrater. Förslag under detta värde ger ingen avisering.</string>
+    <string name="pref_title_half_basal_exercise_target">Halv basal träningsmålvärde</string>
+    <string name="half_basal_exercise_target_summary">Ange ett tal, t.ex. 160, vilket innebär att när det tillfälliga målvärdet är 160 mg/dL och Högt tillfälligt målvärde höjer känsligheten är på, körs 50%% basal på denna nivå (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">IOB-tröskelprocent</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procent av maxIOB över vilken SMB inaktiveras.\nStandardvärde: 100%\nMed 100% är denna funktion i praktiken avstängd.</string>
+    <string name="pref_title_dynisf_adjustment_factor">DynamicISF justeringsfaktor</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Justeringsfaktor för DynamicISF. Ställ in mer än 100% för mer aggressiva korrigeringsdoser, och mindre än 100% för mindre aggressiva korrigeringar.</string>
+    <string name="pref_title_autosens_period">Autosensperiod</string>
+    <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (absorptionstid för KH är exkluderad)</string>
+    <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Antal loggar att skicka</string>
+    <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Tröskel för utdaterad data</string>
+    <string name="pref_title_pump_unreachable_threshold">Tröskel för otillgänglig pump</string>
+    <!-- IntKey: Insulin preferences -->
+    <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Standardantal dagar för Autotune</string>
+    <string name="autotune_default_tune_days_summary">Förvalt antal dagar med data som ska behandlas av Autotune (upp till 30)</string>
+    <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Minsta tid mellan fjärrbolus</string>
+    <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Intervall mellan slumpmässiga BG</string>
+    <string name="pref_title_random_bg_randomize">Skapa slumpgenererat BG-data</string>
+    <string name="pref_summary_random_bg_randomize"></string>
+    <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Tröskelvärde för alarm om inaktuell data</string>
+    <string name="pref_title_urgent_alarm_stale_data">Tröskelvärde för akut alarm om inaktuell data</string>
+    <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Användarprofil för platsrotation</string>
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Man</string>
+    <string name="site_rotation_profile_woman">Kvinna</string>
+    <string name="site_rotation_profile_child">Barn</string>
+    <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Enheter</string>
+    <!-- Formatted unit strings with value only -->
+    <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Språk</string>
+    <string name="lang_default">Systemstandard</string>
+    <string name="lang_en">Engelska</string>
+    <string name="lang_af">Afrikaans</string>
+    <string name="lang_bg">Bulgariska</string>
+    <string name="lang_cs">Tjeckiska</string>
+    <string name="lang_de">Tyska</string>
+    <string name="lang_dk">Danska</string>
+    <string name="lang_fr">Franska</string>
+    <string name="lang_nl">Nederländska</string>
+    <string name="lang_es">Spanska</string>
+    <string name="lang_el">Grekiska</string>
+    <string name="lang_ga">Irländska</string>
+    <string name="lang_it">Italienska</string>
+    <string name="lang_ko">Koreanska</string>
+    <string name="lang_lt">Litauiska</string>
+    <string name="lang_nb">Norska</string>
+    <string name="lang_pl">Polska</string>
+    <string name="lang_pt">Portugisiska</string>
+    <string name="lang_pt_br">Portugisiska (brasiliansk)</string>
+    <string name="lang_ro">Rumänska</string>
+    <string name="lang_ru">Ryska</string>
+    <string name="lang_sk">Slovakiska</string>
+    <string name="lang_sv">Svenska</string>
+    <string name="lang_tr">Turkiska</string>
+    <string name="lang_zh_tw">Kinesiska (traditionell)</string>
+    <string name="lang_zh_cn">Kinesiska (förenklad)</string>
+    <string name="pref_title_patient_name">Instansnamn</string>
+    <string name="pref_summary_patient_name">Namnet på personen som använder denna telefon. Det skiljer denna AAPS-instans från andra i rapporter och synkronisering.</string>
+    <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS-katalog</string>
+    <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Huvudlösenord</string>
+    <string name="pref_title_settings_password">Lösenord för inställningar</string>
+    <string name="pref_title_settings_pin">PIN-kod för inställningar</string>
+    <string name="pref_title_application_password">Lösenord för appen</string>
+    <string name="pref_title_application_pin">PIN-kod för appen</string>
+    <string name="pref_title_bolus_password">Lösenord för bolus</string>
+    <string name="pref_title_bolus_pin">PIN-kod för bolus</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Välj mörkt, ljust eller att följa systemets tema</string>
+    <string name="pref_title_app_color_scheme">App färgschema</string>
+    <string name="pref_dark_theme">Mörkt tema</string>
+    <string name="pref_light_theme">Ljust tema</string>
+    <string name="pref_follow_system_theme">Använd systemets tema</string>
+    <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Personens ålder</string>
+    <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">E-postmottagare</string>
+    <string name="pref_title_identification">Identifiering för kraschrapporter</string>
+    <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Platstjänster</string>
+    <string name="automation_location_passive">Använd passiv plats</string>
+    <string name="automation_location_network">Använd nätverksplats</string>
+    <string name="automation_location_gps">Använd GPS-plats</string>
+    <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Extra obligatorisk PIN-kod på slutet av token</string>
+    <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
+    <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Pumptyp</string>
+    <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Ange din Nightscout URL (dvs. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API-kod</string>
+    <string name="ns_client_secret_summary">Ange din Nightscout API-kod (minst 12 tecken).</string>
+    <string name="nsclient_token_title">Nightscout åtkomsttoken</string>
+    <string name="nsclient_token_summary">Ange din Nightscout åtkomsttoken (minst 17 tecken)</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Tillåtna SSID (semikolonseparerade)</string>
+    <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Insulinknapp ökning 1</string>
+    <string name="pref_title_insulin_button_increment_2">Insulinknapp ökning 2</string>
+    <string name="pref_title_insulin_button_increment_3">Insulinknapp ökning 3</string>
+    <string name="insulin_increment_button_message">Insulinmängd som läggs till när man trycker på knappen</string>
+    <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Fyllnadsknapp 1</string>
+    <string name="pref_title_fill_button_2">Fyllnadsknapp 2</string>
+    <string name="pref_title_fill_button_3">Fyllnadsknapp 3</string>
+    <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maximal bolus</string>
+    <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Maximal basalhastighet</string>
+    <string name="openapsma_max_basal_summary">Detta värde kallas max basal i OpenAPS-sammanhang</string>
+    <string name="pref_title_smb_max_iob">Max IOB för SMB</string>
+    <string name="openapssmb_max_iob_summary">Detta värde kallas Max IOB i OpenAPS-sammanhang\nOpenAPS kommer inte att lägga till mer insulin om nuvarande IOB är större än detta värde. Värdet påverkas även av vald patienttyp.</string>
+    <string name="pref_title_ama_max_iob">Max IOB för AMA</string>
+    <string name="openapsma_max_iob_summary">Detta värde kallas Max IOB i OpenAPS-sammanhang\nDetta är maximal mängd insulin i [U] som APS kan leverera på en gång. Värdet påverkas även av vald patienttyp.</string>
+    <string name="pref_title_max_daily_multiplier">Säkerhetsmultiplikator för max daglig basal</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardvärde: 3 Detta är en grundsten i OpenAPS säkerhet. Detta värde begränsar dina tillfälliga basaler till maximalt 3x ditt största basalvärde. Du behöver oftast inte ändra detta värde. Läs på och förstå skillnaden mellan 4x nuvarande och 3x daglig max som säkerhetsinställningar.</string>
+    <string name="pref_title_current_basal_multiplier">Nuvarande basal säkerhetsmultiplikator</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardvärde: 4 Detta är den andra halvan av viktiga säkerhetsbegränsningar i OpenAPS, och den andra halvan av “3x max dagligen; 4x nuvarande“. Detta innebär att din basal, oavsett max basalinställning på pumpen, inte kan vara högre än detta värde multiplicerat med den nuvarande nivån på din basal. Detta förhindrar att du hamnar i farliga situationer genom att ställa in alltför höga max basaldoser innan du förstår hur algoritmen fungerar. Återigen är standard 4x; de flesta människor kommer aldrig att behöva justera detta utan kommer istället att justera andra inställningar om de känner att de “kör in i“ detta skyddstak.</string>
+    <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Standardvärde: 2\nBolus snooze är aktivt efter att du givit en måltidsbolus, detta för att inte loop ska lågtempa när du just ätit. I detta exempel och grundvärdet är 2; det innebär att med DIA på 3 tim kommer bolus snooze att fasas ut under 1,5 tim (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA KH-absorption per 5 min</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB KH-absorption per 5 min</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standardvärde: 3,0 (AMA) eller 8,0 (SMB). Detta är grundinställning för KH-absorption per 5 min. Standardvärdet motsvarar 3mg/dl/5min. Detta styr hur snabbt COB räknas bort, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat.</string>
+    <string name="pref_title_absorption_cutoff">Absorptionsgräns</string>
+    <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
+    <string name="pref_title_absorption_maxtime">Max absorptionstid</string>
+    <string name="absorption_max_time_summary">Tid i timmar när alla kolhydrater förväntas vara absorberade</string>
+    <string name="pref_title_autosens_min">Autosens min</string>
+    <string name="openapsama_autosens_min_summary">Standardvärde: 0,7\nDen andra sidan av autosens säkerhetsgränser, sätter ett tak på hur lågt autosens kan justera basaler, och hur högt den kan justera ISF- och BG-mål.</string>
+    <string name="pref_title_autosens_max">Autosens max</string>
+    <string name="openapsama_autosens_max_summary">Standardvärde: 1,2\nDetta är ett multiplikatortak för autosens (och snart autotune). Sätter en maxgräns på 20%% för hur högt autosens förhållandet kan vara, vilket i sin tur avgör hur högt autosens kan justera basaler, hur lågt det kan justera ISF, och hur lågt den kan ställa in BG målet.</string>
+    <string name="pref_title_autoisf_min">AutoISF min</string>
+    <string name="openapsama_autoISF_min_summary">Liknande autosens_min definierar detta hur svag ISF kan bli.\n\nStandardvärdet 1,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_autoisf_max">AutoISF max</string>
+    <string name="openapsama_autoISF_max_summary">Liknande autosens_max definierar detta hur stark ISF kan bli.\n\nStandardvärdet 1,0 stänger av effekten av denna funktion.\n\nVARNING: Var extremt försiktig när du använder värden över 2,5</string>
+    <string name="pref_title_bg_accel_weight">BG-acceleration ISF vikt</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Detta är den vikt som appliceras när glukosvärdet accelererar och som stärker ISF vilket potentiellt ökar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_bg_brake_weight">BG broms ISF vikt</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Detta är den vikt som tillämpas när glukosnivån retarderar (bromsar in) och som försvagar ISF vilket potentiellt minskar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_low_bg_weight">Lågt BG-intervall vikt</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Detta är den vikt som appliceras när glukosnivån är under målet och som försvagar ISF vilket potentiellt minskar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_high_bg_weight">Högt BG-intervall vikt</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Detta är den vikt som appliceras när glukosnivån är över målet och som stärker ISF vilket potentiellt ökar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">SMB leveransförhållande BG-intervall</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standardvärde: 0. Det linjärt ökande SMB-leveransförhållandet relaterat till glukosområdet [mål_bg, mål_bg+bg_område].\nVid mål_bg är SMB förhållandet smb_delivery_ratio_min, vid mål_bg+bg_område är det smb_delivery_ratio_max\nMed värdet 0 deaktiveras det linjärt ökande SMB-förhållandet och det fasta smb_delivery_ratio används.</string>
+    <string name="pref_title_pp_weight">Post-prandial (efter måltid) ISF-vikt</string>
+    <string name="openapsama_pp_ISF_weight_summary">Detta är en vikt som appliceras när glukosvärdet stiger och som stärker ISF och därmed potentiellt ökar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_dura_weight">Varaktighet ISF vikt</string>
+    <string name="openapsama_dura_ISF_weight_summary">Detta är en vikt som appliceras vid långvariga platåer med förhöjda blodsockervärden och som stärker ISF vilket potentiellt ökar insulinleveransen.\n\nStandardvärdet 0,0 stänger av effekten av denna funktion.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB leveransförhållande</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standardvärde: 0,5 Detta är en annan viktig säkerhetsgräns för OpenAPS, och anger vilken andel av den totala insulinmängden som krävs, som får levereras som SMB. Detta för att förhindra farliga situationer vid mottagning av SMB-begäran från vårdgivarens telefon samtidigt. Öka detta experimentella värde långsamt och med försiktighet.</string>
+    <string name="pref_title_smb_delivery_ratio_min">SMB leveransförhållande min</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standardvärde: 0,5 Den nedre gränsen av ett linjärt ökande förhållande i stället för det fasta värdet ovan.</string>
+    <string name="pref_title_smb_delivery_ratio_max">SMB leveransförhållande max</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standardvärde: 0,5 Den övre gränsen av ett linjärt ökande förhållande i stället för det fasta värdet ovan.</string>
+    <string name="pref_title_smb_max_range_extension">Utökning av SMB maxintervall</string>
+    <string name="openapsama_smb_max_range_extension_summary">Standardvärde: 1 Detta är en annan viktig säkerhetsgräns för OpenAPS, och anger med vilken faktor du kan överskrida de vanliga 120 maxSMB/maxUAM minuterna. Öka detta experimentella värde långsamt och med försiktighet.</string>
+    <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Låg BG-markering</string>
+    <string name="pref_title_high_mark">Hög BG-markering</string>
+    <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS-tröskelvärde</string>
+    <string name="lgs_threshold_summary">BG-värde under vilket insulintillförseln pausas. Standardvärdet använder standard-målmodell. Användaren kan ange värden mellan 60 mg/dl (3,3 mmol/l) och 100 mg/dl (5,5 mmol/l). För värden under 65/3,6 används standardmodellen</string>
+    <!-- IntentKey preferences -->
+    <!--    Appearance preferences-->
+</resources>

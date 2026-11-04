@@ -1,6 +1,6 @@
 This document specify hints and good practices for source code contributions.
 
-AndroidAPS is community effort and all contributions are welcome! If you wish help us improving AAPS - please read and try to adhere to 
+AAPS is community effort and all contributions are welcome! If you wish help us improving AAPS - please read and try to adhere to 
 this guidelines, to make the development and process of change approval as smooth as possible :) 
 
 General rules
@@ -11,6 +11,23 @@ General rules
 * If you wish to help with documentation or translating:
   https://wiki.aaps.app/en/latest/SupportingAaps/Translations.html
   
+AI-generated contributions
+===========================
+
+AAPS is safety-critical software. AI-generated pull requests are **not welcome**.
+
+Verifying and reviewing AI-generated code reliably takes maintainers more time than the AI took to
+produce it, and unverified code is a risk we cannot accept in this project.
+
+If you want to use AI to help analyze the codebase or investigate a problem, the correct way to
+contribute is:
+
+* Open an **Issue** describing the problem and include the AI findings as analysis/context
+* Leave the actual coding and the fix to the repository maintainers
+
+This keeps the analysis useful while making sure every change to the code is written and verified by
+people who understand and own it.
+
 Development guidelines
 ======================
 

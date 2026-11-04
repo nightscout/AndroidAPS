@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Integrarea pompei Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Alarme Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Notificări pentru alarmele plasturelui Carelevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Stare Bluetooth</string>
+    <string name="carelevo_serial_number_key">Nr. serie</string>
+    <string name="carelevo_boot_date_time_key">Ora activării</string>
+    <string name="carelevo_expiration_key">Expirare</string>
+    <string name="carelevo_basal_rate_key">Rată bazală</string>
+    <string name="carelevo_temp_basal_rate_key">Rată bazală temporară</string>
+    <string name="carelevo_insulin_remain_key">Insulină rămasă</string>
+    <string name="carelevo_running_remain_time">Timp rămas plasture</string>
+    <string name="carelevo_total_insulin_key">Total insulină administrată</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d h</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/h</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Doriți să reluați infuzia?</string>
+    <string name="carelevo_pump_resume_description">Infuzia va fi reluată când apăsați Confirmați.</string>
+    <string name="carelevo_pump_stop_duration_title">Setați durata pauzei infuziei.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 de minute</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 oră</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 oră 30 de minute</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 ore</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 ore 30 de minute</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 ore</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 ore 30 de minute</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 ore</string>
+    <string name="common_unit_value_day_hour_min">%1$d zile %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d min %2$02d s rămase</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Ghid insulină</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Dezactivați plasturele</string>
+    <string name="carelevo_btn_input_search_patch">Căutați plasturele</string>
+    <string name="carelevo_btn_retry">Reîncercați</string>
+    <string name="carelevo_btn_next">Următor</string>
+    <string name="carelevo_btn_safety_check">Verificare de siguranță</string>
+    <string name="carelevo_btn_cancel">Renunțați</string>
+    <string name="carelevo_btn_confirm">Confirmați</string>
+    <string name="carelevo_btn_research">Scanați din nou</string>
+    <string name="carelevo_btn_needle_insert_check">Confirmați inserarea</string>
+    <string name="carelevo_state_none_value">Niciun plasture activ</string>
+    <string name="carelevo_state_disconnected_value">Deconectat</string>
+    <string name="carelevo_state_connected_value">Conectat</string>
+    <string name="carelevo_overview_connect_btn_label">Activați plasturele</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Eliminați plasturele</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Suspendați infuzia</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Reluați infuzia</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Selectați cantitatea introdusă.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Interval: %1$d ~ %2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. Dezlipiți hârtia de protecție de pe blisterul plasturelui.</string>
+    <string name="carelevo_insulin_refill_step2">2. Dezinfectați dopul de cauciuc al flaconului de insulină cu un tampon cu alcool.</string>
+    <string name="carelevo_insulin_refill_step3">3. Scoateți capacul de protecție al acului seringii de insulină trăgându-l drept.</string>
+    <string name="carelevo_insulin_refill_step4">4. Trageți pistonul seringii pentru a o umple cu aproximativ 2 mL de aer.</string>
+    <string name="carelevo_insulin_refill_step5">5. Introduceți seringa plină cu aer în flaconul de insulină și injectați aerul în flacon.</string>
+    <string name="carelevo_insulin_refill_step6">6. Cu seringa încă introdusă, întoarceți cu susul în jos flaconul și seringa împreună și folosiți presiunea pentru a umple seringa cu aproximativ 2 mL de insulină.</string>
+    <string name="carelevo_insulin_refill_step7">7. Introduceți acul seringii vertical în portul de umplere cu insulină al plasturelui (①) până ajunge la fund. Trageți pistonul până sus, apoi eliberați-l. Scoateți seringa din portul de umplere.</string>
+    <string name="carelevo_insulin_refill_step8">8. Țineți seringa în poziție verticală și loviți ușor partea laterală pentru a aduna toate bulele de aer în partea de sus.</string>
+    <string name="carelevo_insulin_refill_step9">9. Introduceți din nou acul în flaconul de insulină, împingeți tot aerul în flacon, apoi extrageți exact cantitatea de insulină pe care o veți folosi pe durata plasturelui.</string>
+    <string name="carelevo_insulin_refill_step10">10. Scoateți seringa din flacon. Dacă există bule de aer, țineți seringa în poziție verticală, loviți ușor partea laterală pentru a muta bulele în sus și eliminați tot aerul din seringă.</string>
+    <string name="carelevo_insulin_refill_step11">11. Aliniați partea de sus a pistonului cu marcajul de pe scală pentru a ajusta exact doza de insulină.</string>
+    <string name="carelevo_insulin_refill_step12">12. Introduceți acul vertical în portul de umplere cu insulină al plasturelui (①) până ajunge la fund și împingeți încet pistonul pentru a injecta toată insulina în plasture.</string>
+    <string name="carelevo_connect_prepare_title">Plasturele a pornit</string>
+    <string name="carelevo_connect_patch_title">Conectați plasturele</string>
+    <string name="carelevo_connect_safety_check_title">Verificare de siguranță</string>
+    <string name="carelevo_connect_patch_attach_title">Aplicați plasturele</string>
+    <string name="carelevo_connect_needle_check_title">Inserați acul</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Alarmă informații plasture</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Setare notificare nivel scăzut de insulină</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Setare notificare utilizare plasture</string>
+    <string name="carelevo_title_fill_insulin">Umpleți plasturele cu insulină</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Umpleți plasturele cu insulină (%1$d–%2$d U), ținând cont de perioada de utilizare (maximum 168 de ore). Apăsați [Cantitate de umplere] pentru insulina introdusă.</string>
+    <string name="carelevo_patch_step_1">PASUL 1.</string>
+    <string name="carelevo_patch_step_2">PASUL 2.</string>
+    <string name="carelevo_patch_step_3">PASUL 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Îndepărtați capacul acului</string>
+    <string name="carelevo_patch_connect_step_1_desc">Scoateți plasturele din blister și îndepărtați capacul acului.</string>
+    <string name="carelevo_patch_connect_step_2_title">Porniți și conectați</string>
+    <string name="carelevo_patch_connect_step_2_desc">Apăsați butonul de pornire mai mult de 1 secundă. După semnalul sonor, apăsați butonul [Căutați plasturele] de mai jos.</string>
+    <string name="carelevo_patch_safety_check_start_title">Verificare de siguranță</string>
+    <string name="carelevo_patch_safety_check_end_title">Verificare de siguranță finalizată</string>
+    <string name="carelevo_patch_safety_check_start_desc">Plasturele a fost conectat cu succes.\nApăsați butonul [Verificare de siguranță].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Verificarea de siguranță este în curs.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Verificarea de siguranță este finalizată.\nApăsați butonul Următor.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Verificați dacă s-a format o picătură de insulină la vârful acului.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Dacă nu vedeți nicio picătură de insulină, apăsați butonul [Reîncercați].</string>
+    <string name="carelevo_patch_attach_step1_title">Dezinfectați locul plasturelui</string>
+    <string name="carelevo_patch_attach_step1_desc">Curățați bine cu un tampon cu alcool.</string>
+    <string name="carelevo_patch_attach_step2_title">Îndepărtați banda de protecție</string>
+    <string name="carelevo_patch_attach_step2_desc">Scoateți plasturele din blister și îndepărtați capacul acului.</string>
+    <string name="carelevo_patch_attach_step3_title">Aplicați plasturele</string>
+    <string name="carelevo_patch_attach_step3_desc">Lipiți plasturele pe piele, cu punctul marcat orientat în sus.</string>
+    <string name="carelevo_patch_attach_step4_desc">După ce ați lipit plasturele, apăsați Următor.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Scoateți capacul de siguranță</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Rotiți capacul de siguranță în direcția săgeții și scoateți-l.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Inserați acul</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Apăsați complet butonul aplicatorului. Un semnal sonor confirmă inserarea reușită.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Apăsați și țineți apăsat 10 secunde.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Încercări rămase pentru inserarea acului: %d.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Dezactivați plasturele și porniți un plasture nou?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Dacă apăsați butonul [OK], administrarea insulinei se va opri.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Terminați fără a porni administrarea?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Dacă apăsați butonul [OK], acest plasture nu va mai putea fi folosit.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Anulați activarea plasturelui?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Dacă apăsați butonul [OK], datele introduse se vor pierde.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Dacă plasturele găsit mai jos este cel corect, apăsați butonul Confirmați.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Inserarea acului este finalizată și aplicatorul este îndepărtat</string>
+    <string name="carelevo_dialog_connect_detached">Aplicator îndepărtat</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        Apăsați clemele de pe ambele părți ale aplicatorului pentru a-l desprinde de plasture,\n
+        apoi apăsați butonul `Aplicator îndepărtat`. Administrarea insulinei va începe.
+    </string>
+    <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth nu este pornit. Verificați.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Niciun plasture conectat.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Plasturele nu este încă conectat. Încercați din nou peste câteva momente.</string>
+    <string name="carelevo_toast_msg_scan_failed">Scanarea a eșuat. Încercați din nou.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Nu a fost găsit niciun plasture. Încercați din nou.</string>
+    <string name="carelevo_toast_msg_connect_failed">Conectarea plasturelui a eșuat. Încercați din nou.</string>
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profilul nu este setat.</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Verificarea acului a eșuat.</string>
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Eliminarea plasturelui a eșuat. Încercați din nou.</string>
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Cererea de administrare a bazalei a eșuat. Încercați din nou.</string>
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Reluarea administrării a eșuat. Încercați din nou.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Suspendarea administrării a eșuat. Încercați din nou.</string>
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Verificarea de siguranță a eșuat.</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Nivel scăzut de insulină</string>
+    <string name="alarm_feat_title_warning_expired_patch">Plasture expirat</string>
+    <string name="alarm_feat_title_warning_low_battery">Baterie aproape descărcată</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Temperatură ridicată/scăzută</string>
+    <string name="alarm_feat_title_warning_not_used_app">Auto-oprire</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE neconectat</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Timpul de aplicare a plasturelui a expirat</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Autodiagnosticare eșuată</string>
+    <string name="alarm_feat_title_warning_patch_error">Eroare plasture</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Ocluzie</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Eroare la inserarea acului</string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Nivel scăzut de insulină</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Durata de funcționare a plasturelui a expirat</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Plasturele va expira în curând</string>
+    <string name="alarm_feat_title_alert_low_battery">Baterie aproape descărcată</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Temperatură ridicată/scăzută</string>
+    <string name="alarm_feat_title_alert_not_used_app">Auto-oprire</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE neconectat</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Activarea plasturelui nu este finalizată</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Porniți insulina</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Porniți Bluetooth</string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Nivel scăzut de insulină</string>
+    <string name="alarm_feat_title_notice_expired_patch">Notificare privind timpul de utilizare a plasturelui</string>
+    <string name="alarm_feat_title_notice_check_patch">Notificare de verificare a plasturelui</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Schimbare de fus orar</string>
+    <string name="alarm_feat_title_notice_check_bg">Verificați glicemia</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS a pornit</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS s-a încheiat</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS nu este disponibil</string>
+    <string name="alarm_feat_title_notice_unknown">Eroare plasture</string>
+    <string name="alarm_feat_desc_unknown">Eroare neașteptată a plasturelui.</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Dezactivați plasturele</string>
+    <string name="alarm_feat_btn_patch_force_discard">Eliminați plasturele</string>
+    <string name="alarm_feat_btn_resume_infusion">Porniți insulina</string>
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Verificați conexiunea plasturelui.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolusul nu poate fi administrat. Bolus disponibil: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolusul nu poate fi administrat. Nu a rămas destulă insulină.</string>
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Au rămas mai puțin de 10 U de insulină; administrarea insulinei a fost oprită. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Plasturele a expirat; administrarea insulinei a fost oprită. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Baterie aproape descărcată; administrarea insulinei a fost oprită. Apăsați butonul [Eliminați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Administrarea insulinei a fost oprită. Mergeți acum într-un loc cu temperatură potrivită (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Administrarea insulinei a fost oprită. Apăsați butonul [Porniți insulina] și reporniți administrarea bazalei.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Timpul de aplicare a plasturelui a expirat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnosticarea a eșuat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Administrarea insulinei a fost oprită din cauza unei erori neașteptate. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Administrarea insulinei a fost oprită din cauza unei ocluzii. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Acul nu a putut fi inserat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Au rămas mai puțin de %s U de insulină. Pregătiți-vă să schimbați plasturele.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Plasturele a expirat. Schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Plasturele va expira în curând. Schimbați plasturele acum.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Bateria este aproape descărcată. Pregătiți-vă să schimbați plasturele.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Administrarea insulinei este întreruptă din cauza temperaturii extreme. Mergeți într-un loc cu 40℉–99℉ pentru a o relua.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Apăsați [OK]. Dacă este ignorată, alerta devine o alarmă critică și administrarea insulinei va fi oprită.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Apăsați butonul [OK] pentru a finaliza activarea plasturelui.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Pauza de insulină s-a încheiat. Apăsați [Porniți insulina] pentru a porni.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth este necesar pentru a folosi plasturele. Apăsați [OK] și porniți Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Au rămas mai puțin de %s U de insulină. Pregătiți-vă să schimbați plasturele.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Timpul de utilizare a plasturelui este de %1$s zile și %2$s ore. Țineți cont de acest lucru în timpul utilizării.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Fusul orar s-a schimbat din %1$s(UTC %2$s) în %3$s(UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Au trecut %s de la bolus. Verificați glicemia.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS a pornit.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS s-a încheiat din cauza deconectării plasturelui/CGM.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS s-a încheiat din cauza pauzei LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS s-a încheiat deoarece timpul programat a trecut.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS s-a încheiat deoarece LGS a fost dezactivat.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS s-a încheiat deoarece valoarea CGM a depășit pragul setat.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS s-a încheiat dintr-un motiv necunoscut.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Verificați conexiunea plasturelui și a CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Omis: actualizare prea devreme.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Plasturele nu a confirmat oprirea. Se așteaptă terminarea bolusului…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Un bolus care nu fusese înregistrat a fost adăugat acum. Verificați IOB, apoi încercați din nou.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Plasturele nu a confirmat oprirea. Este înregistrat bolusul complet de %1$s.</string>
+</resources>

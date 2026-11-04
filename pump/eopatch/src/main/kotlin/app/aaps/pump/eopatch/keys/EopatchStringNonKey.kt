@@ -5,7 +5,6 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 enum class EopatchStringNonKey(
     override val key: String,
     override val defaultValue: String,
-    override val exportable: Boolean = true
 ) : StringNonPreferenceKey {
 
     Alarms("eopatch_alarms", ""),

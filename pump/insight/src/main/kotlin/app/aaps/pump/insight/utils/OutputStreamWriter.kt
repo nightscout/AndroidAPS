@@ -2,6 +2,8 @@ package app.aaps.pump.insight.utils
 
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.wait
+import app.aaps.core.utils.waitMillis
+import app.aaps.pump.insight.utils.OutputStreamWriter.Companion.WRITE_AND_WAIT_TIMEOUT_MS
 import java.io.IOException
 import java.io.OutputStream
 
@@ -40,12 +42,19 @@ class OutputStreamWriter(outputStream: OutputStream, callback: Callback) : Threa
         }
     }
 
+    /**
+     * Writes [bytes] and waits until the writer thread has flushed them, at most [WRITE_AND_WAIT_TIMEOUT_MS].
+     *
+     * The wait used to have no limit. If the writer thread had already stopped on an [IOException],
+     * nothing called notifyAll() any more and the caller waited forever - and the caller is the
+     * synchronized disconnect() of the connection service, so the whole service stalled with it (#5209).
+     */
     fun writeAndWait(bytes: ByteArray) {
         synchronized(buffer) {
             buffer.putBytes(bytes)
             buffer.notifyAll()
             try {
-                buffer.wait()
+                buffer.waitMillis(WRITE_AND_WAIT_TIMEOUT_MS)
             } catch (e: InterruptedException) {
             }
         }
@@ -67,6 +76,7 @@ class OutputStreamWriter(outputStream: OutputStream, callback: Callback) : Threa
     companion object {
 
         private const val BUFFER_SIZE = 1024
+        private const val WRITE_AND_WAIT_TIMEOUT_MS = 2000L
     }
 
     init {

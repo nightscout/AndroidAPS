@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.ApplicationLayer.MAX_VALID_PAYLOAD_SIZE
 import info.nightscout.comboctl.base.ApplicationLayer.createCMDDeliverBolusPacket
 import info.nightscout.comboctl.base.ApplicationLayer.createCMDReadHistoryBlockPacket
 import info.nightscout.comboctl.base.ApplicationLayer.parseCMDReadHistoryBlockResponsePacket
@@ -400,47 +401,47 @@ object ApplicationLayer {
      * IMPORTANT: Bolus amounts are given in 0.1 IU units,
      * so for example, "57" means 5.7 IU.
      */
-    sealed class CMDHistoryEventDetail(val isBolusDetail: Boolean) {
+    sealed class CMDHistoryEventDetail {
 
-        data class QuickBolusRequested(val bolusAmount: Int) : CMDHistoryEventDetail(isBolusDetail = true)
-        data class QuickBolusInfused(val bolusAmount: Int) : CMDHistoryEventDetail(isBolusDetail = true)
+        data class QuickBolusRequested(val bolusAmount: Int) : CMDHistoryEventDetail()
+        data class QuickBolusInfused(val bolusAmount: Int) : CMDHistoryEventDetail()
         data class StandardBolusRequested(
             val bolusAmount: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class StandardBolusInfused(
             val bolusAmount: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class ExtendedBolusStarted(
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class ExtendedBolusEnded(
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class MultiwaveBolusStarted(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class MultiwaveBolusEnded(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
-        data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail(isBolusDetail = false)
+        data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail()
     }
 
     /**
@@ -1350,6 +1351,11 @@ object ApplicationLayer {
                 "historyGap: $historyGap  " +
                 "number of events: $numEvents"
         }
+
+        // The oldest events were lost before we could read them. Log this at a level
+        // that is kept in the logs, so a report of missing boluses can be checked later.
+        if (historyGap)
+            logger(LogLevel.WARN) { "History gap: the pump overwrote its oldest history events before they were read" }
 
         val events = mutableListOf<CMDHistoryEvent>()
         for (eventIndex in 0 until numEvents) {

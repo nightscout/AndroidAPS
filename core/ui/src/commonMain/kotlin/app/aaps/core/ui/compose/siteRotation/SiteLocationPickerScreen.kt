@@ -1,0 +1,83 @@
+package app.aaps.core.ui.compose.siteRotation
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import app.aaps.core.data.model.TE
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.stringResource
+
+/**
+ * Full-screen wrapper for [SiteLocationPicker] with a top bar and confirm button.
+ * Used when navigating from a dialog (Fill, Care) to pick a site location.
+ *
+ * @see SiteLocationPickerScreenPreview
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SiteLocationPickerScreen(
+    siteType: TE.Type,
+    bodyType: BodyType,
+    onClose: () -> Unit,
+    onLocationConfirmed: (TE.Location, TE.Arrow) -> Unit,
+    entries: List<TE> = emptyList()
+) {
+    var selectedLocation by rememberSaveable { mutableStateOf(TE.Location.NONE) }
+    var selectedArrow by rememberSaveable { mutableStateOf(TE.Arrow.NONE) }
+
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(CoreUiStrings.site_rotation)) },
+                navigationIcon = {
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(CoreUiStrings.close)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { onLocationConfirmed(selectedLocation, selectedArrow) },
+                        enabled = selectedLocation != TE.Location.NONE
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = stringResource(CoreUiStrings.save),
+                            tint = if (selectedLocation != TE.Location.NONE)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        SiteLocationPicker(
+            siteType = siteType,
+            bodyType = bodyType,
+            entries = entries,
+            selectedLocation = selectedLocation,
+            selectedArrow = selectedArrow,
+            onLocationSelected = { selectedLocation = it },
+            onArrowSelected = { selectedArrow = it },
+            modifier = Modifier.padding(paddingValues)
+        )
+    }
+}

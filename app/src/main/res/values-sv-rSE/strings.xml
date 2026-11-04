@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Inställningar för %1$s</string>
-    <string name="nav_exit">Avsluta</string>
-    <string name="delta">Delta</string>
-    <string name="save">Spara</string>
-    <string name="wear">Klocka (Wear)</string>
-    <string name="nav_about">Om</string>
-    <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
-    <string name="invalid">OGILTIG</string>
-    <string name="gradually_increase_notification_volume">Öka volymen gradvis för larm och aviseringar</string>
-    <string name="localalertsettings_title">Lokala larm</string>
-    <string name="enable_missed_bg_readings_alert">Varna om BG-data saknas</string>
-    <string name="enable_pump_unreachable_alert">Varna om pumpen inte går att nå</string>
-    <string name="pump_unreachable_threshold">Pumpen ses som ej nåbar efter [min]</string>
-    <string name="enable_carbs_req_alert">Varna om kolhydrater behövs</string>
-    <string name="open_navigation">Öppna menyn</string>
-    <string name="close_navigation">Stäng menyn</string>
-    <string name="remove_items">Ta bort objekt</string>
-    <string name="sort_items">Sortera objekt</string>
-    <string name="unitsnosemicolon">Enheter</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
-    <string name="cannula">Kanyl</string>
     <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Ta bort valda objekt</string>
-    <string name="count_selected">%1$d valda</string>
-    <string name="sort_label">Sortera</string>
-    <string name="search">Sök</string>
+    <string name="select">Välj</string>
+    <string name="set">Ställ in</string>
+    <string name="migrating_preferences">Överför inställningar…</string>
+    <string name="optimizing_database">Optimerar databas…</string>
+    <string name="initializing_plugins">Initierar insticksprogram…</string>
+    <string name="initializing">Initierar…</string>
+    <string name="migrating_profile_switches">Överför profilbyten…</string>
+    <string name="migrating_effective_profile_switches">Överför genomförda profilbyten…</string>
+    <string name="migrating_boluses">Överför bolusdoser…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Äldre poster hade ingen insulinkonfiguration och ingen profil var aktiv, så %1$s användes för dem. Kontrollera dina insulininställningar — redan migrerade poster uppdateras inte efteråt.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Äldre poster saknade insulinets verkningstid, så %1$.1f timmar användes för %2$s. Kontrollera dina insulininställningar — redan migrerade poster uppdateras inte efteråt.</string>
+    <string name="settings_unreadable_title">AAPS-inställningarna kan inte läsas</string>
+    <string name="settings_unreadable_key_explanation">Dina inställningar på den här telefonen är krypterade med en nyckel som Android förvarar åt AAPS, och det går inte längre att öppna inställningarna med den nyckeln. Detta kan inträffa efter att telefonens nyckellager (key store) har återställts.</string>
+    <string name="settings_unreadable_keystore_explanation">Telefonens nyckellager (key store) svarade inte, så AAPS kunde inte öppna inställningarna.</string>
+    <string name="settings_unreadable_not_running">AAPS körs inte och styr inte pumpen. En tillfällig basal som pågår avslutas när dess tid har gått ut. Därefter ger pumpen sin egen basal.</string>
+    <string name="settings_unreadable_what_to_do">Försök igen stänger AAPS och startar om appen. Om det inte hjälper, starta om telefonen. Välj Börja om från början endast när inget annat hjälper: Då läggs de oläsbara inställningarna åt sidan och AAPS startar med tomma inställningar. Importera därefter din senaste inställningsexport i installationsguiden.</string>
+    <string name="settings_unreadable_start_fresh">Börja om från början</string>
+    <string name="settings_unreadable_confirm_title">Starta med tomma inställningar?</string>
+    <string name="settings_unreadable_confirm_text">Den oläsbara inställningsfilen har döpts om och behålls. Alla inställningar återställs till sina standardvärden. Därefter konfigurerar du AAPS på nytt eller importerar en export av inställningarna.</string>
+    <string name="settings_unreadable_notification">AAPS körs inte. Öppna AAPS för att se vad du skall göra.</string>
 </resources>
