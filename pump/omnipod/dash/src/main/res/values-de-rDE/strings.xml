@@ -17,7 +17,7 @@
     <string name="unconfirmed_command" comment="26 characters max for translation">Unbestätigtes Kommando</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vom Nutzer angefragt</string>
     <string name="insulin_delivery_suspended">Insulinabgabe ist unterbrochen</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Die Zeitzone auf dem Pod unterscheidet sich von der Zeitzone auf dem Telefon. Die Basalrate ist falsch. Wechsele das Profi, um dies zu beheben</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Die Zeitzone auf dem Pod unterscheidet sich von der Zeitzone auf dem Telefon. Die Basalrate ist falsch. Wechsele das Profil, um dies zu beheben</string>
     <string name="failed_to_set_the_new_basal_profile">Fehler beim Festlegen des neuen Basal-Profils. Abgabe unterbrochen</string>
     <string name="bolus_delivery_status_uncertain">Bolus Lieferstatus unklar. Aktualisiere den Pod Status, um ihn zu kontrollieren.</string>
     <string name="temp_basal_out_of_sync">Temporärer Basalstatus nicht wie erwartet! Wenn ein Temp Basal zuvor ausgeführt wurde, wurde er abgebrochen. Bitte überprüfe die Insulin- und Pod-Historie</string>
