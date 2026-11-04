@@ -56,7 +56,7 @@ class AaruyConnectSetupTest {
         val adapter = mock(BleAdapter::class.java)
         `when`(adapter.isDeviceBonded(anyString())).thenReturn(true)
         `when`(transport.adapter).thenReturn(adapter)
-        client = AaruyBleClient(RuntimeEnvironment.getApplication(), mock(AAPSLogger::class.java), transport)
+        client = AaruyBleClient(RuntimeEnvironment.getApplication(), mock(AAPSLogger::class.java), transport, Looper.getMainLooper())
     }
 
     @Test

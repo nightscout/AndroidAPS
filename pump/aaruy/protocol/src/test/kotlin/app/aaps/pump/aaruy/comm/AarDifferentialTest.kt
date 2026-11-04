@@ -1,5 +1,6 @@
 package app.aaps.pump.aaruy.comm
 
+import android.os.Looper
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
@@ -315,7 +316,7 @@ class AarDifferentialTest {
     private inner class NewPump : Pump {
 
         val log = mutableListOf<String>()
-        val client = AaruyBleClient(mock(Context::class.java), mock(AAPSLogger::class.java), mock(AaruyBleTransport::class.java, RETURNS_DEEP_STUBS))
+        val client = AaruyBleClient(mock(Context::class.java), mock(AAPSLogger::class.java), mock(AaruyBleTransport::class.java, RETURNS_DEEP_STUBS), mock(Looper::class.java))
         val manager: Any = client.javaClass.getDeclaredField("link").apply { isAccessible = true }.get(client)
         val writing = manager.javaClass.getDeclaredField("writing").apply { isAccessible = true }
 

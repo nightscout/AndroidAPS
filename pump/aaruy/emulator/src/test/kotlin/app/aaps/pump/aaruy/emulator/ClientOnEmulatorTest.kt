@@ -66,7 +66,7 @@ class ClientOnEmulatorTest {
 
         emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
         transport = AaruyEmulatorBleTransport(emulator)
-        util = AaruyBleClient(context, mock(AAPSLogger::class.java), transport)
+        util = AaruyBleClient(context, mock(AAPSLogger::class.java), transport, Looper.getMainLooper())
         util.setOnBleListener(
             Proxy.newProxyInstance(javaClass.classLoader, arrayOf(AaruyBleListener::class.java)) { _, method, args ->
                 log.add(method.name + "(" + args.orEmpty().joinToString() + ")")

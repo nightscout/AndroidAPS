@@ -12,7 +12,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -93,9 +92,11 @@ class AaruyBLE(
     private val TAG = "AaruyBLEService"
     private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
     val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices
-    private val handler = Handler(Looper.getMainLooper())
 
     val aaBleUtil = AaruyBleClient(context, aapsLogger, transport)
+
+    /** On the thread of the pump events, because it shares their state. */
+    private val handler = Handler(aaBleUtil.eventLooper)
 
     /** Set when the emulator replaces the radio, see AaruyBindings. */
     val emulatorTransport: AaruyEmulatorBleTransport? = transport as? AaruyEmulatorBleTransport

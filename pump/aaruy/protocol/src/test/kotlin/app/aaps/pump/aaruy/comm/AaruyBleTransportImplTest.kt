@@ -84,7 +84,7 @@ class AaruyBleTransportImplTest {
 
         shadowOf(context).grantPermissions(Manifest.permission.BLUETOOTH_CONNECT)
         val transport = AaruyBleTransportImpl(context, mock(AAPSLogger::class.java))
-        client = AaruyBleClient(context, mock(AAPSLogger::class.java), transport)
+        client = AaruyBleClient(context, mock(AAPSLogger::class.java), transport, Looper.getMainLooper())
         client.setOnBleListener(
             Proxy.newProxyInstance(javaClass.classLoader, arrayOf(AaruyBleListener::class.java)) { _, method, args ->
                 log.add(method.name + "(" + args.orEmpty().joinToString() + ")")
@@ -163,7 +163,7 @@ class AaruyBleTransportImplTest {
     @Test
     fun nothingIsSentBeforeTheSetupIsComplete() {
         val transport = mock(AaruyBleTransport::class.java, RETURNS_DEEP_STUBS)
-        val client = AaruyBleClient(RuntimeEnvironment.getApplication(), mock(AAPSLogger::class.java), transport)
+        val client = AaruyBleClient(RuntimeEnvironment.getApplication(), mock(AAPSLogger::class.java), transport, Looper.getMainLooper())
         client.getCurStatus()
         client.cancelBolus()
         verify(transport.gatt, never()).writeCharacteristic(any<ByteArray?>() ?: ByteArray(0))

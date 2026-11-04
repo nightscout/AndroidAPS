@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import android.os.SystemClock
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
@@ -33,7 +34,9 @@ import javax.crypto.spec.SecretKeySpec
 class AaruyBleClient(
     context: Context,
     private val aapsLogger: AAPSLogger,
-    private val transport: AaruyBleTransport
+    private val transport: AaruyBleTransport,
+    /** All pump events run here. Not the main thread: the pump must not wait for the screen, and the screen must not wait for the pump. */
+    val eventLooper: Looper = HandlerThread("AaruyPump").apply { start() }.looper
 ) {
 
     private val appContext = context
@@ -376,11 +379,11 @@ fun setOnBleListener(listener: AaruyBleListener) {
     /**
      * The connection and the command queue. Runs the steps the vendor library got from its BLE library:
      * connect with a timeout and retries, wait, discover services, ask for a large MTU, enable notifications.
-     * Events come from any thread and are handled on the main thread, as they were there.
+     * Events come from any thread and are handled one by one on the pump thread, in the order they came.
      */
     private inner class PumpLink : BleTransportListener, AaruyTransportExtras {
 
-        private val main = Handler(Looper.getMainLooper())
+        private val events = Handler(eventLooper)
         private val connectTimeout = Runnable { onConnectFailed("timeout") }
         private val setupTimeout = Runnable { onConnectFailed("setup timeout") }
         private var address: String? = null
@@ -412,7 +415,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
             }
             if (connecting) return
             connecting = true
-            main.removeCallbacks(connectTimeout)
+            events.removeCallbacks(connectTimeout)
             status = BleStatus.CONNECTING
             listener?.onBleStatusChanged(status)
             retriesLeft = CONNECT_RETRIES
@@ -424,37 +427,37 @@ fun setOnBleListener(listener: AaruyBleListener) {
             servicesFound = false
             transport.setListener(this)
             transport.setExtrasListener(this)
-            main.removeCallbacks(connectTimeout)
-            main.postDelayed(connectTimeout, CONNECT_TIMEOUT_MS)
+            events.removeCallbacks(connectTimeout)
+            events.postDelayed(connectTimeout, CONNECT_TIMEOUT_MS)
             if (!transport.gatt.connect(target)) onConnectFailed("connect refused")
         }
 
         /** The status stays CONNECTING: the driver asks to connect again, as it did with the vendor library. */
         private fun onConnectFailed(reason: String) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "connect failed: $reason, retries left: $retriesLeft")
-            main.removeCallbacks(connectTimeout)
-            main.removeCallbacks(setupTimeout)
+            events.removeCallbacks(connectTimeout)
+            events.removeCallbacks(setupTimeout)
             transport.gatt.close()
             if (retriesLeft > 0) {
                 retriesLeft--
-                main.postDelayed({ startConnect() }, CONNECT_RETRY_DELAY_MS)
+                events.postDelayed({ startConnect() }, CONNECT_RETRY_DELAY_MS)
             } else {
                 connecting = false
             }
         }
 
         override fun onConnectionStateChanged(connected: Boolean) {
-            main.post {
+            events.post {
                 if (connected) onConnected() else onDisconnected()
             }
         }
 
         private fun onConnected() {
-            main.removeCallbacks(connectTimeout)
-            main.removeCallbacks(setupTimeout)
-            main.postDelayed(setupTimeout, SETUP_TIMEOUT_MS)
+            events.removeCallbacks(connectTimeout)
+            events.removeCallbacks(setupTimeout)
+            events.postDelayed(setupTimeout, SETUP_TIMEOUT_MS)
             val bonded = address?.let { transport.adapter.isDeviceBonded(it) } == true
-            main.postDelayed({ transport.gatt.discoverServices() }, if (bonded) DISCOVERY_DELAY_BONDED_MS else DISCOVERY_DELAY_MS)
+            events.postDelayed({ transport.gatt.discoverServices() }, if (bonded) DISCOVERY_DELAY_BONDED_MS else DISCOVERY_DELAY_MS)
         }
 
         private fun onDisconnected() {
@@ -464,7 +467,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 onConnectFailed("link lost during setup")
                 return
             }
-            main.removeCallbacks(setupTimeout)
+            events.removeCallbacks(setupTimeout)
             connecting = false
             servicesFound = false
             ready = false
@@ -475,7 +478,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
         }
 
         override fun onServicesDiscovered(success: Boolean) {
-            main.post {
+            events.post {
                 if (success && transport.gatt.findCharacteristics()) {
                     servicesFound = true
                     transport.requestMtu(REQUESTED_MTU)
@@ -487,18 +490,18 @@ fun setOnBleListener(listener: AaruyBleListener) {
         }
 
         override fun onMtuChanged(mtu: Int) {
-            main.post {
+            events.post {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "mtu: $mtu")
                 transport.gatt.enableNotifications()
             }
         }
 
         override fun onDescriptorWritten() {
-            main.post { onReady() }
+            events.post { onReady() }
         }
 
         private fun onReady() {
-            main.removeCallbacks(setupTimeout)
+            events.removeCallbacks(setupTimeout)
             connecting = false
             status = BleStatus.CONNECTED
             ready = true
@@ -510,15 +513,15 @@ fun setOnBleListener(listener: AaruyBleListener) {
         }
 
         override fun onCharacteristicChanged(data: ByteArray) {
-            main.post { handleFrame(data) }
+            events.post { handleFrame(data) }
         }
 
         override fun onCharacteristicWritten() {
-            main.post { inFlight.poll()?.let { onWriteDone(it) } }
+            events.post { inFlight.poll()?.let { onWriteDone(it) } }
         }
 
         override fun onWriteFailed() {
-            main.post { inFlight.poll()?.let { onWriteFailed(it) } }
+            events.post { inFlight.poll()?.let { onWriteFailed(it) } }
         }
 
         override fun onFirmwareVersionRead(data: ByteArray) {
@@ -558,7 +561,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         fun readVersion() = transport.readFirmwareVersion()
 
-        /** Writes come from the main thread and from coroutines. The pump refuses a frame whose sequence is out of order. */
+        /** Writes come from the pump thread and from coroutines. The pump refuses a frame whose sequence is out of order. */
         private fun send(request: Request) {
             synchronized(sendLock) {
                 sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
