@@ -112,7 +112,7 @@ class AaruyBleClient(
 
             else                                                  -> false
         }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "set pin success=$success")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "set pin variant=$variant success=$success")
         return success
     }
 
@@ -389,9 +389,13 @@ class AaruyBleClient(
 
         private val main = Handler(Looper.getMainLooper())
         private val connectTimeout = Runnable { onConnectFailed("timeout") }
+        private val setupTimeout = Runnable { onConnectFailed("setup timeout") }
         private var address: String? = null
         private var retriesLeft = 0
         private var servicesFound = false
+
+        /** From the first connect until the setup ended, either way. Closing the GATT in this time also ends a running pairing. */
+        private var connecting = false
 
         /** Commands may be sent. It is set when the setup is complete. */
         private var ready = false
@@ -412,6 +416,8 @@ class AaruyBleClient(
                 listener?.onBleStatusChanged(status)
                 return
             }
+            if (connecting) return
+            connecting = true
             main.removeCallbacks(connectTimeout)
             status = BleStatus.CONNECTING
             listener?.onBleStatusChanged(status)
@@ -433,10 +439,13 @@ class AaruyBleClient(
         private fun onConnectFailed(reason: String) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "connect failed: $reason, retries left: $retriesLeft")
             main.removeCallbacks(connectTimeout)
+            main.removeCallbacks(setupTimeout)
             transport.gatt.close()
             if (retriesLeft > 0) {
                 retriesLeft--
                 main.postDelayed({ startConnect() }, CONNECT_RETRY_DELAY_MS)
+            } else {
+                connecting = false
             }
         }
 
@@ -448,6 +457,8 @@ class AaruyBleClient(
 
         private fun onConnected() {
             main.removeCallbacks(connectTimeout)
+            main.removeCallbacks(setupTimeout)
+            main.postDelayed(setupTimeout, SETUP_TIMEOUT_MS)
             val bonded = address?.let { transport.adapter.isDeviceBonded(it) } == true
             main.postDelayed({ transport.gatt.discoverServices() }, if (bonded) DISCOVERY_DELAY_BONDED_MS else DISCOVERY_DELAY_MS)
         }
@@ -459,6 +470,8 @@ class AaruyBleClient(
                 onConnectFailed("link lost during setup")
                 return
             }
+            main.removeCallbacks(setupTimeout)
+            connecting = false
             servicesFound = false
             ready = false
             writing = false
@@ -491,6 +504,8 @@ class AaruyBleClient(
         }
 
         private fun onReady() {
+            main.removeCallbacks(setupTimeout)
+            connecting = false
             status = BleStatus.CONNECTED
             ready = true
             sendReportDevice()
@@ -670,6 +685,9 @@ class AaruyBleClient(
     companion object {
 
         private const val CONNECT_TIMEOUT_MS = 15_000L
+
+        /** Pairing waits for a button on the pump, and Android gives up on it after 30 s. */
+        private const val SETUP_TIMEOUT_MS = 45_000L
         private const val CONNECT_RETRIES = 2
         private const val CONNECT_RETRY_DELAY_MS = 1_000L
         private const val DISCOVERY_DELAY_MS = 300L
