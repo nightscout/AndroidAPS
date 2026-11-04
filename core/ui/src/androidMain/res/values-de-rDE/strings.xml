@@ -168,6 +168,7 @@
     <string name="notification">Benachrichtigung</string>
     <string name="noprofile">Bisher noch kein Profil von Nightscout geladen</string>
     <string name="exists">vorhanden</string>
+    <string name="notexists">nicht vorhanden</string>
     <string name="glucose">Glukose</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -225,9 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Wähle das Profil aus, das bei der Aktivierung angewendet werden soll.</string>
     <string name="pump_wizard_profile_gate_no_store">Kein Profil vorhanden. Öffne die Profilverwaltung, erstelle ein Profil und starte anschließend die Aktivierung erneut.</string>
     <string name="reset">Zurücksetzen</string>
+    <string name="profileswitch_ismissing">Profilwechsel fehlt. Führe einen Profilwechsel durch oder tippe im lokalen Profil auf „Profil aktivieren“.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Prozentsatz</string>
     <string name="timeshift_label">Zeitverschiebung</string>
+    <string name="confirm_remove_multiple_items">Möchtest du wirklich %1$d Einträge entfernen?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">%1$d dieser Einträge sind auf dem Master nicht vorhanden. Sie werden nicht entfernt.</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
@@ -339,7 +342,9 @@
     <string name="careportal_note">Notiz</string>
     <string name="careportal_question">Frage</string>
     <string name="careportal_exercise">Bewegung</string>
+    <string name="careportal_announcement_message">Mitteilung: %1$s</string>
     <string name="careportal_note_message">Hinweis : %1$s</string>
+    <string name="careportal_question_message">Frage: %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">​Setzstelle wechseln.: %1$s</string>
     <string name="careportal_pump_site_change">Pumpenkatheter-Wechsel</string>
@@ -656,6 +661,7 @@
     <string name="uel_ns_queue_cleared">NS WARTESCHLANGE GELÖSCHT</string>
     <string name="uel_ns_settings_copied">NS EINSTELLUNGEN KOPIERT</string>
     <string name="uel_error_dialog_ok">WARNMELDUNG OK</string>
+    <string name="uel_error_dialog_mute">FEHLERDIALOG STUMMGESCHALTET</string>
     <string name="uel_error_dialog_mute_5min">WARNMELDUNGEN STUMM 5 MIN</string>
     <string name="uel_objective_started">OBJECTIVE GESTARTET</string>
     <string name="uel_objective_unstarted">OBJECTIVE NICHT GESTARTET</string>
@@ -720,6 +726,7 @@
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="profile_name_contains_dot">Einige Profilnamen enthalten Punkte.\nDies wird von Nightscout nicht unterstützt.\nDie Profile werden nicht zu Nightscout hochgeladen.</string>
     <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
     <string name="errors">Fehler</string>
     <!-- Command Queue + readStatus reasons -->
@@ -884,6 +891,7 @@
     <string name="export_result_message_exported">Einstellungen exportiert</string>
     <string name="export_result_message_failed">Export der Einstellungen FEHLGESCHLAGEN!</string>
     <string name="export_result_message_about_to_expire">Einstellungen exportiert: Das Passwort läuft bald ab. Exportiere die Einstellungen manuell und gib das Passwort erneut ein.</string>
+    <string name="export_result_message_expired">Einstellungsexport abgebrochen: Passwort abgelaufen. Exportiere die Einstellungen manuell und gib das Passwort erneut ein!</string>
     <string name="export_result_message_disabled">Warnung (Automatisierung): Export der Einstellungen nicht aktiviert!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Cloud-Export erfolgreich</string>
@@ -952,6 +960,7 @@
     <string name="open_navigation">Menü öffnen</string>
     <string name="nav_history_browser">Verlauf</string>
     <string name="nav_history_browser_desc">Frühere Diagramme anzeigen</string>
+    <string name="appearance">Darstellung</string>
     <string name="manage">Verwalten</string>
     <string name="localprofile">Profil</string>
     <string name="nav_setupwizard">Einrichtungsassistent</string>
@@ -989,6 +998,7 @@
     <string name="cannula">Kanüle</string>
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Site Rotation -->
+    <string name="select_location">Tippe unten, um die Setzstelle auszuwählen</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Meine App nicht beenden?</string>
     <string name="fabric_upload_disabled">Absturzprotokolle hochladen deaktiviert!</string>
@@ -1037,6 +1047,7 @@
     <string name="unsaved_changes">Ungespeicherte Änderungen</string>
     <string name="unsaved_changes_message">Du hast ungespeicherte Änderungen. Was möchtest du tun?</string>
     <string name="discard">Verwerfen</string>
+    <string name="ic_dynamic_label_warning">Dein Algorithmus kann den Kohlenhydratfaktor (IC) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatz bei fehlenden Daten oder als Referenzwerte</string>
     <string name="isf_dynamic_label_warning">Dein Algorithmus kann den Insulinempfindlichkeitsfaktor (ISF) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatzwerte bei fehlenden Daten oder als Referenzwerte.</string>
     <string name="add_time_block">Zeitblock hinzufügen</string>
     <string name="remove_entry">Eintrag entfernen</string>
