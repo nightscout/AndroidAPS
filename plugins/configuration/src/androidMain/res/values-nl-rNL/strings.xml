@@ -16,14 +16,14 @@
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
-    <string name="master_password_summary">Het hoofdwachtwoord wordt gebruikt om back-ups te versleutelen en om risicovolle handelingen in de app te bevestigen. Onthoud het wachtwoord goed of bewaar het op een veilige plek.</string>
+    <string name="master_password_summary">Het masterwachtwoord wordt gebruikt om back-ups te versleutelen en om risicovolle handelingen in de app te bevestigen. Onthoud het wachtwoord goed of bewaar het op een veilige plek.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
     <string name="syncinfotext">Gegevens synchroniseren met de cloud. Dit onderdeel kan nu worden overgeslagen, maar de leerdoelen kunnen pas worden afgerond als Nightscout of Tidepool is ingesteld.</string>
     <string name="status_label">Status:</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="profile">Profiel</string>
-    <string name="doprofileswitch">Profiel wissel uitvoeren</string>
+    <string name="doprofileswitch">Profielwissel uitvoeren</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
