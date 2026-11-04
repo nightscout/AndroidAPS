@@ -245,7 +245,7 @@
     <string name="profile_parameters">Profielparameters</string>
     <string name="active_profile">Actief profiel</string>
     <string name="available_profiles">Beschikbare profielen</string>
-    <string name="profile_switches">Profiel wisselingen</string>
+    <string name="profile_switches">Profielwisselingen</string>
     <string name="basal_pct_from_tdd_label">% van basaal</string>
     <string name="selected_profile">Geselecteerd:</string>
     <string name="comparation">Vergelijking</string>
