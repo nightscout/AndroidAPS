@@ -12,15 +12,19 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.comm.DailyInfo
+import app.aaps.pump.aaruy.comm.DailyItem
 import app.aaps.pump.aaruy.comm.LogInfo
 import app.aaps.pump.aaruy.comm.LogItem
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
+import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import kotlinx.coroutines.runBlocking
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,6 +52,7 @@ class AaruyHistorySyncTest {
     private val dateUtil = mock(DateUtil::class.java)
     private val pumpSync = mock(PumpSync::class.java)
     private val historyDao = mock(HistoryUnitInfoDao::class.java)
+    private val dailyDao = mock(HistoryDailyUnitInfoDao::class.java)
     private val rh = mock(ResourceHelper::class.java)
     private val pump = AaruyPump(
         logger, rh, mock(Preferences::class.java), dateUtil, pumpSync,
@@ -63,7 +68,7 @@ class AaruyHistorySyncTest {
         pump.canSaveHistory = true
         ble = AaruyBLE(
             transport, logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java),
-            mock(Preferences::class.java), historyDao, mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java), pumpSync
+            mock(Preferences::class.java), historyDao, dailyDao, mock(DetailedBolusInfoStorage::class.java), pumpSync
         )
     }
 
@@ -113,6 +118,23 @@ class AaruyHistorySyncTest {
         receive(LogItem(timestamp = now - 10_000, type = 3, data = 0x8105, injectTime = 0, delayBolus = 0, reserved = 0))
         Thread.sleep(300)
         runBlocking { verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any()) }
+    }
+
+    @Test
+    fun aDayThatComesAgainUpdatesItsRow() {
+        val row = HistoryDailyUnitInfo().apply { dailyTotal = 10; dailyBolus = 5 }
+        `when`(dailyDao.find(eq(now), any())).thenReturn(row)
+        ble.saveDailyData(DailyInfo(1, listOf(DailyItem(now, 2.3, 1.1))))
+        verify(dailyDao, timeout(5000)).update(row)
+        assertEquals(23, row.dailyTotal)
+        assertEquals(11, row.dailyBolus)
+        verify(dailyDao, never()).insert(any())
+    }
+
+    @Test
+    fun aNewDayGetsANewRow() {
+        ble.saveDailyData(DailyInfo(1, listOf(DailyItem(now, 2.3, 1.1))))
+        verify(dailyDao, timeout(5000)).insert(any())
     }
 
     @Test

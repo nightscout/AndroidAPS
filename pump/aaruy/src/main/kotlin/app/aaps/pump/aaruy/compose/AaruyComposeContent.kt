@@ -14,6 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -138,7 +141,15 @@ class AaruyComposeContent(
                 PumpOverviewScreen(state = uiState)
             }
 
-            AaruyScreen.HISTORY -> AaruyHistoryScreen(viewModel = metroViewModel())
+            AaruyScreen.HISTORY -> {
+                // The system back button returns to the pump screen too, as the arrow in the toolbar does.
+                NavigationBackHandler(
+                    state = rememberNavigationEventState(NavigationEventInfo.None),
+                    isBackEnabled = true,
+                    onBackCompleted = { currentScreen = AaruyScreen.OVERVIEW }
+                )
+                AaruyHistoryScreen(viewModel = metroViewModel())
+            }
 
             AaruyScreen.REPLACE_WIZARD -> {
                 KeepScreenOnEffect()

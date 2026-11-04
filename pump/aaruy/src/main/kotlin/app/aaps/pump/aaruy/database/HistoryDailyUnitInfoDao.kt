@@ -24,6 +24,9 @@ interface HistoryDailyUnitInfoDao {
     fun queryAll(): List<HistoryDailyUnitInfo>
 
 
+    @Query("SELECT * FROM history_daily_unit_info WHERE dateTimestamp = :date AND pumpName = :pumpName LIMIT 1")
+    fun find(date: Long, pumpName: String): HistoryDailyUnitInfo?
+
     @Query("SELECT * FROM history_daily_unit_info ORDER BY id DESC")
     fun queryLiveDataList(): LiveData<MutableList<HistoryDailyUnitInfo>>
 

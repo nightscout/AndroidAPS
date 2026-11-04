@@ -24,7 +24,8 @@ fun AaruyHistoryScreen(viewModel: AaruyHistoryViewModel) {
         state = state,
         onSelectType = viewModel::selectType,
         onReload = viewModel::reload,
-        itemKey = { it },
+        // A key must fit in a Bundle. The time alone is not unique: two entries can share the same second.
+        itemKey = { it.toString() },
         historyItem = { record, _ ->
             AapsCard(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(12.dp)) {

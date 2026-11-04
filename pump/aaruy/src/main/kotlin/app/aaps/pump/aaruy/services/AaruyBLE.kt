@@ -51,6 +51,7 @@ import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -880,65 +881,21 @@ class AaruyBLE(
         }
     }
 
-    private fun saveDailyData(dailyInfo: DailyInfo) {
+    internal fun saveDailyData(dailyInfo: DailyInfo) {
         CoroutineScope(Dispatchers.IO).launch {
             val currentPumpName = getShortDeviceName()
             for (item in dailyInfo.dailyItemList) {
                 aapsLogger.warn(LTag.PUMPCOMM, "saveDailyData item.dailyBolus = ${item.dailyBolus}, item.dailyTotal is ${item.dailyTotal}")
-                val allData = historyDailyUnitInfoDao.queryAll()
-                var isExist = false
-                if (allData.isEmpty()) {
-                    val historyDailyUnitInfo = HistoryDailyUnitInfo()
-                    historyDailyUnitInfo.dailyBolus = (item.dailyBolus*10).toInt()
-                    historyDailyUnitInfo.dateTimestamp = item.timestamp
-                    historyDailyUnitInfo.dailyTotal = (item.dailyTotal*10).toInt()
-                    historyDailyUnitInfo.pumpName = currentPumpName
-                    historyDailyUnitInfo.isReplace = false
-                    historyDailyUnitInfo.isUploaded = false
-                    historyDailyUnitInfoDao.insert(historyDailyUnitInfo)
-                } else {
-                    for (i in allData.indices) {
-                        val data = allData[i]
-                        if (i < 3) {
-                            aapsLogger.warn(LTag.PUMPCOMM, "history ${data.toString()}")
-                            if (!currentPumpName.contains(data.pumpName)) {
-                                val historyDailyUnitInfo = HistoryDailyUnitInfo()
-                                historyDailyUnitInfo.dailyBolus = (item.dailyBolus*10).toInt()
-                                historyDailyUnitInfo.dateTimestamp = item.timestamp
-                                historyDailyUnitInfo.dailyTotal = (item.dailyTotal*10).toInt()
-                                historyDailyUnitInfo.pumpName = currentPumpName
-                                historyDailyUnitInfo.isReplace = false
-                                historyDailyUnitInfo.isUploaded = false
-                                historyDailyUnitInfoDao.insert(historyDailyUnitInfo)
-                                isExist = true
-                                break
-                            } else {
-                                if (data.dateTimestamp == item.timestamp) {
-                                    isExist = true
-                                    aapsLogger.warn(LTag.PUMPCOMM, "find timestamp = ${item.timestamp}")
-                                    data.dailyBolus = (item.dailyBolus*10).toInt()
-                                    data.dailyTotal = (item.dailyTotal*10).toInt()
-                                    data.isUploaded = false
-                                    historyDailyUnitInfoDao.update(data)
-                                    break
-                                }
-                            }
-                        } else {
-                            break
-                        }
-                    }
-                    aapsLogger.warn(LTag.PUMPCOMM, "history isExist = $isExist")
-                    if (!isExist) {
-                        val historyDailyUnitInfo = HistoryDailyUnitInfo()
-                        historyDailyUnitInfo.dailyBolus = (item.dailyBolus*10).toInt()
-                        historyDailyUnitInfo.dateTimestamp = item.timestamp
-                        historyDailyUnitInfo.dailyTotal = (item.dailyTotal*10).toInt()
-                        historyDailyUnitInfo.pumpName = currentPumpName
-                        historyDailyUnitInfo.isReplace = false
-                        historyDailyUnitInfo.isUploaded = false
-                        historyDailyUnitInfoDao.insert(historyDailyUnitInfo)
-                    }
+                // The pump sends today again and again while the day grows, so one day of one pump is one row.
+                val row = historyDailyUnitInfoDao.find(item.timestamp, currentPumpName)
+                val info = row ?: HistoryDailyUnitInfo().apply {
+                    dateTimestamp = item.timestamp
+                    pumpName = currentPumpName
                 }
+                info.dailyBolus = (item.dailyBolus * 10).roundToInt()
+                info.dailyTotal = (item.dailyTotal * 10).roundToInt()
+                info.isUploaded = false
+                if (row == null) historyDailyUnitInfoDao.insert(info) else historyDailyUnitInfoDao.update(info)
                 // it is a TDD, store it for stats also.
                 pumpSync.createOrUpdateTotalDailyDose(
                     timestamp = item.timestamp,

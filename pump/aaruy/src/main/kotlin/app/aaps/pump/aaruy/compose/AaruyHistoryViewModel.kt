@@ -109,7 +109,8 @@ class AaruyHistoryViewModel(
             }
             else historyDao.querySince(since).filter { matches(it, type) }.map { toRecord(it, type) }
         }
-        _uiState.update { it.copy(records = records.sortedByDescending { record -> record.timestamp }) }
+        // Equal rows would give equal list keys, and that crashes the list.
+        _uiState.update { it.copy(records = records.distinct().sortedByDescending { record -> record.timestamp }) }
     }
 
     private fun matches(item: HistoryUnitInfo, type: Byte): Boolean =
@@ -140,7 +141,11 @@ class AaruyHistoryViewModel(
     }
 
     fun detailText(record: AaruyHistoryRecord): String = when (record.code) {
-        AaruyHistoryTypes.DAILY -> rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus) + " + " + rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
+        AaruyHistoryTypes.DAILY -> rh.gs(
+            R.string.aaruy_history_daily_parts,
+            rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus),
+            rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
+        )
         AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(R.string.aaruy_history_minutes, record.durationMinutes)
         else                    -> ""
     }
