@@ -10,6 +10,7 @@
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codierung</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codierung</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Weltweit (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Scannt gerade</string>
     <string name="riley_link_ble_config_connected_never">Nie</string>
