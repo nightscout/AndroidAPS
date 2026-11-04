@@ -22,7 +22,8 @@ class AaruyPumpBolusTest {
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        mock(DecimalFormatter::class.java)
+        mock(DecimalFormatter::class.java),
+        mock(BolusProgressData::class.java)
     )
 
     @Test
@@ -33,7 +34,7 @@ class AaruyPumpBolusTest {
         pump.handleBolusStatusUpdate(0, true)
 
         assertTrue(pump.bolusDone)
-        assertEquals(0.05, BolusProgressData.delivered, 0.0001)
+        assertEquals(0.05, pump.bolusDelivered, 0.0001)
         assertEquals(0.05, pump.lastBolusAmount, 0.0001)
     }
 
@@ -41,7 +42,7 @@ class AaruyPumpBolusTest {
     fun finishedBolusReportsTheAmount() {
         pump.handleBolusStatusUpdate(0, true, 0.5)
 
-        assertEquals(0.5, BolusProgressData.delivered, 0.0001)
+        assertEquals(0.5, pump.bolusDelivered, 0.0001)
         assertEquals(0.5, pump.lastBolusAmount, 0.0001)
     }
 }

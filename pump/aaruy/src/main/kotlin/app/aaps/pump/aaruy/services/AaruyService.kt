@@ -1,82 +1,60 @@
 package app.aaps.pump.aaruy.services
 
-import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
-import app.aaps.pump.aaruy.AaruyPlugin
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AlarmState
-import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.keys.AaruyStringKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.round
 
-class AaruyService : DaggerService() {
+class AaruyService : MetroService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var context: Context
-    @Inject lateinit var aaruyPlugin: AaruyPlugin
     @Inject lateinit var aaruyPump: AaruyPump
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: ConstraintsChecker
-    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject lateinit var aaruyBle: AaruyBLE
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var historyDailyUnitInfoDao: HistoryDailyUnitInfoDao
 
-    companion object {
-        private const val CHECK_EXPIRY_WARNING_TIME_MS = 5 * 60 * 1000L
-    }
-
-    private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -85,15 +63,8 @@ class AaruyService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        scope.launch {
-            aaruyPump.pumpStateFlow.collect { pumpState ->
-                // handlePumpStateUpdate(pumpState)
-            }
-        }
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
         scope.launch {
             aaruyPump.connectionStateFlow.collect { connectionState ->
                 isConnected = connectionState == ConnectionState.CONNECTED
@@ -110,7 +81,6 @@ class AaruyService : DaggerService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
         scope.cancel()
     }
 
@@ -124,22 +94,20 @@ class AaruyService : DaggerService() {
         }
     }
 
-    private fun notifyPumpWarning(alarmState: AlarmState) {
+    private suspend fun notifyPumpWarning(alarmState: AlarmState) {
         // Notification on pump warning/error
         if (alarmState != AlarmState.NONE) {
             if (AlarmState.isHighAlarm(alarmState) || AlarmState.isLowAlarm(alarmState)) {
-                uiInteraction.addNotificationWithSound(
-                    Notification.PUMP_ERROR,
+                notificationManager.post(
+                    NotificationId.PUMP_ERROR,
                     rh.gs(R.string.aaruy_pump_error, aaruyPump.alarmStateToString(alarmState)),
-                    Notification.URGENT,
-                    app.aaps.core.ui.R.raw.alarm
+                    sound = AlarmSound.ALARM
                 )
             }
             else if (AlarmState.isRemindAlarm(alarmState)) {
-                uiInteraction.addNotification(
-                    Notification.PUMP_WARNING,
-                    rh.gs(R.string.aaruy_pump_warning, aaruyPump.alarmStateToString(alarmState)),
-                    Notification.ANNOUNCEMENT,
+                notificationManager.post(
+                    NotificationId.PUMP_WARNING,
+                    rh.gs(R.string.aaruy_pump_warning, aaruyPump.alarmStateToString(alarmState))
                 )
             }
             pumpSync.insertAnnouncement(
@@ -205,7 +173,7 @@ class AaruyService : DaggerService() {
         return aaruyBle.updateBasalsInPump(basalInfo)
     }
 
-    fun setBolus(detailedBolusInfo: DetailedBolusInfo): AaruyBolusOutcome {
+    suspend fun setBolus(detailedBolusInfo: DetailedBolusInfo): AaruyBolusOutcome {
         if (!canSetBolus()) return AaruyBolusOutcome.NOT_STARTED
 
         val insulin = detailedBolusInfo.insulin
@@ -214,13 +182,14 @@ class AaruyService : DaggerService() {
         aaruyPump.bolusEndNotSeen = false
         aaruyPump.bolusStopRequested = false
         aaruyPump.bolusStopped = false
-        BolusProgressData.delivered = 0.0
+        aaruyPump.bolusDelivered = 0.0
 
         if (!sendBolusCommand(insulin, isSmb)) {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            // Make sure if anything is delivered (which is highly unlikely at this point) we get it. Not waited for: this bolus runs in the queue.
+            scope.launch { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
             aaruyPump.bolusDone = true
-            BolusProgressData.delivered = 0.0
+            aaruyPump.bolusDelivered = 0.0
             return AaruyBolusOutcome.NOT_STARTED
         }
 
@@ -234,7 +203,7 @@ class AaruyService : DaggerService() {
         // Sync the initial bolus
         val newRecord = pumpSync.addBolusWithTempId(
             timestamp = detailedBolusInfo.timestamp,
-            amount = detailedBolusInfo.insulin,
+            amount = PumpInsulin(detailedBolusInfo.insulin),
             temporaryId = detailedBolusInfo.timestamp,
             type = detailedBolusInfo.bolusType,
             pumpType = aaruyPump.pumpType(),
@@ -251,11 +220,11 @@ class AaruyService : DaggerService() {
 
         waitForBolusProgress()
 
-        if (aaruyPump.bolusStopped && BolusProgressData.delivered == 0.0) {
+        if (aaruyPump.bolusStopped && aaruyPump.bolusDelivered == 0.0) {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
             val syncOk = pumpSync.syncBolusWithTempId(
                 timestamp = bolusStart,
-                amount = 0.0,
+                amount = PumpInsulin(0.0),
                 temporaryId = bolusStart,
                 type = detailedBolusInfo.bolusType,
                 pumpId = bolusStart,
@@ -287,7 +256,6 @@ class AaruyService : DaggerService() {
         var communicationLost = false
         var connectionRetryCounter = 0
         var checkTime = aaruyPump.bolusProgressLastTimeStamp
-        var lastSentBolusAmount: Double? = null
 
         while (!aaruyPump.bolusStopped && !aaruyPump.bolusDone && !communicationLost) {
             SystemClock.sleep(100)
@@ -307,13 +275,6 @@ class AaruyService : DaggerService() {
                     aapsLogger.warn(LTag.PUMPCOMM, "Retry connection failed, communication stopped")
                     disconnect("Communication stopped")
                 }
-            } else {
-                val currentBolusAmount = BolusProgressData.delivered
-
-                if (currentBolusAmount != lastSentBolusAmount) {
-                    rxBus.send(EventOverviewBolusProgress(rh, BolusProgressData.delivered))
-                    lastSentBolusAmount = currentBolusAmount
-                }
             }
         }
 
@@ -321,7 +282,11 @@ class AaruyService : DaggerService() {
         val expectedEnd = aaruyPump.bolusStartTime + bolusDurationInMSec + 1000
         while (dateUtil.now() < expectedEnd && !aaruyPump.bolusDone) {
             val waitTime = expectedEnd - dateUtil.now()
-            rxBus.send(EventOverviewBolusProgress(status = rh.gs(R.string.aaruy_wait_bolus_time_tip, waitTime / 1000), id = BolusProgressData.id))
+            bolusProgressData.updateProgress(
+                percent = (aaruyPump.bolusDelivered / aaruyPump.bolusAmountToBeDelivered * 100).toInt().coerceAtMost(99),
+                status = TextRef.Literal(rh.gs(R.string.aaruy_wait_bolus_time_tip, waitTime / 1000)),
+                delivered = PumpInsulin(aaruyPump.bolusDelivered)
+            )
             SystemClock.sleep(1000)
         }
 
@@ -342,7 +307,7 @@ class AaruyService : DaggerService() {
             return
         }
 
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ + ${BolusProgressData.delivered}")
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ + ${aaruyPump.bolusDelivered}")
         aaruyPump.bolusStopRequested = true
         var success = aaruyBle.cancelBolus()
         val timeout = dateUtil.now() + T.secs(30).msecs()
@@ -354,7 +319,7 @@ class AaruyService : DaggerService() {
         aaruyPump.bolusStopped = success
     }
 
-    fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
+    suspend fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
         if (!isConnected || !aaruyPump.pumpState.isCanTmpBasal()) return false
         var result = true
         if (aaruyPump.isTempBasalInProgress) {
@@ -368,16 +333,10 @@ class AaruyService : DaggerService() {
         }
         aaruyPump.fromTemporaryBasal(tbr)
 
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.getting_temp_basal_status)))
-            }
-        })
-
         return result
     }
 
-    fun extendedBolus(insulin: Double, durationInMinutes: Int): Boolean {
+    suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): Boolean {
         if (!canSetBolus()) return false
         var result = true
         result = aaruyBle.extendedBolus(insulin, durationInMinutes)
@@ -394,7 +353,7 @@ class AaruyService : DaggerService() {
         return result
     }
 
-    fun cancelTempBasal(): Boolean {
+    suspend fun cancelTempBasal(): Boolean {
         if (!isConnected) return false
 
         val result = aaruyBle.cancelTempBasal()
@@ -402,16 +361,10 @@ class AaruyService : DaggerService() {
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         aaruyPump.fromTemporaryBasal(tbr)
 
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.getting_temp_basal_status)))
-            }
-        })
-
         return result
     }
 
-    fun cancelExtendedBolus(): Boolean {
+    suspend fun cancelExtendedBolus(): Boolean {
         if (!isConnected) return false
 
         val result = aaruyBle.cancelBolus()
@@ -422,12 +375,6 @@ class AaruyService : DaggerService() {
                 "extendedBolusDuration: ${eb.duration}, extendedBolusRate: ${eb.rate}, extendedBolusAmount: ${eb.amount}")
         }
         aaruyPump.fromExtendedBolus(eb)
-
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.getting_bolus_status)))
-            }
-        })
 
         return result
     }
@@ -468,7 +415,7 @@ class AaruyService : DaggerService() {
             aapsLogger.warn(LTag.PUMPCOMM, "Pump not connected, not setting bolus")
             return false
         }
-        if (BolusProgressData.stopPressed) {
+        if (bolusProgressData.isStopPressed) {
             aapsLogger.warn(LTag.PUMPCOMM, "Bolus stop pressed, not setting bolus")
             return false
         }

@@ -2,9 +2,7 @@ package app.aaps.pump.aaruy.services
 
 import android.content.Context
 import android.os.Looper
-import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
@@ -17,6 +15,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.BasicParam
+import app.aaps.pump.aaruy.comm.aaruyFrameKey
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
@@ -61,13 +60,11 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java)
+            mock(DecimalFormatter::class.java),
+            mock(BolusProgressData::class.java)
         )
-        val extraDir = mock(DocumentFile::class.java)
-        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
-        val files = mock(FileListProvider::class.java)
-        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
         val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
             logger,
             RuntimeEnvironment.getApplication() as Context,
             pump,
@@ -77,10 +74,9 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java),
-            files
+            mock(PumpSync::class.java)
         )
-        ble.startEmulatorIfRequested()
+        ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
         val emulator = transport.emulator
 
@@ -131,13 +127,11 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java)
+            mock(DecimalFormatter::class.java),
+            mock(BolusProgressData::class.java)
         )
-        val extraDir = mock(DocumentFile::class.java)
-        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
-        val files = mock(FileListProvider::class.java)
-        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
         val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
             logger,
             RuntimeEnvironment.getApplication() as Context,
             pump,
@@ -147,10 +141,9 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java),
-            files
+            mock(PumpSync::class.java)
         )
-        ble.startEmulatorIfRequested()
+        ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
 
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
@@ -202,13 +195,11 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             pumpSync,
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java)
+            mock(DecimalFormatter::class.java),
+            mock(BolusProgressData::class.java)
         )
-        val extraDir = mock(DocumentFile::class.java)
-        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
-        val files = mock(FileListProvider::class.java)
-        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
         val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
             logger,
             RuntimeEnvironment.getApplication() as Context,
             pump,
@@ -218,10 +209,9 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            pumpSync,
-            files
+            pumpSync
         )
-        ble.startEmulatorIfRequested()
+        ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
 
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
@@ -240,14 +230,14 @@ class AaruyBleReconnectTest {
         pump.bolusDone = false
         Thread { ble.setBolus(3.0, false) }.start()
         waitFor("the driver saw the bolus") { pump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING }
-        waitFor("some of the bolus is delivered") { BolusProgressData.delivered > 0.0 }
+        waitFor("some of the bolus is delivered") { pump.bolusDelivered > 0.0 }
         pump.bolusStopRequested = true
         Thread { ble.cancelBolus() }.start()
 
         waitFor("the pump history gave the amount") {
             mockingDetails(pumpSync).invocations.any { it.method.name == "syncBolusWithPumpId" }
         }
-        val amount = mockingDetails(pumpSync).invocations.first { it.method.name == "syncBolusWithPumpId" }.getArgument<Double>(1)
+        val amount = mockingDetails(pumpSync).invocations.first { it.method.name == "syncBolusWithPumpId" }.arguments[1].toString().filter { it.isDigit() || it == '.' }.toDouble()
         assertTrue("delivered, not asked: $amount", amount > 0.0 && amount < 3.0)
         transport.shutdown()
     }
@@ -267,13 +257,11 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java)
+            mock(DecimalFormatter::class.java),
+            mock(BolusProgressData::class.java)
         )
-        val extraDir = mock(DocumentFile::class.java)
-        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
-        val files = mock(FileListProvider::class.java)
-        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
         val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
             logger,
             RuntimeEnvironment.getApplication() as Context,
             pump,
@@ -283,10 +271,9 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java),
-            files
+            mock(PumpSync::class.java)
         )
-        ble.startEmulatorIfRequested()
+        ble.startEmulatorIfActive()
 
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED && ble.isConnected }

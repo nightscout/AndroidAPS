@@ -18,17 +18,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.aaruy.comm.AaruyBleClient
-import app.aaps.pump.aaruy.comm.aaruyFrameKey
+import app.aaps.pump.aaruy.comm.AaruyBleTransport
 import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasicParam
 import app.aaps.pump.aaruy.comm.DailyInfo
@@ -45,27 +43,30 @@ import app.aaps.pump.aaruy.common.enums.AaruyType
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.common.util.AaruySetting
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
-import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
-import app.aaps.pump.aaruy.ui.event.EventAaruyDeviceChange
+import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.support.v18.scanner.ScanResult
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 
 interface BLECommCallback {
     fun onBLEScan()
 }
 
-@Singleton
-class AaruyBLE @Inject internal constructor(
+@SingleIn(AppScope::class)
+@Inject
+class AaruyBLE(
+    transport: AaruyBleTransport,
     private val aapsLogger: AAPSLogger,
     private val context: Context,
     private val aaruyPump: AaruyPump,
@@ -76,20 +77,18 @@ class AaruyBLE @Inject internal constructor(
     private val historyDailyUnitInfoDao: HistoryDailyUnitInfoDao,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val pumpSync: PumpSync,
-    private val fileListProvider: FileListProvider,
 ) {
-    private val EMULATOR_MARKER = "emulate_aaruy"
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val TAG = "AaruyBLEService"
     val scanResultList = ArrayList<ScanResult>()
     private val handler = Handler(Looper.getMainLooper())
 
-    val aaBleUtil = AaruyBleClient(context, aapsLogger)
+    val aaBleUtil = AaruyBleClient(context, aapsLogger, transport)
 
-    /** TEMPORARY: the emulator instead of the radio. The final hook is planned for the v4 driver. */
-    var emulatorTransport: AaruyEmulatorBleTransport? = null
-        private set
+    /** Set when the emulator replaces the radio, see AaruyBindings. */
+    val emulatorTransport: AaruyEmulatorBleTransport? = transport as? AaruyEmulatorBleTransport
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var sendBasalsInfoOk = false
@@ -152,8 +151,7 @@ class AaruyBLE @Inject internal constructor(
         if (emulatorTransport == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
-            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+                        aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
@@ -260,20 +258,15 @@ class AaruyBLE @Inject internal constructor(
     fun connectDevice(device: BluetoothDevice) {
         aapsLogger.warn(LTag.PUMPCOMM, "------------------>connectDevice device = $device")
         listenerReceiveData()
-        if (emulatorTransport != null) aaBleUtil.connectWithoutBonding(device) else aaBleUtil.bindDevice(device)
+        aaBleUtil.bindDevice(device)
     }
 
     /**
      * Starts the emulator if the file `emulate_aaruy` is in the AAPS extra folder, as for the other pump emulators.
      * It also sets a pump address, because the emulator replaces the scan and pairing screen.
      */
-    fun startEmulatorIfRequested() {
-        if (emulatorTransport != null || fileListProvider.ensureExtraDirExists()?.findFile(EMULATOR_MARKER) == null) return
-        aapsLogger.warn(LTag.PUMPCOMM, "Aaruy pump EMULATOR is active. No insulin is delivered.")
-        val emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
-        val transport = AaruyEmulatorBleTransport(emulator)
-        emulatorTransport = transport
-        aaBleUtil.useTransport(transport)
+    fun startEmulatorIfActive() {
+        val transport = emulatorTransport ?: return
         // For tests: adb shell am broadcast -a app.aaps.pump.aaruy.emulator.OUT_OF_RANGE --ez value true
         ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -530,7 +523,7 @@ class AaruyBLE @Inject internal constructor(
             override fun onReceiveErrorData(errorType: Int, error: Int) {
                 aapsLogger.warn(LTag.PUMPCOMM, "onReceiveErrorData errorType = $errorType,error = $error")
                 val tmpErrCode = (error shl 8) or (errorType)
-                aaruyPump.errCode.postValue(tmpErrCode)
+                aaruyPump.errCode.value = tmpErrCode
                 when(error) {
                     0->{        // 操作的正常提示
                         when(errorType) {
@@ -594,12 +587,12 @@ class AaruyBLE @Inject internal constructor(
             }
             else {
                 val endTime = dateUtil.now()
-                aaruyPump.syncStopExtendedWithPumpId(endTime)
+                scope.launch { aaruyPump.syncStopExtendedWithPumpId(endTime) }
             }
         }
         else if (aaruyPump.pumpLastState == AaruyPumpState.TMPBASALRATE_RUNNING) {
             val endTime = dateUtil.now()
-            aaruyPump.syncStopTBRWithPumpId(endTime)
+            scope.launch { aaruyPump.syncStopTBRWithPumpId(endTime) }
             aaruyPump.handleBasalStatusUpdate(0.0)
         }
         else if (aaruyPump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING) {
@@ -635,14 +628,14 @@ class AaruyBLE @Inject internal constructor(
         while (!cancelBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(20)
         if (cancelBolusOk) {
             if (bolusType == 1) {
-                aaruyPump.syncStopExtendedWithPumpId(endTime)
+                scope.launch { aaruyPump.syncStopExtendedWithPumpId(endTime) }
             }
             aaBleUtil.continueInject()
         }
         return cancelBolusOk
     }
 
-    fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
+    suspend fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
         sendTmpBasalOk = false
         aaBleUtil.setClosedMode(1)
         SystemClock.sleep(200)
@@ -655,7 +648,7 @@ class AaruyBLE @Inject internal constructor(
         return sendTmpBasalOk
     }
 
-    fun cancelTempBasal(): Boolean {
+    suspend fun cancelTempBasal(): Boolean {
         cancelTmpBasalOk = false
         val endTime = dateUtil.now()
         aaBleUtil.cancelTempBasal()
@@ -666,7 +659,7 @@ class AaruyBLE @Inject internal constructor(
         return cancelTmpBasalOk
     }
 
-    fun extendedBolus(insulin: Double, durationInMinutes: Int): Boolean {
+    suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): Boolean {
         sendExtendedBolusOk = false
         val startTime = dateUtil.now()
         aaBleUtil.setupAndStartBolus(0.0, insulin, durationInMinutes, false)
@@ -793,7 +786,7 @@ class AaruyBLE @Inject internal constructor(
                     if (detailedBolusInfo != null) {
                         val syncOk = pumpSync.syncBolusWithTempId(
                             timestamp = item.timestamp,
-                            amount = item.data / 1000.0,
+                            amount = PumpInsulin(item.data / 1000.0),
                             temporaryId = detailedBolusInfo.timestamp,
                             type = detailedBolusInfo.bolusType,
                             pumpId = item.timestamp,
@@ -814,7 +807,7 @@ class AaruyBLE @Inject internal constructor(
                     } else {
                         newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = item.timestamp,
-                            amount = item.data / 1000.0,
+                            amount = PumpInsulin(item.data / 1000.0),
                             type = null,
                             pumpId = item.timestamp,
                             pumpType = aaruyPump.pumpType(),

@@ -2,6 +2,7 @@ package app.aaps.pump.aaruy
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -32,7 +33,8 @@ class AaruyPumpProfileTest {
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        mock(DecimalFormatter::class.java)
+        mock(DecimalFormatter::class.java),
+        mock(BolusProgressData::class.java)
     )
 
     private fun profile(rate: Double): Profile {

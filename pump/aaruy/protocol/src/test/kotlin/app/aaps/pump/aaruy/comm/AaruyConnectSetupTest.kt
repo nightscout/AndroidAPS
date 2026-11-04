@@ -53,14 +53,16 @@ class AaruyConnectSetupTest {
     fun setUp() {
         `when`(gatt.connect(anyString())).thenReturn(true)
         `when`(transport.gatt).thenReturn(gatt)
-        `when`(transport.adapter).thenReturn(mock(BleAdapter::class.java))
+        val adapter = mock(BleAdapter::class.java)
+        `when`(adapter.isDeviceBonded(anyString())).thenReturn(true)
+        `when`(transport.adapter).thenReturn(adapter)
         client = AaruyBleClient(RuntimeEnvironment.getApplication(), mock(AAPSLogger::class.java), transport)
     }
 
     @Test
     fun askingAgainBeforeTheLinkIsUpChangesNothing() {
-        client.connectWithoutBonding(device())
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
+        client.bindDevice(device())
 
         verify(gatt, times(1)).connect(address)
         verify(gatt, never()).close()
@@ -68,13 +70,13 @@ class AaruyConnectSetupTest {
 
     @Test
     fun askingAgainWhileTheSetupWaitsForPairingChangesNothing() {
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
         linkUp()
 
         passTime(6)
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
         passTime(6)
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
 
         verify(gatt, times(1)).connect(address)
         verify(gatt, never()).close()
@@ -82,7 +84,7 @@ class AaruyConnectSetupTest {
 
     @Test
     fun aSetupThatNeverEndsIsStartedAgain() {
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
         linkUp()
 
         passTime(60)
@@ -93,11 +95,11 @@ class AaruyConnectSetupTest {
 
     @Test
     fun askingAgainAfterAllRetriesFailedStartsANewConnection() {
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
         passTime(60)
         verify(gatt, times(3)).connect(address)
 
-        client.connectWithoutBonding(device())
+        client.bindDevice(device())
 
         verify(gatt, times(4)).connect(address)
     }

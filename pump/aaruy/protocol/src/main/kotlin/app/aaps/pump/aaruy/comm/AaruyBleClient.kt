@@ -33,7 +33,7 @@ import javax.crypto.spec.SecretKeySpec
 class AaruyBleClient(
     context: Context,
     private val aapsLogger: AAPSLogger,
-    private var transport: AaruyBleTransport = AaruyBleTransportImpl(context, aapsLogger)
+    private val transport: AaruyBleTransport
 ) {
 
     private val appContext = context
@@ -137,7 +137,8 @@ class AaruyBleClient(
     @SuppressLint("MissingPermission")
     fun bindDevice(device: BluetoothDevice) {
         registerBondReceiver()
-        if (device.bondState == BluetoothDevice.BOND_NONE) {
+        // The bond state of the transport comes first: the emulator has a bond, though Android knows no such device.
+        if (!transport.adapter.isDeviceBonded(device.address) && device.bondState == BluetoothDevice.BOND_NONE) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "createBond")
             device.createBond()
         } else {
@@ -145,15 +146,7 @@ class AaruyBleClient(
         }
     }
 
-    /** For the emulator: `bindDevice` asks Android to bond an unbonded device, which cannot happen without a radio. */
-    fun connectWithoutBonding(device: BluetoothDevice) = link.connectDevice(device.address)
-
-    /** TEMPORARY: the driver finds out late that the emulator is wanted. The final hook is planned for the v4 driver. */
-    fun useTransport(transport: AaruyBleTransport) {
-        this.transport = transport
-    }
-
-    fun setOnBleListener(listener: AaruyBleListener) {
+fun setOnBleListener(listener: AaruyBleListener) {
         link.listener = listener
     }
 

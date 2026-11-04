@@ -1,19 +1,18 @@
 package app.aaps.pump.aaruy
 
 import android.util.Base64
-import androidx.lifecycle.MutableLiveData
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
@@ -36,26 +35,31 @@ import app.aaps.pump.aaruy.keys.AaruyStringKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.EnumSet
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-@Singleton
-class AaruyPump @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class AaruyPump(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val bolusProgressData: BolusProgressData
 )  {
 
     companion object {
 
         const val FAKE_TBR_LENGTH = 1440L
+        private const val BASAL_STEP = 0.025
+        private const val SECONDS_PER_HALF_HOUR = 1800
     }
 
     // Connection state flow
@@ -68,7 +72,7 @@ class AaruyPump @Inject constructor(
         }
 
     // Pump error code
-    val errCode = MutableLiveData<Int>()
+    val errCode = MutableStateFlow(0)
 
     // Pump state flow
     private val _pumpState = MutableStateFlow(AaruyPumpState.FIRST_INIT)
@@ -144,27 +148,30 @@ class AaruyPump @Inject constructor(
             preferences.put(AaruyLongKey.PumpCurBolusTime, value)
         }
 
-    private var _lastBolusTime = 0L // Time in ms!
+    private val _lastBolusTime = MutableStateFlow(0L) // Time in ms!
+    val lastBolusTimeFlow: StateFlow<Long> = _lastBolusTime
     var lastBolusTime: Long
-        get() = _lastBolusTime
+        get() = _lastBolusTime.value
         set(value) {
-            _lastBolusTime = value
+            _lastBolusTime.value = value
             preferences.put(AaruyLongKey.PumpLastBolusTime, value)
         }
 
-    private var _lastBolusAmount = 0.0
+    private val _lastBolusAmount = MutableStateFlow(0.0)
+    val lastBolusAmountFlow: StateFlow<Double> = _lastBolusAmount
     var lastBolusAmount: Double
-        get() = _lastBolusAmount
+        get() = _lastBolusAmount.value
         set(value) {
-            _lastBolusAmount = value
+            _lastBolusAmount.value = value
             preferences.put(AaruyDoubleKey.PumpLastBolusAmount, value)
         }
 
-    private var _lastConnection = 0L // Time in ms!
+    private val _lastConnection = MutableStateFlow(0L) // Time in ms!
+    val lastConnectionFlow: StateFlow<Long> = _lastConnection
     var lastConnection: Long
-        get() = _lastConnection
+        get() = _lastConnection.value
         set(value) {
-            _lastConnection = value
+            _lastConnection.value = value
             preferences.put(AaruyLongKey.PumpLastConnect, value)
         }
 
@@ -204,6 +211,7 @@ class AaruyPump @Inject constructor(
     var bolusDone = true // Bolus completed or stopped on pump, initialize as true as to don't show bolus on init
     var bolusEndNotSeen = false // The bolus ended while the link was lost, see handleBolusEndNotSeen
     var bolusStopRequested = false // A stop was sent on this link, so the pump leaving the bolus state is the answer to it
+    var bolusDelivered = 0.0 // What the pump reported for the running bolus. Not from BolusProgressData: its state can be cleared by the queue.
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
     val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered
@@ -483,11 +491,12 @@ class AaruyPump @Inject constructor(
             } else {
                 list[index+1].timeAsSeconds/3600 - item.timeAsSeconds/3600
             }
-            injectPerDay += (item.value * timeCal + 0.00001)
-
             val basalItemSet = BasalItem(0,0.0)
             basalItemSet.startTime = item.timeAsSeconds/3600*2
-            basalItemSet.basalSpeed = pumpType().determineCorrectBasalSize(item.value)
+            // Rounding must not turn a rate above zero into zero: the pump would give nothing for that time.
+            basalItemSet.basalSpeed = pumpType().determineCorrectBasalSize(item.value).let { if (it <= 0.0 && item.value > 0.0) BASAL_STEP else it }
+            // From the rate the pump really gets. UNVERIFIED if the pump uses this total for anything.
+            injectPerDay += (basalItemSet.basalSpeed * timeCal + 0.00001)
             record[index] = basalItemSet
             aapsLogger.debug(LTag.PUMP, "buildAaruyProfileRecord: item.value: ${item.value} " +
                 "item.timeAsSeconds: ${item.timeAsSeconds}, timeCal is $timeCal, basalItemSet.basalSpeed is ${basalItemSet.basalSpeed}")
@@ -513,13 +522,18 @@ class AaruyPump @Inject constructor(
      * and comparing it would send the same profile again at every status check.
      */
     fun isBasalInPump(profile: Profile): Boolean {
-        val inPump = try {
-            Gson().fromJson(String(actualBasalProfile), BasalInfo::class.java)
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.PUMP, "The saved pump profile cannot be read", e)
-            null
-        }
-        return inPump?.basalItems?.basalItemList?.comparable() == buildAaruyProfileRecord(profile).basalItems?.basalItemList?.comparable()
+        return readBasalInPump()?.basalItems?.basalItemList?.comparable() == buildAaruyProfileRecord(profile).basalItems?.basalItemList?.comparable()
+    }
+
+    /** The rates the pump holds, for the running profile (#2454). The pump keeps a start in half hours. null before a profile is known. */
+    fun deliveredBasal(): List<Profile.ProfileValue>? =
+        readBasalInPump()?.basalItems?.basalItemList?.map { Profile.ProfileValue(it.startTime * SECONDS_PER_HALF_HOUR, it.basalSpeed) }
+
+    private fun readBasalInPump(): BasalInfo? = try {
+        Gson().fromJson(String(actualBasalProfile), BasalInfo::class.java)
+    } catch (e: Exception) {
+        aapsLogger.error(LTag.PUMP, "The saved pump profile cannot be read", e)
+        null
     }
 
     private fun List<BasalItem>.comparable() = map { it.startTime to (it.basalSpeed * 1000).roundToInt() }
@@ -530,7 +544,8 @@ class AaruyPump @Inject constructor(
         // The default of 35.0 is above the pump limit and means "no new amount": keep the last amount the pump reported.
         if (amountDelivered <= 25.0) {
             _bolusAmountDelivered.value = amountDelivered
-            BolusProgressData.delivered = amountDelivered
+            bolusDelivered = amountDelivered
+            bolusProgressData.updateProgress(PumpInsulin(amountDelivered))
         }
         bolusDone = bolusCompleted
         if (bolusDone) {
@@ -568,11 +583,11 @@ class AaruyPump @Inject constructor(
         return syncPrefParam()
     }
 
-    fun syncTBRWithPumpId(startTime: Long, rate: Double, duration: Long) {
+    suspend fun syncTBRWithPumpId(startTime: Long, rate: Double, duration: Long) {
         val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(startTime, rate)
         val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = startTime,
-            rate = rate,
+            rate = PumpRate(rate),
             duration = duration,
             isAbsolute = true,
             type = temporaryBasalInfo?.type,
@@ -586,10 +601,10 @@ class AaruyPump @Inject constructor(
         )
     }
 
-    fun syncExtendedWithPumpId(startTime: Long, amount: Double, duration: Long) {
+    suspend fun syncExtendedWithPumpId(startTime: Long, amount: Double, duration: Long) {
         val newRecord = pumpSync.syncExtendedBolusWithPumpId(
             timestamp = startTime,
-            amount = amount,
+            rate = PumpRate(amount * T.hours(1).msecs() / duration),
             duration = duration,
             isEmulatingTB = false,
             pumpId = startTime,
@@ -602,7 +617,7 @@ class AaruyPump @Inject constructor(
         )
     }
 
-    fun syncStopTBRWithPumpId(endTime: Long) {
+    suspend fun syncStopTBRWithPumpId(endTime: Long) {
         val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
             timestamp = endTime,
             endPumpId = endTime,
@@ -615,7 +630,7 @@ class AaruyPump @Inject constructor(
         )
     }
 
-    fun syncStopExtendedWithPumpId(endTime: Long) {
+    suspend fun syncStopExtendedWithPumpId(endTime: Long) {
         val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
             timestamp = endTime,
             endPumpId = endTime,
@@ -637,9 +652,9 @@ class AaruyPump @Inject constructor(
 
     fun loadVarsFromSP() {
         _pumpState.value = AaruyPumpState.fromInt(preferences.get(AaruyIntKey.PumpState))
-        _lastBolusTime = preferences.get(AaruyLongKey.PumpLastBolusTime)
-        _lastBolusAmount = preferences.get(AaruyDoubleKey.PumpLastBolusAmount)
-        _lastConnection = preferences.get(AaruyLongKey.PumpLastConnect)
+        _lastBolusTime.value = preferences.get(AaruyLongKey.PumpLastBolusTime)
+        _lastBolusAmount.value = preferences.get(AaruyDoubleKey.PumpLastBolusAmount)
+        _lastConnection.value = preferences.get(AaruyLongKey.PumpLastConnect)
         _swVersion = preferences.get(AaruyStringKey.PumpSwVersion)
         _pumpSN =  preferences.get(AaruyStringKey.PumpName)
         _bolusStartTime = preferences.get(AaruyLongKey.PumpBolusStartTime)
