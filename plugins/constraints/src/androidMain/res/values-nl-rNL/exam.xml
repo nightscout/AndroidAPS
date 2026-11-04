@@ -165,7 +165,7 @@
     <string name="isf_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="ic_multiple">Je kunt meer dan één waarde voor KH-ratio in je profiel gebruiken.</string>
     <string name="ic_isf">Als je je ISF verandert in je profiel, moet je ook altijd de KH-ratio veranderen.</string>
-    <string name="ic_label_exam">Koolhydraatratio (KH-ratio)</string>
+    <string name="ic_label_exam">Insuline-koolhydraatverhouding (KH-ratio)</string>
     <string name="ic_increasingvalue">Hogere KH-ratio\'s leiden tot minder insulinetoediening voor dezelfde hoeveelheid koolhydraten.</string>
     <string name="ic_decreasingvalue">Lagere KH-ratio\'s leiden tot minder insulinetoediening voor dezelfde hoeveelheid koolhydraten.</string>
     <string name="ic_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/YourAapsProfile.html</string>
@@ -184,8 +184,8 @@
     <string name="profileswitch2_isfhigher">De ISF-waarde wordt 20% hoger.</string>
     <string name="profileswitchtime_label">Profielwissels</string>
     <string name="profileswitchtime_iwant">Als je 2 uur eerder opstaat dan normaal, hoe moet je AAPS dan laten weten dat jouw dagschema is veranderd?</string>
-    <string name="profileswitchtime_2">Voer een profiel wissel uit met een tijdverschuiving van 2</string>
-    <string name="profileswitchtime__2">Voer een profiel wissel uit met een tijdverschuiving van -2</string>
+    <string name="profileswitchtime_2">Voer een profielwissel uit met een tijdverschuiving van 2</string>
+    <string name="profileswitchtime__2">Voer een profielwissel uit met een tijdverschuiving van -2</string>
     <string name="profileswitchtime_tt">Stel een eet binnenkort tijdelijk streefdoel in.</string>
     <string name="profileswitchtime_100">Pas het profiel percentage aan naar een waarde boven de 100%.</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
