@@ -499,7 +499,7 @@ class AaruyHistoryLogActivity : AaruyBaseActivity<ActivityAaruyHistoryLogBinding
     private fun getDateStr(time: Long): String {
         val factTime = time
         val detailTime = AaruyTimeUtil.getWholeDetail(factTime)
-        val weekDay = AaruyTimeUtil.getWeekOfDate(factTime, week)
+        val weekDay = AaruyTimeUtil.getWeekOfDate(factTime, week!!)
 
         val timeStamp =
             (AaruyTimeUtil.dateToStamp("${detailTime!![0]}-${detailTime!![1]}-${detailTime!![2]} 00:00:00"))
@@ -526,7 +526,7 @@ class AaruyHistoryLogActivity : AaruyBaseActivity<ActivityAaruyHistoryLogBinding
         timeStamp =
             (AaruyTimeUtil.dateToStamp("${detailTime!![0]}-${detailTime!![1]}-${detailTime!![2]} 00:00:00"))
 
-        weekDay = AaruyTimeUtil.getWeekOfDate(time, week)
+        weekDay = AaruyTimeUtil.getWeekOfDate(time, week!!)
         aapsLogger.info(LTag.PUMP, "detailTime = ${detailTime?.toList()}, timeStamp is $timeStamp")
         lifecycleScope.launch {
             try {
@@ -694,7 +694,7 @@ class AaruyHistoryLogActivity : AaruyBaseActivity<ActivityAaruyHistoryLogBinding
         btn_positive.setOnClickListener { v ->
             val format = String.format(getString(R.string.date_format), year, month, day)
             aapsLogger.info(LTag.PUMP, "format=$format")
-            val dateToWeek = AaruyTimeUtil.dateToWeek(format, week)
+            val dateToWeek = AaruyTimeUtil.dateToWeek(format, week!!)
             val dateString =
                 String.format(getString(R.string.date_format_string), year, month, day)
             val date = String.format(getString(R.string.date_format), year, month, day)

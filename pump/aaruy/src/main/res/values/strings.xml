@@ -147,8 +147,6 @@
     <string name="history_alarm">Alarm</string>
     <string name="history_carbs_unit">g</string>
     <string name="time_two_num_format">%02d</string>
-    <string name="year_month_day">yyyy/MM/dd</string>
-    <string name="yeaqr_month_day_hour_minute">dd/MM/yyyy HH:mm</string>
     <string name="history_insulin_name4">Bolus(ext)</string>
     <string name="bolus_title">Bolus</string>
     <string name="unit_l">mmol/L</string>
