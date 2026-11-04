@@ -45,7 +45,7 @@
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
     <string name="objectives_usescale">Gebruik scrollen of zoomen op de bloedglucosegrafiek</string>
     <string name="objectives_exam_objective">Toets je kennis</string>
-    <string name="objectives_exam_gate">Neem de vragen door. Elke vraag heeft één of meerdere juiste antwoorden. Vink alle juiste antwoorden aan en selecteer CONTROLEREN.</string>
+    <string name="objectives_exam_gate">Neem de vragen door. Elke vraag heeft één of meerdere juiste antwoorden. Vink alle juiste antwoorden aan en druk daarna op \'Verifieer\'.</string>
     <string name="objectives_exam_learned_prerequisites">Je hoeft geen ontwikkelaar te zijn. Om de leerdoelen te kunnen afronden, heb je wel Nightscout of Tidepool en een ondersteunde pomp nodig. Daarnaast moet je AAPS kunnen bouwen, via een webbrowser of met Android Studio. Dat is nodig bij de eerste installatie en bij elke update.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS kan ook zonder internetverbinding worden gebruikt.</string>
     <string name="objectives_exam_learned_basaltest">Controleer en actualiseer het profiel regelmatig. Een beter profiel leidt tot betere resultaten.</string>
