@@ -40,6 +40,7 @@
     <string name="patch_wake_up_pairing_info">Während des Koppelns erscheinen zwei Android-System-Popups. Sie müssen beide bestätigen, um die Bluetooth-Kopplung abzuschließen.</string>
     <string name="patch_start_pairing">Kopplung starten</string>
     <string name="patch_connect_new">Pod koppeln</string>
+    <string name="patch_connect_new_desc">Der neue Patch wird gekoppelt.\nHalte die Distanz zwischen dem Patch und dem Smartphone so nah wie möglich.</string>
     <string name="patch_remove_needle_cap">Bereite dich auf das Anhängen des Patches vor</string>
     <string name="patch_remove_needle_cap_desc_1">Entfernen Sie das Klebeband und tippen Sie dann auf \"Weiter\".</string>
     <string name="patch_remove_needle_cap_desc_2">Wenn eine Nadel aussticht, tippe auf \'Verwerfen\'.</string>
