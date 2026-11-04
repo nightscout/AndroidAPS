@@ -809,7 +809,7 @@
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insuline beperking!\nKan %1$.2fE niet leveren</string>
     <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
-    <string name="quick_wizard_not_available">De geselecteerde snelwizard is niet langer beschikbaar. Vernieuw uw tegel.</string>
+    <string name="quick_wizard_not_available">De geselecteerde QuickWizard is niet langer beschikbaar. Vernieuw uw tegel</string>
     <string name="quickwizard_managemnt">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
@@ -862,7 +862,7 @@
     <string name="limitingbasalratio">Maximale basaalstand beperkt tot %1$.2f E/u vanwege %2$s</string>
     <string name="pumplimit">pomplimiet</string>
     <string name="limitingpercentrate">Maximaal basaalpercentage beperkt tot %1$d%% vanwege %2$s</string>
-    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentage van %1$d%% herberekend tot %2$s E/u met huidige basaal %3$s E/u</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentage van %1$d%% herberekend tot %2$s E/uur met huidige basaal %3$s E/uur</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="limitingbolus">Bolus beperkt tot %1$.1f E vanwege %2$s</string>
     <!--    Dialogs-->
@@ -1046,7 +1046,7 @@
     <string name="units_colon">Eenheden:</string>
     <string name="unsaved_changes">Niet opgeslagen wijzigingen</string>
     <string name="unsaved_changes_message">Er zijn niet-opgeslagen wijzigingen. Wat moet ermee gebeuren?</string>
-    <string name="discard">Weggooien</string>
+    <string name="discard">Verwijderen</string>
     <string name="ic_dynamic_label_warning">Het algoritme kan de koolhydraatratio (IC) dynamisch bepalen. De onderstaande waarden worden alleen gebruikt wanneer gegevens ontbreken of als referentiewaarde</string>
     <string name="isf_dynamic_label_warning">Het algoritme kan de ISF dynamisch bepalen. De onderstaande waarden worden alleen gebruikt wanneer gegevens ontbreken of als referentiewaarde</string>
     <string name="add_time_block">Tijdblok toevoegen</string>
