@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test
 class OnePlusBleScannerAndroidTest {
 
     @Test
-    fun `nameMatches accepts DX02 DX01 DXCM family only`() {
+    fun `nameMatches accepts DX02 and DXCM only and never the DX01 Stelo`() {
         assertThat(OnePlusBleScannerAndroid.nameMatches("DXCM12")).isTrue()
         assertThat(OnePlusBleScannerAndroid.nameMatches("DX02aS")).isTrue()
-        assertThat(OnePlusBleScannerAndroid.nameMatches("DX01xx")).isTrue()
+        assertThat(OnePlusBleScannerAndroid.nameMatches("DX01xx")).isFalse()
         assertThat(OnePlusBleScannerAndroid.nameMatches("DexcomONE")).isFalse()
         assertThat(OnePlusBleScannerAndroid.nameMatches("Dexcom65")).isFalse()
     }

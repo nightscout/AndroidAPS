@@ -3,7 +3,8 @@ package app.aaps.plugins.dexcomoneplus.identity
 /**
  * Juggluco-aligned ADV name / candidate matching for ONE+ / G7 family.
  *
- * Juggluco `isG7`: local name starts with `DX` + (`CM`|`02`|`01`).
+ * Juggluco `isG7`: local name starts with `DX` + (`CM`|`02`|`01`). `01` is the Dexcom Stelo, which is
+ * refused here on purpose, see [isUnsupportedStelo].
  * Once a device name is known from a successful session, prefer exact match.
  *
  * Do **not** treat marketing names like `Dexcom65` / `DexcomONE` as ONE+ candidates —
@@ -25,12 +26,23 @@ object OnePlusAdvCandidate {
         if (!n.startsWith("DX", ignoreCase = true)) return false
         val rest = n.substring(2, 4)
         return rest.equals("CM", ignoreCase = true) ||
-            rest.equals("02", ignoreCase = true) ||
-            rest.equals("01", ignoreCase = true)
+            rest.equals("02", ignoreCase = true)
     }
 
     /**
-     * Open-scan name filter: G7/ONE+ family only (`DX02` / `DX01` / `DXCM`).
+     * A Dexcom Stelo (`DX01`). It is refused on purpose: it gives a reading every 15 minutes, not every
+     * 5, and it is not made for insulin dosing. The loop computes its trends from readings 5 minutes
+     * apart. Checked before every other rule, so a stored name, a stored address or the FEBC service
+     * cannot let one through.
+     */
+    fun isUnsupportedStelo(name: String?): Boolean =
+        name?.trim()?.startsWith(STELO_PREFIX, ignoreCase = true) == true
+
+    /** Advertised name prefix of the Dexcom Stelo. */
+    const val STELO_PREFIX = "DX01"
+
+    /**
+     * Open-scan name filter: G7/ONE+ family only (`DX02` / `DXCM`). The Stelo (`DX01`) is not part of it.
      * Intentionally excludes `Dex*` marketing names (G6 / phone companions).
      */
     fun nameMatchesSoft(name: String?): Boolean = isG7FamilyName(name)
@@ -46,6 +58,7 @@ object OnePlusAdvCandidate {
         address: String?,
         session: OnePlusStoredSession?,
     ): Boolean {
+        if (isUnsupportedStelo(name)) return false
         val storedName = session?.lastDeviceName
         if (!storedName.isNullOrBlank() && name != null && name.equals(storedName, ignoreCase = true)) {
             return true

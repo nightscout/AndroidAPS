@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference
  * Platform LE scanner for Dexcom ONE+ / G7-family ADV.
  *
  * Soft filters (Juggluco `isG7`):
- * - Local name `DXCM` / `DX02` / `DX01`, and/or
+ * - Local name `DXCM` / `DX02` (never the `DX01` Stelo, see [OnePlusAdvCandidate.isUnsupportedStelo]), and/or
  * - Advertisement includes service UUID FEBC ([OnePlusGattUuids.Advertisement])
  *   **without** a G6-style `Dexcom*` marketing name.
  * - Optional [sessionHint] sticky-matches last MAC / ADV name / serial.
@@ -49,6 +49,9 @@ class OnePlusBleScannerAndroid(
     /** Sensor slot owning this scanner (`prod` / `staging`) — logged so field traces are attributable. */
     private val slot: String = OnePlusLogMarkers.SLOT_PRODUCTION,
 ) : OnePlusBleScanner {
+
+    /** Stelo transmitters already logged as refused. */
+    private val refusedStelo: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
     private val appContext = context.applicationContext
     private val bluetoothManager =
@@ -156,6 +159,10 @@ class OnePlusBleScannerAndroid(
                 val device = result.device ?: return
                 val addr = device.address ?: return
                 val name = device.name ?: result.scanRecord?.deviceName
+                if (OnePlusAdvCandidate.isUnsupportedStelo(name)) {
+                    noteRefusedStelo(addr)
+                    return
+                }
                 if (addr.uppercase() != target) {
                     // FEBC-matched neighbour: keep it only if it looks like a G7-family transmitter
                     // (never a G6 `Dexcom*` companion), so the diagnostic cannot cry wolf.
@@ -366,10 +373,25 @@ class OnePlusBleScannerAndroid(
         }
     }
 
+    /** Logs a refused Stelo once per transmitter, so the scan log does not fill up with it. */
+    private fun noteRefusedStelo(address: String) {
+        if (refusedStelo.add(address.uppercase())) {
+            OnePlusLog.i(
+                "${OnePlusLogMarkers.SCAN}: [$slot] Dexcom Stelo ***${address.takeLast(5)} refused: it reads only " +
+                    "every 15 minutes and is not made for insulin dosing",
+            )
+        }
+    }
+
     private fun handle(result: ScanResult) {
         val device = result.device ?: return
         val address = device.address ?: return
         val name = device.name ?: result.scanRecord?.deviceName
+        // Before the FEBC rule: a Stelo advertises the same service.
+        if (OnePlusAdvCandidate.isUnsupportedStelo(name)) {
+            noteRefusedStelo(address)
+            return
+        }
         val hasAdvUuid = result.scanRecord?.serviceUuids?.any {
             it.uuid == OnePlusGattUuids.Advertisement
         } == true

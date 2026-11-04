@@ -8,7 +8,8 @@ class OnePlusAdvCandidateTest {
     @Test
     fun isG7FamilyName_matchesJugglucoPrefixes() {
         assertThat(OnePlusAdvCandidate.isG7FamilyName("DX02aS")).isTrue()
-        assertThat(OnePlusAdvCandidate.isG7FamilyName("DX01xx")).isTrue()
+        // DX01 is the Dexcom Stelo, refused on purpose.
+        assertThat(OnePlusAdvCandidate.isG7FamilyName("DX01xx")).isFalse()
         assertThat(OnePlusAdvCandidate.isG7FamilyName("DXCMab")).isTrue()
         assertThat(OnePlusAdvCandidate.isG7FamilyName("DexcomONE")).isFalse()
         assertThat(OnePlusAdvCandidate.isG7FamilyName("Dexcom65")).isFalse()
@@ -133,5 +134,17 @@ class OnePlusAdvCandidateTest {
 
         const val STORED_MAC = "AA:BB:CC:DD:EE:FF"
         const val OTHER_MAC = "11:22:33:44:55:66"
+    }
+
+    @Test
+    fun `a Stelo is refused even with a stored name or address`() {
+        assertThat(OnePlusAdvCandidate.isUnsupportedStelo("DX01ab")).isTrue()
+        assertThat(OnePlusAdvCandidate.isUnsupportedStelo(" dx01ab")).isTrue()
+        assertThat(OnePlusAdvCandidate.isUnsupportedStelo("DX02ab")).isFalse()
+        assertThat(OnePlusAdvCandidate.isUnsupportedStelo("DXCMab")).isFalse()
+        assertThat(OnePlusAdvCandidate.isUnsupportedStelo(null)).isFalse()
+        val stored = OnePlusStoredSession(OnePlusSensorIdentity(pin = "1234"), lastMac = "AA:BB:CC:DD:EE:FF", lastDeviceName = "DX01ab")
+        assertThat(OnePlusAdvCandidate.isCandidate("DX01ab", "AA:BB:CC:DD:EE:FF", stored)).isFalse()
+        assertThat(OnePlusAdvCandidate.isCandidate("DX01ab", null, null)).isFalse()
     }
 }
