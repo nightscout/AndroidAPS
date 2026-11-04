@@ -105,7 +105,7 @@
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
-    <string name="action_profile_switch_confirmation">Profiel wisselen aangevraagd</string>
+    <string name="action_profile_switch_confirmation">Profielwissel aangevraagd</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Streefdoel [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Laag [%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Hoog [%s]</string>
@@ -134,7 +134,7 @@
     <string name="cancel_bolus">BOLUS ANNULEREN</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
-    <string name="status_profile_switch">Profiel wissel</string>
+    <string name="status_profile_switch">Profielwissel</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Khd</string>
     <string name="activity_IOB">IOB</string>
@@ -341,7 +341,7 @@
     <string name="loop_status_targets">Streefdoelen</string>
     <string name="loop_status_temp_target">Tijdelijk streefdoel</string>
     <string name="loop_status_target_range">Interval</string>
-    <string name="loop_status_target">Streefwaarde</string>
+    <string name="loop_status_target">Streefdoel</string>
     <string name="loop_status_adjusted_target">Aangepast streefdoel</string>
     <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Tot einde</string>
     <string name="loop_status_scene_ended">Geëindigd</string>
