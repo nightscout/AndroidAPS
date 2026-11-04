@@ -99,4 +99,5 @@
     <string name="getting_pump_status">Getting pump status</string>
     <string name="aaruy_wait_bolus_time_tip">Waiting for bolus end. Remaining %1$d sec.</string>
     <string name="aaruy_history_daily_parts" comment="%1$s=bolus insulin, %2$s=basal insulin of one day. Example: 12.00 U + 18.00 U">%1$s + %2$s</string>
+    <string name="aaruy_time_changed">Time or time zone changed</string>
 </resources>

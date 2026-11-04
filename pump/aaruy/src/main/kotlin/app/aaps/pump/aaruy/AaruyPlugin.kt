@@ -10,6 +10,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -388,6 +389,12 @@ class AaruyPlugin(
     }
 
     override fun canHandleDST(): Boolean = true
+
+    /** The profile goes to the pump in a moved form. The keep alive worker sees that it no longer matches and sends it again. */
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+        aapsLogger.info(LTag.PUMP, "Time or time zone changed: $timeChangeType")
+        commandQueue.readStatus(rh.gs(R.string.aaruy_time_changed))
+    }
 
     override fun clearAllTables() = aaruyHistoryDatabase.clearAllTables()
 

@@ -23,6 +23,7 @@ import app.aaps.pump.aaruy.comm.BasicParam
 import com.google.gson.Gson
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.R
+import app.aaps.pump.aaruy.common.util.AaruyPumpSchedule
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AaruyType
 import app.aaps.pump.aaruy.common.enums.AlarmState
@@ -483,34 +484,18 @@ class AaruyPump(
         //     record[hour] = basalItemSet
         // }
 
-        val list = nsProfile.getBasalValues()
-        var injectPerDay: Double = 0.0
-        val totalArea = list.size
-        var timeCal: Int = 0
-        val record = Array(totalArea){ BasalItem(0,0.0) }
-
-        for((index, item) in list.withIndex()) {
-            timeCal = if (index == totalArea - 1) {
-                24 - item.timeAsSeconds/3600
-            } else {
-                list[index+1].timeAsSeconds/3600 - item.timeAsSeconds/3600
-            }
-            val basalItemSet = BasalItem(0,0.0)
-            basalItemSet.startTime = item.timeAsSeconds/3600*2
+        val local = nsProfile.getBasalValues().map {
             // Rounding must not turn a rate above zero into zero: the pump would give nothing for that time.
-            basalItemSet.basalSpeed = pumpType().determineCorrectBasalSize(item.value).let { if (it <= 0.0 && item.value > 0.0) BASAL_STEP else it }
-            // From the rate the pump really gets. UNVERIFIED if the pump uses this total for anything.
-            injectPerDay += (basalItemSet.basalSpeed * timeCal + 0.00001)
-            record[index] = basalItemSet
-            aapsLogger.debug(LTag.PUMP, "buildAaruyProfileRecord: item.value: ${item.value} " +
-                "item.timeAsSeconds: ${item.timeAsSeconds}, timeCal is $timeCal, basalItemSet.basalSpeed is ${basalItemSet.basalSpeed}")
+            BasalItem(it.timeAsSeconds / SECONDS_PER_HALF_HOUR, pumpType().determineCorrectBasalSize(it.value).let { rate -> if (rate <= 0.0 && it.value > 0.0) BASAL_STEP else rate })
         }
-
-        injectPerDay = ((injectPerDay*1000.0).roundToInt()) / 1000.0
+        val record = AaruyPumpSchedule.toPump(local, AaruyPumpSchedule.shift(dateUtil.now()))
+        val totalArea = record.size
+        // From the rate the pump really gets. UNVERIFIED if the pump uses this total for anything.
+        val injectPerDay = (AaruyPumpSchedule.dailyTotal(record) * 1000.0).roundToInt() / 1000.0
         val basalItems = BasalItems(
             injectPerDay,
             totalArea,
-            record.toList()
+            record
         )
 
         val basalInfo = BasalInfo(
@@ -529,9 +514,13 @@ class AaruyPump(
         return readBasalInPump()?.basalItems?.basalItemList?.comparable() == buildAaruyProfileRecord(profile).basalItems?.basalItemList?.comparable()
     }
 
-    /** The rates the pump holds, for the running profile (#2454). The pump keeps a start in half hours. null before a profile is known. */
+    /**
+     * The rates the pump holds, in local time, for the running profile (#2454). The pump keeps a start in half hours.
+     * This is true also right after a time zone change, when the pump still holds the old schedule. null before a profile is known.
+     */
     fun deliveredBasal(): List<Profile.ProfileValue>? =
-        readBasalInPump()?.basalItems?.basalItemList?.map { Profile.ProfileValue(it.startTime * SECONDS_PER_HALF_HOUR, it.basalSpeed) }
+        readBasalInPump()?.basalItems?.basalItemList?.let { AaruyPumpSchedule.toLocal(it, AaruyPumpSchedule.shift(dateUtil.now())) }
+            ?.map { Profile.ProfileValue(it.startTime * SECONDS_PER_HALF_HOUR, it.basalSpeed) }
 
     /** The rate the pump holds for this time of day, as the running profile says. A temp basal or a bolus does not change it. 0 when no profile is known. */
     fun baseBasalRateAt(secondsOfDay: Int): Double = deliveredBasal()?.lastOrNull { it.timeAsSeconds <= secondsOfDay }?.value ?: 0.0

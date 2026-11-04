@@ -498,14 +498,9 @@ class AaruyPumpEmulator(
     }
 
     private fun currentBasal(): Int {
-        val minutes = (pumpLocalMinutes() / 30)
-        return schedule.lastOrNull { it.first <= minutes }?.second ?: schedule.first().second
-    }
-
-    private fun pumpLocalMinutes(): Int {
-        val calendar = java.util.Calendar.getInstance()
-        calendar.timeInMillis = clock()
-        return calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE)
+        // Seen on a real pump: the schedule follows its own clock, which starts at midnight in UTC+8, in any time zone of the phone.
+        val halfHours = Math.floorMod(pumpTime(), DAY_SECONDS.toInt()) / 1800
+        return schedule.lastOrNull { it.first <= halfHours }?.second ?: schedule.first().second
     }
 
     private fun statusMessage(bolusStateOverride: Int? = null): ByteArray {

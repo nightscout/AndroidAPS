@@ -3,6 +3,7 @@ package app.aaps.pump.aaruy.services
 import android.content.Context
 import android.os.Looper
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
@@ -29,6 +30,7 @@ import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.TimeZone
 import kotlin.concurrent.thread
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
@@ -347,5 +349,45 @@ class AaruyBleReconnectTest {
         assertEquals(true, accepted)
         assertEquals(0.2, pump.baseBasalRateAt(0), 0.0)
         ble.emulatorTransport?.shutdown()
+    }
+
+    /** The case measured on the real pump: 23:06 in UTC+1 is 06:06 for the pump, and it must deliver the rate of 23:00. */
+    @Test
+    fun thePumpDeliversTheRateOfTheLocalHour() {
+        val zoneBefore = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT-1"))
+        try {
+            val now = 1_793_830_000_000L
+            val dateUtil = mock(DateUtil::class.java)
+            `when`(dateUtil.now()).thenReturn(now)
+            val preferences = preferencesWithDefaults()
+            val logger = mock(AAPSLogger::class.java)
+            val pump = AaruyPump(
+                logger, mock(ResourceHelper::class.java), preferences, dateUtil, mock(PumpSync::class.java),
+                mock(TemporaryBasalStorage::class.java), mock(DecimalFormatter::class.java), mock(BolusProgressData::class.java)
+            )
+            val ble = AaruyBLE(
+                AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = { now })),
+                logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java), preferences,
+                mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java), mock(PumpSync::class.java)
+            )
+            ble.startEmulatorIfActive()
+            ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+            waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+            waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+
+            val profile = mock(Profile::class.java)
+            `when`(profile.getBasalValues()).thenReturn(Array(24) { hour -> Profile.ProfileValue(hour * 3600, 0.1 + 0.05 * hour) })
+            var accepted: Boolean? = null
+            thread { accepted = ble.updateBasalsInPump(pump.buildAaruyProfileRecord(profile)) }
+            waitFor("the answer") { accepted != null }
+            assertEquals(true, accepted)
+
+            ble.syncPumpStatus()
+            waitFor("the rate of 23:00, not of 06:00") { pump.lastBasalRate == 1.25 }
+            ble.emulatorTransport?.shutdown()
+        } finally {
+            TimeZone.setDefault(zoneBefore)
+        }
     }
 }
