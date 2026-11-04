@@ -336,8 +336,8 @@ class AaruyBLE(
                     aaruyPump.connectionState = ConnectionState.CONNECTED
                     // Anything can have happened while the link was down, a bolus may have ended.
                     syncPumpStatus()
-                    // A reply that was lost must not leave history off.
-                    if (!aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
+                    // The log can hold what the status does not show. And a reply that was lost must not leave history off.
+                    requestHistoryData(aaruyPump.lastHistoryTime)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 } else if(status == BleStatus.DISCONNECTED) {
                     // A stop with no answer on this link says nothing about how a bolus ended while the link was down.
@@ -417,6 +417,9 @@ class AaruyBLE(
 
             override fun onReceiveCurrentStatus(statusInfo: StatusInfo) {
                 // aapsLogger.warn(LTag.PUMPCOMM, "onReceiveCurrentStatus statusInfo = $statusInfo")
+                // Only an answer shows that the pump was reached.
+                aaruyPump.lastConnection = dateUtil.now()
+                val previousRate = aaruyPump.lastBasalRate
                 aaruyPump.pumpState = AaruyPumpState.fromInt(statusInfo.runningStatus)
                 aaruyPump.handleBasalStatusUpdate(0.0)
 
@@ -428,7 +431,7 @@ class AaruyBLE(
                         if(!cancelTmpBasalOk)
                             cancelTmpBasalOk = true
                         startBasalOk = true
-                        if (statusInfo.basalStatus?.curValue != aaruyPump.lastBasalRate) {
+                        if (statusInfo.basalStatus?.curValue != previousRate) {
                             if (aaruyPump.canSaveHistory)
                                 requestHistoryData(aaruyPump.lastHistoryTime)
                         }
