@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
@@ -52,16 +53,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import app.aaps.pump.aaruy.keys.AaruyStringKey
-
-interface BLECommCallback {
-    fun onBLEScan()
-}
 
 @SingleIn(AppScope::class)
 @Inject
@@ -82,7 +81,8 @@ class AaruyBLE(
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val TAG = "AaruyBLEService"
-    val scanResultList = ArrayList<ScanResult>()
+    private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
+    val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices
     private val handler = Handler(Looper.getMainLooper())
 
     val aaBleUtil = AaruyBleClient(context, aapsLogger, transport)
@@ -99,7 +99,6 @@ class AaruyBLE(
     private var cancelTmpBasalOk = false
     private var startBasalOk = false
     private var isUnbinding = false
-    private var mCallback: BLECommCallback? = null
     private var bolusType: Int = 0
     private var connectCount: Int = 0
 
@@ -111,10 +110,6 @@ class AaruyBLE(
 
     init {
         startDetection()
-    }
-
-    fun setCallback(callback: BLECommCallback?) {
-        this.mCallback = callback
     }
 
     private fun startDetection() {
@@ -237,21 +232,44 @@ class AaruyBLE(
         SystemClock.sleep(2000)
     }
 
+    /** Pumps found so far are in [scannedDevices]. The emulator is always found. */
     @SuppressLint("MissingPermission")
-    fun scanDevice() {
-        aapsLogger.info(LTag.PUMP, "scanDevice")
+    fun startScan() {
+        aapsLogger.info(LTag.PUMP, "startScan")
+        _scannedDevices.value = emptyList()
+        if (emulatorTransport != null) {
+            _scannedDevices.value = listOf(ScannedDevice(AaruyEmulatorBleTransport.DEVICE_NAME, AaruyEmulatorBleTransport.DEVICE_ADDRESS))
+            return
+        }
         aaBleUtil.scanDevice(object : ScanResultListener {
             override fun onScanResult(results: List<ScanResult>) {
-                scanResultList.clear()
-                scanResultList.addAll(results)
-                mCallback?.onBLEScan()
+                _scannedDevices.value = results.mapNotNull { result -> result.device.name?.let { ScannedDevice(it, result.device.address) } }
             }
-
         })
     }
 
     fun stopScan() {
-        aaBleUtil.stopScanDevice()
+        if (emulatorTransport == null) aaBleUtil.stopScanDevice()
+    }
+
+    /** A new pump: its old history is not read as new, and the connection that follows does the pairing. */
+    fun pair(device: ScannedDevice) {
+        aapsLogger.info(LTag.PUMP, "pair ${device.name}")
+        preferences.put(AaruyStringKey.PumpBoundAddress, "")
+        preferences.put(AaruyStringKey.MacAddress, device.address)
+        preferences.put(AaruyStringKey.PumpName, device.name)
+        aaruyPump.canSaveHistory = false
+        aaruyPump.lastHistoryTime = 0
+        aaruyPump.lastHistoryDailyTime = dateUtil.now()
+        aaruyPump.lastBolusTime = 0
+        aaruyPump.lastBolusAmount = 0.0
+        rxBus.send(EventAaruyDeviceChange())
+    }
+
+    /** The pump answers each alarm it is told about. UNVERIFIED on a real pump: nothing has raised one there yet. */
+    fun confirmAlarms() {
+        aaruyPump.activeAlarms.toList().forEach { clearAlarmStatus(it.state) }
+        aaruyPump.clearAlarmState()
     }
 
     @SuppressLint("MissingPermission")
@@ -263,7 +281,6 @@ class AaruyBLE(
 
     /**
      * Starts the emulator if the file `emulate_aaruy` is in the AAPS extra folder, as for the other pump emulators.
-     * It also sets a pump address, because the emulator replaces the scan and pairing screen.
      */
     fun startEmulatorIfActive() {
         val transport = emulatorTransport ?: return
@@ -276,9 +293,6 @@ class AaruyBLE(
                 if (outOfRange) transport.loseConnection()
             }
         }, IntentFilter("app.aaps.pump.aaruy.emulator.OUT_OF_RANGE"), ContextCompat.RECEIVER_EXPORTED)
-        preferences.put(AaruyStringKey.MacAddress, AaruyEmulatorBleTransport.DEVICE_ADDRESS)
-        preferences.put(AaruyStringKey.PumpBoundAddress, AaruyEmulatorBleTransport.DEVICE_ADDRESS)
-        preferences.put(AaruyStringKey.PumpName, AaruyEmulatorBleTransport.DEVICE_NAME)
     }
 
     private fun listenerReceiveData() {
@@ -313,7 +327,7 @@ class AaruyBLE(
                     aaruyPump.connectionState = ConnectionState.CONNECTED
                     // Anything can have happened while the link was down, a bolus may have ended.
                     syncPumpStatus()
-                    // The scan screen asks for the first history only once, and a reply that was lost must not leave history off.
+                    // A reply that was lost must not leave history off.
                     if (!aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 } else if(status == BleStatus.DISCONNECTED) {

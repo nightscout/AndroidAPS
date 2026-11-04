@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.Pump
@@ -88,11 +89,13 @@ class AaruyPlugin(
     private val aaruyHistoryDatabase: AaruyHistoryDatabase,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val aaruyBle: AaruyBLE,
+    private val blePreCheck: BlePreCheck,
+    private val pumpSync: PumpSync,
     notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .composeContent { _ -> AaruyComposeContent() }
+        .composeContent { _ -> AaruyComposeContent(rh.gs(R.string.aaruy_pump), blePreCheck) }
         .icon(IcPluginAaruy)
         .pluginName(TextRef.AndroidRes(R.string.aaruy_pump))
         .description(TextRef.AndroidRes(R.string.aaruy_pump_description)),
@@ -115,7 +118,10 @@ class AaruyPlugin(
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         rxBus.toFlow(EventAaruyDeviceChange::class)
-            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { changePump() }
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                pumpSync.connectNewPump()
+                changePump()
+            }
         aaruyBle.startEmulatorIfActive()
         changePump() // load device name
     }

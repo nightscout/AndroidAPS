@@ -138,6 +138,10 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
                 listener?.onCharacteristicWritten()
                 later(PUMP_ANSWER_MS) {
                     deliver(emulator.handle(data))
+                    if (emulator.unbindRequested) {
+                        emulator.unbindRequested = false
+                        later(UNBIND_DROP_MS) { loseConnection() }
+                    }
                 }
             }
         }
@@ -182,5 +186,6 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
         private const val RADIO_MS = 15L
         private const val PUMP_ANSWER_MS = 60L
         private const val FRAME_GAP_MS = 100L
+        private const val UNBIND_DROP_MS = 2_000L
     }
 }

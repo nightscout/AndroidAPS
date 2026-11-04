@@ -53,6 +53,9 @@ class AaruyPumpEmulator(
     var closedMode = 0
         private set
 
+    /** The app released the pump. The transport drops the link. */
+    var unbindRequested = false
+
     /** The frames the emulator did not accept because of the sequence number. */
     var rejectedFrames = 0
         private set
@@ -145,6 +148,12 @@ class AaruyPumpEmulator(
         PARAM_BOLUS_CONTROL -> handleBolusControl(payload)
         PARAM_TOTAL_CONTROL -> handleTotalControl(payload)
         PARAM_HISTORY       -> handleHistory(payload)
+        PARAM_UNBIND        -> {
+            // Seen on a real pump: no answer, and it drops the link about 2 seconds later.
+            unbindRequested = true
+            emptyList()
+        }
+
         PARAM_CONFIRM       -> listOf(message(PARAM_CONFIRM, byteArrayOf(payload.firstOrNull() ?: 0)))
         PARAM_CLOSED_MODE   -> {
             // A real pump sends no answer to this one.
@@ -596,6 +605,7 @@ class AaruyPumpEmulator(
         private const val PARAM_HISTORY_DAILY: Short = 20
         private const val PARAM_SERIAL: Short = 21
         private const val PARAM_CLOSED_MODE: Short = 24
+        private const val PARAM_UNBIND: Short = -3
 
         private const val COMMAND_READ = 0
         private const val COMMAND_WRITE = 1
