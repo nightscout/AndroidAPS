@@ -515,8 +515,10 @@ class AaruyPump @Inject constructor(
     fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double = 35.0) {
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
+        // The default of 35.0 is above the pump limit and means "no new amount": keep the last amount the pump reported.
         if (amountDelivered <= 25.0) {
             _bolusAmountDelivered.value = amountDelivered
+            BolusProgressData.delivered = amountDelivered
         }
         bolusDone = bolusCompleted
         if (bolusDone) {
@@ -527,8 +529,6 @@ class AaruyPump @Inject constructor(
             }
             lastBolusTime = curBolusTime
         }
-
-        BolusProgressData.delivered = amountDelivered
     }
 
     fun handleBasalStatusUpdate(basalValue: Double) {
