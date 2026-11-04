@@ -65,6 +65,7 @@ import app.aaps.pump.aaruy.keys.AaruyIntKey
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyBolusOutcome
 import app.aaps.pump.aaruy.services.AaruyService
 import app.aaps.pump.aaruy.ui.AaruyOverviewFragment
 import app.aaps.pump.aaruy.ui.event.EventAaruyDeviceChange
@@ -288,17 +289,18 @@ class AaruyPlugin @Inject constructor(
 
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-        var connectionOK = false
-        if (detailedBolusInfo.insulin > 0) connectionOK = aaruyService?.setBolus(detailedBolusInfo) == true
+        var outcome = AaruyBolusOutcome.NOT_STARTED
+        if (detailedBolusInfo.insulin > 0) outcome = aaruyService?.setBolus(detailedBolusInfo) ?: AaruyBolusOutcome.NOT_STARTED
         val result = pumpEnactResultProvider.get()
-        result.success = connectionOK
+        result.success = outcome == AaruyBolusOutcome.FINISHED
+        result.enacted = outcome != AaruyBolusOutcome.NOT_STARTED
         result.bolusDelivered = BolusProgressData.delivered
-
-        if (result.success) result.enacted = true
-        if (!result.success) {
-            result.comment = rh.gs(R.string.alarm_bolus_run_fail)
-        } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
-        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
+        result.comment = when (outcome) {
+            AaruyBolusOutcome.FINISHED    -> rh.gs(app.aaps.core.ui.R.string.ok)
+            AaruyBolusOutcome.NOT_STARTED -> rh.gs(R.string.alarm_bolus_run_fail)
+            AaruyBolusOutcome.UNKNOWN     -> rh.gs(R.string.aaruy_bolus_outcome_unknown, rh.gs(app.aaps.core.ui.R.string.format_insulin_units, result.bolusDelivered))
+        }
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: $outcome. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
     }
 

@@ -15,9 +15,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
+import app.aaps.pump.aaruy.comm.BasicParam
+import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
+import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -42,6 +45,76 @@ class AaruyBleReconnectTest {
             shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
             Thread.sleep(20)
         }
+    }
+
+    /** The bolus ends while the link is lost. The status read at reconnect is the only way to learn it. */
+    @Test
+    fun bolusThatEndedDuringALostLinkIsOverAfterReconnect() {
+        val preferences = mock(Preferences::class.java)
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger,
+            mock(ResourceHelper::class.java),
+            preferences,
+            mock(DateUtil::class.java),
+            mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java),
+            mock(DecimalFormatter::class.java)
+        )
+        val extraDir = mock(DocumentFile::class.java)
+        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
+        val files = mock(FileListProvider::class.java)
+        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
+        val ble = AaruyBLE(
+            logger,
+            RuntimeEnvironment.getApplication() as Context,
+            pump,
+            mock(DateUtil::class.java),
+            mock(RxBus::class.java),
+            preferences,
+            mock(HistoryUnitInfoDao::class.java),
+            mock(HistoryDailyUnitInfoDao::class.java),
+            mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java),
+            files
+        )
+        ble.startEmulatorIfRequested()
+        val transport = ble.emulatorTransport!!
+        val emulator = transport.emulator
+
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        // The client refuses a bolus until the answer has told it the limit.
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        pump.bolusDone = false
+        // On its own thread: `setBolus` waits for a status that is handled on the main thread.
+        Thread { ble.setBolus(0.1, false) }.start()
+        waitFor("the driver saw the bolus") { pump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING }
+        assertEquals(false, pump.bolusDone)
+
+        transport.outOfRange = true
+        transport.loseConnection()
+        waitFor("link lost") { !ble.isConnected }
+        waitFor("the pump ended the bolus") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
+        assertEquals("nothing can be known yet", false, pump.bolusDone)
+
+        transport.outOfRange = false
+        ble.connect("back in range", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("reconnected") { ble.isConnected }
+        waitFor("bolus over") { pump.bolusDone }
+
+        assertTrue(pump.bolusEndNotSeen)
+        assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
+        transport.shutdown()
     }
 
     /**

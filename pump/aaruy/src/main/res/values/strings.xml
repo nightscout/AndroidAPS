@@ -101,6 +101,7 @@
     <string name="alarm_rewinding_fail">Rewinding has failed!</string>
     <string name="alarm_temp_basal_run_fail">Failed to run temp basal!</string>
     <string name="alarm_bolus_run_fail">Failed to run bolus!</string>
+    <string name="aaruy_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.60 U">The connection to the pump was lost during the bolus. The pump had given %1$s by then, and it may still give the rest. Do not bolus again. AAPS reads the real amount from the pump at the next connection.</string>
     <string name="alarm_stop_too_long">Stop injection for more than 15 minutes!</string>
     <string name="alarm_discharge_liquid_fail">Discharge liquid fail!</string>
     <string name="alarm_stop_15m_later">The pump will auto-off in 15 minutes!</string>

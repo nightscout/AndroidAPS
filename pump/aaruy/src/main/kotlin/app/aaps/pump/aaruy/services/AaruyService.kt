@@ -189,7 +189,7 @@ class AaruyService : DaggerService() {
             aaruyBle.syncCurTimeToPump()
         }
 
-        aaruyPump.lastConnection = System.currentTimeMillis()
+        aaruyPump.lastConnection = dateUtil.now()
     }
 
     fun updateBasalsInPump(profile: Profile): Boolean {
@@ -205,12 +205,13 @@ class AaruyService : DaggerService() {
         return aaruyBle.updateBasalsInPump(basalInfo)
     }
 
-    fun setBolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
-        if (!canSetBolus()) return false
+    fun setBolus(detailedBolusInfo: DetailedBolusInfo): AaruyBolusOutcome {
+        if (!canSetBolus()) return AaruyBolusOutcome.NOT_STARTED
 
         val insulin = detailedBolusInfo.insulin
         val isSmb = detailedBolusInfo.bolusType == BS.Type.SMB
         aaruyPump.bolusDone = false
+        aaruyPump.bolusEndNotSeen = false
         aaruyPump.bolusStopped = false
         BolusProgressData.delivered = 0.0
 
@@ -219,10 +220,10 @@ class AaruyService : DaggerService() {
             commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             aaruyPump.bolusDone = true
             BolusProgressData.delivered = 0.0
-            return false
+            return AaruyBolusOutcome.NOT_STARTED
         }
 
-        val bolusStart = System.currentTimeMillis()
+        val bolusStart = dateUtil.now()
         aaruyPump.bolusProgressLastTimeStamp = bolusStart
         aaruyPump.bolusStartTime = bolusStart
         aaruyPump.bolusAmountToBeDelivered = insulin
@@ -268,7 +269,8 @@ class AaruyService : DaggerService() {
             detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, detailedBolusInfo.insulin)
         }
 
-        return true
+        return if (aaruyPump.bolusStopped || (aaruyPump.bolusDone && !aaruyPump.bolusEndNotSeen)) AaruyBolusOutcome.FINISHED
+        else AaruyBolusOutcome.UNKNOWN
     }
 
     private fun sendBolusCommand(insulin: Double, isSmb: Boolean = false): Boolean {
@@ -288,12 +290,16 @@ class AaruyService : DaggerService() {
 
         while (!aaruyPump.bolusStopped && !aaruyPump.bolusDone && !communicationLost) {
             SystemClock.sleep(100)
-            if (aaruyPump.bolusProgressLastTimeStamp > checkTime) checkTime = aaruyPump.bolusProgressLastTimeStamp
-            if (System.currentTimeMillis() - checkTime > T.secs(20).msecs()) {
+            if (aaruyPump.bolusProgressLastTimeStamp > checkTime) {
+                checkTime = aaruyPump.bolusProgressLastTimeStamp
+                connectionRetryCounter = 0
+            }
+            if (dateUtil.now() - checkTime > T.secs(20).msecs()) {
                 if (connectionRetryCounter < 3) {
-                    aapsLogger.warn(LTag.PUMPCOMM, "No bolus progress for 20 seconds, retrying connection")
-                    connect("retrying connection", preferences.get(AaruyStringKey.MacAddress))
-                    checkTime = System.currentTimeMillis()
+                    aapsLogger.warn(LTag.PUMPCOMM, "No bolus progress for 20 seconds, connected: $isConnected")
+                    if (isConnected) aaruyBle.syncPumpStatus()
+                    else connect("retrying connection", preferences.get(AaruyStringKey.MacAddress))
+                    checkTime = dateUtil.now()
                     connectionRetryCounter++
                 } else {
                     communicationLost = true
@@ -312,22 +318,17 @@ class AaruyService : DaggerService() {
 
         val bolusDurationInMSec = (aaruyPump.bolusAmountToBeDelivered/(0.025 * aaruyPump.bolusStep) * 2 * 1000)
         val expectedEnd = aaruyPump.bolusStartTime + bolusDurationInMSec + 1000
-        while (System.currentTimeMillis() < expectedEnd && !aaruyPump.bolusDone) {
-            val waitTime = expectedEnd - System.currentTimeMillis()
+        while (dateUtil.now() < expectedEnd && !aaruyPump.bolusDone) {
+            val waitTime = expectedEnd - dateUtil.now()
             rxBus.send(EventOverviewBolusProgress(status = rh.gs(R.string.aaruy_wait_bolus_time_tip, waitTime / 1000), id = BolusProgressData.id))
             SystemClock.sleep(1000)
         }
 
+        // The pump may have ended the bolus without a message that was seen here.
+        if (isConnected) aaruyBle.syncPumpStatus()
+
         // Allow time for notification packet with new sequnce number to arrive
         SystemClock.sleep(2000)
-
-        // Do not call update status directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                rxBus.send(EventOverviewBolusProgress(status = rh.gs(app.aaps.core.interfaces.R.string.disconnecting), id = BolusProgressData.id, percent = 100))
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.getting_bolus_status)))
-            }
-        })
 
         if (aaruyPump.pumpState.isCanDoRefresh()) {
             aaruyBle.syncAndLoadBasicParam()
@@ -335,20 +336,20 @@ class AaruyService : DaggerService() {
     }
 
     fun stopBolus() {
-        if (!isConnected) return
+        if (!isConnected) {
+            aapsLogger.warn(LTag.PUMPCOMM, "bolusStop not possible, no connection")
+            return
+        }
 
         aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ + ${BolusProgressData.delivered}")
-        if (isConnected) {
-            var success = aaruyBle.cancelBolus()
-            val timeout = System.currentTimeMillis() + T.secs(30).msecs()
-            while (!success && System.currentTimeMillis() < timeout) {
-                success = aaruyBle.cancelBolus()
-            }
-            aapsLogger.debug(LTag.PUMPCOMM, "bolusStop success: $success")
-            aaruyPump.bolusStopped = true
-        } else {
-            aaruyPump.bolusStopped = true
+        var success = aaruyBle.cancelBolus()
+        val timeout = dateUtil.now() + T.secs(30).msecs()
+        while (!success && dateUtil.now() < timeout) {
+            success = aaruyBle.cancelBolus()
         }
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop success: $success")
+        // A stop the pump did not confirm stops nothing: the pump can still be delivering.
+        aaruyPump.bolusStopped = success
     }
 
     fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {

@@ -79,6 +79,7 @@ class AaruyBLE @Inject internal constructor(
     private val fileListProvider: FileListProvider,
 ) {
     private val EMULATOR_MARKER = "emulate_aaruy"
+    private val BOLUS_START_TIMEOUT_MS = 5000L
     private val TAG = "AaruyBLEService"
     val scanResultList = ArrayList<ScanResult>()
     private val handler = Handler(Looper.getMainLooper())
@@ -316,6 +317,8 @@ class AaruyBLE @Inject internal constructor(
                     }
                     preferences.put(AaruyStringKey.PumpBoundAddress, preferences.get(AaruyStringKey.MacAddress))
                     aaruyPump.connectionState = ConnectionState.CONNECTED
+                    // Anything can have happened while the link was down, a bolus may have ended.
+                    syncPumpStatus()
                     // The scan screen asks for the first history, and the emulator replaces that screen.
                     if (emulatorTransport != null && !aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
@@ -461,6 +464,9 @@ class AaruyBLE @Inject internal constructor(
                         cancelTmpBasalOk = true
                     }
                 }
+                if (statusInfo.runningStatus != 3 && aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING && !aaruyPump.bolusDone) {
+                    aaruyPump.handleBolusEndNotSeen()
+                }
                 if (aaruyPump.pumpState != aaruyPump.pumpLastState &&
                     (aaruyPump.pumpLastState.isNormalStatus() || aaruyPump.pumpState.isNormalStatus())) {
                     if (aaruyPump.canSaveHistory)
@@ -604,7 +610,9 @@ class AaruyBLE @Inject internal constructor(
         sendBolusOk = false
         val startBolusTime = dateUtil.now()
         aaBleUtil.setupAndStartBolus(insulin, 0.0, 0, isSmb)
-        SystemClock.sleep(500)
+        // A status that comes late must not report a failure while the pump delivers: the user could bolus again.
+        val end = System.currentTimeMillis() + BOLUS_START_TIMEOUT_MS
+        while (!sendBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(100)
         if (sendBolusOk) {
             aaruyPump.curBolusTime = startBolusTime
         }

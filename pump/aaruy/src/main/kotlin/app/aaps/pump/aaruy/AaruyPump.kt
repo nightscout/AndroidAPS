@@ -202,6 +202,7 @@ class AaruyPump @Inject constructor(
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped
     var bolusDone = true // Bolus completed or stopped on pump, initialize as true as to don't show bolus on init
+    var bolusEndNotSeen = false // The bolus ended while the link was lost, see handleBolusEndNotSeen
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
     val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered
@@ -529,6 +530,15 @@ class AaruyPump @Inject constructor(
             }
             lastBolusTime = curBolusTime
         }
+    }
+
+    /**
+     * The pump left the bolus state and the message that says "done" was not seen, because the link was lost.
+     * The amount is not known until the history is read.
+     */
+    fun handleBolusEndNotSeen() {
+        bolusEndNotSeen = true
+        handleBolusStatusUpdate(0, true)
     }
 
     fun handleBasalStatusUpdate(basalValue: Double) {
