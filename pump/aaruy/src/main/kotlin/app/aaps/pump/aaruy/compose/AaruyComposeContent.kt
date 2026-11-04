@@ -27,7 +27,8 @@ import app.aaps.pump.aaruy.R
 private enum class AaruyScreen {
     OVERVIEW,
     PAIR_WIZARD,
-    REPLACE_WIZARD
+    REPLACE_WIZARD,
+    HISTORY
 }
 
 /** How far the unpair question has come. A pump out of reach is asked about twice, as it stays paired on its side. */
@@ -86,11 +87,23 @@ class AaruyComposeContent(
 
         val pairingTitle = stringResource(R.string.aaruy_pairing)
         val replaceTitle = stringResource(R.string.replace_bat_rescv_label)
+        val historyTitle = stringResource(app.aaps.core.ui.R.string.pump_history)
         val backDescription = stringResource(app.aaps.core.ui.R.string.back)
         val settingsDescription = stringResource(app.aaps.core.ui.R.string.settings)
 
         // A wizard sets the toolbar itself, so that its back arrow asks before it leaves.
         LaunchedEffect(currentScreen) {
+            if (currentScreen == AaruyScreen.HISTORY) {
+                setToolbarConfig(
+                    ToolbarConfig(
+                        title = historyTitle,
+                        navigationIcon = {
+                            IconButton(onClick = { currentScreen = AaruyScreen.OVERVIEW }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDescription) }
+                        },
+                        actions = {}
+                    )
+                )
+            }
             if (currentScreen == AaruyScreen.OVERVIEW) {
                 setToolbarConfig(
                     ToolbarConfig(
@@ -113,6 +126,7 @@ class AaruyComposeContent(
                 when (event) {
                     is AaruyOverviewEvent.StartPairWizard -> currentScreen = AaruyScreen.PAIR_WIZARD
                     is AaruyOverviewEvent.StartReplace    -> currentScreen = AaruyScreen.REPLACE_WIZARD
+                    is AaruyOverviewEvent.StartHistory    -> currentScreen = AaruyScreen.HISTORY
                     is AaruyOverviewEvent.ConfirmUnpair   -> unpairDialog = UnpairDialog.FIRST
                 }
             }
@@ -123,6 +137,8 @@ class AaruyComposeContent(
                 val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
                 PumpOverviewScreen(state = uiState)
             }
+
+            AaruyScreen.HISTORY -> AaruyHistoryScreen(viewModel = metroViewModel())
 
             AaruyScreen.REPLACE_WIZARD -> {
                 KeepScreenOnEffect()

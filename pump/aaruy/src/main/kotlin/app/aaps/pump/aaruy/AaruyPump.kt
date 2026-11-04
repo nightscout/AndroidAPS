@@ -29,7 +29,9 @@ import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.common.util.AaruyConst
 import app.aaps.pump.aaruy.keys.AaruyBooleanKey
 import app.aaps.pump.aaruy.keys.AaruyDoubleKey
+import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
+import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -692,35 +694,35 @@ class AaruyPump(
     fun syncPrefParam(): Boolean {
         var isSame = true
 
-        val maxBolusLocal = checkParameterValue(AaruyStringKey.PumpPrefMaxBolus, "10.0", 10.0, 25.0)
+        val maxBolusLocal = preferences.get(AaruyDoublePreferenceKey.MaxBolus)
         if (maxBolus != maxBolusLocal) {
             isSame = false
             maxBolus = maxBolusLocal
         }
         aapsLogger.debug("syncPrefParam maxBolus is $maxBolus, maxBolusLocal is $maxBolusLocal")
-        val maxBasalLocal = checkParameterValue(AaruyStringKey.PumpPrefMaxBasal, "2", 2.0, 35.0)
+        val maxBasalLocal = preferences.get(AaruyDoublePreferenceKey.MaxBasal)
         if (maxBasal != maxBasalLocal) {
             isSame = false
             maxBasal = maxBasalLocal
         }
         aapsLogger.debug("syncPrefParam maxBasal is $maxBasal, maxBasalLocal is $maxBasalLocal")
-        val lowAlertLocal = checkParameterValue(AaruyStringKey.PumpPrefLowAlert, "20.0", 20.0, 50.0)
+        val lowAlertLocal = preferences.get(AaruyDoublePreferenceKey.LowReservoir)
         if (lowAlert != lowAlertLocal) {
             isSame = false
             lowAlert = lowAlertLocal
         }
-        val bolusStepLocal = getBolusIncFromString(AaruyIntKey.PumpPrefBolusStep, "0.05")
+        val bolusStepLocal = if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1
         if (bolusStep != bolusStepLocal) {
             isSame = false
 
             bolusStep = bolusStepLocal
         }
-        val soundRemindLocal = getOnOrOffFromString(AaruyIntKey.PumpPrefSoundRemind, rh.gs(R.string.setting_aaruy_on))
+        val soundRemindLocal = if (preferences.get(AaruyIntPreferenceKey.SoundPrompt) == 1) 1 else 0
         if(((closeInjectSound and 0x01) xor soundRemindLocal) == 0x01) {
             isSame = false
             closeInjectSound = (closeInjectSound or 0x01) and (0xfffe or soundRemindLocal)
         }
-        val soundAlarmLocal = getOnOrOffFromString(AaruyIntKey.PumpPrefSoundAlarm, rh.gs(R.string.setting_aaruy_on))
+        val soundAlarmLocal = if (preferences.get(AaruyIntPreferenceKey.SoundAlarm) == 1) 1 else 0
         if(((closeInjectSound and 0x02) xor (soundAlarmLocal shl 1)) == 0x02) {
             isSame = false
             closeInjectSound = (closeInjectSound or 0x02) and (0xfffd or (soundAlarmLocal shl 1))
@@ -729,35 +731,4 @@ class AaruyPump(
         return isSame
     }
 
-    private fun checkParameterValue(key: AaruyStringKey, defaultValue: String, defaultValueDouble: Double, maxValueDouble: Double): Double {
-        var valueDouble: Double
-        val value = preferences.get(key)
-        valueDouble = try {
-            value.toDouble()
-        } catch (ex: Exception) {
-            aapsLogger.error("Error parsing setting: %s, value found %s", key, value)
-            defaultValueDouble
-        }
-        if (valueDouble > maxValueDouble) {
-            preferences.put(key, maxValueDouble.toString())
-            valueDouble = maxValueDouble
-        }
-        return valueDouble
-    }
-
-    private fun getBolusIncFromString(key: AaruyIntKey, defaultValue: String): Int {
-        var valueInt: Int = 1
-        val value = preferences.get(key)
-        if (value == 1)
-            valueInt = 2
-        return valueInt
-    }
-
-    private fun getOnOrOffFromString(key: AaruyIntKey, defaultValue: String): Int {
-        var valueInt: Int = 0
-        val value = preferences.get(key)
-        if (value == 1)
-            valueInt = 1
-        return valueInt
-    }
 }

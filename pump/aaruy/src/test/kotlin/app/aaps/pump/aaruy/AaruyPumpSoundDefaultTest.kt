@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.aaruy.keys.AaruyIntKey
+import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,8 +26,8 @@ class AaruyPumpSoundDefaultTest {
     @Test
     fun untouchedSettingsKeepThePumpSoundsOn() {
         val preferences = mock(Preferences::class.java)
-        `when`(preferences.get(AaruyIntKey.PumpPrefSoundRemind)).thenReturn(AaruyIntKey.PumpPrefSoundRemind.defaultValue)
-        `when`(preferences.get(AaruyIntKey.PumpPrefSoundAlarm)).thenReturn(AaruyIntKey.PumpPrefSoundAlarm.defaultValue)
+        `when`(preferences.get(AaruyIntPreferenceKey.SoundPrompt)).thenReturn(AaruyIntPreferenceKey.SoundPrompt.defaultValue)
+        `when`(preferences.get(AaruyIntPreferenceKey.SoundAlarm)).thenReturn(AaruyIntPreferenceKey.SoundAlarm.defaultValue)
         val rh = mock(ResourceHelper::class.java)
         `when`(rh.gs(anyInt())).thenReturn("")
         val pump = AaruyPump(

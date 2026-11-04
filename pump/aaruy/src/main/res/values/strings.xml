@@ -136,6 +136,7 @@
     <string name="actions_reservoir_cannula_skip">Skip</string>
     <string name="actions_reservoir_prime">Prime</string>
     <string name="aaruy_rewind">Rewind</string>
+    <string name="aaruy_history_minutes">%1$d min</string>
     <string name="aaruy_replace_done">The pump is running basal.</string>
     <string name="actions_reservoir_prime_cannula_action">Exhaust</string>
     <string name="dialog_cancel">ESC</string>

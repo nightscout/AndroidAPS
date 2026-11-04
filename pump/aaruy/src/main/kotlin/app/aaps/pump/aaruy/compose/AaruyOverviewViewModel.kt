@@ -1,6 +1,7 @@
 package app.aaps.pump.aaruy.compose
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
@@ -48,6 +49,7 @@ import app.aaps.core.ui.R as CoreUiR
 sealed class AaruyOverviewEvent {
     data object StartPairWizard : AaruyOverviewEvent()
     data object StartReplace : AaruyOverviewEvent()
+    data object StartHistory : AaruyOverviewEvent()
     data object ConfirmUnpair : AaruyOverviewEvent()
 }
 
@@ -209,7 +211,8 @@ class AaruyOverviewViewModel(
         }
 
         val primaryActions = listOf(
-            ScreenAction(label = rh.gs(CoreUiR.string.refresh), icon = Icons.Filled.Refresh, visible = isInitialized, onClick = { onRefreshClick() })
+            ScreenAction(label = rh.gs(CoreUiR.string.refresh), icon = Icons.Filled.Refresh, visible = isInitialized, onClick = { onRefreshClick() }),
+            ScreenAction(label = rh.gs(CoreUiR.string.pump_history), icon = Icons.AutoMirrored.Filled.List, visible = isInitialized, onClick = { _events.tryEmit(AaruyOverviewEvent.StartHistory) })
         )
 
         val managementActions = buildList {

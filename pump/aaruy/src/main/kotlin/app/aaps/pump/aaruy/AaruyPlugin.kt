@@ -42,13 +42,16 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginAaruy
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.compose.AaruyComposeContent
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import app.aaps.pump.aaruy.keys.AaruyBooleanKey
 import app.aaps.pump.aaruy.keys.AaruyDoubleKey
+import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
+import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import app.aaps.pump.aaruy.services.AaruyBLE
@@ -66,6 +69,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -99,7 +106,8 @@ class AaruyPlugin(
         .icon(IcPluginAaruy)
         .pluginName(TextRef.AndroidRes(R.string.aaruy_pump))
         .description(TextRef.AndroidRes(R.string.aaruy_pump_description)),
-    ownPreferences = AaruyStringKey.entries + AaruyIntKey.entries + AaruyLongKey.entries + AaruyDoubleKey.entries + AaruyBooleanKey.entries,
+    ownPreferences = AaruyStringKey.entries + AaruyIntKey.entries + AaruyLongKey.entries + AaruyDoubleKey.entries + AaruyBooleanKey.entries +
+        AaruyDoublePreferenceKey.entries + AaruyIntPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, PumpPluginConstraints, OwnDatabasePlugin {
 
@@ -122,6 +130,13 @@ class AaruyPlugin(
                 pumpSync.connectNewPump()
                 changePump()
             }
+        // A changed setting reaches the pump through the status read, which compares and writes.
+        merge(
+            *AaruyDoublePreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray(),
+            *AaruyIntPreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray()
+        )
+            .onEach { if (isConfigured()) commandQueue.readStatus(rh.gs(R.string.param_refresh)) }
+            .launchIn(newScope)
         aaruyBle.startEmulatorIfActive()
         changePump() // load device name
     }
@@ -372,6 +387,20 @@ class AaruyPlugin(
     override fun canHandleDST(): Boolean = true
 
     override fun clearAllTables() = aaruyHistoryDatabase.clearAllTables()
+
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "aaruy_settings",
+        titleResId = R.string.aaruy_pump,
+        items = listOf(
+            AaruyDoublePreferenceKey.MaxBasal,
+            AaruyDoublePreferenceKey.MaxBolus,
+            AaruyDoublePreferenceKey.LowReservoir,
+            AaruyIntPreferenceKey.BolusStep,
+            AaruyIntPreferenceKey.SoundPrompt,
+            AaruyIntPreferenceKey.SoundAlarm
+        ),
+        icon = pluginDescription.icon
+    )
 
     // cU-domain pump limits: folded into the IU scan by ConstraintsChecker.
     override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate = PumpRate(absoluteRate.cU.coerceAtMost(aaruyPump.maxBasal))

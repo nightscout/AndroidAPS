@@ -21,6 +21,8 @@ import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
+import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
+import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -39,6 +41,14 @@ import java.time.Duration
 @Config(sdk = [35])
 class AaruyBleReconnectTest {
 
+    /** A mock gives 0 for a number, and that would be a limit of 0 U for a bolus. */
+    private fun preferencesWithDefaults(): Preferences {
+        val preferences = mock(Preferences::class.java)
+        AaruyDoublePreferenceKey.entries.forEach { `when`(preferences.get(it)).thenReturn(it.defaultValue) }
+        AaruyIntPreferenceKey.entries.forEach { `when`(preferences.get(it)).thenReturn(it.defaultValue) }
+        return preferences
+    }
+
     private fun waitFor(what: String, condition: () -> Boolean) {
         val end = System.currentTimeMillis() + 20_000
         while (!condition()) {
@@ -51,7 +61,7 @@ class AaruyBleReconnectTest {
     /** The bolus ends while the link is lost. The status read at reconnect is the only way to learn it. */
     @Test
     fun bolusThatEndedDuringALostLinkIsOverAfterReconnect() {
-        val preferences = mock(Preferences::class.java)
+        val preferences = preferencesWithDefaults()
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger,
@@ -118,7 +128,7 @@ class AaruyBleReconnectTest {
     /** A real pump answers a stop by going straight from status 3 to 1. That confirms the stop, and no link was lost. */
     @Test
     fun aStopThatGoesBackToBasalIsConfirmedAndIsNotALostLink() {
-        val preferences = mock(Preferences::class.java)
+        val preferences = preferencesWithDefaults()
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger,
@@ -185,7 +195,7 @@ class AaruyBleReconnectTest {
      */
     @Test
     fun emptyHistoryAtPairingStillGivesTheRealAmountOfAStoppedBolus() {
-        val preferences = mock(Preferences::class.java)
+        val preferences = preferencesWithDefaults()
         val logger = mock(AAPSLogger::class.java)
         val pumpSync = mock(PumpSync::class.java)
         val pump = AaruyPump(
@@ -248,7 +258,7 @@ class AaruyBleReconnectTest {
      */
     @Test
     fun connectWhileTheLinkIsStillUpEndsConnected() {
-        val preferences = mock(Preferences::class.java)
+        val preferences = preferencesWithDefaults()
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger,

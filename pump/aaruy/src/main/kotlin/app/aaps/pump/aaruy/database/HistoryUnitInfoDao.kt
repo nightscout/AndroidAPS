@@ -14,6 +14,13 @@ interface HistoryUnitInfoDao {
     @Delete
     fun delete(historyUnitInfo: HistoryUnitInfo)
 
+    /** The pump sends its last entry again at each read, and `reserved` is what tells two entries of one second apart. */
+    @Query("SELECT COUNT(*) FROM history_unit_info WHERE time=:time AND type=:type AND reserved=:reserved")
+    fun count(time: Long, type: Int, reserved: Int): Int
+
+    @Query("SELECT * FROM history_unit_info WHERE time>=:since ORDER BY time DESC")
+    fun querySince(since: Long): List<HistoryUnitInfo>
+
     @Query("DELETE FROM history_unit_info")
     fun deleteAll()
 

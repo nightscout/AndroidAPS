@@ -16,6 +16,7 @@ import android.os.Looper
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -32,6 +33,7 @@ import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasicParam
 import app.aaps.pump.aaruy.comm.DailyInfo
 import app.aaps.pump.aaruy.comm.LogInfo
+import app.aaps.pump.aaruy.comm.LogItem
 import app.aaps.pump.aaruy.comm.StatusInfo
 import app.aaps.pump.aaruy.comm.BleStatus
 import app.aaps.pump.aaruy.comm.AaruyBleListener
@@ -58,6 +60,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import dev.zacsweers.metro.AppScope
+import kotlin.math.abs
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import app.aaps.pump.aaruy.keys.AaruyStringKey
@@ -80,6 +83,11 @@ class AaruyBLE(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
+    private val HISTORY_TEMP_BASAL = 1
+    private val HISTORY_ALARM = 3
+    private val SAME_ENTRY_MS = 60_000L
+    private val ALARM_SEEN_LIVE_MS = 120_000L
+    @Volatile private var tempBasalCommandRunning = false
     private val TAG = "AaruyBLEService"
     private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
     val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices
@@ -496,28 +504,7 @@ class AaruyBLE(
 
             override fun onReceiveHistoryLog(logInfo: LogInfo) {
                 aapsLogger.warn(LTag.PUMPCOMM, "onReceiveHistoryLog logInfo = $logInfo")
-                refreshHistory = true
-                if (aaruyPump.canSaveHistory) {
-                    aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
-                    saveHistoryData(logInfo)
-                    if (logInfo.curPage+1 == logInfo.totalPage) {
-                        readDailyData(aaruyPump.lastHistoryDailyTime)
-                        aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
-                    }
-                }
-                else if(logInfo.curPage+1 == logInfo.totalPage) {
-                    aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory canSaveHistory = ${aaruyPump.canSaveHistory}, totalPage = ${logInfo.totalPage}")
-                    aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
-                    aaruyPump.canSaveHistory = true
-                    receivingHistory = false
-                }
-
-                if (logInfo.curPage == logInfo.totalPage && logInfo.curPage == 0) {
-                    // A real pump has no history after pairing. Nothing else would turn history on, and then it is never read.
-                    aaruyPump.canSaveHistory = true
-                    readDailyData(aaruyPump.lastHistoryDailyTime)
-                    receivingHistory = false
-                }
+                onHistoryLog(logInfo)
             }
 
             override fun onReceiveHistoryDaily(dailyInfo: DailyInfo) {
@@ -593,7 +580,31 @@ class AaruyBLE(
         })
     }
 
-    // 异常中止注射需调用此函数
+    internal fun onHistoryLog(logInfo: LogInfo) {        refreshHistory = true
+        if (aaruyPump.canSaveHistory) {
+            aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
+            saveHistoryData(logInfo)
+            if (logInfo.curPage+1 == logInfo.totalPage) {
+                readDailyData(aaruyPump.lastHistoryDailyTime)
+                aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
+            }
+        }
+        else if(logInfo.curPage+1 == logInfo.totalPage) {
+            aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory canSaveHistory = ${aaruyPump.canSaveHistory}, totalPage = ${logInfo.totalPage}")
+            aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
+            aaruyPump.canSaveHistory = true
+            receivingHistory = false
+        }
+
+        if (logInfo.curPage == logInfo.totalPage && logInfo.curPage == 0) {
+            // A real pump has no history after pairing. Nothing else would turn history on, and then it is never read.
+            aaruyPump.canSaveHistory = true
+            readDailyData(aaruyPump.lastHistoryDailyTime)
+            receivingHistory = false
+        }
+    }
+
+
     private fun checkPumpInfusion() {
         if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING) {
             if (bolusType == 0) {
@@ -650,6 +661,7 @@ class AaruyBLE(
     }
 
     suspend fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
+        tempBasalCommandRunning = true
         sendTmpBasalOk = false
         aaBleUtil.setClosedMode(1)
         SystemClock.sleep(200)
@@ -659,10 +671,12 @@ class AaruyBLE(
         if (sendTmpBasalOk) {
             aaruyPump.syncTBRWithPumpId(startTime, absoluteRate,durationInMinutes.toLong()*60*1000)
         }
+        tempBasalCommandRunning = false
         return sendTmpBasalOk
     }
 
     suspend fun cancelTempBasal(): Boolean {
+        tempBasalCommandRunning = true
         cancelTmpBasalOk = false
         val endTime = dateUtil.now()
         aaBleUtil.cancelTempBasal()
@@ -670,6 +684,7 @@ class AaruyBLE(
         if (cancelTmpBasalOk) {
             aaruyPump.syncStopTBRWithPumpId(endTime)
         }
+        tempBasalCommandRunning = false
         return cancelTmpBasalOk
     }
 
@@ -833,7 +848,34 @@ class AaruyBLE(
                         "from record: ${newRecordInfo(newRecord)}EVENT BOLUS ${dateUtil.dateAndTimeString(item.timestamp)} ($item.timestamp) Bolus: ${item.data / 1000.0}U "
                     )
                 }
-                historyUnitInfoDao.insert(historyUnitInfo)
+                syncFromHistory(item)
+                if (historyUnitInfoDao.count(item.timestamp, historyUnitInfo.type, historyUnitInfo.reserved) == 0) historyUnitInfoDao.insert(historyUnitInfo)
+            }
+        }
+    }
+
+    /**
+     * What the pump log knows and the driver may not: all of this can happen while the link is down.
+     * A real pump logs a temp basal when it ends, with the time it started and the real minutes.
+     */
+    private suspend fun syncFromHistory(item: LogItem) {
+        when (item.type.toInt()) {
+            HISTORY_TEMP_BASAL -> {
+                // A command that runs now ends the temp basal in the database itself.
+                if (tempBasalCommandRunning) return
+                val running = pumpSync.expectedPumpState().temporaryBasal ?: return
+                if (abs(running.timestamp - item.timestamp) > SAME_ENTRY_MS) return
+                val end = item.timestamp + T.mins(item.injectTime.toLong()).msecs()
+                aapsLogger.debug(LTag.PUMPCOMM, "The pump ended the temp basal at ${dateUtil.dateAndTimeString(end)}")
+                aaruyPump.syncStopTBRWithPumpId(end)
+                aaruyPump.fromTemporaryBasal(null)
+            }
+
+            HISTORY_ALARM      -> {
+                // A newer one was announced when it came. Only one from the time without a link is new.
+                if (dateUtil.now() - item.timestamp < ALARM_SEEN_LIVE_MS) return
+                val alarm = AlarmState.fromInt(item.data.toInt())
+                if (alarm != AlarmState.NONE) pumpSync.insertAnnouncement(aaruyPump.alarmStateToString(alarm), item.timestamp, aaruyPump.pumpType(), aaruyPump.pumpSN)
             }
         }
     }

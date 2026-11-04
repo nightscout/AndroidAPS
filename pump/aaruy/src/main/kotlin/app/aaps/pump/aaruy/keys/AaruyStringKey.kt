@@ -14,8 +14,4 @@ enum class AaruyStringKey(
     PumpActiveAlarm("key_aaruy_active_alarms", ""),
     PumpActualBasalProfile("key_aaruy_actual_basal_profile", ""),
     PumpBoundAddress("key_binded_address", ""),
-
-    PumpPrefMaxBasal("pref_aaruy_max_basal", "2.0"),
-    PumpPrefMaxBolus("pref_aaruy_max_bolus", "10.0"),
-    PumpPrefLowAlert("pref_aaruy_low_alert", "20.0"),
 }
