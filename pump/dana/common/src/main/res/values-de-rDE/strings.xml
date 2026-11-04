@@ -30,7 +30,7 @@
     <string name="basalcompare">Weniger als voreingestellte Basalrate abgeben</string>
     <string name="pumpshutdown">Pumpe stoppen</string>
     <string name="batterydischarged">Pumpenbatterie entladen</string>
-    <string name="occlusion">Verstopfung</string>
+    <string name="occlusion">Verschluss</string>
     <string name="emptyreservoir">Reservoir leer</string>
     <string name="checkshaft">Gewindestange prüfen</string>
     <string name="basalmax">max. Basal</string>
