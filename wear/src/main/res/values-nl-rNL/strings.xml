@@ -71,7 +71,7 @@
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
     <string name="pref_moreWatchfaceSettings">Meer Watchface instellingen</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Kijk naar de Watchface configuratie, alsjeblieft.</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Bekijk de Watchface configuratie.</string>
     <string name="menu_tempt">TijdStreefd</string>
     <string name="menu_tempt_long">Tijdelijk streefdoel</string>
     <string name="menu_wizard">Calculator</string>
@@ -171,7 +171,7 @@
     <string name="complication_summary_none">Tik om een gegevensbron te selecteren</string>
     <string name="pref_complication_type_priority">Complicatietype prioriteit</string>
     <string name="pref_complication_type_priority_all">Standaard voor alle slots</string>
-    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een verandering hier wordt de volgende keer dat u een databron kiest toegepast. Dezelfde kiezen is niet genoeg; kies een andere bron eerst, kies daarna degene die u wilt.</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een wijziging hier wordt toegepast wanneer de volgende keer een databron wordt gekozen. Het opnieuw selecteren van dezelfde databron is niet voldoende. Selecteer eerst een andere databron en kies daarna de gewenste databron.</string>
     <string name="complication_type_priority_value">Waarde of wijzer</string>
     <string name="complication_type_priority_text">Tekst</string>
     <string name="complication_type_priority_icon">Icoon</string>
