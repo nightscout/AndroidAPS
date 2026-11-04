@@ -27,8 +27,6 @@ enum class AaruyIntKey(
     PumpCloseInjectSound("key_param_close_inject_sound", 0, 0, 15),
     PumpNeedleType("key_param_soft_needle_type", 0, 0, 1),
     PumpType("key_param_pump_type", 0, 0, 8),
-    PumpUploadIndex("key_upload_index", 0, 0, 0xfffffff),
-    PumpUploadLastIndex("key_upload_lastIndex", 0, 0, 0xfffffff),
 
     PumpPrefBolusStep("pref_aaruy_bolus_step", 1, 0, 1),
     PumpPrefSoundRemind("pref_aaruy_sound_remind", 1, 0, 1),

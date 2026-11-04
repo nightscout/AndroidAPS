@@ -26,5 +26,4 @@ enum class AaruyLongKey(
     PumpLastConnect("key_aaruy_last_connection", 0),
     PumpLastHistoryTime("key_aaruy_last_historyTime", 0),
     PumpLastHistoryDailyTime("key_aaruy_last_historyDailyTime", 0),
-    PumpCgmTime("key_upload_cgms_time", 0),
 }

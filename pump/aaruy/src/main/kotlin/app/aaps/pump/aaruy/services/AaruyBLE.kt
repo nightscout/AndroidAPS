@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.AppRepository
 import com.aaruy.mylibrary.AABleUtil
 import com.aaruy.mylibrary.AALogger
 import com.aaruy.mylibrary.open.data.BasalInfo
@@ -35,9 +34,6 @@ import com.aaruy.mylibrary.open.interfaces.MyBleListener
 import com.aaruy.mylibrary.open.interfaces.ScanResultListener
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
-import app.aaps.pump.aaruy.api.AaruyApiService
-import app.aaps.pump.aaruy.api.AaruyLogUploader
-import app.aaps.pump.aaruy.api.ApiResponse
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AaruyType
@@ -53,17 +49,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.support.v18.scanner.ScanResult
-import retrofit2.Call
-import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
-import app.aaps.pump.aaruy.api.ApiCgmResponse
-import app.aaps.pump.aaruy.api.ApiLastIndexResponse
-import app.aaps.pump.aaruy.common.util.AaruyNumberUtils
-import app.aaps.pump.aaruy.keys.AaruyIntKey
-import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
-import kotlinx.coroutines.Job
 
 interface BLECommCallback {
     fun onBLEScan()
@@ -81,8 +69,6 @@ class AaruyBLE @Inject internal constructor(
     private val historyDailyUnitInfoDao: HistoryDailyUnitInfoDao,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val pumpSync: PumpSync,
-    private val repository: AppRepository,
-    private var aaruyLogUploader: AaruyLogUploader
 ) {
     private val TAG = "AaruyBLEService"
     val scanResultList = ArrayList<ScanResult>()
@@ -102,22 +88,6 @@ class AaruyBLE @Inject internal constructor(
     private var mCallback: BLECommCallback? = null
     private var bolusType: Int = 0
     private var connectCount: Int = 0
-    private var cgmCount: Int = 0
-
-    private lateinit var jobUploadDayData: Job
-    private var uploadLogOk = true
-    private var uploadLogCont = 0
-    private var uploadLogNum = 0
-    private var uploadTimeCount: Int = 0
-    private var uploadLogLastCont = 0
-
-    private lateinit var jobUploadCgmData: Job
-    private var uploadCgmOk = true
-    private var uploadCgmCont = 0
-    private var uploadCgmNum = 0
-    private var uploadCgmStartTime: Long = 0
-    private var uploadCgmTimeCount: Int = 0
-    private var uploadCgmLastCont = 0
 
     var isConnected = false
     var isConnecting = false
@@ -156,51 +126,6 @@ class AaruyBLE @Inject internal constructor(
                     connectCount = 0
                 }
 
-                cgmCount++
-                if (cgmCount > 60) {
-                    uploadCGMsLog()
-                    cgmCount = 0
-                }
-
-                if (!uploadCgmOk) {
-                    uploadCgmTimeCount++
-                    if ((uploadCgmTimeCount > 20 && uploadCgmCont == 0) || (uploadCgmLastCont == uploadCgmCont && uploadCgmLastCont != 0)) {
-                        uploadCgmTimeCount = 0
-                        uploadCgmCont = 0
-                        uploadCgmLastCont = 0
-                        uploadCgmNum = 0
-                        uploadCgmOk = true
-                        if (::jobUploadCgmData.isInitialized) {
-                            jobUploadCgmData.cancel()
-                        }
-                    }
-                    if (uploadCgmTimeCount%20 == 0) {
-                        uploadCgmLastCont = uploadCgmCont
-                    }
-                }
-                else {
-                    uploadCgmTimeCount = 0
-                }
-
-                if (!uploadLogOk) {
-                    uploadTimeCount++
-                    if ((uploadTimeCount > 10 && uploadLogCont == 0) || (uploadLogLastCont == uploadLogCont && uploadLogLastCont != 0)) {
-                        uploadTimeCount = 0
-                        uploadLogCont = 0
-                        uploadLogLastCont = 0
-                        uploadLogNum = 0
-                        uploadLogOk = true
-                        if (::jobUploadDayData.isInitialized) {
-                            jobUploadDayData.cancel()
-                        }
-                    }
-                    if (uploadTimeCount%10 == 0) {
-                        uploadLogLastCont = uploadLogCont
-                    }
-                }
-                else {
-                    uploadTimeCount = 0
-                }
                 handler.postDelayed(this, 2000)
             }
         }
@@ -519,7 +444,6 @@ class AaruyBLE @Inject internal constructor(
                     if (logInfo.curPage+1 == logInfo.totalPage) {
                         readDailyData(aaruyPump.lastHistoryDailyTime)
                         aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
-                        uploadPumpLog()
                     }
                 }
                 else if(logInfo.curPage+1 == logInfo.totalPage) {
@@ -527,13 +451,11 @@ class AaruyBLE @Inject internal constructor(
                     aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
                     aaruyPump.canSaveHistory = true
                     receivingHistory = false
-                    uploadPumpLog()
                 }
 
                 if (logInfo.curPage == logInfo.totalPage && logInfo.curPage == 0) {
                     readDailyData(aaruyPump.lastHistoryDailyTime)
                     receivingHistory = false
-                    uploadPumpLog()
                 }
             }
 
@@ -928,240 +850,5 @@ class AaruyBLE @Inject internal constructor(
 
     private fun newRecordInfo(newRecord: Boolean): String {
         return "${if (newRecord) "**NEW** " else ""}"
-    }
-
-    private fun uploadPumpLog(): Boolean {
-        if (!uploadLogOk)
-            return false
-
-        //api send
-        uploadLogOk = false
-        jobUploadDayData = CoroutineScope(Dispatchers.IO).launch {
-            aapsLogger.debug(LTag.PUMPCOMM, "logs upload start")
-            val retrofit = aaruyLogUploader.getRetrofitInstance()
-            val api = retrofit?.create(AaruyApiService::class.java)
-            var lastIndex: Int = preferences.get(AaruyIntKey.PumpUploadIndex)
-            var isFailure: Boolean = false
-
-            // 新增修改
-            if (lastIndex == 0) {
-                api?.getLastUploadIndex(
-                    getShortDeviceName()
-                )?.enqueue(
-                    object : retrofit2.Callback<ApiLastIndexResponse> {
-                        override fun onResponse(call: Call<ApiLastIndexResponse>, response: Response<ApiLastIndexResponse>) {
-                            aapsLogger.debug(LTag.PUMPCOMM, "logs upload Success ApiLastIndexResponse id is ${response.body()?.data}")
-                            if (response.body() != null) {
-                                val apiResponse = response.body() as ApiLastIndexResponse
-                                if (apiResponse.data.index != 0) {
-                                    preferences.put(AaruyIntKey.PumpUploadLastIndex, apiResponse.data.index)
-                                }
-                            }
-                            else {
-                                return
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ApiLastIndexResponse>, t: Throwable) {
-                            aapsLogger.error(LTag.PUMPCOMM, "api getLastUploadIndex failed")
-                            t.printStackTrace()
-                        }
-                    }
-                )
-                delay(1000)
-            }
-            var lastUploadIndex: Int = preferences.get(AaruyIntKey.PumpUploadLastIndex)
-            val historyDataList = historyUnitInfoDao.getItemsFromIdToMax(lastIndex)
-            aapsLogger.debug(LTag.PUMPCOMM, "logs upload lastUploadIndex is ${lastUploadIndex}, lastIndex is $lastIndex, historyDataList.size is ${historyDataList.size}")
-
-            if (historyDataList.isNotEmpty() && lastIndex < historyDataList.size) {
-                try {
-                    val minIndex = if (lastIndex == 0) 0 else lastIndex + 1
-                    uploadLogNum = historyDataList.last().id + 1 - minIndex
-                    for (i in minIndex until historyDataList.size) {
-                        var historyKind: Int = historyDataList[i].type
-                        var historySeconds: Long = historyDataList[i].injectTime * 60
-                        val recordSeconds: Long = historyDataList[i].time / 1000
-                        if (historyKind in 3..7) {
-                            historyKind += 200
-                        } else if (historyKind == 2) {
-                            if (historyDataList[i].injectTime.toInt() > 0)
-                                historyKind = 3
-                            else {
-                                historySeconds = historyDataList[i].immTime
-                            }
-                        }
-
-                        // 新增修改
-                        var dataSend: String = historyDataList[i].data.toString()
-                        if (historyKind < 3) {
-                            dataSend = AaruyNumberUtils.getDotThreeString(historyDataList[i].data.toDouble()/1000)
-                        }
-                        else if (historyKind == 3) {
-                            dataSend = AaruyNumberUtils.getDotThreeString(historyDataList[i].delayBolus.toDouble()/1000)
-                        }
-                        else if (historyKind == 205) {
-                            dataSend = AaruyNumberUtils.getDotThreeString(historyDataList[i].data.toDouble()/100)
-                        }
-
-                        api?.uploadPumpHistory(
-                            (historyDataList[i].id+lastUploadIndex).toString(),
-                            AaruyType.getTypeString(aaruyPump.pumpType),
-                            historyDataList[i].blueName,
-                            recordSeconds.toString(),
-                            historyKind.toString(),
-                            dataSend,
-                            historySeconds.toString()
-                        )?.enqueue(
-                            object : retrofit2.Callback<ApiResponse> {
-                                override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                                    aapsLogger.debug(LTag.PUMPCOMM, "logs upload Success ApiResponse id is ${response.body()?.data}")
-                                    if (response.body() != null) {
-                                        val apiResponse = response.body() as ApiResponse
-                                        if (apiResponse.data.index == 0) {
-                                            if (!uploadLogOk) {
-                                                uploadLogCont = 0
-                                                uploadLogLastCont = 0
-                                                uploadLogNum = 0
-                                                uploadLogOk = true
-                                                if (::jobUploadDayData.isInitialized) {
-                                                    jobUploadDayData.cancel()
-                                                }
-                                            }
-                                        } else {
-                                            uploadLogCont++
-                                            if (apiResponse.data.index >= lastUploadIndex) {
-                                                preferences.put(AaruyIntKey.PumpUploadIndex, apiResponse.data.index - lastUploadIndex)
-                                            }
-                                            if (uploadLogCont == uploadLogNum && !uploadLogOk) {
-                                                uploadLogCont = 0
-                                                uploadLogLastCont = 0
-                                                uploadLogNum = 0
-                                                uploadLogOk = true
-                                                if (::jobUploadDayData.isInitialized) {
-                                                    jobUploadDayData.cancel()
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                                    uploadLogOk = true
-                                    if (::jobUploadDayData.isInitialized) {
-                                        jobUploadDayData.cancel()
-                                    }
-                                    aapsLogger.error(LTag.PUMPCOMM, "api uploadPumpLogs failed")
-                                    t.printStackTrace()
-                                    isFailure = true
-                                }
-                            }
-                        )
-
-                        if (isFailure)
-                            break
-                        delay(7000)
-                    }
-                } catch (e: Exception) {
-                    isFailure = true
-                    uploadLogOk = true
-                    if (::jobUploadDayData.isInitialized) {
-                        jobUploadDayData.cancel()
-                    }
-                    aapsLogger.error("Unhandled exception", e)
-                }
-            } else {
-                uploadLogOk = true
-                if (::jobUploadDayData.isInitialized) {
-                    jobUploadDayData.cancel()
-                }
-            }
-        }
-        aapsLogger.debug(LTag.PUMPCOMM, "logs upload end")
-        return true
-    }
-
-    private fun uploadCGMsLog(): Boolean {
-        if (!uploadCgmOk)
-            return false
-
-        uploadCgmOk = false
-        //api send
-        jobUploadCgmData = CoroutineScope(Dispatchers.Default).launch {
-            aapsLogger.debug(LTag.PUMPCOMM, "cgms upload start")
-            val retrofit = aaruyLogUploader.getRetrofitInstance()
-            val api = retrofit?.create(AaruyApiService::class.java)
-            val startTime: Long =
-                preferences.get(AaruyLongKey.PumpCgmTime)
-            val endTime: Long = dateUtil.now()
-            var isFailure: Boolean = false
-            val historyCgmList = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true)
-                .blockingGet()
-
-            if (historyCgmList.isNotEmpty() && startTime < endTime) {
-                try {
-                    uploadCgmStartTime = historyCgmList.last().timestamp + 1000
-                    uploadCgmNum = historyCgmList.size
-                    for (i in historyCgmList.indices) {
-                        aapsLogger.debug(LTag.PUMPCOMM, "historyCgmList[i] is ${historyCgmList[0]}")
-                        api?.uploadCGMsHistory(
-                            getShortDeviceName(),
-                            "GJ",
-                            "GJ001",
-                            "123456",
-                            (historyCgmList[i].timestamp/1000).toString(),
-                            (historyCgmList[i].value/18).toString()  // 转成mmol/L
-                        )?.enqueue(
-                            object : retrofit2.Callback<ApiCgmResponse> {
-                                override fun onResponse(call: Call<ApiCgmResponse>, response: Response<ApiCgmResponse>) {
-                                    // aapsLogger.debug(LTag.PUMPCOMM, "logs upload Success ApiCgmResponse id is ${response.body()?.data}")
-                                    if (response.body() != null) {
-                                        val apiResponse = response.body() as ApiCgmResponse
-                                        if (apiResponse.data.record_time.toInt() == 0) {
-                                            if (!uploadCgmOk) {
-                                                uploadCgmCont = 0
-                                                uploadCgmLastCont = 0
-                                                uploadCgmNum = 0
-                                                uploadCgmOk = true
-                                                if (::jobUploadCgmData.isInitialized) {
-                                                    jobUploadCgmData.cancel()
-                                                }
-                                            }
-                                        } else {
-                                            uploadCgmCont++
-                                            if (uploadCgmCont == uploadCgmNum && !uploadCgmOk) {
-                                                preferences.put(AaruyLongKey.PumpCgmTime, uploadCgmStartTime)
-                                                uploadCgmCont = 0
-                                                uploadCgmLastCont = 0
-                                                uploadCgmNum = 0
-                                                uploadCgmOk = true
-                                                if (::jobUploadCgmData.isInitialized) {
-                                                    jobUploadCgmData.cancel()
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<ApiCgmResponse>, t: Throwable) {
-                                    aapsLogger.error(LTag.PUMPCOMM, "api uploadPumpLogs failed")
-                                    t.printStackTrace()
-                                    isFailure = true
-                                }
-                            }
-                        )
-
-                        if (isFailure)
-                            break
-
-                        delay(70000)
-                    }
-                } catch (e: Exception) {
-                    aapsLogger.error("Unhandled exception", e)
-                }
-            }
-        }
-        aapsLogger.debug(LTag.PUMPCOMM, "logs upload end")
-        return true
     }
 }

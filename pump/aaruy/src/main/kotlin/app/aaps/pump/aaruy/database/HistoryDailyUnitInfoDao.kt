@@ -23,8 +23,6 @@ interface HistoryDailyUnitInfoDao {
     @Query("SELECT * FROM history_daily_unit_info ORDER BY id DESC")
     fun queryAll(): List<HistoryDailyUnitInfo>
 
-    @Query("SELECT * FROM history_daily_unit_info WHERE isUploaded=:isUploaded ORDER BY id DESC")
-    fun queryAllDataByIsUploaded(isUploaded:Boolean): List<HistoryDailyUnitInfo>
 
     @Query("SELECT * FROM history_daily_unit_info ORDER BY id DESC")
     fun queryLiveDataList(): LiveData<MutableList<HistoryDailyUnitInfo>>

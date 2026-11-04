@@ -29,11 +29,7 @@ interface HistoryUnitInfoDao {
     @Query("SELECT * FROM history_unit_info ORDER BY id DESC")
     fun queryAll(): List<HistoryUnitInfo>
 
-    @Query("SELECT * FROM history_unit_info WHERE id BETWEEN :startId AND (SELECT MAX(id) FROM history_unit_info) ORDER BY id ASC")
-    suspend fun getItemsFromIdToMax(startId: Int): List<HistoryUnitInfo>
 
-    @Query("SELECT * FROM history_unit_info WHERE isUploaded=:isUploaded ORDER BY id DESC")
-    fun queryAllDataByIsUploaded(isUploaded:Boolean): List<HistoryUnitInfo>
 
     @Query("SELECT * FROM history_unit_info ORDER BY id DESC")
     fun queryLiveDataList(): LiveData<List<HistoryUnitInfo>>

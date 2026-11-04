@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.Aaruy
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -121,7 +120,7 @@ class AaruyPlugin @Inject constructor(
     ownPreferences = listOf(AaruyStringKey::class.java, AaruyIntKey::class.java, AaruyLongKey::class.java, AaruyDoubleKey::class.java,
                             AaruyBooleanKey::class.java, AaruyIntentKey::class.java),
     aapsLogger, rh, preferences, commandQueue
-), Pump, Aaruy, PluginConstraints, OwnDatabasePlugin {
+), Pump, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var aaruyService: AaruyService? = null
@@ -592,7 +591,7 @@ class AaruyPlugin @Inject constructor(
     }
 
     // Aaruy Pump
-    override fun clearAlarms(): PumpEnactResult {
+    fun clearAlarms(): PumpEnactResult {
         if (!isInitialized()) return  pumpEnactResultProvider.get().success(false).enacted(false)
         val connectionOK = aaruyService?.clearAlarms() ?: false
         return  pumpEnactResultProvider.get().success(connectionOK)
