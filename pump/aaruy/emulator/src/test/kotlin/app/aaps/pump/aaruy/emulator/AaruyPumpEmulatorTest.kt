@@ -127,9 +127,9 @@ class AaruyPumpEmulatorTest {
         val started = startBolus(100).single()
         assertEquals(AaruyPumpEmulator.STATUS_BOLUS, status(started))
 
-        // The default bolus step is 25 thousandths, one step every 2 seconds.
+        // The default bolus step is 50 thousandths, the first at once and then one every 2 seconds.
         val messages = advance(4 * AaruyPumpEmulator.BOLUS_STEP_MS)
-        assertEquals(listOf(25, 50, 75, 100), messages.filter { status(it) == AaruyPumpEmulator.STATUS_BOLUS && bolusState(it) == 0 }.map { bolusNow(it) })
+        assertEquals(listOf(50, 100), messages.filter { status(it) == AaruyPumpEmulator.STATUS_BOLUS && bolusState(it) == 0 }.map { bolusNow(it) })
         val statusAfter = messages.takeLast(2)
         assertEquals(2, bolusState(statusAfter[0]))
         assertEquals(AaruyPumpEmulator.STATUS_BASAL, status(statusAfter[1]))
@@ -163,7 +163,7 @@ class AaruyPumpEmulatorTest {
         val entries = log.payload.size / 12
         assertEquals(PARAM_HISTORY_LOG, log.paramId)
         val bolus = (0 until entries).map { 5 + it * 12 }.first { log.payload[it + 4].toInt() == 2 }
-        assertEquals(50, log.reader().getShort(bolus + 5).toInt())
+        assertEquals(150, log.reader().getShort(bolus + 5).toInt())
     }
 
     @Test
@@ -172,8 +172,8 @@ class AaruyPumpEmulatorTest {
         assertEquals(AaruyPumpEmulator.STATUS_TEMP_BASAL, status(started))
         assertEquals(1500, started.reader().getShort(8).toInt() and 0xFFFF)
 
-        assertEquals(0, advance(29 * 60_000L).size)
-        val ended = advance(2 * 60_000L).single()
+        assertEquals(0, advance(29 * 60_000L).count { it.paramId != PARAM_REAL_DATA })
+        val ended = advance(2 * 60_000L).single { it.paramId != PARAM_REAL_DATA }
         assertEquals(AaruyPumpEmulator.STATUS_BASAL, status(ended))
     }
 
@@ -224,14 +224,61 @@ class AaruyPumpEmulatorTest {
     fun positionFillsTheReservoir() {
         emulator.reservoir = 1.0
         assertEquals(AaruyPumpEmulator.STATUS_POSITION, status(write(PARAM_TOTAL_CONTROL, control(5)).single()))
-        assertEquals(16, advance(AaruyPumpEmulator.TRANSITION_MS)[0].payload[0].toInt())
-        assertEquals(300.0, emulator.reservoir, 0.01)
+        val messages = advance(AaruyPumpEmulator.TRANSITION_MS)
+        assertEquals(AaruyPumpEmulator.STATUS_STOPPED, status(messages[0]))
+        assertEquals(22, messages[1].payload[0].toInt())
+        assertEquals(299.0, emulator.reservoir, 0.01)
     }
 
     @Test
-    fun pushAirReportsLiquid() {
+    fun pushAirEndsStoppedWithNoEvent() {
         assertEquals(AaruyPumpEmulator.STATUS_DRAIN, status(write(PARAM_TOTAL_CONTROL, control(4, 1)).single()))
-        assertEquals(25, advance(AaruyPumpEmulator.TRANSITION_MS)[0].payload[0].toInt())
+        assertEquals(AaruyPumpEmulator.STATUS_STOPPED, status(advance(AaruyPumpEmulator.TRANSITION_MS).single()))
+    }
+
+    @Test
+    fun timeSyncSendsAllSettingsAsARealPump() {
+        val answer = write(PARAM_SYNC_TIME, buffer(4).putInt(1).array())
+        assertEquals(listOf(0, 0, 1, 2, 3, 4, 6, 15), answer.map { it.paramId })
+    }
+
+    @Test
+    fun basalIsLoggedWhenItEndsWithItsRealMinutes() {
+        now += 3 * 60_000L
+        emulator.tick()
+        startBolus(100)
+        val log = write(PARAM_HISTORY, buffer(8).putInt(0).array()).single()
+        val entry = log.reader()
+        assertEquals(1, entry.getShort(0).toInt())
+        assertEquals(0, entry.get(5 + 4).toInt())
+        assertEquals(3, entry.getShort(5 + 7).toInt())
+    }
+
+    @Test
+    fun theLastHistoryEntryComesAgainWhenAskedFromItsTime() {
+        startBolus(100)
+        val time = write(PARAM_HISTORY, buffer(8).putInt(0).array()).single().reader().getInt(5)
+        val again = write(PARAM_HISTORY, buffer(8).putInt(time).array()).single()
+        assertEquals(1, again.reader().getShort(0).toInt())
+    }
+
+    @Test
+    fun aStopWithNoBolusAnswersWithTheStatus() {
+        assertEquals(AaruyPumpEmulator.STATUS_BASAL, status(write(PARAM_BOLUS_CONTROL, control(0)).single()))
+    }
+
+    @Test
+    fun batteryAndSignalComeEveryMinute() {
+        assertEquals(0, advance(30_000L).size)
+        assertEquals(PARAM_REAL_DATA, advance(31_000L).single().paramId)
+    }
+
+    @Test
+    fun stoppedForLongGivesOneWarning() {
+        write(PARAM_TOTAL_CONTROL, control(3))
+        advance(AaruyPumpEmulator.TRANSITION_MS)
+        val warnings = advance(20 * 60_000L).filter { it.paramId == PARAM_ERROR }
+        assertEquals(AaruyPumpEmulator.WARNING_STOPPED_TOO_LONG and 0xFF, warnings.single().payload[0].toInt())
     }
 
     @Test
@@ -286,8 +333,8 @@ class AaruyPumpEmulatorTest {
     }
 
     @Test
-    fun closedModeIsEchoed() {
-        assertEquals(1, write(PARAM_CLOSED_MODE, byteArrayOf(1)).single().payload[0].toInt())
+    fun closedModeGetsNoAnswerAsOnARealPump() {
+        assertEquals(0, write(PARAM_CLOSED_MODE, byteArrayOf(1)).size)
         assertEquals(1, emulator.closedMode)
     }
 
@@ -297,6 +344,7 @@ class AaruyPumpEmulatorTest {
         const val PARAM_BASIC = 0
         const val PARAM_BASAL = 1
         const val PARAM_BOLUS_SETTING = 4
+        const val PARAM_SYNC_TIME = 5
         const val PARAM_STATUS = 6
         const val PARAM_BASAL_CONTROL = 7
         const val PARAM_TEMP_BASAL = 8

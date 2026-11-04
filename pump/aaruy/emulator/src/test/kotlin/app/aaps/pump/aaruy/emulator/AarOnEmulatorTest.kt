@@ -172,7 +172,7 @@ class AarOnEmulatorTest {
     fun tempBasalStartsAndCancels() {
         log.clear()
         util.setClosedMode(1)
-        waitFor("closed mode") { logged("onPumpClosedMode(1") }
+        waitFor("closed mode") { emulator.closedMode == 1 }
         util.startTempBasal(1.5, 30)
         waitFor("temp running") { log.any { it.contains("runningStatus=2") && it.contains("curValue=1.5") } }
         util.cancelTempBasal()

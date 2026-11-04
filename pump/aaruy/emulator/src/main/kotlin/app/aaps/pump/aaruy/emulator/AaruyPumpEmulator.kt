@@ -11,9 +11,10 @@ import kotlin.math.min
  * The pump, without hardware: takes frames and answers with frames. [tick] moves time: basal and bolus
  * delivery, temp basal end, and the messages the pump sends by itself.
  *
- * Frame layouts come from the vendor AAR, so they are known. How the firmware behaves is not in the AAR.
- * It is inferred from what the AAR and the driver expect, and each such place says UNVERIFIED. Check those
- * against a capture from a real pump.
+ * Frame layouts come from the vendor AAR, so they are known. The behaviour comes from a capture of a real pump,
+ * firmware 1.1.0.01, with no reservoir fitted. What the capture did not show is inferred from what the AAR and
+ * the driver expect, and each such place says UNVERIFIED. One difference is on purpose: a real pump starts stopped
+ * and needs the Replace flow, this one starts on basal so that a test does not have to do that first.
  *
  * @param keyProvider the AES key. It is read from the AAR, so it is not stored in this source.
  * @param clock time in ms. Tests give their own.
@@ -30,7 +31,8 @@ class AaruyPumpEmulator(
         val delayMinutes: Int,
         val resumeStatus: Int,
         var delivered: Int = 0,
-        var lastStepAt: Long = startedAt,
+        // The first step comes at once: a real pump reports 0.05 U about 100 ms after it reports 0.
+        var lastStepAt: Long = startedAt - BOLUS_STEP_MS,
         var delayedDelivered: Int = 0
     ) {
 
@@ -39,7 +41,7 @@ class AaruyPumpEmulator(
 
     private class TempBasal(val startedAt: Long, val rate: Int, val minutes: Int)
 
-    private class History(val time: Int, val type: Int, val data: Int, val injectTime: Int = 0, val delayBolus: Int = 0)
+    private class History(val time: Int, val type: Int, val data: Int, val injectTime: Int, val delayBolus: Int, val reserved: Int)
 
     /** Running status. Same numbers as `AaruyPumpState`. */
     var runningStatus = STATUS_BASAL
@@ -58,6 +60,15 @@ class AaruyPumpEmulator(
     private var lastSequence: Short = 0
     private var basicParam = defaultBasicParam()
     private var basalSetting: ByteArray? = null
+    private var bolusSettingEcho = ByteArray(BOLUS_SETTING_SIZE)
+    private var segmentStart = pumpTime()
+    private var stoppedAt = pumpTime()
+    private var historyCount = 0
+    private var lastRealDataAt = clock()
+    private var stoppedWarningSent = false
+    private val basalByDay = HashMap<Long, Double>()
+    private var transitionUnits = 0.0
+    private var eventBeforeStatus = false
     private var schedule = listOf(0 to DEFAULT_BASAL)
     private var bolusSetting: BolusSetting? = null
     private var bolus: Bolus? = null
@@ -102,7 +113,7 @@ class AaruyPumpEmulator(
 
     private fun handleRead(paramId: Short): List<ByteArray> = when (paramId) {
         PARAM_BASIC        -> listOf(message(PARAM_BASIC, basicParam))
-        PARAM_BASAL        -> listOfNotNull(basalSetting?.let { message(PARAM_BASAL, it) })
+        PARAM_BASAL        -> listOf(message(PARAM_BASAL, basalSetting ?: defaultBasalSlot(0)))
         PARAM_STATUS       -> listOf(statusMessage())
         PARAM_REAL_DATA    -> listOf(message(PARAM_REAL_DATA, byteArrayOf(battery.toByte(), BLE_SIGNAL)))
         PARAM_SERIAL       -> listOf(message(PARAM_SERIAL, buffer(2).putShort(lastSequence).array()))
@@ -124,10 +135,11 @@ class AaruyPumpEmulator(
             repeat(3) { reader.short }
             val now = reader.short.unsigned()
             bolusSetting = BolusSetting(total, now, reader.short.unsigned())
-            emptyList()
+            bolusSettingEcho = payload.copyOf()
+            listOf(message(PARAM_BOLUS_SETTING, payload))
         }
 
-        PARAM_SYNC_TIME     -> emptyList()
+        PARAM_SYNC_TIME     -> allSettings()
         PARAM_BASAL_CONTROL -> handleBasalControl(payload)
         PARAM_TEMP_BASAL    -> handleTempBasal(payload)
         PARAM_BOLUS_CONTROL -> handleBolusControl(payload)
@@ -135,12 +147,29 @@ class AaruyPumpEmulator(
         PARAM_HISTORY       -> handleHistory(payload)
         PARAM_CONFIRM       -> listOf(message(PARAM_CONFIRM, byteArrayOf(payload.firstOrNull() ?: 0)))
         PARAM_CLOSED_MODE   -> {
+            // A real pump sends no answer to this one.
             closedMode = payload.firstOrNull()?.toInt() ?: 0
-            listOf(message(PARAM_CLOSED_MODE, byteArrayOf(closedMode.toByte())))
+            emptyList()
         }
 
         else                -> emptyList()
     }
+
+    /** A real pump answers a time sync with all it has, which also moves the queue of the client. */
+    private fun allSettings(): List<ByteArray> = listOf(
+        message(PARAM_BASIC, basicParam),
+        message(PARAM_BASIC, basicParam),
+        message(PARAM_BASAL, basalSetting ?: defaultBasalSlot(0)),
+        message(PARAM_BASAL_SLOT_2, defaultBasalSlot(1)),
+        message(PARAM_BASAL_SLOT_3, defaultBasalSlot(2)),
+        message(PARAM_BOLUS_SETTING, bolusSettingEcho),
+        statusMessage(),
+        message(PARAM_REAL_DATA, byteArrayOf(battery.toByte(), BLE_SIGNAL))
+    )
+
+    /** Seen on a real pump before any profile is set: 0.5 U/h all day, 12 U a day. */
+    private fun defaultBasalSlot(index: Int): ByteArray =
+        buffer(15).putInt(0).put(3).put(index.toByte()).putShort(0).putShort(120).put(0).put(1).put(0).putShort(DEFAULT_BASAL.toShort()).array()
 
     /** UNVERIFIED: 6 means accepted, as the AAR treats any other value as "unbind". If the pump refuses a second phone is not known, so it always accepts. */
     private fun handleReportDevice(): List<ByteArray> {
@@ -166,7 +195,7 @@ class AaruyPumpEmulator(
         val action = payload.getOrNull(ACTION_OFFSET)?.toInt()
         if (action != ACTION_START || runningStatus != STATUS_NOT_RUNNING) return listOf(error(ALARM_RUN_BASAL))
         runningStatus = STATUS_BASAL
-        addHistory(HISTORY_BASAL, currentBasal())
+        segmentStart = pumpTime()
         return listOf(statusMessage())
     }
 
@@ -178,11 +207,12 @@ class AaruyPumpEmulator(
         val minutes = reader.short.unsigned()
         if (action == ACTION_START) {
             if (runningStatus != STATUS_BASAL) return listOf(error(ALARM_RUN_TEMP_BASAL))
+            endSegment()
             tempBasal = TempBasal(clock(), rate, minutes)
             runningStatus = STATUS_TEMP_BASAL
-            addHistory(HISTORY_TEMP_BASAL, rate, injectTime = minutes)
         } else {
             if (runningStatus != STATUS_TEMP_BASAL) return emptyList()
+            endSegment()
             tempBasal = null
             runningStatus = STATUS_BASAL
         }
@@ -194,16 +224,24 @@ class AaruyPumpEmulator(
         if (action == ACTION_START) {
             val setting = bolusSetting
             if (setting == null || (runningStatus != STATUS_BASAL && runningStatus != STATUS_TEMP_BASAL)) return listOf(error(ALARM_RUN_BOLUS))
+            endSegment()
             bolus = Bolus(clock(), setting.now, setting.total - setting.now, setting.delayMinutes, runningStatus)
             bolusSetting = null
+            bolusSettingEcho = buffer(BOLUS_SETTING_SIZE).putInt(pumpTime()).array()
             runningStatus = STATUS_BOLUS
             return listOf(statusMessage())
         }
         // Seen on a real pump (firmware 1.1.0.01): status 3 goes straight back to 1, with no message that gives the amount.
-        val running = bolus ?: return emptyList()
+        val running = bolus
+        if (running == null) {
+            // A stop with no bolus still ends the basal segment: a real pump logged one for each stop it got.
+            endSegment()
+            return listOf(statusMessage())
+        }
         addBolusHistory(running)
         bolus = null
         runningStatus = running.resumeStatus
+        segmentStart = pumpTime()
         return listOf(statusMessage())
     }
 
@@ -215,20 +253,27 @@ class AaruyPumpEmulator(
                 listOf(statusMessage())
             }
 
-            CONTROL_REPLACE       -> startTransition(STATUS_REWIND, STATUS_STOPPED, HISTORY_REWIND, errorPayload(EVENT_REWIND_DONE, 0))
+            CONTROL_REPLACE       -> {
+                eventBeforeStatus = true
+                startTransition(STATUS_REWIND, HISTORY_REWIND, errorPayload(EVENT_REWIND_DONE, 0))
+            }
 
-            CONTROL_PUSH_AIR      -> startTransition(STATUS_DRAIN, STATUS_NOT_RUNNING, null, errorPayload(EVENT_LIQUID_SHOW, 0))
+
+            CONTROL_PUSH_AIR      -> startTransition(STATUS_DRAIN, null, null)
 
             CONTROL_PUSH_POSITION -> {
                 reservoir = FULL_RESERVOIR
                 lowReservoirSent = false
                 noReservoirSent = false
-                startTransition(STATUS_POSITION, STATUS_NOT_RUNNING, HISTORY_POSITION, errorPayload(EVENT_POSITION_DONE, 0))
+                transitionUnits = POSITION_UNITS
+                eventBeforeStatus = false
+                startTransition(STATUS_POSITION, HISTORY_POSITION, errorPayload(EVENT_POSITION_DONE, 0))
             }
 
             CONTROL_RESTORE       -> {
                 if (runningStatus != STATUS_STOPPED) return emptyList()
                 runningStatus = STATUS_NOT_RUNNING
+                stoppedWarningSent = false
                 listOf(statusMessage())
             }
 
@@ -236,14 +281,19 @@ class AaruyPumpEmulator(
         }
     }
 
-    /** UNVERIFIED: how long these take. The real motor is likely slower. */
-    private fun startTransition(during: Int, next: Int, historyType: Int?, doneEvent: ByteArray): List<ByteArray> {
+    /**
+     * All three end stopped. With no reservoir a real pump reports the end in 120 to 240 ms.
+     * UNVERIFIED: how long they take with a reservoir.
+     */
+    private fun startTransition(during: Int, historyType: Int?, doneEvent: ByteArray?): List<ByteArray> {
+        endSegment()
         bolus = null
         tempBasal = null
         runningStatus = during
-        transitionNext = next
+        transitionNext = STATUS_STOPPED
         transitionEndsAt = clock() + TRANSITION_MS
-        transitionMessage = message(PARAM_ERROR, doneEvent)
+        transitionMessage = doneEvent?.let { message(PARAM_ERROR, it) }
+        stoppedAt = pumpTime()
         historyType?.let { addHistory(it, 0) }
         return listOf(statusMessage())
     }
@@ -257,14 +307,15 @@ class AaruyPumpEmulator(
 
     /** UNVERIFIED: the page size. An empty answer has page 0 of 0, which the driver has its own branch for. */
     private fun logMessages(start: Int): List<ByteArray> {
-        val items = history.filter { it.time.toLong() and 0xFFFFFFFFL > start.toLong() and 0xFFFFFFFFL }
+        // The start is included: a real pump sends the last entry again.
+        val items = history.filter { it.time.toLong() and 0xFFFFFFFFL >= start.toLong() and 0xFFFFFFFFL }
         val pages = ceil(items.size / HISTORY_PAGE_SIZE.toDouble()).toInt()
         if (pages == 0) return listOf(message(PARAM_HISTORY_LOG, buffer(HISTORY_HEADER).putShort(0).put(0).put(0).put(0).array()))
         return items.chunked(HISTORY_PAGE_SIZE).mapIndexed { page, chunk ->
             val out = buffer(HISTORY_HEADER + chunk.size * HISTORY_ITEM_SIZE)
                 .putShort(items.size.toShort()).put(pages.toByte()).put(page.toByte()).put(chunk.size.toByte())
             chunk.forEach {
-                out.putInt(it.time).put(it.type.toByte()).putShort(it.data.toShort()).putShort(it.injectTime.toShort()).putShort(it.delayBolus.toShort()).put(0)
+                out.putInt(it.time).put(it.type.toByte()).putShort(it.data.toShort()).putShort(it.injectTime.toShort()).putShort(it.delayBolus.toShort()).put(it.reserved.toByte())
             }
             message(PARAM_HISTORY_LOG, out.array())
         }
@@ -278,7 +329,9 @@ class AaruyPumpEmulator(
         val days = (first..today).map { day ->
             val inDay = history.filter { (it.time.toLong() and 0xFFFFFFFFL) / DAY_SECONDS == day.toLong() && it.type == HISTORY_BOLUS }
             val bolusTenths = inDay.sumOf { it.data } / 100
-            Triple(day, bolusTenths, bolusTenths)
+            val basalTenths = ((basalByDay[day.toLong()] ?: 0.0) * 10).toInt()
+            // Seen on a real pump: the total comes first, and it has the basal in it.
+            Triple(day, bolusTenths + basalTenths, bolusTenths)
         }
         val out = buffer(1 + days.size * 6).put(days.size.toByte())
         days.forEach { out.putShort(it.first.toShort()).putShort(it.second.toShort()).putShort(it.third.toShort()) }
@@ -294,6 +347,7 @@ class AaruyPumpEmulator(
         deliverBasal(elapsed)
         tempBasal?.let {
             if (runningStatus == STATUS_TEMP_BASAL && now >= it.startedAt + it.minutes * MINUTE_MS) {
+                endSegment()
                 tempBasal = null
                 runningStatus = STATUS_BASAL
                 out.add(statusMessage())
@@ -303,11 +357,23 @@ class AaruyPumpEmulator(
         if (transitionEndsAt != 0L && now >= transitionEndsAt) {
             transitionEndsAt = 0L
             runningStatus = transitionNext
-            transitionMessage?.let { out.add(it) }
+            reservoir = (reservoir - transitionUnits).coerceAtLeast(0.0)
+            transitionUnits = 0.0
+            // Seen on a real pump: a rewind sends its event before the status, a position after it.
+            val status = statusMessage()
+            val event = listOfNotNull(transitionMessage)
+            out.addAll(if (eventBeforeStatus) event + status else listOf(status) + event)
             transitionMessage = null
-            out.add(statusMessage())
         }
         out.addAll(checkReservoir())
+        if (runningStatus == STATUS_STOPPED && !stoppedWarningSent && pumpTime() - stoppedAt >= STOPPED_WARNING_SECONDS) {
+            stoppedWarningSent = true
+            out.add(error(WARNING_STOPPED_TOO_LONG))
+        }
+        if (now - lastRealDataAt >= REAL_DATA_PERIOD_MS) {
+            lastRealDataAt = now
+            out.add(message(PARAM_REAL_DATA, byteArrayOf(battery.toByte(), BLE_SIGNAL)))
+        }
         return out
     }
 
@@ -318,7 +384,9 @@ class AaruyPumpEmulator(
             STATUS_BOLUS      -> if (bolus?.resumeStatus == STATUS_TEMP_BASAL) tempBasal?.rate ?: 0 else currentBasal()
             else              -> 0
         }
-        reservoir = (reservoir - rate / 1000.0 * elapsedMs / HOUR_MS).coerceAtLeast(0.0)
+        val units = rate / 1000.0 * elapsedMs / HOUR_MS
+        reservoir = (reservoir - units).coerceAtLeast(0.0)
+        basalByDay.merge(pumpTime().toLong() / DAY_SECONDS, units, Double::plus)
     }
 
     private fun deliverBolus(running: Bolus, now: Long): List<ByteArray> {
@@ -329,7 +397,7 @@ class AaruyPumpEmulator(
             if (now >= end) out.addAll(finishBolus(running))
             return out
         }
-        // UNVERIFIED: the speed. It is from the wait the driver computes: one step every 2 seconds.
+        // Seen on a real pump: one step every 2 seconds.
         val stepUnits = bolusStepThousandths()
         while (running.delivered < running.now && now - running.lastStepAt >= BOLUS_STEP_MS) {
             running.lastStepAt += BOLUS_STEP_MS
@@ -343,23 +411,23 @@ class AaruyPumpEmulator(
 
     private fun finishBolus(running: Bolus): List<ByteArray> {
         addBolusHistory(running)
-        // UNVERIFIED: a status with state 2 says "done", and then the pump returns to basal. The driver reads state 2 as complete.
+        // Seen on a real pump: a status with state 2 says "done", and about 100 ms later it is back on basal.
         val done = statusMessage(bolusStateOverride = BOLUS_STATE_DONE)
         bolus = null
         runningStatus = running.resumeStatus
+        segmentStart = pumpTime()
         return listOf(done, statusMessage())
     }
 
     private fun addBolusHistory(running: Bolus) {
         val time = ((running.startedAt - BASE_TIME_MS) / 1000).toInt()
-        history.add(
-            History(
-                time = time,
-                type = HISTORY_BOLUS,
-                data = if (running.isExtended) running.delayedDelivered else running.delivered,
-                injectTime = if (running.isExtended) running.delayMinutes else 0,
-                delayBolus = if (running.isExtended) running.delayed else 0
-            )
+        // Seen on a real pump: the delivered amount, with the start of the bolus as the time, even after a stop.
+        addHistoryAt(
+            time = time,
+            type = HISTORY_BOLUS,
+            data = if (running.isExtended) running.delayedDelivered else running.delivered,
+            injectTime = if (running.isExtended) running.delayMinutes else 0,
+            delayBolus = if (running.isExtended) running.delayed else 0
         )
     }
 
@@ -375,10 +443,12 @@ class AaruyPumpEmulator(
         }
         if (reservoir <= 0.0 && !noReservoirSent) {
             noReservoirSent = true
+            endSegment()
             bolus?.let { addBolusHistory(it) }
             bolus = null
             tempBasal = null
             if (runningStatus in STATUS_BASAL..STATUS_BOLUS) runningStatus = STATUS_PAUSED
+            stoppedAt = pumpTime()
             out.add(error(ALARM_NO_RESERVOIR))
             out.add(statusMessage())
         }
@@ -391,8 +461,22 @@ class AaruyPumpEmulator(
         return error(code)
     }
 
-    private fun addHistory(type: Int, data: Int, injectTime: Int = 0) {
-        history.add(History(pumpTime(), type, data, injectTime))
+    private fun addHistory(type: Int, data: Int) = addHistoryAt(pumpTime(), type, data, 0, 0)
+
+    /** Seen on a real pump: `reserved` counts the entries by 4 and starts again at 64. UNVERIFIED: what its low 2 bits do. */
+    private fun addHistoryAt(time: Int, type: Int, data: Int, injectTime: Int, delayBolus: Int) {
+        history.add(History(time, type, data, injectTime, delayBolus, historyCount * 4 and 0x3F))
+        historyCount++
+    }
+
+    /** Seen on a real pump: basal and temp basal are logged when they end, with the time they started and the real minutes. */
+    private fun endSegment() {
+        val minutes = (pumpTime() - segmentStart) / 60
+        when (runningStatus) {
+            STATUS_BASAL      -> addHistoryAt(segmentStart, HISTORY_BASAL, currentBasal(), minutes, 0)
+            STATUS_TEMP_BASAL -> addHistoryAt(segmentStart, HISTORY_TEMP_BASAL, tempBasal?.rate ?: 0, minutes, 0)
+        }
+        segmentStart = pumpTime()
     }
 
     private fun bolusStepThousandths(): Int {
@@ -418,21 +502,24 @@ class AaruyPumpEmulator(
             .put(runningStatus.toByte())
         val running = bolus
         when (runningStatus) {
-            STATUS_BASAL      -> out.put(0).putShort(currentBasal().toShort()).putShort(0).putShort(0).put(0)
+            STATUS_BASAL      -> out.put(0).putShort(currentBasal().toShort()).putShort(0).putShort(0).putShort(0)
 
             STATUS_TEMP_BASAL -> {
                 val temp = tempBasal
-                val remain = if (temp == null) 0 else ((temp.startedAt + temp.minutes * MINUTE_MS - clock()) / MINUTE_MS).toInt().coerceAtLeast(0)
-                out.put(0).putShort((temp?.rate ?: 0).toShort()).putShort(remain.toShort()).putShort(0).put(0)
+                // Seen on a real pump: 30 minutes shows as 1800, so the remaining time is in seconds.
+                val remain = if (temp == null) 0 else ((temp.startedAt + temp.minutes * MINUTE_MS - clock()) / 1000).toInt().coerceAtLeast(0)
+                out.put(TEMP_BASAL_INDEX).putShort((temp?.rate ?: 0).toShort()).putShort(remain.toShort()).putShort(0).putShort(0)
             }
 
             STATUS_BOLUS      -> {
                 val state = bolusStateOverride ?: if (running?.isExtended == true) BOLUS_STATE_EXTENDED else BOLUS_STATE_NOW
                 val delivered = if (running?.isExtended == true) running.delayedDelivered else running?.delivered ?: 0
-                out.put(state.toByte()).putShort(delivered.toShort()).putShort((running?.delayed ?: 0).toShort()).putShort(0).put(0)
+                // Seen on a real pump: the time left in seconds, so 0.5 U starts at 20 and ends at 0.
+                val left = ((running?.now ?: 0) - delivered).coerceAtLeast(0) / bolusStepThousandths() * (BOLUS_STEP_MS / 1000).toInt()
+                out.put(state.toByte()).putShort(delivered.toShort()).putShort((running?.delayed ?: 0).toShort()).putShort(left.toShort()).putShort(0)
             }
 
-            STATUS_PAUSED, STATUS_STOPPED -> out.put(0).putInt(pumpTime())
+            STATUS_NOT_RUNNING, STATUS_PAUSED, STATUS_STOPPED -> out.put(STOPPED_INDEX).putInt(stoppedAt)
         }
         return message(PARAM_STATUS, out.array())
     }
@@ -459,10 +546,11 @@ class AaruyPumpEmulator(
     private fun Short.unsigned(): Int = toInt() and 0xFFFF
 
     private fun defaultBasicParam(): ByteArray =
+        // As a real pump has it before the first connection.
         buffer(BASIC_PARAM_SIZE)
-            .putInt(0).put(1).putShort(25).putShort(2000).putShort(500).put(1)
-            .putShort(10000.toShort()).put(1).putShort(2).put(1).putShort(0).putShort(20)
-            .put(0).put(1).put(0).put(0).put(0).put(DEFAULT_PUMP_TYPE.toByte()).put(0).put(0)
+            .putInt(0).put(0).putShort(25).putShort(2000).putShort(500).put(0)
+            .putShort(10000.toShort()).put(2).putShort(4).put(0).putShort(0).putShort(20)
+            .put(0).put(0).put(0).put(0).put(0).put(DEFAULT_PUMP_TYPE.toByte()).put(0).put(0)
             .array()
 
     companion object {
@@ -483,11 +571,15 @@ class AaruyPumpEmulator(
         const val ALARM_LOW_RESERVOIR = 0x8103
         const val ALARM_NO_RESERVOIR = 0x8104
 
-        const val TRANSITION_MS = 3000L
+        const val WARNING_STOPPED_TOO_LONG = 0x8015
+
+        const val TRANSITION_MS = 200L
         const val BOLUS_STEP_MS = 2000L
 
         private const val PARAM_BASIC: Short = 0
         private const val PARAM_BASAL: Short = 1
+        private const val PARAM_BASAL_SLOT_2: Short = 2
+        private const val PARAM_BASAL_SLOT_3: Short = 3
         private const val PARAM_BOLUS_SETTING: Short = 4
         private const val PARAM_SYNC_TIME: Short = 5
         private const val PARAM_STATUS: Short = 6
@@ -525,9 +617,8 @@ class AaruyPumpEmulator(
 
         private const val ERROR_TYPE_SEQUENCE = 28
         private const val ERROR_OPERATION = 0x80
-        private const val EVENT_POSITION_DONE = 16
         private const val EVENT_REWIND_DONE = 17
-        private const val EVENT_LIQUID_SHOW = 25
+        private const val EVENT_POSITION_DONE = 22
 
         private const val BOLUS_STATE_NOW = 0
         private const val BOLUS_STATE_EXTENDED = 1
@@ -539,7 +630,7 @@ class AaruyPumpEmulator(
         private const val HISTORY_ALARM = 3
         private const val HISTORY_REWIND = 4
         private const val HISTORY_POSITION = 5
-        private const val HISTORY_PAUSE = 7
+        
         private const val HISTORY_REQUEST_DAILY = 1
         private const val HISTORY_HEADER = 5
         private const val HISTORY_ITEM_SIZE = 12
@@ -548,7 +639,13 @@ class AaruyPumpEmulator(
 
         private const val BASAL_AREAS_OFFSET = 12
         private const val BASAL_AREA_SIZE = 3
-        private const val STATUS_SIZE = 15
+        private const val STATUS_SIZE = 16
+        private const val BOLUS_SETTING_SIZE = 16
+        private const val STOPPED_INDEX: Byte = 2
+        private const val TEMP_BASAL_INDEX: Byte = 3
+        private const val POSITION_UNITS = 1.0
+        private const val STOPPED_WARNING_SECONDS = 15 * 60
+        private const val REAL_DATA_PERIOD_MS = 60_000L
         private const val BASIC_PARAM_SIZE = 32
         private const val BOLUS_STEP_OFFSET = 14
         private const val LOW_ALERT_OFFSET = 20
