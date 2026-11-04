@@ -4,7 +4,7 @@
     <string name="omnipod_common_pod_management_button_activate_pod">Activeer Pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Deactiveer Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Pod verwijderen</string>
-    <string name="omnipod_common_pod_management_discard_pod_confirmation">Als de Pod wordt verwijderd uit AAPS, kan er daarna geen communicatie meer mee plaatsvinden. Doe dit alleen als alle communicatie met de Pod blijvend mislukt. Als communicatie met de Pod nog wel mogelijk is, gebruik dan de optie <b>Pod deactiveren</b>.\n\nAls de Pod wordt verwijderd uit AAPS, moet deze ook van het lichaam worden verwijderd!</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Als de Pod wordt verwijderd uit AAPS, kan er geen communicatie meer mee plaatsvinden. Doe dit alleen als alle communicatie met de Pod blijvend mislukt. Als communicatie met de Pod nog wel mogelijk is, gebruik dan de optie <b>Pod deactiveren</b>.\n\nAls de Pod wordt verwijderd uit AAPS, moet deze ook van het lichaam worden verwijderd!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Testpieptoon afspelen</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod Historie</string>
     <!-- Omnipod - Error -->
@@ -142,7 +142,7 @@
     <string name="omnipod_common_cmd_cancel_bolus">Annuleer Bolus</string>
     <string name="omnipod_common_cmd_set_tbr">TBR instellen</string>
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annuleer TBR</string>
-    <string name="omnipod_common_cmd_discard_pod">Pod verwerpen</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod verwijderen</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod status verversen</string>
     <string name="omnipod_common_cmd_set_time">Tijd instellen</string>
     <string name="omnipod_common_cmd_configure_alerts">Configureer alarmen</string>
