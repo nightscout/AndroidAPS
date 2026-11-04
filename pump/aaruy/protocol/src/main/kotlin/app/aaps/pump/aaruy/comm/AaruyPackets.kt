@@ -61,8 +61,8 @@ internal fun Short.unsigned(): Int = toInt() and 0xFFFF
 internal fun Byte.unsigned(): Int = toInt() and 0xFF
 internal fun Int.unsigned(): Long = toLong() and 0xFFFFFFFFL
 
-/** Units to thousandths of a unit, cut and not rounded, as the pump expects. */
-internal fun Double.toThousandths(): Short = (this * 1000.0).toInt().toShort()
+/** Units to thousandths of a unit, cut and not rounded. The small addition is for values like 8.075, which give 8074.999... */
+internal fun Double.toThousandths(): Short = (this * 1000.0 + 0.000001).toInt().toShort()
 
 private fun allocate(size: Int): ByteBuffer = ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN)
 

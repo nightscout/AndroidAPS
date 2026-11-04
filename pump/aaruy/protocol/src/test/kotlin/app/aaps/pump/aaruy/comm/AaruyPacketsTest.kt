@@ -233,4 +233,17 @@ class AaruyPacketsTest {
         assertEquals(1500.toShort(), 1.5.toThousandths())
         assertEquals(1000.toShort(), 1.0009.toThousandths())
     }
+
+    @Test
+    fun floatingPointNoiseDoesNotLoseAThousandth() {
+        val wrong = ArrayList<String>()
+        for (steps in 1..1000) {
+            val expected = (steps * 25).toShort()
+            val computed = steps * 0.025
+            val fromText = "${steps * 25 / 1000}.${(steps * 25 % 1000).toString().padStart(3, '0')}".toDouble()
+            if (computed.toThousandths() != expected) wrong.add("computed $computed")
+            if (fromText.toThousandths() != expected) wrong.add("text $fromText")
+        }
+        assertEquals(emptyList<String>(), wrong)
+    }
 }
