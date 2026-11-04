@@ -64,6 +64,7 @@ import app.aaps.pump.aaruy.keys.AaruyDoubleKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
+import app.aaps.pump.aaruy.services.AaruyBLE
 import app.aaps.pump.aaruy.services.AaruyService
 import app.aaps.pump.aaruy.ui.AaruyOverviewFragment
 import app.aaps.pump.aaruy.ui.event.EventAaruyDeviceChange
@@ -107,7 +108,8 @@ class AaruyPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val aaruyHistoryDatabase: AaruyHistoryDatabase,
     private val decimalFormatter: DecimalFormatter,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val aaruyBle: AaruyBLE
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -149,6 +151,7 @@ class AaruyPlugin @Inject constructor(
                            .observeOn(aapsSchedulers.io)
                            .subscribe({ changePump() }) { fabricPrivacy.logException(it) }
         )
+        aaruyBle.startEmulatorIfRequested()
         changePump() // load device name
     }
 

@@ -14,6 +14,7 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -39,6 +40,8 @@ import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AaruyType
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.common.util.AaruySetting
+import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
+import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
@@ -48,6 +51,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import no.nordicsemi.android.ble.EmulatorGattLink
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -69,12 +73,18 @@ class AaruyBLE @Inject internal constructor(
     private val historyDailyUnitInfoDao: HistoryDailyUnitInfoDao,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val pumpSync: PumpSync,
+    private val fileListProvider: FileListProvider,
 ) {
+    private val EMULATOR_MARKER = "emulate_aaruy"
     private val TAG = "AaruyBLEService"
     val scanResultList = ArrayList<ScanResult>()
     private val handler = Handler(Looper.getMainLooper())
 
     val aaBleUtil = AABleUtil(context)
+
+    /** TEMPORARY: the emulator instead of the radio. The final hook is planned for the v4 driver. */
+    var emulatorTransport: AaruyEmulatorBleTransport? = null
+        private set
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var sendBasalsInfoOk = false
@@ -134,7 +144,7 @@ class AaruyBLE @Inject internal constructor(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+        if (emulatorTransport == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
             ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
@@ -164,7 +174,7 @@ class AaruyBLE @Inject internal constructor(
         }
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
-        connectDeviceName = device.name
+        connectDeviceName = if (emulatorTransport != null) AaruyEmulatorBleTransport.DEVICE_NAME else device.name
         connectDevice(device)
 
         isConnected = false
@@ -183,7 +193,7 @@ class AaruyBLE @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+        if (emulatorTransport == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
@@ -245,7 +255,33 @@ class AaruyBLE @Inject internal constructor(
     fun connectDevice(device: BluetoothDevice) {
         aapsLogger.warn(LTag.PUMPCOMM, "------------------>connectDevice device = $device")
         listenerReceiveData()
-        aaBleUtil.bindDevice(device)
+        if (emulatorTransport != null) connectWithoutBonding(device) else aaBleUtil.bindDevice(device)
+    }
+
+    /**
+     * Starts the emulator if the file `emulate_aaruy` is in the AAPS extra folder, as for the other pump emulators.
+     * It also sets a pump address, because the emulator replaces the scan and pairing screen.
+     */
+    fun startEmulatorIfRequested() {
+        if (emulatorTransport != null || fileListProvider.ensureExtraDirExists()?.findFile(EMULATOR_MARKER) == null) return
+        aapsLogger.warn(LTag.PUMPCOMM, "Aaruy pump EMULATOR is active. No insulin is delivered.")
+        val emulator = AaruyPumpEmulator(keyProvider = { readAarKey() })
+        val transport = AaruyEmulatorBleTransport(emulator)
+        emulatorTransport = transport
+        EmulatorGattLink.activate(transport)
+        preferences.put(AaruyStringKey.MacAddress, AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        preferences.put(AaruyStringKey.PumpBoundAddress, AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        preferences.put(AaruyStringKey.PumpName, AaruyEmulatorBleTransport.DEVICE_NAME)
+    }
+
+    /** The key is read from the AAR, so it is not in this source. */
+    private fun readAarKey(): ByteArray =
+        AABleUtil::class.java.getDeclaredField("key").apply { isAccessible = true }.get(aaBleUtil) as ByteArray
+
+    /** `AABleUtil.bindDevice` asks Android to bond an unbonded device, which cannot happen without a radio. */
+    private fun connectWithoutBonding(device: BluetoothDevice) {
+        val manager = AABleUtil::class.java.getDeclaredField("myBleManager").apply { isAccessible = true }.get(aaBleUtil)
+        manager.javaClass.getMethod("c", BluetoothDevice::class.java).invoke(manager, device)
     }
 
     private fun listenerReceiveData() {
