@@ -33,7 +33,6 @@ dependencies {
     implementation(project(":shared:impl"))
 
     implementation("no.nordicsemi.android.support.v18:scanner:1.6.0")
-    implementation("no.nordicsemi.android:ble-ktx:2.7.2")
     implementation(libs.com.google.code.gson)
     implementation(files("libs/mylibrary-release.aar"))
 
