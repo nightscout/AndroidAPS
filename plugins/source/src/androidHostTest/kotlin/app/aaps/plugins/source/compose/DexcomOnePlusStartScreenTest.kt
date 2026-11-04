@@ -21,6 +21,7 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScannerStub
 import app.aaps.plugins.source.DexcomOnePlusHost
 import app.aaps.plugins.source.DexcomOnePlusPlugin
 import app.aaps.plugins.source.SourceStringIds
+import app.aaps.plugins.source.SourceStrings
 import app.aaps.plugins.source.SourceStringsValues
 import org.junit.Rule
 import org.junit.Test
@@ -66,6 +67,7 @@ class DexcomOnePlusStartScreenTest {
                 onOpenPromote = {},
                 onStagingDriver = if (twoSlots) ({ error("not reached in this test") }) else null,
                 onSensorSessionStarted = { _, _ -> },
+                applicatorScanner = null,
             )
         }
     }
@@ -155,6 +157,11 @@ class DexcomOnePlusStartScreenTest {
         override fun alert(message: String) = Unit
         override fun screenScanner(): OnePlusBleScanner = OnePlusBleScannerStub()
         override fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem> = emptyList()
+        override fun openScreen(screen: DexcomOnePlusHost.Screen) = Unit
+        override suspend fun driverLog(): DexcomOnePlusHost.DriverLog =
+            DexcomOnePlusHost.DriverLog(emptyList(), SourceStrings.dexcom_oneplus_log_note_file)
+
+        override fun shareLog(text: String) = Unit
     }
 
     /** An empty slot store in memory, so the screen starts with no sensor remembered. */

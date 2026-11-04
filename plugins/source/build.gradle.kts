@@ -52,6 +52,14 @@ kotlin {
                 implementation(libs.androidx.compose.runtime)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.androidx.work.runtime)
+
+                // The camera that reads the Dexcom ONE+ / G7 applicator barcode on the start screen.
+                // The same CameraX and ZXing versions as the client set-up QR scanner of :plugins:sync.
+                implementation(libs.androidx.camera.camera2)
+                implementation(libs.androidx.camera.core)
+                implementation(libs.androidx.camera.lifecycle)
+                implementation(libs.androidx.camera.view)
+                implementation(libs.com.google.zxing.core)
             }
         }
 

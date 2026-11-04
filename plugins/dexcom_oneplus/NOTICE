@@ -151,6 +151,18 @@ The OEM device-profile abstraction (oem/) and the Android GATT plumbing bulk of
 gatt/OnePlusGattClientAndroid.kt are original AAPS implementation; only the
 protocol choreography within them is derived (see sections 1 and 2).
 
+Ideas taken from AndroidAPS pull request #5397 (Dexcom G7 direct, author
+t1dude), https://github.com/nightscout/AndroidAPS/pull/5397, commit
+bec1b16ba20ec646d459a1c724ad41419985b117. That code is AndroidAPS code under the
+same AGPL-3 license as this tree; none of its Trio (G7SensorKit, MIT) protocol
+code or Trio sounds are used here. Written again on top of this driver, not
+copied:
+  - :plugins:source CameraApplicatorScanner.kt: the applicator Data Matrix scan
+    (PR file cgm/dexcomg7/src/.../ui/G7BarcodeScanner.kt), in particular the
+    "callback returns true when the code was wanted, then stop" contract. The
+    camera code itself follows the client QR scanner of :plugins:sync
+    (QrScanner.android.kt).
+
 
 -------------------------------------------------------------------------------
 Reviewer verification points (not legal advice — maintainer/counsel to confirm)

@@ -40,7 +40,7 @@ class DexcomOnePlusPluginVisibilityTest : TestBase() {
     @BeforeEach
     fun setup() {
         plugin = DexcomOnePlusPlugin(
-            rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
+            rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context) { error("the log is not read here") }, persistenceLayer,
             mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus
         )
     }

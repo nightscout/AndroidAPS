@@ -43,7 +43,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseWatcher
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
 import app.aaps.plugins.dexcomoneplus.session.OnePlusCalibrationGate
-import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.plugins.source.compose.DexcomOnePlusComposeContent
 import app.aaps.plugins.source.keys.DexcomOnePlusBooleanKey
 import app.aaps.plugins.source.keys.DexcomOnePlusIntKey
 import app.aaps.plugins.source.keys.DexcomOnePlusIntentKey
@@ -106,8 +106,10 @@ class DexcomOnePlusPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
         // No `showInList` call: the plugin is listed in every build, like the other BG sources.
-        .composeContent { plugin ->
-            BgSourceComposeContent(
+        // The readings list every BG source shows, with a sensor button in its toolbar that opens the
+        // status screen and from there the driver log.
+        .composeContent { _ ->
+            DexcomOnePlusComposeContent(
                 title = rh.gs(SourceStrings.dexcom_oneplus_native),
             )
         }
@@ -358,7 +360,8 @@ class DexcomOnePlusPlugin @Inject constructor(
         key = "dexcom_oneplus_settings",
         title = SourceStrings.dexcom_oneplus_native,
         summary = SourceStrings.dexcom_oneplus_plugin_summary,
-        // The three screen buttons come from the host, because opening a screen needs a Context.
+        // The start and warm-up buttons come from the host, because opening a screen needs a Context.
+        // Status is the sensor button of the plugin tab instead.
         items = host.screenItems(this) + listOf(
             DexcomOnePlusBooleanKey.SendCalibrationToSensor,
             DexcomOnePlusBooleanKey.AutoPromote,

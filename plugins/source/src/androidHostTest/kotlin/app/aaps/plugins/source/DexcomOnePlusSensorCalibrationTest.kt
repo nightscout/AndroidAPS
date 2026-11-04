@@ -57,7 +57,7 @@ class DexcomOnePlusSensorCalibrationTest : TestBase() {
         whenever(context.applicationContext).thenReturn(context)
         whenever(rh.gs(any<TextRef>())).thenReturn("not sent")
         plugin = DexcomOnePlusPlugin(
-            rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
+            rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context) { error("the log is not read here") }, persistenceLayer,
             mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus,
         )
     }

@@ -1,6 +1,7 @@
 package app.aaps.plugins.source
 
 import app.aaps.core.keys.interfaces.PreferenceItem
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
 import app.aaps.plugins.dexcomoneplus.OnePlusCompetingApps
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseWatcher
@@ -13,9 +14,9 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScanner
  * Everything [DexcomOnePlusPlugin] needs from the phone it runs on.
  *
  * The plugin keeps the sensor slots, the pre-soak rules, the promotion gates and the ingest path.
- * What needs an Android `Context` is asked here: the driver registry, how the three setup screens
- * are opened, the foreground service and the status-bar notification. Each of those is named one
- * by one, the same way `OnePlusPlatform` names what the driver needs, so the plugin never has to
+ * What needs an Android `Context` is asked here: the driver registry, how the start and warm-up
+ * screens are opened, where the driver log is read from, the foreground service and the status-bar
+ * notification. Each of those is named one by one, the same way `OnePlusPlatform` names what the driver needs, so the plugin never has to
  * know what a `Context` is and the tests can replace the host with a fake.
  *
  * ⚠️ Nothing here may answer with something that pretends to work. A CGM plugin that is switched on
@@ -108,4 +109,24 @@ interface DexcomOnePlusHost {
      *   the plugin builds the host, so a host that asked for the plugin would be a loop.
      */
     fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem>
+
+    /** The screens of this plugin that the status screen opens through the host. */
+    enum class Screen { START, WARMUP }
+
+    /** Opens [screen]. */
+    fun openScreen(screen: Screen)
+
+    /**
+     * What the log screen shows.
+     *
+     * @param lines the driver lines, oldest first.
+     * @param note one sentence that says where the lines come from and how long they are kept.
+     */
+    data class DriverLog(val lines: List<String>, val note: TextRef)
+
+    /** Reads the newest driver lines. A host that reads a file does so off the main thread itself. */
+    suspend fun driverLog(): DriverLog
+
+    /** Hands the log text to another app, for the share button of the log screen. */
+    fun shareLog(text: String)
 }

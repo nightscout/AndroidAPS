@@ -16,6 +16,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusCgmDrivers
 import app.aaps.plugins.source.DexcomOnePlusHost
 import app.aaps.plugins.source.DexcomOnePlusPlugin
 import app.aaps.plugins.source.OnePlusBlePermissionHelper
+import app.aaps.plugins.source.compose.CameraApplicatorScanner
 import app.aaps.plugins.source.compose.DexcomOnePlusStartScreen
 import app.aaps.plugins.source.compose.OnePlusBlePermissionGate
 import dev.zacsweers.metro.Inject
@@ -97,6 +98,7 @@ class DexcomOnePlusStartActivity : MetroAppCompatActivity() {
                         onSensorSessionStarted = { address, previousMac ->
                             dexcomOnePlusPlugin.onSensorSessionStarted(address, previousMac)
                         },
+                        applicatorScanner = CameraApplicatorScanner,
                     )
                 }
             }

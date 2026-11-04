@@ -60,7 +60,6 @@
     <string name="cgm_sensor_heading">Sensor</string>
     <string name="cgm_sensor_name">Name</string>
     <string name="cgm_sensor_address">Address</string>
-    <string name="cgm_actions_heading">Actions</string>
     <string name="cgm_session_label">Bluetooth session</string>
     <string name="cgm_driver_log_title">Sensor driver log</string>
     <string name="cgm_driver_log_refresh">Refresh</string>
@@ -90,7 +89,6 @@
     <string name="description_source_dexcom_oneplus_native">Native Dexcom ONE+ and G7 Bluetooth in AAPS. Apply the sensor, enter the pairing code immediately, then wait ~30 min warm-up before loop glucose.</string>
     <string name="dexcom_oneplus_plugin_summary">Status, connect with pairing code, and warm-up</string>
     <string name="dexcom_oneplus_status_title">ONE+ / G7 status</string>
-    <string name="dexcom_oneplus_status_summary">Session phase and connection status</string>
     <string name="dexcom_oneplus_start_title">Start sensor</string>
     <string name="dexcom_oneplus_start_summary">Apply sensor → enter code now → connect → ~30 min warm-up</string>
     <string name="dexcom_oneplus_start_steps">How to start:\n1. Apply the sensor on your body.\n2. Paste the applicator Data Matrix (GS1) or enter the 4-digit pairing code — do not wait until after warm-up.\n3. Stop Dexcom, xDrip, and Juggluco Direct (only one Bluetooth master).\n4. Allow Bluetooth, Scan, select the highlighted sensor, then Connect / follow.\n5. Accept the Android Bluetooth pairing prompt if shown.\n6. Warm-up ~30 min for a new sensor; attaching to a running sensor can deliver EGVs sooner.</string>
@@ -207,7 +205,6 @@
     <string name="dexcom_oneplus_staging_state_warmup">Warming up</string>
     <string name="dexcom_oneplus_staging_state_settling">Settling</string>
     <string name="dexcom_oneplus_staging_state_ready">Ready to promote</string>
-    <string name="dexcom_oneplus_staging_last_reading" comment="%1$s=glucose value with unit, %2$s=time. Example: Last reading: 5.6 mmol/l at 14:32">Last reading: %1$s at %2$s</string>
     <string name="dexcom_oneplus_staging_no_reading_yet">No reading yet. The staging sensor is still warming up or out of range.</string>
     <string name="dexcom_oneplus_staging_cancel">Cancel staging</string>
     <string name="dexcom_oneplus_staging_promote">Promote to production</string>
@@ -246,10 +243,17 @@
     <string name="dexcom_oneplus_warmup_retry">Try connecting again</string>
     <string name="dexcom_oneplus_warmup_start_other">Start another sensor</string>
     <string name="dexcom_oneplus_open_status">Status</string>
-    <string name="dexcom_oneplus_production_heading">Production sensor</string>
     <string name="dexcom_oneplus_staging_heading_short">Pre-soak sensor</string>
-    <string name="dexcom_oneplus_sensor_age" comment="%1$s=already formatted duration. Example: Started 3 days ago">Started %1$s ago</string>
     <string name="dexcom_oneplus_production_no_reading">No reading received yet.</string>
+    <string name="dexcom_oneplus_row_last_reading">Last reading</string>
+    <string name="dexcom_oneplus_reading_at" comment="%1$s=glucose value with unit, %2$s=time. Example: 5.6 mmol/l at 14:32">%1$s at %2$s</string>
+    <string name="dexcom_oneplus_row_sensor_age">Sensor age</string>
+    <string name="dexcom_oneplus_row_message">Last message</string>
+    <string name="dexcom_oneplus_log_note_file">These are the lines of this driver in the app log file. They are kept when the app restarts.</string>
+    <string name="dexcom_oneplus_applicator_scan">Scan the applicator code</string>
+    <string name="dexcom_oneplus_applicator_scan_hint">Hold the code on the sensor applicator in front of the camera. The field is filled as soon as the code is read.</string>
+    <string name="dexcom_oneplus_applicator_scan_camera_refused">The app may not use the camera, so the code cannot be scanned. You can still type it.</string>
+    <string name="dexcom_oneplus_applicator_scan_retry">Ask again</string>
     <string name="dexcom_oneplus_staging_readings_label">Readings collected</string>
     <string name="dexcom_oneplus_staging_last_label">Last reading</string>
     <string name="dexcom_oneplus_end_of_life_title">Sensor is near its end</string>

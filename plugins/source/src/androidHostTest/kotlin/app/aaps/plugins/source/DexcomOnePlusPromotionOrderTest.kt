@@ -24,7 +24,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorIdentity
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
 import app.aaps.plugins.dexcomoneplus.session.OnePlusMacArbiter
-import app.aaps.plugins.source.activities.dexcomOnePlusPromotionMessage
+import app.aaps.plugins.source.compose.DexcomOnePlusStatusState
 import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBase
@@ -83,7 +83,7 @@ class DexcomOnePlusPromotionOrderTest : TestBase() {
         whenever(persistenceLayer.insertCgmSourceData(any(), any(), any(), anyOrNull()))
             .thenReturn(PersistenceLayer.TransactionResult())
         plugin = DexcomOnePlusPlugin(
-            rh, logger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
+            rh, logger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context) { error("the log is not read here") }, persistenceLayer,
             mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus,
         )
         plugin.promotionAlerter = { alerts += it }
@@ -300,71 +300,16 @@ class DexcomOnePlusPromotionOrderTest : TestBase() {
             "Sensor promoted, but older calibration entries could not be ignored. " +
                 "Remove fingerstick calibrations taken before this switch, then calibrate again if needed.",
         )
-        assertThat(
-            dexcomOnePlusPromotionMessage(
-                result = PromotionResult.Rejected(PromotionRejectReason.STAGING_ABSENT),
-                ok = "ok",
-                boundFailed = "bound",
-                followUpIdentityPresent = "follow",
-                followUpIdentityMissing = "missing",
-                rejectedAbsent = "absent",
-                rejectedNotSettled = "settling",
-                rejectedNoGlucose = "glucose",
-                rejectedNoRecentGlucose = "recent",
-            ),
-        ).isEqualTo("absent")
-        assertThat(
-            dexcomOnePlusPromotionMessage(
-                result = PromotionResult.OkBoundFailed,
-                ok = "ok",
-                boundFailed = "bound",
-                followUpIdentityPresent = "follow",
-                followUpIdentityMissing = "missing",
-                rejectedAbsent = "absent",
-                rejectedNotSettled = "settling",
-                rejectedNoGlucose = "glucose",
-                rejectedNoRecentGlucose = "recent",
-            ),
-        ).isEqualTo("bound")
-        assertThat(
-            dexcomOnePlusPromotionMessage(
-                result = PromotionResult.OkFollowUpFailed(productionIdentityPresent = true),
-                ok = "ok",
-                boundFailed = "bound",
-                followUpIdentityPresent = "follow",
-                followUpIdentityMissing = "missing",
-                rejectedAbsent = "absent",
-                rejectedNotSettled = "settling",
-                rejectedNoGlucose = "glucose",
-                rejectedNoRecentGlucose = "recent",
-            ),
-        ).isEqualTo("follow")
-        assertThat(
-            dexcomOnePlusPromotionMessage(
-                result = PromotionResult.OkFollowUpFailed(productionIdentityPresent = false),
-                ok = "ok",
-                boundFailed = "bound",
-                followUpIdentityPresent = "follow",
-                followUpIdentityMissing = "missing",
-                rejectedAbsent = "absent",
-                rejectedNotSettled = "settling",
-                rejectedNoGlucose = "glucose",
-                rejectedNoRecentGlucose = "recent",
-            ),
-        ).isEqualTo("missing")
-        assertThat(
-            dexcomOnePlusPromotionMessage(
-                result = PromotionResult.Ok,
-                ok = "ok",
-                boundFailed = "bound",
-                followUpIdentityPresent = "follow",
-                followUpIdentityMissing = "missing",
-                rejectedAbsent = "absent",
-                rejectedNotSettled = "settling",
-                rejectedNoGlucose = "glucose",
-                rejectedNoRecentGlucose = "recent",
-            ),
-        ).isEqualTo("ok")
+        assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.Rejected(PromotionRejectReason.STAGING_ABSENT)))
+            .isEqualTo(SourceStrings.dexcom_oneplus_staging_promote_rejected_absent)
+        assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.OkBoundFailed))
+            .isEqualTo(SourceStrings.dexcom_oneplus_staging_promote_bound_failed)
+        assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.OkFollowUpFailed(productionIdentityPresent = true)))
+            .isEqualTo(SourceStrings.dexcom_oneplus_staging_promote_follow_up_failed)
+        assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.OkFollowUpFailed(productionIdentityPresent = false)))
+            .isEqualTo(SourceStrings.dexcom_oneplus_staging_promote_follow_up_failed_no_identity)
+        assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.Ok))
+            .isEqualTo(SourceStrings.dexcom_oneplus_staging_promote_ok)
     }
 
     @Test

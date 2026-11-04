@@ -21,11 +21,9 @@ enum class DexcomOnePlusIntentKey(
     override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 
-    Status(
-        key = "dexcom_oneplus_status",
-        title = SourceStrings.dexcom_oneplus_status_title,
-        summary = SourceStrings.dexcom_oneplus_status_summary
-    ),
+    // No Status entry: the status screen is the sensor button of the plugin tab. The status
+    // Activity is still opened by the notification and by the start and warm-up screens.
+
     Start(
         key = "dexcom_oneplus_start",
         title = SourceStrings.dexcom_oneplus_start_title,

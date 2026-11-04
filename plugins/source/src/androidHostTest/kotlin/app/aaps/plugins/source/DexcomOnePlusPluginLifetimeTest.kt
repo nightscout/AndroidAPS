@@ -280,6 +280,11 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
         override fun alert(message: String) = Unit
         override fun screenScanner(): OnePlusBleScanner = OnePlusBleScannerStub()
         override fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem> = emptyList()
+        override fun openScreen(screen: DexcomOnePlusHost.Screen) = Unit
+        override suspend fun driverLog(): DexcomOnePlusHost.DriverLog =
+            DexcomOnePlusHost.DriverLog(emptyList(), SourceStrings.dexcom_oneplus_log_note_file)
+
+        override fun shareLog(text: String) = Unit
     }
 
     /** An empty slot store in memory. */
