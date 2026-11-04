@@ -31,7 +31,7 @@
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
-    <string name="pairfirst">A.u.b. de pomp koppelen met je telefoon!</string>
+    <string name="pairfirst">Koppel de pomp aan de telefoon!</string>
     <string name="processinghistory">Gebeurtenis verwerken</string>
     <string name="diaconn_g8_history_tempbasal">Tijdelijk basaal</string>
     <string name="diaconng8_pump_settings">Diaconn pomp instellingen</string>
