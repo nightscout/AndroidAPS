@@ -31,6 +31,8 @@ dependencies {
     implementation(project(":core:validators"))
     implementation(project(":pump:common"))
     implementation(project(":shared:impl"))
+    implementation(project(":pump:aaruy:protocol"))
+    implementation(project(":pump:aaruy:emulator"))
 
     implementation("no.nordicsemi.android.support.v18:scanner:1.6.0")
     implementation(libs.com.google.code.gson)
