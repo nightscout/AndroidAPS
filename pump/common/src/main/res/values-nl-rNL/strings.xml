@@ -15,9 +15,9 @@
     <string name="pump_cmd_desc_get_firmware">Firmware van de pomp ophalen</string>
     <string name="pump_cmd_desc_get_basal_profile">Basaal profiel ophalen</string>
     <string name="pump_cmd_desc_set_basal_profile">Basaal profiel Instellen</string>
-    <string name="pump_cmd_desc_get_tbr">Tijdelijke basaal ophalen</string>
-    <string name="pump_cmd_desc_cancel_tbr">Tijdelijk basaal annuleren</string>
-    <string name="pump_cmd_desc_set_tbr">Tijdelijke basaal instellen</string>
+    <string name="pump_cmd_desc_get_tbr">Tijdelijke basaalstand ophalen</string>
+    <string name="pump_cmd_desc_cancel_tbr">Tijdelijk basaalstand annuleren</string>
+    <string name="pump_cmd_desc_set_tbr">Tijdelijke basaalstand instellen</string>
     <string name="pump_cmd_desc_set_bolus">Bolus instellen</string>
     <string name="pump_cmd_desc_get_bolus">Bolus ophalen</string>
     <string name="pump_cmd_desc_cancel_bolus">Bolus annuleren</string>
