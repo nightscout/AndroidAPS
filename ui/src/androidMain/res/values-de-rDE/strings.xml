@@ -234,7 +234,7 @@
     <string name="remove_label">Entfernen</string>
     <string name="active_profile_indicator">AKTIV</string>
     <string name="confirm_remove_profile">Profil „%1$s“ entfernen?</string>
-    <string name="confirm_clone_profile">Profil \"%1$s \"klonen?</string>
+    <string name="confirm_clone_profile">Profil „%1$s“ klonen?</string>
     <string name="profile_no_longer_exists">Profilliste wurde zwischenzeitig geändert — Bitte versuche es erneut</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
