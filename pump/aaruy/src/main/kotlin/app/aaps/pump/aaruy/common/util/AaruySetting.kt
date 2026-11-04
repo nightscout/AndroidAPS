@@ -2,7 +2,6 @@ package app.aaps.pump.aaruy.common.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.aaruy.mylibrary.AALogger
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.TimeZone

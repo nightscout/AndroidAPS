@@ -13,4 +13,9 @@ android {
 dependencies {
     implementation(project(":core:interfaces"))
     implementation(libs.androidx.annotation)
+    implementation("no.nordicsemi.android.support.v18:scanner:1.6.0")
+
+    // The vendor library is not in the app any more. It stays as the reference for AarDifferentialTest.
+    testImplementation(files("libs/mylibrary-release.aar"))
+    testImplementation(project(":shared:tests"))
 }

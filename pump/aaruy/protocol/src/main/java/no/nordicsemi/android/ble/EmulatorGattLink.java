@@ -39,6 +39,12 @@ public final class EmulatorGattLink implements GattLink {
 	@Nullable
 	private static volatile BleTransport transport;
 
+	/** A manager that takes its characteristics directly. The vendor AAR in tests has public fields in place of this. */
+	public interface CharacteristicsTarget {
+		void setCharacteristics(@NonNull BluetoothGattCharacteristic notify, @NonNull BluetoothGattCharacteristic write,
+								@NonNull BluetoothGattCharacteristic hardware, @NonNull BluetoothGattCharacteristic firmware);
+	}
+
 	public static void activate(@Nullable BleTransport value) {
 		transport = value;
 	}
@@ -114,6 +120,10 @@ public final class EmulatorGattLink implements GattLink {
 	 * It only copies the characteristics into these public fields, so this sets them directly.
 	 */
 	boolean fillManagerCharacteristics(@NonNull BleManager manager) {
+		if (manager instanceof CharacteristicsTarget) {
+			((CharacteristicsTarget) manager).setCharacteristics(notify, write, hardware, firmware);
+			return true;
+		}
 		try {
 			set(manager, "b", notify);
 			set(manager, "c", write);

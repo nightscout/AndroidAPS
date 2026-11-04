@@ -27,16 +27,16 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
-import com.aaruy.mylibrary.AABleUtil
-import com.aaruy.mylibrary.AALogger
-import com.aaruy.mylibrary.open.data.BasalInfo
-import com.aaruy.mylibrary.open.data.BasicParam
-import com.aaruy.mylibrary.open.data.DailyInfo
-import com.aaruy.mylibrary.open.data.LogInfo
-import com.aaruy.mylibrary.open.data.StatusInfo
-import com.aaruy.mylibrary.open.interfaces.BleStatus
-import com.aaruy.mylibrary.open.interfaces.MyBleListener
-import com.aaruy.mylibrary.open.interfaces.ScanResultListener
+import app.aaps.pump.aaruy.comm.AaruyBleClient
+import app.aaps.pump.aaruy.comm.aaruyFrameKey
+import app.aaps.pump.aaruy.comm.BasalInfo
+import app.aaps.pump.aaruy.comm.BasicParam
+import app.aaps.pump.aaruy.comm.DailyInfo
+import app.aaps.pump.aaruy.comm.LogInfo
+import app.aaps.pump.aaruy.comm.StatusInfo
+import app.aaps.pump.aaruy.comm.BleStatus
+import app.aaps.pump.aaruy.comm.AaruyBleListener
+import app.aaps.pump.aaruy.comm.ScanResultListener
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
@@ -84,7 +84,7 @@ class AaruyBLE @Inject internal constructor(
     val scanResultList = ArrayList<ScanResult>()
     private val handler = Handler(Looper.getMainLooper())
 
-    val aaBleUtil = AABleUtil(context)
+    val aaBleUtil = AaruyBleClient(context, aapsLogger)
 
     /** TEMPORARY: the emulator instead of the radio. The final hook is planned for the v4 driver. */
     var emulatorTransport: AaruyEmulatorBleTransport? = null
@@ -259,7 +259,7 @@ class AaruyBLE @Inject internal constructor(
     fun connectDevice(device: BluetoothDevice) {
         aapsLogger.warn(LTag.PUMPCOMM, "------------------>connectDevice device = $device")
         listenerReceiveData()
-        if (emulatorTransport != null) connectWithoutBonding(device) else aaBleUtil.bindDevice(device)
+        if (emulatorTransport != null) aaBleUtil.connectWithoutBonding(device) else aaBleUtil.bindDevice(device)
     }
 
     /**
@@ -269,7 +269,7 @@ class AaruyBLE @Inject internal constructor(
     fun startEmulatorIfRequested() {
         if (emulatorTransport != null || fileListProvider.ensureExtraDirExists()?.findFile(EMULATOR_MARKER) == null) return
         aapsLogger.warn(LTag.PUMPCOMM, "Aaruy pump EMULATOR is active. No insulin is delivered.")
-        val emulator = AaruyPumpEmulator(keyProvider = { readAarKey() })
+        val emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
         val transport = AaruyEmulatorBleTransport(emulator)
         emulatorTransport = transport
         EmulatorGattLink.activate(transport)
@@ -287,23 +287,13 @@ class AaruyBLE @Inject internal constructor(
         preferences.put(AaruyStringKey.PumpName, AaruyEmulatorBleTransport.DEVICE_NAME)
     }
 
-    /** The key is read from the AAR, so it is not in this source. */
-    private fun readAarKey(): ByteArray =
-        AABleUtil::class.java.getDeclaredField("key").apply { isAccessible = true }.get(aaBleUtil) as ByteArray
-
-    /** `AABleUtil.bindDevice` asks Android to bond an unbonded device, which cannot happen without a radio. */
-    private fun connectWithoutBonding(device: BluetoothDevice) {
-        val manager = AABleUtil::class.java.getDeclaredField("myBleManager").apply { isAccessible = true }.get(aaBleUtil)
-        manager.javaClass.getMethod("c", BluetoothDevice::class.java).invoke(manager, device)
-    }
-
     private fun listenerReceiveData() {
         if (aaBleUtil.getOnBleListener() != null)
             return
 
         aapsLogger.warn(LTag.PUMPCOMM, "------------------>listenerReceiveData setOnBleListener")
 
-        aaBleUtil.setOnBleListener(object : MyBleListener {
+        aaBleUtil.setOnBleListener(object : AaruyBleListener {
             override fun onBleStatusChanged(status: BleStatus) {
                 aapsLogger.warn(LTag.PUMPCOMM, "aaruy onBleStatusChanged status = $status")
                 if (status == BleStatus.CONNECTED) {

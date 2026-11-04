@@ -17,10 +17,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
-import com.aaruy.mylibrary.open.data.BasalInfo
-import com.aaruy.mylibrary.open.data.BasalItem
-import com.aaruy.mylibrary.open.data.BasalItems
-import com.aaruy.mylibrary.open.data.BasicParam
+import app.aaps.pump.aaruy.comm.BasalInfo
+import app.aaps.pump.aaruy.comm.BasalItem
+import app.aaps.pump.aaruy.comm.BasalItems
+import app.aaps.pump.aaruy.comm.BasicParam
 import com.google.gson.Gson
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.R
