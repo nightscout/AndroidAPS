@@ -36,6 +36,7 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.math.round
@@ -56,7 +57,7 @@ class AaruyService : MetroService() {
     @Inject lateinit var dateUtil: DateUtil
 
     private val mBinder: IBinder = LocalBinder()
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     var isConnected: Boolean = false
     var isConnecting: Boolean = false
@@ -65,17 +66,14 @@ class AaruyService : MetroService() {
         super.onCreate()
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
-        scope.launch {
-            aaruyPump.connectionStateFlow.collect { connectionState ->
-                isConnected = connectionState == ConnectionState.CONNECTED
-                isConnecting = connectionState == ConnectionState.CONNECTING
-                handleConnectionStateChange(connectionState)
-            }
+        // One error in handling a warning must not stop the alarms and the connection handling that follow.
+        aaruyPump.connectionStateFlow.collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { connectionState ->
+            isConnected = connectionState == ConnectionState.CONNECTED
+            isConnecting = connectionState == ConnectionState.CONNECTING
+            handleConnectionStateChange(connectionState)
         }
-        scope.launch {
-            aaruyPump.pumpWarningFlow.collect { pumpWarning ->
-                notifyPumpWarning(pumpWarning)
-            }
+        aaruyPump.pumpWarningFlow.collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { pumpWarning ->
+            notifyPumpWarning(pumpWarning)
         }
     }
 
