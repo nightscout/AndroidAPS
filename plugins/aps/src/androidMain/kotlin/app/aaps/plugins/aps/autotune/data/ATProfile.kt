@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -22,7 +23,6 @@ import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.extensions.with
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
 import dev.zacsweers.metro.Inject
 import kotlinx.serialization.json.Json
@@ -98,7 +98,7 @@ class ATProfile(
         return this
     }
 
-    fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp, SystemTimeZone.current()) / 3600]
+    fun getBasal(timestamp: Long): Double = basal[MidnightTime.secondsFromMidnight(timestamp, SystemTimeZone.current()) / 3600]
 
     // for local profile synchronisation
     // kotlinx, not org.json: these feed blockFromJson in AutotunePlugin, the last caller the org.json

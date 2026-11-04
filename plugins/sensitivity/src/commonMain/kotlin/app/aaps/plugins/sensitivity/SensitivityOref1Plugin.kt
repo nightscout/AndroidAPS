@@ -17,12 +17,12 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
@@ -130,7 +130,7 @@ class SensitivityOref1Plugin(
                     deviationsArray.removeAt(0)
                 }
                 pastSensitivity.append(autosensData.pastSensitivity)
-                val secondsFromMidnight = MidnightUtils.secondsFromMidnight(autosensData.time, SystemTimeZone.current())
+                val secondsFromMidnight = MidnightTime.secondsFromMidnight(autosensData.time, SystemTimeZone.current())
                 if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
                     pastSensitivity.append("(").append((secondsFromMidnight / 3600.0).roundToInt()).append(")")
                 }

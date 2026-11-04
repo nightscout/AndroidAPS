@@ -49,7 +49,7 @@ class AgpStatsDataTest {
 
     @Test
     fun hourlyPercentilesUseLocalHoursAndLinearInterpolation() {
-        val start = MidnightTime.calc(1_700_000_000_000L) + T.hours(6).msecs()
+        val start = MidnightTime.before(1_700_000_000_000L, TimeZone.currentSystemDefault()) + T.hours(6).msecs()
         val readings = listOf(40.0, 60.0, 80.0, 100.0, 120.0).mapIndexed { index, value ->
             glucose(start + T.mins(index * 5L).msecs(), value)
         }
@@ -85,7 +85,7 @@ class AgpStatsDataTest {
     @Test
     fun rangesStartAtMidnightOrTheSelectedDuration() {
         val now = 1_700_000_000_000L
-        assertEquals(MidnightTime.calc(now), AgpStatsRange.TODAY.startTime(now))
+        assertEquals(MidnightTime.before(now, TimeZone.currentSystemDefault()), AgpStatsRange.TODAY.startTime(now))
         assertEquals(now - T.hours(24).msecs(), AgpStatsRange.HOURS_24.startTime(now))
         assertEquals(now - T.days(7).msecs(), AgpStatsRange.DAYS_7.startTime(now))
         assertEquals(now - T.days(30).msecs(), AgpStatsRange.DAYS_30.startTime(now))

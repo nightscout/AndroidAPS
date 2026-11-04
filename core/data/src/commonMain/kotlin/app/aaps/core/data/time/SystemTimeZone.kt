@@ -24,11 +24,11 @@ expect fun systemUtcOffsetAt(timestamp: Long): Long
  * `NSTimeZone.resetSystemTimeZone()` on purpose and then resolves the zone name again, which reads
  * and parses the zone file from disk on **every** call.
  *
- * That call sits in the hottest path in the app. `MidnightUtils.secondsFromMidnight` is asked for the
+ * That call sits in the hottest path in the app. `MidnightTime.secondsFromMidnight` is asked for the
  * basal rate of every minute of every temporary basal, again for every 5 minute step, so the zone is
  * read millions of times per IOB/COB run. On iOS one run took about 37 s because of it
  * (nightscout/AndroidAPS#5484). On Android the same path was once the most expensive app code in a
- * CPU trace, which is why `MidnightUtils` already caches the day - this caches the one piece that
+ * CPU trace, which is why `MidnightTime` already caches the day - this caches the one piece that
  * was left.
  *
  * ### How it stays correct
@@ -58,7 +58,7 @@ object SystemTimeZone {
 
     /**
      * One immutable value, so a reader never sees a zone with another read's timestamp. Two threads
-     * reading at the same time only costs one extra lookup, as in `MidnightUtils`.
+     * reading at the same time only costs one extra lookup, as in `MidnightTime`.
      */
     @Volatile private var kept: Kept? = null
 

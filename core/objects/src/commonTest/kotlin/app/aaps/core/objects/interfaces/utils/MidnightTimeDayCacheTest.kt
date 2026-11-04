@@ -1,5 +1,6 @@
-package app.aaps.core.utils
+package app.aaps.core.objects.interfaces.utils
 
+import app.aaps.core.interfaces.utils.MidnightTime
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -11,12 +12,12 @@ import kotlin.test.assertEquals
 import kotlin.time.Instant
 
 /**
- * `MidnightUtils` keeps the last days it used, so most calls need no time zone rules. The answer must
+ * [MidnightTime] keeps the last days it used, so most calls need no time zone rules. The answer must
  * stay exactly what the rules give: it is the time of day the basal rate of the profile is read at.
  *
  * Every test compares with [reference], the code before the cache, in zones with unusual rules.
  */
-class MidnightUtilsDayCacheTest {
+class MidnightTimeDayCacheTest {
 
     /** The calculation before the cache, kept as the reference. */
     private fun reference(timestamp: Long, tz: TimeZone): Pair<Long, Int> {
@@ -28,8 +29,8 @@ class MidnightUtilsDayCacheTest {
 
     private fun assertSame(timestamp: Long, tz: TimeZone) {
         val (millis, seconds) = reference(timestamp, tz)
-        assertEquals(millis, MidnightUtils.millisFrom(timestamp, tz), "millis ${tz.id} $timestamp")
-        assertEquals(seconds, MidnightUtils.secondsFrom(timestamp, tz), "seconds ${tz.id} $timestamp")
+        assertEquals(millis, MidnightTime.millisFromMidnight(timestamp, tz), "millis ${tz.id} $timestamp")
+        assertEquals(seconds, MidnightTime.secondsFromMidnight(timestamp, tz), "seconds ${tz.id} $timestamp")
     }
 
     private val zones = listOf(

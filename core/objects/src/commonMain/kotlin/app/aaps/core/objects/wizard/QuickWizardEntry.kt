@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.valueToUnits
-import app.aaps.core.utils.MidnightUtils
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -49,7 +49,7 @@ class QuickWizardEntry(
     @OpenForTesting
     class Time {
 
-        fun secondsFromMidnight(): Int = MidnightUtils.secondsFromMidnight(SystemTimeZone.current())
+        fun secondsFromMidnight(): Int = MidnightTime.secondsFromMidnight(SystemTimeZone.current())
 
     }
 
