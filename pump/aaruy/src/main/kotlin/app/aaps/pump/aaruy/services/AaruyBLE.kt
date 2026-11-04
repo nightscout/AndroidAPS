@@ -537,7 +537,7 @@ class AaruyBLE(
             override fun onReceiveErrorData(errorType: Int, error: Int) {
                 aapsLogger.warn(LTag.PUMPCOMM, "onReceiveErrorData errorType = $errorType,error = $error")
                 val tmpErrCode = (error shl 8) or (errorType)
-                aaruyPump.errCode.value = tmpErrCode
+                aaruyPump.errCode.tryEmit(tmpErrCode)
                 when(error) {
                     0->{        // 操作的正常提示
                         when(errorType) {

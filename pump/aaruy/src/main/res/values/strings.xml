@@ -123,18 +123,20 @@
     <!-- wizard-->
     <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
     <string name="no_sn_in_settings">No serial number known. Please binding pump in settings and try again.</string>
-    <string name="actions_reservoir_rewind_prompt">Disconnect from body,\n\nclick “ACT” to rewind.</string>
+    <string name="actions_reservoir_rewind_prompt">Disconnect the pump from your body, then press Rewind. The motor moves, and the pump stops giving insulin.</string>
     <string name="actions_reservoir_prime_before">Please assemble the fully charged battery and the reservoir filled with insulin with the pump.</string>
-    <string name="actions_reservoir_prime_comment">Press “Prime” until droplets discharge from the needle.</string>
+    <string name="actions_reservoir_prime_comment">Press Prime until droplets come out of the needle.</string>
     <string name="actions_reservoir_prime_comment_note">Note: Disconnect during priming!</string>
     <string name="actions_reservoir_prime_cannula_before">Connect the infusion set with body.</string>
-    <string name="actions_reservoir_prime_cannula">Click “Exhaust” to fill the cannula with insulin.</string>
-    <string name="actions_reservoir_prime_cannula_note">Note: Click “Skip”, only when the cannula is not replaced!</string>
+    <string name="actions_reservoir_prime_cannula">Press Exhaust to fill the cannula with insulin. Basal starts after that.</string>
+    <string name="actions_reservoir_prime_cannula_note">Note: Press Skip only when the cannula is not replaced!</string>
     <string name="soft_needle_6">6 mm cannula</string>
     <string name="soft_needle_9">9 mm cannula</string>
     <string name="setting_next">Next</string>
     <string name="actions_reservoir_cannula_skip">Skip</string>
     <string name="actions_reservoir_prime">Prime</string>
+    <string name="aaruy_rewind">Rewind</string>
+    <string name="aaruy_replace_done">The pump is running basal.</string>
     <string name="actions_reservoir_prime_cannula_action">Exhaust</string>
     <string name="dialog_cancel">ESC</string>
     <string name="dialog_ok">ACT</string>
@@ -142,7 +144,7 @@
     <string name="is_backing">Rewinding,\nplease wait…</string>
     <string name="locate_check_liquid">Priming, please confirm a droplet formed on the needle tip!</string>
     <string name="notifyTitle">Reminder</string>
-    <string name="actions_reservoir_prime_confirm">Please confirm droplets discharged from the needle, and then click “ACT”.</string>
+    <string name="actions_reservoir_prime_confirm">Did droplets come out of the needle?</string>
     <string name="is_exhaust">Is Exhausting…</string>
     <string name="if_exit_replace_view">Replacement incomplete. Quit?</string>
 

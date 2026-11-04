@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 sealed class AaruyOverviewEvent {
     data object StartPairWizard : AaruyOverviewEvent()
+    data object StartReplace : AaruyOverviewEvent()
     data object ConfirmUnpair : AaruyOverviewEvent()
 }
 
@@ -211,6 +213,10 @@ class AaruyOverviewViewModel(
         )
 
         val managementActions = buildList {
+            // A stopped pump only starts through this, as it has no screen of its own. Not during a bolus: it would end it.
+            if (isInitialized && pump.pumpState != AaruyPumpState.LARGEDOSE_RUNNING) {
+                add(ScreenAction(label = rh.gs(R.string.replace_label), icon = Icons.Filled.SwapHoriz, onClick = { _events.tryEmit(AaruyOverviewEvent.StartReplace) }))
+            }
             if (alarms.isNotEmpty()) add(ScreenAction(label = rh.gs(R.string.confirm_alarms_label), icon = Icons.Filled.Check, onClick = { onConfirmAlarmsClick() }))
             add(
                 if (isConfigured) ScreenAction(label = rh.gs(CoreUiR.string.pump_unpair), icon = Icons.Filled.Bluetooth, onClick = { _events.tryEmit(AaruyOverviewEvent.ConfirmUnpair) })

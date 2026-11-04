@@ -32,6 +32,7 @@ import app.aaps.pump.aaruy.keys.AaruyDoubleKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.EnumSet
@@ -72,7 +73,8 @@ class AaruyPump(
         }
 
     // Pump error code
-    val errCode = MutableStateFlow(0)
+    // Not a state: the pump sends the same message for each prime.
+    val errCode = MutableSharedFlow<Int>(extraBufferCapacity = 16)
 
     // Pump state flow
     private val _pumpState = MutableStateFlow(AaruyPumpState.FIRST_INIT)

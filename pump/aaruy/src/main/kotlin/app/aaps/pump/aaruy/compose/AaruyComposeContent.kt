@@ -26,7 +26,8 @@ import app.aaps.pump.aaruy.R
 
 private enum class AaruyScreen {
     OVERVIEW,
-    PAIR_WIZARD
+    PAIR_WIZARD,
+    REPLACE_WIZARD
 }
 
 /** How far the unpair question has come. A pump out of reach is asked about twice, as it stays paired on its side. */
@@ -84,6 +85,7 @@ class AaruyComposeContent(
         }
 
         val pairingTitle = stringResource(R.string.aaruy_pairing)
+        val replaceTitle = stringResource(R.string.replace_bat_rescv_label)
         val backDescription = stringResource(app.aaps.core.ui.R.string.back)
         val settingsDescription = stringResource(app.aaps.core.ui.R.string.settings)
 
@@ -110,6 +112,7 @@ class AaruyComposeContent(
             overviewViewModel.events.collect { event ->
                 when (event) {
                     is AaruyOverviewEvent.StartPairWizard -> currentScreen = AaruyScreen.PAIR_WIZARD
+                    is AaruyOverviewEvent.StartReplace    -> currentScreen = AaruyScreen.REPLACE_WIZARD
                     is AaruyOverviewEvent.ConfirmUnpair   -> unpairDialog = UnpairDialog.FIRST
                 }
             }
@@ -119,6 +122,16 @@ class AaruyComposeContent(
             AaruyScreen.OVERVIEW    -> {
                 val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
                 PumpOverviewScreen(state = uiState)
+            }
+
+            AaruyScreen.REPLACE_WIZARD -> {
+                KeepScreenOnEffect()
+                AaruyReplaceWizardScreen(
+                    viewModel = metroViewModel(),
+                    title = replaceTitle,
+                    setToolbarConfig = setToolbarConfig,
+                    onFinish = { currentScreen = AaruyScreen.OVERVIEW }
+                )
             }
 
             AaruyScreen.PAIR_WIZARD -> {
