@@ -78,7 +78,7 @@
     <string name="can_export_settings">Sie können die Einstellungen exportieren, um diese Patchsitzung später wiederherstellen zu können.</string>
     <string name="press_OK_to_return">Drücke <b>OK</b> um zum Hauptbildschirm zurückzukehren.</string>
     <string name="deactivate_sure">Bist Du sicher, dass Du den aktuellen Patch deaktivieren möchtest?</string>
-    <string name="cancel_sure">Bist Du sicher, dass Sie Du die Aktivierung abbrechen möchtest?</string>
+    <string name="cancel_sure">Bist Du sicher, dass Du die Aktivierung abbrechen möchtest?</string>
     <string name="medtrum_deactivate_pump_confirm">Bist Du sicher? Diese Aktion kann nicht rückgängig gemacht werden!!</string>
     <string name="press_next_or_cancel">Drücke <b>Nächste</b> zum Deaktivieren oder <b>Abbrechen</b>, um zum Hauptbildschirm zurückzukehren.</string>
     <string name="deactivating_pump">Deaktiviere Patch. Bitte warten.</string>
