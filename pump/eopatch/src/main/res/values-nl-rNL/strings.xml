@@ -23,10 +23,10 @@
     <string name="time_2hr">2 uur</string>
     <string name="patch_safe_deactivation_desc">Om naar nieuwe patch te wisselen moet de huidige patch verwijderd worden. Alle insuline toediening van Patch zal worden geannuleerd.</string>
     <string name="patch_discard_complete_title">Het verwijderen van de patch is voltooid.</string>
-    <string name="patch_discard_complete_desc">Patch is gedeactiveerd.\nVerwijder de patch.\nVerwijder de patch die op uw lichaam zit aangebracht.</string>
+    <string name="patch_discard_complete_desc">Patch is gedeactiveerd.\nVerwijder de patch.\nVerwijder de patch van het lichaam.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Er wordt momenteel een bolus toegediend. Insulinetoediening annuleren en de Patch verwijderen?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Er is een tijdelijk basaalstand actief. Insulinetoediening annuleren en de Patch verwijderen?</string>
-    <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Er wordt op dit moment een bolus en een tijdelijk basaal uitgevoerd. Weet je zeker dat je de insuline toediening wilt annuleren en de patch wilt verwijderen?</string>
+    <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Er wordt op dit moment een bolus toegediend en een tijdelijke basaalstand uitgevoerd. Insulinetoediening onderbreken en de Patch verwijderen?</string>
     <string name="patch_change_confirm_desc">Patch verwijderen?</string>
     <string name="patch_forced_discard">Verwijder</string>
     <string name="patch_comm_error_during_discard_desc_2">Voor unilaterale deactivering, Tik op \'Verwijderen\'.</string>
