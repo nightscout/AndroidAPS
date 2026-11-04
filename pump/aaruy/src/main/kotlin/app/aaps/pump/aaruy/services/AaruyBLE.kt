@@ -80,6 +80,7 @@ class AaruyBLE @Inject internal constructor(
 ) {
     private val EMULATOR_MARKER = "emulate_aaruy"
     private val BOLUS_START_TIMEOUT_MS = 5000L
+    private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val TAG = "AaruyBLEService"
     val scanResultList = ArrayList<ScanResult>()
     private val handler = Handler(Looper.getMainLooper())
@@ -323,6 +324,8 @@ class AaruyBLE @Inject internal constructor(
                     if (emulatorTransport != null && !aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 } else if(status == BleStatus.DISCONNECTED) {
+                    // A stop with no answer on this link says nothing about how a bolus ended while the link was down.
+                    aaruyPump.bolusStopRequested = false
                     isConnected = false
                     isConnecting = false
                     receivingHistory = false
@@ -464,8 +467,11 @@ class AaruyBLE @Inject internal constructor(
                         cancelTmpBasalOk = true
                     }
                 }
+                // A real pump answers a stop by going from status 3 straight to 1, so any status other than 3 confirms it.
+                if (statusInfo.runningStatus != 3) cancelBolusOk = true
                 if (statusInfo.runningStatus != 3 && aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING && !aaruyPump.bolusDone) {
-                    aaruyPump.handleBolusEndNotSeen()
+                    if (aaruyPump.bolusStopRequested) aaruyPump.handleBolusStatusUpdate(0, true)
+                    else aaruyPump.handleBolusEndNotSeen()
                 }
                 if (aaruyPump.pumpState != aaruyPump.pumpLastState &&
                     (aaruyPump.pumpLastState.isNormalStatus() || aaruyPump.pumpState.isNormalStatus())) {
@@ -623,7 +629,8 @@ class AaruyBLE @Inject internal constructor(
         cancelBolusOk = false
         val endTime = dateUtil.now()
         aaBleUtil.cancelBolus()
-        SystemClock.sleep(500)
+        val end = System.currentTimeMillis() + BOLUS_STOP_TIMEOUT_MS
+        while (!cancelBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(20)
         if (cancelBolusOk) {
             if (bolusType == 1) {
                 aaruyPump.syncStopExtendedWithPumpId(endTime)

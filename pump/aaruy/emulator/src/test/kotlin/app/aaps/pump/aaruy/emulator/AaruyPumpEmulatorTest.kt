@@ -153,20 +153,17 @@ class AaruyPumpEmulatorTest {
     }
 
     @Test
-    fun stoppedBolusPausesAndHistoryHasTheDeliveredAmount() {
+    fun stoppedBolusGoesBackToBasalAndHistoryHasTheDeliveredAmount() {
         startBolus(1000)
         advance(2 * AaruyPumpEmulator.BOLUS_STEP_MS)
         val stopped = write(PARAM_BOLUS_CONTROL, control(0)).single()
-        assertEquals(AaruyPumpEmulator.STATUS_PAUSED, status(stopped))
+        assertEquals(AaruyPumpEmulator.STATUS_BASAL, status(stopped))
 
         val log = write(PARAM_HISTORY, buffer(8).putInt(0).array()).single()
         val entries = log.payload.size / 12
         assertEquals(PARAM_HISTORY_LOG, log.paramId)
         val bolus = (0 until entries).map { 5 + it * 12 }.first { log.payload[it + 4].toInt() == 2 }
         assertEquals(50, log.reader().getShort(bolus + 5).toInt())
-
-        val continued = write(PARAM_TOTAL_CONTROL, control(1)).single()
-        assertEquals(AaruyPumpEmulator.STATUS_BASAL, status(continued))
     }
 
     @Test

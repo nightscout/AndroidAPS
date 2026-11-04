@@ -212,6 +212,7 @@ class AaruyService : DaggerService() {
         val isSmb = detailedBolusInfo.bolusType == BS.Type.SMB
         aaruyPump.bolusDone = false
         aaruyPump.bolusEndNotSeen = false
+        aaruyPump.bolusStopRequested = false
         aaruyPump.bolusStopped = false
         BolusProgressData.delivered = 0.0
 
@@ -342,9 +343,10 @@ class AaruyService : DaggerService() {
         }
 
         aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ + ${BolusProgressData.delivered}")
+        aaruyPump.bolusStopRequested = true
         var success = aaruyBle.cancelBolus()
         val timeout = dateUtil.now() + T.secs(30).msecs()
-        while (!success && dateUtil.now() < timeout) {
+        while (!success && isConnected && dateUtil.now() < timeout) {
             success = aaruyBle.cancelBolus()
         }
         aapsLogger.debug(LTag.PUMPCOMM, "bolusStop success: $success")

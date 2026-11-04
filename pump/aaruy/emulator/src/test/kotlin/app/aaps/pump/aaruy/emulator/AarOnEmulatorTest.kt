@@ -156,9 +156,8 @@ class AarOnEmulatorTest {
         waitFor("bolus running") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BOLUS }
         waitFor("status seen by AAR") { log.any { it.contains("runningStatus=3") } }
         util.cancelBolus()
-        waitFor("paused") { log.any { it.contains("runningStatus=7") } }
-        util.continueInject()
         waitFor("basal again") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
+        waitFor("status seen") { log.any { it.contains("runningStatus=1") } }
     }
 
     @Test

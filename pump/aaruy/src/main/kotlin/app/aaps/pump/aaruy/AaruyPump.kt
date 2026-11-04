@@ -203,6 +203,7 @@ class AaruyPump @Inject constructor(
     var bolusStopped = false // bolus stopped
     var bolusDone = true // Bolus completed or stopped on pump, initialize as true as to don't show bolus on init
     var bolusEndNotSeen = false // The bolus ended while the link was lost, see handleBolusEndNotSeen
+    var bolusStopRequested = false // A stop was sent on this link, so the pump leaving the bolus state is the answer to it
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
     val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered

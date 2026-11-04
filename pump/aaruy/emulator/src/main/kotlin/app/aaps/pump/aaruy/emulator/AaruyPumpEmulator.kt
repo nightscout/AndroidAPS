@@ -202,12 +202,11 @@ class AaruyPumpEmulator(
             runningStatus = STATUS_BOLUS
             return listOf(statusMessage())
         }
-        // UNVERIFIED: a stopped bolus leaves the pump paused. The driver waits for status 7 and then asks to continue.
+        // Seen on a real pump (firmware 1.1.0.01): status 3 goes straight back to 1, with no message that gives the amount.
         val running = bolus ?: return emptyList()
         addBolusHistory(running)
         bolus = null
-        runningStatus = STATUS_PAUSED
-        addHistory(HISTORY_PAUSE, 0)
+        runningStatus = running.resumeStatus
         return listOf(statusMessage())
     }
 

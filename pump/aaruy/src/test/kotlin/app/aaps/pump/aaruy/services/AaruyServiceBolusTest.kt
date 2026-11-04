@@ -151,6 +151,19 @@ class AaruyServiceBolusTest {
     }
 
     @Test
+    fun aStopEndsItsRetriesWhenTheLinkIsLost() {
+        var sent = 0
+        `when`(ble.cancelBolus()).thenAnswer {
+            sent++
+            service.isConnected = false
+            false
+        }
+        service.stopBolus()
+        assertEquals(1, sent)
+        assertFalse(pump.bolusStopped)
+    }
+
+    @Test
     fun aConfirmedStopStops() {
         `when`(ble.cancelBolus()).thenReturn(true)
         service.stopBolus()

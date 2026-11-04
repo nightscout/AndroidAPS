@@ -117,6 +117,73 @@ class AaruyBleReconnectTest {
         transport.shutdown()
     }
 
+    /** A real pump answers a stop by going straight from status 3 to 1. That confirms the stop, and no link was lost. */
+    @Test
+    fun aStopThatGoesBackToBasalIsConfirmedAndIsNotALostLink() {
+        val preferences = mock(Preferences::class.java)
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger,
+            mock(ResourceHelper::class.java),
+            preferences,
+            mock(DateUtil::class.java),
+            mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java),
+            mock(DecimalFormatter::class.java)
+        )
+        val extraDir = mock(DocumentFile::class.java)
+        `when`(extraDir.findFile("emulate_aaruy")).thenReturn(mock(DocumentFile::class.java))
+        val files = mock(FileListProvider::class.java)
+        `when`(files.ensureExtraDirExists()).thenReturn(extraDir)
+        val ble = AaruyBLE(
+            logger,
+            RuntimeEnvironment.getApplication() as Context,
+            pump,
+            mock(DateUtil::class.java),
+            mock(RxBus::class.java),
+            preferences,
+            mock(HistoryUnitInfoDao::class.java),
+            mock(HistoryDailyUnitInfoDao::class.java),
+            mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java),
+            files
+        )
+        ble.startEmulatorIfRequested()
+        val transport = ble.emulatorTransport!!
+
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        pump.bolusDone = false
+        Thread { ble.setBolus(3.0, false) }.start()
+        waitFor("the driver saw the bolus") { pump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING }
+
+        pump.bolusStopRequested = true
+        var confirmed = false
+        // `cancelBolus` sleeps in virtual time, so it can look before the answer is handled. The service repeats it too.
+        Thread {
+            repeat(50) {
+                if (!confirmed) confirmed = ble.cancelBolus()
+                Thread.sleep(100)
+            }
+        }.start()
+        waitFor("the stop is confirmed") { confirmed }
+
+        assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
+        assertTrue("the bolus is over", pump.bolusDone)
+        assertEquals("the link was never lost", false, pump.bolusEndNotSeen)
+        transport.shutdown()
+    }
+
     /**
      * The client is still connected, because `disconnectDevice` does not drop the link. It reports CONNECTED at once
      * when asked to connect, and that must not be overwritten by CONNECTING.
