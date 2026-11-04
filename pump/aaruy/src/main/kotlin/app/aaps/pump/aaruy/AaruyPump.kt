@@ -508,11 +508,21 @@ class AaruyPump @Inject constructor(
         return basalInfo
     }
 
-    fun buildAaruyProfileArray(profile: Profile): ByteArray {
-        val basalInfo = buildAaruyProfileRecord(profile)
-        val byteArray = dataClassToByteArray(basalInfo)
-        return byteArray
+    /**
+     * Compares the rates only. The daily total goes to the pump cut to one decimal, so 3.84 comes back as 3.8,
+     * and comparing it would send the same profile again at every status check.
+     */
+    fun isBasalInPump(profile: Profile): Boolean {
+        val inPump = try {
+            Gson().fromJson(String(actualBasalProfile), BasalInfo::class.java)
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMP, "The saved pump profile cannot be read", e)
+            null
+        }
+        return inPump?.basalItems?.basalItemList?.comparable() == buildAaruyProfileRecord(profile).basalItems?.basalItemList?.comparable()
     }
+
+    private fun List<BasalItem>.comparable() = map { it.startTime to (it.basalSpeed * 1000).roundToInt() }
 
     fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double = 35.0) {
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
@@ -601,7 +611,7 @@ class AaruyPump @Inject constructor(
         )
         aapsLogger.debug(
             LTag.PUMPCOMM,
-            "syncExtendedWithPumpId: ${newRecordInfo(newRecord)}"
+            "syncStopTBRWithPumpId: ${newRecordInfo(newRecord)}"
         )
     }
 

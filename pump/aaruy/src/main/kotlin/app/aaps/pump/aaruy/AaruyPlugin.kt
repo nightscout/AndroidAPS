@@ -256,19 +256,7 @@ class AaruyPlugin @Inject constructor(
 
     override fun isThisProfileSet(profile: Profile): Boolean {
         if (!isInitialized()) return true
-        var result = false
-        val profileBytes = aaruyPump.buildAaruyProfileArray(profile)
-        if (profileBytes.size == aaruyPump.actualBasalProfile.size) {
-            result = true
-            for (i in profileBytes.indices) {
-                if (profileBytes[i] != aaruyPump.actualBasalProfile[i]) {
-                    result = false
-                    break
-                }
-            }
-        }
-
-        return result
+        return aaruyPump.isBasalInPump(profile)
     }
 
     override val baseBasalRate: Double
