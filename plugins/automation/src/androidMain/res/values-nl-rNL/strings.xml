@@ -6,9 +6,9 @@
     <string name="automation_new_rule">Regel toevoegen</string>
     <string name="automation_empty_desc">Maak een regel om acties automatisch uit te voeren op basis van triggers.</string>
     <string name="automation_edit_rule">Regel bewerken</string>
-    <string name="automation_discard_title">Wijzigingen weggooien?</string>
-    <string name="automation_discard_message">De regel is onvolledig en kan niet worden opgeslagen. Wijzigingen weggooien?</string>
-    <string name="automation_discard_confirm">Weggooien</string>
+    <string name="automation_discard_title">Wijzigingen verwijderen?</string>
+    <string name="automation_discard_message">De regel is onvolledig en kan niet worden opgeslagen. Wijzigingen verwijderen?</string>
+    <string name="automation_discard_confirm">Verwijderen</string>
     <string name="automation_category_time">Tijd &amp; planning</string>
     <string name="automation_category_glucose">Glucose &amp; behandeling</string>
     <string name="automation_category_device">Apparaatstatus</string>
