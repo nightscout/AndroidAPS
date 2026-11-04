@@ -35,9 +35,14 @@ class AaruyBleClient(
     context: Context,
     private val aapsLogger: AAPSLogger,
     private val transport: AaruyBleTransport,
-    /** All pump events run here. Not the main thread: the pump must not wait for the screen, and the screen must not wait for the pump. */
-    val eventLooper: Looper = HandlerThread("AaruyPump").apply { start() }.looper
+    private val testLooper: Looper? = null
 ) {
+
+    /**
+     * All pump events run here. Not the main thread: the pump must not wait for the screen, and the screen must not wait for the pump.
+     * It starts at the first use, as this class exists also for users of other pumps.
+     */
+    val eventLooper: Looper by lazy { testLooper ?: HandlerThread("AaruyPump").apply { start() }.looper }
 
     private val appContext = context
     private val link = PumpLink()
@@ -387,7 +392,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
      */
     private inner class PumpLink : BleTransportListener, AaruyTransportExtras {
 
-        private val events = Handler(eventLooper)
+        private val events by lazy { Handler(eventLooper) }
         private val connectTimeout = Runnable { onConnectFailed("timeout") }
         private val setupTimeout = Runnable { onConnectFailed("setup timeout") }
         private var address: String? = null

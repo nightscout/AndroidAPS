@@ -96,7 +96,7 @@ class AaruyBLE(
     val aaBleUtil = AaruyBleClient(context, aapsLogger, transport)
 
     /** On the thread of the pump events, because it shares their state. */
-    private val handler = Handler(aaBleUtil.eventLooper)
+    private val handler by lazy { Handler(aaBleUtil.eventLooper) }
 
     /** Set when the emulator replaces the radio, see AaruyBindings. */
     val emulatorTransport: AaruyEmulatorBleTransport? = transport as? AaruyEmulatorBleTransport
@@ -119,9 +119,8 @@ class AaruyBLE(
     var refreshHistory: Boolean = false
     var isFirstDetection: Boolean = false
 
-    init {
-        startDetection()
-    }
+    /** Starts at the first connection: this class also exists for users of other pumps, and they need no check every 2 seconds. */
+    private var detectionStarted = false
 
     private fun startDetection() {
         val detectionRunnable = object : Runnable {
@@ -285,6 +284,10 @@ class AaruyBLE(
 
     @SuppressLint("MissingPermission")
     fun connectDevice(device: BluetoothDevice) {
+        if (!detectionStarted) {
+            detectionStarted = true
+            startDetection()
+        }
         aapsLogger.warn(LTag.PUMPCOMM, "------------------>connectDevice device = $device")
         listenerReceiveData()
         aaBleUtil.bindDevice(device)
