@@ -3,6 +3,9 @@
     <string name="executing_right_now">指令正在執行中</string>
     <string name="smb_being_delivered">目前正在進行超微量注射。請在完成後再試一次。</string>
     <string name="basal_value_below_minimum">基礎值低於最低值。未設置檔案！</string>
+    <string name="concentration_change_failed_title">胰島素變更失敗</string>
+    <string name="concentration_change_failed">新胰島素已在幫浦中，但 AAPS 無法將設定檔寫入幫浦。幫浦目前輸注的胰島素劑量不正確。請立即中斷幫浦連線或取下幫浦，檢查血糖，並視需要以其他方式注射胰島素。只有在設定檔寫入後，才能重新連線幫浦。</string>
+    <string name="concentration_change_pending">使用新胰島素的設定檔尚未寫入幫浦。在寫入之前，無法注射胰島素。</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">幫浦中的基礎率設定檔已更新。幫浦會依自身步進將基礎率四捨五入：每天提供 %1$s，而不是 %2$s。</string>
     <string name="basal_reported_far_from_profile">幫浦回報的基礎率與設定檔差異過大。AAPS 將保留設定檔中的基礎率。請檢查幫浦內的基礎率。</string>
     <!--       Stats -->
