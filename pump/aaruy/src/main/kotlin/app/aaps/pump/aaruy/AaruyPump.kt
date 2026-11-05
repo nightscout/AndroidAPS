@@ -85,12 +85,11 @@ class AaruyPump(
             preferences.put(AaruyIntKey.PumpState, value.state.toInt())
         }
 
-    private val _pumpLastState = MutableStateFlow(AaruyPumpState.FIRST_INIT)
-    val pumpLastStateFlow: StateFlow<AaruyPumpState> = _pumpLastState
+    private var _pumpLastState = AaruyPumpState.FIRST_INIT
     var pumpLastState: AaruyPumpState
-        get() = _pumpLastState.value
+        get() = _pumpLastState
         set(value) {
-            _pumpLastState.value = value
+            _pumpLastState = value
             preferences.put(AaruyIntKey.PumpLastState, value.state.toInt())
         }
 
