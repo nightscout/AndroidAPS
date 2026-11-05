@@ -15,14 +15,17 @@ internal class AaruyScanner {
     var listener: ScanResultListener? = null
 
     private val callback = object : ScanCallback() {
-        @SuppressLint("MissingPermission")
-        override fun onBatchScanResults(batch: List<ScanResult>) {
-            batch.forEach { result ->
-                val name = result.device.name
-                if (!name.isNullOrEmpty() && name.contains(DEVICE_NAME_PREFIX) && results.none { it.device == result.device }) results.add(result)
-            }
-            listener?.onScanResult(results)
+        override fun onBatchScanResults(batch: List<ScanResult>) = onBatch(batch)
+    }
+
+    /** Keeps each pump once. Other devices nearby are left out. */
+    @SuppressLint("MissingPermission")
+    internal fun onBatch(batch: List<ScanResult>) {
+        batch.forEach { result ->
+            val name = result.device.name
+            if (!name.isNullOrEmpty() && name.contains(DEVICE_NAME_PREFIX) && results.none { it.device == result.device }) results.add(result)
         }
+        listener?.onScanResult(results)
     }
 
     fun start() {
