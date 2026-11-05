@@ -362,8 +362,9 @@ class StatusViewModel(
                 aapsLogger.error(LTag.UI, "Switch to the second CGM sensor threw", e)
                 rh.gs(UiStrings.overview_second_sensor_switch_error)
             }
-            _uiState.update { it.copy(promotionMessage = message) }
+            // Rows first: when the message shows, the card already shows the sensor that is now in use.
             refreshCgmRows()
+            _uiState.update { it.copy(promotionMessage = message) }
         }
     }
 

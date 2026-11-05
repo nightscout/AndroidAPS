@@ -44,6 +44,13 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
 
             else                           -> Unit
         }
+        val reconnect = if (state.phase == OnePlusWarmupState.Phase.RECONNECTING) {
+            DexcomOnePlusReconnectNotice.of(state, System.currentTimeMillis())
+        } else null
+        if (reconnect == DexcomOnePlusReconnectNotice.HIDE) {
+            cancel()
+            return
+        }
 
         val ongoing = state.phase != OnePlusWarmupState.Phase.FAILED
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -65,52 +72,32 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
                     .setProgress(0, 0, true)
                     .setShowWhen(false)
 
-            OnePlusWarmupState.Phase.RECONNECTING -> {
+            OnePlusWarmupState.Phase.RECONNECTING -> when (reconnect) {
+                // Between two radio windows of a warm-up: the countdown, as while warming.
+                DexcomOnePlusReconnectNotice.WARMUP_COUNTDOWN -> showWarmupCountdown(builder, state)
+
                 // A reconnect that is really a long ADV silence must say so: the field case showed
                 // an unchanging "Reconnecting…" for 18 min while nothing was happening.
-                val silenceMinutes = state.advSilenceMinutes
-                when {
-                    state.staleMacSuspected                      ->
-                        builder.setContentTitle(context.getString(R.string.dexcom_oneplus_notif_stale_mac_title))
-                            .setContentText(context.getString(R.string.dexcom_oneplus_notif_stale_mac_text))
-                            .setStyle(
-                                NotificationCompat.BigTextStyle()
-                                    .bigText(context.getString(R.string.dexcom_oneplus_notif_stale_mac_text)),
-                            )
-
-                    silenceMinutes != null && silenceMinutes > 0 ->
-                        builder.setContentText(
-                            context.getString(
-                                R.string.dexcom_oneplus_notif_waiting_adv,
-                                silenceMinutes.toInt(),
-                            ),
+                DexcomOnePlusReconnectNotice.STALE_MAC        ->
+                    builder.setContentTitle(context.getString(R.string.dexcom_oneplus_notif_stale_mac_title))
+                        .setContentText(context.getString(R.string.dexcom_oneplus_notif_stale_mac_text))
+                        .setStyle(
+                            NotificationCompat.BigTextStyle()
+                                .bigText(context.getString(R.string.dexcom_oneplus_notif_stale_mac_text)),
                         )
+                        .setProgress(0, 0, true).setShowWhen(false)
 
-                    else                                         ->
-                        builder.setContentText(context.getString(R.string.dexcom_oneplus_notif_reconnecting))
-                }
-                builder.setProgress(0, 0, true).setShowWhen(false)
+                DexcomOnePlusReconnectNotice.NO_SIGNAL        ->
+                    builder.setContentText(
+                        context.getString(R.string.dexcom_oneplus_notif_waiting_adv, (state.advSilenceMinutes ?: 0L).toInt()),
+                    ).setProgress(0, 0, true).setShowWhen(false)
+
+                else                                          ->
+                    builder.setContentText(context.getString(R.string.dexcom_oneplus_notif_reconnecting))
+                        .setProgress(0, 0, true).setShowWhen(false)
             }
 
-            OnePlusWarmupState.Phase.WARMING      -> {
-                builder.setContentTitle(context.getString(R.string.dexcom_oneplus_notif_warming_title))
-                    .setContentText(context.getString(R.string.dexcom_oneplus_notif_warming_text))
-                val remaining = DexcomOnePlusWarmupCountdown.resolveRemainingMs(
-                    state = state.toCgmWarmupInfo(),
-                    nowEpochMs = System.currentTimeMillis(),
-                    localFallbackEndsAtEpochMs = null,
-                )
-                if (remaining != null && remaining > 0L) {
-                    // Live status-bar countdown to end — no per-second updates needed.
-                    val endsAt = state.endsAtEpochMs ?: (System.currentTimeMillis() + remaining)
-                    builder.setWhen(endsAt)
-                        .setShowWhen(true)
-                        .setUsesChronometer(true)
-                        .setChronometerCountDown(true)
-                } else {
-                    builder.setProgress(0, 0, true).setShowWhen(false)
-                }
-            }
+            OnePlusWarmupState.Phase.WARMING      -> showWarmupCountdown(builder, state)
 
             OnePlusWarmupState.Phase.FAILED       ->
                 builder.setContentTitle(context.getString(R.string.dexcom_oneplus_notif_failed_title))
@@ -124,6 +111,27 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
         } catch (_: SecurityException) {
             // POST_NOTIFICATIONS denied on Android 13+ — nothing to show, session continues.
+        }
+    }
+
+    /** The warm-up title and text, with a live countdown when the end is known. */
+    private fun showWarmupCountdown(builder: NotificationCompat.Builder, state: OnePlusWarmupState) {
+        builder.setContentTitle(context.getString(R.string.dexcom_oneplus_notif_warming_title))
+            .setContentText(context.getString(R.string.dexcom_oneplus_notif_warming_text))
+        val remaining = DexcomOnePlusWarmupCountdown.resolveRemainingMs(
+            state = state.toCgmWarmupInfo(),
+            nowEpochMs = System.currentTimeMillis(),
+            localFallbackEndsAtEpochMs = null,
+        )
+        if (remaining != null && remaining > 0L) {
+            // Live status-bar countdown to end — no per-second updates needed.
+            val endsAt = state.endsAtEpochMs ?: (System.currentTimeMillis() + remaining)
+            builder.setWhen(endsAt)
+                .setShowWhen(true)
+                .setUsesChronometer(true)
+                .setChronometerCountDown(true)
+        } else {
+            builder.setProgress(0, 0, true).setShowWhen(false)
         }
     }
 
@@ -183,5 +191,55 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
 
         /** Not 8931 (warm-up) and not 8932 (session foreground service): those replace each other. */
         private const val ALERT_ID = 8933
+    }
+}
+
+/**
+ * What the ongoing notification shows for a [OnePlusWarmupState.Phase.RECONNECTING] state.
+ *
+ * A ONE+ / G7 connects only for a few seconds about every 5 minutes. Between two readings the
+ * driver waits for the next radio window and reports RECONNECTING. That is the normal state, so it
+ * must not post a notification after every reading. Only a silence that is longer than one reading
+ * interval, a sensor that seems to have changed, or a real error is shown. A lost signal also
+ * raises its own alarm, see `DexcomOnePlusSensorAlerts`.
+ */
+internal enum class DexcomOnePlusReconnectNotice {
+
+    /** The normal wait between two readings: no notification. */
+    HIDE,
+
+    /** The wait between two radio windows of a warm-up: the warm-up countdown stays. */
+    WARMUP_COUNTDOWN,
+
+    /** No signal for [NO_SIGNAL_NOTICE_MINUTES] or more: at least one reading was missed. */
+    NO_SIGNAL,
+
+    /** The stored sensor address may be stale (sensor replaced or started elsewhere). */
+    STALE_MAC,
+
+    /** A reconnect after an error, or a refusal pause: shown as "Reconnecting". */
+    RECONNECTING;
+
+    companion object {
+
+        /** A reading comes about every 5 minutes. One more minute of margin before saying "no signal". */
+        const val NO_SIGNAL_NOTICE_MINUTES = 6L
+
+        /** Driver messages of the normal duty cycle, see `OnePlusBleSession`. */
+        private val NORMAL_CYCLE_MESSAGES = setOf("egv_loop_exit", "waiting_for_next_adv", "waiting_for_adv")
+        private const val CONNECT_ATTEMPT_PREFIX = "connect_attempt_"
+
+        fun of(state: OnePlusWarmupState, nowMs: Long): DexcomOnePlusReconnectNotice {
+            val silenceMinutes = state.advSilenceMinutes ?: 0L
+            val message = state.message
+            val normalCycle = message == null || message in NORMAL_CYCLE_MESSAGES || message.startsWith(CONNECT_ATTEMPT_PREFIX)
+            return when {
+                state.staleMacSuspected                        -> STALE_MAC
+                silenceMinutes >= NO_SIGNAL_NOTICE_MINUTES     -> NO_SIGNAL
+                !normalCycle                                   -> RECONNECTING
+                (state.endsAtEpochMs ?: 0L) > nowMs            -> WARMUP_COUNTDOWN
+                else                                           -> HIDE
+            }
+        }
     }
 }
