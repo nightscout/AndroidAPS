@@ -655,13 +655,13 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
             isSame = false
             maxBolus = maxBolusLocal
         }
-        aapsLogger.debug("syncPrefParam maxBolus is $maxBolus, maxBolusLocal is $maxBolusLocal")
+        aapsLogger.debug(LTag.PUMP, "syncPrefParam maxBolus is $maxBolus, maxBolusLocal is $maxBolusLocal")
         val maxBasalLocal = preferences.get(AaruyDoublePreferenceKey.MaxBasal)
         if (maxBasal != maxBasalLocal) {
             isSame = false
             maxBasal = maxBasalLocal
         }
-        aapsLogger.debug("syncPrefParam maxBasal is $maxBasal, maxBasalLocal is $maxBasalLocal")
+        aapsLogger.debug(LTag.PUMP, "syncPrefParam maxBasal is $maxBasal, maxBasalLocal is $maxBasalLocal")
         val lowAlertLocal = preferences.get(AaruyDoublePreferenceKey.LowReservoir)
         if (lowAlert != lowAlertLocal) {
             isSame = false
@@ -683,7 +683,7 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
             isSame = false
             closeInjectSound = (closeInjectSound or 0x02) and (0xfffd or (soundAlarmLocal shl 1))
         }
-        aapsLogger.debug("syncPrefParam closeInjectSound is $closeInjectSound")
+        aapsLogger.debug(LTag.PUMP, "syncPrefParam closeInjectSound is $closeInjectSound")
         return isSame
     }
 

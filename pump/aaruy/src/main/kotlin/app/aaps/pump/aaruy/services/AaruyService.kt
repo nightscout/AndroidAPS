@@ -437,7 +437,7 @@ class AaruyService : MetroService() {
 
     fun getPumpVersionNum(): String {
         aaruyPump.swVersion = aaruyBle.getPumpVersionNum()
-        aapsLogger.warn(LTag.PUMPCOMM, "getPumpVersionNum swVersion is ${aaruyPump.swVersion}")
+        aapsLogger.debug(LTag.PUMPCOMM, "getPumpVersionNum swVersion is ${aaruyPump.swVersion}")
         return aaruyPump.swVersion
     }
 

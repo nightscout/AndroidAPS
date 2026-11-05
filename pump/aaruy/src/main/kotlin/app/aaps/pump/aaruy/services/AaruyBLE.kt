@@ -188,18 +188,18 @@ class AaruyBLE(
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
         if (bluetoothAdapter == null) {
-            aapsLogger.error("Unable to obtain a BluetoothAdapter.")
+            aapsLogger.error(LTag.PUMPBTCOMM, "Unable to obtain a BluetoothAdapter.")
             return false
         }
 
         if (address == null) {
-            aapsLogger.error("unspecified address.")
+            aapsLogger.error(LTag.PUMPBTCOMM, "No pump address to connect to")
             return false
         }
 
         val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
-            aapsLogger.error("Device not found.  Unable to connect from: $from")
+            aapsLogger.error(LTag.PUMPBTCOMM, "Device not found. Unable to connect from: $from")
             return false
         }
 
@@ -243,7 +243,7 @@ class AaruyBLE(
         }
 
         if (bluetoothAdapter == null) {
-            aapsLogger.error("disconnect is not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
+            aapsLogger.error(LTag.PUMPBTCOMM, "disconnect is not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
             isConnected = false
             return
         }
@@ -315,7 +315,7 @@ class AaruyBLE(
             detectionStarted = true
             startDetection()
         }
-        aapsLogger.warn(LTag.PUMPCOMM, "------------------>connectDevice device = $device")
+        aapsLogger.debug(LTag.PUMPCOMM, "connectDevice device = $device")
         listenerReceiveData()
         aaBleUtil.bindDevice(device)
     }
@@ -329,7 +329,7 @@ class AaruyBLE(
         ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val outOfRange = intent.getBooleanExtra("value", true)
-                aapsLogger.warn(LTag.PUMPCOMM, "Aaruy emulator: out of range = $outOfRange")
+                aapsLogger.warn(LTag.PUMPEMULATOR, "Aaruy emulator: out of range = $outOfRange")
                 transport.outOfRange = outOfRange
                 if (outOfRange) transport.loseConnection()
             }
@@ -338,7 +338,7 @@ class AaruyBLE(
         ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val scenario = intent.getStringExtra("value")
-                aapsLogger.warn(LTag.PUMPCOMM, "Aaruy emulator: scenario $scenario")
+                aapsLogger.warn(LTag.PUMPEMULATOR, "Aaruy emulator: scenario $scenario")
                 transport.onPumpThread {
                     val message = when (scenario) {
                         "lose_answer_temp_basal" -> { transport.loseAnswerToParam = TEMP_BASAL_PARAM; null }
@@ -359,11 +359,11 @@ class AaruyBLE(
         if (aaBleUtil.getOnBleListener() != null)
             return
 
-        aapsLogger.warn(LTag.PUMPCOMM, "------------------>listenerReceiveData setOnBleListener")
+        aapsLogger.debug(LTag.PUMPCOMM, "listenerReceiveData setOnBleListener")
 
         aaBleUtil.setOnBleListener(object : AaruyBleListener {
             override fun onBleStatusChanged(status: BleStatus) {
-                aapsLogger.warn(LTag.PUMPCOMM, "aaruy onBleStatusChanged status = $status")
+                aapsLogger.debug(LTag.PUMPCOMM, "aaruy onBleStatusChanged status = $status")
                 if (status == BleStatus.CONNECTED) {
                     awaitingHistory = true
                     isConnected = true
@@ -375,7 +375,7 @@ class AaruyBLE(
                     if (preferences.get(AaruyStringKey.PumpBoundAddress) == "") {
                         CoroutineScope(Dispatchers.IO).launch {
                             // A new pump: the history screen shows where it started
-                            aapsLogger.warn(LTag.PUMPCOMM, "------------------>change pump")
+                            aapsLogger.debug(LTag.PUMPCOMM, "A new pump is paired")
                             val historyUnitInfo = HistoryUnitInfo()
                             historyUnitInfo.blueName = getShortDeviceName()
                             historyUnitInfo.type = 110
@@ -415,7 +415,7 @@ class AaruyBLE(
             }
 
             override fun onRequestResult(success: Boolean, paramId: Int) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onRequestResult   $paramId($success)")
+                aapsLogger.debug(LTag.PUMPCOMM, "onRequestResult   $paramId($success)")
             }
 
             override fun onBolusValueTooHigh(value: Double, maxValue: Double) {
@@ -455,21 +455,20 @@ class AaruyBLE(
             }
 
             override fun onReceiveBasicParamSetting(basicParam: BasicParam) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveBasicParamSetting basicParam = $basicParam")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveBasicParamSetting basicParam = $basicParam")
                 if (!aaruyPump.handleLoadBasicParam(basicParam) && aaruyPump.pumpState.isCanDoRefresh()) {
                     syncAndLoadBasicParam()
                 }
             }
 
             override fun onReceiveBasalSetting(basalInfo: BasalInfo) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveBasalSetting basalInfo = $basalInfo")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveBasalSetting basalInfo = $basalInfo")
                 // The settings of a status read can still come, with the old profile. Only the new one is the answer.
                 if (basalWanted?.let { aaruyPump.sameRates(it, basalInfo) } == true) sendBasalsInfoOk = true
                 aaruyPump.actualBasalProfile = aaruyPump.dataClassToByteArray(basalInfo)
             }
 
             override fun onReceiveCurrentStatus(statusInfo: StatusInfo) {
-                // aapsLogger.warn(LTag.PUMPCOMM, "onReceiveCurrentStatus statusInfo = $statusInfo")
                 // Only an answer shows that the pump was reached.
                 aaruyPump.lastConnection = dateUtil.now()
                 onStatusForDatabase(statusInfo)
@@ -546,12 +545,12 @@ class AaruyBLE(
             }
 
             override fun onReceiveHistoryLog(logInfo: LogInfo) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveHistoryLog logInfo = $logInfo")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveHistoryLog logInfo = $logInfo")
                 onHistoryLog(logInfo)
             }
 
             override fun onReceiveHistoryDaily(dailyInfo: DailyInfo) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveHistoryDaily dailyInfo = $dailyInfo")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveHistoryDaily dailyInfo = $dailyInfo")
                 aaruyPump.lastHistoryDailyTime = dailyInfo.dailyItemList.last().timestamp
                 saveDailyData(dailyInfo)
                 if (refreshHistory) {
@@ -560,12 +559,12 @@ class AaruyBLE(
             }
 
             override fun onReceiveRealData(battery: Int, signal: Byte) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveRealData battery = $battery,signal = $signal")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveRealData battery = $battery,signal = $signal")
                 aaruyPump.remainBattery = battery.toDouble()
             }
 
             override fun onReceiveErrorData(errorType: Int, error: Int) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveErrorData errorType = $errorType,error = $error")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveErrorData errorType = $errorType,error = $error")
                 val tmpErrCode = (error shl 8) or (errorType)
                 aaruyPump.errCode.tryEmit(tmpErrCode)
                 // High byte 0 is the answer to a motor command. The wizard reads it from errCode, nothing else needs it.
@@ -595,26 +594,23 @@ class AaruyBLE(
             }
 
             override fun onReceiveConfirmWarn(confirm: Int) {
-                aapsLogger.warn(LTag.PUMPCOMM, "onReceiveConfirmWarn confirm = $confirm")
+                aapsLogger.debug(LTag.PUMPCOMM, "onReceiveConfirmWarn confirm = $confirm")
             }
 
             override fun onUnbindClearInfo() {
-                aapsLogger.warn(LTag.PUMPCOMM, "onUnbindClearInfo")
+                aapsLogger.debug(LTag.PUMPCOMM, "onUnbindClearInfo")
                 preferences.put(AaruyStringKey.PumpBoundAddress, "")
                 preferences.put(AaruyStringKey.MacAddress, "")
                 preferences.put(AaruyStringKey.PumpName, "")
             }
 
-            // override fun onReceiveReportDevice(reportDeviceInfo: ReportDeviceInfo) {
-            //     aapsLogger.warn(LTag.PUMPCOMM, "onReceiveReportDevice reportDeviceInfo is $reportDeviceInfo")
-            // }
         })
     }
 
     internal fun onHistoryLog(logInfo: LogInfo) {
         refreshHistory = true
         if (aaruyPump.canSaveHistory) {
-            aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
+            aapsLogger.debug(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
             saveHistoryData(logInfo)
             if (logInfo.curPage + 1 == logInfo.totalPage) {
                 readDailyData(aaruyPump.lastHistoryDailyTime)
@@ -622,7 +618,7 @@ class AaruyBLE(
             }
         }
         else if (logInfo.curPage + 1 == logInfo.totalPage) {
-            aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory canSaveHistory = ${aaruyPump.canSaveHistory}, totalPage = ${logInfo.totalPage}")
+            aapsLogger.debug(LTag.PUMPCOMM, "aaruyPump.canSaveHistory canSaveHistory = ${aaruyPump.canSaveHistory}, totalPage = ${logInfo.totalPage}")
             aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
             aaruyPump.canSaveHistory = true
             receivingHistory = false
@@ -791,11 +787,11 @@ fun syncAndLoadBasicParam() {
     }
 
     fun requestHistoryData(lastTime: Long) {
-        aapsLogger.warn(LTag.PUMPCOMM, "requestHistoryData lastTime = $lastTime, receivingHistory is $receivingHistory refreshHistory is $refreshHistory, isFirstDetection is $isFirstDetection")
+        aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData lastTime = $lastTime, receivingHistory is $receivingHistory refreshHistory is $refreshHistory, isFirstDetection is $isFirstDetection")
         if (!receivingHistory) {
             isFirstDetection = true
             refreshHistory = false
-            aapsLogger.warn(LTag.PUMPCOMM, "requestHistoryData receivingHistory = $receivingHistory")
+            aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData receivingHistory = $receivingHistory")
             receivingHistory = true
             CoroutineScope(Dispatchers.Default).launch {
                 delay(20)
@@ -830,7 +826,7 @@ fun syncAndLoadBasicParam() {
         val lastPage = logInfo.curPage + 1 == logInfo.totalPage
         syncJobs.trySend {
             logInfo.logItems.forEachIndexed { index, item ->
-                aapsLogger.warn(LTag.PUMPCOMM, "saveHistoryData item.data = ${item.data}, item.delayBolus is ${item.delayBolus}")
+                aapsLogger.debug(LTag.PUMPCOMM, "saveHistoryData item.data = ${item.data}, item.delayBolus is ${item.delayBolus}")
                 val historyUnitInfo = HistoryUnitInfo()
                 historyUnitInfo.data = item.data.toLong()
                 historyUnitInfo.delayBolus = item.delayBolus.toLong()
@@ -933,7 +929,7 @@ fun syncAndLoadBasicParam() {
         CoroutineScope(Dispatchers.IO).launch {
             val currentPumpName = getShortDeviceName()
             for (item in dailyInfo.dailyItemList) {
-                aapsLogger.warn(LTag.PUMPCOMM, "saveDailyData item.dailyBolus = ${item.dailyBolus}, item.dailyTotal is ${item.dailyTotal}")
+                aapsLogger.debug(LTag.PUMPCOMM, "saveDailyData item.dailyBolus = ${item.dailyBolus}, item.dailyTotal is ${item.dailyTotal}")
                 // The pump sends today again and again while the day grows, so one day of one pump is one row.
                 val row = historyDailyUnitInfoDao.find(item.timestamp, currentPumpName)
                 val info = row ?: HistoryDailyUnitInfo().apply {
