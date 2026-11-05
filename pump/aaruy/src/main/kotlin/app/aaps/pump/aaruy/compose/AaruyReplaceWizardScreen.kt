@@ -17,9 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.siteRotation.SiteLocationWizardStep
 import app.aaps.pump.aaruy.R
 
 @Composable
@@ -43,8 +45,8 @@ fun AaruyReplaceWizardScreen(
 
     WizardScreen(
         currentStep = state.step,
-        totalSteps = AaruyReplaceStep.entries.size,
-        currentStepIndex = state.step.ordinal,
+        totalSteps = state.steps.size,
+        currentStepIndex = state.steps.indexOf(state.step).coerceAtLeast(0),
         canGoBack = !state.busy && state.step != AaruyReplaceStep.DONE,
         onBack = onFinish,
         cancelDialogTitle = title,
@@ -68,6 +70,24 @@ fun AaruyReplaceWizardScreen(
                 primary = WizardButton(stringResource(R.string.setting_next), viewModel::assembled, enabled = canSend)
             )
 
+            AaruyReplaceStep.SELECT_INSULIN -> {
+                val availableInsulins by viewModel.availableInsulins.collectAsStateWithLifecycle()
+                val selectedInsulin by viewModel.selectedInsulin.collectAsStateWithLifecycle()
+                val activeInsulinLabel by viewModel.activeInsulinLabel.collectAsStateWithLifecycle()
+                WizardStepLayout(
+                    primaryButton = WizardButton(stringResource(R.string.setting_next), viewModel::insulinSelected, enabled = selectedInsulin != null)
+                ) {
+                    SelectInsulin(
+                        availableInsulins = availableInsulins,
+                        selectedInsulin = selectedInsulin,
+                        activeInsulinLabel = activeInsulinLabel,
+                        onInsulinSelect = viewModel::selectInsulin,
+                        initialExpanded = true,
+                        concentrationDropDownEnabled = viewModel.concentrationEnabled
+                    )
+                }
+            }
+
             AaruyReplaceStep.PRIME        -> Step(
                 text = stringResource(if (state.dropletsSeenByPump) R.string.locate_check_liquid else R.string.actions_reservoir_prime_comment),
                 note = stringResource(R.string.actions_reservoir_prime_comment_note),
@@ -83,6 +103,8 @@ fun AaruyReplaceWizardScreen(
                 connected = connected,
                 primary = WizardButton(stringResource(R.string.setting_next), viewModel::connectedToBody, enabled = canSend)
             )
+
+            AaruyReplaceStep.SITE_LOCATION  -> SiteLocationWizardStep(host = viewModel)
 
             AaruyReplaceStep.FILL_CANNULA -> Step(
                 text = stringResource(R.string.actions_reservoir_prime_cannula),

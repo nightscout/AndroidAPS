@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.BleScanStep
+import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -34,13 +36,19 @@ fun AaruyPairWizardScreen(
     onCancel: () -> Unit
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
+    val steps by viewModel.steps.collectAsStateWithLifecycle()
     val devices by viewModel.devices.collectAsStateWithLifecycle()
 
+    LaunchedEffect(viewModel) { viewModel.cancelled.collect { onCancel() } }
+
+    // Not known yet whether the profile step comes first.
+    val current = step ?: return
+
     WizardScreen(
-        currentStep = step,
-        totalSteps = AaruyPairStep.entries.size,
-        currentStepIndex = step.ordinal,
-        canGoBack = step != AaruyPairStep.COMPLETE,
+        currentStep = current,
+        totalSteps = steps.size,
+        currentStepIndex = steps.indexOf(current).coerceAtLeast(0),
+        canGoBack = current != AaruyPairStep.COMPLETE,
         onBack = {
             viewModel.cancel()
             onCancel()
@@ -49,8 +57,10 @@ fun AaruyPairWizardScreen(
         cancelDialogText = stringResource(app.aaps.core.ui.R.string.cancel),
         title = title,
         setToolbarConfig = setToolbarConfig
-    ) { current, wizardCancel ->
-        when (current) {
+    ) { shown, wizardCancel ->
+        when (shown) {
+            AaruyPairStep.PROFILE_GATE -> ProfileGateWizardStep(host = viewModel)
+
             AaruyPairStep.BLE_SCAN     -> BleScanStep(
                 devices = devices,
                 onSelectDevice = viewModel::selectDevice,

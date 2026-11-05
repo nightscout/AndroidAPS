@@ -3,11 +3,27 @@ package app.aaps.pump.aaruy.compose
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
+import app.aaps.core.ui.compose.siteRotation.BodyType
+import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
@@ -35,14 +51,22 @@ import kotlinx.coroutines.launch
 enum class AaruyReplaceStep {
     REWIND,
     ASSEMBLE,
+
+    /** Only with more than one insulin to choose from. */
+    SELECT_INSULIN,
     PRIME,
     CONNECT,
+
+    /** Only when site rotation is on for pumps. */
+    SITE_LOCATION,
     FILL_CANNULA,
     DONE
 }
 
 data class AaruyReplaceUiState(
     val step: AaruyReplaceStep = AaruyReplaceStep.REWIND,
+    /** The steps of this run. The optional ones are left out when they do not apply. */
+    val steps: List<AaruyReplaceStep> = AaruyReplaceStep.entries.filter { it != AaruyReplaceStep.SELECT_INSULIN && it != AaruyReplaceStep.SITE_LOCATION },
     /** The motor moves, or the pump is asked to. Nothing else may be sent, and the wizard may not be left. */
     val busy: Boolean = false,
     val primed: Boolean = false,
@@ -62,8 +86,14 @@ class AaruyReplaceWizardViewModel(
     private val aaruyBle: AaruyBLE,
     private val aaruyPump: AaruyPump,
     private val pumpSync: PumpSync,
-    private val dateUtil: DateUtil
-) : ViewModel() {
+    private val dateUtil: DateUtil,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus,
+    private val preferences: Preferences,
+    private val profileFunction: ProfileFunction,
+    private val insulinManager: InsulinManager,
+    private val persistenceLayer: PersistenceLayer
+) : ViewModel(), SiteLocationStepHost {
 
     private val _uiState = MutableStateFlow(AaruyReplaceUiState(needleType = aaruyPump.softNeedleType))
     val uiState: StateFlow<AaruyReplaceUiState> = _uiState
@@ -74,10 +104,55 @@ class AaruyReplaceWizardViewModel(
         .map { it == ConnectionState.CONNECTED }
         .stateIn(viewModelScope, SharingStarted.Eagerly, aaruyPump.connectionState == ConnectionState.CONNECTED)
 
+    // Insulin selection, as on the other pumps
+    private val _availableInsulins = MutableStateFlow<List<ICfg>>(emptyList())
+    val availableInsulins: StateFlow<List<ICfg>> = _availableInsulins
+    private val _selectedInsulin = MutableStateFlow<ICfg?>(null)
+    val selectedInsulin: StateFlow<ICfg?> = _selectedInsulin
+    private val _activeInsulinLabel = MutableStateFlow<String?>(null)
+    val activeInsulinLabel: StateFlow<String?> = _activeInsulinLabel
+    val concentrationEnabled: Boolean get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
+
+    // Site location, as on the other pumps
+    private val _siteLocation = MutableStateFlow(TE.Location.NONE)
+    override val siteLocation: StateFlow<TE.Location> = _siteLocation
+    private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
+    override val siteArrow: StateFlow<TE.Arrow> = _siteArrow
+    private var siteRotationEntries: List<TE> = emptyList()
+
     init {
         // UNDISPATCHED: the answer to a command must not be missed.
         viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
             aaruyPump.errCode.collect { onPumpMessage(it) }
+        }
+        viewModelScope.launch {
+            val insulins = insulinManager.insulins.map { it.deepClone() }
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
+            _availableInsulins.value = insulins
+            _selectedInsulin.value = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
+            _activeInsulinLabel.value = activeLabel
+            val siteRotation = preferences.get(BooleanKey.SiteRotationManagePump)
+            if (siteRotation) {
+                siteRotationEntries = persistenceLayer.getTherapyEventDataFromTime(dateUtil.now() - T.days(45).msecs(), false)
+                    .filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+            }
+            _uiState.update { state ->
+                state.copy(steps = AaruyReplaceStep.entries.filter {
+                    when (it) {
+                        AaruyReplaceStep.SELECT_INSULIN -> insulins.size > 1
+                        AaruyReplaceStep.SITE_LOCATION  -> siteRotation
+                        else                            -> true
+                    }
+                })
+            }
+        }
+    }
+
+    /** Goes to the step that follows [from] in this run. */
+    private fun next(from: AaruyReplaceStep) {
+        _uiState.update { state ->
+            val index = state.steps.indexOf(from)
+            state.copy(step = state.steps.getOrElse(index + 1) { AaruyReplaceStep.DONE }, error = null)
         }
     }
 
@@ -124,11 +199,17 @@ class AaruyReplaceWizardViewModel(
     fun rewind() = command(R.string.alarm_rewinding_fail) {
         aaruyBle.replaceDevice()
         val ok = waitFor(AaruyPumpState.PUSHBACK_RUNNING, AaruyPumpState.STOP_RUNNING)
-        if (ok) _uiState.update { it.copy(step = AaruyReplaceStep.ASSEMBLE) }
+        if (ok) next(AaruyReplaceStep.REWIND)
         ok
     }
 
-    fun assembled() = _uiState.update { it.copy(step = AaruyReplaceStep.PRIME, error = null) }
+    fun assembled() = next(AaruyReplaceStep.ASSEMBLE)
+
+    fun selectInsulin(iCfg: ICfg) {
+        _selectedInsulin.value = iCfg
+    }
+
+    fun insulinSelected() = next(AaruyReplaceStep.SELECT_INSULIN)
 
     /** A real pump says it is done long before the piston stops, so the answer ends the wait. */
     fun prime() {
@@ -146,8 +227,31 @@ class AaruyReplaceWizardViewModel(
 
     fun askDroplets() = _uiState.update { it.copy(confirmDroplets = true) }
     fun dropletsNotSeen() = _uiState.update { it.copy(confirmDroplets = false) }
-    fun dropletsSeen() = _uiState.update { it.copy(confirmDroplets = false, step = AaruyReplaceStep.CONNECT, error = null) }
-    fun connectedToBody() = _uiState.update { it.copy(step = AaruyReplaceStep.FILL_CANNULA, error = null) }
+    fun dropletsSeen() {
+        _uiState.update { it.copy(confirmDroplets = false) }
+        next(AaruyReplaceStep.PRIME)
+    }
+
+    fun connectedToBody() = next(AaruyReplaceStep.CONNECT)
+
+    override fun updateSiteLocation(location: TE.Location) {
+        _siteLocation.value = location
+    }
+
+    override fun updateSiteArrow(arrow: TE.Arrow) {
+        _siteArrow.value = arrow
+    }
+
+    override fun completeSiteLocation() = next(AaruyReplaceStep.SITE_LOCATION)
+
+    override fun skipSiteLocation() {
+        _siteLocation.value = TE.Location.NONE
+        _siteArrow.value = TE.Arrow.NONE
+        next(AaruyReplaceStep.SITE_LOCATION)
+    }
+
+    override fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
+    override fun siteRotationEntries(): List<TE> = siteRotationEntries
 
     fun selectNeedle(type: Int) {
         aaruyPump.softNeedleType = type
@@ -174,9 +278,40 @@ class AaruyReplaceWizardViewModel(
         }
         val now = dateUtil.now()
         pumpSync.insertTherapyEventIfNewWithTimestamp(now, TE.Type.INSULIN_CHANGE, pumpType = aaruyPump.pumpType(), pumpSerial = aaruyPump.pumpSN)
-        if (cannulaChanged) pumpSync.insertTherapyEventIfNewWithTimestamp(now, TE.Type.CANNULA_CHANGE, pumpType = aaruyPump.pumpType(), pumpSerial = aaruyPump.pumpSN)
+        if (cannulaChanged) {
+            pumpSync.insertTherapyEventIfNewWithTimestamp(now, TE.Type.CANNULA_CHANGE, pumpType = aaruyPump.pumpType(), pumpSerial = aaruyPump.pumpSN)
+            saveSiteLocation(now)
+        }
+        switchInsulin()
         _uiState.update { it.copy(step = AaruyReplaceStep.DONE) }
         return true
+    }
+
+    /** The site belongs to the new cannula. Without one it is not saved, and the old cannula keeps its age. */
+    private suspend fun saveSiteLocation(time: Long) {
+        val location = _siteLocation.value.takeIf { it != TE.Location.NONE }
+        val arrow = _siteArrow.value.takeIf { it != TE.Arrow.NONE }
+        if (location == null && arrow == null) return
+        // Basal runs already. A failure here must not leave the wizard waiting.
+        try {
+            persistenceLayer.getTherapyEventDataFromToTime(time, time)
+                .firstOrNull { it.type == TE.Type.CANNULA_CHANGE }
+                ?.let { persistenceLayer.insertOrUpdateTherapyEvent(it.copy(location = location, arrow = arrow)) }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMP, "The site of the new cannula was not saved", e)
+        }
+    }
+
+    /** The pump runs by now: a refused switch cannot stop the change, but it says why. */
+    private suspend fun switchInsulin() {
+        val selected = _selectedInsulin.value ?: return
+        if (selected.insulinLabel == _activeInsulinLabel.value) return
+        val source = if (aaruyPump.pumpType() == PumpType.AARUY_BASE) Sources.AaruyBase else Sources.AaruyFull
+        try {
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, source)
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMP, "The insulin was not switched", e)
+        }
     }
 
     private companion object {
