@@ -138,6 +138,14 @@ class AaruyHistorySyncTest {
     }
 
     @Test
+    fun theDayOfThePumpIsNotStoredAsATotalDailyDose() {
+        ble.saveDailyData(DailyInfo(1, listOf(DailyItem(now, 2.3, 1.1))))
+        verify(dailyDao, timeout(5000)).insert(any())
+        Thread.sleep(300)
+        runBlocking { verify(pumpSync, never()).createOrUpdateTotalDailyDose(any(), any(), any(), any(), anyOrNull(), any(), any()) }
+    }
+
+    @Test
     fun theLastEntryThatComesAgainIsNotStoredTwice() {
         val entry = LogItem(timestamp = now - 30 * minute, type = 0, data = 150, injectTime = 3, delayBolus = 0, reserved = 8)
         `when`(historyDao.count(entry.timestamp, 0, 8)).thenReturn(1)

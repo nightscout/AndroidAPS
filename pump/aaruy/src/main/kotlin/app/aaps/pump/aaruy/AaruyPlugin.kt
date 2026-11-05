@@ -382,11 +382,8 @@ class AaruyPlugin(
     override val pumpDescription: PumpDescription get() = PumpDescription().fillFor(aaruyPump.pumpType())
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
-    override suspend fun loadTDDs(): PumpEnactResult {
-        if (aaruyService?.isConnected != true || !aaruyPump.canSaveHistory) return pumpEnactResultProvider().success(false)
-        aaruyService?.requestHistoryData()
-        return pumpEnactResultProvider().success(true)
-    }
+    /** The day of the pump starts at midnight in China, so it gives no TDD of a local day. AAPS calculates its own. */
+    override suspend fun loadTDDs(): PumpEnactResult = pumpEnactResultProvider()
 
     override fun canHandleDST(): Boolean = true
 

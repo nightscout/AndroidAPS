@@ -909,17 +909,8 @@ class AaruyBLE(
                 info.dailyBolus = (item.dailyBolus * 10).roundToInt()
                 info.dailyTotal = (item.dailyTotal * 10).roundToInt()
                 info.isUploaded = false
+                // Only for the history screen. The day of the pump starts at midnight in China, so this is no TDD of a local day.
                 if (row == null) historyDailyUnitInfoDao.insert(info) else historyDailyUnitInfoDao.update(info)
-                // it is a TDD, store it for stats also.
-                pumpSync.createOrUpdateTotalDailyDose(
-                    timestamp = item.timestamp,
-                    bolusAmount = item.dailyBolus,
-                    basalAmount = item.dailyTotal - item.dailyBolus,
-                    totalAmount = item.dailyTotal,
-                    pumpId = null,
-                    pumpType = aaruyPump.pumpType(),
-                    pumpSerial = aaruyPump.pumpSN
-                )
             }
         }
 

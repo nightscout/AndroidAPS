@@ -456,12 +456,6 @@ class AaruyService : MetroService() {
         return aaruyPump.swVersion
     }
 
-    fun requestHistoryData() {
-        if (!isConnected) return
-
-        aaruyBle.requestHistoryData(aaruyPump.lastHistoryTime)
-    }
-
     fun readDailyData() {
         if (!isConnected) return
         aaruyBle.readDailyData(aaruyPump.lastHistoryDailyTime)
