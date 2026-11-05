@@ -7,6 +7,7 @@ import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -626,10 +627,12 @@ class TddCalculatorImplTest : TestBase() {
     private inline fun <R> inZone(zoneId: String, block: () -> R): R {
         val previous = JavaTimeZone.getDefault()
         JavaTimeZone.setDefault(JavaTimeZone.getTimeZone(zoneId))
+        SystemTimeZone.invalidate() // it keeps the zone for 10 s, and the next test must not get this one
         try {
             return block()
         } finally {
             JavaTimeZone.setDefault(previous)
+            SystemTimeZone.invalidate()
         }
     }
 

@@ -48,6 +48,7 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
@@ -133,7 +134,8 @@ class CommandQueueImplementation(
     // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope,
     private val bolusProgressData: BolusProgressData,
-    private val smbPause: SmbPause
+    private val smbPause: SmbPause,
+    private val uiInteraction: () -> UiInteraction
 ) : CommandQueue {
 
     private val queue = ArrayDeque<Command>()
@@ -269,7 +271,15 @@ class CommandQueueImplementation(
                     iCfg = it.iCfg
                 )
                 persistenceLayer.insertOrUpdateEffectiveProfileSwitch(eps)
-            }
+            } else if (result?.cancelled != true && profileFunction.isConcentrationChangePending())
+                // A failed write is normally only a card (see postProfileWriteResult), but here the new insulin
+                // is in the pump and the old program runs: the basal is wrong, and only the user can stop it. KeepAlive
+                // tries the write again about every 5 minutes, so this comes back until the write succeeds.
+                uiInteraction().runAlarm(
+                    rh.gs(ImplementationStrings.concentration_change_failed),
+                    rh.gs(ImplementationStrings.concentration_change_failed_title),
+                    AlarmSound.BOLUS_ERROR
+                )
         }
     }
 
