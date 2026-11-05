@@ -12,6 +12,25 @@ class DexcomOnePlusStagingTest {
     // ---- computeLifecycle ----
 
     @Test
+    fun `a sensor that told its length ends then`() {
+        val fifteenDays = 15L * 24L * hour + 12L * hour
+        assertThat(DexcomOnePlusStaging.expiresAtMs(now, fifteenDays)).isEqualTo(now + fifteenDays)
+    }
+
+    @Test
+    fun `a sensor that told nothing ends after 10 days and the grace period`() {
+        assertThat(DexcomOnePlusStaging.expiresAtMs(now, null))
+            .isEqualTo(now + DexcomOnePlusStaging.SENSOR_LIFE_MS + DexcomOnePlusStaging.SENSOR_GRACE_MS)
+    }
+
+    @Test
+    fun `a 15-day sensor is not at its end after 10 days`() {
+        val fifteenDays = 15L * 24L * hour + 12L * hour
+        val lc = DexcomOnePlusStaging.computeLifecycle(now - 10L * 24L * hour - 6L * hour, now, fifteenDays)!!
+        assertThat(lc.endOfLife).isFalse()
+    }
+
+    @Test
     fun `lifecycle is null when session start unknown`() {
         assertThat(DexcomOnePlusStaging.computeLifecycle(0L, now)).isNull()
     }

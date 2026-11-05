@@ -25,6 +25,7 @@ import app.aaps.plugins.dexcomoneplus.session.OnePlusCalibrationQueue
 import app.aaps.plugins.dexcomoneplus.session.OnePlusConnectPrep
 import app.aaps.plugins.dexcomoneplus.session.OnePlusSessionAuthKeks
 import app.aaps.plugins.dexcomoneplus.session.OnePlusSessionStart
+import app.aaps.plugins.dexcomoneplus.warmup.OnePlusWarmupClock
 import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -316,6 +317,11 @@ class OnePlusCgmDriverReal(
      * under its own running link (see [rebindStore]).
      */
     fun savedSharedKey(): ByteArray? = sensorStore?.load()?.sharedKey
+
+    /** Warm-up length the sensor of this slot reported (0x52), or the default while it is unknown. */
+    private fun sensorWarmupMs(): Long =
+        runCatching { sensorStore?.loadSensorInfo()?.warmupMs }.getOrNull()?.takeIf { it > 0L }
+            ?: OnePlusWarmupClock.DEFAULT_WARMUP_MS
 
     /**
      * Let go of a session that has ended on its own, so the reconnect watchdog can start a new one.
@@ -745,6 +751,16 @@ class OnePlusCgmDriverReal(
             onCalibrationNotSent = { reason -> onCalibrationNotSent(reason) },
             refusalLedger = refusalLedger,
             refusalPolicy = refusalPolicy,
+            // Read `sensorStore` on every call, like savedSharedKeyProvider: a promotion rebinds it.
+            // The watch only reads the sensor; the phone asks.
+            askSensorInfo = { !watchMode && runCatching { sensorStore?.shouldAskSensorInfo() == true }.getOrDefault(false) },
+            onSensorInfoAsked = { runCatching { sensorStore?.noteSensorInfoAsked() } },
+            onSensorInfo = { info ->
+                ifCurrentOperation(generation) {
+                    runCatching { sensorStore?.saveSensorInfo(info) }
+                }
+            },
+            warmupMs = { sensorWarmupMs() },
         )
         return created
     }

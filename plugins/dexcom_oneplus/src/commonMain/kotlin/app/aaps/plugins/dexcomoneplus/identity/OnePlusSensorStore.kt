@@ -2,6 +2,7 @@ package app.aaps.plugins.dexcomoneplus.identity
 
 import app.aaps.plugins.dexcomoneplus.OnePlusLog
 import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
+import app.aaps.plugins.dexcomoneplus.parse.OnePlusExtendedVersionRx
 import app.aaps.plugins.dexcomoneplus.session.OnePlusAuthRefusals
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -181,6 +182,58 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
         )
     }
 
+    /**
+     * The sensor's own session and warm-up length (its 0x52 answer), or null when not known for the
+     * sensor stored now.
+     *
+     * Kept with the MAC of the sensor that gave it, so a value can never pass to another sensor,
+     * whatever the order in which a new sensor's MAC and session start are written.
+     */
+    fun loadSensorInfo(): OnePlusExtendedVersionRx? {
+        if (!ownedByCurrentSensor(KEY_SENSOR_INFO_MAC)) return null
+        val lengthSeconds = prefs.getLong(KEY_SESSION_LENGTH_S, 0L)
+        if (lengthSeconds <= 0L) return null
+        return OnePlusExtendedVersionRx(sessionLengthSeconds = lengthSeconds, warmupSeconds = prefs.getInt(KEY_WARMUP_S, 0))
+    }
+
+    /** Ignored while no sensor MAC is stored: the value could not be tied to a sensor. */
+    fun saveSensorInfo(info: OnePlusExtendedVersionRx) {
+        val mac = prefs.getString(KEY_MAC)?.takeIf { it.isNotBlank() } ?: return
+        prefs.edit {
+            putString(KEY_SENSOR_INFO_MAC, mac)
+            putLong(KEY_SESSION_LENGTH_S, info.sessionLengthSeconds)
+            putInt(KEY_WARMUP_S, info.warmupSeconds)
+        }
+    }
+
+    /**
+     * True while the session length of the sensor stored now is unknown and it was asked fewer than
+     * [MAX_SENSOR_INFO_ASKS] times. The cap keeps a sensor that does not like the request from being
+     * asked on every connection.
+     */
+    fun shouldAskSensorInfo(): Boolean {
+        if (prefs.getString(KEY_MAC).isNullOrBlank()) return false
+        if (loadSensorInfo() != null) return false
+        val asked = if (ownedByCurrentSensor(KEY_SENSOR_INFO_ASKS_MAC)) prefs.getInt(KEY_SENSOR_INFO_ASKS, 0) else 0
+        return asked < MAX_SENSOR_INFO_ASKS
+    }
+
+    /** One more try for the sensor stored now; the count starts again for another sensor. */
+    fun noteSensorInfoAsked() {
+        val mac = prefs.getString(KEY_MAC)?.takeIf { it.isNotBlank() } ?: return
+        val asked = if (ownedByCurrentSensor(KEY_SENSOR_INFO_ASKS_MAC)) prefs.getInt(KEY_SENSOR_INFO_ASKS, 0) else 0
+        prefs.edit {
+            putString(KEY_SENSOR_INFO_ASKS_MAC, mac)
+            putInt(KEY_SENSOR_INFO_ASKS, asked + 1)
+        }
+    }
+
+    private fun ownedByCurrentSensor(ownerKey: String): Boolean {
+        val owner = prefs.getString(ownerKey)?.takeIf { it.isNotBlank() } ?: return false
+        val mac = prefs.getString(KEY_MAC)?.takeIf { it.isNotBlank() } ?: return false
+        return owner.equals(mac, ignoreCase = true)
+    }
+
     fun saveLastMac(address: String) {
         if (address.isBlank()) return
         prefs.edit { putString(KEY_MAC, address.uppercase()) }
@@ -237,7 +290,7 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
      * / device name / KEKS key + its [sessionStartMs], and clears the ingest high-water mark (the
      * promoted sensor has a fresh EGV sequence space, so no old floor must survive).
      */
-    fun adopt(session: OnePlusStoredSession, sessionStartMs: Long) {
+    fun adopt(session: OnePlusStoredSession, sessionStartMs: Long, sensorInfo: OnePlusExtendedVersionRx? = null) {
         prefs.edit {
             putString(KEY_PIN, session.identity.pin)
             putString(KEY_SERIAL, session.identity.serial)
@@ -253,6 +306,17 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
                 // Keep the start owned by the promoted sensor's MAC, so re-connecting it later is
                 // seen as the same sensor and does not restart the age clock (startSessionForSensor).
                 session.lastMac?.let { putString(KEY_SESSION_START_MAC, it.uppercase()) }
+            }
+            // The promoted sensor keeps its own session length. Without a MAC it cannot be tied to it.
+            val mac = session.lastMac
+            if (sensorInfo != null && mac != null) {
+                putString(KEY_SENSOR_INFO_MAC, mac.uppercase())
+                putLong(KEY_SESSION_LENGTH_S, sensorInfo.sessionLengthSeconds)
+                putInt(KEY_WARMUP_S, sensorInfo.warmupSeconds)
+            } else {
+                remove(KEY_SENSOR_INFO_MAC)
+                remove(KEY_SESSION_LENGTH_S)
+                remove(KEY_WARMUP_S)
             }
         }
         OnePlusLog.i("${OnePlusLogMarkers.SESSION}: adopted promoted sensor serial=${maskSerial(session.identity.serial)}")
@@ -325,5 +389,15 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
         private const val KEY_REFUSAL_COUNT = "auth_refusal_count"
         private const val KEY_REFUSAL_AT = "auth_refusal_at_ms"
         private const val KEY_REFUSAL_SAVED_KEY = "auth_refusal_saved_key"
+
+        /** Session and warm-up length the sensor reported (0x52), and the MAC of that sensor. */
+        private const val KEY_SESSION_LENGTH_S = "sensor_session_length_s"
+        private const val KEY_WARMUP_S = "sensor_warmup_s"
+        private const val KEY_SENSOR_INFO_MAC = "sensor_info_mac"
+        private const val KEY_SENSOR_INFO_ASKS = "sensor_info_asks"
+        private const val KEY_SENSOR_INFO_ASKS_MAC = "sensor_info_asks_mac"
+
+        /** Tries per sensor to read its session length (0x52). */
+        const val MAX_SENSOR_INFO_ASKS = 3
     }
 }

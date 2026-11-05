@@ -31,7 +31,10 @@ internal object DexcomOnePlusStaging {
         return stored.equals(target, ignoreCase = true)
     }
 
-    /** Nominal ONE+/G7 sensor life. */
+    /**
+     * Nominal ONE+/G7 sensor life, used while the sensor has not told its own length. A G7 15-day
+     * says so in its 0x52 answer, see `OnePlusExtendedVersionRx`.
+     */
     const val SENSOR_LIFE_MS = 10L * 24L * HOUR_MS
 
     /** End-of-life grace extension. */
@@ -54,18 +57,27 @@ internal object DexcomOnePlusStaging {
     const val STAGING_MAX_EGV_AGE_MS = 20L * 60L * 1000L
 
     /**
+     * Whole session, grace period included: what the sensor said ([sessionLengthMs], 15.5 days for
+     * a G7 15-day), or 10.5 days while it has not said it.
+     */
+    fun sessionLengthMs(sessionLengthMs: Long?): Long =
+        sessionLengthMs?.takeIf { it > 0L } ?: (SENSOR_LIFE_MS + SENSOR_GRACE_MS)
+
+    /**
      * End of the usable time of a sensor started at [sessionStartMs], grace period included. Null when
      * the start is unknown (0).
+     *
+     * @param sessionLengthMs the session length the sensor reported, grace included, or null.
      */
-    fun expiresAtMs(sessionStartMs: Long): Long? =
-        if (sessionStartMs <= 0L) null else sessionStartMs + SENSOR_LIFE_MS + SENSOR_GRACE_MS
+    fun expiresAtMs(sessionStartMs: Long, sessionLengthMs: Long? = null): Long? =
+        if (sessionStartMs <= 0L) null else sessionStartMs + sessionLengthMs(sessionLengthMs)
 
     /**
      * Derive a [CgmSensorLifecycle] from a sensor session start. Returns null when the start is
      * unknown (0) so the status screen simply shows nothing special.
      */
-    fun computeLifecycle(sessionStartMs: Long, nowMs: Long): CgmSensorLifecycle? {
-        val expires = expiresAtMs(sessionStartMs) ?: return null
+    fun computeLifecycle(sessionStartMs: Long, nowMs: Long, sessionLengthMs: Long? = null): CgmSensorLifecycle? {
+        val expires = expiresAtMs(sessionStartMs, sessionLengthMs) ?: return null
         val age = (nowMs - sessionStartMs).coerceAtLeast(0L)
         val remaining = expires - nowMs
         return CgmSensorLifecycle(

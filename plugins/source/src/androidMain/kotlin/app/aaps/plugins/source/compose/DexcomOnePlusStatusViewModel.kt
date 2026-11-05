@@ -72,6 +72,7 @@ class DexcomOnePlusStatusViewModel(
         val sendCalibrationToSensor: Boolean,
         val correctSensorStartEnabled: Boolean,
         val nowMs: Long,
+        val sensor: DexcomOnePlusSensorFacts,
     )
 
     init {
@@ -94,6 +95,7 @@ class DexcomOnePlusStatusViewModel(
                     sendCalibrationToSensor = preferences.get(DexcomOnePlusBooleanKey.SendCalibrationToSensor),
                     correctSensorStartEnabled = preferences.get(DexcomOnePlusBooleanKey.CorrectSensorStart),
                     nowMs = dateUtil.now(),
+                    sensor = plugin.sensorFacts(),
                 ),
             )
             delay(DRIVER_REFRESH_MILLIS)
@@ -127,6 +129,8 @@ class DexcomOnePlusStatusViewModel(
             stagingState = stagingState,
             stagingEvidence = stagingEvidence,
             nowMs = driver.nowMs,
+            sensor = driver.sensor,
+            warmupEndsAtMs = driver.state.endsAtEpochMs,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), null)
 
@@ -140,6 +144,7 @@ class DexcomOnePlusStatusViewModel(
         glucose = { mgdl -> profileUtil.fromMgdlToStringWithUnits(mgdl) },
         time = { epochMs -> dateUtil.timeString(epochMs) },
         age = { millis -> formatSensorAge(millis, rh) },
+        dateTime = { epochMs -> dateUtil.dateAndTimeString(epochMs) },
     )
 
     /**

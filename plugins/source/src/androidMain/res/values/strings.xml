@@ -172,6 +172,33 @@
     <string name="dexcom_oneplus_status_message_none">(none)</string>
     <string name="dexcom_oneplus_session_up">Up</string>
     <string name="dexcom_oneplus_session_down">Down</string>
+    <string name="dexcom_oneplus_session_between_readings">Closed between readings (normal)</string>
+    <string name="dexcom_oneplus_banner_next_reading_in" comment="%1$s=minutes with unit. Example: Sensor OK. Next reading in about 3 min">Sensor OK. Next reading in about %1$s</string>
+    <string name="dexcom_oneplus_banner_next_reading_due">Sensor OK. The next reading is due now.</string>
+    <string name="dexcom_oneplus_banner_no_reading_for" comment="%1$s=minutes with unit. Example: No reading for 14 min">No reading for %1$s</string>
+    <string name="dexcom_oneplus_banner_ok_left" comment="%1$s=time left before the sensor ends, with units. Example: Sensor OK, 6 days, 4 hours left">Sensor OK, %1$s left</string>
+    <string name="dexcom_oneplus_banner_left_next_reading_in" comment="%1$s=time left before the sensor ends, with units, %2$s=minutes with unit. Example: Sensor OK, 6 days, 4 hours left. Next reading in about 3 min">Sensor OK, %1$s left. Next reading in about %2$s</string>
+    <string name="dexcom_oneplus_banner_left_next_reading_due" comment="%1$s=time left before the sensor ends, with units. Example: Sensor OK, 6 days, 4 hours left. The next reading is due now.">Sensor OK, %1$s left. The next reading is due now.</string>
+    <string name="dexcom_oneplus_banner_grace" comment="%1$s=time left before the sensor stops, with units. Example: Grace period: the sensor stops in 5 hours. Change it now.">Grace period: the sensor stops in %1$s. Change it now.</string>
+    <string name="dexcom_oneplus_time_ago" comment="%1$s=minutes with unit. Example: 3 min ago">%1$s ago</string>
+    <string name="dexcom_oneplus_just_now">Just now</string>
+    <string name="dexcom_oneplus_row_last_connection">Last connection</string>
+    <string name="dexcom_oneplus_row_sensor">Sensor</string>
+    <string name="dexcom_oneplus_sensor_name_days" comment="%1$s=Bluetooth name of the sensor, %2$d=number of days. Example: DXCM1A, 15-day sensor">%1$s, %2$d-day sensor</string>
+    <string name="dexcom_oneplus_row_started">Started</string>
+    <string name="dexcom_oneplus_row_warmup_ends">Warm-up ends</string>
+    <string name="dexcom_oneplus_row_ends" comment="Label: when the sensor reaches the end of its normal life">Ends</string>
+    <string name="dexcom_oneplus_ends_in" comment="%1$s=date and time, %2$s=time left with units. Example: 12/11 14:32 (in 6 days, 4 hours)">%1$s (in %2$s)</string>
+    <string name="dexcom_oneplus_row_grace_ends">Grace period ends</string>
+    <string name="dexcom_oneplus_row_serial">Serial number</string>
+    <string name="dexcom_oneplus_row_pairing_code">Pairing code</string>
+    <string name="dexcom_oneplus_row_sensor_state">Sensor state</string>
+    <string name="dexcom_oneplus_sensor_state_ok">OK</string>
+    <string name="dexcom_oneplus_sensor_state_warming">Warming up</string>
+    <string name="dexcom_oneplus_sensor_state_noise">Noisy signal, readings paused</string>
+    <string name="dexcom_oneplus_sensor_state_failed">Sensor failed</string>
+    <string name="dexcom_oneplus_sensor_state_ended">Sensor ended</string>
+    <string name="dexcom_oneplus_sensor_state_stopped">Session stopped</string>
     <string name="dexcom_oneplus_phase_idle">Idle</string>
     <string name="dexcom_oneplus_phase_pairing">Pairing</string>
     <string name="dexcom_oneplus_phase_connecting">Connecting</string>
@@ -263,6 +290,8 @@
     <string name="dexcom_oneplus_production_no_reading">No reading received yet.</string>
     <string name="dexcom_oneplus_row_last_reading">Last reading</string>
     <string name="dexcom_oneplus_reading_at" comment="%1$s=glucose value with unit, %2$s=time. Example: 5.6 mmol/l at 14:32">%1$s at %2$s</string>
+    <string name="dexcom_oneplus_reading_at_ago" comment="%1$s=glucose value with unit, %2$s=time, %3$s=minutes with unit. Example: 5.6 mmol/l at 14:32 (3 min ago)">%1$s at %2$s (%3$s ago)</string>
+    <string name="dexcom_oneplus_reading_trend_at_ago" comment="%1$s=glucose value with unit, %2$s=trend in words, %3$s=time, %4$s=minutes with unit. Example: 5.6 mmol/l, rising slowly, at 14:32 (3 min ago)">%1$s, %2$s, at %3$s (%4$s ago)</string>
     <string name="dexcom_oneplus_row_sensor_age">Sensor age</string>
     <string name="dexcom_oneplus_row_message">Last message</string>
     <string name="dexcom_oneplus_log_note_file">These are the lines of this driver in the app log file. They are kept when the app restarts.</string>

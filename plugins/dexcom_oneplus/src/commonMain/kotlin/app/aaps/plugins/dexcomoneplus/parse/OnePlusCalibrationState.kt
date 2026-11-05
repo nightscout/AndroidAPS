@@ -45,17 +45,21 @@ object OnePlusCalibrationMapper {
 
     /**
      * Maps calibration byte + optional session age (seconds from EGV2) into [OnePlusWarmupState].
-     * When warming up without exact remaining, uses [OnePlusWarmupClock] 30 min fallback from [nowMs].
+     * When warming up without exact remaining, uses [OnePlusWarmupClock] fallback of [warmupMs] from [nowMs].
+     *
+     * @param warmupMs warm-up length of this sensor: about 1 hour for a G7 15-day, read from its 0x52
+     *   answer. The 30 min default fits a 10-day G7 and a ONE+.
      */
     fun toWarmupState(
         state: OnePlusCalibrationState,
         nowMs: Long = Clock.System.now().toEpochMilliseconds(),
         sessionAgeSeconds: Int? = null,
+        warmupMs: Long = OnePlusWarmupClock.DEFAULT_WARMUP_MS,
     ): OnePlusWarmupState {
         return when {
             state.warmingUp() || state == OnePlusCalibrationState.SensorStarted -> {
-                if (sessionAgeSeconds != null && sessionAgeSeconds in 0 until OnePlusWarmupClock.DEFAULT_WARMUP_MS.toInt() / 1000) {
-                    val remaining = (OnePlusWarmupClock.DEFAULT_WARMUP_MS - sessionAgeSeconds * 1000L).coerceAtLeast(0L)
+                if (sessionAgeSeconds != null && sessionAgeSeconds in 0 until warmupMs.toInt() / 1000) {
+                    val remaining = (warmupMs - sessionAgeSeconds * 1000L).coerceAtLeast(0L)
                     OnePlusWarmupState(
                         phase = OnePlusWarmupState.Phase.WARMING,
                         remainingMs = remaining,
@@ -63,7 +67,7 @@ object OnePlusCalibrationMapper {
                         message = state.name,
                     )
                 } else {
-                    OnePlusWarmupClock.warmingFromStart(startEpochMs = nowMs, nowMs = nowMs, message = state.name)
+                    OnePlusWarmupClock.warmingFromStart(startEpochMs = nowMs, durationMs = warmupMs, nowMs = nowMs, message = state.name)
                 }
             }
             state.usableGlucose() || state == OnePlusCalibrationState.Ok ->
