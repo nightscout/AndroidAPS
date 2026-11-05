@@ -2,6 +2,7 @@ package app.aaps.plugins.source
 
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.plugins.dexcomoneplus.OnePlusDisplaySlot
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseSample
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import com.google.common.truth.Truth.assertThat
@@ -32,6 +33,24 @@ class DexcomOnePlusIngestTest {
         assertThat(gv.noise).isNull()
         assertThat(gv.trendArrow).isEqualTo(TrendArrow.FORTY_FIVE_UP)
         assertThat(gv.sourceSensor).isEqualTo(SourceSensor.DEXCOM_ONEPLUS_NATIVE)
+    }
+
+    /**
+     * Direct-to-watch: a reading the watch took in the sensor's watch slot must never reach
+     * insertCgmSourceData, even when it is new and has a fresh sequence number.
+     */
+    @Test
+    fun `a watch slot reading never reaches the loop`() {
+        val watch = OnePlusGlucoseSample(
+            mgdl = 64.0,
+            timestampMs = 1_700_000_000_000L,
+            sequence = 7L,
+            displaySlot = OnePlusDisplaySlot.WATCH,
+        )
+        assertThat(DexcomOnePlusIngest.mayFeedLoop(watch)).isFalse()
+        assertThat(DexcomOnePlusIngest.shouldAccept(watch)).isFalse()
+        // It did not move the dedup state either: the phone's copy of the same reading still goes in.
+        assertThat(DexcomOnePlusIngest.shouldAccept(watch.copy(displaySlot = OnePlusDisplaySlot.PHONE))).isTrue()
     }
 
     @Test

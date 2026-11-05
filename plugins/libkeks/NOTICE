@@ -45,6 +45,13 @@ What the translation replaced, and why:
   - java.nio.ByteBuffer is replaced by jamorham.keks.util.KeksBuffer, which
     copies the three behaviours the message classes depend on.
 
+One behaviour was added after the translation (November 2026):
+  - Plugin.authSlotOverride. When it is set, the auth request asks for that
+    display slot (for example 3, the watch slot) instead of the byte upstream
+    computes. When it is null, which is the default, the request is exactly the
+    upstream one. It is used by direct-to-watch, so a Wear OS watch can read the
+    sensor next to the phone without taking the phone's slot.
+
 SHA256.java carried its own MIT notice (Copyright (c) 2017 Fabian Meyer). That
 notice is kept in full at the top of the translated SHA256.kt.
 

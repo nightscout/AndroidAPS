@@ -73,6 +73,22 @@
     <string name="staging_auto_promote_hours_title">Hours before the automatic switch</string>
     <string name="staging_auto_promote_done" comment="%1$s=hours since the pre-soak start, with unit. Example: The pre-soak sensor now feeds the loop. Automatic switch after 10 h.">The pre-soak sensor now feeds the loop. Automatic switch after %1$s.</string>
 
+    <!-- Direct-to-watch: a Wear OS watch also reads the ONE+ / G7 sensor itself (Android only) -->
+    <string name="dexcom_oneplus_watch_direct">Direct to watch</string>
+    <string name="dexcom_oneplus_watch_direct_summary">Your Wear OS watch also reads the sensor itself, next to the phone. The watch face keeps showing values when the phone is away. Watch readings stay on the watch and never reach the loop.</string>
+    <string name="dexcom_oneplus_watch_direct_unavailable">Nothing is sent to the watch yet: this phone is not paired with the sensor that feeds the loop.</string>
+    <string name="dexcom_oneplus_watch_direct_watch_label" comment="Label of a row that shows what the watch reports, for example: Watch - Connected">Watch</string>
+    <string name="dexcom_oneplus_watch_direct_battery">The watch may put AAPS to sleep in the background and miss readings. Allow unrestricted battery use for AAPS on the watch.</string>
+    <string name="dexcom_oneplus_watch_state_unknown">No answer from the watch yet</string>
+    <string name="dexcom_oneplus_watch_state_off">Off</string>
+    <string name="dexcom_oneplus_watch_state_not_supported">Not possible on this watch (needs Wear OS 3 or newer)</string>
+    <string name="dexcom_oneplus_watch_state_permission">Allow Bluetooth on the watch</string>
+    <string name="dexcom_oneplus_watch_state_bluetooth_off">Bluetooth is off on the watch</string>
+    <string name="dexcom_oneplus_watch_state_pairing">Pairing: accept the request on the watch</string>
+    <string name="dexcom_oneplus_watch_state_waiting">Paired, waiting for the next reading</string>
+    <string name="dexcom_oneplus_watch_state_connected">Connected</string>
+    <string name="dexcom_oneplus_watch_state_refused">The sensor refused the watch</string>
+
     <string name="aidex">MicroTech CGM App</string>
     <string name="description_source_aidex">Receive CGM values from LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
 

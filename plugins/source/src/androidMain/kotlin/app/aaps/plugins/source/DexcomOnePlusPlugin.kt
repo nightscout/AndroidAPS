@@ -243,6 +243,21 @@ class DexcomOnePlusPlugin @Inject constructor(
     /** Namespaced store for the STAGING sensor (identity / markers / session start kept separate). */
     private val stagingStore by lazy { host.slotStore(host.stagingNamespace) }
 
+    /**
+     * Direct-to-watch, phone side. Follows the PRODUCTION store only, read live on every call, so a
+     * promotion (which adopts the pre-soak sensor into that store) is seen at once. On a host with
+     * no watch link it has no transport and does nothing.
+     */
+    val watchHandover: DexcomOnePlusWatchHandover by lazy {
+        DexcomOnePlusWatchHandover(
+            preferences = preferences,
+            rxBus = rxBus,
+            aapsLogger = aapsLogger,
+            transport = host.watchTransport(rxBus),
+            productionSession = { sensorStore.load() },
+        )
+    }
+
     /** Runs [DexcomOnePlusWarmupBasalGuard] on every warm-up / connection change. Started in onStart, cancelled in onStop. */
     private var warmupGuardJob: Job? = null
 
@@ -385,6 +400,9 @@ class DexcomOnePlusPlugin @Inject constructor(
             DexcomOnePlusBooleanKey.CorrectSensorStart,
             // Sensor age on the overview comes from the SENSOR_CHANGE therapy event this writes.
             BooleanKey.BgSourceCreateSensorChange,
+        ) + listOfNotNull(
+            // Only where a watch link exists.
+            DexcomOnePlusBooleanKey.WatchDirect.takeIf { watchHandover.isSupported },
         ),
         icon = pluginDescription.icon,
     )
@@ -449,6 +467,7 @@ class DexcomOnePlusPlugin @Inject constructor(
                 "stagingResumeQueued=$stagingResumeQueued",
         )
         startWarmupBasalGuard()
+        ioScope()?.let { watchHandover.start(it) }
     }
 
     /**
@@ -488,6 +507,8 @@ class DexcomOnePlusPlugin @Inject constructor(
         workScopeLock.withLock { stopped = true }
         // Each step on its own: a driver that throws must not skip the steps after it. The work
         // cancel and the session service stop must always run.
+        // Before the drivers go: the watch lets the sensor go too.
+        stopStep("watch handover stop") { watchHandover.stop() }
         stopStep("watchdog cancel") { cancelReconnectWatchdog() }
         stopStep("warm-up guard cancel") { warmupGuardJob?.cancel() }
         warmupGuardJob = null
@@ -551,6 +572,10 @@ class DexcomOnePlusPlugin @Inject constructor(
      * runs on [ioScope] (IO). Do not block the BLE executor from this callback.
      */
     override fun onGlucose(sample: OnePlusGlucoseSample) {
+        if (!DexcomOnePlusIngest.mayFeedLoop(sample)) {
+            aapsLogger.warn(LTag.BGSOURCE, "DEXCOM_ONEPLUS_BG: refused a ${sample.displaySlot} slot reading, it never feeds the loop")
+            return
+        }
         if (DexcomOnePlusIngest.isWarmupBlockingIngest(warmupPhase)) {
             aapsLogger.debug(
                 LTag.BGSOURCE,
@@ -754,6 +779,8 @@ class DexcomOnePlusPlugin @Inject constructor(
             reason in DELIBERATE_STOPS    -> cancelReconnectWatchdog()
             else                          -> armReconnectWatchdog()
         }
+        // A new sensor, or a new key after a re-pairing: the watch must follow. Sends only on a change.
+        ioScope()?.launch { watchHandover.refresh(if (up) "session up" else "session down") }
     }
 
     /**
@@ -1133,6 +1160,8 @@ class DexcomOnePlusPlugin @Inject constructor(
         // promotion (e.g. stuck at IDLE) until the app restarts and onStart() re-polls the driver.
         onWarmup(promoted.warmupState())
         refreshProductionLifecycle()
+        // The watch follows the production sensor only, so it gets the promoted one now.
+        watchHandover.resend("pre-soak promoted")
         // One sensor moved from the pre-soak slot into production, so the service is still wanted,
         // but the reason for it has changed. Asked again so the two slots are counted as they are.
         refreshSessionService()

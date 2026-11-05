@@ -125,6 +125,19 @@ class DataHandlerWear(
             }
     }
 
+    /**
+     * A reading the watch took from the sensor itself (direct-to-watch). It takes the same way to the
+     * faces, complications and tiles as a reading from the phone, and goes nowhere else.
+     */
+    fun showSensorReadings(reading: EventData.SingleBg) {
+        dataStoreScope.launch {
+            complicationDataRepository.addSensorReading(reading)
+            triggerComplicationUpdates()
+            TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        }
+    }
+
     private fun setupBus() {
         onEvent<EventData.ActionPing> {
             rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis(), Build.VERSION.SDK_INT)))

@@ -65,6 +65,16 @@ class Plugin : IPluginDA {
 
     private var alt = false
 
+    /**
+     * Added in AAPS, not in xDrip upstream: the display slot the auth request asks for, or null for
+     * the byte upstream sends (`AuthRequestTxMessage2(tokenSize, alt, chal)`, 0x02 = phone).
+     *
+     * A sensor keeps one connection slot per display type, so a watch that reads the sensor next to
+     * the phone must ask for the watch slot (3) or it takes the phone's slot away. Null keeps the
+     * phone path byte for byte as upstream.
+     */
+    @Volatile var authSlotOverride: Int? = null
+
     private val stateLock = KeksLock()
 
     init {
@@ -238,7 +248,7 @@ class Plugin : IPluginDA {
     override fun receivedResponse3(data: ByteArray?): Boolean = false
 
     private fun getAuthRequestTx2(): AuthRequestTxMessage2 {
-        val message = AuthRequestTxMessage2(8, alt, newFwchal)
+        val message = authSlotOverride?.let { AuthRequestTxMessage2(8, it) } ?: AuthRequestTxMessage2(8, alt, newFwchal)
         lastAuthTx2 = message
         return message
     }

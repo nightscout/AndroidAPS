@@ -5,6 +5,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
+import app.aaps.plugins.dexcomoneplus.OnePlusDisplaySlot
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseSample
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import kotlin.concurrent.Volatile
@@ -70,6 +71,10 @@ internal object DexcomOnePlusIngest {
      * @return true if this sample should be inserted (not a near-duplicate of a recent one).
      */
     fun shouldAccept(sample: OnePlusGlucoseSample): Boolean {
+        // The hard rule of direct-to-watch: a reading from any slot but the phone's is for the
+        // watch faces only and never reaches insertCgmSourceData. Checked first, so it does not
+        // even move the dedup state.
+        if (!mayFeedLoop(sample)) return false
         lock.withLock {
             val seq = sample.sequence
             // Persistent floor: reject anything at or below the last accepted sequence — survives
@@ -111,6 +116,15 @@ internal object DexcomOnePlusIngest {
             trendArrow = trendArrowFor(sample.trendSlopeMgdlPerMin),
             sourceSensor = SourceSensor.DEXCOM_ONEPLUS_NATIVE,
         )
+
+    /**
+     * True only for a reading the phone read in its own slot ([OnePlusDisplaySlot.PHONE]).
+     *
+     * A watch that reads the sensor itself (direct-to-watch) keeps its readings on the watch. The
+     * phone's copy of the same reading is the one the loop gets, so this is false for every other
+     * slot, whatever path the reading took.
+     */
+    fun mayFeedLoop(sample: OnePlusGlucoseSample): Boolean = sample.displaySlot.mayFeedLoop
 
     /**
      * Turns the sensor's rate of change into the arrow AAPS stores and draws.

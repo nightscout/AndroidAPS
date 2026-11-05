@@ -95,4 +95,18 @@ enum class DexcomOnePlusBooleanKey(
         title = SourceStrings.staging_auto_promote_title,
         summary = SourceStrings.staging_auto_promote_summary,
     ),
+
+    /**
+     * Direct-to-watch: a Wear OS watch also reads the sensor that feeds the loop, in the sensor's
+     * watch slot, so the watch faces keep a value when the phone is away. The watch's readings stay
+     * on the watch and never reach the loop.
+     *
+     * Off by default. Offered only where the phone has a watch link (Wear OS).
+     */
+    WatchDirect(
+        key = "dexcom_oneplus_watch_direct",
+        defaultValue = false,
+        title = SourceStrings.dexcom_oneplus_watch_direct,
+        summary = SourceStrings.dexcom_oneplus_watch_direct_summary,
+    ),
 }

@@ -84,6 +84,24 @@ class OnePlusCgmDriverRealSharedTest {
     }
 
     @Test
+    fun `the watch driver is never calibrated and its slot cannot feed the loop`() {
+        val driver = OnePlusCgmDriverReal(storeNamespace = "watch", displaySlot = OnePlusDisplaySlot.WATCH)
+        driver.attach(FakePlatform())
+        assertFalse(driver.offerCalibration(glucoseMgdl = 120, bloodAtMs = nowMs()))
+        assertNull(driver.lastCalibrationOutcome())
+        assertFalse(driver.displaySlot.mayFeedLoop)
+        driver.shutdown()
+    }
+
+    @Test
+    fun `only the phone slot keeps the library auth byte`() {
+        assertNull(OnePlusDisplaySlot.PHONE.authSlotOverride)
+        assertEquals(3, OnePlusDisplaySlot.WATCH.authSlotOverride)
+        assertTrue(OnePlusDisplaySlot.PHONE.mayFeedLoop)
+        assertEquals(OnePlusDisplaySlot.PHONE, OnePlusGlucoseSample(mgdl = 100.0, timestampMs = 1L).displaySlot)
+    }
+
+    @Test
     fun `a fingerstick is refused while there is no session`() {
         val driver = OnePlusCgmDriverReal()
         driver.attach(FakePlatform())

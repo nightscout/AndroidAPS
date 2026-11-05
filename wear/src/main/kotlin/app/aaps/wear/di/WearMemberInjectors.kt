@@ -53,6 +53,7 @@ import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.CwfRenderPreviewActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
+import app.aaps.wear.watchdirect.WatchDirectActivity
 import app.aaps.wear.interaction.menus.FillMenuActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.PreferenceMenuActivity
@@ -350,6 +351,12 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(LoopStatusActivity::class)
     fun bindLoopStatusActivity(injector: MembersInjector<LoopStatusActivity>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(WatchDirectActivity::class)
+    fun bindWatchDirectActivity(injector: MembersInjector<WatchDirectActivity>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

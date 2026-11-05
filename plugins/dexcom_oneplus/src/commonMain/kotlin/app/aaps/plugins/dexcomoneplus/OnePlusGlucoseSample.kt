@@ -17,4 +17,9 @@ data class OnePlusGlucoseSample(
      */
     val trendSlopeMgdlPerMin: Double? = null,
     val sequence: Long? = null,
+    /**
+     * The sensor slot this reading was read in. Only a [OnePlusDisplaySlot.PHONE] reading may be
+     * stored as glucose for the loop, see [OnePlusDisplaySlot.mayFeedLoop].
+     */
+    val displaySlot: OnePlusDisplaySlot = OnePlusDisplaySlot.PHONE,
 )

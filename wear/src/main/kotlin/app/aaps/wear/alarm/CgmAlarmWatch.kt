@@ -22,9 +22,10 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 /**
- * The CGM alarms of the phone on the watch ([EventData.CgmAlarm]): a notification with an
- * Acknowledge button, and a vibration for as long as the phone asks, so a low at night can wake the
- * wearer.
+ * The CGM alarms on the watch ([EventData.CgmAlarm]): a notification with an Acknowledge button, and
+ * a vibration for as long as asked, so a low at night can wake the wearer. Most come from the phone.
+ * With direct-to-watch the watch also raises its own low and urgent low here, through the same path,
+ * while the phone is away (see `WatchDirect`).
  *
  * The vibration is marked as an alarm, which the silent mode of the watch does not block, and runs
  * at full strength where the watch lets us set it. The channel itself neither sounds nor vibrates,

@@ -16,6 +16,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import app.aaps.plugins.source.DexcomOnePlusHost
 import app.aaps.plugins.source.DexcomOnePlusPlugin
 import app.aaps.plugins.source.DexcomOnePlusSensorStartCorrection
+import app.aaps.plugins.source.DexcomOnePlusWatchHandover
 import app.aaps.plugins.source.SourceStrings
 import app.aaps.plugins.source.keys.DexcomOnePlusBooleanKey
 import dev.zacsweers.metro.AppScope
@@ -163,4 +164,10 @@ class DexcomOnePlusStatusViewModel(
 
     suspend fun correctSensorStart(startMs: Long): DexcomOnePlusSensorStartCorrection.Verdict =
         plugin.correctProductionSensorStart(startMs)
+
+    /** Direct-to-watch for the production sensor. Its card is drawn only where [DexcomOnePlusWatchHandover.isSupported]. */
+    val watchHandover: DexcomOnePlusWatchHandover get() = plugin.watchHandover
+
+    /** The direct-to-watch switch, live. */
+    val watchDirectEnabled: StateFlow<Boolean> = preferences.observe(DexcomOnePlusBooleanKey.WatchDirect)
 }

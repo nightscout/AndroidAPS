@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
@@ -84,6 +85,14 @@ interface DexcomOnePlusHost {
 
     /** Tell the user about a problem that happened while they were not looking. */
     fun alert(message: String)
+
+    /**
+     * How direct-to-watch messages reach a watch, or null when this host has no watch link.
+     *
+     * Null by default, so a host without a watch link (a test host) does not offer the feature at
+     * all, rather than offering it and doing nothing. Android answers with the Wear OS data layer.
+     */
+    fun watchTransport(rxBus: RxBus): DexcomOnePlusWatchTransport? = null
 
     /**
      * A scanner for the setup screens to drive themselves, separate from the driver's own.

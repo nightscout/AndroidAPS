@@ -1,5 +1,6 @@
 package app.aaps.plugins.dexcomoneplus.session
 
+import app.aaps.plugins.dexcomoneplus.OnePlusDisplaySlot
 import app.aaps.plugins.dexcomoneplus.OnePlusLog
 import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
 import app.aaps.plugins.dexcomoneplus.gatt.OnePlusGattClient
@@ -47,6 +48,11 @@ class OnePlusSessionAuthKeks(
     /** Many 20-byte ExtraData chunks per 160-byte round (×3) plus Auth challenge / AuthStatus. */
     private val maxSteps: Int = 96,
     private val bondWaitMs: Long = 45_000L,
+    /**
+     * The sensor slot to ask for. [OnePlusDisplaySlot.PHONE] leaves the library's auth request as
+     * it is, byte for byte; only direct-to-watch asks for [OnePlusDisplaySlot.WATCH].
+     */
+    private val displaySlot: OnePlusDisplaySlot = OnePlusDisplaySlot.PHONE,
 ) : OnePlusSessionAuth {
 
     override fun authenticate(pairingCode: String, savedSharedKey: ByteArray?): AuthResult {
@@ -59,6 +65,7 @@ class OnePlusSessionAuthKeks(
         forceFreshKeksInstance(pairingCode)
         val plugin = Plugin.getInstance(pairingCode)
         plugin.context.reset()
+        plugin.authSlotOverride = displaySlot.authSlotOverride
         // Ob1: Pref keks_p1..p3 → setPersistence(8..10) before handshake (xDrip Auto Configure QR).
         OnePlusKeksGuideCerts.install(plugin)
 

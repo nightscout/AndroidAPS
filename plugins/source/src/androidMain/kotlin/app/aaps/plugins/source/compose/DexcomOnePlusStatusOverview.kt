@@ -76,6 +76,19 @@ fun DexcomOnePlusStatusOverview(
                     onCancelStaging = { viewModel.cancelStaging() },
                     onOpenStart = actions.onOpenStart,
                 )
+                // Direct-to-watch, only where a watch link exists.
+                val watchHandover = viewModel.watchHandover
+                if (watchHandover.isSupported) {
+                    val watchDirectOn by viewModel.watchDirectEnabled.collectAsState()
+                    val watchReport by watchHandover.report.collectAsState()
+                    DexcomOnePlusWatchDirectCard(
+                        enabled = watchDirectOn,
+                        // Read again on every status tick, so a new pairing shows at once.
+                        available = remember(current) { watchHandover.isAvailable() },
+                        report = watchReport,
+                        onEnabledChange = { watchHandover.setEnabled(it) },
+                    )
+                }
                 promoteResult?.let { message ->
                     Text(
                         text = stringResource(message),
