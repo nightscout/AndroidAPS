@@ -255,6 +255,7 @@ class AaruyPlugin(
         result.bolusDelivered = aaruyPump.bolusDelivered
         result.comment = when (outcome) {
             AaruyBolusOutcome.FINISHED    -> rh.gs(app.aaps.core.ui.R.string.ok)
+            AaruyBolusOutcome.CUT_SHORT   -> rh.gs(R.string.aaruy_bolus_cut_short, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))
             AaruyBolusOutcome.NOT_STARTED -> rh.gs(R.string.alarm_bolus_run_fail)
             AaruyBolusOutcome.UNKNOWN     -> rh.gs(R.string.aaruy_bolus_outcome_unknown, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))
         }

@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -100,6 +101,15 @@ class AaruyService : MetroService() {
                 notificationManager.post(
                     NotificationId.PUMP_ERROR,
                     rh.gs(R.string.aaruy_pump_error, aaruyPump.alarmStateToString(alarmState)),
+                    sound = AlarmSound.ALARM
+                )
+            }
+            else if (alarmState == AlarmState.PUMP_STOP_TOO_LONG) {
+                // Seen on a real pump: after 15 minutes stopped it beeps once and never again. No insulin goes in, so AAPS rings.
+                notificationManager.post(
+                    NotificationId.PUMP_WARNING,
+                    rh.gs(R.string.aaruy_pump_warning, aaruyPump.alarmStateToString(alarmState)),
+                    level = NotificationLevel.URGENT,
                     sound = AlarmSound.ALARM
                 )
             }
@@ -240,8 +250,13 @@ class AaruyService : MetroService() {
             detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, detailedBolusInfo.insulin)
         }
 
-        return if (aaruyPump.bolusStopped || (aaruyPump.bolusDone && !aaruyPump.bolusEndNotSeen)) AaruyBolusOutcome.FINISHED
-        else AaruyBolusOutcome.UNKNOWN
+        return when {
+            aaruyPump.bolusStopped                                -> AaruyBolusOutcome.FINISHED
+            !aaruyPump.bolusDone || aaruyPump.bolusEndNotSeen     -> AaruyBolusOutcome.UNKNOWN
+            // Seen on a real pump with a blocked line: "done" after 0.55 U of 3 U. Half a step leaves room for rounding.
+            aaruyPump.bolusDelivered < insulin - aaruyPump.bolusStepUnits / 2 -> AaruyBolusOutcome.CUT_SHORT
+            else                                                  -> AaruyBolusOutcome.FINISHED
+        }
     }
 
     private fun sendBolusCommand(insulin: Double, isSmb: Boolean = false): Boolean {

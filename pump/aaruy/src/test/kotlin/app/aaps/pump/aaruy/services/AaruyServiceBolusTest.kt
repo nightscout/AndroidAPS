@@ -95,6 +95,28 @@ class AaruyServiceBolusTest {
         assertEquals(0.5, pump.bolusDelivered, 0.0001)
     }
 
+    /** Seen on a real pump with a blocked line: "done" after part of the bolus, with no stop from AAPS. */
+    @Test
+    fun aBolusThePumpEndedEarlyIsCutShort() {
+        pumpAnswers {
+            pump.handleBolusStatusUpdate(false, 0.15)
+            pump.handleBolusStatusUpdate(true)
+        }
+        assertEquals(AaruyBolusOutcome.CUT_SHORT, runBlocking { service.setBolus(info) })
+        assertEquals(0.15, pump.bolusDelivered, 0.0001)
+    }
+
+    /** A stop the user asked for is not a failure, also with only part given. */
+    @Test
+    fun aStopTheUserAskedForIsFinished() {
+        pumpAnswers {
+            pump.handleBolusStatusUpdate(false, 0.15)
+            pump.bolusStopped = true
+            pump.handleBolusStatusUpdate(true)
+        }
+        assertEquals(AaruyBolusOutcome.FINISHED, runBlocking { service.setBolus(info) })
+    }
+
     @Test
     fun silenceAfterTheStartIsNotAFinishedBolus() {
         pumpAnswers { pump.handleBolusStatusUpdate(false, 0.1) }
