@@ -22,6 +22,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.configuration.PLUGIN_SETTLE_WAIT
 import app.aaps.core.interfaces.db.VacuumResult
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
@@ -94,12 +95,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
     companion object {
 
-        /**
-         * How long start up waits for the plugins to finish starting before carrying on regardless.
-         * Matches `ConfigBuilderImpl.PLUGIN_SETTLE_WAIT`, which bounds the same wait on the import path -
-         * the two start paths should behave the same, which is the whole point of waiting here at all.
-         */
-        private val PLUGIN_START_WAIT = 30.seconds
     }
 
     // When the settings cannot be opened, ComposeMainActivity only hands over to SettingsUnreadableActivity and
@@ -288,8 +283,8 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // for the active pump on the next line. Bounded for the same reason applyConfiguration
                 // bounds it: a driver whose onStart will not settle must not hold up start up for ever.
                 val started = configBuilder.initialize()
-                if (withTimeoutOrNull(PLUGIN_START_WAIT) { started.joinAll() } == null)
-                    aapsLogger.warn(LTag.CORE, "Plugins did not finish starting within $PLUGIN_START_WAIT")
+                if (withTimeoutOrNull(PLUGIN_SETTLE_WAIT) { started.joinAll() } == null)
+                    aapsLogger.warn(LTag.CORE, "Plugins did not finish starting within $PLUGIN_SETTLE_WAIT")
 
                 // Running-mode reconciler + expiry scheduler. Start after plugins are registered:
                 // the reconciler's startup-drift check reads the active pump, which requires
