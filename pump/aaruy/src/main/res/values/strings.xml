@@ -31,7 +31,7 @@
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
     <string name="param_refresh">Pump settings changed</string>
-    <string name="replace_label">Replace</string>
+    <string name="replace_label">Change reservoir</string>
     <string name="confirm_alarms_label">Confirm alarms</string>
     <string name="replace_bat_rescv_label">Replace reservoir and battery</string>
     <string name="alarm_none">None</string>
