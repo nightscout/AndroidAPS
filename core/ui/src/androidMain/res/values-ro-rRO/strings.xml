@@ -136,7 +136,6 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina nu a fost de asemenea schimbată.</string>
     <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Pseudonim insulină</string>
