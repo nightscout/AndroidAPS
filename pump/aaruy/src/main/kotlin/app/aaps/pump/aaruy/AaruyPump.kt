@@ -481,6 +481,8 @@ class AaruyPump(
         null
     }
 
+    fun sameRates(first: BasalInfo, second: BasalInfo): Boolean = first.basalItems?.basalItemList?.comparable() == second.basalItems?.basalItemList?.comparable()
+
     private fun List<BasalItem>.comparable() = map { it.startTime to (it.basalSpeed * 1000).roundToInt() }
 
     fun handleBolusStatusUpdate(bolusCompleted: Boolean, amountDelivered: Double = 35.0) {
@@ -535,7 +537,8 @@ class AaruyPump(
         return syncPrefParam()
     }
 
-    suspend fun syncTBRWithPumpId(startTime: Long, rate: Double, duration: Long) {
+    /** @return false when AAPS has no request that fits this temp basal. */
+    suspend fun syncTBRWithPumpId(startTime: Long, rate: Double, duration: Long): Boolean {
         val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(startTime, rate)
         val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = startTime,
@@ -547,13 +550,43 @@ class AaruyPump(
             pumpType = pumpType(),
             pumpSerial = pumpSN
         )
-        aapsLogger.debug(
-            LTag.PUMPCOMM,
-            "syncTBRWithPumpId: ${newRecordInfo(newRecord)}"
+        aapsLogger.debug(LTag.PUMPCOMM, "syncTBRWithPumpId: ${newRecordInfo(newRecord)}")
+        return temporaryBasalInfo != null
+    }
+
+    /** Same record, an earlier start: the same pump ID updates it. */
+    suspend fun correctTBRStart(pumpId: Long, startTime: Long, rate: Double, duration: Long, type: PumpSync.TemporaryBasalType) {
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = startTime,
+            rate = PumpRate(rate),
+            duration = duration,
+            isAbsolute = true,
+            type = type,
+            pumpId = pumpId,
+            pumpType = pumpType(),
+            pumpSerial = pumpSN
         )
     }
 
-    suspend fun syncStopTBRWithPumpId(endTime: Long) {
+    /** No insulin while the pump is stopped: a zero temp basal, as the Medtrum driver does. */
+    suspend fun syncSuspendWithPumpId(startTime: Long, duration: Long) {
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = startTime,
+            rate = PumpRate(0.0),
+            duration = duration,
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            pumpId = startTime,
+            pumpType = pumpType(),
+            pumpSerial = pumpSN
+        )
+    }
+
+    suspend fun announceTempBasalNotFromAaps(rate: String) {
+        pumpSync.insertAnnouncement(rh.gs(R.string.aaruy_temp_basal_not_from_aaps, rate), dateUtil.now(), pumpType(), pumpSN)
+    }
+
+suspend fun syncStopTBRWithPumpId(endTime: Long) {
         val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
             timestamp = endTime,
             endPumpId = endTime,
@@ -576,6 +609,10 @@ class AaruyPump(
         pumpState = AaruyPumpState.FIRST_INIT
         pumpLastState = AaruyPumpState.FIRST_INIT
     }
+
+    var lastDeliveryEnd: Long
+        get() = preferences.get(AaruyLongKey.PumpLastDeliveryEnd)
+        set(value) = preferences.put(AaruyLongKey.PumpLastDeliveryEnd, value)
 
     fun loadVarsFromSP() {
         _pumpState.value = AaruyPumpState.fromInt(preferences.get(AaruyIntKey.PumpState))

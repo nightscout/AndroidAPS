@@ -51,6 +51,8 @@ import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import kotlin.math.roundToInt
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -79,18 +81,42 @@ class AaruyBLE(
     private val historyDailyUnitInfoDao: HistoryDailyUnitInfoDao,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val pumpSync: PumpSync,
+    private val tempBasalSync: AaruyTempBasalSync,
 ) {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val COMMAND_ANSWER_TIMEOUT_MS = 5000L
+    private val STATUS_TEMP_BASAL = 2
+    private val STATUS_BOLUS = 3
     private val BOLUS_STATE_EXTENDED = 1
     private val BOLUS_STATE_DONE = 2
+    private val HISTORY_BASAL = 0
     private val HISTORY_TEMP_BASAL = 1
+    private val HISTORY_BOLUS = 2
     private val HISTORY_ALARM = 3
-    private val SAME_ENTRY_MS = 60_000L
+    private val HISTORY_WAIT_MS = 10_000L
     private val ALARM_SEEN_LIVE_MS = 120_000L
-    @Volatile private var tempBasalCommandRunning = false
+    @Volatile private var cancelTempBasalRunning = false
+    @Volatile private var awaitingHistory = false
+    @Volatile private var lastStatus: AaruyStatusSnapshot? = null
+
+    /** One after the other and in the order they came, or a later status could overtake the log that explains it. */
+    private val syncJobs by lazy {
+        Channel<suspend () -> Unit>(Channel.UNLIMITED).also { jobs ->
+            scope.launch {
+                for (job in jobs) {
+                    try {
+                        job()
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.PUMPCOMM, "Writing what the pump did failed", e)
+                    }
+                }
+            }
+        }
+    }
     private val TAG = "AaruyBLEService"
     private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
     val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices
@@ -105,6 +131,7 @@ class AaruyBLE(
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     @Volatile private var sendBasalsInfoOk = false
+    @Volatile private var basalWanted: BasalInfo? = null
     private var sendBolusOk = false
     private var cancelBolusOk = false
     @Volatile private var sendTmpBasalOk = false
@@ -271,6 +298,7 @@ class AaruyBLE(
         preferences.put(AaruyStringKey.PumpName, device.name)
         aaruyPump.canSaveHistory = false
         aaruyPump.lastHistoryTime = 0
+        aaruyPump.lastDeliveryEnd = 0
         aaruyPump.lastHistoryDailyTime = dateUtil.now()
         aaruyPump.lastBolusTime = 0
         aaruyPump.lastBolusAmount = 0.0
@@ -320,6 +348,7 @@ class AaruyBLE(
             override fun onBleStatusChanged(status: BleStatus) {
                 aapsLogger.warn(LTag.PUMPCOMM, "aaruy onBleStatusChanged status = $status")
                 if (status == BleStatus.CONNECTED) {
+                    awaitingHistory = true
                     isConnected = true
                     isConnecting = false
                     isUnbinding = false
@@ -417,7 +446,8 @@ class AaruyBLE(
 
             override fun onReceiveBasalSetting(basalInfo: BasalInfo) {
                 aapsLogger.warn(LTag.PUMPCOMM, "onReceiveBasalSetting basalInfo = $basalInfo")
-                sendBasalsInfoOk = true
+                // The settings of a status read can still come, with the old profile. Only the new one is the answer.
+                if (basalWanted?.let { aaruyPump.sameRates(it, basalInfo) } == true) sendBasalsInfoOk = true
                 aaruyPump.actualBasalProfile = aaruyPump.dataClassToByteArray(basalInfo)
             }
 
@@ -425,6 +455,7 @@ class AaruyBLE(
                 // aapsLogger.warn(LTag.PUMPCOMM, "onReceiveCurrentStatus statusInfo = $statusInfo")
                 // Only an answer shows that the pump was reached.
                 aaruyPump.lastConnection = dateUtil.now()
+                onStatusForDatabase(statusInfo)
                 val previousRate = aaruyPump.lastBasalRate
                 aaruyPump.pumpState = AaruyPumpState.fromInt(statusInfo.runningStatus)
                 aaruyPump.handleBasalStatusUpdate(0.0)
@@ -434,8 +465,6 @@ class AaruyBLE(
                         checkPumpInfusion()
                     }
                     1-> {       // 基础率运行
-                        if(!cancelTmpBasalOk)
-                            cancelTmpBasalOk = true
                         startBasalOk = true
                         if (statusInfo.basalStatus?.curValue != previousRate) {
                             if (aaruyPump.canSaveHistory)
@@ -444,7 +473,6 @@ class AaruyBLE(
                         aaruyPump.handleBasalStatusUpdate(statusInfo.basalStatus?.curValue ?: 0.0)
                     }
                     2->{        // 临时基础率运行
-                        sendTmpBasalOk = true
                         aaruyPump.handleBasalStatusUpdate(statusInfo.tempBasalStatus?.curValue ?: 0.0)
                     }
                     3->{        // 大剂量运行
@@ -473,12 +501,10 @@ class AaruyBLE(
                         if (aaruyPump.canSaveHistory)
                             requestHistoryData(aaruyPump.lastHistoryTime)
                         cancelBolusOk = true
-                        cancelTmpBasalOk = true
                     }
                     8->{        // 停止(推杆回退)
                         checkPumpInfusion()
                         cancelBolusOk = true
-                        cancelTmpBasalOk = true
                     }
                 }
                 // A real pump answers a stop by going from status 3 straight to 1, so any status other than 3 confirms it.
@@ -582,20 +608,22 @@ class AaruyBLE(
         })
     }
 
-    internal fun onHistoryLog(logInfo: LogInfo) {        refreshHistory = true
+    internal fun onHistoryLog(logInfo: LogInfo) {
+        refreshHistory = true
         if (aaruyPump.canSaveHistory) {
             aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
             saveHistoryData(logInfo)
-            if (logInfo.curPage+1 == logInfo.totalPage) {
+            if (logInfo.curPage + 1 == logInfo.totalPage) {
                 readDailyData(aaruyPump.lastHistoryDailyTime)
-                aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
+                onHistoryRead()
             }
         }
-        else if(logInfo.curPage+1 == logInfo.totalPage) {
+        else if (logInfo.curPage + 1 == logInfo.totalPage) {
             aapsLogger.warn(LTag.PUMPCOMM, "aaruyPump.canSaveHistory canSaveHistory = ${aaruyPump.canSaveHistory}, totalPage = ${logInfo.totalPage}")
             aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
             aaruyPump.canSaveHistory = true
             receivingHistory = false
+            onHistoryRead()
         }
 
         if (logInfo.curPage == logInfo.totalPage && logInfo.curPage == 0) {
@@ -603,9 +631,9 @@ class AaruyBLE(
             aaruyPump.canSaveHistory = true
             readDailyData(aaruyPump.lastHistoryDailyTime)
             receivingHistory = false
+            onHistoryRead()
         }
     }
-
 
     /** AAPS never starts an extended bolus, so something else did. One announcement, and the bolus state of the driver stays as it is. */
     internal fun onExtendedRunning() {
@@ -619,12 +647,7 @@ class AaruyBLE(
         if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING) {
             aaruyPump.handleBolusStatusUpdate(true)
         }
-        else if (aaruyPump.pumpLastState == AaruyPumpState.TMPBASALRATE_RUNNING) {
-            val endTime = dateUtil.now()
-            scope.launch { aaruyPump.syncStopTBRWithPumpId(endTime) }
-            aaruyPump.handleBasalStatusUpdate(0.0)
-        }
-        else if (aaruyPump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING) {
+        else if (aaruyPump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpLastState == AaruyPumpState.TMPBASALRATE_RUNNING) {
             aaruyPump.handleBasalStatusUpdate(0.0)
         }
     }
@@ -638,6 +661,7 @@ class AaruyBLE(
 
     fun updateBasalsInPump(basalInfo: BasalInfo): Boolean {
         sendBasalsInfoOk = false
+        basalWanted = basalInfo
         aaBleUtil.setupBasalInfo(basalInfo)
         return waitForAnswer { sendBasalsInfoOk }
     }
@@ -666,35 +690,55 @@ class AaruyBLE(
         return cancelBolusOk
     }
 
-    suspend fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
-        tempBasalCommandRunning = true
+    fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
         sendTmpBasalOk = false
         aaBleUtil.setClosedMode(1)
         SystemClock.sleep(200)
-        val startTime = dateUtil.now()
         aaBleUtil.startTempBasal(absoluteRate, durationInMinutes)
-        waitForAnswer { sendTmpBasalOk }
-        if (sendTmpBasalOk) {
-            aaruyPump.syncTBRWithPumpId(startTime, absoluteRate,durationInMinutes.toLong()*60*1000)
-        }
-        tempBasalCommandRunning = false
-        return sendTmpBasalOk
+        return waitForAnswer { sendTmpBasalOk }
     }
 
-    suspend fun cancelTempBasal(): Boolean {
-        tempBasalCommandRunning = true
+    fun cancelTempBasal(): Boolean {
         cancelTmpBasalOk = false
-        val endTime = dateUtil.now()
+        cancelTempBasalRunning = true
         aaBleUtil.cancelTempBasal()
-        waitForAnswer { cancelTmpBasalOk }
-        if (cancelTmpBasalOk) {
-            aaruyPump.syncStopTBRWithPumpId(endTime)
-        }
-        tempBasalCommandRunning = false
-        return cancelTmpBasalOk
+        val answered = waitForAnswer { cancelTmpBasalOk }
+        cancelTempBasalRunning = false
+        return answered
     }
 
-    fun syncAndLoadBasicParam() {
+    /** After a reconnect the loop must not decide on what the driver knew before the log was read. */
+    fun waitForHistoryAfterReconnect() {
+        val end = System.currentTimeMillis() + HISTORY_WAIT_MS
+        while (awaitingHistory && System.currentTimeMillis() < end) SystemClock.sleep(50)
+    }
+
+    /** The flags that end a waiting command come after the write, so the command finds the result in the database. */
+    private fun onStatusForDatabase(statusInfo: StatusInfo) {
+        val snapshot = AaruyStatusSnapshot(
+            status = statusInfo.runningStatus,
+            rate = statusInfo.tempBasalStatus?.curValue ?: 0.0,
+            remainingSeconds = statusInfo.tempBasalStatus?.remainTime ?: 0,
+            runningSeconds = statusInfo.tempBasalStatus?.runningTime ?: 0
+        )
+        lastStatus = snapshot
+        val live = !awaitingHistory || cancelTempBasalRunning
+        syncJobs.trySend {
+            tempBasalSync.onStatus(snapshot, live)
+            if (snapshot.status == STATUS_TEMP_BASAL) sendTmpBasalOk = true
+            else if (snapshot.status != STATUS_BOLUS) cancelTmpBasalOk = true
+        }
+    }
+
+    /** The log is read. What the status could not decide before can be decided now. */
+    private fun onHistoryRead() {
+        syncJobs.trySend {
+            awaitingHistory = false
+            lastStatus?.let { tempBasalSync.onStatus(it, live = true) }
+        }
+    }
+
+fun syncAndLoadBasicParam() {
         val basicParam = BasicParam (
             aaruyPump.maxBasal,
             aaruyPump.maxBolus,
@@ -780,8 +824,9 @@ class AaruyBLE(
     }
 
     private fun saveHistoryData(logInfo: LogInfo) {
-        CoroutineScope(Dispatchers.IO).launch {
-            for (item in logInfo.logItems) {
+        val lastPage = logInfo.curPage + 1 == logInfo.totalPage
+        syncJobs.trySend {
+            logInfo.logItems.forEachIndexed { index, item ->
                 aapsLogger.warn(LTag.PUMPCOMM, "saveHistoryData item.data = ${item.data}, item.delayBolus is ${item.delayBolus}")
                 val historyUnitInfo = HistoryUnitInfo()
                 historyUnitInfo.data = item.data.toLong()
@@ -843,27 +888,32 @@ class AaruyBLE(
                         "from record: ${newRecordInfo(newRecord)}EVENT BOLUS ${dateUtil.dateAndTimeString(item.timestamp)} ($item.timestamp) Bolus: ${item.data / 1000.0}U "
                     )
                 }
-                syncFromHistory(item)
+                syncFromHistory(item, logInfo.logItems.getOrNull(index + 1)?.timestamp)
                 if (historyUnitInfoDao.count(item.timestamp, historyUnitInfo.type, historyUnitInfo.reserved) == 0) historyUnitInfoDao.insert(historyUnitInfo)
+            }
+            // Only now: an entry not yet written must come again if the app stops here.
+            if (lastPage && logInfo.logItems.isNotEmpty()) {
+                aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
+                receivingHistory = false
             }
         }
     }
 
-    /**
-     * What the pump log knows and the driver may not: all of this can happen while the link is down.
-     * A real pump logs a temp basal when it ends, with the time it started and the real minutes.
-     */
-    private suspend fun syncFromHistory(item: LogItem) {
+    /** What the pump log knows and the driver may not: all of this can happen while the link is down. */
+    private suspend fun syncFromHistory(item: LogItem, nextStart: Long?) {
+        val minutes = T.mins(item.injectTime.toLong()).msecs()
         when (item.type.toInt()) {
+            HISTORY_BASAL      -> tempBasalSync.onHistoryDelivery(item.timestamp, item.timestamp + minutes)
+
             HISTORY_TEMP_BASAL -> {
-                // A command that runs now ends the temp basal in the database itself.
-                if (tempBasalCommandRunning) return
-                val running = pumpSync.expectedPumpState().temporaryBasal ?: return
-                if (abs(running.timestamp - item.timestamp) > SAME_ENTRY_MS) return
-                val end = item.timestamp + T.mins(item.injectTime.toLong()).msecs()
-                aapsLogger.debug(LTag.PUMPCOMM, "The pump ended the temp basal at ${dateUtil.dateAndTimeString(end)}")
-                aaruyPump.syncStopTBRWithPumpId(end)
-                aaruyPump.fromTemporaryBasal(null)
+                tempBasalSync.onHistoryDelivery(item.timestamp, item.timestamp + minutes)
+                tempBasalSync.onHistoryTempBasal(item, nextStart, lastStatus?.status)
+            }
+
+            HISTORY_BOLUS      -> if (item.delayBolus.toInt() == 0) {
+                // Seen on a real pump: no basal entry runs during a bolus, so this time is no gap. One step every 2 seconds.
+                val steps = item.data.toLong() / (aaruyPump.bolusStep * AaruySetting.precision)
+                tempBasalSync.onHistoryDelivery(item.timestamp, item.timestamp + T.secs(steps * 2).msecs())
             }
 
             HISTORY_ALARM      -> {

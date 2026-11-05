@@ -157,6 +157,7 @@ class AaruyService : MetroService() {
 
         // The pump log can hold what no status shows, as an alarm while the link was down.
         if (aaruyPump.canSaveHistory) aaruyBle.requestHistoryData(aaruyPump.lastHistoryTime)
+        aaruyBle.waitForHistoryAfterReconnect()
     }
 
     fun updateBasalsInPump(profile: Profile): Boolean {

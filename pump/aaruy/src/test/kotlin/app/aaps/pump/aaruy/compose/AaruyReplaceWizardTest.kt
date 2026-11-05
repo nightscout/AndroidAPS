@@ -20,6 +20,7 @@ import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyTempBasalSync
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -45,6 +46,8 @@ import java.time.Duration
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 class AaruyReplaceWizardTest {
+
+    private fun tempBasalSyncMock() = mock(AaruyTempBasalSync::class.java)
 
     private val logger = mock(AAPSLogger::class.java)
     private val dateUtil = mock(DateUtil::class.java)
@@ -86,7 +89,7 @@ class AaruyReplaceWizardTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            pumpSync
+            pumpSync, tempBasalSyncMock()
         )
         wizard = AaruyReplaceWizardViewModel(logger, ble, pump, pumpSync, dateUtil)
         ble.connect("test", AaruyEmulatorBleTransport.DEVICE_ADDRESS)

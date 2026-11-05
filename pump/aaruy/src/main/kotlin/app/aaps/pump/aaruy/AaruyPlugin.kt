@@ -282,7 +282,7 @@ class AaruyPlugin(
         val connectionOK = aaruyService?.setTempBasal(absoluteRate, durationInMinutes) == true
         return if (connectionOK
             && aaruyPump.isTempBasalInProgress
-            && abs(aaruyPump.tempBasalAbsoluteRate - absoluteRate) <= 0.025
+            && abs(aaruyPump.tempBasalAbsoluteRate - PumpRate(absoluteRate).iU(ch.concentration, true)) <= 0.025
         ) {
             result.success = true
             result.enacted = true

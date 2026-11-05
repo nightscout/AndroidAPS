@@ -50,10 +50,11 @@ class AaruyHistorySyncTest {
     private val minute = 60_000L
     private val logger = mock(AAPSLogger::class.java)
     private val dateUtil = mock(DateUtil::class.java)
-    private val pumpSync = mock(PumpSync::class.java)
+    private val pumpSync = mock(PumpSync::class.java) { invocation -> if (invocation.method.name.startsWith("sync")) true else null }
     private val historyDao = mock(HistoryUnitInfoDao::class.java)
     private val dailyDao = mock(HistoryDailyUnitInfoDao::class.java)
     private val rh = mock(ResourceHelper::class.java)
+    private val tempBasalSync = mock(AaruyTempBasalSync::class.java)
     private val pump = AaruyPump(
         logger, rh, mock(Preferences::class.java), dateUtil, pumpSync,
         mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
@@ -68,21 +69,12 @@ class AaruyHistorySyncTest {
         pump.canSaveHistory = true
         ble = AaruyBLE(
             transport, logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java),
-            mock(Preferences::class.java), historyDao, dailyDao, mock(DetailedBolusInfoStorage::class.java), pumpSync
+            mock(Preferences::class.java), historyDao, dailyDao, mock(DetailedBolusInfoStorage::class.java), pumpSync, tempBasalSync
         )
     }
 
     @After
     fun tearDown() = transport.shutdown()
-
-    private fun tbrRunningSince(start: Long) = runBlocking {
-        whenever(pumpSync.expectedPumpState()).thenReturn(
-            PumpSync.PumpState(
-                temporaryBasal = PumpSync.PumpState.TemporaryBasal(start, 30 * minute, 0.5, true, PumpSync.TemporaryBasalType.NORMAL, 0L, 0L),
-                extendedBolus = null, bolus = null, profile = null, serialNumber = ""
-            )
-        )
-    }
 
     private fun receive(vararg items: LogItem) {
         ble.onHistoryLog(LogInfo(items.size, 1, 0, items.size, items.toList()))
@@ -91,20 +83,33 @@ class AaruyHistorySyncTest {
     private fun tbrEntry(start: Long, minutes: Int) = LogItem(timestamp = start, type = 1, data = 500, injectTime = minutes, delayBolus = 0, reserved = 0)
 
     @Test
-    fun aTempBasalThePumpEndedWhileTheLinkWasDownIsStopped() {
-        val start = now - 20 * minute
-        tbrRunningSince(start + 500)
-        receive(tbrEntry(start, 5))
-        runBlocking { verify(pumpSync, timeout(5000)).syncStopTemporaryBasalWithPumpId(eq(start + 5 * minute), any(), any(), any(), any()) }
+    fun aTempBasalEntryGoesToTheSyncWithTheStartOfTheNextEntry() {
+        val first = tbrEntry(now - 20 * minute, 5)
+        val second = tbrEntry(now - 10 * minute, 5)
+        receive(first, second)
+        runBlocking {
+            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(first, second.timestamp, null)
+            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(second, null, null)
+        }
     }
 
+    /** An entry not yet written must come again if the app stops here. */
     @Test
-    fun anOlderTempBasalDoesNotStopTheOneThatRuns() {
-        val start = now - 20 * minute
-        tbrRunningSince(start)
-        receive(tbrEntry(start - 60 * minute, 5))
+    fun theLogTimeMovesOnlyAfterTheWrite() {
+        `when`(historyDao.insert(any())).thenThrow(IllegalStateException("database full"))
+        receive(tbrEntry(now - 20 * minute, 5))
+        verify(historyDao, timeout(5000)).insert(any())
         Thread.sleep(300)
-        runBlocking { verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
+        assertEquals(0L, pump.lastHistoryTime)
+    }
+
+    /** A bolus takes one step every 2 seconds, and no basal entry runs then, so this time is no gap. */
+    @Test
+    fun aBolusCountsAsDelivery() {
+        pump.bolusStep = 2
+        val start = now - 20 * minute
+        receive(LogItem(timestamp = start, type = 2, data = 1000, injectTime = 0, delayBolus = 0, reserved = 0))
+        runBlocking { verify(tempBasalSync, timeout(5000)).onHistoryDelivery(start, start + 40_000) }
     }
 
     @Test

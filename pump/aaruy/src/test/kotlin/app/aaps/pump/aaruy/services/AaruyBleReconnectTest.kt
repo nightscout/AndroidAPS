@@ -46,6 +46,8 @@ import java.time.Duration
 @Config(sdk = [35])
 class AaruyBleReconnectTest {
 
+    private fun tempBasalSyncMock() = mock(AaruyTempBasalSync::class.java)
+
     /** A mock gives 0 for a number, and that would be a limit of 0 U for a bolus. */
     private fun preferencesWithDefaults(): Preferences {
         val preferences = mock(Preferences::class.java)
@@ -88,7 +90,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java)
+            mock(PumpSync::class.java), tempBasalSyncMock()
         )
         ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
@@ -154,7 +156,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java)
+            mock(PumpSync::class.java), tempBasalSyncMock()
         )
         ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
@@ -221,7 +223,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            pumpSync
+            pumpSync, tempBasalSyncMock()
         )
         ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
@@ -282,7 +284,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java)
+            mock(PumpSync::class.java), tempBasalSyncMock()
         )
         ble.startEmulatorIfActive()
 
@@ -327,7 +329,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java)
+            mock(PumpSync::class.java), tempBasalSyncMock()
         )
         ble.startEmulatorIfActive()
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
@@ -363,7 +365,7 @@ class AaruyBleReconnectTest {
             val ble = AaruyBLE(
                 AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = { now })),
                 logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java), preferences,
-                mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java), mock(PumpSync::class.java)
+                mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java), mock(PumpSync::class.java), tempBasalSyncMock()
             )
             ble.startEmulatorIfActive()
             ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
