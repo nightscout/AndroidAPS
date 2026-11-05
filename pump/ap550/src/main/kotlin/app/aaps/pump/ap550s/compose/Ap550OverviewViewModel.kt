@@ -28,9 +28,8 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
@@ -421,17 +420,15 @@ class Ap550OverviewViewModel(
         val connectedAndPaired = ap550PumpPlugin.isConnected() && pump.paired
 
         val primaryActions = listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.AutoMirrored.Filled.List,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { _events.tryEmit(Ap550OverviewEvent.StartHistory) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(if (pump.pumpSuspended) R.string.resume_pump_injection else R.string.stop_pump_injection),
                 icon = Icons.Filled.Pause,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized && connectedAndPaired,
                 onClick = { _events.tryEmit(Ap550OverviewEvent.ConfirmSuspendResume) }
             )
@@ -439,10 +436,9 @@ class Ap550OverviewViewModel(
 
         val managementActions = buildList {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.connect_status),
                     icon = Icons.Filled.History,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { _events.tryEmit(Ap550OverviewEvent.StartConnectStatus) }
                 )
             )
@@ -450,19 +446,17 @@ class Ap550OverviewViewModel(
             // button stays, so there is still an entry into the pairing wizard.
             if (!isConfigured) {
                 add(
-                    PumpAction(
+                    ScreenAction(
                         label = rh.gs(CoreUiR.string.pump_pair),
                         icon = Icons.Filled.Bluetooth,
-                        category = ActionCategory.MANAGEMENT,
                         onClick = { _events.tryEmit(Ap550OverviewEvent.StartPairWizard) }
                     )
                 )
             }
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(if (pump.pumpMuteStatus) R.string.ap550_pump_sound_on_button else R.string.ap550_pump_sound_off_button),
                     icon = if (pump.pumpMuteStatus) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeUp,
-                    category = ActionCategory.MANAGEMENT,
                     visible = isInitialized && connectedAndPaired,
                     onClick = { _events.tryEmit(Ap550OverviewEvent.ConfirmMute) }
                 )

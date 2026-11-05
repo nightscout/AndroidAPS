@@ -29,4 +29,16 @@ enum class Ap550StringNonKey(
      * found under the storage key it was always written to.
      */
     PairingCode("Please input pairing code", ""),
+
+    /** Last date (yyyy-MM-dd) the pump TDD was fetched successfully. */
+    LastPumpTddSyncDate("last_pump_tdd_sync_date", ""),
+
+    /** Raw JSON of the pump TDD records, uploaded to the cloud. */
+    CloudPumpTddRaw("cloud_pump_tdd_raw", ""),
+
+    /** RS (Remote Start) password the driver asks the pump to authenticate with. */
+    Password("ap550_password", ""),
+
+    /** Serial number of the pump whose temp basal was running when the link dropped. */
+    TempBasalRunningSerialNumber("serialNumber_temp_basal_running_after_disconnect", ""),
 }

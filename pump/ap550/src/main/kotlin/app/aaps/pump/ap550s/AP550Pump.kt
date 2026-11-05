@@ -9,9 +9,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.ap550s.keys.Ap550LongNonKey
+import app.aaps.pump.ap550s.keys.Ap550StringNonKey
 import app.aaps.pump.ap550s.database.model.ConnectHistoryItem
 import app.aaps.pump.ap550s.defs.ConnectStatus
 import dev.zacsweers.metro.AppScope
@@ -35,7 +37,7 @@ import kotlin.math.roundToInt
 @SingleIn(AppScope::class)
 class AP550Pump @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val profileStoreProvider: Provider<ProfileStore>,
     private val decimalFormatter: DecimalFormatter
@@ -420,7 +422,7 @@ class AP550Pump @Inject constructor(
 //        get() = password == sp.getInt(R.string.key_ap550_password, -2)
         get() = password == 1234
     val isRSPasswordOK: Boolean
-        get() = rsPassword.equals(sp.getString(R.string.key_ap550_password, ""), ignoreCase = true) || v3RSPump
+        get() = rsPassword.equals(preferences.get(Ap550StringNonKey.Password), ignoreCase = true) || v3RSPump
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "AP550Pump reset")
@@ -440,7 +442,7 @@ class AP550Pump @Inject constructor(
      */
     fun forgetProfile() {
         pumpProfiles = null
-        sp.putLong(R.string.last_get_basal_timestamp, 0L)
+        preferences.put(Ap550LongNonKey.LastGetBasalTimestamp, 0L)
     }
 
     fun modelFriendlyName(): String =

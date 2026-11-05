@@ -33,4 +33,28 @@ enum class Ap550BooleanNonKey(
      * when a profile write to the pump succeeds.
      */
     BasalProfileMismatch("ap550_basal_profile_mismatch", true),
+
+    /**
+     * True when the pump should report temp basal as a percentage of the base rate rather than as
+     * an absolute rate. The legacy string key is `Visualize_basal_percent`.
+     *
+     * The AP550SE only supports percent mode, so the driver flips this on once it sees an SE.
+     * Defaults to `true`, matching the old `sp.getBoolean(key_ap550_basal_is_percent, true)`.
+     */
+    BasalIsPercent("Visualize_basal_percent", true),
+
+    /** Whether the pump's log index has been fetched already. Legacy raw key "IsGetLogIndex". */
+    IsGetLogIndex("IsGetLogIndex", false),
+
+    /**
+     * When true, the driver reads one additional temp-basal history entry right after a reconnect,
+     * to catch the basal the pump ran while the link was down.
+     */
+    IsTempBasalRunningAfterDisconnect("is_temp_basal_running_after_disconnect", false),
+
+    /** Whether the bolus/temp-basal log index has been fetched already. Legacy raw key. */
+    IsGetBolusTempbasalLogIndex("IsGetBolusTempbasalLogIndex", false),
+
+    /** Whether the pump's basal profile matches the one AAPS wants to write. */
+    IsBasalSame("is_basal_same", false),
 }

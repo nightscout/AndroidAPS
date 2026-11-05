@@ -84,15 +84,17 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.pump.ap550s.events.EventUISPumpStatusChanged
 import app.aaps.pump.ap550s.keys.Ap550BooleanKey
 import app.aaps.pump.ap550s.keys.Ap550BooleanNonKey
+import app.aaps.pump.ap550s.keys.Ap550IntNonKey
+import app.aaps.pump.ap550s.keys.Ap550LongNonKey
 import app.aaps.pump.ap550s.keys.Ap550StringNonKey
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.utils.MidnightUtils
+import app.aaps.core.data.time.SystemTimeZone
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.utils.notify
 import app.aaps.core.utils.waitMillis
 import app.aaps.core.objects.workflow.MetroService
@@ -235,7 +237,6 @@ class AP550ExecutionService : MetroService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
     @Inject lateinit var context: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var ap550Pump: AP550Pump
@@ -490,7 +491,7 @@ class AP550ExecutionService : MetroService() {
                 }
 
                 // Near 22:00, add one hypoglycemia risk check
-                val nowFromMidnight = MidnightUtils.secondsFromMidnight(dateUtil.now())
+                val nowFromMidnight = MidnightTime.secondsFromMidnight(dateUtil.now(), SystemTimeZone.current())
                 val clockTime = 22 * 60 * 60
                 aapsLogger.debug(LTag.PUMP, "hypoglycemia")
                 if (abs(clockTime - nowFromMidnight) <= 15) {    // Around 22:00, a 30 s window
@@ -499,11 +500,11 @@ class AP550ExecutionService : MetroService() {
 
                 // Daily pump TDD pull, triggered at the day rollover. Rate-limited, so the pump does not crash;
                 val today = LocalDate.now(ZoneId.systemDefault())
-                val lastSyncDate = sp.getString(R.string.key_last_pump_tdd_sync_date, "")
-                val lastAttempt = sp.getLong(R.string.key_last_pump_tdd_fetch_attempt_time, 0L)
+                val lastSyncDate = preferences.get(Ap550StringNonKey.LastPumpTddSyncDate)
+                val lastAttempt = preferences.get(Ap550LongNonKey.LastPumpTddFetchAttemptTime)
                 val withinWindow = now - lastAttempt < 3 * 60 * 60 * 1000L
                 if (today.toString() != lastSyncDate && !withinWindow) {
-                    sp.putLong(R.string.key_last_pump_tdd_fetch_attempt_time, now)
+                    preferences.put(Ap550LongNonKey.LastPumpTddFetchAttemptTime, now)
                     fetchPumpTddToRawSp()
                 }
             }
@@ -520,10 +521,10 @@ class AP550ExecutionService : MetroService() {
                     isPairSuccess = false
                 }
                 // As soon as Bluetooth connects, check for a 550SE. A 550SE uses percent mode only.
-                val nameValue = sp.getStringOrNull(R.string.key_ap550_bt_device_name, null)
+                val nameValue = preferences.getIfExists(Ap550StringNonKey.BtDeviceName)
                 if (nameValue != null) {
                     if(nameValue.contains("E")){
-                        sp.putBoolean(R.string.key_ap550_basal_is_percent, true)
+                        preferences.put(Ap550BooleanNonKey.BasalIsPercent, true)
                         ap550PumpPlugin.pumpDescription.tempBasalStyle  = PumpDescription.PERCENT // A 550SE only has percent
                     }
                 }
@@ -575,7 +576,7 @@ class AP550ExecutionService : MetroService() {
                 handleHypoglycemiaAlertCheck()
             }
 
-        val macAddress = sp.getString(R.string.key_ap550_mac_address, "")
+        val macAddress = preferences.get(Ap550StringNonKey.MacAddress)
         if (!StringUtils.isEmpty(macAddress)) {
             isPairSuccess = true
         }
@@ -592,7 +593,7 @@ class AP550ExecutionService : MetroService() {
                 }
             }
         }
-        if(sp.getBoolean(R.string.key_ap550_basal_is_percent, true)){
+        if(preferences.get(Ap550BooleanNonKey.BasalIsPercent)){
             ap550PumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.PERCENT
         }else{
             ap550PumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
@@ -606,9 +607,9 @@ class AP550ExecutionService : MetroService() {
         rxBus.send(EventAP550Reconnect())
         maybeStartForeground()
         // On service start, load the pairing data from SP into ap550Pump
-        ap550Pump.device_name_for_pair = sp.getString(R.string.key_ap550_bt_device_name, "")
-        ap550Pump.mac_address_for_pair = sp.getString(R.string.key_ap550_mac_address, "")
-        ap550Pump.sn_for_pair = sp.getString(R.string.key_ap550_ser_number, "")
+        ap550Pump.device_name_for_pair = preferences.get(Ap550StringNonKey.BtDeviceName)
+        ap550Pump.mac_address_for_pair = preferences.get(Ap550StringNonKey.MacAddress)
+        ap550Pump.sn_for_pair = preferences.get(Ap550StringNonKey.SerialNumber)
         // Restore the in-memory serial number too, so sync calls right after
         // reconnect (before the pump answers Shipping Info) carry the right serial.
         // Empty on first bind, so nothing is set then.
@@ -653,8 +654,8 @@ class AP550ExecutionService : MetroService() {
             aapsLogger!!.debug(LTag.PUMP,"TDD upload - fetched pump daily totals: ${fetched.size} records, " +
                     "oldest=${dateUtil!!.dateAndTimeAndSecondsString(fetched.minOf { it.timestamp })}, " +
                     "newest=${dateUtil!!.dateAndTimeAndSecondsString(fetched.maxOf { it.timestamp })}")
-            sp!!.putString(R.string.key_cloud_pump_tdd_raw, arr.toString())
-            sp!!.putString(R.string.key_last_pump_tdd_sync_date, LocalDate.now(zone).toString())
+            preferences.put(Ap550StringNonKey.CloudPumpTddRaw, arr.toString())
+            preferences.put(Ap550StringNonKey.LastPumpTddSyncDate, LocalDate.now(zone).toString())
         } else {
             aapsLogger!!.debug(LTag.PUMP, "TDD upload - the fetched pump daily totals hold no yesterday data")
         }
@@ -701,7 +702,7 @@ class AP550ExecutionService : MetroService() {
 
         // ISF (to mmol/L per U)
         val isfMgdl = profileFunction?.getProfile()?.getIsfMgdlTimeFromMidnight(
-            MidnightUtils.secondsFromMidnight()
+            MidnightTime.secondsFromMidnight(SystemTimeZone.current())
         ) ?: return
         val isf = isfMgdl * Constants.MGDL_TO_MMOLL
 
@@ -820,7 +821,7 @@ class AP550ExecutionService : MetroService() {
             aapsLogger!!.debug(LTag.PUMP, "Query 550 pump status")
             val now = System.currentTimeMillis()
             ap550Pump!!.lastConnection = now
-            sp?.putLong("ap550s_lastConnection", now)
+            preferences.put(Ap550LongNonKey.LastConnection, now)
             ap550Pump?.scanStatusRecord(ConnectStatus.Connected)
             sendMessage(sdkMessageFactory!!.msgSettingMaxValues())
             if (syncPumpTime()) {
@@ -830,9 +831,9 @@ class AP550ExecutionService : MetroService() {
                 sendMessage(sdkMessageFactory!!.msgInitConnStatusBasic())     // Ask whether the pump is suspended
             }
             /* *************** Do not delete this code! It is the reset/fill history upload for Cloud; not added for now ****************
-            if(now - sp?.getLong("ap550s_msgHistoryRefill", 0L)!! > 59*60*1000){   // Sync the reset/fill history once per hour
+            if(now - preferences.get(Ap550LongNonKey.MsgHistoryRefill) > 59*60*1000){   // Sync the reset/fill history once per hour
                 sendMessage(MsgHistoryRefill(injector!!))
-                sp?.putLong("ap550s_msgHistoryRefill", now)
+                preferences.put(Ap550LongNonKey.MsgHistoryRefill, now)
                 rxBus!!.send(EventRefillHistory())
             }
             */
@@ -840,8 +841,8 @@ class AP550ExecutionService : MetroService() {
             sendMessage(sdkMessageFactory!!.msgErrorArray(ap550Pump!!.pumpVersionCode1))
             if (ap550Pump!!.pumpVersionString != BEFORE_DCN18_VERSION_STRING) {
                 // Read the basal change log / other logs
-                if (sp?.getBoolean("IsGetLogIndex", false) == false || ap550Pump!!.basicIndex < 0 || ap550Pump!!.otherIndex < 0) {
-                    aapsLogger!!.debug(LTag.PUMPCOMM, "IsGetLogIndex=${sp?.getBoolean("IsGetLogIndex", false)} otherIndex=${ap550Pump!!.otherIndex} basicIndex=${ap550Pump!!.basicIndex}")
+                if (preferences.get(Ap550BooleanNonKey.IsGetLogIndex) == false || ap550Pump!!.basicIndex < 0 || ap550Pump!!.otherIndex < 0) {
+                    aapsLogger!!.debug(LTag.PUMPCOMM, "IsGetLogIndex=${preferences.get(Ap550BooleanNonKey.IsGetLogIndex)} otherIndex=${ap550Pump!!.otherIndex} basicIndex=${ap550Pump!!.basicIndex}")
                     val mesGetLogIndex = sdkMessageFactory!!.msgGetLogIndex()
                     sendMessage(mesGetLogIndex)
                 } else {
@@ -882,7 +883,7 @@ class AP550ExecutionService : MetroService() {
         val tempBasalSynMsg = if (lastestTempBasalTime == null) {
             sdkMessageFactory!!.msgTempBasalHistory(System.currentTimeMillis() - 5 * 60 * 60 * 1000, ap550Pump!!.pumpVersionString == BEFORE_DCN18_VERSION_STRING)   // Fetch the pump temp basal history of the last 5 hours
         } else {
-            if (sp!!.getBoolean(R.string.is_temp_basal_running_after_disconnect, false) && ap550Pump!!.pumpVersionString != BEFORE_DCN18_VERSION_STRING) {
+            if (preferences.get(Ap550BooleanNonKey.IsTempBasalRunningAfterDisconnect) && ap550Pump!!.pumpVersionString != BEFORE_DCN18_VERSION_STRING) {
                 aapsLogger?.debug(LTag.PUMPCOMM, "Fetch the latest temp basal record, lastestTempBasalTime - 13 * 1000: ${lastestTempBasalTime-13 * 1000}")
                 sdkMessageFactory!!.msgTempBasalHistory(lastestTempBasalTime - 13 * 1000, ap550Pump!!.pumpVersionString == BEFORE_DCN18_VERSION_STRING)   // Fetch the latest temp basal record of the pump
             } else {
@@ -1088,10 +1089,10 @@ class AP550ExecutionService : MetroService() {
                     sendMessage(sdkMessageFactory!!.msgSettingActiveProfile())
                     sendMessage(sdkMessageFactory!!.msgSettingShippingInfo())
                     // sendMessage(MsgSettingMeal(injector!!))
-                    if(now- (sp?.getLong(R.string.last_get_basal_timestamp, 0) ?: 0) > 60*60*1000){
+                    if(now- (preferences.get(Ap550LongNonKey.LastGetBasalTimestamp) ?: 0) > 60*60*1000){
                         aapsLogger!!.debug(LTag.PUMPCOMM, "Test_Basal_Setting Basal mismatch 0")
                         sendMessage(sdkMessageFactory!!.msgSettingBasal(ap550Pump!!.activeProfile, ap550PumpPlugin!!.pumpDescription.basalMinimumRate))
-                        sp?.putLong(R.string.last_get_basal_timestamp, now)
+                        preferences.put(Ap550LongNonKey.LastGetBasalTimestamp, now)
                     }
                     ap550Pump!!.lastSettingsRead = now
                 }
@@ -1099,7 +1100,7 @@ class AP550ExecutionService : MetroService() {
                 sendMessage(msgInitConnStatusBolus)
                 sendMessage(msgInitConnStatusBasic)
 
-                if (sp?.getBoolean(R.string.key_ap550_basal_is_percent, true) == true) {
+                if (preferences.get(Ap550BooleanNonKey.BasalIsPercent) == true) {
                     rxBus!!.send(EventPumpStatusChanged(resourceHelper!!.gs(R.string.getting_temp_basal_status)))                   // Percent
                     val tempStatusMsg = sdkMessageFactory!!.msgStatusTempBasal(ap550Pump!!.pumpVersionCode1)
                     sendMessage(tempStatusMsg)
@@ -1118,7 +1119,7 @@ class AP550ExecutionService : MetroService() {
                     ap550Pump!!.lastConnection = now
                     ap550Pump!!.scanStatusRecord(ConnectStatus.Connected)
                     rxBus!!.send(EventUISPumpStatusChanged(true))
-                    sp?.putLong("ap550s_lastConnection", now)
+                    preferences.put(Ap550LongNonKey.LastConnection, now)
                     // lastConnectStatus = true
                 }
                 // Both checks below compare this against raw pump values, so it has to be the profile
@@ -1127,10 +1128,10 @@ class AP550ExecutionService : MetroService() {
                 if (profile != null && Math.abs(ap550Pump!!.currentBasal - profile.getBasal()) >= ap550PumpPlugin!!.pumpDescription.basalStep) {
                     aapsLogger!!.debug(LTag.PUMPCOMM, "Test_Basal_Setting ap550Pump!!.currentBasal=${ap550Pump!!.currentBasal} profile.getBasal()=${profile.getBasal()}")
                     rxBus!!.send(EventPumpStatusChanged(resourceHelper!!.gs(R.string.getting_pump_settings)))
-                    if(now- (sp?.getLong(R.string.last_get_basal_timestamp, 0) ?: 0) > 60*60*1000){
+                    if(now- (preferences.get(Ap550LongNonKey.LastGetBasalTimestamp) ?: 0) > 60*60*1000){
                         aapsLogger!!.debug(LTag.PUMPCOMM, "Test_Basal_Setting Basal mismatch 1")
                         sendMessage(sdkMessageFactory!!.msgSettingBasal(ap550Pump!!.activeProfile, ap550PumpPlugin!!.pumpDescription.basalMinimumRate))
-                        sp?.putLong(R.string.last_get_basal_timestamp, now)
+                        preferences.put(Ap550LongNonKey.LastGetBasalTimestamp, now)
                     }
 
                     if (!ap550PumpPlugin!!.isThisProfileSet(profile) && !commandQueue.isRunning(
@@ -1181,8 +1182,8 @@ class AP550ExecutionService : MetroService() {
                 }
 
                 if (ap550Pump!!.pumpVersionString != BEFORE_DCN18_VERSION_STRING) {
-                    if (sp?.getBoolean("IsGetLogIndex", false) == false || ap550Pump!!.basicIndex < 0 || ap550Pump!!.otherIndex < 0) {
-                        aapsLogger!!.debug(LTag.PUMPCOMM, "IsGetLogIndex=${sp?.getBoolean("IsGetLogIndex", false)} otherIndex=${ap550Pump!!.otherIndex} basicIndex=${ap550Pump!!.basicIndex}")
+                    if (preferences.get(Ap550BooleanNonKey.IsGetLogIndex) == false || ap550Pump!!.basicIndex < 0 || ap550Pump!!.otherIndex < 0) {
+                        aapsLogger!!.debug(LTag.PUMPCOMM, "IsGetLogIndex=${preferences.get(Ap550BooleanNonKey.IsGetLogIndex)} otherIndex=${ap550Pump!!.otherIndex} basicIndex=${ap550Pump!!.basicIndex}")
                         val mesGetLogIndex = sdkMessageFactory!!.msgGetLogIndex()
                         sendMessage(mesGetLogIndex)
                     }
@@ -1345,9 +1346,9 @@ class AP550ExecutionService : MetroService() {
             mDevName = ap550Pump?.device_name_for_pair
             if(StringUtils.isEmpty(mDevName) || mDevName == "" || StringUtils.isEmpty(mDevMac) || mDevMac == "")
             {
-                ap550Pump?.device_name_for_pair = sp!!.getString(R.string.key_ap550_bt_device_name, "")
-                ap550Pump?.mac_address_for_pair = sp!!.getString(R.string.key_ap550_mac_address, "")
-                ap550Pump?.sn_for_pair = sp!!.getString(R.string.key_ap550_ser_number, "")
+                ap550Pump?.device_name_for_pair = preferences.get(Ap550StringNonKey.BtDeviceName)
+                ap550Pump?.mac_address_for_pair = preferences.get(Ap550StringNonKey.MacAddress)
+                ap550Pump?.sn_for_pair = preferences.get(Ap550StringNonKey.SerialNumber)
                 aapsLogger?.debug(LTag.PUMPBTCOMM, "mDevName = " + mDevName)
                 aapsLogger?.debug(LTag.PUMPBTCOMM, "mDevMac = " + mDevMac)
                 aapsLogger?.debug(LTag.PUMPBTCOMM, "ap550Pump?.device_name_for_pair = " + ap550Pump?.device_name_for_pair)
@@ -1756,15 +1757,15 @@ class AP550ExecutionService : MetroService() {
         val nowTimestamp = dateUtil!!.now()
         val runningTempBasal = runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(nowTimestamp) }
         if (runningTempBasal != null) {
-            sp!!.putBoolean(R.string.is_temp_basal_running_after_disconnect, true)
+            preferences.put(Ap550BooleanNonKey.IsTempBasalRunningAfterDisconnect, true)
             val timestamp = runningTempBasal.timestamp
             val serialNumber = runningTempBasal.ids.pumpSerial
             val duration =runningTempBasal.duration
             aapsLogger!!.debug("A running basal found at pump disconnect, time: $timestamp, duration: $duration, pump serial: $serialNumber")
-            sp!!.putLong(R.string.timestamp_temp_basal_running_after_disconnect, timestamp)
-            sp!!.putLong(R.string.disconnectTimestamp_temp_basal_running_after_disconnect, nowTimestamp)
-            sp!!.putString(R.string.serialNumber_temp_basal_running_after_disconnect, serialNumber!!)
-            sp!!.putLong(R.string.duration_temp_basal_running_after_disconnect, duration)
+            preferences.put(Ap550LongNonKey.TempBasalRunningTimestamp, timestamp)
+            preferences.put(Ap550LongNonKey.TempBasalRunningDisconnectTimestamp, nowTimestamp)
+            preferences.put(Ap550StringNonKey.TempBasalRunningSerialNumber, serialNumber!!)
+            preferences.put(Ap550LongNonKey.TempBasalRunningDuration, duration)
         }
     }
 
@@ -2046,7 +2047,7 @@ class AP550ExecutionService : MetroService() {
 
     fun checkPumpVersion(): Boolean {
         sendMessage(sdkMessageFactory!!.msgInitConnStatusTime())
-        val aapsDcnVersion = sp!!.getInt(R.string.key_dcn_version, 0)
+        val aapsDcnVersion = preferences.get(Ap550IntNonKey.DcnVersion)
         aapsLogger!!.debug(LTag.PUMPBTCOMM, "versionPairCheck appsDcnVersion:" + aapsDcnVersion + " ap550Pump.getPumpVersionCode1():" + ap550Pump!!.pumpVersionCode1)
         return ap550Pump!!.pumpVersionCode1 == aapsDcnVersion
     }
@@ -2081,7 +2082,7 @@ class AP550ExecutionService : MetroService() {
         disconnect("stopConnecting")
         // Raise a reconnect failed alarm; no popup while not paired
         var sn_for_pair: String = ""
-        sn_for_pair = sp!!.getString(R.string.key_ap550_ser_number, "")
+        sn_for_pair = preferences.get(Ap550StringNonKey.SerialNumber)
         if (!StringUtils.isEmpty(sn_for_pair)) {
             notificationManager.post(
                 NotificationId.PUMP_UNREACHABLE,
@@ -2744,7 +2745,7 @@ class AP550ExecutionService : MetroService() {
     // The old MsgGetLogIndex.handleMessage side effects
     private fun applyGetLogIndex(data: LogIndexData?) {
         if (data == null) return
-        sp!!.putBoolean("IsGetLogIndex", true)
+        preferences.put(Ap550BooleanNonKey.IsGetLogIndex, true)
         ap550Pump!!.otherIndex = data.otherIndex
         ap550Pump!!.basicIndex = data.basicIndex
     }
@@ -2752,7 +2753,7 @@ class AP550ExecutionService : MetroService() {
     // The old MsgGetBolusTempbasalLogIndex.handleMessage side effects
     private fun applyGetBolusTempbasalLogIndex(data: BolusTempbasalLogIndexData?) {
         if (data == null) return
-        sp!!.putBoolean("IsGetBolusTempbasalLogIndex", true)
+        preferences.put(Ap550BooleanNonKey.IsGetBolusTempbasalLogIndex, true)
         ap550Pump!!.tempBasalIndex = data.tempBasalIndex
         ap550Pump!!.bolusIndex = data.bolusIndex
     }
@@ -2768,7 +2769,7 @@ class AP550ExecutionService : MetroService() {
                 val profilerate = runningProfile.getBasalTimeFromMidnight(index / 2 * 60 * 60)
                 if (abs(rate - profilerate) > ap550PumpPlugin!!.pumpDescription.basalStep) {
                     aapsLogger!!.debug(LTag.PUMPCOMM, "Basal rate mismatch: pump: $rate profile: $profilerate")
-                    sp!!.putBoolean(R.string.is_basal_same, false)
+                    preferences.put(Ap550BooleanNonKey.IsBasalSame, false)
                     break
                 }
                 aapsLogger!!.debug(LTag.PUMPCOMM, "Basal rate match: pump: $rate profile: $profilerate")
@@ -2781,14 +2782,14 @@ class AP550ExecutionService : MetroService() {
         if (index == null) return
         if (ap550Pump!!.pumpIsFirstBindForCfgChangeRecord == true) {
             ap550Pump!!.pumpIsFirstBindForCfgChangeRecord = false
-            sp!!.putInt("PumpConfigChangeRecordIndex", index)
-            aapsLogger!!.debug(LTag.PUMPCOMM, "pump is firstly bind, reset the CFG Change index in SP ${sp!!.getInt("PumpConfigChangeRecordIndex", 0)}")
+            preferences.put(Ap550IntNonKey.PumpConfigChangeRecordIndex, index)
+            aapsLogger!!.debug(LTag.PUMPCOMM, "pump is firstly bind, reset the CFG Change index in SP ${preferences.get(Ap550IntNonKey.PumpConfigChangeRecordIndex)}")
         } else {
-            aapsLogger!!.debug(LTag.PUMPCOMM, "AAPS receive cfg change index, in SP = ${sp!!.getInt("PumpConfigChangeRecordIndex", 0)}, Pump index = $index")
+            aapsLogger!!.debug(LTag.PUMPCOMM, "AAPS receive cfg change index, in SP = ${preferences.get(Ap550IntNonKey.PumpConfigChangeRecordIndex)}, Pump index = $index")
             // Not the first pairing: compare the index stored in SP with the one reported by
             // the pump; if the SP one is smaller, the history records must be synced
-            if (sp!!.getInt("PumpConfigChangeRecordIndex", 0) < index) {
-                rxBus!!.send(EventGetCfgChangeRecord(sp!!.getInt("PumpConfigChangeRecordIndex", 0)))
+            if (preferences.get(Ap550IntNonKey.PumpConfigChangeRecordIndex) < index) {
+                rxBus!!.send(EventGetCfgChangeRecord(preferences.get(Ap550IntNonKey.PumpConfigChangeRecordIndex)))
             }
         }
     }
@@ -2802,7 +2803,7 @@ class AP550ExecutionService : MetroService() {
             aapsLogger!!.debug(LTag.PUMPCOMM, "config change record[${data.index}]: ${dateUtil!!.dateAndTimeString(data.time)} flag:${data.flag} res:${data.res} value:${data.value}")
             // Update the reset/prime history record index
             ap550Pump!!.cfgchangeIndex = data.index + 1
-            sp!!.putInt("PumpConfigChangeRecordIndex", data.index + 1)
+            preferences.put(Ap550IntNonKey.PumpConfigChangeRecordIndex, data.index + 1)
             if (data.flag == 25 || data.flag == 17 || data.flag == 28) {
                 val notes = when (data.flag) {
                     17 -> "PUMP"
@@ -2841,14 +2842,14 @@ class AP550ExecutionService : MetroService() {
         if (index == null) return
         if (ap550Pump!!.pumpIsFirstBindForVentResetRecord == true) {
             ap550Pump!!.pumpIsFirstBindForVentResetRecord = false
-            sp!!.putInt("PumpResetAndVentRecordIndex", index)
-            aapsLogger!!.debug(LTag.PUMPCOMM, "pump is firstly bind, reset the Vent Reset index in SP ${sp!!.getInt("PumpResetAndVentRecordIndex", 0)}")
+            preferences.put(Ap550IntNonKey.PumpResetAndVentRecordIndex, index)
+            aapsLogger!!.debug(LTag.PUMPCOMM, "pump is firstly bind, reset the Vent Reset index in SP ${preferences.get(Ap550IntNonKey.PumpResetAndVentRecordIndex)}")
         } else {
-            aapsLogger!!.debug(LTag.PUMPCOMM, "AAPS receive vent reset index, in SP = ${sp!!.getInt("PumpResetAndVentRecordIndex", 0)}, Pump index = $index")
+            aapsLogger!!.debug(LTag.PUMPCOMM, "AAPS receive vent reset index, in SP = ${preferences.get(Ap550IntNonKey.PumpResetAndVentRecordIndex)}, Pump index = $index")
             // Not the first pairing: compare the index stored in SP with the one reported by
             // the pump; if the SP one is smaller, the history records must be synced
-            if (sp!!.getInt("PumpResetAndVentRecordIndex", 0) < index) {
-                rxBus!!.send(EventGetResetVentRecord(sp!!.getInt("PumpResetAndVentRecordIndex", 0)))
+            if (preferences.get(Ap550IntNonKey.PumpResetAndVentRecordIndex) < index) {
+                rxBus!!.send(EventGetResetVentRecord(preferences.get(Ap550IntNonKey.PumpResetAndVentRecordIndex)))
             }
         }
     }
@@ -2862,7 +2863,7 @@ class AP550ExecutionService : MetroService() {
             aapsLogger!!.debug(LTag.PUMPCOMM, "reset vent record[${data.index}]: ${dateUtil!!.dateAndTimeString(data.time)} type:${data.type} value:${data.value}")
             // Update the reset/prime history record index
             ap550Pump!!.ventIndex = data.index + 1
-            sp!!.putInt("PumpResetAndVentRecordIndex", data.index + 1)
+            preferences.put(Ap550IntNonKey.PumpResetAndVentRecordIndex, data.index + 1)
             // Add the reset/prime history record entry to the care records
             val notes = when (data.type) {
                 0x07 -> rh!!.gs(R.string.pump_fixed_vent_record, data.value / 10.0)
@@ -3648,7 +3649,7 @@ class AP550ExecutionService : MetroService() {
         ).value()
 
         // After the constraints are applied, restore the originally configured style
-        val sp550BasalIsPercent = sp!!.getBoolean(R.string.key_ap550_basal_is_percent, false)
+        val sp550BasalIsPercent = preferences.get(Ap550BooleanNonKey.BasalIsPercent)
         ap550PumpPlugin!!.pumpDescription.tempBasalStyle = if (sp550BasalIsPercent) PumpDescription.PERCENT else PumpDescription.ABSOLUTE
 
         aapsLogger!!.debug(LTag.PUMPCOMM, "Temp basal state - percentAfterConstraintChecker = $percent")
@@ -3784,16 +3785,16 @@ class AP550ExecutionService : MetroService() {
         val tempBasalDuration = data.duration
         val isAbsolute = data.isAbsolute
 
-        if (sp!!.getBoolean(R.string.is_temp_basal_running_after_disconnect, false) && ap550Pump!!.pumpVersionString != BEFORE_DCN18_VERSION_STRING) {
-            val timestamp = sp!!.getLong(R.string.timestamp_temp_basal_running_after_disconnect, 0) // start time of the temp basal still running at disconnect
-            val disconnectTimestamp = sp!!.getLong(R.string.disconnectTimestamp_temp_basal_running_after_disconnect, 0) // disconnect timestamp
-            val duration = sp!!.getLong(R.string.duration_temp_basal_running_after_disconnect, 0)
-            val serialNumber = sp!!.getString(R.string.serialNumber_temp_basal_running_after_disconnect, "")
+        if (preferences.get(Ap550BooleanNonKey.IsTempBasalRunningAfterDisconnect) && ap550Pump!!.pumpVersionString != BEFORE_DCN18_VERSION_STRING) {
+            val timestamp = preferences.get(Ap550LongNonKey.TempBasalRunningTimestamp) // start time of the temp basal still running at disconnect
+            val disconnectTimestamp = preferences.get(Ap550LongNonKey.TempBasalRunningDisconnectTimestamp) // disconnect timestamp
+            val duration = preferences.get(Ap550LongNonKey.TempBasalRunningDuration)
+            val serialNumber = preferences.get(Ap550StringNonKey.TempBasalRunningSerialNumber)
             aapsLogger!!.debug(LTag.PUMPCOMM, "time basal running after disconnect time: $time,  timestamp: $timestamp, disconnectTimestamp: $disconnectTimestamp, duration: $duration, serialNumber: $serialNumber")
             if (timestamp > 0 && disconnectTimestamp > 0 && duration > 0 && serialNumber != "") {
                 if (abs(timestamp - time) > 13 * 1000 || serialNumber != ap550Pump!!.serialNumber) { // more than 13 seconds apart (max 10 s AAPS-pump time diff + 3 s communication), so the pump has no matching temp basal record; stop this temp basal with the disconnect timestamp as the stop time
                     aapsLogger!!.debug(LTag.PUMPCOMM, "Time difference above 3 seconds or pump serial number mismatch, temp basal disconnect: $timestamp, record from bump:$time")
-                    sp!!.putBoolean(R.string.is_temp_basal_running_after_disconnect, false)
+                    preferences.put(Ap550BooleanNonKey.IsTempBasalRunningAfterDisconnect, false)
                     val endTimestamp = min(disconnectTimestamp, timestamp + duration)
                     aapsLogger!!.debug(LTag.PUMPCOMM, "MsgTempBasalHistory stop time: $endTimestamp, serialNumber: $serialNumber")
 
@@ -3820,11 +3821,11 @@ class AP550ExecutionService : MetroService() {
                         )
                     }
                     aapsLogger!!.debug(LTag.PUMPCOMM, "temp basal after disconnect success: $success")
-                    sp!!.putBoolean(R.string.is_temp_basal_running_after_disconnect, false)
+                    preferences.put(Ap550BooleanNonKey.IsTempBasalRunningAfterDisconnect, false)
                     return
                 }
             } else {
-                sp!!.putBoolean(R.string.is_temp_basal_running_after_disconnect, false)
+                preferences.put(Ap550BooleanNonKey.IsTempBasalRunningAfterDisconnect, false)
             }
         }
 
