@@ -30,6 +30,7 @@ import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
+import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import dev.zacsweers.metro.Inject
@@ -322,7 +323,8 @@ class AaruyService : MetroService() {
     suspend fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
         if (!isConnected || !aaruyPump.pumpState.isCanTmpBasal()) return false
         var result = true
-        if (aaruyPump.isTempBasalInProgress) {
+        // The pump takes a new temp basal only from the plain basal. What it runs now is the status, not the database.
+        if (aaruyPump.pumpState == AaruyPumpState.TMPBASALRATE_RUNNING) {
             result = aaruyBle.cancelTempBasal()
         }
         if (result) result = aaruyBle.setTempBasal(absoluteRate, durationInMinutes)

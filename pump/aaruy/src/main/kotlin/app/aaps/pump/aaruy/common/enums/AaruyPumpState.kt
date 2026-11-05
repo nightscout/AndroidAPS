@@ -28,8 +28,9 @@ enum class AaruyPumpState(val state: Int) {
         return (this == BASALRATE_RUNNING || this == TMPBASALRATE_RUNNING)
     }
 
+    /** A running temp basal must not block a new one: the loop changes it all the time, also to stop insulin. */
     fun isCanTmpBasal(): Boolean {
-        return (this == BASALRATE_RUNNING)
+        return (this == BASALRATE_RUNNING || this == TMPBASALRATE_RUNNING)
     }
 
     companion object {
