@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
@@ -53,7 +52,6 @@ class AaruyServiceBolusTest {
         dateUtil,
         pumpSync,
         mock(TemporaryBasalStorage::class.java),
-        mock(DecimalFormatter::class.java),
         progress
     )
     private val service = AaruyService()
@@ -92,14 +90,14 @@ class AaruyServiceBolusTest {
 
     @Test
     fun finishedBolusIsFinished() {
-        pumpAnswers { pump.handleBolusStatusUpdate(0, true, 0.5) }
+        pumpAnswers { pump.handleBolusStatusUpdate(true, 0.5) }
         assertEquals(AaruyBolusOutcome.FINISHED, runBlocking { service.setBolus(info) })
         assertEquals(0.5, pump.bolusDelivered, 0.0001)
     }
 
     @Test
     fun silenceAfterTheStartIsNotAFinishedBolus() {
-        pumpAnswers { pump.handleBolusStatusUpdate(0, false, 0.1) }
+        pumpAnswers { pump.handleBolusStatusUpdate(false, 0.1) }
         assertEquals(AaruyBolusOutcome.UNKNOWN, runBlocking { service.setBolus(info) })
         assertEquals(0.1, pump.bolusDelivered, 0.0001)
         assertFalse("the next bolus must wait for the real state", pump.bolusDone)
@@ -108,7 +106,7 @@ class AaruyServiceBolusTest {
     @Test
     fun aBolusEndThatWasNotSeenIsNotAFinishedBolus() {
         pumpAnswers {
-            pump.handleBolusStatusUpdate(0, false, 0.1)
+            pump.handleBolusStatusUpdate(false, 0.1)
             pump.handleBolusEndNotSeen()
         }
         assertEquals(AaruyBolusOutcome.UNKNOWN, runBlocking { service.setBolus(info) })
@@ -118,7 +116,7 @@ class AaruyServiceBolusTest {
     @Test
     fun theNextBolusForgetsTheEndThatWasNotSeen() {
         pump.handleBolusEndNotSeen()
-        pumpAnswers { pump.handleBolusStatusUpdate(0, true, 0.5) }
+        pumpAnswers { pump.handleBolusStatusUpdate(true, 0.5) }
         assertEquals(AaruyBolusOutcome.FINISHED, runBlocking { service.setBolus(info) })
     }
 
@@ -138,13 +136,13 @@ class AaruyServiceBolusTest {
 
     @Test
     fun whenConnectedAndSilentItAsksForTheStatus() {
-        pumpAnswers { pump.handleBolusStatusUpdate(0, false, 0.1) }
+        pumpAnswers { pump.handleBolusStatusUpdate(false, 0.1) }
         var asked = 0
         `when`(ble.syncPumpStatus()).thenAnswer {
             // The answer counts as progress, and the bolus ends after a few of them.
             asked++
             pump.bolusProgressLastTimeStamp = dateUtil.now() + 1
-            if (asked == 5) pump.handleBolusStatusUpdate(0, true, 0.5)
+            if (asked == 5) pump.handleBolusStatusUpdate(true, 0.5)
             Unit
         }
         assertEquals(AaruyBolusOutcome.FINISHED, runBlocking { service.setBolus(info) })

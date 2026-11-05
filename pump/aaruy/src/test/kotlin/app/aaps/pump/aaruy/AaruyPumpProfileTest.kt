@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasalItem
@@ -38,7 +37,6 @@ class AaruyPumpProfileTest {
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        mock(DecimalFormatter::class.java),
         mock(BolusProgressData::class.java)
     )
 

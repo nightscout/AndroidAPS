@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasalItem
@@ -54,7 +53,6 @@ class AaruyPump(
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val decimalFormatter: DecimalFormatter,
     private val bolusProgressData: BolusProgressData
 )  {
 
@@ -253,55 +251,6 @@ class AaruyPump(
             tempBasalStart = tbr.timestamp
             tempBasalDuration = tbr.duration
             tempBasalAbsoluteRate = tbr.rate
-        }
-    }
-
-    // extended bolus
-    var extendedBolusStart: Long = 0
-    var extendedBolusDuration: Long = 0     // ms 毫秒
-    var extendedBolusAmount = 0.0
-
-    var isExtendedInProgress: Boolean
-        get() = extendedBolusStart != 0L && dateUtil.now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
-        set(isRunning) {
-            if (isRunning) throw IllegalArgumentException("Use to cancel EB only")
-            else {
-                extendedBolusStart = 0L
-                extendedBolusDuration = 0L
-                extendedBolusAmount = 0.0
-            }
-        }
-    val extendedBolusPassedMinutes: Int
-        get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
-    val extendedBolusRemainingMinutes: Int
-        get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
-    private val extendedBolusDurationInMinutes: Int
-        get() = T.msecs(extendedBolusDuration).mins().toInt()
-
-    var extendedBolusAbsoluteRate: Double
-        get() = extendedBolusAmount * T.hours(1).msecs() / extendedBolusDuration
-        set(rate) {
-            extendedBolusAmount = rate * extendedBolusDuration / T.hours(1).msecs()
-        }
-
-    fun extendedBolusToString(): String {
-        if (!isExtendedInProgress) return ""
-        //return "E "+ decimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-        //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
-        return "E " + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-            dateUtil.timeString(extendedBolusStart) +
-            " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
-    }
-
-    fun fromExtendedBolus(eb: PumpSync.PumpState.ExtendedBolus?) {
-        if (eb == null) {
-            extendedBolusStart = 0
-            extendedBolusDuration = 0
-            extendedBolusAmount = 0.0
-        } else {
-            extendedBolusStart = eb.timestamp
-            extendedBolusDuration = eb.duration
-            extendedBolusAmount = eb.amount
         }
     }
 
@@ -534,8 +483,8 @@ class AaruyPump(
 
     private fun List<BasalItem>.comparable() = map { it.startTime to (it.basalSpeed * 1000).roundToInt() }
 
-    fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double = 35.0) {
-        aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
+    fun handleBolusStatusUpdate(bolusCompleted: Boolean, amountDelivered: Double = 35.0) {
+        aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
         // The default of 35.0 is above the pump limit and means "no new amount": keep the last amount the pump reported.
         if (amountDelivered <= 25.0) {
@@ -560,7 +509,7 @@ class AaruyPump(
      */
     fun handleBolusEndNotSeen() {
         bolusEndNotSeen = true
-        handleBolusStatusUpdate(0, true)
+        handleBolusStatusUpdate(true)
     }
 
     fun handleBasalStatusUpdate(basalValue: Double) {
@@ -604,22 +553,6 @@ class AaruyPump(
         )
     }
 
-    suspend fun syncExtendedWithPumpId(startTime: Long, amount: Double, duration: Long) {
-        val newRecord = pumpSync.syncExtendedBolusWithPumpId(
-            timestamp = startTime,
-            rate = PumpRate(amount * T.hours(1).msecs() / duration),
-            duration = duration,
-            isEmulatingTB = false,
-            pumpId = startTime,
-            pumpType = pumpType(),
-            pumpSerial = pumpSN
-        )
-        aapsLogger.debug(
-            LTag.PUMPCOMM,
-            "syncExtendedWithPumpId: ${newRecordInfo(newRecord)}"
-        )
-    }
-
     suspend fun syncStopTBRWithPumpId(endTime: Long) {
         val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
             timestamp = endTime,
@@ -633,17 +566,8 @@ class AaruyPump(
         )
     }
 
-    suspend fun syncStopExtendedWithPumpId(endTime: Long) {
-        val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
-            timestamp = endTime,
-            endPumpId = endTime,
-            pumpType = pumpType(),
-            pumpSerial = pumpSN
-        )
-        aapsLogger.debug(
-            LTag.PUMPCOMM,
-            "syncExtendedWithPumpId: ${newRecordInfo(newRecord)}"
-        )
+    suspend fun announceExtendedNotFromAaps() {
+        pumpSync.insertAnnouncement(rh.gs(R.string.aaruy_extended_not_from_aaps), dateUtil.now(), pumpType(), pumpSN)
     }
 
     fun reset() {

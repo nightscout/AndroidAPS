@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.comm.DailyInfo
@@ -35,6 +34,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.timeout
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
@@ -56,7 +56,7 @@ class AaruyHistorySyncTest {
     private val rh = mock(ResourceHelper::class.java)
     private val pump = AaruyPump(
         logger, rh, mock(Preferences::class.java), dateUtil, pumpSync,
-        mock(TemporaryBasalStorage::class.java), mock(DecimalFormatter::class.java), mock(BolusProgressData::class.java)
+        mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
     )
     private val transport = AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))
     private lateinit var ble: AaruyBLE
@@ -118,6 +118,16 @@ class AaruyHistorySyncTest {
         receive(LogItem(timestamp = now - 10_000, type = 3, data = 0x8105, injectTime = 0, delayBolus = 0, reserved = 0))
         Thread.sleep(300)
         runBlocking { verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any()) }
+    }
+
+    /** AAPS never starts one, so something else did. The status comes again and again while it runs. */
+    @Test
+    fun anExtendedBolusNotFromAapsIsAnnouncedOnce() {
+        ble.onExtendedRunning()
+        ble.onExtendedRunning()
+        runBlocking { verify(pumpSync, timeout(5000)).insertAnnouncement(any(), anyOrNull(), any(), any()) }
+        Thread.sleep(300)
+        runBlocking { verify(pumpSync, times(1)).insertAnnouncement(any(), anyOrNull(), any(), any()) }
     }
 
     @Test

@@ -40,7 +40,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginAaruy
@@ -314,42 +313,8 @@ class AaruyPlugin(
         return result
     }
 
-    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
-        val result = pumpEnactResultProvider()
-        if (!isInitialized()) {
-            result.success = false
-            result.enacted = false
-            return result
-        }
-
-        if (aaruyPump.pumpType() == PumpType.AARUY_BASE) {
-            aapsLogger.info(LTag.PUMP, "setExtendedBolus - insulin: $insulin, durationInMinutes: $durationInMinutes")
-            result.success = false
-            result.enacted = false
-            result.comment = "Aaruy base driver does not support extended boluses"
-            return result
-        }
-
-        // Already limited by the command queue and PumpPluginConstraints. Round to the step of the pump.
-        val rounded = Round.roundTo(insulin, pumpDescription.extendedBolusStep)
-
-        if (aaruyPump.isExtendedInProgress && abs(aaruyPump.extendedBolusAmount - rounded) < pumpDescription.extendedBolusStep) {
-            aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + aaruyPump.extendedBolusAmount + " Asked: " + rounded)
-            return pumpEnactResultProvider().enacted(false).success(true).comment(rh.gs(app.aaps.core.ui.R.string.ok)).duration(aaruyPump.extendedBolusRemainingMinutes)
-                .absolute(aaruyPump.extendedBolusAbsoluteRate).isPercent(false).isTempCancel(false)
-        }
-
-        if (aaruyService?.extendedBolus(rounded, durationInMinutes) == true) {
-            aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
-            return pumpEnactResultProvider().enacted(true).success(true).comment(rh.gs(app.aaps.core.ui.R.string.ok)).duration(aaruyPump.extendedBolusRemainingMinutes)
-                .absolute(aaruyPump.extendedBolusAbsoluteRate).bolusDelivered(aaruyPump.extendedBolusAmount).isPercent(false)
-        }
-
-        result.enacted = false
-        result.success = false
-        aapsLogger.error("setExtendedBolus: Failed to extended bolus")
-        return result
-    }
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
+        pumpEnactResultProvider().success(false).enacted(false).comment("Aaruy driver does not support extended boluses")
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
@@ -364,17 +329,7 @@ class AaruyPlugin(
         }
     }
 
-    override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
-
-        val connectionOK = aaruyService?.cancelExtendedBolus() == true
-        return if (connectionOK && !aaruyPump.isExtendedInProgress) {
-            pumpEnactResultProvider().success(true).enacted(true)
-        } else {
-            aapsLogger.error(LTag.PUMP, "cancelExtendedBolus failed, connectionOK: $connectionOK, isExtendedInProgress: ${aaruyPump.isExtendedInProgress}")
-            pumpEnactResultProvider().success(false).enacted(false).comment("Aaruy extendedBolus failed")
-        }
-    }
+    override suspend fun cancelExtendedBolus(): PumpEnactResult = pumpEnactResultProvider()
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Aaruy
     override fun model(): PumpType = aaruyPump.pumpType()

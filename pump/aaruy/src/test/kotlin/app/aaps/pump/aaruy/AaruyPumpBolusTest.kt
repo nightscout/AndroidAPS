@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -22,16 +21,15 @@ class AaruyPumpBolusTest {
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        mock(DecimalFormatter::class.java),
         mock(BolusProgressData::class.java)
     )
 
     @Test
     fun stoppedBolusKeepsTheAmountThePumpReported() {
-        pump.handleBolusStatusUpdate(0, false, 0.05)
+        pump.handleBolusStatusUpdate(false, 0.05)
 
         // A stop has no amount, so the driver calls this without one.
-        pump.handleBolusStatusUpdate(0, true)
+        pump.handleBolusStatusUpdate(true)
 
         assertTrue(pump.bolusDone)
         assertEquals(0.05, pump.bolusDelivered, 0.0001)
@@ -40,7 +38,7 @@ class AaruyPumpBolusTest {
 
     @Test
     fun finishedBolusReportsTheAmount() {
-        pump.handleBolusStatusUpdate(0, true, 0.5)
+        pump.handleBolusStatusUpdate(true, 0.5)
 
         assertEquals(0.5, pump.bolusDelivered, 0.0001)
         assertEquals(0.5, pump.lastBolusAmount, 0.0001)

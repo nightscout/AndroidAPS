@@ -84,6 +84,8 @@ class AaruyBLE(
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val COMMAND_ANSWER_TIMEOUT_MS = 5000L
+    private val BOLUS_STATE_EXTENDED = 1
+    private val BOLUS_STATE_DONE = 2
     private val HISTORY_TEMP_BASAL = 1
     private val HISTORY_ALARM = 3
     private val SAME_ENTRY_MS = 60_000L
@@ -104,13 +106,12 @@ class AaruyBLE(
     private var connectDeviceName: String? = null
     @Volatile private var sendBasalsInfoOk = false
     private var sendBolusOk = false
-    @Volatile private var sendExtendedBolusOk = false
     private var cancelBolusOk = false
     @Volatile private var sendTmpBasalOk = false
     @Volatile private var cancelTmpBasalOk = false
     private var startBasalOk = false
     private var isUnbinding = false
-    private var bolusType: Int = 0
+    private var extendedAnnounced = false
     private var connectCount: Int = 0
 
     var isConnected = false
@@ -447,25 +448,14 @@ class AaruyBLE(
                         aaruyPump.handleBasalStatusUpdate(statusInfo.tempBasalStatus?.curValue ?: 0.0)
                     }
                     3->{        // 大剂量运行
-                        sendBolusOk = true
-                        var bolusCompleted: Boolean = false
-                        var amountDelivered: Double = 0.0
-
-                        amountDelivered = statusInfo.bolusStatus?.curBolusNow ?: 0.0
-                        amountDelivered /= 1000
-                        if (statusInfo.bolusStatus?.state == 1) {
-                            bolusType = 1
-                            sendExtendedBolusOk = true
+                        if (statusInfo.bolusStatus?.state == BOLUS_STATE_EXTENDED) {
+                            onExtendedRunning()
+                        } else {
+                            sendBolusOk = true
+                            val bolusCompleted = statusInfo.bolusStatus?.state == BOLUS_STATE_DONE
+                            if (bolusCompleted && aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
+                            aaruyPump.handleBolusStatusUpdate(bolusCompleted, (statusInfo.bolusStatus?.curBolusNow ?: 0.0) / 1000)
                         }
-                        else if (statusInfo.bolusStatus?.state == 2) {
-                            bolusCompleted = true
-                            if (aaruyPump.canSaveHistory)
-                                requestHistoryData(aaruyPump.lastHistoryTime)
-                        }
-                        else {
-                            bolusType = 0
-                        }
-                        aaruyPump.handleBolusStatusUpdate(bolusType, bolusCompleted, amountDelivered)
                     }
                     4->{        // 排液操作正在进行
 
@@ -477,8 +467,8 @@ class AaruyBLE(
 
                     }
                     7->{        // 暂停(推杆不回退)
-                        if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING && bolusType == 0) {
-                            aaruyPump.handleBolusStatusUpdate(0, true)
+                        if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING) {
+                            aaruyPump.handleBolusStatusUpdate(true)
                         }
                         if (aaruyPump.canSaveHistory)
                             requestHistoryData(aaruyPump.lastHistoryTime)
@@ -492,9 +482,12 @@ class AaruyBLE(
                     }
                 }
                 // A real pump answers a stop by going from status 3 straight to 1, so any status other than 3 confirms it.
-                if (statusInfo.runningStatus != 3) cancelBolusOk = true
+                if (statusInfo.runningStatus != 3) {
+                    cancelBolusOk = true
+                    extendedAnnounced = false
+                }
                 if (statusInfo.runningStatus != 3 && aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING && !aaruyPump.bolusDone) {
-                    if (aaruyPump.bolusStopRequested) aaruyPump.handleBolusStatusUpdate(0, true)
+                    if (aaruyPump.bolusStopRequested) aaruyPump.handleBolusStatusUpdate(true)
                     else aaruyPump.handleBolusEndNotSeen()
                 }
                 if (aaruyPump.pumpState != aaruyPump.pumpLastState &&
@@ -614,15 +607,17 @@ class AaruyBLE(
     }
 
 
+    /** AAPS never starts an extended bolus, so something else did. One announcement, and the bolus state of the driver stays as it is. */
+    internal fun onExtendedRunning() {
+        if (extendedAnnounced) return
+        extendedAnnounced = true
+        aapsLogger.warn(LTag.PUMPCOMM, "The pump runs an extended bolus that AAPS did not start")
+        scope.launch { aaruyPump.announceExtendedNotFromAaps() }
+    }
+
     private fun checkPumpInfusion() {
         if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING) {
-            if (bolusType == 0) {
-                aaruyPump.handleBolusStatusUpdate(0, true)
-            }
-            else {
-                val endTime = dateUtil.now()
-                scope.launch { aaruyPump.syncStopExtendedWithPumpId(endTime) }
-            }
+            aaruyPump.handleBolusStatusUpdate(true)
         }
         else if (aaruyPump.pumpLastState == AaruyPumpState.TMPBASALRATE_RUNNING) {
             val endTime = dateUtil.now()
@@ -662,14 +657,10 @@ class AaruyBLE(
 
     fun cancelBolus(): Boolean {
         cancelBolusOk = false
-        val endTime = dateUtil.now()
         aaBleUtil.cancelBolus()
         val end = System.currentTimeMillis() + BOLUS_STOP_TIMEOUT_MS
         while (!cancelBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(20)
         if (cancelBolusOk) {
-            if (bolusType == 1) {
-                scope.launch { aaruyPump.syncStopExtendedWithPumpId(endTime) }
-            }
             aaBleUtil.continueInject()
         }
         return cancelBolusOk
@@ -701,17 +692,6 @@ class AaruyBLE(
         }
         tempBasalCommandRunning = false
         return cancelTmpBasalOk
-    }
-
-    suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): Boolean {
-        sendExtendedBolusOk = false
-        val startTime = dateUtil.now()
-        aaBleUtil.setupAndStartBolus(0.0, insulin, durationInMinutes, false)
-        waitForAnswer { sendExtendedBolusOk }
-        if(sendExtendedBolusOk) {
-            aaruyPump.syncExtendedWithPumpId(startTime, insulin, durationInMinutes.toLong()*60*1000)
-        }
-        return sendExtendedBolusOk
     }
 
     fun syncAndLoadBasicParam() {

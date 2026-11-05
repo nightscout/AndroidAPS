@@ -335,23 +335,6 @@ class AaruyService : MetroService() {
         return result
     }
 
-    suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): Boolean {
-        if (!canSetBolus()) return false
-        var result = true
-        result = aaruyBle.extendedBolus(insulin, durationInMinutes)
-
-        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingextendedbolus)))
-
-        val eb = pumpSync.expectedPumpState().extendedBolus
-        if (eb != null) {
-            aapsLogger.info(LTag.PUMP, "---->extendedBolus - extendedBolusStart: ${eb.timestamp}, " +
-                "extendedBolusDuration: ${eb.duration}, extendedBolusRate: ${eb.rate}, extendedBolusAmount: ${eb.amount}")
-        }
-        aaruyPump.fromExtendedBolus(eb)
-
-        return result
-    }
-
     suspend fun cancelTempBasal(): Boolean {
         if (!isConnected) return false
 
@@ -359,21 +342,6 @@ class AaruyService : MetroService() {
 
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         aaruyPump.fromTemporaryBasal(tbr)
-
-        return result
-    }
-
-    suspend fun cancelExtendedBolus(): Boolean {
-        if (!isConnected) return false
-
-        val result = aaruyBle.cancelBolus()
-
-        val eb = pumpSync.expectedPumpState().extendedBolus
-        if (eb != null) {
-            aapsLogger.info(LTag.PUMP, "---->extendedBolus - extendedBolusStart: ${eb.timestamp}, " +
-                "extendedBolusDuration: ${eb.duration}, extendedBolusRate: ${eb.rate}, extendedBolusAmount: ${eb.amount}")
-        }
-        aaruyPump.fromExtendedBolus(eb)
 
         return result
     }

@@ -89,7 +89,7 @@
     <string name="bolus_title">Bolus</string>
     <string name="temp_basal_title">Temp basal</string>
     <string name="basal_rate_title">Basal rate</string>
-    <string name="settingextendedbolus" >Setting extended bolus</string>
+    <string name="aaruy_extended_not_from_aaps">The pump runs an extended bolus that AAPS did not start. AAPS does not count this insulin. No temp basal and no bolus can start until it ends.</string>
     <string name="getting_pump_status">Getting pump status</string>
     <string name="aaruy_wait_bolus_time_tip" comment="%1$d=seconds. Example: Waiting for the bolus to end. 20 s left.">Waiting for the bolus to end. %1$d s left.</string>
     <string name="aaruy_history_daily_parts" comment="%1$s=bolus insulin, %2$s=basal insulin of one day. Example: 12.00 U + 18.00 U">%1$s + %2$s</string>

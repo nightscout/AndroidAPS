@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
@@ -76,7 +75,6 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java),
             mock(BolusProgressData::class.java)
         )
         val ble = AaruyBLE(
@@ -143,7 +141,6 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java),
             mock(BolusProgressData::class.java)
         )
         val ble = AaruyBLE(
@@ -211,7 +208,6 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             pumpSync,
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java),
             mock(BolusProgressData::class.java)
         )
         val ble = AaruyBLE(
@@ -273,7 +269,6 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java),
             mock(BolusProgressData::class.java)
         )
         val ble = AaruyBLE(
@@ -319,7 +314,6 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(DecimalFormatter::class.java),
             mock(BolusProgressData::class.java)
         )
         val ble = AaruyBLE(
@@ -364,7 +358,7 @@ class AaruyBleReconnectTest {
             val logger = mock(AAPSLogger::class.java)
             val pump = AaruyPump(
                 logger, mock(ResourceHelper::class.java), preferences, dateUtil, mock(PumpSync::class.java),
-                mock(TemporaryBasalStorage::class.java), mock(DecimalFormatter::class.java), mock(BolusProgressData::class.java)
+                mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
             )
             val ble = AaruyBLE(
                 AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = { now })),
