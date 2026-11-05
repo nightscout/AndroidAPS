@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.plugins.source.SourceStrings
 
 /**
@@ -88,7 +89,10 @@ fun CgmScaffold(
                 actions = actions,
             )
         },
-        bottomBar = bottomBar,
+        // A plain composable in this slot is not moved above the system navigation bar by Scaffold:
+        // with 3-button navigation the Connect button was hidden behind it. bottomBarSafeArea keeps
+        // it above the navigation bar and the keyboard.
+        bottomBar = { Box(modifier = Modifier.bottomBarSafeArea()) { bottomBar() } },
     ) { innerPadding ->
         Box(
             modifier = Modifier
