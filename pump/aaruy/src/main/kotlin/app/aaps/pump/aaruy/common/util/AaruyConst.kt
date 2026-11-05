@@ -1,17 +1,6 @@
 package app.aaps.pump.aaruy.common.util
 
-import app.aaps.pump.aaruy.R
-
 object AaruyConst {
-    object Prefs {
-        val MaxBasal = R.string.key_pref_aaruy_max_basal
-        val MaxBolus = R.string.key_pref_aaruy_max_bolus
-        val LowAlert = R.string.key_pref_aaruy_low_alert
-        val BolusStep = R.string.key_pref_aaruy_bolus_step
-        val SoundRemind = R.string.key_pref_aaruy_sound_remind
-        val SoundAlarm = R.string.key_pref_aaruy_sound_alarm
-    }
-
     object errCodeType {
         /**
          *  设置胰岛素泵的基本参数

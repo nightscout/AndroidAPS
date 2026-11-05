@@ -27,7 +27,6 @@ import app.aaps.pump.aaruy.common.util.AaruyPumpSchedule
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AaruyType
 import app.aaps.pump.aaruy.common.enums.AlarmState
-import app.aaps.pump.aaruy.common.util.AaruyConst
 import app.aaps.pump.aaruy.keys.AaruyBooleanKey
 import app.aaps.pump.aaruy.keys.AaruyDoubleKey
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
