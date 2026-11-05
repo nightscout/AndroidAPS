@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">L\'insulina non è stata cambiata: %1$s. La tua insulina precedente è ancora in uso.</string>
     <string name="insulin_activation_unconfirmed">Non è stato possibile confermare il cambio di insulina. Prima di erogare insulina controlla quale insulina è attiva nel tuo profilo.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">L’insulina non è cambiata. L’insulina precedente è ancora in uso.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAnche l\'insulina non è stata cambiata.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAnche l\'insulina non è stata cambiata. Se la nuova insulina è già presente nel micro, non collegarlo ed eseguire nuovamente il cambio di insulina.</string>
     <string name="active"><![CDATA[<Attivo>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Soprannome dell\'insulina</string>
