@@ -39,10 +39,8 @@ import app.aaps.pump.aaruy.comm.BleStatus
 import app.aaps.pump.aaruy.comm.AaruyBleListener
 import app.aaps.pump.aaruy.comm.ScanResultListener
 import app.aaps.pump.aaruy.AaruyPump
-import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
-import app.aaps.pump.aaruy.common.enums.AaruyType
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.common.util.AaruySetting
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
@@ -63,7 +61,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import dev.zacsweers.metro.AppScope
-import kotlin.math.abs
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import app.aaps.pump.aaruy.keys.AaruyStringKey
@@ -377,7 +374,7 @@ class AaruyBLE(
                     aaBleUtil.stopScanDevice()
                     if (preferences.get(AaruyStringKey.PumpBoundAddress) == "") {
                         CoroutineScope(Dispatchers.IO).launch {
-                            // 换泵保存
+                            // A new pump: the history screen shows where it started
                             aapsLogger.warn(LTag.PUMPCOMM, "------------------>change pump")
                             val historyUnitInfo = HistoryUnitInfo()
                             historyUnitInfo.blueName = getShortDeviceName()
@@ -484,10 +481,10 @@ class AaruyBLE(
                 aaruyPump.handleBasalStatusUpdate(0.0)
 
                 when(statusInfo.runningStatus) {
-                    0-> {       // 未运行
+                    0-> {       // Not running
                         checkPumpInfusion()
                     }
-                    1-> {       // 基础率运行
+                    1-> {       // Basal running
                         startBasalOk = true
                         if (statusInfo.basalStatus?.curValue != previousRate) {
                             if (aaruyPump.canSaveHistory)
@@ -495,10 +492,10 @@ class AaruyBLE(
                         }
                         aaruyPump.handleBasalStatusUpdate(statusInfo.basalStatus?.curValue ?: 0.0)
                     }
-                    2->{        // 临时基础率运行
+                    2->{        // Temp basal running
                         aaruyPump.handleBasalStatusUpdate(statusInfo.tempBasalStatus?.curValue ?: 0.0)
                     }
-                    3->{        // 大剂量运行
+                    3->{        // Bolus running
                         if (statusInfo.bolusStatus?.state == BOLUS_STATE_EXTENDED) {
                             onExtendedRunning()
                         } else {
@@ -508,16 +505,11 @@ class AaruyBLE(
                             aaruyPump.handleBolusStatusUpdate(bolusCompleted, (statusInfo.bolusStatus?.curBolusNow ?: 0.0) / 1000)
                         }
                     }
-                    4->{        // 排液操作正在进行
-
-                    }
-                    5->{        // 推杆回退正在进行
+                    // 4: filling the cannula, 6: the piston looks for the reservoir. Nothing to do while they run.
+                    5->{        // Rewind running
                         checkPumpInfusion()
                     }
-                    6->{        // 推杆定位正在进行
-
-                    }
-                    7->{        // 暂停(推杆不回退)
+                    7->{        // Paused, the piston stays where it is
                         if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING) {
                             aaruyPump.handleBolusStatusUpdate(true)
                         }
@@ -525,7 +517,7 @@ class AaruyBLE(
                             requestHistoryData(aaruyPump.lastHistoryTime)
                         cancelBolusOk = true
                     }
-                    8->{        // 停止(推杆回退)
+                    8->{        // Stopped, after a rewind
                         checkPumpInfusion()
                         cancelBolusOk = true
                     }
@@ -576,21 +568,9 @@ class AaruyBLE(
                 aapsLogger.warn(LTag.PUMPCOMM, "onReceiveErrorData errorType = $errorType,error = $error")
                 val tmpErrCode = (error shl 8) or (errorType)
                 aaruyPump.errCode.tryEmit(tmpErrCode)
+                // High byte 0 is the answer to a motor command. The wizard reads it from errCode, nothing else needs it.
                 when(error) {
-                    0->{        // 操作的正常提示
-                        when(errorType) {
-                            16-> {  // 进行了推杆定位的排液操作成功
-
-                            }
-                            17-> {  // 推杆回退成功
-
-                            }
-                            25-> {  // 有液体排出
-
-                            }
-                        }
-                    }
-                    0x80->{     // 操作的错误提示
+                    0x80->{     // An error answer to a command
                         if (tmpErrCode == 0x801C) {
                             if(receivingHistory) {
                                 receivingHistory = false
@@ -601,7 +581,7 @@ class AaruyBLE(
                             aaruyPump.pumpWarning = alarmState
                         }
                     }
-                    0x81->{     // 报警提示类型
+                    0x81->{     // An alarm
                         val alarmState = AlarmState.fromInt(tmpErrCode)
                         if (!aaruyPump.activeAlarms.contains(alarmState) && alarmState != AlarmState.NONE) {
                             if(AlarmState.isHighAlarm(alarmState) || AlarmState.isLowAlarm(alarmState))
@@ -834,7 +814,7 @@ fun syncAndLoadBasicParam() {
     fun getShortDeviceName(): String {
         var name = "Q10000"
         if (preferences.get(AaruyStringKey.PumpBoundAddress) == "") {
-            name = preferences.get(AaruyStringKey.MacAddress)         // 将要连接的泵
+            name = preferences.get(AaruyStringKey.MacAddress)         // The pump that is being connected
         }
         else {
             name = aaruyPump.pumpSN

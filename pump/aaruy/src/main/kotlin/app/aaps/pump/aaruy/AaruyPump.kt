@@ -2,7 +2,6 @@ package app.aaps.pump.aaruy
 
 import android.util.Base64
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
@@ -41,7 +40,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 @SingleIn(AppScope::class)
@@ -192,7 +190,7 @@ class AaruyPump(
         }
 
     private var _pumpSN = ""
-    var pumpSN: String      // 包括aaruy_
+    var pumpSN: String      // With the "aaruy_" prefix
         get() = _pumpSN
         set(value) {
             _pumpSN = value
@@ -222,7 +220,6 @@ class AaruyPump(
     var bolusDelivered = 0.0 // What the pump reported for the running bolus. Not from BolusProgressData: its state can be cleared by the queue.
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
-    val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered
 
     // temp basal
     var tempBasalStart: Long = 0
@@ -238,15 +235,6 @@ class AaruyPump(
             }
         }
 
-    fun temporaryBasalToString(): String {
-        if (!isTempBasalInProgress) return ""
-
-        val passedMin = ((min(dateUtil.now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
-        return tempBasalAbsoluteRate.toString() + "U/h @" +
-            dateUtil.timeString(tempBasalStart) +
-            " " + passedMin + "/" + T.msecs(tempBasalDuration).mins() + "'"
-    }
-
     fun fromTemporaryBasal(tbr: PumpSync.PumpState.TemporaryBasal?) {
         if (tbr == null) {
             tempBasalStart = 0
@@ -259,47 +247,49 @@ class AaruyPump(
         }
     }
 
-    // status
-    var dailyTotalUnits = 0.0
-    var maxDailyTotalUnits = 0
-
-    // Aaruy pump
-    private var _maxBasal: Double = 1.5 //最大基础率（U/小时) 0.1~35,默认1.5
+    // Settings of the pump
+    /** U/h, 0.1 to 35. */
+    private var _maxBasal: Double = 1.5
     var maxBasal: Double
         get() = _maxBasal
         set(value) {
             _maxBasal = value
             preferences.put(AaruyDoubleKey.PumpMaxBasal, value)
         }
-    private var _maxBolus: Double = 10.0 //最大大剂量值（U） 1~25U,默认值10U
+    /** U, 1 to 25. */
+    private var _maxBolus: Double = 10.0
     var maxBolus: Double
         get() = _maxBolus
         set(value) {
             _maxBolus = value
             preferences.put(AaruyDoubleKey.PumpMaxBolus, value)
         }
-    private var _bolusStep: Int = 2 //大剂量一次注射量(数值就是对应着精度的倍数，从1开始)
+    /** The bolus step as a count of 0.025 U, from 1. */
+    private var _bolusStep: Int = 2
     var bolusStep: Int
         get() = _bolusStep
         set(value) {
             _bolusStep = value
             preferences.put(AaruyIntKey.PumpBolusStep, value)
         }
-    private var _lowAlert: Double = 20.0 //低药量报警阀值（U），默认为20U
+    /** The low reservoir alarm, in U. */
+    private var _lowAlert: Double = 20.0
     var lowAlert: Double
         get() = _lowAlert
         set(value) {
             _lowAlert = value
             preferences.put(AaruyDoubleKey.PumpLowAlert, value)
         }
-    private var _closeInjectSound: Int = 0 //0:有提示音和报警音 1:关闭提示音，有报警音 2:有提示音，关闭报警音 3：关闭提示音和报警音
+    /** 0 beeps and alarm sounds, 1 alarm sounds only, 2 beeps only, 3 neither. */
+    private var _closeInjectSound: Int = 0
     var closeInjectSound: Int
         get() = _closeInjectSound
         set(value) {
             _closeInjectSound = value
             preferences.put(AaruyIntKey.PumpCloseInjectSound, value)
         }
-    private var _softNeedleType: Int = 0 //软针长度 0:6mm 1:9mm
+    /** The cannula: 0 is 6 mm, 1 is 9 mm. */
+    private var _softNeedleType: Int = 0
     var softNeedleType: Int
         get() = _softNeedleType
         set(value) {
@@ -314,7 +304,8 @@ class AaruyPump(
             preferences.put(AaruyIntKey.PumpType, value)
         }
 
-    private var _canSaveHistory: Boolean = false// 是否能保存历史
+    /** False after pairing until the old history of the pump has been skipped. */
+    private var _canSaveHistory: Boolean = false
     var canSaveHistory: Boolean
         get() = _canSaveHistory
         set(value) {
@@ -323,7 +314,7 @@ class AaruyPump(
         }
 
     private var _lastHistoryTime: Long = 0
-    var lastHistoryTime: Long           // 毫秒
+    var lastHistoryTime: Long           // ms
         get() = _lastHistoryTime
         set(value) {
             _lastHistoryTime = value
@@ -331,7 +322,7 @@ class AaruyPump(
         }
 
     private var _lastHistoryDailyTime: Long = 0
-    var lastHistoryDailyTime: Long      // 毫秒
+    var lastHistoryDailyTime: Long      // ms
         get() = _lastHistoryDailyTime
         set(value) {
             _lastHistoryDailyTime = value
@@ -339,7 +330,7 @@ class AaruyPump(
         }
 
     private var _alreadyPushBack: Boolean = false
-    var alreadyPushBack: Boolean      // 用于主动推杆回退
+    var alreadyPushBack: Boolean      // An empty reservoir rewinds by itself once, see AaruyBLE
         get() = _alreadyPushBack
         set(value) {
             _alreadyPushBack = value
