@@ -68,61 +68,10 @@ class PeriodicMaintenanceTest : TestBase() {
         verify(localAlertUtils).checkGlucoseAlerts()
     }
 
-    /** A failing glucose alarm check must not skip the log and database trim of the same pass. */
-    @Test
-    fun `a failing glucose alarm check does not skip the trim`() = runTest {
-        val now = T.days(10).msecs()
-        whenever(dateUtil.now()).thenReturn(now)
-        whenever(preferences.get(LongNonKey.LastCleanupRun)).thenReturn(now - T.days(2).msecs())
-        whenever(localAlertUtils.checkGlucoseAlerts()).thenThrow(IllegalStateException("broken"))
-
-        sut.runOnce()
-
-        verify(maintenance).deleteLogs(PeriodicMaintenance.KEEP_LOG_FILES)
-        verify(persistenceLayer).cleanupDatabase(eq(now - keep), eq(false))
-    }
-
-    /** The CGM sensor alarms are checked on every pass, and a failing glucose check does not skip them. */
-    @Test
-    fun `a pass checks the sensor alarms even when the glucose check fails`() = runTest {
-        whenever(dateUtil.now()).thenReturn(1_000L)
-        whenever(localAlertUtils.checkGlucoseAlerts()).thenThrow(IllegalStateException("broken"))
-
-        sut.runOnce()
-
-        verify(localAlertUtils).checkSensorAlerts()
-    }
-
-    /** A failing sensor alarm check must not skip the log and database trim of the same pass. */
-    @Test
-    fun `a failing sensor alarm check does not skip the trim`() = runTest {
-        val now = T.days(10).msecs()
-        whenever(dateUtil.now()).thenReturn(now)
-        whenever(preferences.get(LongNonKey.LastCleanupRun)).thenReturn(now - T.days(2).msecs())
-        whenever(localAlertUtils.checkSensorAlerts()).thenThrow(IllegalStateException("broken"))
-
-        sut.runOnce()
-
-        verify(maintenance).deleteLogs(PeriodicMaintenance.KEEP_LOG_FILES)
-        verify(persistenceLayer).cleanupDatabase(eq(now - keep), eq(false))
-    }
-
-    /** A new reading checks the sensor alarms too, so a sensor that comes back is cleared at once. */
-    @Test
-    fun `a new reading checks the sensor alarms`() = runTest {
-        val scope = CoroutineScope(Dispatchers.Unconfined)
-        try {
-            sut.startGlucoseAlarmTrigger(scope)
-
-            rxBus.send(EventBucketedDataCreated())
-
-            verify(localAlertUtils, timeout(1_000).times(1)).checkSensorAlerts()
-        } finally {
-            scope.cancel()
-        }
-    }
-
-    /** iOS and desktop: a new reading must check the glucose alarms, not only the next tick. */
+    /**
+     * iOS: the ticker does not run while the app is in the background, but a new reading still
+     * arrives. The glucose alarms must be checked then too, not only at the next tick.
+     */
     @Test
     fun `a new reading checks the glucose alarms`() = runTest {
         whenever(dateUtil.now()).thenReturn(1_000L)

@@ -28,7 +28,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config as RobolectricConfig
 
 /**
- * The Libre 3 plugin publishes its sensor state for the central sensor alarms, from the driver
+ * The Libre 3 plugin reports its sensor state to the central sensor alarms, from the driver
  * callbacks it already gets, and says nothing while it is stopped.
  *
  * Robolectric, because a warm-up state also posts the status bar message.
@@ -82,6 +82,9 @@ class Libre3PluginSensorAlertTest {
         assertThat(Libre3SensorStore(context, null).saveIdentityAndWait(identity)).isTrue()
     }
 
+    /** The state the central check reads, with the default warning time before the end (12 h). */
+    private fun Libre3NativePlugin.alertState() = sensorAlertState(System.currentTimeMillis(), 12L * 60L * 60L * 1000L)
+
     @After
     fun tearDown() {
         Libre3SensorStore(context, null).clearAll()
@@ -92,11 +95,11 @@ class Libre3PluginSensorAlertTest {
     fun `the plugin reports its sensor state`() {
         assertThat(plugin).isInstanceOf(CgmSensorAlertProvider::class.java)
         storeRunningSensor()
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Ok)
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Ok)
 
         plugin.onWarmup(Libre3WarmupState(phase = Libre3WarmupState.Phase.FAILED))
 
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Failed(CgmSensorFailure.OTHER))
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Failed(CgmSensorFailure.OTHER))
     }
 
     @Test
@@ -104,14 +107,14 @@ class Libre3PluginSensorAlertTest {
         storeRunningSensor()
 
         plugin.onWarmup(Libre3WarmupState(phase = Libre3WarmupState.Phase.RECONNECTING))
-        assertThat(plugin.sensorAlertState.value).isInstanceOf(CgmSensorAlertState.SignalLost::class.java)
+        assertThat(plugin.alertState()).isInstanceOf(CgmSensorAlertState.SignalLost::class.java)
 
         // A retry passes through CONNECTING: the link is not back yet.
         plugin.onWarmup(Libre3WarmupState(phase = Libre3WarmupState.Phase.CONNECTING))
-        assertThat(plugin.sensorAlertState.value).isInstanceOf(CgmSensorAlertState.SignalLost::class.java)
+        assertThat(plugin.alertState()).isInstanceOf(CgmSensorAlertState.SignalLost::class.java)
 
         plugin.onWarmup(Libre3WarmupState(phase = Libre3WarmupState.Phase.READY))
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Ok)
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Ok)
     }
 
     @Test
@@ -119,10 +122,10 @@ class Libre3PluginSensorAlertTest {
         storeRunningSensor()
 
         plugin.productionWatcher.onPatchStatus(patchStatus(errorData = 3))
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Failed(CgmSensorFailure.SENSOR_ERROR))
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Failed(CgmSensorFailure.SENSOR_ERROR))
 
         plugin.productionWatcher.onPatchStatus(patchStatus(errorData = 0))
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Ok)
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Ok)
     }
 
     /** The urgent alarm sounds once per end: neither the first end message nor a restart may move the episode. */
@@ -130,15 +133,15 @@ class Libre3PluginSensorAlertTest {
     fun `an ended sensor keeps one expired episode, through the end message and a restart`() {
         val expiresAtMs = storeEndedSensor()
         val expired = CgmSensorAlertState.Expired(expiresAtMs)
-        assertThat(plugin.sensorAlertState.value).isEqualTo(expired)
+        assertThat(plugin.alertState()).isEqualTo(expired)
 
         plugin.productionWatcher.onPatchStatus(patchStatus(errorData = 5))
-        assertThat(plugin.sensorAlertState.value).isEqualTo(expired)
+        assertThat(plugin.alertState()).isEqualTo(expired)
 
         val restarted = newPlugin()
-        assertThat(restarted.sensorAlertState.value).isEqualTo(expired)
+        assertThat(restarted.alertState()).isEqualTo(expired)
         restarted.productionWatcher.onPatchStatus(patchStatus(errorData = 5))
-        assertThat(restarted.sensorAlertState.value).isEqualTo(expired)
+        assertThat(restarted.alertState()).isEqualTo(expired)
     }
 
     @Test
@@ -146,10 +149,10 @@ class Libre3PluginSensorAlertTest {
         storeRunningSensor()
 
         plugin.productionWatcher.onPatchStatus(patchStatus(errorData = 99))
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Ok)
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Ok)
 
         plugin.productionWatcher.onPatchStatus(patchStatus(errorData = 99))
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Failed(CgmSensorFailure.SENSOR_ERROR))
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Failed(CgmSensorFailure.SENSOR_ERROR))
     }
 
     @Test
@@ -159,7 +162,7 @@ class Libre3PluginSensorAlertTest {
 
         plugin.onStop()
 
-        assertThat(plugin.sensorAlertState.value).isEqualTo(CgmSensorAlertState.Ok)
+        assertThat(plugin.alertState()).isEqualTo(CgmSensorAlertState.Ok)
     }
 
     private fun patchStatus(errorData: Int) = Libre3PatchStatus(

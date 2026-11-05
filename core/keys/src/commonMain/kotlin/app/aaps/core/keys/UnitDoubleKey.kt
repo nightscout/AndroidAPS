@@ -49,8 +49,8 @@ enum class UnitDoubleKey(
         title = KeysStrings.pref_title_alert_hyper_threshold,
         dependency = BooleanKey.AlertHyper
     )
-    // The rapid fall drop is a glucose difference, so it is the IntKey `AlertRapidFallDrop` in mg/dL:
-    // this type guesses the unit from the number and gets small differences wrong.
+    // The rapid-fall drop size is a glucose difference, so it is the IntKey `AlertRapidFallDrop` in
+    // mg/dL: this type guesses the unit from the number and gets small differences wrong.
     ;
 
 }

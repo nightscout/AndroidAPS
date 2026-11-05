@@ -17,7 +17,6 @@ import app.aaps.implementation.maintenance.PeriodicMaintenance.Companion.MAX_CUT
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.delay
@@ -72,40 +71,20 @@ class PeriodicMaintenance(
     suspend fun runOnce() {
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.checkStaleBGAlert()
-        checkAlarmsSafely()
+        localAlertUtils.checkGlucoseAlerts()
         maintenance.deleteLogs(KEEP_LOG_FILES)
         cleanupDatabase()
     }
 
     /**
-     * The glucose alarms and the CGM sensor alarms, each on its own: a failure in one must not skip
-     * the other, nor the log and database trim of the same pass.
-     */
-    private suspend fun checkAlarmsSafely() {
-        try {
-            localAlertUtils.checkGlucoseAlerts()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (t: Throwable) {
-            aapsLogger.error(LTag.CORE, "Glucose alarm check failed", t)
-        }
-        try {
-            localAlertUtils.checkSensorAlerts()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (t: Throwable) {
-            aapsLogger.error(LTag.CORE, "Sensor alarm check failed", t)
-        }
-    }
-
-    /**
-     * Checks the glucose alarms, and the CGM sensor alarms, each time a new reading has been processed. Every platform runs this:
+     * Checks the CGM alarms each time a new reading has been processed. Every platform runs this:
      * iOS and desktop through [start], Android from the app start, next to its `KeepAliveWorker`
      * schedule (which already runs [runOnce], so Android must not call [start] and get a second ticker).
      *
-     * Without it a low could wait up to five minutes for the next periodic pass. Checking twice is
-     * harmless: each alarm keeps its own "next alarm" time, so a second check in the same minute does
-     * not post again.
+     * Without it a low could wait up to five minutes for the next periodic pass, and on iOS longer:
+     * there the ticker does not run while the app is in the background, but a CGM reading still wakes
+     * the app up. Checking twice is harmless: each alarm keeps its own state, so a second check in the
+     * same minute does not post again.
      *
      * Call it once per process.
      */
@@ -113,7 +92,7 @@ class PeriodicMaintenance(
         // UNDISPATCHED because RxBus has no replay: a reading processed before the collector starts
         // would be missed.
         rxBus.toFlow(EventBucketedDataCreated::class)
-            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { checkAlarmsSafely() }
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { localAlertUtils.checkGlucoseAlerts() }
     }
 
     /**
@@ -123,7 +102,7 @@ class PeriodicMaintenance(
      * A failure is logged and the loop continues - one bad pass must not stop the missed-reading
      * alarm for the rest of the session.
      *
-     * It also starts [startGlucoseAlarmTrigger], so the glucose alarms are checked on each new reading.
+     * It also starts [startGlucoseAlarmTrigger], so the CGM alarms are checked on each new reading.
      */
     fun start(scope: CoroutineScope) {
         startGlucoseAlarmTrigger(scope)

@@ -3,6 +3,7 @@ package app.aaps.wear.di
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.wear.WearApp
 import app.aaps.wear.comm.DataLayerListenerServiceWear
+import app.aaps.wear.alarm.CgmAlarmReceiver
 import app.aaps.wear.alarm.PhoneAlarmReceiver
 import app.aaps.wear.eatreminder.EatReminderReceiver
 import app.aaps.wear.complications.BgGraphComplication
@@ -301,6 +302,12 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(PhoneAlarmReceiver::class)
     fun bindPhoneAlarmReceiver(injector: MembersInjector<PhoneAlarmReceiver>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(CgmAlarmReceiver::class)
+    fun bindCgmAlarmReceiver(injector: MembersInjector<CgmAlarmReceiver>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors
