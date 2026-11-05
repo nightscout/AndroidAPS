@@ -244,6 +244,7 @@ key_aaruy_cur_bolus_time|AaruyLongKey|true
 key_aaruy_last_bolus_amount|AaruyDoubleKey|true
 key_aaruy_last_bolus_time|AaruyLongKey|true
 key_aaruy_last_connection|AaruyLongKey|true
+key_aaruy_last_delivery_end|AaruyLongKey|true
 key_aaruy_last_historyDailyTime|AaruyLongKey|true
 key_aaruy_last_historyTime|AaruyLongKey|true
 key_aaruy_name|AaruyStringKey|true
