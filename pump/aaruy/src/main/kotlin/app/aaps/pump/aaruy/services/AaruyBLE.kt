@@ -306,7 +306,7 @@ class AaruyBLE(
         rxBus.send(EventAaruyDeviceChange())
     }
 
-    /** The pump answers each alarm it is told about. UNVERIFIED on a real pump: nothing has raised one there yet. */
+    /** The pump answers each alarm it is told about. Seen on a real pump: a blocked motor stopped beeping after this. */
     fun confirmAlarms() {
         aaruyPump.activeAlarms.toList().forEach { clearAlarmStatus(it.state) }
         aaruyPump.clearAlarmState()

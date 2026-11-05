@@ -100,9 +100,14 @@ class AaruyPump(
     private var _activeAlarms: EnumSet<AlarmState> = EnumSet.noneOf(AlarmState::class.java)
     var activeAlarms: EnumSet<AlarmState>
         get() = _activeAlarms
-        set(value) {
+        private set(value) {
             _activeAlarms = value
+            _activeAlarmsFlow.value = value.toSet()
         }
+
+    // A copy, so that the screen sees each change. The set itself is changed in place.
+    private val _activeAlarmsFlow = MutableStateFlow<Set<AlarmState>>(emptySet())
+    val activeAlarmsFlow: StateFlow<Set<AlarmState>> = _activeAlarmsFlow
 
     // New pump warnings
     private val _pumpWarning = MutableStateFlow(AlarmState.NONE)
@@ -402,6 +407,7 @@ class AaruyPump(
     private fun saveActiveAlarms() {
         val alarmsStr = activeAlarms.joinToString(separator = ",") { it.name }
         preferences.put(AaruyStringKey.PumpActiveAlarm, alarmsStr)
+        _activeAlarmsFlow.value = activeAlarms.toSet()
     }
 
     private fun loadActiveAlarms() {
