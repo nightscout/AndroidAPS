@@ -37,4 +37,11 @@ class AaruyPumpAlarmsTest {
         pump.clearAlarmState()
         assertEquals(emptySet<AlarmState>(), pump.activeAlarmsFlow.value)
     }
+
+    @Test
+    fun anAlarmFromTheHistoryIsOnlyTheLowByte() {
+        assertEquals(AlarmState.PUMP_MOTOR_BLOCK, AlarmState.fromHistory(5))
+        assertEquals(AlarmState.PUMP_MOTOR_BLOCK, AlarmState.fromHistory(0x8105))
+        assertEquals(AlarmState.NONE, AlarmState.fromHistory(0))
+    }
 }

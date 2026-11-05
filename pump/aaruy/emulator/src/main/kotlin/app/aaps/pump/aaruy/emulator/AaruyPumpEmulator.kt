@@ -503,10 +503,35 @@ class AaruyPumpEmulator(
         return out
     }
 
-    /** Raises a pump alarm from a test or a scenario. @param code an `AlarmState` value */
+    /**
+     * Raises a pump alarm from a test or a scenario. @param code an `AlarmState` value
+     *
+     * Seen on a real pump: the history keeps only the low byte, so a blocked motor (0x8105) is logged as 5.
+     */
     fun raiseAlarm(code: Int): ByteArray {
-        addHistory(HISTORY_ALARM, code)
+        addHistory(HISTORY_ALARM, code and 0xFF)
         return error(code)
+    }
+
+    /**
+     * The motor is blocked. Seen on a real pump during a bolus: the bolus ends at the amount given so far, the pump stops
+     * (status 0, the bolus fields keep that amount), the error comes after the status, and the history has the bolus and then the alarm.
+     * UNVERIFIED: a block with no bolus running. It is done the same way here.
+     */
+    fun blockMotor(): List<ByteArray> {
+        val running = bolus
+        val delivered = running?.delivered ?: 0
+        if (running != null) addBolusHistory(running) else endSegment()
+        bolus = null
+        tempBasal = null
+        runningStatus = STATUS_NOT_RUNNING
+        stoppedAt = pumpTime()
+        val status = buffer(STATUS_SIZE)
+            .putInt(pumpTime())
+            .putShort(reservoir.toInt().toShort())
+            .put(STATUS_NOT_RUNNING.toByte())
+            .put(0).putShort(delivered.toShort()).putShort(0).putShort(0).putShort(0)
+        return listOf(message(PARAM_STATUS, status.array()), raiseAlarm(ALARM_MOTOR_BLOCK))
     }
 
     private fun addHistory(type: Int, data: Int) = addHistoryAt(pumpTime(), type, data, 0, 0)
@@ -615,6 +640,7 @@ class AaruyPumpEmulator(
         private const val ERROR_BOLUS_NOT_ON_STEP = 0x8005
         const val ALARM_LOW_RESERVOIR = 0x8103
         const val ALARM_NO_RESERVOIR = 0x8104
+        const val ALARM_MOTOR_BLOCK = 0x8105
 
         const val WARNING_STOPPED_TOO_LONG = 0x8015
 

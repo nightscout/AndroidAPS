@@ -349,6 +349,7 @@ class AaruyBLE(
                         "temp_basal_end"         -> transport.emulator.endTempBasalByItself()
                         "stop"                   -> transport.emulator.stopByItself()
                         "resume"                 -> transport.emulator.resumeByItself()
+                        "occlusion"              -> { transport.emulator.blockMotor().forEach { transport.pumpSends(it) }; null }
                         else                     -> null
                     }
                     message?.let { transport.pumpSends(it) }
@@ -942,7 +943,7 @@ fun syncAndLoadBasicParam() {
             HISTORY_ALARM      -> {
                 // A newer one was announced when it came. Only one from the time without a link is new.
                 if (dateUtil.now() - item.timestamp < ALARM_SEEN_LIVE_MS) return
-                val alarm = AlarmState.fromInt(item.data.toInt())
+                val alarm = AlarmState.fromHistory(item.data.toInt())
                 if (alarm != AlarmState.NONE) pumpSync.insertAnnouncement(aaruyPump.alarmStateToString(alarm), item.timestamp, aaruyPump.pumpType(), aaruyPump.pumpSN)
             }
         }

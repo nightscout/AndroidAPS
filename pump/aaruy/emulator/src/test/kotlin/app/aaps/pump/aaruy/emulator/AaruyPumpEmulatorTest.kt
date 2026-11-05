@@ -175,6 +175,29 @@ class AaruyPumpEmulatorTest {
         assertEquals(150, log.reader().getShort(bolus + 5).toInt())
     }
 
+    /** As a real pump did with a blocked line: 0.55 U of 3 U, status 0, error 05 81, history with the bolus and the alarm as 5. */
+    @Test
+    fun aBlockedMotorEndsTheBolusAndTheHistoryHasTheAlarmAsOneByte() {
+        startBolus(3000)
+        val given = bolusNow(advance(3 * AaruyPumpEmulator.BOLUS_STEP_MS).last { it.paramId == PARAM_STATUS })
+        assertTrue(given in 1 until 3000)
+        val sent = emulator.blockMotor().map { decode(it) }
+
+        assertEquals(PARAM_STATUS, sent[0].paramId)
+        assertEquals(AaruyPumpEmulator.STATUS_NOT_RUNNING, status(sent[0]))
+        assertEquals(given, bolusNow(sent[0]))
+        assertEquals(PARAM_ERROR, sent[1].paramId)
+        assertEquals(listOf<Byte>(0x05, 0x81.toByte()), sent[1].payload.toList())
+        assertTrue(advance(10 * AaruyPumpEmulator.BOLUS_STEP_MS).none { it.paramId == PARAM_STATUS && status(it) == AaruyPumpEmulator.STATUS_BOLUS })
+
+        val log = write(PARAM_HISTORY, buffer(8).putInt(0).array()).single()
+        val starts = (0 until log.payload.size / 12).map { 5 + it * 12 }
+        val bolus = starts.first { log.payload[it + 4].toInt() == 2 }
+        val alarm = starts.first { log.payload[it + 4].toInt() == 3 }
+        assertEquals(given, log.reader().getShort(bolus + 5).toInt())
+        assertEquals(5, log.reader().getShort(alarm + 5).toInt())
+    }
+
     @Test
     fun tempBasalRunsAndEndsByItself() {
         val started = write(PARAM_TEMP_BASAL, tempBasal(1, 1500, 30)).single()

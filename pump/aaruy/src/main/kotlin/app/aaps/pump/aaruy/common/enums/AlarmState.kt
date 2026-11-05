@@ -34,6 +34,12 @@ enum class AlarmState(val state: Int) {
         fun fromInt(state: Int) = AlarmState.entries.find { it.state == state }
             ?: NONE
 
+        /**
+         * An alarm from the pump history. Seen on a real pump: only the low byte is kept, a blocked motor (0x8105) is logged as 5.
+         * UNVERIFIED for the other alarms: they are taken as alarms (0x81..) too, as the history has no other kind seen so far.
+         */
+        fun fromHistory(data: Int): AlarmState = if (data in 1..0xFF) fromInt(0x8100 or data) else fromInt(data)
+
         fun isHighAlarm(state: Int): Boolean {
             val alarmState = fromInt(state)
             return alarmState == PUMP_NO_POWER ||

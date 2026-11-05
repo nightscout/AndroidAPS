@@ -112,15 +112,16 @@ class AaruyHistorySyncTest {
         runBlocking { verify(tempBasalSync, timeout(5000)).onHistoryDelivery(start, start + 40_000) }
     }
 
+    /** Seen on a real pump: the history keeps only the low byte, a blocked motor (0x8105) is 5. The full code was read and dropped it. */
     @Test
     fun anOldAlarmIsRecordedWithThePumpTime() {
-        receive(LogItem(timestamp = now - 30 * minute, type = 3, data = 0x8105, injectTime = 0, delayBolus = 0, reserved = 0))
+        receive(LogItem(timestamp = now - 30 * minute, type = 3, data = 5, injectTime = 0, delayBolus = 0, reserved = 0))
         runBlocking { verify(pumpSync, timeout(5000)).insertAnnouncement(eq("alarm"), eq(now - 30 * minute), any(), any()) }
     }
 
     @Test
     fun anAlarmJustSeenLiveIsNotRecordedAgain() {
-        receive(LogItem(timestamp = now - 10_000, type = 3, data = 0x8105, injectTime = 0, delayBolus = 0, reserved = 0))
+        receive(LogItem(timestamp = now - 10_000, type = 3, data = 5, injectTime = 0, delayBolus = 0, reserved = 0))
         Thread.sleep(300)
         runBlocking { verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any()) }
     }
