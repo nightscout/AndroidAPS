@@ -121,4 +121,35 @@ interface DexcomTIR {
      * @return Threshold value in mg/dL (default: 250)
      */
     fun veryHighTirMgdl(): Double
+
+    /**
+     * Percentage of readings below 70 mg/dL, the limit of the Glucose Pentagon (CGP).
+     *
+     * @return Percentage (0-100), or 0.0 if no data points exist
+     */
+    fun cgpBelowRangePct(): Double
+
+    /**
+     * Percentage of readings above 180 mg/dL at any hour, the limit of the Glucose Pentagon (CGP).
+     * It has no night limit, so it is not [highPct] + [veryHighPct].
+     *
+     * @return Percentage (0-100), or 0.0 if no data points exist
+     */
+    fun cgpAboveRangePct(): Double
+
+    /**
+     * Intensity of hypoglycemia of the Glucose Pentagon (CGP): √(AUC² + time²) of each day for glucose ≤ 70 mg/dL,
+     * then the mean of the days. AUC is the area below 70 mg/dL.
+     *
+     * @return Intensity in mg/dL × min, or 0.0 if no data points exist
+     */
+    fun cgpHypoIntensity(): Double
+
+    /**
+     * Intensity of hyperglycemia of the Glucose Pentagon (CGP): √(AUC² + time²) of each day for glucose ≥ 180 mg/dL,
+     * then the mean of the days. AUC is the area above 180 mg/dL.
+     *
+     * @return Intensity in mg/dL × min, or 0.0 if no data points exist
+     */
+    fun cgpHyperIntensity(): Double
 }

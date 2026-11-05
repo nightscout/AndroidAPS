@@ -38,7 +38,9 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.exp
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sin
 
 /**
@@ -61,31 +63,35 @@ data class CgpData(
 
 private const val AXIS_COUNT = 5
 
-private const val BASELINE_OFFSET = 0.18
-
 private const val ANGLE_STEP_DEG = 72.0
 
-// Max values for each axis
-private const val TOR_MAX = 100.0
+/** Length of each axis in the paper. */
+private const val AXIS_LENGTH_MM = 76.0
 
-private const val CV_MAX = 60.0
+private const val MINUTES_PER_DAY = 1440.0
 
-private const val HYPO_MAX = 20.0
+/**
+ * Where each axis of Vigersky et al. 2018 (PMC5761978) puts its value, in mm, from the top axis clockwise.
+ * All healthy values give 14 mm, which gives the reference area of 466 mm² from the paper.
+ *
+ * @param torMinutes minutes per day out of 70-180 mg/dL
+ * @param cvPct coefficient of variation in %
+ * @param hypoIntensity intensity of hypoglycemia, see [DexcomTIR.cgpHypoIntensity]
+ * @param hyperIntensity intensity of hyperglycemia, see [DexcomTIR.cgpHyperIntensity]
+ * @param meanMgdl mean glucose in mg/dL
+ */
+internal fun cgpAxesMm(torMinutes: Double, cvPct: Double, hypoIntensity: Double, hyperIntensity: Double, meanMgdl: Double): List<Double> = listOf(
+    (torMinutes * 0.00614).pow(1.581) + 14,
+    (cvPct - 17).coerceAtLeast(0.0) * 0.92 + 14,
+    exp(hypoIntensity * 0.00057) + 13,
+    (hyperIntensity * 0.000115).pow(1.51) + 14,
+    ((meanMgdl - 90).coerceAtLeast(0.0) * 0.0217).pow(2.63) + 14
+)
 
-private const val HYPER_MAX = 80.0
+/** The area of the pentagon compared to the area of a healthy person. Not limited to the drawn axes. */
+internal fun pgrOf(axesMm: List<Double>): Double = pentagonArea(axesMm) / pentagonArea(HEALTHY_AXES_MM)
 
-private const val MEAN_MAX = 300.0
-
-// Reference (healthy) values
-private const val TOR_REF = 0.0
-
-private const val CV_REF = 17.0
-
-private const val HYPO_REF = 0.0
-
-private const val HYPER_REF = 0.0
-
-private const val MEAN_REF = 90.0
+private val HEALTHY_AXES_MM = List(AXIS_COUNT) { 14.0 }
 
 /**
  * Computes CGP data from DexcomTIR statistics.
@@ -94,35 +100,16 @@ private const val MEAN_REF = 90.0
  * @return CgpData with raw values, normalized values (0-1), reference values, and PGR score
  */
 fun computeCgpData(dexcomTir: DexcomTIR): CgpData {
-    val torPct = 100.0 - dexcomTir.inRangePct()
+    val hypoPct = dexcomTir.cgpBelowRangePct()
+    val hyperPct = dexcomTir.cgpAboveRangePct()
+    val torPct = hypoPct + hyperPct
     val mean = dexcomTir.mean()
     val sd = dexcomTir.calculateSD()
     val cvPct = if (mean > 0) sd / mean * 100.0 else 0.0
-    val hypoPct = dexcomTir.veryLowPct() + dexcomTir.lowPct()
-    val hyperPct = dexcomTir.highPct() + dexcomTir.veryHighPct()
 
-    fun normalize(value: Double, max: Double): Double =
-        BASELINE_OFFSET + (1.0 - BASELINE_OFFSET) * (value / max).coerceIn(0.0, 1.0)
+    val axesMm = cgpAxesMm(torPct / 100.0 * MINUTES_PER_DAY, cvPct, dexcomTir.cgpHypoIntensity(), dexcomTir.cgpHyperIntensity(), mean)
 
-    val normalizedValues = listOf(
-        normalize(torPct, TOR_MAX),
-        normalize(cvPct, CV_MAX),
-        normalize(hypoPct, HYPO_MAX),
-        normalize(hyperPct, HYPER_MAX),
-        normalize(mean, MEAN_MAX)
-    )
-
-    val referenceValues = listOf(
-        normalize(TOR_REF, TOR_MAX),
-        normalize(CV_REF, CV_MAX),
-        normalize(HYPO_REF, HYPO_MAX),
-        normalize(HYPER_REF, HYPER_MAX),
-        normalize(MEAN_REF, MEAN_MAX)
-    )
-
-    val patientArea = pentagonArea(normalizedValues)
-    val referenceArea = pentagonArea(referenceValues)
-    val pgr = if (referenceArea > 0) patientArea / referenceArea else 0.0
+    fun normalize(mm: Double): Double = (mm / AXIS_LENGTH_MM).coerceAtMost(1.0)
 
     return CgpData(
         torPct = torPct,
@@ -130,9 +117,9 @@ fun computeCgpData(dexcomTir: DexcomTIR): CgpData {
         hypoPct = hypoPct,
         hyperPct = hyperPct,
         meanGlucose = mean,
-        normalizedValues = normalizedValues,
-        referenceValues = referenceValues,
-        pgr = pgr
+        normalizedValues = axesMm.map(::normalize),
+        referenceValues = HEALTHY_AXES_MM.map(::normalize),
+        pgr = pgrOf(axesMm)
     )
 }
 
