@@ -19,13 +19,13 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoActivationTime
 import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoTriggeredAlertsResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5IdRotation
 import app.aaps.pump.omnipod.omnipod5.keys.O5StringNonPreferenceKey
 import com.google.gson.Gson
 import java.io.Serializable
 import java.util.Calendar
 import java.util.EnumSet
-import java.util.TimeZone
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -181,14 +181,21 @@ class PersistedO5PodStateManager @Inject constructor(
     override val timeZoneOffset: Int? get() = podState.timeZoneOffset
     override val timeZoneUpdated: Long? get() = podState.timeZoneUpdated
 
-    override fun updateTimeZone() {
-        val timeZone = TimeZone.getDefault()
-        val now = System.currentTimeMillis()
-        podState.timeZoneOffset = timeZone.getOffset(now)
+    override fun updateTimeZone() = confirmTimeZone(PodTimeZone.now())
+
+    override fun confirmTimeZone(timeZone: PodTimeZone) {
+        podState.timeZoneOffset = timeZone.offset
         podState.timeZone = timeZone.id
-        podState.timeZoneUpdated = now
+        podState.timeZoneUpdated = timeZone.updatedAt
         store()
     }
+
+    override var timeChangeInProgress: Boolean
+        get() = podState.timeChangeInProgress
+        set(value) {
+            podState.timeChangeInProgress = value
+            store()
+        }
 
     override var deliverySuspended: Boolean
         get() = podState.deliverySuspended
@@ -550,6 +557,7 @@ class PersistedO5PodStateManager @Inject constructor(
         var timeZone: String? = null, // TimeZone ID (e.g. "Europe/Amsterdam")
         var timeZoneOffset: Int? = null,
         var timeZoneUpdated: Long? = null,
+        var timeChangeInProgress: Boolean = false,
         var deliverySuspended: Boolean = false,
         var lastBolusStartTime: Long? = null,
         var lastBolusRequestedUnits: Double? = null,

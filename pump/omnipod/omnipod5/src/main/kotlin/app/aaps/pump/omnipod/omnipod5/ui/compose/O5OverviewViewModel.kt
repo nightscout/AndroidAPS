@@ -219,7 +219,7 @@ class O5OverviewViewModel @Inject constructor(
 
             val basalText = if (podStateManager.basalProgram != null && !podStateManager.deliverySuspended) {
                 ch.basalRateString(
-                    rate = PumpRate(PumpType.OMNIPOD_5.determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))),
+                    rate = PumpRate(PumpType.OMNIPOD_5.determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis(), podStateManager.timeZoneOffset))),
                     isAbsolute = true
                 )
             } else PLACEHOLDER

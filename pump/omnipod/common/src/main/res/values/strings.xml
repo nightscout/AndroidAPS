@@ -34,6 +34,8 @@
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alert configuration has been updated in the Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">The time on the Pod has been updated.</string>
+    <string name="omnipod_common_loop_waiting_for_time_update">Waiting for the Pod time to update.</string>
+    <string name="omnipod_common_automatic_time_update_failed">The automatic Pod time update failed. The loop is suspended until the time update is confirmed. Check the Pod status.</string>
 
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Set time</string>

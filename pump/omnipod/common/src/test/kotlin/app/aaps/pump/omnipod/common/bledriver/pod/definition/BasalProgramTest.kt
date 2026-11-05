@@ -32,24 +32,24 @@ class BasalProgramTest {
             )
         )
 
-        assertThat(program.rateAt(millisAt(10, 15))).isEqualTo(1.0)
-        assertThat(program.rateAt(millisAt(14, 45))).isEqualTo(1.5)
+        assertThat(program.rateAt(millisAt(10, 15), null)).isEqualTo(1.0)
+        assertThat(program.rateAt(millisAt(14, 45), null)).isEqualTo(1.5)
     }
 
     @Test
     fun `rateAt treats startSlotIndex as inclusive and endSlotIndex as exclusive`() {
         val program = BasalProgram(listOf(BasalProgram.Segment(20, 22, 200)))
 
-        assertThat(program.rateAt(millisAt(10, 0))).isEqualTo(2.0)
-        assertThat(program.rateAt(millisAt(10, 29))).isEqualTo(2.0)
-        assertThat(program.rateAt(millisAt(11, 0))).isEqualTo(0.0)
+        assertThat(program.rateAt(millisAt(10, 0), null)).isEqualTo(2.0)
+        assertThat(program.rateAt(millisAt(10, 29), null)).isEqualTo(2.0)
+        assertThat(program.rateAt(millisAt(11, 0), null)).isEqualTo(0.0)
     }
 
     @Test
     fun `rateAt returns zero when no segment covers the slot`() {
         val program = BasalProgram(listOf(BasalProgram.Segment(0, 10, 100)))
 
-        assertThat(program.rateAt(millisAt(23, 0))).isEqualTo(0.0)
+        assertThat(program.rateAt(millisAt(23, 0), null)).isEqualTo(0.0)
     }
 
     @Test
@@ -130,7 +130,7 @@ class BasalProgramTest {
         val deserialized = Gson().fromJson("{}", BasalProgram::class.java)
 
         assertThat(deserialized.segments).isEmpty()
-        assertThat(deserialized.rateAt(millisAt(10, 0))).isEqualTo(0.0)
+        assertThat(deserialized.rateAt(millisAt(10, 0), null)).isEqualTo(0.0)
     }
 
     @Test

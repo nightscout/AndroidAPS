@@ -24,6 +24,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
 import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import com.google.gson.Gson
 import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
@@ -149,6 +150,16 @@ class OmnipodDashPodStateManagerImpl(
 
     override val timeZoneId: String?
         get() = podState.timeZone
+
+    override val timeZoneOffset: Int?
+        get() = podState.timeZoneOffset
+
+    override var timeChangeInProgress: Boolean
+        get() = podState.timeChangeInProgress
+        set(value) {
+            podState.timeChangeInProgress = value
+            store()
+        }
 
     override val sameTimeZone: Boolean
         get() {
@@ -322,10 +333,6 @@ class OmnipodDashPodStateManagerImpl(
             }
         }
 
-        // Offset to convert UTC epoch to pod-local time for rateAt (which uses device timezone internally)
-        val deviceOffsetMs = TimeZone.getDefault().getOffset(startTime)
-        val podTimeAdjustmentMs = timeZoneOffset - deviceOffsetMs
-        
         // Integrate over each segment
         return boundaries.sorted().windowed(2).mapIndexed { index, (boundaryStart, boundaryEnd) ->
             val segmentHours = (boundaryEnd - boundaryStart) / 3600_000.0
@@ -335,7 +342,7 @@ class OmnipodDashPodStateManagerImpl(
             val rate = tempBasal?.let { tb ->
                 val tempBasalEnd = tb.startTime + tb.durationInMinutes * 60_000L
                 tb.rate.takeIf { segmentMid in tb.startTime until tempBasalEnd }
-            } ?: basalProgram?.rateAt(segmentMid + podTimeAdjustmentMs) ?: return null  // Abort if rate unknown
+            } ?: basalProgram?.rateAt(segmentMid, timeZoneOffset) ?: return null  // Abort if rate unknown
             
             val delivery = rate * segmentHours
             
@@ -436,13 +443,18 @@ class OmnipodDashPodStateManagerImpl(
             return podState.timeZoneUpdated
         }
 
-    override fun updateTimeZone() {
-        val timeZone = TimeZone.getDefault()
-        val now = System.currentTimeMillis()
+    override fun updateTimeZone() = confirmTimeZone(PodTimeZone.now())
 
-        podState.timeZoneOffset = timeZone.getOffset(now)
+    override fun confirmTimeZone(timeZone: PodTimeZone) {
+        podState.timeZoneOffset = timeZone.offset
         podState.timeZone = timeZone.id
-        podState.timeZoneUpdated = now
+        podState.timeZoneUpdated = timeZone.updatedAt
+        store()
+    }
+
+    override fun recordBasalProgramTimeZone(timeZone: PodTimeZone) {
+        podState.activeCommand?.basalTimeZone = timeZone
+        store()
     }
 
     override val expiry: ZonedDateTime?
@@ -1031,6 +1043,7 @@ class OmnipodDashPodStateManagerImpl(
         var timeZone: String? = null, // TimeZone ID (e.g. "Europe/Amsterdam")
         var timeZoneOffset: Int? = null,
         var timeZoneUpdated: Long? = null,
+        var timeChangeInProgress: Boolean = false,
         var alarmSynced: Boolean = false,
         var suspendAlertsEnabled: Boolean = false,
 

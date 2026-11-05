@@ -415,11 +415,21 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
 
     @Test
-    fun `manufacturer, model, and DST support are fixed`() {
+    fun `manufacturer and model are fixed and time handling supports an inactive pod`() {
         assertThat(plugin.manufacturer()).isEqualTo(ManufacturerType.Insulet)
         assertThat(plugin.model()).isEqualTo(PumpType.OMNIPOD_5)
-        assertThat(plugin.canHandleDST()).isFalse()
+        assertThat(plugin.canHandleDST()).isTrue()
         assertThat(plugin.isFakingTempsByExtendedBoluses).isFalse()
+    }
+
+    @Test
+    fun `an active pod needs a known offset before disabling the old DST guard`() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.isPodRunning).thenReturn(true)
+        whenever(podStateManager.timeZoneOffset).thenReturn(null)
+        assertThat(plugin.canHandleDST()).isFalse()
+        whenever(podStateManager.timeZoneOffset).thenReturn(3600000)
+        assertThat(plugin.canHandleDST()).isTrue()
     }
 
     @Test
@@ -1703,7 +1713,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         assertThat(result.enacted).isTrue()
         verifyZeroTempBasalSynced("12345")
         verify(pumpSync).syncStopTemporaryBasalWithPumpId(any(), any(), eq(PumpType.OMNIPOD_5), eq("12345"), any())
-        verify(podStateManager).updateTimeZone()
+        verify(podStateManager).confirmTimeZone(any())
         verify(notificationManager, never()).post(eq(NotificationId.PROFILE_SET_OK), any<TextRef>(), any(), any(), any(), any(), anyOrNull(), any(), anyOrNull())
     }
 

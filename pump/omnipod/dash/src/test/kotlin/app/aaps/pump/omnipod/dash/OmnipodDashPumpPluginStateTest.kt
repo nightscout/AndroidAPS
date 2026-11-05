@@ -118,8 +118,7 @@ class OmnipodDashPumpPluginStateTest {
      */
     @Test
     fun `an alarming pod reports a zero base rate even with a program loaded`() {
-        val program = mock<BasalProgram>()
-        whenever(program.rateAt(any())).thenReturn(1.25)
+        val program = BasalProgram(listOf(BasalProgram.Segment(0, 48, 125)))
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(mock())
 
@@ -128,10 +127,10 @@ class OmnipodDashPumpPluginStateTest {
 
     @Test
     fun `a healthy pod reports the rate its program gives for now`() {
-        val program = mock<BasalProgram>()
-        whenever(program.rateAt(any())).thenReturn(1.25)
+        val program = BasalProgram(listOf(BasalProgram.Segment(0, 48, 125)))
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(null)
+        whenever(podStateManager.timeZoneOffset).thenReturn(null)
 
         assertThat(sut.baseBasalRate.cU).isEqualTo(1.25)
     }
@@ -290,10 +289,19 @@ class OmnipodDashPumpPluginStateTest {
     }
 
     @Test
-    fun `the pump reports itself as an Insulet pump that cannot handle DST`() {
+    fun `the pump supports automatic time handling without an active pod`() {
         assertThat(sut.manufacturer()).isEqualTo(ManufacturerType.Insulet)
-        assertThat(sut.canHandleDST()).isFalse()
+        assertThat(sut.canHandleDST()).isTrue()
         assertThat(sut.isFakingTempsByExtendedBoluses).isFalse()
+    }
+
+    @Test
+    fun `an active pod needs a known offset before disabling the old DST guard`() {
+        whenever(podStateManager.isPodRunning).thenReturn(true)
+        whenever(podStateManager.timeZoneOffset).thenReturn(null)
+        assertThat(sut.canHandleDST()).isFalse()
+        whenever(podStateManager.timeZoneOffset).thenReturn(3600000)
+        assertThat(sut.canHandleDST()).isTrue()
     }
 
     // endregion
