@@ -40,6 +40,10 @@ private enum class DexcomOnePlusTabScreen { READINGS, STATUS, LOG }
  * sensor status, and the status leads on to the driver log. Back, the toolbar arrow or the system
  * gesture, goes up one screen. Starting a sensor and the warm-up countdown are opened through
  * [DexcomOnePlusHost.openScreen], because those screens are Activities of their own.
+ *
+ * The idea follows the G7 plugin tab (readings list, then status, then log) in
+ * nightscout/AndroidAPS pull request 5397 (Dexcom G7 direct, by t1dude, commit `bec1b16ba20`),
+ * written again on this driver. See the NOTICE file of `:plugins:dexcom_oneplus`.
  */
 internal class DexcomOnePlusComposeContent(
     private val title: String,

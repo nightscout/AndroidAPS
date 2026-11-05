@@ -157,6 +157,20 @@ bec1b16ba20ec646d459a1c724ad41419985b117. That code is AndroidAPS code under the
 same AGPL-3 license as this tree; none of its Trio (G7SensorKit, MIT) protocol
 code or Trio sounds are used here. Written again on top of this driver, not
 copied:
+  - :plugins:source DexcomOnePlusStatusOverview.kt and DexcomOnePlusLogScreen.kt,
+    opened from the plugin tab (DexcomOnePlusComposeContent.kt): the status
+    screen and the communication log inside the plugin tab (PR status screen
+    and data/G7CommLog.kt).
+  - Scanner and session rules (this module): the competing app check and its
+    package names (OnePlusCompetingApps.kt), the "slot held" byte of the
+    advertisement (OnePlusAdvSlot.kt), stopping before repeated refusals lock
+    the sensor (OnePlusAuthRefusals.kt), and keeping a backfill on disconnect
+    (OnePlusBackfillSession.kt).
+  - :implementation CgmAlarmEngine.kt and the CGM alarm settings: the alarm
+    engine of the PR (G7Alarms / G7AlarmEngine), with its two open review
+    points fixed. See also implementation/NOTICE.
+  - Direct to watch and the watch alarm (:plugins:source
+    DexcomOnePlusWatchHandover.kt, :wear): see wear/NOTICE.
   - :plugins:source CameraApplicatorScanner.kt: the applicator Data Matrix scan
     (PR file cgm/dexcomg7/src/.../ui/G7BarcodeScanner.kt), in particular the
     "callback returns true when the code was wanted, then stop" contract. The

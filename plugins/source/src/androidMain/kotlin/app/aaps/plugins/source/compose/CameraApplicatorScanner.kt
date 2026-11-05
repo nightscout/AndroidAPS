@@ -55,6 +55,10 @@ import java.util.concurrent.atomic.AtomicBoolean
  * Built the same way as the client set-up QR scanner of `:plugins:sync`, which already runs
  * without Google Play services. The camera permission is asked here, the first time the scan
  * opens, and not in the setup wizard: only a person who scans needs it.
+ *
+ * The idea follows `G7BarcodeScanner` in nightscout/AndroidAPS pull request 5397 (Dexcom G7 direct,
+ * by t1dude, commit `bec1b16ba20`), written again on this driver. See the NOTICE file of
+ * `:plugins:dexcom_oneplus`.
  */
 object CameraApplicatorScanner : OnePlusApplicatorScanner {
 

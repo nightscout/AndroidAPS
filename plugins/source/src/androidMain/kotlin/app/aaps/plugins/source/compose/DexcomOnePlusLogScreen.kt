@@ -37,6 +37,10 @@ private const val LOG_REFRESH_MILLIS = 5_000L
  * the person is there and stops following once they scroll up.
  *
  * [reloads] is bumped by the refresh button in the toolbar.
+ *
+ * The idea follows `G7CommLog`, the communication log of the G7 plugin tab in nightscout/AndroidAPS
+ * pull request 5397 (Dexcom G7 direct, by t1dude, commit `bec1b16ba20`), written again on this
+ * driver. See the NOTICE file of `:plugins:dexcom_oneplus`.
  */
 @Composable
 fun DexcomOnePlusLogScreen(

@@ -41,6 +41,10 @@ import java.util.TimeZone
  *
  * No frame of its own: the plugin tab gives it the toolbar, and the status Activity wraps it in
  * `CgmScaffold`.
+ *
+ * The idea follows the status screen of the G7 plugin tab in nightscout/AndroidAPS pull request
+ * 5397 (Dexcom G7 direct, by t1dude, commit `bec1b16ba20`), written again on this driver. See the
+ * NOTICE file of `:plugins:dexcom_oneplus`.
  */
 @Composable
 fun DexcomOnePlusStatusOverview(
