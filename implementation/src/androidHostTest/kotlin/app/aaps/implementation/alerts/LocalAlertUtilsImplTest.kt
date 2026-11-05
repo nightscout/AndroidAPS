@@ -1,5 +1,8 @@
 package app.aaps.implementation.alerts
 
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.CgmAlarmType
@@ -344,6 +347,39 @@ class LocalAlertUtilsImplTest : TestBase() {
         verify(cgmAlarmManager).acknowledge(CgmAlarmType.HIGH)
         verify(cgmAlarmManager).mute(30)
         verify(cgmAlarmManager).test(CgmAlarmType.URGENT_LOW)
+    }
+
+    // endregion
+
+    // region missed readings
+
+    private suspend fun lastReadingMinutesAgo(minutes: Long) {
+        val reading = GV(
+            timestamp = now - T.mins(minutes).msecs(), raw = null, value = 100.0,
+            trendArrow = TrendArrow.FLAT, noise = null, sourceSensor = SourceSensor.UNKNOWN
+        )
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(reading)
+    }
+
+    @Test
+    fun `the missed readings alarm goes off for a user who relies on the low alarm`() = runTest {
+        // Its own switch is off, but the low alarm is on: a silent sensor must not leave the user blind.
+        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(false)
+        whenever(preferences.get(BooleanKey.AlertHypo)).thenReturn(true)
+        lastReadingMinutesAgo(30)
+
+        localAlertUtils.checkStaleBGAlert()
+
+        verify(preferences).put(LocalAlertLongKey.NextMissedReadingsAlarm, now)
+    }
+
+    @Test
+    fun `no missed readings alarm when neither it nor any glucose alarm is on`() = runTest {
+        lastReadingMinutesAgo(30)
+
+        localAlertUtils.checkStaleBGAlert()
+
+        verify(preferences, never()).put(eq(LocalAlertLongKey.NextMissedReadingsAlarm), any())
     }
 
     // endregion

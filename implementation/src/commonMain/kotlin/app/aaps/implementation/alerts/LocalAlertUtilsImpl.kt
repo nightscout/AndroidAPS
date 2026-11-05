@@ -5,6 +5,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.CgmAlarmGroup
 import app.aaps.core.interfaces.alerts.CgmAlarmType
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -24,6 +25,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.alerts.cgm.CgmAlarmKeys
 import app.aaps.implementation.alerts.cgm.CgmAlarmManager
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import dev.zacsweers.metro.AppScope
@@ -135,9 +137,21 @@ class LocalAlertUtilsImpl(
         }
     }
 
+    /**
+     * The missed readings alarm is on when the user switched it on, and also when any glucose alarm
+     * (a CGM alarm of the low or high group) is on. Those alarms say nothing when the readings stop,
+     * so without this a silent sensor would leave a user who relies on them blind without knowing.
+     */
+    private fun missedReadingsAlarmWanted(): Boolean =
+        preferences.get(BooleanKey.AlertMissedBgReading) ||
+            CgmAlarmType.entries.any { type ->
+                (type.group == CgmAlarmGroup.LOW || type.group == CgmAlarmGroup.HIGH) &&
+                    preferences.get(CgmAlarmKeys.of(type).enabled)
+            }
+
     override suspend fun checkStaleBGAlert() {
         val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
-        if (preferences.get(BooleanKey.AlertMissedBgReading)
+        if (missedReadingsAlarmWanted()
             && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
             && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()
         ) {
