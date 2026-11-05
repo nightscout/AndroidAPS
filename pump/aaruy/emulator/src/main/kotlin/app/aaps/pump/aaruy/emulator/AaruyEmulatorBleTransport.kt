@@ -35,6 +35,9 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
     /** `connect()` returns true, but the pump never answers, as when it is out of range. */
     @Volatile var outOfRange = false
 
+    /** The pump does the next command with this parameter, then the link is lost before the answer. */
+    @Volatile var loseAnswerToParam = -1
+
     init {
         thread.scheduleWithFixedDelay({ tick() }, TICK_MS, TICK_MS, TimeUnit.MILLISECONDS)
     }
@@ -138,6 +141,13 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
                 listener?.onCharacteristicWritten()
                 later(PUMP_ANSWER_MS) {
                     val answer = emulator.handle(data)
+                    if (emulator.lastParamId == loseAnswerToParam) {
+                        // The pump did it, and the answer never comes.
+                        loseAnswerToParam = -1
+                        outOfRange = true
+                        loseConnection()
+                        return@later
+                    }
                     later(emulator.answerDelayMs) { deliver(answer) }
                     emulator.answerDelayMs = 0
                     if (emulator.unbindRequested) {

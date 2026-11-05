@@ -202,8 +202,9 @@ class AaruyPlugin(
 
     override fun isInitialized(): Boolean = isConfigured() && aaruyPump.pumpState != AaruyPumpState.FIRST_INIT
 
+    /** Before the first status the state is not known. That is no stop: it would write SUSPENDED_BY_PUMP at each start of the app. */
     override fun isSuspended(): Boolean =
-        aaruyPump.pumpState < AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpState > AaruyPumpState.PUSHFORWARD_RUNNING
+        aaruyPump.pumpState != AaruyPumpState.FIRST_INIT && (aaruyPump.pumpState < AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpState > AaruyPumpState.PUSHFORWARD_RUNNING)
 
     override fun isBusy(): Boolean = false
 

@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -91,6 +92,7 @@ class AaruyBLE(
     private val STATUS_BOLUS = 3
     private val BOLUS_STATE_EXTENDED = 1
     private val BOLUS_STATE_DONE = 2
+    private val TEMP_BASAL_PARAM = 8
     private val HISTORY_BASAL = 0
     private val HISTORY_TEMP_BASAL = 1
     private val HISTORY_BOLUS = 2
@@ -336,6 +338,24 @@ class AaruyBLE(
                 if (outOfRange) transport.loseConnection()
             }
         }, IntentFilter("app.aaps.pump.aaruy.emulator.OUT_OF_RANGE"), ContextCompat.RECEIVER_EXPORTED)
+        // For tests: adb shell am broadcast -a app.aaps.pump.aaruy.emulator.SCENARIO --es value temp_basal_start --ei rate 500 --ei minutes 30
+        ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val scenario = intent.getStringExtra("value")
+                aapsLogger.warn(LTag.PUMPCOMM, "Aaruy emulator: scenario $scenario")
+                transport.onPumpThread {
+                    val message = when (scenario) {
+                        "lose_answer_temp_basal" -> { transport.loseAnswerToParam = TEMP_BASAL_PARAM; null }
+                        "temp_basal_start"       -> transport.emulator.startTempBasalByItself(intent.getIntExtra("rate", 500), intent.getIntExtra("minutes", 30))
+                        "temp_basal_end"         -> transport.emulator.endTempBasalByItself()
+                        "stop"                   -> transport.emulator.stopByItself()
+                        "resume"                 -> transport.emulator.resumeByItself()
+                        else                     -> null
+                    }
+                    message?.let { transport.pumpSends(it) }
+                }
+            }
+        }, IntentFilter("app.aaps.pump.aaruy.emulator.SCENARIO"), ContextCompat.RECEIVER_EXPORTED)
     }
 
     private fun listenerReceiveData() {
@@ -457,7 +477,10 @@ class AaruyBLE(
                 aaruyPump.lastConnection = dateUtil.now()
                 onStatusForDatabase(statusInfo)
                 val previousRate = aaruyPump.lastBasalRate
+                val firstStatus = aaruyPump.pumpState == AaruyPumpState.FIRST_INIT
                 aaruyPump.pumpState = AaruyPumpState.fromInt(statusInfo.runningStatus)
+                // Screens that show what the pump can do wait for this.
+                if (firstStatus) rxBus.send(EventInitializationChanged())
                 aaruyPump.handleBasalStatusUpdate(0.0)
 
                 when(statusInfo.runningStatus) {
@@ -901,7 +924,8 @@ fun syncAndLoadBasicParam() {
 
     /** What the pump log knows and the driver may not: all of this can happen while the link is down. */
     private suspend fun syncFromHistory(item: LogItem, nextStart: Long?) {
-        val minutes = T.mins(item.injectTime.toLong()).msecs()
+        // An entry counts whole minutes, so the middle of the last minute is at most 30 seconds off. Without this a gap comes out too long.
+        val minutes = T.mins(item.injectTime.toLong()).msecs() + T.secs(30).msecs()
         when (item.type.toInt()) {
             HISTORY_BASAL      -> tempBasalSync.onHistoryDelivery(item.timestamp, item.timestamp + minutes)
 

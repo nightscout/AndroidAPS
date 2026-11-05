@@ -67,6 +67,9 @@ class AaruyTempBasalSyncTest {
         whenever(persistence.getTemporaryBasalActiveAt(any())).thenAnswer { invocation ->
             (invocation.arguments[0] as Long).takeIf { it in start..start + duration }?.let { record }
         }
+        whenever(persistence.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
+            if (start in (invocation.arguments[0] as Long)..(invocation.arguments[1] as Long)) listOf(record) else emptyList()
+        }
     }
 
     private fun calls(name: String): List<Invocation> = mockingDetails(pumpSync).invocations.filter { it.method.name.startsWith(name) }
@@ -208,7 +211,7 @@ class AaruyTempBasalSyncTest {
         val start = now - 20 * minute
         databaseHolds(start)
         sync.onHistoryTempBasal(entry(start, 5), null, statusNow = 1)
-        assertEquals(start + 5 * minute, stops.single().arguments[0])
+        assertEquals(start + 5 * minute + 30 * second, stops.single().arguments[0])
     }
 
     /** An entry counts whole minutes, and the next entry knows the exact time. */
@@ -218,6 +221,36 @@ class AaruyTempBasalSyncTest {
         databaseHolds(start)
         sync.onHistoryTempBasal(entry(start, 0), start + 22 * second, statusNow = 1)
         assertEquals(start + 22 * second, stops.single().arguments[0])
+    }
+
+    /** Seen on the emulator: a temp basal of 30 seconds logs 0 minutes, and it ended 1 second after its start. */
+    @Test
+    fun anEntryWithoutMinutesEndsInTheMiddleOfTheMinute() = runBlocking {
+        val start = now - 20 * minute
+        databaseHolds(start)
+        sync.onHistoryTempBasal(entry(start, 0), null, statusNow = 1)
+        assertEquals(start + 30 * second, stops.single().arguments[0])
+    }
+
+    @Test
+    fun anEndIsNeverInTheFuture() = runBlocking {
+        val start = now - 10 * second
+        databaseHolds(start)
+        sync.onHistoryTempBasal(entry(start, 0), null, statusNow = 1)
+        assertEquals(now, stops.single().arguments[0])
+    }
+
+    /**
+     * Seen on the emulator: the record starts after the entry and ended already. When the last entry came again it found
+     * nothing, so a second temp basal and a false announcement were added.
+     */
+    @Test
+    fun anEntryThatComesAgainFindsARecordThatEndedAlready() = runBlocking {
+        val start = now - 20 * minute
+        databaseHolds(start + 788, duration = 212)
+        sync.onHistoryTempBasal(entry(start, 0), null, statusNow = 1)
+        assertEquals(0, writes.size)
+        assertEquals(0, announcements.size)
     }
 
     /** The clocks differ, so the record can start some seconds after the entry. */
@@ -244,7 +277,7 @@ class AaruyTempBasalSyncTest {
         val start = now - 60 * minute
         sync.onHistoryTempBasal(entry(start, 30), null, statusNow = 1)
         assertEquals(start, writes.single().arguments[0])
-        assertEquals(30 * minute, writes.single().arguments[2])
+        assertEquals(30 * minute + 30 * second, writes.single().arguments[2])
         assertEquals(start, writes.single().arguments[5])
     }
 
@@ -271,6 +304,16 @@ class AaruyTempBasalSyncTest {
         databaseHolds(now - 60 * minute, duration = 20 * minute)
         sync.onHistoryDelivery(now - 40 * minute, now - 30 * minute)
         assertEquals(0, writes.size)
+    }
+
+    /** Seen on the emulator: a record that ended just before the gap looked as if it covers the gap. */
+    @Test
+    fun aRecordThatEndedJustBeforeTheGapIsNotTheGap() = runBlocking {
+        val from = now - 60 * minute
+        `when`(preferences.get(AaruyLongKey.PumpLastDeliveryEnd)).thenReturn(from)
+        databaseHolds(from - minute, duration = minute + 2 * second)
+        sync.onHistoryDelivery(now - 40 * minute, now - 30 * minute)
+        assertEquals(from, writes.single().arguments[0])
     }
 
     @Test

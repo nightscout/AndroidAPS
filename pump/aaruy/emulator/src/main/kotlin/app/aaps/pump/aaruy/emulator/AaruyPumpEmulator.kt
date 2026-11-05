@@ -111,6 +111,7 @@ class AaruyPumpEmulator(
             }
             lastSequence = sequence
         }
+        lastParamId = paramId.toInt()
         return if (command == COMMAND_READ) handleRead(paramId) else handleWrite(paramId, payload)
     }
 
@@ -125,6 +126,10 @@ class AaruyPumpEmulator(
 
     /** How much later than usual the last answer comes. Seen on a real pump: about a second for a new profile. */
     var answerDelayMs = 0L
+
+    /** The parameter of the last command that was handled. */
+    var lastParamId = -1
+        private set
 
     private fun handleWrite(paramId: Short, payload: ByteArray): List<ByteArray> = when (paramId) {
         PARAM_REPORT_DEVICE -> handleReportDevice()
@@ -202,6 +207,34 @@ class AaruyPumpEmulator(
         if (areas.isNotEmpty()) schedule = areas
         answerDelayMs = BASAL_ANSWER_MS
         return listOf(message(PARAM_BASAL, payload))
+    }
+
+    /** The pump does this by itself, as if something else controls it. For tests of what the driver learns from the status and the log. */
+    fun startTempBasalByItself(rate: Int, minutes: Int): ByteArray {
+        endSegment()
+        tempBasal = TempBasal(clock(), rate, minutes)
+        runningStatus = STATUS_TEMP_BASAL
+        return statusMessage()
+    }
+
+    fun endTempBasalByItself(): ByteArray {
+        endSegment()
+        tempBasal = null
+        runningStatus = STATUS_BASAL
+        return statusMessage()
+    }
+
+    fun stopByItself(): ByteArray {
+        endSegment()
+        stoppedAt = pumpTime()
+        runningStatus = STATUS_STOPPED
+        return statusMessage()
+    }
+
+    fun resumeByItself(): ByteArray {
+        segmentStart = pumpTime()
+        runningStatus = STATUS_BASAL
+        return statusMessage()
     }
 
     private fun handleBasalControl(payload: ByteArray): List<ByteArray> {
@@ -518,7 +551,8 @@ class AaruyPumpEmulator(
                 val temp = tempBasal
                 // Seen on a real pump: 30 minutes shows as 1800, so the remaining time is in seconds.
                 val remain = if (temp == null) 0 else ((temp.startedAt + temp.minutes * MINUTE_MS - clock()) / 1000).toInt().coerceAtLeast(0)
-                out.put(TEMP_BASAL_INDEX).putShort((temp?.rate ?: 0).toShort()).putShort(remain.toShort()).putShort(0).putShort(0)
+                // Seen on a real pump: the running seconds count from the last split, so a bolus attempt starts them again.
+                out.put(TEMP_BASAL_INDEX).putShort((temp?.rate ?: 0).toShort()).putShort(remain.toShort()).putShort((pumpTime() - segmentStart).toShort()).putShort(0)
             }
 
             STATUS_BOLUS      -> {

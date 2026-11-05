@@ -14,7 +14,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
-import kotlin.math.max
+import kotlin.math.min
 
 /** What one status frame says. A rate and the times only when a temp basal runs. */
 data class AaruyStatusSnapshot(val status: Int, val rate: Double = 0.0, val remainingSeconds: Long = 0, val runningSeconds: Long = 0)
@@ -74,10 +74,13 @@ class AaruyTempBasalSync(
         }
     }
 
-    /** @param nextStart when the next entry of the log starts: a more exact end, because an entry counts only whole minutes. */
+    /**
+     * @param nextStart when the next entry of the log starts: the exact end. Without it the end is known only to the minute,
+     * because an entry counts whole minutes: a temp basal of 30 seconds says 0. The middle of that minute is never more than 30 seconds off.
+     */
     suspend fun onHistoryTempBasal(item: LogItem, nextStart: Long?, statusNow: Int?) {
         val start = item.timestamp
-        val end = max(nextStart ?: (start + T.mins(item.injectTime.toLong()).msecs()), start + MIN_LENGTH_MS)
+        val end = nextStart ?: min(dateUtil.now(), start + T.mins(item.injectTime.toLong()).msecs() + HALF_MINUTE_MS)
         val record = recordAround(start)
         when {
             record == null                                                                      -> addTempBasal(start, item.data / 1000.0, end - start)
@@ -101,7 +104,8 @@ class AaruyTempBasalSync(
     }
 
     private suspend fun fillGap(from: Long, to: Long) {
-        if (recordAround(from + SAME_TIME_MS) != null) return
+        // Not near the start of the gap: a record that ended just before it would look as if it covers the gap.
+        if (persistenceLayer.getTemporaryBasalActiveAt((from + to) / 2) != null) return
         val end = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(from, to, true).firstOrNull()?.timestamp ?: to
         if (end - from <= GAP_MS) return
         aapsLogger.debug(LTag.PUMPCOMM, "The log has a gap from ${dateUtil.dateAndTimeString(from)} to ${dateUtil.dateAndTimeString(end)}")
@@ -116,11 +120,13 @@ class AaruyTempBasalSync(
         }
     }
 
-    /** The clocks of the phone and the pump differ by some seconds, so a start is not exact. */
+    /**
+     * The clocks of the phone and the pump differ by some seconds, so a record can start just after the entry and even end before the next read.
+     * Seen on the emulator as on a real pump: the last entry of a read comes again, and it must find its own record.
+     */
     private suspend fun recordAround(time: Long) =
         persistenceLayer.getTemporaryBasalActiveAt(time)
-            ?: persistenceLayer.getTemporaryBasalActiveAt(time + SAME_TIME_MS)
-            ?: persistenceLayer.getTemporaryBasalActiveAt(time - SAME_TIME_MS)
+            ?: persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(time - SAME_TIME_MS, time + SAME_TIME_MS, true).firstOrNull()
 
     private suspend fun refreshDriverState() = aaruyPump.fromTemporaryBasal(pumpSync.expectedPumpState().temporaryBasal)
 
@@ -132,7 +138,7 @@ class AaruyTempBasalSync(
         const val SAME_RATE = 0.01
         const val SAME_TIME_MS = 5_000L
         const val LATE_START_MS = 30_000L
-        const val MIN_LENGTH_MS = 1_000L
+        const val HALF_MINUTE_MS = 30_000L
 
         /** More than the whole minutes an entry loses at each end, and short breaks around a bolus. */
         const val GAP_MS = 3 * 60_000L
