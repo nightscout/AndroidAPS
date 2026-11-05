@@ -3,6 +3,9 @@
     <string name="executing_right_now">Kommandoen utføres akkurat nå</string>
     <string name="smb_being_delivered">En SMB leveres akkurat nå. Prøv igjen når den er ferdig.</string>
     <string name="basal_value_below_minimum">Basalverdi under minimum. Profilen settes ikke!</string>
+    <string name="concentration_change_failed_title">Insulinbyttet mislyktes</string>
+    <string name="concentration_change_failed">Det nye insulinet er i pumpen, men AAPS kunne ikke skrive profilen til den. Pumpen gir feil mengde insulin. Koble fra eller fjern pumpen nå, kontroller blodsukkeret, og gi insulin på en annen måte hvis du trenger det. Koble til pumpen igjen først etter at profilen er skrevet.</string>
+    <string name="concentration_change_pending">Profilen med det nye insulinet er ikke skrevet til pumpen ennå. Insulin kan ikke gis før den er skrevet.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalprofilen i pumpen er oppdatert. Pumpen runder basalen til sitt eget trinn: den gir %1$s per dag i stedet for %2$s.</string>
     <string name="basal_reported_far_from_profile">Pumpen rapporterer en basaldose langt fra profilen. AAPS beholder profilbasalen. Sjekk basaldosene i pumpen.</string>
     <!--       Stats -->
