@@ -1,5 +1,8 @@
 package app.aaps.pump.aaruy.compose
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bluetooth
@@ -12,7 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -26,6 +33,9 @@ import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
 import app.aaps.pump.aaruy.R
+import app.aaps.core.ui.R as CoreUiR
+
+private val PUMP_IMAGE_HEIGHT = 128.dp
 
 private enum class AaruyScreen {
     OVERVIEW,
@@ -138,7 +148,19 @@ class AaruyComposeContent(
         when (currentScreen) {
             AaruyScreen.OVERVIEW    -> {
                 val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
-                PumpOverviewScreen(state = uiState)
+                PumpOverviewScreen(
+                    state = uiState,
+                    customContent = {
+                        Image(
+                            painter = painterResource(id = CoreUiR.drawable.ic_aaruy_128),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(PUMP_IMAGE_HEIGHT),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                )
             }
 
             AaruyScreen.HISTORY -> {
