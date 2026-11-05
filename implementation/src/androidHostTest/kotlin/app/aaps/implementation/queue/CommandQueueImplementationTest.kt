@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -87,6 +88,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var smsCommunicator: SmsCommunicator
     private val smsCommunicatorProvider: () -> SmsCommunicator by lazy { { smsCommunicator } }
     @Mock lateinit var commandExecutor: CommandExecutor
+    @Mock lateinit var uiInteraction: UiInteraction
     private val commandExecutorProvider: () -> CommandExecutor by lazy { { commandExecutor } }
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -116,12 +118,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandExecutor: () -> CommandExecutor,
         appScope: CoroutineScope,
         bolusProgressData: BolusProgressData,
-        smbPause: SmbPause
+        smbPause: SmbPause,
+        uiInteraction: () -> UiInteraction
     ) : CommandQueueImplementation(
         aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, config, dateUtil, fabricPrivacy,
         notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, commandExecutor, appScope, bolusProgressData,
-        smbPause
+        smbPause, uiInteraction
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -157,7 +160,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             commandExecutorProvider,
             appScope,
             bolusProgressData,
-            smbPause
+            smbPause,
+            { uiInteraction }
         )
 
     @BeforeEach
@@ -205,7 +209,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
         executor = CommandExecutor(
@@ -252,7 +256,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
@@ -278,7 +282,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData,
@@ -339,7 +343,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
@@ -463,6 +467,64 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
         assertThat(roundingNotices()).isEmpty()
         verifyNoPlainOkPosted()
+    }
+
+    // endregion
+
+    // region #5486 - a failed write after an insulin change: the new insulin is in the pump and the old program runs
+
+    /** A new PS whose write ends with [result] while the concentration change is [pending] or not. */
+    private suspend fun writeEndsWith(result: PumpEnactResult, pending: Boolean) {
+        givenActiveEpsFrom(139)
+        testPumpPlugin.isProfileSet = false
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(pending)
+        rxBus.send(EventProfileChangeRequested())
+        commandQueue.pickup()
+        commandQueue.performing()?.completion?.complete(result)
+        commandQueue.resetPerforming()
+    }
+
+    private fun verifyAlarm(mode: VerificationMode) =
+        verify(uiInteraction, mode).runAlarm(any(), eq("Insulin change failed"), eq(AlarmSound.BOLUS_ERROR))
+
+    @Test
+    fun `a failed write with a concentration change pending raises the alarm over the screen`() = runTest {
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = true)
+
+        verifyAlarm(times(1))
+        verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
+    }
+
+    /** KeepAlive tries again about every 5 minutes: a dismissed alarm must come back while the write keeps failing. */
+    @Test
+    fun `every failed retry raises the alarm again`() = runTest {
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = true)
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = true)
+
+        verifyAlarm(times(2))
+    }
+
+    /** The same failure with the same concentration, e.g. a percentage switch: the card only, as before. */
+    @Test
+    fun `a failed write without a concentration change raises no alarm`() = runTest {
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = false)
+
+        verifyAlarm(never())
+    }
+
+    /** Dropped on purpose (an import, a cleared queue): no failed update, and KeepAlive sets it again. */
+    @Test
+    fun `a cancelled write raises no alarm`() = runTest {
+        writeEndsWith(pumpEnactResultProvider().success(false).enacted(false).also { it.cancelled = true }, pending = true)
+
+        verifyAlarm(never())
+    }
+
+    @Test
+    fun `a successful write raises no alarm`() = runTest {
+        writeEndsWith(enactResult(isSuccess = true, isEnacted = true), pending = true)
+
+        verifyAlarm(never())
     }
 
     // endregion

@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.TB
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -419,18 +418,6 @@ open class DanaOverviewViewModel(
             infoRows = infoRows,
             primaryActions = primaryActions,
             managementActions = managementActions
-        )
-    }
-
-    fun temporaryBasalToString(): String {
-        val pump = danaPump
-        if (!pump.isTempBasalInProgress) return ""
-
-        return ch.basalTbrString(
-            rate = PumpRate(pump.tempBasalPercent.toDouble()),
-            startTime = pump.tempBasalStart,
-            durationInMin = T.msecs(pump.tempBasalDuration).mins().toInt(),
-            isAbsolute = true
         )
     }
 
