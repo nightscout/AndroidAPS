@@ -379,7 +379,7 @@ class AaruyPlugin(
     override fun manufacturer(): ManufacturerType = ManufacturerType.Aaruy
     override fun model(): PumpType = aaruyPump.pumpType()
     override fun serialNumber(): String = aaruyPump.pumpSN
-    override val pumpDescription: PumpDescription get() = PumpDescription().fillFor(aaruyPump.pumpType())
+    override val pumpDescription: PumpDescription get() = PumpDescription().fillFor(aaruyPump.pumpType()).also { it.bolusStep = aaruyPump.bolusStepUnits }
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
     /** The day of the pump starts at midnight in China, so it gives no TDD of a local day. AAPS calculates its own. */

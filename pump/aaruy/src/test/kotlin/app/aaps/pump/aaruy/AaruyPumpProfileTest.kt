@@ -12,6 +12,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasalItem
 import app.aaps.pump.aaruy.comm.BasalItems
+import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -29,10 +30,11 @@ import java.util.TimeZone
 @Config(sdk = [35])
 class AaruyPumpProfileTest {
 
+    private val preferences = mock(Preferences::class.java)
     private val pump = AaruyPump(
         mock(AAPSLogger::class.java),
         mock(ResourceHelper::class.java),
-        mock(Preferences::class.java),
+        preferences,
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
@@ -53,6 +55,19 @@ class AaruyPumpProfileTest {
 
     private fun inPump(injectPerDay: Double, rate: Double, start: Int = 0) =
         pump.dataClassToByteArray(BasalInfo(BasalItems(injectPerDay, 1, listOf(BasalItem(start, rate)))))
+
+    /** Seen on a real pump: set to 0.05 U it refuses 0.125 U. A setting not yet in the pump must not allow that. */
+    @Test
+    fun theBolusStepIsTheCoarserOfThePumpAndTheSetting() {
+        pump.bolusStep = 1
+        `when`(preferences.get(AaruyIntPreferenceKey.BolusStep)).thenReturn(0)
+        assertEquals(0.025, pump.bolusStepUnits, 1e-9)
+        `when`(preferences.get(AaruyIntPreferenceKey.BolusStep)).thenReturn(1)
+        assertEquals(0.05, pump.bolusStepUnits, 1e-9)
+        pump.bolusStep = 2
+        `when`(preferences.get(AaruyIntPreferenceKey.BolusStep)).thenReturn(0)
+        assertEquals(0.05, pump.bolusStepUnits, 1e-9)
+    }
 
     @Test
     fun aDailyTotalCutToOneDecimalIsStillTheSameProfile() {

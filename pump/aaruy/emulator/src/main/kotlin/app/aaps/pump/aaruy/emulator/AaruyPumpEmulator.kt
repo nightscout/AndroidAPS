@@ -238,6 +238,8 @@ class AaruyPumpEmulator(
             val setting = bolusSetting
             if (setting == null || (runningStatus != STATUS_BASAL && runningStatus != STATUS_TEMP_BASAL)) return listOf(error(ALARM_RUN_BOLUS))
             endSegment()
+            // Seen on a real pump: with a step of 0.05 U it answers 0.125 U with these two errors, and the segment has ended anyway.
+            if (setting.now % bolusStepThousandths() != 0) return listOf(error(ERROR_BOLUS_NOT_ON_STEP), error(ALARM_RUN_BOLUS))
             bolus = Bolus(clock(), setting.now, setting.total - setting.now, setting.delayMinutes, runningStatus)
             bolusSetting = null
             bolusSettingEcho = buffer(BOLUS_SETTING_SIZE).putInt(pumpTime()).array()
@@ -576,6 +578,7 @@ class AaruyPumpEmulator(
         const val ALARM_RUN_BASAL = 0x800C
         const val ALARM_RUN_TEMP_BASAL = 0x800D
         const val ALARM_RUN_BOLUS = 0x800E
+        private const val ERROR_BOLUS_NOT_ON_STEP = 0x8005
         const val ALARM_LOW_RESERVOIR = 0x8103
         const val ALARM_NO_RESERVOIR = 0x8104
 

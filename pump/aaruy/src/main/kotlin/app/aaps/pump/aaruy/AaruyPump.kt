@@ -62,6 +62,7 @@ class AaruyPump(
 
         const val FAKE_TBR_LENGTH = 1440L
         private const val BASAL_STEP = 0.025
+        private const val BOLUS_PRECISION_UNITS = 0.025
         private const val SECONDS_PER_HALF_HOUR = 1800
     }
 
@@ -566,6 +567,13 @@ class AaruyPump(
         // Update aaruy pump state
         _lastBasalRate.value = basalValue
     }
+
+    /**
+     * Seen on a real pump: set to 0.05 U it refuses 0.125 U and accepts 0.10 U. The setting reaches the pump only at the
+     * next status read, so until then the coarser one is used. A coarser amount is valid on both.
+     */
+    val bolusStepUnits: Double
+        get() = max(bolusStep, if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1) * BOLUS_PRECISION_UNITS
 
     fun handleLoadBasicParam(basicParam: BasicParam): Boolean {
         pumpType = (basicParam.pumpType and 0x7f)

@@ -145,6 +145,15 @@ class AaruyPumpEmulatorTest {
         assertTrue(emulator.reservoir in 98.9..99.0, "reservoir ${emulator.reservoir}")
     }
 
+    /** Seen on a real pump with a step of 0.05 U: 0.125 U is refused with two errors, 0.10 U runs. */
+    @Test
+    fun aBolusNotOnTheStepIsRefused() {
+        val answers = startBolus(125)
+        assertEquals(listOf(PARAM_ERROR, PARAM_ERROR), answers.map { it.paramId })
+        assertEquals(AaruyPumpEmulator.ALARM_RUN_BOLUS and 0xFF, answers.last().payload[0].toInt() and 0xFF)
+        assertEquals(PARAM_STATUS, startBolus(100).single().paramId)
+    }
+
     @Test
     fun bolusWithoutSettingIsRefused() {
         val answer = write(PARAM_BOLUS_CONTROL, control(1)).single()
