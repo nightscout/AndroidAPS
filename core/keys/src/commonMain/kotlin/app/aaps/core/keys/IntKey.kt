@@ -413,6 +413,195 @@ enum class IntKey(
         dependency = BooleanKey.AlertPumpUnreachable,
         unitType = UnitType.MIN
     ),
+    /**
+     * Rapid-fall drop size: a glucose *difference*, stored and shown in mg/dL for both unit settings.
+     *
+     * It must NOT be a `UnitDoubleKey`. That type guesses the unit from the number (below 36 means
+     * mmol/L), which is right for a glucose level but wrong for a small difference: 30 mg/dL was shown
+     * as 540, and a typed 25 was stored as 450, so the alarm could never fire. The key string ends in
+     * `_mgdl` because the old `alert_rapid_fall_drop` holds a float, which an int read cannot load,
+     * and its value was often wrong. `PreferenceMigrations` copies the old value once, and only when
+     * it is inside 15-60 mg/dL; any other old value is dropped and the default applies.
+     */
+    AlertRapidFallDrop(
+        key = "alert_rapid_fall_drop_mgdl",
+        defaultValue = 30,
+        min = 15,
+        max = 60,
+        title = KeysStrings.pref_title_alert_rapid_fall_drop,
+        summary = KeysStrings.pref_summary_alert_rapid_fall_drop,
+        dependency = BooleanKey.AlertRapidFall,
+        unitType = UnitType.MGDL
+    ),
+    AlertRapidFallWindow(
+        key = "alert_rapid_fall_window",
+        defaultValue = 15,
+        min = 5,
+        max = 30,
+        title = KeysStrings.pref_title_alert_rapid_fall_window,
+        dependency = BooleanKey.AlertRapidFall,
+        unitType = UnitType.MIN
+    ),
+    /** Rise rate alarm: how much glucose must rise within [AlertRapidRiseWindow]. A difference, so mg/dL always, like [AlertRapidFallDrop]. */
+    AlertRapidRiseAmount(
+        key = "alert_rapid_rise_mgdl",
+        defaultValue = 30,
+        min = 15,
+        max = 60,
+        title = KeysStrings.pref_title_alert_rapid_rise_amount,
+        summary = KeysStrings.pref_summary_alert_rapid_rise_amount,
+        dependency = BooleanKey.AlertRapidRise,
+        unitType = UnitType.MGDL
+    ),
+    AlertRapidRiseWindow(
+        key = "alert_rapid_rise_window",
+        defaultValue = 15,
+        min = 5,
+        max = 30,
+        title = KeysStrings.pref_title_alert_rapid_rise_window,
+        dependency = BooleanKey.AlertRapidRise,
+        unitType = UnitType.MIN
+    ),
+    /** High alarm: how long glucose must stay high before the first alarm. 0 = at once. */
+    AlertHyperDelay(
+        key = "alert_cgm_high_delay_minutes",
+        defaultValue = 0,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_delay_first,
+        summary = KeysStrings.pref_summary_alert_delay_first,
+        dependency = BooleanKey.AlertHyper,
+        unitType = UnitType.MIN
+    ),
+    AlertCgmExpiringLeadHours(
+        key = "alert_cgm_expiring_lead_hours",
+        defaultValue = 12,
+        min = 1,
+        max = 48,
+        title = KeysStrings.pref_title_alert_cgm_expiring_lead,
+        dependency = BooleanKey.AlertCgmSensorExpiring,
+        unitType = UnitType.HOURS
+    ),
+    AlertCgmSignalLostMinutes(
+        key = "alert_cgm_signal_lost_minutes",
+        defaultValue = 10,
+        min = 5,
+        max = 60,
+        title = KeysStrings.pref_title_alert_cgm_signal_lost_delay,
+        dependency = BooleanKey.AlertCgmSignalLost,
+        unitType = UnitType.MIN
+    ),
+    AlertCgmSensorIssueMinutes(
+        key = "alert_cgm_sensor_issue_minutes",
+        defaultValue = 20,
+        min = 0,
+        max = 60,
+        title = KeysStrings.pref_title_alert_cgm_sensor_issue_delay,
+        dependency = BooleanKey.AlertCgmSensorIssue,
+        unitType = UnitType.MIN
+    ),
+    // Repeat after "Acknowledge": the alarm stays quiet this long, then goes off again if its cause is
+    // still there. 0 = not again until the cause has gone. Urgent low always comes back, within 30 min.
+    AlertUrgentLowRepeat(
+        key = "alert_cgm_urgent_low_repeat_minutes",
+        defaultValue = 30,
+        min = 5,
+        max = 30,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat_urgent_low,
+        dependency = BooleanKey.AlertUrgentLow,
+        unitType = UnitType.MIN
+    ),
+    AlertUrgentLowSoonRepeat(
+        key = "alert_cgm_urgent_low_soon_repeat_minutes",
+        defaultValue = 30,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertUrgentLowSoon,
+        unitType = UnitType.MIN
+    ),
+    AlertHypoRepeat(
+        key = "alert_cgm_low_repeat_minutes",
+        defaultValue = 15,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertHypo,
+        unitType = UnitType.MIN
+    ),
+    AlertRapidFallRepeat(
+        key = "alert_cgm_fall_rate_repeat_minutes",
+        defaultValue = 15,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertRapidFall,
+        unitType = UnitType.MIN
+    ),
+    AlertHyperRepeat(
+        key = "alert_cgm_high_repeat_minutes",
+        defaultValue = 30,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertHyper,
+        unitType = UnitType.MIN
+    ),
+    AlertRapidRiseRepeat(
+        key = "alert_cgm_rise_rate_repeat_minutes",
+        defaultValue = 30,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertRapidRise,
+        unitType = UnitType.MIN
+    ),
+    AlertCgmSensorFailedRepeat(
+        key = "alert_cgm_sensor_failed_repeat_minutes",
+        defaultValue = 0,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertCgmSensorFailed,
+        unitType = UnitType.MIN
+    ),
+    AlertCgmSensorExpiredRepeat(
+        key = "alert_cgm_sensor_expired_repeat_minutes",
+        defaultValue = 0,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertCgmSensorExpired,
+        unitType = UnitType.MIN
+    ),
+    AlertCgmSignalLostRepeat(
+        key = "alert_cgm_signal_lost_repeat_minutes",
+        defaultValue = 30,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertCgmSignalLost,
+        unitType = UnitType.MIN
+    ),
+    AlertCgmSensorIssueRepeat(
+        key = "alert_cgm_sensor_issue_repeat_minutes",
+        defaultValue = 30,
+        min = 0,
+        max = 240,
+        title = KeysStrings.pref_title_alert_repeat,
+        summary = KeysStrings.pref_summary_alert_repeat,
+        dependency = BooleanKey.AlertCgmSensorIssue,
+        unitType = UnitType.MIN
+    ),
 
     AutotuneDefaultTuneDays(key = "autotune_default_tune_days", defaultValue = 5, min = 1, max = 30, title = KeysStrings.pref_title_autotune_days, summary = KeysStrings.autotune_default_tune_days_summary, unitType = UnitType.DAYS),
 

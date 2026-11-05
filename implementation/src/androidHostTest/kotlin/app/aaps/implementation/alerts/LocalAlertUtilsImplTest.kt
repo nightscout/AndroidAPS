@@ -2,17 +2,21 @@ package app.aaps.implementation.alerts
 
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.CgmAlarmType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.alerts.cgm.CgmAlarmManager
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import app.aaps.shared.tests.TestBase
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +29,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -40,6 +45,7 @@ class LocalAlertUtilsImplTest : TestBase() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var notificationManager: NotificationManager
+    @Mock lateinit var cgmAlarmManager: CgmAlarmManager
     @Mock lateinit var pump: PumpWithConcentration
     @Mock lateinit var pumpDescription: PumpDescription
 
@@ -80,6 +86,7 @@ class LocalAlertUtilsImplTest : TestBase() {
             persistenceLayer,
             dateUtil,
             notificationManager,
+            cgmAlarmManager,
             testScope
         )
         whenever(dateUtil.now()).thenReturn(now)
@@ -208,7 +215,7 @@ class LocalAlertUtilsImplTest : TestBase() {
     fun `reportPumpStatusRead updates alarm when profile is available`() = runTest {
         val lastDataTime = now - T.mins(5).msecs()
         val thresholdMinutes = 30
-        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
+        val profile = mock<EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
@@ -235,7 +242,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val lastDataTime = now - T.mins(5).msecs()
         val thresholdMinutes = 30
         val futureAlarmTime = now + T.hours(2).msecs()
-        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
+        val profile = mock<EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
@@ -302,7 +309,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         val lastDataTime = now - T.mins(10).msecs()
         val thresholdMinutes = 40
         val currentAlarmTime = now + T.mins(5).msecs()
-        val profile = org.mockito.kotlin.mock<app.aaps.core.interfaces.profile.EffectiveProfile>()
+        val profile = mock<EffectiveProfile>()
 
         whenever(profileFunction.getProfile()).thenReturn(profile)
         whenever(pump.lastDataTime).thenReturn(MutableStateFlow(lastDataTime))
@@ -314,4 +321,30 @@ class LocalAlertUtilsImplTest : TestBase() {
         val expectedEarliestAlarm = lastDataTime + T.mins(thresholdMinutes.toLong()).msecs()
         verify(preferences).put(LocalAlertLongKey.NextPumpDisconnectedAlarm, expectedEarliestAlarm)
     }
+
+    // region CGM alarms - the rules are in CgmAlarmEngineTest and CgmAlarmManagerTest
+
+    @Test
+    fun `checkGlucoseAlerts runs the CGM alarms`() = runTest {
+        localAlertUtils.checkGlucoseAlerts()
+        verify(cgmAlarmManager).check()
+    }
+
+    @Test
+    fun `hypo treated holds the low alarms for 20 minutes`() {
+        localAlertUtils.snoozeHypoAfterTreatment()
+        verify(cgmAlarmManager).acknowledgeHypoTreated(T.mins(20).msecs())
+    }
+
+    @Test
+    fun `acknowledge mute and test go to the CGM alarms`() {
+        localAlertUtils.acknowledgeCgmAlarms(CgmAlarmType.HIGH)
+        localAlertUtils.muteCgmAlarms(30)
+        localAlertUtils.testCgmAlarm(CgmAlarmType.URGENT_LOW)
+        verify(cgmAlarmManager).acknowledge(CgmAlarmType.HIGH)
+        verify(cgmAlarmManager).mute(30)
+        verify(cgmAlarmManager).test(CgmAlarmType.URGENT_LOW)
+    }
+
+    // endregion
 }

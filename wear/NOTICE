@@ -1,0 +1,15 @@
+AAPS watch app - notices for code that came from elsewhere
+
+CgmAlarmWatch (src/main/kotlin/app/aaps/wear/alarm/CgmAlarmWatch.kt)
+--------------------------------------------------------------------
+Adapted from CgmAlarmWear in nightscout/AndroidAPS pull request 5397
+(Dexcom G7 direct, by t1dude), path
+wear/src/main/kotlin/app/aaps/wear/comm/CgmAlarmWear.kt at commit bec1b16ba20:
+https://github.com/nightscout/AndroidAPS/pull/5397
+
+That code was written for AndroidAPS and is under the same licence as
+AndroidAPS (GNU Affero General Public License v3, see LICENSE.txt at the root
+of this repository). The vibration pattern (pulses at full strength, as an
+alarm vibration that the silent mode of the watch does not block) and the
+Acknowledge round trip to the phone follow it. It does not contain code from
+Trio or from G7SensorKit.

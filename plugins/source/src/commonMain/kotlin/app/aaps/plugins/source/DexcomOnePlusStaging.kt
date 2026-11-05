@@ -54,13 +54,20 @@ internal object DexcomOnePlusStaging {
     const val STAGING_MAX_EGV_AGE_MS = 20L * 60L * 1000L
 
     /**
+     * End of the usable time of a sensor started at [sessionStartMs], grace period included. Null when
+     * the start is unknown (0).
+     */
+    fun expiresAtMs(sessionStartMs: Long): Long? =
+        if (sessionStartMs <= 0L) null else sessionStartMs + SENSOR_LIFE_MS + SENSOR_GRACE_MS
+
+    /**
      * Derive a [CgmSensorLifecycle] from a sensor session start. Returns null when the start is
      * unknown (0) so the status screen simply shows nothing special.
      */
     fun computeLifecycle(sessionStartMs: Long, nowMs: Long): CgmSensorLifecycle? {
-        if (sessionStartMs <= 0L) return null
+        val expires = expiresAtMs(sessionStartMs) ?: return null
         val age = (nowMs - sessionStartMs).coerceAtLeast(0L)
-        val remaining = sessionStartMs + SENSOR_LIFE_MS + SENSOR_GRACE_MS - nowMs
+        val remaining = expires - nowMs
         return CgmSensorLifecycle(
             startedAtEpochMs = sessionStartMs,
             ageMs = age,

@@ -122,6 +122,7 @@ import app.aaps.database.AppRepository
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
@@ -335,6 +336,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val autosensData: AutosensData
     val commandQueue: CommandQueue
     val localAlertUtils: LocalAlertUtils
+    val periodicMaintenance: PeriodicMaintenance
     val bolusProgressData: BolusProgressData
     val persistenceLayer: PersistenceLayer
     val cloudStorageManager: CloudStorageManager
