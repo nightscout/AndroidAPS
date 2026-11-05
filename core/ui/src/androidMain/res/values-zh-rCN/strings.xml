@@ -135,7 +135,6 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">胰岛素未切换：%1$s 您之前的胰岛素仍在使用中。</string>
     <string name="insulin_activation_unconfirmed">胰岛素切换无法确认。请在输注前检查配置文件中哪种胰岛素处于活动状态。</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">胰岛素未切换。您之前的胰岛素仍在使用中。\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
     <string name="insulin_nickname_label">胰岛素昵称</string>
