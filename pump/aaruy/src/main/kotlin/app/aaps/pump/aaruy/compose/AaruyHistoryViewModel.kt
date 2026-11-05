@@ -1,5 +1,6 @@
 package app.aaps.pump.aaruy.compose
 
+import app.aaps.core.interfaces.R as InterfacesR
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -135,18 +136,18 @@ class AaruyHistoryViewModel(
     fun valueText(record: AaruyHistoryRecord): String = when (record.code) {
         AaruyHistoryTypes.ALARM    -> record.alarm
         AaruyHistoryTypes.REPLACED -> record.stringValue
-        AaruyHistoryTypes.DAILY    -> rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
-        AaruyHistoryTypes.BOLUS    -> rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.value)
+        AaruyHistoryTypes.DAILY    -> rh.gs(InterfacesR.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+        AaruyHistoryTypes.BOLUS    -> rh.gs(InterfacesR.string.format_insulin_units, record.value)
         else                       -> rh.gs(CoreUiR.string.pump_base_basal_rate, record.value)
     }
 
     fun detailText(record: AaruyHistoryRecord): String = when (record.code) {
         AaruyHistoryTypes.DAILY -> rh.gs(
             R.string.aaruy_history_daily_parts,
-            rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus),
-            rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
+            rh.gs(InterfacesR.string.format_insulin_units, record.dailyBolus),
+            rh.gs(InterfacesR.string.format_insulin_units, record.dailyBasal)
         )
-        AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(R.string.aaruy_history_minutes, record.durationMinutes)
+        AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(CoreUiR.string.format_mins, record.durationMinutes)
         else                    -> ""
     }
 

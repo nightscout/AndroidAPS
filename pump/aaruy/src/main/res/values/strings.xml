@@ -4,11 +4,11 @@
     <string name="aaruy_pump_description">Pump integration for Aaruy</string>
     <string name="aaruy_pump_error" comment="%1$s=name of the alarm. Example: Reservoir empty">Aaruy pump error: %1$s</string>
     <string name="aaruy_pump_warning" comment="%1$s=name of the warning. Example: Low battery">Aaruy pump warning: %1$s</string>
-    <string name="aaruy_pairing" >Aaruy pump pairing</string>
+    <string name="aaruy_pairing">Aaruy pump pairing</string>
     <string name="aaruy_press_pump_button">Press the button on the pump</string>
     <string name="aaruy_press_pump_button_detail">The pump does not pair until you press its button. Keep it close to the phone.</string>
     <string name="aaruy_pairing_successful">Pump paired</string>
-    <string name="aaruy_pairing_successful_detail">The pump is connected. A new pump stays stopped until you use Replace.</string>
+    <string name="aaruy_pairing_successful_detail">The pump is connected. A new pump stays stopped until you use Change reservoir.</string>
     <string name="aaruy_state_not_running">Not running</string>
     <string name="aaruy_state_basal">Basal running</string>
     <string name="aaruy_state_temp_basal">Temp basal running</string>
@@ -21,7 +21,7 @@
     <string name="setting_insulin_max_bolus">Max bolus</string>
     <string name="setting_insulin_low_reservoir">Low reservoir alarm</string>
     <string name="setting_insulin_bolus_rate" comment="Title of a setting. The size of one bolus step of the pump, in units. Values: 0.025 or 0.05">Bolus step</string>
-    <string name="setting_inject_sound_remind">Prompt sound</string>
+    <string name="setting_inject_sound_remind">Beeps</string>
     <string name="setting_inject_sound_alarm">Alarm sound</string>
     <string name="setting_aaruy_on">On</string>
     <string name="setting_aaruy_off">Off</string>
@@ -33,7 +33,7 @@
     <string name="param_refresh">Pump settings changed</string>
     <string name="replace_label">Change reservoir</string>
     <string name="confirm_alarms_label">Confirm alarms</string>
-    <string name="replace_bat_rescv_label">Replace reservoir and battery</string>
+    <string name="replace_bat_rescv_label">Change reservoir and battery</string>
     <string name="alarm_none">None</string>
     <string name="alarm_zero_dose">Reservoir empty</string>
     <string name="alarm_low_power">Low battery</string>
@@ -49,7 +49,7 @@
     <string name="alarm_error4">Pump error 4</string>
     <string name="alarm_error3_plus">Pump error 3+</string>
     <string name="alarm_motor_busy">Motor busy</string>
-    <string name="alarm_motor_repeat">Motor repeat</string>
+    <string name="alarm_motor_repeat">Motor command repeated</string>
     <string name="alarm_bolus_error">Bolus error</string>
     <string name="alarm_basal_run_fail">Basal failed to start</string>
     <string name="alarm_please_run_basal_first">Start basal first</string>
@@ -72,19 +72,17 @@
     <string name="actions_reservoir_prime_cannula_note">Press Skip only if you did not replace the cannula.</string>
     <string name="soft_needle_6">6 mm cannula</string>
     <string name="soft_needle_9">9 mm cannula</string>
-    <string name="setting_next">Next</string>
     <string name="actions_reservoir_cannula_skip">Skip</string>
     <string name="actions_reservoir_prime">Prime</string>
     <string name="aaruy_rewind">Rewind</string>
-    <string name="aaruy_history_minutes">%1$d min</string>
-    <string name="aaruy_replace_done">Replacement finished. Basal is running.</string>
+    <string name="aaruy_replace_done">Reservoir change finished. Basal is running.</string>
     <string name="actions_reservoir_prime_cannula_action">Fill cannula</string>
     <string name="bluetooth_disconnect">The pump is not connected. Waiting for it to reconnect.</string>
     <string name="is_backing">Rewinding</string>
     <string name="locate_check_liquid">Priming. Check that droplets came out of the needle.</string>
     <string name="actions_reservoir_prime_confirm">Did droplets come out of the needle?</string>
     <string name="is_exhaust">Filling the cannula</string>
-    <string name="if_exit_replace_view">The replacement is not finished. Quit?</string>
+    <string name="if_exit_replace_view">The reservoir change is not finished. Quit?</string>
     <string name="daily_total">Daily totals</string>
     <string name="history_alarm">Alarm</string>
     <string name="bolus_title">Bolus</string>

@@ -1,5 +1,6 @@
 package app.aaps.pump.aaruy
 
+import app.aaps.core.ui.R as CoreUiR
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -170,7 +171,7 @@ class AaruyPlugin(
         mDeviceName = preferences.get(AaruyStringKey.PumpName)
         aaruyPump.pumpSN = mDeviceName
         aaruyPump.reset()
-        if (isConfigured()) commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed))
+        if (isConfigured()) commandQueue.readStatus(rh.gs(CoreUiR.string.device_changed))
     }
 
     override fun connect(reason: String) {
@@ -213,7 +214,7 @@ class AaruyPlugin(
         if (!isInitialized()) {
             // Deferred and not a real error: it is sent again at reconnect. Profile notifications are owned by the command queue.
             result.success = true
-            result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
+            result.comment = rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
             return result
         }
         return if (aaruyService?.updateBasalsInPump(profile) == true) {
@@ -222,7 +223,7 @@ class AaruyPlugin(
             result.comment = "OK"
             result
         } else {
-            result.comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
+            result.comment = rh.gs(CoreUiR.string.failed_update_basal_profile)
             result
         }
     }
@@ -254,7 +255,7 @@ class AaruyPlugin(
         result.enacted = outcome != AaruyBolusOutcome.NOT_STARTED
         result.bolusDelivered = aaruyPump.bolusDelivered
         result.comment = when (outcome) {
-            AaruyBolusOutcome.FINISHED    -> rh.gs(app.aaps.core.ui.R.string.ok)
+            AaruyBolusOutcome.FINISHED    -> rh.gs(CoreUiR.string.ok)
             AaruyBolusOutcome.CUT_SHORT   -> rh.gs(R.string.aaruy_bolus_cut_short, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))
             AaruyBolusOutcome.NOT_STARTED -> rh.gs(R.string.alarm_bolus_run_fail)
             AaruyBolusOutcome.UNKNOWN     -> rh.gs(R.string.aaruy_bolus_outcome_unknown, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))

@@ -26,6 +26,7 @@ import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.aaruy.R
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun AaruyPairWizardScreen(
@@ -54,7 +55,7 @@ fun AaruyPairWizardScreen(
             onCancel()
         },
         cancelDialogTitle = stringResource(R.string.aaruy_pairing),
-        cancelDialogText = stringResource(app.aaps.core.ui.R.string.cancel),
+        cancelDialogText = stringResource(CoreUiR.string.cancel),
         title = title,
         setToolbarConfig = setToolbarConfig
     ) { shown, wizardCancel ->
@@ -70,7 +71,7 @@ fun AaruyPairWizardScreen(
             )
 
             AaruyPairStep.PRESS_BUTTON -> WizardStepLayout(
-                secondaryButton = WizardButton(text = stringResource(app.aaps.core.ui.R.string.cancel), onClick = wizardCancel)
+                secondaryButton = WizardButton(text = stringResource(CoreUiR.string.cancel), onClick = wizardCancel)
             ) {
                 PairMessage(
                     icon = { Icon(Icons.Filled.TouchApp, contentDescription = null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary) },
@@ -80,7 +81,7 @@ fun AaruyPairWizardScreen(
             }
 
             AaruyPairStep.COMPLETE     -> WizardStepLayout(
-                primaryButton = WizardButton(text = stringResource(app.aaps.core.ui.R.string.ok), onClick = onFinish)
+                primaryButton = WizardButton(text = stringResource(CoreUiR.string.ok), onClick = onFinish)
             ) {
                 PairMessage(
                     icon = { Icon(Icons.Filled.CheckCircle, contentDescription = null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary) },

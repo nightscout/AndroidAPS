@@ -1,5 +1,6 @@
 package app.aaps.pump.aaruy.services
 
+import app.aaps.core.ui.R as CoreUiR
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
@@ -151,9 +152,9 @@ class AaruyService : MetroService() {
                 detailedBolusInfoStorage.add(detailedBolusInfo) // Reinsert
             }
             if (detailedBolusInfo?.bolusType == BS.Type.SMB) {
-                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(CoreUiR.string.smb_bolus_u, detailedBolusInfo.insulin)))
             } else {
-                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(CoreUiR.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
             }
             waitForBolusProgress()
         }

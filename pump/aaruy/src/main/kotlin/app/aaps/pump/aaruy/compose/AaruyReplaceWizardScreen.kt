@@ -23,6 +23,7 @@ import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.core.ui.compose.siteRotation.SiteLocationWizardStep
 import app.aaps.pump.aaruy.R
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun AaruyReplaceWizardScreen(
@@ -67,7 +68,7 @@ fun AaruyReplaceWizardScreen(
                 text = stringResource(R.string.actions_reservoir_prime_before),
                 state = state,
                 connected = connected,
-                primary = WizardButton(stringResource(R.string.setting_next), viewModel::assembled, enabled = canSend)
+                primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::assembled, enabled = canSend)
             )
 
             AaruyReplaceStep.SELECT_INSULIN -> {
@@ -75,7 +76,7 @@ fun AaruyReplaceWizardScreen(
                 val selectedInsulin by viewModel.selectedInsulin.collectAsStateWithLifecycle()
                 val activeInsulinLabel by viewModel.activeInsulinLabel.collectAsStateWithLifecycle()
                 WizardStepLayout(
-                    primaryButton = WizardButton(stringResource(R.string.setting_next), viewModel::insulinSelected, enabled = selectedInsulin != null)
+                    primaryButton = WizardButton(stringResource(CoreUiR.string.next), viewModel::insulinSelected, enabled = selectedInsulin != null)
                 ) {
                     SelectInsulin(
                         availableInsulins = availableInsulins,
@@ -93,7 +94,7 @@ fun AaruyReplaceWizardScreen(
                 note = stringResource(R.string.actions_reservoir_prime_comment_note),
                 state = state,
                 connected = connected,
-                primary = WizardButton(stringResource(R.string.setting_next), viewModel::askDroplets, enabled = canSend && state.primed),
+                primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::askDroplets, enabled = canSend && state.primed),
                 secondary = WizardButton(stringResource(R.string.actions_reservoir_prime), viewModel::prime, enabled = canSend, loading = state.busy)
             )
 
@@ -101,7 +102,7 @@ fun AaruyReplaceWizardScreen(
                 text = stringResource(R.string.actions_reservoir_prime_cannula_before),
                 state = state,
                 connected = connected,
-                primary = WizardButton(stringResource(R.string.setting_next), viewModel::connectedToBody, enabled = canSend)
+                primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::connectedToBody, enabled = canSend)
             )
 
             AaruyReplaceStep.SITE_LOCATION  -> SiteLocationWizardStep(host = viewModel)
@@ -122,7 +123,7 @@ fun AaruyReplaceWizardScreen(
                 text = stringResource(R.string.aaruy_replace_done),
                 state = state,
                 connected = true,
-                primary = WizardButton(stringResource(app.aaps.core.ui.R.string.ok), onFinish)
+                primary = WizardButton(stringResource(CoreUiR.string.ok), onFinish)
             )
         }
     }

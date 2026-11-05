@@ -100,9 +100,9 @@ class AaruyComposeContent(
 
         val pairingTitle = stringResource(R.string.aaruy_pairing)
         val replaceTitle = stringResource(R.string.replace_bat_rescv_label)
-        val historyTitle = stringResource(app.aaps.core.ui.R.string.pump_history)
-        val backDescription = stringResource(app.aaps.core.ui.R.string.back)
-        val settingsDescription = stringResource(app.aaps.core.ui.R.string.settings)
+        val historyTitle = stringResource(CoreUiR.string.pump_history)
+        val backDescription = stringResource(CoreUiR.string.back)
+        val settingsDescription = stringResource(CoreUiR.string.settings)
 
         // A wizard sets the toolbar itself, so that its back arrow asks before it leaves.
         LaunchedEffect(currentScreen) {
