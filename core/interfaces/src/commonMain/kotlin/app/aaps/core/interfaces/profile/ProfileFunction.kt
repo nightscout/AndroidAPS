@@ -60,6 +60,16 @@ interface ProfileFunction {
     suspend fun isProfileChangePending(): Boolean
 
     /**
+     * The requested profile uses another insulin concentration than the one every dose is converted with now.
+     *
+     * The switch happens only when the pump has written the profile, but the new insulin can be in the pump before
+     * that. Until then a dose is converted with the wrong factor (U100 to U200: twice the insulin, and the record
+     * says the amount that was asked), so doses must not go to the pump. Always false on AAPSClient: it gives no
+     * doses, and its running profile comes from the master.
+     */
+    suspend fun isConcentrationChangePending(): Boolean
+
+    /**
      * Build a new circadian profile switch request based on provided profile
      *
      * @param profileStore  ProfileStore to use
