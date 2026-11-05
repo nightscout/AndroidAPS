@@ -302,8 +302,7 @@ class AaruyBLE(
         aaruyPump.lastHistoryTime = 0
         aaruyPump.lastDeliveryEnd = 0
         aaruyPump.lastHistoryDailyTime = dateUtil.now()
-        aaruyPump.lastBolusTime = 0
-        aaruyPump.lastBolusAmount = 0.0
+        // The last bolus stays: the user got it, also when the pump is a new one.
         rxBus.send(EventAaruyDeviceChange())
     }
 
