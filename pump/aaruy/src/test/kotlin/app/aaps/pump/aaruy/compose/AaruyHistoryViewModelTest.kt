@@ -1,0 +1,145 @@
+package app.aaps.pump.aaruy.compose
+
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.PumpHistoryType
+import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.R
+import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
+import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
+import app.aaps.pump.aaruy.database.HistoryUnitInfo
+import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
+import app.aaps.pump.aaruy.services.AaruyBLE
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class AaruyHistoryViewModelTest {
+
+    private val now = 1_800_000_000_000L
+    private val rh: ResourceHelper = mock()
+    private val dateUtil: DateUtil = mock()
+    private val historyDao: HistoryUnitInfoDao = mock()
+    private val dailyDao: HistoryDailyUnitInfoDao = mock()
+    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), dateUtil, mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(rh.gs(any<Int>())).thenAnswer { "s${it.arguments[0]}" }
+        whenever(rh.gs(R.string.alarm_block)).thenReturn("Motor blocked")
+        whenever(historyDao.querySince(any())).thenReturn(emptyList())
+        whenever(dailyDao.queryAll()).thenReturn(emptyList())
+    }
+
+    @AfterEach
+    fun tearDown() = Dispatchers.resetMain()
+
+    private fun viewModel() = AaruyHistoryViewModel(rh, mock<AaruyBLE>(), pump, historyDao, dailyDao, dateUtil)
+
+    private fun entry(time: Long, type: Int, data: Long = 0, injectTime: Long = 0, delayBolus: Long = 0) = HistoryUnitInfo().also {
+        it.time = time
+        it.type = type
+        it.data = data
+        it.injectTime = injectTime
+        it.delayBolus = delayBolus
+    }
+
+    /** The list is read on another thread. */
+    private fun AaruyHistoryViewModel.recordsWhen(condition: (List<AaruyHistoryRecord>) -> Boolean): List<AaruyHistoryRecord> {
+        val end = System.currentTimeMillis() + 5_000
+        while (!condition(uiState.value.records)) {
+            assertTrue(System.currentTimeMillis() < end, "records: ${uiState.value.records}")
+            Thread.sleep(10)
+        }
+        return uiState.value.records
+    }
+
+    private fun AaruyHistoryViewModel.show(type: Byte) = selectType(uiState.value.availableTypes.first { it.type == type })
+
+    /** Seen on a real pump: the log keeps only the low byte, a blocked motor is 5. It showed as "None". */
+    @Test
+    fun anAlarmFromThePumpLogHasItsName() {
+        whenever(historyDao.querySince(any())).thenReturn(listOf(entry(now - 1000, AaruyHistoryTypes.ALARM.toInt(), data = 5)))
+        val viewModel = viewModel()
+        viewModel.show(AaruyHistoryTypes.ALARM)
+        val records = viewModel.recordsWhen { it.isNotEmpty() }
+        assertEquals("Motor blocked", viewModel.valueText(records.single()))
+    }
+
+    @Test
+    fun aBolusCountsItsExtendedPart() {
+        whenever(historyDao.querySince(any())).thenReturn(listOf(entry(now - 1000, AaruyHistoryTypes.BOLUS.toInt(), data = 1500, delayBolus = 500)))
+        val records = viewModel().recordsWhen { it.isNotEmpty() }
+        assertEquals(2.0, records.single().value, 0.0001)
+    }
+
+    @Test
+    fun aReservoirChangeShowsRewindAndPrimeAndNothingElse() {
+        whenever(historyDao.querySince(any())).thenReturn(
+            listOf(
+                entry(now - 3000, AaruyHistoryTypes.REWIND.toInt()),
+                entry(now - 2000, AaruyHistoryTypes.PRIME.toInt(), data = 420),
+                entry(now - 1000, AaruyHistoryTypes.BOLUS.toInt(), data = 1000)
+            )
+        )
+        val viewModel = viewModel()
+        viewModel.show(AaruyHistoryTypes.REPLACED)
+        val records = viewModel.recordsWhen { it.size == 2 }
+        assertEquals(listOf("s${R.string.actions_reservoir_prime}", "s${R.string.aaruy_rewind}"), records.map { viewModel.valueText(it) })
+    }
+
+    @Test
+    fun aDayIsSplitIntoBolusAndBasal() {
+        whenever(dailyDao.queryAll()).thenReturn(listOf(HistoryDailyUnitInfo().also {
+            it.dateTimestamp = now - 1000
+            it.dailyTotal = 145
+            it.dailyBolus = 111
+        }))
+        val viewModel = viewModel()
+        viewModel.show(AaruyHistoryTypes.DAILY)
+        val day = viewModel.recordsWhen { it.isNotEmpty() }.single()
+        assertEquals(11.1, day.dailyBolus, 0.0001)
+        assertEquals(3.4, day.dailyBasal, 0.0001)
+    }
+
+    /** Equal rows would give equal list keys, and that crashes the list. */
+    @Test
+    fun equalRowsComeOnceAndTheNewestFirst() {
+        whenever(historyDao.querySince(any())).thenReturn(
+            listOf(
+                entry(now - 5000, AaruyHistoryTypes.BOLUS.toInt(), data = 1000),
+                entry(now - 1000, AaruyHistoryTypes.BOLUS.toInt(), data = 500),
+                entry(now - 5000, AaruyHistoryTypes.BOLUS.toInt(), data = 1000)
+            )
+        )
+        val records = viewModel().recordsWhen { it.isNotEmpty() }
+        assertEquals(listOf(now - 1000, now - 5000), records.map { it.timestamp })
+    }
+
+    @Test
+    fun theTypesAreTheOnesTheScreenOffers() {
+        val types = viewModel().uiState.value.availableTypes.map(PumpHistoryType::type)
+        assertEquals(
+            listOf(AaruyHistoryTypes.BOLUS, AaruyHistoryTypes.TEMP_BASAL, AaruyHistoryTypes.BASAL, AaruyHistoryTypes.ALARM, AaruyHistoryTypes.REPLACED, AaruyHistoryTypes.DAILY),
+            types
+        )
+    }
+}

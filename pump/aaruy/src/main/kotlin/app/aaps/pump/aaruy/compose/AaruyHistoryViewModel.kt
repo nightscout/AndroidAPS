@@ -119,7 +119,8 @@ class AaruyHistoryViewModel(
         else item.type == type.toInt()
 
     private fun toRecord(item: HistoryUnitInfo, type: Byte): AaruyHistoryRecord = when (type) {
-        AaruyHistoryTypes.ALARM -> AaruyHistoryRecord(item.time, type, alarm = aaruyPump.alarmStateToString(AlarmState.fromInt(item.data.toInt())))
+        // Seen on a real pump: the log keeps only the low byte of the alarm.
+        AaruyHistoryTypes.ALARM -> AaruyHistoryRecord(item.time, type, alarm = aaruyPump.alarmStateToString(AlarmState.fromHistory(item.data.toInt())))
 
         AaruyHistoryTypes.REPLACED -> AaruyHistoryRecord(
             item.time, type,
