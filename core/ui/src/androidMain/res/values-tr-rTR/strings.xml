@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">İnsülin değiştirilmedi: %1$s Önceki insülininiz kullanılmaya devam ediyor.</string>
     <string name="insulin_activation_unconfirmed">İnsülin değişikliği doğrulanamadı. Doz uygulamadan önce profilinizde hangi insülinin aktif olduğunu kontrol edin.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">İnsülin değiştirilmedi. Önceki insülininiz hâlâ kullanımda.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nİnsülin değiştirilmedi. Eğer pompada yeni insülin varsa, pompayı bağlamayın ve insülin değiştirme işlemini yeniden yapın.</string>
     <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="date">Tarih</string>
     <string name="insulin_nickname_label">İnsülinin takma adı</string>
