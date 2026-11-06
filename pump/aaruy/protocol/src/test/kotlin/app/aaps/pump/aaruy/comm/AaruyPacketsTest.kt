@@ -10,7 +10,7 @@ import java.nio.ByteOrder
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
-/** The wire format, written out by hand. It does not use the vendor AAR, so it stays when the AAR goes. */
+/** The wire format, written out by hand. */
 class AaruyPacketsTest {
 
     private fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }

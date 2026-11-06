@@ -30,8 +30,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 
 /**
- * The Kotlin protocol against the emulator, through the BLE library: the same scenarios as `AarOnEmulatorTest`,
- * so both must behave the same. It does not prove the firmware behaves the same.
+ * The Kotlin protocol against the emulator, through the BLE transport. The vendor library passed the same scenarios
+ * while it was still in the tests. It does not prove the firmware behaves the same.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])

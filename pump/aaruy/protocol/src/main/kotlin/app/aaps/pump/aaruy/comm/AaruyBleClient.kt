@@ -28,7 +28,8 @@ import javax.crypto.spec.SecretKeySpec
 /**
  * Talks to the pump. Turns commands into encrypted packets and pump messages into [AaruyBleListener] calls.
  *
- * Recovered from the vendor library `mylibrary-release.aar`. It should do the same things in the same order.
+ * Recovered from the vendor library `mylibrary-release.aar`. `AaruyCommandBytesTest` checks that it still sends the
+ * same bytes as that library did.
  * Commands that the driver did not use are left out.
  */
 class AaruyBleClient(

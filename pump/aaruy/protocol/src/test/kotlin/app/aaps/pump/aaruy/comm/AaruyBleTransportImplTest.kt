@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * The Kotlin client on the real transport, down to Android's `BluetoothGatt`. Robolectric plays Android and this test
- * plays the pump. `NordicRealModeTest` runs the vendor AAR through the same steps and expects the same frames.
+ * plays the pump.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
