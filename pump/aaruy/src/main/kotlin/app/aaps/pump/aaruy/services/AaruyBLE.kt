@@ -890,8 +890,11 @@ fun syncAndLoadBasicParam() {
             historyUnitInfo.pumpType = aaruyPump.pumpType
 
             if (item.type == 2 && item.delayBolus.toInt() == 0) {
-                aaruyPump.lastBolusAmount = item.data / 1000.0
-                aaruyPump.lastBolusTime = item.timestamp
+                // A read can bring old entries again. The minute is for the pump clock, which can be some seconds behind the phone.
+                if (item.timestamp > aaruyPump.lastBolusTime - T.mins(1).msecs()) {
+                    aaruyPump.lastBolusAmount = item.data / 1000.0
+                    aaruyPump.lastBolusTime = item.timestamp
+                }
 
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(item.timestamp, item.data / 1000.0)
                 var newRecord = false

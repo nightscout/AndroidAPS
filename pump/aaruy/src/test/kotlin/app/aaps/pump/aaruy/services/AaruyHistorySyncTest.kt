@@ -201,6 +201,20 @@ class AaruyHistorySyncTest {
         runBlocking { verify(pumpSync, timeout(5000)).syncBolusWithPumpId(eq(start), any(), eq(BS.Type.SMB), eq(start), any(), any()) }
     }
 
+    /** Seen on a real pump: a read from an earlier time brought an older bolus, and the pump screen showed it as the last one. */
+    @Test
+    fun anOlderBolusReadAgainIsNotTheLastBolus() {
+        val newer = LogItem(timestamp = now - 10 * minute, type = 2, data = 500, injectTime = 0, delayBolus = 0, reserved = 0)
+        val older = LogItem(timestamp = now - 60 * minute, type = 2, data = 10_000, injectTime = 0, delayBolus = 0, reserved = 0)
+        receive(newer)
+        page(0, 2, older)
+        page(1, 2, newer)
+        receive(older)
+        Thread.sleep(500)
+        assertEquals(newer.timestamp, pump.lastBolusTime)
+        assertEquals(0.5, pump.lastBolusAmount, 0.0001)
+    }
+
     /** A bolus takes one step every 2 seconds, and no basal entry runs then, so this time is no gap. */
     @Test
     fun aBolusCountsAsDelivery() {
