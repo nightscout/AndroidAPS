@@ -38,6 +38,17 @@ class AaruyCommandBytesTest {
         AaruyCommandScript.pinNames.zip(pins).forEach { (name, line) -> assertEquals(line, "pin [$name] ${AaruyBleClient.pinFromDeviceName(name)}") }
     }
 
+    /** Here the vendor library unbound the pump, showed reservoir 0 and "liquid shown". */
+    @Test
+    fun shortFramesAreDroppedAndReachNoListener() {
+        val client = KotlinClient()
+        client.snapshot()
+        client.receive(AaruyFrame.buildWrite(AaruyParamId.REPORT_DEVICE, 1, byteArrayOf(0, 0, 0, 0, 6)))
+        client.receive(AaruyFrame.buildWrite(AaruyParamId.CURRENT_STATUS, 1, byteArrayOf(0, 0, 0, 0, 0, 0, 1, 1)))
+        client.receive(AaruyFrame.buildWrite(AaruyParamId.ERROR_INFO, 1, byteArrayOf(25)))
+        assertEquals("seq=0 queue=[] log=[]", client.snapshot())
+    }
+
     private class KotlinClient : AaruyCommandScript.Client {
 
         private val log = mutableListOf<String>()

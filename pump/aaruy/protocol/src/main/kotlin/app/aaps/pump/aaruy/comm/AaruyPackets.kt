@@ -7,8 +7,9 @@ import java.nio.ByteOrder
  * The packets on the wire. All numbers are little endian. Values that the pump treats as unsigned are
  * kept in signed types of the same width and read with [unsigned].
  *
- * A parser that catches an exception gives back the fields it read so far, so a short packet does not
- * stop the caller. Some parsers do not catch, and the exception then goes to the frame handler.
+ * A packet shorter than its fields throws, and the frame handler then drops it. The vendor library kept the fields
+ * it had read so far and left the rest at their defaults, so a short status could show an empty reservoir and a
+ * short device report could unbind the pump.
  */
 internal object AaruyParamId {
 
@@ -162,15 +163,11 @@ internal class BasalInfoPacket {
         fun parse(data: ByteArray): BasalInfoPacket {
             val reader = AaruyByteReader(data)
             val packet = BasalInfoPacket()
-            try {
-                packet.injectPerDay = reader.u16()
-                packet.segment = reader.u8().toByte()
-                packet.totalArea = reader.u8().toByte()
-                packet.areaBytes = AaruyByteReader.chunks(data, 4, 3)
-                packet.areas = packet.areaBytes?.map { BasalAreaPacket.parse(it) }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            packet.injectPerDay = reader.u16()
+            packet.segment = reader.u8().toByte()
+            packet.totalArea = reader.u8().toByte()
+            packet.areaBytes = AaruyByteReader.chunks(data, 4, 3)
+            packet.areas = packet.areaBytes?.map { BasalAreaPacket.parse(it) }
             return packet
         }
     }
@@ -190,14 +187,10 @@ internal class ReportDevicePacket {
         fun parse(data: ByteArray): ReportDevicePacket {
             val reader = AaruyByteReader(data)
             val packet = ReportDevicePacket()
-            try {
-                packet.settingTime = reader.u32()
-                packet.deviceType = reader.u8().toByte()
-                packet.version = reader.u8().toByte()
-                packet.serial = reader.u16()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            packet.settingTime = reader.u32()
+            packet.deviceType = reader.u8().toByte()
+            packet.version = reader.u8().toByte()
+            packet.serial = reader.u16()
             return packet
         }
     }
@@ -226,17 +219,13 @@ internal class BasalSettingPacket {
         fun parse(data: ByteArray): BasalSettingPacket {
             val reader = AaruyByteReader(data)
             val packet = BasalSettingPacket()
-            try {
-                packet.settingTime = reader.u32()
-                packet.totalBasal = reader.u8().toByte()
-                packet.curIndex = reader.u8().toByte()
-                packet.reserved = AaruyByteReader.slice(data, 6, 2)
-                val info = AaruyByteReader.slice(data, 8, data.size - 8)
-                packet.basalInfoBytes = info
-                packet.basalInfo = BasalInfoPacket.parse(info)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            packet.settingTime = reader.u32()
+            packet.totalBasal = reader.u8().toByte()
+            packet.curIndex = reader.u8().toByte()
+            packet.reserved = AaruyByteReader.slice(data, 6, 2)
+            val info = AaruyByteReader.slice(data, 8, data.size - 8)
+            packet.basalInfoBytes = info
+            packet.basalInfo = BasalInfoPacket.parse(info)
             return packet
         }
     }
@@ -414,18 +403,14 @@ internal class CurrentStatusPacket {
         fun parse(data: ByteArray): CurrentStatusPacket {
             val reader = AaruyByteReader(data)
             val packet = CurrentStatusPacket()
-            try {
-                packet.settingTime = reader.u32()
-                packet.remainAmount = reader.u16()
-                packet.runningStatus = reader.u8().toByte()
-                when (packet.runningStatus) {
-                    RUNNING_BASAL                  -> packet.basal = parseBasal(reader, data)
-                    RUNNING_TEMP_BASAL             -> packet.tempBasal = parseBasal(reader, data)
-                    RUNNING_BOLUS                  -> packet.bolus = parseBolus(reader, data)
-                    RUNNING_PAUSED, RUNNING_STOPPED -> packet.pause = parsePause(reader)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            packet.settingTime = reader.u32()
+            packet.remainAmount = reader.u16()
+            packet.runningStatus = reader.u8().toByte()
+            when (packet.runningStatus) {
+                RUNNING_BASAL                  -> packet.basal = parseBasal(reader, data)
+                RUNNING_TEMP_BASAL             -> packet.tempBasal = parseBasal(reader, data)
+                RUNNING_BOLUS                  -> packet.bolus = parseBolus(reader, data)
+                RUNNING_PAUSED, RUNNING_STOPPED -> packet.pause = parsePause(reader)
             }
             return packet
         }
@@ -463,12 +448,8 @@ internal class ErrorInfoPacket {
         fun parse(data: ByteArray): ErrorInfoPacket {
             val reader = AaruyByteReader(data)
             val packet = ErrorInfoPacket()
-            try {
-                packet.errorType = reader.u8()
-                packet.error = reader.u8()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            packet.errorType = reader.u8()
+            packet.error = reader.u8()
             return packet
         }
     }
@@ -552,11 +533,7 @@ internal class HistoryLogPacket {
             packet.totalPage = reader.u8().toByte()
             packet.curPage = reader.u8().toByte()
             packet.curNum = reader.u8().toByte()
-            try {
-                packet.units = AaruyByteReader.chunks(data, 5, 12).map { HistoryUnitPacket.parse(it) }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            packet.units = AaruyByteReader.chunks(data, 5, 12).map { HistoryUnitPacket.parse(it) }
             return packet
         }
     }

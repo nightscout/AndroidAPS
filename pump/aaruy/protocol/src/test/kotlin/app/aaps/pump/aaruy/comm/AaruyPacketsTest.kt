@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.crypto.Cipher
@@ -162,20 +164,37 @@ class AaruyPacketsTest {
         }
     }
 
+    /** The vendor library kept such a status, with no basal and maybe reservoir 0. */
     @Test
-    fun statusThatEndsEarlyKeepsWhatWasRead() {
-        val status = CurrentStatusPacket.parse(bytes(1, 0, 0, 0, 0x96, 0, 1, 3))
-        assertEquals(150.toShort(), status.remainAmount)
-        assertEquals(1.toByte(), status.runningStatus)
-        assertNull(status.basal)
+    fun statusThatEndsEarlyIsRefused() {
+        assertThrows(BufferUnderflowException::class.java) { CurrentStatusPacket.parse(bytes(1, 0, 0, 0, 0x96, 0, 1, 3)) }
+        assertThrows(BufferUnderflowException::class.java) { CurrentStatusPacket.parse(bytes(1, 0, 0, 0, 0x96)) }
     }
 
     @Test
-    fun errorThatEndsEarlyKeepsWhatWasRead() {
-        val error = ErrorInfoPacket.parse(bytes(5))
-        assertEquals(5, error.errorType)
-        assertEquals(0, error.error)
+    fun statusWithNothingRunningNeedsOnlyTheHeader() {
+        val status = CurrentStatusPacket.parse(bytes(1, 0, 0, 0, 0x96, 0, 0))
+        assertEquals(150.toShort(), status.remainAmount)
+        assertEquals(0.toByte(), status.runningStatus)
+    }
+
+    /** One byte 25 would have read as "liquid shown" with error 0. */
+    @Test
+    fun errorThatEndsEarlyIsRefused() {
+        assertThrows(BufferUnderflowException::class.java) { ErrorInfoPacket.parse(bytes(25)) }
         assertEquals(129, ErrorInfoPacket.parse(bytes(5, 0x81)).error)
+    }
+
+    /** The vendor library left the device type at 1 here, and the driver then unbinds the pump. */
+    @Test
+    fun deviceReportThatEndsEarlyIsRefused() {
+        assertThrows(BufferUnderflowException::class.java) { ReportDevicePacket.parse(bytes(1, 0, 0, 0, 6, 2, 100)) }
+    }
+
+    @Test
+    fun basalSettingThatEndsEarlyIsRefused() {
+        assertThrows(BufferUnderflowException::class.java) { BasalSettingPacket.parse(bytes(1, 0, 0, 0, 3, 0, 0, 0)) }
+        assertThrows(IndexOutOfBoundsException::class.java) { BasalSettingPacket.parse(bytes(1, 0, 0, 0, 3, 0, 0, 0, 0x7B, 0, 3, 3, 0, 0xF4)) }
     }
 
     @Test
@@ -193,11 +212,10 @@ class AaruyPacketsTest {
         assertEquals(2.toByte(), unit.reserved)
     }
 
+    /** The vendor library kept the header with no entries, so the page looked read. */
     @Test
-    fun historyLogWithAPartialUnitKeepsTheHeader() {
-        val log = HistoryLogPacket.parse(bytes(3, 0, 1, 0, 1, 9, 0, 0))
-        assertEquals(3.toShort(), log.count)
-        assertEquals(0, log.units.size)
+    fun historyLogWithAPartialUnitIsRefused() {
+        assertThrows(IndexOutOfBoundsException::class.java) { HistoryLogPacket.parse(bytes(3, 0, 1, 0, 1, 9, 0, 0)) }
     }
 
     @Test
