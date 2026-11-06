@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -39,7 +38,7 @@ class AaruyPluginBolusTest {
     private val service: AaruyService = mock()
     private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
     private val plugin = AaruyPlugin(
-        mock<AAPSLogger>(), rh, mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), mock<Context>(), pump, mock<DetailedBolusInfoStorage>(),
+        mock<AAPSLogger>(), rh, mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), mock<Context>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },
         mock<AaruyBLE>(), mock<BlePreCheck>(), mock<PumpSync>(), ch, mock<NotificationManager>()
     ).also { plugin ->

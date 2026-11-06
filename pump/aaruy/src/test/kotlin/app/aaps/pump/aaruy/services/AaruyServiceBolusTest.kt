@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -24,6 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.whenever
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyDouble
@@ -45,6 +47,7 @@ class AaruyServiceBolusTest {
     private val dateUtil = mock(DateUtil::class.java)
     private val ble = mock(AaruyBLE::class.java)
     private val progress = mock(BolusProgressData::class.java)
+    private val bolusInfoStorage = mock(DetailedBolusInfoStorage::class.java)
     private val pump = AaruyPump(
         mock(AAPSLogger::class.java),
         mock(ResourceHelper::class.java, RETURNS_SMART_NULLS),
@@ -71,7 +74,7 @@ class AaruyServiceBolusTest {
         service.aaruyPump = pump
         service.aaruyBle = ble
         service.pumpSync = pumpSync
-        service.detailedBolusInfoStorage = mock(DetailedBolusInfoStorage::class.java)
+        service.detailedBolusInfoStorage = bolusInfoStorage
         service.isConnected = true
         pump.pumpState = AaruyPumpState.BASALRATE_RUNNING
         pump.bolusStep = 2
@@ -84,7 +87,7 @@ class AaruyServiceBolusTest {
     private fun pumpAnswers(action: () -> Unit) {
         `when`(ble.setBolus(anyDouble(), anyBoolean())).thenAnswer {
             action()
-            true
+            AaruyBolusStart.STARTED
         }
     }
 
@@ -142,11 +145,24 @@ class AaruyServiceBolusTest {
         assertEquals(AaruyBolusOutcome.FINISHED, runBlocking { service.setBolus(info) })
     }
 
+    /** Nothing went to the pump, so nothing is stored that a later history entry could take for this bolus. */
     @Test
-    fun aBolusThePumpDidNotStartIsNotStarted() {
-        `when`(ble.setBolus(anyDouble(), anyBoolean())).thenReturn(false)
+    fun aBolusThatWasNeverSentIsNotStarted() {
+        `when`(ble.setBolus(anyDouble(), anyBoolean())).thenReturn(AaruyBolusStart.NOT_SENT)
         assertEquals(AaruyBolusOutcome.NOT_STARTED, runBlocking { service.setBolus(info) })
         assertTrue(pump.bolusDone)
+        verify(bolusInfoStorage, never()).add(any())
+        runBlocking { verify(pumpSync, never()).addBolusWithTempId(any(), any(), any(), any(), any(), any()) }
+    }
+
+    /** The start went out and no status came. The pump may deliver all of it: the user must not bolus again, and the whole amount counts. */
+    @Test
+    fun aStartWithNoAnswerIsUnknownAndCountsTheWholeAmount() {
+        `when`(ble.setBolus(anyDouble(), anyBoolean())).thenReturn(AaruyBolusStart.NO_ANSWER)
+        assertEquals(AaruyBolusOutcome.UNKNOWN, runBlocking { service.setBolus(info) })
+        verify(bolusInfoStorage).add(info)
+        runBlocking { verify(pumpSync).addBolusWithTempId(any(), argThat<PumpInsulin> { cU == 0.5 }, any(), any(), any(), any()) }
+        assertTrue("a later status 3 blocks the next bolus, not this", pump.bolusDone)
     }
 
     @Test

@@ -195,13 +195,15 @@ class AaruyService : MetroService() {
         aaruyPump.bolusStopped = false
         aaruyPump.bolusDelivered = 0.0
 
-        if (!sendBolusCommand(insulin, isSmb)) {
-            aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            // Make sure if anything is delivered (which is highly unlikely at this point) we get it. Not waited for: this bolus runs in the queue.
+        val start = sendBolusCommand(insulin, isSmb)
+        if (start != AaruyBolusStart.STARTED) {
+            aapsLogger.error(LTag.PUMPCOMM, "Bolus not reported by the pump: $start")
+            // The status and the history tell what the pump did. Not waited for: this bolus runs in the queue.
             scope.launch { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
+            // A status 3 that comes later sets this back, so no second bolus can start while the pump delivers.
             aaruyPump.bolusDone = true
             aaruyPump.bolusDelivered = 0.0
-            return AaruyBolusOutcome.NOT_STARTED
+            if (start == AaruyBolusStart.NOT_SENT) return AaruyBolusOutcome.NOT_STARTED
         }
 
         val bolusStart = dateUtil.now()
@@ -228,6 +230,8 @@ class AaruyService : MetroService() {
         } else {
             aapsLogger.error(LTag.PUMPCOMM, "Bolus with tempId ${detailedBolusInfo.timestamp} already exists")
         }
+        // The whole amount counts until the history gives the real one: the user must not bolus again.
+        if (start == AaruyBolusStart.NO_ANSWER) return AaruyBolusOutcome.UNKNOWN
 
         waitForBolusProgress()
 
@@ -259,12 +263,12 @@ class AaruyService : MetroService() {
         }
     }
 
-    private fun sendBolusCommand(insulin: Double, isSmb: Boolean = false): Boolean {
+    private fun sendBolusCommand(insulin: Double, isSmb: Boolean = false): AaruyBolusStart {
         return if (insulin > 0) {
             aaruyBle.setBolus(insulin, isSmb)
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "Bolus not set, insulin: $insulin")
-            false
+            AaruyBolusStart.NOT_SENT
         }
     }
 

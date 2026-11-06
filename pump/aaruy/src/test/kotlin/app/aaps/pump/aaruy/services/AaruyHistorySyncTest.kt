@@ -4,7 +4,9 @@ import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -57,6 +59,7 @@ class AaruyHistorySyncTest {
     private val rh = mock(ResourceHelper::class.java)
     private val tempBasalSync = mock(AaruyTempBasalSync::class.java)
     private val notificationManager = mock(NotificationManager::class.java)
+    private val bolusInfoStorage = mock(DetailedBolusInfoStorage::class.java)
     private val pump = AaruyPump(
         logger, rh, mock(Preferences::class.java), dateUtil, pumpSync,
         mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
@@ -71,7 +74,7 @@ class AaruyHistorySyncTest {
         pump.canSaveHistory = true
         ble = AaruyBLE(
             transport, logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java),
-            mock(Preferences::class.java), historyDao, dailyDao, mock(DetailedBolusInfoStorage::class.java), pumpSync, tempBasalSync,
+            mock(Preferences::class.java), historyDao, dailyDao, bolusInfoStorage, pumpSync, tempBasalSync,
             notificationManager, rh
         )
     }
@@ -151,6 +154,16 @@ class AaruyHistorySyncTest {
         }
         verify(notificationManager, timeout(5000)).post(eq(NotificationId.PUMP_SYNC_ERROR), any<String>(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
         assertEquals(0L, pump.lastHistoryTime)
+    }
+
+    /** The bolus info was found, but no record has its temporary id. The pump gave this bolus, so it must still be written, with its type. */
+    @Test
+    fun aBolusWithInfoButNoTemporaryRecordIsWrittenByPumpId() {
+        val start = now - 20 * minute
+        `when`(bolusInfoStorage.findDetailedBolusInfo(start, 3.0)).thenReturn(DetailedBolusInfo().apply { timestamp = start - 3000; insulin = 3.0; bolusType = BS.Type.SMB })
+        runBlocking { `when`(pumpSync.syncBolusWithTempId(any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(false) }
+        receive(LogItem(timestamp = start, type = 2, data = 3000, injectTime = 0, delayBolus = 0, reserved = 0))
+        runBlocking { verify(pumpSync, timeout(5000)).syncBolusWithPumpId(eq(start), any(), eq(BS.Type.SMB), eq(start), any(), any()) }
     }
 
     /** A bolus takes one step every 2 seconds, and no basal entry runs then, so this time is no gap. */

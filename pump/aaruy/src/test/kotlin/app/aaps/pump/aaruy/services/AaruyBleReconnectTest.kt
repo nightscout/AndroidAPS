@@ -132,6 +132,52 @@ class AaruyBleReconnectTest {
         transport.shutdown()
     }
 
+    /** The pump took the start, and the link was lost before its status came. The pump delivers all of it, so this must not read as "not started". */
+    @Test
+    fun aStartWhoseAnswerIsLostIsNotANotStartedBolus() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        val emulator = transport.emulator
+
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        transport.loseAnswerToParam = BOLUS_CONTROL
+        var start: AaruyBolusStart? = null
+        thread { start = ble.setBolus(3.0, false) }
+        waitFor("the driver stopped waiting") { start != null }
+
+        assertEquals(AaruyBolusStart.NO_ANSWER, start)
+        assertEquals("the pump runs the bolus", AaruyPumpEmulator.STATUS_BOLUS, emulator.runningStatus)
+        transport.shutdown()
+    }
+
+    private companion object {
+
+        const val BOLUS_CONTROL = 9
+    }
+
     /** A real pump answers a stop by going straight from status 3 to 1. That confirms the stop, and no link was lost. */
     @Test
     fun aStopThatGoesBackToBasalIsConfirmedAndIsNotALostLink() {

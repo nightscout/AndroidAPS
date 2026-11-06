@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -93,7 +92,6 @@ class AaruyPlugin(
     private val rxBus: RxBus,
     private val context: Context,
     private val aaruyPump: AaruyPump,
-    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val dateUtil: DateUtil,
     private val aaruyHistoryDatabase: AaruyHistoryDatabase,
@@ -247,8 +245,7 @@ class AaruyPlugin(
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
-        // Already limited by the command queue and PumpPluginConstraints.
-        detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+        // Already limited by the command queue and PumpPluginConstraints. The service stores the bolus info once the start was sent.
         val outcome = aaruyService?.setBolus(detailedBolusInfo) ?: AaruyBolusOutcome.NOT_STARTED
         val result = pumpEnactResultProvider()
         result.success = outcome == AaruyBolusOutcome.FINISHED

@@ -136,6 +136,51 @@ class ClientOnEmulatorTest {
         waitFor("status seen") { log.any { it.contains("runningStatus=1") } }
     }
 
+    /** The pump threads run only when the test drains this looper, so nothing is sent between the two calls. */
+    @Test
+    fun aStopWhileTheSettingIsOnTheWayKeepsTheStartFromGoingOut() {
+        log.clear()
+        util.setupAndStartBolus(5.0, 0.0, 0, false)
+        util.cancelBolus()
+        repeat(30) { drain() }
+        assertFalse("no bolus ran: $log", log.any { it.contains("runningStatus=3") })
+        assertEquals(AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
+    }
+
+    @Test
+    fun aStartTheDriverGaveUpOnIsNeverSent() {
+        log.clear()
+        util.setupAndStartBolus(5.0, 0.0, 0, false)
+        assertFalse("not sent yet", util.abandonBolusStart())
+        repeat(30) { drain() }
+        assertFalse("no bolus ran: $log", log.any { it.contains("runningStatus=3") })
+        assertEquals(AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
+    }
+
+    /** The pump answers a start only with a status. A start that went out may run with no answer seen. */
+    @Test
+    fun aStartThatWentOutIsReportedAsSent() {
+        util.setupAndStartBolus(0.5, 0.0, 0, false)
+        waitFor("bolus running") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BOLUS }
+        assertTrue(util.abandonBolusStart())
+    }
+
+    /** A command asked on the old link must not go first on the new one: the driver has given up on it. */
+    @Test
+    fun aCommandWaitingAtALinkLossIsNotSentAfterTheReconnect() {
+        util.setClosedMode(1)
+        waitFor("closed mode") { emulator.closedMode == 1 }
+        util.getCurStatus()
+        util.startTempBasal(1.5, 30)
+        transport.loseConnection()
+        waitFor("link lost") { logged("onBleStatusChanged(DISCONNECTED") }
+        log.clear()
+        util.bindDevice((RuntimeEnvironment.getApplication().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter.getRemoteDevice(AaruyEmulatorBleTransport.DEVICE_ADDRESS))
+        waitFor("connected again") { logged("onBleStatusChanged(CONNECTED") }
+        repeat(30) { drain() }
+        assertEquals("the old temp basal was not sent", AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
+    }
+
     @Test
     fun bolusAboveMaxIsRefusedByTheAar() {
         log.clear()

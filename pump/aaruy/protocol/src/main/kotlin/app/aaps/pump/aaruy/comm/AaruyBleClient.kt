@@ -49,7 +49,6 @@ class AaruyBleClient(
     private val link = PumpLink()
     private val scanner = AaruyScanner()
 
-    private var prepareStartBolus = false
     private var prepareStartBasal = false
     private var currentStatus: CurrentStatusPacket? = null
     private var needRestoreUnRunState = false
@@ -260,6 +259,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
     fun setupAndStartBolus(now: Double, delayed: Double, delayMinutes: Int, isSmb: Boolean) {
         val status = runningStatus
         isSmbType = isSmb
+        link.newBolus()
         val listener = link.listener
         when {
             status == 0                                                -> listener?.onRunBasalFirst(status)
@@ -272,33 +272,45 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 if (total > maxBolus) {
                     listener?.onBolusValueTooHigh(total, maxBolus)
                 } else if (status == 1 || status == 2) {
-                    prepareStartBolus = true
                     val packet = BolusSettingPacket().apply {
                         bolus = total.toThousandths()
                         bolusNow = now.toThousandths()
                         bolusDelayTime = delayMinutes.toShort()
                     }
-                    link.write(AaruyParamId.BOLUS_SETTING, packet.toBytes())
+                    link.writeBolusSetting(packet.toBytes())
                 }
             }
         }
     }
 
-    private fun startBolus() {
+    /** @return false when the start was not queued, so it can never be sent */
+    private fun startBolus(): Boolean {
         val listener = link.listener
         when (val status = runningStatus) {
             1, 2 -> {
                 val type: Byte = if (isSmbType) 2 else 0
                 isSmbType = false
-                link.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 1, type).toBytes(protocolVersion))
+                link.writeBolusStart(ControlPacket(AaruyPumpTime.now(), 1, type).toBytes(protocolVersion))
+                return true
             }
 
             3    -> listener?.onBolusIsRunning(status)
             else -> listener?.onRunBasalFirst(status ?: UNKNOWN_STATUS)
         }
+        return false
     }
 
+    /**
+     * The driver stopped waiting for the pump to report the bolus. A start that is still waiting here is never sent.
+     * The pump answers a start only with a status, so a start that went to the radio may run with no answer seen.
+     *
+     * @return true when the start went to the radio and the pump may run the bolus
+     */
+    fun abandonBolusStart(): Boolean = link.abandonBolusStart()
+
     fun cancelBolus() {
+        // A stop that goes out before the start stops nothing, and then the whole bolus runs.
+        link.abandonBolusStart()
         link.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 0).toBytes(protocolVersion))
     }
 
@@ -384,7 +396,11 @@ fun setOnBleListener(listener: AaruyBleListener) {
         return runningStatus
     }
 
-    private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0))
+    /** @param bolusId not 0 for the start of a bolus: which bolus it starts */
+    private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0), val bolusId: Int = 0)
+
+    /** NONE: no bolus asked. PENDING: the setting is sent, the start is not yet at the radio. SENT: the start went to the radio. DROPPED: the start must never be sent. */
+    private enum class BolusStart { NONE, PENDING, SENT, DROPPED }
 
     /**
      * The connection and the command queue. Runs the steps the vendor library got from its BLE library:
@@ -411,6 +427,12 @@ fun setOnBleListener(listener: AaruyBleListener) {
         private val queue = ConcurrentLinkedQueue<Request>()
         private val inFlight = ConcurrentLinkedQueue<Short>()
         private var status = BleStatus.DISCONNECTED
+
+        /** Changed only under [sendLock], so the start cannot go out while the driver gives up on it. */
+        private var bolusStart = BolusStart.NONE
+
+        /** The bolus [bolusStart] is about. A start of an older bolus is never sent. */
+        private var bolusId = 0
 
         var listener: AaruyBleListener? = null
         var maxBolus = 0.0
@@ -485,8 +507,13 @@ fun setOnBleListener(listener: AaruyBleListener) {
             connecting = false
             servicesFound = false
             ready = false
-            writing = false
-            inFlight.clear()
+            synchronized(sendLock) {
+                writing = false
+                inFlight.clear()
+                // A command that waited here was asked on the old link, and the driver has given up on it. After a reconnect it would come too late.
+                queue.clear()
+                if (bolusStart == BolusStart.PENDING) bolusStart = BolusStart.DROPPED
+            }
             status = BleStatus.DISCONNECTED
             listener?.onBleStatusChanged(status)
         }
@@ -554,6 +581,41 @@ fun setOnBleListener(listener: AaruyBleListener) {
             sendNextIfIdle()
         }
 
+        fun writeBolusStart(data: ByteArray) {
+            if (!ready) return
+            synchronized(sendLock) { queue.add(Request(AaruyParamId.BOLUS_CONTROL, isRead = false, data = data, bolusId = bolusId)) }
+            sendNextIfIdle()
+        }
+
+        /** A new bolus: what the last one left behind is never sent. */
+        fun newBolus() = synchronized(sendLock) {
+            abandonBolusStart()
+            bolusId++
+            bolusStart = BolusStart.NONE
+        }
+
+        /** The start follows when the pump has taken the setting, see [onWriteDone]. */
+        fun writeBolusSetting(data: ByteArray) {
+            if (!ready) return
+            synchronized(sendLock) { bolusStart = BolusStart.PENDING }
+            write(AaruyParamId.BOLUS_SETTING, data)
+        }
+
+        fun abandonBolusStart(): Boolean = synchronized(sendLock) {
+            when (bolusStart) {
+                BolusStart.SENT    -> true
+
+                BolusStart.PENDING -> {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "bolus start dropped before it was sent")
+                    bolusStart = BolusStart.DROPPED
+                    queue.removeIf { it.bolusId != 0 }
+                    false
+                }
+
+                else               -> false
+            }
+        }
+
         private fun sendNextIfIdle() {
             synchronized(sendLock) {
                 if (!writing) queue.poll()?.let { send(it) }
@@ -576,9 +638,13 @@ fun setOnBleListener(listener: AaruyBleListener) {
         fun readVersion() = transport.readFirmwareVersion()
 
         /** Writes come from the pump thread and from coroutines. The pump refuses a frame whose sequence is out of order. */
-        private fun send(request: Request) {
+        private fun send(first: Request) {
             synchronized(sendLock) {
-                sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
+                var request = first
+                // Taken from the queue just before the driver gave up on it.
+                while (request.bolusId != 0 && (request.bolusId != bolusId || bolusStart != BolusStart.PENDING)) request = queue.poll() ?: return
+                if (request.bolusId != 0) bolusStart = BolusStart.SENT
+                sequence =if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
                 val frame =
                     if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
                     else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
@@ -597,9 +663,10 @@ fun setOnBleListener(listener: AaruyBleListener) {
                         transport.adapter.removeBond(unbound)
                     }
                 }
-            } else if (paramId == AaruyParamId.BOLUS_SETTING && prepareStartBolus) {
-                prepareStartBolus = false
-                startBolus()
+            } else if (paramId == AaruyParamId.BOLUS_SETTING) {
+                synchronized(sendLock) {
+                    if (bolusStart == BolusStart.PENDING && !startBolus()) bolusStart = BolusStart.NONE
+                }
             }
             writing = false
             listener?.onRequestResult(true, paramId.unsigned())

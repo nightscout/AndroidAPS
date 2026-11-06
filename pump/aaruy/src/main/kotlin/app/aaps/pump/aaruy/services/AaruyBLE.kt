@@ -96,6 +96,7 @@ class AaruyBLE(
     private val BOLUS_STATE_EXTENDED = 1
     private val BOLUS_STATE_DONE = 2
     private val TEMP_BASAL_PARAM = 8
+    private val BOLUS_CONTROL_PARAM = 9
     private val HISTORY_BASAL = 0
     private val HISTORY_TEMP_BASAL = 1
     private val HISTORY_BOLUS = 2
@@ -356,6 +357,7 @@ class AaruyBLE(
                 transport.onPumpThread {
                     val message = when (scenario) {
                         "lose_answer_temp_basal" -> { transport.loseAnswerToParam = TEMP_BASAL_PARAM; null }
+                        "lose_answer_bolus"      -> { transport.loseAnswerToParam = BOLUS_CONTROL_PARAM; null }
                         "temp_basal_start"       -> transport.emulator.startTempBasalByItself(intent.getIntExtra("rate", 500), intent.getIntExtra("minutes", 30))
                         "temp_basal_end"         -> transport.emulator.endTempBasalByItself()
                         "stop"                   -> transport.emulator.stopByItself()
@@ -685,17 +687,22 @@ class AaruyBLE(
         return waitForAnswer { sendBasalsInfoOk }
     }
 
-    fun setBolus(insulin: Double, isSmb: Boolean = true): Boolean {
+    fun setBolus(insulin: Double, isSmb: Boolean = true): AaruyBolusStart {
         sendBolusOk = false
         val startBolusTime = dateUtil.now()
         aaBleUtil.setupAndStartBolus(insulin, 0.0, 0, isSmb)
         // A status that comes late must not report a failure while the pump delivers: the user could bolus again.
         val end = System.currentTimeMillis() + BOLUS_START_TIMEOUT_MS
         while (!sendBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(100)
-        if (sendBolusOk) {
-            aaruyPump.curBolusTime = startBolusTime
+        // Asked even after a status 3: the start must not go out later from the queue.
+        val startSent = aaBleUtil.abandonBolusStart()
+        val result = when {
+            sendBolusOk -> AaruyBolusStart.STARTED
+            startSent   -> AaruyBolusStart.NO_ANSWER
+            else        -> AaruyBolusStart.NOT_SENT
         }
-        return sendBolusOk
+        if (result != AaruyBolusStart.NOT_SENT) aaruyPump.curBolusTime = startBolusTime
+        return result
     }
 
     fun cancelBolus(): Boolean {
@@ -884,9 +891,16 @@ fun syncAndLoadBasicParam() {
                             pumpSerial = aaruyPump.pumpSN
                         )
                         if (!syncOk) {
-                            aapsLogger.warn(LTag.PUMPCOMM, "saveHistoryData: BOLUS_RECORD: Failed to sync bolus with tempId: ${detailedBolusInfo.timestamp}")
-                            // detailedInfo can be from another similar record. Reinsert
-                            detailedBolusInfoStorage.add(detailedBolusInfo)
+                            // No record with this temporary id, as when the user deleted it. The pump gave this bolus, so it is written all the same.
+                            aapsLogger.warn(LTag.PUMPCOMM, "saveHistoryData: BOLUS_RECORD: no record with tempId ${detailedBolusInfo.timestamp}, written by pump id")
+                            newRecord = pumpSync.syncBolusWithPumpId(
+                                timestamp = item.timestamp,
+                                amount = PumpInsulin(item.data / 1000.0),
+                                type = detailedBolusInfo.bolusType,
+                                pumpId = item.timestamp,
+                                pumpType = aaruyPump.pumpType(),
+                                pumpSerial = aaruyPump.pumpSN
+                            )
                         }
                         else {
                             aapsLogger.debug(
