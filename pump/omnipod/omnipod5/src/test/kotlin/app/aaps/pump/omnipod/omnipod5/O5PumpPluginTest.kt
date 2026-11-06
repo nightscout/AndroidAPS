@@ -1607,6 +1607,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         plugin.cancelTempBasal(false)
 
         verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+        verify(podStateManager, never()).activeTempBasalRate = null
     }
 
     @Test

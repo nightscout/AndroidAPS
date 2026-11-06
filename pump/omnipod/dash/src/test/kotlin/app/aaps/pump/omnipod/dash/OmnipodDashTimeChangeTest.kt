@@ -3,6 +3,7 @@ package app.aaps.pump.omnipod.dash
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
@@ -33,6 +34,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -41,6 +43,7 @@ import org.mockito.kotlin.whenever
 
 class OmnipodDashTimeChangeTest : TestBaseWithProfile() {
 
+    private val logger = mock<AAPSLogger>()
     private val state = mock<OmnipodDashPodStateManager>()
     private val manager = mock<OmnipodDashManager>()
     private val history = mock<DashHistory>()
@@ -68,7 +71,7 @@ class OmnipodDashTimeChangeTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() = runBlocking<Unit> {
         plugin = OmnipodDashPumpPlugin(
-            aapsLogger, rh, preferences, queue, manager, state, history, sync, rxBus,
+            logger, rh, preferences, queue, manager, state, history, sync, rxBus,
             aapsSchedulers, mock(), notificationManager, pumpEnactResultProvider, mock(), mock(), mock(), mock()
         )
         whenever(state.isPodRunning).thenReturn(true)
@@ -170,6 +173,42 @@ class OmnipodDashTimeChangeTest : TestBaseWithProfile() {
         assertThat(temp).isNull()
         verify(manager, never()).setTempBasal(any(), any(), any())
         assertThat(inProgress).isFalse()
+    }
+
+    @Test
+    fun `reported suspend counts the old rate then keeps the same zero inside and outside`() = runBlocking<Unit> {
+        var zeroAtResume: OmnipodDashPodStateManager.TempBasal? = null
+        var reportedAtResume: PumpSync.PumpState.TemporaryBasal? = null
+        whenever(manager.setBasalProgram(any(), any())).thenReturn(Observable.defer {
+            zeroAtResume = temp
+            reportedAtResume = expectedTemp
+            delivery = DeliveryStatus.BASAL_ACTIVE
+            Observable.empty()
+        })
+
+        val result = plugin.executeCustomCommand(CommandHandleTimeChange(false))
+
+        assertThat(result.success).isTrue()
+        val reported = requireNotNull(reportedAtResume)
+        val zero = OmnipodDashPodStateManager.TempBasal(reported.timestamp, 0.0, (reported.duration / 60000).toShort())
+        assertThat(zeroAtResume).isEqualTo(zero)
+        assertThat(reported.type).isEqualTo(PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+        val order = inOrder(state)
+        order.verify(state).updateBasalExpected(reported.timestamp)
+        order.verify(state).tempBasal = zero
+        assertThat(temp).isNull()
+        assertThat(expectedTemp).isNull()
+    }
+
+    @Test
+    fun `a nonzero suspend rate also updates the expected basal at the reported start`() = runBlocking<Unit> {
+        whenever(state.updateActiveCommand()).thenReturn(Maybe.empty())
+
+        plugin.setTempBasalAbsolute(1.0, 30, true, PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+
+        val reported = requireNotNull(expectedTemp)
+        verify(state).updateBasalExpected(reported.timestamp)
+        assertThat(temp).isEqualTo(OmnipodDashPodStateManager.TempBasal(reported.timestamp, 1.0, 30))
     }
 
     @Test

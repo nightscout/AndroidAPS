@@ -343,6 +343,9 @@ class O5PumpPlugin @Inject constructor(
             pumpType = PumpType.OMNIPOD_5,
             pumpSerial = pumpSerial
         )
+        podStateManager.activeTempBasalStartTime = now
+        podStateManager.activeTempBasalRate = 0.0
+        podStateManager.activeTempBasalDurationMinutes = PodConstants.MAX_POD_LIFETIME.toMinutes().toShort()
     }
 
     /**
@@ -731,9 +734,6 @@ class O5PumpPlugin @Inject constructor(
 
             O5PodStateManager.PendingDoseType.TEMP_BASAL_CANCEL  ->
                 if (podStateManager.deliveryStatus?.tempBasalActive() != true) {
-                    podStateManager.activeTempBasalStartTime = null
-                    podStateManager.activeTempBasalRate = null
-                    podStateManager.activeTempBasalDurationMinutes = null
                     syncTempBasalCancelled(pending.startedAt, pending.historyId ?: pending.startedAt)
                     markDoseSuccess(pending)
                     podStateManager.pendingDoseCommand = null
@@ -798,6 +798,9 @@ class O5PumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, "O5 temp basal cancelled while delivery is suspended - keeping the zero temp basal")
             return
         }
+        podStateManager.activeTempBasalStartTime = null
+        podStateManager.activeTempBasalRate = null
+        podStateManager.activeTempBasalDurationMinutes = null
         syncTempBasalStopped(timestamp, endPumpId)
     }
 
@@ -1421,9 +1424,6 @@ class O5PumpPlugin @Inject constructor(
             .build()
         bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
         history.markSent(historyId).andThen(history.markSuccess(historyId)).blockingAwait()
-        podStateManager.activeTempBasalStartTime = null
-        podStateManager.activeTempBasalRate = null
-        podStateManager.activeTempBasalDurationMinutes = null
         syncTempBasalCancelled(startedAt, historyId)
         notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
         podStateManager.pendingDoseCommand = null
@@ -1543,10 +1543,6 @@ class O5PumpPlugin @Inject constructor(
             bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
             podStateManager.deliverySuspended = true
             podStateManager.suspendAlertsEnabled = true
-            // Suspending stops any temp basal on the pod as well.
-            podStateManager.activeTempBasalStartTime = null
-            podStateManager.activeTempBasalRate = null
-            podStateManager.activeTempBasalDurationMinutes = null
             history.recordSuccess(OmnipodCommandType.SUSPEND_DELIVERY)
             runBlocking { syncZeroTempBasal(serialNumber()) }
             pumpEnactResultProvider.get().success(true).enacted(true)

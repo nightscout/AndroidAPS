@@ -1002,6 +1002,12 @@ class OmnipodDashPumpPlugin(
             pumpType = PumpType.OMNIPOD_DASH,
             pumpSerial = serialNumber()
         )
+        if (tbrType == PumpSync.TemporaryBasalType.PUMP_SUSPEND) {
+            podStateManager.updateBasalExpected(historyEntry.createdAt)
+            podStateManager.tempBasal = OmnipodDashPodStateManager.TempBasal(
+                historyEntry.createdAt, absoluteRate, durationInMinutes.toShort()
+            )
+        }
         aapsLogger.debug(LTag.PUMP, "pumpSyncTempBasal: $ret")
         return ret
     }
@@ -1471,7 +1477,8 @@ class OmnipodDashPumpPlugin(
         aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation ${historyEntry.commandType}")
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL -> {
-                if (confirmation.success) {
+                // Cancelling a temp basal does not resume delivery; keep the reported zero basal while suspended.
+                if (confirmation.success && !podStateManager.isSuspended) {
                     val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
                         historyEntry.pumpId(),
@@ -1533,6 +1540,8 @@ class OmnipodDashPumpPlugin(
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
+                    // The confirmed basal program resumes delivery, so clear the zero basal kept during suspension.
+                    podStateManager.tempBasal = null
                     notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
                     notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
                     notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
@@ -1572,7 +1581,6 @@ class OmnipodDashPumpPlugin(
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
-                } else {
                     podStateManager.tempBasal = null
                 }
             }

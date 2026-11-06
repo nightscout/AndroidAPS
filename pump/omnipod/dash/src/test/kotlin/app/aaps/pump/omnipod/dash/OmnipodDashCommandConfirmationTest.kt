@@ -98,6 +98,7 @@ class OmnipodDashCommandConfirmationTest {
         verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(eq(CREATED_AT), eq(HISTORY_ID), eq(PumpType.OMNIPOD_DASH), any(), any()) }
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CommandDisableSuspendAlerts>()) }
         verify(podStateManager).basalProgram = basalProgram
+        verify(podStateManager).tempBasal = null
         verify(notificationManager).dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
         verify(notificationManager).dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
     }
@@ -124,6 +125,26 @@ class OmnipodDashCommandConfirmationTest {
         verify(podStateManager).confirmTimeZone(sentZone)
         verify(podStateManager, never()).updateTimeZone()
         verify(podStateManager).timeChangeInProgress = false
+    }
+
+    @Test
+    fun `confirmed suspend retains the internal zero basal`() = runBlocking<Unit> {
+        givenHistoryEntry(OmnipodCommandType.SUSPEND_DELIVERY)
+
+        sut.handleCommandConfirmation(confirmation(success = true))
+
+        verify(podStateManager, never()).tempBasal = null
+    }
+
+    @Test
+    fun `cancel during suspension retains the internal zero basal`() = runBlocking<Unit> {
+        givenHistoryEntry(OmnipodCommandType.CANCEL_TEMPORARY_BASAL)
+        whenever(podStateManager.isSuspended).thenReturn(true)
+
+        sut.handleCommandConfirmation(confirmation(success = true))
+
+        verify(podStateManager, never()).tempBasal = null
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
     }
 
     @Test

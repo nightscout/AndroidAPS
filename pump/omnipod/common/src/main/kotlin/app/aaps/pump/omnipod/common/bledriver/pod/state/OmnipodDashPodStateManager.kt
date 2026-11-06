@@ -89,6 +89,9 @@ interface OmnipodDashPodStateManager {
     val lastBolus: LastBolus?
     var suspendAlertsEnabled: Boolean
 
+    /** Counts the current expected rate up to [now] before changing it. */
+    fun updateBasalExpected(now: Long)
+
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray
     fun commitEapAkaSequenceNumber()

@@ -827,16 +827,7 @@ class OmnipodDashPodStateManagerImpl(
             ).toInt().toShort()
         }
 
-        // Update basal expected delivery
-        podState.basalExpected = podState.basalExpected?.let {
-            integrateExpectedDelivery(
-                startTime = podState.lastUpdatedSystem,
-                endTime = now,
-                timeZoneOffset = podState.timeZoneOffset,
-                tempBasal = tempBasal,
-                basalProgram = basalProgram
-            )?.let { delta -> it + delta }
-        } ?: basalDelivered.takeIf { isActivationCompleted }
+        updateBasalExpected(now)
         
         // Update bolus pulses delivered (exclude basal corrections)
         podState.bolusPulsesDelivered = podState.bolusPulsesDelivered?.let {
@@ -866,6 +857,25 @@ class OmnipodDashPodStateManagerImpl(
         podState.lastUpdatedSystem = now
         podState.lastStatusResponseReceived = nowRealtime
         updateLastBolusFromResponse(bolusPulsesRemaining)
+    }
+
+    @Synchronized
+    override fun updateBasalExpected(now: Long) {
+        val start = podState.basalExpectedUpdatedAt ?: podState.lastUpdatedSystem
+        val end = maxOf(start, now)
+        if (end != now) {
+            logger.warn(LTag.PUMP, "Expected basal already counted to $end; requested update time was $now")
+        }
+        podState.basalExpected = podState.basalExpected?.let {
+            integrateExpectedDelivery(
+                startTime = start,
+                endTime = end,
+                timeZoneOffset = podState.timeZoneOffset,
+                tempBasal = tempBasal,
+                basalProgram = basalProgram
+            )?.let { delta -> it + delta }
+        } ?: basalDelivered.takeIf { isActivationCompleted }
+        podState.basalExpectedUpdatedAt = end
     }
 
     private inline fun logBasalTracking(block: () -> Unit) {
@@ -1080,6 +1090,7 @@ class OmnipodDashPodStateManagerImpl(
 
         var bolusPulsesDelivered: Short? = null,  // Cumulative count of bolus pulses for basal tracking
         var basalExpected: Double? = null,  // Initialized to actual on first drift calculation
+        var basalExpectedUpdatedAt: Long? = null, // Null in state saved before this field was added
         
         var lastBasalCorrectionTime: Long? = null,  // Timestamp of last basal correction attempt (for cooldown)
         @Transient var basalCorrectionInProgress: Boolean = false  // Transient flag: true while basal correction is delivering

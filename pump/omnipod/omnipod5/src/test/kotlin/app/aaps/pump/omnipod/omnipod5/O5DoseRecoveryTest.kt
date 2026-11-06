@@ -31,6 +31,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.core.data.pump.defs.PumpType
@@ -38,6 +39,7 @@ import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.InMemoryO5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.PersistedO5PodStateManager
+import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.nextBasalExpected
 import app.aaps.pump.omnipod.omnipod5.history.O5History
 import app.aaps.pump.omnipod.omnipod5.history.database.O5HistoryDatabase
 import app.aaps.pump.omnipod.omnipod5.keys.O5StringNonPreferenceKey
@@ -242,6 +244,26 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `reported suspend stores the same zero and expected basal stays unchanged`() = runBlocking<Unit> {
+        state.activationProgress = ActivationProgress.COMPLETED
+        state.basalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+        state.basalExpected = 2.0
+        respondToTimeCommands()
+
+        val result = plugin.executeCustomCommand(CommandSuspendDelivery())
+
+        assertThat(result.success).isTrue()
+        val start = requireNotNull(state.activeTempBasalStartTime)
+        val duration = requireNotNull(state.activeTempBasalDurationMinutes)
+        assertThat(state.activeTempBasalRate).isEqualTo(0.0)
+        assertThat(state.nextBasalExpected(start, start + 3_600_000L)).isEqualTo(state.basalExpected)
+        verify(sync).syncTemporaryBasalWithPumpId(
+            eq(start), argThat { cU == 0.0 }, eq(duration * 60_000L), eq(true),
+            eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(start), eq(PumpType.OMNIPOD_5), eq("12345")
+        )
+    }
+
+    @Test
     fun `a denied time update keeps the loop blocked for a retry`() = runBlocking<Unit> {
         prepareTimeChange()
         respondToTimeCommands()
@@ -252,6 +274,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
         assertThat(result.success).isFalse()
         assertThat(state.timeChangeInProgress).isTrue()
         assertThat(loopAllowed()).isFalse()
+        assertThat(state.activeTempBasalRate).isEqualTo(0.0)
     }
 
     @Test
