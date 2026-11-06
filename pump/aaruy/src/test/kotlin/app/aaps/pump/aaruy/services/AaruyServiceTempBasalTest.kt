@@ -88,6 +88,16 @@ class AaruyServiceTempBasalTest {
         verify(ble, never()).setTempBasal(anyDouble(), anyInt())
     }
 
+    /** The pump ended it during a lost link. The client sends nothing then, and every cancel of the loop failed after 5 s. */
+    @Test
+    fun aCancelWhenThePumpRunsNoTempBasalIsDone() {
+        for (state in listOf(AaruyPumpState.BASALRATE_RUNNING, AaruyPumpState.STOP_RUNNING)) {
+            pump.pumpState = state
+            assertTrue(state.name, runBlocking { service.cancelTempBasal() })
+        }
+        verify(ble, never()).cancelTempBasal()
+    }
+
     @Test
     fun noTempBasalDuringABolusOrAStop() {
         for (state in listOf(AaruyPumpState.LARGEDOSE_RUNNING, AaruyPumpState.STOP_RUNNING, AaruyPumpState.PAUSE_RUNNING, AaruyPumpState.FIRST_INIT)) {

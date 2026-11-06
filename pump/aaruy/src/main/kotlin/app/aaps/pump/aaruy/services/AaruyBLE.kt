@@ -183,6 +183,11 @@ class AaruyBLE(
     private fun startDetection() {
         val detectionRunnable = object : Runnable {
             override fun run() {
+                // Not scheduled again. The next connect starts it.
+                if (stopped) {
+                    detectionStarted = false
+                    return
+                }
                 // No answer, or the last page never came. Also the first read after pairing, or history stays off.
                 if (receivingHistory && isConnected && System.currentTimeMillis() - lastHistoryPageAt > HISTORY_PAGE_TIMEOUT_MS) {
                     aapsLogger.warn(LTag.PUMPCOMM, "History read stopped sending pages")
@@ -211,6 +216,10 @@ class AaruyBLE(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
+        if (stopped) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "no connect, the driver is off: $from")
+            return false
+        }
         if (emulatorTransport == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -298,6 +307,22 @@ class AaruyBLE(
         }
         isConnected = false
         SystemClock.sleep(2000)
+        // The unbind went out by now. A pump out of reach would connect again as soon as it is back, with no pump paired.
+        aaBleUtil.closeLink()
+    }
+
+    /** The plugin is off, as when the user chose another pump: this pump must not write into the database. */
+    @Volatile private var stopped = false
+
+    fun stop() {
+        aapsLogger.info(LTag.PUMP, "Aaruy driver stopped")
+        stopped = true
+        // Only after a connect: for users of other pumps this would start the pump thread for nothing.
+        if (detectionStarted) aaBleUtil.closeLink()
+    }
+
+    fun start() {
+        stopped = false
     }
 
     /** Pumps found so far are in [scannedDevices]. The emulator is always found. */
@@ -326,6 +351,8 @@ class AaruyBLE(
         preferences.put(AaruyStringKey.PumpBoundAddress, "")
         preferences.put(AaruyStringKey.MacAddress, device.address)
         preferences.put(AaruyStringKey.PumpName, device.name)
+        // A link that is still up goes to the old pump. The wizard would take it for the new one.
+        if (isConnected || isConnecting) aaBleUtil.closeLink()
         aaruyPump.canSaveHistory = false
         aaruyPump.lastHistoryTime = 0
         aaruyPump.lastDeliveryEnd = 0
@@ -396,7 +423,11 @@ class AaruyBLE(
         aaBleUtil.setOnBleListener(object : AaruyBleListener {
             override fun onBleStatusChanged(status: BleStatus) {
                 aapsLogger.debug(LTag.PUMPCOMM, "aaruy onBleStatusChanged status = $status")
-                if (status == BleStatus.CONNECTED) {
+                if (status == BleStatus.CONNECTED && (stopped || preferences.get(AaruyStringKey.MacAddress) == "")) {
+                    // Unpaired while the link came up, or the pump refused this phone: no pump of AAPS is on this link.
+                    aapsLogger.warn(LTag.PUMPCOMM, "A link with no paired pump is closed, stopped: $stopped")
+                    aaBleUtil.closeLink()
+                } else if (status == BleStatus.CONNECTED) {
                     awaitingHistory = true
                     isConnected = true
                     isConnecting = false
@@ -426,6 +457,8 @@ class AaruyBLE(
                 } else if(status == BleStatus.DISCONNECTED) {
                     // A stop with no answer on this link says nothing about how a bolus ended while the link was down.
                     aaruyPump.bolusStopRequested = false
+                    // The end of this bolus can only be seen in the log now, whatever the next status says.
+                    if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING && !aaruyPump.bolusDone) aaruyPump.bolusLinkLost = true
                     isConnected = false
                     isConnecting = false
                     receivingHistory = false
@@ -433,7 +466,7 @@ class AaruyBLE(
                     if (isUnbinding) {
                         rxBus.send(EventAaruyDeviceChange())
                     }
-                    if (preferences.get(AaruyStringKey.MacAddress) != "") {
+                    if (!stopped && preferences.get(AaruyStringKey.MacAddress) != "") {
                         connect("retrying connection", preferences.get(AaruyStringKey.MacAddress))
                     }
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
@@ -510,6 +543,16 @@ class AaruyBLE(
                 // Screens that show what the pump can do wait for this.
                 if (firstStatus) rxBus.send(EventInitializationChanged())
                 aaruyPump.handleBasalStatusUpdate(0.0)
+
+                // Before the branches below: some of them take any end of a bolus as one that was seen, with an old amount.
+                if (aaruyPump.bolusLinkLost) {
+                    // Still running: its end comes live, with the amount.
+                    if (statusInfo.runningStatus == 3) aaruyPump.bolusLinkLost = false
+                    else if (!aaruyPump.bolusDone) {
+                        aaruyPump.bolusLinkLost = false
+                        aaruyPump.handleBolusEndNotSeen()
+                    }
+                }
 
                 when(statusInfo.runningStatus) {
                     0-> {       // Not running
@@ -621,6 +664,8 @@ class AaruyBLE(
 
             override fun onUnbindClearInfo() {
                 aapsLogger.debug(LTag.PUMPCOMM, "onUnbindClearInfo")
+                // The pump refused this phone. Without a word the pairing would just stop, and the wizard would wait.
+                notificationManager.post(NotificationId.DEVICE_NOT_PAIRED, rh.gs(R.string.aaruy_pump_bound_elsewhere))
                 preferences.put(AaruyStringKey.PumpBoundAddress, "")
                 preferences.put(AaruyStringKey.MacAddress, "")
                 preferences.put(AaruyStringKey.PumpName, "")
@@ -703,9 +748,8 @@ class AaruyBLE(
         aaBleUtil.cancelBolus()
         val end = System.currentTimeMillis() + BOLUS_STOP_TIMEOUT_MS
         while (!cancelBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(20)
-        if (cancelBolusOk) {
-            aaBleUtil.continueInject()
-        }
+        // No CONTINUE after it. Seen on a real pump: it goes back to basal or the temp basal by itself. CONTINUE would
+        // restart a pump that a blocked motor or an empty reservoir had stopped while the stop was on its way.
         return cancelBolusOk
     }
 

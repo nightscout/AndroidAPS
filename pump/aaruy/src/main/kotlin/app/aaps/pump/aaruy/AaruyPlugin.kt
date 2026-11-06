@@ -139,11 +139,14 @@ class AaruyPlugin(
         )
             .onEach { if (isConfigured()) commandQueue.readStatus(rh.gs(R.string.param_refresh)) }
             .launchIn(newScope)
+        aaruyBle.start()
         aaruyBle.startEmulatorIfActive()
         changePump() // load device name
     }
 
     override suspend fun onStop() {
+        // Another pump is chosen: this one must not connect or write into the database any more.
+        aaruyBle.stop()
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)

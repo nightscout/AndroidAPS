@@ -27,6 +27,7 @@ import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
+import app.aaps.pump.aaruy.keys.AaruyStringKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -210,6 +211,88 @@ class AaruyBleReconnectTest {
         val (pump, transport) = connectedWithHistory(entries = 15, saveHistory = false, losePage = 1)
         waitFor("history on") { pump.canSaveHistory }
         assertTrue(pump.lastHistoryTime > 0)
+        transport.shutdown()
+    }
+
+    /**
+     * The link was lost during the bolus, and a blocked motor stopped the pump meanwhile. The first status after the reconnect
+     * is no end that was seen: the driver knew only the amount from before the loss, and the user would bolus the rest again.
+     */
+    @Test
+    fun aBolusThatEndedInAStopDuringALostLinkIsNotSeenToEnd() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        val emulator = transport.emulator
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        pump.bolusDone = false
+        thread { ble.setBolus(3.0, false) }
+        waitFor("the driver saw the bolus") { pump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING }
+        transport.outOfRange = true
+        transport.loseConnection()
+        waitFor("link lost") { !ble.isConnected }
+        transport.onPumpThread { emulator.blockMotor() }
+        waitFor("the pump stopped the bolus") { emulator.runningStatus != AaruyPumpEmulator.STATUS_BOLUS }
+
+        transport.outOfRange = false
+        ble.connect("back in range", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("bolus over") { pump.bolusDone }
+        assertTrue("the end was not seen", pump.bolusEndNotSeen)
+        transport.shutdown()
+    }
+
+    /** Unpaired while out of reach. Back in reach, the pump must not connect: AAPS would use it with no pump paired. */
+    @Test
+    fun aPumpUnpairedOutOfReachDoesNotConnectAgain() {
+        val preferences = preferencesWithDefaults()
+        `when`(preferences.get(AaruyStringKey.MacAddress)).thenReturn(AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        transport.outOfRange = true
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("connecting") { pump.connectionState == ConnectionState.CONNECTING }
+
+        `when`(preferences.get(AaruyStringKey.MacAddress)).thenReturn("")
+        thread { ble.unbindDevice() }.join()
+        transport.outOfRange = false
+        repeat(60) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(50)
+        }
+        assertTrue("no link: ${pump.connectionState}", pump.connectionState != ConnectionState.CONNECTED)
         transport.shutdown()
     }
 

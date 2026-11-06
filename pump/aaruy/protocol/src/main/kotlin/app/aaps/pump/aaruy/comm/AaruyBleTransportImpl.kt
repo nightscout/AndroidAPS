@@ -14,6 +14,8 @@ import android.bluetooth.BluetoothStatusCodes
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -57,6 +59,19 @@ class AaruyBleTransportImpl(
     private val operations = ArrayDeque<Operation>()
     private var current: Operation? = null
 
+    /**
+     * One answer that never comes would hold every later command, while the link looks up. Dropping the link ends it: the
+     * client connects again. Lazy, as this class exists also for users of other pumps.
+     */
+    private val timeouts by lazy { Handler(Looper.getMainLooper()) }
+    private val operationTimeout = Runnable { onOperationTimeout() }
+
+    private fun onOperationTimeout() {
+        if (synchronized(operations) { current == null }) return
+        aapsLogger.error(LTag.PUMPBTCOMM, "GATT operation got no answer in $OPERATION_TIMEOUT_MS ms, the link is dropped")
+        bluetoothGatt?.disconnect()
+    }
+
     private fun enqueue(operation: Operation) {
         synchronized(operations) {
             operations.addLast(operation)
@@ -73,12 +88,16 @@ class AaruyBleTransportImpl(
                 aapsLogger.error(LTag.PUMPBTCOMM, "GATT operation could not start")
                 current = null
                 if (next.isWrite) extras?.onWriteFailed()
+            } else {
+                timeouts.removeCallbacks(operationTimeout)
+                timeouts.postDelayed(operationTimeout, OPERATION_TIMEOUT_MS)
             }
         }
     }
 
     private fun finishCurrent() {
         synchronized(operations) {
+            timeouts.removeCallbacks(operationTimeout)
             current = null
             startNext()
         }
@@ -87,6 +106,7 @@ class AaruyBleTransportImpl(
     private fun failAllOperations() {
         val failedWrites: Int
         synchronized(operations) {
+            timeouts.removeCallbacks(operationTimeout)
             failedWrites = operations.count { it.isWrite } + if (current?.isWrite == true) 1 else 0
             operations.clear()
             current = null
@@ -278,6 +298,9 @@ class AaruyBleTransportImpl(
     private companion object {
 
         const val DEFAULT_MTU = 23
+
+        /** Seen on a real pump: a write is answered in some ms, a read of the firmware in about 100 ms. */
+        const val OPERATION_TIMEOUT_MS = 5_000L
         val SERVICE_PUMP: UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
         val CHARACTERISTIC_WRITE: UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
         val CHARACTERISTIC_NOTIFY: UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")

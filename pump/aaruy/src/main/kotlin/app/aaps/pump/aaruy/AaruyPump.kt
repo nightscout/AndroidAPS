@@ -41,6 +41,7 @@ import java.util.EnumSet
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -62,6 +63,9 @@ class AaruyPump(
         private const val BASAL_STEP = 0.025
         private const val BOLUS_PRECISION_UNITS = 0.025
         private const val SECONDS_PER_HALF_HOUR = 1800
+
+        /** As the protocol rounds: 0.1 * 1000 is 99.99999 in floating point. */
+        private const val ROUNDING = 0.000001
     }
 
     // Connection state flow
@@ -232,7 +236,8 @@ class AaruyPump(
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped
     var bolusDone = true // Bolus completed or stopped on pump, initialize as true as to don't show bolus on init
-    var bolusEndNotSeen = false // The bolus ended while the link was lost, see handleBolusEndNotSeen
+    @Volatile var bolusEndNotSeen = false // The bolus ended while the link was lost, see handleBolusEndNotSeen
+    @Volatile var bolusLinkLost = false // The link was lost while this bolus ran. The first status of the new link is no answer to anything.
     var bolusStopRequested = false // A stop was sent on this link, so the pump leaving the bolus state is the answer to it
     var bolusDelivered = 0.0 // What the pump reported for the running bolus. Not from BolusProgressData: its state can be cleared by the queue.
 
@@ -667,22 +672,26 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         }
     }
 
+    /**
+     * Compared as the pump holds them: it keeps the limits in thousandths and the low reservoir alarm in whole units.
+     * Otherwise a value like 15.5 U never matches what the pump answers, and the settings are written again and again.
+     */
     fun syncPrefParam(): Boolean {
         var isSame = true
 
-        val maxBolusLocal = preferences.get(AaruyDoublePreferenceKey.MaxBolus)
+        val maxBolusLocal = floor(preferences.get(AaruyDoublePreferenceKey.MaxBolus) * 1000 + ROUNDING) / 1000
         if (maxBolus != maxBolusLocal) {
             isSame = false
             maxBolus = maxBolusLocal
         }
         aapsLogger.debug(LTag.PUMP, "syncPrefParam maxBolus is $maxBolus, maxBolusLocal is $maxBolusLocal")
-        val maxBasalLocal = preferences.get(AaruyDoublePreferenceKey.MaxBasal)
+        val maxBasalLocal = floor(preferences.get(AaruyDoublePreferenceKey.MaxBasal) * 1000 + ROUNDING) / 1000
         if (maxBasal != maxBasalLocal) {
             isSame = false
             maxBasal = maxBasalLocal
         }
         aapsLogger.debug(LTag.PUMP, "syncPrefParam maxBasal is $maxBasal, maxBasalLocal is $maxBasalLocal")
-        val lowAlertLocal = preferences.get(AaruyDoublePreferenceKey.LowReservoir)
+        val lowAlertLocal = floor(preferences.get(AaruyDoublePreferenceKey.LowReservoir) + ROUNDING)
         if (lowAlert != lowAlertLocal) {
             isSame = false
             lowAlert = lowAlertLocal

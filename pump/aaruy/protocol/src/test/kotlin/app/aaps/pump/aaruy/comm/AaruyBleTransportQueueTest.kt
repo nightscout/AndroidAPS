@@ -15,8 +15,11 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
+import android.os.Looper
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import java.time.Duration
 import java.util.UUID
 
 /** Android refuses a GATT operation while another is pending. Here `BluetoothGatt` is a mock, so the test decides when an operation ends. */
@@ -112,6 +115,22 @@ class AaruyBleTransportQueueTest {
 
         transport.gatt.writeCharacteristic(second)
         verify(gatt).writeCharacteristic(write, second, noResponse)
+    }
+
+    /** One answer that never came held every later command while the link looked up. */
+    @Test
+    fun aWriteWithNoAnswerDropsTheLink() {
+        transport.gatt.writeCharacteristic(first)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(6))
+        verify(gatt).disconnect()
+    }
+
+    @Test
+    fun aWriteThatIsAnsweredDropsNothing() {
+        transport.gatt.writeCharacteristic(first)
+        callback.onCharacteristicWrite(gatt, write, BluetoothGatt.GATT_SUCCESS)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(6))
+        verify(gatt, never()).disconnect()
     }
 
     @Test

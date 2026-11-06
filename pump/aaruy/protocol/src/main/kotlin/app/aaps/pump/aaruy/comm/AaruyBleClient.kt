@@ -374,6 +374,9 @@ fun setOnBleListener(listener: AaruyBleListener) {
         link.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 0).toBytes())
     }
 
+    /** Ends the link and the tries to make one, for an unpaired pump or a plugin that is off. */
+    fun closeLink() = link.close()
+
     /** As in the vendor library, this does not drop the link. It only made a request and never sent it. */
     fun disconnectDevice() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnectDevice: the link stays up")
@@ -435,11 +438,15 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         fun connectDevice(address: String) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "connectDevice status=$status")
-            this.address = address
             if (status == BleStatus.CONNECTED) {
-                listener?.onBleStatusChanged(status)
-                return
+                if (address == this.address) {
+                    listener?.onBleStatusChanged(status)
+                    return
+                }
+                // A link to another pump is no link to this one.
+                closeNow()
             }
+            this.address = address
             if (connecting) return
             connecting = true
             events.removeCallbacks(connectTimeout)
@@ -489,6 +496,33 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         fun onAdapterOff() {
             events.post { if (status == BleStatus.CONNECTED || connecting) onDisconnected() }
+        }
+
+        /** Ends the link and every try to make one. Nothing connects again until the driver asks. */
+        fun close() {
+            events.post { closeNow() }
+        }
+
+        private fun closeNow() {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "close link, status=$status connecting=$connecting")
+            val wasUp = status != BleStatus.DISCONNECTED || connecting
+            // Also the retries and the delayed CONNECTED, which are posted here.
+            events.removeCallbacksAndMessages(null)
+            // A loss of the link reported after this must not start a retry.
+            retriesLeft = 0
+            connecting = false
+            servicesFound = false
+            ready = false
+            synchronized(sendLock) {
+                writing = false
+                inFlight.clear()
+                queue.clear()
+                if (bolusStart == BolusStart.PENDING) bolusStart = BolusStart.DROPPED
+            }
+            transport.gatt.disconnect()
+            transport.gatt.close()
+            status = BleStatus.DISCONNECTED
+            if (wasUp) listener?.onBleStatusChanged(status)
         }
 
         private fun onDisconnected() {
@@ -542,10 +576,8 @@ fun setOnBleListener(listener: AaruyBleListener) {
             status = BleStatus.CONNECTED
             ready = true
             sendReportDevice()
-            CoroutineScope(Dispatchers.IO).launch {
-                delay(500L)
-                listener?.onBleStatusChanged(status)
-            }
+            // On this thread, so it comes before or after a loss of the link, never over it. A link lost in these 500 ms is not reported as up.
+            events.postDelayed({ if (status == BleStatus.CONNECTED && ready) listener?.onBleStatusChanged(status) }, CONNECTED_DELAY_MS)
         }
 
         override fun onCharacteristicChanged(data: ByteArray) {
@@ -671,6 +703,8 @@ fun setOnBleListener(listener: AaruyBleListener) {
         private fun onWriteFailed(paramId: Short) {
             writing = false
             listener?.onRequestResult(false, paramId.unsigned())
+            // The commands behind it are still wanted now, not at the next command, when the driver has given up on them.
+            queue.poll()?.let { send(it) }
         }
 
         private fun handleFrame(frame: ByteArray) {
@@ -772,6 +806,9 @@ fun setOnBleListener(listener: AaruyBleListener) {
         private const val CONNECT_RETRY_DELAY_MS = 1_000L
         private const val DISCOVERY_DELAY_MS = 300L
         private const val DISCOVERY_DELAY_BONDED_MS = 1_600L
+
+        /** As in the vendor library: the answers to the first frames come before the driver hears of the link. */
+        private const val CONNECTED_DELAY_MS = 500L
         private const val REQUESTED_MTU = 517
         private const val DEVICE_NAME = "aaruy"
         private const val DEFAULT_PIN = "210101"

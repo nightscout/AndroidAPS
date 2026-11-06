@@ -191,6 +191,7 @@ class AaruyService : MetroService() {
         val isSmb = detailedBolusInfo.bolusType == BS.Type.SMB
         aaruyPump.bolusDone = false
         aaruyPump.bolusEndNotSeen = false
+        aaruyPump.bolusLinkLost = false
         aaruyPump.bolusStopRequested = false
         aaruyPump.bolusStopped = false
         aaruyPump.bolusDelivered = 0.0
@@ -235,7 +236,8 @@ class AaruyService : MetroService() {
 
         waitForBolusProgress()
 
-        if (aaruyPump.bolusStopped && aaruyPump.bolusDelivered == 0.0) {
+        // A bolus whose end was not seen may have given everything: its record keeps the amount until the log has the real one.
+        if (aaruyPump.bolusStopped && aaruyPump.bolusDelivered == 0.0 && !aaruyPump.bolusEndNotSeen) {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
             val syncOk = pumpSync.syncBolusWithTempId(
                 timestamp = bolusStart,
@@ -255,8 +257,10 @@ class AaruyService : MetroService() {
         }
 
         return when {
+            // First: a stop sent just after a reconnect took the first status of the new link as its answer.
+            aaruyPump.bolusEndNotSeen                             -> AaruyBolusOutcome.UNKNOWN
             aaruyPump.bolusStopped                                -> AaruyBolusOutcome.FINISHED
-            !aaruyPump.bolusDone || aaruyPump.bolusEndNotSeen     -> AaruyBolusOutcome.UNKNOWN
+            !aaruyPump.bolusDone                                  -> AaruyBolusOutcome.UNKNOWN
             // Seen on a real pump with a blocked line: "done" after 0.55 U of 3 U. Half a step leaves room for rounding.
             aaruyPump.bolusDelivered < insulin - aaruyPump.bolusStepUnits / 2 -> AaruyBolusOutcome.CUT_SHORT
             else                                                  -> AaruyBolusOutcome.FINISHED
@@ -360,7 +364,11 @@ class AaruyService : MetroService() {
     suspend fun cancelTempBasal(): Boolean {
         if (!isConnected) return false
 
-        val result = aaruyBle.cancelTempBasal()
+        // The pump ended it already, as during a lost link. Its record waits for the log, which has the real end: the
+        // client would send nothing, and each cancel of the loop would fail until then.
+        val noTempBasalOnPump = aaruyPump.pumpState == AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpState.isSuspendedByPump()
+        if (noTempBasalOnPump) aaruyBle.waitForHistoryAfterReconnect()
+        val result = noTempBasalOnPump || aaruyBle.cancelTempBasal()
 
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         aaruyPump.fromTemporaryBasal(tbr)
