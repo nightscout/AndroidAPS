@@ -74,7 +74,7 @@ class AaruyService : MetroService() {
             isConnecting = connectionState == ConnectionState.CONNECTING
             handleConnectionStateChange(connectionState)
         }
-        aaruyPump.pumpWarningFlow.collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { pumpWarning ->
+        aaruyPump.pumpWarnings.collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { pumpWarning ->
             notifyPumpWarning(pumpWarning)
         }
     }

@@ -15,6 +15,7 @@ import android.os.Handler
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -564,7 +565,7 @@ class AaruyBLE(
                 aaruyPump.reservoir = statusInfo.remainAmount.toDouble()
                 if (!aaruyPump.alreadyPushBack && statusInfo.remainAmount == 0) {
                     aaruyPump.alreadyPushBack = true
-                    aaruyPump.pumpWarning = AlarmState.PUMP_ZERO_RESERVOIR
+                    aaruyPump.warn(AlarmState.PUMP_ZERO_RESERVOIR)
                     replaceDevice()
                 }
             }
@@ -592,17 +593,15 @@ class AaruyBLE(
                 // High byte 0 is the answer to a motor command. The wizard reads it from errCode, nothing else needs it.
                 when(error) {
                     0x80->{     // An error answer to a command. A refused history request is asked again when no page comes.
+                        // Each answer is new: the command it refuses was sent again.
+                        val alarmState = AlarmState.fromInt(tmpErrCode)
+                        if (alarmState != AlarmState.NONE) aaruyPump.warn(alarmState)
+                    }
+                    0x81->{     // An alarm. Seen on a real pump: a blocked motor repeats it until it is confirmed.
                         val alarmState = AlarmState.fromInt(tmpErrCode)
                         if (alarmState != AlarmState.NONE) {
-                            aaruyPump.pumpWarning = alarmState
-                        }
-                    }
-                    0x81->{     // An alarm
-                        val alarmState = AlarmState.fromInt(tmpErrCode)
-                        if (!aaruyPump.activeAlarms.contains(alarmState) && alarmState != AlarmState.NONE) {
-                            if(AlarmState.isHighAlarm(alarmState) || AlarmState.isLowAlarm(alarmState))
-                                aaruyPump.addAlarm(alarmState)
-                            aaruyPump.pumpWarning = alarmState
+                            if (AlarmState.isHighAlarm(alarmState) || AlarmState.isLowAlarm(alarmState)) aaruyPump.addAlarm(alarmState)
+                            aaruyPump.warnOnce(alarmState)
                         }
                         if (aaruyPump.canSaveHistory)
                             requestHistoryData(aaruyPump.lastHistoryTime)
@@ -983,7 +982,9 @@ fun syncAndLoadBasicParam() {
                 // A newer one was announced when it came. Only one from the time without a link is new.
                 if (dateUtil.now() - item.timestamp < ALARM_SEEN_LIVE_MS) return
                 val alarm = AlarmState.fromHistory(item.data.toInt())
-                if (alarm != AlarmState.NONE) pumpSync.insertAnnouncement(aaruyPump.alarmStateToString(alarm), item.timestamp, aaruyPump.pumpType(), aaruyPump.pumpSN)
+                // At the time of the alarm, and once: a read brings its last entry again, and a read with a hole is asked again.
+                if (alarm != AlarmState.NONE)
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(item.timestamp, TE.Type.ANNOUNCEMENT, aaruyPump.alarmStateToString(alarm), item.timestamp, aaruyPump.pumpType(), aaruyPump.pumpSN)
             }
         }
     }

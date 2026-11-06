@@ -34,7 +34,9 @@ import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.Collections
 import java.util.EnumSet
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -106,14 +108,21 @@ class AaruyPump(
     private val _activeAlarmsFlow = MutableStateFlow<Set<AlarmState>>(emptySet())
     val activeAlarmsFlow: StateFlow<Set<AlarmState>> = _activeAlarmsFlow
 
-    // New pump warnings
-    private val _pumpWarning = MutableStateFlow(AlarmState.NONE)
-    val pumpWarningFlow: StateFlow<AlarmState> = _pumpWarning
-    var pumpWarning: AlarmState
-        get() = _pumpWarning.value
-        set(value) {
-            _pumpWarning.value = value
-        }
+    /** One event for each warning. A state would drop the same alarm when it comes a second time. */
+    private val _pumpWarnings = MutableSharedFlow<AlarmState>(extraBufferCapacity = 16)
+    val pumpWarnings: SharedFlow<AlarmState> = _pumpWarnings
+
+    /** In memory only: after a restart an alarm the pump still repeats is announced again, as AAPS no longer shows it. */
+    private val announcedAlarms: MutableSet<AlarmState> = Collections.synchronizedSet(EnumSet.noneOf(AlarmState::class.java))
+
+    fun warn(alarm: AlarmState) {
+        _pumpWarnings.tryEmit(alarm)
+    }
+
+    /** For an alarm the pump repeats until it is confirmed. */
+    fun warnOnce(alarm: AlarmState) {
+        if (announcedAlarms.add(alarm)) warn(alarm)
+    }
 
     private val _lastBasalRate = MutableStateFlow(0.0)
     val lastBasalRateFlow: StateFlow<Double> = _lastBasalRate
@@ -356,8 +365,10 @@ class AaruyPump(
         saveActiveAlarms()
     }
 
+    /** The alarms are confirmed on the pump. If one comes again, it is a new one. */
     fun clearAlarmState() {
         activeAlarms.clear()
+        announcedAlarms.clear()
         saveActiveAlarms()
     }
 

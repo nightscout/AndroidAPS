@@ -85,9 +85,8 @@ class AaruyOverviewViewModel(
         aaruyPump.lastBolusTimeFlow,
         aaruyPump.lastBolusAmountFlow,
         aaruyPump.lastConnectionFlow,
-        aaruyPump.pumpWarningFlow,
         aaruyPump.activeAlarmsFlow
-    ) { _, _, _, _, _ -> }
+    ) { _, _, _, _ -> }
 
     val uiState: StateFlow<PumpOverviewUiState> = combine(
         pumpFlow,

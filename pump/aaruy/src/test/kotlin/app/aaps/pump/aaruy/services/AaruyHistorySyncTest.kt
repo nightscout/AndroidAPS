@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -53,7 +54,7 @@ class AaruyHistorySyncTest {
     private val minute = 60_000L
     private val logger = mock(AAPSLogger::class.java)
     private val dateUtil = mock(DateUtil::class.java)
-    private val pumpSync = mock(PumpSync::class.java) { invocation -> if (invocation.method.name.startsWith("sync")) true else null }
+    private val pumpSync = mock(PumpSync::class.java) { invocation -> if (invocation.method.name.startsWith("sync") || invocation.method.name.startsWith("insertTherapyEvent")) true else null }
     private val historyDao = mock(HistoryUnitInfoDao::class.java)
     private val dailyDao = mock(HistoryDailyUnitInfoDao::class.java)
     private val rh = mock(ResourceHelper::class.java)
@@ -209,18 +210,24 @@ class AaruyHistorySyncTest {
         runBlocking { verify(tempBasalSync, timeout(5000)).onHistoryDelivery(start, start + 40_000) }
     }
 
-    /** Seen on a real pump: the history keeps only the low byte, a blocked motor (0x8105) is 5. The full code was read and dropped it. */
+    /**
+     * Seen on a real pump: the history keeps only the low byte, a blocked motor (0x8105) is 5. The full code was read and dropped it.
+     * It is written at the time of the alarm, by a call that writes nothing when that record exists: the next read brings the entry again.
+     */
     @Test
-    fun anOldAlarmIsRecordedWithThePumpTime() {
+    fun anOldAlarmIsRecordedOnceAtTheTimeOfTheAlarm() {
         receive(LogItem(timestamp = now - 30 * minute, type = 3, data = 5, injectTime = 0, delayBolus = 0, reserved = 0))
-        runBlocking { verify(pumpSync, timeout(5000)).insertAnnouncement(eq("alarm"), eq(now - 30 * minute), any(), any()) }
+        runBlocking {
+            verify(pumpSync, timeout(5000)).insertTherapyEventIfNewWithTimestamp(eq(now - 30 * minute), eq(TE.Type.ANNOUNCEMENT), eq("alarm"), eq(now - 30 * minute), any(), any())
+            verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any())
+        }
     }
 
     @Test
     fun anAlarmJustSeenLiveIsNotRecordedAgain() {
         receive(LogItem(timestamp = now - 10_000, type = 3, data = 5, injectTime = 0, delayBolus = 0, reserved = 0))
         Thread.sleep(300)
-        runBlocking { verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any()) }
+        runBlocking { verify(pumpSync, never()).insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any()) }
     }
 
     /** AAPS never starts one, so something else did. The status comes again and again while it runs. */
