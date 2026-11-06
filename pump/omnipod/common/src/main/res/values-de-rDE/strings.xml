@@ -113,6 +113,10 @@
     <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulinabgabe gestoppt! Tausche jetzt den Pod.</string>
     <string name="omnipod_common_pdm_notification_header_pod_expired">Pod ist abgelaufen</string>
     <string name="omnipod_common_pdm_notification_text_pod_expired">Insulin Abgabe gestoppt. Tausche den Pod jetzt.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Verstopfung erkannt</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulin Abgabe gestoppt. Tausche den Pod jetzt. Prüfe Deinen Blutzucker</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod Fehler</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulin Abgabe gestoppt. Tausche den Pod jetzt.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod läuft in Kürze ab</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod läuft in Kürze ab</string>
