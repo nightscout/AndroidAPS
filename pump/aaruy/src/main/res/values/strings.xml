@@ -67,6 +67,7 @@
     <string name="actions_reservoir_prime_before">Put a fully charged battery and a reservoir filled with insulin into the pump.</string>
     <string name="actions_reservoir_prime_comment">Press Prime until droplets come out of the needle.</string>
     <string name="actions_reservoir_prime_comment_note">The pump must be disconnected from your body during priming.</string>
+    <string name="aaruy_motor_still_running">The motor can still run for a while. Wait until it is quiet, then go on.</string>
     <string name="actions_reservoir_prime_cannula_before">Connect the infusion set to your body.</string>
     <string name="actions_reservoir_prime_cannula">Choose the cannula length, then press Fill cannula. Basal starts after that.</string>
     <string name="actions_reservoir_prime_cannula_note">Press Skip only if you did not replace the cannula.</string>

@@ -66,6 +66,7 @@ fun AaruyReplaceWizardScreen(
 
             AaruyReplaceStep.ASSEMBLE     -> Step(
                 text = stringResource(R.string.actions_reservoir_prime_before),
+                hint = stringResource(R.string.aaruy_motor_still_running),
                 state = state,
                 connected = connected,
                 primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::assembled, enabled = canSend)
@@ -92,6 +93,7 @@ fun AaruyReplaceWizardScreen(
             AaruyReplaceStep.PRIME        -> Step(
                 text = stringResource(if (state.dropletsSeenByPump) R.string.locate_check_liquid else R.string.actions_reservoir_prime_comment),
                 note = stringResource(R.string.actions_reservoir_prime_comment_note),
+                hint = if (state.primed) stringResource(R.string.aaruy_motor_still_running) else null,
                 state = state,
                 connected = connected,
                 primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::askDroplets, enabled = canSend && state.primed),
@@ -136,11 +138,14 @@ private fun Step(
     connected: Boolean,
     primary: WizardButton,
     note: String? = null,
+    hint: String? = null,
     secondary: WizardButton? = null,
     extra: @Composable () -> Unit = {}
 ) {
     WizardStepLayout(primaryButton = primary, secondaryButton = secondary) {
         Text(text = text, style = MaterialTheme.typography.bodyLarge)
+        // The pump reports the end of a motor move before the motor stops, and nothing else tells when it does.
+        hint?.let { Text(text = it, style = MaterialTheme.typography.bodyMedium) }
         extra()
         note?.let { Text(text = it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
         state.error?.let { Text(text = stringResource(it), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }

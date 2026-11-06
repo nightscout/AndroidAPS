@@ -85,6 +85,8 @@ class AaruyReplaceWizardScreenTest {
         pump.pumpState = AaruyPumpState.STOP_RUNNING
         viewModel.rewind()
         compose.waitUntil(10_000) { viewModel.uiState.value.step == AaruyReplaceStep.ASSEMBLE }
+        // Seen on a real pump: the piston still moves back after the pump has reported the end.
+        compose.onNodeWithText(context.getString(R.string.aaruy_motor_still_running)).assertIsDisplayed()
         compose.onNodeWithText(context.getString(CoreUiR.string.next)).assertIsEnabled().performClick()
         compose.waitUntil(5_000) { viewModel.uiState.value.step == AaruyReplaceStep.SELECT_INSULIN }
         compose.onAllNodesWithText("Fiasp", substring = true).onFirst().assertIsDisplayed()
