@@ -197,6 +197,25 @@ class AaruyReplaceWizardTest {
         assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
     }
 
+    /**
+     * The link was lost after the fill went out, so its state was never seen. The pump may have filled the cannula, which
+     * is in the body by now: Fill must not be offered again, only the basal start.
+     */
+    @Test
+    fun aFillWhoseLinkWasLostIsTakenAsFilled() {
+        untilFillCannula()
+        transport.onPumpThread { transport.emulator.ignoreNextControl = AaruyPumpEmulator.CONTROL_PUSH_AIR }
+        Thread.sleep(200)
+        wizard.fillCannula()
+        Thread.sleep(300)
+        transport.loseConnection()
+        waitFor("link lost") { pump.connectionState != ConnectionState.CONNECTED }
+        ble.connect("back", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("not known") { !wizard.uiState.value.busy }
+        assertEquals(R.string.aaruy_fill_unknown, wizard.uiState.value.error)
+        assertTrue("no second fill offered", wizard.uiState.value.cannulaFilled)
+    }
+
     /** Not through the command queue: a rewind would end a bolus the loop started after the wizard opened. */
     @Test
     fun noRewindDuringABolus() {

@@ -74,6 +74,7 @@
     <string name="soft_needle_6">6 mm cannula</string>
     <string name="soft_needle_9">9 mm cannula</string>
     <string name="actions_reservoir_cannula_skip">Skip</string>
+    <string name="aaruy_fill_unknown">The link to the pump was lost during the fill. The cannula may be filled already: do not fill it again. Press Start basal.</string>
     <string name="aaruy_start_basal" comment="Button. The cannula is filled, only the start of the basal rate failed and is tried again.">Start basal</string>
     <string name="actions_reservoir_prime">Prime</string>
     <string name="aaruy_rewind">Rewind</string>

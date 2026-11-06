@@ -263,6 +263,49 @@ class AaruyBleReconnectTest {
         transport.shutdown()
     }
 
+    /**
+     * Seen on a real pump: set to 0.05 U it refuses 0.125 U with "bolus could not start". That is an answer: no bolus, and
+     * no record of the whole amount that would stay in IOB for hours.
+     */
+    @Test
+    fun aStartThePumpRefusesIsNotSent() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        val emulator = transport.emulator
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        var start: AaruyBolusStart? = null
+        val began = System.currentTimeMillis()
+        thread { start = ble.setBolus(0.125, false) }
+        waitFor("the driver got the answer") { start != null }
+        assertEquals(AaruyBolusStart.NOT_SENT, start)
+        assertTrue("the refusal ended the wait", System.currentTimeMillis() - began < 4_000)
+        assertEquals(AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
+        transport.shutdown()
+    }
+
     /** Unpaired while out of reach. Back in reach, the pump must not connect: AAPS would use it with no pump paired. */
     @Test
     fun aPumpUnpairedOutOfReachDoesNotConnectAgain() {

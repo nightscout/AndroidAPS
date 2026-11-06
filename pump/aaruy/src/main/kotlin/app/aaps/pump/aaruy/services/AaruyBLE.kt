@@ -54,6 +54,7 @@ import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
+import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
@@ -92,6 +93,7 @@ class AaruyBLE(
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val COMMAND_ANSWER_TIMEOUT_MS = 5000L
+    private val STATUS_BASAL = 1
     private val STATUS_TEMP_BASAL = 2
     private val STATUS_BOLUS = 3
     private val BOLUS_STATE_EXTENDED = 1
@@ -129,6 +131,12 @@ class AaruyBLE(
     @Volatile private var cancelTempBasalRunning = false
     @Volatile private var awaitingHistory = false
     @Volatile private var lastStatus: AaruyStatusSnapshot? = null
+
+    /** The pump answered the bolus start with "bolus could not start". */
+    @Volatile private var bolusStartRefused = false
+
+    /** When a status last showed the pump giving insulin. A stop cannot have begun before it. */
+    @Volatile private var lastDeliveringStatusAt = 0L
 
     /**
      * The status in the order of the history jobs. A history page whose job runs after a newer status came must
@@ -651,6 +659,7 @@ class AaruyBLE(
                 // High byte 0 is the answer to a motor command. The wizard reads it from errCode, nothing else needs it.
                 when(error) {
                     0x80->{     // An error answer to a command. A refused history request is asked again when no page comes.
+                        if (tmpErrCode == AlarmState.PUMP_RUN_BOLUS.state) bolusStartRefused = true
                         // Each answer is new: the command it refuses was sent again.
                         val alarmState = AlarmState.fromInt(tmpErrCode)
                         if (alarmState != AlarmState.NONE) aaruyPump.warn(alarmState)
@@ -736,17 +745,20 @@ class AaruyBLE(
 
     fun setBolus(insulin: Double, isSmb: Boolean = true): AaruyBolusStart {
         sendBolusOk = false
+        bolusStartRefused = false
         val startBolusTime = dateUtil.now()
         aaBleUtil.setupAndStartBolus(insulin, 0.0, 0, isSmb)
         // A status that comes late must not report a failure while the pump delivers: the user could bolus again.
         val end = System.currentTimeMillis() + BOLUS_START_TIMEOUT_MS
-        while (!sendBolusOk && System.currentTimeMillis() < end) SystemClock.sleep(100)
+        while (!sendBolusOk && !bolusStartRefused && System.currentTimeMillis() < end) SystemClock.sleep(100)
         // Asked even after a status 3: the start must not go out later from the queue.
         val startSent = aaBleUtil.abandonBolusStart()
         val result = when {
-            sendBolusOk -> AaruyBolusStart.STARTED
-            startSent   -> AaruyBolusStart.NO_ANSWER
-            else        -> AaruyBolusStart.NOT_SENT
+            sendBolusOk       -> AaruyBolusStart.STARTED
+            // Seen on a real pump: set to 0.05 U it refused 0.125 U. That is an answer, and no insulin goes in.
+            bolusStartRefused -> AaruyBolusStart.NOT_SENT
+            startSent         -> AaruyBolusStart.NO_ANSWER
+            else              -> AaruyBolusStart.NOT_SENT
         }
         if (result != AaruyBolusStart.NOT_SENT) aaruyPump.curBolusTime = startBolusTime
         return result
@@ -794,6 +806,7 @@ class AaruyBLE(
             runningSeconds = statusInfo.tempBasalStatus?.runningTime ?: 0
         )
         lastStatus = snapshot
+        if (snapshot.status in STATUS_BASAL..STATUS_BOLUS) lastDeliveringStatusAt = dateUtil.now()
         val live = !awaitingHistory || cancelTempBasalRunning
         syncJobs.trySend {
             syncedStatus = snapshot
@@ -815,7 +828,9 @@ class AaruyBLE(
      */
     private suspend fun historyRead(complete: Boolean = false) {
         awaitingHistory = false
-        lastStatus?.let { tempBasalSync.onStatus(it, live = true, stoppedSince = if (complete) aaruyPump.lastDeliveryEnd.takeIf { end -> end > 0 } else null) }
+        // A segment is logged when it ends, and the stop ends it: a stop during the read is not in it. A status that showed delivery is later proof.
+        val stoppedSince = if (complete) aaruyPump.lastDeliveryEnd.takeIf { it > 0 }?.let { max(it, lastDeliveringStatusAt) } else null
+        lastStatus?.let { tempBasalSync.onStatus(it, live = true, stoppedSince = stoppedSince) }
     }
 
 fun syncAndLoadBasicParam() {

@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -111,10 +112,14 @@ class AaruyPairWizardViewModel(
     fun selectDevice(device: ScannedDevice) {
         stopScan()
         _step.value = AaruyPairStep.PRESS_BUTTON
+        // A link that is up now goes to the old pump, and pair() closes it later, on the pump thread: wait for a new one.
+        val oldLinkUp = aaruyPump.connectionState == ConnectionState.CONNECTED
         aaruyBle.pair(device)
         waitForPairing?.cancel()
         waitForPairing = viewModelScope.launch {
-            aaruyPump.connectionStateFlow.first { it == ConnectionState.CONNECTED }
+            aaruyPump.connectionStateFlow
+                .dropWhile { oldLinkUp && it == ConnectionState.CONNECTED }
+                .first { it == ConnectionState.CONNECTED }
             _step.value = AaruyPairStep.COMPLETE
         }
     }

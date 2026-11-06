@@ -90,7 +90,7 @@ class AaruyTempBasalSync(
         val byMinutes = start + T.mins(item.injectTime + 1L).msecs()
         val end = nextStart?.takeIf { it in start..byMinutes } ?: min(dateUtil.now(), start + T.mins(item.injectTime.toLong()).msecs() + HALF_MINUTE_MS)
         val rate = item.data / 1000.0
-        val record = recordAround(start) ?: lateStart(start, end, rate)
+        val record = recordAround(start, rate) ?: lateStart(start, end, rate)
         when {
             record == null                                                                      -> addTempBasal(start, rate, end - start)
             // Still running in the database, and the pump ended it while the link was down. With status 2 or 3 this entry is only a split.
@@ -148,10 +148,15 @@ class AaruyTempBasalSync(
      * The clocks of the phone and the pump differ by some seconds, so a record can start just after the entry and even end before the next read.
      * Seen on the emulator as on a real pump: the last entry of a read comes again, and it must find its own record.
      */
-    private suspend fun recordAround(time: Long): TB? =
+    private suspend fun recordAround(time: Long, rate: Double): TB? {
+        val rateInDatabaseUnits = PumpRate(rate).iU(ch.concentration, true)
         // The one that starts here first: the one before can end some hundred ms after this start, and it is not this one.
-        persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(time - SAME_TIME_MS, time + SAME_TIME_MS, true).minByOrNull { abs(it.timestamp - time) }
-            ?: persistenceLayer.getTemporaryBasalActiveAt(time)?.takeIf { it.timestamp + it.duration > time + SAME_TIME_MS }
+        return persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(time - SAME_TIME_MS, time + SAME_TIME_MS, true).minByOrNull { abs(it.timestamp - time) }
+            ?: persistenceLayer.getTemporaryBasalActiveAt(time)?.takeIf {
+                // Still running after this start, or this temp basal itself, which a live status ended just after a split piece began.
+                it.timestamp + it.duration > time + SAME_TIME_MS || (abs(it.rate - rateInDatabaseUnits) < SAME_RATE && it.timestamp < time - SAME_TIME_MS)
+            }
+    }
 
     private suspend fun refreshDriverState() = aaruyPump.fromTemporaryBasal(pumpSync.expectedPumpState().temporaryBasal)
 

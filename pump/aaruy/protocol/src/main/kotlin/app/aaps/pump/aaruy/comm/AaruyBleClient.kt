@@ -480,7 +480,11 @@ fun setOnBleListener(listener: AaruyBleListener) {
             }
         }
 
+        /** False from the moment the radio reports a loss, before the loss is handled: nothing more may go out then. */
+        @Volatile private var linkUp = false
+
         override fun onConnectionStateChanged(connected: Boolean) {
+            if (!connected) linkUp = false
             events.post {
                 if (connected) onConnected() else onDisconnected()
             }
@@ -495,6 +499,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
         }
 
         fun onAdapterOff() {
+            linkUp = false
             events.post { if (status == BleStatus.CONNECTED || connecting) onDisconnected() }
         }
 
@@ -508,6 +513,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
             val wasUp = status != BleStatus.DISCONNECTED || connecting
             // Also the retries and the delayed CONNECTED, which are posted here.
             events.removeCallbacksAndMessages(null)
+            linkUp = false
             // A loss of the link reported after this must not start a retry.
             retriesLeft = 0
             connecting = false
@@ -575,6 +581,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
             connecting = false
             status = BleStatus.CONNECTED
             ready = true
+            linkUp = true
             sendReportDevice()
             // On this thread, so it comes before or after a loss of the link, never over it. A link lost in these 500 ms is not reported as up.
             events.postDelayed({ if (status == BleStatus.CONNECTED && ready) listener?.onBleStatusChanged(status) }, CONNECTED_DELAY_MS)
@@ -704,7 +711,8 @@ fun setOnBleListener(listener: AaruyBleListener) {
             writing = false
             listener?.onRequestResult(false, paramId.unsigned())
             // The commands behind it are still wanted now, not at the next command, when the driver has given up on them.
-            queue.poll()?.let { send(it) }
+            // Not into a link that is gone: a bolus start sent there would count as sent, and its loss clears the queue anyway.
+            if (linkUp) queue.poll()?.let { send(it) }
         }
 
         private fun handleFrame(frame: ByteArray) {

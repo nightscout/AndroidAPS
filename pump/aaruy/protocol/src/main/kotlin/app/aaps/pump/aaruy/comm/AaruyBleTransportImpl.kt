@@ -120,8 +120,9 @@ class AaruyBleTransportImpl(
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange status=$status state=$newState")
             val connected = status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED
-            if (!connected) failAllOperations()
+            // The loss first: the client must know the link is gone before a failed write makes it send the next one.
             listener?.onConnectionStateChanged(connected)
+            if (!connected) failAllOperations()
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {

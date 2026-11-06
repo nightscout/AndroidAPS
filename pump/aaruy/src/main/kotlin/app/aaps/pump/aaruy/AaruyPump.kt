@@ -93,8 +93,9 @@ class AaruyPump(
     var pumpState: AaruyPumpState
         get() = _pumpState.value
         set(value) {
-            seenStates.add(value)
+            // In this order: a state that is seen is the state now or an older one, never the one before it.
             _pumpState.value = value
+            seenStates.add(value)
             preferences.put(AaruyIntKey.PumpState, value.state.toInt())
         }
     fun forgetSeenStates() = seenStates.clear()

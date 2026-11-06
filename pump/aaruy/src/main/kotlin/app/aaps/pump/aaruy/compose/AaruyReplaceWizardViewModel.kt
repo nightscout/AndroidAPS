@@ -202,25 +202,31 @@ class AaruyReplaceWizardViewModel(
      * Sends a motor command and waits for the pump to pass through [during] and end in [end]. Seen on a real pump: the
      * pump is in [end] already before a cannula fill, so [end] alone says nothing: a refused or lost command looked done.
      */
-    private suspend fun runMotor(during: AaruyPumpState, end: AaruyPumpState, send: () -> Unit): Boolean {
+    private suspend fun runMotor(during: AaruyPumpState, end: AaruyPumpState, send: () -> Unit): MotorResult {
         aaruyPump.forgetSeenStates()
         send()
         val start = dateUtil.now()
+        var lostAt = 0L
         while (dateUtil.now() - start < MOTOR_TIMEOUT_MS) {
-            if (aaruyPump.hasSeen(during) && aaruyPump.pumpState == end) return true
+            if (aaruyPump.hasSeen(during) && aaruyPump.pumpState == end) return MotorResult.DONE
+            if (lostAt == 0L && aaruyPump.connectionState != ConnectionState.CONNECTED) lostAt = dateUtil.now()
+            // Back, and a status came on the new link: what was not seen by now is not seen.
+            if (lostAt != 0L && aaruyPump.lastConnection > lostAt) return MotorResult.UNKNOWN
             delay(POLL_MS)
         }
-        return false
+        // It began, or the command may have reached the pump before the link was lost.
+        return if (aaruyPump.hasSeen(during) || lostAt != 0L) MotorResult.UNKNOWN else MotorResult.NOT_RUN
     }
 
     fun rewind() {
-        // Not through the command queue: a bolus the loop started after the wizard opened would be ended.
-        if (aaruyPump.pumpState == AaruyPumpState.LARGEDOSE_RUNNING) {
+        // Not through the command queue: a bolus the loop started after the wizard opened would be ended. Also one that is being set up.
+        if (aaruyPump.pumpState == AaruyPumpState.LARGEDOSE_RUNNING || !aaruyPump.bolusDone) {
             _uiState.update { it.copy(error = R.string.aaruy_state_bolus) }
             return
         }
         command(R.string.alarm_rewinding_fail) {
-            val ok = runMotor(AaruyPumpState.PUSHBACK_RUNNING, AaruyPumpState.STOP_RUNNING) { aaruyBle.replaceDevice() }
+            // A second rewind does no harm, so only a seen one counts.
+            val ok = runMotor(AaruyPumpState.PUSHBACK_RUNNING, AaruyPumpState.STOP_RUNNING) { aaruyBle.replaceDevice() } == MotorResult.DONE
             if (ok) next(AaruyReplaceStep.REWIND)
             ok
         }
@@ -294,15 +300,18 @@ class AaruyReplaceWizardViewModel(
         _uiState.update { it.copy(busy = true, error = null) }
         viewModelScope.launch(Dispatchers.IO) {
             aaruyBle.syncAndLoadBasicParam()
-            val filled = runMotor(AaruyPumpState.EXHAUSTING, AaruyPumpState.STOP_RUNNING) { aaruyBle.needlePushAir(_uiState.value.needleType.toByte()) }
+            val fill = runMotor(AaruyPumpState.EXHAUSTING, AaruyPumpState.STOP_RUNNING) { aaruyBle.needlePushAir(_uiState.value.needleType.toByte()) }
+            // Not known is taken as filled: a cannula left empty delays the insulin, a second fill puts it into the body.
+            val filled = fill != MotorResult.NOT_RUN
             _uiState.update { it.copy(cannulaFilled = filled) }
-            val ok = filled && startBasal(cannulaChanged = true)
-            aapsLogger.debug(LTag.PUMP, "Replace fill: filled $filled, basal $ok")
+            val ok = fill == MotorResult.DONE && startBasal(cannulaChanged = true)
+            aapsLogger.debug(LTag.PUMP, "Replace fill: $fill, basal $ok")
             _uiState.update {
                 it.copy(busy = false, error = when {
-                    ok     -> null
-                    filled -> R.string.alarm_basal_run_fail
-                    else   -> R.string.alarm_discharge_liquid_fail
+                    ok                         -> null
+                    fill == MotorResult.UNKNOWN -> R.string.aaruy_fill_unknown
+                    filled                     -> R.string.alarm_basal_run_fail
+                    else                       -> R.string.alarm_discharge_liquid_fail
                 })
             }
         }
@@ -315,7 +324,8 @@ class AaruyReplaceWizardViewModel(
         aaruyPump.clearAlarmState()
         aaruyBle.startBaseInject()
         val start = dateUtil.now()
-        while (aaruyPump.pumpState != AaruyPumpState.BASALRATE_RUNNING) {
+        // Any delivery: on a second try the loop can have set a temp basal already, and the client then sends nothing.
+        while (aaruyPump.pumpState !in AaruyPumpState.BASALRATE_RUNNING..AaruyPumpState.LARGEDOSE_RUNNING) {
             if (dateUtil.now() - start > BASAL_TIMEOUT_MS) return false
             delay(POLL_MS)
         }
@@ -356,6 +366,9 @@ class AaruyReplaceWizardViewModel(
             aapsLogger.error(LTag.PUMP, "The insulin was not switched", e)
         }
     }
+
+    /** UNKNOWN: it began and its end was not seen, or the link was lost after the command went out. */
+    private enum class MotorResult { DONE, NOT_RUN, UNKNOWN }
 
     private companion object {
 
