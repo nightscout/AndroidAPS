@@ -51,11 +51,20 @@ class AaruyReplaceWizardScreenTest {
     private val insulinManager: InsulinManager = mock()
     private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), dateUtil, mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
 
+    /** As on a real pump: the rewind shows its own state, then the stopped one. */
+    private val ble: AaruyBLE = mock<AaruyBLE>().also {
+        whenever(it.replaceDevice()).thenAnswer {
+            pump.pumpState = AaruyPumpState.PUSHBACK_RUNNING
+            pump.pumpState = AaruyPumpState.STOP_RUNNING
+            Unit
+        }
+    }
+
     private fun show(connected: Boolean): AaruyReplaceWizardViewModel {
         whenever(dateUtil.now()).thenAnswer { System.currentTimeMillis() }
         pump.connectionState = if (connected) ConnectionState.CONNECTED else ConnectionState.DISCONNECTED
         val viewModel = AaruyReplaceWizardViewModel(
-            mock(), mock<AaruyBLE>(), pump, mock<PumpSync>(), dateUtil, mock<ResourceHelper>(), mock<RxBus>(), mock<Preferences>(),
+            mock(), ble, pump, mock<PumpSync>(), dateUtil, mock<ResourceHelper>(), mock<RxBus>(), mock<Preferences>(),
             mock<ProfileFunction>(), insulinManager, mock<PersistenceLayer>()
         )
         compose.setContent { MaterialTheme { AaruyReplaceWizardScreen(viewModel, "Change reservoir and battery", setToolbarConfig = {}, onFinish = {}) } }
@@ -82,7 +91,6 @@ class AaruyReplaceWizardScreenTest {
         whenever(insulinManager.insulins).thenReturn(arrayListOf(ICfg("Lyumjev", 45, 5.0, 1.0), ICfg("Fiasp", 55, 5.0, 1.0)))
         val viewModel = show(connected = true)
         // The rewind ends when the pump stops. A real pump says so in less than a second.
-        pump.pumpState = AaruyPumpState.STOP_RUNNING
         viewModel.rewind()
         compose.waitUntil(10_000) { viewModel.uiState.value.step == AaruyReplaceStep.ASSEMBLE }
         // Seen on a real pump: the piston still moves back after the pump has reported the end.

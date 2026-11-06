@@ -175,11 +175,16 @@ class AaruyComposeContent(
 
             AaruyScreen.REPLACE_WIZARD -> {
                 KeepScreenOnEffect()
+                val replaceViewModel: AaruyReplaceWizardViewModel = metroViewModel()
                 AaruyReplaceWizardScreen(
-                    viewModel = metroViewModel(),
+                    viewModel = replaceViewModel,
                     title = replaceTitle,
                     setToolbarConfig = setToolbarConfig,
-                    onFinish = { currentScreen = AaruyScreen.OVERVIEW }
+                    onFinish = {
+                        // It lives as long as the pump screen: the next run must start at the first step.
+                        replaceViewModel.reset()
+                        currentScreen = AaruyScreen.OVERVIEW
+                    }
                 )
             }
 
@@ -194,12 +199,19 @@ class AaruyComposeContent(
                         onFailed = { currentScreen = AaruyScreen.OVERVIEW }
                     )
                 } else {
+                    val pairViewModel: AaruyPairWizardViewModel = metroViewModel()
                     AaruyPairWizardScreen(
-                        viewModel = metroViewModel(),
+                        viewModel = pairViewModel,
                         title = pairingTitle,
                         setToolbarConfig = setToolbarConfig,
-                        onFinish = { currentScreen = AaruyScreen.OVERVIEW },
-                        onCancel = { currentScreen = AaruyScreen.OVERVIEW }
+                        onFinish = {
+                            pairViewModel.reset()
+                            currentScreen = AaruyScreen.OVERVIEW
+                        },
+                        onCancel = {
+                            pairViewModel.reset()
+                            currentScreen = AaruyScreen.OVERVIEW
+                        }
                     )
                 }
             }

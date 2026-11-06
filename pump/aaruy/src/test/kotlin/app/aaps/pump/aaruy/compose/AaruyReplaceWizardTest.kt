@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
@@ -42,6 +43,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -88,9 +91,12 @@ class AaruyReplaceWizardTest {
         }
     }
 
+    /** Moves the clock of the driver, so a long wait can end at once. The emulator keeps the real time. */
+    @Volatile private var clockOffset = 0L
+
     @Before
     fun setUp() {
-        `when`(dateUtil.now()).thenAnswer { System.currentTimeMillis() }
+        `when`(dateUtil.now()).thenAnswer { System.currentTimeMillis() + clockOffset }
         runBlocking { whenever(pumpSync.insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(true) }
         ble = AaruyBLE(
             transport,
@@ -152,6 +158,66 @@ class AaruyReplaceWizardTest {
         waitFor("done") { wizard.uiState.value.step == AaruyReplaceStep.DONE }
         assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
         runBlocking { verify(pumpSync, times(1)).insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any()) }
+    }
+
+    /** Seen on a real pump: it is stopped already before the fill, so "stopped" alone said nothing. A fill that never ran is not done. */
+    @Test
+    fun aCannulaFillThePumpNeverRanIsNotDone() {
+        untilFillCannula()
+        transport.onPumpThread { transport.emulator.ignoreNextControl = AaruyPumpEmulator.CONTROL_PUSH_AIR }
+        Thread.sleep(200)
+        wizard.fillCannula()
+        // Longer than the 3 s after which "stopped" alone counted as done.
+        Thread.sleep(3_500)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(AaruyReplaceStep.FILL_CANNULA, wizard.uiState.value.step)
+        clockOffset += 121_000
+        waitFor("the wait for the motor gave up") { !wizard.uiState.value.busy }
+        assertEquals(R.string.alarm_discharge_liquid_fail, wizard.uiState.value.error)
+        assertFalse(wizard.uiState.value.cannulaFilled)
+        assertEquals(AaruyPumpState.STOP_RUNNING, pump.pumpState)
+        runBlocking { verify(pumpSync, never()).insertTherapyEventIfNewWithTimestamp(any(), eq(TE.Type.CANNULA_CHANGE), anyOrNull(), anyOrNull(), any(), any()) }
+    }
+
+    /** The fill worked and the basal start did not. A second fill would go into the body, so the next press only starts basal. */
+    @Test
+    fun aFailedBasalStartAfterTheFillTriesOnlyTheBasalAgain() {
+        untilFillCannula()
+        transport.onPumpThread { transport.emulator.ignoreNextControl = AaruyPumpEmulator.CONTROL_RESTORE }
+        Thread.sleep(200)
+        wizard.fillCannula()
+        waitFor("basal start failed") { wizard.uiState.value.cannulaFilled && !wizard.uiState.value.busy }
+        assertEquals(R.string.alarm_basal_run_fail, wizard.uiState.value.error)
+        assertEquals(AaruyReplaceStep.FILL_CANNULA, wizard.uiState.value.step)
+
+        pump.forgetSeenStates()
+        wizard.fillCannula()
+        waitFor("done") { wizard.uiState.value.step == AaruyReplaceStep.DONE }
+        assertFalse("no second fill", pump.hasSeen(AaruyPumpState.EXHAUSTING))
+        assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
+    }
+
+    /** Not through the command queue: a rewind would end a bolus the loop started after the wizard opened. */
+    @Test
+    fun noRewindDuringABolus() {
+        startWizard()
+        pump.pumpState = AaruyPumpState.LARGEDOSE_RUNNING
+        wizard.rewind()
+        assertEquals(R.string.aaruy_state_bolus, wizard.uiState.value.error)
+        assertFalse(wizard.uiState.value.busy)
+        assertEquals(AaruyReplaceStep.REWIND, wizard.uiState.value.step)
+    }
+
+    /** The view model lives as long as the pump screen. The next change of reservoir starts at the first step. */
+    @Test
+    fun aResetStartsAgainAtTheFirstStep() {
+        untilFillCannula()
+        wizard.fillCannula()
+        waitFor("done") { wizard.uiState.value.step == AaruyReplaceStep.DONE }
+        wizard.reset()
+        assertEquals(AaruyReplaceStep.REWIND, wizard.uiState.value.step)
+        assertFalse(wizard.uiState.value.cannulaFilled)
+        assertFalse(wizard.uiState.value.primed)
     }
 
     @Test

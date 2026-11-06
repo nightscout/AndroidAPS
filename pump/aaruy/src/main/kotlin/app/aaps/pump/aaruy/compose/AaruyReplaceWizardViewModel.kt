@@ -74,6 +74,8 @@ data class AaruyReplaceUiState(
     val needleType: Int = 0,
     val confirmDroplets: Boolean = false,
     val dropletsSeenByPump: Boolean = false,
+    /** The cannula is filled. A second fill would go into the body, so only the basal start can be tried again. */
+    val cannulaFilled: Boolean = false,
     val error: Int? = null
 )
 
@@ -125,6 +127,22 @@ class AaruyReplaceWizardViewModel(
         viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
             aaruyPump.errCode.collect { onPumpMessage(it) }
         }
+        loadChoices()
+    }
+
+    /**
+     * The view model lives as long as the pump screen, not as the wizard. Without this the next change of reservoir
+     * starts where the last one ended.
+     */
+    fun reset() {
+        primeTimeout?.cancel()
+        _uiState.value = AaruyReplaceUiState(needleType = aaruyPump.softNeedleType)
+        _siteLocation.value = TE.Location.NONE
+        _siteArrow.value = TE.Arrow.NONE
+        loadChoices()
+    }
+
+    private fun loadChoices() {
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
             val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
@@ -181,26 +199,31 @@ class AaruyReplaceWizardViewModel(
     }
 
     /**
-     * Waits for the pump to pass through [during] and end in [end]. The two can come so close that a state
-     * flow shows only the last one, so [end] alone also counts after [ALONE_COUNTS_AFTER_MS].
+     * Sends a motor command and waits for the pump to pass through [during] and end in [end]. Seen on a real pump: the
+     * pump is in [end] already before a cannula fill, so [end] alone says nothing: a refused or lost command looked done.
      */
-    private suspend fun waitFor(during: AaruyPumpState, end: AaruyPumpState): Boolean {
-        var seen = false
+    private suspend fun runMotor(during: AaruyPumpState, end: AaruyPumpState, send: () -> Unit): Boolean {
+        aaruyPump.forgetSeenStates()
+        send()
         val start = dateUtil.now()
         while (dateUtil.now() - start < MOTOR_TIMEOUT_MS) {
-            val state = aaruyPump.pumpState
-            if (state == during) seen = true
-            if (state == end && (seen || dateUtil.now() - start > ALONE_COUNTS_AFTER_MS)) return true
+            if (aaruyPump.hasSeen(during) && aaruyPump.pumpState == end) return true
             delay(POLL_MS)
         }
         return false
     }
 
-    fun rewind() = command(R.string.alarm_rewinding_fail) {
-        aaruyBle.replaceDevice()
-        val ok = waitFor(AaruyPumpState.PUSHBACK_RUNNING, AaruyPumpState.STOP_RUNNING)
-        if (ok) next(AaruyReplaceStep.REWIND)
-        ok
+    fun rewind() {
+        // Not through the command queue: a bolus the loop started after the wizard opened would be ended.
+        if (aaruyPump.pumpState == AaruyPumpState.LARGEDOSE_RUNNING) {
+            _uiState.update { it.copy(error = R.string.aaruy_state_bolus) }
+            return
+        }
+        command(R.string.alarm_rewinding_fail) {
+            val ok = runMotor(AaruyPumpState.PUSHBACK_RUNNING, AaruyPumpState.STOP_RUNNING) { aaruyBle.replaceDevice() }
+            if (ok) next(AaruyReplaceStep.REWIND)
+            ok
+        }
     }
 
     fun assembled() = next(AaruyReplaceStep.ASSEMBLE)
@@ -258,11 +281,31 @@ class AaruyReplaceWizardViewModel(
         _uiState.update { it.copy(needleType = type) }
     }
 
-    /** Basal starts by itself after this: the insulin for the cannula is the last step before it. */
-    fun fillCannula() = command(R.string.alarm_discharge_liquid_fail) {
-        aaruyBle.syncAndLoadBasicParam()
-        aaruyBle.needlePushAir(_uiState.value.needleType.toByte())
-        waitFor(AaruyPumpState.EXHAUSTING, AaruyPumpState.STOP_RUNNING) && startBasal(cannulaChanged = true)
+    /**
+     * Basal starts by itself after this: the insulin for the cannula is the last step before it. A failed basal start
+     * says so, and the next press only starts basal: "Priming failed" would make the user fill the cannula again.
+     */
+    fun fillCannula() {
+        if (_uiState.value.cannulaFilled) {
+            command(R.string.alarm_basal_run_fail) { startBasal(cannulaChanged = true) }
+            return
+        }
+        if (_uiState.value.busy) return
+        _uiState.update { it.copy(busy = true, error = null) }
+        viewModelScope.launch(Dispatchers.IO) {
+            aaruyBle.syncAndLoadBasicParam()
+            val filled = runMotor(AaruyPumpState.EXHAUSTING, AaruyPumpState.STOP_RUNNING) { aaruyBle.needlePushAir(_uiState.value.needleType.toByte()) }
+            _uiState.update { it.copy(cannulaFilled = filled) }
+            val ok = filled && startBasal(cannulaChanged = true)
+            aapsLogger.debug(LTag.PUMP, "Replace fill: filled $filled, basal $ok")
+            _uiState.update {
+                it.copy(busy = false, error = when {
+                    ok     -> null
+                    filled -> R.string.alarm_basal_run_fail
+                    else   -> R.string.alarm_discharge_liquid_fail
+                })
+            }
+        }
     }
 
     fun skipFillingCannula() = command(R.string.alarm_basal_run_fail) { startBasal(cannulaChanged = false) }
@@ -317,7 +360,6 @@ class AaruyReplaceWizardViewModel(
     private companion object {
 
         const val POLL_MS = 50L
-        const val ALONE_COUNTS_AFTER_MS = 3_000L
 
         // UNVERIFIED: how long the motor takes with a full reservoir. A real pump with none was done in less than a second.
         const val MOTOR_TIMEOUT_MS = 120_000L

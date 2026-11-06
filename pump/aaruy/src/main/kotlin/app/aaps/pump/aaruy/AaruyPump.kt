@@ -77,15 +77,24 @@ class AaruyPump(
     // Not a state: the pump sends the same message for each prime.
     val errCode = MutableSharedFlow<Int>(extraBufferCapacity = 16)
 
+    /**
+     * Every state a status showed since [forgetSeenStates]. Seen on a real pump: rewind and cannula fill show their
+     * state for only about 150 ms, so a look at [pumpState] can miss it.
+     */
+    private val seenStates: MutableSet<AaruyPumpState> = Collections.synchronizedSet(EnumSet.noneOf(AaruyPumpState::class.java))
+
     // Pump state flow
     private val _pumpState = MutableStateFlow(AaruyPumpState.FIRST_INIT)
     val pumpStateFlow: StateFlow<AaruyPumpState> = _pumpState
     var pumpState: AaruyPumpState
         get() = _pumpState.value
         set(value) {
+            seenStates.add(value)
             _pumpState.value = value
             preferences.put(AaruyIntKey.PumpState, value.state.toInt())
         }
+    fun forgetSeenStates() = seenStates.clear()
+    fun hasSeen(state: AaruyPumpState): Boolean = state in seenStates
 
     private var _pumpLastState = AaruyPumpState.FIRST_INIT
     var pumpLastState: AaruyPumpState

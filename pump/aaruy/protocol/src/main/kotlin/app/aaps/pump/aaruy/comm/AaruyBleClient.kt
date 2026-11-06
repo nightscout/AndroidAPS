@@ -229,13 +229,8 @@ fun setOnBleListener(listener: AaruyBleListener) {
         when (val status = runningStatus) {
             1    -> Unit
 
-            8    ->
-                if (needRestoreUnRunState) {
-                    needRestoreUnRunState = false
-                    restoreUnRunState()
-                } else {
-                    link.listener?.onRunReplaceFirst(status)
-                }
+            // The flag stays until basal runs: a restore that was lost or refused must be sent again when the user tries again.
+            8    -> if (needRestoreUnRunState) restoreUnRunState() else link.listener?.onRunReplaceFirst(status)
 
             0    -> {
                 prepareStartBasal = false
@@ -712,6 +707,8 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
                 AaruyParamId.CURRENT_STATUS                                -> {
                     val packet = CurrentStatusPacket.parse(payload)
+                    // From stopped to not running: the restore worked. From here basal starts without it.
+                    if (runningStatus == 8 && packet.runningStatus.toInt() == 0) needRestoreUnRunState = false
                     currentStatus = packet
                     if (packet.runningStatus.toInt() == 0 && prepareStartBasal) {
                         prepareStartBasal = false

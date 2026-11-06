@@ -27,6 +27,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -74,7 +75,21 @@ class AaruyPairWizardViewModel(
     private val _selectedProfile = MutableStateFlow<String?>(null)
     override val selectedProfile: StateFlow<String?> = _selectedProfile
 
+    private var waitForPairing: Job? = null
+
     init {
+        begin()
+    }
+
+    /** The view model lives as long as the pump screen. Without this a second pairing opens at "Pump paired". */
+    fun reset() {
+        waitForPairing?.cancel()
+        stopScan()
+        _step.value = null
+        begin()
+    }
+
+    private fun begin() {
         viewModelScope.launch {
             if (profileFunction.getRequestedProfile() == null) {
                 val names = profileRepository.profiles.value.map { it.name }
@@ -83,7 +98,10 @@ class AaruyPairWizardViewModel(
                 _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
                 _steps.value = AaruyPairStep.entries
                 _step.value = AaruyPairStep.PROFILE_GATE
-            } else _step.value = AaruyPairStep.BLE_SCAN
+            } else {
+                _steps.value = AaruyPairStep.entries.filter { it != AaruyPairStep.PROFILE_GATE }
+                _step.value = AaruyPairStep.BLE_SCAN
+            }
         }
     }
 
@@ -94,7 +112,8 @@ class AaruyPairWizardViewModel(
         stopScan()
         _step.value = AaruyPairStep.PRESS_BUTTON
         aaruyBle.pair(device)
-        viewModelScope.launch {
+        waitForPairing?.cancel()
+        waitForPairing = viewModelScope.launch {
             aaruyPump.connectionStateFlow.first { it == ConnectionState.CONNECTED }
             _step.value = AaruyPairStep.COMPLETE
         }

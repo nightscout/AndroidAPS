@@ -114,8 +114,12 @@ fun AaruyReplaceWizardScreen(
                 note = stringResource(R.string.actions_reservoir_prime_cannula_note),
                 state = state,
                 connected = connected,
-                primary = WizardButton(stringResource(R.string.actions_reservoir_prime_cannula_action), viewModel::fillCannula, enabled = canSend, loading = state.busy),
-                secondary = WizardButton(stringResource(R.string.actions_reservoir_cannula_skip), viewModel::skipFillingCannula, enabled = canSend)
+                primary = WizardButton(
+                    stringResource(if (state.cannulaFilled) R.string.aaruy_start_basal else R.string.actions_reservoir_prime_cannula_action),
+                    viewModel::fillCannula, enabled = canSend, loading = state.busy
+                ),
+                // After the fill, Skip would record no new cannula.
+                secondary = if (state.cannulaFilled) null else WizardButton(stringResource(R.string.actions_reservoir_cannula_skip), viewModel::skipFillingCannula, enabled = canSend)
             ) {
                 NeedleChoice(stringResource(R.string.soft_needle_6), state.needleType == 0, enabled = canSend) { viewModel.selectNeedle(0) }
                 NeedleChoice(stringResource(R.string.soft_needle_9), state.needleType == 1, enabled = canSend) { viewModel.selectNeedle(1) }

@@ -303,8 +303,16 @@ class AaruyPumpEmulator(
         return listOf(statusMessage())
     }
 
+    /** The next motor command with this action does nothing and gets no answer, as when it is lost or refused. */
+    var ignoreNextControl = -1
+
     private fun handleTotalControl(payload: ByteArray): List<ByteArray> {
-        return when (payload.getOrNull(ACTION_OFFSET)?.toInt()) {
+        val action = payload.getOrNull(ACTION_OFFSET)?.toInt()
+        if (action == ignoreNextControl) {
+            ignoreNextControl = -1
+            return emptyList()
+        }
+        return when (action) {
             CONTROL_CONTINUE      -> {
                 if (runningStatus != STATUS_PAUSED && runningStatus != STATUS_NOT_RUNNING) return emptyList()
                 runningStatus = STATUS_BASAL
@@ -692,9 +700,9 @@ class AaruyPumpEmulator(
         private const val ACTION_START = 1
         private const val CONTROL_CONTINUE = 1
         private const val CONTROL_REPLACE = 3
-        private const val CONTROL_PUSH_AIR = 4
+        const val CONTROL_PUSH_AIR = 4
         private const val CONTROL_PUSH_POSITION = 5
-        private const val CONTROL_RESTORE = 6
+        const val CONTROL_RESTORE = 6
 
         private const val REPORT_ACCEPTED: Byte = 6
         private const val PROTOCOL_VERSION: Byte = 1
