@@ -173,6 +173,46 @@ class AaruyBleReconnectTest {
         transport.shutdown()
     }
 
+    private fun connectedWithHistory(entries: Int, saveHistory: Boolean, losePage: Int): Pair<AaruyPump, AaruyEmulatorBleTransport> {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        pump.canSaveHistory = saveHistory
+        val emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
+        emulator.addBasalHistory(entries)
+        emulator.loseHistoryPage = losePage
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(emulator),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("connected") { pump.connectionState == ConnectionState.CONNECTED }
+        return pump to ble.emulatorTransport!!
+    }
+
+    /** Page 0 came and the last page never did. The read is asked again, or history stays off for as long as the link is up. */
+    @Test
+    fun aLostLastHistoryPageIsAskedAgain() {
+        val (pump, transport) = connectedWithHistory(entries = 15, saveHistory = true, losePage = 1)
+        waitFor("the read was asked again and is whole") { pump.lastHistoryTime > 0 }
+        transport.shutdown()
+    }
+
+    /** The first read after pairing only finds where the log ends. If its last page is lost, history must still come on. */
+    @Test
+    fun aLostLastPageOfTheFirstReadStillTurnsHistoryOn() {
+        val (pump, transport) = connectedWithHistory(entries = 15, saveHistory = false, losePage = 1)
+        waitFor("history on") { pump.canSaveHistory }
+        assertTrue(pump.lastHistoryTime > 0)
+        transport.shutdown()
+    }
+
     private companion object {
 
         const val BOLUS_CONTROL = 9

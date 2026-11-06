@@ -127,6 +127,16 @@ class AaruyPumpEmulator(
     /** How much later than usual the last answer comes. Seen on a real pump: about a second for a new profile. */
     var answerDelayMs = 0L
 
+    /** The page with this number is left out of the next history answer, as when its frame is lost. */
+    var loseHistoryPage = -1
+
+    /** The log of a pump that has run for a while: basal entries of one minute each, one after the other, up to now. */
+    fun addBasalHistory(entries: Int) {
+        val now = pumpTime()
+        repeat(entries) { addHistoryAt(now - (entries - it) * 60, HISTORY_BASAL, DEFAULT_BASAL, 1, 0) }
+        history.sortBy { it.time.toLong() and 0xFFFFFFFFL }
+    }
+
     /** The parameter of the last command that was handled. */
     var lastParamId = -1
         private set
@@ -359,7 +369,9 @@ class AaruyPumpEmulator(
         val items = history.filter { it.time.toLong() and 0xFFFFFFFFL >= start.toLong() and 0xFFFFFFFFL }
         val pages = ceil(items.size / HISTORY_PAGE_SIZE.toDouble()).toInt()
         if (pages == 0) return listOf(message(PARAM_HISTORY_LOG, buffer(HISTORY_HEADER).putShort(0).put(0).put(0).put(0).array()))
-        return items.chunked(HISTORY_PAGE_SIZE).mapIndexed { page, chunk ->
+        val lost = loseHistoryPage
+        loseHistoryPage = -1
+        return items.chunked(HISTORY_PAGE_SIZE).withIndex().filter { it.index != lost }.map { (page, chunk) ->
             val out = buffer(HISTORY_HEADER + chunk.size * HISTORY_ITEM_SIZE)
                 .putShort(items.size.toShort()).put(pages.toByte()).put(page.toByte()).put(chunk.size.toByte())
             chunk.forEach {

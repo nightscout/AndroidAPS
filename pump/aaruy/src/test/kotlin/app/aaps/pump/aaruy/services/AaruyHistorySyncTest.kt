@@ -124,25 +124,59 @@ class AaruyHistorySyncTest {
         assertEquals(false, ble.receivingHistory)
     }
 
-    /** The pages that came are stored, but the log time stays, so the same request brings the missing page. */
+    /**
+     * The page before the hole is stored. The page after it is left out: the gap fill would take the hole for time with
+     * no insulin and write a pump stop that the next read could not remove. The same request brings all of it again.
+     */
     @Test
-    fun aMissingMiddlePageKeepsTheLogTimeAndAsksAgain() {
-        page(0, 3, tbrEntry(now - 30 * minute, 5))
-        page(2, 3, tbrEntry(now - 10 * minute, 5))
-        verify(historyDao, timeout(5000).times(2)).insert(any())
+    fun aMissingMiddlePageKeepsTheLogTimeLeavesTheRestOutAndAsksAgain() {
+        val before = tbrEntry(now - 30 * minute, 5)
+        val after = tbrEntry(now - 10 * minute, 5)
+        page(0, 3, before)
+        page(2, 3, after)
+        verify(historyDao, timeout(5000)).insert(any())
         Thread.sleep(300)
+        verify(historyDao, times(1)).insert(any())
+        runBlocking {
+            verify(tempBasalSync).onHistoryDelivery(eq(before.timestamp), any())
+            verify(tempBasalSync, never()).onHistoryDelivery(eq(after.timestamp), any())
+        }
         assertEquals(0L, pump.lastHistoryTime)
         assertEquals(true, ble.receivingHistory)
         verify(notificationManager, never()).post(any(), any<String>(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
     }
 
     @Test
-    fun aMissingFirstPageKeepsTheLogTime() {
+    fun aMissingFirstPageKeepsTheLogTimeAndWritesNothing() {
         ble.requestHistoryData(0)
         page(1, 2, tbrEntry(now - 10 * minute, 5))
+        Thread.sleep(500)
+        verify(historyDao, never()).insert(any())
+        assertEquals(0L, pump.lastHistoryTime)
+    }
+
+    /** A page that could not be written is a hole too: what came after the failed entry must come again. */
+    @Test
+    fun aPageThatCannotBeWrittenKeepsTheLogTimeAndLeavesTheRestOut() {
+        `when`(historyDao.insert(any())).thenThrow(IllegalStateException("database full"))
+        page(0, 2, tbrEntry(now - 30 * minute, 5))
+        val after = tbrEntry(now - 10 * minute, 5)
+        page(1, 2, after)
         verify(historyDao, timeout(5000)).insert(any())
         Thread.sleep(300)
+        runBlocking { verify(tempBasalSync, never()).onHistoryDelivery(eq(after.timestamp), any()) }
         assertEquals(0L, pump.lastHistoryTime)
+    }
+
+    /** A new read starts at page 0 and is whole again. */
+    @Test
+    fun aCompleteReadAfterOneWithAHoleMovesTheLogTime() {
+        page(0, 3, tbrEntry(now - 30 * minute, 5))
+        page(2, 3, tbrEntry(now - 10 * minute, 5))
+        page(0, 2, tbrEntry(now - 30 * minute, 5))
+        page(1, 2, tbrEntry(now - 10 * minute, 5))
+        Thread.sleep(500)
+        assertEquals(now - 10 * minute, pump.lastHistoryTime)
     }
 
     /** A page that always fails would stop the history for good. The user must know. */

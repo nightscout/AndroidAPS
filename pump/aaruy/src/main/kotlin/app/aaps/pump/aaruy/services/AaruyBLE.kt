@@ -105,9 +105,20 @@ class AaruyBLE(
     private val ALARM_SEEN_LIVE_MS = 120_000L
     private val HISTORY_READ_TRIES = 3
 
+    /** Seen on a real pump: about 100 ms from one page to the next. */
+    private val HISTORY_PAGE_TIMEOUT_MS = 5_000L
+
     /** The page the pump must send next. A page that did not come leaves a hole in the read. */
     @Volatile private var nextHistoryPage = 0
-    @Volatile private var historyPageMissing = false
+
+    /** When the read was asked or its last page came. A read that stops sending pages has lost one, maybe its last. */
+    @Volatile private var lastHistoryPageAt = 0L
+
+    /**
+     * Set by a page that did not come or could not be written. The rest of that read is left out: the gap fill would take the
+     * hole for time with no insulin. The same request brings all of it again. Used only by the history jobs.
+     */
+    @Volatile private var historyReadBroken = false
 
     /** Reads in a row with a hole. The start time of the next read stays the same, so a page that always fails would stop the history for good. */
     @Volatile private var historyReadFailures = 0
@@ -157,9 +168,7 @@ class AaruyBLE(
 
     var isConnected = false
     var isConnecting = false
-    var receivingHistory: Boolean = false
-    var refreshHistory: Boolean = false
-    var isFirstDetection: Boolean = false
+    @Volatile var receivingHistory: Boolean = false
 
     /** Starts at the first connection: this class also exists for users of other pumps, and they need no check every 2 seconds. */
     private var detectionStarted = false
@@ -167,13 +176,13 @@ class AaruyBLE(
     private fun startDetection() {
         val detectionRunnable = object : Runnable {
             override fun run() {
-                if (!isFirstDetection && !refreshHistory && receivingHistory) {
-                    receivingHistory = false
-                    if (aaruyPump.canSaveHistory)
-                        requestHistoryData(aaruyPump.lastHistoryTime)
+                // No answer, or the last page never came. Also the first read after pairing, or history stays off.
+                if (receivingHistory && isConnected && System.currentTimeMillis() - lastHistoryPageAt > HISTORY_PAGE_TIMEOUT_MS) {
+                    aapsLogger.warn(LTag.PUMPCOMM, "History read stopped sending pages")
+                    lastHistoryPageAt = System.currentTimeMillis()
+                    syncJobs.trySend { onHistoryReadWithHole() }
                 }
 
-                isFirstDetection = false
                 if (connectCount > 0 && aaruyPump.connectionState != ConnectionState.CONNECTED) {
                     connectCount++
                     if (connectCount > 3) {
@@ -567,11 +576,8 @@ class AaruyBLE(
 
             override fun onReceiveHistoryDaily(dailyInfo: DailyInfo) {
                 aapsLogger.debug(LTag.PUMPCOMM, "onReceiveHistoryDaily dailyInfo = $dailyInfo")
-                aaruyPump.lastHistoryDailyTime = dailyInfo.dailyItemList.last().timestamp
+                dailyInfo.dailyItemList.lastOrNull()?.let { aaruyPump.lastHistoryDailyTime = it.timestamp }
                 saveDailyData(dailyInfo)
-                if (refreshHistory) {
-                    receivingHistory = false
-                }
             }
 
             override fun onReceiveRealData(battery: Int, signal: Byte) {
@@ -585,12 +591,7 @@ class AaruyBLE(
                 aaruyPump.errCode.tryEmit(tmpErrCode)
                 // High byte 0 is the answer to a motor command. The wizard reads it from errCode, nothing else needs it.
                 when(error) {
-                    0x80->{     // An error answer to a command
-                        if (tmpErrCode == 0x801C) {
-                            if(receivingHistory) {
-                                receivingHistory = false
-                            }
-                        }
+                    0x80->{     // An error answer to a command. A refused history request is asked again when no page comes.
                         val alarmState = AlarmState.fromInt(tmpErrCode)
                         if (alarmState != AlarmState.NONE) {
                             aaruyPump.pumpWarning = alarmState
@@ -624,34 +625,21 @@ class AaruyBLE(
     }
 
     internal fun onHistoryLog(logInfo: LogInfo) {
-        refreshHistory = true
-        if (logInfo.curPage == 0) historyPageMissing = false
-        else if (logInfo.curPage != nextHistoryPage) {
-            aapsLogger.warn(LTag.PUMPCOMM, "History page ${logInfo.curPage} came, page $nextHistoryPage was expected")
-            historyPageMissing = true
-        }
+        lastHistoryPageAt = System.currentTimeMillis()
+        // A read starts at page 0, also one the driver did not ask for.
+        val pageMissing = logInfo.curPage != 0 && logInfo.curPage != nextHistoryPage
+        if (pageMissing) aapsLogger.warn(LTag.PUMPCOMM, "History page ${logInfo.curPage} came, page $nextHistoryPage was expected")
         nextHistoryPage = logInfo.curPage + 1
-        if (aaruyPump.canSaveHistory) {
-            aapsLogger.debug(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
-            saveHistoryData(logInfo, complete = !historyPageMissing)
-            if (logInfo.curPage + 1 == logInfo.totalPage) {
-                readDailyData(aaruyPump.lastHistoryDailyTime)
-                onHistoryRead()
-            }
-        }
-        else if (logInfo.curPage + 1 == logInfo.totalPage) {
-            aapsLogger.debug(LTag.PUMPCOMM, "aaruyPump.canSaveHistory canSaveHistory = ${aaruyPump.canSaveHistory}, totalPage = ${logInfo.totalPage}")
-            aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
+        // A real pump has no history after pairing: one empty page, and the total is 0.
+        val lastPage = logInfo.curPage + 1 >= logInfo.totalPage
+        aapsLogger.debug(LTag.PUMPCOMM, "History page ${logInfo.curPage} of ${logInfo.totalPage}, saved: ${aaruyPump.canSaveHistory}")
+        if (aaruyPump.canSaveHistory) saveHistoryData(logInfo, pageMissing, lastPage)
+        else if (lastPage) {
+            // The first read after pairing only finds where the log ends. Nothing is lost if a page is missing here.
+            logInfo.logItems.lastOrNull()?.let { aaruyPump.lastHistoryTime = it.timestamp }
             aaruyPump.canSaveHistory = true
             receivingHistory = false
-            onHistoryRead()
-        }
-
-        if (logInfo.curPage == logInfo.totalPage && logInfo.curPage == 0) {
-            // A real pump has no history after pairing. Nothing else would turn history on, and then it is never read.
-            aaruyPump.canSaveHistory = true
             readDailyData(aaruyPump.lastHistoryDailyTime)
-            receivingHistory = false
             onHistoryRead()
         }
     }
@@ -758,10 +746,13 @@ class AaruyBLE(
 
     /** The log is read. What the status could not decide before can be decided now. */
     private fun onHistoryRead() {
-        syncJobs.trySend {
-            awaitingHistory = false
-            lastStatus?.let { tempBasalSync.onStatus(it, live = true) }
-        }
+        syncJobs.trySend { historyRead() }
+    }
+
+    /** Runs as a history job, after the writes of the read. */
+    private suspend fun historyRead() {
+        awaitingHistory = false
+        lastStatus?.let { tempBasalSync.onStatus(it, live = true) }
     }
 
 fun syncAndLoadBasicParam() {
@@ -814,13 +805,10 @@ fun syncAndLoadBasicParam() {
     }
 
     fun requestHistoryData(lastTime: Long) {
-        aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData lastTime = $lastTime, receivingHistory is $receivingHistory refreshHistory is $refreshHistory, isFirstDetection is $isFirstDetection")
+        aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData lastTime = $lastTime, receivingHistory is $receivingHistory")
         if (!receivingHistory) {
-            isFirstDetection = true
-            refreshHistory = false
             nextHistoryPage = 0
-            historyPageMissing = false
-            aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData receivingHistory = $receivingHistory")
+            lastHistoryPageAt = System.currentTimeMillis()
             receivingHistory = true
             CoroutineScope(Dispatchers.Default).launch {
                 delay(20)
@@ -851,103 +839,126 @@ fun syncAndLoadBasicParam() {
         }
     }
 
-    private fun saveHistoryData(logInfo: LogInfo, complete: Boolean) {
-        val lastPage = logInfo.curPage + 1 == logInfo.totalPage
+    private fun saveHistoryData(logInfo: LogInfo, pageMissing: Boolean, lastPage: Boolean) {
         syncJobs.trySend {
-            logInfo.logItems.forEachIndexed { index, item ->
-                aapsLogger.debug(LTag.PUMPCOMM, "saveHistoryData item.data = ${item.data}, item.delayBolus is ${item.delayBolus}")
-                val historyUnitInfo = HistoryUnitInfo()
-                historyUnitInfo.data = item.data.toLong()
-                historyUnitInfo.delayBolus = item.delayBolus.toLong()
-                historyUnitInfo.injectTime = item.injectTime.toLong()
-                historyUnitInfo.reserved = item.reserved
-                if (item.delayBolus.toInt() == 0 && item.type.toInt() == 2) {
-                    val bolusStep =
-                        aaruyPump.bolusStep.times(AaruySetting.precision).toLong()
-                    historyUnitInfo.immTime =
-                        item.data.toLong().div(bolusStep)
-                            .times(2)
-                }
-                historyUnitInfo.time = item.timestamp
-                historyUnitInfo.type = item.type.toInt()
-                historyUnitInfo.blueName = getShortDeviceName()
-                historyUnitInfo.isUploaded = false
-                historyUnitInfo.pumpType = aaruyPump.pumpType
+            if (logInfo.curPage == 0) historyReadBroken = false
+            if (pageMissing) historyReadBroken = true
+            if (historyReadBroken) aapsLogger.warn(LTag.PUMPCOMM, "History page ${logInfo.curPage} left out: a page before it is missing")
+            else try {
+                saveHistoryPage(logInfo)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // The entries after the one that failed are not written. The same request brings them again.
+                aapsLogger.error(LTag.PUMPCOMM, "History page ${logInfo.curPage} could not be written", e)
+                historyReadBroken = true
+            }
+            if (lastPage) {
+                if (historyReadBroken) onHistoryReadWithHole()
+                else onHistoryReadComplete(logInfo)
+            }
+        }
+    }
 
-                if (item.type == 2 && item.delayBolus.toInt() == 0) {
-                    aaruyPump.lastBolusAmount = item.data / 1000.0
-                    aaruyPump.lastBolusTime = item.timestamp
+    /** Only now: an entry not yet written must come again if the app stops here. */
+    private suspend fun onHistoryReadComplete(lastPage: LogInfo) {
+        lastPage.logItems.lastOrNull()?.let { aaruyPump.lastHistoryTime = it.timestamp }
+        historyReadFailures = 0
+        receivingHistory = false
+        readDailyData(aaruyPump.lastHistoryDailyTime)
+        historyRead()
+    }
 
-                    val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(item.timestamp, item.data / 1000.0)
-                    var newRecord = false
-                    if (detailedBolusInfo != null) {
-                        val syncOk = pumpSync.syncBolusWithTempId(
+    private suspend fun saveHistoryPage(logInfo: LogInfo) {
+        logInfo.logItems.forEachIndexed { index, item ->
+            aapsLogger.debug(LTag.PUMPCOMM, "saveHistoryData item.data = ${item.data}, item.delayBolus is ${item.delayBolus}")
+            val historyUnitInfo = HistoryUnitInfo()
+            historyUnitInfo.data = item.data.toLong()
+            historyUnitInfo.delayBolus = item.delayBolus.toLong()
+            historyUnitInfo.injectTime = item.injectTime.toLong()
+            historyUnitInfo.reserved = item.reserved
+            if (item.delayBolus.toInt() == 0 && item.type.toInt() == 2) {
+                val bolusStep =
+                    aaruyPump.bolusStep.times(AaruySetting.precision).toLong()
+                historyUnitInfo.immTime =
+                    item.data.toLong().div(bolusStep)
+                        .times(2)
+            }
+            historyUnitInfo.time = item.timestamp
+            historyUnitInfo.type = item.type.toInt()
+            historyUnitInfo.blueName = getShortDeviceName()
+            historyUnitInfo.isUploaded = false
+            historyUnitInfo.pumpType = aaruyPump.pumpType
+
+            if (item.type == 2 && item.delayBolus.toInt() == 0) {
+                aaruyPump.lastBolusAmount = item.data / 1000.0
+                aaruyPump.lastBolusTime = item.timestamp
+
+                val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(item.timestamp, item.data / 1000.0)
+                var newRecord = false
+                if (detailedBolusInfo != null) {
+                    val syncOk = pumpSync.syncBolusWithTempId(
+                        timestamp = item.timestamp,
+                        amount = PumpInsulin(item.data / 1000.0),
+                        temporaryId = detailedBolusInfo.timestamp,
+                        type = detailedBolusInfo.bolusType,
+                        pumpId = item.timestamp,
+                        pumpType = aaruyPump.pumpType(),
+                        pumpSerial = aaruyPump.pumpSN
+                    )
+                    if (!syncOk) {
+                        // No record with this temporary id, as when the user deleted it. The pump gave this bolus, so it is written all the same.
+                        aapsLogger.warn(LTag.PUMPCOMM, "saveHistoryData: BOLUS_RECORD: no record with tempId ${detailedBolusInfo.timestamp}, written by pump id")
+                        newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = item.timestamp,
                             amount = PumpInsulin(item.data / 1000.0),
-                            temporaryId = detailedBolusInfo.timestamp,
                             type = detailedBolusInfo.bolusType,
                             pumpId = item.timestamp,
                             pumpType = aaruyPump.pumpType(),
                             pumpSerial = aaruyPump.pumpSN
                         )
-                        if (!syncOk) {
-                            // No record with this temporary id, as when the user deleted it. The pump gave this bolus, so it is written all the same.
-                            aapsLogger.warn(LTag.PUMPCOMM, "saveHistoryData: BOLUS_RECORD: no record with tempId ${detailedBolusInfo.timestamp}, written by pump id")
-                            newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = item.timestamp,
-                                amount = PumpInsulin(item.data / 1000.0),
-                                type = detailedBolusInfo.bolusType,
-                                pumpId = item.timestamp,
-                                pumpType = aaruyPump.pumpType(),
-                                pumpSerial = aaruyPump.pumpSN
-                            )
-                        }
-                        else {
-                            aapsLogger.debug(
-                                LTag.PUMPCOMM,
-                                "EVENT syncBolusWithTempId ok timestamp ${dateUtil.dateAndTimeString(aaruyPump.lastBolusTime)} Bolus: ${aaruyPump.lastBolusAmount}U "
-                            )
-                        }
-                    } else {
-                        newRecord = pumpSync.syncBolusWithPumpId(
-                            timestamp = item.timestamp,
-                            amount = PumpInsulin(item.data / 1000.0),
-                            type = null,
-                            pumpId = item.timestamp,
-                            pumpType = aaruyPump.pumpType(),
-                            pumpSerial = aaruyPump.pumpSN
+                    }
+                    else {
+                        aapsLogger.debug(
+                            LTag.PUMPCOMM,
+                            "EVENT syncBolusWithTempId ok timestamp ${dateUtil.dateAndTimeString(aaruyPump.lastBolusTime)} Bolus: ${aaruyPump.lastBolusAmount}U "
                         )
                     }
-                    aapsLogger.debug(
-                        LTag.PUMPCOMM,
-                        "from record: ${newRecordInfo(newRecord)}EVENT BOLUS ${dateUtil.dateAndTimeString(item.timestamp)} ($item.timestamp) Bolus: ${item.data / 1000.0}U "
+                } else {
+                    newRecord = pumpSync.syncBolusWithPumpId(
+                        timestamp = item.timestamp,
+                        amount = PumpInsulin(item.data / 1000.0),
+                        type = null,
+                        pumpId = item.timestamp,
+                        pumpType = aaruyPump.pumpType(),
+                        pumpSerial = aaruyPump.pumpSN
                     )
                 }
-                syncFromHistory(item, logInfo.logItems.getOrNull(index + 1)?.timestamp)
-                if (historyUnitInfoDao.count(item.timestamp, historyUnitInfo.type, historyUnitInfo.reserved) == 0) historyUnitInfoDao.insert(historyUnitInfo)
+                aapsLogger.debug(
+                    LTag.PUMPCOMM,
+                    "from record: ${newRecordInfo(newRecord)}EVENT BOLUS ${dateUtil.dateAndTimeString(item.timestamp)} ($item.timestamp) Bolus: ${item.data / 1000.0}U "
+                )
             }
-            // Only now: an entry not yet written must come again if the app stops here.
-            if (lastPage && logInfo.logItems.isNotEmpty()) {
-                if (complete) {
-                    aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
-                    historyReadFailures = 0
-                    receivingHistory = false
-                } else onHistoryReadWithHole()
-            }
+            syncFromHistory(item, logInfo.logItems.getOrNull(index + 1)?.timestamp)
+            if (historyUnitInfoDao.count(item.timestamp, historyUnitInfo.type, historyUnitInfo.reserved) == 0) historyUnitInfoDao.insert(historyUnitInfo)
         }
     }
 
     /**
-     * The pages that came are good and stay stored. The request has no page number, only a start time, so the same
+     * The pages before the hole stay stored. The request has no page number, only a start time, so the same
      * request goes again. Entries that come twice are not stored twice.
      */
-    private fun onHistoryReadWithHole() {
+    private suspend fun onHistoryReadWithHole() {
         historyReadFailures++
         aapsLogger.warn(LTag.PUMPCOMM, "History read with a missing page, $historyReadFailures in a row. The log time stays at ${aaruyPump.lastHistoryTime}")
         receivingHistory = false
         if (historyReadFailures < HISTORY_READ_TRIES) requestHistoryData(aaruyPump.lastHistoryTime)
-        else if (historyReadFailures == HISTORY_READ_TRIES)
-            notificationManager.post(NotificationId.PUMP_SYNC_ERROR, rh.gs(R.string.aaruy_history_read_failed), validityCheck = { historyReadFailures >= HISTORY_READ_TRIES })
+        else {
+            if (historyReadFailures == HISTORY_READ_TRIES)
+                notificationManager.post(NotificationId.PUMP_SYNC_ERROR, rh.gs(R.string.aaruy_history_read_failed), validityCheck = { historyReadFailures >= HISTORY_READ_TRIES })
+            // Waiting longer would keep every status from ending a temp basal for as long as the link is up.
+            historyRead()
+        }
     }
 
     /** What the pump log knows and the driver may not: all of this can happen while the link is down. */

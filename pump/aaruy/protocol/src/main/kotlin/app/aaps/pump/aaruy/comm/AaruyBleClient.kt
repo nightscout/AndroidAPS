@@ -644,7 +644,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 // Taken from the queue just before the driver gave up on it.
                 while (request.bolusId != 0 && (request.bolusId != bolusId || bolusStart != BolusStart.PENDING)) request = queue.poll() ?: return
                 if (request.bolusId != 0) bolusStart = BolusStart.SENT
-                sequence =if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
+                sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
                 val frame =
                     if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
                     else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
