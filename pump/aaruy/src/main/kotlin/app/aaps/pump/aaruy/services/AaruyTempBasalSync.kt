@@ -1,5 +1,6 @@
 package app.aaps.pump.aaruy.services
 
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -42,8 +43,11 @@ class AaruyTempBasalSync(
     private val ch: ConcentrationHelper,
 ) {
 
-    /** @param live false after a reconnect until the log is read: an end seen now can be long ago. */
-    suspend fun onStatus(snapshot: AaruyStatusSnapshot, live: Boolean) {
+    /**
+     * @param live false after a reconnect until the log is read: an end seen now can be long ago.
+     * @param stoppedSince after a whole read, where the log ends: a pump that is stopped now has given nothing since.
+     */
+    suspend fun onStatus(snapshot: AaruyStatusSnapshot, live: Boolean, stoppedSince: Long? = null) {
         val running = pumpSync.expectedPumpState().temporaryBasal
         when (snapshot.status) {
             STATUS_TEMP_BASAL -> onTempBasalRunning(snapshot, running)
@@ -53,8 +57,10 @@ class AaruyTempBasalSync(
             STATUS_BASAL      -> if (live && running != null) aaruyPump.syncStopTBRWithPumpId(dateUtil.now())
 
             else              -> if (live && running?.type != PumpSync.TemporaryBasalType.PUMP_SUSPEND) {
-                aapsLogger.debug(LTag.PUMPCOMM, "The pump delivers nothing, status ${snapshot.status}")
-                aaruyPump.syncSuspendWithPumpId(dateUtil.now(), SUSPEND_LENGTH_MS)
+                // A stop during a lost link began long before this read. The gap fill finds no gap after the last entry.
+                val from = stoppedSince?.takeIf { it in dateUtil.now() - SUSPEND_LENGTH_MS..dateUtil.now() } ?: dateUtil.now()
+                aapsLogger.debug(LTag.PUMPCOMM, "The pump delivers nothing, status ${snapshot.status}, since ${dateUtil.dateAndTimeString(from)}")
+                aaruyPump.syncSuspendWithPumpId(from, SUSPEND_LENGTH_MS)
             }
         }
         refreshDriverState()
@@ -80,10 +86,13 @@ class AaruyTempBasalSync(
      */
     suspend fun onHistoryTempBasal(item: LogItem, nextStart: Long?, statusNow: Int?) {
         val start = item.timestamp
-        val end = nextStart ?: min(dateUtil.now(), start + T.mins(item.injectTime.toLong()).msecs() + HALF_MINUTE_MS)
-        val record = recordAround(start)
+        // The next entry can be an alarm long after this one, so it is the end only within the minutes of this entry.
+        val byMinutes = start + T.mins(item.injectTime + 1L).msecs()
+        val end = nextStart?.takeIf { it in start..byMinutes } ?: min(dateUtil.now(), start + T.mins(item.injectTime.toLong()).msecs() + HALF_MINUTE_MS)
+        val rate = item.data / 1000.0
+        val record = recordAround(start) ?: lateStart(start, end, rate)
         when {
-            record == null                                                                      -> addTempBasal(start, item.data / 1000.0, end - start)
+            record == null                                                                      -> addTempBasal(start, rate, end - start)
             // Still running in the database, and the pump ended it while the link was down. With status 2 or 3 this entry is only a split.
             dateUtil.now() < record.timestamp + record.duration && statusNow != STATUS_TEMP_BASAL && statusNow != STATUS_BOLUS -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "The pump ended the temp basal at ${dateUtil.dateAndTimeString(end)}")
@@ -112,8 +121,23 @@ class AaruyTempBasalSync(
         aaruyPump.syncSuspendWithPumpId(from, end - from)
     }
 
+    /**
+     * The status wrote this temp basal late: its first frame after a lost answer had old counters, and no later frame
+     * corrected them. The log has the real start. Without this the same temp basal would be in the database twice.
+     */
+    private suspend fun lateStart(start: Long, end: Long, rate: Double): TB? {
+        val rateInDatabaseUnits = PumpRate(rate).iU(ch.concentration, true)
+        val late = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(start, end, true)
+            .firstOrNull { abs(it.rate - rateInDatabaseUnits) < SAME_RATE && it.ids.pumpId != null } ?: return null
+        aapsLogger.debug(LTag.PUMPCOMM, "The temp basal written at ${dateUtil.dateAndTimeString(late.timestamp)} started at ${dateUtil.dateAndTimeString(start)}")
+        aaruyPump.correctTBRStart(late.ids.pumpId!!, start, rate, late.timestamp + late.duration - start, PumpSync.TemporaryBasalType.fromDbType(late.type))
+        return late.copy(timestamp = start, duration = late.timestamp + late.duration - start)
+    }
+
     /** A request found means the answer was lost, which is normal. Nothing found means AAPS never asked for this, and the user should know. */
     private suspend fun addTempBasal(start: Long, rate: Double, duration: Long) {
+        // An entry of 0 minutes whose next entry has the same time. The database refuses it, and that would stop the read at every try.
+        if (duration <= 0) return
         if (!aaruyPump.syncTBRWithPumpId(start, rate, duration)) {
             aapsLogger.warn(LTag.PUMPCOMM, "The pump runs a temp basal of $rate that AAPS did not ask for")
             aaruyPump.announceTempBasalNotFromAaps(ch.basalRateString(PumpRate(rate), true))
@@ -124,9 +148,10 @@ class AaruyTempBasalSync(
      * The clocks of the phone and the pump differ by some seconds, so a record can start just after the entry and even end before the next read.
      * Seen on the emulator as on a real pump: the last entry of a read comes again, and it must find its own record.
      */
-    private suspend fun recordAround(time: Long) =
-        persistenceLayer.getTemporaryBasalActiveAt(time)
-            ?: persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(time - SAME_TIME_MS, time + SAME_TIME_MS, true).firstOrNull()
+    private suspend fun recordAround(time: Long): TB? =
+        // The one that starts here first: the one before can end some hundred ms after this start, and it is not this one.
+        persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(time - SAME_TIME_MS, time + SAME_TIME_MS, true).minByOrNull { abs(it.timestamp - time) }
+            ?: persistenceLayer.getTemporaryBasalActiveAt(time)?.takeIf { it.timestamp + it.duration > time + SAME_TIME_MS }
 
     private suspend fun refreshDriverState() = aaruyPump.fromTemporaryBasal(pumpSync.expectedPumpState().temporaryBasal)
 

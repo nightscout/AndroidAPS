@@ -316,6 +316,66 @@ class AaruyTempBasalSyncTest {
         assertEquals(from, writes.single().arguments[0])
     }
 
+    /** A status after a lost answer had old counters and wrote the start 12 minutes late. The log has the real start: the same temp basal, not a second one. */
+    @Test
+    fun aRecordTheStatusStartedLateGetsTheStartOfTheLog() = runBlocking {
+        val start = now - 60 * minute
+        val late = TB(timestamp = start + 12 * minute, duration = 18 * minute, rate = 0.5, isAbsolute = true, type = TB.Type.NORMAL).also { it.ids.pumpId = start + 12 * minute }
+        whenever(persistence.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
+            if (late.timestamp in (invocation.arguments[0] as Long)..(invocation.arguments[1] as Long)) listOf(late) else emptyList()
+        }
+        sync.onHistoryTempBasal(entry(start, 30), null, statusNow = 1)
+        assertEquals("only the start is corrected", 1, writes.size)
+        assertEquals(start, writes.single().arguments[0])
+        assertEquals(30 * minute, writes.single().arguments[2])
+        assertEquals(late.ids.pumpId, writes.single().arguments[5])
+        assertEquals(0, announcements.size)
+    }
+
+    /** The next item of the page was an alarm 80 minutes later. The temp basal ran for its 30 minutes, not until the alarm. */
+    @Test
+    fun aNextEntryAfterTheMinutesOfThisOneIsNotItsEnd() = runBlocking {
+        val start = now - 120 * minute
+        sync.onHistoryTempBasal(entry(start, 30), start + 80 * minute, statusNow = 1)
+        assertEquals(30 * minute + 30 * second, writes.single().arguments[2])
+    }
+
+    /** The database refuses a temp basal of no length, and the read stopped at it every time. */
+    @Test
+    fun anEntryOfNoLengthAddsNothing() = runBlocking {
+        val start = now - 20 * minute
+        sync.onHistoryTempBasal(entry(start, 0), start, statusNow = 1)
+        assertEquals(0, writes.size)
+    }
+
+    /**
+     * The one before ends some hundred ms after this entry starts, and the database has this one too. This one must be
+     * found: the one before had ended already, so a pump that stopped this one was never told to AAPS.
+     */
+    @Test
+    fun theRecordThatStartsWithTheEntryIsFoundNotTheOneBefore() = runBlocking {
+        val start = now - 40 * minute
+        val before = TB(timestamp = start - 30 * minute, duration = 30 * minute + 700, rate = 1.0, isAbsolute = true, type = TB.Type.NORMAL)
+        val this1 = TB(timestamp = start + 950, duration = 60 * minute, rate = 0.5, isAbsolute = true, type = TB.Type.NORMAL)
+        whenever(persistence.getTemporaryBasalActiveAt(any())).thenAnswer { invocation ->
+            val time = invocation.arguments[0] as Long
+            listOf(before, this1).firstOrNull { time in it.timestamp..it.timestamp + it.duration }
+        }
+        whenever(persistence.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
+            listOf(before, this1).filter { it.timestamp in (invocation.arguments[0] as Long)..(invocation.arguments[1] as Long) }
+        }
+        sync.onHistoryTempBasal(entry(start, 10), null, statusNow = 0)
+        assertEquals(start + 10 * minute + 30 * second, stops.single().arguments[0])
+    }
+
+    /** The pump stopped during a lost link. After a whole read the stop starts where the log ends, not at the time of the read. */
+    @Test
+    fun aStopFoundAfterAReadStartsWhereTheLogEnds() = runBlocking {
+        sync.onStatus(AaruyStatusSnapshot(8), live = true, stoppedSince = now - 30 * minute)
+        assertEquals(now - 30 * minute, writes.single().arguments[0])
+        assertEquals(PumpSync.TemporaryBasalType.PUMP_SUSPEND, writes.single().arguments[4])
+    }
+
     @Test
     fun theFirstEntryHasNoGapBeforeIt() = runBlocking {
         `when`(preferences.get(AaruyLongKey.PumpLastDeliveryEnd)).thenReturn(0L)

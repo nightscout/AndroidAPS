@@ -127,6 +127,12 @@ class AaruyBLE(
     @Volatile private var awaitingHistory = false
     @Volatile private var lastStatus: AaruyStatusSnapshot? = null
 
+    /**
+     * The status in the order of the history jobs. A history page whose job runs after a newer status came must
+     * see the status of its own time: the newest could end a temp basal at a split piece of it.
+     */
+    @Volatile private var syncedStatus: AaruyStatusSnapshot? = null
+
     /** One after the other and in the order they came, or a later status could overtake the log that explains it. */
     private val syncJobs by lazy {
         Channel<suspend () -> Unit>(Channel.UNLIMITED).also { jobs ->
@@ -737,6 +743,7 @@ class AaruyBLE(
         lastStatus = snapshot
         val live = !awaitingHistory || cancelTempBasalRunning
         syncJobs.trySend {
+            syncedStatus = snapshot
             tempBasalSync.onStatus(snapshot, live)
             if (snapshot.status == STATUS_TEMP_BASAL) sendTmpBasalOk = true
             else if (snapshot.status != STATUS_BOLUS) cancelTmpBasalOk = true
@@ -748,10 +755,13 @@ class AaruyBLE(
         syncJobs.trySend { historyRead() }
     }
 
-    /** Runs as a history job, after the writes of the read. */
-    private suspend fun historyRead() {
+    /**
+     * Runs as a history job, after the writes of the read. The newest status, also one whose own job comes later: it ran with live false.
+     * @param complete the log is read to its end, so where it ends is where the pump last gave insulin
+     */
+    private suspend fun historyRead(complete: Boolean = false) {
         awaitingHistory = false
-        lastStatus?.let { tempBasalSync.onStatus(it, live = true) }
+        lastStatus?.let { tempBasalSync.onStatus(it, live = true, stoppedSince = if (complete) aaruyPump.lastDeliveryEnd.takeIf { end -> end > 0 } else null) }
     }
 
 fun syncAndLoadBasicParam() {
@@ -865,7 +875,7 @@ fun syncAndLoadBasicParam() {
         historyReadFailures = 0
         receivingHistory = false
         readDailyData(aaruyPump.lastHistoryDailyTime)
-        historyRead()
+        historyRead(complete = true)
     }
 
     private suspend fun saveHistoryPage(logInfo: LogInfo) {
@@ -972,7 +982,7 @@ fun syncAndLoadBasicParam() {
 
             HISTORY_TEMP_BASAL -> {
                 tempBasalSync.onHistoryDelivery(item.timestamp, item.timestamp + minutes)
-                tempBasalSync.onHistoryTempBasal(item, nextStart, lastStatus?.status)
+                tempBasalSync.onHistoryTempBasal(item, nextStart, syncedStatus?.status)
             }
 
             HISTORY_BOLUS      -> if (item.delayBolus.toInt() == 0) {
