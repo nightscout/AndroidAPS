@@ -2,6 +2,8 @@ package app.aaps.pump.aaruy.services
 
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
@@ -54,6 +56,7 @@ class AaruyHistorySyncTest {
     private val dailyDao = mock(HistoryDailyUnitInfoDao::class.java)
     private val rh = mock(ResourceHelper::class.java)
     private val tempBasalSync = mock(AaruyTempBasalSync::class.java)
+    private val notificationManager = mock(NotificationManager::class.java)
     private val pump = AaruyPump(
         logger, rh, mock(Preferences::class.java), dateUtil, pumpSync,
         mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
@@ -68,7 +71,8 @@ class AaruyHistorySyncTest {
         pump.canSaveHistory = true
         ble = AaruyBLE(
             transport, logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java),
-            mock(Preferences::class.java), historyDao, dailyDao, mock(DetailedBolusInfoStorage::class.java), pumpSync, tempBasalSync
+            mock(Preferences::class.java), historyDao, dailyDao, mock(DetailedBolusInfoStorage::class.java), pumpSync, tempBasalSync,
+            notificationManager, rh
         )
     }
 
@@ -77,6 +81,10 @@ class AaruyHistorySyncTest {
 
     private fun receive(vararg items: LogItem) {
         ble.onHistoryLog(LogInfo(items.size, 1, 0, items.size, items.toList()))
+    }
+
+    private fun page(page: Int, total: Int, vararg items: LogItem) {
+        ble.onHistoryLog(LogInfo(items.size, total, page, items.size, items.toList()))
     }
 
     private fun tbrEntry(start: Long, minutes: Int) = LogItem(timestamp = start, type = 1, data = 500, injectTime = minutes, delayBolus = 0, reserved = 0)
@@ -99,6 +107,49 @@ class AaruyHistorySyncTest {
         receive(tbrEntry(now - 20 * minute, 5))
         verify(historyDao, timeout(5000)).insert(any())
         Thread.sleep(300)
+        assertEquals(0L, pump.lastHistoryTime)
+    }
+
+    @Test
+    fun aCompleteReadMovesTheLogTime() {
+        page(0, 3, tbrEntry(now - 30 * minute, 5))
+        page(1, 3, tbrEntry(now - 20 * minute, 5))
+        page(2, 3, tbrEntry(now - 10 * minute, 5))
+        verify(historyDao, timeout(5000).times(3)).insert(any())
+        Thread.sleep(300)
+        assertEquals(now - 10 * minute, pump.lastHistoryTime)
+        assertEquals(false, ble.receivingHistory)
+    }
+
+    /** The pages that came are stored, but the log time stays, so the same request brings the missing page. */
+    @Test
+    fun aMissingMiddlePageKeepsTheLogTimeAndAsksAgain() {
+        page(0, 3, tbrEntry(now - 30 * minute, 5))
+        page(2, 3, tbrEntry(now - 10 * minute, 5))
+        verify(historyDao, timeout(5000).times(2)).insert(any())
+        Thread.sleep(300)
+        assertEquals(0L, pump.lastHistoryTime)
+        assertEquals(true, ble.receivingHistory)
+        verify(notificationManager, never()).post(any(), any<String>(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
+    }
+
+    @Test
+    fun aMissingFirstPageKeepsTheLogTime() {
+        ble.requestHistoryData(0)
+        page(1, 2, tbrEntry(now - 10 * minute, 5))
+        verify(historyDao, timeout(5000)).insert(any())
+        Thread.sleep(300)
+        assertEquals(0L, pump.lastHistoryTime)
+    }
+
+    /** A page that always fails would stop the history for good. The user must know. */
+    @Test
+    fun threeReadsWithAHoleInARowTellTheUser() {
+        repeat(3) {
+            page(0, 3, tbrEntry(now - 30 * minute, 5))
+            page(2, 3, tbrEntry(now - 10 * minute, 5))
+        }
+        verify(notificationManager, timeout(5000)).post(eq(NotificationId.PUMP_SYNC_ERROR), any<String>(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
         assertEquals(0L, pump.lastHistoryTime)
     }
 

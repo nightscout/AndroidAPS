@@ -93,6 +93,7 @@
     <string name="getting_pump_status">Getting pump status</string>
     <string name="aaruy_wait_bolus_time_tip" comment="%1$d=seconds. Example: Waiting for the bolus to end. 20 s left.">Waiting for the bolus to end. %1$d s left.</string>
     <string name="aaruy_history_daily_parts" comment="%1$s=bolus insulin, %2$s=basal insulin of one day. Example: 12.00 U + 18.00 U">%1$s + %2$s</string>
+    <string name="aaruy_history_read_failed">The pump history could not be read completely. A bolus given on the pump may be missing in AAPS. AAPS keeps trying.</string>
     <string name="aaruy_time_changed">Time or time zone changed</string>
     <string name="aaruy_temp_basal_not_from_aaps" comment="%1$s=rate with unit. Example: 0.50 U/h">The pump ran a temp basal of %1$s that AAPS did not ask for. It is now in the treatments.</string>
 </resources>

@@ -3,6 +3,7 @@ package app.aaps.pump.aaruy.services
 import android.content.Context
 import android.os.Looper
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -90,7 +91,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java), tempBasalSyncMock()
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
         ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
@@ -156,7 +157,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java), tempBasalSyncMock()
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
         ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
@@ -223,7 +224,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            pumpSync, tempBasalSyncMock()
+            pumpSync, tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
         ble.startEmulatorIfActive()
         val transport = ble.emulatorTransport!!
@@ -284,7 +285,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java), tempBasalSyncMock()
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
         ble.startEmulatorIfActive()
 
@@ -329,7 +330,7 @@ class AaruyBleReconnectTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            mock(PumpSync::class.java), tempBasalSyncMock()
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
         ble.startEmulatorIfActive()
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
@@ -365,7 +366,7 @@ class AaruyBleReconnectTest {
             val ble = AaruyBLE(
                 AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = { now })),
                 logger, RuntimeEnvironment.getApplication() as Context, pump, dateUtil, mock(RxBus::class.java), preferences,
-                mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java), mock(PumpSync::class.java), tempBasalSyncMock()
+                mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java), mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
             )
             ble.startEmulatorIfActive()
             ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)

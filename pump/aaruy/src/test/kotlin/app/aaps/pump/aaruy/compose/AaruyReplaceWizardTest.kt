@@ -8,6 +8,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -102,7 +103,7 @@ class AaruyReplaceWizardTest {
             mock(HistoryUnitInfoDao::class.java),
             mock(HistoryDailyUnitInfoDao::class.java),
             mock(DetailedBolusInfoStorage::class.java),
-            pumpSync, tempBasalSyncMock()
+            pumpSync, tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
         ble.connect("test", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         waitFor("connected") { pump.connectionState == ConnectionState.CONNECTED }

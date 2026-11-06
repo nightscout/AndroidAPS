@@ -18,10 +18,13 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -39,6 +42,7 @@ import app.aaps.pump.aaruy.comm.BleStatus
 import app.aaps.pump.aaruy.comm.AaruyBleListener
 import app.aaps.pump.aaruy.comm.ScanResultListener
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
@@ -80,6 +84,8 @@ class AaruyBLE(
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val pumpSync: PumpSync,
     private val tempBasalSync: AaruyTempBasalSync,
+    private val notificationManager: NotificationManager,
+    private val rh: ResourceHelper,
 ) {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val BOLUS_START_TIMEOUT_MS = 5000L
@@ -96,6 +102,14 @@ class AaruyBLE(
     private val HISTORY_ALARM = 3
     private val HISTORY_WAIT_MS = 10_000L
     private val ALARM_SEEN_LIVE_MS = 120_000L
+    private val HISTORY_READ_TRIES = 3
+
+    /** The page the pump must send next. A page that did not come leaves a hole in the read. */
+    @Volatile private var nextHistoryPage = 0
+    @Volatile private var historyPageMissing = false
+
+    /** Reads in a row with a hole. The start time of the next read stays the same, so a page that always fails would stop the history for good. */
+    @Volatile private var historyReadFailures = 0
     @Volatile private var cancelTempBasalRunning = false
     @Volatile private var awaitingHistory = false
     @Volatile private var lastStatus: AaruyStatusSnapshot? = null
@@ -609,9 +623,15 @@ class AaruyBLE(
 
     internal fun onHistoryLog(logInfo: LogInfo) {
         refreshHistory = true
+        if (logInfo.curPage == 0) historyPageMissing = false
+        else if (logInfo.curPage != nextHistoryPage) {
+            aapsLogger.warn(LTag.PUMPCOMM, "History page ${logInfo.curPage} came, page $nextHistoryPage was expected")
+            historyPageMissing = true
+        }
+        nextHistoryPage = logInfo.curPage + 1
         if (aaruyPump.canSaveHistory) {
             aapsLogger.debug(LTag.PUMPCOMM, "aaruyPump.canSaveHistory curPage = ${logInfo.curPage}, totalPage = ${logInfo.totalPage}")
-            saveHistoryData(logInfo)
+            saveHistoryData(logInfo, complete = !historyPageMissing)
             if (logInfo.curPage + 1 == logInfo.totalPage) {
                 readDailyData(aaruyPump.lastHistoryDailyTime)
                 onHistoryRead()
@@ -791,6 +811,8 @@ fun syncAndLoadBasicParam() {
         if (!receivingHistory) {
             isFirstDetection = true
             refreshHistory = false
+            nextHistoryPage = 0
+            historyPageMissing = false
             aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData receivingHistory = $receivingHistory")
             receivingHistory = true
             CoroutineScope(Dispatchers.Default).launch {
@@ -822,7 +844,7 @@ fun syncAndLoadBasicParam() {
         }
     }
 
-    private fun saveHistoryData(logInfo: LogInfo) {
+    private fun saveHistoryData(logInfo: LogInfo, complete: Boolean) {
         val lastPage = logInfo.curPage + 1 == logInfo.totalPage
         syncJobs.trySend {
             logInfo.logItems.forEachIndexed { index, item ->
@@ -892,10 +914,26 @@ fun syncAndLoadBasicParam() {
             }
             // Only now: an entry not yet written must come again if the app stops here.
             if (lastPage && logInfo.logItems.isNotEmpty()) {
-                aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
-                receivingHistory = false
+                if (complete) {
+                    aaruyPump.lastHistoryTime = logInfo.logItems.last().timestamp
+                    historyReadFailures = 0
+                    receivingHistory = false
+                } else onHistoryReadWithHole()
             }
         }
+    }
+
+    /**
+     * The pages that came are good and stay stored. The request has no page number, only a start time, so the same
+     * request goes again. Entries that come twice are not stored twice.
+     */
+    private fun onHistoryReadWithHole() {
+        historyReadFailures++
+        aapsLogger.warn(LTag.PUMPCOMM, "History read with a missing page, $historyReadFailures in a row. The log time stays at ${aaruyPump.lastHistoryTime}")
+        receivingHistory = false
+        if (historyReadFailures < HISTORY_READ_TRIES) requestHistoryData(aaruyPump.lastHistoryTime)
+        else if (historyReadFailures == HISTORY_READ_TRIES)
+            notificationManager.post(NotificationId.PUMP_SYNC_ERROR, rh.gs(R.string.aaruy_history_read_failed), validityCheck = { historyReadFailures >= HISTORY_READ_TRIES })
     }
 
     /** What the pump log knows and the driver may not: all of this can happen while the link is down. */
