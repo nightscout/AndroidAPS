@@ -201,6 +201,19 @@ class AaruyHistorySyncTest {
         runBlocking { verify(pumpSync, timeout(5000)).syncBolusWithPumpId(eq(start), any(), eq(BS.Type.SMB), eq(start), any(), any()) }
     }
 
+    /** It was synced when it first came. Synced again with no type, a PRIMING record changed its amount by the concentration. */
+    @Test
+    fun aBolusThatComesAgainIsNotSyncedAgain() {
+        val entry = LogItem(timestamp = now - 30 * minute, type = 2, data = 2000, injectTime = 0, delayBolus = 0, reserved = 4)
+        `when`(historyDao.count(entry.timestamp, 2, 4)).thenReturn(1)
+        receive(entry)
+        Thread.sleep(300)
+        runBlocking {
+            verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
+            verify(pumpSync, never()).syncBolusWithTempId(any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())
+        }
+    }
+
     /** Seen on a real pump: a read from an earlier time brought an older bolus, and the pump screen showed it as the last one. */
     @Test
     fun anOlderBolusReadAgainIsNotTheLastBolus() {

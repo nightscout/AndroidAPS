@@ -75,6 +75,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.min
 import kotlin.math.abs
 import java.util.Calendar
 
@@ -368,7 +369,11 @@ class AaruyPlugin(
     )
 
     // cU-domain pump limits: folded into the IU scan by ConstraintsChecker.
-    override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate = PumpRate(absoluteRate.cU.coerceAtMost(aaruyPump.maxBasal))
-    override fun applyBolusConstraints(insulin: PumpInsulin): PumpInsulin = PumpInsulin(insulin.cU.coerceAtMost(aaruyPump.maxBolus))
+    // The lower of pump and setting: a lowered setting counts at once, and a raised one only when the pump has it.
+    override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate =
+        PumpRate(absoluteRate.cU.coerceAtMost(min(aaruyPump.maxBasal, preferences.get(AaruyDoublePreferenceKey.MaxBasal))))
+
+    override fun applyBolusConstraints(insulin: PumpInsulin): PumpInsulin =
+        PumpInsulin(insulin.cU.coerceAtMost(min(aaruyPump.maxBolus, preferences.get(AaruyDoublePreferenceKey.MaxBolus))))
     override fun applyExtendedBolusConstraints(insulin: PumpInsulin): PumpInsulin = applyBolusConstraints(insulin)
 }

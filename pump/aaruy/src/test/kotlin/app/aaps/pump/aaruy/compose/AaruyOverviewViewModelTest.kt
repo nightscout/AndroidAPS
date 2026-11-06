@@ -20,6 +20,7 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
+import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.services.AaruyBLE
@@ -109,10 +110,22 @@ class AaruyOverviewViewModelTest {
     @Test
     fun anActiveAlarmIsShownAndCanBeConfirmed() {
         pump.pumpState = AaruyPumpState.STOP_RUNNING
+        pump.connectionState = ConnectionState.CONNECTED
         pump.addAlarm(AlarmState.PUMP_MOTOR_BLOCK)
         val state = state()
         assertTrue(state.row(R.string.active_alarms_label).visible)
         assertTrue("s${R.string.confirm_alarms_label}" in state.actions())
+    }
+
+    /** Without a link the pump would not hear it: it would go on with the alarm, and AAPS would no longer show it. */
+    @Test
+    fun anAlarmCannotBeConfirmedWithoutALink() {
+        pump.pumpState = AaruyPumpState.STOP_RUNNING
+        pump.connectionState = ConnectionState.DISCONNECTED
+        pump.addAlarm(AlarmState.PUMP_MOTOR_BLOCK)
+        val state = state()
+        assertTrue(state.row(R.string.active_alarms_label).visible)
+        assertFalse("s${R.string.confirm_alarms_label}" in state.actions())
     }
 
     /** Starting the change would end the bolus. */

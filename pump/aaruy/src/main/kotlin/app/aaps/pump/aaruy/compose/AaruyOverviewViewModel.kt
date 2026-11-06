@@ -13,7 +13,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpInsulin
-import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -189,7 +188,8 @@ class AaruyOverviewViewModel(
                 PumpInfoRow(
                     label = rh.gs(CoreUiR.string.tempbasal_label),
                     value = if (pump.isTempBasalInProgress) ch.basalTbrString(
-                        rate = PumpRate(pump.tempBasalAbsoluteRate),
+                        // From the database, so in insulin units. The pump runs it in its own units.
+                        rate = ch.toPumpRate(pump.tempBasalAbsoluteRate),
                         startTime = pump.tempBasalStart,
                         durationInMin = T.msecs(pump.tempBasalDuration).mins().toInt()
                     ) else "",
@@ -220,7 +220,8 @@ class AaruyOverviewViewModel(
             if (isInitialized && pump.pumpState != AaruyPumpState.LARGEDOSE_RUNNING) {
                 add(ScreenAction(label = rh.gs(R.string.replace_label), icon = Icons.Filled.SwapHoriz, onClick = { _events.tryEmit(AaruyOverviewEvent.StartReplace) }))
             }
-            if (alarms.isNotEmpty()) add(ScreenAction(label = rh.gs(R.string.confirm_alarms_label), icon = Icons.Filled.Check, onClick = { onConfirmAlarmsClick() }))
+            // Only with a link: the pump must hear it, see AaruyBLE.confirmAlarms.
+            if (alarms.isNotEmpty() && pump.connectionState == ConnectionState.CONNECTED) add(ScreenAction(label = rh.gs(R.string.confirm_alarms_label), icon = Icons.Filled.Check, onClick = { onConfirmAlarmsClick() }))
             add(
                 if (isConfigured) ScreenAction(label = rh.gs(CoreUiR.string.pump_unpair), icon = Icons.Filled.Bluetooth, onClick = { _events.tryEmit(AaruyOverviewEvent.ConfirmUnpair) })
                 else ScreenAction(label = rh.gs(CoreUiR.string.pump_pair), icon = Icons.Filled.Bluetooth, onClick = { _events.tryEmit(AaruyOverviewEvent.StartPairWizard) })

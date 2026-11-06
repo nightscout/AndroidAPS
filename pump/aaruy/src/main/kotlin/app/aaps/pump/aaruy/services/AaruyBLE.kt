@@ -121,6 +121,9 @@ class AaruyBLE(
      */
     @Volatile private var historyReadBroken = false
 
+    /** Counts each new link and each loss. A read that ends after a reconnect belongs to the old link: the new one waits for its own. */
+    @Volatile private var linkGeneration = 0
+
     /** Reads in a row with a hole. The start time of the next read stays the same, so a page that always fails would stop the history for good. */
     @Volatile private var historyReadFailures = 0
     @Volatile private var cancelTempBasalRunning = false
@@ -363,6 +366,8 @@ class AaruyBLE(
 
     /** The pump answers each alarm it is told about. Seen on a real pump: a blocked motor stopped beeping after this. */
     fun confirmAlarms() {
+        // Without a link nothing is sent: the pump would go on with the alarm, and AAPS would no longer show it.
+        if (!isConnected) return
         aaruyPump.activeAlarms.toList().forEach { clearAlarmStatus(it.state) }
         aaruyPump.clearAlarmState()
     }
@@ -428,6 +433,7 @@ class AaruyBLE(
                     aapsLogger.warn(LTag.PUMPCOMM, "A link with no paired pump is closed, stopped: $stopped")
                     aaBleUtil.closeLink()
                 } else if (status == BleStatus.CONNECTED) {
+                    linkGeneration++
                     awaitingHistory = true
                     isConnected = true
                     isConnecting = false
@@ -457,6 +463,9 @@ class AaruyBLE(
                 } else if(status == BleStatus.DISCONNECTED) {
                     // A stop with no answer on this link says nothing about how a bolus ended while the link was down.
                     aaruyPump.bolusStopRequested = false
+                    linkGeneration++
+                    // A status before the next read is not live: the end of a temp basal seen then can be long ago.
+                    awaitingHistory = true
                     // The end of this bolus can only be seen in the log now, whatever the next status says.
                     if (aaruyPump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING && !aaruyPump.bolusDone) aaruyPump.bolusLinkLost = true
                     isConnected = false
@@ -796,7 +805,8 @@ class AaruyBLE(
 
     /** The log is read. What the status could not decide before can be decided now. */
     private fun onHistoryRead() {
-        syncJobs.trySend { historyRead() }
+        val generation = linkGeneration
+        syncJobs.trySend { if (generation == linkGeneration) historyRead() }
     }
 
     /**
@@ -893,6 +903,7 @@ fun syncAndLoadBasicParam() {
     }
 
     private fun saveHistoryData(logInfo: LogInfo, pageMissing: Boolean, lastPage: Boolean) {
+        val generation = linkGeneration
         syncJobs.trySend {
             if (logInfo.curPage == 0) historyReadBroken = false
             if (pageMissing) historyReadBroken = true
@@ -907,7 +918,9 @@ fun syncAndLoadBasicParam() {
                 historyReadBroken = true
             }
             if (lastPage) {
-                if (historyReadBroken) onHistoryReadWithHole()
+                // What it wrote is good. The new link reads from the same time again.
+                if (generation != linkGeneration) aapsLogger.debug(LTag.PUMPCOMM, "A history read of an earlier link ended")
+                else if (historyReadBroken) onHistoryReadWithHole()
                 else onHistoryReadComplete(logInfo)
             }
         }
@@ -943,7 +956,9 @@ fun syncAndLoadBasicParam() {
             historyUnitInfo.isUploaded = false
             historyUnitInfo.pumpType = aaruyPump.pumpType
 
-            if (item.type == 2 && item.delayBolus.toInt() == 0) {
+            // Written only after its sync, so a known entry was synced. Again, a sync with no type changed a PRIMING record by the concentration.
+            val known = historyUnitInfoDao.count(item.timestamp, historyUnitInfo.type, historyUnitInfo.reserved) > 0
+            if (item.type == 2 && item.delayBolus.toInt() == 0 && !known) {
                 // A read can bring old entries again. The minute is for the pump clock, which can be some seconds behind the phone.
                 if (item.timestamp > aaruyPump.lastBolusTime - T.mins(1).msecs()) {
                     aaruyPump.lastBolusAmount = item.data / 1000.0
@@ -996,7 +1011,7 @@ fun syncAndLoadBasicParam() {
                 )
             }
             syncFromHistory(item, logInfo.logItems.getOrNull(index + 1)?.timestamp)
-            if (historyUnitInfoDao.count(item.timestamp, historyUnitInfo.type, historyUnitInfo.reserved) == 0) historyUnitInfoDao.insert(historyUnitInfo)
+            if (!known) historyUnitInfoDao.insert(historyUnitInfo)
         }
     }
 

@@ -1,7 +1,10 @@
 package app.aaps.pump.aaruy.compose
 
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -28,6 +31,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AaruyHistoryViewModelTest {
@@ -52,7 +56,23 @@ class AaruyHistoryViewModelTest {
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
 
-    private fun viewModel() = AaruyHistoryViewModel(rh, mock<AaruyBLE>(), pump, historyDao, dailyDao, dateUtil)
+    /** As the real one does for U200: insulin units, and the pump units next to them. */
+    private val ch: ConcentrationHelper = mock<ConcentrationHelper>().also {
+        whenever(it.insulinAmountString(any())).thenAnswer { invocation -> (invocation.arguments[0] as PumpInsulin).cU.let { cU -> "%.2f U (%.2f CU)".format(Locale.ROOT, cU * 2, cU) } }
+        whenever(it.basalRateString(any(), any(), any())).thenAnswer { invocation -> (invocation.arguments[0] as PumpRate).cU.let { cU -> "%.2f U/h (%.2f CU/h)".format(Locale.ROOT, cU * 2, cU) } }
+    }
+
+    private fun viewModel() = AaruyHistoryViewModel(rh, mock<AaruyBLE>(), pump, historyDao, dailyDao, dateUtil, ch)
+
+    /** With U200 a bolus of 1.0 CU is 2.0 U of insulin. Shown as "1.00 U", the user read half of what was given. */
+    @Test
+    fun withU200TheHistoryShowsInsulinUnitsAndPumpUnits() {
+        whenever(historyDao.querySince(any())).thenReturn(listOf(entry(now - 1000, AaruyHistoryTypes.BOLUS.toInt(), data = 1000)))
+        val viewModel = viewModel()
+        viewModel.show(AaruyHistoryTypes.BOLUS)
+        val records = viewModel.recordsWhen { it.isNotEmpty() }
+        assertEquals("2.00 U (1.00 CU)", viewModel.valueText(records.single()))
+    }
 
     private fun entry(time: Long, type: Int, data: Long = 0, injectTime: Long = 0, delayBolus: Long = 0) = HistoryUnitInfo().also {
         it.time = time

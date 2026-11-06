@@ -1,10 +1,12 @@
 package app.aaps.pump.aaruy.compose
 
-import app.aaps.core.interfaces.R as InterfacesR
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.pump.PumpHistoryRecord
@@ -66,7 +68,8 @@ class AaruyHistoryViewModel(
     private val aaruyPump: AaruyPump,
     private val historyDao: HistoryUnitInfoDao,
     private val dailyDao: HistoryDailyUnitInfoDao,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val ch: ConcentrationHelper
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PumpHistoryUiState<AaruyHistoryRecord>())
@@ -134,19 +137,20 @@ class AaruyHistoryViewModel(
     fun timeText(record: AaruyHistoryRecord): String =
         if (record.code == AaruyHistoryTypes.DAILY) dateUtil.dateString(record.timestamp) else dateUtil.dateAndTimeString(record.timestamp)
 
+    /** The pump counts in its own units. With insulin that is not U100 they differ from insulin units, so both are shown. */
     fun valueText(record: AaruyHistoryRecord): String = when (record.code) {
         AaruyHistoryTypes.ALARM    -> record.alarm
         AaruyHistoryTypes.REPLACED -> record.stringValue
-        AaruyHistoryTypes.DAILY    -> rh.gs(InterfacesR.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
-        AaruyHistoryTypes.BOLUS    -> rh.gs(InterfacesR.string.format_insulin_units, record.value)
-        else                       -> rh.gs(CoreUiR.string.pump_base_basal_rate, record.value)
+        AaruyHistoryTypes.DAILY    -> ch.insulinAmountString(PumpInsulin(record.dailyBolus + record.dailyBasal))
+        AaruyHistoryTypes.BOLUS    -> ch.insulinAmountString(PumpInsulin(record.value))
+        else                       -> ch.basalRateString(PumpRate(record.value), true)
     }
 
     fun detailText(record: AaruyHistoryRecord): String = when (record.code) {
         AaruyHistoryTypes.DAILY -> rh.gs(
             R.string.aaruy_history_daily_parts,
-            rh.gs(InterfacesR.string.format_insulin_units, record.dailyBolus),
-            rh.gs(InterfacesR.string.format_insulin_units, record.dailyBasal)
+            ch.insulinAmountString(PumpInsulin(record.dailyBolus)),
+            ch.insulinAmountString(PumpInsulin(record.dailyBasal))
         )
         AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(CoreUiR.string.format_mins, record.durationMinutes)
         else                    -> ""
