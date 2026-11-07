@@ -47,6 +47,7 @@ import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.icons.IcMdi
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPatchPump
+import app.aaps.core.ui.compose.icons.IcPluginAp550
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
 import app.aaps.core.ui.compose.icons.IcPluginCarelevo
@@ -108,6 +109,7 @@ class UserEntryPresentationHelperImpl(
         Sources.Actions             -> IcAction
         Sources.Aidex               -> IcXDrip
         Sources.Announcement        -> IcAnnouncement
+        Sources.AP550S              -> IcPluginAp550
         Sources.Automation          -> IcPluginAutomation
         Sources.Autotune            -> IcPluginAutotune
         Sources.BG                  -> IcGenericCgm
@@ -197,6 +199,7 @@ class UserEntryPresentationHelperImpl(
         Sources.Actions             -> ElementType.TEMP_BASAL.color()
         Sources.Aidex               -> ElementType.CGM_DEX.color()
         Sources.Announcement        -> ElementType.ANNOUNCEMENT.color()
+        Sources.AP550S              -> ElementType.PUMP.color()
         Sources.Automation          -> ElementType.AUTOMATION.color()
         Sources.Autotune            -> ElementType.AAPS.color()
         Sources.BG                  -> ElementType.CGM_DEX.color()

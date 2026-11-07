@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <path android:pathData="M512,512m-512,0a512,512 0 1,1 1024,0a512,512 0 1,1 -1024,0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="radial"
+                android:centerX="512"
+                android:centerY="512"
+                android:gradientRadius="512">
+                <item android:offset="0.8" android:color="?attr/colorSurface"/>
+                <item android:offset="0.9" android:color="#FF9800"/>
+                <item android:offset="1.0" android:color="?attr/colorSurface"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:fillColor="#80FF9800"
+        android:pathData="M512,512m-340,0a340,340 0 1,1 680,0a340,340 0 1,1 -680,0
+                          M512,512m-420,0a420,420 0 1,1 840,0a420,420 0 1,1 -840,0"
+        android:fillType="evenOdd"/>
+
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M512,512m-340,0a340,340 0 1,1 680,0a340,340 0 1,1 -680,0"/>
+
+    <!-- A group scales the drawing around the view centre (512, 512) -->
+    <group
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:pivotX="512"
+        android:pivotY="512">
+
+        <!-- White Bluetooth icon, kept at its own size and centred -->
+        <path
+            android:fillColor="#FFFEFD"
+            android:pathData="M732.2,663L556,512 732.2,361c6.1,-5.1 10.2,-12.8 10.2,-22 0,-8.2 -3.6,-16.4 -10.2,-22l-201.7,-173.1c-5.1,-4.1 -11.3,-7.2 -18.4,-7.2 -15.9,0 -28.7,12.8 -28.7,28.7v283.1L329.2,317.4c-5.1,-4.1 -11.3,-7.2 -18.4,-7.2 -15.9,0 -28.7,12.8 -28.7,28.7 0,8.7 4.1,16.4 10.2,22L468,512 291.8,663c-6.7,5.6 -10.2,13.3 -10.2,22 0,15.9 12.8,28.7 28.7,28.7 7.2,0 13.8,-2.6 18.4,-7.2l154.1,-132.1v283.1c0,15.9 12.8,28.7 28.7,28.7 7.2,0 13.8,-2.6 18.4,-7.2L732.2,706.6c6.7,-5.6 10.2,-13.3 10.2,-22 0,-8.2 -3.6,-15.9 -10.2,-21.5zM669.2,685.1l-128.5,110.1v-220.2l128.5,110.1zM540.7,449.5v-220.2l128.5,110.1 -128.5,110.1z"/>
+
+    </group>
+
+</vector>
