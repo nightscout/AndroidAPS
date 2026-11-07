@@ -16,7 +16,6 @@ import app.aaps.core.ui.compose.pump.PumpHistoryUiState
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.common.enums.AlarmState
-import app.aaps.pump.aaruy.common.util.AaruyPumpSchedule
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
@@ -147,10 +146,16 @@ class AaruyHistoryViewModel(
         else                       -> AaruyHistoryRecord(item.time, type, value = (item.data + item.delayBolus) / 1000.0, durationMinutes = item.injectTime.toInt())
     }
 
-    /** A daily total has the date of the pump's own day, which starts at midnight in UTC+8. */
-    fun timeText(record: AaruyHistoryRecord): String =
-        if (record.code == AaruyHistoryTypes.DAILY) dateUtil.dateString(AaruyPumpSchedule.pumpDayAsLocalDate(record.timestamp))
-        else dateUtil.dateAndTimeString(record.timestamp)
+    /**
+     * A day of the pump runs from midnight to midnight in UTC+8, 24 hours with no summer time. It never matches a local day:
+     * with one date it had the date before for most of the day, or the date after in the evening. So its local start and
+     * end are shown (review #68, #81).
+     */
+    fun timeText(record: AaruyHistoryRecord): String {
+        if (record.code != AaruyHistoryTypes.DAILY) return dateUtil.dateAndTimeString(record.timestamp)
+        val end = record.timestamp + T.days(1).msecs()
+        return rh.gs(R.string.aaruy_history_pump_day, dateUtil.dateStringShort(record.timestamp), dateUtil.timeString(record.timestamp), dateUtil.dateStringShort(end), dateUtil.timeString(end))
+    }
 
     /** The pump counts in its own units. With insulin that is not U100 they differ from insulin units, so both are shown. */
     fun valueText(record: AaruyHistoryRecord): String = when (record.code) {

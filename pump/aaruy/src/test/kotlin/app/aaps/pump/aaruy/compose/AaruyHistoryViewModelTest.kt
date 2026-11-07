@@ -35,11 +35,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.Locale
-import java.util.TimeZone
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AaruyHistoryViewModelTest {
@@ -169,20 +165,20 @@ class AaruyHistoryViewModelTest {
         assertEquals("X10001Y", viewModel.detailText(record))
     }
 
-    /** Review #68, #81: a day of the pump starts at midnight in UTC+8. In Prague that is 17:00 of the day before. */
+    /**
+     * Review #68, #81: a day of the pump starts at midnight in UTC+8, in Prague 17:00 of the day before. With one date it had
+     * the date before, and with the date of the pump the date after in the evening. So it shows its local start and end.
+     */
     @Test
-    fun aDailyTotalHasTheDateOfThePumpDay() {
-        val zone = TimeZone.getDefault()
-        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
-        try {
-            // 6 Nov 2026 00:00 in UTC+8 is 5 Nov 17:00 in Prague.
-            val pumpDayStart = LocalDate.of(2026, 11, 6).atStartOfDay(ZoneOffset.ofHours(8)).toInstant().toEpochMilli()
-            val localMidnight = LocalDate.of(2026, 11, 6).atStartOfDay(ZoneId.of("Europe/Prague")).toInstant().toEpochMilli()
-            whenever(dateUtil.dateString(localMidnight)).thenReturn("06.11.2026")
-            assertEquals("06.11.2026", viewModel().timeText(AaruyHistoryRecord(pumpDayStart, AaruyHistoryTypes.DAILY)))
-        } finally {
-            TimeZone.setDefault(zone)
-        }
+    fun aDailyTotalShowsTheLocalStartAndEndOfThePumpDay() {
+        val start = 1_794_067_200_000L // 7 Nov 2026 16:00 UTC, midnight of 8 Nov in UTC+8
+        val end = start + 24 * 60 * 60 * 1000L
+        whenever(dateUtil.dateStringShort(start)).thenReturn("11/7")
+        whenever(dateUtil.timeString(start)).thenReturn("17:00")
+        whenever(dateUtil.dateStringShort(end)).thenReturn("11/8")
+        whenever(dateUtil.timeString(end)).thenReturn("17:00")
+        whenever(rh.gs(R.string.aaruy_history_pump_day, "11/7", "17:00", "11/8", "17:00")).thenReturn("11/7 17:00 – 11/8 17:00")
+        assertEquals("11/7 17:00 – 11/8 17:00", viewModel().timeText(AaruyHistoryRecord(start, AaruyHistoryTypes.DAILY)))
     }
 
     /** The first list is read on another thread. Read last, it replaced the list of the type the user chose after it. */

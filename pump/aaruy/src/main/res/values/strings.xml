@@ -95,6 +95,7 @@
     <string name="getting_pump_status">Getting pump status</string>
     <string name="aaruy_wait_bolus_time_tip" comment="%1$d=seconds. Example: Waiting for the bolus to end. 20 s left.">Waiting for the bolus to end. %1$d s left.</string>
     <string name="aaruy_history_daily_parts" comment="%1$s=bolus insulin, %2$s=basal insulin of one day. Example: 12.00 U + 18.00 U">%1$s + %2$s</string>
+    <string name="aaruy_history_pump_day" comment="A day of the pump runs from midnight to midnight in China time (UTC+8), so it is shown as its start and end in local time. %1$s=start date, %2$s=start time, %3$s=end date, %4$s=end time. Example: 11/7 17:00 – 11/8 17:00">%1$s %2$s – %3$s %4$s</string>
     <string name="aaruy_pump_bound_elsewhere">The pump refused this phone. It may be paired with another phone or app: unpair it there, then pair it here again.</string>
     <string name="aaruy_history_read_failed">The pump history could not be read completely. A bolus given on the pump may be missing in AAPS. AAPS keeps trying.</string>
     <string name="aaruy_time_changed">Time or time zone changed</string>

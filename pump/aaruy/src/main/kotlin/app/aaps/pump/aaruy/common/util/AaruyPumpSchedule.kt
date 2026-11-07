@@ -1,8 +1,6 @@
 package app.aaps.pump.aaruy.common.util
 
 import app.aaps.pump.aaruy.comm.BasalItem
-import java.time.Instant
-import java.time.ZoneOffset
 import java.util.TimeZone
 import kotlin.math.roundToInt
 
@@ -21,15 +19,6 @@ object AaruyPumpSchedule {
 
     /** How many half hours the clock of the pump is ahead of the local clock at this moment. */
     fun shift(now: Long, zone: TimeZone = TimeZone.getDefault()): Int = ((PUMP_ZONE_OFFSET_MS - zone.getOffset(now)) / HALF_HOUR_MS).roundToInt()
-
-    /**
-     * The day of the pump, as local midnight of the same date. A day of the pump starts at midnight in UTC+8, which is the
-     * evening before in Europe and the morning before in the Americas. Shown in local time, each day had the date of the day
-     * before (review #68, #81).
-     */
-    fun pumpDayAsLocalDate(pumpDayStart: Long, zone: TimeZone = TimeZone.getDefault()): Long =
-        Instant.ofEpochMilli(pumpDayStart).atZone(ZoneOffset.ofTotalSeconds(PUMP_ZONE_OFFSET_MS / 1000)).toLocalDate()
-            .atStartOfDay(zone.toZoneId()).toInstant().toEpochMilli()
 
     fun toPump(local: List<BasalItem>, shift: Int): List<BasalItem> = rotate(local, shift)
 
