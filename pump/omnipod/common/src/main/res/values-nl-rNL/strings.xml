@@ -30,7 +30,7 @@
     <string name="omnipod_common_error_unexpected_exception">Er is een onverwachte fout opgetreden. A.u.b. rapporteren! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">De instellingen voor meldingen zijn bijgewerkt in de Pod.</string>
-    <string name="omnipod_common_confirmation_time_on_pod_updated">De tijd in de Pod is bijgewerkt.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">De tijd op de Pod is bijgewerkt.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Tijd instellen</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Onderbreken</string>
