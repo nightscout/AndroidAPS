@@ -5,6 +5,8 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.CgmAlarmGroup
+import app.aaps.core.interfaces.alerts.CgmAlarmType
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -23,12 +25,15 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.alerts.cgm.CgmAlarmKeys
+import app.aaps.implementation.alerts.cgm.CgmAlarmManager
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
@@ -49,6 +54,7 @@ class LocalAlertUtilsImpl(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
+    private val cgmAlarmManager: CgmAlarmManager,
     private val appScope: CoroutineScope
 ) : LocalAlertUtils {
 
@@ -131,9 +137,21 @@ class LocalAlertUtilsImpl(
         }
     }
 
+    /**
+     * The missed readings alarm is on when the user switched it on, and also when any glucose alarm
+     * (a CGM alarm of the low or high group) is on. Those alarms say nothing when the readings stop,
+     * so without this a silent sensor would leave a user who relies on them blind without knowing.
+     */
+    private fun missedReadingsAlarmWanted(): Boolean =
+        preferences.get(BooleanKey.AlertMissedBgReading) ||
+            CgmAlarmType.entries.any { type ->
+                (type.group == CgmAlarmGroup.LOW || type.group == CgmAlarmGroup.HIGH) &&
+                    preferences.get(CgmAlarmKeys.of(type).enabled)
+            }
+
     override suspend fun checkStaleBGAlert() {
         val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
-        if (preferences.get(BooleanKey.AlertMissedBgReading)
+        if (missedReadingsAlarmWanted()
             && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
             && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()
         ) {
@@ -154,5 +172,29 @@ class LocalAlertUtilsImpl(
         } else if (dateUtil.isOlderThan(bgReading.timestamp, 5).not()) {
             notificationManager.dismiss(NotificationId.BG_READINGS_MISSED)
         }
+    }
+
+    override suspend fun checkGlucoseAlerts() = cgmAlarmManager.check()
+
+    /**
+     * "Hypo treated" action: hold the low alarms for [HYPO_TREATED_SNOOZE_MS] (about the time carbs
+     * need to raise glucose) and clear them. This only silences: the alarm comes back by itself when
+     * the hold runs out and glucose is still low. Urgent low comes back after its own repeat time at
+     * most (30 minutes or less).
+     */
+    override fun snoozeHypoAfterTreatment() = cgmAlarmManager.acknowledgeHypoTreated(HYPO_TREATED_SNOOZE_MS)
+
+    override fun acknowledgeCgmAlarms(type: CgmAlarmType?) = cgmAlarmManager.acknowledge(type)
+
+    override fun muteCgmAlarms(minutes: Int) = cgmAlarmManager.mute(minutes)
+
+    override val cgmAlarmsMutedUntil: StateFlow<Long> get() = cgmAlarmManager.mutedUntil
+
+    override fun testCgmAlarm(type: CgmAlarmType) = cgmAlarmManager.test(type)
+
+    companion object {
+
+        /** Hold after the user said they treated a hypo: about how long carbs need to work. */
+        private val HYPO_TREATED_SNOOZE_MS = CgmAlarmManager.HYPO_TREATED_SNOOZE_MS
     }
 }

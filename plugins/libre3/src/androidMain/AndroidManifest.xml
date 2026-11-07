@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The app needs Android 12 or newer, so the old BLUETOOTH and BLUETOOTH_ADMIN permissions are
+         not needed. The scan never finds the phone's location, the same as in the app and the pumps. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.NFC" />
+
+    <!-- NFC is only needed to pair a new sensor. A phone without NFC can still reconnect
+         to a sensor that was already paired, so the feature must stay optional. -->
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+</manifest>

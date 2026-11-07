@@ -64,6 +64,12 @@ data class CalibrationFit(
 }
 
 /**
+ * First timestamp of the entries the fit may use: the session start, or the later cut set by
+ * [app.aaps.core.interfaces.calibration.Calibration.ignoreEntriesBefore] (0 when it was never set).
+ */
+internal fun fitStart(sessionStart: Long, entriesValidFrom: Long): Long = maxOf(sessionStart, entriesValidFrom)
+
+/**
  * Time-decay weight (0..1] for an entry of age `now - timestamp`, matching the fit's τ.
  *
  * Future-dated entries (clock skew, backup import) are clamped to weight = 1.0 instead of

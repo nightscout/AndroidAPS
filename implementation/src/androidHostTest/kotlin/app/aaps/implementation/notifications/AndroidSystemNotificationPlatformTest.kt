@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.notifications.AlarmAction
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -22,7 +23,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -87,9 +90,22 @@ class AndroidSystemNotificationPlatformTest {
         sut.show(notification(NotificationLevel.URGENT, sound = AlarmSound.URGENT_ALARM), "Urgent")
 
         verify(alarmNotificationManager).postSilentAlarmNotification(
-            notificationKey = eq(42), title = eq("Urgent"), body = eq("text"), urgent = eq(true)
+            notificationKey = eq(42), title = eq("Urgent"), body = eq("text"), urgent = eq(true), alarmAction = isNull()
         )
         verify(preferences, never()).get(any<BooleanKey>())
+    }
+
+    /** The lock screen button of a CGM alarm travels with it, so it can be acknowledged without opening the app. */
+    @Test
+    fun `a cgm alarm is posted with its acknowledge button`() {
+        sut.show(
+            AapsNotification(id = NotificationId.CGM_URGENT_LOW, instanceKey = 43, text = "text", level = NotificationLevel.URGENT, sound = AlarmSound.URGENT_ALARM),
+            "Urgent low"
+        )
+
+        verify(alarmNotificationManager).postSilentAlarmNotification(
+            notificationKey = eq(43), title = eq("Urgent low"), body = eq("text"), urgent = eq(true), alarmAction = eq(AlarmAction.CGM_ACKNOWLEDGE)
+        )
     }
 
     @Test
@@ -98,7 +114,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.NORMAL), "Info")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -108,7 +124,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.NORMAL, actions = listOf(mock())), "Info")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -119,7 +135,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.URGENT), "Urgent")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
