@@ -39,7 +39,7 @@
     <string name="closedmodeenabled">Closed modus actief</string>
     <string name="description_objectives">Leerprogramma</string>
     <string name="doyouwantresetstart">Leerdoel opnieuw starten? Mogelijk gaat de voortgang verloren.</string>
-    <string name="objectives_button_unfinish">Voltooiing wissen</string>
+    <string name="objectives_button_unfinish">Voltooide status ongedaan maken</string>
     <string name="objectives_button_unstart">Opnieuw beginnen</string>
     <string name="bg_doubled_lgs">LGS modus als gevolg van dubbele waarden in de BG bron</string>
 </resources>
