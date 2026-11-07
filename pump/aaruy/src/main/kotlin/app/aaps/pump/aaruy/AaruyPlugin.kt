@@ -174,7 +174,9 @@ class AaruyPlugin(
         mDeviceName = preferences.get(AaruyStringKey.PumpName)
         aaruyPump.pumpSN = mDeviceName
         aaruyPump.reset(newPump)
-        if (isConfigured()) commandQueue.readStatus(rh.gs(CoreUiR.string.device_changed))
+        // Not waited for. At an app start this runs in onStart, and the app start waited for the whole read: during a
+        // bolus for 30 s, and the pump log it read was written before the app could store it.
+        if (isConfigured()) scope?.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.device_changed)) }
     }
 
     override fun connect(reason: String) {

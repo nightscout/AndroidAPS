@@ -3,10 +3,12 @@ package app.aaps.pump.aaruy.compose
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -17,9 +19,9 @@ import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
-import app.aaps.pump.aaruy.services.AaruyBLE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -30,6 +32,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
@@ -62,7 +66,31 @@ class AaruyHistoryViewModelTest {
         whenever(it.basalRateString(any(), any(), any())).thenAnswer { invocation -> (invocation.arguments[0] as PumpRate).cU.let { cU -> "%.2f U/h (%.2f CU/h)".format(Locale.ROOT, cU * 2, cU) } }
     }
 
-    private fun viewModel() = AaruyHistoryViewModel(rh, mock<AaruyBLE>(), pump, historyDao, dailyDao, dateUtil, ch)
+    private val commandQueue: CommandQueue = mock()
+
+    private fun viewModel() = AaruyHistoryViewModel(rh, commandQueue, pump, historyDao, dailyDao, dateUtil, ch)
+
+    /** The queue owns the link. The reload is its status read, and the list is read after that read has ended. */
+    @Test
+    fun aReloadReadsThePumpThroughTheQueueAndThenTheList() {
+        val viewModel = viewModel()
+        // The first list, before the reload.
+        verify(historyDao, timeout(5_000)).querySince(any())
+        runBlocking {
+            whenever(commandQueue.readStatus(any())).thenAnswer {
+                whenever(historyDao.querySince(any())).thenReturn(listOf(entry(now - 1000, AaruyHistoryTypes.BOLUS.toInt(), data = 1000)))
+                mock<PumpEnactResult>()
+            }
+        }
+        viewModel.reload()
+        viewModel.recordsWhen { it.isNotEmpty() }
+        runBlocking { verify(commandQueue).readStatus(any()) }
+        val end = System.currentTimeMillis() + 5_000
+        while (viewModel.uiState.value.isLoading) {
+            assertTrue(System.currentTimeMillis() < end, "still loading")
+            Thread.sleep(10)
+        }
+    }
 
     /** With U200 a bolus of 1.0 CU is 2.0 U of insulin. Shown as "1.00 U", the user read half of what was given. */
     @Test

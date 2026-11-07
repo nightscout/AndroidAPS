@@ -7,6 +7,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.pump.PumpHistoryRecord
@@ -18,14 +19,12 @@ import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
-import app.aaps.pump.aaruy.services.AaruyBLE
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -64,7 +63,7 @@ data class AaruyHistoryRecord(
 @Inject
 class AaruyHistoryViewModel(
     private val rh: ResourceHelper,
-    private val aaruyBle: AaruyBLE,
+    private val commandQueue: CommandQueue,
     private val aaruyPump: AaruyPump,
     private val historyDao: HistoryUnitInfoDao,
     private val dailyDao: HistoryDailyUnitInfoDao,
@@ -97,9 +96,8 @@ class AaruyHistoryViewModel(
         val type = _uiState.value.selectedType ?: return
         _uiState.update { it.copy(isLoading = true, statusMessage = "") }
         viewModelScope.launch {
-            aaruyBle.requestHistoryData(aaruyPump.lastHistoryTime)
-            // The reply has no end signal to wait for. It comes at one frame in about 100 ms.
-            delay(RELOAD_WAIT_MS)
+            // Through the queue, which owns the link. Its status read ends when the log is written.
+            commandQueue.readStatus(rh.gs(CoreUiR.string.user_request))
             load(type.type)
             _uiState.update { it.copy(isLoading = false) }
         }
@@ -154,10 +152,5 @@ class AaruyHistoryViewModel(
         )
         AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(CoreUiR.string.format_mins, record.durationMinutes)
         else                    -> ""
-    }
-
-    private companion object {
-
-        const val RELOAD_WAIT_MS = 2_000L
     }
 }
