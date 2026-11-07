@@ -40,8 +40,6 @@ class AaruyPumpSoundDefaultTest {
         )
         pump.closeInjectSound = 0
 
-        pump.syncPrefParam()
-
-        assertEquals(0, pump.closeInjectSound)
+        assertEquals(0, pump.settingsForPump().closeInjectSound)
     }
 }

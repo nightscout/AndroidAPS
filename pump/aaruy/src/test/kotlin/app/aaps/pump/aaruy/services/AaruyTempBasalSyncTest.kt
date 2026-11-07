@@ -111,6 +111,29 @@ class AaruyTempBasalSyncTest {
         assertEquals(1, announcements.size)
     }
 
+    /** A sync of an app run that started at [appStart]. */
+    private fun syncStartedAt(appStart: Long): AaruyTempBasalSync {
+        `when`(dateUtil.now()).thenReturn(appStart)
+        return AaruyTempBasalSync(mock(AAPSLogger::class.java), dateUtil, pump, pumpSync, persistence, ch).also { `when`(dateUtil.now()).thenReturn(now) }
+    }
+
+    /**
+     * Review #82: the loop set the temp basal and the app was killed before the status wrote it. Its request was in memory
+     * only. It was announced as "not asked for by AAPS", which says something else controls the pump.
+     */
+    @Test
+    fun aTempBasalFromBeforeTheAppStartIsWrittenButNotAnnounced() = runBlocking {
+        syncStartedAt(now - 10 * second).onStatus(tempBasalFrame(runningFor = 34), live = true)
+        assertEquals(1, writes.size)
+        assertEquals(0, announcements.size)
+    }
+
+    @Test
+    fun aTempBasalThatStartedInThisAppRunIsAnnounced() = runBlocking {
+        syncStartedAt(now - 10 * minute).onStatus(tempBasalFrame(runningFor = 34), live = true)
+        assertEquals(1, announcements.size)
+    }
+
     @Test
     fun aKnownTempBasalWritesNothing() = runBlocking {
         pumpExpects(running(now - 34 * second))

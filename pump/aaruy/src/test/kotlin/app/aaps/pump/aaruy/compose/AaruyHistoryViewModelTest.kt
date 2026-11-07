@@ -35,7 +35,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AaruyHistoryViewModelTest {
@@ -152,6 +156,33 @@ class AaruyHistoryViewModelTest {
         viewModel.show(AaruyHistoryTypes.REPLACED)
         val records = viewModel.recordsWhen { it.size == 2 }
         assertEquals(listOf("s${R.string.actions_reservoir_prime}", "s${R.string.aaruy_rewind}"), records.map { viewModel.valueText(it) })
+    }
+
+    /** Review #69: the driver writes this row when a new pump is paired, and no list showed it. */
+    @Test
+    fun aNewPumpIsShownWithTheChangesOfReservoir() {
+        whenever(historyDao.querySince(any())).thenReturn(listOf(entry(now - 1000, AaruyHistoryTypes.NEW_PUMP.toInt()).also { it.blueName = "X10001Y" }))
+        val viewModel = viewModel()
+        viewModel.show(AaruyHistoryTypes.REPLACED)
+        val record = viewModel.recordsWhen { it.isNotEmpty() }.single()
+        assertEquals("s${R.string.aaruy_pairing_successful}", viewModel.valueText(record))
+        assertEquals("X10001Y", viewModel.detailText(record))
+    }
+
+    /** Review #68, #81: a day of the pump starts at midnight in UTC+8. In Prague that is 17:00 of the day before. */
+    @Test
+    fun aDailyTotalHasTheDateOfThePumpDay() {
+        val zone = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        try {
+            // 6 Nov 2026 00:00 in UTC+8 is 5 Nov 17:00 in Prague.
+            val pumpDayStart = LocalDate.of(2026, 11, 6).atStartOfDay(ZoneOffset.ofHours(8)).toInstant().toEpochMilli()
+            val localMidnight = LocalDate.of(2026, 11, 6).atStartOfDay(ZoneId.of("Europe/Prague")).toInstant().toEpochMilli()
+            whenever(dateUtil.dateString(localMidnight)).thenReturn("06.11.2026")
+            assertEquals("06.11.2026", viewModel().timeText(AaruyHistoryRecord(pumpDayStart, AaruyHistoryTypes.DAILY)))
+        } finally {
+            TimeZone.setDefault(zone)
+        }
     }
 
     /** The first list is read on another thread. Read last, it replaced the list of the type the user chose after it. */

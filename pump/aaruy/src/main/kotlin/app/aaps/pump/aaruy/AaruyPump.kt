@@ -498,7 +498,7 @@ class AaruyPump(
         lowAlert = basicParam.lowAlert
         closeInjectSound = basicParam.closeInjectSound
 
-        return syncPrefParam()
+        return pumpHasTheSettings()
     }
 
     /** @return false when AAPS has no request that fits this temp basal. */
@@ -601,52 +601,42 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         _lastHistoryTime = preferences.get(AaruyLongKey.PumpLastHistoryTime)
         _lastHistoryDailyTime = preferences.get(AaruyLongKey.PumpLastHistoryDailyTime)
         loadActiveAlarms()
-        // The pump holds the user settings: syncPrefParam writes them to it.
-        syncPrefParam()
+        // Each status read writes the user settings to the pump, so it holds them. Not the bolus step: the coarser step
+        // stays until the pump reports its own, see bolusStepUnits.
+        settingsForPump().let {
+            maxBasal = it.maxBasal
+            maxBolus = it.maxBolus
+            lowAlert = it.lowAlert
+            closeInjectSound = it.closeInjectSound
+        }
     }
 
     /**
-     * Compared as the pump holds them: it keeps the limits in thousandths and the low reservoir alarm in whole units.
-     * Otherwise a value like 15.5 U never matches what the pump answers, and the settings are written again and again.
+     * The user settings as the pump holds them: it keeps the limits in thousandths and the low reservoir alarm in whole
+     * units. Otherwise a value like 15.5 U never matches what the pump answers, and the settings are written again and again.
+     * This is what is written to the pump. What the pump holds changes only when the pump reports it (review #73).
      */
-    fun syncPrefParam(): Boolean {
-        var isSame = true
+    fun settingsForPump(): BasicParam {
+        val soundRemind = if (preferences.get(AaruyIntPreferenceKey.SoundPrompt) == 1) 1 else 0
+        val soundAlarm = if (preferences.get(AaruyIntPreferenceKey.SoundAlarm) == 1) 1 else 0
+        return BasicParam(
+            maxBasal = floor(preferences.get(AaruyDoublePreferenceKey.MaxBasal) * 1000 + ROUNDING) / 1000,
+            maxBolus = floor(preferences.get(AaruyDoublePreferenceKey.MaxBolus) * 1000 + ROUNDING) / 1000,
+            bolusStep = if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1,
+            lowAlert = floor(preferences.get(AaruyDoublePreferenceKey.LowReservoir) + ROUNDING),
+            // Only the two low bits are settings. The other bits stay as the pump has them.
+            closeInjectSound = (closeInjectSound and 0x03.inv()) or soundRemind or (soundAlarm shl 1),
+            pumpType = pumpType
+        )
+    }
 
-        val maxBolusLocal = floor(preferences.get(AaruyDoublePreferenceKey.MaxBolus) * 1000 + ROUNDING) / 1000
-        if (maxBolus != maxBolusLocal) {
-            isSame = false
-            maxBolus = maxBolusLocal
-        }
-        aapsLogger.debug(LTag.PUMP, "syncPrefParam maxBolus is $maxBolus, maxBolusLocal is $maxBolusLocal")
-        val maxBasalLocal = floor(preferences.get(AaruyDoublePreferenceKey.MaxBasal) * 1000 + ROUNDING) / 1000
-        if (maxBasal != maxBasalLocal) {
-            isSame = false
-            maxBasal = maxBasalLocal
-        }
-        aapsLogger.debug(LTag.PUMP, "syncPrefParam maxBasal is $maxBasal, maxBasalLocal is $maxBasalLocal")
-        val lowAlertLocal = floor(preferences.get(AaruyDoublePreferenceKey.LowReservoir) + ROUNDING)
-        if (lowAlert != lowAlertLocal) {
-            isSame = false
-            lowAlert = lowAlertLocal
-        }
-        val bolusStepLocal = if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1
-        if (bolusStep != bolusStepLocal) {
-            isSame = false
-
-            bolusStep = bolusStepLocal
-        }
-        val soundRemindLocal = if (preferences.get(AaruyIntPreferenceKey.SoundPrompt) == 1) 1 else 0
-        if(((closeInjectSound and 0x01) xor soundRemindLocal) == 0x01) {
-            isSame = false
-            closeInjectSound = (closeInjectSound or 0x01) and (0xfffe or soundRemindLocal)
-        }
-        val soundAlarmLocal = if (preferences.get(AaruyIntPreferenceKey.SoundAlarm) == 1) 1 else 0
-        if(((closeInjectSound and 0x02) xor (soundAlarmLocal shl 1)) == 0x02) {
-            isSame = false
-            closeInjectSound = (closeInjectSound or 0x02) and (0xfffd or (soundAlarmLocal shl 1))
-        }
-        aapsLogger.debug(LTag.PUMP, "syncPrefParam closeInjectSound is $closeInjectSound")
-        return isSame
+    /** @return whether the pump holds the user settings, as it reported them last */
+    fun pumpHasTheSettings(): Boolean {
+        val wanted = settingsForPump()
+        aapsLogger.debug(LTag.PUMP, "Pump settings: max basal $maxBasal (wanted ${wanted.maxBasal}), max bolus $maxBolus (${wanted.maxBolus}), " +
+            "bolus step $bolusStep (${wanted.bolusStep}), low alert $lowAlert (${wanted.lowAlert}), sound $closeInjectSound (${wanted.closeInjectSound})")
+        return maxBasal == wanted.maxBasal && maxBolus == wanted.maxBolus && bolusStep == wanted.bolusStep &&
+            lowAlert == wanted.lowAlert && closeInjectSound == wanted.closeInjectSound
     }
 
 }

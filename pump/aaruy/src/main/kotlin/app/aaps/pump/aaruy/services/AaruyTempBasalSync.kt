@@ -156,14 +156,24 @@ class AaruyTempBasalSync(
         return late.copy(timestamp = start, duration = late.timestamp + late.duration - start)
     }
 
-    /** A request found means the answer was lost, which is normal. Nothing found means AAPS never asked for this, and the user should know. */
+    /** The requests of AAPS are kept in memory only. One from before an app restart is gone. */
+    private val appRunStart = dateUtil.now()
+
+    /**
+     * A request found means the answer was lost, which is normal. Nothing found means AAPS never asked for this, and the user
+     * should know. But only for a temp basal that started in this app run: one from before a restart was maybe asked for, and
+     * it was announced as not from AAPS (review #82).
+     */
     private suspend fun addTempBasal(start: Long, rate: Double, duration: Long) {
         // An entry of 0 minutes whose next entry has the same time. The database refuses it, and that would stop the read at every try.
         if (duration <= 0) return
-        if (!aaruyPump.syncTBRWithPumpId(start, rate, duration)) {
-            aapsLogger.warn(LTag.PUMPCOMM, "The pump runs a temp basal of $rate that AAPS did not ask for")
-            aaruyPump.announceTempBasalNotFromAaps(ch.basalRateString(PumpRate(rate), true))
+        if (aaruyPump.syncTBRWithPumpId(start, rate, duration)) return
+        if (start < appRunStart) {
+            aapsLogger.debug(LTag.PUMPCOMM, "A temp basal of $rate from before the app start, its request is not known")
+            return
         }
+        aapsLogger.warn(LTag.PUMPCOMM, "The pump runs a temp basal of $rate that AAPS did not ask for")
+        aaruyPump.announceTempBasalNotFromAaps(ch.basalRateString(PumpRate(rate), true))
     }
 
     /**

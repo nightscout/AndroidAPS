@@ -44,6 +44,7 @@ import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.common.util.AaruySetting
+import app.aaps.pump.aaruy.compose.AaruyHistoryTypes
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
@@ -442,19 +443,19 @@ class AaruyBLE(
                     isUnbinding = false
                     receivingHistory = false
                     aaBleUtil.stopScanDevice()
-                    if (preferences.get(AaruyStringKey.PumpBoundAddress) == "") {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            // A new pump: the history screen shows where it started
-                            aapsLogger.debug(LTag.PUMPCOMM, "A new pump is paired")
-                            val historyUnitInfo = HistoryUnitInfo()
-                            historyUnitInfo.blueName = getShortDeviceName()
-                            historyUnitInfo.type = 110
-                            historyUnitInfo.time = System.currentTimeMillis()
-                            historyUnitInfo.isUploaded = false
-                            historyUnitInfoDao.insert(historyUnitInfo)
-                        }
-                    }
+                    val newPump = preferences.get(AaruyStringKey.PumpBoundAddress) == ""
+                    // Before the name is taken: until then the name is a part of the address, not the serial number.
                     preferences.put(AaruyStringKey.PumpBoundAddress, preferences.get(AaruyStringKey.MacAddress))
+                    if (newPump) {
+                        // A new pump: the history screen shows where it started, with the changes of reservoir.
+                        aapsLogger.debug(LTag.PUMPCOMM, "A new pump is paired")
+                        val historyUnitInfo = HistoryUnitInfo()
+                        historyUnitInfo.blueName = getShortDeviceName()
+                        historyUnitInfo.type = AaruyHistoryTypes.NEW_PUMP.toInt()
+                        historyUnitInfo.time = dateUtil.now()
+                        historyUnitInfo.isUploaded = false
+                        CoroutineScope(Dispatchers.IO).launch { historyUnitInfoDao.insert(historyUnitInfo) }
+                    }
                     aaruyPump.connectionState = ConnectionState.CONNECTED
                     // Anything can have happened while the link was down, a bolus may have ended.
                     syncPumpStatus()
@@ -831,16 +832,9 @@ class AaruyBLE(
         lastStatus?.let { tempBasalSync.onStatus(it, live = true, stoppedSince = stoppedSince) }
     }
 
-fun syncAndLoadBasicParam() {
-        val basicParam = BasicParam (
-            aaruyPump.maxBasal,
-            aaruyPump.maxBolus,
-            aaruyPump.bolusStep,
-            aaruyPump.lowAlert,
-            aaruyPump.closeInjectSound,
-            aaruyPump.pumpType,
-        )
-        aaBleUtil.setupBasicParamInfo(basicParam)
+    /** Writes the user settings. What the pump holds is taken from its answer, not from this write. */
+    fun syncAndLoadBasicParam() {
+        aaBleUtil.setupBasicParamInfo(aaruyPump.settingsForPump())
     }
 
     fun syncCurTimeToPump() {

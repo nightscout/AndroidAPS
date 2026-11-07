@@ -16,6 +16,7 @@ import app.aaps.core.ui.compose.pump.PumpHistoryUiState
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.common.enums.AlarmState
+import app.aaps.pump.aaruy.common.util.AaruyPumpSchedule
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
@@ -43,6 +44,9 @@ object AaruyHistoryTypes {
     const val PRIME: Byte = 5
     const val DAILY: Byte = 100
     const val REPLACED: Byte = 101
+
+    /** Written by the driver at the first connection of a newly paired pump, not by the pump. */
+    const val NEW_PUMP: Byte = 110
 }
 
 data class AaruyHistoryRecord(
@@ -54,7 +58,9 @@ data class AaruyHistoryRecord(
     override val durationMinutes: Int = 0,
     override val dailyBasal: Double = 0.0,
     override val dailyBolus: Double = 0.0,
-    override val alarm: String = ""
+    override val alarm: String = "",
+    /** The pump of a [AaruyHistoryTypes.NEW_PUMP] row. */
+    val pumpName: String = ""
 ) : PumpHistoryRecord
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
@@ -116,8 +122,9 @@ class AaruyHistoryViewModel(
         _uiState.update { if (it.selectedType?.type != type) it else it.copy(records = records.distinct().sortedByDescending { record -> record.timestamp }) }
     }
 
+    /** A new pump is shown with the changes of reservoir: it is where the log of that pump starts. */
     private fun matches(item: HistoryUnitInfo, type: Byte): Boolean =
-        if (type == AaruyHistoryTypes.REPLACED) item.type == AaruyHistoryTypes.REWIND.toInt() || item.type == AaruyHistoryTypes.PRIME.toInt()
+        if (type == AaruyHistoryTypes.REPLACED) item.type in listOf(AaruyHistoryTypes.REWIND, AaruyHistoryTypes.PRIME, AaruyHistoryTypes.NEW_PUMP).map { it.toInt() }
         else item.type == type.toInt()
 
     private fun toRecord(item: HistoryUnitInfo, type: Byte): AaruyHistoryRecord = when (type) {
@@ -126,15 +133,24 @@ class AaruyHistoryViewModel(
 
         AaruyHistoryTypes.REPLACED -> AaruyHistoryRecord(
             item.time, type,
-            stringValue = rh.gs(if (item.type == AaruyHistoryTypes.REWIND.toInt()) R.string.aaruy_rewind else R.string.actions_reservoir_prime)
+            stringValue = rh.gs(
+                when (item.type) {
+                    AaruyHistoryTypes.REWIND.toInt()   -> R.string.aaruy_rewind
+                    AaruyHistoryTypes.NEW_PUMP.toInt() -> R.string.aaruy_pairing_successful
+                    else                               -> R.string.actions_reservoir_prime
+                }
+            ),
+            pumpName = if (item.type == AaruyHistoryTypes.NEW_PUMP.toInt()) item.blueName else ""
         )
 
         // A bolus has an amount now and an extended part, in thousandths of a unit.
         else                       -> AaruyHistoryRecord(item.time, type, value = (item.data + item.delayBolus) / 1000.0, durationMinutes = item.injectTime.toInt())
     }
 
+    /** A daily total has the date of the pump's own day, which starts at midnight in UTC+8. */
     fun timeText(record: AaruyHistoryRecord): String =
-        if (record.code == AaruyHistoryTypes.DAILY) dateUtil.dateString(record.timestamp) else dateUtil.dateAndTimeString(record.timestamp)
+        if (record.code == AaruyHistoryTypes.DAILY) dateUtil.dateString(AaruyPumpSchedule.pumpDayAsLocalDate(record.timestamp))
+        else dateUtil.dateAndTimeString(record.timestamp)
 
     /** The pump counts in its own units. With insulin that is not U100 they differ from insulin units, so both are shown. */
     fun valueText(record: AaruyHistoryRecord): String = when (record.code) {
@@ -152,6 +168,7 @@ class AaruyHistoryViewModel(
             ch.insulinAmountString(PumpInsulin(record.dailyBasal))
         )
         AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(CoreUiR.string.format_mins, record.durationMinutes)
+        AaruyHistoryTypes.REPLACED -> record.pumpName
         else                    -> ""
     }
 }
