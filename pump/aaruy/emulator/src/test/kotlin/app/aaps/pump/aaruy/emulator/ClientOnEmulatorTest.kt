@@ -234,6 +234,29 @@ class ClientOnEmulatorTest {
         waitFor("back to not running, then basal by the AAR's own flow") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
     }
 
+    /** Seen on a real pump: a stopped pump logs the rewind at once, the prime only when it leaves the stop. */
+    @Test
+    fun thePrimeIsLoggedOnlyWhenThePumpLeavesTheStop() {
+        util.replaceDevice()
+        waitFor("stopped") { log.any { it.contains("runningStatus=8") } }
+        log.clear()
+        util.pushPosition()
+        waitFor("primed") { log.any { it.contains("runningStatus=6") } && emulator.runningStatus == AaruyPumpEmulator.STATUS_STOPPED }
+
+        log.clear()
+        util.getHistoryLogData(0)
+        waitFor("history while stopped") { logged("onReceiveHistoryLog") }
+        assertTrue(log.toString(), log.any { it.contains("type=4,") })
+        assertFalse(log.toString(), log.any { it.contains("type=5,") })
+
+        util.startBasal()
+        waitFor("basal") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
+        log.clear()
+        util.getHistoryLogData(0)
+        waitFor("history after the stop") { logged("onReceiveHistoryLog") }
+        assertTrue(log.toString(), log.any { it.contains("type=5,") })
+    }
+
     /**
      * Review #60: the app was restarted after the rewind, and the client of the new app run does not know of it. It sent no
      * restore, so basal started only after a new rewind and prime. The driver tells it from the pump log.

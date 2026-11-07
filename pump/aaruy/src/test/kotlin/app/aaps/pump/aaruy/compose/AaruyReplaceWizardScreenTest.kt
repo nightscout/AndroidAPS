@@ -27,7 +27,6 @@ import app.aaps.pump.aaruy.FakeResult
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
-import app.aaps.pump.aaruy.common.enums.AaruyReplaceProgress
 import app.aaps.pump.aaruy.services.AaruyMotorResult
 import app.aaps.pump.aaruy.services.AaruyReplaceSteps
 import app.aaps.pump.aaruy.services.AaruyRewindCommand
@@ -74,7 +73,7 @@ class AaruyReplaceWizardScreenTest {
         whenever(dateUtil.now()).thenAnswer { System.currentTimeMillis() }
         pump.connectionState = if (connected) ConnectionState.CONNECTED else ConnectionState.DISCONNECTED
         val replaceSteps = mock<AaruyReplaceSteps>()
-        runBlocking { whenever(replaceSteps.progressFromLog()).thenReturn(AaruyReplaceProgress.NONE) }
+        runBlocking { whenever(replaceSteps.rewoundWithoutDeliverySince()).thenReturn(false) }
         val viewModel = AaruyReplaceWizardViewModel(
             mock(), commandQueue, replaceSteps, pump, mock<PumpSync>(), dateUtil, mock<ResourceHelper>(), mock<RxBus>(), mock<Preferences>(),
             mock<ProfileFunction>(), insulinManager, mock<PersistenceLayer>()

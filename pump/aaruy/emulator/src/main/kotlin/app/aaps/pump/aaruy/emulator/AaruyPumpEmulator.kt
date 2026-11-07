@@ -306,6 +306,13 @@ class AaruyPumpEmulator(
     /** The next motor command with this action does nothing and gets no answer, as when it is lost or refused. */
     var ignoreNextControl = -1
 
+    /**
+     * Seen on a real pump: the prime is logged only when the pump leaves the stop, as one entry with the time of the first
+     * prime, also after two primes. Until then a read of the log shows only the rewind. UNVERIFIED: its data, and a prime
+     * with no rewind before it.
+     */
+    private var primeNotLogged: Int? = null
+
     private fun handleTotalControl(payload: ByteArray): List<ByteArray> {
         val action = payload.getOrNull(ACTION_OFFSET)?.toInt()
         if (action == ignoreNextControl) {
@@ -321,6 +328,7 @@ class AaruyPumpEmulator(
 
             CONTROL_REPLACE       -> {
                 eventBeforeStatus = true
+                primeNotLogged = null
                 startTransition(STATUS_REWIND, HISTORY_REWIND, errorPayload(EVENT_REWIND_DONE, 0))
             }
 
@@ -333,11 +341,14 @@ class AaruyPumpEmulator(
                 noReservoirSent = false
                 transitionUnits = POSITION_UNITS
                 eventBeforeStatus = false
-                startTransition(STATUS_POSITION, HISTORY_POSITION, errorPayload(EVENT_POSITION_DONE, 0))
+                if (primeNotLogged == null) primeNotLogged = pumpTime()
+                startTransition(STATUS_POSITION, null, errorPayload(EVENT_POSITION_DONE, 0))
             }
 
             CONTROL_RESTORE       -> {
                 if (runningStatus != STATUS_STOPPED) return emptyList()
+                primeNotLogged?.let { addHistoryAt(it, HISTORY_POSITION, 0, 0, 0) }
+                primeNotLogged = null
                 runningStatus = STATUS_NOT_RUNNING
                 stoppedWarningSent = false
                 listOf(statusMessage())

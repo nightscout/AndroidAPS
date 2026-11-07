@@ -163,8 +163,9 @@ class AaruyReplaceWizardTest {
 
     /**
      * Review #60: the app was restarted after the prime, before basal ran. The pump is still stopped. The new app run knows
-     * from the pump log how far the change came: it goes on with connect and fill, and basal starts with no new rewind and
-     * prime. Its client never saw the rewind, which it used to need before it sent the restore.
+     * from the pump log that the rewind was done: it goes on after it, and basal starts with no second rewind. Its client
+     * never saw the rewind, which it used to need before it sent the restore. The log has no prime entry yet, as on a real
+     * pump, so the prime comes again.
      */
     @Test
     fun afterARestartTheChangeGoesOnFromThePumpLog() {
@@ -174,8 +175,7 @@ class AaruyReplaceWizardTest {
         wizard.assembled()
         wizard.prime()
         waitFor("primed") { wizard.uiState.value.primed }
-        val primedAt = System.currentTimeMillis()
-        whenever(historyDao.querySince(any())).thenReturn(listOf(logEntry(primedAt, AaruyHistoryTypes.PRIME), logEntry(primedAt - 60_000, AaruyHistoryTypes.REWIND)))
+        whenever(historyDao.querySince(any())).thenReturn(listOf(logEntry(System.currentTimeMillis() - 60_000, AaruyHistoryTypes.REWIND)))
 
         // The restart: a new driver with a new client, and a new screen.
         ble.disconnect("app restart")
@@ -188,14 +188,20 @@ class AaruyReplaceWizardTest {
         waitFor("connected again") { pump.connectionState == ConnectionState.CONNECTED }
         waitFor("still stopped") { pump.pumpState == AaruyPumpState.STOP_RUNNING }
         startWizard()
-        waitFor("on from where it stopped") { wizard.uiState.value.step == AaruyReplaceStep.CONNECT }
-        assertTrue(wizard.uiState.value.primed)
+        waitFor("on after the rewind") { wizard.uiState.value.step == AaruyReplaceStep.ASSEMBLE }
+        assertFalse(wizard.uiState.value.primed)
         assertTrue("the fill step says the log cannot tell", wizard.uiState.value.resumed)
 
+        wizard.assembled()
+        wizard.prime()
+        waitFor("primed again") { wizard.uiState.value.primed }
+        wizard.askDroplets()
+        wizard.dropletsSeen()
         wizard.connectedToBody()
         wizard.fillCannula()
         waitFor("done") { wizard.uiState.value.step == AaruyReplaceStep.DONE }
         assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
+        runBlocking { verify(commandQueue, times(1)).customCommand(any<AaruyRewindCommand>()) }
     }
 
     /** Nothing in the log since the last rewind: a pump stopped for another reason is changed from the start. */

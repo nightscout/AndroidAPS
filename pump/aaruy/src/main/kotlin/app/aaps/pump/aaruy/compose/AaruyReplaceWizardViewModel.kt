@@ -28,7 +28,6 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
-import app.aaps.pump.aaruy.common.enums.AaruyReplaceProgress
 import app.aaps.pump.aaruy.common.util.AaruyConst
 import app.aaps.pump.aaruy.services.AaruyFillCannulaCommand
 import app.aaps.pump.aaruy.services.AaruyMotorResult
@@ -171,20 +170,16 @@ class AaruyReplaceWizardViewModel(
     }
 
     /**
-     * The pump is still stopped where a change of reservoir stopped, as after an app restart: it goes on from there. Only this
-     * screen knew how far it came, so it started again with a rewind and a prime, with more insulin.
+     * The pump is still stopped after the rewind of a change of reservoir, as after an app restart: the change goes on after
+     * the rewind. Only this screen knew how far it came, so it started again with a rewind, and that needs more insulin. The
+     * log cannot tell if the prime was done, so the prime comes again.
      */
     private suspend fun resumeWhereTheChangeStopped() {
-        if (aaruyPump.pumpState != AaruyPumpState.STOP_RUNNING) return
-        val progress = replaceSteps.progressFromLog()
+        if (aaruyPump.pumpState != AaruyPumpState.STOP_RUNNING || !replaceSteps.rewoundWithoutDeliverySince()) return
         _uiState.update { state ->
             // Not when the user went on already.
             if (state.step != AaruyReplaceStep.REWIND || state.busy) state
-            else when (progress) {
-                AaruyReplaceProgress.REWOUND -> state.copy(step = AaruyReplaceStep.ASSEMBLE, resumed = true)
-                AaruyReplaceProgress.PRIMED  -> state.copy(step = AaruyReplaceStep.CONNECT, primed = true, resumed = true)
-                AaruyReplaceProgress.NONE    -> state
-            }
+            else state.copy(step = AaruyReplaceStep.ASSEMBLE, resumed = true)
         }
     }
 

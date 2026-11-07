@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
-import app.aaps.pump.aaruy.common.enums.AaruyReplaceProgress
 import app.aaps.pump.aaruy.common.util.AaruyConst
 import app.aaps.pump.aaruy.compose.AaruyHistoryTypes
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
@@ -36,21 +35,18 @@ class AaruyReplaceSteps(
 ) {
 
     /**
-     * How far a change of reservoir came, from the pump log: the last rewind, a prime after it, and no delivery since. So it
-     * is known after an app restart too, with no setting that an import of old settings could bring back. Only while the
-     * pump is stopped does it mean the change is still going on.
+     * Whether the pump log has a rewind and no insulin given since. So a change of reservoir is known after an app restart
+     * too, with no setting that an import of old settings could bring back. Only while the pump is stopped does it mean the
+     * change is still going on.
+     *
+     * The prime does not tell how far the change came. Seen on a real pump: its prime entry is written only when the pump
+     * leaves the stop, so a stopped pump never shows it. After a restart the change goes on after the rewind, with the prime.
      */
-    suspend fun progressFromLog(): AaruyReplaceProgress = withContext(Dispatchers.IO) {
+    suspend fun rewoundWithoutDeliverySince(): Boolean = withContext(Dispatchers.IO) {
         // Newest first.
         val entries = historyUnitInfoDao.querySince(dateUtil.now() - LOG_WINDOW_MS)
         val sinceRewind = entries.takeWhile { it.type != AaruyHistoryTypes.REWIND.toInt() }
-        when {
-            sinceRewind.size == entries.size                     -> AaruyReplaceProgress.NONE
-            // Insulin was given after it, so that change is over.
-            sinceRewind.any { it.type in DELIVERY_TYPES }        -> AaruyReplaceProgress.NONE
-            sinceRewind.any { it.type == AaruyHistoryTypes.PRIME.toInt() } -> AaruyReplaceProgress.PRIMED
-            else                                                 -> AaruyReplaceProgress.REWOUND
-        }
+        sinceRewind.size < entries.size && sinceRewind.none { it.type in DELIVERY_TYPES }
     }
 
     /** @return null for a command that is no step of a reservoir change */
@@ -90,7 +86,7 @@ class AaruyReplaceSteps(
         aaruyPump.alreadyPushBack = false
         aaruyPump.clearAlarmState()
         // The client of this app run may not know of the rewind, as after a restart. The log does.
-        if (aaruyPump.pumpState == AaruyPumpState.STOP_RUNNING && progressFromLog() != AaruyReplaceProgress.NONE) aaruyBle.allowRestoreAfterRewind()
+        if (aaruyPump.pumpState == AaruyPumpState.STOP_RUNNING && rewoundWithoutDeliverySince()) aaruyBle.allowRestoreAfterRewind()
         aaruyBle.startBaseInject()
         val start = dateUtil.now()
         while (aaruyPump.pumpState !in AaruyPumpState.BASALRATE_RUNNING..AaruyPumpState.LARGEDOSE_RUNNING) {
