@@ -291,7 +291,7 @@ class PersistentNotificationPlugin(
             }
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             line1 += if (activeTemp != null) {
-                " • " + activeTemp.toStringShort(rh) + " "
+                " • " + activeTemp.toStringShort(rh, pump.pumpDescription.tempAbsoluteFormat) + " "
             } else {
                 " • " + rh.gs(CoreUiR.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + " "
             }

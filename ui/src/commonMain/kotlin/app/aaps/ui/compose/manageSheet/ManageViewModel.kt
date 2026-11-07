@@ -170,7 +170,7 @@ class ManageViewModel(
                 if (activeTemp != null) {
                     showTempBasal = false
                     showCancelTempBasal = true // cancel relays to the master via batchExecutor → shown on a client too
-                    cancelTempBasalText = rh.gs(UiStrings.cancel_action_with_details, rh.gs(CoreUiStrings.cancel), activeTemp.toStringShort(rh))
+                    cancelTempBasalText = rh.gs(UiStrings.cancel_action_with_details, rh.gs(CoreUiStrings.cancel), activeTemp.toStringShort(rh, pump.pumpDescription.tempAbsoluteFormat))
                 } else {
                     showTempBasal = true
                     showCancelTempBasal = false

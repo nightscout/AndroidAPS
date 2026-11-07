@@ -235,7 +235,7 @@ class MasterRecordWriter(
             is Stored.BolusCalculatorResult -> rh.gs(CoreUiStrings.boluswizard)
             is Stored.TemporaryTarget       -> line(CoreUiStrings.temporary_target, stored.record.friendlyDescription(profileUtil.units, rh, profileUtil))
             is Stored.TemporaryBasal        -> profileFunction.getProfile(stored.record.timestamp)?.let { profile ->
-                line(CoreUiStrings.tempbasal_label, stored.record.toStringFull(profile, dateUtil, rh))
+                line(CoreUiStrings.tempbasal_label, stored.record.toStringFull(profile, dateUtil, rh, activePlugin.activePump.pumpDescription.tempAbsoluteFormat))
             } ?: rh.gs(CoreUiStrings.tempbasal_label)
 
             is Stored.ExtendedBolus         -> line(CoreUiStrings.extended_bolus, stored.record.toStringFull(dateUtil, rh))

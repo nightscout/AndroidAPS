@@ -109,7 +109,7 @@
     <string name="default_custom_watchface_external_comment">Default watchface including external views for followers, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="wear_default_watchface">Default Watchface</string>
     <string name="wear_more_watchfaces">More watchfaces</string>
-    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_absolute_rate_dynamic" comment="%1$s=rate with the digits the pump can run, %2$s=start time, %3$d=minutes run, %4$d=all minutes. Example: 0.275 U/h @12:00 5/30'">%1$s U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 
