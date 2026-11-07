@@ -270,6 +270,7 @@ last_vacuum_run|LongNonKey|true
 last_versionchecker_plugin_warning_timestamp|VersionCheckerLongKey|true
 last_versionchecker_warning|VersionCheckerLongKey|true
 lgsThreshold|UnitDoubleKey|true
+live_update_lock_screen_only|BooleanKey|true
 local_profile_data|StringNonKey|true
 local_profile_last_change|LongNonKey|true
 location|StringKey|true
