@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.comm.LogItem
+import app.aaps.pump.aaruy.compose.AaruyHistoryTypes
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -19,6 +20,13 @@ import kotlin.math.min
 
 /** What one status frame says. A rate and the times only when a temp basal runs. */
 data class AaruyStatusSnapshot(val status: Int, val rate: Double = 0.0, val remainingSeconds: Long = 0, val runningSeconds: Long = 0)
+
+/**
+ * Seen on a real pump: a bolus, also a refused one, ends a temp basal entry while the temp basal goes on, and an alarm is
+ * logged before the entry of the time it came in. So these two say nothing about a temp basal before them. Any other entry
+ * tells if it went on.
+ */
+internal fun LogItem.tellsIfATempBasalWentOn(): Boolean = type != AaruyHistoryTypes.BOLUS.toInt() && type != AaruyHistoryTypes.ALARM.toInt()
 
 /**
  * Fills the database with what the pump really did, not with what was asked. Commands write nothing here, so a lost answer is no mistake.
@@ -81,10 +89,14 @@ class AaruyTempBasalSync(
     }
 
     /**
+     * The log decides if this entry is the real end or only a split piece, see [tellsIfATempBasalWentOn]. Only for the newest
+     * entry, which nothing follows yet, the status now has to tell.
+     *
      * @param nextStart when the next entry of the log starts: the exact end. Without it the end is known only to the minute,
      * because an entry counts whole minutes: a temp basal of 30 seconds says 0. The middle of that minute is never more than 30 seconds off.
+     * @param next the next entry that tells if this temp basal went on. Null for the newest entry.
      */
-    suspend fun onHistoryTempBasal(item: LogItem, nextStart: Long?, statusNow: Int?) {
+    suspend fun onHistoryTempBasal(item: LogItem, nextStart: Long?, next: LogItem?, statusNow: Int?) {
         val start = item.timestamp
         // The next entry can be an alarm long after this one, so it is the end only within the minutes of this entry.
         val byMinutes = start + T.mins(item.injectTime + 1L).msecs()
@@ -93,7 +105,14 @@ class AaruyTempBasalSync(
         val record = recordAround(start, rate) ?: lateStart(start, end, rate)
         when {
             record == null                                                                      -> addTempBasal(start, rate, end - start)
-            // Still running in the database, and the pump ended it while the link was down. With status 2 or 3 this entry is only a split.
+            // The log goes on after this entry, so the log decides, not the status now. After a lost link the pump can run another
+            // temp basal or a bolus now: this entry was taken for a split piece, and AAPS counted its rate until the next one cut it.
+            next != null                                                                        ->
+                if (!sameTempBasal(item, next) && record.timestamp + record.duration > end + END_TOLERANCE_MS) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "The log ends the temp basal at ${dateUtil.dateAndTimeString(end)}")
+                    aaruyPump.syncStopTBRWithPumpId(end)
+                }
+            // The newest entry. Still running in the database, and the pump ended it while the link was down. With status 2 or 3 this entry is only a split.
             dateUtil.now() < record.timestamp + record.duration && statusNow != STATUS_TEMP_BASAL && statusNow != STATUS_BOLUS -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "The pump ended the temp basal at ${dateUtil.dateAndTimeString(end)}")
                 aaruyPump.syncStopTBRWithPumpId(end)
@@ -101,6 +120,9 @@ class AaruyTempBasalSync(
         }
         refreshDriverState()
     }
+
+    /** The piece after a bolus or an alarm: the same temp basal goes on. */
+    private fun sameTempBasal(item: LogItem, next: LogItem): Boolean = next.type == AaruyHistoryTypes.TEMP_BASAL.toInt() && next.data == item.data
 
     /**
      * Every delivery of the log has a start and an end. A gap between them is time when the pump delivered nothing,
@@ -169,6 +191,9 @@ class AaruyTempBasalSync(
         const val SAME_TIME_MS = 5_000L
         const val LATE_START_MS = 30_000L
         const val HALF_MINUTE_MS = 30_000L
+
+        /** An end from whole minutes is up to 30 seconds off, and a record ended by AAPS some seconds from the log. */
+        const val END_TOLERANCE_MS = 60_000L
 
         /** More than the whole minutes an entry loses at each end, and short breaks around a bolus. */
         const val GAP_MS = 3 * 60_000L

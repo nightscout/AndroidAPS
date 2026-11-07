@@ -68,6 +68,22 @@ class AaruyServiceTempBasalTest {
         order.verify(ble).setTempBasal(1.0, 30)
     }
 
+    /**
+     * The status of the new temp basal writes its record, which cuts the running one at its start. The log can end the
+     * running one earlier, as after a lost link, so it is read first: the database takes one end only.
+     */
+    @Test
+    fun theLogIsReadBeforeANewTempBasalGoesToThePump() {
+        pump.pumpState = AaruyPumpState.TMPBASALRATE_RUNNING
+
+        assertTrue(setTempBasal())
+
+        val order = inOrder(ble)
+        order.verify(ble).waitForHistoryAfterReconnect()
+        order.verify(ble).cancelTempBasal()
+        order.verify(ble).setTempBasal(1.0, 30)
+    }
+
     @Test
     fun fromThePlainBasalNothingIsCancelled() {
         pump.pumpState = AaruyPumpState.BASALRATE_RUNNING

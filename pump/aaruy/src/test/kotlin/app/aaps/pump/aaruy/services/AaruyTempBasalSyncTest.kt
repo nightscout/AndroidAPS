@@ -200,17 +200,74 @@ class AaruyTempBasalSyncTest {
     fun aSplitEntryDoesNotEndTheTempBasal() = runBlocking {
         val start = now - 2 * minute
         databaseHolds(start)
-        sync.onHistoryTempBasal(entry(start, 1), null, statusNow = 2)
-        sync.onHistoryTempBasal(entry(start, 1), null, statusNow = 3)
+        sync.onHistoryTempBasal(entry(start, 1), null, next = null, statusNow = 2)
+        sync.onHistoryTempBasal(entry(start, 1), null, next = null, statusNow = 3)
         assertEquals(0, stops.size)
         assertEquals(0, writes.size)
+    }
+
+    private fun basalEntry(start: Long, minutes: Int = 30) = LogItem(timestamp = start, type = 0, data = 1000, injectTime = minutes, delayBolus = 0, reserved = 0)
+
+    /**
+     * Review #64: the pump ended the temp basal during a lost link and runs another one now. Basal followed it in the log,
+     * so the log has its end. The status now made it a split piece, and AAPS counted its rate until the next one cut it.
+     */
+    @Test
+    fun theLogEndsATempBasalAlsoWhenThePumpRunsAnotherOneNow() = runBlocking {
+        val start = now - 55 * minute
+        databaseHolds(start, duration = 60 * minute)
+        sync.onHistoryTempBasal(entry(start, 20), start + 20 * minute, next = basalEntry(start + 20 * minute), statusNow = 2)
+        assertEquals(start + 20 * minute, stops.single().arguments[0])
+    }
+
+    @Test
+    fun theLogEndsATempBasalAlsoWhenThePumpGivesABolusNow() = runBlocking {
+        val start = now - 55 * minute
+        databaseHolds(start, duration = 60 * minute)
+        sync.onHistoryTempBasal(entry(start, 20), start + 20 * minute, next = basalEntry(start + 20 * minute), statusNow = 3)
+        assertEquals(start + 20 * minute, stops.single().arguments[0])
+    }
+
+    /** Review #66: a bolus split it, and the same temp basal follows. The pump runs basal now, which made it an end. */
+    @Test
+    fun aPieceThatTheSameTempBasalFollowsIsNoEnd() = runBlocking {
+        val start = now - 25 * minute
+        databaseHolds(start, duration = 30 * minute)
+        sync.onHistoryTempBasal(entry(start, 10), start + 10 * minute, next = entry(start + 11 * minute, 10), statusNow = 1)
+        assertEquals(0, stops.size)
+    }
+
+    @Test
+    fun aTempBasalOfAnotherRateAfterItIsAnEnd() = runBlocking {
+        val start = now - 25 * minute
+        databaseHolds(start, duration = 60 * minute)
+        sync.onHistoryTempBasal(entry(start, 10), start + 10 * minute, next = entry(start + 10 * minute, 10, rate = 800), statusNow = 2)
+        assertEquals(start + 10 * minute, stops.single().arguments[0])
+    }
+
+    /** The database says it ran longer than the log, also when that longer end is over by now. */
+    @Test
+    fun theLogEndsARecordWhoseOwnEndIsOverAlready() = runBlocking {
+        val start = now - 60 * minute
+        databaseHolds(start, duration = 30 * minute)
+        sync.onHistoryTempBasal(entry(start, 10), start + 10 * minute, next = basalEntry(start + 10 * minute), statusNow = 1)
+        assertEquals(start + 10 * minute, stops.single().arguments[0])
+    }
+
+    /** AAPS ended it a few seconds from the pump. The log says the same, so nothing is written. */
+    @Test
+    fun aRecordThatEndsWithTheLogIsNotEndedAgain() = runBlocking {
+        val start = now - 60 * minute
+        databaseHolds(start, duration = 10 * minute + 20 * second)
+        sync.onHistoryTempBasal(entry(start, 10), start + 10 * minute, next = basalEntry(start + 10 * minute), statusNow = 1)
+        assertEquals(0, stops.size)
     }
 
     @Test
     fun anEntryEndsATempBasalThePumpEndedDuringALostLink() = runBlocking {
         val start = now - 20 * minute
         databaseHolds(start)
-        sync.onHistoryTempBasal(entry(start, 5), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 5), null, next = null, statusNow = 1)
         assertEquals(start + 5 * minute + 30 * second, stops.single().arguments[0])
     }
 
@@ -219,7 +276,7 @@ class AaruyTempBasalSyncTest {
     fun theNextEntryGivesTheExactEnd() = runBlocking {
         val start = now - 20 * minute
         databaseHolds(start)
-        sync.onHistoryTempBasal(entry(start, 0), start + 22 * second, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 0), start + 22 * second, next = null, statusNow = 1)
         assertEquals(start + 22 * second, stops.single().arguments[0])
     }
 
@@ -228,7 +285,7 @@ class AaruyTempBasalSyncTest {
     fun anEntryWithoutMinutesEndsInTheMiddleOfTheMinute() = runBlocking {
         val start = now - 20 * minute
         databaseHolds(start)
-        sync.onHistoryTempBasal(entry(start, 0), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 0), null, next = null, statusNow = 1)
         assertEquals(start + 30 * second, stops.single().arguments[0])
     }
 
@@ -236,7 +293,7 @@ class AaruyTempBasalSyncTest {
     fun anEndIsNeverInTheFuture() = runBlocking {
         val start = now - 10 * second
         databaseHolds(start)
-        sync.onHistoryTempBasal(entry(start, 0), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 0), null, next = null, statusNow = 1)
         assertEquals(now, stops.single().arguments[0])
     }
 
@@ -248,7 +305,7 @@ class AaruyTempBasalSyncTest {
     fun anEntryThatComesAgainFindsARecordThatEndedAlready() = runBlocking {
         val start = now - 20 * minute
         databaseHolds(start + 788, duration = 212)
-        sync.onHistoryTempBasal(entry(start, 0), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 0), null, next = null, statusNow = 1)
         assertEquals(0, writes.size)
         assertEquals(0, announcements.size)
     }
@@ -258,7 +315,7 @@ class AaruyTempBasalSyncTest {
     fun aRecordSomeSecondsLaterIsTheSameTempBasal() = runBlocking {
         val start = now - 20 * minute
         databaseHolds(start + 2 * second)
-        sync.onHistoryTempBasal(entry(start, 5), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 5), null, next = null, statusNow = 1)
         assertEquals(0, writes.size)
     }
 
@@ -266,7 +323,7 @@ class AaruyTempBasalSyncTest {
     fun anEntryInsideAFinishedRecordChangesNothing() = runBlocking {
         val start = now - 60 * minute
         databaseHolds(start, duration = 10 * minute)
-        sync.onHistoryTempBasal(entry(start + 2 * minute, 3), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start + 2 * minute, 3), null, next = null, statusNow = 1)
         assertEquals(0, stops.size)
         assertEquals(0, writes.size)
     }
@@ -275,7 +332,7 @@ class AaruyTempBasalSyncTest {
     @Test
     fun anEntryTheDatabaseDoesNotHaveIsAdded() = runBlocking {
         val start = now - 60 * minute
-        sync.onHistoryTempBasal(entry(start, 30), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 30), null, next = null, statusNow = 1)
         assertEquals(start, writes.single().arguments[0])
         assertEquals(30 * minute + 30 * second, writes.single().arguments[2])
         assertEquals(start, writes.single().arguments[5])
@@ -324,7 +381,7 @@ class AaruyTempBasalSyncTest {
         whenever(persistence.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
             if (late.timestamp in (invocation.arguments[0] as Long)..(invocation.arguments[1] as Long)) listOf(late) else emptyList()
         }
-        sync.onHistoryTempBasal(entry(start, 30), null, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 30), null, next = null, statusNow = 1)
         assertEquals("only the start is corrected", 1, writes.size)
         assertEquals(start, writes.single().arguments[0])
         assertEquals(30 * minute, writes.single().arguments[2])
@@ -336,7 +393,7 @@ class AaruyTempBasalSyncTest {
     @Test
     fun aNextEntryAfterTheMinutesOfThisOneIsNotItsEnd() = runBlocking {
         val start = now - 120 * minute
-        sync.onHistoryTempBasal(entry(start, 30), start + 80 * minute, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 30), start + 80 * minute, next = null, statusNow = 1)
         assertEquals(30 * minute + 30 * second, writes.single().arguments[2])
     }
 
@@ -344,7 +401,7 @@ class AaruyTempBasalSyncTest {
     @Test
     fun anEntryOfNoLengthAddsNothing() = runBlocking {
         val start = now - 20 * minute
-        sync.onHistoryTempBasal(entry(start, 0), start, statusNow = 1)
+        sync.onHistoryTempBasal(entry(start, 0), start, next = null, statusNow = 1)
         assertEquals(0, writes.size)
     }
 
@@ -364,7 +421,7 @@ class AaruyTempBasalSyncTest {
         whenever(persistence.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
             listOf(before, this1).filter { it.timestamp in (invocation.arguments[0] as Long)..(invocation.arguments[1] as Long) }
         }
-        sync.onHistoryTempBasal(entry(start, 10), null, statusNow = 0)
+        sync.onHistoryTempBasal(entry(start, 10), null, next = null, statusNow = 0)
         assertEquals(start + 10 * minute + 30 * second, stops.single().arguments[0])
     }
 

@@ -914,11 +914,15 @@ fun syncAndLoadBasicParam() {
     private fun saveHistoryData(logInfo: LogInfo, pageMissing: Boolean, lastPage: Boolean) {
         val generation = linkGeneration
         syncJobs.trySend {
-            if (logInfo.curPage == 0) historyReadBroken = false
+            if (logInfo.curPage == 0) {
+                historyReadBroken = false
+                // A read that did not end is read again from its start.
+                tempBasalWaitingForNextPage = null
+            }
             if (pageMissing) historyReadBroken = true
             if (historyReadBroken) aapsLogger.warn(LTag.PUMPCOMM, "History page ${logInfo.curPage} left out: a page before it is missing")
             else try {
-                saveHistoryPage(logInfo)
+                saveHistoryPage(logInfo, lastPage)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -931,12 +935,21 @@ fun syncAndLoadBasicParam() {
                 if (generation != linkGeneration) aapsLogger.debug(LTag.PUMPCOMM, "A history read of an earlier link ended")
                 else if (historyReadBroken) onHistoryReadWithHole()
                 else onHistoryReadComplete(logInfo)
+                tempBasalWaitingForNextPage = null
             }
         }
     }
 
+    /**
+     * A temp basal entry with nothing after it on its page that tells if it went on: the next page tells. With its next start
+     * when its page had one. Only in the history jobs.
+     */
+    private var tempBasalWaitingForNextPage: Pair<LogItem, Long?>? = null
+
     /** Only now: an entry not yet written must come again if the app stops here. */
     private suspend fun onHistoryReadComplete(lastPage: LogInfo) {
+        // Nothing came after it: it is the newest, and only the status can tell.
+        tempBasalWaitingForNextPage?.let { (waiting, nextStart) -> tempBasalSync.onHistoryTempBasal(waiting, nextStart, null, syncedStatus?.status) }
         lastPage.logItems.lastOrNull()?.let { aaruyPump.lastHistoryTime = it.timestamp }
         historyReadFailures = 0
         receivingHistory = false
@@ -944,8 +957,15 @@ fun syncAndLoadBasicParam() {
         historyRead(complete = true)
     }
 
-    private suspend fun saveHistoryPage(logInfo: LogInfo) {
+    private suspend fun saveHistoryPage(logInfo: LogInfo, lastPage: Boolean) {
+        // Its page ended with it, so the first entry of this page is the exact end.
+        tempBasalWaitingForNextPage = tempBasalWaitingForNextPage?.let { (waiting, nextStart) -> waiting to (nextStart ?: logInfo.logItems.firstOrNull()?.timestamp) }
         logInfo.logItems.forEachIndexed { index, item ->
+            // First the temp basal of the page before, which this entry ends or goes on with. A new one would cut its record.
+            if (item.tellsIfATempBasalWentOn()) tempBasalWaitingForNextPage?.let { (waiting, nextStart) ->
+                tempBasalWaitingForNextPage = null
+                tempBasalSync.onHistoryTempBasal(waiting, nextStart, item, syncedStatus?.status)
+            }
             aapsLogger.debug(LTag.PUMPCOMM, "saveHistoryData item.data = ${item.data}, item.delayBolus is ${item.delayBolus}")
             val historyUnitInfo = HistoryUnitInfo()
             historyUnitInfo.data = item.data.toLong()
@@ -1033,7 +1053,8 @@ fun syncAndLoadBasicParam() {
                     "from record: ${newRecordInfo(newRecord)}EVENT BOLUS ${dateUtil.dateAndTimeString(item.timestamp)} ($item.timestamp) Bolus: ${item.data / 1000.0}U "
                 )
             }
-            syncFromHistory(item, logInfo.logItems.getOrNull(index + 1)?.timestamp)
+            val next = logInfo.logItems.drop(index + 1).firstOrNull { it.tellsIfATempBasalWentOn() }
+            syncFromHistory(item, logInfo.logItems.getOrNull(index + 1)?.timestamp, next, lastPage)
             if (!known) historyUnitInfoDao.insert(historyUnitInfo)
         }
     }
@@ -1055,8 +1076,11 @@ fun syncAndLoadBasicParam() {
         }
     }
 
-    /** What the pump log knows and the driver may not: all of this can happen while the link is down. */
-    private suspend fun syncFromHistory(item: LogItem, nextStart: Long?) {
+    /**
+     * What the pump log knows and the driver may not: all of this can happen while the link is down.
+     * @param next the next entry of this page that tells if a temp basal went on
+     */
+    private suspend fun syncFromHistory(item: LogItem, nextStart: Long?, next: LogItem?, lastPage: Boolean) {
         // An entry counts whole minutes, so the middle of the last minute is at most 30 seconds off. Without this a gap comes out too long.
         val minutes = T.mins(item.injectTime.toLong()).msecs() + T.secs(30).msecs()
         when (item.type.toInt()) {
@@ -1064,7 +1088,9 @@ fun syncAndLoadBasicParam() {
 
             HISTORY_TEMP_BASAL -> {
                 tempBasalSync.onHistoryDelivery(item.timestamp, item.timestamp + minutes)
-                tempBasalSync.onHistoryTempBasal(item, nextStart, syncedStatus?.status)
+                // The next page tells. Only the newest entry of the whole read is left to the status.
+                if (next == null && !lastPage) tempBasalWaitingForNextPage = item to nextStart
+                else tempBasalSync.onHistoryTempBasal(item, nextStart, next, syncedStatus?.status)
             }
 
             HISTORY_BOLUS      -> if (item.delayBolus.toInt() == 0) {

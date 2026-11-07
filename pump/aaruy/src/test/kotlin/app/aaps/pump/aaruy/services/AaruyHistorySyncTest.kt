@@ -99,9 +99,51 @@ class AaruyHistorySyncTest {
         val second = tbrEntry(now - 10 * minute, 5)
         receive(first, second)
         runBlocking {
-            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(first, second.timestamp, null)
-            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(second, null, null)
+            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(first, second.timestamp, second, null)
+            // The newest entry of the read: nothing after it tells, so the status does.
+            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(second, null, null, null)
         }
+    }
+
+    private fun bolusEntry(start: Long) = LogItem(timestamp = start, type = 2, data = 500, injectTime = 0, delayBolus = 0, reserved = 0)
+    private fun basalEntry(start: Long) = LogItem(timestamp = start, type = 0, data = 1000, injectTime = 30, delayBolus = 0, reserved = 0)
+
+    /**
+     * A bolus says nothing about a temp basal before it, and what does tell can be on the next page. Left to the status now,
+     * a temp basal the pump ended during a lost link went on in AAPS when the pump ran another one now.
+     */
+    @Test
+    fun aTempBasalAtTheEndOfAPageWaitsForWhatTheNextPageTells() {
+        val tempBasal = tbrEntry(now - 30 * minute, 5)
+        val bolus = bolusEntry(now - 25 * minute)
+        val basal = basalEntry(now - 24 * minute)
+        page(0, 2, tempBasal)
+        page(1, 2, bolus, basal)
+        runBlocking {
+            verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(tempBasal, bolus.timestamp, basal, null)
+            verify(tempBasalSync, never()).onHistoryTempBasal(eq(tempBasal), anyOrNull(), eq(null), anyOrNull())
+        }
+    }
+
+    /** Nothing after it tells in the whole read: it is the newest, and the status now decides, with the exact end. */
+    @Test
+    fun theNewestTempBasalOfAReadIsLeftToTheStatus() {
+        val tempBasal = tbrEntry(now - 30 * minute, 5)
+        val bolus = bolusEntry(now - 25 * minute)
+        page(0, 2, tempBasal)
+        page(1, 2, bolus)
+        runBlocking { verify(tempBasalSync, timeout(5000)).onHistoryTempBasal(tempBasal, bolus.timestamp, null, null) }
+    }
+
+    /** The read with a hole is asked again, and the entry comes again with it. Decided now, it would be decided without its next page. */
+    @Test
+    fun aTempBasalWaitingForAPageAfterAHoleIsNotDecided() {
+        val tempBasal = tbrEntry(now - 30 * minute, 5)
+        page(0, 3, tempBasal)
+        page(2, 3, basalEntry(now - 20 * minute))
+        verify(historyDao, timeout(5000)).insert(any())
+        Thread.sleep(300)
+        runBlocking { verify(tempBasalSync, never()).onHistoryTempBasal(eq(tempBasal), anyOrNull(), anyOrNull(), anyOrNull()) }
     }
 
     /** An entry not yet written must come again if the app stops here. */

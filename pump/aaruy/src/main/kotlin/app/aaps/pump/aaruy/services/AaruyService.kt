@@ -380,6 +380,10 @@ class AaruyService : MetroService() {
 
     suspend fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
         if (!isConnected || !aaruyPump.pumpState.isCanTmpBasal()) return false
+        // The log first. Dana writes its records only from its log, so the end of the old temp basal always comes before the new
+        // one. Here the status of the new one writes its record, which cuts the running record at its start. When the log has an
+        // earlier end for that one, as after a lost link, it must come before: the database takes one end only.
+        aaruyBle.waitForHistoryAfterReconnect()
         var result = true
         // The pump takes a new temp basal only from the plain basal. What it runs now is the status, not the database.
         if (aaruyPump.pumpState == AaruyPumpState.TMPBASALRATE_RUNNING) {
