@@ -1160,7 +1160,7 @@ class MasterActionExecutorImpl(
     /** The TBR line(s) — rate (percent or absolute) + duration, with a cap warning when reduced. */
     private fun buildTempBasalLine(capped: BatchAction.TempBasal, original: BatchAction.TempBasal?): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
-        val rateStr = if (capped.isPercent) rh.gs(CoreUiStrings.units_format_percent, capped.rate.toInt()) else rh.gs(CoreUiStrings.pump_base_basal_rate, capped.rate)
+        val rateStr = if (capped.isPercent) rh.gs(CoreUiStrings.units_format_percent, capped.rate.toInt()) else rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, activePlugin.activePump.pumpDescription.tempAbsoluteFormat.format(capped.rate))
         out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.tempbasal_label), rateStr))
         out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.duration), rh.gs(CoreUiStrings.format_mins, capped.durationMinutes)))
         if (original != null && capped.rate != original.rate) out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(CoreUiStrings.constraint_applied))

@@ -55,7 +55,8 @@ class ConcentrationHelperImpl(
         // Was "%.${decimals}f". String.format is JVM only; NumberFormat is the multiplatform
         // equivalent, and HALF_UP is stated explicitly because that is what String.format did - the
         // NumberFormat default is HALF_EVEN, which would round a tie the other way.
-        val fmt = NumberFormat(minFractionDigits = decimals, rounding = NumberRounding.HALF_UP)
+        val pumpDigits = activePlugin.activePump.pumpDescription.tempAbsoluteFormat.maxFractionDigits
+        val fmt = NumberFormat(minFractionDigits = decimals, maxFractionDigits = max(decimals, pumpDigits), rounding = NumberRounding.HALF_UP)
         if (isU100())
             return rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.cU))
         else {
@@ -70,7 +71,7 @@ override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int,
     val passedMinutes = min(T.msecs(max(0, dateUtil.now() - startTime)).mins().toInt(), durationInMin)
     return rh.gs(
         if (isExtended) ImplementationStrings.concentration_etbr_format else ImplementationStrings.concentration_tbr_format,
-        basalRateString(rate, isAbsolute), startTimeString, passedMinutes, durationInMin
+        basalRateString(rate, isAbsolute, decimals), startTimeString, passedMinutes, durationInMin
     )
 }
 

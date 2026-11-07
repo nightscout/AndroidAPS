@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aaruy_pump">Aaruy</string>
+    <string name="aaruy_pump_description">Pump integration for Aaruy</string>
+    <string name="aaruy_pump_error" comment="%1$s=name of the alarm. Example: Reservoir empty">Aaruy pump error: %1$s</string>
+    <string name="aaruy_pump_warning" comment="%1$s=name of the warning. Example: Low battery">Aaruy pump warning: %1$s</string>
+    <string name="aaruy_pairing">Aaruy pump pairing</string>
+    <string name="aaruy_press_pump_button">Press the button on the pump</string>
+    <string name="aaruy_press_pump_button_detail">The pump does not pair until you press its button. Keep it close to the phone.</string>
+    <string name="aaruy_pairing_successful">Pump paired</string>
+    <string name="aaruy_pairing_successful_detail">The pump is connected. A new pump stays stopped until you use Change reservoir.</string>
+    <string name="aaruy_state_not_running">Not running</string>
+    <string name="aaruy_state_basal">Basal running</string>
+    <string name="aaruy_state_temp_basal">Temp basal running</string>
+    <string name="aaruy_state_bolus">Bolus running</string>
+    <string name="aaruy_state_priming">Priming</string>
+    <string name="aaruy_state_paused">Paused, no insulin is delivered</string>
+    <string name="aaruy_state_stopped">Stopped, no insulin is delivered</string>
+    <string name="aaruy_state_unknown">Unknown</string>
+    <string name="setting_insulin_max_basal">Max basal</string>
+    <string name="setting_insulin_max_bolus">Max bolus</string>
+    <string name="setting_insulin_low_reservoir">Low reservoir alarm</string>
+    <string name="setting_insulin_bolus_rate" comment="Title of a setting. The size of one bolus step of the pump, in units. Values: 0.025 or 0.05">Bolus step</string>
+    <string name="setting_inject_sound_remind">Beeps</string>
+    <string name="setting_inject_sound_alarm">Alarm sound</string>
+    <string name="setting_aaruy_on">On</string>
+    <string name="setting_aaruy_off">Off</string>
+    <string name="actions_pump_disconnect" comment="%1$s=name of the pump">The pump %1$s is not connected. Unpair it anyway?</string>
+    <string name="actions_pump_disconnect_again" comment="%1$s=name of the pump">After you unpair, the pump %1$s cannot be used or connected again.</string>
+    <string name="actions_pump_disconnect_prompt" comment="%1$s=name of the pump">Unpair the pump %1$s?</string>
+    <string name="pump_state_label">Pump state</string>
+    <string name="active_alarms_label">Active alarms</string>
+    <string name="param_refresh">Pump settings changed</string>
+    <string name="replace_label">Change reservoir</string>
+    <string name="confirm_alarms_label">Confirm alarms</string>
+    <string name="replace_bat_rescv_label">Change reservoir and battery</string>
+    <string name="alarm_none">None</string>
+    <string name="alarm_zero_dose">Reservoir empty</string>
+    <string name="alarm_low_power">Low battery</string>
+    <string name="alarm_no_power">Battery almost empty</string>
+    <string name="alarm_low_dose">Low reservoir</string>
+    <string name="alarm_no_dose">Reservoir empty</string>
+    <string name="alarm_block">Motor blocked</string>
+    <string name="alarm_block2">Motor blocked (2)</string>
+    <string name="alarm_auto_poweroff">The pump turned itself off</string>
+    <string name="alarm_error3">Pump error 3</string>
+    <string name="alarm_error2">Pump error 2</string>
+    <string name="alarm_error1">Pump error 1</string>
+    <string name="alarm_error4">Pump error 4</string>
+    <string name="alarm_error3_plus">Pump error 3+</string>
+    <string name="alarm_motor_busy">Motor busy</string>
+    <string name="alarm_motor_repeat">Motor command repeated</string>
+    <string name="alarm_bolus_error">Bolus error</string>
+    <string name="alarm_basal_run_fail">Basal failed to start</string>
+    <string name="alarm_please_run_basal_first">Start basal first</string>
+    <string name="alarm_rewinding_fail">Rewind failed</string>
+    <string name="alarm_temp_basal_run_fail">Temp basal failed to start</string>
+    <string name="alarm_bolus_run_fail">Bolus failed to start</string>
+    <string name="aaruy_bolus_cut_short" comment="%1$s=insulin amount with unit. Example: 0.55 U, or for U200 insulin 0.55 U (0.28 CU)">The pump stopped the bolus after %1$s. Check the pump for an alarm.</string>
+    <string name="aaruy_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">The connection to the pump was lost during the bolus. The pump had delivered %1$s by then, and it may still deliver the rest. Do not bolus again. AAPS reads the real amount from the pump at the next connection.</string>
+    <string name="alarm_stop_too_long">The pump has been stopped for more than 15 minutes</string>
+    <string name="alarm_discharge_liquid_fail">Priming failed</string>
+    <string name="alarm_stop_15m_later">If you do nothing, the pump stops delivering insulin in 15 minutes</string>
+    <string name="low_battery_not_allow_back">Battery too low to rewind</string>
+    <string name="low_battery_not_allow_remove_air">Battery too low to prime</string>
+    <string name="actions_reservoir_rewind_prompt">Disconnect the pump from your body, then press Rewind. The motor moves, and the pump stops delivering insulin.</string>
+    <string name="actions_reservoir_prime_before">Put a fully charged battery and a reservoir filled with insulin into the pump.</string>
+    <string name="actions_reservoir_prime_comment">Press Prime until droplets come out of the needle.</string>
+    <string name="actions_reservoir_prime_comment_note">The pump must be disconnected from your body during priming.</string>
+    <string name="aaruy_motor_still_running">The motor can still run for a while. Wait until it is quiet, then go on.</string>
+    <string name="actions_reservoir_prime_cannula_before">Connect the infusion set to your body.</string>
+    <string name="actions_reservoir_prime_cannula">Choose the cannula length, then press Fill cannula. Basal starts after that.</string>
+    <string name="actions_reservoir_prime_cannula_note">Press Skip only if you did not replace the cannula.</string>
+    <string name="soft_needle_6">6 mm cannula</string>
+    <string name="soft_needle_9">9 mm cannula</string>
+    <string name="actions_reservoir_cannula_skip">Skip</string>
+    <string name="aaruy_fill_unknown">The link to the pump was lost during the fill. The cannula may be filled already: do not fill it again. Press Start basal.</string>
+    <string name="aaruy_start_basal" comment="Button. The cannula is filled, only the start of the basal rate failed and is tried again.">Start basal</string>
+    <string name="actions_reservoir_prime">Prime</string>
+    <string name="aaruy_rewind">Rewind</string>
+    <string name="aaruy_replace_done">Reservoir change finished. Basal is running.</string>
+    <string name="actions_reservoir_prime_cannula_action">Fill cannula</string>
+    <string name="is_backing">Rewinding</string>
+    <string name="locate_check_liquid">Priming. Check that droplets came out of the needle.</string>
+    <string name="actions_reservoir_prime_confirm">Did droplets come out of the needle?</string>
+    <string name="is_exhaust">Filling the cannula</string>
+    <string name="if_exit_replace_view">The reservoir change is not finished. Quit?</string>
+    <string name="daily_total">Daily totals</string>
+    <string name="history_alarm">Alarm</string>
+    <string name="bolus_title">Bolus</string>
+    <string name="temp_basal_title">Temp basal</string>
+    <string name="basal_rate_title">Basal rate</string>
+    <string name="aaruy_extended_not_from_aaps">The pump runs an extended bolus that AAPS did not start. AAPS does not count this insulin. No temp basal and no bolus can start until it ends.</string>
+    <string name="getting_pump_status">Getting pump status</string>
+    <string name="aaruy_wait_bolus_time_tip" comment="%1$d=seconds. Example: Waiting for the bolus to end. 20 s left.">Waiting for the bolus to end. %1$d s left.</string>
+    <string name="aaruy_history_daily_parts" comment="%1$s=bolus insulin, %2$s=basal insulin of one day. Example: 12.00 U + 18.00 U">%1$s + %2$s</string>
+    <string name="aaruy_pump_bound_elsewhere">The pump refused this phone. It may be paired with another phone or app: unpair it there, then pair it here again.</string>
+    <string name="aaruy_history_read_failed">The pump history could not be read completely. A bolus given on the pump may be missing in AAPS. AAPS keeps trying.</string>
+    <string name="aaruy_time_changed">Time or time zone changed</string>
+    <string name="aaruy_temp_basal_not_from_aaps" comment="%1$s=rate with unit. Example: 0.50 U/h">The pump ran a temp basal of %1$s that AAPS did not ask for. It is now in the treatments.</string>
+</resources>

@@ -92,6 +92,7 @@ class TempBasalDialogViewModel(
                 tempPercentStep = pumpDescription.tempPercentStep.toDouble(),
                 maxTempAbsolute = pumpDescription.maxTempAbsolute,
                 tempAbsoluteStep = pumpDescription.tempAbsoluteStep,
+                tempAbsoluteFormat = pumpDescription.tempAbsoluteFormat,
                 tempDurationStep = pumpDescription.tempDurationStep.toDouble(),
                 tempMaxDuration = pumpDescription.tempMaxDuration.toDouble(),
                 profile = profile,
