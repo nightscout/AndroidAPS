@@ -186,7 +186,16 @@ class AaruyService : MetroService() {
 
     suspend fun setBolus(detailedBolusInfo: DetailedBolusInfo): AaruyBolusOutcome {
         if (!canSetBolus()) return AaruyBolusOutcome.NOT_STARTED
+        // While it runs, its command shows the progress. After it, a bolus the pump still runs is shown by the driver.
+        aaruyPump.bolusCommandRunning = true
+        try {
+            return deliverBolus(detailedBolusInfo)
+        } finally {
+            aaruyPump.bolusCommandRunning = false
+        }
+    }
 
+    private suspend fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): AaruyBolusOutcome {
         val insulin = detailedBolusInfo.insulin
         val isSmb = detailedBolusInfo.bolusType == BS.Type.SMB
         aaruyPump.bolusDone = false

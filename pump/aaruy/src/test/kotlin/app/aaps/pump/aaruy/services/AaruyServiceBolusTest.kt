@@ -91,6 +91,19 @@ class AaruyServiceBolusTest {
         }
     }
 
+    /** Its command shows its progress. A bolus the driver found running, as after a restart, is shown by the driver only when no command runs. */
+    @Test
+    fun theBolusCommandIsKnownWhileItRuns() {
+        var runningDuringTheBolus = false
+        pumpAnswers {
+            runningDuringTheBolus = pump.bolusCommandRunning
+            pump.handleBolusStatusUpdate(true, 0.5)
+        }
+        runBlocking { service.setBolus(info) }
+        assertTrue(runningDuringTheBolus)
+        assertFalse(pump.bolusCommandRunning)
+    }
+
     @Test
     fun finishedBolusIsFinished() {
         pumpAnswers { pump.handleBolusStatusUpdate(true, 0.5) }

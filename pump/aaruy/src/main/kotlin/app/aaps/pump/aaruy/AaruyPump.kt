@@ -243,6 +243,21 @@ class AaruyPump(
     @Volatile var bolusLinkLost = false // The link was lost while this bolus ran. The first status of the new link is no answer to anything.
     var bolusStopRequested = false // A stop was sent on this link, so the pump leaving the bolus state is the answer to it
     var bolusDelivered = 0.0 // What the pump reported for the running bolus. Not from BolusProgressData: its state can be cleared by the queue.
+    @Volatile var bolusCommandRunning = false // A bolus command of this app run is in the driver: it shows its own progress
+
+    /** The progress of a bolus no command of this app run started, as after an app restart. Closed when the pump ends it. */
+    @Volatile private var foundBolusGeneration: Long? = null
+
+    /**
+     * A status shows a bolus that no bolus command of this app run started. Without this there is no progress and no
+     * Stop button for it, and this pump has no screen of its own: AAPS is the only way to stop it.
+     */
+    fun showFoundBolus(total: Double, isSmb: Boolean) {
+        if (bolusCommandRunning || foundBolusGeneration != null) return
+        foundBolusGeneration = bolusProgressData.startIfIdle(total, isSmb)?.also {
+            aapsLogger.debug(LTag.PUMP, "A running bolus of $total U is shown, it was not started in this app run")
+        }
+    }
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
 
@@ -520,6 +535,8 @@ class AaruyPump(
         }
         bolusDone = bolusCompleted
         if (bolusDone) {
+            foundBolusGeneration?.let { bolusProgressData.completeAndAutoClear(it) }
+            foundBolusGeneration = null
             lastBolusAmount = if (amountDelivered <= 25.0) {
                 amountDelivered
             } else {

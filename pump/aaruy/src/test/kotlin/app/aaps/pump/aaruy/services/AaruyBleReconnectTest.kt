@@ -2,11 +2,13 @@ package app.aaps.pump.aaruy.services
 
 import android.content.Context
 import android.os.Looper
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -28,14 +30,19 @@ import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.TimeZone
 import kotlin.concurrent.thread
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockingDetails
+import org.mockito.kotlin.any
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -303,6 +310,58 @@ class AaruyBleReconnectTest {
         assertEquals(AaruyBolusStart.NOT_SENT, start)
         assertTrue("the refusal ended the wait", System.currentTimeMillis() - began < 4_000)
         assertEquals(AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
+        transport.shutdown()
+    }
+
+    /**
+     * As after an app restart during a bolus: the pump runs one that no bolus command of this app run started. It
+     * must get a progress with a Stop button, as this pump has no screen of its own, and the progress must close
+     * when the pump ends it.
+     */
+    @Test
+    fun aBolusRunningWithoutACommandIsShownAndCanBeStopped() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val ch = mock(ConcentrationHelper::class.java)
+        `when`(ch.fromPump(any(), anyBoolean())).thenAnswer { (it.arguments[0] as PumpInsulin).cU }
+        `when`(ch.bolusProgressString(any(), anyBoolean())).thenReturn("")
+        `when`(ch.bolusProgressString(any(), anyDouble(), anyBoolean())).thenReturn("")
+        val progress = BolusProgressData(ch, CoroutineScope(Dispatchers.Default))
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), progress
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        // Not through AaruyService: no bolus command of this app run.
+        thread { ble.setBolus(2.0, false) }
+        waitFor("the bolus is shown") { progress.state.value != null }
+        assertEquals(2.0, progress.state.value!!.insulin, 0.051)
+        assertTrue(progress.state.value!!.stopDeliveryEnabled)
+
+        // What the Stop button does: cancelAllBoluses calls stopBolusDelivering, which sends the stop.
+        pump.bolusStopRequested = true
+        thread { repeat(50) { if (!pump.bolusDone) ble.cancelBolus(); Thread.sleep(100) } }
+        waitFor("the bolus is over") { pump.bolusDone }
+        waitFor("the progress is closed") { progress.state.value?.percent == 100 || progress.state.value == null }
         transport.shutdown()
     }
 
