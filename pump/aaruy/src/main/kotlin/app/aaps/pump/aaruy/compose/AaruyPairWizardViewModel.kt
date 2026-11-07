@@ -147,7 +147,7 @@ class AaruyPairWizardViewModel(
     /** Leaving before the pump paired: no half paired pump stays behind. */
     fun cancel() {
         stopScan()
-        if (_step.value == AaruyPairStep.PRESS_BUTTON) aaruyBle.unbindDevice()
+        if (_step.value == AaruyPairStep.PRESS_BUTTON) aaruyBle.unbindDeviceInBackground()
     }
 
     override fun onCleared() {

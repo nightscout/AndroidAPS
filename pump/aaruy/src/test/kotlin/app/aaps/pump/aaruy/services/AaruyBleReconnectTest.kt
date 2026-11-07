@@ -32,7 +32,9 @@ import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.TimeZone
@@ -43,6 +45,8 @@ import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -525,6 +529,64 @@ class AaruyBleReconnectTest {
         }
         val amount = mockingDetails(pumpSync).invocations.first { it.method.name == "syncBolusWithPumpId" }.arguments[1].toString().filter { it.isDigit() || it == '.' }.toDouble()
         assertTrue("delivered, not asked: $amount", amount > 0.0 && amount < 3.0)
+        transport.shutdown()
+    }
+
+    /**
+     * After an app restart the stored bolus info can be gone: the store keeps only the last two. The start of the last
+     * bolus is saved, and it is the temporary id of its record. The bolus was written a second time by pump id, next to
+     * its record with the amount asked for, so IOB counted it twice.
+     */
+    @Test
+    fun withoutItsStoredInfoABolusFindsItsRecordByTheSavedStart() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pumpSync = mock(PumpSync::class.java)
+        runBlocking { whenever(pumpSync.syncBolusWithTempId(any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(true) }
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), pumpSync,
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        // Gives nothing back: the info of this bolus was lost with the restart.
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            pumpSync, tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        waitFor("history is on after the empty reply") { pump.canSaveHistory }
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        val writes = transport.writes.size
+        ble.syncAndLoadBasicParam()
+        waitFor("basic param sent") { transport.writes.size > writes }
+        repeat(20) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        // Saved by the bolus command before the restart.
+        val start = System.currentTimeMillis()
+        pump.bolusStartTime = start
+        pump.bolusAmountToBeDelivered = 3.0
+        pump.bolusDone = false
+        Thread { ble.setBolus(3.0, false) }.start()
+        waitFor("the driver saw the bolus") { pump.pumpLastState == AaruyPumpState.LARGEDOSE_RUNNING }
+        waitFor("some of the bolus is delivered") { pump.bolusDelivered > 0.0 }
+        pump.bolusStopRequested = true
+        Thread { ble.cancelBolus() }.start()
+
+        waitFor("the pump history gave the bolus") {
+            mockingDetails(pumpSync).invocations.any { it.method.name == "syncBolusWithTempId" }
+        }
+        val sync = mockingDetails(pumpSync).invocations.first { it.method.name == "syncBolusWithTempId" }
+        assertEquals("the record of this bolus", start, sync.arguments[2])
+        assertFalse("not a second record", mockingDetails(pumpSync).invocations.any { it.method.name == "syncBolusWithPumpId" })
         transport.shutdown()
     }
 

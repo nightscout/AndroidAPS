@@ -159,6 +159,14 @@ class AaruyOverviewViewModelTest {
         verify(ble, never()).unbindDevice()
     }
 
+    /** The dialog calls this on the main thread, and the unbind waits for the pump for 2 s. */
+    @Test
+    fun forgettingThePumpDoesNotWaitOnTheMainThread() {
+        viewModel().forgetPump()
+        verify(ble).unbindDeviceInBackground()
+        verify(ble, never()).unbindDevice()
+    }
+
     private fun AaruyOverviewViewModel.eventsOf(action: AaruyOverviewViewModel.() -> Unit): List<AaruyOverviewEvent> {
         val events = mutableListOf<AaruyOverviewEvent>()
         val collector = CoroutineScope(UnconfinedTestDispatcher()).launch { this@eventsOf.events.collect { events.add(it) } }

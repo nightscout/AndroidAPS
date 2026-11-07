@@ -121,7 +121,7 @@ class AaruyOverviewViewModel(
     /** The pump could not be told. It stays paired on its side, so the screen asked a second time. */
     fun forgetPump() {
         aaruyPump.clearAlarmState()
-        aaruyBle.unbindDevice()
+        aaruyBle.unbindDeviceInBackground()
     }
 
     private fun pumpStateText(state: AaruyPumpState): String = rh.gs(

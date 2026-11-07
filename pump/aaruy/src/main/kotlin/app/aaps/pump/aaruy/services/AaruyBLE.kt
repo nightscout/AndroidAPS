@@ -50,6 +50,7 @@ import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CancellationException
@@ -301,6 +302,11 @@ class AaruyBLE(
         // The unbind went out by now. A pump out of reach would connect again as soon as it is back, with no pump paired.
         aaBleUtil.closeLink()
         return told
+    }
+
+    /** For the screens, which call on the main thread: [unbindDevice] waits for the pump for 2 s. Not stopped when the screen is left. */
+    fun unbindDeviceInBackground() {
+        scope.launch { unbindDevice() }
     }
 
     /** The plugin is off, as when the user chose another pump: this pump must not write into the database. */
@@ -999,7 +1005,21 @@ fun syncAndLoadBasicParam() {
                         )
                     }
                 } else {
-                    newRecord = pumpSync.syncBolusWithPumpId(
+                    // The stored info is gone, as after an app restart: the store keeps only the last two. The start of
+                    // the last bolus is saved, and it is the temporary id of its record. Without this the bolus was
+                    // written a second time, next to its record with the amount asked for.
+                    val savedStart = aaruyPump.bolusStartTime
+                    val lastBolusOfThisPhone = abs(item.timestamp - savedStart) < T.mins(1).msecs() && item.data / 1000.0 <= aaruyPump.bolusAmountToBeDelivered + 0.01
+                    val syncOk = lastBolusOfThisPhone && pumpSync.syncBolusWithTempId(
+                        timestamp = item.timestamp,
+                        amount = PumpInsulin(item.data / 1000.0),
+                        temporaryId = savedStart,
+                        type = null,
+                        pumpId = item.timestamp,
+                        pumpType = aaruyPump.pumpType(),
+                        pumpSerial = aaruyPump.pumpSN
+                    )
+                    if (!syncOk) newRecord = pumpSync.syncBolusWithPumpId(
                         timestamp = item.timestamp,
                         amount = PumpInsulin(item.data / 1000.0),
                         type = null,

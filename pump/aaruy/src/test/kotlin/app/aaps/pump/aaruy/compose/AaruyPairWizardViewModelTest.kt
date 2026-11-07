@@ -111,13 +111,15 @@ class AaruyPairWizardViewModelTest {
         viewModel.selectDevice(mock())
         assertEquals(AaruyPairStep.PRESS_BUTTON, viewModel.step.value)
         viewModel.cancel()
-        verify(ble).unbindDevice()
+        // Off the main thread: the unbind waits for the pump for 2 s.
+        verify(ble).unbindDeviceInBackground()
+        verify(ble, never()).unbindDevice()
     }
 
     @Test
     fun cancelDuringTheScanUnpairsNothing() {
         runBlocking { whenever(profileFunction.getRequestedProfile()).thenReturn(mock<PS>()) }
         viewModel().cancel()
-        verify(ble, never()).unbindDevice()
+        verify(ble, never()).unbindDeviceInBackground()
     }
 }
