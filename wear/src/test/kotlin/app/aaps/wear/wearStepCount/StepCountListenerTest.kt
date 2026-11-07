@@ -131,44 +131,38 @@ internal class StepCountListenerTest {
         listener.dispose()
     }
 
+    /** Puts steps straight into the 5 minute blocks, [blocksAgo] blocks before the current one. */
+    @Suppress("UNCHECKED_CAST")
+    private fun putBlocks(listener: StepCountListener, vararg blocksAgo: Pair<Int, Int>) {
+        val field = StepCountListener::class.java.getDeclaredField("stepsMap")
+        field.isAccessible = true
+        val map = field.get(listener) as MutableMap<Long, Int>
+        val current = currentBucket()
+        blocksAgo.forEach { (ago, steps) -> map[current - ago] = steps }
+    }
+
     @Test
-    fun progressiveWindowFieldsAreZeroedByDuration() {
-        // Even with no data, verify the structural rule: shorter durations null out longer windows.
+    fun everyRowCarriesAllWindows() {
+        // Each window counts the finished blocks it covers: 5 min = 1 block, 10 min = 2, 15 min = 3.
+        // Before, 10 and 15 min read only the one block 10 or 15 minutes ago, and the row of a short
+        // duration had 0 in the longer windows.
         val listener = create()
-        val rows = run { listener.send(42L); emitted.single() }
-
-        val d5 = rows[0]
-        val d10 = rows[1]
-        val d15 = rows[2]
-        val d30 = rows[3]
-        val d60 = rows[4]
-        val d180 = rows[5]
-
-        // duration == 5 -> only steps5min carries a value slot; others are hard 0.
-        assertThat(d5.steps10min).isEqualTo(0)
-        assertThat(d5.steps15min).isEqualTo(0)
-        assertThat(d5.steps30min).isEqualTo(0)
-        assertThat(d5.steps60min).isEqualTo(0)
-        assertThat(d5.steps180min).isEqualTo(0)
-
-        // duration == 10 -> up to steps10min; 15/30/60/180 hard 0.
-        assertThat(d10.steps15min).isEqualTo(0)
-        assertThat(d10.steps30min).isEqualTo(0)
-        assertThat(d10.steps60min).isEqualTo(0)
-        assertThat(d10.steps180min).isEqualTo(0)
-
-        // duration == 15 -> up to steps15min; 30/60/180 hard 0.
-        assertThat(d15.steps30min).isEqualTo(0)
-        assertThat(d15.steps60min).isEqualTo(0)
-        assertThat(d15.steps180min).isEqualTo(0)
-
-        // duration == 30 -> up to steps30min; 60/180 hard 0.
-        assertThat(d30.steps60min).isEqualTo(0)
-        assertThat(d30.steps180min).isEqualTo(0)
-
-        // duration == 60 and 180 -> all six windows populated (all 0 here).
-        assertThat(d60.steps180min).isEqualTo(0)
-        assertThat(d180.steps180min).isEqualTo(0)
+        val stable = sameBucketAround {
+            putBlocks(listener, 1 to 10, 2 to 20, 3 to 40, 4 to 80)
+            listener.send(42L)
+        }
+        val rows = emitted.single()
+        assertThat(rows).hasSize(6)
+        if (stable) {
+            rows.forEach { row ->
+                assertThat(row.steps5min).isEqualTo(10)
+                assertThat(row.steps10min).isEqualTo(30)
+                assertThat(row.steps15min).isEqualTo(70)
+                assertThat(row.steps30min).isEqualTo(150)
+                assertThat(row.steps60min).isEqualTo(150)
+                assertThat(row.steps180min).isEqualTo(150)
+            }
+        }
         listener.dispose()
     }
 
