@@ -49,6 +49,16 @@ class AaruyHistoryDatabaseTest {
         assertEquals(listOf(3000L, 2000L), history.querySince(2000).map { it.time })
     }
 
+    /** The last bolus after an app restart: it is not kept as a setting. */
+    @Test
+    fun newestGivesTheLastEntryOfThatTypeOnly() {
+        assertNull(history.newest(2))
+        history.insert(entry(1000, 2))
+        history.insert(entry(3000, 2))
+        history.insert(entry(4000, 1))
+        assertEquals(3000L, history.newest(2)?.time)
+    }
+
     @Test
     fun aDayIsFoundByItsStartAndThePump() {
         daily.insert(HistoryDailyUnitInfo().also {

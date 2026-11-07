@@ -182,6 +182,9 @@ class AaruyBLE(
     private var isUnbinding = false
     private var extendedAnnounced = false
 
+    /** The driver rewinds an empty reservoir by itself, once. */
+    private var emptyReservoirRewound = false
+
     var isConnected = false
     var isConnecting = false
     @Volatile var receivingHistory: Boolean = false
@@ -535,7 +538,7 @@ class AaruyBLE(
                 aapsLogger.debug(LTag.PUMPCOMM, "onReceiveBasalSetting basalInfo = $basalInfo")
                 // The settings of a status read can still come, with the old profile. Only the new one is the answer.
                 if (basalWanted?.let { aaruyPump.sameRates(it, basalInfo) } == true) sendBasalsInfoOk = true
-                aaruyPump.actualBasalProfile = aaruyPump.dataClassToByteArray(basalInfo)
+                aaruyPump.actualBasalProfile = basalInfo
             }
 
             override fun onReceiveCurrentStatus(statusInfo: StatusInfo) {
@@ -623,8 +626,12 @@ class AaruyBLE(
                 }
                 aaruyPump.pumpLastState = aaruyPump.pumpState
                 aaruyPump.reservoir = statusInfo.remainAmount.toDouble()
-                if (!aaruyPump.alreadyPushBack && statusInfo.remainAmount == 0) {
-                    aaruyPump.alreadyPushBack = true
+                // Once. A status can come before the pump shows the rewind, so the flag. After it the pump stays stopped until the
+                // reservoir is changed, which tells it also after an app restart.
+                val rewound = aaruyPump.pumpState == AaruyPumpState.PUSHBACK_RUNNING || aaruyPump.pumpState == AaruyPumpState.STOP_RUNNING
+                if (statusInfo.remainAmount > 0) emptyReservoirRewound = false
+                else if (!rewound && !emptyReservoirRewound) {
+                    emptyReservoirRewound = true
                     aaruyPump.warn(AlarmState.PUMP_ZERO_RESERVOIR)
                     replaceDevice()
                 }
@@ -740,22 +747,19 @@ class AaruyBLE(
     fun setBolus(insulin: Double, isSmb: Boolean = true): AaruyBolusStart {
         sendBolusOk = false
         bolusStartRefused = false
-        val startBolusTime = dateUtil.now()
         aaBleUtil.setupAndStartBolus(insulin, 0.0, 0, isSmb)
         // A status that comes late must not report a failure while the pump delivers: the user could bolus again.
         val end = System.currentTimeMillis() + BOLUS_START_TIMEOUT_MS
         while (!sendBolusOk && !bolusStartRefused && System.currentTimeMillis() < end) SystemClock.sleep(100)
         // Asked even after a status 3: the start must not go out later from the queue.
         val startSent = aaBleUtil.abandonBolusStart()
-        val result = when {
+        return when {
             sendBolusOk       -> AaruyBolusStart.STARTED
             // Seen on a real pump: set to 0.05 U it refused 0.125 U. That is an answer, and no insulin goes in.
             bolusStartRefused -> AaruyBolusStart.NOT_SENT
             startSent         -> AaruyBolusStart.NO_ANSWER
             else              -> AaruyBolusStart.NOT_SENT
         }
-        if (result != AaruyBolusStart.NOT_SENT) aaruyPump.curBolusTime = startBolusTime
-        return result
     }
 
     fun cancelBolus(): Boolean {

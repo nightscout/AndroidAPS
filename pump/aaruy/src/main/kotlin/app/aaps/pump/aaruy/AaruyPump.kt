@@ -1,6 +1,5 @@
 package app.aaps.pump.aaruy
 
-import android.util.Base64
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -18,7 +17,6 @@ import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasalItem
 import app.aaps.pump.aaruy.comm.BasalItems
 import app.aaps.pump.aaruy.comm.BasicParam
-import com.google.gson.Gson
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.common.util.AaruyPumpSchedule
@@ -87,7 +85,7 @@ class AaruyPump(
      */
     private val seenStates: MutableSet<AaruyPumpState> = Collections.synchronizedSet(EnumSet.noneOf(AaruyPumpState::class.java))
 
-    // Pump state flow
+    /** Not kept over an app restart: the first status tells it again, and until then the plugin is not initialized. */
     private val _pumpState = MutableStateFlow(AaruyPumpState.FIRST_INIT)
     val pumpStateFlow: StateFlow<AaruyPumpState> = _pumpState
     var pumpState: AaruyPumpState
@@ -96,18 +94,11 @@ class AaruyPump(
             // In this order: a state that is seen is the state now or an older one, never the one before it.
             _pumpState.value = value
             seenStates.add(value)
-            preferences.put(AaruyIntKey.PumpState, value.state.toInt())
         }
     fun forgetSeenStates() = seenStates.clear()
     fun hasSeen(state: AaruyPumpState): Boolean = state in seenStates
 
-    private var _pumpLastState = AaruyPumpState.FIRST_INIT
-    var pumpLastState: AaruyPumpState
-        get() = _pumpLastState
-        set(value) {
-            _pumpLastState = value
-            preferences.put(AaruyIntKey.PumpLastState, value.state.toInt())
-        }
+    var pumpLastState: AaruyPumpState = AaruyPumpState.FIRST_INIT
 
     // Active alarms
     private var _activeAlarms: EnumSet<AlarmState> = EnumSet.noneOf(AlarmState::class.java)
@@ -161,30 +152,16 @@ class AaruyPump(
             _remainBattery.value = value
         }
 
-    private var _actualBasalProfile = byteArrayOf(0)
-    var actualBasalProfile: ByteArray
-        get() = _actualBasalProfile
-        set(value) {
-            _actualBasalProfile = value
-            val encodedString = Base64.encodeToString(value, Base64.DEFAULT)
-            preferences.put(AaruyStringKey.PumpActualBasalProfile, encodedString ?: "")
-        }
+    /** The profile the pump holds, read at each connection. Null until then. */
+    var actualBasalProfile: BasalInfo? = null
 
-    private var _curBolusTime = 0L // Time in ms!
-    var curBolusTime: Long
-        get() = _curBolusTime
-        set(value) {
-            _curBolusTime = value
-            preferences.put(AaruyLongKey.PumpCurBolusTime, value)
-        }
-
+    /** After an app restart it comes from the stored pump log, see `AaruyPlugin.onStart`. */
     private val _lastBolusTime = MutableStateFlow(0L) // Time in ms!
     val lastBolusTimeFlow: StateFlow<Long> = _lastBolusTime
     var lastBolusTime: Long
         get() = _lastBolusTime.value
         set(value) {
             _lastBolusTime.value = value
-            preferences.put(AaruyLongKey.PumpLastBolusTime, value)
         }
 
     private val _lastBolusAmount = MutableStateFlow(0.0)
@@ -193,7 +170,6 @@ class AaruyPump(
         get() = _lastBolusAmount.value
         set(value) {
             _lastBolusAmount.value = value
-            preferences.put(AaruyDoubleKey.PumpLastBolusAmount, value)
         }
 
     private val _lastConnection = MutableStateFlow(0L) // Time in ms!
@@ -205,13 +181,8 @@ class AaruyPump(
             preferences.put(AaruyLongKey.PumpLastConnect, value)
         }
 
-    private var _swVersion: String = "" // As reported by pump
-    var swVersion: String
-        get() = _swVersion
-        set(value) {
-            _swVersion = value
-            preferences.put(AaruyStringKey.PumpSwVersion, value)
-        }
+    /** As the pump reports it at each status read. */
+    var swVersion: String = ""
 
     private var _pumpSN = ""
     var pumpSN: String      // With the "aaruy_" prefix
@@ -287,47 +258,18 @@ class AaruyPump(
         }
     }
 
-    // Settings of the pump
+    // Settings of the pump. Not kept over an app restart: they start from the user settings, which `syncPrefParam` writes to
+    // the pump, and the pump reports them at each connection.
     /** U/h, 0.1 to 35. */
-    private var _maxBasal: Double = 1.5
-    var maxBasal: Double
-        get() = _maxBasal
-        set(value) {
-            _maxBasal = value
-            preferences.put(AaruyDoubleKey.PumpMaxBasal, value)
-        }
+    var maxBasal: Double = 1.5
     /** U, 1 to 25. */
-    private var _maxBolus: Double = 10.0
-    var maxBolus: Double
-        get() = _maxBolus
-        set(value) {
-            _maxBolus = value
-            preferences.put(AaruyDoubleKey.PumpMaxBolus, value)
-        }
+    var maxBolus: Double = 10.0
     /** The bolus step as a count of 0.025 U, from 1. */
-    private var _bolusStep: Int = 2
-    var bolusStep: Int
-        get() = _bolusStep
-        set(value) {
-            _bolusStep = value
-            preferences.put(AaruyIntKey.PumpBolusStep, value)
-        }
+    var bolusStep: Int = 2
     /** The low reservoir alarm, in U. */
-    private var _lowAlert: Double = 20.0
-    var lowAlert: Double
-        get() = _lowAlert
-        set(value) {
-            _lowAlert = value
-            preferences.put(AaruyDoubleKey.PumpLowAlert, value)
-        }
+    var lowAlert: Double = 20.0
     /** 0 beeps and alarm sounds, 1 alarm sounds only, 2 beeps only, 3 neither. */
-    private var _closeInjectSound: Int = 0
-    var closeInjectSound: Int
-        get() = _closeInjectSound
-        set(value) {
-            _closeInjectSound = value
-            preferences.put(AaruyIntKey.PumpCloseInjectSound, value)
-        }
+    var closeInjectSound: Int = 0
     /** The cannula: 0 is 6 mm, 1 is 9 mm. */
     private var _softNeedleType: Int = 0
     var softNeedleType: Int
@@ -367,14 +309,6 @@ class AaruyPump(
         set(value) {
             _lastHistoryDailyTime = value
             preferences.put(AaruyLongKey.PumpLastHistoryDailyTime, value)
-        }
-
-    private var _alreadyPushBack: Boolean = false
-    var alreadyPushBack: Boolean      // An empty reservoir rewinds by itself once, see AaruyBLE
-        get() = _alreadyPushBack
-        set(value) {
-            _alreadyPushBack = value
-            preferences.put(AaruyBooleanKey.PumpAlreadyBack, value)
         }
 
     fun pumpType(): PumpType = pumpType(AaruyType.fromValue(pumpType))
@@ -458,11 +392,6 @@ class AaruyPump(
         return "${if (newRecord) "**NEW** " else ""}"
     }
 
-    fun dataClassToByteArray(data: BasalInfo): ByteArray {
-        val jsonString = Gson().toJson(data)
-        return jsonString.toByteArray()
-    }
-
     fun buildAaruyProfileRecord(nsProfile: Profile): BasalInfo {
         // val record = Array(24) { BasalItem(0,0.0) }
         // for (hour in 0..23) {
@@ -499,7 +428,7 @@ class AaruyPump(
      * and comparing it would send the same profile again at every status check.
      */
     fun isBasalInPump(profile: Profile): Boolean {
-        return readBasalInPump()?.basalItems?.basalItemList?.comparable() == buildAaruyProfileRecord(profile).basalItems?.basalItemList?.comparable()
+        return actualBasalProfile?.basalItems?.basalItemList?.comparable() == buildAaruyProfileRecord(profile).basalItems?.basalItemList?.comparable()
     }
 
     /**
@@ -507,18 +436,11 @@ class AaruyPump(
      * This is true also right after a time zone change, when the pump still holds the old schedule. null before a profile is known.
      */
     fun deliveredBasal(): List<Profile.ProfileValue>? =
-        readBasalInPump()?.basalItems?.basalItemList?.let { AaruyPumpSchedule.toLocal(it, AaruyPumpSchedule.shift(dateUtil.now())) }
+        actualBasalProfile?.basalItems?.basalItemList?.let { AaruyPumpSchedule.toLocal(it, AaruyPumpSchedule.shift(dateUtil.now())) }
             ?.map { Profile.ProfileValue(it.startTime * SECONDS_PER_HALF_HOUR, it.basalSpeed) }
 
     /** The rate the pump holds for this time of day, as the running profile says. A temp basal or a bolus does not change it. 0 when no profile is known. */
     fun baseBasalRateAt(secondsOfDay: Int): Double = deliveredBasal()?.lastOrNull { it.timeAsSeconds <= secondsOfDay }?.value ?: 0.0
-
-    private fun readBasalInPump(): BasalInfo? = try {
-        Gson().fromJson(String(actualBasalProfile), BasalInfo::class.java)
-    } catch (e: Exception) {
-        aapsLogger.error(LTag.PUMP, "The saved pump profile cannot be read", e)
-        null
-    }
 
     fun sameRates(first: BasalInfo, second: BasalInfo): Boolean = first.basalItems?.basalItemList?.comparable() == second.basalItems?.basalItemList?.comparable()
 
@@ -542,7 +464,8 @@ class AaruyPump(
             } else {
                 _bolusAmountDelivered.value
             }
-            lastBolusTime = curBolusTime
+            // Kept over an app restart, so a bolus that ends after one still gets its time. The pump log corrects it to the pump's start.
+            lastBolusTime = bolusStartTime
         }
     }
 
@@ -654,6 +577,7 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
             lastConnection = 0
             // The next status read asks the new pump.
             swVersion = ""
+            actualBasalProfile = null
         }
         reservoir = null
         remainBattery = null
@@ -665,41 +589,20 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         get() = preferences.get(AaruyLongKey.PumpLastDeliveryEnd)
         set(value) = preferences.put(AaruyLongKey.PumpLastDeliveryEnd, value)
 
+    /** Only what the pump cannot tell again. The rest comes with the first status, the last bolus from the stored pump log. */
     fun loadVarsFromSP() {
-        _pumpState.value = AaruyPumpState.fromInt(preferences.get(AaruyIntKey.PumpState))
-        _lastBolusTime.value = preferences.get(AaruyLongKey.PumpLastBolusTime)
-        _lastBolusAmount.value = preferences.get(AaruyDoubleKey.PumpLastBolusAmount)
         _lastConnection.value = preferences.get(AaruyLongKey.PumpLastConnect)
-        _swVersion = preferences.get(AaruyStringKey.PumpSwVersion)
-        _pumpSN =  preferences.get(AaruyStringKey.PumpName)
+        _pumpSN = preferences.get(AaruyStringKey.PumpName)
         _bolusStartTime = preferences.get(AaruyLongKey.PumpBolusStartTime)
         _bolusAmountToBeDelivered = preferences.get(AaruyDoubleKey.PumpBolusAmount)
-        _curBolusTime = preferences.get(AaruyLongKey.PumpCurBolusTime)
-
-        // aaruy pump
-        // default setting
-        bolusStep = 1
-
-        _maxBasal = preferences.get(AaruyDoubleKey.PumpMaxBasal)
-        _maxBolus = preferences.get(AaruyDoubleKey.PumpMaxBolus)
-        _bolusStep = preferences.get(AaruyIntKey.PumpBolusStep)
-        _lowAlert = preferences.get(AaruyDoubleKey.PumpLowAlert)
-        _closeInjectSound = preferences.get(AaruyIntKey.PumpCloseInjectSound)
         _softNeedleType = preferences.get(AaruyIntKey.PumpNeedleType)
         _pumpType = preferences.get(AaruyIntKey.PumpType)
         _canSaveHistory = preferences.get(AaruyBooleanKey.PumpSaveHistory)
         _lastHistoryTime = preferences.get(AaruyLongKey.PumpLastHistoryTime)
         _lastHistoryDailyTime = preferences.get(AaruyLongKey.PumpLastHistoryDailyTime)
-        _alreadyPushBack = preferences.get(AaruyBooleanKey.PumpAlreadyBack)
-
         loadActiveAlarms()
-
-        val encodedString = preferences.get(AaruyStringKey.PumpActualBasalProfile)
-        try {
-            _actualBasalProfile = Base64.decode(encodedString, Base64.DEFAULT)
-        } catch (e: Exception) {
-            aapsLogger.warn(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
-        }
+        // The pump holds the user settings: syncPrefParam writes them to it.
+        syncPrefParam()
     }
 
     /**

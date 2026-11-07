@@ -52,7 +52,7 @@ class AaruyPumpProfileTest {
     }
 
     private fun inPump(injectPerDay: Double, rate: Double, start: Int = 0) =
-        pump.dataClassToByteArray(BasalInfo(BasalItems(injectPerDay, 1, listOf(BasalItem(start, rate)))))
+        BasalInfo(BasalItems(injectPerDay, 1, listOf(BasalItem(start, rate))))
 
     /** Seen on a real pump: set to 0.05 U it refuses 0.125 U. A setting not yet in the pump must not allow that. */
     @Test
@@ -77,7 +77,7 @@ class AaruyPumpProfileTest {
     fun theBaseRateFollowsTheTimeOfDayAndNotWhatIsDeliveredNow() {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai")) // no shift
         val items = listOf(BasalItem(0, 0.5), BasalItem(16, 1.0)) // 1.0 U/h from 08:00
-        pump.actualBasalProfile = pump.dataClassToByteArray(BasalInfo(BasalItems(18.0, 2, items)))
+        pump.actualBasalProfile = BasalInfo(BasalItems(18.0, 2, items))
         pump.handleBasalStatusUpdate(3.0) // a temp basal runs
         assertEquals(0.5, pump.baseBasalRateAt(7 * 3600 + 59 * 60), 0.0)
         assertEquals(1.0, pump.baseBasalRateAt(8 * 3600), 0.0)
@@ -90,7 +90,7 @@ class AaruyPumpProfileTest {
         `when`(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.2), Profile.ProfileValue(23 * 3600, 0.4)))
         val record = pump.buildAaruyProfileRecord(profile)
         assertEquals(listOf(BasalItem(0, 0.2), BasalItem(12, 0.4), BasalItem(14, 0.2)), record.basalItems?.basalItemList)
-        pump.actualBasalProfile = pump.dataClassToByteArray(record)
+        pump.actualBasalProfile = record
         assertEquals(0.4, pump.baseBasalRateAt(23 * 3600 + 26 * 60), 0.0)
         assertEquals(0.2, pump.baseBasalRateAt(6 * 3600 + 26 * 60), 0.0)
         assertTrue(pump.isBasalInPump(profile))
@@ -101,14 +101,14 @@ class AaruyPumpProfileTest {
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT-1"))
         val profile = mock(Profile::class.java)
         `when`(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.2), Profile.ProfileValue(23 * 3600, 0.4)))
-        pump.actualBasalProfile = pump.dataClassToByteArray(pump.buildAaruyProfileRecord(profile))
+        pump.actualBasalProfile = pump.buildAaruyProfileRecord(profile)
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT-2"))
         assertFalse(pump.isBasalInPump(profile))
     }
 
     @Test
     fun noKnownProfileGivesNoBaseRate() {
-        pump.actualBasalProfile = ByteArray(0)
+        pump.actualBasalProfile = null
         assertEquals(0.0, pump.baseBasalRateAt(0), 0.0)
     }
 
@@ -126,7 +126,7 @@ class AaruyPumpProfileTest {
 
     @Test
     fun aPumpProfileThatIsNotKnownIsNotTheSame() {
-        pump.actualBasalProfile = ByteArray(0)
+        pump.actualBasalProfile = null
         assertFalse(pump.isBasalInPump(profile(0.16)))
     }
 }

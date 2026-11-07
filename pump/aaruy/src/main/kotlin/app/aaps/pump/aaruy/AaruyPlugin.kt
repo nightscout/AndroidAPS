@@ -47,6 +47,7 @@ import app.aaps.core.ui.compose.icons.IcPluginAaruy
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.compose.AaruyComposeContent
+import app.aaps.pump.aaruy.compose.AaruyHistoryTypes
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import app.aaps.pump.aaruy.keys.AaruyBooleanKey
@@ -80,6 +81,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlin.math.min
 import kotlin.math.abs
 import java.util.Calendar
@@ -128,6 +130,11 @@ class AaruyPlugin(
     override suspend fun onStart() {
         super.onStart()
         aaruyPump.loadVarsFromSP()
+        // The stored pump log has the last bolus, so it is not kept as a setting.
+        withContext(Dispatchers.IO) { aaruyHistoryDatabase.historyUnitInfoDao().newest(AaruyHistoryTypes.BOLUS.toInt()) }?.let {
+            aaruyPump.lastBolusTime = it.time
+            aaruyPump.lastBolusAmount = it.data / 1000.0
+        }
         context.bindService(Intent(context, AaruyService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope

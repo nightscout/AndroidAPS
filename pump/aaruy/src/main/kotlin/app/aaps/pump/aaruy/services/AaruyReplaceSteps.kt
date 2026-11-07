@@ -83,7 +83,6 @@ class AaruyReplaceSteps(
 
     /** Any delivery counts: on a second try the loop can have set a temp basal already, and the client then sends nothing. */
     suspend fun startBasal(): Boolean {
-        aaruyPump.alreadyPushBack = false
         aaruyPump.clearAlarmState()
         // The client of this app run may not know of the rewind, as after a restart. The log does.
         if (aaruyPump.pumpState == AaruyPumpState.STOP_RUNNING && rewoundWithoutDeliverySince()) aaruyBle.allowRestoreAfterRewind()

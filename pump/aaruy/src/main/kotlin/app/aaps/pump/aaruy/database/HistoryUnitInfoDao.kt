@@ -18,4 +18,8 @@ interface HistoryUnitInfoDao {
     /** For the history screen, newest first. */
     @Query("SELECT * FROM history_unit_info WHERE time>=:since ORDER BY time DESC")
     fun querySince(since: Long): List<HistoryUnitInfo>
+
+    /** The newest entry of this type, as the last bolus after an app restart. */
+    @Query("SELECT * FROM history_unit_info WHERE type=:type ORDER BY time DESC LIMIT 1")
+    fun newest(type: Int): HistoryUnitInfo?
 }
