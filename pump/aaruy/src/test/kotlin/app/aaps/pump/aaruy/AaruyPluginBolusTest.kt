@@ -94,7 +94,7 @@ class AaruyPluginBolusTest {
 }
 
 /** Only the fields a bolus sets. The real one lives in a module this one does not see. */
-private class FakeResult : PumpEnactResult {
+internal class FakeResult : PumpEnactResult {
 
     override var success = false
     override var enacted = false

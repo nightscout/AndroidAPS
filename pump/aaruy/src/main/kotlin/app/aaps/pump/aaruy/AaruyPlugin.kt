@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
@@ -57,7 +58,9 @@ import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import app.aaps.pump.aaruy.services.AaruyBLE
 import app.aaps.pump.aaruy.services.AaruyBolusOutcome
+import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
 import app.aaps.pump.aaruy.services.AaruyService
+import app.aaps.pump.aaruy.services.AaruyUnpairCommand
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -337,6 +340,14 @@ class AaruyPlugin(
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult = pumpEnactResultProvider()
+
+    /** The queue runs them with the link open, as every command. */
+    override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? = when (customCommand) {
+        is AaruyConfirmAlarmsCommand -> pumpEnactResultProvider().also { it.success = aaruyBle.confirmAlarms() }
+        // Without a link nothing is forgotten here: the screen asks whether to forget a pump that was not told.
+        is AaruyUnpairCommand        -> pumpEnactResultProvider().also { it.success = aaruyBle.isConnected && aaruyBle.unbindDevice() }
+        else                         -> null
+    }
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Aaruy
     override fun model(): PumpType = aaruyPump.pumpType()

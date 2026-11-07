@@ -25,9 +25,10 @@ import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
-import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
+import app.aaps.pump.aaruy.services.AaruyUnpairCommand
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -50,6 +51,9 @@ sealed class AaruyOverviewEvent {
     data object StartReplace : AaruyOverviewEvent()
     data object StartHistory : AaruyOverviewEvent()
     data object ConfirmUnpair : AaruyOverviewEvent()
+
+    /** The unpair could not reach the pump. */
+    data object PumpNotReached : AaruyOverviewEvent()
 }
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
@@ -100,15 +104,22 @@ class AaruyOverviewViewModel(
         viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.clicked_connect_to_pump)) }
     }
 
+    /** Through the queue, which opens the link. A confirm that does not reach the pump leaves the alarms listed. */
     private fun onConfirmAlarmsClick() {
-        viewModelScope.launch(Dispatchers.IO) { aaruyBle.confirmAlarms() }
+        viewModelScope.launch { commandQueue.customCommand(AaruyConfirmAlarmsCommand()) }
     }
 
-    /** A pump that cannot be reached is not told. It stays paired on its side, so the screen asks a second time. */
-    val isConnected: Boolean get() = aaruyPump.connectionState == ConnectionState.CONNECTED
     val pumpName: String get() = aaruyBle.getShortDeviceName()
 
-    fun performUnpair() {
+    /** Through the queue, which opens the link: the pump is told, so it can be paired again. */
+    fun unpair() {
+        viewModelScope.launch {
+            if (!commandQueue.customCommand(AaruyUnpairCommand()).success) _events.emit(AaruyOverviewEvent.PumpNotReached)
+        }
+    }
+
+    /** The pump could not be told. It stays paired on its side, so the screen asked a second time. */
+    fun forgetPump() {
         aaruyPump.clearAlarmState()
         aaruyBle.unbindDevice()
     }
@@ -226,7 +237,7 @@ class AaruyOverviewViewModel(
                 add(ScreenAction(label = rh.gs(R.string.replace_label), icon = Icons.Filled.SwapHoriz, onClick = { _events.tryEmit(AaruyOverviewEvent.StartReplace) }))
             }
             // Only with a link: the pump must hear it, see AaruyBLE.confirmAlarms.
-            if (alarms.isNotEmpty() && pump.connectionState == ConnectionState.CONNECTED) add(ScreenAction(label = rh.gs(R.string.confirm_alarms_label), icon = Icons.Filled.Check, onClick = { onConfirmAlarmsClick() }))
+            if (alarms.isNotEmpty()) add(ScreenAction(label = rh.gs(R.string.confirm_alarms_label), icon = Icons.Filled.Check, onClick = { onConfirmAlarmsClick() }))
             add(
                 if (isConfigured) ScreenAction(label = rh.gs(CoreUiR.string.pump_unpair), icon = Icons.Filled.Bluetooth, onClick = { _events.tryEmit(AaruyOverviewEvent.ConfirmUnpair) })
                 else ScreenAction(label = rh.gs(CoreUiR.string.pump_pair), icon = Icons.Filled.Bluetooth, onClick = { _events.tryEmit(AaruyOverviewEvent.StartPairWizard) })

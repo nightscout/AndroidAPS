@@ -47,7 +47,14 @@ private enum class AaruyScreen {
 /** How far the unpair question has come. A pump out of reach is asked about twice, as it stays paired on its side. */
 private enum class UnpairDialog {
     NONE,
+
+    /** Before the queue tries to reach the pump. */
     FIRST,
+
+    /** The queue could not reach the pump. */
+    NOT_REACHED,
+
+    /** The last question before the pump is forgotten without being told. */
     SECOND
 }
 
@@ -68,30 +75,31 @@ class AaruyComposeContent(
 
         when (unpairDialog) {
             UnpairDialog.NONE   -> Unit
-            UnpairDialog.FIRST  -> {
-                val connected = overviewViewModel.isConnected
-                OkCancelDialog(
-                    title = pluginName,
-                    icon = Icons.Filled.Bluetooth,
-                    message = stringResource(if (connected) R.string.actions_pump_disconnect_prompt else R.string.actions_pump_disconnect, overviewViewModel.pumpName),
-                    onConfirm = {
-                        if (connected) {
-                            overviewViewModel.performUnpair()
-                            unpairDialog = UnpairDialog.NONE
-                        } else {
-                            unpairDialog = UnpairDialog.SECOND
-                        }
-                    },
-                    onDismiss = { unpairDialog = UnpairDialog.NONE }
-                )
-            }
+            UnpairDialog.FIRST       -> OkCancelDialog(
+                title = pluginName,
+                icon = Icons.Filled.Bluetooth,
+                message = stringResource(R.string.actions_pump_disconnect_prompt, overviewViewModel.pumpName),
+                onConfirm = {
+                    overviewViewModel.unpair()
+                    unpairDialog = UnpairDialog.NONE
+                },
+                onDismiss = { unpairDialog = UnpairDialog.NONE }
+            )
 
-            UnpairDialog.SECOND -> OkCancelDialog(
+            UnpairDialog.NOT_REACHED -> OkCancelDialog(
+                title = pluginName,
+                icon = Icons.Filled.Bluetooth,
+                message = stringResource(R.string.actions_pump_disconnect, overviewViewModel.pumpName),
+                onConfirm = { unpairDialog = UnpairDialog.SECOND },
+                onDismiss = { unpairDialog = UnpairDialog.NONE }
+            )
+
+            UnpairDialog.SECOND      -> OkCancelDialog(
                 title = pluginName,
                 icon = Icons.Filled.Bluetooth,
                 message = stringResource(R.string.actions_pump_disconnect_again, overviewViewModel.pumpName),
                 onConfirm = {
-                    overviewViewModel.performUnpair()
+                    overviewViewModel.forgetPump()
                     unpairDialog = UnpairDialog.NONE
                 },
                 onDismiss = { unpairDialog = UnpairDialog.NONE }
@@ -141,6 +149,7 @@ class AaruyComposeContent(
                     is AaruyOverviewEvent.StartReplace    -> currentScreen = AaruyScreen.REPLACE_WIZARD
                     is AaruyOverviewEvent.StartHistory    -> currentScreen = AaruyScreen.HISTORY
                     is AaruyOverviewEvent.ConfirmUnpair   -> unpairDialog = UnpairDialog.FIRST
+                    is AaruyOverviewEvent.PumpNotReached  -> unpairDialog = UnpairDialog.NOT_REACHED
                 }
             }
         }

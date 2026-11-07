@@ -293,8 +293,13 @@ class AaruyBLE(
         SystemClock.sleep(2000)
     }
 
+    /**
+     * The pump is told to forget this phone, and AAPS forgets the pump. Without a link only AAPS forgets it, and the pump
+     * stays paired on its side. @return whether the pump was told
+     */
     @Synchronized
-    fun unbindDevice() {
+    fun unbindDevice(): Boolean {
+        val told = isConnected
         isUnbinding = true
         aaBleUtil.unbindDevice()
         preferences.put(AaruyStringKey.PumpBoundAddress, "")
@@ -309,6 +314,7 @@ class AaruyBLE(
         SystemClock.sleep(2000)
         // The unbind went out by now. A pump out of reach would connect again as soon as it is back, with no pump paired.
         aaBleUtil.closeLink()
+        return told
     }
 
     /** The plugin is off, as when the user chose another pump: this pump must not write into the database. */
@@ -361,12 +367,16 @@ class AaruyBLE(
         rxBus.send(EventAaruyDeviceChange())
     }
 
-    /** The pump answers each alarm it is told about. Seen on a real pump: a blocked motor stopped beeping after this. */
-    fun confirmAlarms() {
-        // Without a link nothing is sent: the pump would go on with the alarm, and AAPS would no longer show it.
-        if (!isConnected) return
+    /**
+     * The pump answers each alarm it is told about. Seen on a real pump: a blocked motor stopped beeping after this.
+     * A command of the queue, which opens the link. @return false without a link: then nothing is sent.
+     */
+    fun confirmAlarms(): Boolean {
+        // The pump would go on with the alarm, and AAPS would no longer show it.
+        if (!isConnected) return false
         aaruyPump.activeAlarms.toList().forEach { clearAlarmStatus(it.state) }
         aaruyPump.clearAlarmState()
+        return true
     }
 
     @SuppressLint("MissingPermission")

@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
@@ -24,9 +25,14 @@ import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
+import app.aaps.pump.aaruy.services.AaruyUnpairCommand
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -39,6 +45,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
 
@@ -71,10 +79,20 @@ class AaruyOverviewViewModelTest {
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
 
-    private fun state(configured: Boolean = true, initialized: Boolean = true): PumpOverviewUiState {
+    private val commandQueue: CommandQueue = mock()
+
+    private fun viewModel(configured: Boolean = true, initialized: Boolean = true): AaruyOverviewViewModel {
         whenever(activePump.isConfigured()).thenReturn(configured)
         whenever(activePump.isInitialized()).thenReturn(initialized)
-        return AaruyOverviewViewModel(rh, rxBus, mock<CommandQueue>(), mock<DateUtil>(), pump, ble, activePlugin, ch).uiState.value
+        return AaruyOverviewViewModel(rh, rxBus, commandQueue, mock<DateUtil>(), pump, ble, activePlugin, ch)
+    }
+
+    private fun state(configured: Boolean = true, initialized: Boolean = true): PumpOverviewUiState = viewModel(configured, initialized).uiState.value
+
+    private fun queueAnswers(success: Boolean) = runBlocking {
+        val result = mock<PumpEnactResult>()
+        whenever(result.success).thenReturn(success)
+        whenever(commandQueue.customCommand(any())).thenReturn(result)
     }
 
     private fun PumpOverviewUiState.row(label: Int) = infoRows.filterIsInstance<PumpInfoRow>().single { it.label == "s$label" }
@@ -106,26 +124,47 @@ class AaruyOverviewViewModelTest {
         assertEquals(StatusLevel.CRITICAL, state().row(R.string.pump_state_label).level)
     }
 
-    /** Seen on a real pump: confirming stops its beeping. */
+    /**
+     * Seen on a real pump: confirming stops its beeping. The command queue opens the link for it, as for every command,
+     * so it is offered when no link is up. It used to be sent straight to the pump, and only while a link was up.
+     */
     @Test
-    fun anActiveAlarmIsShownAndCanBeConfirmed() {
-        pump.pumpState = AaruyPumpState.STOP_RUNNING
-        pump.connectionState = ConnectionState.CONNECTED
-        pump.addAlarm(AlarmState.PUMP_MOTOR_BLOCK)
-        val state = state()
-        assertTrue(state.row(R.string.active_alarms_label).visible)
-        assertTrue("s${R.string.confirm_alarms_label}" in state.actions())
-    }
-
-    /** Without a link the pump would not hear it: it would go on with the alarm, and AAPS would no longer show it. */
-    @Test
-    fun anAlarmCannotBeConfirmedWithoutALink() {
+    fun anActiveAlarmIsConfirmedThroughTheQueue() {
         pump.pumpState = AaruyPumpState.STOP_RUNNING
         pump.connectionState = ConnectionState.DISCONNECTED
         pump.addAlarm(AlarmState.PUMP_MOTOR_BLOCK)
+        queueAnswers(success = true)
         val state = state()
         assertTrue(state.row(R.string.active_alarms_label).visible)
-        assertFalse("s${R.string.confirm_alarms_label}" in state.actions())
+        (state.primaryActions + state.managementActions).single { it.label == "s${R.string.confirm_alarms_label}" }.onClick()
+        runBlocking { verify(commandQueue).customCommand(any<AaruyConfirmAlarmsCommand>()) }
+        verify(ble, never()).confirmAlarms()
+    }
+
+    /** The queue reached the pump and told it. Nothing more is asked. */
+    @Test
+    fun anUnpairThatReachesThePumpAsksNothingMore() {
+        queueAnswers(success = true)
+        val events = viewModel().eventsOf { unpair() }
+        runBlocking { verify(commandQueue).customCommand(any<AaruyUnpairCommand>()) }
+        assertTrue(events.isEmpty(), "$events")
+    }
+
+    /** The pump stays paired on its side when it is not told, so the screen asks again before it forgets the pump. */
+    @Test
+    fun anUnpairThatDoesNotReachThePumpAsksAgain() {
+        queueAnswers(success = false)
+        val events = viewModel().eventsOf { unpair() }
+        assertEquals(listOf(AaruyOverviewEvent.PumpNotReached), events)
+        verify(ble, never()).unbindDevice()
+    }
+
+    private fun AaruyOverviewViewModel.eventsOf(action: AaruyOverviewViewModel.() -> Unit): List<AaruyOverviewEvent> {
+        val events = mutableListOf<AaruyOverviewEvent>()
+        val collector = CoroutineScope(UnconfinedTestDispatcher()).launch { this@eventsOf.events.collect { events.add(it) } }
+        action()
+        collector.cancel()
+        return events
     }
 
     /** Starting the change would end the bolus. */
