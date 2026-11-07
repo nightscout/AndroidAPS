@@ -374,13 +374,12 @@ fun setOnBleListener(listener: AaruyBleListener) {
         link.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 0).toBytes())
     }
 
-    /** Ends the link and the tries to make one, for an unpaired pump or a plugin that is off. */
+    /**
+     * Ends the link and the tries to make one: when the command queue has nothing more to send, for an unpaired pump, or
+     * for a plugin that is off. Nothing connects again until the driver asks. (The vendor library meant to drop the link
+     * here too, but it never sent its request, so the link stayed up.)
+     */
     fun closeLink() = link.close()
-
-    /** As in the vendor library, this does not drop the link. It only made a request and never sent it. */
-    fun disconnectDevice() {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "disconnectDevice: the link stays up")
-    }
 
     fun unbindDevice() {
         link.write(AaruyParamId.UNBIND, byteArrayOf(1))
@@ -466,7 +465,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
             if (!transport.gatt.connect(target)) onConnectFailed("connect refused")
         }
 
-        /** The status stays CONNECTING: the driver asks to connect again, as it did with the vendor library. */
+        /** After the last try the link is DISCONNECTED. The command queue then asks again, until its own time is up. */
         private fun onConnectFailed(reason: String) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "connect failed: $reason, retries left: $retriesLeft")
             events.removeCallbacks(connectTimeout)
@@ -477,6 +476,8 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 events.postDelayed({ startConnect() }, CONNECT_RETRY_DELAY_MS)
             } else {
                 connecting = false
+                status = BleStatus.DISCONNECTED
+                listener?.onBleStatusChanged(status)
             }
         }
 
@@ -486,7 +487,12 @@ fun setOnBleListener(listener: AaruyBleListener) {
         override fun onConnectionStateChanged(connected: Boolean) {
             if (!connected) linkUp = false
             events.post {
-                if (connected) onConnected() else onDisconnected()
+                when {
+                    // A link that was closed can still report. A loss would end the next connect, a connect would open a link nobody asked for.
+                    status == BleStatus.DISCONNECTED && !connecting -> aapsLogger.debug(LTag.PUMPBTCOMM, "a closed link reported connected=$connected, ignored")
+                    connected                                       -> onConnected()
+                    else                                            -> onDisconnected()
+                }
             }
         }
 

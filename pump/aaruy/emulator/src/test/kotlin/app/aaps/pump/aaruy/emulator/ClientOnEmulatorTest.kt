@@ -175,7 +175,7 @@ class ClientOnEmulatorTest {
         transport.loseConnection()
         waitFor("link lost") { logged("onBleStatusChanged(DISCONNECTED") }
         log.clear()
-        util.bindDevice((RuntimeEnvironment.getApplication().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter.getRemoteDevice(AaruyEmulatorBleTransport.DEVICE_ADDRESS))
+        util.bindDevice(pumpDevice())
         waitFor("connected again") { logged("onBleStatusChanged(CONNECTED") }
         repeat(30) { drain() }
         assertEquals("the old temp basal was not sent", AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
@@ -273,5 +273,64 @@ class ClientOnEmulatorTest {
         transport.loseConnection()
         waitFor("reported") { logged("onBleStatusChanged(DISCONNECTED") }
         assertFalse(logged("onBleStatusChanged(CONNECTED"))
+    }
+
+    private fun pumpDevice(): BluetoothDevice =
+        (RuntimeEnvironment.getApplication().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter.getRemoteDevice(AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+
+    /** Real time for the emulator, which runs on its own thread, and virtual time for the timeouts of the client. */
+    private fun waitWhile(realMs: Long, virtual: Duration) {
+        val end = System.currentTimeMillis() + realMs
+        while (System.currentTimeMillis() < end) drain()
+        shadowOf(Looper.getMainLooper()).idleFor(virtual)
+        drain()
+    }
+
+    /** The command queue closes the link when it has nothing to send. It stays closed until the next connect. */
+    @Test
+    fun aClosedLinkStaysClosedUntilTheNextConnect() {
+        log.clear()
+        util.closeLink()
+        waitFor("closed") { logged("onBleStatusChanged(DISCONNECTED") }
+        waitWhile(500, Duration.ofSeconds(60))
+        assertFalse("no link comes by itself: $log", logged("onBleStatusChanged(CONNECTED"))
+
+        util.bindDevice(pumpDevice())
+        waitFor("connected again") { logged("onBleStatusChanged(CONNECTED") }
+    }
+
+    /**
+     * After its last try the link is DISCONNECTED, not CONNECTING. The command queue connects only a pump that is
+     * neither, so a pump that stayed CONNECTING was never tried again.
+     */
+    @Test
+    fun aConnectThatFailsEndsDisconnectedSoTheQueueCanTryAgain() {
+        util.closeLink()
+        waitFor("closed") { logged("onBleStatusChanged(DISCONNECTED") }
+        transport.outOfRange = true
+        log.clear()
+        util.bindDevice(pumpDevice())
+        waitFor("connecting") { logged("onBleStatusChanged(CONNECTING") }
+        // Three tries of 15 s, with a second between them.
+        repeat(4) { waitWhile(100, Duration.ofSeconds(20)) }
+        assertTrue("given up: $log", logged("onBleStatusChanged(DISCONNECTED"))
+
+        transport.outOfRange = false
+        log.clear()
+        util.bindDevice(pumpDevice())
+        waitFor("connected on the next try") { logged("onBleStatusChanged(CONNECTED") }
+    }
+
+    /** A link closed while it connects can still report that it is up. Taken as new, it would open a link nobody asked for. */
+    @Test
+    fun aLinkClosedWhileItConnectsDoesNotComeBack() {
+        util.closeLink()
+        waitFor("closed") { logged("onBleStatusChanged(DISCONNECTED") }
+        log.clear()
+        util.bindDevice(pumpDevice())
+        util.closeLink()
+        // The emulator reports the link up after 200 ms.
+        waitWhile(1_000, Duration.ofSeconds(5))
+        assertFalse("no link: $log", logged("onBleStatusChanged(CONNECTED"))
     }
 }

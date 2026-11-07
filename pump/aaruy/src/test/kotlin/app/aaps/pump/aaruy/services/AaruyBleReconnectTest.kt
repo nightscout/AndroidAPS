@@ -529,11 +529,11 @@ class AaruyBleReconnectTest {
     }
 
     /**
-     * The client is still connected, because `disconnectDevice` does not drop the link. It reports CONNECTED at once
-     * when asked to connect, and that must not be overwritten by CONNECTING.
+     * The command queue owns the link, as for every pump: its disconnect closes it, and only its next connect opens it.
+     * The driver used to connect again at once after every loss, and the queue's disconnect did nothing.
      */
     @Test
-    fun connectWhileTheLinkIsStillUpEndsConnected() {
+    fun aDisconnectClosesTheLinkAndOnlyTheNextConnectOpensIt() {
         val preferences = preferencesWithDefaults()
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
@@ -560,18 +560,21 @@ class AaruyBleReconnectTest {
         )
         ble.startEmulatorIfActive()
 
+        `when`(preferences.get(AaruyStringKey.MacAddress)).thenReturn(AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED && ble.isConnected }
 
-        // This is what `disconnect` leaves behind: the driver thinks it is off, the client is still on.
-        ble.isConnected = false
+        thread { ble.disconnect("Queue empty") }.join()
+        waitFor("closed") { pump.connectionState == ConnectionState.DISCONNECTED }
+        // The driver's own retry ran every 2 s on the pump thread.
+        repeat(60) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(50)
+        }
+        assertEquals("not opened by the driver", ConnectionState.DISCONNECTED, pump.connectionState)
 
-        ble.connect("retrying connection", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
-        waitFor("callbacks") { true }
-        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(1))
-
-        assertEquals(ConnectionState.CONNECTED, pump.connectionState)
-        assertTrue("driver must know it is connected", ble.isConnected)
+        ble.connect("Connection needed", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("opened by the next connect") { pump.connectionState == ConnectionState.CONNECTED && ble.isConnected }
         assertEquals("not connecting", false, ble.isConnecting)
         ble.emulatorTransport?.shutdown()
     }

@@ -184,7 +184,6 @@ class AaruyBLE(
     private var startBasalOk = false
     private var isUnbinding = false
     private var extendedAnnounced = false
-    private var connectCount: Int = 0
 
     var isConnected = false
     var isConnecting = false
@@ -206,19 +205,6 @@ class AaruyBLE(
                     aapsLogger.warn(LTag.PUMPCOMM, "History read stopped sending pages")
                     lastHistoryPageAt = System.currentTimeMillis()
                     syncJobs.trySend { onHistoryReadWithHole() }
-                }
-
-                if (connectCount > 0 && aaruyPump.connectionState != ConnectionState.CONNECTED) {
-                    connectCount++
-                    if (connectCount > 3) {
-                        connectCount = 1
-                        if (preferences.get(AaruyStringKey.MacAddress) != "") {
-                            connect("retrying connection", preferences.get(AaruyStringKey.MacAddress))
-                        }
-                    }
-                }
-                else {
-                    connectCount = 0
                 }
 
                 handler.postDelayed(this, 2000)
@@ -267,8 +253,7 @@ class AaruyBLE(
         isConnecting = true
         aaruyPump.connectionState = ConnectionState.CONNECTING
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
-        connectCount = 1
-        // Last: if the link is still up the AAR reports CONNECTED during this call, and nothing may overwrite that.
+        // Last: if the link is still up the client reports CONNECTED during this call, and nothing may overwrite that.
         connectDevice(device)
         return true
     }
@@ -301,8 +286,10 @@ class AaruyBLE(
             return
         }
 
-        aaBleUtil.disconnectDevice()
+        // The command queue owns the link: it opens it for its commands and closes it when it has none left.
+        aaBleUtil.closeLink()
         isConnected = false
+        // The close runs on the pump thread. A connect asked at once could start before it and be closed by it.
         SystemClock.sleep(2000)
     }
 
@@ -449,7 +436,6 @@ class AaruyBLE(
                     isConnecting = false
                     isUnbinding = false
                     receivingHistory = false
-                    connectCount = 0
                     aaBleUtil.stopScanDevice()
                     if (preferences.get(AaruyStringKey.PumpBoundAddress) == "") {
                         CoroutineScope(Dispatchers.IO).launch {
@@ -485,9 +471,7 @@ class AaruyBLE(
                     if (isUnbinding) {
                         rxBus.send(EventAaruyDeviceChange())
                     }
-                    if (!stopped && preferences.get(AaruyStringKey.MacAddress) != "") {
-                        connect("retrying connection", preferences.get(AaruyStringKey.MacAddress))
-                    }
+                    // Not connected again here: the command queue connects for its next command, as for every pump.
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                 }
                 else {
