@@ -26,7 +26,6 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.aaruy.AaruyPump
@@ -34,7 +33,6 @@ import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
-import app.aaps.pump.aaruy.keys.AaruyStringKey
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -47,7 +45,6 @@ class AaruyService : MetroService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var aaruyPump: AaruyPump
@@ -157,6 +154,8 @@ class AaruyService : MetroService() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(CoreUiR.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
             }
             waitForBolusProgress()
+            // Lost during the bolus: a new status read is asked, and this one has no link to read with.
+            if (!isConnected) return
         }
 
         aaruyBle.syncPumpStatus()
@@ -285,28 +284,36 @@ class AaruyService : MetroService() {
         }
     }
 
+    /**
+     * Follows the bolus until the pump ends it. Without a link it ends at once: the command queue owns the link, and the
+     * status read asked here connects again. That read shows the bolus again with its Stop, as after an app restart.
+     */
     private fun waitForBolusProgress() {
-        var communicationLost = false
-        var connectionRetryCounter = 0
+        var silentRetries = 0
         var checkTime = aaruyPump.bolusProgressLastTimeStamp
 
-        while (!aaruyPump.bolusStopped && !aaruyPump.bolusDone && !communicationLost) {
+        while (!aaruyPump.bolusStopped && !aaruyPump.bolusDone) {
+            if (!isConnected) {
+                aapsLogger.warn(LTag.PUMPCOMM, "The link was lost during the bolus")
+                readStatusAfterLostBolus()
+                return
+            }
             SystemClock.sleep(100)
             if (aaruyPump.bolusProgressLastTimeStamp > checkTime) {
                 checkTime = aaruyPump.bolusProgressLastTimeStamp
-                connectionRetryCounter = 0
+                silentRetries = 0
             }
             if (dateUtil.now() - checkTime > T.secs(20).msecs()) {
-                if (connectionRetryCounter < 3) {
-                    aapsLogger.warn(LTag.PUMPCOMM, "No bolus progress for 20 seconds, connected: $isConnected")
-                    if (isConnected) aaruyBle.syncPumpStatus()
-                    else connect("retrying connection", preferences.get(AaruyStringKey.MacAddress))
+                if (silentRetries < 3) {
+                    aapsLogger.warn(LTag.PUMPCOMM, "No bolus progress for 20 seconds")
+                    aaruyBle.syncPumpStatus()
                     checkTime = dateUtil.now()
-                    connectionRetryCounter++
+                    silentRetries++
                 } else {
-                    communicationLost = true
-                    aapsLogger.warn(LTag.PUMPCOMM, "Retry connection failed, communication stopped")
+                    aapsLogger.warn(LTag.PUMPCOMM, "The pump does not answer, communication stopped")
                     disconnect("Communication stopped")
+                    readStatusAfterLostBolus()
+                    return
                 }
             }
         }
@@ -332,6 +339,11 @@ class AaruyService : MetroService() {
         if (aaruyPump.pumpState.isCanDoRefresh()) {
             aaruyBle.syncAndLoadBasicParam()
         }
+    }
+
+    /** Not waited for: it runs after the command that asks for it. The pump has no screen, so its Stop must come back soon. */
+    private fun readStatusAfterLostBolus() {
+        scope.launch { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
     }
 
     fun stopBolus() {

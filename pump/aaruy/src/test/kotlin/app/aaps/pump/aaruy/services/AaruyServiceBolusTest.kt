@@ -32,6 +32,7 @@ import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.Mockito.RETURNS_SMART_NULLS
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
+import org.mockito.Mockito.timeout
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
@@ -48,6 +49,7 @@ class AaruyServiceBolusTest {
     private val ble = mock(AaruyBLE::class.java)
     private val progress = mock(BolusProgressData::class.java)
     private val bolusInfoStorage = mock(DetailedBolusInfoStorage::class.java)
+    private val commandQueue = mock(CommandQueue::class.java)
     private val pump = AaruyPump(
         mock(AAPSLogger::class.java),
         mock(ResourceHelper::class.java, RETURNS_SMART_NULLS),
@@ -69,8 +71,7 @@ class AaruyServiceBolusTest {
         service.notificationManager = mock(NotificationManager::class.java)
         service.rxBus = mock(RxBus::class.java)
         service.rh = mock(ResourceHelper::class.java, RETURNS_SMART_NULLS)
-        service.preferences = preferences
-        service.commandQueue = mock(CommandQueue::class.java)
+        service.commandQueue = commandQueue
         service.aaruyPump = pump
         service.aaruyBle = ble
         service.pumpSync = pumpSync
@@ -139,6 +140,27 @@ class AaruyServiceBolusTest {
         assertEquals(AaruyBolusOutcome.UNKNOWN, runBlocking { service.setBolus(info) })
         assertEquals(0.1, pump.bolusDelivered, 0.0001)
         assertFalse("the next bolus must wait for the real state", pump.bolusDone)
+        // The link is closed, and the queue opens a new one for the next status.
+        verify(ble).disconnect(any())
+        runBlocking { verify(commandQueue, timeout(5_000)).readStatus(any()) }
+    }
+
+    /**
+     * The command queue owns the link, as for every pump. The bolus command ends at once, and its status read connects
+     * again: that read shows the running bolus with its Stop. The driver used to connect again by itself.
+     */
+    @Test
+    fun aLinkLostDuringTheBolusEndsTheCommandAndAsksTheQueueForAStatus() {
+        pumpAnswers {
+            pump.handleBolusStatusUpdate(false, 0.1)
+            service.isConnected = false
+        }
+        val start = SystemClock.elapsedRealtime()
+        assertEquals(AaruyBolusOutcome.UNKNOWN, runBlocking { service.setBolus(info) })
+        assertTrue("ended at once, not after 20 s without progress", SystemClock.elapsedRealtime() - start < 20_000)
+        assertFalse("the next bolus must wait for the real state", pump.bolusDone)
+        verify(ble, never()).connect(any(), any())
+        runBlocking { verify(commandQueue, timeout(5_000)).readStatus(any()) }
     }
 
     @Test
