@@ -153,8 +153,13 @@ class CommandExecutor(
                 // Connecting is not a command in flight, so applying is safe, and treating it as busy
                 // would stall the apply behind a driver that cannot connect at all - the case that
                 // prompted this, where a pump was selected with no hardware to answer.
-                if (queue.isHeld()) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "queue held")
+                //
+                // An app that has not finished starting counts as held too. Until then there is no
+                // profile, so the pump records a command brings - a status read's history above all - were
+                // dropped by PumpSync for good. A driver can queue a command from `onStart`, and every one
+                // does through `PumpPluginBase.onStart`, before the app has finished starting.
+                if (queue.isHeld() || !config.appInitialized) {
+                    aapsLogger.debug(LTag.PUMPQUEUE, if (queue.isHeld()) "queue held" else "waiting for the app to start")
                     heldSince = heldSince ?: Clock.System.now().toEpochMilliseconds()
                     delay(500)
                     continue

@@ -71,6 +71,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.verification.VerificationMode
 import java.util.Calendar
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -184,6 +185,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 )
             )
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+            // The executor holds every command until the app has finished starting.
+            whenever(config.appInitialized).thenReturn(true)
 
             val bolusConstraint = ConstraintObject(0.0, aapsLogger)
             whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
@@ -270,6 +273,43 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         }
 
         // TestPumpPlugin.connect() sets connected. Without the call the queue waits for the connection until it times out.
+        assertThat(testPumpPlugin.connected).isTrue()
+        assertThat(result?.success).isTrue()
+    }
+
+    /**
+     * The queue does not reach the pump before the app has finished starting. Until then there is no profile, so the
+     * records a command brings were dropped by PumpSync for good: seen on a real pump, whose status read at app start
+     * read a bolus from the pump history and lost it. Every driver queues a status read while the app starts, through
+     * `PumpPluginBase.onStart`.
+     */
+    @Test
+    fun `the queue does not reach the pump before the app has finished starting`() = runTest {
+        val started = AtomicBoolean(false)
+        whenever(config.appInitialized).thenAnswer { started.get() }
+        testPumpPlugin.connected = false
+        lateinit var executor: CommandExecutor
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
+        )
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
+        )
+
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        Thread.sleep(1_500)
+        assertThat(testPumpPlugin.connected).isFalse()
+        assertThat(result).isNull()
+
+        started.set(true)
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
         assertThat(testPumpPlugin.connected).isTrue()
         assertThat(result?.success).isTrue()
     }
