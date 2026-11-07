@@ -73,6 +73,7 @@ fun ElementType.color(): Color = when (this) {
     ElementType.CGM_XDRIP               -> AapsTheme.elementColors.cgmXdrip
     ElementType.CGM_DEX                 -> AapsTheme.elementColors.cgmDex
     ElementType.CALIBRATION             -> AapsTheme.elementColors.calibration
+    ElementType.EVERSENSE_CALIBRATION -> AapsTheme.elementColors.calibration
     ElementType.INSULIN_MANAGEMENT      -> AapsTheme.elementColors.insulin
 
     ElementType.PROFILE_MANAGEMENT      -> AapsTheme.elementColors.profileSwitch
@@ -139,6 +140,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.CGM_XDRIP               -> IcXDrip
     ElementType.CGM_DEX                 -> IcByoda
     ElementType.CALIBRATION             -> IcCalibration
+    ElementType.EVERSENSE_CALIBRATION -> IcCalibration
     ElementType.INSULIN_MANAGEMENT      -> IcPluginInsulin
 
     ElementType.PROFILE_MANAGEMENT      -> IcProfile
@@ -210,6 +212,7 @@ fun ElementType.label(): TextRef? = when (this) {
     ElementType.CGM_XDRIP               -> CoreUiStrings.cgm
     ElementType.CGM_DEX                 -> CoreUiStrings.cgm
     ElementType.CALIBRATION             -> CoreUiStrings.calibration
+    ElementType.EVERSENSE_CALIBRATION -> CoreUiStrings.eversense_calibration_label
     ElementType.INSULIN_MANAGEMENT      -> CoreUiStrings.insulin_management
     ElementType.PROFILE_MANAGEMENT      -> CoreUiStrings.profile_management
     ElementType.TEMP_TARGET_MANAGEMENT  -> CoreUiStrings.temp_target_management
@@ -272,6 +275,7 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.CGM_DEX                 -> CoreUiStrings.treatment_cgm_desc
 
     ElementType.CALIBRATION             -> CoreUiStrings.treatment_calibration_desc
+    ElementType.EVERSENSE_CALIBRATION -> CoreUiStrings.treatment_eversense_calibration_desc
     ElementType.BG_CHECK                -> CoreUiStrings.treatment_bg_check_desc
     ElementType.EXERCISE                -> CoreUiStrings.treatment_exercise_desc
     ElementType.ANNOUNCEMENT            -> CoreUiStrings.treatment_announcement_desc

@@ -1,5 +1,6 @@
 plugins {
     id("kmp-android-library")
+    id("kotlinx-serialization")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
@@ -42,7 +43,8 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(project(":plugins:eversense"))
+                api(project(":plugins:eversense"))
+                implementation(libs.androidx.appcompat)
                 implementation(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.compose.material3)
                 implementation(libs.androidx.compose.runtime)
