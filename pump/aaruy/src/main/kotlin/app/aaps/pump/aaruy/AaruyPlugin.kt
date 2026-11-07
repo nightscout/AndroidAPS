@@ -131,7 +131,7 @@ class AaruyPlugin(
         rxBus.toFlow(EventAaruyDeviceChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
                 pumpSync.connectNewPump()
-                changePump()
+                changePump(newPump = true)
             }
         // A changed setting reaches the pump through the status read, which compares and writes.
         merge(
@@ -142,7 +142,7 @@ class AaruyPlugin(
             .launchIn(newScope)
         aaruyBle.start()
         aaruyBle.startEmulatorIfActive()
-        changePump() // load device name
+        changePump(newPump = false) // load device name
     }
 
     override suspend fun onStop() {
@@ -168,11 +168,12 @@ class AaruyPlugin(
         }
     }
 
-    suspend fun changePump() {
+    /** @param newPump paired or unpaired, not an app start */
+    suspend fun changePump(newPump: Boolean) {
         mDeviceAddress = preferences.get(AaruyStringKey.MacAddress)
         mDeviceName = preferences.get(AaruyStringKey.PumpName)
         aaruyPump.pumpSN = mDeviceName
-        aaruyPump.reset()
+        aaruyPump.reset(newPump)
         if (isConfigured()) commandQueue.readStatus(rh.gs(CoreUiR.string.device_changed))
     }
 
@@ -239,8 +240,8 @@ class AaruyPlugin(
 
     override val baseBasalRate: PumpRate
         get() = Calendar.getInstance().let { PumpRate(aaruyPump.baseBasalRateAt(it.get(Calendar.HOUR_OF_DAY) * 3600 + it.get(Calendar.MINUTE) * 60)) }
-    override val reservoirLevel: StateFlow<PumpInsulin> = aaruyPump.reservoirFlow.mapState(::PumpInsulin)
-    override val batteryLevel: StateFlow<Int?> = aaruyPump.remainBatteryFlow.mapState { it.toInt() }
+    override val reservoirLevel: StateFlow<PumpInsulin?> = aaruyPump.reservoirFlow.mapState { it?.let(::PumpInsulin) }
+    override val batteryLevel: StateFlow<Int?> = aaruyPump.remainBatteryFlow.mapState { it?.toInt() }
     override val lastDataTime: StateFlow<Long> = aaruyPump.lastConnectionFlow
     override val lastBolusTime: StateFlow<Long?> = aaruyPump.lastBolusTimeFlow.mapState { if (it == 0L) null else it }
     override val lastBolusAmount: StateFlow<PumpInsulin?> = aaruyPump.lastBolusAmountFlow.mapState { if (it == 0.0) null else PumpInsulin(it) }

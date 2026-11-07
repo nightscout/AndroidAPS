@@ -156,14 +156,17 @@ class AaruyOverviewViewModel(
                     visible = alarms.isNotEmpty()
                 )
             )
+            // Not known until the first status after an app start: shown as "-", not as an empty battery.
+            val battery = pump.remainBattery
             add(
                 PumpInfoRow(
                     label = rh.gs(CoreUiR.string.battery_label),
-                    value = rh.gs(CoreUiR.string.units_format_percent, pump.remainBattery.toInt()),
+                    value = battery?.let { rh.gs(CoreUiR.string.units_format_percent, it.toInt()) } ?: NOT_KNOWN,
                     level = when {
-                        pump.remainBattery <= 26 -> StatusLevel.CRITICAL
-                        pump.remainBattery <= 51 -> StatusLevel.WARNING
-                        else                     -> StatusLevel.NORMAL
+                        battery == null -> StatusLevel.NORMAL
+                        battery <= 26   -> StatusLevel.CRITICAL
+                        battery <= 51   -> StatusLevel.WARNING
+                        else            -> StatusLevel.NORMAL
                     }
                 )
             )
@@ -196,14 +199,16 @@ class AaruyOverviewViewModel(
                     visible = pump.isTempBasalInProgress
                 )
             )
+            val reservoir = pump.reservoir
             add(
                 PumpInfoRow(
                     label = rh.gs(CoreUiR.string.reservoir_label),
-                    value = ch.insulinAmountString(PumpInsulin(pump.reservoir)),
+                    value = reservoir?.let { ch.insulinAmountString(PumpInsulin(it)) } ?: NOT_KNOWN,
                     level = when {
-                        pump.reservoir <= pump.lowAlert     -> StatusLevel.CRITICAL
-                        pump.reservoir <= pump.lowAlert * 2 -> StatusLevel.WARNING
-                        else                                -> StatusLevel.NORMAL
+                        reservoir == null                -> StatusLevel.NORMAL
+                        reservoir <= pump.lowAlert       -> StatusLevel.CRITICAL
+                        reservoir <= pump.lowAlert * 2   -> StatusLevel.WARNING
+                        else                             -> StatusLevel.NORMAL
                     }
                 )
             )
@@ -235,5 +240,11 @@ class AaruyOverviewViewModel(
             primaryActions = primaryActions,
             managementActions = managementActions
         )
+    }
+
+    private companion object {
+
+        /** As the status lights of the overview show a value that is not known. */
+        const val NOT_KNOWN = "-"
     }
 }

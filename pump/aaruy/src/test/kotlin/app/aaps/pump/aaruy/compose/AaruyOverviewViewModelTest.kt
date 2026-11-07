@@ -145,4 +145,17 @@ class AaruyOverviewViewModelTest {
         pump.reservoir = 200.0
         assertEquals(StatusLevel.NORMAL, state().row(CoreUiR.string.reservoir_label).level)
     }
+
+    /** After an app start, until the first status. They showed 0 U and 0 % in red. */
+    @Test
+    fun aReservoirAndBatteryThatAreNotKnownShowADash() {
+        pump.pumpState = AaruyPumpState.BASALRATE_RUNNING
+        pump.reservoir = null
+        pump.remainBattery = null
+        val state = state()
+        assertEquals("-", state.row(CoreUiR.string.reservoir_label).value)
+        assertEquals(StatusLevel.NORMAL, state.row(CoreUiR.string.reservoir_label).level)
+        assertEquals("-", state.row(CoreUiR.string.battery_label).value)
+        assertEquals(StatusLevel.NORMAL, state.row(CoreUiR.string.battery_label).level)
+    }
 }

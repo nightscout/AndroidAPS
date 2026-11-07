@@ -143,17 +143,19 @@ class AaruyPump(
     val lastBasalRate: Double
         get() = _lastBasalRate.value
 
-    private val _reservoir = MutableStateFlow(0.0)
-    val reservoirFlow: StateFlow<Double> = _reservoir
-    var reservoir: Double
+    /** Null until the first status after an app start or a new pump: not known is no empty reservoir. */
+    private val _reservoir = MutableStateFlow<Double?>(null)
+    val reservoirFlow: StateFlow<Double?> = _reservoir
+    var reservoir: Double?
         get() = _reservoir.value
         set(value) {
             _reservoir.value = value
         }
 
-    private val _remainBattery = MutableStateFlow(0.0)
-    val remainBatteryFlow: StateFlow<Double> = _remainBattery
-    var remainBattery: Double
+    /** Null until the pump told it, as the reservoir. */
+    private val _remainBattery = MutableStateFlow<Double?>(null)
+    val remainBatteryFlow: StateFlow<Double?> = _remainBattery
+    var remainBattery: Double?
         get() = _remainBattery.value
         set(value) {
             _remainBattery.value = value
@@ -625,9 +627,15 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         pumpSync.insertAnnouncement(rh.gs(R.string.aaruy_extended_not_from_aaps), dateUtil.now(), pumpType(), pumpSN)
     }
 
-    fun reset() {
-        aapsLogger.debug(LTag.PUMP, "Aaruy Pump reset")
-        lastConnection = 0
+    /**
+     * @param newPump another pump than before. Only then is the last contact gone: at an app start it is the time AAPS
+     * last heard of this pump, which the pump-unreachable alarm counts from.
+     */
+    fun reset(newPump: Boolean) {
+        aapsLogger.debug(LTag.PUMP, "Aaruy Pump reset, new pump: $newPump")
+        if (newPump) lastConnection = 0
+        reservoir = null
+        remainBattery = null
         pumpState = AaruyPumpState.FIRST_INIT
         pumpLastState = AaruyPumpState.FIRST_INIT
     }
