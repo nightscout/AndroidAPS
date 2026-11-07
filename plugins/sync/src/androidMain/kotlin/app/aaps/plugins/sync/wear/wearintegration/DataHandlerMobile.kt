@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -31,9 +32,8 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
-import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -64,6 +64,8 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.core.interfaces.overview.graph.buildTargetLine
+import app.aaps.core.interfaces.overview.graph.targetMiddleMgdl
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
@@ -72,6 +74,10 @@ import app.aaps.core.interfaces.rx.weardata.ProfileInfo
 import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderAction
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
@@ -164,11 +170,11 @@ class DataHandlerMobile(
     private val pumpStatusProvider: PumpStatusProvider,
     private val ch: ConcentrationHelper,
     private val runningModeGuard: RunningModeGuard,
-    private val wizardBolusExecutor: WizardBolusExecutor,
-    // Role-transparent relays: on a MASTER they run locally (via wizardBolusExecutor); on a CLIENT they route the
+    private val masterActionExecutor: MasterActionExecutor,
+    // Role-transparent relays: on a MASTER they run locally (via masterActionExecutor); on a CLIENT they route the
     // action to the master over the signed round-trip (gated on masterReachable). EVERY wear therapy action goes
     // through these — bolus/eCarbs/TT/PS/RM via batchExecutor, quick-wizard/wizard via wizardExecutor. The local
-    // wizardBolusExecutor stays on the wear path for Fill ONLY (no relay command for Fill).
+    // masterActionExecutor stays on the wear path for Fill ONLY (no relay command for Fill).
     private val batchExecutor: BatchExecutor,
     private val wizardExecutor: WizardExecutor,
 ) {
@@ -179,6 +185,8 @@ class DataHandlerMobile(
     @Inject lateinit var activeSceneSync: ActiveSceneSync
     @Inject lateinit var sceneChainResolver: SceneChainResolver
     @Inject lateinit var sensitivityOverview: SensitivityOverview
+    @Inject lateinit var eatReminder: EatReminder
+    @Inject lateinit var clientControlDispatcher: ClientControlActionDispatcher
 
     // App lifetime: this is a @Singleton that subscribes in init and
     // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
@@ -340,7 +348,7 @@ class DataHandlerMobile(
                 // The executor already wrote the right sentence for both cases (a failure and a cancel), so the
                 // watch shows its comment as-is. The watch has no neutral terminal screen — a cancel still lands
                 // under the red "Error" heading — but the words are correct.
-                wizardBolusExecutor.deliverFillBolus(it.insulin, null, Sources.Wear, onError = { failure -> sendError(failure.comment) })
+                masterActionExecutor.deliverFillBolus(it.insulin, null, Sources.Wear, onError = { failure -> sendError(failure.comment) })
         }
         // These two are the ones that actually recompute a dose. The executor they delegate to already
         // refuses before init, so this is defence in depth - but it keeps the refusal in one place with the
@@ -394,6 +402,11 @@ class DataHandlerMobile(
             onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
+        // Not gated by the wear control switch, like the mute above: they only answer an alarm
+        onEventSync<EventData.DismissAlert> { uiInteraction.dismissAlarm("Dismissed from wear") }
+        onEventSync<EventData.MuteAlert> { uiInteraction.muteAlarm(it.minutes, "Muted from wear for ${it.minutes} min") }
+        // Not gated by the wear control switch, like the mute above: it only ends or moves a reminder
+        onEvent<EventData.ActionEatReminder> { handleEatReminder(it) }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
         // Coalesce Wear reconnect-flush bursts (Data Layer replays queued events back-to-back).
         // chunkedOnQuietPeriod keeps the timer idle when no events arrive, unlike a fixed window.
@@ -597,8 +610,11 @@ class DataHandlerMobile(
         val historyList = getTDDList(dummies)
         if (isOldData(historyList)) {
             val busy = activePump.isBusy()
-            val message = rh.gs(CoreUiStrings.tdd_old_data) + ", " +
+            val message = rh.gs(
+                InterfacesStrings.values_with_comma,
+                rh.gs(CoreUiStrings.tdd_old_data),
                 if (busy) rh.gs(CoreUiStrings.pump_busy) else rh.gs(SyncStrings.pump_fetching_data)
+            )
             sendToWear(EventData.ConfirmAction(rh.gs(CoreUiStrings.tdd_short), message, returnCommand = null))
             if (!busy) {
                 commandQueue.loadTDDs()
@@ -696,19 +712,24 @@ class DataHandlerMobile(
             sendError(rh.gs(CoreUiStrings.wizard_no_actual_bg))
             return
         }
-        val inputs = WizardBolusExecutor.WizardInputs(
+        val inputs = MasterActionExecutor.WizardInputs(
             bg = bgReading.valueToUnits(profileFunction.getUnits()),
-            carbs = command.carbs,
+            // The meal type splits the grams like the phone wizard does: part now, part as eCarbs.
+            carbs = command.carbsType.carbsNow(command.carbs),
             percentage = command.percentage,
             directCorrection = 0.0,
-            carbTime = 0,
+            carbTime = command.carbTime,
             useBg = preferences.get(BooleanKey.WearWizardBg),
             useCob = preferences.get(BooleanKey.WearWizardCob),
             useIob = preferences.get(BooleanKey.WearWizardIob),
             useTt = preferences.get(BooleanKey.WearWizardTt),
             useTrend = preferences.get(BooleanKey.WearWizardTrend),
-            alarm = false,
+            alarm = command.alarm && command.carbTime > 0,
             notes = "",
+            eCarbsGrams = command.carbsType.eCarbs(command.carbs),
+            // The eCarbs start relative to the meal, as on the phone
+            eCarbsDelayMinutes = command.carbsType.eCarbsDelayMinutes + command.carbTime,
+            eCarbsDurationHours = command.carbsType.eCarbsDurationHours,
             source = Sources.Wear
         )
         contacting()
@@ -919,7 +940,7 @@ class DataHandlerMobile(
      * Shared wear eCarbs precheck: cap + park + author the confirmation on the MASTER via the role-transparent
      * [BatchExecutor] (MASTER → local prepareBatch; CLIENT → signed BatchPrepare so the master records them), then push
      * the master-authored [lines][EventData.ConfirmAction.lines] to the watch with the parked bolusId. The wear ✓
-     * commits by id (consume-once). (Was a local-only `wizardBolusExecutor.prepareBatch`; now everything runs on the master.)
+     * commits by id (consume-once). (Was a local-only `masterActionExecutor.prepareBatch`; now everything runs on the master.)
      */
     private suspend fun sendBatchPreCheck(
         bolus: BatchAction.Bolus,
@@ -998,7 +1019,7 @@ class DataHandlerMobile(
         }
         // A prime is in pump units.
         val insulinAfterConstraints = constraintChecker.applyPrimingConstraints(PumpInsulin(amount)).cU
-        var message = rh.gs(CoreUiStrings.prime_fill) + ": " + insulinAfterConstraints + rh.gs(SyncStrings.units_short)
+        var message = rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.prime_fill), rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints))
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(CoreUiStrings.constraint_applied)
         sendToWear(
             EventData.ConfirmAction(
@@ -1017,7 +1038,7 @@ class DataHandlerMobile(
         }
         // A prime is in pump units.
         val insulinAfterConstraints = constraintChecker.applyPrimingConstraints(PumpInsulin(command.insulin)).cU
-        var message = rh.gs(CoreUiStrings.prime_fill) + ": " + insulinAfterConstraints + rh.gs(SyncStrings.units_short)
+        var message = rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.prime_fill), rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints))
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(CoreUiStrings.constraint_applied)
         sendToWear(
             EventData.ConfirmAction(
@@ -1249,7 +1270,8 @@ class DataHandlerMobile(
                 insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
                 carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
                 carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
-                pushedWatchface = preferences.get(StringKey.WearPushedWatchface)
+                pushedWatchface = preferences.get(StringKey.WearPushedWatchface),
+                alertOverrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
             )
         )
         // QuickWizard
@@ -1473,12 +1495,19 @@ class DataHandlerMobile(
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
         }
-        persistenceLayer.getBolusesFromTimeIncludingInvalid(startTimeWindow, true)
-            .stream()
-            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
-        persistenceLayer.getCarbsFromTimeExpanded(startTimeWindow, true)
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
+        // A day of boluses and carbs: the last hours go to the watch, the whole day sets the size
+        // cuts, the same day the phone's graphs take them from
+        val dayStart = now - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+        val dayBoluses = persistenceLayer.getBolusesFromTimeIncludingInvalid(dayStart, true)
+            .filter { it.type != BS.Type.PRIMING }
+        dayBoluses.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, it.amount, 0.0, it.type == BS.Type.SMB, it.isValid)) }
+        val smbSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.SMB && it.amount > 0 }.map { it.amount })
+        val bolusSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.NORMAL }.map { it.amount })
+        val dayCarbs = persistenceLayer.getCarbsFromTimeExpanded(dayStart, true)
+        dayCarbs.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, 0.0, it.amount, false, it.isValid)) }
+        val carbsSizeClasses = MarkerSizeClasses.ofMax(dayCarbs.filter { it.isValid && it.amount > 0 }.map { it.amount })
         val apsResult = if (config.APS) {
             val lastRun = loop.lastRun
             if (lastRun?.request?.hasPredictions == true) {
@@ -1504,7 +1533,26 @@ class DataHandlerMobile(
                     )
                 )
             }
-        sendToWear(EventData.TreatmentData(temps, basals, boluses, predictions))
+        // The target line as on the phone's BG graph, out past the watch's prediction area. One read of the
+        // temporary targets for the whole window; the running one at the start is not "from" the start.
+        val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(startTimeWindow) +
+            persistenceLayer.getTemporaryTargetDataFromTime(startTimeWindow, true)).distinctBy { it.id }
+        val targets = ArrayList(
+            buildTargetLine(startTimeWindow, now + T.hours(2).msecs(), temporaryTargets, profile::targetMiddleMgdl) { it }
+                .map { EventData.TreatmentData.Target(it.timestamp, it.value) }
+        )
+        sendToWear(
+            EventData.TreatmentData(
+                temps, basals, boluses, predictions,
+                targets = targets,
+                smbSmallBelow = smbSizeClasses?.smallBelow ?: -1.0,
+                smbLargeFrom = smbSizeClasses?.largeFrom ?: -1.0,
+                bolusSmallBelow = bolusSizeClasses?.smallBelow ?: -1.0,
+                bolusLargeFrom = bolusSizeClasses?.largeFrom ?: -1.0,
+                carbsSmallBelow = carbsSizeClasses?.smallBelow ?: -1.0,
+                carbsLargeFrom = carbsSizeClasses?.largeFrom ?: -1.0
+            )
+        )
     }
 
     private fun predictionColor(data: GV): Int {
@@ -1583,16 +1631,21 @@ class DataHandlerMobile(
         // profile there is no IU conversion to make, so the reservoir is reported as unavailable
         // rather than converted at a guessed concentration.
         val concentration = profile?.iCfg?.concentration
-        val reservoir = concentration?.let { c ->
-            pump.reservoirLevel.value.iU(c).let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
-        } ?: 0.0
+        // Null also when the pump has not told it yet, as after an app start. On AAPSClient the local pump is the
+        // VirtualPump with a fixed 50 U: the master's reservoir comes with its device status, in insulin units already.
+        val reservoirKnown: Double? =
+            if (config.AAPSCLIENT) processedDeviceStatusData.pumpData?.reservoir
+            else concentration?.let { c ->
+                pump.reservoirLevel.value?.iU(c)?.let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+            }
+        val reservoir = reservoirKnown ?: 0.0
         val reservoirString = if (reservoir > 0) decimalFormatter.to0Decimal(reservoir, rh.gs(CoreUiStrings.insulin_unit_shortname)) else ""
         val resUrgent = preferences.get(IntKey.OverviewResCritical)
         val resWarn = preferences.get(IntKey.OverviewResWarning)
         val reservoirLevel = when {
             // Unknown must not fall through the thresholds: a 0.0 reservoir is <= resUrgent and would
             // raise a false critical-reservoir alarm on the watch.
-            concentration == null  -> 0
+            reservoirKnown == null -> 0
             reservoir <= resUrgent -> 2
             reservoir <= resWarn   -> 1
             else                   -> 0
@@ -1600,6 +1653,8 @@ class DataHandlerMobile(
 
         // Current running mode (+ end time of a temporary one) for the running-mode complication and picker
         val runningModeRecord = loop.runningModeRecord()
+        // The "time to eat" timer, on a client the copy of the master's
+        val eatReminderState = eatReminder.state.value
 
         sendToWear(
             EventData.Status(
@@ -1624,7 +1679,9 @@ class DataHandlerMobile(
                 reservoirLevel = reservoirLevel,
                 loopMode = runningModeRecord.mode.toLoopMode(),
                 modeEndTime = runningModeRecord.endTimeForWatch(),
-                modeFromScene = runningModeRecord.id == activeSceneSync.getActiveState()?.scopedRecords?.rmId
+                modeFromScene = runningModeRecord.id == activeSceneSync.getActiveState()?.scopedRecords?.rmId,
+                eatReminderStartedAt = eatReminderState?.startedAt,
+                eatReminderEndsAt = eatReminderState?.endsAt
             )
         )
     }
@@ -1785,7 +1842,7 @@ class DataHandlerMobile(
             val tdd = historyList[0].total
             historyList.removeAt(0)
 
-            message += rh.gs(SyncStrings.today) + ": " + rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD) + "\n"
+            message += rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.today), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)) + "\n"
             message += "\n"
         }
         var weighted03 = 0.0
@@ -1804,17 +1861,17 @@ class DataHandlerMobile(
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
         }
-        message += rh.gs(SyncStrings.weighted) + ":\n"
-        message += "0.3: " + rh.gs(SyncStrings.tdd_line, weighted03, 100 * weighted03 / refTDD) + "\n"
-        message += "0.5: " + rh.gs(SyncStrings.tdd_line, weighted05, 100 * weighted05 / refTDD) + "\n"
-        message += "0.7: " + rh.gs(SyncStrings.tdd_line, weighted07, 100 * weighted07 / refTDD) + "\n"
+        message += rh.gs(CoreUiStrings.label_with_colon, rh.gs(SyncStrings.weighted)) + "\n"
+        for ((weight, value) in listOf("0.3" to weighted03, "0.5" to weighted05, "0.7" to weighted07))
+            message += rh.gs(InterfacesStrings.confirmation_line, weight, rh.gs(SyncStrings.tdd_line, value, 100 * value / refTDD)) + "\n"
         message += "\n"
         historyList.reverse()
         // add TDDs:
         for (record in historyList) {
             val tdd = record.total
-            message += df.format(Date(record.timestamp)) + " " + rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)
-            message += (if (dummies.contains(record)) "x" else "") + "\n"
+            val dayLine = rh.gs(CoreUiStrings.value_with_unit, df.format(Date(record.timestamp)), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD))
+            // x marks a day that is estimated, not read from the pump
+            message += (if (dummies.contains(record)) rh.gs(CoreUiStrings.value_with_unit, dayLine, "x") else dayLine) + "\n"
         }
         return message
     }
@@ -1824,6 +1881,24 @@ class DataHandlerMobile(
         profile ?: return rh.gs(CoreUiStrings.noprofile)
         if (!loop.runningMode().isLoopRunning()) status += rh.gs(CoreUiStrings.disabled_loop) + "\n"
         return status
+    }
+
+    /**
+     * Stop or +5 min from the watch. On a master the timer changes here; a client asks its master, as its own bar does.
+     * The same two functions as every other Stop and +5 min, so the watch does what the phone does. A +5 min whose alarm
+     * cannot be set is told once, by the alarm code on the phone, as for the bar; the next status puts the watch back.
+     */
+    private suspend fun handleEatReminder(command: EventData.ActionEatReminder) {
+        clientControlDispatcher.execute(
+            ClientControlActionDispatcher.Command.EatReminderControl(command.action),
+            rh.gs(CoreUiStrings.clientcontrol_action_eat_reminder)
+        ) {
+            when (command.action) {
+                EatReminderAction.STOP   -> eatReminder.stop()
+                EatReminderAction.EXTEND -> eatReminder.extend()
+            }
+            ActionProgress.Applied
+        }
     }
 
     private fun sendError(errorMessage: String) {

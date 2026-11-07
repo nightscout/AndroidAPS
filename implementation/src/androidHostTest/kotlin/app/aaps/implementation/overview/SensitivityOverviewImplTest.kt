@@ -1,6 +1,7 @@
 package app.aaps.implementation.overview
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
@@ -8,12 +9,14 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.IsfStep
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlin.math.round
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -37,6 +40,7 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var ads: AutosensDataStore
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     private lateinit var sut: SensitivityOverviewImpl
 
@@ -44,7 +48,7 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
     fun prepare() {
         sut = SensitivityOverviewImpl(
             iobCobCalculator, loop, config, constraintsChecker, profileFunction, processedDeviceStatusData,
-            profileUtil, activePlugin, baseText, decimalFormatter, dateUtil, aapsLogger, preferences
+            profileUtil, activePlugin, baseText, decimalFormatter, dateUtil, aapsLogger, preferences, persistenceLayer
         )
         whenever(config.APS).thenReturn(true)
         whenever(iobCobCalculator.ads).thenReturn(ads)
@@ -138,11 +142,15 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
     /**
      * The step is worked out from the numbers, but a step the chip cannot show must not get an
      * arrow: two values that round to the same text would read "5.5 up 5.5".
+     *
+     * The ratio moves the ISF toward the middle of its shown 0.1 step. A fixed ratio failed from
+     * 00:00 to 02:00, where the profile ISF (3 mmol/L = 54.047 mg/dL) is close to a rounding edge.
      */
     @Test
     fun `a ratio too small to change the shown value gives no step`() = runBlocking {
+        val isf = effectiveProfile.getProfileIsfMgdl()
         autosensRatio(1.0)
-        ratioUsedByLoop(0.9999)
+        ratioUsedByLoop(if (isf < round(isf * 10) / 10) 0.9999 else 1.0001)
 
         val data = sut.build()
 
@@ -227,6 +235,30 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
         val data = sut.build()
 
         assertThat(data.lines).containsExactly("Autosens Value: 85%", profileIsfLine(), effectiveIsfLine(0.8488)).inOrder()
+    }
+
+    /**
+     * With a variable ISF the dialog also shows the ISF for carbs. It is the average of the stored loop
+     * results, the same number the COB calculation and the wizard use, on a master and on a client.
+     */
+    @Test
+    fun `the ISF for carbs is the average of the stored loop results`() = runBlocking {
+        autosensRatio(1.0)
+        val request = mock<APSResult>().also {
+            whenever(it.variableSens).thenReturn(80.0)
+            whenever(it.rawData()).thenReturn(RT(runningDynamicIsf = true, sensitivityRatio = 1.0))
+        }
+        whenever(loop.lastRun).thenReturn(Loop.LastRun().apply { this.request = request })
+        whenever(persistenceLayer.getLoopSensitivities(any(), any())).thenReturn(
+            listOf(
+                PersistenceLayer.LoopSensitivity(now - T.mins(6).msecs(), 70.0),
+                PersistenceLayer.LoopSensitivity(now - T.mins(1).msecs(), 90.0)
+            )
+        )
+
+        val data = sut.build()
+
+        assertThat(data.lines).contains(baseText.gs(CoreUiStrings.isf_for_carbs, 80.0))
     }
 
     /** Foreign device status data: a zero would divide by zero, so it counts as no ratio at all. */

@@ -127,6 +127,13 @@ interface Config {
      * without a default: a new shell has to say what it is rather than inherit someone else's answer.
      */
     val platform: AppPlatform
+
+    /**
+     * Whether AAPS can be shown in a language of its own, other than the phone's. Android gives apps their own
+     * language from Android 13 on; on Android 12 AAPS follows the phone, and the language setting is hidden.
+     * True where the app sets its text language itself (iOS, desktop).
+     */
+    val supportsAppLanguage: Boolean get() = true
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String
@@ -173,7 +180,7 @@ interface Config {
      *
      * Prefer [whileReconfiguring] - it pairs this with [endReconfiguring] in a `finally`. Calling this
      * without a guaranteed matching end leaves [appInitialized] false for the rest of the process, and
-     * `WizardBolusExecutorImpl` refuses on that in two places: the user could not bolus. That is worse
+     * `MasterActionExecutorImpl` refuses on that in two places: the user could not bolus. That is worse
      * than the window this closes.
      */
     fun beginReconfiguring()

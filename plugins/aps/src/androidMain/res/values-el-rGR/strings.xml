@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Συντελεστής προσαρμογής DynamicISF %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Δυναμική ISF</string>
+    <string name="openaps_auto_isf">Αυτόματο ISF</string>
     <string name="openapsma_disabled">Προσθήκη απενεργοποιημένη</string>
     <string name="openapsma_no_glucose_data">Μη διαθέσιμα δεδομένα γλυκόζης</string>
     <string name="openaps_no_as_data">Μη διαθέσιμα δεδομένα autosens</string>
@@ -12,7 +14,8 @@
     <string name="description_ama">Κατάσταση του αλγόριθμου για το 2017</string>
     <string name="description_smb">Ο πιο πρόσφατος αλγόριθμος για προχωρημένους χρήστες</string>
     <string name="description_smb_dynamic_isf">Πιο πρόσφατος αλγόριθμος για προχωρημένους χρήστες με δυναμικό/ αυτόματο ISF</string>
-    <string name="openapsma_last_run_label">Τελευταίος Υπολογισμός</string>
+    <string name="description_auto_isf">Πειραματικός αλγόριθμος για προχωρημένους χρήστες με τις επεκτάσεις AutoISF</string>
+    <string name="openapsma_last_run_label">Τελευταία εκτέλεση</string>
     <string name="openapsma_input_parameters_label">Εισαγωγή Παραμέτρων</string>
     <string name="openapsma_glucose_status_label">Κατάσταση Γλυκόζης</string>
     <string name="openapsma_current_temp_label">Τρέχων Προσωρινός Ρυθμός</string>
@@ -35,9 +38,11 @@
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Κορύφωση</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Ένα bolus παραδόθηκε μέσα στα τελευταία 3 λεπτά, παράκαμψη SMB</string>
     <string name="pump_not_initialized">Η αντλία δεν αρχικοποιήθηκε!</string>
+    <string name="zero_basal_not_set">Η αντλία δεν δέχτηκε τον μηδενικό προσωρινό βασικό ρυθμό. Μπορεί να χορηγεί ακόμα βασική ινσουλίνη. Ελέγξτε την αντλία.</string>
     <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
     <string name="no_aps_selected">ΔΕΝ ΕΠΙΛΕΧΘΗΚΕ APS Ή ΔΕΝ ΕΓΙΝΕ ΠΑΡΟΧΗ ΑΠΟΤΕΛΕΣΜΑΤΟΣ</string>
     <string name="ignore5m">Παράβλεψη για 5 λεπτά</string>
@@ -45,6 +50,9 @@
     <string name="ignore30m">Παράβλεψη για 30 λεπτά</string>
     <string name="carbs_suggestion">Προτεινόμενοι Υδατάνθρακες</string>
     <string name="open_loop_new_suggestion">Νέα διαθέσιμη πρόταση</string>
+    <string name="loop_notification_channel_name">Προτάσεις κυκλώματος</string>
+    <string name="loop_notification_channel_silent_name">Προτάσεις κυκλώματος κατά τη λειτουργία «Μην ενοχλείτε»</string>
+    <string name="open_loop_suggestion_too_old">Αυτή η πρόταση είναι πολύ παλιά. Δεν στάλθηκε τίποτα στην αντλία. Περιμένετε την επόμενη.</string>
     <string name="basal_set_correctly">Ο βασικός ρυθμός ορίστηκε σωστά</string>
     <string name="last_run_label">Τελευταία εκτέλεση</string>
     <string name="loop_aps_label">APS</string>
@@ -57,11 +65,13 @@
     <string name="loop_smb_execution_time_label">Χρόνος εκτέλεσης SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB καθορισμένο από την αντλία</string>
     <string name="fallback_smb_no_tdd">Επιστροφή στο SMB. Δεν υπάρχουν αρκετά δεδομένα TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Επιστροφή στην ευαισθησία του προφίλ. Ανεπαρκή δεδομένα. Αιτία: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Βοήθεια για πιθανές αλλαγές στο προφίλ (ISF, αναλογία υδατανθράκων, βασικός ρυθμός)</string>
     <string name="autotune_default_tune_days_title">Αριθμός ημερών δεδομένων</string>
     <string name="autotune_tunedprofile_name">Συντονισμένο</string>
     <string name="autotune_profile">Προφίλ :</string>
-    <string name="autotune_last_run">Τελευταίος Υπολογισμός :</string>
+    <string name="autotune_last_run">Τελευταία εκτέλεση :</string>
     <string name="autotune_warning">Προειδοποίηση :</string>
     <string name="autotune_ic_warning">Το επιλεγμένο προφίλ έχει τιμές IC %1$d. Το Autotune θα χρησιμοποιήσει %2$.2f g/U</string>
     <string name="autotune_isf_warning">Το επιλεγμένο προφίλ έχει τιμές ISF %1$d. Το Autotune θα χρησιμοποιήσει %2$.1f %3$s/U</string>
@@ -84,5 +94,8 @@
     <string name="autotune_update_local_profile_message">Ενημέρωση του προφίλ %1$s με το Προφίλ Autotune;</string>
     <string name="autotune_revert_local_profile_message">Επαναφορά προφίλ %1$s με Προφίλ Εισαγωγής;</string>
     <string name="autotune_profile_invalid">Μη έγκυρο προφίλ</string>
+    <string name="pump_disconnected">Αντλία αποσυνδεδεμένη</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">Ρυθμίσεις AutoISF</string>
+    <string name="smb_delivery_settings_title">Ρυθμίσεις χορήγησης SMB</string>
 </resources>

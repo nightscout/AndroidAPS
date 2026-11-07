@@ -676,7 +676,11 @@ class OmnipodErosPumpPlugin(
             return pumpEnactResultProvider().success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex))
         }
 
-        uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), null)
+        uiInteraction.runAlarm(
+            rh.gs(app.aaps.core.ui.R.string.label_with_colon, rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value)) + "\n" + result.toString(),
+            rh.gs(R.string.omnipod_eros_pod_management_pulse_log),
+            null
+        )
         return pumpEnactResultProvider().success(true).enacted(false)
     }
 

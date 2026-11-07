@@ -55,10 +55,10 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
-import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.TimeOffsetRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -72,8 +72,10 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.EVENT_TIME_OFFSET_RANGE_MINUTES
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
+import app.aaps.ui.compose.components.SmbBeingDeliveredBanner
 
 /**
  * @see PreviewSiteChange
@@ -205,6 +207,7 @@ fun FillDialogScreen(
         onInsulinChange = viewModel::updateInsulin,
         onInsulinSelect = viewModel::selectInsulin,
         onNotesChange = viewModel::updateNotes,
+        onTimeOffsetChange = viewModel::updateTimeOffset,
         onDateClick = { showDatePicker = true },
         onTimeClick = { showTimePicker = true },
         // The settings edit the prime presets, so they go with the prime.
@@ -228,6 +231,7 @@ internal fun FillDialogContent(
     onInsulinChange: (Double) -> Unit,
     onInsulinSelect: (ICfg) -> Unit,
     onNotesChange: (String) -> Unit,
+    onTimeOffsetChange: (Int) -> Unit,
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit,
     onSettingsClick: (() -> Unit)?,
@@ -239,28 +243,31 @@ internal fun FillDialogContent(
 
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
-                    }
-                },
-                actions = {
-                    if (onSettingsClick != null) {
-                        IconButton(onClick = onSettingsClick) {
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
                             Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiStrings.settings),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
                             )
                         }
+                    },
+                    actions = {
+                        if (onSettingsClick != null) {
+                            IconButton(onClick = onSettingsClick) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = stringResource(CoreUiStrings.settings),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
-                }
-            )
+                )
+                if (uiState.waitsForSmb) SmbBeingDeliveredBanner()
+            }
         },
         bottomBar = {
             // The button shows only a value, so a screen reader would say just the amount and never
@@ -272,7 +279,7 @@ internal fun FillDialogContent(
                     focusManager.clearFocus()
                     onConfirmClick()
                 },
-                enabled = uiState.hasAction,
+                enabled = uiState.hasAction && !uiState.waitsForSmb,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()
@@ -396,10 +403,13 @@ internal fun FillDialogContent(
                         }
                     }
 
-                    // Time (collapsible "Now" pattern)
-                    EventTimeRow(
-                        timeChanged = uiState.eventTimeChanged,
-                        displayText = "$dateString $timeString",
+                    // Time: -/+ in 5 minute steps like the other treatment dialogs, the pickers when expanded
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.time,
+                        offsetMinutes = uiState.timeOffsetMinutes,
+                        onOffsetChange = onTimeOffsetChange,
+                        resolvedTimeText = if (uiState.timeOffsetMinutes != 0) stringResource(CoreUiStrings.value_with_unit, dateString, timeString) else null,
+                        offsetRange = EVENT_TIME_OFFSET_RANGE_MINUTES,
                         dateTimeContent = {
                             DateTimeSection(
                                 dateString = dateString,

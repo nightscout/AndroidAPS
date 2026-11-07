@@ -6,16 +6,23 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.plugins.calibration.fitLinearCalibration
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,17 +35,24 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 private val WARM_UP_DURATION_MS = T.hours(2).msecs()
 
-
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own. Injected rather than built by the plugin, so the plugin does
+// not need the batch path (which reaches the plugin again through ActivePlugin).
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
+@Inject
 class CalibrationViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,
-    private val aapsLogger: AAPSLogger,
-    val dateUtil: DateUtil
+    val dateUtil: DateUtil,
+    rh: TextResolver,
+    rxBus: RxBus,
+    config: Config,
+    batchExecutor: BatchExecutor
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalibrationUiState())
@@ -89,29 +103,16 @@ class CalibrationViewModel(
         }
     }
 
-    fun deleteEntry(id: Long) {
-        viewModelScope.launch {
-            val entry = _uiState.value.entries.firstOrNull { it.id == id }
-            try {
-                // UserEntry logging is performed inside PersistenceLayer.invalidateCalibrationEntry
-                persistenceLayer.invalidateCalibrationEntry(
-                    id = id,
-                    action = Action.CALIBRATION_REMOVED,
-                    source = Sources.CalibrationDialog,
-                    note = "id=$id",
-                    listValues = entry?.let {
-                        listOf(
-                            ValueWithUnit.fromGlucoseUnit(
-                                profileUtil.fromMgdlToUnits(it.fingerstickMgdl),
-                                profileUtil.units
-                            )
-                        )
-                    } ?: emptyList()
-                )
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.DATABASE, "Failed to invalidate calibration entry id=$id", e)
-            }
-        }
+    /**
+     * Removing an entry. The master removes its own copy: a calibration removed only on a client would still
+     * correct the BG the loop uses on the master.
+     */
+    val removal = RecordRemoval(batchExecutor, rh, rxBus, config, viewModelScope, Sources.CalibrationDialog)
+
+    /** Ask the master to describe removing the entry [id]; the screen then shows its confirmation. */
+    fun requestDelete(id: Long) {
+        val entry = _uiState.value.entries.firstOrNull { it.id == id } ?: return
+        removal.request(listOfNotNull(BatchAction.Remove.of(BatchAction.Remove.Kind.CALIBRATION, listOf(entry))))
     }
 
     fun selectEntry(id: Long) {

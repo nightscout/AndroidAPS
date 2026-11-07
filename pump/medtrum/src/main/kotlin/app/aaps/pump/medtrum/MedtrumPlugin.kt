@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -198,8 +197,12 @@ class MedtrumPlugin(
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
-                val success = medtrumService?.connect(reason) == true
-                if (!success) rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.ble_not_supported_or_not_paired), EventShowSnackbar.Type.Error))
+                // No message from here. A refused connect means either a missing permission or no
+                // Bluetooth adapter, and the transport says which one, or it means the service is
+                // already connecting, which is normal and only worth a log line. This used to post
+                // "BLE not supported or device not paired" for all three, and Medtrum never pairs -
+                // it looks for the serial number - so that reason could not be true at all.
+                medtrumService?.connect(reason)
             }
         }
     }

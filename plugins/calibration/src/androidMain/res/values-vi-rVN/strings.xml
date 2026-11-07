@@ -21,7 +21,5 @@
     <string name="cal_entries_header">Các giá trị đo bằng máy (%1$d)</string>
     <string name="cal_no_entries">Chưa có giá trị đo bằng máy.</string>
     <string name="cal_entry_pair">Đo bằng máy %1$s → cảm biến %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">Xóa mục?</string>
-    <string name="cal_remove_entry_message">Thao tác này sẽ vô hiệu hóa giá trị đo. Độ khớp sẽ được tính toán lại.</string>
     <string name="cal_chart_entry_readout">Giá trị đo %1$d/%2$d · %3$s · cảm biến %4$s → đường huyết %5$s</string>
 </resources>

@@ -26,10 +26,10 @@ package app.aaps.core.keys.interfaces
  * restricting it by the platform doing the *displaying* would hide real function. Only restrict a
  * key that is not synced. `PreferencePlatformRulesTest` holds that line.
  *
- * **Not a device capability.** This says which shell is running, not what the hardware can do. A
- * phone-versus-tablet question is `isCompactScreen()`, and an "is this pump a patch pump" question
- * is `VisibilityContext`. Keep those separate - a platform is a fixed fact about the build, while
- * the others change under the app.
+ * **Not a device capability.** This says which shell is running, not what the hardware can do. How
+ * much room the screen has is measured by the layout itself, and an "is this pump a patch pump"
+ * question is `VisibilityContext`. Keep those separate - a platform is a fixed fact about the build,
+ * while the others change under the app.
  */
 enum class AppPlatform {
 

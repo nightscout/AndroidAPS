@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -187,11 +188,7 @@ private fun SectionCard(
     title: String,
     content: @Composable () -> Unit
 ) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
-    ) {
+    AapsCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 text = title,

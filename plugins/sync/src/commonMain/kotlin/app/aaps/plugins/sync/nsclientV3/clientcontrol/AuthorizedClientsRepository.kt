@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
@@ -17,6 +18,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+
+/** The role of a stored client: none stored means Admin (see [ClientRole.of]). */
+internal val AuthorizedClient.clientRole: ClientRole get() = ClientRole.of(role)
 
 /**
  * Master-side store of clients authorized to send commands.
@@ -87,7 +91,7 @@ class AuthorizedClientsRepository(
      * for caller-side wrapping (PIN-based pairing offer) — caller must not persist it. The
      * encrypted form is stored on the entry.
      */
-    suspend fun addPending(name: String, pairTtlMs: Long, now: Long): PendingResult = mutex.withLock {
+    suspend fun addPending(name: String, role: ClientRole, pairTtlMs: Long, now: Long, nsSubject: String? = null): PendingResult = mutex.withLock {
         val secretBytes = ClientControlCrypto.newSecretBytes()
         val secretHex = ClientControlCrypto.bytesToHex(secretBytes)
         val entry = AuthorizedClient(
@@ -96,14 +100,63 @@ class AuthorizedClientsRepository(
             encryptedSecret = secureEncrypt.encrypt(secretHex, SECURE_ENCRYPT_ALIAS),
             state = ClientState.Pending,
             createdAt = now,
-            pairExpiresAt = now + pairTtlMs
+            pairExpiresAt = now + pairTtlMs,
+            role = role.name,
+            nsSubject = nsSubject
         )
         write(decode() + entry)
         PendingResult(entry, secretHex)
     }
 
+    /**
+     * Keeps [secret] from a key exchange next to the current one, replacing an earlier one that the client never used.
+     * Returns false when it cannot be wrapped (then the exchange is not answered).
+     */
+    suspend fun setPendingSecret(clientId: String, secret: ByteArray): Boolean = mutex.withLock {
+        val wrapped = secureEncrypt.encrypt(ClientControlCrypto.bytesToHex(secret), SECURE_ENCRYPT_ALIAS)
+        if (wrapped.isEmpty()) return@withLock false
+        val list = decode()
+        if (list.none { it.clientId == clientId }) return@withLock false
+        write(list.map { if (it.clientId == clientId) it.copy(pendingSecret = wrapped) else it })
+        true
+    }
+
+    /** The client signs with the secret from the key exchange: from now on it is the only one. */
+    suspend fun promotePendingSecret(clientId: String): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { client ->
+            val pending = client.pendingSecret
+            if (client.clientId == clientId && pending != null) client.copy(encryptedSecret = pending, pendingSecret = null) else client
+        }
+        if (updated != list) write(updated)
+    }
+
+    /**
+     * Keep the name of the Nightscout token [clientId] writes with. Called for each verified message, so it writes only
+     * when the name changed (the client was set up with another token).
+     */
+    suspend fun noteSubject(clientId: String, nsSubject: String): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { if (it.clientId == clientId) it.copy(nsSubject = nsSubject) else it }
+        if (updated != list) write(updated)
+    }
+
+    /** The client wrote with its own token [ownToken]: from now on its commands are taken only with that one. */
+    suspend fun bindOwnToken(clientId: String, ownToken: String): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { if (it.clientId == clientId && it.ownToken == null) it.copy(ownToken = ownToken) else it }
+        if (updated != list) write(updated)
+    }
+
     suspend fun delete(clientId: String): Unit = mutex.withLock {
         write(decode().filterNot { it.clientId == clientId })
+    }
+
+    /** Change the role of a client. It takes effect on the next command; the client learns it from the roster. */
+    suspend fun setRole(clientId: String, role: ClientRole): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { if (it.clientId == clientId) it.copy(role = role.name) else it }
+        if (updated != list) write(updated)
     }
 
     /**
@@ -173,7 +226,13 @@ class AuthorizedClientsRepository(
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: secret hex for $clientId is malformed")
             return@withLock null
         }
-        SecretLookup(bytes, entry.counterReceived)
+        // The waiting secret is optional: one that cannot be read only means the exchange has to be done again.
+        val pending = entry.pendingSecret
+            ?.takeIf { secureEncrypt.isValidDataString(it) }
+            ?.let { secureEncrypt.decrypt(it) }
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { runCatching { ClientControlCrypto.hexToBytes(it) }.getOrNull() }
+        SecretLookup(bytes, entry.counterReceived, pending)
     }
 
     private fun decode(raw: String = preferences.get(StringNonKey.NsClientControlAuthorizedClients)): List<AuthorizedClient> =
@@ -184,11 +243,13 @@ class AuthorizedClientsRepository(
     }
 
     data class PendingResult(val entry: AuthorizedClient, val secretHex: String)
-    data class SecretLookup(val secretBytes: ByteArray, val counterReceived: Long) {
+    /** [pendingSecretBytes]: the secret from the client's last key exchange, not used by the client yet. */
+    data class SecretLookup(val secretBytes: ByteArray, val counterReceived: Long, val pendingSecretBytes: ByteArray? = null) {
 
         override fun equals(other: Any?): Boolean =
-            other is SecretLookup && secretBytes.contentEquals(other.secretBytes) && counterReceived == other.counterReceived
+            other is SecretLookup && secretBytes.contentEquals(other.secretBytes) && counterReceived == other.counterReceived &&
+                (pendingSecretBytes?.contentEquals(other.pendingSecretBytes) ?: (other.pendingSecretBytes == null))
 
-        override fun hashCode(): Int = secretBytes.contentHashCode() * 31 + counterReceived.hashCode()
+        override fun hashCode(): Int = (secretBytes.contentHashCode() * 31 + counterReceived.hashCode()) * 31 + (pendingSecretBytes?.contentHashCode() ?: 0)
     }
 }

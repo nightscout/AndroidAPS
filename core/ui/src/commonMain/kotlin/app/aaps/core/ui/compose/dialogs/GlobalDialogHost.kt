@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Root-level dialog host that subscribes to [EventShowDialog] on [rxBus] and
@@ -48,7 +49,11 @@ fun GlobalDialogHost(rxBus: RxBus) {
                 val choice = CompletableDeferred<Boolean?>()
                 try {
                     current = event to choice
-                    val confirmed = choice.await()
+                    // Past closeAt the dialog counts as cancelled. A negative time left times out at once.
+                    val closeAt = (event as? EventShowDialog.OkCancel)?.closeAt
+                    val confirmed =
+                        if (closeAt != null) withTimeoutOrNull(-closeAt.elapsedNow()) { choice.await() } ?: false
+                        else choice.await()
                     current = null
                     when (event) {
                         is EventShowDialog.Ok          -> if (confirmed != false) event.onOk?.invoke()
@@ -56,7 +61,7 @@ fun GlobalDialogHost(rxBus: RxBus) {
                         is EventShowDialog.YesNoCancel -> when (confirmed) {
                             true  -> event.onYes()
                             false -> event.onNo?.invoke()
-                            null  -> Unit
+                            null  -> event.onCancel?.invoke()
                         }
 
                         is EventShowDialog.Error       -> if (confirmed != false) event.onPositive?.invoke() else event.onDismiss?.invoke()

@@ -6,14 +6,42 @@
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti Hipo LT</string>
     <string name="time_offset">Laiko poslinkis</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd. %2$dval.</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$d val.</string>
     <!--    Widget-->
-    <string name="configure">Derinti skaidrumą</string>
+    <string name="configure">Derinti nepermatomumą</string>
     <string name="widget_description">AAPS valdiklis</string>
     <string name="widget_bg_graph_description">AAPS gliukozės grafikas</string>
+    <string name="widget_glucose_circle_description">AAPS gliukozės apskritimas</string>
     <string name="widget_compact_bg_description">AAPS gliukozė + AIO + AAO (kompaktiškas)</string>
     <string name="widget_small_description">Mažas AAPS valdiklis</string>
     <!--     Activities-->
     <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Ambulatorinis gliukozės profilis</string>
+    <string name="agp_glycemic_overview">Glikemijos apžvalga</string>
+    <string name="agp_today">Šiandien</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$d val.</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$d d</string>
+    <string name="agp_no_data">Šiam laikotarpiui gliukozės duomenų nėra.</string>
+    <string name="agp_load_failed">AGP statistika neįkelta. Bandykite dar kartą.</string>
+    <string name="agp_chart_description">Glikemijos procentilių grafikas</string>
+    <string name="agp_tir_chart">Laiko ribose grafikas</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Vidurkis</string>
+    <string name="agp_median">Mediana</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">D.</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
     <string name="cgp_title">Išsamus gliukozės penkiakampis (CGP) — 14 dienų</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -30,7 +58,7 @@
     <string name="cgp_pgr_extremely_high">Ypač didelė rizika</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
-    <string name="age">Laikas</string>
+    <string name="age">Amžius</string>
     <string name="weight_label">Svoris</string>
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
@@ -70,7 +98,6 @@
     <string name="aaps_bolus_icon_label">Bolusas</string>
     <string name="aaps_carbs_icon_label">Angliavandeniai</string>
     <string name="aaps_tbr_icon_label">Laikina bazė</string>
-    <string name="aaps_activity_icon_label">Sportas</string>
     <string name="aaps_note_icon_label">Pastaba</string>
     <string name="aaps_automation_icon_label">Automatizacija</string>
     <string name="aaps_calibration_icon_label">Kalibravimas</string>
@@ -161,7 +188,12 @@
     <string name="duration10h">10 val.</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Trūksta %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (JIF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IA: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IA: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100 % greitai pasisavinamų angliavandenių, be ištęstų angliavandenių</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Angliavandeniai sumažinti %1$d%%, pridėta %2$d%% i-AV, atidėtų %3$d min ir paskirstytų per %4$d val.</string>
     <string name="wizard_include_info">Paspauskite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• KG — kraujo gliukozė (pradžioje ĮJUNGTA)\n• LT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — KG tendencija (įsimenama paskutinė būsena)\n• AIO — aktyvus insulinas organizme (pradžioje ĮJUNGTA)\n• AAO — aktyvūs angliavandeniai organizme (įsimenama paskutinė būsena)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
@@ -173,7 +205,27 @@
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Gliukozės grafikas. Naujausios vertės %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Rodyti valdiklius</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Įspėjimas: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">nėra laikino tikslo, naudojamas profilio tikslas</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">tikslą pakeitė ciklas</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s nuo %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">pokytis %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">senas rodmuo</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Gliukozės grafikas. Naujausios vertės %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Gliukozės prognozės. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s prognozė kyla iki %2$s.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s prognozė krenta iki %2$s.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s prognozė lieka ties %2$s.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">AIO prognozė</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">AAO prognozė</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Įsisavintų angliavandenių prognozė</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">NDM prognozė</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Nulinės bazės prognozė</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">reikalingas veiksmas</string>
+    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">Galima pradėti: %1$d</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d iš %2$d atlikta</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Vykdyti</string>
     <string name="add_new_profile">Pridėti naują profilį</string>
     <string name="edit_label">Redaguoti</string>
@@ -205,7 +257,7 @@
     <string name="format_with_tdd">Laikas: %1$d BPD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Laikas: %1$d BPD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Laikas: %1$d Svoris: %2$.0f kg</string>
-    <string name="dpv_default_profile">Numatytasis profilis</string>
+    <string name="dpv_default_profile">DPV numatytasis profilis</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
@@ -255,6 +307,7 @@
     <string name="permission_directory_picker_error">Nepavyko atidaryti aplanko pasirinkimo lango. Dažniausiai tai susiję su Android arba Family Link.</string>
     <string name="permission_nav_label">Leidimai</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">BPD ciklas</string>
     <string name="cycle_offset">Ciklo poslinkis</string>
     <string name="raw_tdd">Neapdorota BPD</string>
     <string name="cleaned_tdd">Išvalyta BPD</string>
@@ -271,9 +324,11 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Pasirinkti veiksmai</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Pridėti %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Pašalinti %1$s</string>
     <string name="quick_launch_no_dynamic_items">Nėra galimų elementų</string>
     <string name="quick_launch_category_treatment">Terapija</string>
-    <string name="quick_launch_category_care">Terapija</string>
+    <string name="quick_launch_category_care">Terapijos įrašai</string>
     <string name="quick_launch_category_profile">Profilis</string>
     <string name="quick_launch_category_temp_target">Laikino tikslo ruošiniai</string>
     <string name="quick_launch_category_quick_wizard">Greitasis vedlys</string>
@@ -294,15 +349,11 @@
     <string name="widget_rm_disabled">Išjungta</string>
     <string name="widget_rm_suspended">Sustabdyta</string>
     <string name="widget_rm_resume">Atnaujinti</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Kalibravimas neįrašytas: gliukozė kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Bandykite dar kartą, kai gliukozė bus stabili.</string>
-    <string name="cal_reject_no_pair">Kalibravimas neįrašytas: per pastarąsias 10 minučių nerastas nė vienas jutiklio rodmuo.</string>
-    <string name="cal_reject_warmup">Kalibravimas neįrašytas: jutiklis vis dar šyla.</string>
-    <string name="cal_reject_no_session">Kalibravimas neįrašytas: nėra aktyvaus jutiklio. Pirmiausia pažymėkite jutiklio pakeitimą.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Jutiklis vis dar šyla. Kalibruoti bus galima %1$s.</string>
     <string name="cal_precheck_no_session">Nėra aktyvaus jutiklio.</string>
     <string name="cal_precheck_no_pair">Per pastarąsias 10 min negauta jutiklio rodmenų. Patikrinkite jutiklio ryšį.</string>
     <string name="cal_precheck_delta_too_high">Gliukozės kiekis kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Palaukite, kol stabilizuosis.</string>
     <string name="cal_precheck_mark_sensor_change">Pažymėti jutiklio pakeitimą</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>

@@ -29,9 +29,8 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
@@ -59,6 +58,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class DiaconnOverviewEvent {
@@ -212,7 +212,7 @@ class DiaconnOverviewViewModel(
         // Last connection
         val lastConnection = if (lastConnectionTime != 0L) {
             val agoMinutes = ((System.currentTimeMillis() - lastConnectionTime) / 60_000).toInt()
-            dateUtil.timeString(lastConnectionTime) + " (" + rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes) + ")"
+            rh.gs(InterfacesR.string.value_with_detail, dateUtil.timeString(lastConnectionTime), rh.gs(InterfacesR.string.minago, agoMinutes))
         } else ""
 
         // Last bolus
@@ -232,7 +232,7 @@ class DiaconnOverviewViewModel(
         val extendedBolusText = extendedBolusToString()
 
         // Battery
-        val batteryText = battery?.let { "${it}%" }
+        val batteryText = battery?.let { rh.gs(CoreUiR.string.units_format_percent, it) }
 
         // Reservoir
         val reservoirText = ch.insulinAmountString(PumpInsulin(pump.systemRemainInsulin)) // "/ 307 U" removed
@@ -301,30 +301,35 @@ class DiaconnOverviewViewModel(
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = tempBasalText, visible = tempBasalText.isNotEmpty()))
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.extended_bolus_label), value = extendedBolusText, visible = extendedBolusText.isNotEmpty()))
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = reservoirText, level = reservoirLevel))
-            add(PumpInfoRow(label = rh.gs(R.string.basal_step) + " / " + rh.gs(R.string.bolus_step), value = "${ch.fromPump(PumpInsulin(pump.basalStep))} / ${ch.fromPump(PumpInsulin(pump.bolusStep))}"))
+            add(
+                PumpInfoRow(
+                    label = rh.gs(InterfacesR.string.values_with_slash, rh.gs(R.string.basal_step), rh.gs(R.string.bolus_step)),
+                    value = rh.gs(InterfacesR.string.values_with_slash, ch.fromPump(PumpInsulin(pump.basalStep)).toString(), ch.fromPump(PumpInsulin(pump.bolusStep)).toString())
+                )
+            )
 
-            // Firmware
-            val firmware = rh.gs(R.string.diaconn_g8_pump) +
-                "\nVersion: ${pump.majorVersion}.${pump.minorVersion}" +
-                "\nCountry: ${pump.country}" +
-                "\nProductType: ${pump.productType}" +
-                "\nManufacture: ${pump.makeYear}.${pump.makeMonth}.${pump.makeDay}"
+            // Firmware. The field names are technical and were never translated.
+            val firmware = listOf(
+                rh.gs(R.string.diaconn_g8_pump),
+                rh.gs(InterfacesR.string.confirmation_line, "Version", "${pump.majorVersion}.${pump.minorVersion}"),
+                rh.gs(InterfacesR.string.confirmation_line, "Country", pump.country.toString()),
+                rh.gs(InterfacesR.string.confirmation_line, "ProductType", pump.productType.toString()),
+                rh.gs(InterfacesR.string.confirmation_line, "Manufacture", "${pump.makeYear}.${pump.makeMonth}.${pump.makeDay}")
+            ).joinToString("\n")
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.firmware), value = firmware))
         }
 
         // Actions
         val primaryActions = listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onRefreshClick() }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.AutoMirrored.Filled.List,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onHistoryClick() }
             )
@@ -332,10 +337,9 @@ class DiaconnOverviewViewModel(
 
         val managementActions = buildList {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.diaconng8_pump_settings),
                     icon = Icons.Filled.Settings,
-                    category = ActionCategory.MANAGEMENT,
                     visible = isInitialized,
                     onClick = { onUserSettingsClick() }
                 )
@@ -343,19 +347,17 @@ class DiaconnOverviewViewModel(
 
             if (isConfigured) {
                 add(
-                    PumpAction(
+                    ScreenAction(
                         label = rh.gs(CoreUiR.string.pump_unpair),
                         icon = Icons.Filled.Bluetooth,
-                        category = ActionCategory.MANAGEMENT,
                         onClick = { onUnpairClick() }
                     )
                 )
             } else {
                 add(
-                    PumpAction(
+                    ScreenAction(
                         label = rh.gs(CoreUiR.string.pump_pair),
                         icon = Icons.Filled.Bluetooth,
-                        category = ActionCategory.MANAGEMENT,
                         onClick = { onPairClick() }
                     )
                 )

@@ -1,6 +1,8 @@
 package app.aaps.core.nssdk.interfaces
 
 import app.aaps.core.nssdk.localmodel.Status
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthRole
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthSubject
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
@@ -38,7 +40,8 @@ interface NSAndroidClient {
     suspend fun getTreatmentsModifiedSince(from: Long, limit: Int): ReadResponse<List<NSTreatment>>
 
     suspend fun createDeviceStatus(nsDeviceStatus: NSDeviceStatus): CreateUpdateResponse
-    suspend fun getDeviceStatusModifiedSince(from: Long): List<NSDeviceStatus>
+    /** Device statuses the server stored or changed after [from], oldest change first, at most [limit] of them */
+    suspend fun getDeviceStatusModifiedSince(from: Long, limit: Int): List<NSDeviceStatus>
 
     suspend fun createProfileStore(remoteProfileStore: JsonObject): CreateUpdateResponse
     suspend fun getProfileModifiedSince(from: Long): ReadResponse<List<JsonObject>>
@@ -71,4 +74,28 @@ interface NSAndroidClient {
 
     /** Hard delete via NS `?permanent=true` — removes the doc instead of soft-deleting (tombstoning) it. */
     suspend fun deleteSettingsPermanent(identifier: String): CreateUpdateResponse
+
+    // Tokens and roles (`/api/v2/authorization`), what the Nightscout admin tools page uses. Every call needs an admin
+    // token and throws [app.aaps.core.nssdk.exceptions.NotAllowedNightscoutException] without one.
+
+    /** All roles, the built-in ones (no id) included. */
+    suspend fun getAuthRoles(): List<NSAuthRole>
+
+    /** Stores a new role and returns it with its id. Not repeated on a network error, so it cannot create two. */
+    suspend fun createAuthRole(role: NSAuthRole): NSAuthRole
+
+    /** Replaces the stored role with the same id as a whole. */
+    suspend fun updateAuthRole(role: NSAuthRole)
+
+    /** All subjects, each with its access token. */
+    suspend fun getAuthSubjects(): List<NSAuthSubject>
+
+    /**
+     * Stores a new subject and returns it with its id, but without the token (read it with [getAuthSubjects]). Not
+     * repeated on a network error, so it cannot create two.
+     */
+    suspend fun createAuthSubject(subject: NSAuthSubject): NSAuthSubject
+
+    /** Deletes the subject: its token stops working at once. */
+    suspend fun deleteAuthSubject(id: String)
 }

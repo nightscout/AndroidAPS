@@ -47,7 +47,6 @@ class DateUtilImplCommonTest {
         override fun gs(ref: TextRef): String = name(ref)
         override fun gs(ref: TextRef, vararg args: Any?): String = name(ref) + args.joinToString(prefix = "(", postfix = ")")
         override fun gsNotLocalised(ref: TextRef): String = name(ref)
-        override fun shortTextMode(): Boolean = false
         private fun name(ref: TextRef) = when (ref) {
             is TextRef.Named      -> ref.name
             is TextRef.Literal    -> ref.text

@@ -21,9 +21,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
@@ -89,17 +88,18 @@ class DanaRSOverviewViewModel(
         if (!isConfigured) return null
         val address = preferences.get(DanaStringNonKey.MacAddress)
         if (address.isBlank() || bleTransport.adapter.isDeviceBonded(address)) return null
-        return StatusBanner(rh.gs(app.aaps.core.ui.R.string.ble_not_supported_or_not_paired), StatusLevel.CRITICAL)
+        // The pump has an address but is not bonded, so this is only about pairing. It used to say
+        // "BLE not supported or device not paired", although BLE support is not tested here at all.
+        return StatusBanner(rh.gs(R.string.pairfirst), StatusLevel.CRITICAL)
     }
 
-    override fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<PumpAction> = buildList {
+    override fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<ScreenAction> = buildList {
         // User Settings (only for RS pumps with non-legacy firmware)
         if (pump.hwModel != 1 && pump.protocol != 0x00) {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.danar_user_options),
                     icon = Icons.Filled.Settings,
-                    category = ActionCategory.MANAGEMENT,
                     visible = isInitialized,
                     onClick = { onUserSettingsClick() }
                 )
@@ -109,19 +109,17 @@ class DanaRSOverviewViewModel(
         // Pair / Unpair
         if (isConfigured) {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
                     icon = Icons.Filled.Bluetooth,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onUnpairClick() }
                 )
             )
         } else {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(app.aaps.core.ui.R.string.pairing),
                     icon = Icons.Filled.Bluetooth,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onPairClick() }
                 )
             )

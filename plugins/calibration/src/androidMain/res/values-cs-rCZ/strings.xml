@@ -21,7 +21,5 @@
     <string name="cal_entries_header">Položky z prstu (%1$d)</string>
     <string name="cal_no_entries">Zatím žádné hodnoty z prstu.</string>
     <string name="cal_entry_pair">Hodnota z prstu %1$s → senzor %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">Odstranit záznam?</string>
-    <string name="cal_remove_entry_message">Toto zruší platnost záznamu. Přizpůsobení bude přepočítáno.</string>
     <string name="cal_chart_entry_readout">Položka %1$d/%2$d · %3$s · senzor %4$s → Gly %5$s</string>
 </resources>

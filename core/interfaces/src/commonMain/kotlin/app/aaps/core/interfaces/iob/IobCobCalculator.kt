@@ -14,6 +14,17 @@ interface IobCobCalculator {
 
     var ads: AutosensDataStore
 
+    /**
+     * Loop results with times from [oldest] on were stored. A client calls this for the master's results
+     * that came with the device statuses.
+     *
+     * Each result changes the ISF for carbs from its own time on (`IsfForCarbs`). A new result is newer than
+     * every calculated bucket, and the next run reads it anyway. One that came late - after a newer BG was
+     * calculated, or with the 48 hours a client loads after a start - leaves the buckets from its time on
+     * calculated without it, so the calculation starts again from there.
+     */
+    suspend fun apsResultsStored(oldest: Long)
+
     suspend fun getMealDataWithWaitingForCalculationFinish(): MealData
     suspend fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
 

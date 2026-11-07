@@ -32,7 +32,6 @@ class PrefsFormatCodecTest {
         override fun gs(ref: TextRef): String = "translation"
         override fun gs(ref: TextRef, vararg args: Any?): String = "translation"
         override fun gsNotLocalised(ref: TextRef): String = "translation"
-        override fun shortTextMode(): Boolean = false
     }
 
     /**

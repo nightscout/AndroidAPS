@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.openhumans.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -21,7 +20,6 @@ import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
-import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.sync.di.AuthUrl
 import app.aaps.plugins.sync.openhumans.compose.OHLoginScreen
 import dev.zacsweers.metro.Inject
@@ -43,10 +41,6 @@ class OHLoginActivity : MetroAppCompatActivity() {
 
     private val viewModel by viewModels<OHLoginViewModel> {
         (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

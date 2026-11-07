@@ -152,7 +152,7 @@ private fun BolusConfirmScreen(insulin: Double, onConfirm: () -> Unit) {
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "${fmt.format(insulin)} ${stringResource(R.string.insulin_unit_short)}",
+            text = stringResource(R.string.wizard_insulin_format, fmt.format(insulin)),
             color = InsulinBlue,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold

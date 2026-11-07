@@ -74,14 +74,20 @@ class NotificationReaderPlugin(
     private fun loadPackageConfig(): PackageConfig {
         return try {
             val stored = preferences.get(StringNonKey.NotificationReaderPackages)
-            val json = if (stored.isNotEmpty()) {
-                stored
-            } else {
-                val asset = context.assets.open(PACKAGE_CONFIG_ASSET).bufferedReader().use { it.readText() }
-                preferences.put(StringNonKey.NotificationReaderPackages, asset)
-                asset
+            val storedConfig = stored.takeIf { it.isNotEmpty() }?.let { PackageConfig.fromJson(it) }
+            val asset = try {
+                context.assets.open(PACKAGE_CONFIG_ASSET).bufferedReader().use { it.readText() }
+            } catch (e: Exception) {
+                if (storedConfig != null) return storedConfig
+                throw e
             }
-            PackageConfig.fromJson(json)
+            val assetConfig = PackageConfig.fromJson(asset)
+            if (storedConfig != null && storedConfig.version >= assetConfig.version) {
+                storedConfig
+            } else {
+                preferences.put(StringNonKey.NotificationReaderPackages, asset)
+                assetConfig
+            }
         } catch (e: Exception) {
             aapsLogger.error(LTag.BGSOURCE, "Failed to load package config", e)
             PackageConfig(0, emptySet(), emptyMap(), emptyMap())

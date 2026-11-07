@@ -468,7 +468,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
         }
         if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
-        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
+        rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.processinghistory), status)))
     }
 
     override val friendlyName: String = "APS_HISTORY_EVENTS"

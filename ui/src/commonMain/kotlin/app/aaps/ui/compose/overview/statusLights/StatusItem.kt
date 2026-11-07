@@ -11,6 +11,7 @@ import app.aaps.core.ui.compose.StatusLevel
  */
 data class StatusItem(
     val label: String,
+    /** "3d4h", or "4h" while there is no full day yet. Always short, so every screen size reads the same. */
     val age: String,
     val ageStatus: StatusLevel = StatusLevel.UNSPECIFIED,
     val agePercent: Float = -1f, // 0-1 progress toward critical threshold

@@ -40,7 +40,10 @@
     <string name="setupwizard_client_control_info">Koble til klientenheter slik at de kan sende signerte kommandoer til denne hovedenheten via Nightscout. Dette er den nye anbefalte måten å fjernstyre AAPS på.</string>
     <string name="setupwizard_ns_receive_info">Mottak av behandlinger og data direkte fra Nightscout (en mindre sikker metode) er nå deaktivert som standard. Åpne innstillingene nedenfor bare hvis du fortsatt har behov for dette. Dette er nødvendig hvis du ønsker å registrere data via Nightscout eller tredjepartsapper.</string>
     <string name="setupwizard_open_ns_receive_settings">Mottak av Nightscout-data</string>
-    <string name="setupwizard_pair_with_master_info">Koble denne klienten til hovedenheten din med AAPS slik at den kan sende kommandoer via en sikker forbindelse.</string>
+    <string name="setupwizard_pair_with_master_info">Koble denne klienten sammen med AAPS-hovedenheten for å kunne sende kommandoer via en sikker kanal. Når sammenkoblingen er fullført, er oppsettet ferdig.</string>
+    <string name="setupwizard_setup_from_master_title">Sett opp fra hovedenheten</string>
+    <string name="setupwizard_setup_from_master_info">Åpne Autoriserte klienter på hovedenheten, og legg til denne telefonen ved hjelp av en QR-kode. Skanningen konfigurerer Nightscout med et eget token og kan også sammenkoble telefonen. Når koden er skannet, er oppsettet ferdig. Hvis du ikke har en QR-kode, hopper du over dette trinnet og konfigurerer Nightscout manuelt.</string>
+    <string name="setupwizard_scan_master_qr">Skann QR-koden</string>
     <string name="setupwizard_pairing_ws_warning">WebSocket-tilkobling til Nightscout er nødvendig for sammenkobling. Gå tilbake til forrige trinn og aktiver den først.</string>
     <string name="setupwizard_pairing_status_master">Tilkoblede klienter: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Ingen klienter er koblet til ennå</string>

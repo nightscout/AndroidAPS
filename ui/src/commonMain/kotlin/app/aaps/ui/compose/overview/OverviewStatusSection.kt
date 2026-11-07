@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +45,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -87,14 +87,10 @@ fun OverviewStatusSection(
     var showSettingsSheet by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    ElevatedCard(
+    AapsCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+            .padding(horizontal = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -132,17 +128,14 @@ fun OverviewStatusSection(
                         modifier = Modifier.clickable { onExpandedChange(false) }
                     )
                 } else {
-                    FlowRow(
+                    // The ages are short, so all of them fit on one line on most screens. The line
+                    // wraps where they do not.
+                    CompactStatusItems(
+                        items = compactItems,
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { onExpandedChange(true) },
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        compactItems.forEach { item ->
-                            CompactStatusItem(item = item)
-                        }
-                    }
+                            .clickable { onExpandedChange(true) }
+                    )
                     Icon(
                         imageVector = Icons.Filled.ExpandMore,
                         contentDescription = stringResource(CoreUiStrings.expand),
@@ -158,21 +151,23 @@ fun OverviewStatusSection(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Each button also needs this phone's role to allow what it opens (the master would refuse it).
+                    val role = LocalClientRole.current
                     StatusSectionContent(
                         sensorStatus = sensorStatus,
                         insulinStatus = insulinStatus,
                         cannulaStatus = cannulaStatus,
                         batteryStatus = batteryStatus,
-                        onSensorInsertClick = if (commandsAllowed) {
+                        onSensorInsertClick = if (commandsAllowed && role.allows(ElementType.SENSOR_INSERT.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.SENSOR_INSERT)) }
                         } else null,
-                        onFillClick = if (showFill && commandsAllowed) {
+                        onFillClick = if (showFill && commandsAllowed && role.allows(ElementType.CANNULA_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.CANNULA_CHANGE)) }
                         } else null,
-                        onInsulinChangeClick = if (showFill && commandsAllowed) {
+                        onInsulinChangeClick = if (showFill && commandsAllowed && role.allows(ElementType.FILL.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.FILL)) }
                         } else null,
-                        onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed) {
+                        onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed && role.allows(ElementType.BATTERY_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.BATTERY_CHANGE)) }
                         } else null
                     )
@@ -227,6 +222,19 @@ internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
 }
 
 @Composable
+private fun CompactStatusItems(items: List<StatusItem>, modifier: Modifier = Modifier) {
+    FlowRow(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items.forEach { item ->
+            CompactStatusItem(item = item)
+        }
+    }
+}
+
+@Composable
 private fun CompactStatusItem(item: StatusItem) {
     val showAge = item.compactAge
     val showLevel = item.compactLevel && item.level != null
@@ -254,7 +262,7 @@ private fun CompactStatusItem(item: StatusItem) {
         verticalAlignment = Alignment.CenterVertically,
         // Merged so the icon's name, the values and the severity are one item. The description adds
         // only the severity, because on a merging node it sits before the children rather than
-        // replacing them: "Critical, Cannula, 3d 50%".
+        // replacing them: "Critical, Cannula, 3d5h 50%".
         modifier = if (severity != null) {
             Modifier.semantics(mergeDescendants = true) { contentDescription = severity }
         } else {

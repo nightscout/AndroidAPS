@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">Communication réussie</string>
     <string name="patch_communication_succeed_message">Connecté avec le Patch.</string>
     <string name="patch_cancel_pairing">Annuler l\'appairage</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">Lors de la suspension, le Bolus &amp; Basal Temp actuellement délivré sera annulé.\n\nTaux : %1$s U/h\nTemps restant : %2$s\n&amp; Insuline restante : %3$.2f U</string>
     <string name="insulin_suspend_msg2">Lors de la suspension, le Bolus actuellement distribué sera annulé. \n\nInsuline restante : %1$.2f U</string>
     <string name="insulin_suspend_msg3">Lors de la suspension, le Basal Temp actuellement distribué sera annulé.\n\nTaux : %1$s U/h\nTemps restant : %2$s</string>

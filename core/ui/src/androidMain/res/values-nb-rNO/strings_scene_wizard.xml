@@ -66,16 +66,14 @@
     <string name="scene_wizard_finish">Fullfør</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Oppfølgingsscene</string>
-    <string name="scene_wizard_chain_info">Du kan valgfritt koble til en annen scene som aktiveres automatisk når denne utløper. Du kan også hoppe direkte til den dersom scenen avsluttes tidligere. Oppfølgingsscenen kjører kun dersom målet er aktivert og pumpen er tilgjengelig, ellers får du et varsel.</string>
+    <string name="scene_wizard_chain_info">Du kan eventuelt kjede sammen en annen scene som aktiveres automatisk når denne utløper. Du kan også gå direkte til den når du avslutter scenen før tiden. Oppfølgingen starter bare hvis målscenen er aktivert og pumpen er tilgjengelig. Hvis ikke, viser banneret for den avsluttede scenen hvorfor den ikke startet.</string>
     <string name="scene_chain_none">Ingen</string>
     <string name="scene_skip_to_format">Hopp til %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Koblet scene ble slettet</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Scenen \"%1$s\" er avsluttet</string>
-    <string name="scene_chained_format">Scene koblet: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s avsluttet — oppfølging hoppet over: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Oppfølgingen startet ikke: %1$s</string>
     <string name="scene_chain_skipped_deleted">målscene ble slettet</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" er deaktivert</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d av %4$d handlinger mislyktes</string>

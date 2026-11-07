@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.rx.events
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.ui.ConfirmationLine
+import kotlin.time.TimeMark
 
 /**
  * Request a modal dialog from anywhere in the app. Consumed by the root
@@ -33,6 +34,10 @@ sealed class EventShowDialog : Event() {
      *
      * [confirmationLines], when set, take precedence over [message]: the host tints them with theme
      * colors at render time (so the producing code stays theme-blind). Pass these for action confirmations.
+     *
+     * [closeAt], when set, closes the dialog as if Cancel was pressed once that time has passed, also when
+     * it is already past by the time the dialog would show. For a bolus confirmation whose dose is only good
+     * for a while (see [app.aaps.core.interfaces.queue.SmbPause]).
      */
     data class OkCancel(
         val title: String?,
@@ -41,7 +46,8 @@ sealed class EventShowDialog : Event() {
         val icon: ImageVector? = null,
         val confirmationLines: List<ConfirmationLine>? = null,
         val onOk: suspend () -> Unit,
-        val onCancel: (suspend () -> Unit)? = null
+        val onCancel: (suspend () -> Unit)? = null,
+        val closeAt: TimeMark? = null
     ) : EventShowDialog()
 
     /** Three-option dialog: Yes / No / Cancel. */
@@ -49,7 +55,8 @@ sealed class EventShowDialog : Event() {
         val title: String,
         val message: String,
         val onYes: () -> Unit,
-        val onNo: (() -> Unit)? = null
+        val onNo: (() -> Unit)? = null,
+        val onCancel: (() -> Unit)? = null
     ) : EventShowDialog()
 
     /** Error dialog with warning icon + Dismiss + optional positive button. */

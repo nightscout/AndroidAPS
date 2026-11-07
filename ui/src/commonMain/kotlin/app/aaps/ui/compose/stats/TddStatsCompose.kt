@@ -97,14 +97,8 @@ fun TddStatsCompose(
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            Text(
-                text = stringResource(CoreUiStrings.average),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
             TddTableDataRow(
-                date = "",
+                date = stringResource(CoreUiStrings.average),
                 basal = decimalFormatter.to2Decimal(avg.data.basalAmount),
                 bolus = decimalFormatter.to2Decimal(avg.data.bolusAmount),
                 total = decimalFormatter.to2Decimal(avg.data.totalAmount),
@@ -118,14 +112,8 @@ fun TddStatsCompose(
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            Text(
-                text = stringResource(InterfacesStrings.today),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
             TddTableDataRow(
-                date = "",
+                date = stringResource(InterfacesStrings.today),
                 basal = decimalFormatter.to2Decimal(today.basalAmount),
                 bolus = decimalFormatter.to2Decimal(today.bolusAmount),
                 total = decimalFormatter.to2Decimal(today.totalAmount),
@@ -192,7 +180,7 @@ fun TddTableHeaderRow() {
  * Composable that displays a single data row in the TDD statistics table.
  * Shows insulin and carb values for a specific day or summary row (average/today).
  *
- * @param date The date string to display (empty for average/today rows)
+ * @param date The date string to display, or the label of a summary row (average/today)
  * @param basal Basal insulin amount formatted as string (e.g., "12.50")
  * @param bolus Bolus insulin amount formatted as string (e.g., "18.30")
  * @param total Total daily insulin formatted as string (e.g., "30.80")

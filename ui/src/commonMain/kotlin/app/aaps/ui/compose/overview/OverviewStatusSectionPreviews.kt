@@ -27,7 +27,7 @@ private val previewStatusItems = Triple(
     ),
     StatusItem(
         label = "Sensor",
-        age = "3d",
+        age = "3d5h",
         ageStatus = StatusLevel.WARNING,
         level = "82%",
         levelStatus = StatusLevel.NORMAL,
@@ -37,7 +37,7 @@ private val previewStatusItems = Triple(
 
 private val previewBatteryItem = StatusItem(
     label = "Battery",
-    age = "2d",
+    age = "2d7h",
     ageStatus = StatusLevel.NORMAL,
     level = "68%",
     levelStatus = StatusLevel.NORMAL,

@@ -121,19 +121,17 @@ class StepCountListener(
         send(System.currentTimeMillis())
     }
 
-    private fun getStepsInLast5Min(): Int {
-        val now = currentTimeIn5Min() - 1
-        return if (stepsMap.containsKey(now)) stepsMap.getValue(now) else 0
-    }
+    // 5, 10 and 15 minutes count the last 1, 2 and 3 finished 5 minute blocks. Before, 10 and 15 read only
+    // the one block 10 or 15 minutes ago, so "10 minutes" was smaller than "5 minutes" while walking.
+    private fun getStepsInLast5Min(): Int = getStepsInFinishedBlocks(1)
 
-    private fun getStepsInLast10Min(): Int {
-        val tenMinAgo = currentTimeIn5Min() - 2
-        return if (stepsMap.containsKey(tenMinAgo)) stepsMap.getValue(tenMinAgo) else 0
-    }
+    private fun getStepsInLast10Min(): Int = getStepsInFinishedBlocks(2)
 
-    private fun getStepsInLast15Min(): Int {
-        val fifteenMinAgo = currentTimeIn5Min() - 3
-        return if (stepsMap.containsKey(fifteenMinAgo)) stepsMap.getValue(fifteenMinAgo) else 0
+    private fun getStepsInLast15Min(): Int = getStepsInFinishedBlocks(3)
+
+    private fun getStepsInFinishedBlocks(count: Int): Int {
+        val lastFinished = currentTimeIn5Min() - 1
+        return (lastFinished - count + 1..lastFinished).sumOf { stepsMap[it] ?: 0 }
     }
 
     private fun getStepsInLast30Min(): Int {
@@ -166,64 +164,12 @@ class StepCountListener(
 
         val device = (Build.MANUFACTURER ?: "unknown") + " " + (Build.MODEL ?: "unknown")
 
-        val stepsList = listOf(
+        // Every row carries all six windows. There is still one row per window, because a phone with an
+        // older AAPS looks up the row whose duration matches the window of its automation rule. Once
+        // those phones are gone, one row is enough.
+        val stepsList = WINDOWS_MINUTES.map { minutes ->
             EventData.ActionStepsRate(
-                duration = 5 * 60 * 1000,
-                timestamp = timestampMillis,
-                steps5min = stepsInLast5Minutes,
-                steps10min = 0,
-                steps15min = 0,
-                steps30min = 0,
-                steps60min = 0,
-                steps180min = 0,
-                device = device
-            ),
-            EventData.ActionStepsRate(
-                duration = 10 * 60 * 1000,
-                timestamp = timestampMillis,
-                steps5min = stepsInLast5Minutes,
-                steps10min = stepsInLast10Minutes,
-                steps15min = 0,
-                steps30min = 0,
-                steps60min = 0,
-                steps180min = 0,
-                device = device
-            ),
-            EventData.ActionStepsRate(
-                duration = 15 * 60 * 1000,
-                timestamp = timestampMillis,
-                steps5min = stepsInLast5Minutes,
-                steps10min = stepsInLast10Minutes,
-                steps15min = stepsInLast15Minutes,
-                steps30min = 0,
-                steps60min = 0,
-                steps180min = 0,
-                device = device
-            ),
-            EventData.ActionStepsRate(
-                duration = 30 * 60 * 1000,
-                timestamp = timestampMillis,
-                steps5min = stepsInLast5Minutes,
-                steps10min = stepsInLast10Minutes,
-                steps15min = stepsInLast15Minutes,
-                steps30min = stepsInLast30Minutes,
-                steps60min = 0,
-                steps180min = 0,
-                device = device
-            ),
-            EventData.ActionStepsRate(
-                duration = 60 * 60 * 1000,
-                timestamp = timestampMillis,
-                steps5min = stepsInLast5Minutes,
-                steps10min = stepsInLast10Minutes,
-                steps15min = stepsInLast15Minutes,
-                steps30min = stepsInLast30Minutes,
-                steps60min = stepsInLast60Minutes,
-                steps180min = stepsInLast180Minutes,
-                device = device
-            ),
-            EventData.ActionStepsRate(
-                duration = 180 * 60 * 1000,
+                duration = minutes * 60 * 1000L,
                 timestamp = timestampMillis,
                 steps5min = stepsInLast5Minutes,
                 steps10min = stepsInLast10Minutes,
@@ -233,7 +179,7 @@ class StepCountListener(
                 steps180min = stepsInLast180Minutes,
                 device = device
             )
-        )
+        }
         sendStepsRate(stepsList)
     }
 
@@ -249,4 +195,8 @@ class StepCountListener(
         return stepCount
     }
 
+    private companion object {
+
+        val WINDOWS_MINUTES = listOf(5, 10, 15, 30, 60, 180)
+    }
 }

@@ -23,7 +23,5 @@
     <string name="cal_entries_header">Fingerstick entries (%1$d)</string>
     <string name="cal_no_entries">No fingerstick entries yet.</string>
     <string name="cal_entry_pair">Fingerstick %1$s → sensor %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">Remove entry?</string>
-    <string name="cal_remove_entry_message">This will invalidate the entry. The fit will be recalculated.</string>
     <string name="cal_chart_entry_readout">Entry %1$d/%2$d · %3$s · sensor %4$s → BG %5$s</string>
 </resources>

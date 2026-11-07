@@ -27,14 +27,15 @@ class DanaRsPacketHistoryDailyTest : DanaRSTestBase() {
         try {
             val havana = DateTimeZone.forID("America/Havana")
             DateTimeZone.setDefault(havana)
-            // Cuba moves the clock from 00:00 to 01:00 on the second Sunday of March
-            assertThat(havana.isLocalDateTimeGap(LocalDateTime(2027, 3, 14, 0, 0))).isTrue()
+            // Cuba moved the clock from 00:00 to 01:00 on 2026-03-08. A past date on purpose: the rules for
+            // future years change with the time zone data (joda-time 2.15.1 dropped the change of March 2027).
+            assertThat(havana.isLocalDateTimeGap(LocalDateTime(2026, 3, 8, 0, 0))).isTrue()
             val packet = DanaRSPacketHistoryDaily(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump).with(0)
 
-            // Code 3, 2027-03-14, daily basal and bolus 0
-            packet.handleMessage(byteArrayOf(0xB2.toByte(), 0x14, 0x03, 27, 3, 14, 0, 0, 0, 0, 0, 0))
+            // Code 3, 2026-03-08, daily basal and bolus 0
+            packet.handleMessage(byteArrayOf(0xB2.toByte(), 0x14, 0x03, 26, 3, 8, 0, 0, 0, 0, 0, 0))
 
-            assertThat(packet.danaRHistoryRecord.timestamp).isEqualTo(DateTime(2027, 3, 14, 1, 0, 0, havana).millis)
+            assertThat(packet.danaRHistoryRecord.timestamp).isEqualTo(DateTime(2026, 3, 8, 1, 0, 0, havana).millis)
         } finally {
             DateTimeZone.setDefault(defaultZone)
         }

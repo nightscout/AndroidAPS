@@ -61,7 +61,6 @@
     <string name="patch_communication_succeed">Kommunikation erfolgreich</string>
     <string name="patch_communication_succeed_message">Verbunden mit dem Patch.</string>
     <string name="patch_cancel_pairing">Kopplung abbrechen</string>
-    <string name="all_dose_unit">&#160;IE</string>
     <string name="insulin_suspend_msg1">Nach der Suspendierung werden der derzeit ausgelieferte Bolus &amp; Temp-Basal abgebrochen. \n\nRate : %1$s U/hr\nVerbleibende Zeit : %2$s\n&amp; Insulin zu gehen: %3$.2f IE</string>
     <string name="insulin_suspend_msg2">Nach der Suspendierung wird der derzeit lieferbare Bolus abgebrochen. \n\nInsulin zum gehen: %1$.2f IE</string>
     <string name="insulin_suspend_msg3">Nach der Suspendierung wird der derzeit ausgelieferte Temp-Basal abgebrochen. \nRate : %1$s U/hr\nVerbleibende Zeit : %2$s\n Insulin zu gehen:  IE</string>

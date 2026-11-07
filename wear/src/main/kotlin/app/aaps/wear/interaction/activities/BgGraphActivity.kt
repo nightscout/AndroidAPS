@@ -19,9 +19,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +49,7 @@ import app.aaps.wear.interaction.actions.CarbsOrange
 import app.aaps.wear.interaction.actions.InsulinBlue
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.utils.DisplayFormat
+import kotlinx.coroutines.delay
 import dev.zacsweers.metro.Inject
 
 class BgGraphActivity : AppCompatActivity() {
@@ -72,6 +75,15 @@ class BgGraphActivity : AppCompatActivity() {
 private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat: DisplayFormat) {
     val data by repository.complicationData.collectAsState(initial = ComplicationData())
     var windowIdx by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+    // The graph's clock, a minute at a time, so the minutes left of the eat reminder stay right between data updates
+    var clock by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(60_000L)
+            clock = System.currentTimeMillis()
+        }
+    }
     val historyHours = historyHoursCycle[windowIdx]
 
     val bgData = data.bgData
@@ -185,7 +197,7 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                     .weight(1f)
                     .clickable { windowIdx = (windowIdx + 1) % historyHoursCycle.size }
             ) {
-                renderBgGraph(data, historyHours)
+                renderBgGraph(data, historyHours, now = clock, minutesText = { context.getString(R.string.action_minutes_format, it) })
             }
         }
     }

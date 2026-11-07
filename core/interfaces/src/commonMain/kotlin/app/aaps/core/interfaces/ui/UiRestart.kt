@@ -20,15 +20,15 @@ import kotlinx.coroutines.flow.asStateFlow
  * - **After an import.** The settings are applied to the running app, but a screen composed before
  *   that still shows the values it read. Without a rebuild the import looks as though it failed.
  * - **After a language change.** `TextRefValueRegistry` is plain state, so Compose has no idea the
- *   text changed. Android instead reloads a `Context` and recreates the activity, because there the
- *   locale lives in `Resources`.
+ *   text changed. On Android the system applies the app's language itself (Android 13 and newer), and
+ *   `MainApp` asks for a rebuild once it has: text built before, in caches and view models, is still
+ *   in the old language.
  *
  * ## What each platform does with it
  *
- * Android recreates the activity, which is the only thing that re-runs `attachBaseContext` and so
- * the only thing that can change the locale `Resources` resolves against. iOS and the desktop key
- * the root on [signal], which rebuilds the composition without a process restart - and on iOS that
- * matters, because it may not restart at all.
+ * Android recreates the activity and clears its view models. iOS and the desktop key the root on
+ * [signal], which rebuilds the composition without a process restart - and on iOS that matters,
+ * because it may not restart at all.
  *
  * A counter rather than an event, so a shell that was not collecting at the moment of the request
  * still sees a value it has not handled yet.

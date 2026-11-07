@@ -1,8 +1,13 @@
 package app.aaps.core.keys.interfaces
 
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /** Shared empty flow backing the [Preferences.syncedLocalChanges] default (one instance, never emits). */
 private object EmptySyncedChanges {
@@ -63,6 +68,22 @@ interface Preferences {
      * Are we in currently in SimpleMode ?
      */
     val simpleMode: Boolean
+
+    /**
+     * Is hardened mode on?
+     *
+     * In hardened mode the master takes changes only from paired clients, through the signed
+     * client-control channel, and never directly from Nightscout. Every key with
+     * [BooleanPreferenceKey.defaultedByHardenedMode] then uses its default (upload on, accept off,
+     * WebSocket on).
+     *
+     * It is the switch [BooleanKey.HardenedMode], read with [get], so simple mode turns it on.
+     * A client has the master's value of the switch (it is synced master → client, like simple mode),
+     * so both phones get the same answer. On a client it counts only while the client is paired: an
+     * unpaired client is a viewer and keeps its own settings.
+     */
+    val hardenedMode: Boolean
+        get() = get(BooleanKey.HardenedMode) && (!nsclientMode || get(StringNonKey.NsClientControlClientId).isNotEmpty())
 
     /**
      * Are we in currently in APS build ?
@@ -653,3 +674,30 @@ interface Preferences {
     fun reloadFromStore()
 
 }
+
+/**
+ * [Preferences.hardenedMode] now, and again after each change of what it is made of: the switch,
+ * simple mode (it forces the switch on) and, on a client, the pairing.
+ */
+fun Preferences.observeHardenedMode(): Flow<Boolean> =
+    combine(
+        observe(BooleanKey.HardenedMode),
+        observe(BooleanKey.GeneralSimpleMode),
+        observe(StringNonKey.NsClientControlClientId)
+    ) { _, _, _ -> hardenedMode }
+        .distinctUntilChanged()
+
+/**
+ * The value [Preferences.get] returns for [key], now and again after each change that can move it:
+ * the stored value, simple mode and hardened mode.
+ *
+ * `observe(key)` emits only the stored value. It stays quiet when simple mode or hardened mode
+ * forces the key to its default, so a listener that has to follow the value in use needs this.
+ */
+fun Preferences.observeEffective(key: BooleanPreferenceKey): Flow<Boolean> =
+    combine(
+        observe(key),
+        observe(BooleanKey.GeneralSimpleMode),
+        observeHardenedMode()
+    ) { _, _, _ -> get(key) }
+        .distinctUntilChanged()

@@ -79,7 +79,7 @@ class DetailedBolusInfoCopyTest {
     // `id` is `Clock.System.now().toEpochMilliseconds()`, so an instance and its copy are built in the
     // same millisecond and get the SAME number - a fresh id is indistinguishable from a copied one.
     // Worth knowing on its own: two DetailedBolusInfo created in one millisecond share an id, which is
-    // the same collision that WizardBolusExecutorImpl.nextPendingId() exists to avoid for parked doses.
+    // the same collision that MasterActionExecutorImpl.nextPendingId() exists to avoid for parked doses.
 
     @Test
     fun createBolus_usesBolusTimestampWhenSet_afterACopy() {

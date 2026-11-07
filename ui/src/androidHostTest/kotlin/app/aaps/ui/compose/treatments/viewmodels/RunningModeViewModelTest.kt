@@ -1,6 +1,11 @@
 package app.aaps.ui.compose.treatments.viewmodels
 
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -12,13 +17,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -28,6 +39,8 @@ internal class RunningModeViewModelTest {
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var batchExecutor: BatchExecutor
+    @Mock private lateinit var config: Config
 
     private lateinit var sut: RunningModeViewModel
 
@@ -36,7 +49,7 @@ internal class RunningModeViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(persistenceLayer.observeChanges(RM::class)).thenReturn(emptyFlow())
-        sut = RunningModeViewModel(persistenceLayer, generatedTextResolver(), dateUtil, aapsLogger, rxBus)
+        sut = RunningModeViewModel(persistenceLayer, generatedTextResolver(), dateUtil, aapsLogger, rxBus, batchExecutor, config)
     }
 
     @AfterEach
@@ -91,11 +104,18 @@ internal class RunningModeViewModelTest {
     }
 
     @Test
-    fun `getDeleteConfirmationMessage empty when nothing selected, plural for many`() {
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("")
+    fun `requestDelete asks the master to remove the selected running modes by their ids`() = runTest {
+        sut.enterSelectionMode(mock<RM> {
+            on { id } doReturn 8L
+            on { ids } doReturn IDs(nightscoutId = "ns8")
+        })
 
-        sut.enterSelectionMode(mock<RM>())
-        sut.toggleSelection(mock<RM>())
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Are you sure you want to remove 2 items")
+        sut.requestDelete()
+
+        val actions = argumentCaptor<List<BatchAction>>()
+        verify(batchExecutor).prepare(actions.capture(), eq(Sources.Treatments), any())
+        assertThat(actions.firstValue).containsExactly(
+            BatchAction.Remove(BatchAction.Remove.Kind.RUNNING_MODE, listOf(BatchAction.Remove.Ref(nsId = "ns8", localId = 8L)))
+        )
     }
 }

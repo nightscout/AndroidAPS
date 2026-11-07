@@ -12,4 +12,14 @@
     <string name="migrating_effective_profile_switches">Migrerer effektive profilbytter…</string>
     <string name="migrating_boluses">Migrerer boluser…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Eldre oppføringer hadde ingen insulinkonfigurasjon og ingen aktiv profil, så %1$s ble brukt for dem. Kontroller insulininnstillingene dine – oppføringer som allerede er migrert blir ikke oppdatert i etterkant.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Eldre oppføringer manglet varighet for insulin, så %1$.1f timer ble brukt for %2$s. Kontroller insulininnstillingene – oppføringer som allerede er migrert, blir ikke oppdatert i ettertid.</string>
+    <string name="settings_unreadable_title">AAPS-innstillingene kan ikke leses</string>
+    <string name="settings_unreadable_key_explanation">Innstillingene på denne telefonen er kryptert med en nøkkel som Android oppbevarer for AAPS, men nøkkelen kan ikke lenger brukes til å dekryptere dem. Dette kan skje hvis telefonens nøkkellager er blitt tilbakestilt.</string>
+    <string name="settings_unreadable_keystore_explanation">Telefonens nøkkellager svarte ikke, så AAPS kunne ikke åpne innstillingene.</string>
+    <string name="settings_unreadable_not_running">AAPS kjører ikke og styrer ikke pumpen. En midlertidig basal som er aktiv, avsluttes når den angitte tiden utløper. Deretter leverer pumpen sin egen basal.</string>
+    <string name="settings_unreadable_what_to_do">Prøv igjen lukker AAPS og starter appen på nytt. Hvis det ikke hjelper, starter du telefonen på nytt. Velg Start på nytt bare hvis ingenting annet hjelper. Da blir de uleselige innstillingene lagt til side, og AAPS starter med tomme innstillinger. Deretter importerer du den siste eksporten av innstillingene i oppsettsveiviseren.</string>
+    <string name="settings_unreadable_start_fresh">Start på nytt</string>
+    <string name="settings_unreadable_confirm_title">Starte med tomme innstillinger?</string>
+    <string name="settings_unreadable_confirm_text">Filen med de uleselige innstillingene får nytt navn og beholdes. Alle innstillinger tilbakestilles til standardverdiene. Deretter setter du opp AAPS på nytt eller importerer en eksport av innstillingene.</string>
+    <string name="settings_unreadable_notification">AAPS kjører ikke. Åpne AAPS for å se hva du skal gjøre.</string>
 </resources>

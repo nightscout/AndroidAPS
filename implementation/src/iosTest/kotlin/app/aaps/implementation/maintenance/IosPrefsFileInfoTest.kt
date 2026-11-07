@@ -61,7 +61,6 @@ class IosPrefsFileInfoTest {
         override fun gs(ref: TextRef): String = "t"
         override fun gs(ref: TextRef, vararg args: Any?): String = "t"
         override fun gsNotLocalised(ref: TextRef): String = "t"
-        override fun shortTextMode(): Boolean = false
     }
 
     private val plainKeychain = object : SecureEncrypt {

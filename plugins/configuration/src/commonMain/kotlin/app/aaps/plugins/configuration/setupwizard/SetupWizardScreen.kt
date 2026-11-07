@@ -61,6 +61,7 @@ fun SetupWizardScreen(
     onProfileSwitch: () -> Unit,
     onOpenAuthorizedClients: () -> Unit,
     onPairWithMaster: () -> Unit,
+    onScanMasterQr: () -> Unit,
     onOpenNsReceiveSettings: () -> Unit,
     onRunObjectives: () -> Unit,
     onRequestDirectoryAccess: () -> Unit,
@@ -80,6 +81,7 @@ fun SetupWizardScreen(
         swDefinition.onProfileSwitch = onProfileSwitch
         swDefinition.onOpenAuthorizedClients = onOpenAuthorizedClients
         swDefinition.onPairWithMaster = onPairWithMaster
+        swDefinition.onScanMasterQr = onScanMasterQr
         swDefinition.onOpenNsReceiveSettings = onOpenNsReceiveSettings
         swDefinition.onRunObjectives = onRunObjectives
         swDefinition.onRequestDirectoryAccess = onRequestDirectoryAccess
@@ -96,6 +98,7 @@ fun SetupWizardScreen(
             swDefinition.onProfileSwitch = null
             swDefinition.onOpenAuthorizedClients = null
             swDefinition.onPairWithMaster = null
+            swDefinition.onScanMasterQr = null
             swDefinition.onOpenNsReceiveSettings = null
             swDefinition.onRunObjectives = null
             swDefinition.onRequestDirectoryAccess = null

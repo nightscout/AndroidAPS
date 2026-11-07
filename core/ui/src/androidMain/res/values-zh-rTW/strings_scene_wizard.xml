@@ -66,16 +66,14 @@
     <string name="scene_wizard_finish">完成</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">後續情境</string>
-    <string name="scene_wizard_chain_info">可選擇串接另一個情境，於本情境到期時自動啟用。你也可以在提前結束時跳轉至它。僅當目標已啟用且幫浦可用時，後續情境才會執行；否則你會收到通知。</string>
+    <string name="scene_wizard_chain_info">您可以選擇接續另一個場景，讓它在目前場景到期時自動啟動。您也可以提前結束時直接切換到下一個場景。只有在目標場景已啟用且幫浦可使用時，後續場景才會啟動；否則，已結束場景的橫幅會說明未能啟動的原因。</string>
     <string name="scene_chain_none">無</string>
     <string name="scene_skip_to_format">跳轉至 %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">已串接的情境已被刪除</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">情境「%1$s」已結束</string>
-    <string name="scene_chained_format">已串接情境：%1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s 已結束 — 已略過後續：%2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">後續場景未啟動：%1$s</string>
     <string name="scene_chain_skipped_deleted">目標情境已被刪除</string>
     <string name="scene_chain_skipped_disabled">「%1$s」已停用</string>
     <string name="scene_chain_error_summary">%1$s → %2$s：有 %3$d 項動作失敗（共 %4$d 項）</string>

@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.scenes
 
 import app.aaps.core.data.model.Scene
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -29,13 +29,17 @@ interface SceneAutomationApi {
 
     /**
      * Two-step PREPARE: resolve scene [id], gate it, and author the master's confirmation lines + park it consume-once.
-     * Returns the preview ([WizardBolusExecutor.PrepareResult.Preview] = bolusId + lines) or an Error; nothing is
+     * Returns the preview ([MasterActionExecutor.PrepareResult.Preview] = bolusId + lines) or an Error; nothing is
      * activated. Commit via [commitScene] with the returned bolusId. The master is the SSOT for the confirmation.
+     * [owner] is the clientId of the paired client that asks (null: the master itself); only it may commit the park.
      */
-    suspend fun prepareScene(id: String, durationMinutes: Int? = null): WizardBolusExecutor.PrepareResult
+    suspend fun prepareScene(id: String, durationMinutes: Int? = null, owner: String? = null): MasterActionExecutor.PrepareResult
 
-    /** Two-step COMMIT: activate the parked scene matching [bolusId] EXACTLY once; an activation failure rides [onError]. */
-    suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult
+    /**
+     * Two-step COMMIT: activate the parked scene matching [bolusId] EXACTLY once; an activation failure rides [onError].
+     * A park prepared for another [owner] is not touched: [MasterActionExecutor.ConfirmResult.NoPending].
+     */
+    suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit, owner: String? = null): MasterActionExecutor.ConfirmResult
 
     /** Set the enabled flag on a scene by id. Fails only if the scene is missing. */
     fun setEnabled(id: String, enabled: Boolean): SceneAutomationResult
@@ -79,11 +83,12 @@ interface SceneAutomationApi {
 
     /**
      * Deactivate the active scene, and if it has a configured chain target, fire it — resolving the
-     * target from the active scene's own `endAction` internally (no caller-supplied id). Posts the
-     * SCENE_CHAINED / SCENE_CHAIN_ERROR notification on completion. This is the single master-side entry
-     * for "stop + chain", shared by the End-Scene dialog, the `scene.stop(triggerChain=true)` command,
-     * so the chain (and its notification) behaves identically however it was triggered. Falls back to a
-     * plain [stopActiveScene] when there's no chain target.
+     * target from the active scene's own `endAction` internally (no caller-supplied id). A chain that
+     * works says so with the new scene's own banner; only one that partly failed posts a notification
+     * (SCENE_CHAIN_ERROR). This is the single master-side entry for "stop + chain", shared by the
+     * End-Scene dialog and the `scene.stop(triggerChain=true)` command, so the chain behaves
+     * identically however it was triggered. Falls back to a plain [stopActiveScene] when there's no
+     * chain target.
      */
     suspend fun stopActiveSceneAndChain(): SceneAutomationResult
 }

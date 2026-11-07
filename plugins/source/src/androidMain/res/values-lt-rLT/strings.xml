@@ -22,6 +22,7 @@
     <string name="random_bg">Atsitiktinė glikemija</string>
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Gauti gliukozės duomenis iš Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
@@ -50,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Jutiklis stabilizuojasi, palaukite…</string>
     <string name="aidex_sensor_replace">Jutiklį būtina pakeisti. Kuo greičiau pakeiskite jį nauju jutikliu</string>
     <string name="aidex_signal_lost">Prarastas jutiklio signalas. Patikrinkite ryšį</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">dubliuojama gliukozės reikšmė</string>
 </resources>

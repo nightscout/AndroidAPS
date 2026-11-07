@@ -68,16 +68,14 @@
     <string name="scene_wizard_finish">完成</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">后续情景</string>
-    <string name="scene_wizard_chain_info">可选择关联另一个后续情景，当本情景到期结束时自动启用。也可在手动提前结束本情景时，直接跳转至该后续情景。仅当血糖目标已启用、且胰岛素泵状态正常时，后续情景才会自动运行；否则系统会推送通知提醒。</string>
+    <string name="scene_wizard_chain_info">可选择串联另一个情景模式，使其在当前情景模式到期时自动激活。提前结束时，您也可以直接跳转到该情景模式。后续情景模式仅在目标已启用且泵可用时才会运行；否则，已结束情景模式的横幅会说明其未能启动的原因。</string>
     <string name="scene_chain_none">无</string>
     <string name="scene_skip_to_format">跳转到 %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">已关联的后续情景已被删除</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">情景“%1$s” 结束</string>
-    <string name="scene_chained_format">情景已联动：%1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s 已结束 — 跳过后续情景：%2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">后续情景模式未启动：%1$s</string>
     <string name="scene_chain_skipped_deleted">目标情景已删除</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" 已禁用</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d %4$d 操作失败</string>

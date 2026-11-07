@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.di
 
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -32,6 +33,8 @@ import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.CrashReporter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.di.CoreObjectsGraph
@@ -47,6 +50,7 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import app.aaps.shared.clientbindings.ClientHistoryWindowGraph
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.search.BuiltInSearchables
@@ -79,6 +83,13 @@ interface IosAppGraph : MetroViewModelMultibindings {
     // Everything AapsAppRoot needs.
     val config: Config
     val preferences: Preferences
+
+    /**
+     * Exposed so startup can read the reporting opt-out through [FabricPrivacy.fabricEnabled] and
+     * push it into Crashlytics, rather than through [preferences], which answers the shared default
+     * for this Simple-Mode-defaulted key.
+     */
+    val fabricPrivacy: FabricPrivacy
 
     /** Collected by the composition root, which rebuilds when it moves. */
     val uiRestart: UiRestart
@@ -118,9 +129,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
      * factory looks like an ordinary missing binding, which is exactly how it first failed.
      *
      * Each window it creates is a separate scope with its own calculation objects - see
-     * [IosHistoryWindowGraph] for why that matters.
+     * [ClientHistoryWindowGraph] for why that matters. Shared with desktop.
      */
-    val historyWindowFactory: IosHistoryWindowGraph.Factory
+    val historyWindowFactory: ClientHistoryWindowGraph.Factory
 
     /** The loop's own calculator and cache, exposed so a test can prove a window does not share them. */
     val iobCobCalculator: IobCobCalculator
@@ -149,6 +160,7 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val periodicMaintenance: PeriodicMaintenance
     // Turns a snackbar into a notification when no screen is up to show it. Shared with Android.
     val snackbarNotificationFallback: SnackbarNotificationFallback
+    val eatReminder: EatReminder
     val appScope: CoroutineScope
     val swDefinition: SWDefinition
     val builtInSearchables: BuiltInSearchables
@@ -224,7 +236,13 @@ interface IosAppGraph : MetroViewModelMultibindings {
              * So it arrives here instead. Until it did, iOS had a placeholder that returned null and
              * the client simply never connected, while desktop worked.
              */
-            @Provides nsSocketFactory: NsSocketFactory
+            @Provides nsSocketFactory: NsSocketFactory,
+            /**
+             * Firebase Crashlytics, handed in for the same reason as the socket: the implementation
+             * is a Swift class on the Firebase Apple SDK, and a Swift class cannot carry a Kotlin
+             * annotation. `FabricPrivacyImpl` takes it and reports through it.
+             */
+            @Provides crashReporter: CrashReporter
         ): IosAppGraph
     }
 }

@@ -12,6 +12,11 @@ data class CarbsDialogUiState(
     val hypoTtChecked: Boolean = false,
     val eatingSoonTtChecked: Boolean = false,
     val activityTtChecked: Boolean = false,
+    /**
+     * False on a client whose role may enter carbs but not set a temp target. The switches are not offered and the
+     * hypo target is not ticked by itself, or the master would refuse the carbs together with the target.
+     */
+    val canSetTempTarget: Boolean = true,
     val alarmChecked: Boolean = false,
     val bolusReminderChecked: Boolean = false,
     val notes: String = "",

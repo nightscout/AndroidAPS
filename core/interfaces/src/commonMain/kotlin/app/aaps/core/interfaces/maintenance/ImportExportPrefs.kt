@@ -125,7 +125,13 @@ interface ImportExportPrefs {
         val syncedSkipped: Int = 0,
         val notExportable: Int = 0,
         val unresolved: List<String> = emptyList(),
-        val unreadable: List<String> = emptyList()
+        val unreadable: List<String> = emptyList(),
+        /**
+         * Labels of the insulins rebuilt from a v3 (3.x) backup and added to the insulin list. Empty for
+         * a v4 file, which carries the list itself. The user has to be told: the new insulin is not the
+         * running one until a profile switch selects it.
+         */
+        val importedInsulins: List<String> = emptyList()
     )
 
     /**

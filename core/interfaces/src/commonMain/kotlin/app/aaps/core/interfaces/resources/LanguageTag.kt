@@ -12,11 +12,11 @@ package app.aaps.core.interfaces.resources
  *  - **`pt_BR`, `zh_TW`, `zh_CN`** use an underscore, which is the Java `Locale.toString()` form,
  *    not a tag. BCP 47 wants a hyphen.
  *
- * Android's `LocaleHelper` has always applied both rules while building a `java.util.Locale`. The
- * iOS and desktop shells passed the stored value straight to [TextRefValueRegistry.locale], which
- * matches nothing for those four - so choosing Danish, Brazilian Portuguese or either Chinese gave a
- * fully English app on those platforms, indistinguishable from "not translated yet", with nothing
- * logged. This is the one place the rules live now; `LocaleHelper` reads them from here too.
+ * Android has always applied both rules while building its locale. The iOS and desktop shells passed
+ * the stored value straight to [TextRefValueRegistry.locale], which matches nothing for those four -
+ * so choosing Danish, Brazilian Portuguese or either Chinese gave a fully English app on those
+ * platforms, indistinguishable from "not translated yet", with nothing logged. This is the one place
+ * the rules live now; Android reads them from here too, for the app language it gives the system.
  *
  * Anything already a plain language code passes through unchanged, so adding a language to the list
  * needs no change here unless it repeats one of the two mistakes above.

@@ -322,6 +322,13 @@ interface DateUtil {
     fun timeStringFromSeconds(seconds: Int): String
 
     /**
+     * The hour alone, for a place where every time is a whole hour and the room is small.
+     * @param seconds The number of seconds past midnight.
+     * @return "13" with a 24-hour clock, "1 PM" with a 12-hour clock.
+     */
+    fun hourStringFromSeconds(seconds: Int): String
+
+    /**
      * Formats a duration in milliseconds into a human-readable string with hours and minutes.
      * @param timeInMillis The duration in milliseconds.
      * @param rh Resource helper for localized units (e.g., "h").
@@ -430,15 +437,6 @@ interface DateUtil {
      */
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
     fun computeDiff(date1: Long, date2: Long): TimeDiff
-
-    /**
-     * Converts a duration in milliseconds into a human-readable "age" string (e.g., "5 days 3 hours").
-     * @param milliseconds The duration to format.
-     * @param useShortText If true, uses abbreviated units (e.g., "d", "h"). If false, uses full names (e.g., "days", "hours").
-     * @param rh Resource helper to get localized unit strings.
-     * @return The formatted age string.
-     */
-    fun age(milliseconds: Long, useShortText: Boolean, rh: TextResolver): String
 
     /**
      * Converts a duration in milliseconds into a simplified, human-readable string with the largest appropriate unit.

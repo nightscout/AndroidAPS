@@ -108,6 +108,21 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
         assertThat(result.json().toString()).contains("\"rate\":1.0")
     }
 
+    /** The return of the CGM data checks has no eventual BG. Such a result is not stored (#5413). */
+    @Test
+    fun `a result without eventual BG stopped early`() {
+        val result = apsResultProvider().with(RT(runningDynamicIsf = true, algorithm = APSResult.Algorithm.SMB, rate = 1.0, duration = 30))
+
+        assertThat(result.stoppedEarly).isTrue()
+    }
+
+    @Test
+    fun `a result with eventual BG did not stop early`() {
+        val result = apsResultProvider().with(RT(runningDynamicIsf = true, algorithm = APSResult.Algorithm.SMB, eventualBG = 120.0, variable_sens = 45.0))
+
+        assertThat(result.stoppedEarly).isFalse()
+    }
+
     /**
      * Open loop, no temp running, profile basal 1 U/h. With a 60 % minimum change, 140 % and 150 % are both
      * small changes and are not reported - unless the request is at the pump limit, which is always reported.

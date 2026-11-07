@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -18,6 +19,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -52,7 +54,8 @@ class SensitivityOverviewImpl(
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val persistenceLayer: PersistenceLayer
 ) : SensitivityOverview {
 
     override suspend fun build(): SensitivityOverviewData {
@@ -113,7 +116,8 @@ class SensitivityOverviewImpl(
             lines.add(rh.gs(CoreUiStrings.isf_variable, variableIsfDisplayed))
             if (namesOwnRatio)
                 lines.add(rh.gs(CoreUiStrings.algorithm_long, ratioUsed * 100))
-            val isfForCarbs = profile.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
+            val now = dateUtil.now()
+            val isfForCarbs = IsfForCarbs.load(persistenceLayer, now, now).isfMgdl(profile, now)
             lines.add(rh.gs(CoreUiStrings.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs, units)))
             if (config.APS) {
                 activePlugin.activeAPS?.getSensitivityOverviewString()?.let { lines.add(it) }

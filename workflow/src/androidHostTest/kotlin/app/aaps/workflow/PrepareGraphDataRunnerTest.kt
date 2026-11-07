@@ -1,6 +1,7 @@
 package app.aaps.workflow
 
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.GV
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
@@ -9,9 +10,9 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.ActivityGraphData
+import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.overview.graph.TimeRange
 import app.aaps.core.interfaces.profiling.Profiler
@@ -43,7 +44,6 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
     @Mock lateinit var workflowChainData: WorkflowChainData
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var profiler: Profiler
-    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var mockedRxBus: RxBus
     @Mock lateinit var sensitivity: Sensitivity
     @Mock lateinit var dataAds: AutosensDataStore
@@ -57,8 +57,8 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
     private fun runner() =
         PrepareGraphDataRunner(
             aapsLogger, workflowChainData, dateUtil, mockedRxBus, persistenceLayer,
-            activePlugin, profileFunction, profileUtil, preferences, config, profiler, decimalFormatter,
-            processedDeviceStatusData, TestScope(), autosensDataProvider
+            activePlugin, profileFunction, profileUtil, preferences, profiler, decimalFormatter,
+            TestScope(), autosensDataProvider
         )
 
     // The runner asks this between phases; nothing in these tests stops a run part way.
@@ -201,6 +201,10 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
     @Test
     fun `bg data reload phase loads, smooths and signals bucketed data`() = runTest {
         stubSuspendCalls()
+        val gv = mock<GV>()
+        whenever(gv.timestamp).thenReturn(-60_000L)
+        whenever(gv.utcOffset).thenReturn(19_800_000L)
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf(gv))
         whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = true, emitFinalProgress = false))
 
         val result = run()
@@ -210,6 +214,9 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         // The cached IOB is kept for a new BG, only old entries are dropped
         verify(dataIobCob).bgDataReloaded()
         verify(dataIobCob, never()).clearCache()
+        val readings = argumentCaptor<List<BgDataPoint>>()
+        verify(cache).updateBgReadings(readings.capture())
+        assertThat(readings.lastValue.single().utcOffset).isEqualTo(gv.utcOffset)
         // Terminal-only progress not emitted when emitFinalProgress = false
         verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
     }

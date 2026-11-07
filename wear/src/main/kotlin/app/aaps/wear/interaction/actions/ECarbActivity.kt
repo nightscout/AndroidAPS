@@ -46,6 +46,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.di.WearMetroActivity
 import dev.zacsweers.metro.Inject
+import app.aaps.core.interfaces.R as InterfacesR
 
 class ECarbActivity : WearMetroActivity() {
 
@@ -191,7 +192,11 @@ private fun ECarbConfirmScreen(carbs: Int, startMinutes: Int, durationHours: Int
             else              -> ""
         }
         val durationStr = if (durationHours != 0) stringResource(R.string.action_duration_hours_format, durationHours) else ""
-        val timing = listOf(startStr, durationStr).filter { it.isNotEmpty() }.joinToString(" / ")
+        val timing = when {
+            startStr.isEmpty()    -> durationStr
+            durationStr.isEmpty() -> startStr
+            else                  -> stringResource(InterfacesR.string.values_with_slash, startStr, durationStr)
+        }
         if (timing.isNotEmpty()) {
             Text(
                 text = timing,

@@ -1,7 +1,5 @@
 package app.aaps.plugins.configuration.configBuilder
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.configuration.AppExit
@@ -9,14 +7,18 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.system.exitProcess
 
 /**
- * Ends the app on Android, restarting it through `AlarmManager` when asked.
+ * Ends the app on Android, and starts it again when asked.
  *
- * Lifted out of `ConfigBuilderImpl` unchanged, which is what let the rest of that class move to
- * commonMain. A process cannot restart itself directly, so the trick is to hand the launch intent to
- * `AlarmManager` a moment in the future and then die: the alarm fires after the process is gone and
- * starts it again.
+ * Starting again works while the app is on the screen. A new task with the launch activity is started
+ * before the process ends, and Android starts a fresh process for it. This used to hand the launch intent to
+ * `AlarmManager` to fire after the process was gone, and Android blocks that: an app that no longer runs may
+ * not open a screen ("Background activity launch blocked", seen on Android 15 on 2026-10-26).
+ *
+ * From the background - an SMS command, a pump driver - Android does not let an app open a screen at all, so
+ * then the process only ends. A broadcast or a job starts it again for the background work.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
@@ -26,24 +28,14 @@ class AndroidAppExit(
 ) : AppExit {
 
     override fun exit(launchAgain: Boolean) {
-        if (launchAgain) scheduleStart()
+        if (launchAgain) startAgain()
         System.runFinalization()
-        kotlin.system.exitProcess(0)
+        exitProcess(0)
     }
 
-    private fun scheduleStart() {
-        // fetch the packageManager so we can get the default launch activity
-        context.packageManager?.let { pm ->
-            //create the intent with the default start activity for your application
-            pm.getLaunchIntentForPackage(context.packageName)?.let { startActivity ->
-                startActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                //create a pending intent so the application is restarted after System.exit(0) was called.
-                // We use an AlarmManager to call this intent in 100ms
-                val pendingIntentId = 2233445
-                val pendingIntent = PendingIntent.getActivity(context, pendingIntentId, startActivity, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-                (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
-                    .set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
-            }
-        }
+    private fun startAgain() {
+        val launchActivity = context.packageManager.getLaunchIntentForPackage(context.packageName)?.component ?: return
+        // A new task, started now, while this process may still open a screen. It also clears the old one.
+        context.startActivity(Intent.makeRestartActivityTask(launchActivity))
     }
 }

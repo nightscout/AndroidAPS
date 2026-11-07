@@ -88,6 +88,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -149,7 +150,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     fun setup() {
         // Mock basics
         whenever(rh.gs(anyInt())).thenReturn("test")
-        whenever(rh.gs(anyInt(), any())).thenReturn("test")
+        whenever(rh.gs(anyInt(), anyVararg())).thenReturn("test")
         whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
         whenever(preferences.get(DanaStringNonKey.Password)).thenReturn("0000")

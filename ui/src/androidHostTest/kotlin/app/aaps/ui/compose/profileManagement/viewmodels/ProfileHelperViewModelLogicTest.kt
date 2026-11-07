@@ -58,7 +58,6 @@ internal class ProfileHelperViewModelLogicTest {
             nameOf(ref) + "|" + args.joinToString(",")
 
         override fun gsNotLocalised(ref: TextRef): String = nameOf(ref)
-        override fun shortTextMode(): Boolean = false
     }
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer

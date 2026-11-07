@@ -219,9 +219,9 @@ class QuickLaunchConfigViewModel(
 
     /**
      * Mode-based visibility for an action's backing element — the same [ElementVisibility] gate search and the
-     * Manage sheet use (e.g. MASTER_OR_PAIRED_CLIENT hides command actions on an unpaired client). Actions with no
-     * element (plugins) are visible; those are gated by showInList in [buildPluginGroups] instead.
+     * Manage sheet use (e.g. MASTER_OR_PAIRED_CLIENT hides command actions on an unpaired client), plus the client's
+     * role. Actions with no element (plugins) are visible; those are gated by showInList in [buildPluginGroups] instead.
      */
     private fun QuickLaunchAction.isVisibleInMode(): Boolean =
-        elementType?.visibility?.isVisible(visibilityContext) ?: true
+        elementType?.isAvailable(visibilityContext) ?: true
 }

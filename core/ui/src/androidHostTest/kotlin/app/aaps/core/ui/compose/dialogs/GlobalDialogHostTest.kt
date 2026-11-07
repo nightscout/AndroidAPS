@@ -23,6 +23,9 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 
 /**
  * Integration test for the [GlobalDialogHost] router: it subscribes to [EventShowDialog] on an
@@ -90,6 +93,50 @@ class GlobalDialogHostTest {
         )
         compose.waitForIdle()
 
+        compose.onNodeWithText(okLabel).performClick()
+        compose.waitForIdle()
+
+        assertThat(ok).isEqualTo(1)
+        assertThat(cancel).isEqualTo(0)
+    }
+
+    // #5381: a bolus confirmation is good only for the master's SMB pause; past it, it counts as cancelled.
+    @Test
+    fun okCancelEvent_pastCloseAt_closesAsCancelled() {
+        var ok = 0
+        var cancel = 0
+        rxBus.send(
+            EventShowDialog.OkCancel(
+                title = "Confirm",
+                message = "Old dose",
+                onOk = { ok++ },
+                onCancel = { cancel++ },
+                closeAt = TimeSource.Monotonic.markNow() - 1.seconds
+            )
+        )
+        compose.waitForIdle()
+
+        compose.onNodeWithText("Old dose").assertDoesNotExist()
+        assertThat(ok).isEqualTo(0)
+        assertThat(cancel).isEqualTo(1)
+    }
+
+    @Test
+    fun okCancelEvent_beforeCloseAt_staysAndConfirms() {
+        var ok = 0
+        var cancel = 0
+        rxBus.send(
+            EventShowDialog.OkCancel(
+                title = "Confirm",
+                message = "Fresh dose",
+                onOk = { ok++ },
+                onCancel = { cancel++ },
+                closeAt = TimeSource.Monotonic.markNow() + 2.minutes
+            )
+        )
+        compose.waitForIdle()
+
+        compose.onNodeWithText("Fresh dose").assertIsDisplayed()
         compose.onNodeWithText(okLabel).performClick()
         compose.waitForIdle()
 

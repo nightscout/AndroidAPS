@@ -32,8 +32,10 @@ fun generateGitBuild(): String {
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
-        process.waitFor()
-        return output.readText().trim()
+        // The exit code decides, not the text. git run outside a work tree exits non-zero with
+        // empty output, and reading that as an answer silently reported no commit at all.
+        if (process.waitFor() != 0) return "NoGitSystemAvailable"
+        return output.readText().trim().ifEmpty { "NoGitSystemAvailable" }
     } catch (_: Exception) {
         return "NoGitSystemAvailable"
     }
@@ -45,8 +47,10 @@ fun generateGitRemote(): String {
         val output = File.createTempFile("git-remote", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
-        process.waitFor()
-        return output.readText().trim()
+        // The exit code decides, not the text. git run outside a work tree exits non-zero with
+        // empty output, and reading that as an answer silently reported no remote at all.
+        if (process.waitFor() != 0) return "NoGitSystemAvailable"
+        return output.readText().trim().ifEmpty { "NoGitSystemAvailable" }
     } catch (_: Exception) {
         return "NoGitSystemAvailable"
     }
@@ -80,7 +84,10 @@ fun allCommitted(): Boolean {
         val output = File.createTempFile("git-comited", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
-        process.waitFor()
+        // An ignored failure here was the worse one: empty output read as a clean tree, so a
+        // build could claim its sources matched the commit it names. Empty output with a zero
+        // exit really is clean, so only the exit code can tell the two apart.
+        if (process.waitFor() != 0) return false
         return output.readText().replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea\/codeStyles\/.*?\s*$"""), "")
             // ignore all files added to project dir but not staged/known to GIT
             .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "").trim().isEmpty()
@@ -161,7 +168,7 @@ android {
             applicationId = "info.nightscout.aapsclient2"
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient2")
-            versionName = Versions.appVersion + "-aapsclient"
+            versionName = Versions.appVersion + "-aapsclient2"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
             manifestPlaceholders["appIconRound"] = "@mipmap/ic_blueowl"
         }

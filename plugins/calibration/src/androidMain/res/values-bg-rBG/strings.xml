@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Без калибрация</string>
+    <string name="description_no_calibration">"Не се прилага корекция на калибрацията. Стойностите от сензора се използват непроменени. Използвайте това, когато сензорът е фабрично калибриран и точен."</string>
+    <string name="linear_calibration_name">Линейна калибрация</string>
+    <string name="description_linear_calibration">"Линейна корекция на калибрацията за всеки сензор (наклон и отместване), изчислена от вашите измервания от пръст. По-новите записи имат по-голяма тежест. Корекцията се прилага след началото на текущата сесия на сензора; първите 2 часа се пропускат като период на загряване."</string>
+    <string name="sensor_change_detected_text">Засечена е възможна смяна на сензор в %1$s. Да я отбележа ли като нов сензор?</string>
+    <string name="sensor_change_detected_action">Отбележи смяна на сензор</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Запишете смяна на сензор, за да активирате калибрацията.</string>
+    <string name="cal_status_warmup">Сензорът загрява — калибрацията се активира след %1$s.</string>
+    <string name="cal_status_need_more_entries">Нужни са поне 2 измервания от пръст (в момента: %1$d).</string>
+    <string name="cal_status_unsafe_fit">Изчислената калибрация е извън безопасния диапазон — не е приложена.</string>
+    <string name="cal_status_applied">Калибрацията е приложена.</string>
+    <string name="cal_status_applied_offset_only">Приложена е калибрация само с отместване — диапазонът на сензора е твърде тесен за наклон.</string>
+    <string name="cal_status_applied_slope_clamped">Калибрацията е приложена — наклонът е ограничен до безопасния диапазон. Добавете още записи, за да се разхлаби ограничението.</string>
+    <string name="cal_slope_offset">Наклон %1$.2f, корекция в средния диапазон %2$s</string>
+    <string name="cal_session_started">Сесията е стартирана: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Запиши смяна на сензор</string>
+    <string name="cal_add_calibration">Добави калибрация</string>
+    <string name="cal_entries_header">Измервания от пръст (%1$d)</string>
+    <string name="cal_no_entries">Още няма измервания от пръст.</string>
+    <string name="cal_entry_pair">Измерване от пръст %1$s → сензор %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Запис %1$d/%2$d · %3$s · сензор %4$s → КЗ %5$s</string>
 </resources>

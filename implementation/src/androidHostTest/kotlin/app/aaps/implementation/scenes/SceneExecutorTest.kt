@@ -11,7 +11,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -173,17 +173,38 @@ class SceneExecutorTest : TestBaseWithProfile() {
     @Test fun `prepare names the follow-up scene in the confirmation`() = runBlocking {
         whenever(sceneChainResolver.resolveCatalogChainTarget(smbScene)).thenReturn(Scene(id = "s3", name = "Cooldown"))
 
-        val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
+        val result = sut.prepareScene(smbScene, durationMinutes = 0) as MasterActionExecutor.PrepareResult.Preview
 
         // Last, and in the scene colour like the name above it
         assertThat(result.lines.last()).isEqualTo(ConfirmationLine(ConfirmationRole.SCENE, "→ Cooldown"))
     }
 
     @Test fun `prepare says nothing about a follow-up when there is none`() = runBlocking {
-        val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
+        val result = sut.prepareScene(smbScene, durationMinutes = 0) as MasterActionExecutor.PrepareResult.Preview
 
         // The scene's name is the only scene-coloured line
         assertThat(result.lines.count { it.role == ConfirmationRole.SCENE }).isEqualTo(1)
+    }
+
+    // A parked scene belongs to the client that prepared it. Another client that knows the id gets nothing,
+    // and the park stays for its owner.
+    @Test fun `a parked scene is committed only by the client that prepared it`() = runBlocking {
+        val prepared = sut.prepareScene(smbScene, durationMinutes = 0, owner = "a") as MasterActionExecutor.PrepareResult.Preview
+
+        val stranger = sut.commitScene(prepared.bolusId, { }, owner = "b")
+        val local = sut.commitScene(prepared.bolusId, { })
+        val owner = sut.commitScene(prepared.bolusId, { }, owner = "a")
+
+        assertThat(stranger).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(local).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(owner).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test fun `a client cannot commit a scene parked on the master`() = runBlocking {
+        val prepared = sut.prepareScene(smbScene, durationMinutes = 0) as MasterActionExecutor.PrepareResult.Preview
+
+        assertThat(sut.commitScene(prepared.bolusId, { }, owner = "a")).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(sut.commitScene(prepared.bolusId, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
     }
 
     // Ending a scene early has to drop the pending expiry, or it fires later against whatever is active then.

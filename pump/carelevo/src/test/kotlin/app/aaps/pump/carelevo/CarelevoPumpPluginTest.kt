@@ -161,10 +161,10 @@ class CarelevoPumpPluginTest : CarelevoPumpPluginTestBase() {
     }
 
     @Test
-    fun `reservoirLevel should default to zero before observers update state`() {
+    fun `reservoirLevel is not known before observers update state`() {
         patchInfoSubject.onNext(Optional.of(samplePatchInfo(insulinRemain = 42.5)))
 
-        assertThat(plugin.reservoirLevel.value.cU).isWithin(0.001).of(0.0)
+        assertThat(plugin.reservoirLevel.value).isNull()
     }
 
     @Test

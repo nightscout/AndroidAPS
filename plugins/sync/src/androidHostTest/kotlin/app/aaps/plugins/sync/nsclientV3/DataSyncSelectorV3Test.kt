@@ -2,7 +2,9 @@ package app.aaps.plugins.sync.nsclientV3
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -262,6 +264,21 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Should not process when upload is disabled
         verify(persistenceLayer, Times(0)).getLastBolusId()
+    }
+
+    // A client sends everything through the master; its own records, like the start note, stay on the phone.
+    @Test
+    fun doUploadSendsNothingFromAClientTest() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true)
+        newLocalNoteToSync()
+
+        sut.doUpload()
+
+        verify(persistenceLayer, Times(0)).getNextSyncElementTherapyEvent(any())
+        verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
+        verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -567,6 +584,28 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
     }
 
+    /** A new "AndroidAPS started" note, made on this phone and not yet in NS, as the next record to sync. */
+    private suspend fun newLocalNoteToSync() {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastTherapyEventId()).thenReturn(10L)
+        // firstId, startId, the confirm check, then the next startId
+        whenever(preferences.get(NsclientLongKey.TherapyEventLastSyncedId)).thenReturn(5L, 5L, 5L, 6L)
+        val note = TE(id = 6, timestamp = 1000L, type = TE.Type.NOTE, note = "AndroidAPS started", glucoseUnit = GlucoseUnit.MGDL, ids = IDs())
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(5L)).thenReturn(Pair(note, note))
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(6L)).thenReturn(null)
+    }
+
+    @Test
+    fun processChangedTherapyEventsUploadsANewNoteOnTheMasterTest() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        newLocalNoteToSync()
+        whenever(nsClientV3Plugin.nsAdd(eq("treatments"), any<DataSyncSelector.PairTherapyEvent>(), any(), anyOrNull())).thenReturn(true)
+
+        sut.processChangedTherapyEvents()
+
+        verify(nsClientV3Plugin, Times(1)).nsAdd(eq("treatments"), any<DataSyncSelector.PairTherapyEvent>(), any(), anyOrNull())
+    }
+
     // Tests for processChangedDeviceStatuses
     @Test
     fun processChangedDeviceStatusesWhenPausedTest() = runTest {
@@ -737,20 +776,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(nsClientV3Plugin, Times(1)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
     }
 
-    @Test
-    fun processChangedProfileStoreNotUploadedByClientTest() = runTest {
-        // The master owns the profile store in Nightscout. A client only mirrors a list it received,
-        // so uploading would either echo the master's own data back or publish a client-side edit
-        // behind its back.
-        whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
-        whenever(preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)).thenReturn(0L)
-        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1000L)
-
-        sut.processChangedProfileStore()
-
-        verify(nsClientV3Plugin, Times(0)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
-    }
 
     // Tests for processChangedBoluses with getNextSyncElement returning data
 

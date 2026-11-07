@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import kotlin.math.roundToInt
@@ -120,7 +121,7 @@ fun PlusMinusEdit(
     }
 
     fun stepValue(direction: Int) {
-        val newValue = roundToStep(value + direction * step, step).coerceIn(minValue, maxValue)
+        val newValue = stepFromShown(value, direction, step, valueFormat, valueRange)
         textFieldValue = TextFieldValue(valueFormat.format(newValue))
         isError = false
         onValueChange(newValue)
@@ -194,4 +195,16 @@ fun PlusMinusEdit(
             )
         }
     }
+}
+
+/**
+ * The value one [step] up ([direction] 1) or down (-1) from [value] as [valueFormat] shows it.
+ *
+ * Not from the stored value: one with more digits than the field shows moved the shown digit by two, or
+ * did not move it at all. Autotune writes basal rates with three decimals, and 1.125 is shown as 1.12
+ * but stepped from 1.13 (#5401).
+ */
+internal fun stepFromShown(value: Double, direction: Int, step: Double, valueFormat: NumberFormat, valueRange: ClosedFloatingPointRange<Double>): Double {
+    val shown = valueFormat.format(value, NumberFormatPlatform.SEPARATOR_DOT).toDoubleOrNull() ?: value
+    return roundToStep(shown + direction * step, step).coerceIn(valueRange.start, valueRange.endInclusive)
 }

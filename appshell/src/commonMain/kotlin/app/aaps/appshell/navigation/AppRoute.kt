@@ -97,7 +97,11 @@ sealed class AppRoute(val route: String) {
     }
 
     data object AutomationList : AppRoute("automation_list")
-    data object SceneList : AppRoute("scene_list")
+    data object SceneList : AppRoute("scene_list?mode={mode}") {
+
+        fun createRoute(mode: ScreenMode = ScreenMode.EDIT) = "scene_list?mode=${mode.name}"
+    }
+
     data object SceneWizard : AppRoute("scene_wizard?sceneId={sceneId}") {
 
         fun createRoute(sceneId: String? = null): String =
@@ -125,5 +129,15 @@ sealed class AppRoute(val route: String) {
     data object SiteRotationManagement : AppRoute("siteRotationManagement")
     data object SetupWizard : AppRoute("setup_wizard")
     data object AuthorizedClients : AppRoute("authorized_clients")
-    data object PairWithMaster : AppRoute("pair_with_master")
+    /** From the setup wizard, a pairing made here also finishes the wizard. */
+    data object PairWithMaster : AppRoute("pair_with_master?wizard={wizard}") {
+
+        fun createRoute(fromSetupWizard: Boolean = false) = if (fromSetupWizard) "pair_with_master?wizard=true" else "pair_with_master"
+    }
+
+    /** From the setup wizard, a code used here also finishes the wizard. */
+    data object ScanMasterQr : AppRoute("scan_master_qr?wizard={wizard}") {
+
+        fun createRoute(fromSetupWizard: Boolean = false) = if (fromSetupWizard) "scan_master_qr?wizard=true" else "scan_master_qr"
+    }
 }

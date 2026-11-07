@@ -110,6 +110,8 @@ internal fun PlusMinusInputScreen(
     valueColor: Color = Color.White,
     stepLabels: List<String>? = null,
     title: String? = null,
+    /** Drawn under the label, for a small control that belongs to the value, such as a switch. */
+    footer: (@Composable () -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
@@ -213,6 +215,7 @@ internal fun PlusMinusInputScreen(
                             textAlign = TextAlign.Center,
                         )
                     }
+                    footer?.invoke()
                 }
                 StepButton(step = stepValues[0], isIncrement = true, onStep = ::step, enabled = enabled)
             }
@@ -240,6 +243,7 @@ internal fun PlusMinusInputScreen(
                         textAlign = TextAlign.Center,
                     )
                 }
+                footer?.invoke()
             }
 
             // Bottom-left: decrement (fine step)

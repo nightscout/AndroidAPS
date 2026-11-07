@@ -21,8 +21,7 @@ interface Automation {
     suspend fun processEvent(someEvent: AutomationEvent)
 
     /**
-     * Generate reminder via [app.aaps.plugins.automation.TimerUtil]
-     *
+     * Create new Automation event to remind the user to bolus
      */
     fun scheduleAutomationEventBolusReminder()
 
@@ -31,13 +30,6 @@ interface Automation {
      *
      */
     fun removeAutomationEventBolusReminder()
-
-    /**
-     * Generate reminder via [app.aaps.plugins.automation.TimerUtil]
-     *
-     * @param seconds seconds to the future
-     */
-    fun scheduleTimeToEatReminder(seconds: Int)
 
     /**
      * Remove Automation event

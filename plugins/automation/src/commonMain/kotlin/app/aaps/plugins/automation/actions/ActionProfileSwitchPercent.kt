@@ -2,6 +2,7 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -53,7 +54,7 @@ class ActionProfileSwitchPercent(
             timeShiftInHours = 0,
             action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
             source = Sources.Automation,
-            note = title + ": " + rh.gs(CoreUiStrings.startprofile, pct.value.toInt(), duration.value),
+            note = rh.gs(InterfacesStrings.confirmation_line, title, rh.gs(CoreUiStrings.startprofile, pct.value.toInt(), duration.value)),
             listValues = listOf(
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)

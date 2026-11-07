@@ -8,6 +8,7 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -15,10 +16,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
 import org.junit.Test
@@ -66,6 +70,8 @@ class BgSourceScreenTest {
         whenever(viewModel.rh).thenReturn(rh)
         whenever(viewModel.dateUtil).thenReturn(dateUtil)
         whenever(viewModel.formatGlucoseValue(any())).thenReturn("100 mg/dl")
+        // No removal is waiting, so the dialog draws nothing.
+        whenever(viewModel.removal).thenReturn(RecordRemoval(mock(), rh, mock(), config, CoroutineScope(Dispatchers.Unconfined), Sources.BgFragment))
         // removing-mode toolbar builds its title via rh.gs(count_selected, n) and rh.gs(close).
         // SelectableListToolbar names its strings with TextRef now, so stub that overload.
         whenever(rh.gs(any<TextRef>())).thenReturn("label")

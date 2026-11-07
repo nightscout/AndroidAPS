@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
@@ -119,6 +120,8 @@ internal class DiaconnOverviewViewModelTest {
         whenever(rh.gs(R.string.basal_step)).thenReturn("Basal step")
         whenever(rh.gs(R.string.bolus_step)).thenReturn("Bolus step")
         whenever(rh.gs(R.string.diaconn_g8_pump)).thenReturn("Diaconn G8")
+        // texts with values: battery, last connection, steps, firmware
+        whenever(rh.gs(any<Int>(), anyVararg())).thenReturn("formatted")
     }
 
     @AfterEach

@@ -21,10 +21,14 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
@@ -49,10 +53,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.concurrent.Volatile
 import kotlin.math.max
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -79,7 +87,9 @@ class InsulinDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    nsClient: NsClient,
+    commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinDialogUiState())
@@ -89,8 +99,11 @@ class InsulinDialogViewModel(
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
 
-        /** The MASTER prepared the batch and returned its merged confirmation [lines]; show them, then [commit] [bolusId]. */
-        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
+        /**
+         * The MASTER prepared the batch and returned its merged confirmation [lines]; show them, then [commit] [bolusId],
+         * or [discard] it on Cancel. Close it at [closeAt]: the master's SMB pause for the dose has run out by then.
+         */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>, val closeAt: TimeMark) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -123,6 +136,8 @@ class InsulinDialogViewModel(
                 insulin = 0.0,
                 timeOffsetMinutes = 0,
                 eatingSoonTtChecked = false,
+                // A temp target needs a higher role than insulin; the master would refuse the bolus together with it.
+                canSetTempTarget = nsClient.clientRole.value.allows(ElementType.TEMP_TARGET_MANAGEMENT.role),
                 recordOnlyChecked = initialForcedRecordOnly,
                 notes = "",
                 eventTime = now,
@@ -157,6 +172,9 @@ class InsulinDialogViewModel(
                 )
             }
         }
+        commandQueue.smbBeingDelivered
+            .onEach { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
+            .launchIn(viewModelScope)
     }
 
     private suspend fun getRunningIcfg() = profileFunction.getRunningOrRequestedICfg()
@@ -240,6 +258,8 @@ class InsulinDialogViewModel(
      * viewModelScope) while the round-trip is in flight.
      */
     fun prepareAndConfirm() {
+        // Counted from before the prepare, so on a client the confirmation closes before the master's pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         appScope.launch {
             val state = uiState.value
             confirmedState = state
@@ -249,23 +269,25 @@ class InsulinDialogViewModel(
                 return@launch
             }
             when (val prepared = batchExecutor.prepare(actions, Sources.InsulinDialog, rh.gs(InterfacesStrings.bolus))) {
-                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
-                // Offline block (and a master-local failure) surface here; a client round-trip failure already showed
-                // on the app-level modal, so only re-surface NotReachable or a master-side detail message.
+                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines, closeAt))
+                // Offline block (and a master-local failure) surface here. A client's round-trip failure already showed
+                // on the app-level modal, with the master's own text, so a client re-surfaces only NotReachable.
                 is ActionProgress.Rejected -> when {
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
-                    else                                      -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
-                        else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                    }
+                    config.AAPSCLIENT                         -> Unit
+                    // Nothing was sent to the pump and the dialog keeps its values: a plain message, not the bolus-error alarm.
+                    else                                      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
                 }
 
                 else                       -> Unit // Unconfirmed → app-level modal
             }
         }
     }
+
+    /** The confirmation was cancelled or closed itself: drop the prepared batch, so the loop can give SMBs again. */
+    fun discard(bolusId: Long) = batchExecutor.discard(bolusId)
 
     /** Confirm the master's prepared batch: deliver the parked bundle exactly once. */
     fun commit(bolusId: Long) {
@@ -276,14 +298,12 @@ class InsulinDialogViewModel(
             if (result is ActionProgress.Applied && (state == null || !state.recordOnlyChecked || state.timeOffsetMinutes == 0))
                 automation.removeAutomationEventBolusReminder()
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
-            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            // NoPendingBolus, …) → the master's detail, which a client's app-level modal has shown already.
+            // Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
-                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                }
+                else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
         }
     }

@@ -32,6 +32,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.EVENT_TIME_OFFSET_RANGE_MINUTES
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -77,6 +78,7 @@ class CareDialogViewModel(
         )
         val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
         val siteRotation = preferences.get(BooleanKey.SiteRotationManageCgm)
+        val now = dateUtil.now()
 
         _uiState.update {
             CareDialogUiState(
@@ -85,8 +87,9 @@ class CareDialogViewModel(
                 bgValue = currentBg,
                 duration = 0.0,
                 notes = "",
-                eventTime = dateUtil.now(),
-                eventTimeChanged = false,
+                eventTime = now,
+                eventTimeOriginal = now,
+                timeOffsetMinutes = 0,
                 glucoseUnits = units,
                 showNotesFromPreferences = showNotes,
                 siteRotationManageCgm = siteRotation
@@ -154,8 +157,25 @@ class CareDialogViewModel(
         _uiState.update { it.copy(notes = value) }
     }
 
+    /** The -/+ buttons: the time in minutes from when the dialog opened. */
+    fun updateTimeOffset(minutes: Int) {
+        val clamped = minutes.coerceIn(EVENT_TIME_OFFSET_RANGE_MINUTES)
+        _uiState.update {
+            it.copy(
+                timeOffsetMinutes = clamped,
+                eventTime = it.eventTimeOriginal + clamped.toLong() * 60 * 1000
+            )
+        }
+    }
+
+    /** The date and time pickers. The offset follows, so the -/+ buttons go on from the picked time. */
     fun updateEventTime(timeMillis: Long) {
-        _uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
+        _uiState.update {
+            it.copy(
+                eventTime = timeMillis,
+                timeOffsetMinutes = ((timeMillis - it.eventTimeOriginal) / (1000 * 60)).toInt()
+            )
+        }
     }
 
     private var confirmedState: CareDialogUiState? = null

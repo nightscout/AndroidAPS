@@ -65,6 +65,7 @@ class FillDialogContentTest {
                     onInsulinChange = {},
                     onInsulinSelect = {},
                     onNotesChange = {},
+                    onTimeOffsetChange = {},
                     onDateClick = {},
                     onTimeClick = {},
                     onSettingsClick = null,

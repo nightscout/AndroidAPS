@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TimeDiff
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +49,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.concurrent.atomic.AtomicInteger
@@ -246,10 +248,11 @@ internal class StatusViewModelTest {
         whenever(tddCalculator.calculateIntervalWithCachedDays(any(), any(), any())).thenReturn(TDD(timestamp = 0, totalAmount = 12.0))
         // Only the cannula usage is formatted here (no profile, so no reservoir level), and it is the last
         // step of a refresh, so this marks the moment a refresh has finished.
-        whenever(decimalFormatter.to0Decimal(any<Double>(), any<String>())).thenAnswer {
+        whenever(decimalFormatter.to0Decimal(any<Double>())).thenAnswer {
             finished.incrementAndGet()
-            USAGE_TEXT
+            "12"
         }
+        whenever(rh.gs(eq(CoreUiStrings.value_with_unit), any(), any())).thenReturn(USAGE_TEXT)
     }
 
     private companion object {

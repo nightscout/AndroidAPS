@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
+import app.aaps.pump.equil.database.EquilHistoryPump
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
@@ -104,6 +105,64 @@ internal class EquilHistoryViewModelTest {
         // types absent from the when fall through to All
         assertThat(EquilHistoryViewModel.groupForType(EquilHistoryRecord.EventType.FILL))
             .isEqualTo(EquilHistoryEntryGroup.All)
+    }
+
+    /** A pump history row. Port 4, type 1, level 1 is a pump event with a text, so it gives an Event item. */
+    private fun pumpRow(id: Long, index: Int, time: Long, rate: Int = 100, largeRate: Int = 0, withEvent: Boolean = true) =
+        EquilHistoryPump().apply {
+            this.id = id
+            eventIndex = index
+            eventTimestamp = time
+            this.rate = rate
+            this.largeRate = largeRate
+            if (withEvent) {
+                port = 4
+                type = 1
+                level = 1
+            }
+        }
+
+    /**
+     * The insert never replaces a row (the row id is generated), so the same pump event can be stored
+     * twice. On 4.0.0-rc1 the two copies gave two equal items, and the list crashed on the duplicate key.
+     */
+    @Test
+    fun transformPumpEvents_showsAnEventStoredTwiceOnlyOnce() {
+        val event = pumpRow(id = 1, index = 7, time = 1_000_007)
+        val copy = pumpRow(id = 2, index = 7, time = 1_000_007)
+
+        val items = sut.transformPumpEvents(listOf(event, copy))
+
+        assertThat(items.filterIsInstance<PumpEventItem.Event>()).hasSize(1)
+    }
+
+    /** The list key does not depend on time or content, so two items that look the same still get different keys. */
+    @Test
+    fun transformPumpEvents_keysStayUniqueWhenTwoEventsLookTheSame() {
+        val first = pumpRow(id = 1, index = 5, time = 1_000_000)
+        val second = pumpRow(id = 2, index = 6, time = 1_000_000)
+
+        val items = sut.transformPumpEvents(listOf(first, second))
+
+        assertThat(items.filterIsInstance<PumpEventItem.Event>()).hasSize(2)
+        assertThat(items.map { it.listKey }).containsNoDuplicates()
+    }
+
+    /** Basal changes, a bolus and events from the same rows: every item still has its own key. */
+    @Test
+    fun transformPumpEvents_givesEveryKindItsOwnKey() {
+        val rows = listOf(
+            pumpRow(id = 1, index = 1, time = 1_000_001, rate = 100),
+            pumpRow(id = 2, index = 2, time = 2_000_002, rate = 100, largeRate = 50, withEvent = false),
+            pumpRow(id = 3, index = 3, time = 3_000_003, rate = 200)
+        )
+
+        val items = sut.transformPumpEvents(rows)
+
+        assertThat(items.filterIsInstance<PumpEventItem.BasalChange>()).hasSize(2)
+        assertThat(items.filterIsInstance<PumpEventItem.Bolus>()).hasSize(1)
+        assertThat(items.filterIsInstance<PumpEventItem.Event>()).hasSize(2)
+        assertThat(items.map { it.listKey }).containsNoDuplicates()
     }
 
     @Test

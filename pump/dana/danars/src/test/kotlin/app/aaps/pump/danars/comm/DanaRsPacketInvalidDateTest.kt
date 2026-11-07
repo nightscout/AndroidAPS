@@ -82,13 +82,14 @@ class DanaRsPacketInvalidDateTest : DanaRSTestBase() {
         try {
             val havana = DateTimeZone.forID("America/Havana")
             DateTimeZone.setDefault(havana)
-            // Cuba moves the clock from 00:00 to 01:00 on the second Sunday of March
-            assertThat(havana.isLocalDateTimeGap(LocalDateTime(2027, 3, 14, 0, 0))).isTrue()
+            // Cuba moved the clock from 00:00 to 01:00 on 2026-03-08. A past date on purpose: the rules for
+            // future years change with the time zone data (joda-time 2.15.1 dropped the change of March 2027).
+            assertThat(havana.isLocalDateTimeGap(LocalDateTime(2026, 3, 8, 0, 0))).isTrue()
 
             // dateFromBuff takes the position in the whole packet, header included
-            val time = apsHistory().dateFromBuff(header + byteArrayOf(27, 3, 14), 2)
+            val time = apsHistory().dateFromBuff(header + byteArrayOf(26, 3, 8), 2)
 
-            assertThat(time).isEqualTo(DateTime(2027, 3, 14, 1, 0, 0, havana).millis)
+            assertThat(time).isEqualTo(DateTime(2026, 3, 8, 1, 0, 0, havana).millis)
         } finally {
             DateTimeZone.setDefault(defaultZone)
         }

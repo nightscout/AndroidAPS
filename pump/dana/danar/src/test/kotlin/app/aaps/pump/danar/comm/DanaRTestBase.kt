@@ -19,6 +19,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.whenever
 
@@ -43,6 +44,8 @@ open class DanaRTestBase : TestBaseWithProfile() {
         doNothing().whenever(danaRKoreanPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
         doNothing().whenever(danaRPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
         whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
+        // Texts with values, such as "%1$s: %2$s" for "Processing event: <event>"
+        whenever(rh.gs(ArgumentMatchers.anyInt(), anyVararg())).thenReturn("")
     }
 
     init {

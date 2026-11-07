@@ -1,6 +1,7 @@
 package app.aaps.core.nssdk.utils
 
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckEnvelope
+import app.aaps.core.nssdk.localmodel.clientcontrol.KeyExchangeEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.core.nssdk.utils.ClientControlCrypto.bytesToHex
@@ -115,6 +116,14 @@ object ClientControlCrypto {
         val expected = sign(secret, ack.canonicalString())
         return constantTimeEquals(expected, ack.signature)
     }
+
+    /** Master-side: sign a drafted [KeyExchangeEnvelope] with the pairing's old secret (signature field ignored on input). */
+    fun signKeyExchange(secret: ByteArray, draft: KeyExchangeEnvelope): KeyExchangeEnvelope =
+        draft.copy(signature = sign(secret, draft.canonicalString()))
+
+    /** Client-side: verify a [KeyExchangeEnvelope] came from the paired master. */
+    fun verifyKeyExchange(secret: ByteArray, env: KeyExchangeEnvelope): Boolean =
+        constantTimeEquals(sign(secret, env.canonicalString()), env.signature)
 
     /** Master-side: sign a drafted [ProgressEnvelope] (signature field ignored on input). */
     fun signProgress(secret: ByteArray, draft: ProgressEnvelope): ProgressEnvelope =

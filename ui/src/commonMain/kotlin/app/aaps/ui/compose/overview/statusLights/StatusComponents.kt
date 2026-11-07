@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.StatusLevel
@@ -104,7 +105,7 @@ private fun StatusRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Everything that is only read is one accessibility node, so a screen reader reads
-        // "Critical, Cannula, 5d 12h, 150U" in one stop. It used to stop on the name, then the age,
+        // "Critical, Cannula, 5d12h, 150U" in one stop. It used to stop on the name, then the age,
         // then the level: three swipes for a row nobody can change. The merge has to happen HERE and
         // the value columns must carry no semantics of their own, because a merging parent does not
         // absorb a child that is itself merging - which is also what keeps the action button below
@@ -135,11 +136,14 @@ private fun StatusRow(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            // Label
+            // Label. One line even where the row is too narrow for it: cut at the end, never broken
+            // inside the word ("Cann / ula").
             Text(
                 text = item.label,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
 

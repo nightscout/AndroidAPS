@@ -56,16 +56,6 @@ interface APS {
     fun getIsfMgdl(profile: Profile, caller: String): Double? = error("Not implemented")
 
     /**
-     * Calculate ISF to specified timestamp
-     * @param timestamp time
-     * @param caller Caller identification for logging purposes
-     * @return isf or null if not available
-     *
-     * Remember calculation must be as fast as possible. It's called very often
-     */
-    fun getAverageIsfMgdl(timestamp: Long, caller: String): Double? = error("Not implemented")
-
-    /**
      * Calculate current IC
      * @param profile Actual profile to get multiplier form [ProfileSealed.EPS]
      * @return ic or null if not available

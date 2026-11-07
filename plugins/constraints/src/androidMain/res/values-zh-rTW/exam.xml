@@ -202,6 +202,7 @@
     <string name="u200_with_profile_reports">我的 AAPS 資料庫與 NS 報表會變得不正確。所有數值（注射、速率、TDD）都必須乘以 2 才能查看真實數值，尤其是在提供給醫師與醫療團隊時。</string>
     <string name="u200_with_profile_pens">若我使用 U200 筆進行外部注射，就不需要在 AAPS 與筆之間進行任何換算。</string>
     <string name="u200_with_profile_pens2">無論我使用哪種筆（U100 或 U200）進行外部注射，每一次外部注射我都必須在 AAPS 計算的劑量與我在筆上選擇的劑量之間進行換算。</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">您一直使用 U200 搭配 50% 設定檔的權宜作法，並想切換到「胰島素濃度」功能。哪些答案是正確的？</string>
     <string name="switch_u200_profile_any_time">我可以隨時切換，因為我的幫浦中已經是正確的 U200 胰島素。</string>
     <string name="switch_u200_profile_ps">我必須準備一個更強的設定檔（相較目前預設設定檔為 200%），並在下一次更換貼片／儲藥槽且選擇 U200 胰島素時，同步這個新設定檔。</string>

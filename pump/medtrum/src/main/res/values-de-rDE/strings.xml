@@ -2,14 +2,19 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_description">Pumpenintegration für Medtrum Nano und Medtrum 300U</string>
     <string name="medtrum_pump_setting">Medtrum Pumpeneinstellungen</string>
     <string name="pump_error">Pumpenfehler: %1$s!! </string>
+    <string name="pump_warning">Pumpwarnung: %1$s </string>
     <string name="pump_is_suspended">Pumpe ist ausgesetzt</string>
     <string name="pump_is_suspended_hour_max">Pumpe ist wegen Überschreitung des max. Insulins pro Stunde ausgesetzt</string>
     <string name="pump_is_suspended_day_max">Pumpe wird wegen Überschreitung des täglichen Höchstinsulins ausgesetzt</string>
     <string name="patch_not_active">Patch nicht aktiviert</string>
     <string name="pump_setting_failed">Einstellung der Benutzereinstellungen auf Pumpe fehlgeschlagen!</string>
+    <string name="pump_sync_error">Fehler beim Synchronisieren des Verlaufs der Pumpe, ein Datensatz wurde übersprungen. Überprüfen Sie die Behandlungstabelle, um zu überprüfen, ob der Bolus korrekt synchronisiert wurde. Schlummern und wenn der Fehler erneut auftritt, den Patch oder die Pumpenbasis austauschen.</string>
+    <string name="patch_reset_after_primed_error">Der Patch wurde von selbst neu gestartet und hat seine Sitzung verloren. Er kann kein Insulin mehr liefern. Entferne den Patch und starte einen neuen.</string>
     <!-- overview fragment -->
+    <string name="active_bolus_label">Aktiver Bolus</string>
     <string name="pump_state_label">Pumpenstatus</string>
     <string name="active_alarms_label">Aktive Alarme</string>
     <string name="basal_type_label">Basaltyp</string>
@@ -17,6 +22,7 @@
     <string name="fw_version_label">FW-Version</string>
     <string name="patch_no_label">Patch Nr.</string>
     <string name="patch_expiry_label">Patch läuft ab</string>
+    <string name="patch_activation_time_label">Aktivierung</string>
     <string name="reset_alarms_label">Alarme zurücksetzen</string>
     <string name="change_patch_label">Wechsele Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vom Nutzer angefragt</string>
@@ -41,7 +47,9 @@
     <string name="alarm_battery_out">Akku leer</string>
     <string name="alarm_no_calibration">Keine Kalibrierung</string>
     <string name="pump_time_update_failed">Fehler beim Aktualisieren der Pumpen-Zeitzone, stelle Benachrichtigung ab und aktualisiere manuell.</string>
+    <string name="bolus_error">Bolusfehler</string>
     <!-- Status strings -->
+    <string name="status_stopped">Gestoppt</string>
     <!-- wizard-->
     <string name="retry">Erneut versuchen</string>
     <string name="step_prepare_patch">Pod aktivieren</string>
@@ -55,10 +63,12 @@
     <string name="step_deactivate">Patch deaktivieren</string>
     <string name="step_deactivating">Deaktiviere...</string>
     <string name="step_deactivate_complete">Patch deaktiviert</string>
+    <string name="unpair_confirm_message">Dies löscht die gespeicherte Pumpennummer und trennt die Verbindung. Aktiviere einen neuen Patch, um nach einer Pumpe zu suchen.</string>
     <string name="step_retry_activation">Aktivierung wird ausgeführt</string>
     <string name="unexpected_state">Unerwarteter Zustand: %1$s</string>
     <string name="patch_begin_activation">Kein aktiver Patch. Drücken Sie <b>Weiter</b> um den Aktivierungsprozess zu starten.</string>
     <string name="note_min_70_units">Hinweis: Für die Aktivierung ist mindestens 70 Einheiten erforderlich.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f IE</string>
     <string name="do_not_attach_to_body">Den Patch noch nicht an den Körper anhängen.</string>
     <string name="half_press_needle">Nadelknopf halb durchdrücken. Drücke dann <b>Weiter</b> um das Füllen zu starten.</string>
     <string name="wait_for_priming">Bitte warten Sie, bis das Füllen abgeschlossen ist.</string>
@@ -67,6 +77,7 @@
     <string name="remove_safety_lock">Entferne den Sicherheitsverschluss. Befestige die Pumpe an Deinem Körper. Drücke dann die Nadel-Taste.</string>
     <string name="activating_pump">Pumpe wird aktiviert und die Anfangs-Basalrate wird festgelegt. Bitte warten.</string>
     <string name="activating_complete">Neuer Patch aktiviert. %.2f Einheiten übrig.</string>
+    <string name="can_export_settings">Sie können die Einstellungen exportieren, um diese Patchsitzung später wiederherstellen zu können.</string>
     <string name="press_OK_to_return">Drücke <b>OK</b> um zum Hauptbildschirm zurückzukehren.</string>
     <string name="deactivate_sure">Bist Du sicher, dass Du den aktuellen Patch deaktivieren möchtest?</string>
     <string name="cancel_sure">Bist Du sicher, dass Sie Du die Aktivierung abbrechen möchtest?</string>
@@ -83,14 +94,31 @@
     <!-- settings-->
     <string name="alarm_setting_title">Alarm Einstellungen</string>
     <string name="alarm_setting_summary">Wählen Sie Ihre bevorzugten Pumpen-Alarmeinstellungen.</string>
+    <string name="alarm_setting_light_vibrate_beep">Licht, Vibration und Piepton</string>
+    <string name="alarm_setting_light_vibrate">Licht und Vibration</string>
+    <string name="alarm_setting_light_beep">Licht und Piepton</string>
+    <string name="alarm_setting_light">Licht</string>
+    <string name="alarm_setting_vibrate_beep">Vibration und Piepton</string>
+    <string name="alarm_setting_vibrate">Vibration</string>
+    <string name="alarm_setting_beep">Piepton</string>
+    <string name="alarm_setting_silent">Lautlos</string>
+    <string name="pump_warning_notification_title">Benachrichtigung bei Pumpenwarnung</string>
     <string name="patch_expiration_title">Patch Ablaufdatum</string>
     <string name="patch_expiration_summary">Wenn aktiviert, läuft der Patch nach 3 Tagen ab, mit einer Nachfrist von 8 Stunden danach.</string>
+    <string name="hourly_max_insulin_title">Stündliches Maximum an Insulin [IE]</string>
     <string name="hourly_max_insulin_summary">Lege die maximale Anzahl an Insulineinheiten pro Stunde fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
+    <string name="daily_max_insulin_title">Tägliches Maximum an Insulin [IE]</string>
     <string name="daily_max_insulin_summary">Legen Sie die maximale Anzahl an Insulineinheiten pro Tag fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pumpenstatus wird abgerufen</string>
+    <string name="syncing_records">Datensätze synchronisieren, %1$d verbleibend</string>
     <string name="getting_bolus_status">Erhalte Bolus Status</string>
     <string name="getting_temp_basal_status">Erhalte temporären Basalstatus</string>
     <string name="setting_pump_settings">Benutzeroptionen einstellen</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus vom Benutzer abgebrochen</string>
+    <string name="bolus_error_reason_not_connected">Pumpe nicht verbunden</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus wird bereits ausgeführt</string>
+    <string name="bolus_error_reason_unable_to_send_command">Bolus Befehl kann nicht gesendet werden</string>
+    <string name="bolus_error_reason_pump_error">Pumpenfehler</string>
 </resources>

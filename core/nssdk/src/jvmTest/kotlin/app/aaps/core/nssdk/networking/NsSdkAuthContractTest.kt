@@ -26,7 +26,8 @@ import java.util.concurrent.atomic.AtomicInteger
  *    unauthenticated request to Nightscout does not fail - it answers **200 with the anonymous
  *    role**, which flows into `lastStatus` -> `hasWritePermission` -> `DataSyncWorker` skipping the
  *    entire upload block. Nothing is logged and nothing throws; uploads simply stop.
- * 2. **Refresh fires on 401 and 403.** `bearer` only handles 401.
+ * 2. **Refresh fires on 401 and 403.** `bearer` only handles 401. Nightscout answers 403 for a
+ *    token that was deleted, so without it the phone would not learn the token is gone.
  * 3. The failing body is inspected **before** refreshing, to detect a clock-skew rejection. A Ktor
  *    refresh hook never sees the body, so that error would disappear.
  * 4. `bearer` serialises refreshes behind a `Mutex`; this code does not. That one is an improvement
@@ -196,6 +197,19 @@ class NsSdkAuthContractTest {
 
         assertThrows<InvalidAccessTokenException> { client.getSgvs() }
         assertThat(refreshCalls.get()).isEqualTo(1)   // excluded from retry, so exactly one attempt
+    }
+
+    /**
+     * A token deleted in Nightscout, measured on a live server: the old login still gets 403 on
+     * API v3, and only the refresh answers 401. So a 403 must lead to the refresh, or the phone would
+     * not learn that its token is gone until the old login expires.
+     */
+    @Test
+    fun `a deleted token is reported as invalid after a 403`() = runTest {
+        route(data = { status(403, "forbidden") }, refresh = { status(401, "Unauthorized") })
+
+        assertThrows<InvalidAccessTokenException> { client.getSgvs() }
+        assertThat(refreshCalls.get()).isEqualTo(1)
     }
 
     /**

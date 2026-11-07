@@ -1,5 +1,6 @@
 package app.aaps.core.data.datetime
 
+import app.aaps.core.data.time.SystemTimeZone
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import org.joda.time.DateTime
@@ -28,10 +29,14 @@ class IsoDateParserParityTest {
     @BeforeEach fun pinZone() {
         original = TimeZone.getDefault()
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        // The parser asks SystemTimeZone, which answers from its last read. Without this it would
+        // answer with whatever zone some earlier test left there.
+        SystemTimeZone.invalidate()
     }
 
     @AfterEach fun restoreZone() {
         TimeZone.setDefault(original)
+        SystemTimeZone.invalidate()
     }
 
     private fun joda(text: String): Long =

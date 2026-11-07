@@ -6,6 +6,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.alerts.EatReminderAlarm
 import app.aaps.implementation.scenes.SceneExpiryRunner
 import app.aaps.implementation.scenes.SceneExpiryScheduler
 import dev.zacsweers.metro.AppScope
@@ -43,6 +47,42 @@ class DesktopReminderScheduler(
             delay(seconds * 1000L)
             notificationManager.post(NotificationId.TOAST_ALARM, text)
         }
+    }
+}
+
+/**
+ * The "time to eat" alarm, as a coroutine that waits and then posts, like [DesktopReminderScheduler].
+ *
+ * The wait lives in this process, so closing AAPS forgets it. At the next start `EatReminder.restore` sets it
+ * again when the end is still ahead. One alarm at a time; scheduling again replaces it.
+ */
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class DesktopEatReminderAlarm(
+    private val aapsLogger: AAPSLogger,
+    private val notificationManager: NotificationManager,
+    private val rh: TextResolver,
+    private val dateUtil: DateUtil,
+    @ApplicationScope private val scope: CoroutineScope
+) : EatReminderAlarm {
+
+    private var pending: Job? = null
+
+    override fun schedule(startedAt: Long, endsAt: Long): Boolean {
+        cancel()
+        val delayMs = endsAt - dateUtil.now()
+        aapsLogger.debug(LTag.CORE, "Eat reminder in ${delayMs}ms")
+        pending = scope.launch {
+            delay(delayMs)
+            notificationManager.post(NotificationId.TOAST_ALARM, rh.gs(CoreUiStrings.eat_reminder_title))
+        }
+        return true
+    }
+
+    override fun cancel() {
+        pending?.cancel()
+        pending = null
     }
 }
 

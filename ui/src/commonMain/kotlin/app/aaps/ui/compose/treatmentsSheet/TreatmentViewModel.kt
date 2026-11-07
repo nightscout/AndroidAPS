@@ -218,8 +218,11 @@ class TreatmentViewModel(
         if (wizard.calculatedTotalInsulin <= 0.0)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(UiStrings.wizard_no_insulin_required))
 
-        val detail = rh.gs(InterfacesStrings.format_carbs, entry.carbs()) +
-            " " + rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
+        val detail = rh.gs(
+            CoreUiStrings.value_with_unit,
+            rh.gs(InterfacesStrings.format_carbs, entry.carbs()),
+            rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
+        )
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())

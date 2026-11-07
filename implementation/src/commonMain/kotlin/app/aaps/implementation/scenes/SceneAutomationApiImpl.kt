@@ -2,7 +2,7 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
@@ -70,14 +70,14 @@ class SceneAutomationApiImpl(
         else SceneAutomationResult.Failed(result.errorMessage)
     }
 
-    override suspend fun prepareScene(id: String, durationMinutes: Int?): WizardBolusExecutor.PrepareResult {
-        val scene = sceneRepository.getScene(id) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_not_found))
-        if (!scene.isEnabled) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_disabled))
-        return sceneExecutor.prepareScene(scene, durationMinutes)
+    override suspend fun prepareScene(id: String, durationMinutes: Int?, owner: String?): MasterActionExecutor.PrepareResult {
+        val scene = sceneRepository.getScene(id) ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_not_found))
+        if (!scene.isEnabled) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_disabled))
+        return sceneExecutor.prepareScene(scene, durationMinutes, owner)
     }
 
-    override suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult =
-        sceneExecutor.commitScene(bolusId, onError)
+    override suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit, owner: String?): MasterActionExecutor.ConfirmResult =
+        sceneExecutor.commitScene(bolusId, onError, owner)
 
     override suspend fun stopActiveSceneAndStartScene(targetSceneId: String): SceneAutomationResult {
         // TOCTOU re-check: caller (dialog or wire command) captured the target id at some earlier
@@ -110,23 +110,14 @@ class SceneAutomationApiImpl(
         // delegate to the single canonical stop+start path (which TOCTOU-re-checks preconditions).
         val targetId = (activeSceneManager.getActiveState()?.scene?.endAction as? SceneEndAction.ChainScene)?.sceneId
         val result = if (targetId != null) stopActiveSceneAndStartScene(targetId) else stopActiveScene()
-        // Chain-completion notification — posted here so it fires identically whether the chain was
-        // triggered from the End-Scene dialog or a client's scene.stop(triggerChain) command.
-        if (result is SceneAutomationResult.ChainCompleted) {
-            // Read into a local: the format arguments are non-null now, and a public property of
-            // another module cannot be smart cast.
-            val endedSceneName = result.endedSceneName
-            if (result.failedCount == 0 && endedSceneName != null)
-                notificationManager.post(
-                    id = NotificationId.SCENE_CHAINED,
-                    text = rh.gs(CoreUiStrings.scene_chained_format, endedSceneName, result.targetSceneName)
-                )
-            else if (result.failedCount > 0)
-                notificationManager.post(
-                    id = NotificationId.SCENE_CHAIN_ERROR,
-                    text = rh.gs(CoreUiStrings.scene_chain_error_summary, endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
-                )
-        }
+        // Only a chain that went wrong is worth a notification: a follow-up that started is its own
+        // banner. Posted here so it fires identically whether the chain was triggered from the
+        // End-Scene dialog or a client's scene.stop(triggerChain) command.
+        if (result is SceneAutomationResult.ChainCompleted && result.failedCount > 0)
+            notificationManager.post(
+                id = NotificationId.SCENE_CHAIN_ERROR,
+                text = rh.gs(CoreUiStrings.scene_chain_error_summary, result.endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
+            )
         return result
     }
 

@@ -2,6 +2,8 @@ package app.aaps.ui.compose.treatments.viewmodels
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -48,7 +50,10 @@ class TreatmentsViewModel(
     val importExportPrefs: ImportExportPrefs,
     val uel: UserEntryLogger,
     val aapsLogger: AAPSLogger,
-    val rxBus: RxBus
+    val rxBus: RxBus,
+    // Removing a record goes through the master on every role, see BatchAction.Remove.
+    val batchExecutor: BatchExecutor,
+    val config: Config
 ) : ViewModel() {
 
     /**
@@ -68,7 +73,9 @@ class TreatmentsViewModel(
             dateUtil = dateUtil,
             decimalFormatter = decimalFormatter,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 
@@ -78,7 +85,9 @@ class TreatmentsViewModel(
             rh = rh,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 
@@ -91,18 +100,21 @@ class TreatmentsViewModel(
             dateUtil = dateUtil,
             decimalFormatter = decimalFormatter,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 
     val tempTargetViewModel: TempTargetViewModel by lazy {
         TempTargetViewModel(
             persistenceLayer = persistenceLayer,
-            profileUtil = profileUtil,
             rh = rh,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 
@@ -113,7 +125,9 @@ class TreatmentsViewModel(
             rh = rh,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 
@@ -121,10 +135,11 @@ class TreatmentsViewModel(
         CareportalViewModel(
             persistenceLayer = persistenceLayer,
             rh = rh,
-            translator = translator,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 
@@ -134,7 +149,9 @@ class TreatmentsViewModel(
             rh = rh,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
-            rxBus = rxBus
+            rxBus = rxBus,
+            batchExecutor = batchExecutor,
+            config = config
         )
     }
 

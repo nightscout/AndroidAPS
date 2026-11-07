@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.autotune.compose
 
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -70,6 +71,7 @@ internal class AutotuneViewModelTest {
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var loop: Loop
+    @Mock private lateinit var config: Config
 
     private val autotunePlugin: AutotunePlugin = mock()
     private val profileStoreProvider: () -> ProfileStore = mock()
@@ -94,7 +96,7 @@ internal class AutotuneViewModelTest {
         // some other VM does not also release this one's init into its unstubbed dependencies.
         sut = AutotuneViewModel(
             autotunePlugin, autotuneFS, profileFunction, profileUtil, profileRepository, preferences,
-            dateUtil, rh, rxBus, uel, loop, profileStoreProvider, atProfileProvider,
+            dateUtil, rh, rxBus, uel, loop, config, profileStoreProvider, atProfileProvider,
             CoroutineScope(StandardTestDispatcher(TestCoroutineScheduler()))
         )
     }
@@ -149,7 +151,7 @@ internal class AutotuneViewModelTest {
         whenever(dateUtil.dateAndTimeString(any())).thenReturn("now")
         return AutotuneViewModel(
             autotunePlugin, autotuneFS, profileFunction, profileUtil, profileRepository, preferences,
-            dateUtil, rh, rxBus, uel, loop, profileStoreProvider, atProfileProvider,
+            dateUtil, rh, rxBus, uel, loop, config, profileStoreProvider, atProfileProvider,
             CoroutineScope(SupervisorJob() + StandardTestDispatcher(scheduler))
         )
     }
@@ -197,5 +199,34 @@ internal class AutotuneViewModelTest {
         val captor = argumentCaptor<EventShowDialog.Ok>()
         verify(rxBus).send(captor.capture())
         assertThat(captor.firstValue.message).isEqualTo("The pump cannot take it")
+    }
+
+    // A switch made on a client stays there and never reaches the master, so the client does not offer it. Copying the
+    // tuned profile into the profile store is still offered: the store is synced.
+    @Test
+    fun `a client does not offer the switch to the tuned profile`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val vm = tunedSut(testScheduler)
+        advanceUntilIdle()
+
+        assertThat(vm.uiState.value.lastRunSuccess).isTrue()
+        assertThat(vm.uiState.value.showProfileSwitch).isFalse()
+        assertThat(vm.uiState.value.showCopyLocal).isTrue()
+    }
+
+    @Test
+    fun `the master offers the switch to the tuned profile`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        val vm = tunedSut(testScheduler)
+        advanceUntilIdle()
+
+        assertThat(vm.uiState.value.showProfileSwitch).isTrue()
+    }
+
+    /** A VM whose last run succeeded, so the result buttons are worked out. */
+    private fun tunedSut(scheduler: TestCoroutineScheduler): AutotuneViewModel {
+        whenever(autotunePlugin.lastRunSuccess).thenReturn(true)
+        whenever(rh.gs(any<Int>())).thenReturn("text")
+        return advanceableSut(scheduler)
     }
 }

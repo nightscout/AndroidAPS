@@ -78,7 +78,7 @@
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
     <string name="connect_pump_base">Assurez-vous que la base de la pompe est connectée au patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
     <string name="note_min_70_units">Remarque : Un minimum de 70 unités est requis pour l\'activation.</string>
-    <string name="reservoir_text_and_level">Réservoir: %.2fU</string>
+    <string name="reservoir_text_and_level">Réservoir : %.2f U</string>
     <string name="do_not_attach_to_body">Ne fixez pas encore le Patch sur le corps.</string>
     <string name="half_press_needle">Appuyez à mi-course sur le bouton de l\'aiguille. Puis appuyez sur <b>Suivant</b> pour démarrer l\'amorçage.</string>
     <string name="wait_for_priming">Merci de patienter jusqu\'à la fin de l\'amorçage.</string>
@@ -114,7 +114,7 @@
     <string name="alarm_setting_silent">Silencieux</string>
     <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>
     <string name="pump_warning_notification_summary">Afficher une notification sur les avertissements non critiques de la pompe : pile faible, réservoir faible (20 unités) et expire bientôt. Il est recommandé de laisser activé lorsque les alarmes de la pompe sont réglées sur silencieux.</string>
-    <string name="pump_warning_expiry_hour_title">Avertissement d\'expiration de la pompe [hours]</string>
+    <string name="pump_warning_expiry_hour_title">Avertissement d\'expiration de la pompe [heures]</string>
     <string name="pump_warning_expiry_hour_summary">Afficher une notification à l\'heure spécifiée après l\'activation.</string>
     <string name="patch_expiration_title">Expiration du Patch</string>
     <string name="patch_expiration_summary">Lorsqu\'il est activé, le Patch expirera après 3 jours, avec un délai de grâce de 8 heures au-delà.</string>

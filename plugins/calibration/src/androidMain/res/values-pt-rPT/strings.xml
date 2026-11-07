@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Sem calibração</string>
+    <string name="description_no_calibration">"Nenhuma calibração aplicada. Os valores do sensor são usados tal como estão. Use quando o sensor já é calibrado de fábrica e é preciso."</string>
+    <string name="linear_calibration_name">Calibração linear</string>
+    <string name="description_linear_calibration">"Calibração linear por sensor (declive e desvio), calculada a partir das suas medições capilares. As medições recentes têm mais peso. É aplicada após o início da sessão do sensor atual; as primeiras 2 horas são ignoradas como aquecimento."</string>
+    <string name="sensor_change_detected_text">Possível troca de sensor detetada às %1$s. Marcar como sensor novo?</string>
+    <string name="sensor_change_detected_action">Marcar troca de sensor</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registe uma troca de sensor para ativar a calibração.</string>
+    <string name="cal_status_warmup">Aquecimento do sensor — calibração ativa após %1$s.</string>
+    <string name="cal_status_need_more_entries">São necessárias pelo menos 2 medições capilares (atualmente %1$d).</string>
+    <string name="cal_status_unsafe_fit">Ajuste fora do intervalo seguro — calibração não aplicada.</string>
+    <string name="cal_status_applied">Calibração aplicada.</string>
+    <string name="cal_status_applied_offset_only">Aplicada calibração só com desvio — o intervalo do sensor é demasiado estreito para o declive.</string>
+    <string name="cal_status_applied_slope_clamped">Calibração aplicada — declive limitado a um intervalo seguro. Adicione mais medições para o libertar.</string>
+    <string name="cal_slope_offset">Declive %1$.2f, correção a meio do intervalo %2$s</string>
+    <string name="cal_session_started">Sessão iniciada: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registar troca de sensor</string>
+    <string name="cal_add_calibration">Adicionar calibração</string>
+    <string name="cal_entries_header">Medições capilares (%1$d)</string>
+    <string name="cal_no_entries">Ainda sem medições capilares.</string>
+    <string name="cal_entry_pair">Capilar %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Medição %1$d/%2$d · %3$s · sensor %4$s → glicose %5$s</string>
 </resources>

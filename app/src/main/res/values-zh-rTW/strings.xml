@@ -12,4 +12,14 @@
     <string name="migrating_effective_profile_switches">正在移轉生效的設定檔切換…</string>
     <string name="migrating_boluses">正在移轉注射…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">較舊的記錄沒有胰島素設定，且當時沒有啟用中的設定檔，因此這些記錄使用了 %1$s。請檢查你的胰島素設定——已完成移轉的記錄之後不會再更新。</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">較早的記錄沒有胰島素作用時間，因此已將 %2$s 設為 %1$.1f 小時。請檢查胰島素設定 — 已完成移轉的記錄之後不會再更新。</string>
+    <string name="settings_unreadable_title">無法讀取 AAPS 設定</string>
+    <string name="settings_unreadable_key_explanation">這支手機上的設定已使用 Android 為 AAPS 保管的金鑰加密，但該金鑰現在已無法解密設定。手機的金鑰儲存區重設後，可能會發生這種情況。</string>
+    <string name="settings_unreadable_keystore_explanation">手機的金鑰儲存區沒有回應，因此 AAPS 無法開啟設定。</string>
+    <string name="settings_unreadable_not_running">AAPS 未在執行，也不會控制幫浦。正在執行的臨時基礎率會在設定時間結束，之後幫浦會恢復使用自己的基礎率。</string>
+    <string name="settings_unreadable_what_to_do">重試會關閉 AAPS 並重新啟動。如果沒有幫助，請重新啟動手機。只有在其他方法都無效時，才選擇「重新開始」：這會將無法讀取的設定移到一旁，並讓 AAPS 使用空白設定啟動。接著在設定嚮導中匯入最近一次匯出的設定。</string>
+    <string name="settings_unreadable_start_fresh">重新開始</string>
+    <string name="settings_unreadable_confirm_title">要使用空白設定啟動嗎？</string>
+    <string name="settings_unreadable_confirm_text">無法讀取的設定檔會重新命名並保留。所有設定都會恢復為預設值。接著重新設定 AAPS，或匯入已匯出的設定。</string>
+    <string name="settings_unreadable_notification">AAPS 未在執行。請開啟 AAPS 查看如何處理。</string>
 </resources>

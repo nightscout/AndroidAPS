@@ -19,13 +19,6 @@ plugins {
  * A plain `kotlin("jvm")` module rather than a multiplatform one: it has exactly one target, and
  * Gradle resolves the `jvm` variant of every multiplatform module it depends on.
  */
-/**
- * Which module owns which strings, generated rather than hand written.
- *
- * The list is `StringOwnerModules.ALL`, shared with `:app` and `:ios:shell`, so a module added to
- * the build cannot be missing from one platform and present on another. That is not theoretical:
- * this shell had five of sixteen and rendered plugin names as string names until it was run.
- */
 
 /** The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date. */
 fun buildStamp(): String {
@@ -40,12 +33,7 @@ fun buildStamp(): String {
     }
     return "$commit-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
 }
-/**
- * The version this build reports, from the same constant the Android app uses.
- *
- * Without it the About dialog showed a hardcoded placeholder, which is worse than showing nothing:
- * a user quoting it in a bug report names a build that does not exist.
- */
+
 /**
  * The app icon, copied from the one place it lives rather than checked in twice.
  *
@@ -140,6 +128,12 @@ val makeIcns = tasks.register<Exec>("makeDesktopIcns") {
     )
 }
 
+/**
+ * The version this build reports, from the same constant the Android app uses.
+ *
+ * Without it the About dialog showed a hardcoded placeholder, which is worse than showing nothing:
+ * a user quoting it in a bug report names a build that does not exist.
+ */
 val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBuildInfo") {
     version.set(Versions.appVersion)
     buildStamp.set(buildStamp())
@@ -149,6 +143,13 @@ val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBu
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
 }
 
+/**
+ * Which module owns which strings, generated rather than hand written.
+ *
+ * The list is `StringOwnerModules.ALL`, shared with `:app` and `:ios:shell`, so a module added to
+ * the build cannot be missing from one platform and present on another. That is not theoretical:
+ * this shell had five of sixteen and rendered plugin names as string names until it was run.
+ */
 val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateDesktopStringOwners") {
     owners.set(StringOwnerModules.ALL)
     packageName.set("app.aaps.desktop.shell.di")
@@ -159,7 +160,6 @@ val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("gene
 }
 
 kotlin {
-    compilerOptions { jvmTarget.set(Versions.jvmTarget) }
     sourceSets.main {
         kotlin.srcDir(generateStringOwners)
         kotlin.srcDir(generateBuildInfo)
@@ -203,6 +203,11 @@ dependencies {
     // phone runs, so a payload parses identically on both.
     implementation(libs.org.json.android)
 
+    // The OS key stores the encryption keys live in: DPAPI (through jna-platform's Crypt32Util), the
+    // macOS Keychain and libsecret. One library for all three; see the `secure` package.
+    implementation(libs.jna)
+    implementation(libs.jna.platform)
+
     // The plugins the client runs, mirroring the list :ios:shell carries. Metro finds their
     // @ContributesBinding classes through these, which is what turns the graph from an anchor into
     // the real app. No pump driver except the virtual one: a desktop has no Bluetooth radio to
@@ -233,11 +238,28 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-tasks.withType<Test> { useJUnitPlatform() }
+tasks.withType<Test> {
+    useJUnitPlatform()
+    // Where the tests see the home directory. `DesktopFolders` puts the preference store, the log and
+    // the database under `user.home`. A test that builds the real graph opens all three, so without
+    // this a test run would write into the developer's own `~/.aaps`, the same folder the running app
+    // uses. Emptied before each run, so one run cannot leave state behind for the next.
+    // A local File, not a value of the script: `doFirst` keeps what it uses until the task runs, and a
+    // reference to the build script there breaks the configuration cache.
+    val testHome = project.layout.buildDirectory.dir("test-home").get().asFile
+    systemProperty("user.home", testHome.absolutePath)
+    // Keys in files under that home, never in the real Keychain or keyring of whoever runs the tests.
+    // The tests of the OS key stores themselves construct those directly.
+    systemProperty("aaps.desktop.keyVault", "file")
+    doFirst { testHome.deleteRecursively() }
+}
 
 compose.desktop {
     application {
         mainClass = "app.aaps.desktop.shell.MainKt"
+        // JNA calls into the OS key stores. From JDK 24 that is a "restricted method": allowed today with a
+        // warning, blocked in a future release unless native access is enabled. JDK 21 accepts the flag too.
+        jvmArgs += "--enable-native-access=ALL-UNNAMED"
 
         nativeDistributions {
             // The client name, matching `DesktopClientConfig.appName` and the `aapsclient` flavour
@@ -248,6 +270,10 @@ compose.desktop {
             // jpackage demands a plain numeric version - an MSI rejects anything else - so the
             // `-dev-b-kmp` style suffix that Versions.appVersion carries is trimmed off here.
             packageVersion = Versions.appVersion.substringBefore('-')
+            // The packaged app carries a trimmed JRE with only the modules the plugin can detect. JNA
+            // needs sun.misc.Unsafe from jdk.unsupported, which it cannot detect; without it every OS
+            // key store fails to load and the keys fall back to plain files.
+            modules("jdk.unsupported")
             // jpackage embeds a JRE, so the user installs an app rather than a JVM.
             targetFormats(
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,

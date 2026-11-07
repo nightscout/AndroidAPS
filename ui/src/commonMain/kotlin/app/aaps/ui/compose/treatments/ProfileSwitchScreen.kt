@@ -46,6 +46,7 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.RecordRemovalDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.stringResource
@@ -74,8 +75,6 @@ fun ProfileSwitchScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Dialog states
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var deleteDialogMessage by remember { mutableStateOf("") }
     var showCloneDialog by remember { mutableStateOf(false) }
     var cloneDialogMessage by remember { mutableStateOf("") }
     var pendingCloneAction by remember { mutableStateOf<(() -> Unit)?>(null) }
@@ -89,28 +88,13 @@ fun ProfileSwitchScreen(
         setToolbarConfig(
             viewModel.getToolbarConfig(
                 onNavigateBack = onNavigateBack,
-                onDeleteClick = {
-                    if (uiState.selectedItems.isNotEmpty()) {
-                        deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
-                        showDeleteDialog = true
-                    }
-                }
+                onDeleteClick = { viewModel.requestDelete() }
             )
         )
     }
 
-    // Delete confirmation dialog
-    if (showDeleteDialog) {
-        OkCancelDialog(
-            title = stringResource(CoreUiStrings.removerecord),
-            message = deleteDialogMessage,
-            onConfirm = {
-                viewModel.deleteSelected()
-                showDeleteDialog = false
-            },
-            onDismiss = { showDeleteDialog = false }
-        )
-    }
+    // Delete confirmation, written by the master
+    RecordRemovalDialog(removal = viewModel.removal, onApplied = { viewModel.onRemoved() })
 
     // Clone confirmation dialog
     if (showCloneDialog) {

@@ -911,6 +911,14 @@
             android:exported="false"
             android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
+        <!-- The "time to eat" timer: its alarm, and the buttons of its notification -->
+        <receiver
+            android:name=".eatreminder.EatReminderReceiver"
+            android:exported="false" />
+        <!-- The phone's alarm on the watch: the buttons of its notification, and its repeats -->
+        <receiver
+            android:name=".alarm.PhoneAlarmReceiver"
+            android:exported="false" />
         <activity
             android:name="androidx.wear.activity.ConfirmationActivity"
             android:exported="false"

@@ -67,26 +67,50 @@ Bug Fix #1.
 
 ---
 
-## 2. Nice-number scaling (`GraphUtils.kt`)
+## 2. Axis bounds and labels (`GraphUtils.kt`)
 
-Implements Paul Heckbert's "Nice Numbers for Graph Labels" algorithm: axis bounds and tick
-spacing are snapped to `1/2/5/10 × 10^n` (a `2.5` tier is added to avoid an overly coarse jump
-between the `2` and `5` tiers).
+The bounds of an axis and its labels are worked out apart from each other.
+
+**Bounds** are the data of the visible window, rounded out to a grid of about a tenth of the
+range, as `1/2/5 × 10^n` (`boundGrid`). A bound lies at most a sixth of the range beyond the data,
+so the curve fills its graph, and it still moves in steps instead of with every scroll tick.
 
 | Function | Used for |
 |---|---|
-| `niceScale(min, max)` | Free-range scale, no zero anchor (VAR_SENSITIVITY, HEART_RATE) |
-| `zeroFloorNiceRange(min, max)` | Mostly-positive series (IOB, BGI, DEVIATIONS, ACTIVITY, STEPS, ABS_IOB) — floors at 0 by default, but disparity-aware: if the negative excursion is small relative to the positive range (ratio ≥ 10×), the negative side gets its own small "nice" sliver instead of forcing one shared (coarser) tick step across the whole range |
-| `niceScaleAroundPivot(min, max, pivot)` | SENSITIVITY (pivot=100%) / DEV_SLOPE (pivot=0) — pivot always lands exactly at the axis midpoint. Below a minimum deviation floor (`SENS_MIN_DEVIATION = 5.0`), snaps to a fixed 3-tick scale instead of nice-ifying a near-zero range |
-| `niceUp(value)` / `niceNegativeSliver(value)` | Round a single bound up (or further negative) independently — used when the two sides of a range need decoupled scales |
+| `niceScale(min, max)` | Free-range scale, no zero anchor (BG, VAR_SENSITIVITY, HEART_RATE) |
+| `zeroFloorNiceRange(min, max)` | Mostly-positive series (IOB, BGI, DEVIATIONS, ACTIVITY, STEPS, ABS_IOB) — floors at 0 by default, but disparity-aware: if the negative excursion is small relative to the positive range (ratio ≥ 10×), each side is rounded on its own grid, so the negative part stays a thin sliver |
+| `niceScaleAroundPivot(min, max, pivot)` | SENSITIVITY (pivot=100%) / DEV_SLOPE (pivot=0) — pivot always lands exactly at the axis midpoint. Below a minimum deviation floor (`SENS_MIN_DEVIATION = 5.0`), a fixed pivot ± 5 instead of a range tight around a near-zero deviation |
+| `niceUp(value)` | Rounds a single bound up on its own grid — used when the two sides of a range are rounded apart |
 
-`ClampedVerticalAxisItemPlacer` wraps the standard step-based item placer to filter out
-labels/gridlines outside a given `[visibleMin, visibleMax]` — used in two situations:
-1. IOB/BAS: the axis extends above the real IOB data to reserve headroom for the basal overlay;
-   labels must stop at the real data max, not continue into the reserved band.
+**Labels** come from `NiceVerticalAxisItemPlacer`. They are the multiples of the smallest
+`1/2/5 × 10^n` step that keeps them `AXIS_LABEL_SPACING` (1.5) label heights apart on the real
+pixel height of the axis, so a taller graph gets a finer step (0, 0.5, 1, 1.5 U instead of 0, 1 U).
+When that spacing would leave fewer than two labels, they may come closer, down to just touching:
+one label alone says nothing about the scale.
+Being multiples of the step and not steps counted from a bound, they are round numbers whatever
+the bounds are, and 0 is a label whenever it is on the axis (SENS' 100% too). A bound does not
+need to carry a label.
+
+Before, one Heckbert "nice numbers" scale did both jobs, so the bounds had to be label values.
+A short graph has room for only a few labels — the IOB graph asked for 3 (`IOB_GRAPH_TICK_COUNT`)
+to stay clear of Vico's own label thinning — and a bound could then land almost twice as far out
+as the data: an IOB of 2.9 U got an axis up to 4 U, and up to 5 U with a hair of negative IOB in
+view. The requested tick counts are gone with that.
+
+The placer's `labelMin` / `labelMax` keep labels off a part of the axis the series does not
+reach. Two situations:
+1. IOB/BAS: the axis goes on above the real IOB data, to leave room above IOB (see below);
+   labels must stop at the real data max.
 2. Dual-axis combos where the zero-floor side's axis is pushed below its own real floor purely
    to align its zero with the other side's pivot — labels must stop at its own real floor
    instead of showing a fake negative tick for a series that can never go negative.
+
+**IOB/BAS layout.** IOB and the bolus markers fill the lower 75% of the height
+(`IOB_HEIGHT_FRACTION`); basal hangs down from the top over 50% (`BASAL_HEIGHT_FRACTION`). The two
+overlap between 50% and 75%. They meet there only when a high temp basal runs with a high IOB;
+the loop sets a low or zero temp most of the time, and basal then stays at the top. Before, the
+two did not overlap, and IOB had only the lower half. The free top quarter holds the label of a
+bolus given at the IOB peak.
 
 ---
 
@@ -101,15 +125,18 @@ computes a shared axis construction depending on which series are combined:
 - **One pivot, one zero-floor** (e.g. SENS + COB): the pivot side gets a full nice-scaled
   symmetric range around its own pivot, unconditionally. The zero-floor side gets a symmetric
   `(-half, +half)` container sized from its own zero-floor nice range, so its zero lands at the
-  pivot's center row; its own real floor is preserved for tick labels via
-  `ClampedVerticalAxisItemPlacer`.
+  pivot's center row; its own real floor is preserved for tick labels via the `labelMin` of
+  `NiceVerticalAxisItemPlacer`.
 - **Neither pivot-centered** (e.g. COB + VAR_SENSITIVITY, BGI + STEPS): each series' own
   "negative fraction" (how much of its axis height sits below zero) is computed independently —
   primary from its nice bounds, secondary from its raw bounds — and the shared target fraction
   is their **average**, so neither curve's dynamic range dominates the compromise. Each axis is
   then widened just enough to hit that shared fraction, anchored at whichever of its own
   min/max avoids clipping (`fractionAlignedRange` / `fractionAlignedNiceRange`) — this
-  construction guarantees neither curve is ever clipped, for any target fraction.
+  construction guarantees neither curve is ever clipped, for any target fraction. Rounding the
+  primary's stretched bound moves its zero a little off the shared fraction, so the secondary
+  axis, which is not rounded, takes the primary's real zero fraction instead, and both zeros stay
+  on one pixel row.
 
 Verified by hand for the disparity case that motivated this design: a mostly-positive series
 (e.g. IOB) combined with a series that has a real negative excursion (e.g. BGI) — in both
@@ -175,7 +202,7 @@ no axis of its own must not move them.
 | | BG graph | IOB/BAS graph |
 |---|---|---|
 | zero anchor | the **low mark** | IOB zero |
-| room above | `bgNice.max - lowMark` | `primaryDataNiceRange.max` (stops below the reserved basal band) |
+| room above | `bgNice.max - lowMark` | `primaryDataNiceRange.max` (the IOB top, below the free top quarter) |
 | room below | `lowMark - bgNice.min` | IOB's own negative sliver, usually none |
 
 On the IOB/BAS graph this is the ordinary vertical zero alignment — activity zero on IOB zero.
@@ -197,27 +224,26 @@ the green".
 
 ### Where the negative tail is clipped
 
-The BG axis floor is `floor(dataMin / step) * step`, and `dataMin` is itself floored at the low
-mark, so the floor normally lands below the low mark and leaves 10–25% of the height underneath it.
-But when the low mark is an exact multiple of the step and the visible window holds no BG below it,
-the floor lands exactly **on** the low mark and there is no room at all:
+The BG axis floor is `dataMin` rounded down to the bound grid (about a tenth of the range), and
+`dataMin` is itself floored at the low mark. While the visible window holds no BG below the low
+mark, the floor therefore lands on the low mark or just under it, and there is little or no room:
 
 | lowMark | highMark | BG axis | room below lowMark |
 |---|---|---|---|
-| 72 (default) | 180 | 50..200 | 22 mg/dL (14.7%) |
-| 70 | 180 | 50..200 | 20 (13.3%) |
-| 75 | 180 | 50..200 | 25 (16.7%) |
+| 72 (default) | 180 | 70..180 | 2 mg/dL (1.8%) |
+| **70** | **180** | **70..180** | **0** |
+| 75 | 180 | 70..180 | 5 (4.5%) |
 | **80** | **180** | **80..180** | **0** |
 | **90** | **140** | **90..140** | **0** |
 | **100** | any | **100..** | **0** |
-| 3.9 mmol | 10.0 | 2.0..10.0 | 1.9 (23.8%) |
+| 3.9 mmol | 10.0 | 3.5..10.0 | 0.4 (6.2%) |
 | **4.0 mmol** | **10.0** | **4.0..10.0** | **0** |
 | **5.0 mmol** | **9.0** | **5.0..9.0** | **0** |
 
-4.0 mmol/L is a common low mark, so this is not a corner case. In that situation the negative tail
-is clipped at the axis floor and the positive side deliberately keeps its full scale — it is not
-shrunk to compensate. The alternative would be to move the BG scale, which is exactly what the rule
-above forbids.
+So the negative tail is clipped at the axis floor in most setups, and the positive side
+deliberately keeps its full scale — it is not shrunk to compensate. The alternative would be to
+move the BG scale, which is exactly what the rule above forbids. (With the coarser rounding the BG
+axis used before, most setups left 10–25% of the height under the low mark.)
 
 `ActivityGraphData.maxActivity` (a `max(|activity|)` over the whole loaded day, computed in
 `PrepareGraphDataRunner`) was the only input to the old formulas and was removed with them.

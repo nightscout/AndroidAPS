@@ -24,6 +24,7 @@ import platform.Foundation.create
 import platform.Security.SecItemAdd
 import platform.Security.SecItemCopyMatching
 import platform.Security.SecItemDelete
+import platform.Security.errSecItemNotFound
 import platform.Security.errSecSuccess
 import platform.Security.kSecAttrAccessible
 import platform.Security.kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
@@ -45,12 +46,26 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  */
 interface Keychain {
 
+    /** The stored key, or null when there is none - or when the Keychain did not answer. */
     fun load(alias: String): ByteArray?
+
+    /**
+     * Like [load], but only "nothing stored" answers null. A Keychain that does not answer throws
+     * [KeychainUnavailableException].
+     *
+     * For a key whose absence leads to a new key: the settings store would otherwise make a new key while
+     * the old one is only out of reach, and the settings it protects would be lost.
+     */
+    fun loadStrict(alias: String): ByteArray? = load(alias)
+
     fun store(alias: String, key: ByteArray)
 
     /** True when something was actually removed. */
     fun delete(alias: String): Boolean
 }
+
+/** The Keychain answered with an error, not with a key and not with "nothing stored". */
+class KeychainUnavailableException(val status: Int) : Exception("The Keychain did not answer, OSStatus $status")
 
 /**
  * The real Keychain.
@@ -77,7 +92,14 @@ interface Keychain {
 @OptIn(ExperimentalForeignApi::class, ExperimentalEncodingApi::class)
 class AppleKeychain(private val service: String = "app.aaps.secureencrypt") : Keychain {
 
-    override fun load(alias: String): ByteArray? = memScoped {
+    override fun load(alias: String): ByteArray? =
+        try {
+            loadStrict(alias)
+        } catch (_: KeychainUnavailableException) {
+            null
+        }
+
+    override fun loadStrict(alias: String): ByteArray? = memScoped {
         val query = SecQuery()
         try {
             query.put(kSecClass, kSecClassGenericPassword)
@@ -85,9 +107,11 @@ class AppleKeychain(private val service: String = "app.aaps.secureencrypt") : Ke
             query.putBridged(kSecAttrAccount, alias)
             query.put(kSecReturnData, kCFBooleanTrue)
             val result = alloc<CFTypeRefVar>()
-            val status = SecItemCopyMatching(query.dictionary(), result.ptr)
-            if (status != errSecSuccess) return@memScoped null
-            (CFBridgingRelease(result.value) as? NSData)?.toByteArray()
+            when (val status = SecItemCopyMatching(query.dictionary(), result.ptr)) {
+                errSecSuccess      -> (CFBridgingRelease(result.value) as? NSData)?.toByteArray()
+                errSecItemNotFound -> null
+                else               -> throw KeychainUnavailableException(status)
+            }
         } finally {
             query.close()
         }

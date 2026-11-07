@@ -19,9 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +37,7 @@ import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.RecordRemovalDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -64,10 +62,6 @@ fun RunningModeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Dialog state
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var deleteDialogMessage by remember { mutableStateOf("") }
-
     val currentlyActiveMode = remember(uiState.runningModes) {
         viewModel.getActiveMode()
     }
@@ -77,28 +71,13 @@ fun RunningModeScreen(
         setToolbarConfig(
             viewModel.getToolbarConfig(
                 onNavigateBack = onNavigateBack,
-                onDeleteClick = {
-                    if (uiState.selectedItems.isNotEmpty()) {
-                        deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
-                        showDeleteDialog = true
-                    }
-                }
+                onDeleteClick = { viewModel.requestDelete() }
             )
         )
     }
 
-    // Delete confirmation dialog
-    if (showDeleteDialog) {
-        OkCancelDialog(
-            title = stringResource(CoreUiStrings.removerecord),
-            message = deleteDialogMessage,
-            onConfirm = {
-                viewModel.deleteSelected()
-                showDeleteDialog = false
-            },
-            onDismiss = { showDeleteDialog = false }
-        )
-    }
+    // Delete confirmation, written by the master
+    RecordRemovalDialog(removal = viewModel.removal, onApplied = { viewModel.onRemoved() })
 
     AapsTheme {
         Box(modifier = Modifier.fillMaxSize()) {

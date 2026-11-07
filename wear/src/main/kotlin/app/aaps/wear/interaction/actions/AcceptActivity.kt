@@ -243,6 +243,7 @@ class AcceptActivity : AppCompatActivity() {
                                 enabled = !confirmationSent,
                                 totalInsulin = wizardDetail?.let { (it.unclampedInsulin + correctionU).coerceAtLeast(0.0) },
                                 carbs = wizardDetail?.carbs,
+                                eCarbs = wizardDetail?.eCarbsGrams ?: 0,
                                 onConfirm = { confirmationSent = true; confirm(correctionU) },
                             )
                         }
@@ -309,7 +310,7 @@ class AcceptActivity : AppCompatActivity() {
 }
 
 @Composable
-private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: Int?, onConfirm: () -> Unit) {
+private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: Int?, eCarbs: Int, onConfirm: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     val fmt = remember { NumberFormat.DECIMAL_2 }
     Column(
@@ -352,9 +353,10 @@ private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: In
                 fontWeight = FontWeight.Bold,
             )
         }
-        if (carbs != null && carbs > 0) {
+        if (carbs != null && (carbs > 0 || eCarbs > 0)) {
+            // "52+22 g" when part of the meal goes in as eCarbs, same as the request page and the phone.
             Text(
-                text = stringResource(R.string.wizard_carbs_short, carbs),
+                text = if (eCarbs > 0) stringResource(R.string.wizard_carbs_split, carbs, eCarbs) else stringResource(R.string.wizard_carbs_short, carbs),
                 color = CarbsOrange,
                 fontSize = 12.sp,
             )
@@ -409,12 +411,15 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
 
     // Scrolls in both states: a warning line under the total makes the summary card taller, and the
     // "New IOB" line of the collapsed calculation card then sits under the round edge of the screen.
+    // The big bottom margin is what makes that case scrollable. Without a warning the closed page
+    // fits, and the margin would only add an empty scroll, so it stays small there.
+    val bottomPadding = if (isExpanded || warnings.isNotEmpty()) 36.dp else 10.dp
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = 10.dp)
-            .padding(top = 10.dp, bottom = 36.dp),
+            .padding(top = 10.dp, bottom = bottomPadding),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -505,7 +510,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                 if (correctionSteps != 0 && detail.carbs == 0) {
                     val corrSign = if (correctionU > 0) "+" else ""
                     Text(
-                        text = "$corrSign${fmt2.format(correctionU)} ${stringResource(R.string.insulin_unit_short)}",
+                        text = stringResource(R.string.wizard_insulin_format, "$corrSign${fmt2.format(correctionU)}"),
                         color = InsulinBlue,
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center,
@@ -540,7 +545,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                             Spacer(Modifier.width(3.dp))
                             Text(text = "(", color = WearSecondaryText, fontSize = carbsFontSize)
                             Text(
-                                text = "$corrSign${fmt2.format(correctionU)} ${stringResource(R.string.insulin_unit_short)}",
+                                text = stringResource(R.string.wizard_insulin_format, "$corrSign${fmt2.format(correctionU)}"),
                                 color = InsulinBlue,
                                 fontSize = carbsFontSize,
                                 fontWeight = FontWeight.Bold,
@@ -678,7 +683,7 @@ private fun WizardDetailRow(label: String, value: Double, fmt: NumberFormat) {
         Spacer(Modifier.width(6.dp))
         Text(text = label, color = WearSecondaryText, fontSize = 11.sp, modifier = Modifier.weight(1f))
         Text(
-            text = "$sign${fmt.format(value)} ${stringResource(R.string.insulin_unit_short)}",
+            text = stringResource(R.string.wizard_insulin_format, "$sign${fmt.format(value)}"),
             color = valueColor,
             fontSize = 11.sp,
         )

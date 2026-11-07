@@ -18,6 +18,19 @@ interface BooleanPreferenceKey : PreferenceKey, BooleanNonPreferenceKey {
      */
     val engineeringModeOnly: Boolean
         get() = false
+
+    /**
+     * Affected by hardened mode ([Preferences.hardenedMode])?
+     *
+     * If yes: while hardened mode is on, the default value is always used, the stored value is ignored
+     * and the row is hidden. The default of such a key must therefore be its hardened value: do not
+     * accept from Nightscout, do upload, use the WebSocket.
+     *
+     * Like [defaultedBySM], but for hardened mode. Simple mode turns hardened mode on, but it is not
+     * the same thing: a user who is not in simple mode can turn hardened mode on as well.
+     */
+    val defaultedByHardenedMode: Boolean
+        get() = false
 }
 
 /**

@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 
@@ -56,6 +57,13 @@ interface CommandQueue {
     fun clear()
 
     /**
+     * Like [clear], a delivery failure with its alarm, but with [comment] as the reason instead of
+     * "connection timed out" - for a case where the real reason is known, so the alarm does not send the
+     * user the wrong way.
+     */
+    fun clear(comment: TextRef)
+
+    /**
      * Drops every queued command without running it and tells each waiting caller, through
      * [Command.cancel] - so a command that owns progress UI (a bolus) clears it as well.
      *
@@ -71,6 +79,18 @@ interface CommandQueue {
     fun performing(): Command?
     fun resetPerforming()
     fun bolusInQueue(): Boolean
+
+    /**
+     * True while an SMB is being delivered. It cannot be stopped, and the queue refuses a manual bolus until it has
+     * finished, so the bolus screens block their OK button meanwhile.
+     */
+    val smbBeingDelivered: StateFlow<Boolean>
+
+    /**
+     * Drops an SMB that waits in the queue and has not started yet. Its caller, the loop, is told that it was not
+     * given. Used when the user starts a bolus: the SMB was calculated without that bolus.
+     */
+    fun dropWaitingSmb()
     suspend fun bolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
     fun cancelAllBoluses(id: Long?)
     suspend fun stopPump(): PumpEnactResult

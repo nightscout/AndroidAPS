@@ -3,6 +3,7 @@ package app.aaps.implementation.sharedPreferences
 import app.aaps.core.data.model.devAssert
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -58,6 +59,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
+import kotlin.concurrent.Volatile
 import kotlin.math.max
 import kotlin.math.min
 
@@ -83,7 +85,14 @@ class PreferencesImpl(
     // classes, so it did about a dozen contains-checks in total. It now holds the key constants, and
     // a list would mean a linear scan per key against well over a thousand of them. LinkedHashSet
     // keeps insertion order, so everything that iterates this still sees the same sequence.
-    private val prefsList: MutableSet<NonPreferenceKey> =
+    //
+    // Copy on write. A plugin registers its keys when it is created, which can be late and on any
+    // thread, while other threads read this set - the Nightscout sync publisher reads the sync keys
+    // on a background thread. Adding to a LinkedHashSet while another thread walks it throws
+    // ConcurrentModificationException (seen in getSyncKeys on 4.0.0-rc1). So a registration builds
+    // a new set and swaps it in, and a reader always walks one complete set without a lock.
+    @Volatile
+    private var prefsList: Set<NonPreferenceKey> =
         (BooleanComposedKey.entries +
             BooleanKey.entries +
             BooleanNonKey.entries +
@@ -100,6 +109,9 @@ class PreferencesImpl(
             ProfileComposedStringKey.entries +
             ProfileComposedBooleanKey.entries +
             ProfileIntKey.entries).toCollection(LinkedHashSet())
+
+    /** Only so that two registrations at the same time cannot lose each other's keys. Readers do not take it. */
+    private val prefsListLock = AapsLock()
 
     // Emits a key on every LOCAL write to a Bidirectional-synced preference (not on putRemote), so
     // the client→master sync publisher can push local edits. Buffered + DROP_OLDEST so a pref write
@@ -166,6 +178,8 @@ class PreferencesImpl(
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        // The switch itself is never defaultedByHardenedMode (PreferencesImplTest checks it), so reading hardenedMode here cannot loop.
+        else if (key.defaultedByHardenedMode && hardenedMode) calculatedDefaultValue(key)
         // Recompute-when-hidden is for LOCAL values only; a synced key is remote-authoritative, so its stored value wins (visibility ≠ value).
         else if (key.calculatedDefaultValue && isHidden(key) && key.sync == null) calculatedDefaultValue(key)
         else sp.getBoolean(key.key, calculatedDefaultValue(key))
@@ -437,7 +451,8 @@ class PreferencesImpl(
     }
 
     override fun registerPreferences(keys: List<NonPreferenceKey>) {
-        prefsList.addAll(keys)
+        // Set + Iterable gives a new LinkedHashSet, in the same order as before.
+        prefsListLock.withLock { prefsList = prefsList + keys }
     }
 
     override fun allMatchingStrings(key: ComposedKey): List<String> =
@@ -495,7 +510,7 @@ class PreferencesImpl(
                 BooleanKey.NsClientLogAppStart                     -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromErrors   -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromCarbsReq -> config.APS
-                BooleanKey.NsClientAllowClientControl              -> simpleMode // client control on by default in simple mode, opt-in otherwise
+                BooleanKey.HardenedMode                            -> simpleMode // client control on by default in simple mode, opt-in otherwise
                 else                                               -> error("Unsupported default value calculation")
             }
         else key.defaultValue

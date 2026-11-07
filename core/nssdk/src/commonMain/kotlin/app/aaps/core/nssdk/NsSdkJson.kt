@@ -23,10 +23,9 @@ import kotlinx.serialization.json.Json
  *   others with long".
  *
  *   The cost is that some malformed JSON which throws today would parse instead. That is the safer
- *   direction here: the socket.io listener that feeds this
- *   (`NSClientV3Service.onDataCreateUpdate`) has no try/catch, so a throw escapes onto the socket
- *   callback thread and loses the record. `RealNightscoutTreatmentTest` pins which malformed inputs
- *   still throw.
+ *   direction here: the websocket handler that feeds this (`NsFrameHandler.onDataCreateUpdate`)
+ *   drops a document it cannot decode, so a throw loses the record. `RealNightscoutTreatmentTest`
+ *   pins which malformed inputs still throw.
  *
  * - **`encodeDefaults = true`** - required for backward compatibility, and the easiest one to get
  *   wrong, because kotlinx's default is the opposite of Gson's.
@@ -45,9 +44,8 @@ import kotlinx.serialization.json.Json
  *
  *   An **unknown enum value** throws in kotlinx but was silently mapped to `null` by Gson. That is
  *   not a corner case: `eventType` is an enum, Nightscout is written to by many uploaders, and a
- *   newer AAPS adding one event type would otherwise make every older client throw on that record -
- *   inside a socket.io listener with no try/catch, so the record is lost and the exception escapes
- *   onto the callback thread. Coercing to the default (`null`) keeps the old, tolerant behaviour:
+ *   newer AAPS adding one event type would otherwise make every older client throw on that record,
+ *   and the record is lost. Coercing to the default (`null`) keeps the old, tolerant behaviour:
  *   the treatment is simply not recognised and is skipped, which is what already happens for an
  *   absent `eventType`.
  *

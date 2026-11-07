@@ -5,6 +5,12 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+    <!-- A client reads the master's set-up QR code. A phone without a camera pairs with the PIN. -->
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />

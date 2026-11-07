@@ -24,8 +24,8 @@ import kotlin.time.Clock
  *
  * ## Per client, like everything else the app stores
  *
- * The tokens go through [KeyValueStore], which on desktop is `DesktopSp`, reading the preference
- * file inside this client's own data directory. So AAPSClient and AAPSClient2 sign in to Drive
+ * The tokens go through [KeyValueStore], which on desktop is the encrypted settings store inside
+ * this client's own data directory. So AAPSClient and AAPSClient2 sign in to Drive
  * separately and may point at different Google accounts, exactly as two Android clients do - while
  * the folder they export into is the shared `AAPS` one.
  */

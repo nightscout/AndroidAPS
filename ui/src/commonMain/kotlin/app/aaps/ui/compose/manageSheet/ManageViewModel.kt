@@ -195,7 +195,7 @@ class ManageViewModel(
                     showPairWithMaster = config.AAPSCLIENT && preferences.get(BooleanKey.NsClient3UseWs),
                     showMutatingActions = !config.AAPSCLIENT || nsClient.masterOrPairedClientFlow.value,
                     // General gate: PUMP declares its own visibility (!isClient → full + pumpcontrol, not aapsclient).
-                    showPump = ElementType.PUMP.visibility.isVisible(visibilityContext),
+                    showPump = ElementType.PUMP.isAvailable(visibilityContext),
                     cancelTempBasalText = cancelTempBasalText,
                     cancelExtendedBolusText = cancelExtendedBolusText,
                     isPatchPump = pumpDescription.isPatchPump,
@@ -221,13 +221,11 @@ class ManageViewModel(
         appScope.launch {
             when (val prepared = batchExecutor.prepare(listOf(action), Sources.Actions, label)) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(elementType, prepared.id, prepared.lines, label))
-                // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
+                // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the
+                // modal, with the master's own text.
                 is ActionProgress.Rejected ->
                     if (prepared.reason.isNotDeliveryError()) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
-                    else prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = label, message = detail))
-                        else _sideEffect.tryEmit(SideEffect.ShowError(elementType, detail))
-                    }
+                    else if (!config.AAPSCLIENT) prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowError(elementType, it)) }
 
                 else                       -> Unit // Unconfirmed → app-level modal
             }
@@ -238,13 +236,11 @@ class ManageViewModel(
     fun commitCancel(bolusId: Long, elementType: ElementType, label: String) {
         appScope.launch {
             // NoPendingBolus (a double-tapped dialog already consumed it) stays silent — the cancel ran once.
+            // A client's modal has shown the master's own text already.
             val result = batchExecutor.commit(bolusId, Sources.Actions, label, pumpDirect = true)
             if (result is ActionProgress.Rejected)
                 if (result.reason.isNotDeliveryError()) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = label, message = detail))
-                    else _sideEffect.tryEmit(SideEffect.ShowError(elementType, detail))
-                }
+                else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowError(elementType, it)) }
         }
     }
 

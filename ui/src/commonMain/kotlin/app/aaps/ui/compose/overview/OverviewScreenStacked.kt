@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ActiveSceneState
@@ -70,6 +71,10 @@ fun OverviewScreenStacked(
     endSceneEnabled: Boolean = true,
     commandsAllowed: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
+    /** The "time to eat" bar, under the scene bar. */
+    eatReminderBanner: @Composable () -> Unit = {},
+    /** Height of the bars drawn over the content in preview mode (a short window, e.g. split screen); added to the end space. */
+    overlaidBarsHeight: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -96,6 +101,7 @@ fun OverviewScreenStacked(
             endEnabled = endSceneEnabled,
             formatDuration = formatDuration
         )
+        eatReminderBanner()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -168,6 +174,9 @@ fun OverviewScreenStacked(
             )
         }
 
-        GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text)
+        GraphsSection(
+            graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
+            overlaidBarsHeight = overlaidBarsHeight
+        )
     }
 }

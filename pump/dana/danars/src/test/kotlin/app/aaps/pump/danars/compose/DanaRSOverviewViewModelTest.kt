@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -114,6 +115,8 @@ internal class DanaRSOverviewViewModelTest {
         whenever(rh.gs(CoreUiR.string.tempbasal_label)).thenReturn("Temp basal")
         whenever(rh.gs(CoreUiR.string.extended_bolus_label)).thenReturn("Extended bolus")
         whenever(rh.gs(R.string.basal_bolus_step)).thenReturn("Basal/bolus step")
+        // texts with values: base basal with profile number, battery, steps, last connection
+        whenever(rh.gs(any<Int>(), anyVararg())).thenReturn("formatted")
     }
 
     @AfterEach

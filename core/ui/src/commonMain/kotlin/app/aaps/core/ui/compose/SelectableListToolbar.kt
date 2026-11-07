@@ -13,6 +13,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.ui.CoreUiStrings
 
 /**
@@ -33,7 +35,8 @@ import app.aaps.core.ui.CoreUiStrings
  * @param selectedCount Number of items selected (shown in selection mode)
  * @param onExitRemovingMode Called when user exits selection mode
  * @param onNavigateBack Called when user presses back button (normal mode)
- * @param onDelete Called when user presses delete button (selection mode)
+ * @param onDelete Called when user presses delete button (selection mode). The button is disabled on a client
+ *        that cannot reach the master, because every removal is done by the master.
  * @param rh Resource helper for string resources
  * @param title Title to display in normal mode
  * @param showInvalidated Optional: Current state of show/hide invalidated toggle (null to hide toggle)
@@ -71,12 +74,14 @@ fun SelectableListToolbar(
                 }
             },
             actions = {
-                // Delete button
-                IconButton(onClick = onDelete) {
+                // Delete button. Removing goes through the master, so a client can delete only while it reaches it,
+                // and only with a caregiver's role (removing records is not in a meal assistant's role).
+                val deleteEnabled = masterEditingEnabled(ClientRole.Caregiver)
+                IconButton(onClick = onDelete, enabled = deleteEnabled) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(CoreUiStrings.delete),
-                        tint = MaterialTheme.colorScheme.error
+                        tint = if (deleteEnabled) MaterialTheme.colorScheme.error else LocalContentColor.current
                     )
                 }
             }

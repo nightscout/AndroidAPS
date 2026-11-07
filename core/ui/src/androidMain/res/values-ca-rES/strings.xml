@@ -59,7 +59,6 @@
     <string name="stop">Stop</string>
     <string name="active"><![CDATA[<Actiu>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Unitats</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -91,6 +90,7 @@
     <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Durada</string>
     <string name="shortgramm">g</string>
@@ -374,7 +374,6 @@
     <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
     <string name="ble_not_enabled">Bluetooth no activat.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Configuració plugin</string>
@@ -443,5 +442,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Rang de visualització</string>
 </resources>

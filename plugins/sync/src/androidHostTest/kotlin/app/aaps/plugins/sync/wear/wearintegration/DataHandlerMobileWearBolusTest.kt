@@ -1,4 +1,5 @@
 package app.aaps.plugins.sync.wear.wearintegration
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
@@ -11,7 +12,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
@@ -48,6 +49,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
@@ -89,7 +91,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
     @Mock private lateinit var importExportPrefs: ImportExportPrefs
     @Mock private lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock private lateinit var runningModeGuard: RunningModeGuard
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var wizardExecutor: WizardExecutor
     @Mock private lateinit var pump: PumpWithConcentration
@@ -102,7 +104,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
-            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
+            ch, runningModeGuard, masterActionExecutor, batchExecutor, wizardExecutor
         )
         sut.automation = automation
         // Confirm-title + error-title + client-reject string all go through the single-arg gs().
@@ -161,7 +163,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         assertThat(bolus.carbsDurationHours).isEqualTo(0)
         assertThat(bolus.recordOnly).isFalse()
         // Insulin no longer goes through the LOCAL executor — it relays.
-        verifyBlocking(wizardBolusExecutor, never()) { prepareBatch(any()) }
+        verifyBlocking(masterActionExecutor, never()) { prepareBatch(any(), anyOrNull()) }
         // The round-trip carries only the parked bolusId + the master's lines — no echoed amount, no concatenated message.
         assertThat(confirm.returnCommand).isEqualTo(EventData.ActionBolusConfirmed(4242L))
         assertThat(confirm.message).isEmpty()
@@ -183,7 +185,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         val sent = capturedConfirm { sut.handleBolusPreCheck(EventData.ActionBolusPreCheck(insulin = 1.0, carbs = 0)) }
         // No blanket local refusal any more — the handler attempts the relay; it did NOT go to the local executor.
         verifyBlocking(batchExecutor) { prepare(any(), any(), any()) }
-        verifyBlocking(wizardBolusExecutor, never()) { prepareBatch(any()) }
+        verifyBlocking(masterActionExecutor, never()) { prepareBatch(any(), anyOrNull()) }
         assertThat(sent.returnCommand).isInstanceOf(EventData.Error::class.java)
     }
     @Test fun `carbs-only bolus also relays through the role-transparent executor`() = runTest {
@@ -344,6 +346,58 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         assertThat(sent.returnCommand).isInstanceOf(EventData.Error::class.java)
         verifyBlocking(wizardExecutor, never()) { prepare(any(), any()) }
     }
+    @Test fun `wizard precheck with a meal type splits the grams into carbs now and eCarbs`() = runTest {
+        // The watch sends the total and the type. The phone splits like its own wizard: pizza = 80 % now,
+        // 35 % as eCarbs after 60 min over 3 h. A watch without the type sends none, and bread keeps all carbs now.
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(preferences.get(any<BooleanKey>())).thenReturn(true)
+        stubWizardPrepared(555L, lines = emptyList())
+        capturedConfirm { sut.handleWizardPreCheck(EventData.ActionWizardPreCheck(carbs = 65, percentage = 100, carbsType = CarbsType.PIZZA)) }
+        val captor = argumentCaptor<WizardExecutor.WizardSource>()
+        verifyBlocking(wizardExecutor) { prepare(captor.capture(), any()) }
+        val inputs = (captor.firstValue as WizardExecutor.WizardSource.Manual).inputs
+        assertThat(inputs.carbs).isEqualTo(52)
+        assertThat(inputs.eCarbsGrams).isEqualTo(22)
+        assertThat(inputs.eCarbsDelayMinutes).isEqualTo(60)
+        assertThat(inputs.eCarbsDurationHours).isEqualTo(3)
+    }
+
+    @Test fun `wizard precheck with a carb time starts the eat reminder and moves the eCarbs with the meal`() = runTest {
+        // The watch's carb time page: the carbs come 15 min later and the alarm is on. The eCarbs of the
+        // meal type start relative to the meal, as on the phone (60 + 15).
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(preferences.get(any<BooleanKey>())).thenReturn(true)
+        stubWizardPrepared(555L, lines = emptyList())
+        capturedConfirm { sut.handleWizardPreCheck(EventData.ActionWizardPreCheck(carbs = 65, percentage = 100, carbsType = CarbsType.PIZZA, carbTime = 15, alarm = true)) }
+        val captor = argumentCaptor<WizardExecutor.WizardSource>()
+        verifyBlocking(wizardExecutor) { prepare(captor.capture(), any()) }
+        val inputs = (captor.firstValue as WizardExecutor.WizardSource.Manual).inputs
+        assertThat(inputs.carbTime).isEqualTo(15)
+        assertThat(inputs.alarm).isTrue()
+        assertThat(inputs.eCarbsDelayMinutes).isEqualTo(75)
+    }
+
+    @Test fun `wizard precheck drops the alarm when the carbs are not later`() = runTest {
+        // Nothing to wait for: the alarm only counts with a carb time in the future.
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(preferences.get(any<BooleanKey>())).thenReturn(true)
+        stubWizardPrepared(555L, lines = emptyList())
+        capturedConfirm { sut.handleWizardPreCheck(EventData.ActionWizardPreCheck(carbs = 30, percentage = 100, carbTime = 0, alarm = true)) }
+        val captor = argumentCaptor<WizardExecutor.WizardSource>()
+        verifyBlocking(wizardExecutor) { prepare(captor.capture(), any()) }
+        val inputs = (captor.firstValue as WizardExecutor.WizardSource.Manual).inputs
+        assertThat(inputs.carbTime).isEqualTo(0)
+        assertThat(inputs.alarm).isFalse()
+    }
     // --- QuickWizard tile modes (branch on entry.mode() exactly like the phone's MainViewModel) -----------
     //
     // The wear QuickWizard handler used to ALWAYS recompute via WizardExecutor, so a fixed INSULIN button
@@ -434,6 +488,15 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         // before send() is reached.
         rxBus.send(EventData.SnoozeAlert(0L))
         verify(uiInteraction, timeout(2000)).stopAlarm("Muted from wear")
+    }
+    @Test fun `onEventSync dispatches a posted DismissAlert to its handler`() {
+        // Silence on the watch's notification of the alarm: stop and close the screen, where the quick snooze leaves it
+        rxBus.send(EventData.DismissAlert(0L))
+        verify(uiInteraction, timeout(2000)).dismissAlarm("Dismissed from wear")
+    }
+    @Test fun `onEventSync dispatches a posted MuteAlert to its handler`() {
+        rxBus.send(EventData.MuteAlert(0L, minutes = 5))
+        verify(uiInteraction, timeout(2000)).muteAlarm(5, "Muted from wear for 5 min")
     }
     @Test fun `onEvent dispatches a posted ActionBolusPreCheck to the suspend handler`() {
         // onEvent wraps the handler in rxCompletable, which runs the coroutine off the posting thread —

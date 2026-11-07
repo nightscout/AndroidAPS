@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.interfaces.profile.ProfileValidationError
 import app.aaps.core.interfaces.profile.SingleProfile
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -181,6 +184,65 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         publish(stored)
 
         assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("Existing")
+        assertThat(sut.uiState.value.isEdited).isFalse()
+    }
+
+    /**
+     * A profile from autotune has basal rates with three decimals. The editor shows them with two, so it
+     * works on them rounded: the steps and the sum then match the rows (#5401, #5402). Opening the
+     * profile alone is not an edit; the next save stores the rounded values.
+     */
+    @Test
+    fun aBasalWithThreeDecimalsIsShownSummedAndSavedWithTwo() = runTest {
+        whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
+        val tuned = profile("Tuned").copy(basal = listOf(Block(T.hours(1).msecs(), 1.125), Block(T.hours(23).msecs(), 1.114)))
+        publish(tuned)
+
+        sut.selectProfile(0)
+
+        assertThat(sut.uiState.value.currentProfile?.basal?.map { it.value }).containsExactly(1.13, 1.11).inOrder()
+        assertThat(sut.uiState.value.basalSum).isWithin(1e-9).of(1.13 + 23 * 1.11)
+        assertThat(sut.uiState.value.isEdited).isFalse()
+
+        sut.updateProfileName("Tuned 2")
+        sut.saveProfile()
+
+        val saved = argumentCaptor<SingleProfile>()
+        verify(profileRepository).replace(eq(0), saved.capture())
+        assertThat(saved.firstValue.basal.map { it.amount }).containsExactly(1.13, 1.11).inOrder()
+    }
+
+    /** Typing a basal with three decimals would make a hidden digit again, so it is rounded like a loaded one. */
+    @Test
+    fun aTypedBasalWithThreeDecimalsIsRounded() = runTest {
+        publish(profile("Existing"))
+        sut.selectProfile(0)
+
+        sut.updateBasalEntry(0, TimeValue(0, 1.125))
+
+        assertThat(sut.uiState.value.currentProfile?.basal?.single()?.value).isEqualTo(1.13)
+    }
+
+    /**
+     * Reset must discard the edits made after a save too. The reloaded profile is the one just saved, and
+     * the editor took it for the echo of its own save and kept the edits.
+     */
+    @Test
+    fun resetAfterASaveStillDiscardsTheEdit() = runTest {
+        whenever(profileRepository.replace(any(), any())).thenReturn(Result.success(Unit))
+        publish(profile("Existing"))
+        sut.selectProfile(0)
+        sut.updateProfileName("Saved")
+        sut.saveProfile()
+        // The store now holds the saved profile
+        publish(profile("Saved"))
+
+        sut.updateProfileName("TypedButNotSaved")
+        sut.resetProfile()
+        // reset() reloads it from storage
+        publish(profile("Saved"))
+
+        assertThat(sut.uiState.value.currentProfile?.name).isEqualTo("Saved")
         assertThat(sut.uiState.value.isEdited).isFalse()
     }
 

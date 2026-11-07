@@ -40,7 +40,10 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.manageSheet.FakePumpPlugin
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
@@ -56,8 +59,10 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.withTimeout
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.robolectric.RuntimeEnvironment
 
 /**
  * Builds the four **real** view models the three overview layouts share
@@ -116,6 +121,10 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
 
     init {
         stubResourcesFromRobolectric(rh)
+        // The status ages are this module's own strings, and the shared stub knows only five other
+        // modules, so it would throw. Answered from the real resources, like everything else here.
+        doReturn(RuntimeEnvironment.getApplication().getString(R.string.status_age_short)).whenever(rh).gs(UiStrings.status_age_short)
+        doReturn(RuntimeEnvironment.getApplication().getString(R.string.status_age_short_hours)).whenever(rh).gs(UiStrings.status_age_short_hours)
 
         // ----- shared ambient -----
         whenever(screen.dateUtil.now()).thenReturn(NOW)
@@ -172,6 +181,9 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
         whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.databaseClearedFlow).thenReturn(emptyFlow())
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(false))
+        // A mock returns null for these, not the interface default; the Manage sheet checks the role of each element.
+        whenever(nsClient.clientRole).thenReturn(MutableStateFlow(ClientRole.Admin))
+        whenever(visibilityContext.clientRole).thenReturn(ClientRole.Admin)
     }
 
     val graphViewModel: GraphViewModel by lazy {

@@ -54,9 +54,9 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
-import app.aaps.core.ui.compose.EventTimeRow
 import app.aaps.core.ui.compose.ExpandableNumberInputRow
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.TimeOffsetRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
@@ -65,6 +65,7 @@ import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.EVENT_TIME_OFFSET_RANGE_MINUTES
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
 
@@ -144,6 +145,7 @@ fun CareDialogScreen(
         onBgValueChange = viewModel::updateBgValue,
         onDurationChange = viewModel::updateDuration,
         onNotesChange = viewModel::updateNotes,
+        onTimeOffsetChange = viewModel::updateTimeOffset,
         onNavigateBack = onNavigateBack,
         onConfirmClick = { showConfirmation = true },
         onDateClick = { showDatePicker = true },
@@ -165,6 +167,7 @@ internal fun CareDialogContent(
     onBgValueChange: (Double) -> Unit,
     onDurationChange: (Double) -> Unit,
     onNotesChange: (String) -> Unit,
+    onTimeOffsetChange: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit,
     onDateClick: () -> Unit,
@@ -268,10 +271,13 @@ internal fun CareDialogContent(
                         )
                     }
 
-                    // Time (collapsible "Now" pattern)
-                    EventTimeRow(
-                        timeChanged = uiState.eventTimeChanged,
-                        displayText = "$dateString $timeString",
+                    // Time: -/+ in 5 minute steps like the other treatment dialogs, the pickers when expanded
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.time,
+                        offsetMinutes = uiState.timeOffsetMinutes,
+                        onOffsetChange = onTimeOffsetChange,
+                        resolvedTimeText = if (uiState.timeOffsetMinutes != 0) stringResource(CoreUiStrings.value_with_unit, dateString, timeString) else null,
+                        offsetRange = EVENT_TIME_OFFSET_RANGE_MINUTES,
                         dateTimeContent = {
                             DateTimeSection(
                                 dateString = dateString,

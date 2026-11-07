@@ -5,13 +5,7 @@ plugins {
 }
 
 kotlin {
-    jvm {
-        // Every consumer of :core:data is still an Android or JVM module, so this variant is the
-        // one they resolve. Nothing about them changes.
-        compilerOptions {
-            jvmTarget.set(Versions.jvmTarget)
-        }
-    }
+    jvm()
 
     // Real Apple targets. Kotlin/Native cross compiles klibs for them from any host, so these do
     // build on Windows - only linking, cinterop and running their tests need a Mac.

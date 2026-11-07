@@ -7,6 +7,8 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderState
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
@@ -16,6 +18,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -36,16 +39,19 @@ class WearPluginTest : TestBaseWithProfile() {
     @Mock lateinit var dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var scenes: SceneAutomationApi
+    @Mock lateinit var eatReminder: EatReminder
 
     private lateinit var wearPlugin: WearPlugin
     private lateinit var rateLimit: RateLimit
 
     private val temporaryTargets = MutableSharedFlow<List<TT>>()
     private val runningModes = MutableSharedFlow<List<RM>>()
+    private val eatReminderState = MutableStateFlow<EatReminderState?>(null)
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, preferences, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), persistenceLayer, scenes, mock())
+        whenever(eatReminder.state).thenReturn(eatReminderState)
+        wearPlugin = WearPlugin(aapsLogger, rh, preferences, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), persistenceLayer, scenes, eatReminder, mock())
         whenever(persistenceLayer.observeChanges(TT::class)).thenReturn(temporaryTargets)
         whenever(persistenceLayer.observeChanges(RM::class)).thenReturn(runningModes)
     }
@@ -148,5 +154,19 @@ class WearPluginTest : TestBaseWithProfile() {
         runCurrent()
 
         assertThat(reasons).containsExactly("EventLoopUpdateGui")
+    }
+
+    @Test
+    fun `a change of the eat reminder is resent at once, its first value is not a change`() = runTest {
+        val reasons = collectResends()
+        advanceTimeBy(10.seconds)
+        runCurrent()
+        assertThat(reasons).isEmpty()
+
+        eatReminderState.value = EatReminderState(startedAt = 1_000L, endsAt = 901_000L, durationMs = 900_000L)
+        advanceTimeBy(5.seconds)
+        runCurrent()
+
+        assertThat(reasons).containsExactly("EatReminderChange")
     }
 }

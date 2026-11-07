@@ -4,7 +4,7 @@
     <string name="open_humans_description">Open Humans allows you to upload your diabetes data and donate it to scientific projects.</string>
     <string name="logout">Logout</string>
     <string name="setup">Setup</string>
-    <string name="setup_completed_info">Open Humans has been setup. In case you want to stop uploading, click \'Logout\'.</string>
+    <string name="setup_completed_info">Open Humans has been set up. In case you want to stop uploading, click \'Logout\'.</string>
     <string name="not_setup_info">Open Humans is currently inactive. To start uploading data, click \'Setup\'.</string>
     <string name="project_member_id">Project Member ID: %1$s</string>
     <string name="open_humans_uploading">Uploading to Open Humans…</string>

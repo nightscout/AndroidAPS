@@ -3,21 +3,27 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
+import app.aaps.core.keys.interfaces.ClientRole
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.observeHardenedMode
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.takeInstanceNameFromMaster
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
@@ -28,8 +34,17 @@ class PairWithMasterViewModel(
     private val repository: ClientPairingRepository,
     private val publisher: ClientControlPublisher,
     private val fetcher: PairingOfferFetcher,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val preferences: Preferences,
+    nsClient: NsClient
 ) : ViewModel() {
+
+    /** Hardened mode as this paired client follows it: the master's switch, read with the same rule as on the master. */
+    val hardenedMode: StateFlow<Boolean> = preferences.observeHardenedMode()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), preferences.hardenedMode)
+
+    /** This phone's role on the master, shown on the paired screen. */
+    val clientRole: StateFlow<ClientRole> = nsClient.clientRole
 
     // Starts in Fetching rather than being decided here: currentPairing() suspends now, because it
     // takes the repository mutex across three preference reads. Defaulting to PinEntry instead
@@ -97,9 +112,23 @@ class PairWithMasterViewModel(
                 _state.value = UiState.Error(ErrorReason.SecretStoreFailed)
                 return@launch
             }
+            preferences.takeInstanceNameFromMaster(payload.name)
             _state.value = UiState.Sending
-            publisher.publish(ClientControlMessage.Hello())
+            // With a key exchange: the master answers with the secret that replaces the one from the PIN offer.
+            publisher.publishHello()
             _state.value = UiState.Success
+        }
+    }
+
+    /**
+     * Shows the pairing made meanwhile somewhere else: from this screen the user can open the QR code scanner, which
+     * pairs the phone when the code carries a pairing.
+     */
+    fun refreshPairing() {
+        if (_state.value != UiState.PinEntry) return
+        viewModelScope.launch {
+            val pairing = repository.currentPairing() ?: return@launch
+            if (_state.value == UiState.PinEntry) _state.value = UiState.AlreadyPaired(pairing)
         }
     }
 

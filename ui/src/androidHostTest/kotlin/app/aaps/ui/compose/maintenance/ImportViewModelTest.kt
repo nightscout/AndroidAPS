@@ -98,6 +98,7 @@ internal class ImportViewModelTest {
         whenever(pump.serialNumber()).thenReturn("sn")
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
         whenever(iobCobCalculator.ads).thenReturn(ads)
+        runBlocking { whenever(importExportPrefs.executeImport(any(), any())).thenReturn(ImportExportPrefs.ImportOutcome()) }
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, config, rh, uel,
             commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart,
@@ -250,7 +251,7 @@ internal class ImportViewModelTest {
     /**
      * The window must close even when the apply blows up, and the existing test below proves a
      * throwing `applyConfiguration` reaches `ApplyFailed`. Left open, `appInitialized` would stay
-     * false for the rest of the process and `WizardBolusExecutorImpl` refuses on it in two places -
+     * false for the rest of the process and `MasterActionExecutorImpl` refuses on it in two places -
      * the user could not bolus. That is worse than the crash this change prevents.
      */
     @Test
@@ -326,6 +327,32 @@ internal class ImportViewModelTest {
         advanceUntilIdle()
 
         assertThat(sut.importStep.value).isEqualTo(ImportStep.Applied)
+    }
+
+    /**
+     * A 3.x backup's insulin is added to the list but not switched to, so the user is told which one it is
+     * and that it is not in use yet (#5453).
+     */
+    @Test
+    fun `an insulin added from a 3x backup is announced`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        whenever(importExportPrefs.executeImport(any(), any()))
+            .thenReturn(ImportExportPrefs.ImportOutcome(importedInsulins = listOf("Free-Peak Oref 38m 6h U100")))
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(notificationManager).post(eq(NotificationId.IMPORTED_INSULIN_ADDED), anyOrNull<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<(() -> Boolean)>())
+    }
+
+    @Test
+    fun `an import without a 3x insulin announces nothing`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(notificationManager, never()).post(eq(NotificationId.IMPORTED_INSULIN_ADDED), anyOrNull<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<(() -> Boolean)>())
     }
 
     /** One audit entry per import, written when it is applied - not when the picker is opened. */

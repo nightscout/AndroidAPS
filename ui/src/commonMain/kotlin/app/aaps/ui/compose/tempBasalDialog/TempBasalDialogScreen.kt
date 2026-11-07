@@ -143,9 +143,9 @@ internal fun TempBasalDialogContent(
             val hasAction = if (uiState.isPercentPump) uiState.basalPercent != 100.0 else uiState.basalAbsolute > 0.0
             // One text for both the visible label and the screen reader, so they cannot drift apart.
             val confirmValue = if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
-                "${NumberFormat.INTEGER.format(uiState.basalPercent)}%"
+                stringResource(CoreUiStrings.units_format_percent_value, NumberFormat.INTEGER.format(uiState.basalPercent))
             } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                "${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(InterfacesStrings.profile_ins_units_per_hour)}"
+                stringResource(CoreUiStrings.pump_base_basal_rate, uiState.basalAbsolute)
             } else {
                 stringResource(CoreUiStrings.ok)
             }

@@ -26,7 +26,7 @@
     <string name="commanderror">Command error</string>
     <string name="speederror">Speed error</string>
     <string name="insulinlimitviolation">Insulin limit violation</string>
-    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
+    <string name="boluserrorcode">Asked: %1$.2f U Delivered: %2$.2f U Error code: %3$s</string>
 
     <string name="selectedpump">Selected pump</string>
     <string name="bolus_step">Bolus Step</string>
@@ -45,7 +45,7 @@
     <string name="diaconn_g8_screentimeout">LCD on time [second]</string>
     <string name="diaconn_g8_language">Language</string>
     <string name="diaconn_g8_bolus_speed">Bolus speed</string>
-    <string name="diaconn_g8_pumplang_chiness">Chiness</string>
+    <string name="diaconn_g8_pumplang_chiness">Chinese</string>
     <string name="diaconn_g8_pumplang_korean">Korean</string>
     <string name="diaconn_g8_pumplang_english">English</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -63,7 +63,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Add \"Battery Change\" event to careportal when detected in history</string>
     <string name="diaconn_g8_logbatterychange_title">Log battery change</string>
     <string name="diaconn_g8_logsyncinprogress">Log Synchronization in progress</string>
-    <string name="diaconn_g8_loginsulinshorage">Inuslin shortage</string>
+    <string name="diaconn_g8_loginsulinshorage">Insulin shortage</string>
     <string name="diaconn_g8_logbatteryshorage">Battery shortage</string>
     <string name="diaconn_g8_logneedleprime">Needle prime :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Injector prime :%1$.2fU</string>
@@ -77,7 +77,7 @@
     <string name="diaconn_g8_reasoncomplete">Complete</string>
     <string name="diaconn_g8_reasoninjectonblock">Injection block</string>
     <string name="diaconn_g8_reasonbatteryshortage">Battery shortage</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Insuiln shortage</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Insulin shortage</string>
     <string name="diaconn_g8_reasonuserstop">User stop</string>
     <string name="diaconn_g8_reasonsystemreset">System reset</string>
     <string name="diaconn_g8_reasonother">Other</string>
@@ -93,7 +93,7 @@
     <string name="diaconn_g8_logalarmblock">Injection Block (%s)</string>
     <string name="diaconn_g8_lgorelease">basal release (%s)</string>
     <string name="diaconn_g8_lgosuspend">basal suspend (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Dual Nomarl Success</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Dual Normal Success</string>
     <string name="diaconn_g8_logdualsquarestart">Dual Square Start</string>
     <string name="diaconn_g8_logdualsquaresuccess">Dual Square Success</string>
     <string name="diaconn_g8_logsquarestart">Square Start</string>
@@ -102,8 +102,8 @@
     <string name="diaconn_g8_logsuccess">Success</string>
     <string name="diaconn_g8_logmealsuccess">Meal Success</string>
     <string name="diaconn_g8_errorcode_1">Can\'t lookup due to packet CRC error.</string>
-    <string name="diaconn_g8_errorcode_2">Can\'t be set to an input parameter error.</string>
-    <string name="diaconn_g8_errorcode_3">Can\'t be set to a protocol specification error.</string>
+    <string name="diaconn_g8_errorcode_2">Cannot be set: input parameter error.</string>
+    <string name="diaconn_g8_errorcode_3">Cannot be set: protocol specification error.</string>
     <string name="diaconn_g8_errorcode_4">Eating timed, cannot be injected.</string>
     <string name="diaconn_g8_errorcode_6">Cancelled by pump</string>
     <string name="diaconn_g8_errorcode_7">Taking other actions, limiting app settings.</string>
@@ -113,7 +113,7 @@
     <string name="diaconn_g8_errorcode_11">Injection is not possible due to low battery.</string>
     <string name="diaconn_g8_errorcode_12">Insulin insufficiency cannot be injected.</string>
     <string name="diaconn_g8_errorcode_13">You cannot inject it because it exceeds the limit once.</string>
-    <string name="diaconn_g8_errorcode_14">Injection cannot be injected because it exceeds the injection volume today.</string>
+    <string name="diaconn_g8_errorcode_14">Cannot inject because it exceeds the injection volume for today.</string>
     <string name="diaconn_g8_errorcode_15">After basal setup is complete, basal injection can be performed.</string>
     <string name="diaconn_g8_logtubechange_title">Log tube change</string>
     <string name="diaconn_g8_logtubechange_summary">Add \"Tube Change\" event to Note when detected in history</string>
@@ -121,8 +121,8 @@
     <string name="diaconn_g8_errorcode_32">During LGS running, injection is restricted</string>
     <string name="diaconn_g8_errorcode_33">LGS status is ON, ON Command is declined.</string>
     <string name="diaconn_g8_errorcode_34">LGS status is OFF, OFF Command is declined.</string>
-    <string name="diaconn_g8_errorcode_35">Tempbasal start is rejected  when tempbasal is running</string>
-    <string name="diaconn_g8_errorcode_36">Tempbasal stop is rejected  when tempbasal is not running</string>
+    <string name="diaconn_g8_errorcode_35">Tempbasal start is rejected when tempbasal is running</string>
+    <string name="diaconn_g8_errorcode_36">Tempbasal stop is rejected when tempbasal is not running</string>
     <string name="diaconn_g8_cloudsend_summary">Send pump logs to the Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
     <string name="bolus_speed_1">1 U/min</string>

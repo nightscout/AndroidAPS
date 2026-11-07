@@ -96,7 +96,9 @@ fun TimeOffsetRow(
                     )
                 }
             }
-            if (onAlarmChange != null && alarmChecked && offsetMinutes != 0) {
+            // As the switch below: the alarm is set only for a time in the future. The flag stays on when the
+            // time goes to now or earlier, so it is not enough on its own (#5415).
+            if (onAlarmChange != null && alarmChecked && offsetMinutes > 0) {
                 Icon(
                     imageVector = Icons.Outlined.Notifications,
                     // The only sign that an alarm is set when the row is collapsed.

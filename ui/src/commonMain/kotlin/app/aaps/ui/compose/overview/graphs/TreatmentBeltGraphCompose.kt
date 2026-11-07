@@ -2,7 +2,6 @@ package app.aaps.ui.compose.overview.graphs
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,18 +15,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.endOf
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcActivity
@@ -35,7 +33,7 @@ import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcNote
-import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.navigation.ElementColors
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
@@ -48,28 +46,27 @@ import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
-import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
-import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.DrawingContext
 import com.patrykandpatrick.vico.compose.common.Fill
-import com.patrykandpatrick.vico.compose.common.Insets
 import com.patrykandpatrick.vico.compose.common.component.Component
-import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 
-/** ExtraStore key for therapy event lookup by X position. */
-private val therapyEventMapKey = ExtraStore.Key<Map<Double, TherapyEventGraphPoint>>()
-
-/** ExtraStore key for running mode segments (start, end, mode). */
-private val modeSegmentsKey = ExtraStore.Key<List<Triple<Double, Double, RM.Mode>>>()
+/** How near to an icon a tap has to be to show that icon's event: half the icon and a little more. */
+private val BELT_ICON_TAP_RADIUS = 12.dp
 
 /**
  * Treatment Belt Graph — thin graph above BG graph showing:
  * - Running mode background colors (colored rectangles per mode segment)
- * - Therapy event icons (MBG, Finger Stick, Announcement, Exercise, etc.)
+ * - Therapy event icons (Announcement, Exercise, notes, etc.)
+ *
+ * An event that carries a glucose value (a meter value, a BG check) is NOT here: it is drawn inside
+ * the BG graph at its own value, where it can be compared with the sensor curve. Such an event
+ * without a value — not something the careportal can create — is then not drawn at all.
+ *
+ * What an icon or a colour means is shown in the inspect pill, see [GraphInspectState.beltController]:
+ * press and hold as on every graph, or tap. The pill is drawn over the belt and goes away by itself.
  *
  * Architecture:
  * - Fixed Y range (0.0 to 1.0) — all events plotted at Y=0.5
@@ -81,14 +78,12 @@ private val modeSegmentsKey = ExtraStore.Key<List<Triple<Double, Double, RM.Mode
  *
  * Dynamic series order (must match lines list):
  *   1. Running mode segments (0..N, each = 2-point at Y=1.0 with area fill)
- *   2. MBG points (conditional)
- *   3. Finger Stick points (conditional)
- *   4. Announcement points (conditional)
- *   5. Settings Export points (conditional)
- *   6. General event points (conditional)
- *   7. Exercise duration lines (0..M, each = 2-point at Y=1.0, top)
- *   8. General with duration lines (0..K, each = 2-point at Y=1.0, top)
- *   9. Normalizer (always last)
+ *   2. Announcement points (conditional)
+ *   3. Settings Export points (conditional)
+ *   4. General event points (conditional)
+ *   5. Exercise duration lines (0..M, each = 2-point at Y=1.0, top)
+ *   6. General with duration lines (0..K, each = 2-point at Y=1.0, top)
+ *   7. Normalizer (always last)
  */
 @Composable
 fun TreatmentBeltGraphCompose(
@@ -97,7 +92,7 @@ fun TreatmentBeltGraphCompose(
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
-    /** While holding the BG graph, a line at the inspected time. Null turns it off. */
+    /** The line at the inspected time, and a hold or a tap on the belt shows the pill. Null turns both off. */
     inspect: GraphInspectState? = null,
     modifier: Modifier = Modifier
 ) {
@@ -117,17 +112,15 @@ fun TreatmentBeltGraphCompose(
 
     // Colors from theme
     val elementColors = AapsTheme.elementColors
-    val bgCheckColor = elementColors.bgCheck
-    val announcementColor = elementColors.announcement
-    val careportalColor = elementColors.careportal
-    val exerciseColor = elementColors.exercise
+    val announcementColor = TherapyEventType.ANNOUNCEMENT.beltColor(elementColors)
+    val careportalColor = TherapyEventType.GENERAL.beltColor(elementColors)
+    val exerciseColor = TherapyEventType.EXERCISE.beltColor(elementColors)
 
     // Icon painters for therapy events
-    val bgCheckPainter = rememberVectorPainter(IcBgCheck)
-    val announcementPainter = rememberVectorPainter(IcAnnouncement)
-    val activityPainter = rememberVectorPainter(IcActivity)
-    val notePainter = rememberVectorPainter(IcNote)
-    val clinicalNotesPainter = rememberVectorPainter(IcClinicalNotes)
+    val announcementPainter = rememberVectorPainter(TherapyEventType.ANNOUNCEMENT.beltIcon())
+    val activityPainter = rememberVectorPainter(TherapyEventType.EXERCISE.beltIcon())
+    val notePainter = rememberVectorPainter(TherapyEventType.GENERAL.beltIcon())
+    val clinicalNotesPainter = rememberVectorPainter(TherapyEventType.SETTINGS_EXPORT.beltIcon())
 
     val minX = 0.0
     val maxX = remember(minTimestamp, maxTimestamp) {
@@ -147,8 +140,6 @@ fun TreatmentBeltGraphCompose(
     // Track which series are present (for dynamic line matching)
     val renderedModeSegmentsState = remember { mutableStateOf<List<Triple<Double, Double, RM.Mode>>>(emptyList()) }
     val modeSegmentCountState = remember { mutableIntStateOf(0) }
-    val hasMbgState = remember { mutableStateOf(false) }
-    val hasFingerStickState = remember { mutableStateOf(false) }
     val hasAnnouncementState = remember { mutableStateOf(false) }
     val hasSettingsExportState = remember { mutableStateOf(false) }
     val hasGeneralState = remember { mutableStateOf(false) }
@@ -170,8 +161,6 @@ fun TreatmentBeltGraphCompose(
                 lineModel { series(x = normalizerX(maxX), y = NORMALIZER_Y) }
             }
             modeSegmentCountState.intValue = 0
-            hasMbgState.value = false
-            hasFingerStickState.value = false
             hasAnnouncementState.value = false
             hasSettingsExportState.value = false
             hasGeneralState.value = false
@@ -183,7 +172,8 @@ fun TreatmentBeltGraphCompose(
         val activeRunningModeData = lastRunningModeData.value
         val segments = activeRunningModeData.segments
         val activeTreatmentData = lastTreatmentData.value
-        val therapyEvents = activeTreatmentData.therapyEvents
+        // Meter values and BG checks live in the BG graph now, at their own glucose value
+        val therapyEvents = activeTreatmentData.therapyEvents.filter { it.isOnBelt() }
 
         // Prepare running mode segment series data (all modes get a color)
         val rawModeSegments = segments.mapNotNull { segment ->
@@ -201,12 +191,6 @@ fun TreatmentBeltGraphCompose(
         val modeSegmentSeries = rawModeSegments
 
         // Group therapy events by type (non-duration events)
-        val mbgPoints = therapyEvents
-            .filter { it.eventType == TherapyEventType.MBG }
-            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
-        val fingerStickPoints = therapyEvents
-            .filter { it.eventType == TherapyEventType.FINGER_STICK }
-            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
         val announcementPoints = therapyEvents
             .filter { it.eventType == TherapyEventType.ANNOUNCEMENT }
             .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
@@ -241,8 +225,6 @@ fun TreatmentBeltGraphCompose(
                 cStart to cEnd
             }
 
-        var hasMbg = false
-        var hasFingerStick = false
         var hasAnnouncement = false
         var hasSettingsExport = false
         var hasGeneral = false
@@ -255,16 +237,6 @@ fun TreatmentBeltGraphCompose(
                 }
 
                 // 2. Non-duration therapy events (grouped by type)
-                val mbgFiltered = filterToRange(mbgPoints, minX, maxX)
-                if (mbgFiltered.isNotEmpty()) {
-                    series(x = mbgFiltered.map { it.first }, y = mbgFiltered.map { it.second })
-                    hasMbg = true
-                }
-                val fsFiltered = filterToRange(fingerStickPoints, minX, maxX)
-                if (fsFiltered.isNotEmpty()) {
-                    series(x = fsFiltered.map { it.first }, y = fsFiltered.map { it.second })
-                    hasFingerStick = true
-                }
                 val annFiltered = filterToRange(announcementPoints, minX, maxX)
                 if (annFiltered.isNotEmpty()) {
                     series(x = annFiltered.map { it.first }, y = annFiltered.map { it.second })
@@ -292,25 +264,11 @@ fun TreatmentBeltGraphCompose(
                 // 4. Normalizer (always last)
                 series(x = normalizerX(maxX), y = NORMALIZER_Y)
             }
-            extras { store ->
-                store[therapyEventMapKey] = buildMap {
-                    for (event in therapyEvents) {
-                        val x = timestampToX(event.timestamp, minTimestamp)
-                        put(x, event)
-                        if (event.duration > 0) {
-                            put(timestampToX(endOf(event.timestamp, event.duration), minTimestamp), event)
-                        }
-                    }
-                }
-                store[modeSegmentsKey] = modeSegmentSeries
-            }
         }
 
         // Update state after transaction
         renderedModeSegmentsState.value = modeSegmentSeries
         modeSegmentCountState.intValue = modeSegmentSeries.size
-        hasMbgState.value = hasMbg
-        hasFingerStickState.value = hasFingerStick
         hasAnnouncementState.value = hasAnnouncement
         hasSettingsExportState.value = hasSettingsExport
         hasGeneralState.value = hasGeneral
@@ -322,48 +280,10 @@ fun TreatmentBeltGraphCompose(
     // Line styles
     // =========================================================================
 
-    // Build mode color mapping function
-    fun modeColor(mode: RM.Mode): Color = when (mode) {
-        RM.Mode.CLOSED_LOOP       -> Color.Transparent
-        RM.Mode.RESUME            -> Color.Transparent
-        RM.Mode.OPEN_LOOP         -> elementColors.loopOpened
-        RM.Mode.CLOSED_LOOP_LGS   -> elementColors.loopLgs
-        RM.Mode.DISABLED_LOOP     -> elementColors.loopDisabled
-        RM.Mode.SUPER_BOLUS       -> elementColors.loopSuperBolus
-        RM.Mode.DISCONNECTED_PUMP -> elementColors.loopDisconnected
-        RM.Mode.SUSPENDED_BY_PUMP,
-        RM.Mode.SUSPENDED_BY_USER,
-        RM.Mode.SUSPENDED_BY_DST  -> elementColors.loopSuspended
-    }
-
     // Use the rendered segments (with gap fills) for building lines — must match series order
     val renderedModeSegments by renderedModeSegmentsState
 
     // Therapy event icon point styles
-    val mbgLine = remember(bgCheckColor, bgCheckPainter) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-            areaFill = null,
-            pointProvider = LineCartesianLayer.PointProvider.single(
-                LineCartesianLayer.Point(
-                    component = PainterComponent(bgCheckPainter, tint = bgCheckColor.copy(alpha = 0.5f)),
-                    size = 16.dp
-                )
-            )
-        )
-    }
-    val fingerStickLine = remember(bgCheckColor, bgCheckPainter) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-            areaFill = null,
-            pointProvider = LineCartesianLayer.PointProvider.single(
-                LineCartesianLayer.Point(
-                    component = PainterComponent(bgCheckPainter, tint = bgCheckColor),
-                    size = 16.dp
-                )
-            )
-        )
-    }
     val announcementLine = remember(announcementColor, announcementPainter) {
         LineCartesianLayer.Line(
             fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
@@ -432,8 +352,6 @@ fun TreatmentBeltGraphCompose(
 
     // Build lines list dynamically — MUST match series order from LaunchedEffect
     val modeSegmentCount by modeSegmentCountState
-    val hasMbg by hasMbgState
-    val hasFingerStick by hasFingerStickState
     val hasAnnouncement by hasAnnouncementState
     val hasSettingsExport by hasSettingsExportState
     val hasGeneral by hasGeneralState
@@ -442,19 +360,17 @@ fun TreatmentBeltGraphCompose(
 
     val lines = remember(
         modeSegmentCount, renderedModeSegments,
-        hasMbg, hasFingerStick, hasAnnouncement, hasSettingsExport, hasGeneral,
+        hasAnnouncement, hasSettingsExport, hasGeneral,
         exerciseDurationCount, generalDurationCount,
-        mbgLine, fingerStickLine, announcementLine, settingsExportLine, generalLine,
+        announcementLine, settingsExportLine, generalLine,
         exerciseDurationLine, generalDurationLine, normalizerLine
     ) {
         buildList {
             // 1. Running mode segment lines (area fill) — from rendered segments (includes gap fills)
             for ((_, _, mode) in renderedModeSegments) {
-                add(createModeSegmentLine(modeColor(mode)))
+                add(createModeSegmentLine(mode.beltColor(elementColors)))
             }
             // 2. Non-duration therapy event lines
-            if (hasMbg) add(mbgLine)
-            if (hasFingerStick) add(fingerStickLine)
             if (hasAnnouncement) add(announcementLine)
             if (hasSettingsExport) add(settingsExportLine)
             if (hasGeneral) add(generalLine)
@@ -467,20 +383,24 @@ fun TreatmentBeltGraphCompose(
     }
 
     // Time formatter and axis config — same as other graphs for alignment
+    val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val timeFormatter = rememberTimeFormatter(minTimestamp)
     val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
 
-    // =========================================================================
-    // Tap marker (tooltip on tap)
-    // =========================================================================
-    val modeNameMap = rememberModeNameMap()
-    val beltMarker = rememberBeltMarker(modeNameMap)
+    // Press and hold, or a tap, shows the inspect pill. The marker draws nothing, it only hands the
+    // time under the finger to the shared inspect state.
+    val inspectMarker = remember(inspect) { inspect?.let { SilentInspectMarker } }
+    val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
+    val iconRadiusPx = with(LocalDensity.current) { BELT_ICON_TAP_RADIUS.toPx() }
+    val beltController = remember(inspect, iconRadiusPx) { inspect?.beltController(iconRadiusPx) }
+    val markerController = beltController ?: defaultMarkerController
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val beltDecorations = remember(nowLine, inspectLine) { listOfNotNull(nowLine, inspectLine) }
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings)
+    val beltDecorations = remember(nowLine, clockChanges, inspectLine) { listOfNotNull(nowLine, clockChanges, inspectLine) }
 
     val rangeProvider = remember(maxX) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
@@ -492,8 +412,9 @@ fun TreatmentBeltGraphCompose(
                 lineProvider = LineCartesianLayer.LineProvider.series(lines),
                 rangeProvider = rangeProvider
             ),
-            marker = beltMarker,
-            markerController = CartesianMarkerController.rememberToggleOnTap(),
+            marker = inspectMarker,
+            markerVisibilityListener = inspect?.visibilityListener,
+            markerController = markerController,
             decorations = beltDecorations,
             startAxis = VerticalAxis.rememberStart(
                 label = rememberTextComponent(
@@ -532,88 +453,46 @@ private fun createModeSegmentLine(color: Color): LineCartesianLayer.Line =
     )
 
 /**
- * Resolves localized display names for each [RM.Mode].
+ * Whether the belt draws this event. One with a glucose value (a meter value, a BG check) is drawn
+ * in the BG graph at that value instead.
  */
-@Composable
-private fun rememberModeNameMap(): Map<RM.Mode, String> {
-    val closedLoop = stringResource(CoreUiStrings.closedloop)
-    val openLoop = stringResource(CoreUiStrings.openloop)
-    val lgs = stringResource(CoreUiStrings.lowglucosesuspend)
-    val disabledLoop = stringResource(CoreUiStrings.disabled_loop)
-    val superbolus = stringResource(CoreUiStrings.superbolus)
-    val disconnected = stringResource(CoreUiStrings.disconnected)
-    val pumpSuspended = stringResource(InterfacesStrings.pumpsuspended)
-    val loopSuspended = stringResource(InterfacesStrings.loopsuspended)
-    val dstSuspended = stringResource(CoreUiStrings.loop_suspended_by_dst)
-    return mapOf(
-        RM.Mode.CLOSED_LOOP to closedLoop,
-        RM.Mode.RESUME to closedLoop,
-        RM.Mode.OPEN_LOOP to openLoop,
-        RM.Mode.CLOSED_LOOP_LGS to lgs,
-        RM.Mode.DISABLED_LOOP to disabledLoop,
-        RM.Mode.SUPER_BOLUS to superbolus,
-        RM.Mode.DISCONNECTED_PUMP to disconnected,
-        RM.Mode.SUSPENDED_BY_PUMP to pumpSuspended,
-        RM.Mode.SUSPENDED_BY_USER to loopSuspended,
-        RM.Mode.SUSPENDED_BY_DST to dstSuspended,
-    )
+internal fun TherapyEventGraphPoint.isOnBelt(): Boolean =
+    eventType != TherapyEventType.MBG && eventType != TherapyEventType.FINGER_STICK
+
+/** The belt's icon for an event, also used in the inspect pill. */
+internal fun TherapyEventType.beltIcon(): ImageVector = when (this) {
+    TherapyEventType.ANNOUNCEMENT          -> IcAnnouncement
+    TherapyEventType.SETTINGS_EXPORT       -> IcClinicalNotes
+    TherapyEventType.EXERCISE              -> IcActivity
+    TherapyEventType.GENERAL,
+    TherapyEventType.GENERAL_WITH_DURATION -> IcNote
+    TherapyEventType.MBG,
+    TherapyEventType.FINGER_STICK          -> IcBgCheck
 }
 
-/**
- * Creates a marker for the treatment belt graph that shows therapy event details
- * or running mode name on tap.
- */
-@Composable
-private fun rememberBeltMarker(modeNameMap: Map<RM.Mode, String>): DefaultCartesianMarker {
-    val surfaceColor = MaterialTheme.colorScheme.surface
-    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
-    val outlineColor = MaterialTheme.colorScheme.outline
+/** The belt's colour for an event, also used in the inspect pill. */
+internal fun TherapyEventType.beltColor(colors: ElementColors): Color = when (this) {
+    TherapyEventType.ANNOUNCEMENT          -> colors.announcement
+    TherapyEventType.EXERCISE              -> colors.exercise
+    TherapyEventType.SETTINGS_EXPORT,
+    TherapyEventType.GENERAL,
+    TherapyEventType.GENERAL_WITH_DURATION -> colors.careportal
+    TherapyEventType.MBG,
+    TherapyEventType.FINGER_STICK          -> colors.bgCheck
+}
 
-    val labelBackground = remember(surfaceColor, outlineColor) {
-        ShapeComponent(
-            fill = Fill(surfaceColor),
-            shape = RoundedCornerShape(4.dp),
-            strokeFill = Fill(outlineColor),
-            strokeThickness = 1.dp
-        )
-    }
-
-    val markerLabel = rememberTextComponent(
-        style = TextStyle(color = onSurfaceColor, fontSize = 15.sp),
-        padding = Insets(horizontal = 10.dp, vertical = 5.dp),
-        background = labelBackground
-    )
-
-    val valueFormatter = remember(modeNameMap) {
-        DefaultCartesianMarker.ValueFormatter { context, targets ->
-            val x = targets.firstOrNull()?.x ?: return@ValueFormatter ""
-            val extraStore = context.model.extraStore
-
-            // Check for therapy event at tapped X position
-            val eventMap = extraStore.getOrNull(therapyEventMapKey)
-            val event = eventMap?.get(x)
-            if (event != null) return@ValueFormatter event.label
-
-            // Fall back to running mode name for the segment containing X
-            val segments = extraStore.getOrNull(modeSegmentsKey)
-            if (segments != null) {
-                val segment = segments.find { (start, end, _) -> x in start..end }
-                if (segment != null) {
-                    return@ValueFormatter modeNameMap[segment.third] ?: segment.third.name
-                }
-            }
-
-            ""
-        }
-    }
-
-    return rememberDefaultCartesianMarker(
-        label = markerLabel,
-        valueFormatter = valueFormatter,
-        labelPosition = DefaultCartesianMarker.LabelPosition.AroundPoint,
-        indicator = null,
-        guideline = null
-    )
+/** The belt's colour for a running mode, also used in the inspect pill. Closed loop is not coloured. */
+internal fun RM.Mode.beltColor(colors: ElementColors): Color = when (this) {
+    RM.Mode.CLOSED_LOOP       -> Color.Transparent
+    RM.Mode.RESUME            -> Color.Transparent
+    RM.Mode.OPEN_LOOP         -> colors.loopOpened
+    RM.Mode.CLOSED_LOOP_LGS   -> colors.loopLgs
+    RM.Mode.DISABLED_LOOP     -> colors.loopDisabled
+    RM.Mode.SUPER_BOLUS       -> colors.loopSuperBolus
+    RM.Mode.DISCONNECTED_PUMP -> colors.loopDisconnected
+    RM.Mode.SUSPENDED_BY_PUMP,
+    RM.Mode.SUSPENDED_BY_USER,
+    RM.Mode.SUSPENDED_BY_DST  -> colors.loopSuspended
 }
 
 /**

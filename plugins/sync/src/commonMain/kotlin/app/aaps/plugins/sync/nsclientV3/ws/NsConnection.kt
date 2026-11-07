@@ -40,8 +40,9 @@ interface NsConnection {
      * **on**, so without this a desktop would take the websocket path, receive no pushes, and never
      * poll either: sync would be silently dead while every screen looked normal.
      *
-     * The refresh tick therefore polls whenever the preference is off **or** the platform cannot do
-     * websockets, which also means a user toggling that preference cannot break a desktop client.
+     * The refresh tick therefore polls whenever the preference is off, the platform cannot do
+     * websockets, **or** the socket is not connected (`NSClientV3Plugin.needsPolling`), which also means
+     * a user toggling that preference cannot break a desktop client.
      * True by default, so the platforms that do have sockets are unaffected.
      */
     val supportsWebsocket: Boolean get() = true

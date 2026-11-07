@@ -2,9 +2,11 @@ package app.aaps.di.metro
 
 import android.content.Context
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
+import app.aaps.settingsstore.AndroidStorage
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,9 @@ import org.mockito.kotlin.mock
  * and source graph tests live in this module rather than beside their graphs.
  */
 fun testRoot(): AppRootGraph {
+    // The app's store needs the Keystore and real files. A mock answers the way the mocked SharedPreferences
+    // under the old store did.
+    AndroidStorage.useForTests(mock<KeyValueStore>(defaultAnswer = Answers.RETURNS_MOCKS))
     // A real scope, because a mocked one is not merely inert here. Plugins that Metro builds now touch it
     // while being constructed - `appScope.coroutineContext[Job]` - and a mock returns a mock Element,
     // which fails as `ClassCastException ... cannot be cast to Job` from inside the graph. Unconfined so

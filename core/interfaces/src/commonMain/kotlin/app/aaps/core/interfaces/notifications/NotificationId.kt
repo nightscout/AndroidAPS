@@ -175,6 +175,7 @@ enum class NotificationId(
     NEW_VERSION_DETECTED(NORMAL, SYSTEM),
     VERSION_EXPIRE(IMPORTANT, SYSTEM),
     INSULIN_MIGRATION_DEFAULT_USED(IMPORTANT, SYSTEM),
+    IMPORTED_INSULIN_ADDED(IMPORTANT, SYSTEM),
     IDENTIFICATION_NOT_SET(NORMAL, SYSTEM),
     MASTER_PASSWORD_NOT_SET(IMPORTANT, SYSTEM),
     AAPS_DIR_NOT_SELECTED(NORMAL, SYSTEM),
@@ -241,7 +242,27 @@ enum class NotificationId(
     // The End Scene dialog does not show the result, so without this nothing said so. IMPORTANT: it changes
     // insulin delivery until the user activates a profile, but nothing is delivered wrongly now.
     // Appended at the END for the same reason as above.
-    SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION);
+    SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION),
+
+    // A Garmin watch connected to a client sent carbs or a pump disconnect. A client does not store them, because
+    // they would never reach the master, and the watch cannot show why. Appended at the END for the same reason as above.
+    GARMIN_NOT_ON_CLIENT(NORMAL, SYNC),
+
+    // The Combo gave the bolus, but its history also had boluses that AAPS did not know about. Its own id,
+    // so that it does not replace the low reservoir warning of the same bolus on COMBO_PUMP_ALARM (#5379).
+    // Appended at the END for the same reason as above.
+    COMBO_UNKNOWN_BOLUS(URGENT, PUMP),
+
+    // Desktop only: no OS key store was found (Linux without a keyring), so the keys that protect the settings
+    // and the pairing secrets are plain files next to the data. IMPORTANT, not URGENT: nothing is wrong with
+    // therapy, but a copy of the folder gives everything away, and the user can fix it. Appended at the END for
+    // the same reason as above.
+    SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM),
+
+    // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
+    // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
+    // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
+    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP);
 
     companion object {
 

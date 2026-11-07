@@ -100,11 +100,14 @@ class AuthFlowOut(
         private set
         get() =
             if (field == ConnectionStatus.NONE) {
-                if (authState.lastTokenResponse != null) ConnectionStatus.NO_SESSION
+                if (hasSavedLogin) ConnectionStatus.NO_SESSION
                 else ConnectionStatus.NOT_LOGGED_IN
             } else field
 
     var authState = AuthState()
+
+    /** A token from an earlier login is saved. It does not say that the token still works. */
+    val hasSavedLogin: Boolean get() = authState.lastTokenResponse != null
 
     fun updateConnectionStatus(newStatus: ConnectionStatus? = null, message: String? = null) {
         aapsLogger.debug(LTag.TIDEPOOL, "updateConnectionStatus: $newStatus $message")

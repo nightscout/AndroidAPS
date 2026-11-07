@@ -60,7 +60,15 @@ fun SafeDeactivationStep(viewModel: EopatchPatchViewModel) {
         val remainedInsulin = viewModel.patchRemainedInsulin
 
         Text(
-            text = stringResource(R.string.eopatch_expiration_time) + ": $remainedTime ($remainedDays ${stringResource(R.string.symbol_day)})",
+            text = stringResource(
+                app.aaps.core.interfaces.R.string.confirmation_line,
+                stringResource(R.string.eopatch_expiration_time),
+                stringResource(
+                    app.aaps.core.interfaces.R.string.value_with_detail,
+                    remainedTime,
+                    stringResource(app.aaps.core.ui.R.string.value_with_unit, remainedDays.toString(), stringResource(R.string.symbol_day))
+                )
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
         val insulinValue = when {
@@ -68,9 +76,14 @@ fun SafeDeactivationStep(viewModel: EopatchPatchViewModel) {
             remainedInsulin < 1  -> 1
             else                 -> remainedInsulin
         }
+        // "50 U +" means at least 50 U, "1 U -" less than 1 U
         val insulinSymbol = if (remainedInsulin > 1) stringResource(R.string.symbol_plus) else stringResource(R.string.symbol_minus)
         Text(
-            text = stringResource(app.aaps.core.ui.R.string.reservoir_label) + ": $insulinValue${stringResource(R.string.all_dose_unit)}$insulinSymbol",
+            text = stringResource(
+                app.aaps.core.interfaces.R.string.confirmation_line,
+                stringResource(app.aaps.core.ui.R.string.reservoir_label),
+                stringResource(app.aaps.core.ui.R.string.value_with_unit, stringResource(app.aaps.core.ui.R.string.units_format_insulin_int, insulinValue), insulinSymbol)
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
     }

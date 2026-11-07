@@ -27,9 +27,10 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientKeyExchange
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
-import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -74,6 +75,8 @@ class NsFrameHandler(
     private val nsIncomingDataProcessor: () -> NsIncomingDataProcessor,
     private val runningConfiguration: () -> RunningConfiguration,
     private val orphanDetector: () -> OrphanDetector,
+    private val clientKeyExchange: () -> ClientKeyExchange,
+    private val masterDocVerifier: () -> MasterDocVerifier,
     private val storeDataForDb: StoreDataForDb,
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
@@ -107,16 +110,22 @@ class NsFrameHandler(
             nsClientV3Plugin().storeLastLoadedSrvModified()
         }
 
+        // advanceInitialLoadCursor = false below, for the same reason as the guard above: a live
+        // record must not move the first-load cursor either. It carries the time of "now", so
+        // during a first load it would make the REST load start at now and the history behind it -
+        // profile switches included - would never be read.
         when (collection) {
-            "devicestatus" -> nsDeviceStatusHandler.handleNewData(arrayOf(docString.toNSDeviceStatus()), live = true)
+            "devicestatus" -> decode(collection, raw) { docString.toNSDeviceStatus() }?.let {
+                nsDeviceStatusHandler.handleNewData(arrayOf(it), live = true)
+            }
 
             "entries"      -> {
-                docString.toNSSgvV3()?.let {
-                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false)
+                decode(collection, raw) { docString.toNSSgvV3() }?.let {
+                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false, advanceInitialLoadCursor = false)
                     storeDataForDb.requestStoreGlucoseValues()
                 }
                 // The same collection also carries AAPS calibration entries.
-                docString.toCalibrationMbg()?.let {
+                decode(collection, raw) { docString.toCalibrationMbg() }?.let {
                     nsIncomingDataProcessor().processCalibrations(listOf(it), doFullSync = false)
                     storeDataForDb.requestStoreCalibrationEntries()
                 }
@@ -124,12 +133,12 @@ class NsFrameHandler(
 
             "profile"      -> appScope.launch { nsIncomingDataProcessor().processProfile(doc, doFullSync = false) }
 
-            "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false)
+            "treatments"   -> decode(collection, raw) { docString.toNSTreatment() }?.let {
+                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false, advanceInitialLoadCursor = false)
                 storeDataForDb.requestStoreTreatments(fullSync = false)
             }
 
-            "foods"        -> docString.toNSFood()?.let {
+            "foods"        -> decode(collection, raw) { docString.toNSFood() }?.let {
                 nsIncomingDataProcessor().processFood(listOf(it))
                 storeDataForDb.requestStoreFoods()
             }
@@ -142,24 +151,26 @@ class NsFrameHandler(
     private fun onSettings(doc: JsonObject, docString: String, srvModified: Long) {
         val identifier = doc.str("identifier") ?: ""
         when {
-            // Client: cold config doc - apply everything except the active scene.
+            // Client: cold config doc - apply everything except the active scene. Only when the master signed it
+            // (MasterDocVerifier): a client token may write to settings too.
             config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
-                docString.toRunningConfiguration()?.let {
-                    runningConfiguration().applyCold(it)
+                masterDocVerifier().open(identifier, doc)?.let { opened ->
+                    runningConfiguration().applyCold(opened.configuration)
                     // Only the orphan bookkeeping is deferred, because onSettingsDoc takes the
                     // repository mutex and this runs on the socket's thread, not in a coroutine.
                     // applyCold and the liveness clock stay inline.
-                    appScope.launch { orphanDetector().onSettingsDoc(it, srvModified) }
-                    // A live config push proves the master is alive now - feed the liveness clock.
-                    nsClientV3Plugin().bumpMasterSignal(srvModified)
+                    appScope.launch { orphanDetector().onSettingsDoc(opened.configuration, srvModified) }
+                    // A live config push proves the master is alive - at the time it signed it, so a doc put back
+                    // later by somebody else does not make a master that is gone look alive.
+                    nsClientV3Plugin().bumpMasterSignal(opened.signedAt ?: srvModified)
                 }
 
-            // Client: hot state doc - the active scene and runtime flags only. Kept apart from the
+            // Client: hot state doc - the active scene only. Kept apart from the
             // cold branch so this can never clear a running scene.
             config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
-                docString.toRunningConfiguration()?.let {
-                    runningConfiguration().applyHot(it)
-                    nsClientV3Plugin().bumpMasterSignal(srvModified)
+                masterDocVerifier().open(identifier, doc)?.let { opened ->
+                    runningConfiguration().applyHot(opened.configuration)
+                    nsClientV3Plugin().bumpMasterSignal(opened.signedAt ?: srvModified)
                 }
 
             // Client: master->client command ACK. Must be tested BEFORE the generic IDENTIFIER_PREFIX
@@ -171,6 +182,13 @@ class NsFrameHandler(
             // Client: master->client live bolus-progress mirror. Same ordering rule as the ACK.
             config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
                 appScope.launch { nsClientV3Plugin().handleClientControlProgressEvent(doc) }
+
+            // Client: the master's answer to the key exchange in the hello. Same ordering rule as the ACK.
+            config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_KEY_PREFIX)      ->
+                appScope.launch {
+                    runCatching { clientKeyExchange().onKeyDoc(doc) }
+                        .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl key exchange failed: ${it.message}", it) }
+                }
 
             // Master: inbound client-control envelopes. The plugin gates on the master toggle itself.
             // Guarded by !AAPSCLIENT because Nightscout echoes every write back to its sender, and a
@@ -195,7 +213,9 @@ class NsFrameHandler(
                 storeDataForDb.requestUpdateDeletedTreatments()
             }
 
-            "entries"    -> {
+            // Only when BG is taken from Nightscout at all: otherwise anyone who can write there could remove
+            // this phone's readings.
+            "entries"    -> if (nsIncomingDataProcessor().acceptsGlucose(doFullSync = false)) {
                 storeDataForDb.addToDeleteGlucoseValue(identifier)
                 storeDataForDb.requestUpdateDeletedGlucoseValues()
             }
@@ -300,9 +320,27 @@ class NsFrameHandler(
      * socket.io listener, which is neither visible nor safe. Silence would be no better: a stream of
      * unreadable frames must not look the same as no frames at all.
      */
-    private fun drop(what: String, raw: String) {
-        aapsLogger.error(LTag.NSCLIENT, "Dropping unreadable $what frame: ${raw.take(200)}")
+    private fun drop(what: String, raw: String, reason: String? = null) {
+        val because = reason?.let { " ($it)" } ?: ""
+        aapsLogger.error(LTag.NSCLIENT, "Dropping unreadable $what frame$because: ${raw.take(200)}")
     }
+
+    /**
+     * Turns a document into its model, or drops the frame when that fails.
+     *
+     * Any uploader can write to Nightscout, so a document in a shape this version does not expect is
+     * normal, not a fault in AAPS. Thrown here, it escaped the socket.io listener and crashed the app,
+     * and again for every such document: a device status with `"uploader":"GG-Host"` did that every
+     * few minutes on 4.0.0-dev-e. Only the decoding is guarded. A failure while processing a document
+     * that did decode is a real fault and still surfaces.
+     */
+    private inline fun <T> decode(collection: String, raw: String, read: () -> T): T? =
+        try {
+            read()
+        } catch (e: Exception) {
+            drop(collection, raw, e.message)
+            null
+        }
 
     // Frame reading lives in NsWsPayload, which is tested on its own.
     private fun parse(raw: String): JsonObject? = NsWsPayload.parse(raw)

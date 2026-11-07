@@ -137,7 +137,7 @@ class ProfileFunctionImpl(
         if (profileSwitch != null) {
             profileName = if (customized) profileSwitch.originalCustomizedName else profileSwitch.originalProfileName
             if (showRemainingTime && profileSwitch.originalDuration != 0L) {
-                profileName += dateUtil.untilString(profileSwitch.originalEnd, rh)
+                profileName = rh.gs(InterfacesStrings.value_with_detail, profileName, dateUtil.untilString(profileSwitch.originalEnd, rh, withParentheses = false))
             }
         }
         return profileName
@@ -226,6 +226,13 @@ class ProfileFunctionImpl(
         if (config.AAPSCLIENT && running is ProfileSealed.EPS)
             return running.value.timestamp < requested.timestamp && !ProfileSealed.PS(requested, activePlugin).isEqual(running)
         return !ProfileSealed.PS(requested, activePlugin).isAppliedAs(running)
+    }
+
+    // Against the mirror, with the same fallback to 1.0: this is the value the conversions really use.
+    override suspend fun isConcentrationChangePending(): Boolean {
+        if (config.AAPSCLIENT) return false
+        val requested = getRequestedProfile() ?: return false
+        return requested.iCfg.concentration != (runningICfg.value?.concentration ?: 1.0)
     }
 
     override fun getUnits(): GlucoseUnit =

@@ -607,7 +607,7 @@ abstract class BaseWatchFace : WatchFace() {
         binding.timestamp.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
         binding.timestamp.text = readingAge()
         binding.uploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
-        binding.uploaderBattery?.text = status[0].battery + "%"
+        binding.uploaderBattery?.text = status[0].battery.toIntOrNull()?.let { getString(R.string.loop_status_profile_percentage_value, it) } ?: status[0].battery
         binding.rigBattery?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
         binding.rigBattery?.text = status[0].rigBattery
         binding.basalRate?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()

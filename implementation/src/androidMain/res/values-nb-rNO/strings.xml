@@ -28,12 +28,15 @@
     <string name="alarm_channel_bolus_error">Bolusfeil</string>
     <string name="alarm_channel_error">Generell feil</string>
     <string name="alarm_channel_urgent">Kritisk alarm</string>
+    <string name="alarm_channel_eat_reminder">Tid for å spise</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (overstyr Ikke forstyrr)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (følger innstillingen Ikke forstyrr)</string>
     <string name="alarm_channel_silent_urgent">Kritisk alarm (modus med gradvis volumøkning)</string>
     <string name="alarm_channel_silent">Alarm (modus med gradvis volumøkning)</string>
     <string name="alarm_channel_silent_description">Brukes når «Øk varslingsvolumet gradvis» er aktivert. Alarmskjermen spiller av lyden.</string>
     <string name="ongoing_channel_name">Pågående status</string>
+    <string name="eat_reminder_channel">Nedtelling til spisepåminnelse</string>
+    <string name="eat_reminder_channel_description">Viser tiden som gjenstår til det er tid for å spise. Nedtellingen er lydløs, men alarmen ved slutten lager lyd.</string>
     <string name="notifications_channel_name">AAPS-varsler</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>

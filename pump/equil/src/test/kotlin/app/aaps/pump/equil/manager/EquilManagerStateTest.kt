@@ -27,6 +27,9 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 /**
  * How the pod state survives a plugin restart.
@@ -91,6 +94,56 @@ class EquilManagerStateTest {
         assertThat(restarted.isActivationCompleted()).isTrue()
     }
 
+    /** A stored state with a completed activation, as an earlier manager leaves it behind. */
+    private fun storedCompletedPod(): String {
+        val earlier = newManager()
+        earlier.init()
+        earlier.setActivationProgress(ActivationProgress.COMPLETED)
+        return persisted
+    }
+
+    @Test
+    fun `a reset before the first init is not replaced by what is stored`() {
+        val completed = storedCompletedPod()
+        val manager = newManager()
+
+        manager.clearPodState()
+        // Something stale reaches preferences after the reset, then the delayed onStart runs.
+        persisted = completed
+        manager.init()
+
+        assertThat(manager.isActivationCompleted()).isFalse()
+    }
+
+    /**
+     * What `EquilEmulatorActivationTest` failed with: "activationProgress=COMPLETED" while the persisted
+     * state was the clean one. The load had read the old state before the reset and published it after.
+     */
+    @Test
+    fun `a load that is running when the reset comes does not publish its old state over the reset`() {
+        persisted = storedCompletedPod()
+        val manager = newManager()
+        val loadHasRead = CountDownLatch(1)
+        val finishLoad = CountDownLatch(1)
+        whenever(preferences.get(EquilStringKey.State)).thenAnswer {
+            val read = persisted
+            loadHasRead.countDown()
+            finishLoad.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            read
+        }
+
+        val load = thread { manager.init() }
+        assertThat(loadHasRead.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).isTrue()
+        val reset = thread { manager.clearPodState() }
+        // The reset either waits for the load, or it is done now and the load publishes over it.
+        reset.join(RESET_WAIT_MS)
+        finishLoad.countDown()
+        load.join()
+        reset.join()
+
+        assertThat(manager.isActivationCompleted()).isFalse()
+    }
+
     @Test
     fun `a second init does not reload over newer in-memory state`() {
         sut.init()
@@ -120,5 +173,11 @@ class EquilManagerStateTest {
 
         assertThat(sut.hasPodState()).isTrue()
         assertThat(sut.getActivationProgress()).isEqualTo(ActivationProgress.NONE)
+    }
+
+    private companion object {
+
+        const val TIMEOUT_SECONDS = 5L
+        const val RESET_WAIT_MS = 300L
     }
 }

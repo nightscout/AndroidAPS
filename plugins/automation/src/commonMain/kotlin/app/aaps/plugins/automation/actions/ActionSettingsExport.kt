@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -115,7 +116,7 @@ class ActionSettingsExport(
         notificationManager.post(NotificationId.SETTINGS_EXPORT_RESULT, exportResultMessage, exportResultLevel)
 
         // Insert therapy event EXPORT_SETTINGS for automation trigger to uniquely detect.
-        val error = "${text.value}: $exportResultMessage"
+        val error = rh.gs(InterfacesStrings.confirmation_line, text.value, exportResultMessage)
         aapsLogger.debug(LTag.AUTOMATION, "Insert therapy EXPORT_SETTINGS event, error=:${error}, doAlsoAnnouncement=$announceAlert")
         persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = TE.asSettingsExport(error = error),
@@ -128,7 +129,7 @@ class ActionSettingsExport(
 
         if (announceAlert && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
             // Do additional event type announcement for aapsClient alerting
-            val alert = "${rh.gs(CoreUiStrings.export_alert)}(${text.value}): $exportResultMessage"
+            val alert = rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.value_with_detail, rh.gs(CoreUiStrings.export_alert), text.value), exportResultMessage)
             aapsLogger.debug(LTag.AUTOMATION, "Insert therapy ALERT/ANNOUNCEMENT event, error=:${alert}")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE.asAnnouncement(error = alert),

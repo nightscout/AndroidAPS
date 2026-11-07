@@ -85,7 +85,5 @@ fun generatedTextResolver(fallback: TextResolver, vararg extraOwners: Pair<Strin
 
         override fun gsNotLocalised(ref: TextRef): String =
             if (ref is TextRef.AndroidRes) fallback.gsNotLocalised(ref) else generated.gsNotLocalised(ref)
-
-        override fun shortTextMode(): Boolean = generated.shortTextMode()
     }
 }

@@ -6,8 +6,8 @@ package app.aaps.annotations
  * The allOpen plugin is configured with this annotation's own name, in
  * `all-open-dependencies.gradle.kts`, so the annotation alone is what opens a class.
  *
- * Note this means an annotated class is open in release builds too: the three modules applying
- * allOpen apply it to every variant.
+ * Note this means an annotated class is open in release builds too: the modules applying
+ * `all-open-dependencies` apply it to every variant.
  */
 @Target(AnnotationTarget.CLASS)
 annotation class OpenForTesting

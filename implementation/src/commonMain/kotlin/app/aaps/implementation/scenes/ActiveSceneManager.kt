@@ -105,6 +105,18 @@ class ActiveSceneManager(
         persistActiveState(updated)
     }
 
+    /**
+     * Master only: record why the follow-up scene did not start, so the expired banner can say it.
+     * Call after [markExpired] - the scene is still there, only its lifecycle has changed.
+     */
+    fun setChainSkipReason(reason: String) {
+        val current = _activeSceneState.value ?: return
+        if (current.chainSkipReason == reason) return
+        val updated = current.copy(chainSkipReason = reason)
+        _activeSceneState.value = updated
+        persistActiveState(updated)
+    }
+
     /** Clear the active scene (called by SceneExecutor on deactivation or dismiss) */
     fun clearActive() {
         _activeSceneState.value = null
@@ -144,7 +156,8 @@ class ActiveSceneManager(
                 ttNsId = it.scopedRecords.ttNsId,
                 psNsId = it.scopedRecords.psNsId,
                 rmNsId = it.scopedRecords.rmNsId,
-                teNsId = it.scopedRecords.teNsId
+                teNsId = it.scopedRecords.teNsId,
+                chainSkipReason = it.chainSkipReason
             )
         }
 
@@ -173,7 +186,8 @@ class ActiveSceneManager(
                 psNsId = snapshot.psNsId,
                 rmNsId = snapshot.rmNsId,
                 teNsId = snapshot.teNsId
-            )
+            ),
+            chainSkipReason = snapshot.chainSkipReason
         )
         if (initial == _activeSceneState.value) return
         aapsLogger.info(LTag.UI, "ActiveSceneManager.applyActiveScene('${scene.name}' lifecycle=${snapshot.lifecycle})")
@@ -298,6 +312,7 @@ class ActiveSceneManager(
             put("durationMs", state.durationMs)
             put("lifecycle", state.lifecycle.name)
             state.priorSmb?.let { put("priorSmb", it) }
+            state.chainSkipReason?.let { put("chainSkipReason", it) }
             put("scopedRecords", state.scopedRecords.toJson())
         }
         preferences.put(StringNonKey.ActiveScene, json.toString())
@@ -325,7 +340,8 @@ class ActiveSceneManager(
                     ?.let { runCatching { SceneLifecycle.valueOf(it) }.getOrNull() }
                     ?: SceneLifecycle.ACTIVE,
                 priorSmb = json.booleanOrNull("priorSmb"),
-                scopedRecords = (json["scopedRecords"] as? JsonObject)?.toScopedRecords() ?: ScopedRecords()
+                scopedRecords = (json["scopedRecords"] as? JsonObject)?.toScopedRecords() ?: ScopedRecords(),
+                chainSkipReason = json.stringOrNull("chainSkipReason")
             )
         } catch (_: Exception) {
             null

@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Absence d\'étalonnage</string>
+    <string name="description_no_calibration">"Aucune substitution d'étalonnage appliquée. Les valeurs du capteur sont utilisées telles quels. Utilisez ceci lorsque le capteur est déjà calibré à l'usine et précis."</string>
+    <string name="linear_calibration_name">Étalonnage linéaire</string>
+    <string name="description_linear_calibration">"Substitution d'étalonnage linéaire par capteur (pente et décalage) calculée à partir de vos glycémies au doigt. Les entrées récentes sont pondérées. Le remplacement est appliqué après le démarrage de la session de capteur actuelle; les deux premières heures sont ignorées étant le temps de démarrage."</string>
+    <string name="sensor_change_detected_text">Changement de capteur probable détecté à %1$s. Marquer comme nouveau capteur ?</string>
+    <string name="sensor_change_detected_action">Enregistrer le changement de capteur</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Enregistrer un changement de capteur pour activer l\'étalonnage.</string>
+    <string name="cal_status_warmup">Échauffement du capteur — étalonnage actif après %1$s.</string>
+    <string name="cal_status_need_more_entries">Besoin d\'au moins 2 glycémies aux doigts (actuellement %1$d).</string>
+    <string name="cal_status_unsafe_fit">Calibration hors plage de sécurité — étalonnage non appliqué.</string>
+    <string name="cal_status_applied">Calibration appliquée.</string>
+    <string name="cal_status_applied_offset_only">Étalonnage par décalage seul appliqué — la plage de mesure du capteur est trop étroite pour la pente.</string>
+    <string name="cal_status_applied_slope_clamped">Calibration appliquée — pente maintenue dans une plage de sécurité. Ajoutez d\'autres entrées pour assouplir cette restriction.</string>
+    <string name="cal_slope_offset">Pente %1$.2f, correction moyenne %2$s</string>
+    <string name="cal_session_started">Session démarrée : %1$s</string>
+    <string name="cal_mark_sensor_change_now">Enregistrer le changement de capteur</string>
+    <string name="cal_add_calibration">Ajouter une calibration</string>
+    <string name="cal_entries_header">Entrées issues de prélèvements capillaires (%1$d)</string>
+    <string name="cal_no_entries">Aucune glycémie capillaire pour l\'instant.</string>
+    <string name="cal_entry_pair">Glycémie capillaire %1$s → capteur %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Glycémie %1$d/%2$d · %3$s · Capteur %4$s → Glycémie %5$s</string>
 </resources>

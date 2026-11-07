@@ -65,6 +65,48 @@ internal class OrphanDetectorTest {
 
     private fun configWithoutRosterField() = NSRunningConfiguration() // authorizedClients = null
 
+    private fun configWithRoles(roles: Map<String, String>?) =
+        NSRunningConfiguration(authorizedClients = NSAuthorizedClients(clientIds = listOf(ourClientId), roles = roles))
+
+    // -- this phone's role, kept from the roster ----------------------------------------------
+
+    @Test
+    fun ownRoleFromTheRosterIsStored() = runTest {
+        sut.onSettingsDoc(configWithRoles(mapOf(ourClientId to "MealAssistant", "other" to "Admin")), docSrvModified = now)
+        verify(preferences).put(StringNonKey.NsClientControlRole, "MealAssistant")
+    }
+
+    @Test
+    fun aRosterWithoutRolesIsAnOlderMasterSoFullControlStays() = runTest {
+        sut.onSettingsDoc(configWithRoles(null), docSrvModified = now)
+        verify(preferences).put(StringNonKey.NsClientControlRole, "Admin")
+    }
+
+    @Test
+    fun rolesWithoutThisPhoneMeanReadOnly() = runTest {
+        sut.onSettingsDoc(configWithRoles(mapOf("other" to "Admin")), docSrvModified = now)
+        verify(preferences).put(StringNonKey.NsClientControlRole, "ReadOnly")
+    }
+
+    /**
+     * Just paired: the doc in flight is from before the pairing, so it cannot list this phone. It must not turn the role
+     * the pairing came with into ReadOnly - the client showed only Manage until the master's next roster.
+     */
+    @Test
+    fun aDocFromBeforeThePairingKeepsTheRoleOfThePairing() = runTest {
+        pairedAt = now
+        val staleDoc = NSRunningConfiguration(authorizedClients = NSAuthorizedClients(clientIds = listOf("other"), roles = mapOf("other" to "Admin")))
+        sut.onSettingsDoc(staleDoc, docSrvModified = now - 4_000L)
+        verify(preferences, never()).put(eq(StringNonKey.NsClientControlRole), any<String>())
+    }
+
+    @Test
+    fun anUnchangedRoleIsNotWrittenAgain() = runTest {
+        whenever(preferences.get(StringNonKey.NsClientControlRole)).thenReturn("Caregiver")
+        sut.onSettingsDoc(configWithRoles(mapOf(ourClientId to "Caregiver")), docSrvModified = now)
+        verify(preferences, never()).put(eq(StringNonKey.NsClientControlRole), any<String>())
+    }
+
     /**
      * Old master that doesn't publish the roster yet. Block absent on the wire is the
      * compatibility marker — clients must not infer orphan status from its absence.

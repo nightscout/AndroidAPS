@@ -174,14 +174,52 @@ private val migration31to32 = object : Migration(31, 32) {
     }
 }
 
+/**
+ * Insulin configuration columns: `peak` becomes `insulinPeakTime` and `concentration` is added.
+ *
+ * The three old columns are CARRIED ACROSS, not replaced by the sentinel. v3 already stored the insulin
+ * on every profile switch record - `ProfileFunctionImpl.buildProfileSwitch` wrote the insulin plugin's
+ * label and peak together with `insulinEndTime = pureProfile.dia * 3600 * 1000`, and `ProfileSealed.PS.dia`
+ * read the DIA back out of it. So the row itself knows which insulin delivered it, per record. This used to
+ * write `'', -1, -1, 1.0` over all three and leave `MainApp` to reconstruct ONE insulin from the dead
+ * insulin-plugin preferences and stamp it over the whole history - which loses every other profile's DIA and,
+ * when the reconstruction cannot find a DIA, substitutes the hard-limit maximum of 9 h. It is also one-way:
+ * the sentinel is consumed, so a wrong value is never revisited.
+ *
+ * `carryInsulinColumns` keeps a usable value and writes the sentinel only where there is none, so
+ * `MainApp` still stamps the rows that really have nothing. `concentration` is 1.0 by construction: these
+ * records predate concentration entirely, and 1.0 is the identity that leaves historical doses unscaled.
+ *
+ * `boluses` goes through the same expression and in practice always lands on the sentinel: `BS.icfg` is
+ * null by default and no v3 code ever assigned it, so those three columns are NULL on every v3 bolus row.
+ * The expression is shared anyway - one rule, and it picks a value up if one is ever there.
+ */
 private val migration32to33 = object : Migration(32, 33) {
+
+    /**
+     * `insulinLabel, insulinEndTime, insulinPeakTime, concentration` read out of the v32 columns.
+     *
+     * All three are taken together or none is: a DIA without a peak is not an insulin, and half a curve
+     * would compute an IOB that looks plausible and is not. A NULL compares as neither `> 0`, so a NULL
+     * column falls to the sentinel on its own.
+     *
+     * One line on purpose. The statements below are `trimIndent()`ed after interpolation, so a value with
+     * its own line breaks would decide their common indent.
+     */
+    private val carryInsulinColumns =
+        "CASE WHEN insulinEndTime > 0 AND peak > 0 THEN insulinLabel ELSE '' END, " +
+            "CASE WHEN insulinEndTime > 0 AND peak > 0 THEN insulinEndTime ELSE -1 END, " +
+            "CASE WHEN insulinEndTime > 0 AND peak > 0 THEN peak ELSE -1 END, " +
+            "1.0"
+
     override fun migrate(connection: SQLiteConnection) {
-        // Migration of boluses table (insulinPeakTime must be migrated in MainApp)
+        // Migration of boluses table (v3 never stamped a bolus, so these always take the sentinel)
         connection.execSQL("CREATE TABLE IF NOT EXISTS new_boluses (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `amount` REAL NOT NULL, `type` TEXT NOT NULL, `notes` TEXT, `isBasalInsulin` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, `insulinLabel` TEXT NOT NULL, `insulinEndTime` INTEGER NOT NULL, `insulinPeakTime` INTEGER NOT NULL, `concentration` REAL NOT NULL, FOREIGN KEY(`referenceId`) REFERENCES `boluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
         connection.execSQL(
             """
                 INSERT INTO new_boluses (id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, amount, type, notes, isBasalInsulin, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId, insulinLabel, insulinEndTime, insulinPeakTime, concentration)
-                SELECT id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, amount, type, notes, isBasalInsulin, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId, '', -1, -1, 1.0
+                SELECT id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, amount, type, notes, isBasalInsulin, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId,
+                $carryInsulinColumns
                 FROM `$TABLE_BOLUSES`
                 """.trimIndent()
         )
@@ -193,14 +231,15 @@ private val migration32to33 = object : Migration(32, 33) {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_boluses_timestamp` ON `$TABLE_BOLUSES` (`timestamp`)")
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_boluses_nightscoutId` ON `$TABLE_BOLUSES` (`nightscoutId`)")
 
-        // Migration of effectiveProfileSwitches table (insulinPeakTime must be migrated in MainApp)
+        // Migration of effectiveProfileSwitches table (the v3 insulin is carried across, see above)
         connection.execSQL(
             "CREATE TABLE IF NOT EXISTS new_effectiveProfileSwitches (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `basalBlocks` TEXT NOT NULL, `isfBlocks` TEXT NOT NULL, `icBlocks` TEXT NOT NULL, `targetBlocks` TEXT NOT NULL, `glucoseUnit` TEXT NOT NULL, `originalProfileName` TEXT NOT NULL, `originalCustomizedName` TEXT NOT NULL, `originalTimeshift` INTEGER NOT NULL, `originalPercentage` INTEGER NOT NULL, `originalDuration` INTEGER NOT NULL, `originalEnd` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, `insulinLabel` TEXT NOT NULL, `insulinEndTime` INTEGER NOT NULL, `insulinPeakTime` INTEGER NOT NULL, `concentration` REAL NOT NULL, FOREIGN KEY(`referenceId`) REFERENCES `effectiveProfileSwitches`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )"
         )
         connection.execSQL(
             """
                 INSERT INTO new_effectiveProfileSwitches (id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, basalBlocks, isfBlocks, icBlocks, targetBlocks, glucoseUnit, originalProfileName, originalCustomizedName, originalTimeshift, originalPercentage, originalDuration, originalEnd, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId, insulinLabel, insulinEndTime, insulinPeakTime, concentration)
-                SELECT id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, basalBlocks, isfBlocks, icBlocks, targetBlocks, glucoseUnit, originalProfileName, originalCustomizedName, originalTimeshift, originalPercentage, originalDuration, originalEnd, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId, '', -1, -1, 1.0
+                SELECT id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, basalBlocks, isfBlocks, icBlocks, targetBlocks, glucoseUnit, originalProfileName, originalCustomizedName, originalTimeshift, originalPercentage, originalDuration, originalEnd, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId,
+                $carryInsulinColumns
                 FROM `$TABLE_EFFECTIVE_PROFILE_SWITCHES`
                 """.trimIndent()
         )
@@ -211,12 +250,13 @@ private val migration32to33 = object : Migration(32, 33) {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_effectiveProfileSwitches_timestamp` ON `$TABLE_EFFECTIVE_PROFILE_SWITCHES` (`timestamp`)")
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_effectiveProfileSwitches_nightscoutId` ON `$TABLE_EFFECTIVE_PROFILE_SWITCHES` (`nightscoutId`)")
 
-        // Migration of profileSwitches table (insulinPeakTime must be migrated in MainApp)
+        // Migration of profileSwitches table (the v3 insulin is carried across, see above)
         connection.execSQL("CREATE TABLE IF NOT EXISTS new_profileSwitches (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `basalBlocks` TEXT NOT NULL, `isfBlocks` TEXT NOT NULL, `icBlocks` TEXT NOT NULL, `targetBlocks` TEXT NOT NULL, `glucoseUnit` TEXT NOT NULL, `profileName` TEXT NOT NULL, `timeshift` INTEGER NOT NULL, `percentage` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, `insulinLabel` TEXT NOT NULL, `insulinEndTime` INTEGER NOT NULL, `insulinPeakTime` INTEGER NOT NULL, `concentration` REAL NOT NULL, FOREIGN KEY(`referenceId`) REFERENCES `profileSwitches`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
         connection.execSQL(
             """
                 INSERT INTO new_profileSwitches (id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, basalBlocks, isfBlocks, icBlocks, targetBlocks, glucoseUnit, profileName, timeshift, percentage, duration, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId, insulinLabel, insulinEndTime, insulinPeakTime, concentration)
-                SELECT id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, basalBlocks, isfBlocks, icBlocks, targetBlocks, glucoseUnit, profileName, timeshift, percentage, duration, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId, '', -1, -1, 1.0
+                SELECT id, version, dateCreated, isValid, referenceId, timestamp, utcOffset, basalBlocks, isfBlocks, icBlocks, targetBlocks, glucoseUnit, profileName, timeshift, percentage, duration, nightscoutSystemId, nightscoutId, pumpType, pumpSerial, temporaryId, pumpId, startId, endId,
+                $carryInsulinColumns
                 FROM `$TABLE_PROFILE_SWITCHES`
                 """.trimIndent()
         )

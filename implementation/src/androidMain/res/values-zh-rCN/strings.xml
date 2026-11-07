@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">现在命令被执行了</string>
+    <string name="smb_being_delivered">当前正在输注 SMB。请在其完成后再试。</string>
     <string name="basal_value_below_minimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">泵中的基础率配置文件已更新。泵会将基础率舍入到其自身的步进值：它每天输注 %1$s，而非 %2$s。</string>
+    <string name="basal_reported_far_from_profile">泵报告的基础率与配置文件相差甚远。AAPS 将保持配置文件中的基础率。请检查泵中的基础率。</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">碳水</string>
     <!--    PumpStatusGenerator-->
@@ -20,6 +23,21 @@
     <string name="permission_schedule_exact_alarm_title">警报与提醒</string>
     <string name="permission_schedule_exact_alarm_description">必要权限，以便在 AAPS 处于后台时警报能唤醒屏幕，并让提醒准时响铃</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS 警报</string>
+    <string name="alarm_channel_standard">标准警报</string>
+    <string name="alarm_channel_bolus_error">大剂量错误</string>
+    <string name="alarm_channel_error">一般错误</string>
+    <string name="alarm_channel_urgent">紧急警报</string>
+    <string name="alarm_channel_eat_reminder">吃饭时间</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (覆盖勿扰模式)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (遵循勿扰模式)</string>
+    <string name="alarm_channel_silent_urgent">紧急警报（音量渐强模式）</string>
+    <string name="alarm_channel_silent">警报（音量渐强模式）</string>
+    <string name="alarm_channel_silent_description">当‘逐渐增大通知音量’开启时使用。警报屏幕会播放该声音。</string>
+    <string name="ongoing_channel_name">持续状态</string>
+    <string name="eat_reminder_channel">进餐提醒倒计时</string>
+    <string name="eat_reminder_channel_description">显示距离进餐时间还剩多久。它本身不发声；到时间时由警报发声。</string>
+    <string name="notifications_channel_name">AAPS 通知</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

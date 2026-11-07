@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.ActionProfileSwitchPreChec
 import app.aaps.wear.R
 import app.aaps.wear.di.WearMetroActivity
 import dev.zacsweers.metro.Inject
+import app.aaps.core.interfaces.R as InterfacesR
 
 class ProfileSwitchActivity : WearMetroActivity() {
 
@@ -156,7 +157,7 @@ private fun ProfileSwitchRequestScreen(
 
     val timeshiftText = "${if (timeshift > 0) "+" else ""}${stringResource(R.string.action_duration_hours_format, timeshift)}"
     val durationText = if (duration == 0) "\u221E" else formatDurationMinutes(duration)
-    val detailLine = "$timeshiftText / $durationText"
+    val detailLine = stringResource(InterfacesR.string.values_with_slash, timeshiftText, durationText)
 
     Column(
         modifier = Modifier
@@ -192,7 +193,7 @@ private fun ProfileSwitchRequestScreen(
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "$percentage%",
+            text = stringResource(R.string.loop_status_profile_percentage_value, percentage),
             color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold

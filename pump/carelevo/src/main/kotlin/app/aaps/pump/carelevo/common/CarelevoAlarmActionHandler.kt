@@ -155,7 +155,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
             AlarmCause.ALARM_NOTICE_ATTACH_PATCH_CHECK                      -> {
                 scope.launch {
                     if (alarmClearCoordinator.clearAlarmOnPatch(info)) acknowledgeAndRemoveAlarm(info.alarmId)
-                    else startAlarmAlertAbnormalClearProcess(info, alarmCause)
+                    else startAlarmAlertAbnormalClearProcess(info, alarmCause, forgetSnapshot = true)
                 }
             }
 
@@ -216,13 +216,16 @@ class CarelevoAlarmActionHandler @Inject constructor(
     /**
      * The patch could not be reached (or the link itself is the alarm): acknowledge locally so the
      * user is not held hostage by an unclearable alarm, then run any cause-specific recovery.
+     * [forgetSnapshot] is set when a clear was attempted and failed: the alarm is still active on the
+     * patch, so it is dropped from the snapshot baseline only after the local removal has landed.
      */
-    private fun startAlarmAlertAbnormalClearProcess(info: CarelevoAlarmInfo, alarmCause: AlarmCause) {
+    private fun startAlarmAlertAbnormalClearProcess(info: CarelevoAlarmInfo, alarmCause: AlarmCause, forgetSnapshot: Boolean = false) {
         compositeDisposable += alarmUseCase.acknowledgeAlarm(info.alarmId)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
+                    if (forgetSnapshot) alarmClearCoordinator.forgetSnapshotAlarmCause(alarmCause)
                     when (alarmCause) {
                         AlarmCause.ALARM_ALERT_BLUETOOTH_OFF -> {
                             // Keep the queue entry visible until the link is confirmed back;

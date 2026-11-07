@@ -4,7 +4,7 @@
     <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
     <string name="dst_loop_disabled_warning">Cambio de hora de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
     <!-- Storage constraint -->
-    <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡El lazo se encuentra desactivado!</string>
+    <string name="disk_full">Debes liberar al menos %1$d MB de almacenamiento interno. ¡El lazo se encuentra desactivado!</string>
     <!-- Version Checker -->
     <string name="application_expired">Aplicación caducada</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
@@ -38,7 +38,7 @@
     <string name="apsselected">APS seleccionado</string>
     <string name="closedmodeenabled">Lazo cerrado activado</string>
     <string name="description_objectives">Programa de aprendizaje</string>
-    <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
+    <string name="doyouwantresetstart">¿Quieres reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
     <string name="objectives_button_unstart">Restablecer estado iniciado</string>
     <string name="bg_doubled_lgs">Modo LGS debido a valores duplicados en la fuente de glucosa</string>

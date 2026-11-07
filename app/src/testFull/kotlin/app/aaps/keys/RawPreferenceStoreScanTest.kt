@@ -48,8 +48,8 @@ class RawPreferenceStoreScanTest {
     private val allowed: Map<String, String> = mapOf(
         // --- It IS the store ---
         "shared/impl/src/androidMain/kotlin/app/aaps/shared/impl/sharedPreferences/SPImpl.kt" to "the Android store implementation",
-        "desktop/shell/src/main/kotlin/app/aaps/desktop/shell/prefs/DesktopSp.kt" to "the desktop store implementation",
-        "ios/shell/src/iosMain/kotlin/app/aaps/ios/shell/prefs/IosSp.kt" to "the iOS store implementation",
+        "shared/impl/src/commonMain/kotlin/app/aaps/shared/impl/sharedPreferences/EncryptedKeyValueStore.kt" to "the encrypted store implementation (phone, desktop and iOS)",
+        "app/src/main/kotlin/app/aaps/settingsstore/AndroidStorage.kt" to "opens the phone's store, before the graph that hands it out exists",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/sharedPreferences/PreferencesImpl.kt" to "Preferences itself, which is what everything else is supposed to use",
         "shared/tests/src/androidMain/kotlin/app/aaps/shared/tests/SharedPreferencesMock.kt" to "the test double for the store; it lives in a main source set so tests in other modules can use it",
 
@@ -74,6 +74,12 @@ class RawPreferenceStoreScanTest {
         // import hands them the file, and one copy of the functions serves both.
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/PreferenceMigrations.kt" to
             "migrates keys this build no longer registers, over whichever store it is handed",
+        // The v3 to v4 insulin migration. Same reason as the line above, and it only READS: the insulin
+        // plugin selection (`ConfigBuilder_Enabled_INSULIN_<X>`), the free peak (`insulin_oref_peak`) and
+        // each profile's DIA (`LocalProfile_<n>_dia`) are all names this build has no key for - the DIA
+        // belongs to the insulin now, and the insulin stopped being a plugin.
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/InsulinMigration.kt" to
+            "reads the v3 insulin and DIA names this build no longer registers, to stamp records that predate ICfg",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/FileKeyValueStore.kt" to
             "an in-memory store over an import file, so the migrations above run on it without touching the device",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/CloudStorageManager.kt" to "moves export files to and from cloud storage",
@@ -86,10 +92,8 @@ class RawPreferenceStoreScanTest {
         // --- Runs before DI exists ---
         "implementation/src/androidMain/kotlin/app/aaps/implementation/utils/fabric/FabricPrivacyImpl.kt" to "reads before the graph is built (DI cycle)",
         "implementation/src/iosMain/kotlin/app/aaps/implementation/utils/fabric/FabricPrivacyImpl.kt" to "same, on iOS",
-        "core/ui/src/androidMain/kotlin/app/aaps/core/ui/locale/LocaleHelper.kt" to "reads the language before DI exists",
 
         // --- Wiring, which hands the store to the things above ---
-        "app/src/main/kotlin/app/aaps/di/metro/AppAndroidBindings.kt" to "DI wiring",
         "app/src/main/kotlin/app/aaps/di/metro/AppRootGraph.kt" to "DI wiring",
         "app/src/main/kotlin/app/aaps/di/metro/MetroGraphs.kt" to "DI wiring",
         "app/src/main/kotlin/app/aaps/di/metro/SharedImplBindings.kt" to "DI wiring",

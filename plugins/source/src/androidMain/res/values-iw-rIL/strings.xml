@@ -4,9 +4,9 @@
     <string name="ns_client_bg">נתוני סוכר מ-NSClient</string>
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
     <string name="source_xdrip">נתוני סוכר מ-xDrip+</string>
-    <string name="description_source_xdrip">מקבל ערכי סוכר מ-xDrip ומיישומים מתאימים (Juggluco ועוד).</string>
+    <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip+ ומיישומים תואמים (Juggluco ועוד).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
+    <string name="description_source_dexcom">קבלת ערכי סוכר מאפליקציית \'Build Your Own Dexcom App\' (BYODA).</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
     <string name="mm640g">Minimed 640G</string>
@@ -22,6 +22,7 @@
     <string name="random_bg">נתוני סוכר אקראיים</string>
     <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">קבלת נתוני גלוקוז מאפליקציית Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">אפליקציית SI</string>
@@ -30,6 +31,7 @@
     <string name="patched_sino_app">אפליקציית Sino</string>
     <string name="description_source_patched_sino_app">קבלת נתוני סוכר מאפליקציית Sino מותאמת.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
     <string name="description_source_instara_app">קבלת ערכי סוכר מאפליקציית Instara.</string>
     <!-- Instara preferences -->
     <string name="pref_title_instara_history_request">בקשת נתונים היסטוריים מ־Instara</string>
@@ -38,8 +40,8 @@
     <string name="notification_reader">קורא התראות</string>
     <string name="description_source_notification_reader">קריאת ערכי גלוקוז מהתראות של אפליקציות CGM רשמיות, כגון Dexcom, Medtronic ו־Eversense.</string>
     <!-- Permission rationales -->
-    <string name="permission_dexcom_title">דקסקום CGM</string>
-    <string name="permission_dexcom_description">האפליקציה זקוקה להרשאה כדי לקבל נתוני CGM מאפליקציית דקסקום.</string>
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">האפליקציה זקוקה להרשאה כדי לקבל נתוני CGM מאפליקציית Dexcom.</string>
     <string name="permission_notification_listener_title">גישה להתראות</string>
     <string name="permission_notification_listener_description">נדרשת הרשאה כדי לקרוא ערכי גלוקוז מהתראות של אפליקציות CGM.</string>
     <string name="aidex">אפליקציית MicroTech CGM</string>
@@ -47,6 +49,7 @@
     <string name="aidex_sensor_expired">תוקף החיישן הסתיים. יש להחליף לחיישן חדש.</string>
     <string name="aidex_sensor_error">שגיאת חיישן. יש לבדוק את מצב החיישן.</string>
     <string name="aidex_sensor_stabilizing">החיישן נמצא בתהליך התייצבות. נא להמתין…</string>
-    <string name="aidex_sensor_replace">נדרשת החלפת חיישן, אנא החלף לחיישן חדש בהקדם האפשרי</string>
-    <string name="aidex_signal_lost">אות החיישן אבד, אנא בדוק את החיבור</string>
+    <string name="aidex_sensor_replace">נדרשת החלפת חיישן. יש להחליף לחיישן חדש בהקדם האפשרי</string>
+    <string name="aidex_signal_lost">אות החיישן אבד. יש לבדוק את החיבור</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">קריאה כפולה</string>
 </resources>

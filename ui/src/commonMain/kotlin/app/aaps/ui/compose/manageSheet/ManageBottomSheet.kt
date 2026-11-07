@@ -22,12 +22,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -47,8 +49,12 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.ElementVisibility
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.LocalClientRole
+import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
@@ -166,6 +172,10 @@ internal fun ManageBottomSheetContent(
     ) {
         // Explains offline vs. control-disabled; renders nothing when editing is enabled.
         MasterOfflineBanner(editingEnabled = editingEnabled)
+        // A paired read-only client gets almost nothing here; say why. Not an error, so not the offline banner.
+        // (The role first: it is Admin in previews, so LocalConfig, which previews do not provide, is never read there.)
+        if (LocalClientRole.current == ClientRole.ReadOnly && editingEnabled && showMutatingActions && LocalConfig.current.AAPSCLIENT)
+            ReadOnlyRoleBanner()
         // Section: Manage
         SectionHeader(stringResource(CoreUiStrings.manage))
 
@@ -173,7 +183,7 @@ internal fun ManageBottomSheetContent(
             // Profiles are the exception: an unpaired client still needs to SEE them (it receives them
             // from Nightscout and calculates with them), so the entry stays and the screen opens
             // read-only there. Every other editor here can only write, so it is hidden instead.
-            add { modifier ->
+            add(ElementType.PROFILE_MANAGEMENT) { modifier ->
                 ManageGridItem(
                     elementType = ElementType.PROFILE_MANAGEMENT,
                     onDismiss = onDismiss,
@@ -185,7 +195,7 @@ internal fun ManageBottomSheetContent(
             // (showMutatingActions=false), always shown on a master. SITE_ROTATION now rides it too (its record +
             // edit write path is Client-Control-migrated), so it is gated alongside the others.
             if (showMutatingActions) {
-                add { modifier ->
+                add(ElementType.INSULIN_MANAGEMENT) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.INSULIN_MANAGEMENT,
                         onDismiss = onDismiss,
@@ -194,7 +204,7 @@ internal fun ManageBottomSheetContent(
                     )
                 }
                 if (showTempTarget) {
-                    add { modifier ->
+                    add(ElementType.TEMP_TARGET_MANAGEMENT) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.TEMP_TARGET_MANAGEMENT,
                             onDismiss = onDismiss,
@@ -203,7 +213,7 @@ internal fun ManageBottomSheetContent(
                         )
                     }
                 }
-                add { modifier ->
+                add(ElementType.QUICK_WIZARD_MANAGEMENT) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.QUICK_WIZARD_MANAGEMENT,
                         onDismiss = onDismiss,
@@ -211,7 +221,7 @@ internal fun ManageBottomSheetContent(
                         modifier = modifier
                     )
                 }
-                add { modifier ->
+                add(ElementType.SCENE_MANAGEMENT) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.SCENE_MANAGEMENT,
                         onDismiss = onDismiss,
@@ -219,7 +229,7 @@ internal fun ManageBottomSheetContent(
                         modifier = modifier
                     )
                 }
-                add { modifier ->
+                add(ElementType.AUTOMATION_MANAGEMENT) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.AUTOMATION_MANAGEMENT,
                         onDismiss = onDismiss,
@@ -227,7 +237,7 @@ internal fun ManageBottomSheetContent(
                         modifier = modifier
                     )
                 }
-                add { modifier ->
+                add(ElementType.FOOD_MANAGEMENT) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.FOOD_MANAGEMENT,
                         onDismiss = onDismiss,
@@ -235,7 +245,7 @@ internal fun ManageBottomSheetContent(
                         modifier = modifier
                     )
                 }
-                add { modifier ->
+                add(ElementType.SITE_ROTATION) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.SITE_ROTATION,
                         onDismiss = onDismiss,
@@ -245,7 +255,7 @@ internal fun ManageBottomSheetContent(
                 }
             }
             if (pumpPlugin != null && showPump) {
-                add { modifier ->
+                add(ElementType.PUMP) { modifier ->
                     ManageGridItem(
                         text = stringResource(CoreUiStrings.pump_management),
                         icon = pumpPlugin.pluginDescription.icon ?: ElementType.PUMP.icon(),
@@ -258,7 +268,7 @@ internal fun ManageBottomSheetContent(
                 }
             }
             if (showAuthorizedClients) {
-                add { modifier ->
+                add(ElementType.AUTHORIZED_CLIENTS) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.AUTHORIZED_CLIENTS,
                         onDismiss = onDismiss,
@@ -268,7 +278,7 @@ internal fun ManageBottomSheetContent(
                 }
             }
             if (showPairWithMaster) {
-                add { modifier ->
+                add(ElementType.PAIR_WITH_MASTER) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.PAIR_WITH_MASTER,
                         onDismiss = onDismiss,
@@ -282,11 +292,15 @@ internal fun ManageBottomSheetContent(
         // Section: Device maintenance & basal — every item (sensor insert, fill, battery change, TBR/EB) now rides
         // Client-Control, so the whole section is gated MASTER_OR_PAIRED_CLIENT (hidden on an unpaired client).
         if (showMutatingActions && (showTempBasal || showCancelTempBasal || showExtendedBolus || showCancelExtendedBolus)) {
-            HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
-            Spacer(modifier = Modifier.height(8.dp))
-
-            GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
-                add { modifier ->
+            GridSection(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                // Drawn only when this phone's role leaves an item in the section.
+                header = {
+                    HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            ) {
+                add(ElementType.SENSOR_INSERT) { modifier ->
                     ManageGridItem(
                         elementType = ElementType.SENSOR_INSERT,
                         onDismiss = onDismiss,
@@ -295,7 +309,7 @@ internal fun ManageBottomSheetContent(
                     )
                 }
                 if (showFill) { // section already gated by showMutatingActions
-                    add { modifier ->
+                    add(ElementType.FILL) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.FILL,
                             onDismiss = onDismiss,
@@ -305,7 +319,7 @@ internal fun ManageBottomSheetContent(
                     }
                 }
                 if (showBatteryChange) {
-                    add { modifier ->
+                    add(ElementType.BATTERY_CHANGE) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.BATTERY_CHANGE,
                             onDismiss = onDismiss,
@@ -316,7 +330,7 @@ internal fun ManageBottomSheetContent(
                 }
                 if (!isSimpleMode) { // section already gated by showMutatingActions
                     if (showCancelTempBasal) {
-                        add { modifier ->
+                        add(ElementType.TEMP_BASAL) { modifier ->
                             ManageGridItem(
                                 text = cancelTempBasalText,
                                 icon = IcTbrCancel,
@@ -328,7 +342,7 @@ internal fun ManageBottomSheetContent(
                             )
                         }
                     } else if (showTempBasal) {
-                        add { modifier ->
+                        add(ElementType.TEMP_BASAL) { modifier ->
                             ManageGridItem(
                                 elementType = ElementType.TEMP_BASAL,
                                 text = stringResource(CoreUiStrings.tempbasal_button),
@@ -339,7 +353,7 @@ internal fun ManageBottomSheetContent(
                         }
                     }
                     if (showCancelExtendedBolus) {
-                        add { modifier ->
+                        add(ElementType.EXTENDED_BOLUS) { modifier ->
                             ManageGridItem(
                                 text = cancelExtendedBolusText,
                                 icon = IcCancelExtendedBolus,
@@ -351,7 +365,7 @@ internal fun ManageBottomSheetContent(
                             )
                         }
                     } else if (showExtendedBolus) {
-                        add { modifier ->
+                        add(ElementType.EXTENDED_BOLUS) { modifier ->
                             ManageGridItem(
                                 elementType = ElementType.EXTENDED_BOLUS,
                                 text = stringResource(CoreUiStrings.extended_bolus_button),
@@ -367,7 +381,8 @@ internal fun ManageBottomSheetContent(
 
         // Section: Careportal (hidden in simple mode, collapsed by default). Its events now ride Client-Control
         // (Track B), so the section is also gated MASTER_OR_PAIRED_CLIENT — hidden on an unpaired client.
-        if (!isSimpleMode && showMutatingActions) {
+        val careportalAvailable = careportalElements.any { LocalClientRole.current.allows(it.role) }
+        if (!isSimpleMode && showMutatingActions && careportalAvailable) {
             var careportalExpanded by remember { mutableStateOf(false) }
             val careportalExpandRequester = rememberBringIntoViewOnExpand(careportalExpanded)
             HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
@@ -382,7 +397,7 @@ internal fun ManageBottomSheetContent(
                 modifier = Modifier.bringIntoViewRequester(careportalExpandRequester)
             ) {
                 GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    add { modifier ->
+                    add(ElementType.BG_CHECK) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.BG_CHECK,
                             onDismiss = onDismiss,
@@ -391,7 +406,7 @@ internal fun ManageBottomSheetContent(
                             modifier = modifier
                         )
                     }
-                    add { modifier ->
+                    add(ElementType.NOTE) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.NOTE,
                             onDismiss = onDismiss,
@@ -400,7 +415,7 @@ internal fun ManageBottomSheetContent(
                             modifier = modifier
                         )
                     }
-                    add { modifier ->
+                    add(ElementType.EXERCISE) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.EXERCISE,
                             onDismiss = onDismiss,
@@ -409,7 +424,7 @@ internal fun ManageBottomSheetContent(
                             modifier = modifier
                         )
                     }
-                    add { modifier ->
+                    add(ElementType.QUESTION) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.QUESTION,
                             onDismiss = onDismiss,
@@ -418,7 +433,7 @@ internal fun ManageBottomSheetContent(
                             modifier = modifier
                         )
                     }
-                    add { modifier ->
+                    add(ElementType.ANNOUNCEMENT) { modifier ->
                         ManageGridItem(
                             elementType = ElementType.ANNOUNCEMENT,
                             onDismiss = onDismiss,
@@ -455,15 +470,41 @@ internal fun ManageBottomSheetContent(
     }
 }
 
+/** "This phone is in read-only mode on the main phone": a chosen state, so a calm colour instead of the error one. */
+@Composable
+private fun ReadOnlyRoleBanner() {
+    Surface(color = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(horizontal = AapsSpacing.xxLarge, vertical = AapsSpacing.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+        ) {
+            Icon(imageVector = Icons.Default.Visibility, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+            Text(
+                text = stringResource(CoreUiStrings.client_read_only_banner),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+    }
+}
+
+/** The careportal section's events; its collapsible header is shown only when the role leaves one of them. */
+private val careportalElements = listOf(ElementType.BG_CHECK, ElementType.NOTE, ElementType.EXERCISE, ElementType.QUESTION, ElementType.ANNOUNCEMENT)
+
 /**
- * Lays out composable items in a 2-column grid with equal-height rows.
+ * Lays out composable items in a 2-column grid with equal-height rows. Items this phone's role cannot use are left out
+ * before the layout (see [GridSectionScope.add]), so no gap is left; [header] is drawn only when an item is left.
  */
 @Composable
 private fun GridSection(
     modifier: Modifier = Modifier,
+    header: (@Composable () -> Unit)? = null,
     content: GridSectionScope.() -> Unit
 ) {
-    val items = GridSectionScope().apply(content).items
+    val items = GridSectionScope(LocalClientRole.current).apply(content).items
+    if (items.isEmpty()) return
+    header?.invoke()
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -490,11 +531,13 @@ private fun GridSection(
     }
 }
 
-private class GridSectionScope {
+private class GridSectionScope(private val role: ClientRole) {
 
     val items = mutableListOf<@Composable (Modifier) -> Unit>()
-    fun add(item: @Composable (Modifier) -> Unit) {
-        items.add(item)
+
+    /** Adds [item], unless it opens [elementType] and this phone's role cannot use that (the master would refuse it). */
+    fun add(elementType: ElementType? = null, item: @Composable (Modifier) -> Unit) {
+        if (elementType == null || role.allows(elementType.role)) items.add(item)
     }
 }
 

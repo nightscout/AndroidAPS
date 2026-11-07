@@ -38,18 +38,18 @@ class StatusSectionContentTest {
             MaterialTheme {
                 StatusSectionContent(
                     sensorStatus = StatusItem(
-                        label = "Sensor", age = "5d 12h", ageStatus = StatusLevel.NORMAL, agePercent = 0.55f,
+                        label = "Sensor", age = "5d12h", ageStatus = StatusLevel.NORMAL, agePercent = 0.55f,
                         level = "Signal OK", levelStatus = StatusLevel.NORMAL, levelPercent = 0.2f, icon = IcCgmInsert
                     ),
                     insulinStatus = StatusItem(
-                        label = "Insulin", age = "2d 3h", ageStatus = StatusLevel.WARNING, agePercent = 0.75f,
+                        label = "Insulin", age = "2d3h", ageStatus = StatusLevel.WARNING, agePercent = 0.75f,
                         level = "86 U", levelStatus = StatusLevel.NORMAL, levelPercent = -1f, icon = IcPumpCartridge
                     ),
                     cannulaStatus = StatusItem(
-                        label = "Cannula", age = "1d 18h", ageStatus = StatusLevel.NORMAL, agePercent = 0.6f, icon = IcCannulaChange
+                        label = "Cannula", age = "1d18h", ageStatus = StatusLevel.NORMAL, agePercent = 0.6f, icon = IcCannulaChange
                     ),
                     batteryStatus = StatusItem(
-                        label = "Battery", age = "14d", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
+                        label = "Battery", age = "14d3h", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
                         level = "12%", levelStatus = StatusLevel.CRITICAL, levelPercent = 0.88f, icon = IcPumpBattery
                     ),
                     onSensorInsertClick = {},
@@ -59,7 +59,7 @@ class StatusSectionContentTest {
                 )
             }
         }
-        compose.onNodeWithText("5d 12h").assertIsDisplayed()
+        compose.onNodeWithText("5d12h").assertIsDisplayed()
         compose.onNodeWithText("86 U").assertIsDisplayed()
         compose.onNodeWithText("12%").assertIsDisplayed()
     }
@@ -76,7 +76,7 @@ class StatusSectionContentTest {
                     insulinStatus = null,
                     cannulaStatus = null,
                     batteryStatus = StatusItem(
-                        label = "Battery", age = "14d", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
+                        label = "Battery", age = "14d3h", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
                         level = "12%", levelStatus = StatusLevel.CRITICAL, levelPercent = 0.88f, icon = IcPumpBattery
                     ),
                     onBatteryChangeClick = {}
@@ -87,7 +87,7 @@ class StatusSectionContentTest {
         // One node, found by the severity it speaks, holding the row name and both of its values.
         compose.onNode(hasContentDescription("Critical"))
             .assert(hasText("Battery"))
-            .assert(hasText("14d"))
+            .assert(hasText("14d3h"))
             .assert(hasText("12%"))
 
         // The action button stays a node of its own, or it could no longer be pressed. It is named
@@ -109,7 +109,7 @@ class StatusSectionContentTest {
                     insulinStatus = null,
                     cannulaStatus = null,
                     batteryStatus = StatusItem(
-                        label = "Battery", age = "14d", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
+                        label = "Battery", age = "14d3h", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
                         level = "12%", levelStatus = StatusLevel.CRITICAL, levelPercent = 0.88f, icon = IcPumpBattery
                     ),
                     onBatteryChangeClick = {}

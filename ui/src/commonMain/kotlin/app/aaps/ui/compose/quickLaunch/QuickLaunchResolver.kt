@@ -167,12 +167,12 @@ class QuickLaunchResolver(
 
                 QuickWizardMode.CARBS   -> {
                     val carbs = entry.carbs()
-                    if (carbs > 0) "${carbs}g" else null
+                    if (carbs > 0) rh.gs(InterfacesStrings.format_carbs, carbs) else null
                 }
 
                 QuickWizardMode.WIZARD  -> {
                     val carbs = entry.carbs()
-                    if (carbs > 0) "${carbs}g" else null
+                    if (carbs > 0) rh.gs(InterfacesStrings.format_carbs, carbs) else null
                 }
             }
         }
@@ -226,21 +226,12 @@ class QuickLaunchResolver(
     private fun findPlugin(className: String): PluginBase? =
         activePlugin.getPluginsList().find { it::class.simpleName.orEmpty() == className }
 
-    companion object {
-
-        fun buildProfileLabel(action: QuickLaunchAction.ProfileAction): String = buildString {
-            append(action.profileName)
-            if (action.percentage != 100) append(" ${action.percentage}%")
-            if (action.durationMinutes > 0) {
-                val hours = action.durationMinutes / 60
-                val mins = action.durationMinutes % 60
-                append(" ")
-                when {
-                    hours > 0 && mins > 0 -> append("${hours}h${mins}m")
-                    hours > 0             -> append("${hours}h")
-                    else                  -> append("${mins}m")
-                }
-            }
-        }
+    private fun buildProfileLabel(action: QuickLaunchAction.ProfileAction): String {
+        val percentage = if (action.percentage != 100) rh.gs(CoreUiStrings.units_format_percent, action.percentage) else null
+        val duration = if (action.durationMinutes > 0) formatMinutesAsDuration(action.durationMinutes, rh) else null
+        val details =
+            if (percentage != null && duration != null) rh.gs(CoreUiStrings.value_with_unit, percentage, duration)
+            else percentage ?: duration
+        return details?.let { rh.gs(CoreUiStrings.value_with_unit, action.profileName, it) } ?: action.profileName
     }
 }

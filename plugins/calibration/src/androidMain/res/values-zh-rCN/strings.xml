@@ -21,7 +21,5 @@
     <string name="cal_entries_header">指血录入条目 (%1$d)</string>
     <string name="cal_no_entries">暂无指血录入条目。</string>
     <string name="cal_entry_pair">指血%1$s → 传感器 %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">移除项目?</string>
-    <string name="cal_remove_entry_message">此操作将使该条目失效。拟合将重新计算。</string>
     <string name="cal_chart_entry_readout">条目 %1$d/%2$d · %3$s · 传感器 %4$s → 血糖 %5$s</string>
 </resources>

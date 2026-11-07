@@ -25,9 +25,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.timeAgoFullString
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
@@ -299,17 +298,15 @@ class MedtrumOverviewViewModel(
 
         // Primary actions
         val primaryActions = listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
-                category = ActionCategory.PRIMARY,
                 enabled = canRefresh,
                 onClick = { onClickRefresh() }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(R.string.reset_alarms_label),
                 icon = Icons.Filled.PlayArrow,
-                category = ActionCategory.PRIMARY,
                 enabled = pumpState.isSuspendedByPump(),
                 visible = pumpState.isSuspendedByPump(),
                 onClick = { onClickResetAlarms() }
@@ -321,19 +318,17 @@ class MedtrumOverviewViewModel(
         // Management actions
         val managementActions = buildList {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.change_patch_label),
                     icon = Icons.Filled.SwapHoriz,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onClickChangePatch() }
                 )
             )
             if (isPaired) {
                 add(
-                    PumpAction(
+                    ScreenAction(
                         label = rh.gs(CoreUiR.string.pump_unpair),
                         icon = Icons.Filled.Bluetooth,
-                        category = ActionCategory.MANAGEMENT,
                         onClick = { onUnpairClick() }
                     )
                 )
@@ -381,10 +376,16 @@ class MedtrumOverviewViewModel(
                 val daysLeft = T.msecs(timeLeft).days()
                 val hoursLeft = T.msecs(timeLeft).hours() % 24
 
-                val daysString = if (daysLeft > 0) "$daysLeft ${rh.gs(app.aaps.core.interfaces.R.string.days)} " else ""
-                val hoursString = "$hoursLeft ${rh.gs(app.aaps.core.interfaces.R.string.hours)}"
-
-                dateUtil.dateAndTimeString(expiry) + "\n(" + daysString + hoursString + ")"
+                val hoursText = rh.gs(app.aaps.core.ui.R.string.value_with_unit, hoursLeft.toString(), rh.gs(app.aaps.core.interfaces.R.string.hours))
+                val timeLeftText =
+                    if (daysLeft > 0) rh.gs(
+                        app.aaps.core.ui.R.string.value_with_unit,
+                        rh.gs(app.aaps.core.ui.R.string.value_with_unit, daysLeft.toString(), rh.gs(app.aaps.core.interfaces.R.string.days)),
+                        hoursText
+                    )
+                    else hoursText
+                // The time left goes on a new line, under the date
+                dateUtil.dateAndTimeString(expiry) + "\n" + rh.gs(app.aaps.core.ui.R.string.value_in_parentheses, timeLeftText)
             }
         } else {
             rh.gs(R.string.expiry_not_enabled)

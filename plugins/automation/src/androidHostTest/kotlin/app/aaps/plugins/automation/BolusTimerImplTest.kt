@@ -2,7 +2,6 @@ package app.aaps.plugins.automation
 
 import android.content.Context
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -52,7 +51,6 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var profileRepository: ProfileRepository
-    @Mock lateinit var reminderScheduler: ReminderScheduler
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
@@ -68,7 +66,7 @@ class BolusTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(
             mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil,
-            activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi, mock()
+            activePlugin, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi, mock()
         )
     }
 

@@ -6,7 +6,7 @@
     <string name="previous_button">Prev</string>
     <string name="setupwizard_finish">FINISH</string>
     <string name="welcome">Welcome</string>
-    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
+    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process.</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
@@ -27,7 +27,7 @@
     <string name="exitwizard">Skip setup wizard</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful. Do not forget to read the OpenAPS documentation and configure it before use.</string>
+    <string name="setupwizard_aps_description">Select one of the available algorithms. They are sorted from oldest to newest. A newer algorithm is usually more powerful. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
     <string name="startobjective">Start your first objective</string>
@@ -40,7 +40,10 @@
     <string name="setupwizard_client_control_info">Pair client devices so they can send signed commands to this master over Nightscout. This is the new recommended way to control AAPS remotely.</string>
     <string name="setupwizard_ns_receive_info">Accepting treatments and data directly from Nightscout (less secure way) is now turned off by default. Open the settings below only if you still need it. Necessary if you need to enter data through NS or 3rd party apps.</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout data acceptance</string>
-    <string name="setupwizard_pair_with_master_info">Pair this client with your master AAPS so it can send commands over a secure channel.</string>
+    <string name="setupwizard_pair_with_master_info">Pair this client with your master AAPS so it can send commands over a secure channel. After the pairing, the setup is finished.</string>
+    <string name="setupwizard_setup_from_master_title">Set up from the master</string>
+    <string name="setupwizard_setup_from_master_info">On the master, open Authorized clients and add this phone with a QR code. Scanning it sets up Nightscout with a token of its own, and can pair the phone too. After the scan, the setup is finished. Without a QR code, skip this step and set up Nightscout yourself.</string>
+    <string name="setupwizard_scan_master_qr">Scan the QR code</string>
     <string name="setupwizard_pairing_ws_warning">The Nightscout WebSocket connection is required for pairing. Go back to the previous step and enable it first.</string>
     <string name="setupwizard_pairing_status_master">Paired clients: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">No clients paired yet</string>
@@ -56,7 +59,7 @@
     <string name="configbuilder_pump_description">Which pump would you like to use with AAPS?</string>
     <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
     <string name="configbuilder_sync_description">Data upload, synchronization and communication plugins.</string>
-    <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
+    <string name="configbuilder_bgsource_description">Where should AAPS get its data from?</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="nsclient_version_does_not_match">AAPSClient version doesn\'t match AAPS version. Please update.</string>

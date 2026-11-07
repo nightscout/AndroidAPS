@@ -6,9 +6,9 @@ import android.content.res.Resources
  * Deliberately `Resources.getSystem()`, not `Locale.getDefault()`.
  *
  * `getSystem()` is the **device's** configuration. `Locale.getDefault()` follows the language AAPS
- * itself is running in, which `LocaleHelper` overrides from a preference - so a phone set to Chinese
- * with AAPS displayed in English would answer differently. The two agree for most users and disagree
- * for exactly the ones this setting exists for, so the original reading is kept.
+ * itself is running in, which Android sets from the language picked in AAPS (Android 13 and newer) -
+ * so a phone set to Chinese with AAPS displayed in English would answer differently. The two agree for
+ * most users and disagree for exactly the ones this setting exists for, so the original reading is kept.
  */
 internal actual object LocalePlatform {
 

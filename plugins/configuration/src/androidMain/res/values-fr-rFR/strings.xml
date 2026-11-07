@@ -41,12 +41,16 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="setupwizard_client_control_info">Associer des appareils clients pour qu\'ils puissent envoyer des commandes signées à ce maître via Nightscout. C\'est le nouveau moyen recommandé pour contrôler AAPS à distance.</string>
     <string name="setupwizard_ns_receive_info">L\'acceptation des traitements et des données directement depuis Nightscout (méthode moins sécurisée) est maintenant désactivée par défaut. Ouvrez les paramètres ci-dessous uniquement si vous en avez toujours besoin. Nécessaire si vous avez besoin de saisir des données via NS ou des applications tierces.</string>
     <string name="setupwizard_open_ns_receive_settings">Acceptation des données Nightscout</string>
-    <string name="setupwizard_pair_with_master_info">Associer ce client à votre AAPS maître pour qu\'il puisse envoyer des commandes sur un canal sécurisé.</string>
+    <string name="setupwizard_pair_with_master_info">Appairer ce client à votre maître AAPS pour qu\'il puisse envoyer des commandes sur un canal sécurisé. Une fois appairé, la configuration est terminée.</string>
+    <string name="setupwizard_setup_from_master_title">Configurer depuis le maître</string>
+    <string name="setupwizard_setup_from_master_info">Sur le maître, ouvrez les clients autorisés et ajoutez ce téléphone avec un QR code. En le scannant, il met en place Nightscout avec un jeton individuel, et peut également appairer le téléphone. Sans QR code, passez cette étape et configurez Nightscout vous-même.</string>
+    <string name="setupwizard_scan_master_qr">Scanner le QR code</string>
     <string name="setupwizard_pairing_ws_warning">La connexion WebSocket Nightscout est requise pour l\'association. Retournez à l\'étape précédente et activez-la d\'abord.</string>
     <string name="setupwizard_pairing_status_master">Clients associés : %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Aucun client associé pour l\'instant</string>
     <string name="setupwizard_pairing_status_client_paired">Associé à un maître</string>
     <string name="setupwizard_pairing_status_client_not_paired">Pas encore associé</string>
+    <string name="setupwizard_instance_name_title">Qui utilise ce téléphone ?</string>
     <string name="readstatus">Statut de lecture</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>

@@ -26,6 +26,7 @@
     <string name="doprofileswitch">Zmień profil</string>
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Są posortowane od najstarszego do najnowszego. Nowszy algorytm jest zazwyczaj bardziej zaawansowany. Nie zapomnij przeczytać dokumentacji OpenAPS i skonfigurować go przed użyciem.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
@@ -39,7 +40,10 @@
     <string name="setupwizard_client_control_info">Sparuj urządzenia opiekuna, aby mogły wysyłać podpisane polecenia do urządzenia pacjenta przez Nightscout. To nowy, zalecany sposób zdalnego sterowania AAPS.</string>
     <string name="setupwizard_ns_receive_info">Przyjmowanie leczenia i danych bezpośrednio z Nightscout (mniej bezpieczny sposób) jest obecnie domyślnie wyłączone. Otwórz ustawienia poniżej tylko wtedy, gdy nadal ich potrzebujesz. Jest to potrzebne, jeśli musisz wprowadzać dane przez NS lub aplikacje zewnętrzne.</string>
     <string name="setupwizard_open_ns_receive_settings">Przyjmowanie danych z Nightscout</string>
-    <string name="setupwizard_pair_with_master_info">Sparuj to urządzenie opiekuna z telefonem pacjenta (z AAPS-em), aby mogło wysyłać polecenia przez bezpieczny kanał.</string>
+    <string name="setupwizard_pair_with_master_info">Sparuj to urządzenie opiekuna z telefonem pacjenta z AAPS, aby mogło wysyłać polecenia bezpiecznym kanałem. Po sparowaniu konfiguracja jest zakończona.</string>
+    <string name="setupwizard_setup_from_master_title">Konfiguracja z telefonu pacjenta</string>
+    <string name="setupwizard_setup_from_master_info">Na telefonie pacjenta otwórz „Autoryzowani opiekunowie” i dodaj ten telefon, skanując kod QR. Skanowanie konfiguruje Nightscout z własnym tokenem i może też sparować ten telefon. Po zeskanowaniu konfiguracja jest zakończona. Możesz też nie używać kodu QR - wtedy pomiń ten krok i skonfiguruj Nightscout samodzielnie.</string>
+    <string name="setupwizard_scan_master_qr">Zeskanuj kod QR</string>
     <string name="setupwizard_pairing_ws_warning">Parowanie wymaga połączenia z Nightscout przez WebSocket. Wróć do poprzedniego kroku i najpierw je włącz.</string>
     <string name="setupwizard_pairing_status_master">Sparowane urządzenia opiekuna: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Brak sparowanych klientów</string>

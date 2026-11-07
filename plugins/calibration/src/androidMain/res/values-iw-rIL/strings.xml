@@ -21,7 +21,5 @@
     <string name="cal_entries_header">מדידות אצבע (%1$d)</string>
     <string name="cal_no_entries">עדיין לא הוזנו מדידות אצבע.</string>
     <string name="cal_entry_pair">מדידת אצבע %1$s ← חיישן %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">להסיר את המדידה?</string>
-    <string name="cal_remove_entry_message">המדידה תסומן כלא תקפה והכיול יחושב מחדש.</string>
     <string name="cal_chart_entry_readout">מדידה %1$d/%2$d · %3$s · חיישן %4$s ← גלוקוז %5$s</string>
 </resources>

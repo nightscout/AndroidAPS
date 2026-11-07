@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Δεν επικοινωνήθηκε ποτέ</string>
+    <string name="pump_status_sleeping">Κατάσταση ύπνου</string>
+    <string name="pump_status_waking_up">Ξύπνημα</string>
+    <string name="pump_status_active">Ενεργή</string>
+    <string name="pump_status_error_comm">Σφάλμα κατά την επικοινωνία</string>
+    <string name="pump_status_timeout_comm">Λήξη χρόνου επικοινωνίας</string>
+    <string name="pump_status_invalid_config">Μη έγκυρη ρύθμιση παραμέτρων</string>
+    <string name="medtronic_pump_encoding_title">Κωδικοποίηση Medtronic</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Κωδικοποίηση 4b6b με λογισμικό</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Κωδικοποίηση 4b6b με υλικό</string>
+    <string name="medtronic_pump_frequency_us_ca">ΗΠΑ &amp; Καναδάς (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Παγκόσμια (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Σάρωση</string>
     <string name="riley_link_ble_config_connected_never">Ποτέ</string>
@@ -27,7 +39,7 @@
     <string name="rileylink_pump_frequency">Συχνότητα Αντλίας:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
-    <string name="rileylink_state_bt_init">Επαναφορά Bluetooth…</string>
+    <string name="rileylink_state_bt_init">Αρχικοποίηση Bluetooth…</string>
     <string name="rileylink_state_bt_error">Σφάλμα Bluetooth</string>
     <string name="rileylink_state_bt_ready">Bluetooth Έτοιμο</string>
     <string name="rileylink_state_not_started">Δεν ξεκίνησε</string>
@@ -60,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Χρήση Σάρωσης</string>
     <string name="orange_use_scanning_level_summary">Σάρωση πριν από τη σύνδεση με το OrangeLink, θα πρέπει να βελτιώσει τις συνδέσεις (μπορεί επίσης να χρησιμοποιηθεί με άλλους κλώνους RileyLink, εάν χρειάζεται)</string>
+    <string name="rileylink_pair">Σύζευξη RileyLink</string>
+    <string name="rileylink_pair_success">Επιτυχής σύζευξη με RileyLink</string>
+    <string name="rileylink_config_reset">Επαναφορά ρυθμίσεων RileyLink</string>
 </resources>

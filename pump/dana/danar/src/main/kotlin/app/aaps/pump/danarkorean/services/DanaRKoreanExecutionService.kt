@@ -130,7 +130,7 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, TextRef.AndroidRes(R.string.approachingdailylimit))
                     pumpSync.insertAnnouncement(
-                        rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
+                        rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.approachingdailylimit), rh.gs(app.aaps.core.interfaces.R.string.values_with_slash, danaPump.dailyTotalUnits.toString(), rh.gs(app.aaps.core.ui.R.string.units_format_insulin_int, danaPump.maxDailyTotalUnits))),
                         null,
                         PumpType.DANA_R_KOREAN,
                         danaRKoreanPlugin.serialNumber()

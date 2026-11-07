@@ -6,8 +6,8 @@ metadata:
 ---
 
 `ResourceHelper.gq(@PluralsRes id, quantity, vararg args)` is **androidMain only** and has no shared
-counterpart. `TextResolver` (the commonMain half) declares `gs`, `gs(vararg)`, `gsNotLocalised` and
-`shortTextMode` - no plural method. `TextRef` has `AndroidRes`, `Named` and `Literal` - no plural
+counterpart. `TextResolver` (the commonMain half) declares `gs`, `gs(vararg)` and `gsNotLocalised` -
+no plural method. `TextRef` has `AndroidRes`, `Named` and `Literal` - no plural
 form. `GenerateKeyStringsTask` emits `<string>` names only, never `<plurals>`.
 
 So a file that calls `.gq(` cannot reach commonMain by any mechanical fix. Grep for it *before*

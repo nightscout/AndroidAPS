@@ -20,7 +20,7 @@
     <string name="searching_for_devices">Търсене на устройства...</string>
     <string name="pairing_completed">Сдвояване завършено</string>
     <string name="code_compare">Съвпадат ли кодовете, показани на това устройство и на Вашата помпа?</string>
-    <string name="insight_pairing">Insight свързване</string>
+    <string name="insight_pairing">Сдвояване с Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Тръба сменена</string>
@@ -32,7 +32,7 @@
     <string name="timeout_during_handshake">Таймаут при сдвояването - рестартирайте bluetooth</string>
     <string name="pump_stopped">Помпата е спряна</string>
     <string name="pump_started">Помпата е стартирана</string>
-    <string name="release_software_version">Софтуер версия</string>
+    <string name="release_software_version">Версия на софтуера</string>
     <string name="bluetooth_address">Bluetooth адрес</string>
     <string name="manufacturing_date">Дата на производство</string>
     <string name="log_site_changes">Записвай смяната на местата</string>

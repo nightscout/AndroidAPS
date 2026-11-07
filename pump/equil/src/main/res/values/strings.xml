@@ -1,6 +1,6 @@
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
+    <string name="equil_pump_description">Equil 5.3 or newer Patch Pump</string>
 
     <!--  start  -->
     <string name="equil_basal_speed">Base basal</string>
@@ -51,8 +51,8 @@
     <string name="equil_same_infusion_set_hint">The cannula will not be primed and no cannula change will be recorded.</string>
 
     <string name="equil_unpair_alert">Are you sure you want to relinquish control over %1$s?</string>
-    <string name="equil_record_basal">Basal rate %1$s U/H</string>
-    <string name="equil_record_basal_temp">Temporary basal rate %1$s U/H</string>
+    <string name="equil_record_basal">Basal rate %1$s U/h</string>
+    <string name="equil_record_basal_temp">Temporary basal rate %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR duration must be greater than zero and a multiple of %1$s minutes.</string>
     <string name="equil_basal_exceeds_max">Profile basal rate %1$s U/h exceeds the pump max basal %2$s U/h. Increase the max basal setting and reconnect the pump.</string>
@@ -73,7 +73,7 @@
     <string name="equil_shutdown">Equil auto off</string>
 
 
-    <string name="equil_common_history_tbr_value">Rate： %1$.2f U/H，duration： %2$d minutes</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f U/h, duration: %2$d minutes</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
 
     <!-- equil - Commands -->
@@ -87,7 +87,7 @@
     <string name="equil_common_cmd_resume_delivery">Resume delivery</string>
     <string name="equil_common_cmd_pair">Pair Equil</string>
     <string name="equil_common_cmd_insert_cannula">Insert cannula</string>
-    <string name="equil_common_cmd_unpair">UnPair Equil</string>
+    <string name="equil_common_cmd_unpair">Unpair Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Set extended bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Cancel extended bolus</string>
     <!--    推杆回退-->
@@ -106,9 +106,9 @@
     <string name="equil_command_connect_no_response">No response from pump</string>
 
     <string name="equil_command__unknown">The unknown status of the command</string>
-    <string name="equil_install">Implant the pump into the body</string>
+    <string name="equil_install">Attach the pump to your body</string>
     <string name="equil_settings_alarm_battery">Low battery alarm</string>
-    <string name="equil_settings_alarm_insulin">Low drug storage alarm</string>
+    <string name="equil_settings_alarm_insulin">Low reservoir alarm</string>
     <string name="equil_init_insulin_error">Initialization of the reservoir is not complete</string>
 
     <string name="equil_history_group_all">All</string>
@@ -126,7 +126,7 @@
     <string name="equil_history_item3">Detected infusion blockage</string>
     <string name="equil_history_item4">Detected motor reversal</string>
     <string name="equil_history_item5">Detected motor malfunction</string>
-    <string name="equil_history_item6">Injection paused starting</string>
+    <string name="equil_history_item6">Injection pause started</string>
     <string name="equil_history_item7">Injection already paused</string>
     <string name="equil_history_item8">Automatic shutdown imminent</string>
     <string name="equil_history_item9">Auto off!</string>

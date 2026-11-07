@@ -3,6 +3,7 @@ package app.aaps.pump.danar.comm
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.dana.R
 import kotlinx.coroutines.runBlocking
 
 class MsgError(
@@ -18,11 +19,11 @@ class MsgError(
         val errorCode = intFromBuff(bytes, 0, 1)
         var errorString = ""
         when (errorCode) {
-            1, 2, 3 -> errorString = rh.gs(app.aaps.pump.dana.R.string.pumperror) + " " + errorCode
-            4       -> errorString = rh.gs(app.aaps.pump.dana.R.string.pumpshutdown)
-            5       -> errorString = rh.gs(app.aaps.pump.dana.R.string.occlusion)
-            7       -> errorString = rh.gs(app.aaps.pump.dana.R.string.lowbattery)
-            8       -> errorString = rh.gs(app.aaps.pump.dana.R.string.batterydischarged)
+            1, 2, 3 -> errorString = rh.gs(app.aaps.core.ui.R.string.value_with_unit, rh.gs(R.string.pumperror), errorCode.toString())
+            4       -> errorString = rh.gs(R.string.pumpshutdown)
+            5       -> errorString = rh.gs(R.string.occlusion)
+            7       -> errorString = rh.gs(R.string.lowbattery)
+            8       -> errorString = rh.gs(R.string.batterydischarged)
         }
         if (errorCode < 8) { // bolus delivering stopped
             danaPump.bolusStopped = true

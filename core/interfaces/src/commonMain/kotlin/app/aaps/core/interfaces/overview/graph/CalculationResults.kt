@@ -52,6 +52,7 @@ data class BgDataPoint(
     val range: BgRange,            // Range classification (high/in-range/low)
     val type: BgType,              // Type determines rendering style and color
     val filledGap: Boolean = false, // For bucketed data - if true, render semi-transparent
+    val utcOffset: Long? = null,   // Stored offset in milliseconds; null for synthetic points.
 )
 
 // ============================================================================
@@ -189,15 +190,17 @@ data class VarSensGraphData(
 )
 
 /**
- * Heart rate graph data: BPM readings from smartwatch or similar device.
- * Each point spans (timestamp - duration) to timestamp.
+ * Heart rate graph data: BPM readings from smartwatch or similar device, as stretches of a line.
+ * A new stretch starts where the device sent nothing for a while, so the line is not drawn across
+ * that time. A point is the start of a reading; the last point of a stretch is the end of its last reading.
  */
 data class HeartRateGraphData(
-    val heartRates: List<GraphDataPoint>
+    val segments: List<List<GraphDataPoint>>
 )
 
 /**
  * Steps count graph data: 5-minute step counts from smartwatch or similar device.
+ * Each point counts the steps from timestamp to timestamp + 5 min.
  */
 data class StepsGraphData(
     val steps: List<GraphDataPoint>
@@ -289,8 +292,25 @@ enum class TherapyEventType {
 data class TherapyEventGraphPoint(
     val timestamp: Long,
     val eventType: TherapyEventType,
-    val label: String,         // Note or translated type name
-    val duration: Long         // Duration in ms (0 if no duration)
+    val label: String,            // Note or translated type name
+    val duration: Long,           // Duration in ms (0 if no duration)
+    /**
+     * Measured glucose in the user's units, for the events that carry one (MBG, finger stick).
+     * Null for every other event. Events with a value are drawn inside the BG graph at that
+     * value, not on the treatment belt.
+     */
+    val glucoseUserUnits: Double? = null
+)
+
+/**
+ * Calibration pair for the BG graph: the finger value is drawn at its own glucose value, so the
+ * reader can compare it with the sensor curve at that time.
+ */
+data class CalibrationGraphPoint(
+    val timestamp: Long,
+    val fingerstickUserUnits: Double,  // Finger value in the user's units
+    val isValid: Boolean,
+    val label: String                  // Pre-formatted value with units (e.g. "6.7 mmol/L")
 )
 
 /**
@@ -312,7 +332,8 @@ data class TreatmentGraphData(
     val boluses: List<BolusGraphPoint>,
     val carbs: List<CarbsGraphPoint>,
     val extendedBoluses: List<ExtendedBolusGraphPoint>,
-    val therapyEvents: List<TherapyEventGraphPoint>
+    val therapyEvents: List<TherapyEventGraphPoint>,
+    val calibrations: List<CalibrationGraphPoint>
 )
 
 // ============================================================================

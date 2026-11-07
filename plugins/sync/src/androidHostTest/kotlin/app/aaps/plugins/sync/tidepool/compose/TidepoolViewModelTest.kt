@@ -44,14 +44,35 @@ internal class TidepoolViewModelTest {
 
     @Test
     fun `initial state reflects NONE status`() {
-        assertThat(sut.uiState.value.connectionStatus).isEqualTo("NONE")
+        assertThat(sut.uiState.value.connectionStatus).isEqualTo(AuthFlowOut.ConnectionStatus.NONE)
         assertThat(sut.uiState.value.logList).isEmpty()
     }
 
     @Test
-    fun `connectionStatus flow updates uiState with status name`() {
+    fun `connectionStatus flow updates uiState`() {
         connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED
-        assertThat(sut.uiState.value.connectionStatus).isEqualTo("SESSION_ESTABLISHED")
+        assertThat(sut.uiState.value.connectionStatus).isEqualTo(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED)
+    }
+
+    @Test
+    fun `logout is offered while a saved login can be used`() {
+        whenever(authFlowOut.hasSavedLogin).thenReturn(true)
+        connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.FAILED
+        assertThat(sut.uiState.value.loggedIn).isTrue()
+    }
+
+    @Test
+    fun `login is offered when the saved token stopped working`() {
+        whenever(authFlowOut.hasSavedLogin).thenReturn(true)
+        connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN
+        assertThat(sut.uiState.value.loggedIn).isFalse()
+    }
+
+    @Test
+    fun `login is offered when no login is saved`() {
+        whenever(authFlowOut.hasSavedLogin).thenReturn(false)
+        connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.BLOCKED
+        assertThat(sut.uiState.value.loggedIn).isFalse()
     }
 
     @Test
@@ -74,12 +95,12 @@ internal class TidepoolViewModelTest {
         connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.FETCHING_TOKEN
         logListFlow.value = listOf(SyncLogEntry("a"), SyncLogEntry("b"))
 
-        assertThat(sut.uiState.value.connectionStatus).isEqualTo("FETCHING_TOKEN")
+        assertThat(sut.uiState.value.connectionStatus).isEqualTo(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN)
         assertThat(sut.uiState.value.logList).hasSize(2)
 
         // A later status change must not clobber the already-collected log list.
         connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED
-        assertThat(sut.uiState.value.connectionStatus).isEqualTo("SESSION_ESTABLISHED")
+        assertThat(sut.uiState.value.connectionStatus).isEqualTo(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED)
         assertThat(sut.uiState.value.logList).hasSize(2)
     }
 
@@ -87,6 +108,6 @@ internal class TidepoolViewModelTest {
     fun `latest status wins after several updates`() {
         connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.BLOCKED
         connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.NO_SESSION
-        assertThat(sut.uiState.value.connectionStatus).isEqualTo("NO_SESSION")
+        assertThat(sut.uiState.value.connectionStatus).isEqualTo(AuthFlowOut.ConnectionStatus.NO_SESSION)
     }
 }

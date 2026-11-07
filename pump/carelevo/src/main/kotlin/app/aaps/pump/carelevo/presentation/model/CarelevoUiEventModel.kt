@@ -17,7 +17,7 @@ sealed class CarelevoOverviewEvent : Event {
     data object ShowPumpStopDurationSelectDialog : CarelevoOverviewEvent()
     data object ShowPumpResumeDialog : CarelevoOverviewEvent()
 
-    // Action requests emitted from PumpAction.onClick (handled by the screen)
+    // Action requests emitted from ScreenAction.onClick (handled by the screen)
     data object StartConnectionFlow : CarelevoOverviewEvent()
     data object ShowPumpDiscardDialog : CarelevoOverviewEvent()
 }

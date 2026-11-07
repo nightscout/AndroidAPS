@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.Loop.LastRun
+import app.aaps.core.interfaces.aps.SmbIntervalGate
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -52,13 +53,13 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -123,12 +124,11 @@ class LoopPlugin(
     private val persistenceLayer: PersistenceLayer,
     notificationManager: NotificationManager,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val pumpStatusProvider: PumpStatusProvider,
-    private val decimalFormatter: DecimalFormatter,
     private val ch: ConcentrationHelper,
     private val loopNotifier: LoopNotifier,
     private val runningModeReconciler: RunningModeReconciler,
+    private val smbPause: SmbPause,
 
     @ApplicationScope private val appScope: CoroutineScope
 ) : PluginBase(
@@ -140,7 +140,6 @@ class LoopPlugin(
                 rxBus = rxBus,
                 rh = rh,
                 dateUtil = dateUtil,
-                decimalFormatter = decimalFormatter,
                 aapsLogger = aapsLogger,
                 preferences = preferences
             )
@@ -590,8 +589,7 @@ class LoopPlugin(
                 return@withContext
             }
 
-            // Store calculations to DB
-            persistenceLayer.insertOrUpdateApsResult(apsResult)
+            storeApsResult(apsResult)
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
@@ -608,12 +606,6 @@ class LoopPlugin(
             resultAfterConstraints.smbConstraint = ConstraintObject(resultAfterConstraints.smb, aapsLogger)
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
-            // safety check for multiple SMBs
-            val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
-            if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
-                aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
-                resultAfterConstraints.smb = 0.0
-            }
             prevCarbsreq = lastRun?.constraintsProcessed?.carbsReq ?: prevCarbsreq
             if (lastRun == null) lastRun = LastRun()
             lastRun?.let { lastRun ->
@@ -942,10 +934,22 @@ class LoopPlugin(
         }
     }
 
-    private suspend fun applySMBRequest(request: APSResult): PumpEnactResult {
+    /**
+     * Stores what the algorithm calculated. A run that stopped early on bad CGM data calculated nothing and
+     * is not stored, see [APSResult.stoppedEarly]. Internal for its test, without driving a whole loop run.
+     */
+    internal suspend fun storeApsResult(apsResult: APSResult) {
+        if (apsResult.stoppedEarly) aapsLogger.debug(LTag.APS, "Stopped early, the result is not stored")
+        else persistenceLayer.insertOrUpdateApsResult(apsResult)
+    }
+
+    // Internal for the tests of its checks, without driving a whole loop run to the SMB branch.
+    internal suspend fun applySMBRequest(request: APSResult): PumpEnactResult {
         val pump = activePlugin.activePump
+        // Safety check for multiple SMBs, independent of the APS. It runs after the temp basal, so it also
+        // sees a bolus the pump driver wrote while the temp basal was being set.
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
-        if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
+        if (SmbIntervalGate.tooSoon(lastBolusTime, preferences.get(IntKey.ApsMaxSmbFrequency), dateUtil.now())) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
             return pumpEnactResultProvider().comment(ApsStrings.smb_frequency_exceeded).enacted(false).success(false)
         }
@@ -957,11 +961,17 @@ class LoopPlugin(
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(InterfacesStrings.pumpsuspended))
             return pumpEnactResultProvider().comment(InterfacesStrings.pumpsuspended).enacted(false).success(false)
         }
+        // The user is confirming a bolus that was calculated without this SMB. Checked here, before the user entry
+        // below, so the log does not show an SMB that was never given. The queue checks again.
+        if (smbPause.isActive()) {
+            aapsLogger.debug(LTag.APS, "applySMBRequest: no SMB while a bolus is waiting for confirmation")
+            return pumpEnactResultProvider().comment(CoreUiStrings.smb_paused_for_bolus).enacted(false).success(false)
+        }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")
 
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
-        detailedBolusInfo.lastKnownBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
+        detailedBolusInfo.lastKnownBolusTime = lastBolusTime
         detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.bolusType = BS.Type.SMB
@@ -1056,9 +1066,13 @@ class LoopPlugin(
         lastRun?.let { lastRun ->
             if (lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
                 // do not send if result is older than 1 min
+                // A client of this version works the ISF for carbs out itself from the stored results
+                // (IsfForCarbs). The finished value stays in the device status for older clients.
+                val now = dateUtil.now()
+                val isfMgdlForCarbs = IsfForCarbs.load(persistenceLayer, now, now).isfMgdl(profile, now)
                 apsResult = lastRun.request?.json()?.with {
                     put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
-                    put("isfMgdlForCarbs", profile.getIsfMgdlForCarbs(dateUtil.now(), "LoopPlugin", config, processedDeviceStatusData))
+                    put("isfMgdlForCarbs", isfMgdlForCarbs)
                 }
                 iob = lastRun.request?.iob?.jsonObject(dateUtil)?.with {
                     put("time", dateUtil.toISOString(lastRun.lastAPSRun))

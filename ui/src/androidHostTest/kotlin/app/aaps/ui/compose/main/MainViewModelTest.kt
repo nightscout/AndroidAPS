@@ -5,11 +5,15 @@ import androidx.compose.material.icons.filled.Add
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderAction
+import app.aaps.core.interfaces.alerts.EatReminderState
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.InitProgress
@@ -26,6 +30,7 @@ import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -41,6 +46,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.AppPlatform
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -68,7 +74,9 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -106,6 +114,8 @@ internal class MainViewModelTest {
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var nsClient: NsClient
     @Mock private lateinit var visibilityContext: VisibilityContext
+    @Mock private lateinit var eatReminder: EatReminder
+    @Mock private lateinit var clientControlDispatcher: ClientControlActionDispatcher
 
     private lateinit var sut: MainViewModel
 
@@ -120,6 +130,9 @@ internal class MainViewModelTest {
         // Reachability / pairing signals read as fields at construction.
         whenever(nsClient.masterReachable).thenReturn(MutableStateFlow(true))
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(true))
+        // The role filter of the toolbar reads these. A mock returns null for them, not the interface default.
+        whenever(nsClient.clientRole).thenReturn(MutableStateFlow(ClientRole.Admin))
+        whenever(visibilityContext.clientRole).thenReturn(ClientRole.Admin)
 
         // Cache flows folded into chipStateFlow's combine (getters evaluated eagerly as combine args).
         whenever(overviewDataCache.calcProgressFlow).thenReturn(MutableStateFlow(0))
@@ -135,6 +148,7 @@ internal class MainViewModelTest {
         // activeSceneChainTargetName's combine).
         whenever(activeSceneManager.activeSceneState).thenReturn(MutableStateFlow<ActiveSceneState?>(null))
         whenever(sceneStore.scenesFlow).thenReturn(MutableStateFlow(""))
+        whenever(eatReminder.state).thenReturn(MutableStateFlow<EatReminderState?>(null))
 
         // Preference observers created (launchIn deferred) in init.
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(true))
@@ -155,8 +169,30 @@ internal class MainViewModelTest {
         automation, persistenceLayer, aapsLogger, quickLaunchResolver, wizardExecutor,
         batchExecutor, uel, loop, protectionCheck, sceneActions, sceneChainTargetResolver,
         sceneStore, activeSceneManager, rxBus, nsClient, visibilityContext,
-        CoroutineScope(UnconfinedTestDispatcher())
+        CoroutineScope(UnconfinedTestDispatcher()), eatReminder, clientControlDispatcher
     )
+
+    @Test
+    fun `eat reminder buttons go through the dispatcher and change the timer on the master`() = runTest {
+        // execute() runs the local action on a master; the round trip on a client is the dispatcher's business.
+        whenever(rh.gs(any<TextRef>())).thenReturn("Change eat reminder")
+        whenever(clientControlDispatcher.execute(any(), any(), any())).doSuspendableAnswer {
+            it.getArgument<suspend () -> ActionProgress>(2).invoke()
+        }
+
+        sut.extendEatReminder()
+        sut.stopEatReminder()
+        advanceUntilIdle()
+
+        val commands = argumentCaptor<ClientControlActionDispatcher.Command>()
+        verify(clientControlDispatcher, times(2)).execute(commands.capture(), any(), any())
+        assertThat(commands.allValues).containsExactly(
+            ClientControlActionDispatcher.Command.EatReminderControl(EatReminderAction.EXTEND),
+            ClientControlActionDispatcher.Command.EatReminderControl(EatReminderAction.STOP)
+        ).inOrder()
+        verify(eatReminder).extend()
+        verify(eatReminder).stop()
+    }
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
@@ -285,6 +321,60 @@ internal class MainViewModelTest {
 
         assertThat(sut.quickLaunchItems.value.map { it.action }).containsExactly(QuickLaunchAction.Wizard, qw, configButton).inOrder()
         verify(preferences, never()).put(eq(StringNonKey.QuickLaunchActions), any<String>())
+    }
+
+    /** Answers every protection request with [outcome]. */
+    private fun resolveProtection(outcome: ProtectionResult) {
+        whenever(protectionCheck.requestProtection(any(), any())).thenAnswer { invocation ->
+            @Suppress("UNCHECKED_CAST")
+            val onResult = invocation.arguments[1] as (ProtectionResult) -> Unit
+            onResult(outcome)
+        }
+    }
+
+    /**
+     * A scene changes the profile, the temp target, the loop mode and SMB, so it needs the same bolus
+     * protection as doing those things by hand. The overview scenes sheet started one with no check (#5429).
+     */
+    @Test
+    fun `a scene is not prepared when bolus protection is refused`() = runTest {
+        resolveProtection(ProtectionResult.DENIED)
+
+        sut.requestSceneConfirmation("s1")
+        advanceUntilIdle()
+
+        verify(protectionCheck).requestProtection(eq(ProtectionCheck.Protection.BOLUS), any())
+        verify(sceneActions, never()).prepareStart(any(), anyOrNull())
+    }
+
+    @Test
+    fun `a scene is prepared and confirmed once bolus protection is granted`() = runTest {
+        resolveProtection(ProtectionResult.GRANTED)
+        whenever(rh.gs(any<TextRef>())).thenReturn("Scene")
+        whenever(sceneActions.prepareStart("s1")).thenReturn(ActionProgress.Prepared(id = 3L))
+
+        sut.requestSceneConfirmation("s1")
+        advanceUntilIdle()
+
+        val sent = argumentCaptor<Event>()
+        verify(rxBus).send(sent.capture())
+        assertThat(sent.firstValue).isInstanceOf(EventShowDialog.OkCancel::class.java)
+    }
+
+    /** Ending a scene reverts what it changed, and "Skip to" starts the next scene. */
+    @Test
+    fun `ending a scene from the banner needs bolus protection`() = runTest {
+        resolveProtection(ProtectionResult.DENIED)
+        sut.requestSceneDeactivation()
+        advanceUntilIdle()
+        verify(activeSceneManager, never()).getActiveState()
+        assertThat(sut.actionConfirmation.value).isNull()
+
+        resolveProtection(ProtectionResult.GRANTED)
+        sut.requestSceneDeactivation()
+        advanceUntilIdle()
+        verify(activeSceneManager).getActiveState()
+        verify(protectionCheck, times(2)).requestProtection(eq(ProtectionCheck.Protection.BOLUS), any())
     }
 
     /**

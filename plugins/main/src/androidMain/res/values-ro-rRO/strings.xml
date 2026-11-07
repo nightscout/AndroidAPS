@@ -5,7 +5,7 @@
     <string name="insulin_label">Insulină</string>
     <string name="pb_label">Baterie pompă</string>
     <string name="cannula">Canulă</string>
-    <string name="patch_pump">Pompă fără fir</string>
+    <string name="patch_pump">Pompă plasture</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->

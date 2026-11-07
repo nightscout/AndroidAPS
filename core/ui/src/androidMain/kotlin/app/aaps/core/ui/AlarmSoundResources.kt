@@ -18,4 +18,5 @@ val AlarmSound.rawRes: Int
         AlarmSound.URGENT_ALARM -> R.raw.urgentalarm
         AlarmSound.ERROR        -> R.raw.error
         AlarmSound.BOLUS_ERROR  -> R.raw.boluserror
+        AlarmSound.EAT_REMINDER -> R.raw.eatreminder
     }

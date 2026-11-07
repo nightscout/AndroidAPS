@@ -48,6 +48,7 @@ private const val WIDE = "w1280dp-h800dp"
  *    "Status" heading and a "collapse" affordance.
  *  - the two wide layouts carry a [LargeClock] and the stacked one does not.
  *  - the tablet layout hides the BG circle's "time ago" line, because its clock already carries one.
+ *    The split layout does the opposite: the circle keeps it and the clock shows only the time.
  *  - with no BG reading, the BG circle shows the "---" placeholder rather than nothing.
  *
  * Every label is read from the real resources, so a translation edit cannot make the test lie.
@@ -193,11 +194,13 @@ class OverviewScreenVariantsTest {
 
     @Test
     @Config(qualifiers = WIDE)
-    fun `split layout shows the clock with the age of the BG reading`() {
+    fun `split layout shows the clock without the age of the BG reading`() {
         viewModels.withBg()
         setScreen(Variant.SPLIT)
 
-        compose.onNodeWithText(clockText).assertIsDisplayed()
+        // The BG circle beside it already shows the age, see `split layout keeps the BG time ago line`.
+        compose.onNodeWithText(OverviewViewModelFixture.CLOCK_TIME).assertIsDisplayed()
+        compose.onNodeWithText(clockText).assertDoesNotExist()
     }
 
     @Test

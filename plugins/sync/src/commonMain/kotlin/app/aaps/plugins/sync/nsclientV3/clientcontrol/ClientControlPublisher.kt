@@ -63,6 +63,10 @@ class ClientControlPublisher(
         // The master writes here; the client reads here. Shares IDENTIFIER_PREFIX, so the master receiver MUST
         // skip it (it is not an inbound command envelope) — see ClientControlReceiver.
         const val IDENTIFIER_PROGRESS_PREFIX = "${IDENTIFIER_PREFIX}progress_"
+
+        // Master→client answer to the key exchange in a hello (KeyExchangeEnvelope), one per client. The master writes
+        // and deletes it; the client reads it. Shares IDENTIFIER_PREFIX, so the master receiver MUST skip it.
+        const val IDENTIFIER_KEY_PREFIX = "${IDENTIFIER_PREFIX}key_"
         const val SCHEMA_VERSION = 1
 
         // Fire-and-forget commands keep the historical ±5 min skew window as their validity, so adding
@@ -105,6 +109,18 @@ class ClientControlPublisher(
         publishTracked(message, dateUtil.now() + FIRE_AND_FORGET_TTL_MS, wantsAck = false).result
 
     /**
+     * The hello, with the public key of a new key exchange: the master answers with a key doc and the pairing secret
+     * is replaced (`ClientPairingRepository.completeKeyExchange`). A hello that was not sent gives the exchange up, so
+     * the next one can go at once.
+     */
+    suspend fun publishHello(): ClientControlSendResult {
+        val publicKey = pairingRepository.startKeyExchange(dateUtil.now())
+        val result = publish(ClientControlMessage.Hello(publicKey = publicKey))
+        if (result != ClientControlSendResult.Success && publicKey != null) pairingRepository.abandonKeyExchange(publicKey)
+        return result
+    }
+
+    /**
      * Like [publish], but carries an explicit [validUntil] (command expiry the master enforces) and
      * returns the envelope's `counter` on success so a round-trip caller can correlate the master's
      * ACK. The counter is null on any non-Success result (nothing was signed/sent). [wantsAck]
@@ -139,7 +155,8 @@ class ClientControlPublisher(
             is ClientControlMessage.BolusPrepare,
             is ClientControlMessage.BolusCommit,
             is ClientControlMessage.WizardPrepare,
-            is ClientControlMessage.BatchPrepare -> "$IDENTIFIER_CMD_PREFIX${type}_${pairing.clientId}"
+            is ClientControlMessage.BatchPrepare,
+            is ClientControlMessage.EatReminderControl -> "$IDENTIFIER_CMD_PREFIX${type}_${pairing.clientId}"
         }
         val result = uploadEnvelope(identifier, envelope)
         return TrackedPublish(result, if (result is ClientControlSendResult.Success) envelope.counter else null)

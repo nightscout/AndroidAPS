@@ -21,7 +21,5 @@
     <string name="cal_entries_header">Glucemias capilares (%1$d)</string>
     <string name="cal_no_entries">Aún no hay glucemias capilares</string>
     <string name="cal_entry_pair">Glucemia capilar %1$s → Sensor %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">¿Eliminar entrada?</string>
-    <string name="cal_remove_entry_message">Esto invalidará la entrada. Se recalculará el ajuste</string>
     <string name="cal_chart_entry_readout">Entrada %1$d/%2$d · %3$s · Sensor %4$s → BG %5$s</string>
 </resources>

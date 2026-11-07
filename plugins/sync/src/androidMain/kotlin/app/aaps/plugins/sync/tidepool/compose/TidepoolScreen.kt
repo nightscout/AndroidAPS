@@ -1,23 +1,14 @@
 package app.aaps.plugins.sync.tidepool.compose
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,16 +16,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.sync.SyncStrings
-import app.aaps.plugins.sync.log.SyncLogList
+import app.aaps.plugins.sync.log.LabelValueRow
+import app.aaps.plugins.sync.log.SyncLogLayout
+import app.aaps.plugins.sync.log.clearLogAction
+import app.aaps.plugins.sync.log.fullSyncAction
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut.ConnectionStatus
 
 @Composable
 internal fun TidepoolScreen(
@@ -52,6 +47,9 @@ internal fun TidepoolScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showLogoutConfirm by remember { mutableStateOf(false) }
+    var showFullSyncConfirm by remember { mutableStateOf(false) }
+    var showPurgeConfirm by remember { mutableStateOf(false) }
 
     // Only title needs pre-resolving (plain String used in LaunchedEffect suspend block)
     val title = stringResource(SyncStrings.tidepool)
@@ -69,6 +67,22 @@ internal fun TidepoolScreen(
                     }
                 },
                 actions = {
+                    // Login and Logout change the whole session, so they stay on top. The other actions are at the bottom.
+                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+                    if (state.loggedIn)
+                        IconButton(onClick = { showLogoutConfirm = true }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Logout,
+                                contentDescription = stringResource(CoreUiStrings.logout)
+                            )
+                        }
+                    else
+                        IconButton(onClick = onLogin) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Login,
+                                contentDescription = stringResource(CoreUiStrings.login)
+                            )
+                        }
                     if (onSettings != null) {
                         IconButton(onClick = onSettings) {
                             Icon(
@@ -77,14 +91,6 @@ internal fun TidepoolScreen(
                             )
                         }
                     }
-                    TidepoolMenu(
-                        onLogin = onLogin,
-                        onLogout = onLogout,
-                        onUploadNow = onUploadNow,
-                        onFullSync = onFullSync,
-                        onPurge = onPurge,
-                        onClearLog = onClearLog
-                    )
                 }
             )
         )
@@ -93,122 +99,35 @@ internal fun TidepoolScreen(
     TidepoolScreenContent(
         uiState = uiState,
         dateUtil = dateUtil,
+        onUploadNow = onUploadNow,
+        onFullSync = { showFullSyncConfirm = true },
+        onClearLog = onClearLog,
+        onPurge = { showPurgeConfirm = true },
         modifier = modifier
     )
-}
 
-/**
- * @see TidepoolScreenPreview
- */
-@Composable
-internal fun TidepoolScreenContent(
-    uiState: TidepoolUiState,
-    dateUtil: DateUtil? = null,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(AapsSpacing.extraLarge),
-        verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
-    ) {
-        // Status row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-        ) {
-            Text(
-                text = stringResource(SyncStrings.status_label),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = uiState.connectionStatus,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-
-        HorizontalDivider()
-
-        SyncLogList(
-            entries = uiState.logList,
-            dateUtil = dateUtil,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+    if (showLogoutConfirm) {
+        OkCancelDialog(
+            title = stringResource(CoreUiStrings.logout),
+            message = stringResource(SyncStrings.tidepool_logout_confirm),
+            onConfirm = {
+                showLogoutConfirm = false
+                onLogout()
+            },
+            onDismiss = { showLogoutConfirm = false }
         )
     }
-}
-
-@Composable
-private fun TidepoolMenu(
-    onLogin: () -> Unit,
-    onLogout: () -> Unit,
-    onUploadNow: () -> Unit,
-    onFullSync: () -> Unit,
-    onPurge: () -> Unit,
-    onClearLog: () -> Unit
-) {
-    var showMenu by remember { mutableStateOf(false) }
-    var showPurgeConfirm by remember { mutableStateOf(false) }
-
-    Box {
-        IconButton(onClick = { showMenu = true }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(CoreUiStrings.more_options)
-            )
-        }
-        DropdownMenu(
-            expanded = showMenu,
-            onDismissRequest = { showMenu = false }
-        ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(CoreUiStrings.login)) },
-                onClick = {
-                    showMenu = false
-                    onLogin()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(CoreUiStrings.logout)) },
-                onClick = {
-                    showMenu = false
-                    onLogout()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.upload_now)) },
-                onClick = {
-                    showMenu = false
-                    onUploadNow()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.full_sync)) },
-                onClick = {
-                    showMenu = false
-                    onFullSync()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.tidepool_purge_data)) },
-                onClick = {
-                    showMenu = false
-                    showPurgeConfirm = true
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.clear_log)) },
-                onClick = {
-                    showMenu = false
-                    onClearLog()
-                }
-            )
-        }
+    if (showFullSyncConfirm) {
+        OkCancelDialog(
+            title = stringResource(SyncStrings.tidepool),
+            message = stringResource(SyncStrings.tidepool_full_sync_comment),
+            onConfirm = {
+                showFullSyncConfirm = false
+                onFullSync()
+            },
+            onDismiss = { showFullSyncConfirm = false }
+        )
     }
-
     if (showPurgeConfirm) {
         OkCancelDialog(
             title = stringResource(SyncStrings.tidepool_purge_data),
@@ -220,4 +139,48 @@ private fun TidepoolMenu(
             onDismiss = { showPurgeConfirm = false }
         )
     }
+}
+
+/**
+ * @see TidepoolScreenPreview
+ */
+@Composable
+internal fun TidepoolScreenContent(
+    uiState: TidepoolUiState,
+    dateUtil: DateUtil? = null,
+    onUploadNow: () -> Unit = {},
+    onFullSync: () -> Unit = {},
+    onClearLog: () -> Unit = {},
+    onPurge: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    SyncLogLayout(
+        logList = uiState.logList,
+        dateUtil = dateUtil,
+        actions = listOf(
+            ScreenAction(label = stringResource(SyncStrings.upload_now), icon = Icons.Filled.CloudUpload, onClick = onUploadNow),
+            fullSyncAction(onFullSync),
+            clearLogAction(onClearLog),
+            ScreenAction(label = stringResource(SyncStrings.tidepool_purge_data), icon = Icons.Filled.DeleteForever, onClick = onPurge)
+        ),
+        modifier = modifier
+    ) {
+        LabelValueRow(
+            label = stringResource(SyncStrings.status_label),
+            value = connectionStatusText(uiState.connectionStatus),
+            boldValue = true
+        )
+    }
+}
+
+@Composable
+private fun connectionStatusText(status: ConnectionStatus): String = when (status) {
+    // AuthFlowOut never reports NONE, so it means "not known yet"
+    ConnectionStatus.NONE                -> ""
+    ConnectionStatus.NOT_LOGGED_IN       -> stringResource(SyncStrings.tidepool_status_not_logged_in)
+    ConnectionStatus.NO_SESSION          -> stringResource(SyncStrings.tidepool_status_no_session)
+    ConnectionStatus.BLOCKED             -> stringResource(SyncStrings.tidepool_status_blocked)
+    ConnectionStatus.FETCHING_TOKEN      -> stringResource(CoreUiStrings.connecting)
+    ConnectionStatus.SESSION_ESTABLISHED -> stringResource(InterfacesStrings.connected)
+    ConnectionStatus.FAILED              -> stringResource(SyncStrings.tidepool_status_failed)
 }

@@ -26,4 +26,7 @@ object AlarmIntent {
      * activity loop would otherwise overlap.
      */
     const val EXTRA_POSTED_AT_ELAPSED_REALTIME = "postedAtElapsedRealtime"
+
+    /** True for the alarm of the "time to eat" timer: the alarm screen then offers +5 min instead of a 5 minute mute. */
+    const val EXTRA_EAT_REMINDER = "eatReminder"
 }

@@ -79,7 +79,6 @@ Hvis der ikke oprettes forbindelse efter mere end omkring 5 minutter:\n\n
     <string name="combov2_bolus_delivery_failed">Bolus levering mislykkedes. Det ser ud til at ingen bolus blev leveret. Kontroller venligst pumpen for at undgå en dobbelt bolus og derefter bolus igen. For at beskytte mod fejl hentes bolusser ikke automatisk.</string>
     <string name="combov2_bolus_not_delivered">Bolus ikke leveret</string>
     <string name="combov2_cannot_access_pump_data">Kan ikke få adgang til pumpedata; pumpen skal parres igen</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Uagtede bolusleverancer opdaget. Annullerer bolus af sikkerhedsmæssige årsager.</string>
     <string name="combov2_incorrect_active_basal_profile">Forkert aktiv basalprofil; profil 1 skal være den aktive, ikke profil %1$d</string>
     <string name="combov2_unrecognized_alert">Ukendt Combo-alarm</string>
     <string name="combov2_combo_alert">Combo-alarm</string>

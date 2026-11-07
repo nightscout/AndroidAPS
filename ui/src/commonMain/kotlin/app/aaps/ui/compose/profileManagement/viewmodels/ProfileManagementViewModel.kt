@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
@@ -135,13 +136,19 @@ class ProfileManagementViewModel(
      *
      * Fail closed until the flows settle, and read it where the state is built rather than where the
      * mode is requested, so a change while the screen is open takes effect at once.
+     *
+     * The client's role splits it in two: activating a profile is a caregiver's, editing profiles (presets)
+     * is an admin's. A master is always both.
      */
-    private val editingAllowed: Boolean get() = editingAllowedFlow.value
+    private val access: ProfileAccess get() = accessFlow.value
 
-    private val editingAllowedFlow: StateFlow<Boolean> =
-        combine(nsClient.masterOrPairedClientFlow, nsClient.masterReachable) { paired, reachable ->
-            !config.AAPSCLIENT || (paired && reachable)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), !config.AAPSCLIENT)
+    private data class ProfileAccess(val activate: Boolean, val edit: Boolean)
+
+    private val accessFlow: StateFlow<ProfileAccess> =
+        combine(nsClient.masterOrPairedClientFlow, nsClient.masterReachable, nsClient.clientRole) { paired, reachable, role ->
+            val canSend = !config.AAPSCLIENT || (paired && reachable)
+            ProfileAccess(activate = canSend && role.allows(ClientRole.Caregiver), edit = canSend && role.allows(ClientRole.Admin))
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileAccess(!config.AAPSCLIENT, !config.AAPSCLIENT))
 
     fun setScreenMode(mode: ScreenMode) {
         _screenMode.value = mode
@@ -201,9 +208,9 @@ class ProfileManagementViewModel(
         _selectedIndex,
         persistenceLayer.observeChanges(EPS::class).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
         _screenMode,
-        // An input, not a snapshot: pairing/unpairing or the master going away while this screen is
-        // open has to move it between editable and read-only right away.
-        editingAllowedFlow
+        // An input, not a snapshot: pairing/unpairing, a new role or the master going away while this
+        // screen is open has to move it between editable and read-only right away.
+        accessFlow
     ) { profiles, requestedIdx, _, screenMode, _ ->
         UiInputs(profiles, requestedIdx, screenMode)
     }.mapLatest { inputs ->
@@ -211,8 +218,9 @@ class ProfileManagementViewModel(
             aapsLogger.error(LTag.UI, "Failed to compute uiState", e)
             ProfileManagementUiState(
                 isLoading = false,
-                screenMode = if (editingAllowed) inputs.screenMode else ScreenMode.PLAY,
-                commandsAllowed = editingAllowed
+                screenMode = if (access.edit) inputs.screenMode else ScreenMode.PLAY,
+                commandsAllowed = access.activate,
+                editAllowed = access.edit
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileManagementUiState())
@@ -285,9 +293,10 @@ class ProfileManagementViewModel(
             pumpWarnings = pumpWarnings,
             selectedProfile = selectedProfile,
             compareData = compareData,
-            // An unpaired client cannot leave PLAY, whatever mode was requested.
-            screenMode = if (editingAllowed) screenMode else ScreenMode.PLAY,
-            commandsAllowed = editingAllowed,
+            // An unpaired client, or one whose role may not edit profiles, cannot leave PLAY, whatever mode was requested.
+            screenMode = if (access.edit) screenMode else ScreenMode.PLAY,
+            commandsAllowed = access.activate,
+            editAllowed = access.edit,
             isLoading = false
         )
     }
@@ -357,16 +366,9 @@ class ProfileManagementViewModel(
         return when {
             baseChanged                             -> {
                 val profileName = profiles[currentIndex].name
-                val runningLabel = buildString {
-                    append(rh.gs(CoreUiStrings.running))
-                    if (hasModifications) {
-                        val tsHours = (tsMs / 3600000).toInt()
-                        append(" (")
-                        append("$pct%")
-                        if (tsHours != 0) append(", ${if (tsHours > 0) "+" else ""}${tsHours}h")
-                        append(")")
-                    }
-                }
+                val runningLabel =
+                    if (hasModifications) labelWithModifications(rh.gs(CoreUiStrings.running), pct, (tsMs / 3600000).toInt())
+                    else rh.gs(CoreUiStrings.running)
                 val compareData = buildProfileCompareData(
                     profile1 = effectiveProfile,
                     profile2 = baseProfile,
@@ -383,14 +385,9 @@ class ProfileManagementViewModel(
             // Rounded by the pump only: the profile next to the rates the pump really gives.
             (hasModifications || roundedByPump) && baseProfile != null -> {
                 val profileName = profiles[currentIndex].name
-                val tsHours = (tsMs / 3600000).toInt()
-                val effectiveLabel = if (!hasModifications) rh.gs(CoreUiStrings.running) else buildString {
-                    append(profileName)
-                    append(" (")
-                    append("$pct%")
-                    if (tsHours != 0) append(", ${if (tsHours > 0) "+" else ""}${tsHours}h")
-                    append(")")
-                }
+                val effectiveLabel =
+                    if (!hasModifications) rh.gs(CoreUiStrings.running)
+                    else labelWithModifications(profileName, pct, (tsMs / 3600000).toInt())
                 val compareData = buildProfileCompareData(
                     profile1 = baseProfile,
                     profile2 = effectiveProfile,
@@ -549,6 +546,17 @@ class ProfileManagementViewModel(
         )
     }
 
+    /** "Weekend (110%)", or "Weekend (110%, +2 h)" when the profile is also shifted in time. */
+    private fun labelWithModifications(name: String, percentage: Int, timeshiftHours: Int): String {
+        val percentageText = rh.gs(CoreUiStrings.units_format_percent, percentage)
+        val details =
+            if (timeshiftHours != 0) {
+                val timeshift = rh.gs(CoreUiStrings.value_with_unit, if (timeshiftHours > 0) "+$timeshiftHours" else "$timeshiftHours", rh.gs(InterfacesStrings.shorthour))
+                rh.gs(InterfacesStrings.values_with_comma, percentageText, timeshift)
+            } else percentageText
+        return rh.gs(InterfacesStrings.value_with_detail, name, details)
+    }
+
     private fun failReorder(): Int? {
         _snackbarEvent.tryEmit(rh.gs(UiStrings.profile_no_longer_exists))
         _reorderOrder.value = null
@@ -677,10 +685,11 @@ class ProfileManagementViewModel(
                                         withContext(Dispatchers.Main) { onSuccess() }
                                     }
 
+                                    // A client's app-level modal has shown the master's own text already.
                                     is ActionProgress.Rejected ->
                                         if (result.reason.isNotDeliveryError())
                                             rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
-                                        else result.detail?.let { detail ->
+                                        else if (!config.AAPSCLIENT) result.detail?.let { detail ->
                                             rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                                         }
 
@@ -693,11 +702,12 @@ class ProfileManagementViewModel(
                 true
             }
 
-            // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal.
+            // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal,
+            // with the master's own text.
             is ActionProgress.Rejected -> {
                 if (prepared.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
-                else prepared.detail?.let { detail ->
+                else if (!config.AAPSCLIENT) prepared.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                 }
                 false
@@ -771,10 +781,12 @@ data class ProfileManagementUiState(
     val compareData: ProfileCompareData? = null,
     val screenMode: ScreenMode = ScreenMode.EDIT,
     /**
-     * False on an unpaired client: editing and activating are both commands for the master, and there
-     * is no master to send them to. The profile list itself stays visible — only the affordances go
-     * away. Same axis as `commandsAllowed` on the overview chips.
+     * Whether a profile may be activated. False on an unpaired client: activating is a command for the master,
+     * and there is no master to send it to; false too below a caregiver's role. The profile list itself stays
+     * visible — only the affordance goes away. Same axis as `commandsAllowed` on the overview chips.
      */
     val commandsAllowed: Boolean = true,
+    /** Whether profiles may be edited: like [commandsAllowed], but only for an admin role (profiles are presets). */
+    val editAllowed: Boolean = true,
     val isLoading: Boolean = true
 )

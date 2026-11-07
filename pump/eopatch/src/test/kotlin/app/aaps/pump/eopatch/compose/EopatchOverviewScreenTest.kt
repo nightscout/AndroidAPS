@@ -9,7 +9,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.core.ui.compose.LocalSnackbarHostState
-import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -58,7 +58,7 @@ class EopatchOverviewScreenTest {
     private var rawResumeClicks = 0
     private var otherClicks = 0
 
-    private fun show(vararg actions: PumpAction) {
+    private fun show(vararg actions: ScreenAction) {
         whenever(viewModel.uiState).thenReturn(MutableStateFlow(PumpOverviewUiState(primaryActions = actions.toList())))
         whenever(viewModel.events).thenReturn(MutableSharedFlow())
         whenever(viewModel.getSuspendDialogText()).thenReturn("Suspend delivery?")
@@ -69,8 +69,8 @@ class EopatchOverviewScreenTest {
         }
     }
 
-    private fun suspendAction() = PumpAction(label = suspendLabel, onClick = { rawSuspendClicks++ })
-    private fun resumeAction() = PumpAction(label = resumeLabel, onClick = { rawResumeClicks++ })
+    private fun suspendAction() = ScreenAction(label = suspendLabel, onClick = { rawSuspendClicks++ })
+    private fun resumeAction() = ScreenAction(label = resumeLabel, onClick = { rawResumeClicks++ })
 
     // ---- suspending ----
 
@@ -146,7 +146,7 @@ class EopatchOverviewScreenTest {
     /** Only suspend and resume are rewired; any other action keeps the handler it came with. */
     @Test
     fun anUnrelatedActionKeepsItsOwnBehaviour() {
-        show(PumpAction(label = "Refresh", onClick = { otherClicks++ }))
+        show(ScreenAction(label = "Refresh", onClick = { otherClicks++ }))
 
         compose.onNodeWithText("Refresh").performClick()
 

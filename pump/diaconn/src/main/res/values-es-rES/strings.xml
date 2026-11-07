@@ -134,5 +134,5 @@
     <string name="bolus_speed_7">7 U/min</string>
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">¡Vinculación exitosa!</string>
-    <string name="diaconn_pairing_successful_message">Su bomba ya está conectada y lista para usarse.</string>
+    <string name="diaconn_pairing_successful_message">Tu bomba ya está conectada y lista para usarse.</string>
 </resources>

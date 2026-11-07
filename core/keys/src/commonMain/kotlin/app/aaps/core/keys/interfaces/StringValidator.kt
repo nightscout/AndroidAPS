@@ -88,9 +88,12 @@ fun interface StringValidator {
             errorMessage = errorMessage
         )
 
-        /** Validates person name (letters, spaces, hyphens, apostrophes) */
+        /**
+         * Validates person name (ASCII letters, digits, spaces, hyphens, apostrophes). Digits, because a client takes the
+         * name the master gave the phone, which is often a device name like "S10e".
+         */
         fun personName(errorMessage: String = "Invalid name format") = regex(
-            pattern = "^[a-zA-Z\\s'-]+$",
+            pattern = "^[a-zA-Z0-9\\s'-]+$",
             errorMessage = errorMessage
         )
 

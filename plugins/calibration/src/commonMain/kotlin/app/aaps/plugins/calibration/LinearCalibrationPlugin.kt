@@ -12,6 +12,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.calibration.CalibrationContext
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -22,7 +23,6 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
@@ -57,14 +57,14 @@ class LinearCalibrationPlugin(
     notificationManager: NotificationManager,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val rxBus: RxBus,
-    private val profileUtil: ProfileUtil
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .pluginName(CalibrationStrings.linear_calibration_name)
         .description(CalibrationStrings.description_linear_calibration)
-        .composeContent { CalibrationComposeContent(persistenceLayer, profileUtil, aapsLogger, dateUtil) },
+        .composeContent { CalibrationComposeContent() },
     aapsLogger, rh, notificationManager
 ), Calibration {
 
@@ -199,6 +199,9 @@ class LinearCalibrationPlugin(
     }
 
     private suspend fun detectAndNotifyGap(data: List<InMemoryGlucoseValue>, sessionStart: Long?) {
+        // Only the master asks. Its button writes a sensor change, and on a client that would stay on the client.
+        // The master sees the same gap and posts the same notice. A client also sees gaps when its sync is late.
+        if (config.AAPSCLIENT) return
         val gapThresholdMs = T.mins(GAP_THRESHOLD_MIN).msecs()
         var gapTime: Long? = null
         for (i in 0 until data.size - 1) {

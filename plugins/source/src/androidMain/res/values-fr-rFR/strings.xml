@@ -22,9 +22,11 @@
     <string name="random_bg">Gly Aléatoire</string>
     <string name="description_source_random_bg">Générer des glycémies aléatoires (mode démo uniquement)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Recevoir les glycémies de l’application Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Application SI</string>
+    <string name="description_source_patched_si_app">Recevez des données de glucose à partir de Sibionic SI App patchée ou de Sibionics App.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Application Sino</string>
     <string name="description_source_patched_sino_app">Recevoir des données de glucose de l\'application Patched Sino.</string>
@@ -49,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Le capteur est en cours de stabilisation, veuillez patienter…</string>
     <string name="aidex_sensor_replace">Remplacement du capteur requis, veuillez le remplacer par un nouveau capteur dès que possible</string>
     <string name="aidex_signal_lost">Signal capteur perdu, veuillez vérifier la connexion</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">lecture en double</string>
 </resources>

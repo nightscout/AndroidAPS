@@ -51,6 +51,7 @@ class LanguageTagTest {
     fun `a plain language code passes through`() {
         assertThat(LanguageTag.of("cs")).isEqualTo("cs")
         assertThat(LanguageTag.of("de")).isEqualTo("de")
+        assertThat(LanguageTag.of("he")).isEqualTo("he")
     }
 
     /**

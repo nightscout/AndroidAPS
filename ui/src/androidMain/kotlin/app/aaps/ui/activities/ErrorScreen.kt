@@ -29,12 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
  * Modal-style screen rendered over a scrim by [ErrorActivity] when an urgent alarm fires.
- * Displays the alarm title/status and three actions: OK (dismiss), Mute, Mute 5 min.
+ * Displays the alarm title/status and three actions, each saying what it does: mute for 5 minutes
+ * (+5 min for the "time to eat" timer), silence, and silence and close.
  *
  * Audio (MediaPlayer + volume ramp) is owned by [ErrorActivity] itself — the [onStart]
  * callback fires once on first composition so the activity can begin playback when the
@@ -51,7 +53,9 @@ fun ErrorScreen(
     onOk: () -> Unit,
     onMute: () -> Unit,
     onMute5Min: () -> Unit,
-    onStart: () -> Unit
+    onStart: () -> Unit,
+    /** The alarm of the "time to eat" timer: the first button moves the timer 5 minutes instead of muting for 5 minutes. */
+    eatReminder: Boolean = false
 ) {
     DisposableEffect(Unit) {
         onStart()
@@ -132,32 +136,35 @@ fun ErrorScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Mute 5 min button
+                // Mute 5 min button (+5 min for the eat timer)
                 Button(
                     onClick = onMute5Min,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.mute5min))
+                    Text(
+                        if (eatReminder) stringResource(CoreUiStrings.eat_reminder_extend, EatReminder.EXTEND_MINUTES)
+                        else stringResource(CoreUiStrings.mute5min)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Mute button
+                // Silence button: the sound stops, this screen stays open
                 Button(
                     onClick = onMute,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.mute))
+                    Text(stringResource(CoreUiStrings.alarm_silence))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // OK button
+                // Silence and close button
                 Button(
                     onClick = onOk,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.ok))
+                    Text(stringResource(CoreUiStrings.alarm_silence_and_close))
                 }
             }
         }

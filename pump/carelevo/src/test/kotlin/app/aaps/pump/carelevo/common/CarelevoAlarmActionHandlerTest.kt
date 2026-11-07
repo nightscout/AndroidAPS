@@ -146,6 +146,32 @@ internal class CarelevoAlarmActionHandlerTest {
 
         awaitCondition { sut.alarmQueue.value.isEmpty() }
         verify(alarmUseCase).acknowledgeAlarm(eq("alarm-1"))
+        verify(alarmClearCoordinator).forgetSnapshotAlarmCause(alarm().cause)
+    }
+
+    @Test
+    fun `confirmed patch clear keeps the snapshot baseline`() {
+        whenever { alarmClearCoordinator.clearAlarmOnPatch(any()) }.thenReturn(true)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(alarm()))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(alarm()))
+
+        awaitCondition { sut.alarmQueue.value.isEmpty() }
+        verify(alarmClearCoordinator, never()).forgetSnapshotAlarmCause(any())
+    }
+
+    @Test
+    fun `BLE not connected alert is acknowledged locally and keeps the snapshot baseline`() {
+        val bleAlert = alarm(id = "ble", cause = AlarmCause.ALARM_ALERT_BLE_NOT_CONNECTED)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(bleAlert))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(bleAlert))
+
+        awaitCondition { sut.alarmQueue.value.isEmpty() }
+        verify(alarmUseCase).acknowledgeAlarm(eq("ble"))
+        verify(alarmClearCoordinator, never()).forgetSnapshotAlarmCause(any())
     }
 
     @Test

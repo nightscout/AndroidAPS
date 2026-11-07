@@ -6,6 +6,7 @@ import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.objects.workflow.WorkOutcome
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 
 /**
@@ -113,6 +115,8 @@ class SceneExpiryRunnerTest : TestBaseWithProfile() {
         assertThat(outcome).isEqualTo(WorkOutcome.Success)
         verify(sceneExecutor).onExpiry()
         verify(sceneRepository, never()).getScene(any())
+        // The banner says the scene ended and has to be closed anyway, so there is nothing to post.
+        verifyNoInteractions(notificationManager)
     }
 
     @Test
@@ -127,6 +131,9 @@ class SceneExpiryRunnerTest : TestBaseWithProfile() {
         assertThat(outcome).isEqualTo(WorkOutcome.Success)
         verify(sceneExecutor).onExpiry()
         verify(sceneRepository).getScene("target")
+        // The follow-up is gone. That goes on the banner, not into a second thing to confirm.
+        verify(activeSceneManager).setChainSkipReason(baseText.gs(CoreUiStrings.scene_chain_skipped_deleted))
+        verifyNoInteractions(notificationManager)
     }
 
     /**

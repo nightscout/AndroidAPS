@@ -19,7 +19,7 @@
     <string name="a11y_bg_quality_flat">Date plate. Se consideră greșite</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U din cauza %2$s</string>
-    <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
+    <string name="limitingcarbs">Se limitează carbohidrații la %1$d g din cauza %2$s</string>
     <string name="safety">Siguranță</string>
     <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
@@ -41,5 +41,5 @@
     <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
     <string name="objectives_button_unfinish">Resetare stare finalizată</string>
     <string name="objectives_button_unstart">Resetare stare de început</string>
-    <string name="bg_doubled_lgs">Modul Suspendare la hipoglicemie din cauza valorilor dublate în sursa de glicemie</string>
+    <string name="bg_doubled_lgs">Modul Suspendare la glicemie scăzută din cauza valorilor dublate în sursa de glicemie</string>
 </resources>

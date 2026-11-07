@@ -242,8 +242,12 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun pumpSpecificShortStatusFormatsTheDailyTotal() {
         danaPump.dailyTotalUnits = 12.3
         danaPump.maxDailyTotalUnits = 80
+        // The English templates, so the text is checked as the user reads it
+        whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.confirmation_line), anyOrNull(), anyOrNull())).thenAnswer { "${it.arguments[1]}: ${it.arguments[2]}" }
+        whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.values_with_slash), anyOrNull(), anyOrNull())).thenAnswer { "${it.arguments[1]} / ${it.arguments[2]}" }
+        whenever(rh.gs(eq(app.aaps.core.ui.R.string.units_format_insulin_int), anyOrNull())).thenAnswer { "${it.arguments[1]} U" }
 
-        assertThat(danaRSPlugin.pumpSpecificShortStatus(veryShort = false)).contains("TDD")
+        assertThat(danaRSPlugin.pumpSpecificShortStatus(veryShort = false)).isEqualTo("TDD: ${decimalFormatter.to0Decimal(12.3)} / 80 U")
         assertThat(danaRSPlugin.pumpSpecificShortStatus(veryShort = true)).isEmpty()
     }
 

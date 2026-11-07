@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
@@ -24,8 +25,11 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -62,6 +66,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.time.TimeSource
 
 @Stable
 @AssistedInject
@@ -88,7 +93,8 @@ class WizardDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WizardDialogUiState())
@@ -123,8 +129,30 @@ class WizardDialogViewModel(
      */
     private var appliedPercentagePreference: Int? = null
 
+    // The time of the reading in the BG field, so a recalculation that brings no new reading changes nothing.
+    private var followedReading: Long? = null
+
     init {
-        viewModelScope.launch { initialize() }
+        viewModelScope.launch {
+            initialize()
+            // Both after initialize(), which builds a new state and would drop what they set.
+            // Not EventBucketedDataCreated: it comes while the calculation still works on its own copy of the data,
+            // and iobCobCalculator.ads gives the reading before. The finished copy is published before this one.
+            launch { rxBus.toFlow(EventAutosensCalculationFinished::class).collect { followNewReading() } }
+            commandQueue.smbBeingDelivered.collect { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
+        }
+    }
+
+    /** A calculation has finished; take its reading if it is new. See [withNewReading]. */
+    private fun followNewReading() {
+        val state = uiState.value
+        if (!state.initialized || state.bgEdited) return
+        val reading = iobCobCalculator.ads.actualBg() ?: return
+        if (reading.timestamp == followedReading) return
+        followedReading = reading.timestamp
+        val ageMinutes = ((dateUtil.now() - reading.timestamp) / 60000).toInt()
+        _uiState.update { it.withNewReading(reading.valueToUnits(it.units), ageMinutes) }
+        recalculate()
     }
 
     /**
@@ -171,6 +199,7 @@ class WizardDialogViewModel(
 
         // Current BG
         val actualBg = iobCobCalculator.ads.actualBg()
+        followedReading = actualBg?.timestamp
         val hasBgData = actualBg != null
         val currentBg = actualBg?.valueToUnits(units) ?: 0.0
         val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
@@ -235,7 +264,8 @@ class WizardDialogViewModel(
         val state = uiState.value
         val range = if (state.isMgdl) 0.0..500.0 else 0.0..30.0
         val clamped = value.coerceIn(range)
-        _uiState.update { it.copy(bg = clamped) }
+        // A change only: focusing the field and leaving it is not an edit, and the field keeps following readings.
+        _uiState.update { it.copy(bg = clamped, bgEdited = it.bgEdited || clamped != it.bg) }
         recalculate()
     }
 
@@ -267,7 +297,9 @@ class WizardDialogViewModel(
 
     fun updateCarbTime(value: Int) {
         val clamped = value.coerceIn(-60, 60)
-        _uiState.update { it.copy(carbTime = clamped) }
+        // Eating later turns the "time to eat" alarm on, as in 3.x. Only when the time first becomes positive,
+        // so an alarm the user turned off stays off while they change the minutes.
+        _uiState.update { it.copy(carbTime = clamped, alarmChecked = it.alarmChecked || (it.carbTime <= 0 && clamped > 0)) }
         recalculate()
     }
 
@@ -276,8 +308,11 @@ class WizardDialogViewModel(
         recalculate()
     }
 
+    // The note and the alarm recalculate too: the confirmation and the record-only path read them from the
+    // wizard of the last calculation, so a change made last was lost (#5415).
     fun updateNotes(value: String) {
         _uiState.update { it.copy(notes = value) }
+        recalculate()
     }
 
     fun selectProfile(index: Int) {
@@ -335,6 +370,7 @@ class WizardDialogViewModel(
 
     fun toggleAlarm(checked: Boolean) {
         _uiState.update { it.copy(alarmChecked = checked) }
+        recalculate()
     }
 
     fun toggleCalculationExpanded() {
@@ -377,7 +413,15 @@ class WizardDialogViewModel(
         viewModelScope.launch { recalculateSuspend() }
     }
 
+    /**
+     * Counts the calculations. Each one reads the inputs when it starts, and they can end in another order:
+     * typing a note starts one for every letter. Only the newest may keep its result. Else an older one that
+     * ends last leaves a wizard with old inputs, and the confirmation and the record-only path use it (#5415).
+     */
+    private var calculations = 0
+
     private suspend fun recalculateSuspend() {
+        val calculation = ++calculations
         val state = uiState.value
         val profileStore = profileRepository.profile.value ?: return
 
@@ -409,8 +453,8 @@ class WizardDialogViewModel(
 
         // Carbs type split: effective carbs for wizard, eCarbs for later scheduling
         val carbsType = state.carbsType
-        val effectiveCarbs = state.carbs * carbsType.carbsPercent / 100
-        val eCarbs = state.carbs * carbsType.eCarbsPercent / 100
+        val effectiveCarbs = carbsType.carbsNow(state.carbs)
+        val eCarbs = carbsType.eCarbs(state.carbs)
 
         // Carbs constraint check (on effective carbs only)
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(effectiveCarbs, aapsLogger)).value()
@@ -442,6 +486,8 @@ class WizardDialogViewModel(
             state.carbTime
         )
 
+        // A newer calculation started meanwhile: its result counts, not this one
+        if (calculation != calculations) return
         wizard = w
 
         // Update temp target availability
@@ -547,10 +593,10 @@ class WizardDialogViewModel(
      */
     fun deliverManualWizard() {
         val state = uiState.value
-        val effectiveCarbs = state.carbs * state.carbsType.carbsPercent / 100
+        val effectiveCarbs = state.carbsType.carbsNow(state.carbs)
         // null → recompute on the master's active profile (index 0 = "Active"); else the selected stored profile by name.
         val profileName = if (state.selectedProfileIndex == 0) null else state.profileNames.getOrNull(state.selectedProfileIndex)
-        val inputs = WizardBolusExecutor.WizardInputs(
+        val inputs = MasterActionExecutor.WizardInputs(
             bg = state.bg, carbs = effectiveCarbs, percentage = state.percentage, directCorrection = state.directCorrection,
             carbTime = state.carbTime, useBg = state.useBg, useCob = state.useCOB, useIob = state.useIOB,
             useTt = state.useTT, useTrend = state.useTrend, alarm = state.alarmChecked, notes = state.notes,
@@ -558,10 +604,16 @@ class WizardDialogViewModel(
             profileName = profileName
         )
         val label = rh.gs(CoreUiStrings.clientcontrol_action_deliver_bolus)
+        // Counted from before the prepare, so on a client the confirmation closes before the master's pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         appScope.launch {
             when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.Manual(inputs), label)) {
                 is ActionProgress.Prepared ->
-                    showWizardBolusConfirmation(rxBus, rh, rh.gs(CoreUiStrings.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                    showWizardBolusConfirmation(
+                        rxBus, rh, rh.gs(CoreUiStrings.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines,
+                        closeAt = closeAt,
+                        onCancel = { wizardExecutor.discard(prepared.id) }
+                    ) { asAdvisor ->
                         // Confirmed → close the wizard (Cancel leaves it open with inputs intact, like the insulin dialog).
                         _sideEffect.tryEmit(SideEffect.NavigateBack)
                         appScope.launch {

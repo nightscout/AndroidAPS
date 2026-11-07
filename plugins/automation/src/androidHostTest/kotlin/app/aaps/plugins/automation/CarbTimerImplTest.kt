@@ -2,7 +2,6 @@ package app.aaps.plugins.automation
 
 import android.content.Context
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -25,13 +24,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class CarbTimerImplTest : TestBase() {
@@ -65,31 +58,24 @@ class CarbTimerImplTest : TestBase() {
 
     private val eventFactory by lazy { AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps) }
     private lateinit var dateUtil: DateUtil
-    private lateinit var reminderScheduler: ReminderScheduler
 
     private lateinit var automationRuntime: AutomationRuntime
 
     @BeforeEach fun init() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
-        reminderScheduler = mock()
         automationRuntime = AutomationRuntime(
-            mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi, mock()
+            mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil, activePlugin, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi, mock()
         )
     }
 
+    // The "time to eat" timer itself is EatReminder in :implementation now; automation only keeps the advisor's
+    // BG-triggered event.
     @Test fun doTest() {
         assertThat(automationRuntime.size()).isEqualTo(0)
         automationRuntime.scheduleAutomationEventEatReminder()
         assertThat(automationRuntime.size()).isEqualTo(1)
         automationRuntime.removeAutomationEventEatReminder()
         assertThat(automationRuntime.size()).isEqualTo(0)
-
-        automationRuntime.scheduleTimeToEatReminder(1)
-        // The reminder is handed to ReminderScheduler, NOT to the Clock app via startActivity, which
-        // Android blocks from the background. How the reminder actually rings is the implementation's
-        // business and it lives in :app now - this only pins that automation asks for it.
-        verify(context, never()).startActivity(any())
-        verify(reminderScheduler, times(1)).scheduleReminder(eq(1), anyOrNull())
     }
 }

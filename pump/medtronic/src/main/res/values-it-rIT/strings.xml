@@ -26,8 +26,8 @@
     <string name="medtronic_pump_type_715">715</string>
     <string name="medtronic_pump_type_522">522</string>
     <string name="medtronic_pump_type_722">722</string>
-    <string name="medtronic_pump_type_523_24a">523 (Fw 2,4A o inferiore)</string>
-    <string name="medtronic_pump_type_723_24a">723 (Fw 2,4A o inferiore)</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A o inferiore)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A o inferiore)</string>
     <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
     <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
     <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
@@ -59,14 +59,14 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Hai cancellato il bolo dopo che era già stato impostato sul micro. Dal momento che il micro Medtronic non supporta la cancellazione, avrai bisogno di cancellare il bolo manualmente. Metti il micro in modalità sospensione e poi fallo ripartire (se vuoi ancora cancellare il bolo). L\'applicazione rileverà le modifiche al prossimo aggiornamento (in meno di 5 minuti).</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Hai annullato il bolo dopo che era già stato impostato sul micro. Poiché il micro Medtronic non supporta l\'annullamento, dovrai annullarlo manualmente. Metti il micro in sospensione e poi riprendi (se vuoi ancora annullare il bolo). L\'applicazione rileverà le modifiche al prossimo aggiornamento (in meno di 5 minuti).</string>
     <string name="medtronic_cmd_cant_read_tbr">Impossibile leggere il TBR corrente.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Impossibile cancellare il TBR corrente. Arresto dell\'operazione.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">Impostazione del profilo fallita. A causa dei seguenti modelli, hai una velocità basale troppo grande: %1$s</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Impossibile annullare il TBR corrente. Arresto dell\'operazione.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Impostazione del profilo fallita, perché i seguenti schemi hanno una velocità basale troppo alta: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Il bolo non può essere erogato.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Il bolo non può essere erogato perché la quantità di insulina disponibile (%1$.2f) è inferiore al bolo richiesto (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Il TBR non può essere impostato.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr">Impossibile cancellare il TBR corrente.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Impossibile annullare il TBR corrente.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Il profilo basale non può essere impostato.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Il profilo basale è lo stesso, non sarà impostato di nuovo.</string>
     <string name="medtronic_cmd_desc_get_history">Ottieni storico - Pagina %1$d (%2$d/16)</string>
@@ -80,7 +80,7 @@
     <string name="medtronic_cmd_desc_set_basal_profile">Imposta profilo basale</string>
     <string name="medtronic_cmd_desc_get_tbr">Ottieni basale temporanea</string>
     <string name="medtronic_cmd_desc_set_tbr">Imposta basale temporanea</string>
-    <string name="medtronic_cmd_desc_cancel_tbr">Cancella basale temporanea</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Annulla basale temporanea</string>
     <string name="medtronic_cmd_desc_set_bolus">Imposta bolo</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Ottieni insulina rimanente</string>
     <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Adesso</string>
@@ -88,7 +88,7 @@
     <string name="medtronic_notification_check_time_date">Necessario aggiornare orologio micro</string>
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
-    <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
+    <string name="set_neutral_temps_summary">Se abilitato, annulla una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare il suono/la vibrazione di alcuni micro allo scoccare dell\'ora.</string>
     <string name="invalid_history_data">Rilevati dati non validi dallo storico del micro. Apri una segnalazione e fornisci i log.</string>
     <string name="riley_statistics">Statistiche RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Aggiorna: cliccato</string>

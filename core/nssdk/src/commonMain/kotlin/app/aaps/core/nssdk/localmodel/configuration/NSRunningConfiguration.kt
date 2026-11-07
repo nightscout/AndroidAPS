@@ -21,13 +21,14 @@ data class NSRunningConfiguration(
     // publish it → client leaves its own flag untouched.
     val isFakingTempsByExtendedBoluses: Boolean? = null,
     val activeScene: NSActiveScene? = null,
+    // Hot doc, like [activeScene]: the master's running "time to eat" timer. Null = none (or an older master).
+    val eatReminder: NSEatReminder? = null,
     // Flat block of cold-channel synced preference values (key string → value serialized as string),
     // driven by each key's SyncSpec. Applied with "master wins" on the client; client→master edits
     // travel separately via the signed Client-Control PreferencesUpdate channel.
     val syncedPrefs: Map<String, String>? = null,
-    // Computed runtime flag carried in the "hot" doc alongside [activeScene] — whether autosens
-    // is actually in use on the master. Top-level so it can ride the small hot doc and refresh on
-    // scene lifecycle events.
+    // Whether autosens is in use on the master, computed there from cold settings. In the cold doc, because the hot doc
+    // ([activeScene], [eatReminder]) is sent only when one of them changes.
     val usedAutosensOnMainPhone: Boolean? = null,
     val authorizedClients: NSAuthorizedClients? = null
 )
@@ -42,11 +43,17 @@ data class NSRunningConfiguration(
  * - **Block present with our clientId in [clientIds]**: authorized.
  * - **Block present without our clientId**: orphan (revoked or master-wiped) — surface re-pair UI.
  *
- * Only `clientId` strings are exposed. Names, timestamps, secrets stay master-local.
+ * Only `clientId` strings are exposed, plus each client's role. Names, timestamps, secrets stay master-local.
  */
 @Serializable
 data class NSAuthorizedClients(
-    val clientIds: List<String> = emptyList()
+    val clientIds: List<String> = emptyList(),
+    /**
+     * clientId -> role name (`ClientRole` in core/keys), for the same Active clients as [clientIds]. A client
+     * reads its own entry to know which controls to show; the master enforces the role on every command.
+     * Null: an older master without roles, so every client keeps full control (Admin).
+     */
+    val roles: Map<String, String>? = null
 )
 
 /**
@@ -76,5 +83,23 @@ data class NSActiveScene(
     val ttNsId: String? = null,
     val psNsId: String? = null,
     val rmNsId: String? = null,
-    val teNsId: String? = null
+    val teNsId: String? = null,
+    /**
+     * Why the follow-up scene did not start, in the master's words. Null when there was no follow-up,
+     * when it started, or when the master pre-dates this field. The client shows it on the banner of
+     * the ended scene, which is the only place it is said.
+     */
+    val chainSkipReason: String? = null
+)
+
+/**
+ * Wire view of the master's running "time to eat" timer, so a client can show it. Times are the master's clock.
+ * [durationMs] is the length the user set; [endsAt] moves later with each +5 min. The master drops the block when
+ * the timer ends.
+ */
+@Serializable
+data class NSEatReminder(
+    val startedAt: Long,
+    val endsAt: Long,
+    val durationMs: Long
 )

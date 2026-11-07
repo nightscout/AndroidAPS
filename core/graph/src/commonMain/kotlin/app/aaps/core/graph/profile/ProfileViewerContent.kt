@@ -57,36 +57,20 @@ fun ProfileSingleContent(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Units & ICfg Card if running (combined to save space)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        // ICfg Card if running. No units card: ISF and target lines already carry the units.
+        profile.iCfg?.let { iCfg ->
             ElevatedCard(
-                modifier = Modifier.weight(1f),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+                onClick = onInsulinManager
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ProfileRow(
-                        label = stringResource(CoreUiStrings.units_label),
-                        value = profile.units.displayLabel
+                        label = stringResource(CoreUiStrings.insulin_label),
+                        value = iCfg.insulinLabel
                     )
-                }
-            }
-            profile.iCfg?.let { iCfg ->
-                ElevatedCard(
-                    modifier = Modifier.weight(1f),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
-                    onClick = onInsulinManager
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        ProfileRow(
-                            label = stringResource(CoreUiStrings.insulin_label),
-                            value = iCfg.insulinLabel
-                        )
-                    }
                 }
             }
         }

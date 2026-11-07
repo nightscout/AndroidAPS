@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.smsCommunicator.actions
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -20,11 +20,13 @@ import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 import app.aaps.plugins.sync.smsCommunicator.SmsBatchResult
 import app.aaps.plugins.sync.smsCommunicator.runSmsBatch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 /**
  * Executes a remote bolus delivery: BOLUS <insulin> [MEAL].
  *
- * Delivered through [WizardBolusExecutor], so the bolus is capped, gated and logged exactly like one from the phone.
+ * Delivered through [MasterActionExecutor], so the bolus is capped, gated and logged exactly like one from the phone.
  * MEAL adds the eating-soon temp target to the same batch. As in the phone's insulin dialog, the target is set once
  * the bolus is accepted, not after the pump finished.
  */
@@ -32,7 +34,7 @@ class BolusAction(
     private val insulin: Double,
     private val isMeal: Boolean,
     private val receivedSms: Sms,
-    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val masterActionExecutor: MasterActionExecutor,
     private val commandQueue: CommandQueue,
     private val rh: TextResolver,
     private val profileUtil: ProfileUtil,
@@ -46,7 +48,17 @@ class BolusAction(
     private val updateLastRemoteBolusTime: (Long) -> Unit
 ) : SmsAction(pumpCommand = true) {
 
-    override suspend fun run() {
+    /**
+     * Runs to the end even when WorkManager stops the SMS worker (#5441). The bolus goes on in the app scope anyway,
+     * so a stopped run used to send no reply, and the remote bolus interval was not started. The sender then sent
+     * BOLUS again, and the interval check let it through.
+     *
+     * The interval starts when the pump accepted the bolus, not when it finished. It also counts a bolus that failed
+     * after that, because part of the dose may be in.
+     */
+    override suspend fun run() = withContext(NonCancellable) { deliver() }
+
+    private suspend fun deliver() {
         val mealTarget = if (isMeal) {
             val ttMgdl = preferences.ttTargetMgdl(TT.Reason.EATING_SOON)
             BatchAction.TempTarget(
@@ -59,10 +71,9 @@ class BolusAction(
             recordOnly = false, notes = "", timestamp = 0L, iCfg = null
         )
         val actions = listOfNotNull(bolus, mealTarget)
-        when (val result = wizardBolusExecutor.runSmsBatch(actions, waitForDose = true)) {
+        when (val result = masterActionExecutor.runSmsBatch(actions, waitForDose = true, onAccepted = { updateLastRemoteBolusTime(dateUtil.now()) })) {
             is SmsBatchResult.Done    -> {
                 commandQueue.readStatus(rh.gs(CoreUiStrings.sms))
-                updateLastRemoteBolusTime(dateUtil.now())
                 // After STOP the pump gave less than this, and the executor does not report how much. The status
                 // below shows what the pump has, so the reply does not name an amount it cannot vouch for.
                 var replyText = when {

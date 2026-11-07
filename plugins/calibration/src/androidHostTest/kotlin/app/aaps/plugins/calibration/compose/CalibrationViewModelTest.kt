@@ -3,9 +3,12 @@ package app.aaps.plugins.calibration.compose
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -13,12 +16,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -38,8 +45,11 @@ internal class CalibrationViewModelTest {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var profileUtil: ProfileUtil
-    @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var dateUtil: DateUtil
+    @Mock private lateinit var rh: TextResolver
+    @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var config: Config
+    @Mock private lateinit var batchExecutor: BatchExecutor
 
     @BeforeEach
     fun setUp() {
@@ -58,7 +68,7 @@ internal class CalibrationViewModelTest {
     }
 
     private fun viewModel() =
-        CalibrationViewModel(persistenceLayer, profileUtil, aapsLogger, dateUtil)
+        CalibrationViewModel(persistenceLayer, profileUtil, dateUtil, rh, rxBus, config, batchExecutor)
 
     @Test
     fun uiState_hasEmptySessionDefaults() {
@@ -81,5 +91,14 @@ internal class CalibrationViewModelTest {
         sut.selectEntry(42L)
 
         assertThat(sut.uiState.value.selectedEntryId).isEqualTo(42L)
+    }
+
+    @Test
+    fun requestDelete_ofAnUnknownEntry_asksNothing() = runTest {
+        val sut = viewModel()
+
+        sut.requestDelete(42L)
+
+        verify(batchExecutor, never()).prepare(any(), any(), any())
     }
 }

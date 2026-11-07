@@ -8,13 +8,13 @@ interface RunningConfiguration {
     // called in AAPS mode only — "cold" settings doc: plugin config that changes only on user edits.
     fun configuration(): JsonObject
 
-    // called in AAPS mode only — "hot" settings doc: runtime state that changes frequently
-    // (active scene lifecycle) plus computed runtime flags. Published to a separate identifier.
-    fun activeSceneConfiguration(): JsonObject
+    // called in AAPS mode only — "hot" settings doc: the active scene and the "time to eat" timer, which change
+    // more often than the cold settings. Published to a separate identifier.
+    fun hotConfiguration(): JsonObject
 
-    // called in NSClient mode only — apply the cold doc (everything except the active scene).
+    // called in NSClient mode only — apply the cold doc (everything except the hot state).
     fun applyCold(configuration: NSRunningConfiguration)
 
-    // called in NSClient mode only — apply the hot doc (active scene + computed runtime flags).
+    // called in NSClient mode only — apply the hot doc (the active scene and the "time to eat" timer).
     fun applyHot(configuration: NSRunningConfiguration)
 }

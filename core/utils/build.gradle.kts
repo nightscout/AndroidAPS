@@ -1,35 +1,16 @@
 import kotlin.math.min
 
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as :core:keys and :core:data.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
 }
 
 kotlin {
     android {
         namespace = "app.aaps.core.utils"
-        compileSdk = Versions.compileSdk
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // Compatible with wear module
         // Creates the androidHostTest compilation, which also pulls in commonTest.
         withHostTest { }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-        // Restated from android-module-dependencies, which a multiplatform module cannot apply.
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    jvm {
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-    }
-
-    iosArm64()
-    iosSimulatorArm64()
 
     sourceSets {
         commonMain {

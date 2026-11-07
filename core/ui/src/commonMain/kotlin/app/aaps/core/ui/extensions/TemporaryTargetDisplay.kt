@@ -24,6 +24,10 @@ fun TT.highValueToUnitsToString(units: GlucoseUnit, decimalFormatter: DecimalFor
     else decimalFormatter.to1Decimal(this.highTarget * Constants.MGDL_TO_MMOLL)
 
 fun TT.friendlyDescription(units: GlucoseUnit, rh: TextResolver, profileUtil: ProfileUtil): String =
-    profileUtil.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
-        profileUtil.unitLabel +
-        "@" + rh.gs(CoreUiStrings.format_mins, duration.milliseconds.inWholeMinutes) + "(" + reason.text + ")"
+    rh.gs(
+        CoreUiStrings.temp_target_description,
+        profileUtil.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units),
+        profileUtil.unitLabel,
+        rh.gs(CoreUiStrings.format_mins, duration.milliseconds.inWholeMinutes),
+        reason.text
+    )

@@ -13,6 +13,9 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +32,8 @@ import kotlin.time.Duration.Companion.minutes
  *
  * This is the half of notification handling that is the same everywhere: which notifications are
  * live, which replaces which, when they expire, and which alarm owns the sound. The system tray and
- * the audio are reached through [SystemNotificationPlatform].
+ * the audio are reached through [SystemNotificationPlatform]. The watch is told which alarm sounds
+ * ([EventData.AlarmRinging]) and when it stops, so it can tell why the phone makes a sound.
  *
  * Both platforms use this now. `NotificationManagerImpl` is gone: Android keeps its channel,
  * receiver and `NotificationCompat` code in `AndroidSystemNotificationPlatform`, and iOS in
@@ -39,6 +43,7 @@ class CommonNotificationManager(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val platform: SystemNotificationPlatform,
+    private val rxBus: RxBus,
     scope: CoroutineScope
 ) : NotificationManager {
 
@@ -238,6 +243,10 @@ class CommonNotificationManager(
      * sounding" slot is what makes concurrent alarms hand off correctly: dismissing the audible one
      * promotes the next remaining one instead of going silent.
      *
+     * The watch follows the same slot: it is told of the alarm that takes the sound, and of silence. These alarms
+     * cannot be muted from the watch: the phone has only Dismiss for them, and they come back by themselves while
+     * their cause lasts.
+     *
      * Caller must hold [lock].
      */
     private fun refreshAlarmSound() {
@@ -249,11 +258,17 @@ class CommonNotificationManager(
                 if (soundingKey != null) {
                     soundingKey = null
                     platform.setAudibleAlarm(null, null)
+                    rxBus.send(EventMobileToWear(EventData.AlarmStopped(now())))
                 }
 
             top.instanceKey != soundingKey -> {
                 soundingKey = top.instanceKey
                 platform.setAudibleAlarm(top.instanceKey, top.sound)
+                rxBus.send(
+                    EventMobileToWear(
+                        EventData.AlarmRinging(now(), title = rh.gs(CoreUiStrings.urgent_alarm), status = top.text, canMute = false)
+                    )
+                )
             }
             // else: already playing the top alarm - leave the ramp running.
         }

@@ -30,7 +30,7 @@ class DialogSearchables(
 
     override fun getSearchableItems(): List<SearchableItem> =
         ElementType.searchableEntries
-            .filter { it.visibility.isVisible(visibilityContext) }
+            .filter { it.isAvailable(visibilityContext) }
             .filter { elementAvailability.isAvailable(it) }
             .map { SearchableItem.Dialog(it) }
 }
