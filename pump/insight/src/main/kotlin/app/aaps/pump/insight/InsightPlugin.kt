@@ -263,7 +263,8 @@ class InsightPlugin(
     var cartridgeStatus: CartridgeStatus? = null
         private set(value) {
             field = value
-            _reservoirLevel.value = PumpInsulin(value?.remainingAmount ?: 0.0)
+            // Null until the pump told it: no empty reservoir in Nightscout, on the watch or in automation rules.
+            _reservoirLevel.value = value?.remainingAmount?.let(::PumpInsulin)
         }
     var totalDailyDose: TotalDailyDose? = null
         private set
@@ -609,8 +610,8 @@ class InsightPlugin(
             if (connectionService == null || alertService == null) return PumpRate(0.0)
             return PumpRate(activeBasalRate?.activeBasalRate ?: 0.0)
         }
-    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
-    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+    private val _reservoirLevel = MutableStateFlow<PumpInsulin?>(null)
+    override val reservoirLevel: StateFlow<PumpInsulin?> = _reservoirLevel
 
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevel

@@ -913,7 +913,7 @@ class ComboV2Plugin(
     // pump again and resets the current pump state.
 
     private val _reservoirLevelValue = MutableStateFlow<Double?>(null)
-    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevelValue.mapState { PumpInsulin(it ?: 0.0) }
+    override val reservoirLevel: StateFlow<PumpInsulin?> = _reservoirLevelValue.mapState { it?.let(::PumpInsulin) }
 
     private val _batteryLevelValue = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevelValue

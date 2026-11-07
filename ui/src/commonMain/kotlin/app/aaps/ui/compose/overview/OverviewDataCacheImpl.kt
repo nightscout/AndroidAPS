@@ -1152,11 +1152,11 @@ class OverviewDataCacheImpl(
         val pumpItem = processedDeviceStatusData.pumpData?.let { pumpData ->
             val level = when {
                 pumpData.clock + URGENT_CLOCK_MINUTES * 60 * 1000L < now                          -> AapsClientLevel.URGENT
-                pumpData.reservoir < URGENT_RESERVOIR                                             -> AapsClientLevel.URGENT
+                pumpData.reservoir.let { it != null && it < URGENT_RESERVOIR }                  -> AapsClientLevel.URGENT
                 pumpData.isPercent && pumpData.percent < URGENT_BATTERY_PERCENT                   -> AapsClientLevel.URGENT
                 !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < URGENT_BATTERY_VOLTAGE -> AapsClientLevel.URGENT
                 pumpData.clock + WARN_CLOCK_MINUTES * 60 * 1000L < now                            -> AapsClientLevel.WARN
-                pumpData.reservoir < WARN_RESERVOIR                                               -> AapsClientLevel.WARN
+                pumpData.reservoir.let { it != null && it < WARN_RESERVOIR }                    -> AapsClientLevel.WARN
                 pumpData.isPercent && pumpData.percent < WARN_BATTERY_PERCENT                     -> AapsClientLevel.WARN
                 !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < WARN_BATTERY_VOLTAGE -> AapsClientLevel.WARN
                 else                                                                              -> AapsClientLevel.INFO
