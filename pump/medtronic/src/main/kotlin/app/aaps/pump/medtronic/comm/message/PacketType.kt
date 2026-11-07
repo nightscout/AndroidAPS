@@ -1,7 +1,5 @@
 package app.aaps.pump.medtronic.comm.message
 
-import java.util.*
-
 /**
  * Created by geoff on 5/29/16.
  * refactored into enum

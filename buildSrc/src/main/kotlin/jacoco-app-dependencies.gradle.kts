@@ -1,18 +1,22 @@
 import groovy.xml.XmlSlurper
 import groovy.xml.slurpersupport.NodeChild
-import java.io.File
 import java.util.Locale
-import org.gradle.api.GradleException
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.register
-import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlin.math.roundToInt
 
 plugins {
     id("com.android.application")
     id("jacoco")
+}
+
+// Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default JaCoCo
+// on-the-fly agent records no coverage for the classes those tests exercise (e.g. wear complications,
+// Compose screens). includeNoLocationClasses lets JaCoCo account for the Robolectric-loaded classes.
+// No-op for app modules without Robolectric tests, so it's safe to apply to every jacoco app module.
+tasks.withType<Test>().configureEach {
+    extensions.configure(JacocoTaskExtension::class) {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
 }
 
 private val limits = mutableMapOf(
@@ -90,8 +94,6 @@ val excludedFiles = mutableSetOf(
     "**/*\$Lambda\$*.*",
     "**/*Companion*.*",
     "**/*Module*.*",
-    "**/*Dagger*.*",
-    "**/*Hilt*.*",
     "**/*MembersInjector*.*",
     "**/*_MembersInjector.class",
     "**/*_Factory*.*",

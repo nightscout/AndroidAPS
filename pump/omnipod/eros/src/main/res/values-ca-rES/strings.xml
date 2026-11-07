@@ -41,7 +41,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Hi ha una basal temporal en curs al pod, però AAPS no n\'és conscient. Si us plau cancel·leu la basal temporal manualment.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Estadístiques RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Llegir registre de pols</string>
     <string name="omnipod_eros_pod_management_pulse_log">Registre de pols</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Registre de pols (copiat al porta-retalls)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

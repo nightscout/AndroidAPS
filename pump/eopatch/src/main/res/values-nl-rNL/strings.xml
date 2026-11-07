@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pomp integratie voor EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">Laag reservoir waarschuwing</string>
     <string name="patch_expiration_reminders">Patch houdbaarheid herinnering</string>
@@ -12,7 +11,6 @@
     <string name="eopatch_base_basal_rate">Basis basaalstand</string>
     <string name="eopatch_temp_basal_rate">Tijdelijke basaalstand</string>
     <string name="invalid_basal_rate">Basaalstand in het profiel is minder dan 0,05 E/hr. EOPatch heeft een minimale injectie hoeveelheid van 0.5E p/u. Probeer het opnieuw na het instellen van het profiel op meer dan de minimale injectie eenheid.</string>
-    <string name="no_profile_selected">Geen profiel geselecteerd. Selecteer een profiel en probeer het opnieuw.</string>
     <string name="symbol_day">dag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -81,5 +79,4 @@
     <string name="string_resumed_insulin_delivery_message">Insulinetoediening is hervat.</string>
     <string name="string_temp_basal_remained_hhmm">resterende tijd: %1$s:%2$s</string>
     <string name="string_resume_failed">Hervatten mislukt.</string>
-    <!-- Permission rationales -->
 </resources>

@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
@@ -24,16 +26,27 @@ internal fun AttachStep(
     viewModel: EquilWizardViewModel,
     onCancel: () -> Unit
 ) {
+    // Without a new infusion set there is no prime step, so Next runs the pump setup from here.
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+
     AttachStepContent(
+        isLoading = isLoading,
+        errorMessage = errorMessage,
         imageRes = R.drawable.equil_animation_wizard_attach,
-        onNext = { viewModel.moveStep(viewModel.getAttachNextStep()) },
+        onNext = { viewModel.finishAttachStep() },
         onCancel = onCancel
     )
 }
 
+/**
+ * @see AttachStepPreview
+ */
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun AttachStepContent(
+internal fun AttachStepContent(
+    isLoading: Boolean,
+    errorMessage: String?,
     @DrawableRes imageRes: Int,
     onNext: () -> Unit,
     onCancel: () -> Unit
@@ -41,7 +54,8 @@ private fun AttachStepContent(
     WizardStepLayout(
         primaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.next),
-            onClick = onNext
+            onClick = onNext,
+            loading = isLoading
         ),
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
@@ -61,15 +75,8 @@ private fun AttachStepContent(
             alignment = Alignment.Center,
             contentScale = ContentScale.Fit
         )
+        if (errorMessage != null) {
+            ErrorBanner(message = errorMessage)
+        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AttachStepPreview() {
-    AttachStepContent(
-        imageRes = R.drawable.equil_animation_wizard_attach,
-        onNext = {},
-        onCancel = {}
-    )
 }

@@ -20,12 +20,6 @@ android {
         }
     }
 
-    sourceSets {
-        named("main") {
-            jniLibs.directories.add("src/main/jniLibs")
-        }
-    }
-
     compileOptions {
         sourceCompatibility = Versions.javaVersion
         targetCompatibility = Versions.javaVersion
@@ -35,26 +29,6 @@ android {
         checkReleaseBuilds = false
         disable += "MissingTranslation"
         disable += "ExtraTranslation"
-    }
-
-    flavorDimensions.add("standard")
-    productFlavors {
-        create("full") {
-            isDefault = true
-            dimension = "standard"
-        }
-        create("pumpcontrol") {
-            dimension = "standard"
-        }
-        create("aapsclient") {
-            dimension = "standard"
-        }
-        create("aapsclient2") {
-            dimension = "standard"
-        }
-        create("aapsclient3") {
-            dimension = "standard"
-        }
     }
 
     buildFeatures {

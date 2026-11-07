@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,11 +14,16 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.eopatch.CommonUtils
@@ -41,7 +47,11 @@ import app.aaps.pump.eopatch.keys.EopatchIntKey
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -57,13 +67,17 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
-class EopatchPatchViewModel @Inject constructor(
+@Inject
+class EopatchPatchViewModel(
     val rh: ResourceHelper,
     val patchManager: IPatchManager,
     private val patchManagerExecutor: PatchManagerExecutor,
@@ -76,8 +90,10 @@ class EopatchPatchViewModel @Inject constructor(
     private val preferences: Preferences,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val persistenceLayer: PersistenceLayer
-) : ViewModel(), SiteLocationStepHost {
+    private val profileRepository: ProfileRepository,
+    private val persistenceLayer: PersistenceLayer,
+    private val rxBus: RxBus
+) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     companion object {
 
@@ -125,6 +141,13 @@ class EopatchPatchViewModel @Inject constructor(
 
     val showSiteLocationStep: Boolean
         get() = preferences.get(BooleanKey.SiteRotationManagePump)
+
+    // Profile gate state (for PROFILE_GATE step) — implements ProfileGateStepHost
+    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
+    override val availableProfiles: StateFlow<List<String>> = _availableProfiles.asStateFlow()
+
+    private val _selectedProfile = MutableStateFlow<String?>(null)
+    override val selectedProfile: StateFlow<String?> = _selectedProfile.asStateFlow()
 
     // Ticks every second to drive recomposition of time-dependent properties
     private val _expirationTick = MutableStateFlow(0L)
@@ -238,7 +261,7 @@ class EopatchPatchViewModel @Inject constructor(
             .filter { isSubStepRunning }
             .observeOn(aapsSchedulers.main)
             .flatMapMaybe { alarmRegistry.remove(AlarmCode.B012) }
-            .flatMapMaybe { alarmRegistry.add(AlarmCode.B012, TimeUnit.MINUTES.toMillis(3)) }
+            .flatMapMaybe { alarmRegistry.add(AlarmCode.B012, 3.minutes.inWholeMilliseconds) }
             .subscribe()
     }
 
@@ -301,9 +324,57 @@ class EopatchPatchViewModel @Inject constructor(
     }
 
     fun initializePatchStep(step: PatchStep?, withAlarmHandle: Boolean = true) {
-        mInitPatchStep = prepareStep(step, withAlarmHandle)
-        dismissPatchCommCheckDialogInternal(false)
+        // If launching the standard activation flow but no profile switch exists yet, gate first.
+        if (step == PatchStep.WAKE_UP) {
+            viewModelScope.launch {
+                if (profileFunction.getRequestedProfile() == null) {
+                    loadAvailableProfiles()
+                    mInitPatchStep = prepareStep(PatchStep.PROFILE_GATE, withAlarmHandle)
+                } else {
+                    mInitPatchStep = prepareStep(step, withAlarmHandle)
+                }
+                dismissPatchCommCheckDialogInternal(false)
+            }
+        } else {
+            mInitPatchStep = prepareStep(step, withAlarmHandle)
+            dismissPatchCommCheckDialogInternal(false)
+        }
     }
+
+    // region ProfileGateStepHost
+
+    private suspend fun loadAvailableProfiles() {
+        val names = profileRepository.profiles.value.map { it.name }
+        _availableProfiles.value = names
+        if (_selectedProfile.value !in names) {
+            // Default to the active profile — getOriginalProfileName() returns the clean
+            // name without %/timeshift decoration (matches names from the profile store).
+            val activeName = profileFunction.getOriginalProfileName()
+            _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
+        }
+    }
+
+    override fun selectProfile(name: String) {
+        _selectedProfile.value = name
+    }
+
+    override fun activateSelectedProfile() {
+        val name = _selectedProfile.value ?: return
+        val store = profileRepository.profile.value ?: return
+        val iCfg = insulinManager.insulins.firstOrNull() ?: return
+        viewModelScope.launch {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.EOPatch2, System.currentTimeMillis()))
+                moveStep(PatchStep.WAKE_UP)
+            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+        }
+    }
+
+    override fun cancelGate() {
+        _events.tryEmit(PatchEvent.Finish)
+    }
+
+    // endregion
 
     private fun prepareStep(step: PatchStep?, withAlarmHandle: Boolean = true): PatchStep {
         (step ?: convertToPatchStep(patchConfig.lifecycleEvent.lifeCycle)).let { newStep ->
@@ -314,6 +385,7 @@ class EopatchPatchViewModel @Inject constructor(
                 PatchStep.DISCARDED_FOR_CHANGE       -> R.string.patch_discard_complete_title
 
                 PatchStep.MANUALLY_TURNING_OFF_ALARM -> R.string.patch_manually_turning_off_alarm_title
+                PatchStep.PROFILE_GATE               -> app.aaps.core.ui.R.string.pump_wizard_profile_gate_title
                 PatchStep.WAKE_UP,
                 PatchStep.CONNECT_NEW,
                 PatchStep.SELECT_INSULIN,
@@ -353,14 +425,14 @@ class EopatchPatchViewModel @Inject constructor(
                     PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE                                    -> {
                         val now = System.currentTimeMillis()
                         val expireTimeStamp = patchConfig.expireTimestamp
-                        val millisBeforeExpiration = TimeUnit.HOURS.toMillis(preferences.get(EopatchIntKey.ExpirationReminder).toLong())
+                        val millisBeforeExpiration = preferences.get(EopatchIntKey.ExpirationReminder).toLong().hours.inWholeMilliseconds
 
                         Maybe.just(AlarmCode.B012)
                             .flatMap { alarmRegistry.remove(it) }
                             .flatMap { alarmRegistry.remove(AlarmCode.A020) }
                             .flatMap { alarmRegistry.add(AlarmCode.B000, expireTimeStamp - now - millisBeforeExpiration) }
                             .flatMap { alarmRegistry.add(AlarmCode.B005, expireTimeStamp - now) }
-                            .flatMap { alarmRegistry.add(AlarmCode.B006, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI - TimeUnit.HOURS.toMillis(1)) }
+                            .flatMap { alarmRegistry.add(AlarmCode.B006, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI - 1.hours.inWholeMilliseconds) }
                             .flatMap { alarmRegistry.add(AlarmCode.A003, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI) }
                             .subscribe()
                     }
@@ -751,8 +823,11 @@ class EopatchPatchViewModel @Inject constructor(
                 .doFinally { _isCommChecking.value = false }
                 .onErrorReturnItem(false)
                 .subscribeDefault(aapsLogger) {
-                    if (it) moveStep(PatchStep.COMPLETE)
-                    else updateSetupStep(SetupStep.ACTIVATION_FAILED)
+                    if (it) {
+                        // The insulin chosen in SELECT_INSULIN. It had no caller, so the choice was never applied.
+                        executeInsulinProfileSwitch()
+                        moveStep(PatchStep.COMPLETE)
+                    } else updateSetupStep(SetupStep.ACTIVATION_FAILED)
                 }
         )
     }
@@ -779,9 +854,9 @@ class EopatchPatchViewModel @Inject constructor(
     private fun Long.diffTime(maxElapsed: Long): String {
         val current = System.currentTimeMillis()
         return abs((this - current).let { (it > maxElapsed).takeOne(it, maxElapsed) }).let { millis ->
-            val hours = TimeUnit.MILLISECONDS.toHours(millis)
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(millis - TimeUnit.HOURS.toMillis(hours))
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(millis - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+            val hours = millis.milliseconds.inWholeHours
+            val minutes = (millis - hours.hours.inWholeMilliseconds).milliseconds.inWholeMinutes
+            val seconds = (millis - hours.hours.inWholeMilliseconds - minutes.minutes.inWholeMilliseconds).milliseconds.inWholeSeconds
             (this < current).takeOne("- ", "") + String.format(Locale.getDefault(), "%02d:%02d:%02d", hours % 24, minutes, seconds)
         }
     }
@@ -828,7 +903,7 @@ class EopatchPatchViewModel @Inject constructor(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -840,12 +915,13 @@ class EopatchPatchViewModel @Inject constructor(
         _selectedInsulin.value = iCfg
     }
 
+    /** Called after activation, so the patch is running by then: a refused switch cannot stop the wizard, but it says why. */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.EOPatch2)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.EOPatch2)
         }
     }
 

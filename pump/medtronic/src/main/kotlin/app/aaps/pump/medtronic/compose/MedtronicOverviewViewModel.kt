@@ -12,9 +12,11 @@ import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -42,8 +44,11 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -53,8 +58,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Provider
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
 sealed class MedtronicOverviewEvent {
@@ -66,9 +70,12 @@ sealed class MedtronicOverviewEvent {
 }
 
 @Stable
-@HiltViewModel
-class MedtronicOverviewViewModel @Inject constructor(
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
+@Inject
+class MedtronicOverviewViewModel(
     private val rh: ResourceHelper,
+    private val ch: ConcentrationHelper,
     private val medtronicPumpPlugin: MedtronicPumpPlugin,
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val medtronicUtil: MedtronicUtil,
@@ -78,9 +85,9 @@ class MedtronicOverviewViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
-    private val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    @ApplicationContext private val context: Context
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask,
+    private val wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
+    private val context: Context
 ) : ViewModel() {
 
     companion object {
@@ -88,22 +95,22 @@ class MedtronicOverviewViewModel @Inject constructor(
         private const val PLACEHOLDER = "-"
     }
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private val _events = MutableSharedFlow<MedtronicOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<MedtronicOverviewEvent> = _events
 
     private val medtronicRefresh = MutableStateFlow(0L).also { flow ->
         viewModelScope.launch {
-            rxBus.toFlow(EventMedtronicPumpValuesChanged::class.java)
+            rxBus.toFlow(EventMedtronicPumpValuesChanged::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class.java)
+            rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class)
                 .collect {
                     aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
                     medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
@@ -158,32 +165,33 @@ class MedtronicOverviewViewModel @Inject constructor(
 
         // Last connection
         val (lastConnText, lastConnLevel) = buildLastConnection()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = lastConnText, level = lastConnLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = lastConnText, level = lastConnLevel))
 
         // Last bolus
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label), value = buildLastBolus()))
+        buildLastBolus()?.let {
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
+        }
 
         // Base basal rate
-        val basalText = "(" + medtronicPumpStatus.activeProfileName + ")  " +
-            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, medtronicPumpPlugin.baseBasalRate.cU)
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label), value = basalText))
+        val basalText = "${ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true)} (${medtronicPumpStatus.activeProfileName})"
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = basalText))
 
         // Temp basal
         val tbrText = buildTempBasal()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), value = tbrText, visible = tbrText.isNotEmpty()))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = tbrText, visible = tbrText.isNotEmpty()))
 
         // Battery
         val (batteryText, batteryLevel) = buildBattery()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = batteryText, level = batteryLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = batteryText, level = batteryLevel))
 
         // Reservoir
         val (reservoirText, reservoirLevel) = buildReservoir()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = reservoirText, level = reservoirLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = reservoirText, level = reservoirLevel))
 
         // Errors
         val errorsText = medtronicPumpStatus.errorInfo
         val errorsLevel = if (errorsText != PLACEHOLDER) StatusLevel.CRITICAL else StatusLevel.NORMAL
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.errors), value = errorsText, level = errorsLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.errors), value = errorsText, level = errorsLevel))
     }
 
     private fun buildPumpStatusText(): String {
@@ -248,31 +256,25 @@ class MedtronicOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun buildLastBolus(): String {
-        val bolus = medtronicPumpStatus.lastBolusAmount
+    private fun buildLastBolus(): String? {
+        val bolus = medtronicPumpStatus.lastBolusAmount?.let { PumpInsulin(it) }
         val bolusTime = medtronicPumpStatus.lastBolusTime
-        if (bolus == null || bolusTime == null) return ""
-
-        val agoMsc = System.currentTimeMillis() - bolusTime.time
-        val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
-        val unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
-        val ago = when {
-            agoMsc < 60 * 1000 -> rh.gs(R.string.medtronic_pump_connected_now)
-            bolusMinAgo < 60   -> dateUtil.minAgo(rh, bolusTime.time)
-            else               -> dateUtil.hourAgo(bolusTime.time, rh)
-        }
-        return rh.gs(R.string.mdt_last_bolus, bolus, unit, ago)
+        if (bolus == null || bolusTime == null)
+            return null
+        return ch.insulinAmountAgoString(bolus, bolusTime.time)
     }
 
     private fun buildTempBasal(): String {
-        val tbrRemainingTime = medtronicPumpStatus.tbrRemainingTime ?: return ""
-        return rh.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime)
+        val tempBasalAmount = medtronicPumpStatus.tempBasalAmount?.let { PumpRate(it) } ?: return ""
+        val startTime = medtronicPumpStatus.tempBasalStart ?: return ""
+        val duration = medtronicPumpStatus.tempBasalDuration ?: return ""
+        return ch.basalTbrString(rate = tempBasalAmount, startTime = startTime, durationInMin = duration)
     }
 
     private fun buildBattery(): Pair<String, StatusLevel> {
         val remaining = medtronicPumpStatus.batteryRemaining
         val text = if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {
-            remaining?.let { "$it%" } ?: rh.gs(app.aaps.core.ui.R.string.unknown)
+            remaining?.let { "$it%" } ?: rh.gs(CoreUiR.string.unknown)
         } else {
             (remaining?.let { "$it%  " } ?: "") +
                 String.format(Locale.getDefault(), "(%.2f V)", medtronicPumpStatus.batteryVoltage)
@@ -287,13 +289,12 @@ class MedtronicOverviewViewModel @Inject constructor(
     }
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
-        val remaining = medtronicPumpStatus.reservoirRemainingUnits
-        val full = medtronicPumpStatus.reservoirFullUnits
-        val text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, remaining, full)
+        val remaining = PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits)
+        val text = ch.insulinAmountString(remaining) // "/ $full U" removed
         val level = when {
-            remaining <= 20.0 -> StatusLevel.CRITICAL
-            remaining <= 50.0 -> StatusLevel.WARNING
-            else              -> StatusLevel.NORMAL
+            ch.fromPump(remaining) <= 20.0 -> StatusLevel.CRITICAL
+            ch.fromPump(remaining) <= 50.0 -> StatusLevel.WARNING
+            else                           -> StatusLevel.NORMAL
         }
         return text to level
     }
@@ -305,7 +306,7 @@ class MedtronicOverviewViewModel @Inject constructor(
     private fun buildPrimaryActions(): List<PumpAction> {
         return listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
+                label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
                 onClick = { onRefreshClicked() }
             )
@@ -323,7 +324,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 onClick = { _events.tryEmit(MedtronicOverviewEvent.ShowRileyLinkPairWizard) }
             ),
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pump_history),
+                label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.Filled.History,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(MedtronicOverviewEvent.ShowHistory) }
@@ -346,8 +347,8 @@ class MedtronicOverviewViewModel @Inject constructor(
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
                     if (isConfigured) {
-                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider.get())
-                        _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(R.string.medtronic_custom_action_wake_and_tune)))
+                        // No snackbar: the RileyLink status row already shows the tune-up.
+                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
                     } else {
                         emitNotConfiguredDialog()
                     }
@@ -368,7 +369,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.RestartAlt,
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
-                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider.get())
+                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider())
                     _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(RileyLinkR.string.rileylink_config_reset)))
                 }
             )
@@ -385,16 +386,13 @@ class MedtronicOverviewViewModel @Inject constructor(
             return
         }
         medtronicPumpPlugin.resetStatusState()
-        commandQueue.readStatus(rh.gs(R.string.clicked_refresh), object : Callback() {
-            override fun run() { /* refresh button re-enabled via EventRefreshButtonState */
-            }
-        })
+        viewModelScope.launch { commandQueue.readStatus(rh.gs(R.string.clicked_refresh)) }
     }
 
     private fun emitNotConfiguredDialog() {
         _events.tryEmit(
             MedtronicOverviewEvent.ShowDialog(
-                rh.gs(app.aaps.core.ui.R.string.warning),
+                rh.gs(CoreUiR.string.warning),
                 rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration)
             )
         )

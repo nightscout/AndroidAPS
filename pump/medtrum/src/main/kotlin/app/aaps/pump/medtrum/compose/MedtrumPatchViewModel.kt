@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,27 +14,37 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.R
+import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.medtrum.code.ConnectionState
 import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
-import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.encryption.Crypt
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import app.aaps.pump.medtrum.util.MedtrumSnUtil
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -43,31 +54,38 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class PatchEvent {
     data object Finish : PatchEvent()
-    data class ShowError(val message: String) : PatchEvent()
 }
 
 enum class WizardPage {
-    PREPARE, SELECT_INSULIN, PRIME, ATTACH, ACTIVATE, SITE_LOCATION, COMPLETE,
+    BLE_SCAN, PROFILE_GATE, PREPARE, SELECT_INSULIN, PRIME, ATTACH, ACTIVATE, SITE_LOCATION, COMPLETE,
     CONFIRM_DEACTIVATE, DEACTIVATING, DEACTIVATE_COMPLETE,
     RETRY_ACTIVATION
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
-class MedtrumPatchViewModel @Inject constructor(
+@Inject
+class MedtrumPatchViewModel(
     private val aapsLogger: AAPSLogger,
     private val medtrumPlugin: MedtrumPlugin,
     private val commandQueue: CommandQueue,
     val medtrumPump: MedtrumPump,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
+    private val profileRepository: ProfileRepository,
     private val preferences: Preferences,
-    private val persistenceLayer: PersistenceLayer
-) : ViewModel(), SiteLocationStepHost {
+    private val persistenceLayer: PersistenceLayer,
+    private val bleTransport: MedtrumBleTransport,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus
+) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val concentrationEnabled: Boolean
@@ -115,20 +133,17 @@ class MedtrumPatchViewModel @Inject constructor(
     private val _activeInsulinLabel = MutableStateFlow<String?>(null)
     val activeInsulinLabel: StateFlow<String?> = _activeInsulinLabel.asStateFlow()
 
-    // Serial number editing state
-    private val _snText = MutableStateFlow("")
-    val snText: StateFlow<String> = _snText.asStateFlow()
+    // Profile gate state (for PROFILE_GATE step)
+    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
+    override val availableProfiles: StateFlow<List<String>> = _availableProfiles.asStateFlow()
 
-    private val _snValidationErrorResId = MutableStateFlow<Int?>(null)
-    val snValidationErrorResId: StateFlow<Int?> = _snValidationErrorResId.asStateFlow()
+    private val _selectedProfile = MutableStateFlow<String?>(null)
+    override val selectedProfile: StateFlow<String?> = _selectedProfile.asStateFlow()
 
-    val isSnValid: Boolean
-        get() {
-            val text = _snText.value
-            if (text.isEmpty()) return false
-            val serial = text.toLongOrNull(radix = 16) ?: return false
-            return MedtrumSnUtil().getDeviceTypeFromSerial(serial) != ModelType.INVALID
-        }
+    // BLE scan state (for BLE_SCAN wizard step)
+    private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
+    val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices.asStateFlow()
+    private var scanJob: Job? = null
 
     /** Whether the insulin change step should be shown (multiple insulins available) */
     val showInsulinStep: Boolean
@@ -145,7 +160,7 @@ class MedtrumPatchViewModel @Inject constructor(
     private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
     override val siteArrow: StateFlow<TE.Arrow> = _siteArrow.asStateFlow()
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     // One-time events
     private val _events = MutableSharedFlow<PatchEvent>(extraBufferCapacity = 5)
@@ -198,33 +213,37 @@ class MedtrumPatchViewModel @Inject constructor(
         scope.launch {
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumPatchViewModel pumpStateFlow: $state")
-                if (_patchStep.value != null) {
-                    when (state) {
-                        MedtrumPumpState.NONE, MedtrumPumpState.IDLE         -> {
+                if (patchStep.value != null) {
+                    when {
+                        state == MedtrumPumpState.NONE                                           -> {
                             updateSetupStep(SetupStep.INITIAL)
                         }
 
-                        MedtrumPumpState.FILLED                              -> {
+                        state == MedtrumPumpState.IDLE && !medtrumPump.patchPrimed               -> {
+                            updateSetupStep(SetupStep.INITIAL)
+                        }
+
+                        state == MedtrumPumpState.FILLED && !medtrumPump.patchPrimed             -> {
                             updateSetupStep(SetupStep.FILLED)
                         }
 
-                        MedtrumPumpState.PRIMING                             -> {
+                        state == MedtrumPumpState.PRIMING                                        -> {
                             updateSetupStep(SetupStep.PRIMING)
                         }
 
-                        MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> {
+                        state == MedtrumPumpState.PRIMED || state == MedtrumPumpState.EJECTED    -> {
                             updateSetupStep(SetupStep.PRIMED)
                         }
 
-                        MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> {
+                        state == MedtrumPumpState.ACTIVE || state == MedtrumPumpState.ACTIVE_ALT -> {
                             updateSetupStep(SetupStep.ACTIVATED)
                         }
 
-                        MedtrumPumpState.STOPPED                             -> {
+                        state == MedtrumPumpState.STOPPED                                        -> {
                             updateSetupStep(SetupStep.STOPPED)
                         }
 
-                        else                                                 -> {
+                        else                                                                     -> {
                             updateSetupStep(SetupStep.ERROR)
                         }
                     }
@@ -243,6 +262,8 @@ class MedtrumPatchViewModel @Inject constructor(
 
         if (oldPatchStep != newPatchStep) {
             when (newPatchStep) {
+                PatchStep.BLE_SCAN,
+                PatchStep.PROFILE_GATE,
                 PatchStep.CANCEL,
                 PatchStep.COMPLETE,
                 PatchStep.ACTIVATE_COMPLETE,
@@ -278,8 +299,12 @@ class MedtrumPatchViewModel @Inject constructor(
             }
         }
 
-        prepareStep(newPatchStep)
         aapsLogger.info(LTag.PUMP, "moveStep: $oldPatchStep -> $newPatchStep")
+        if (newPatchStep == PatchStep.PREPARE_PATCH) {
+            checkAndPreparePatchStart()
+            return
+        }
+        prepareStep(newPatchStep)
     }
 
     fun forceMoveStep(newPatchStep: PatchStep) {
@@ -300,6 +325,7 @@ class MedtrumPatchViewModel @Inject constructor(
 
     fun handleCancel() {
         if (oldPatchStep !in listOf(
+                PatchStep.PROFILE_GATE,
                 PatchStep.PREPARE_PATCH,
                 PatchStep.START_DEACTIVATION,
                 PatchStep.DEACTIVATE,
@@ -314,7 +340,15 @@ class MedtrumPatchViewModel @Inject constructor(
                 while (medtrumService?.isConnecting == true || medtrumService?.isConnected == true) {
                     delay(100)
                 }
-                medtrumPump.pumpState = MedtrumPumpState.FILLED
+                // Set pump state to to a proper state, (at beginning of retry state is reset to NONE)
+                // This is to ensure user can retry activation again
+                if (medtrumPump.pumpState == MedtrumPumpState.NONE) {
+                    if (medtrumPump.patchPrimed) {
+                        medtrumPump.pumpState = MedtrumPumpState.PRIMING
+                    } else {
+                        medtrumPump.pumpState = MedtrumPumpState.FILLED
+                    }
+                }
                 _events.tryEmit(PatchEvent.Finish)
             }
             return
@@ -339,7 +373,10 @@ class MedtrumPatchViewModel @Inject constructor(
         _canGoBack.value = true
         _siteLocation.value = TE.Location.NONE
         _siteArrow.value = TE.Arrow.NONE
-        siteRotationEntriesCache = emptyList()
+        _siteRotationEntries.value = emptyList()
+        _scannedDevices.value = emptyList()
+        scanJob?.cancel()
+        scanJob = null
         oldPatchStep = null
         mInitPatchStep = null
         connectRetryCounter = 0
@@ -349,8 +386,29 @@ class MedtrumPatchViewModel @Inject constructor(
     fun initializePatchStep(step: PatchStep) {
         aapsLogger.info(LTag.PUMP, "initializePatchStep: $step")
         loadInsulins()
-        wizardPages = buildWizardPages(step)
-        mInitPatchStep = prepareStep(step)
+        if (step == PatchStep.PREPARE_PATCH) {
+            checkAndPreparePatchStart()
+        } else {
+            wizardPages = buildWizardPages(step)
+            mInitPatchStep = prepareStep(step)
+        }
+    }
+
+    // PS lookup is a Room read (suspend) — resolve on a background coroutine so we don't block
+    // the main thread. Also used when transitioning to PREPARE_PATCH from the deactivation flow.
+    private fun checkAndPreparePatchStart() {
+        scope.launch {
+            val noProfile = profileFunction.getRequestedProfile() == null
+            val noSN = medtrumPump.pumpSN == 0L
+            if (noProfile) loadAvailableProfiles()
+            val effectiveStep = when {
+                noProfile -> PatchStep.PROFILE_GATE
+                noSN      -> PatchStep.BLE_SCAN
+                else      -> PatchStep.PREPARE_PATCH
+            }
+            wizardPages = buildWizardPages(effectiveStep)
+            mInitPatchStep = prepareStep(effectiveStep)
+        }
     }
 
     fun preparePatch() {
@@ -396,23 +454,27 @@ class MedtrumPatchViewModel @Inject constructor(
     }
 
     fun deactivatePatch() {
-        commandQueue.deactivate(object : Callback() {
-            override fun run() {
-                if (this.result.success) {
-                    // State change will handle navigation
+        if ((medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION)
+            || medtrumPump.pumpState <= MedtrumPumpState.FILLED
+        ) {
+            // We are in a fault state, we need to force deactivation 
+            // Connection can be skipped as its useless anyways
+            // (deactivation command will not work in fault state)
+            aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
+            medtrumService?.disconnect("ForceDeactivation")
+            SystemClock.sleep(1000)
+            medtrumPump.pumpState = MedtrumPumpState.STOPPED
+        } else {
+            scope.launch {
+                val result = commandQueue.deactivate()
+                if (result.success) {
+                    // Do nothing, state change will handle this
                 } else {
-                    if (medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION) {
-                        aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
-                        medtrumService?.disconnect("ForceDeactivation")
-                        SystemClock.sleep(1000)
-                        medtrumPump.pumpState = MedtrumPumpState.STOPPED
-                    } else {
-                        aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
-                        updateSetupStep(SetupStep.ERROR)
-                    }
+                    aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
+                    updateSetupStep(SetupStep.ERROR)
                 }
             }
-        })
+        }
     }
 
     fun retryActivationConnect() {
@@ -431,7 +493,7 @@ class MedtrumPatchViewModel @Inject constructor(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -443,31 +505,74 @@ class MedtrumPatchViewModel @Inject constructor(
         _selectedInsulin.value = iCfg
     }
 
-    fun initSnText() {
-        val currentSn = medtrumPump.pumpSN
-        _snText.value = if (currentSn != 0L) currentSn.toString(radix = 16).uppercase() else ""
-        _snValidationErrorResId.value = null
+    // region ProfileGateStepHost
+
+    /** Load profile names from LocalProfile store and pre-select the active profile (if any). */
+    private suspend fun loadAvailableProfiles() {
+        val names = profileRepository.profiles.value.map { it.name }
+        _availableProfiles.value = names
+        if (_selectedProfile.value !in names) {
+            // Default to the active profile — getOriginalProfileName() returns the clean
+            // name without %/timeshift decoration (matches names from the profile store).
+            val activeName = profileFunction.getOriginalProfileName()
+            _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
+        }
     }
 
-    fun updateSnText(newText: String) {
-        // Filter to hex chars only and uppercase
-        val filtered = newText.filter { it in '0'..'9' || it in 'A'..'F' || it in 'a'..'f' }.uppercase()
-        _snText.value = filtered
-        _snValidationErrorResId.value = validateSn(filtered)
+    override fun selectProfile(name: String) {
+        _selectedProfile.value = name
     }
 
-    fun saveSn() {
-        val text = _snText.value
-        if (!isSnValid) return
-        preferences.put(MedtrumStringNonKey.SnInput, text)
-        medtrumPump.loadUserSettingsFromSP()
+    override fun activateSelectedProfile() {
+        val name = _selectedProfile.value ?: return
+        val store = profileRepository.profile.value ?: return
+        val iCfg = insulinManager.insulins.firstOrNull() ?: return
+        scope.launch {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Medtrum, System.currentTimeMillis())) {
+                val nextStep = if (medtrumPump.pumpSN == 0L) PatchStep.BLE_SCAN else PatchStep.PREPARE_PATCH
+                aapsLogger.info(LTag.PUMP, "ProfileGate: profile activated, advancing to $nextStep")
+                moveStep(nextStep)
+            } else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+        }
     }
 
-    private fun validateSn(text: String): Int? {
-        if (text.isEmpty()) return null
-        val serial = text.toLongOrNull(radix = 16) ?: return R.string.sn_input_invalid
-        val deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(serial)
-        return if (deviceType == ModelType.INVALID) R.string.sn_input_invalid else null
+    override fun cancelGate() {
+        _events.tryEmit(PatchEvent.Finish)
+    }
+
+    // endregion
+
+    fun startDeviceScan() {
+        _scannedDevices.value = emptyList()
+        bleTransport.scanner.startScan()
+        scanJob = viewModelScope.launch {
+            bleTransport.scanner.scannedDevices.collect { device ->
+                val current = _scannedDevices.value
+                if (current.none { it.address == device.address }) {
+                    _scannedDevices.value = current + device
+                }
+            }
+        }
+    }
+
+    fun stopDeviceScan() {
+        bleTransport.scanner.stopScan()
+        scanJob?.cancel()
+        scanJob = null
+    }
+
+    fun onDeviceSelected(device: ScannedDevice) {
+        stopDeviceScan()
+        // Save SN directly from scan — no manual entry needed
+        val snHex = device.name.removePrefix("MT-").takeIf { it.isNotEmpty() }
+        if (snHex != null) {
+            preferences.put(MedtrumStringNonKey.SnInput, snHex)
+            medtrumPump.loadUserSettingsFromSP()
+        }
+        bleTransport.setCachedAddress(device.address)
+        // Skip SN-entry step; go straight to connect+fill
+        moveStep(PatchStep.PREPARE_PATCH_CONNECT)
     }
 
     // region SiteLocationStepHost
@@ -480,25 +585,30 @@ class MedtrumPatchViewModel @Inject constructor(
         _siteArrow.value = arrow
     }
 
+    /** Navigate from ATTACH to SITE_LOCATION if enabled, otherwise straight to ACTIVATE. */
+    fun moveAfterPriming() {
+        moveStep(if (showSiteLocationStep) PatchStep.SITE_LOCATION else PatchStep.ATTACH_PATCH)
+    }
+
     override fun completeSiteLocation() {
         // Site location is saved after activation completes (patchStartTime not available yet)
-        moveStep(PatchStep.ACTIVATE)
+        moveStep(PatchStep.ATTACH_PATCH)
     }
 
     override fun skipSiteLocation() {
         _siteLocation.value = TE.Location.NONE
         _siteArrow.value = TE.Arrow.NONE
-        moveStep(PatchStep.ACTIVATE)
+        moveStep(PatchStep.ATTACH_PATCH)
     }
 
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
 
     private fun loadSiteRotationEntries() {
         scope.launch {
-            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+            _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
         }
@@ -533,18 +643,30 @@ class MedtrumPatchViewModel @Inject constructor(
         moveStep(PatchStep.COMPLETE)
     }
 
-    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    /**
+     * Execute profile switch if user selected a different insulin. Called after activation completes, so the
+     * patch is running by then: a refused switch cannot stop the wizard, but it says why.
+     */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
-        val activeLabel = _activeInsulinLabel.value
-        if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
+            // Recompute from the currently active profile instead of trusting the cached value,
+            // which is captured during initializePatchStep — before PROFILE_GATE selection has
+            // produced an EffectiveProfileSwitch — and is not refreshed across activation sessions.
+            val activeLabel = insulinManager.insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
+            if (selected.insulinLabel == activeLabel) return@launch
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.Medtrum)
         }
     }
 
     private fun prepareStep(newStep: PatchStep): PatchStep {
+        // Rebuild only for workflow entry points or when pages have not been set yet
+        if (wizardPages.isEmpty() || newStep in listOf(PatchStep.START_DEACTIVATION, PatchStep.RETRY_ACTIVATION, PatchStep.PREPARE_PATCH)) {
+            wizardPages = buildWizardPages(newStep)
+        }
         val stringResId = when (newStep) {
+            PatchStep.BLE_SCAN                 -> CoreUiR.string.step_ble_scan
+            PatchStep.PROFILE_GATE             -> CoreUiR.string.pump_wizard_profile_gate_title
             PatchStep.PREPARE_PATCH            -> R.string.step_prepare_patch
             PatchStep.PREPARE_PATCH_CONNECT    -> R.string.step_prepare_patch_connect
             PatchStep.SELECT_INSULIN           -> R.string.step_select_insulin
@@ -554,7 +676,7 @@ class MedtrumPatchViewModel @Inject constructor(
             PatchStep.ATTACH_PATCH             -> R.string.step_attach
             PatchStep.ACTIVATE                 -> R.string.step_activate
             PatchStep.ACTIVATE_COMPLETE        -> R.string.step_activate_complete
-            PatchStep.SITE_LOCATION            -> app.aaps.core.ui.R.string.site_rotation
+            PatchStep.SITE_LOCATION            -> CoreUiR.string.site_rotation
             PatchStep.START_DEACTIVATION       -> R.string.step_deactivate
             PatchStep.DEACTIVATE               -> R.string.step_deactivating
             PatchStep.DEACTIVATION_COMPLETE    -> R.string.step_deactivate_complete
@@ -573,6 +695,8 @@ class MedtrumPatchViewModel @Inject constructor(
 
         _patchStep.value = newStep
         _canGoBack.value = newStep in listOf(
+            PatchStep.BLE_SCAN,
+            PatchStep.PROFILE_GATE,
             PatchStep.PREPARE_PATCH,
             PatchStep.SELECT_INSULIN,
             PatchStep.SITE_LOCATION,
@@ -607,12 +731,16 @@ class MedtrumPatchViewModel @Inject constructor(
 
     /** Build the dynamic wizard page list for the given start step. */
     private fun buildWizardPages(startStep: PatchStep): List<WizardPage> = when (startStep) {
+        PatchStep.BLE_SCAN,
+        PatchStep.PROFILE_GATE,
         PatchStep.PREPARE_PATCH      -> buildList {
+            if (startStep == PatchStep.PROFILE_GATE) add(WizardPage.PROFILE_GATE)
+            if (startStep == PatchStep.BLE_SCAN || medtrumPump.pumpSN == 0L) add(WizardPage.BLE_SCAN)
             add(WizardPage.PREPARE)
             if (showInsulinStep) add(WizardPage.SELECT_INSULIN)
             add(WizardPage.PRIME)
-            add(WizardPage.ATTACH)
             if (showSiteLocationStep) add(WizardPage.SITE_LOCATION)
+            add(WizardPage.ATTACH)
             add(WizardPage.ACTIVATE)
             add(WizardPage.COMPLETE)
         }
@@ -630,6 +758,9 @@ class MedtrumPatchViewModel @Inject constructor(
 
     /** Map a PatchStep (which may have sub-states) to its WizardPage. */
     private fun PatchStep.toWizardPage(): WizardPage? = when (this) {
+        PatchStep.BLE_SCAN                 -> WizardPage.BLE_SCAN
+        PatchStep.PROFILE_GATE             -> WizardPage.PROFILE_GATE
+
         PatchStep.PREPARE_PATCH,
         PatchStep.PREPARE_PATCH_CONNECT    -> WizardPage.PREPARE
 
@@ -638,11 +769,12 @@ class MedtrumPatchViewModel @Inject constructor(
         PatchStep.PRIMING,
         PatchStep.PRIME_COMPLETE           -> WizardPage.PRIME
 
+        PatchStep.SITE_LOCATION            -> WizardPage.SITE_LOCATION
+
         PatchStep.ATTACH_PATCH             -> WizardPage.ATTACH
         PatchStep.ACTIVATE,
         PatchStep.ACTIVATE_COMPLETE        -> WizardPage.ACTIVATE
 
-        PatchStep.SITE_LOCATION            -> WizardPage.SITE_LOCATION
         PatchStep.COMPLETE                 -> WizardPage.COMPLETE
         PatchStep.START_DEACTIVATION       -> WizardPage.CONFIRM_DEACTIVATE
         PatchStep.DEACTIVATE,

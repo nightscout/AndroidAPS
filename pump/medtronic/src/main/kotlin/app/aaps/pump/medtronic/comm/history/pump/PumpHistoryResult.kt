@@ -14,6 +14,12 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
 
     var isSearchFinished = false
         private set
+
+    /**
+     * The read stopped on an error before it reached the search date. Entries older than the pages that were read
+     * can be missing, so the entries in this result must not be processed.
+     */
+    var readFailed = false
     private val searchEntry: PumpHistoryEntry? = null
     private var searchDate: Long? = null
     private var searchType = SearchType.None
@@ -86,6 +92,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
             ", searchDate=" + searchDate +  //
             ", searchType=" + searchType +  //
             ", searchFinished=" + isSearchFinished +  //
+            ", readFailed=" + readFailed +  //
             "]"
     }
 

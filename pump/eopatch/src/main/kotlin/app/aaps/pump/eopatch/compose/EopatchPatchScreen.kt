@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.code.PatchStep
@@ -68,6 +69,7 @@ fun EopatchPatchScreen(
     }
 
     val canGoBack = patchStep in listOf(
+        PatchStep.PROFILE_GATE,
         PatchStep.WAKE_UP,
         PatchStep.SAFE_DEACTIVATION,
         PatchStep.DISCARDED,
@@ -116,6 +118,7 @@ fun EopatchPatchScreen(
             setToolbarConfig = setToolbarConfig
         ) { step, onCancel ->
             when (step) {
+                PatchStep.PROFILE_GATE                       -> ProfileGateWizardStep(viewModel)
                 PatchStep.WAKE_UP                            -> WakeUpStep(viewModel)
                 PatchStep.CONNECT_NEW                        -> ConnectStep(viewModel)
                 PatchStep.SELECT_INSULIN                     -> SelectInsulinStep(viewModel)

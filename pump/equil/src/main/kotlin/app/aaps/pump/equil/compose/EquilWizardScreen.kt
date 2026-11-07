@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.compose.steps.AirStep
@@ -43,20 +44,21 @@ internal fun EquilWizardScreen(
         setToolbarConfig = setToolbarConfig,
         stepContent = { step, onCancel ->
             when (step) {
-                EquilWizardStep.ASSEMBLE       -> AssembleStep(viewModel, onCancel)
-                EquilWizardStep.BLE_SCAN       -> BleScanStepWrapper(viewModel, onCancel)
-                EquilWizardStep.PASSWORD       -> PasswordStep(viewModel, onCancel)
-                EquilWizardStep.FILL           -> FillStep(viewModel, onCancel)
-                EquilWizardStep.ATTACH         -> AttachStep(viewModel, onCancel)
-                EquilWizardStep.AIR            -> AirStep(viewModel, onCancel)
+                EquilWizardStep.PROFILE_GATE -> ProfileGateWizardStep(viewModel)
+                EquilWizardStep.ASSEMBLE -> AssembleStep(viewModel, onCancel)
+                EquilWizardStep.BLE_SCAN -> BleScanStepWrapper(viewModel, onCancel)
+                EquilWizardStep.PASSWORD -> PasswordStep(viewModel, onCancel)
+                EquilWizardStep.FILL -> FillStep(viewModel, onCancel)
+                EquilWizardStep.ATTACH -> AttachStep(viewModel, onCancel)
+                EquilWizardStep.AIR -> AirStep(viewModel, onCancel)
                 EquilWizardStep.SELECT_INSULIN -> SelectInsulinStep(viewModel, onCancel)
-                EquilWizardStep.SITE_LOCATION  -> SiteLocationStep(viewModel, onCancel)
-                EquilWizardStep.CONFIRM        -> ConfirmStep(viewModel, onCancel)
+                EquilWizardStep.SITE_LOCATION -> SiteLocationStep(viewModel, onCancel)
+                EquilWizardStep.CONFIRM -> ConfirmStep(viewModel, onCancel)
                 EquilWizardStep.CHANGE_INSULIN -> ChangeInsulinStep(viewModel, onCancel)
-                EquilWizardStep.UNPAIR_DETACH  -> UnpairDetachStep(viewModel, onCancel)
+                EquilWizardStep.UNPAIR_DETACH -> UnpairDetachStep(viewModel, onCancel)
                 EquilWizardStep.UNPAIR_CONFIRM -> UnpairConfirmStep(viewModel, onCancel)
 
-                EquilWizardStep.CANCEL         -> {} // Terminal, finish event emitted
+                EquilWizardStep.CANCEL -> {} // Terminal, finish event emitted
             }
         }
     )

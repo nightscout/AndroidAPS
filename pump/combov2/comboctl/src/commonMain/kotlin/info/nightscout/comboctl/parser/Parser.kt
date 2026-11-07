@@ -1688,7 +1688,6 @@ class TimeAndDateSettingsScreenParser(val titleId: TitleID) : Parser() {
                 TitleID.YEAR   -> ParsedScreen.TimeAndDateSettingsYearScreen(quantity)
                 TitleID.MONTH  -> ParsedScreen.TimeAndDateSettingsMonthScreen(quantity)
                 TitleID.DAY    -> ParsedScreen.TimeAndDateSettingsDayScreen(quantity)
-                else           -> return ParseResult.Failed
             }
         )
     }

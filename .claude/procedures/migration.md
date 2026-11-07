@@ -45,7 +45,15 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
 - **Verify completeness rigorously:**
     - After claiming a phase is "done", search for old patterns
     - Count migrated files vs. initial count
-    - User will verify - assume accountability
+- **For any DI change, also run `:app:assembleFullDebugAndroidTest`:**
+    - The instrumented test APK has its own graph wiring, and `assembleFullDebug` does not build it. It
+      can be broken while every other check is green - this has reached CI twice. It costs about a minute.
+    - Read objects from the graph rather than injecting them into instrumented tests, so a test can
+      never drive an object the running app has never heard of.
+- **Mutation-test every new guard, and do it WITHOUT `--rerun-tasks`:**
+    - A guard that passes proves nothing until you have watched it fail on a deliberate break.
+    - If the guard reads files Gradle does not know are inputs (source scanning, generated output), the
+      task stays `UP-TO-DATE` and the guard never fires. Declare them with `inputs.dir(...)`.
 - **Document decisions in PLAN.md:**
     - Why certain approaches were chosen
     - What patterns emerged during migration

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
-    <string name="omnipod_dash_name" translatable="false">Dash</string>
-    <string name="omnipod_dash_name_short" translatable="false">Dash</string>
+    <string name="omnipod_dash_name" translatable="false">Omnipod Dash</string>
     <string name="omnipod_dash_pump_description">Pump integration for Omnipod Dash (the new, Bluetooth-enabled model with a blue needle cap).</string>
 
     <!-- Omnipod Dash - Overview -->
@@ -22,20 +21,12 @@
     <string name="omnipod_dash_scan_failed">Scan failed</string>
     <string name="omnipod_dash_generic_error">Generic error: %1$s</string>
     <string name="omnipod_dash_connection_lost">Connection lost</string>
-    <string name="omnipod_dash_failed_to_send">Failed to send the command</string>
-    <string name="omnipod_dash_command_not_sent">Command not sent</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Command not received by the pod</string>
-    <string name="omnipod_dash_unknown">Unknown state for the command</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutes</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulin delivery is suspended</string>
-    <string name="omnipod_common_history_total_delivered">Total delivered: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Another bolus is being delivered</string>
     <string name="omnipod_dash_not_enough_insulin">Not enough insulin left in the reservoir</string>
 
     <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
-    <string name="profile_set_ok">Profile set OK</string>
     <string name="suspend_delivery_is_unconfirmed">Suspend delivery is unconfirmed! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="insulin_delivery_suspended">Insulin delivery suspended</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Timezone on pod is different from the timezone on phone. Basal rate is incorrect. Switch profile to fix</string>

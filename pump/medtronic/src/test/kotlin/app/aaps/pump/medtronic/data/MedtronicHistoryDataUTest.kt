@@ -1,5 +1,6 @@
 package app.aaps.pump.medtronic.data
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.DateTimeUtil
@@ -156,7 +157,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
 
         val unitToTest = MedtronicHistoryData(aapsLogger, preferences, medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, notificationManager, profileUtil)
         val glucoseMgdl = 180
-        val glucoseMmol = 10.0
+        val glucoseMmol = glucoseMgdl * Constants.MGDL_TO_MMOLL
 
         whenever(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MMOL.asText)
 

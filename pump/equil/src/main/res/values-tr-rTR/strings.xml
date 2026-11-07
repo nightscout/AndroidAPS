@@ -17,24 +17,21 @@
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
     <string name="equil_tone">Uyarı tonu</string>
+    <string name="equil_bolus_speed">Bolus hızı</string>
     <string name="equil_tone_mode_mute">Sessiz</string>
     <string name="equil_tone_mode_shake">Sadece titreşim</string>
     <string name="equil_tone_mode_tone">Sadece ses</string>
     <string name="equil_tone_mode_tone_and_shake">Titreşim ve ses</string>
-    <string name="equil_unit_u">%1$s Ü</string>
     <string name="equil_ble_config_confirmation_title">Equil Patch pompasını eşleştirin</string>
     <string name="equil_error">Bağlantı Hatası</string>
     <string name="equil_change">Pompayı değiştir</string>
     <string name="equil_change_content">Lütfen pompayı tabandan ayırın.</string>
     <string name="equil_unpair_alert">%1$s üzerindeki kontrolü bırakmak istediğinizden emin misiniz?</string>
-    <string name="equil_devices_number_hint">Cihaz numarası</string>
     <string name="equil_record_basal">Bazal oranı %1$s Ü/S</string>
     <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/S</string>
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
     <string name="equil_not_enough_insulin">Rezervuarda yeterli insülin kalmadı</string>
-    <string name="equil_low_battery">Düşük pil</string>
-    <string name="equil_low_insulin">Rezervuarda yeterli insülin kalmadı</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>
@@ -106,36 +103,17 @@
     <string name="equil_history_item18">Anormal İnfüzyon Durduruldu</string>
     <string name="equil_common_overview_button_suspend_delivery">Askıya al</string>
     <string name="equil_common_overview_button_resume_delivery">İletime devam et</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fÜ/s @%2$s (%3$d/%4$d dakika)</string>
-    <string name="equil_common_moments_ago">Dakika önce</string>
-    <string name="equil_common_less_than_a_minute_ago">Bir dakikadan az önce</string>
-    <string name="equil_common_time_ago">%1$s dak önce</string>
-    <string name="equil_common_composite_time">%1$s ve %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misin?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d dakika</item>
-        <item quantity="other">%1$d dakika</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d saat</item>
-        <item quantity="other">%1$d saat</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d gün</item>
-        <item quantity="other">%1$d gün</item>
-    </plurals>
     <string name="equil_support_error">Cihaz yazılımı sürümü çok düşük. Desteklenmiyor</string>
     <string name="equil_set_pair_password">Paylaşım şifresini belirleyin</string>
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>
     <string name="equil_unbind">Eşleştirmeyi sonlandır</string>
     <string name="equil_assemble">Lütfen pompayı, dolu rezervuarı ve şarj edilmiş pili birleştirin</string>
-    <string name="equil_devices_number">Yeni pompa kimliğini girin</string>
     <string name="equil_insert">Lütfen iğne ucunda bir damla insülin kalana kadar rezervuarı doldurun</string>
     <string name="equil_insert2">Pompa, pompa tabanı üzerinde olmamalıdır.</string>
     <string name="equil_attach">Lütfen pompayı tabana takın</string>
     <string name="equil_hint2">Kanul dolumu</string>
     <string name="equil_pump_updated">Pompa güncellendi</string>
     <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
-    <string name="error_mustbe6hexadidits">6 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>
 </resources>

@@ -44,7 +44,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En temp basal körs på podden, men AAPS är inte medveten om denna. Vänligen avbryt din tillfälliga basal manuellt.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Riley Link-statistik</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Läs pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulslogg (kopierad till klippbordet)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

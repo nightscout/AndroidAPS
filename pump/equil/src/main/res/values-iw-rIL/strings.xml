@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_pump_description">משאבת מדבקה Equil גרסה 5.3 ומעלה </string>
     <!--  start  -->
+    <string name="equil_title_dressing">החליפו מכל</string>
+    <string name="equil_title_assemble">הרכבת המשאבה</string>
+    <string name="equil_title_serial">צימוד משאבה</string>
+    <string name="equil_title_air">ניקוז אוויר</string>
+    <string name="equil_tone">אופן ההתראה</string>
+    <string name="equil_bolus_speed">מהירות הזרקת הבולוס</string>
+    <string name="equil_tone_mode_mute">השתק</string>
+    <string name="equil_tone_mode_shake">רטט בלבד</string>
+    <string name="equil_tone_mode_tone">צליל בלבד</string>
+    <string name="equil_unbind_content">פעולה זו תפסיק את מתן האינסולין, תחזיר את בוכנת המשאבה לתחתית המכל ותבטל את הצימוד!</string>
+    <string name="equil_error">שגיאת חיבור</string>
+    <string name="equil_new_infusion_set_question">האם תרכיבו גם סט אינפוזיה חדש (בסיס ופרפרית)?</string>
+    <string name="equil_new_infusion_set_yes">כן סט אינפוזיה חדש</string>
+    <string name="equil_new_infusion_set_no">לא, רק מכל או סוללה</string>
+    <string name="equil_same_infusion_set_hint">הפרפרית לא תעבור תיחול ולא תירשם החלפת פרפרית.</string>
+    <string name="equil_not_enough_insulin">אין מספיק אינסולין במכל</string>
+    <string name="equil_pump_not_run">המשאבה לא פעילה</string>
+    <string name="equil_pair">צמד</string>
+    <string name="equil_pair_error">שגיאת צימוד</string>
+    <string name="equil_fill">מילוי והכנה</string>
+    <string name="equil_air">ניקוז אוויר</string>
+    <string name="equil_firmware_version">גרסת קושחה</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_basal_schedule">הגדרת לו\"ז בזאלי</string>
+    <string name="equil_common_cmd_set_time">הגדר זמן</string>
+    <string name="equil_common_cmd_suspend_delivery">השהיית הזרקה</string>
+    <string name="equil_common_cmd_resume_delivery">חידוש הזרקה</string>
+    <string name="equil_common_cmd_insert_cannula">הכנסת צינורית</string>
+    <string name="equil_common_cmd_set_extended_bolus">הגדר בולוס ממושך</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">ביטול בולוס ממושך</string>
     <!--    推杆回退-->
+    <string name="equil_common_set_alarm_tone">הגדרת התראה בצליל בלבד</string>
+    <string name="equil_common_set_alarm_shake">הגדר רטט בלבד</string>
+    <string name="equil_common_set_alarm_mute">השתקת התראות</string>
+    <string name="equil_common_set_alarm_tone_and_shake">הגדרת התראה בצליל וברטט</string>
+    <string name="equil_common_cmd_fill">מילוי</string>
+    <string name="history_manual_confirm">אישור ידני</string>
+    <string name="equil_command_not_found">מכשיר לא נמצא</string>
+    <string name="equil_command_connect_error">שגיאה בחיבור המשאבה</string>
+    <string name="equil_command_connect_no_response">אין תגובה מהמשאבה/פוד</string>
+    <string name="equil_install">חיבור המשאבה לגוף</string>
+    <string name="equil_settings_alarm_battery">התראת סוללה חלשה</string>
+    <string name="equil_settings_alarm_insulin">התראת כמות אינסולין נמוכה</string>
+    <string name="equil_init_insulin_error">אתחול מכל האינסולין טרם הושלם</string>
+    <string name="equil_history_group_all">הכול</string>
+    <string name="equil_history_group_pair">צימוד</string>
+    <string name="equil_history_group_basal">בזאלי</string>
+    <string name="equil_history_group_configuration">הגדרות</string>
+    <string name="equil_tab_action">היסטוריית פעולות</string>
+    <string name="equil_none">ללא</string>
+    <string name="equil_history_item1">כמות האינסולין במכל נמוכה</string>
+    <string name="equil_history_item9">כיבוי אוטומטי!</string>
+    <string name="equil_history_item14">בזאלי זמני הסתיים</string>
     <string name="equil_common_wizard_exit_confirmation_text">עוד לא סיימתם את כל השלבים. אתם בטוחים שברצונכם לצאת?</string>
+    <string name="equil_support_error">גרסת הקושחה ישנה מדי ואינה נתמכת</string>
+    <string name="equil_password_tips">אפשר להגדיר סיסמה לצימוד עם משאבת Equil גרסה v5.3 אותה סיסמה תשמש גם לביטול הצימוד בעתיד, לכן חשוב לזכור אותה. הסיסמה חייבת להכיל 4 תווים מתוך: ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">הגדרת סיסמת צימוד</string>
+    <string name="equil_pair_password_title">הזנת סיסמה עבור %1$s</string>
     <string name="equil_replace_reservoir">המכל ריק. נא להחליפו</string>
-    <string name="error_mustbe6hexadidits">חייב להיות באורך 6 תוים, מהתוים הבאים: ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">ביטול הצימוד נכשל. המשאבה תוסר בכל זאת. הסיסמה שהוגדרה בזמן הצימוד לא תימחק מהמשאבה.</string>
 </resources>

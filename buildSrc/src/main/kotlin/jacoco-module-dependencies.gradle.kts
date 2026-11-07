@@ -1,19 +1,17 @@
 import groovy.xml.XmlSlurper
 import groovy.xml.slurpersupport.NodeChild
-import java.io.File
 import java.util.Locale
-import org.gradle.api.GradleException
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.register
-import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlin.math.roundToInt
 
 plugins {
     id("com.android.library")
     id("jacoco")
 }
+
+// The JaCoCo/Robolectric setting that used to be here now applies to every project from the root
+// build file. It was moved because this convention applies `com.android.library`, which AGP 9 refuses
+// next to the multiplatform plugin - so any module that flipped to KMP silently stopped recording
+// coverage for its Robolectric tests, while the tests kept passing.
 
 private val limits = mutableMapOf(
     "instruction" to 0.0,
@@ -90,8 +88,6 @@ val excludedFiles = mutableSetOf(
     "**/*\$Lambda\$*.*",
     "**/*Companion*.*",
     "**/*Module*.*",
-    "**/*Dagger*.*",
-    "**/*Hilt*.*",
     "**/*MembersInjector*.*",
     "**/*_MembersInjector.class",
     "**/*_Factory*.*",

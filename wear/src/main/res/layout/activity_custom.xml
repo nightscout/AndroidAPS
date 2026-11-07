@@ -6,15 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".watchfaces.CustomWatchface">
 
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="400px"
-        android:layout_height="400px"
-        android:layout_marginLeft="0px"
+    <!-- background is not here on purpose: everything in this layout paints after complications,
+         and background must paint before them. It is still a real ImageView, created and styled by
+         CustomWatchface (see backgroundView / resolveBackgroundDrawable()) and drawn onto the
+         Canvas in onDraw(). -->
+
+    <FrameLayout
+        android:id="@+id/complication1"
+        android:layout_width="0px"
+        android:layout_height="0px"
         android:layout_marginTop="0px"
-        android:orientation="vertical"
-        android:src="@drawable/background"
-        android:visibility="visible" />
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication3"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication4"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/complication5"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone" />
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"

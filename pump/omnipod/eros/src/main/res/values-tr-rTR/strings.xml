@@ -44,7 +44,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod\'da geçici bir bazal çalışıyor, ancak AAPS bu geçici bazaldan habersiz. Lütfen geçici bazalınızı manuel olarak iptal edin.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Durumu</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Nabız Günlüğünü Oku</string>
     <string name="omnipod_eros_pod_management_pulse_log">Nabız Günlüğü</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Nabız Günlüğü (panoya kopyalandı)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

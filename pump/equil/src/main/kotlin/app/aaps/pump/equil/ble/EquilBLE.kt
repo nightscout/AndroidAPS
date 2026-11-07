@@ -23,16 +23,18 @@ import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdInsulinGet
 import app.aaps.pump.equil.manager.command.CmdPair
 import app.aaps.pump.equil.manager.command.CmdRunningModeGet
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class EquilBLE @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class EquilBLE(
     private val aapsLogger: AAPSLogger,
     private val bleTransport: EquilBleTransport,
     private val rxBus: RxBus
@@ -41,6 +43,8 @@ class EquilBLE @Inject constructor(
     private var equilManager: EquilManager? = null
     var isConnected = false
     var connecting = false
+    private var connectInitiated = false
+    private var connectRunnable: Runnable? = null
     var macAddress: String? = null
     private var bleHandler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -55,6 +59,19 @@ class EquilBLE @Inject constructor(
             aapsLogger.debug(LTag.PUMPCOMM, "error133 ")
             baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
         }
+        bleTransport.onDescriptorWriteFailed = { linkSetupFailed("enabling notifications failed") }
+    }
+
+    /**
+     * The link is up, but services or notifications could not be set up, so no answer from the pump
+     * can arrive. Fail the waiting command at once and close the link, so the next connect starts
+     * clean. Before, the command waited for its full timeout.
+     */
+    private fun linkSetupFailed(reason: String) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Link setup failed: $reason")
+        baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
+        bleConnectErrorForResult()
+        disconnect()
     }
 
     // --- BleTransportListener ---
@@ -66,6 +83,14 @@ class EquilBLE @Inject constructor(
             isConnected = true
             equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
             handler.removeMessages(TIME_OUT_CONNECT_WHAT)
+            // Link up: stop the parallel advert-harvest scan (the pump stops advertising once connected; if it
+            // already caught an advert it stopped itself in the scan collector).
+            stopScan()
+            synchronized(notifyLock) {
+                // New link: notifications not yet enabled. Block command dispatch until onDescriptorWritten.
+                notificationEnabled = false
+                dispatchedCmd = null
+            }
             bleTransport.gatt.discoverServices()
             updateCmdStatus(ResolvedResult.FAILURE)
         } else {
@@ -77,7 +102,7 @@ class EquilBLE @Inject constructor(
 
     override fun onServicesDiscovered(success: Boolean) {
         if (!success) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered failed")
+            linkSetupFailed("service discovery failed")
             return
         }
         bleTransport.gatt.enableNotifications()
@@ -86,7 +111,13 @@ class EquilBLE @Inject constructor(
 
     override fun onDescriptorWritten() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWritten: Wrote GATT Descriptor successfully.")
-        ready()
+        synchronized(notifyLock) {
+            notificationEnabled = true
+            // Notifications are now live: send the pending command (queue-opened or the one that opened
+            // this link). Null-safe + send-once via dispatchedCmd, so it can't collide with the descriptor
+            // write and can't double-send with writeCmd().
+            dispatchCmd()
+        }
     }
 
     override fun onCharacteristicChanged(data: ByteArray) {
@@ -141,7 +172,12 @@ class EquilBLE @Inject constructor(
 
     fun disconnect() {
         isConnected = false
-        startTrue = false
+        connecting = false
+        connectInitiated = false
+        // Cancel any pending delayed connect so a stale runnable can't re-open a GATT after teardown.
+        connectRunnable?.let { handler.removeCallbacks(it) }
+        connectRunnable = null
+        stopScan() // cancel any in-flight advert-harvest scan (hybrid connect); also clears startTrue
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
         aapsLogger.debug(LTag.PUMPBTCOMM, "Closing GATT connection")
@@ -149,13 +185,19 @@ class EquilBLE @Inject constructor(
         bleTransport.gatt.close()
         baseCmd = null
         preCmd = null
+        synchronized(notifyLock) {
+            notificationEnabled = false
+            dispatchedCmd = null
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
     }
 
     fun closeBleAuto() {
-        handler.postDelayed({
-            disconnect()
-        }, EquilConst.EQUIL_BLE_NEXT_CMD)
+        // Tear down immediately. The AAPS command queue owns the connection lifecycle: after the last
+        // command it holds the link for waitForDisconnectionInSeconds() (5 s) for reuse and only then
+        // calls Pump.disconnect() -> here. No extra driver-side linger is needed, and an immediate
+        // teardown avoids the mid-command race that a deferred, cancellable timer would introduce.
+        disconnect()
     }
 
     var autoScan = true
@@ -167,16 +209,47 @@ class EquilBLE @Inject constructor(
     }
 
     private fun connectEquil(address: String) {
-        handler.postDelayed({
+        // Guard against the scan emitting the same device multiple times (and other re-entrant
+        // calls): only one connect attempt per session, reset on disconnect(). Prevents stacking
+        // overlapping GATT clients. See also the close-before-connect guard in EquilBleTransportImpl.
+        if (connectInitiated) return
+        connectInitiated = true
+        val runnable = Runnable {
             aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
             bleTransport.gatt.connect(address)
-        }, 500)
+        }
+        connectRunnable = runnable
+        handler.postDelayed(runnable, 500)
     }
 
     private var baseCmd: BaseCmd? = null
     private var preCmd: BaseCmd? = null
+
+    // Notification-readiness gate for the current GATT link. Android allows only ONE outstanding GATT
+    // operation at a time. `isConnected` flips true at onConnectionStateChanged BEFORE onServicesDiscovered
+    // has enabled notifications (the notify-descriptor write). If a command's first characteristic write
+    // goes out in that window it collides with the descriptor write: writeDescriptor returns false,
+    // notifications never turn on, the pump's replies never arrive, and the command idle-times-out ->
+    // "Pump connection failure / manually check delivered insulin" (bolus, tempBasal and profile/CmdSettingSet
+    // all hit this through different writeCmd branches). Fix: never send the FIRST command on a link until
+    // onDescriptorWritten confirms notifications; dispatchedCmd makes that send-once so it can't double with
+    // writeCmd(). See #4910 (this is its follow-up).
+    private val notifyLock = Any()
+    @Volatile private var notificationEnabled = false
+    private var dispatchedCmd: BaseCmd? = null
+
+    // Send the current command's first packet exactly once per link, only after notifications are enabled.
+    // Null-safe (no-op during the pure connect handshake). Caller MUST hold notifyLock.
+    private fun dispatchCmd() {
+        val cmd = baseCmd
+        if (cmd != null && cmd !== dispatchedCmd) {
+            dispatchedCmd = cmd
+            ready()
+        }
+    }
+
     fun writeCmd(baseCmd: BaseCmd) {
-        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
+        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd $baseCmd")
         this.baseCmd = baseCmd
         val mac: String = when (baseCmd) {
             is CmdPair -> baseCmd.address
@@ -184,13 +257,30 @@ class EquilBLE @Inject constructor(
             else -> equilManager?.equilState?.address ?: error("Unknown MAC address")
         }
         autoScan = baseCmd is CmdRunningModeGet || baseCmd is CmdInsulinGet
+        if (isConnected) {
+            synchronized(notifyLock) {
+                if (!notificationEnabled) {
+                    // Fresh link, notifications not enabled yet: defer EVERY send path (pair step,
+                    // continuation, first command). onDescriptorWritten -> dispatchCmd() sends it once
+                    // notifications are up, avoiding the descriptor-write collision.
+                    preCmd = baseCmd
+                    return
+                }
+            }
+        }
         if (isConnected && baseCmd.isPairStep()) {
-            ready()
+            synchronized(notifyLock) { dispatchCmd() }
         } else if (isConnected) {
-            preCmd?.let { preCmd ->
-                baseCmd.runCode = preCmd.runCode
-                baseCmd.runPwd = preCmd.runPwd
+            val prevCmd = preCmd
+            if (prevCmd != null) {
+                baseCmd.runCode = prevCmd.runCode
+                baseCmd.runPwd = prevCmd.runPwd
                 nextCmd2()
+            } else {
+                // GATT link opened by the queue's connect() phase, notifications already up: send this
+                // command as the first one on the open link (else the pump idle-disconnects, status 19).
+                // See issue #4910.
+                synchronized(notifyLock) { dispatchCmd() }
             }
         } else {
             findEquil(mac)
@@ -199,16 +289,25 @@ class EquilBLE @Inject constructor(
         preCmd = baseCmd
     }
 
-    fun readHistory(baseCmd: CmdHistoryGet) {
+    /**
+     * Sends a history request on the open link.
+     *
+     * @return false when there is no open link, so nothing was sent and no answer will come. The
+     * caller must not wait for one then. The pump closes the link about 10 s after a command, so
+     * this is the normal case after a bolus. It used to notify the command instead, but that
+     * happened before the caller started to wait, so the caller waited its full 22 s timeout.
+     */
+    fun readHistory(baseCmd: CmdHistoryGet): Boolean {
         if (isConnected && preCmd != null) {
             baseCmd.runCode = preCmd!!.runCode
             baseCmd.runPwd = preCmd!!.runPwd
             this.baseCmd = baseCmd
             nextCmd2()
             preCmd = baseCmd
-        } else {
-            aapsLogger.debug(LTag.PUMPCOMM, "readHistory error")
+            return true
         }
+        aapsLogger.debug(LTag.PUMPCOMM, "readHistory: no open link, history not requested")
+        return false
     }
 
     private var equilResponse: EquilResponse? = null
@@ -259,16 +358,23 @@ class EquilBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
         if (macAddress.isNullOrEmpty()) return
         if (startTrue) return
+        startTrue = true
+        connecting = true
+        equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
 
         bleTransport.scanAddress = macAddress
         updateCmdStatus(ResolvedResult.NOT_FOUNT)
-        connecting = true
+        // With a known address the connection does not need the scan, it only reads the advertisement
+        // (battery, reservoir, history index). Stop it after a while, or with the pump out of range the
+        // most power hungry scan mode runs until the queue gives up. A scan that has to find the pump
+        // (autoScan) keeps running; the connect timeout of the command ends it.
+        if (!autoScan) handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, EquilConst.EQUIL_ADVERT_SCAN_TIME_OUT)
 
         scanJob = scope.launch {
             bleTransport.scanner.scannedDevices.collect { device ->
                 device.scanRecordBytes?.let { bytes ->
                     bleHandler.post {
-                        equilManager?.decodeData(bytes, autoScan)
+                        equilManager?.decodeData(bytes)
                     }
                 }
                 stopScan()
@@ -287,13 +393,27 @@ class EquilBLE @Inject constructor(
     }
 
     fun connect(from: String) {
-        aapsLogger.debug(LTag.PUMPCOMM, "connect====startTrue=$startTrue====isConnected=$isConnected from $from")
-        if (startTrue || isConnected) {
+        aapsLogger.debug(LTag.PUMPCOMM, "connect====connecting=$connecting====isConnected=$isConnected from $from")
+        if (connecting || isConnected) {
             return
         }
-        autoScan = true
         baseCmd = null
-        startScan()
+        macAddress = equilManager?.equilState?.address
+        val mac = macAddress
+        if (!mac.isNullOrEmpty()) {
+            // Known/bonded pump: connect straight to its MAC (autoConnect, see EquilBleTransportImpl) instead of
+            // scan-to-connect. Scan discovery was the #5040 bottleneck (60-90 s on many phones). In parallel run
+            // a best-effort advert harvest that does NOT gate the connection - it refreshes the pump's current
+            // history index + battery/reservoir/alarm. Scanning stays as the fallback for an unknown MAC.
+            connecting = true
+            equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+            connectEquil(mac)
+            autoScan = false
+            startScan()
+        } else {
+            autoScan = true
+            startScan()
+        }
     }
 
     fun stopScan() {

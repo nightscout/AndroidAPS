@@ -1,7 +1,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pump integration for EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">The patch did not confirm the end of the bolus. %1$s is recorded, but the patch may have given more. Check the patch before you give more insulin.</string>
 
     <string name="low_reservoir">Low reservoir Alerts</string>
     <string name="patch_expiration_reminders">Patch expiration Reminder</string>
@@ -16,7 +16,7 @@
     <string name="eopatch_temp_basal_rate">Temp Basal Rate</string>
 
     <string name="invalid_basal_rate">The basal of the profile is less than 0.05 U/hr. EOPatch has a minimum injection unit of 0.05U. Please try again after setting the profile to more than the minimum injection unit.</string>
-    <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
+    <string name="no_profile_selected_try_again">No profile selected. Please select a profile and try again.</string>
 
     <string name="symbol_day">day</string>
     <string name="symbol_plus">+</string>
@@ -99,7 +99,4 @@
     <string name="wizard_exit_deactivation_warning">Exit deactivation wizard? The patch may remain active and continue delivering insulin.</string>
     <string name="patch_force_reset">Force Reset</string>
     <string name="patch_force_reset_confirm">This will clear the patch state locally without sending commands to the patch. Use only if normal deactivation fails. The patch will continue delivering until its battery runs out or it is manually turned off.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Exact Alarms</string>
-    <string name="permission_exact_alarm_description">Application needs permission to schedule exact alarms for patch management</string>
 </resources>

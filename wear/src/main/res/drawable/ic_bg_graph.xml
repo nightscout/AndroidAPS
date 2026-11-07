@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+  <!-- High threshold line (yellow) -->
+  <path
+      android:fillColor="#00000000"
+      android:strokeColor="#60FFFF00"
+      android:strokeWidth="0.5"
+      android:pathData="M1,8 L23,8"/>
+
+  <!-- Low threshold line (red) -->
+  <path
+      android:fillColor="#00000000"
+      android:strokeColor="#60FF0000"
+      android:strokeWidth="0.5"
+      android:pathData="M1,18 L23,18"/>
+
+  <!-- Dots: in range (green) -->
+  <path android:fillColor="#FF00FF00" android:pathData="M2,15 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FF00FF00" android:pathData="M4,13 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FF00FF00" android:pathData="M6,10 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FF00FF00" android:pathData="M12,8 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FF00FF00" android:pathData="M14.5,12 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FF00FF00" android:pathData="M17,16 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+
+  <!-- Dots: high (yellow) -->
+  <path android:fillColor="#FFFFFF00" android:pathData="M8,6 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FFFFFF00" android:pathData="M10,5 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+
+  <!-- Dots: low (red) -->
+  <path android:fillColor="#FFFF0000" android:pathData="M19.5,19 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+  <path android:fillColor="#FFFF0000" android:pathData="M22,20 m-1,0 a1,1 0,1 1,2,0 a1,1 0,1 1,-2,0"/>
+
+</vector>

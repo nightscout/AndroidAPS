@@ -1,12 +1,17 @@
 package app.aaps.pump.eopatch.compose
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -15,6 +20,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
@@ -34,8 +40,11 @@ import app.aaps.pump.eopatch.extension.takeOne
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasalManager
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,11 +58,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class EopatchOverviewEvent {
     data class StartPatchWorkflow(
@@ -65,9 +75,11 @@ sealed class EopatchOverviewEvent {
     data class ShowToast(val messageResId: Int, val isError: Boolean = false) : EopatchOverviewEvent()
 }
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
-class EopatchOverviewViewModel @Inject constructor(
+@Inject
+class EopatchOverviewViewModel(
     private val rh: ResourceHelper,
     val patchManager: IPatchManager,
     private val patchManagerExecutor: PatchManagerExecutor,
@@ -81,12 +93,13 @@ class EopatchOverviewViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
-    @ApplicationContext private val context: Context
+    private val ch: ConcentrationHelper,
+    private val context: Context
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val stateBuilder = PumpOverviewStateBuilder(rh)
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
     private val disposables = CompositeDisposable()
 
     private val _events = MutableSharedFlow<EopatchOverviewEvent>(extraBufferCapacity = 5)
@@ -106,7 +119,11 @@ class EopatchOverviewViewModel @Inject constructor(
         communicationStatus.refreshTrigger
     ) { inputs, stateTs, _, _ ->
         buildUiState(inputs.config, inputs.connState, inputs.isPaused, inputs.insulin, stateTs)
-    }.stateIn(scope, SharingStarted.WhileSubscribed(5000), buildUiState(patchConfigData, patchManagerExecutor.patchConnectionState, preferenceManager.patchState.isNormalBasalPaused, preferenceManager.patchState.remainedInsulin, preferenceManager.patchState.updatedTimestamp))
+    }.stateIn(
+        scope,
+        SharingStarted.WhileSubscribed(5000),
+        buildUiState(patchConfigData, patchManagerExecutor.patchConnectionState, preferenceManager.patchState.isNormalBasalPaused, preferenceManager.patchState.remainedInsulin, preferenceManager.patchState.updatedTimestamp)
+    )
 
     private data class UiInputs(val config: PatchConfig, val connState: BleConnectionState, val isPaused: Boolean, val insulin: Float)
 
@@ -154,7 +171,7 @@ class EopatchOverviewViewModel @Inject constructor(
         viewModelScope.launch {
             val profile = profileFunction.getProfile()
             if (profile == null) {
-                _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.no_profile_selected))
+                _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.no_profile_selected_try_again))
                 return@launch
             }
             val basalValues = profile.getBasalValues()
@@ -181,7 +198,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 .observeOn(aapsSchedulers.main)
                 .subscribe({ response ->
                                if (response.isSuccess) {
-                                   runBlocking {
+                                   scope.launch {
                                        pumpSync.syncTemporaryBasalWithPumpId(
                                            timestamp = dateUtil.now(),
                                            rate = PumpRate(0.0),
@@ -192,8 +209,8 @@ class EopatchOverviewViewModel @Inject constructor(
                                            pumpType = PumpType.EOFLOW_EOPATCH2,
                                            pumpSerial = patchConfigData.patchSerialNumber
                                        )
+                                       _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_suspended_insulin_delivery_message))
                                    }
-                                   _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_suspended_insulin_delivery_message))
                                } else {
                                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_pause_failed, isError = true))
                                }
@@ -210,15 +227,15 @@ class EopatchOverviewViewModel @Inject constructor(
                 .observeOn(aapsSchedulers.main)
                 .subscribe({
                                if (it.isSuccess) {
-                                   runBlocking {
+                                   scope.launch {
                                        pumpSync.syncStopTemporaryBasalWithPumpId(
                                            timestamp = dateUtil.now(),
                                            endPumpId = dateUtil.now(),
                                            pumpType = PumpType.EOFLOW_EOPATCH2,
                                            pumpSerial = patchConfigData.patchSerialNumber
                                        )
+                                       _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_resumed_insulin_delivery_message))
                                    }
-                                   _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_resumed_insulin_delivery_message))
                                } else {
                                    _events.tryEmit(EopatchOverviewEvent.ShowToast(R.string.string_resume_failed, isError = true))
                                }
@@ -232,7 +249,7 @@ class EopatchOverviewViewModel @Inject constructor(
         val isBolusActive = preferenceManager.patchState.isBolusActive
         val tempBasal = tempBasalManager.startedBasal
         val isTempBasalActive = preferenceManager.patchState.isTempBasalActive && tempBasal != null
-        val tempRate = tempBasal?.doseUnitText ?: ""
+        val tempRate = tempBasal?.doseText ?: ""
         val tempRemainTime = tempBasal?.remainTimeText ?: ""
         var remainBolus = preferenceManager.patchState.isNowBolusActive.takeOne(preferenceManager.bolusCurrent.remain(BolusType.NOW), 0f)
         remainBolus += preferenceManager.patchState.isExtBolusActive.takeOne(preferenceManager.bolusCurrent.remain(BolusType.EXT), 0f)
@@ -261,8 +278,8 @@ class EopatchOverviewViewModel @Inject constructor(
             // Connection state — only show when not connected (error states shown in banner)
             if (connState != BleConnectionState.CONNECTED) {
                 val connText = when (connState) {
-                    BleConnectionState.DISCONNECTED -> rh.gs(app.aaps.core.ui.R.string.disconnected)
-                    else                            -> rh.gs(app.aaps.core.ui.R.string.connecting)
+                    BleConnectionState.DISCONNECTED -> rh.gs(CoreUiR.string.disconnected)
+                    else                            -> rh.gs(CoreUiR.string.connecting)
                 }
                 add(PumpInfoRow(label = rh.gs(R.string.eopatch_ble_status), value = connText))
             }
@@ -272,36 +289,36 @@ class EopatchOverviewViewModel @Inject constructor(
                 val statusText = if (isPaused) {
                     val finishTimeMillis = config.basalPauseFinishTimestamp
                     val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
-                    val h = TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
-                    val m = TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
-                    "${rh.gs(app.aaps.core.ui.R.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    val h = remainTimeMillis.milliseconds.inWholeHours
+                    val m = (remainTimeMillis - h.hours.inWholeMilliseconds).milliseconds.inWholeMinutes
+                    "${rh.gs(InterfacesR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 } else {
                     rh.gs(R.string.string_running)
                 }
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.status), value = statusText))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.status), value = statusText))
 
                 // Basal rate
                 if (preferenceManager.patchState.isNormalBasalRunning) {
-                    val basalRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour)
+                    val basalRate = ch.basalRateString(PumpRate(normalBasalManager.normalBasal.currentDeliveredDoseUnitPerHour), true)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_base_basal_rate), value = basalRate))
                 }
 
                 // Temp basal
                 val tempBasal = tempBasalManager.startedBasal
                 if (preferenceManager.patchState.isTempBasalActive && tempBasal != null) {
-                    val tempRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, tempBasal.doseUnitPerHour)
+                    val tempRate = ch.basalTbrString(PumpRate(tempBasal.doseUnitPerHour.toDouble()), tempBasal.startTimestamp, tempBasal.durationMinutes.toInt())
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_temp_basal_rate), value = tempRate))
                 }
             }
 
             // Remaining insulin
             val insulinText = when {
-                insulin > 50f -> "50+ U"
-                insulin < 1f  -> "0 U"
-                else          -> "${insulin.roundToInt()} U"
+                insulin > 50f -> rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0)))
+                insulin < 1f  -> ch.insulinAmountString(PumpInsulin(0.0))
+                else          -> ch.insulinAmountString(PumpInsulin(insulin.roundToInt().toDouble()))
             }
             if (config.isActivated) {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = insulinText))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = insulinText))
             }
 
             // Serial number
@@ -311,7 +328,7 @@ class EopatchOverviewViewModel @Inject constructor(
 
             // Last state update
             if (config.isActivated && stateUpdatedTimestamp > 0L) {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.minAgo(rh, stateUpdatedTimestamp)))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.minAgo(rh, stateUpdatedTimestamp)))
             }
         }
 
@@ -322,7 +339,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = rh.gs(R.string.string_activate_patch),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                        icon = Icons.Filled.SwapHoriz,
                         category = ActionCategory.PRIMARY,
                         onClick = { onClickActivation() }
                     )
@@ -331,8 +348,8 @@ class EopatchOverviewViewModel @Inject constructor(
             if (isActivated) {
                 add(
                     PumpAction(
-                        label = if (isPaused) rh.gs(app.aaps.core.ui.R.string.pump_resume) else rh.gs(app.aaps.core.ui.R.string.pump_suspend),
-                        iconRes = if (isPaused) app.aaps.core.ui.R.drawable.ic_loop_resume else app.aaps.core.ui.R.drawable.ic_loop_paused,
+                        label = if (isPaused) rh.gs(CoreUiR.string.pump_resume) else rh.gs(CoreUiR.string.pump_suspend),
+                        icon = if (isPaused) Icons.Filled.PlayArrow else IcLoopPaused,
                         category = ActionCategory.PRIMARY,
                         onClick = { } // Click handled in screen composable (needs dialog)
                     )
@@ -345,7 +362,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = rh.gs(R.string.string_discard_patch),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                        icon = Icons.Filled.SwapHoriz,
                         category = ActionCategory.MANAGEMENT,
                         onClick = { onClickDeactivation() }
                     )
@@ -364,9 +381,9 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private fun buildStatusBanner(connState: BleConnectionState, isActivated: Boolean, isPaused: Boolean): StatusBanner? = when {
         !isActivated -> StatusBanner(text = rh.gs(R.string.eopatch_not_activated), level = StatusLevel.WARNING)
-        isPaused -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.pumpsuspended), level = StatusLevel.WARNING)
-        connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.disconnected), level = StatusLevel.CRITICAL)
-        connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.connecting), level = StatusLevel.UNSPECIFIED)
+        isPaused -> StatusBanner(text = rh.gs(InterfacesR.string.pumpsuspended), level = StatusLevel.WARNING)
+        connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.disconnected), level = StatusLevel.CRITICAL)
+        connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.connecting), level = StatusLevel.UNSPECIFIED)
         else -> null // Connected, activated, running — no banner needed
     }
 }

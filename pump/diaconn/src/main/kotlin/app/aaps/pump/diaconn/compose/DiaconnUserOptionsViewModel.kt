@@ -2,22 +2,25 @@ package app.aaps.pump.diaconn.compose
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.keys.DiaconnIntKey
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 data class DiaconnUserOptionsUiState(
     val beepAndAlarm: Int = 1,      // 1=sound, 2=vibrate, 3=silent
@@ -32,9 +35,13 @@ sealed class DiaconnUserOptionsEvent {
     data class Error(val message: String) : DiaconnUserOptionsEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
-class DiaconnUserOptionsViewModel @Inject constructor(
+@Inject
+class DiaconnUserOptionsViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val commandQueue: CommandQueue,
@@ -107,14 +114,13 @@ class DiaconnUserOptionsViewModel @Inject constructor(
     }
 
     private fun saveToCommandQueue() {
-        commandQueue.setUserOptions(object : Callback() {
-            override fun run() {
-                if (result.success) {
-                    _events.tryEmit(DiaconnUserOptionsEvent.Saved)
-                } else {
-                    _events.tryEmit(DiaconnUserOptionsEvent.Error(result.comment))
-                }
+        viewModelScope.launch {
+            val result = commandQueue.setUserOptions()
+            if (result.success) {
+                _events.tryEmit(DiaconnUserOptionsEvent.Saved)
+            } else {
+                _events.tryEmit(DiaconnUserOptionsEvent.Error(result.comment))
             }
-        })
+        }
     }
 }

@@ -29,6 +29,63 @@
 - When spawning agents that use Bash, ALWAYS include this rule in the agent prompt
 - See `.claude/CLAUDE_COMMANDS.md` for platform-specific working commands
 
+## macOS Machine (used for iOS builds)
+
+Everything above assumes the Windows machine. The same repo is also checked out on a Mac, which
+is the only place the iOS side can be linked and tested. Check `uname` if you are not sure which
+machine you are on. On macOS these rules replace the Windows ones:
+
+- **Use `./gradlew`, never `./gradlew.bat`.** Stop daemons with `./gradlew --stop`.
+- **`which` works, `where` does not.** This is the opposite of the Windows rule.
+- **There is no `powershell.exe`.** `sort` and `uniq` are normal commands here, so the Windows
+  workaround of wrapping them in PowerShell does not apply.
+- **`chmod` exists and is a normal command**, but you should almost never need it. `gradlew`
+  already has the exec bit.
+- **Use the scratchpad directory for screenshots and temporary files**, not `%TEMP%`.
+- The pipe-hides-the-exit-code warning still holds. Redirect to a log file and grep it.
+- Do not install Xcode, Homebrew or CocoaPods. The Mac is already set up (Xcode 26.6, iOS SDK and
+  simulator runtime, JDK 21, Android SDK, Kotlin/Native in `~/.konan`). No module uses a
+  `cocoapods` block, so CocoaPods is not needed at all.
+
+### What each machine can run
+
+Kotlin/Native cross compiles klibs for every target from either host, so `compileKotlinIosArm64`
+and `compileKotlinMingwX64` both work everywhere. Only the tests are limited, and the two hosts
+are exact mirrors of each other:
+
+| Test task | Windows | macOS |
+|---|---|---|
+| `jvmTest`, `testFullDebugUnitTest` | runs | runs |
+| `iosSimulatorArm64Test` | SKIPPED | runs |
+
+This means `runtests.sh` (which calls `allTests`) never covers all native targets on one machine.
+Before claiming that native code is fully tested, the same commit has to be run on both.
+
+Useful commands on the Mac:
+
+- Compile the iOS device target for every KMP module: `./gradlew compileKotlinIosArm64 --no-daemon`
+- Run the iOS simulator tests: `./gradlew iosSimulatorArm64Test --no-daemon`
+
+**A real body of tests runs on the simulator** - `iosTest` and `commonTest` source sets both execute
+under `iosSimulatorArm64Test`, so a change to shared code is genuinely run on Apple, not merely
+cross-compiled to a klib. Measured on 2026-09-21 at `7e303d9bb5`: **714 tests, 0 failures, across all
+14 modules below** (4m 11s). There are 18 populated test source sets in those 14 modules:
+
+- `commonTest`: `core/data`, `core/interfaces`, `core/nssdk`, `core/objects`, `core/utils`,
+  `database/persistence`, `implementation`, `plugins/aps`, `plugins/sync`, `shared/clientbindings`,
+  `shared/impl`, `ui`
+- `iosTest`: `core/interfaces`, `implementation`, `ios/shell`, `plugins/aps`, `plugins/automation`,
+  `plugins/sync`
+
+`.github/workflows/ios-ci.yml` already runs five of them explicitly. Re-derive the list rather than
+trusting this one when it matters:
+`find . -maxdepth 4 -type d \( -name commonTest -o -name iosTest \) -not -path "*/build/*"` - and
+check each for `.kt` files, because an empty source-set directory still exists for `core/ui`.
+
+(This paragraph used to say only `:core:data` had a `commonTest` source set and that everything else
+reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused work to be shipped as
+"compiles for iOS" when it could have been run.)
+
 ## Token Usage Reduction (Delay Conversation Compaction)
 
 - **Use Task agents for exploration instead of direct Glob/Grep:**
@@ -45,7 +102,10 @@
     - Use `head_limit` to cap number of results
 - **Suppress verbose Bash output:**
     - Use `--quiet` flag for gradle: `.\gradlew.bat assembleFullDebug --quiet --no-daemon`
-    - Pipe to `tail -50` for long outputs
+    - Pipe to `tail -50` only when you just need to *read* output — ⚠️ a pipe makes the reported exit
+      code the **pipe's** (e.g. `tail`'s), NOT gradle's, so a FAILED build/test looks like it passed.
+      For pass/fail, redirect instead: `./gradlew.bat … --no-daemon > build.log 2>&1` then grep the log
+      (`^e: ` for Kotlin errors, `BUILD FAILED`/`BUILD SUCCESSFUL`).
     - Avoid commands that dump entire logs
 - **Be specific in searches:**
     - Narrow glob patterns: `src/**/specific/*.kt` instead of `**/*.kt`
@@ -55,12 +115,49 @@
     - Don't explore same directories multiple times
     - Combine related searches when possible
 
+## Verify Before You Push
+
+- **A rename or a signature change is never local.** Run the suite **CI** runs, not the modules you
+  edited. The command is in `.github/workflows/unit-tests.yml`:
+  ```
+  ./gradlew.bat --console=plain --no-daemon --continue -PfirebaseDisable \
+    testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
+  ```
+  Add `--continue` yourself. Without it gradle stops scheduling after the first failing module, so
+  you fix one thing, push, and CI goes red on the next one. (Learned the slow way on 2026-10-13:
+  three red CI rounds for a single commit, each a different module of the same change.)
+- **After renaming anything, grep case-insensitively.** `grep -rni oldname` — renaming a class also
+  renames the lowercase DI property, and `grep -rn OldName` silently misses `oldName`. Two files
+  hold names as a golden list, so they do not fail to compile, they fail a test:
+    - `app/src/testFull/kotlin/app/aaps/di/metro/GraphScopeStabilityTest.kt` — the root graph
+      accessor names.
+    - `app/src/testFull/resources/prefs-schema.txt` — the preference schema.
+- **Adding a parameter breaks Mockito matcher counts.** A `verify(...)` / `whenever(...)` with N
+  matchers now needs N+1 (`InvalidUseOfMatchersException: 8 matchers expected, 7 recorded`). A
+  default value does not spare the test: Kotlin passes the default explicitly at the call site, so
+  give the new slot a real matcher — prefer `eq(<default>)` over `any()`, it documents the intent.
+- **Never run two gradle builds at once.** They contend on the build cache (`Timeout waiting to
+  lock Build cache … Owner PID`) and fail tasks that are otherwise fine, and the extra load makes
+  real-time tests (`withTimeout`, cancellation races) flake. Run them one after the other.
+- **In a coroutine test, do not `advanceUntilIdle()` on anything that can re-arm itself.** A
+  scheduler that re-schedules from a mocked, frozen `dateUtil.now()` never goes idle, and the test
+  hangs instead of failing — it ate a whole test run before anyone noticed. Use `advanceTimeBy(d)`
+  over a bounded window and assert the event count, so a regression fails on the number.
+
 ## User Preferences
 
 - **NEVER make code changes without user confirmation** — When the user describes a problem or
   preference, propose the change first and wait for approval before editing code. Do NOT immediately
   edit files based on user feedback. The only exception is when the user explicitly says "do it",
   "fix it", "go ahead", or similar direct instruction.
+- **NEVER commit until the user explicitly asks** — Editing files is fine (subject to the rule above),
+  but do NOT run `git commit` (or `git push`) until the user directly asks for it. "Fix it" / "do it"
+  authorizes the code change, NOT a commit. Leave the work in the working tree and let the user review
+  it first; only commit when they say "commit", "push", or similar.
+- **Use simple "school english" everywhere** — In code (identifiers, comments, KDoc), commit messages,
+  PR text, UI strings and chat, write plain, simple English. Many readers and contributors are
+  non-native speakers. Prefer short common words and short sentences; avoid idioms, slang, rare
+  vocabulary, and needlessly complex phrasing. Clear over clever.
 - **Think critically, don't just agree** — Before implementing, evaluate whether the agreed approach
   is actually the best solution. Challenge assumptions, point out potential issues, suggest better
   alternatives. The user may miss something too. Ask "Is this the best way?" before writing code.
@@ -81,10 +178,41 @@
     - After each batch, state how many remain and continue until zero remain
     - Do NOT stop early or claim "done" until truly everything is processed
     - User WILL verify results - assume accountability
-- **Always use explicit imports:**
-    - Never use fully qualified names (e.g., `kotlin.math.abs`)
-    - Always add proper import statements at the top of the file
-    - Example: Add `import kotlin.math.abs` instead of using `kotlin.math.abs()`
+- **Always use explicit imports (no exceptions):**
+    - Never use fully qualified names inline (e.g., `kotlin.math.abs`,
+      `app.aaps.core.ui.compose.icons.IcFoo`, `androidx.compose.ui.graphics.vector.ImageVector`)
+    - Always add proper `import` statements at the top of the file and use short names in code
+    - Applies to type parameters, parameter types, return types, constructor calls, property
+      delegates, `remember { mutableStateOf<Type>() }`, etc.
+    - Applies when adding new code to existing files — add the import even if only referenced once
+    - ❌ BAD: `fun composeIcon() = app.aaps.core.ui.compose.icons.IcProfile`
+    - ✅ GOOD: `import app.aaps.core.ui.compose.icons.IcProfile` at top, then
+      `fun composeIcon() = IcProfile`
+    - ❌ BAD: `mutableListOf<androidx.compose.ui.graphics.vector.ImageVector>()`
+    - ✅ GOOD: `import androidx.compose.ui.graphics.vector.ImageVector` then
+      `mutableListOf<ImageVector>()`
+    - Only exception: when two different classes with the same simple name would collide — then one
+      can stay fully qualified at use site (rare)
+- **KDoc `[symbol]` references must resolve, or use backticks:** The IDE lint
+  (`KDocUnresolvedReference`) flags any `[Xxx]` link in a `/** */` block that can't be resolved from
+  the current file. A `[Xxx]` link only resolves if `Xxx` is importable here — imported, in the same
+  package, or written as a fully-qualified name whose module is on **this** module's main classpath.
+  When touching a file that has such a warning, fix it (don't mass-fix untouched files):
+    - **Prefer a clickable link.** If a resolvable symbol exists, link it — use an **interface** in a
+      `core:interfaces` (or similar already-depended-on) module rather than a concrete impl in another
+      module. A fully-qualified link is fine when the short name isn't imported:
+      `[app.aaps.core.interfaces.aps.Loop.invoke]`.
+    - **NEVER add a module dependency just to make a doc link resolve.** If the only matching symbol
+      is `private`, or lives in a module this one doesn't depend on (or only as `testImplementation`),
+      it can't be linked.
+    - **Then fall back to backticks.** Wrap the unresolvable reference in backticks so it's a plain
+      code span, not a checked link — lint has nothing to resolve, and it still renders as monospace:
+      `` `LoopPlugin.applySMBRequest` ``.
+    - Do NOT use `@Suppress("KDocUnresolvedReference")` — it's unreliable on the enclosing
+      declaration and hides real breakage of any *other* link in the same doc block. Backticks are the
+      fix.
+    - ❌ BAD: `* handled in [LoopPlugin.applySMBRequest].` (private, cross-module → unresolved)
+    - ✅ GOOD: `` * handled in [app.aaps.core.interfaces.aps.Loop.invoke] and `LoopPlugin.applySMBRequest`. ``
 - **Use centralized theme/styling:**
     - For Compose UI: Always use theme values instead of hardcoded dp/padding/colors. If proper
       setting doesn't exist, discuss it before creating hardcoded values.
@@ -102,6 +230,15 @@
     - Remove unused functions, parameters, and extensions
     - Delete deprecated code and escape hatches
     - Compile frequently to verify nothing breaks
+- **Remove dead code when you find it**, in the same change, including unreferenced resources. For
+  strings, delete them from the English `values/strings.xml` only (see the strings rule below). Do not
+  ship a generator, an interface or a registration that nothing uses yet - add it when the thing that
+  consumes it lands.
+    - **But check first whether the dead code is hiding a bug.** A private function with no callers,
+      or a parameter that is always the default, can mean a caller was lost rather than that the code
+      is obsolete. `TriggerBTDevice.devicesPaired()` looked like dead code and was in fact a
+      user-facing regression: the Compose migration dropped its caller, so the Bluetooth device
+      picker was permanently empty. Compare against `master` before deleting.
 - **Use TodoWrite for complex multi-step work:**
     - Create specific, actionable todo items (not vague descriptions)
     - Mark todos in_progress before starting, completed immediately after finishing
@@ -122,12 +259,36 @@
   imports, API changes, type changes, new files) could cause errors.
 - Avoid duplication while writing new code and resources. Prefer moving to another module. Elaborate
   if you think, it's necessary
-- When resource strings are affected, change only english version. Ignore translations
+- **Strings: touch the English `values/strings.xml` only.** This applies when you add, change or
+  remove a string, also when you delete an unused one. Never edit the translated `values-xx/strings.xml`
+  files: translations come from Crowdin (`crowdin.yml`) and are updated from there.
 - **Never manipulate localized strings programmatically** - Using patterns like
   `.replace(",", ".")`,
   `.removeSuffix(":")`, or stripping characters from resource strings breaks localization. Different
   languages have different punctuation and formatting rules. If a string needs different formats,
   create separate resource strings instead.
+- **Never build user-facing text by concatenating strings in code** - Joining pieces like
+  `rh.gs(label) + ": " + value`, `value + " " + unit`, or `"$a/$b h"` is NOT translatable and breaks
+  RTL languages (the translator can't control the separator, order, or direction). Instead use a
+  **format-string resource template** with positional placeholders and let the value carry its own
+  unit:
+    - ❌ BAD: `rh.gs(R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(v, step)`
+    - ✅ GOOD:
+      `rh.gs(R.string.confirmation_line, rh.gs(R.string.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(v, step))`
+      where `confirmation_line` is `"%1$s: %2$s"` — and prefer value+unit templates
+      (`format_insulin_units`, `format_carbs`, `pump_base_basal_rate`, `format_mins`,
+      `ProfileUtil.fromMgdlToStringWithUnits`) over a bare number. Most such templates already exist
+      in
+      `:core:ui`; reuse them before adding a new one.
+- **Add a `comment="..."` translator note ONLY when a new string genuinely needs it for correct
+  translation** — i.e. it has placeholders, is short/ambiguous out of context, carries units, or has
+  order-sensitive parts. Do NOT add comments blanket to every string; a plain, self-explanatory
+  sentence needs none. When you do add one, use the `comment="..."` attribute (not an XML comment) and
+  explain each placeholder with an example, mirroring existing strings:
+    - ✅ needs it (placeholders + units):
+      `<string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=min, %4$s=max. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>`
+    - ❌ does NOT need it (plain, unambiguous sentence — no comment):
+      `<string name="master_control_disabled_banner">Master has disabled remote control. Editing is disabled until it is re-enabled on the master.</string>`
 - **In Compose code, use `stringResource()` not `ResourceHelper`** - Compose has built-in
   `stringResource(R.string.xyz)` function. Only use `ResourceHelper` (rh) in non-Composable contexts
   (ViewModels, regular functions). This keeps Compose code cleaner and more idiomatic.
@@ -140,6 +301,29 @@
   }
   ```
   The modifier is in `app.aaps.core.ui.compose.clearFocusOnTap`.
+- **Snackbar pattern (Compose)** - `LocalSnackbarHostState` exists for legacy reasons but is an
+  anti-pattern (hidden dependency, was silently failing before we fixed the default to `error()`).
+  **Do not add new `LocalSnackbarHostState.current` consumers.** Prefer either:
+    1. **Event hoisting from ViewModel / utility class** (preferred for non-Composables):
+       ```kotlin
+       // In ViewModel / domain class
+       private val _snackbarEvents = MutableSharedFlow<String>()
+       val snackbarEvents = _snackbarEvents.asSharedFlow()
+
+       // In the Composable
+       LaunchedEffect(Unit) {
+           viewModel.snackbarEvents.collect { snackbarHostState.showSnackbar(it) }
+       }
+       ```
+    2. **Parameter passing** (for child composables that need to snack):
+       ```kotlin
+       fun MyScreen(onShowMessage: (String) -> Unit) { ... }
+       ```
+  Existing `LocalSnackbarHostState.current` usages can stay as-is until touched for other reasons —
+  no forced migration. Only when refactoring a file anyway, move toward the preferred patterns.
+  **Note for Toast→Snackbar migrations:** services, workers, and background plugins cannot render
+  snackbars (no active Compose tree). For those, use Android Notifications for important messages,
+  keep Toast as low-priority fallback, or drop the message entirely if non-critical.
 - **Avoid adding new inter-module (project) dependencies** - Adding
   `implementation(project(":other:module"))`
   between modules can significantly slow down compilation time. Always discuss before adding these.
@@ -150,9 +334,63 @@
     - Note: Adding external library dependencies via `api(libs.xxx)` or `implementation(libs.xxx)`
       is fine.
 
+## Skills
+
+- Repeatable procedures live in `.claude/skills/<name>/SKILL.md` and load on demand. Use one when the
+  task matches instead of working from memory.
+- **Keep a skill up to date as you use it.** If you hit a step that is missing, add it before you
+  finish. If a step is wrong or no longer needed, correct it in the same change. A stale procedure is
+  worse than none, because it gets believed. The same goes for `.claude/procedures/*.md`.
+- Skills are checked into the repo, so every contributor and the macOS checkout get them. Keep them
+  free of session state ("green, uncommitted, device-pending") - that belongs in notes, not here.
+
+## Memory
+
+Decide where a thing belongs **before** writing it down. Three tiers:
+
+- **Method and procedure** (how to flip a module, how to review, how to audit memory) → a skill or
+  `.claude/procedures/*.md` in the repo. Everybody gets it and git carries it between machines.
+- **Durable facts** (a stated preference, a decision made under pushback, a standing "do not re-add
+  this", a trap in a tool) → memory. These are worth sharing between machines.
+- **Working state** (file paths, counts, "migration is 60% done", "applied but not committed") →
+  memory, but short-lived and local. It rots fastest and another machine does not need it.
+
+Rules that follow from that:
+
+- **Anything re-derivable from the code is a liability, not an asset.** A list of files a migration
+  touched will be wrong within weeks and someone will plan work from it. Record *why* a decision was
+  made - that is the part the code cannot tell you.
+- **Never put sensitive content in this public repo**: analysis of unfixed safety bugs, machine
+  names, network addresses, key paths. Those stay in private memory.
+- **Cite symbols, not line numbers.** `File.kt:123` is wrong within months; a function or class name
+  survives.
+- **The goal is not the same memory on every machine, it is true memory.** The three machines work on
+  different branches, so their memories should differ. Syncing does not make memory true - auditing
+  does. Use the `memory-audit` skill.
+
 ## Migration Procedures
 
 - **For migrations**: Follow procedures in `.claude/procedures/migration.md`
+- **For flipping a module to Kotlin Multiplatform**: use the `kmp-module-flip` skill.
+
+### Kotlin Multiplatform migration rules
+
+- **Migrate the class, lift only the platform call out.** A class is not "Android" because one line
+  of it is. Put that line behind an interface in commonMain and keep the rule - inputs,
+  serialization, description, matching logic - in shared code. `PairedBtDevices` and
+  `LastKnownLocation` in `:plugins:automation` are the examples to copy.
+- **Implement the androidMain side straight away; other platforms can follow later.** Do not hold up
+  a migration waiting for an iOS implementation.
+- **Prefer a platform-independent interface over passing `Context` around.** Where code takes a
+  `Context` (or another Android type) only to reach one capability, replace it with an interface so
+  the code compiles for iOS or the JVM. First check whether the parameter is used at all - several
+  turned out to be dead.
+- **An interface must be honourable on every target that gets one.** An implementation that silently
+  does nothing is a safety problem here: an automation rule the user relies on would quietly stop
+  firing. Where a target cannot honour the contract, the feature should be visibly absent on that
+  target rather than present and dead. Ask before making that call.
+- **Keep exact platform maths on the platform.** Move the decision, not the calculation, when a
+  different formula would change results.
 
 ## When Stuck
 
@@ -164,6 +402,23 @@
 - If an approach requires more than 3 workarounds: **step back and reconsider the approach**
 - If you realize you're about to repeat a mistake from memory: **stop and follow the correct pattern
   **
+
+## On-Device Testing (ONLY on explicit request)
+
+Default stays **"Never install app automatically"** — only build / install / drive devices when the
+user explicitly asks. That request overrides the no-install rule; `connectedAndroidTest` still needs
+its own permission (it wipes the app). When asked:
+
+- Master runs the `full` flavor, a client runs an `aapsclient` flavor — build the needed APK(s) and
+  `adb install -r` (keep data; **never uninstall/wipe** the setup). Find devices via `adb devices -l`.
+- **Never install a build that is older than the app on the device.** Update the branch first
+  (`git status -sb` must not say "behind"), and check that `DATABASE_VERSION` in
+  `database/impl/.../AppDatabase.kt` is not lower than the installed build's. A lower version is a
+  downgrade, and Room's destructive fallback then drops the whole database, even with `install -r`.
+- Drive the UI with **`uiautomator`** (dump hierarchy → tap by element `bounds`), not screenshots.
+- Verify behaviour from **`logcat`** (clear before the action, dump after, grep the relevant markers).
+- Use redirect-not-pipe for any gradle build/test so the real exit code shows (see caveat above).
+- Ask connected devices are test devices.
 
 ## Project Info
 

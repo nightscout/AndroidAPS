@@ -12,16 +12,22 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
+import app.aaps.wear.di.WearMetroActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
+import app.aaps.wear.interaction.actions.RunningModePickerActivity
+import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
+import app.aaps.wear.interaction.activities.BgGraphActivity
+import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Transparent activity to handle complication tap actions reliably.
@@ -32,10 +38,11 @@ import javax.inject.Inject
  * when trying to start a foreground service from a BroadcastReceiver
  * while the app is in the background.
  */
-class ComplicationTapActivity : DaggerAppCompatActivity() {
+class ComplicationTapActivity : WearMetroActivity() {
 
     @Inject lateinit var displayFormat: DisplayFormat
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var aapsLogger: AAPSLogger
 
     companion object {
@@ -131,6 +138,7 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
         }
 
         action = remapActionWithUserPreferences(action)
+        action = gateByWearControl(action)
         aapsLogger.debug(LTag.WEAR, "ComplicationTapActivity handling action: $action for complication: $complicationId")
 
         // Request an update for the complication that has just been tapped
@@ -146,7 +154,11 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
             ComplicationAction.WIZARD -> intentOpen = Intent(this, WizardActivity::class.java)
             ComplicationAction.BOLUS -> intentOpen = Intent(this, TreatmentActivity::class.java)
             ComplicationAction.E_CARB -> intentOpen = Intent(this, ECarbActivity::class.java)
+            ComplicationAction.TEMP_TARGET -> intentOpen = Intent(this, TempTargetActivity::class.java)
+            ComplicationAction.BG_GRAPH -> intentOpen = Intent(this, BgGraphActivity::class.java)
             ComplicationAction.STATUS -> intentOpen = Intent(this, StatusMenuActivity::class.java)
+            ComplicationAction.LOOP_STATUS -> intentOpen = Intent(this, LoopStatusActivity::class.java)
+            ComplicationAction.RUNNING_MODE -> intentOpen = Intent(this, RunningModePickerActivity::class.java)
 
             ComplicationAction.WARNING_OLD, ComplicationAction.WARNING_SYNC -> {
                 val oneAndHalfMinuteAgo = System.currentTimeMillis() - (Constants.MINUTE_IN_MS + Constants.SECOND_IN_MS * 30)
@@ -160,13 +172,33 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
         }
 
         if (intentOpen != null) {
-            intentOpen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            // CLEAR_TASK: a complication tap is a fresh entry point from the watchface — replace
+            // whatever lingers in the app task (Android 12+ keeps the root launcher activity alive
+            // on back, which would otherwise resurface under the opened screen on back press)
+            intentOpen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intentOpen)
         }
     }
 
     private val complicationTapAction: String
         get() = sp.getString(R.string.key_complication_tap_action, "default")
+
+    /**
+     * The main menu and the tiles hide every control action while the phone has "Wear control" off,
+     * but a complication tap used to open the control screens directly - the phone's switch could
+     * be bypassed with one tap on the COB or target complication. Send those taps to the main menu
+     * instead, which shows the disabled state. Read-only screens stay reachable.
+     */
+    private fun gateByWearControl(action: ComplicationAction): ComplicationAction =
+        when (action) {
+            ComplicationAction.WIZARD,
+            ComplicationAction.BOLUS,
+            ComplicationAction.E_CARB,
+            ComplicationAction.TEMP_TARGET,
+            ComplicationAction.RUNNING_MODE -> if (preferences.get(BooleanKey.WearControl)) action else ComplicationAction.MENU
+
+            else                            -> action
+        }
 
     private fun remapActionWithUserPreferences(originalAction: ComplicationAction): ComplicationAction {
         val userPrefAction = complicationTapAction
@@ -179,6 +211,9 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
                 "bolus" -> ComplicationAction.BOLUS
                 "ecarb" -> ComplicationAction.E_CARB
                 "status" -> ComplicationAction.STATUS
+                "loop_status" -> ComplicationAction.LOOP_STATUS
+                "bg_graph" -> ComplicationAction.BG_GRAPH
+                "running_mode" -> ComplicationAction.RUNNING_MODE
                 "none" -> ComplicationAction.NONE
                 "default" -> originalAction
                 else -> originalAction

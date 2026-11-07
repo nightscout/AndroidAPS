@@ -1,5 +1,6 @@
 package app.aaps.pump.diaconn.compose
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
@@ -7,8 +8,10 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.ParcelUuid
 import androidx.compose.runtime.Stable
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -17,15 +20,17 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import java.util.UUID
-import javax.inject.Inject
 
 enum class DiaconnPairStep {
     BLE_SCAN,
@@ -41,13 +46,17 @@ sealed class DiaconnPairWizardEvent {
     data object Finish : DiaconnPairWizardEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
-class DiaconnPairWizardViewModel @Inject constructor(
+@Inject
+class DiaconnPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DiaconnPairWizardUiState())
@@ -78,6 +87,11 @@ class DiaconnPairWizardViewModel @Inject constructor(
     @SuppressLint("MissingPermission")
     fun startScan() {
         aapsLogger.debug(LTag.PUMP, "DiaconnPairWizard: startScan")
+        // Without the permission Android throws a SecurityException, and the app ends
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            aapsLogger.error(LTag.PUMP, "DiaconnPairWizard: BLUETOOTH_SCAN permission missing, no scan")
+            return
+        }
         try {
             val filter = ScanFilter.Builder()
                 .setServiceUuid(ParcelUuid(serviceUUID))

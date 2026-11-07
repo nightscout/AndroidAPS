@@ -11,6 +11,7 @@ sealed class OmnipodOverviewEvent {
     data object StartDeactivation : OmnipodOverviewEvent()
     data object ShowHistory : OmnipodOverviewEvent()
     data class ShowDialog(val title: String, val message: String) : OmnipodOverviewEvent()
+    data class ConfirmDiscardPod(val title: String, val message: String) : OmnipodOverviewEvent()
     data class ShowErrorDialog(val title: String, val message: String) : OmnipodOverviewEvent()
     data class StartActivity(val intent: Intent) : OmnipodOverviewEvent()
     data object ShowRileyLinkPairWizard : OmnipodOverviewEvent()

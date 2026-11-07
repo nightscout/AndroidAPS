@@ -1,5 +1,6 @@
 package app.aaps.pump.insight.compose
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -10,9 +11,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.IBinder
+import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.utils.extensions.safeDisable
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import app.aaps.pump.insight.connection_service.InsightConnectionService
 import app.aaps.pump.insight.descriptors.InsightState
@@ -36,6 +40,7 @@ import kotlinx.coroutines.launch
 internal class InsightPairState(
     private val context: Context,
     private val pumpSync: PumpSync,
+    private val rxBus: RxBus,
     private val scope: CoroutineScope
 ) : InsightConnectionService.StateCallback, InsightConnectionService.ExceptionCallback {
 
@@ -150,7 +155,7 @@ internal class InsightPairState(
     override fun onExceptionOccur(e: Exception?) {
         e?.let { ex ->
             scope.launch(Dispatchers.Main.immediate) {
-                ExceptionTranslator.makeToast(context, ex)
+                ExceptionTranslator.notify(context, rxBus, ex)
             }
         }
     }
@@ -158,8 +163,10 @@ internal class InsightPairState(
     @SuppressLint("MissingPermission")
     private fun startBLScan() {
         if (scanning) return
+        // Without the permission Android throws a SecurityException, and the app ends
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) return
         val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter ?: return
-        if (!bluetoothAdapter.isEnabled) bluetoothAdapter.safeDisable()
+        if (!bluetoothAdapter.isEnabled) bluetoothAdapter.safeEnable()
         val intentFilter = IntentFilter().apply {
             addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
             addAction(BluetoothDevice.ACTION_FOUND)

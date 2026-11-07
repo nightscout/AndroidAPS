@@ -4,7 +4,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.core.ui.R as CoreUiR
@@ -28,6 +27,10 @@ fun InfoStep(
     )
 }
 
+/**
+ * @see PreviewInfoStep
+ * @see PreviewInfoStepFinish
+ */
 @Composable
 internal fun InfoStepContent(
     text: String,
@@ -49,32 +52,6 @@ internal fun InfoStepContent(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Info - With Cancel")
-@Composable
-private fun PreviewInfoStep() {
-    MaterialTheme {
-        InfoStepContent(
-            text = "Please follow the instructions to prepare your new pod for activation.",
-            isFinishStep = false,
-            onNext = {},
-            onCancel = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Info - Finish")
-@Composable
-private fun PreviewInfoStepFinish() {
-    MaterialTheme {
-        InfoStepContent(
-            text = "Your pod has been successfully activated!",
-            isFinishStep = true,
-            onNext = {},
-            onCancel = null
         )
     }
 }

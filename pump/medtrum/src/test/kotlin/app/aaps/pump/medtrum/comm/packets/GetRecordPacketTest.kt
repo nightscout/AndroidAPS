@@ -2,6 +2,7 @@ package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -10,8 +11,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.medtrum.MedtrumTestBase
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -28,17 +27,16 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
     @Mock private lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is GetRecordPacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is GetRecordPacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
                 it.pumpSync = pumpSync
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.dateUtil = dateUtil
                 it.medtrumTimeUtil = medtrumTimeUtil
-            }
         }
+        true
     }
 
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
@@ -88,10 +86,14 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val bolusType = BS.Type.SMB
         val amount = 1.1
 
-        // Mocks
-        val detailedBolusInfo: DetailedBolusInfo = mock()
-        detailedBolusInfo.timestamp = timestamp // Wierd way to mock but this is a @JvmField
-        whenever(detailedBolusInfo.bolusType).thenReturn(bolusType)
+        // A real instance, not a mock. The timestamp used to be written straight onto a mock's field,
+        // which worked only because it was a @JvmField and so bypassed Mockito. It is an ordinary
+        // property now, so that write would go to a stubbed setter and be dropped. DetailedBolusInfo
+        // is plain data, so there is nothing to mock here anyway.
+        val detailedBolusInfo = DetailedBolusInfo().apply {
+            this.timestamp = timestamp
+            this.bolusType = bolusType
+        }
 
         whenever(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amount)).thenReturn(detailedBolusInfo)
 

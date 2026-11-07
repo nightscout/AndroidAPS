@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Unidades</string>
+    <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
+    <string name="next_button">Seguinte</string>
+    <string name="previous_button">Anterior</string>
+    <string name="setupwizard_finish">TERMINAR</string>
+    <string name="welcome">Bem-vindo</string>
+    <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
+    <string name="end_user_license_agreement">Condições de Utilização</string>
+    <string name="end_user_license_agreement_text">NÃO DEVE SER USADO PARA FAZER DECISÕES MÉDICAS. NÃO HÁ NENHUMA GARANTIA PARA O PROGRAMA, NA EXTENSÃO PERMITIDA PELA LEGISLAÇÃO APLICÁVEL. EXCEPTO QUANDO DE OUTRA FORMA, POR ESCRITO, OS TITULARES DOS DIREITOS DE AUTOR E / OU OUTRAS PARTES FORNECEM O PROGRAMA “TAL COMO ESTÁ”, SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO, ÀS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. TODO O RISCO QUANTO À QUALIDADE E DESEMPENHO DO PROGRAMA É CONSIGO. CASO O PROGRAMA SEJA DEFEITUOSO, ASSUME O CUSTO DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIOS.</string>
+    <string name="end_user_license_agreement_i_understand">EU ENTENDO E CONCORDO</string>
+    <string name="display_settings">Definições Ecrã</string>
+    <string name="low_mark">Marca Baixo</string>
+    <string name="high_mark">Marca ALTO</string>
+    <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
+    <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
+    <string name="storedsettingsfound">Definições armazenadas encontradas</string>
+    <string name="master_password_summary">Senha Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>
+    <string name="syncinfotext">Sincronize dados com a nuvem. Pode saltar este passo agora, mas não será capaz de passar os objetivos até que configure o Nightscout ou o Tidepool.</string>
+    <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
+    <string name="profile">Perfil</string>
+    <string name="doprofileswitch">Fazer Mudança De Perfil</string>
+    <string name="exitwizard">Saltar assistente de configuração</string>
+    <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar a configuração assim que a bomba for configurada.\n</string>
+    <string name="startobjective">Iniciar primeiro objectivo</string>
+    <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
+    <string name="readstatus">Ler estado</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo parece não suportar a otimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Qual a bomba que gostaria de utilizar com a AndroidAPS?</string>
+    <string name="configbuilder_aps_description">Qual é o algoritmo do APS que deve fazer ajustes na terapia?</string>
+    <string name="configbuilder_bgsource_description">De onde deve a AndroidAPS obter os dados?</string>
+    <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
+    <string name="allow_hardware_pump_text">Atenção: Se conectar e ativar a ligação à sua bomba física, a AndroidAPS irá copiar as definições do perfil para as definições da bomba, apagando o perfil memorizado na bomba. Por favor verifique se o que preencheu no perfil da AAPS tem os mesmos valores que estão na bomba. Caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
+    <string name="nsclient_version_does_not_match">A versão AAPSClient não coincide com a versão AAPS. Por favor, atualize.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

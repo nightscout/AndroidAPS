@@ -5,15 +5,17 @@ import app.aaps.pump.eopatch.core.api.SetKey
 import app.aaps.pump.eopatch.core.response.BasalScheduleSetResponse
 import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
 import app.aaps.pump.eopatch.vo.PatchLifecycleEvent.Companion.createActivated
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ActivateTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class ActivateTask(
     val startBasalTask: StartNormalBasalTask
 ) : TaskBase(TaskFunc.ACTIVATE) {
 

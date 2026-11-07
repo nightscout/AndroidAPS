@@ -41,7 +41,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Ένας προσωρινός βασικός τρέχει στο Pod, αλλά το AAPS δεν γνωρίζει αυτόν τον προσωρινό βασικό ρυθμό. Παρακαλώ ακυρώστε τον προσωρινό βασικό σας χειροκίνητα.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Στατιστικά RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Ανάγνωση Αρχείου Καταγραφής Pulse</string>
     <string name="omnipod_eros_pod_management_pulse_log">Αρχείο Καταγραφής Pulse</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Αρχείο καταγραφής Pulse (αντιγράφηκε στο πρόχειρο)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

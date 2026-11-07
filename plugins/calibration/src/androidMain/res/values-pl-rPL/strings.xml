@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_calibration_name">Brak kalibracji</string>
+    <string name="description_no_calibration">"Brak nadpisania kalibracji. Wartości z sensora są używane bez zmian. Użyj tej opcji, gdy sensor jest już fabrycznie skalibrowany i dokładny."</string>
+    <string name="linear_calibration_name">Kalibracja liniowa</string>
+    <string name="description_linear_calibration">"Nadpisanie kalibracji liniowej dla sensora (nachylenie i przesunięcie) obliczane na podstawie Twoich pomiarów z palca. Nowsze pomiary mają większą wagę. Nadpisanie jest stosowane po rozpoczęciu bieżącej sesji sensora; pierwsze 2 godziny są pomijane jako rozgrzewka."</string>
+    <string name="sensor_change_detected_text">Możliwa zmiana sensora wykryta o %1$s. Oznaczyć jako nowy sensor?</string>
+    <string name="sensor_change_detected_action">Oznacz zmianę senzora</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Zarejestruj zmianę sensora, aby włączyć kalibrację.</string>
+    <string name="cal_status_warmup">Rozgrzewanie senzora - kalibracja aktywna po %1$s.</string>
+    <string name="cal_status_need_more_entries">Potrzeba co najmniej 2 pomiarów z palca (obecnie %1$d).</string>
+    <string name="cal_status_unsafe_fit">Dopasowanie poza bezpiecznym zakresem - kalibracja nie została zastosowana.</string>
+    <string name="cal_status_applied">Kalibracja zastosowana.</string>
+    <string name="cal_status_applied_offset_only">Zastosowano tylko kalibrację przesunięcia (offset) - zakres sensora jest zbyt wąski do obliczenia nachylenia.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibracja zastosowana - nachylenie ograniczone do bezpiecznego zakresu. Dodaj więcej wpisów, aby ograniczenie zostało złagodzone.</string>
+    <string name="cal_slope_offset">Nachylenie %1$.2f, korekta w środkowym zakresie %2$s</string>
+    <string name="cal_session_started">Sesja rozpoczęta: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Zapisz zmianę sensora</string>
+    <string name="cal_add_calibration">Dodaj kalibrację</string>
+    <string name="cal_entries_header">Wpisy z glukometru (%1$d)</string>
+    <string name="cal_no_entries">Brak wpisów z glukometru.</string>
+    <string name="cal_entry_pair">Palec %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Usunąć wpis?</string>
+    <string name="cal_remove_entry_message">To unieważni wpis. Dopasowanie zostanie ponownie obliczone.</string>
+    <string name="cal_chart_entry_readout">Wpis %1$d/%2$d · %3$s · sensor %4$s → BG %5$s</string>
+</resources>

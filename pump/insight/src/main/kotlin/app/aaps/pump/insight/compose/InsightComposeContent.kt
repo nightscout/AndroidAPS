@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,13 +21,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -44,24 +49,32 @@ import app.aaps.pump.insight.descriptors.BolusType
 import app.aaps.pump.insight.descriptors.InsightState
 import app.aaps.pump.insight.descriptors.OperatingMode
 import app.aaps.pump.insight.events.EventLocalInsightUpdateGUI
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import app.aaps.core.ui.R as CoreUiR
 
 private enum class InsightScreen { OVERVIEW, PAIR_WIZARD }
 
 class InsightComposeContent(
     private val insightPlugin: InsightPlugin,
+    private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
     private val context: Context,
-    private val aapsSchedulers: AapsSchedulers,
     private val pumpSync: PumpSync,
-    private val blePreCheck: BlePreCheck
+    private val blePreCheck: BlePreCheck,
+    private val ch: ConcentrationHelper,
+    private val appScope: CoroutineScope
 ) : ComposablePluginContent {
 
     @Composable
@@ -73,12 +86,14 @@ class InsightComposeContent(
         val overviewState = remember {
             InsightOverviewState(
                 insightPlugin = insightPlugin,
+                aapsLogger = aapsLogger,
                 rh = rh,
                 rxBus = rxBus,
                 dateUtil = dateUtil,
                 commandQueue = commandQueue,
                 context = context,
-                aapsSchedulers = aapsSchedulers
+                ch = ch,
+                appScope = appScope
             )
         }
 
@@ -95,7 +110,7 @@ class InsightComposeContent(
             IconButton(onClick = onNavigateBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(id = app.aaps.core.ui.R.string.back)
+                    contentDescription = stringResource(id = CoreUiR.string.back)
                 )
             }
         }
@@ -103,7 +118,7 @@ class InsightComposeContent(
             IconButton(onClick = { currentScreen = InsightScreen.OVERVIEW }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(id = app.aaps.core.ui.R.string.back)
+                    contentDescription = stringResource(id = CoreUiR.string.back)
                 )
             }
         }
@@ -112,7 +127,7 @@ class InsightComposeContent(
                 IconButton(onClick = action) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
-                        contentDescription = stringResource(id = app.aaps.core.ui.R.string.settings)
+                        contentDescription = stringResource(id = CoreUiR.string.settings)
                     )
                 }
             }
@@ -168,6 +183,7 @@ class InsightComposeContent(
                 PairWizardHost(
                     blePreCheck = blePreCheck,
                     pumpSync = pumpSync,
+                    rxBus = rxBus,
                     onFinish = { currentScreen = InsightScreen.OVERVIEW }
                 )
             }
@@ -179,6 +195,7 @@ class InsightComposeContent(
 private fun PairWizardHost(
     blePreCheck: BlePreCheck,
     pumpSync: PumpSync,
+    rxBus: RxBus,
     onFinish: () -> Unit
 ) {
     var bleReady by remember { mutableStateOf(false) }
@@ -197,6 +214,7 @@ private fun PairWizardHost(
         InsightPairState(
             context = context,
             pumpSync = pumpSync,
+            rxBus = rxBus,
             scope = coroutineScope
         )
     }
@@ -232,15 +250,17 @@ internal sealed class InsightOverviewEvent {
 
 internal class InsightOverviewState(
     private val insightPlugin: InsightPlugin,
+    private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
     @Suppress("unused") private val context: Context,
-    private val aapsSchedulers: AapsSchedulers
+    private val ch: ConcentrationHelper,
+    private val appScope: CoroutineScope
 ) {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private var refreshPending = false
     private var tbrOverNotificationPending = false
 
@@ -251,16 +271,20 @@ internal class InsightOverviewState(
     val uiState: StateFlow<PumpOverviewUiState> = _uiState
 
     fun start() {
-        disposable.add(
-            rxBus.toObservable(EventLocalInsightUpdateGUI::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({ refresh() }, {})
-        )
+        // Own scope on Main, like the main scheduler used before, cancelled in stop() like the
+        // CompositeDisposable was cleared. appScope must not be used here, it is app lifetime.
+        // UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss an update
+        // sent before it starts.
+        val newScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
+        scope = newScope
+        rxBus.toFlow(EventLocalInsightUpdateGUI::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { refresh() }
         refresh()
     }
 
     fun stop() {
-        disposable.clear()
+        scope?.cancel()
+        scope = null
     }
 
     fun performUnpair() {
@@ -286,10 +310,10 @@ internal class InsightOverviewState(
         // Connection status
         val statusRes = when (service.state) {
             InsightState.NOT_PAIRED   -> R.string.not_paired
-            InsightState.DISCONNECTED -> app.aaps.core.ui.R.string.disconnected
+            InsightState.DISCONNECTED -> CoreUiR.string.disconnected
             InsightState.CONNECTED    -> app.aaps.core.interfaces.R.string.connected
             InsightState.RECOVERING   -> R.string.recovering
-            else                      -> app.aaps.core.ui.R.string.connecting
+            else                      -> CoreUiR.string.connecting
         }
         add(PumpInfoRow(label = rh.gs(R.string.insight_status), value = rh.gs(statusRes)))
 
@@ -297,7 +321,7 @@ internal class InsightOverviewState(
             add(
                 PumpInfoRow(
                     label = rh.gs(R.string.recovery_duration),
-                    value = rh.gs(app.aaps.core.ui.R.string.secs, (service.recoveryDuration / 1000).toInt())
+                    value = rh.gs(CoreUiR.string.secs, (service.recoveryDuration / 1000).toInt())
                 )
             )
         }
@@ -320,7 +344,7 @@ internal class InsightOverviewState(
                 val modeText = when (mode) {
                     OperatingMode.STARTED -> rh.gs(R.string.started)
                     OperatingMode.STOPPED -> rh.gs(R.string.stopped)
-                    OperatingMode.PAUSED  -> rh.gs(app.aaps.core.ui.R.string.paused)
+                    OperatingMode.PAUSED  -> rh.gs(CoreUiR.string.paused)
                 }
                 add(PumpInfoRow(label = rh.gs(R.string.operating_mode), value = modeText))
             }
@@ -328,70 +352,84 @@ internal class InsightOverviewState(
             insightPlugin.batteryStatus?.let { battery ->
                 add(
                     PumpInfoRow(
-                        label = rh.gs(app.aaps.core.ui.R.string.battery_label),
-                        value = rh.gs(app.aaps.core.ui.R.string.format_percent, battery.batteryAmount)
+                        label = rh.gs(CoreUiR.string.battery_label),
+                        value = rh.gs(CoreUiR.string.format_percent, battery.batteryAmount)
                     )
                 )
             }
 
             insightPlugin.cartridgeStatus?.let { cartridge ->
                 val status = if (cartridge.isInserted)
-                    rh.gs(app.aaps.core.ui.R.string.format_insulin_units, cartridge.remainingAmount)
+                    ch.insulinAmountString(PumpInsulin(cartridge.remainingAmount))
                 else
                     rh.gs(R.string.not_inserted)
                 add(PumpInfoRow(label = rh.gs(R.string.reservoir_level), value = status))
             }
 
             insightPlugin.totalDailyDose?.let { tdd ->
-                add(PumpInfoRow(label = rh.gs(R.string.tdd_bolus), value = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.bolus)))
-                add(PumpInfoRow(label = rh.gs(R.string.tdd_basal), value = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.basal)))
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.tdd_total), value = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.bolusAndBasal)))
+                add(PumpInfoRow(label = rh.gs(R.string.tdd_bolus), value = ch.insulinAmountString(PumpInsulin(tdd.bolus))))
+                add(PumpInfoRow(label = rh.gs(R.string.tdd_basal), value = ch.insulinAmountString(PumpInsulin(tdd.basal))))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.tdd_total), value = ch.insulinAmountString(PumpInsulin(tdd.bolusAndBasal))))
             }
 
             insightPlugin.activeBasalRate?.let { basal ->
                 add(
                     PumpInfoRow(
-                        label = rh.gs(R.string.active_basal_rate),
-                        value = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, basal.activeBasalRate) + " (${basal.activeBasalProfileName})"
+                        label = rh.gs(CoreUiR.string.base_basal_rate_label),
+                        value = "${ch.basalRateString(PumpRate(basal.activeBasalRate), true)} (${basal.activeBasalProfileName})"
                     )
                 )
             }
 
             insightPlugin.activeTBR?.let { tbr ->
-                add(
-                    PumpInfoRow(
-                        label = rh.gs(R.string.active_tbr),
-                        value = rh.gs(R.string.tbr_formatter, tbr.percentage, tbr.initialDuration - tbr.remainingDuration, tbr.initialDuration)
+                if (insightPlugin.lastTempBasalTimestamp > 0L)
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CoreUiR.string.tempbasal_label),
+                            value = ch.basalTbrString(
+                                rate = PumpRate(tbr.percentage.toDouble()),
+                                startTime = insightPlugin.lastTempBasalTimestamp,
+                                durationInMin = tbr.initialDuration,
+                                isAbsolute = false
+                            )
+                        )
                     )
-                )
             }
 
-            val lastBolusCu = insightPlugin.lastBolusAmount.value?.cU ?: 0.0
-            if (lastBolusCu != 0.0 && insightPlugin.lastBolusTimestamp != 0L) {
-                val minAgo = (System.currentTimeMillis() - insightPlugin.lastBolusTimestamp) / 60.0 / 1000.0
-                val ago = if (minAgo < 60) dateUtil.minAgo(rh, insightPlugin.lastBolusTimestamp)
-                else dateUtil.hourAgo(insightPlugin.lastBolusTimestamp, rh)
-                val unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
-                add(
-                    PumpInfoRow(
-                        label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label),
-                        value = rh.gs(R.string.insight_last_bolus_formater, lastBolusCu, unit, ago)
+            insightPlugin.lastBolusAmount.value?.let { lastBolus ->
+                if (lastBolus.cU != 0.0 && insightPlugin.lastBolusTimestamp != 0L) {
+                    val text = ch.insulinAmountAgoString(
+                        lastBolus,
+                        insightPlugin.lastBolusTimestamp
                     )
-                )
+                    text?.let {
+                        add(
+                            PumpInfoRow(
+                                label = rh.gs(CoreUiR.string.last_bolus_label),
+                                value = it
+                            )
+                        )
+                    }
+                }
             }
 
             insightPlugin.activeBoluses?.let { boluses ->
                 boluses.take(2).forEach { bolus ->
                     val label = when (bolus.bolusType) {
                         BolusType.MULTIWAVE -> rh.gs(R.string.multiwave_bolus)
-                        BolusType.EXTENDED  -> rh.gs(app.aaps.core.ui.R.string.extended_bolus)
+                        BolusType.EXTENDED  -> rh.gs(CoreUiR.string.extended_bolus)
                         else                -> null
                     }
                     if (label != null) {
                         add(
                             PumpInfoRow(
                                 label = label,
-                                value = rh.gs(R.string.eb_formatter, bolus.remainingAmount, bolus.initialAmount, bolus.remainingDuration)
+                                value = ch.insulinDeliveryAgoString(
+                                    amount = PumpInsulin(bolus.initialAmount - bolus.remainingAmount),
+                                    totalAmount = PumpInsulin(bolus.initialAmount),
+                                    startTime = bolus.startTime,
+                                    durationInMin = bolus.remainingDuration
+                                )
                             )
                         )
                     }
@@ -403,7 +441,7 @@ internal class InsightOverviewState(
         if (service.isPaired) {
             service.pumpSystemIdentification?.let { sys ->
                 if (sys.serialNumber.isNotEmpty()) {
-                    add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.serial_number), value = sys.serialNumber))
+                    add(PumpInfoRow(label = rh.gs(CoreUiR.string.serial_number), value = sys.serialNumber))
                 }
                 sys.manufacturingDate?.let { date ->
                     add(PumpInfoRow(label = rh.gs(R.string.manufacturing_date), value = date))
@@ -423,19 +461,18 @@ internal class InsightOverviewState(
 
         add(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
-                iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
+                label = rh.gs(CoreUiR.string.refresh),
+                icon = Icons.Filled.Refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = !refreshPending,
                 onClick = {
                     refreshPending = true
                     refresh()
-                    commandQueue.readStatus("InsightRefreshButton", object : Callback() {
-                        override fun run() {
-                            refreshPending = false
-                            refresh()
-                        }
-                    })
+                    appScope.launch {
+                        commandQueue.readStatus("InsightRefreshButton")
+                        refreshPending = false
+                        refresh()
+                    }
                 }
             )
         )
@@ -451,12 +488,11 @@ internal class InsightOverviewState(
                     onClick = {
                         tbrOverNotificationPending = true
                         refresh()
-                        commandQueue.setTBROverNotification(object : Callback() {
-                            override fun run() {
-                                tbrOverNotificationPending = false
-                                refresh()
-                            }
-                        }, !block.isEnabled)
+                        appScope.launch {
+                            commandQueue.setTBROverNotification(!block.isEnabled)
+                            tbrOverNotificationPending = false
+                            refresh()
+                        }
                     }
                 )
             )
@@ -469,7 +505,7 @@ internal class InsightOverviewState(
             add(
                 PumpAction(
                     label = rh.gs(R.string.unpair),
-                    iconRes = app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp,
+                    icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { _events.tryEmit(InsightOverviewEvent.RequestUnpair) }
                 )
@@ -478,7 +514,7 @@ internal class InsightOverviewState(
             add(
                 PumpAction(
                     label = rh.gs(R.string.insight_pairing),
-                    iconRes = app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp,
+                    icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { _events.tryEmit(InsightOverviewEvent.StartPairing) }
                 )

@@ -43,7 +43,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Auf dem Pod läuft eine temp. Basalrate, aber AAPS kennt diese nicht. Brich die TBR bitte manuell ab.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Status</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Pulse-Log lesen</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (in Zwischenablage kopiert)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Befülle den neuen Pod mit ausreichend Insulin für 3 Tage.\n\nAchte auch zwei Pieptöne vom Pod während des Füllens. Diese zeigen an, dass der Pod mit der Mindestmenge von 80 IE befüllt wurde. Leere die Spritze komplett, auch wenn Du die beiden Pieptöne gehört hast.\n\nKlicke <b>Weiter</b> nachdem Du den Pod befüllt hast.\n\n<b>Hinweis:</b> Entferne den Nadelschutz des Pods noch nicht.\n<b>Hinweis:</b> Bringe den RileyLink in eine aufrechte Position und platziere den Pod einige Zentimeter entfernt davon.</string>

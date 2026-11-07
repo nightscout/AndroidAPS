@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Интегриране на помпа EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">Предупреждение за празен резервоар</string>
     <string name="patch_expiration_reminders">Напомняне за изтичане на Patch</string>
@@ -9,10 +8,11 @@
     <string name="eopatch_ble_status">Състояние на BLE</string>
     <string name="eopatch_serial_number">Сериен номер</string>
     <string name="eopatch_expiration_time">Време на изтичане</string>
+    <string name="eopatch_not_activated">Не е активирана</string>
     <string name="eopatch_base_basal_rate">Базова базална стойност</string>
     <string name="eopatch_temp_basal_rate">Временна базална стойност</string>
     <string name="invalid_basal_rate">Базалната стойност на профила е по-малка от 0,05 Е/час. EOPatch има минимална инжекционна единица от 0,05U. Моля, опитайте отново, след като зададете профила на повече от тази стойност.</string>
-    <string name="no_profile_selected">Няма избран профил. Моля, изберете профил и опитайте отново.</string>
+    <string name="no_profile_selected_try_again">Няма избран профил. Моля, изберете профил и опитайте отново.</string>
     <string name="symbol_day">ден</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -37,17 +37,21 @@
     <string name="patch_wake_up">Пълнене на инсулин</string>
     <string name="patch_wake_up_desc_1">Напълнете нов Patch с инсулин, при стайна температура. Проверете ъгъла на спринцовката.</string>
     <string name="patch_wake_up_desc_2">Следете за 1 звуков сигнал.</string>
+    <string name="patch_wake_up_pairing_info">При свързването 2 Android нотификации ще се покажат. Трябва да ги потвърдите за Bluetooth свързване.</string>
     <string name="patch_start_pairing">Започване на сдвояване</string>
     <string name="patch_connect_new">Сдвояване на Patch</string>
     <string name="patch_connect_new_desc">Новият Patch се сдвоява.\nПоддържайте дистанцията между Patch и смарт устройството възможно най-малка</string>
     <string name="patch_remove_needle_cap">Подгответе се за закрепване на Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Отстранете залепващата лента и след това натиснете „Напред“.</string>
+    <string name="patch_remove_needle_cap_desc_2">Ако иглата стърчи. натиснете \'Откажи\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">Този пач е мокър или мръсен, или с орегъната лепенка. Натиснете \'Откажи\'.</string>
     <string name="patch_remove_protection_tape">Закрепяне на Patch</string>
     <string name="patch_remove_protection_tape_desc_1">Почистете и подсушете мястото на приложение, след което прикрепете Patch към кожата.</string>
     <string name="patch_remove_protection_tape_desc_2">Проверете инфузионния сет и след това натиснете „Стартиране на проверката за безопасност“.</string>
     <string name="patch_start_safety_check">Стартирайте проверката за безопасност</string>
     <string name="patch_safety_check">Проверка за безопасност…</string>
     <string name="patch_safety_check_desc_1">Отнема около 30 секунди.</string>
+    <string name="patch_safety_check_desc_2">За сигурност, не премахвайте защитата на иглата докато не мине проверката!</string>
     <string name="patch_rotate_knob">Поставяне на иглата</string>
     <string name="patch_rotate_knob_desc_1">Завъртете лоста за действие на иглата на повече от 100°, за да поставите иглата и след това завъртете напълно, за да го махнете</string>
     <string name="patch_rotate_knob_desc_2">Проверете за 1 звуков сигнал и след това натиснете „Напред“.</string>
@@ -59,6 +63,7 @@
     <string name="patch_activate_reminder_desc">Активирането на Patch не е завършено.\n Продължете.</string>
     <string name="patch_communication_check_helper_1">Доближете смарт устройството си до Patch.</string>
     <string name="patch_communication_check_helper_2">Моля, преместете се на друго място и опитайте отново.</string>
+    <string name="patch_safety_check_failed_desc">Грешка при проверката за сигурност. Опитайте отново.</string>
     <string name="patch_communication_failed">Грешка при свързване</string>
     <string name="patch_communication_succeed">Успешно свързване</string>
     <string name="patch_communication_succeed_message">Свързанo с Patch.</string>
@@ -77,9 +82,14 @@
     <string name="needle_insertion_error_3">Натиснете „Отхвърляне“, за да деактивирате Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Време за спиране на базала</string>
     <string name="string_resume_insulin_delivery_title">Възобновяване доставянето на инсулин</string>
+    <string name="string_resume_insulin_delivery_message">Край на спирането на инсулин.\nНатиснете \'Потвърди\' за да го продължите.\n\nСпирането няма да прължи докато не натиснете \'Потвърди\'.\nАко не го направите може да изпаднете в хипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Доставянето на инсулин е спряно.</string>
     <string name="string_resumed_insulin_delivery_message">Доставянето на инсулин е възобновено.</string>
     <string name="string_temp_basal_remained_hhmm">оставащо време: %1$s:%2$s</string>
+    <string name="string_pause_failed">Прекъсването е неуспешно.</string>
     <string name="string_resume_failed">Възобновяването е неуспешно.</string>
-    <!-- Permission rationales -->
+    <string name="wizard_exit_activation_warning">Изход от съветника? Пач помпата ще остане в незавършен статус и ще се наложи да сложите нова.</string>
+    <string name="wizard_exit_deactivation_warning">Изход от съветника? Помпата може да остане активна и да пуска инсулин.</string>
+    <string name="patch_force_reset">Форирано нулиране</string>
+    <string name="patch_force_reset_confirm">Това ще изчисти статуса на пача локално и без да изпрати команда до помпата. Използвай само ако нормалната деактивация е невъзможна. Помпата ще доставя инсулин докато не свърши батерията или е ръчно изключена.</string>
 </resources>

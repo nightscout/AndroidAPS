@@ -8,10 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.pump.WizardButton
@@ -19,6 +17,10 @@ import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
 
+/**
+ * @see PreviewCollapsed
+ * @see PreviewExpanded
+ */
 @Composable
 fun SelectInsulinStep(
     viewModel: MedtrumPatchViewModel,
@@ -34,7 +36,7 @@ fun SelectInsulinStep(
             onClick = { viewModel.moveStep(PatchStep.PRIME) }
         ),
         secondaryButton = WizardButton(
-            text = stringResource(app.aaps.core.ui.R.string.cancel),
+            text = stringResource(R.string.cancel),
             onClick = onCancel
         )
     ) {
@@ -54,43 +56,3 @@ fun SelectInsulinStep(
         )
     }
 }
-
-
-
-// region Previews
-
-private val previewInsulins = listOf(
-    ICfg("Fiasp U100", peak = 55, dia = 5.0, concentration = 1.0),
-    ICfg("Lyumjev U200", peak = 45, dia = 5.0, concentration = 2.0),
-    ICfg("NovoRapid U100", peak = 75, dia = 5.0, concentration = 1.0)
-)
-
-@Preview(showBackground = true, name = "Select Insulin - Collapsed")
-@Composable
-private fun PreviewCollapsed() {
-    MaterialTheme {
-        SelectInsulin(
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[0],
-            activeInsulinLabel = "Fiasp U100",
-            onInsulinSelect = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Select Insulin - Expanded")
-@Composable
-private fun PreviewExpanded() {
-    MaterialTheme {
-        SelectInsulin(
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[0],
-            activeInsulinLabel = "Fiasp U100",
-            onInsulinSelect = {},
-            initialExpanded = true,
-            concentrationDropDownEnabled = true
-        )
-    }
-}
-
-// endregion

@@ -45,7 +45,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink 統計</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">重設 RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">讀取脈搏日誌</string>
     <string name="omnipod_eros_pod_management_pulse_log">脈搏日誌</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">脈搏日誌（已複製到剪貼簿）</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

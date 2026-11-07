@@ -21,20 +21,16 @@
     <string name="equil_tone_mode_shake">Alleen trillen</string>
     <string name="equil_tone_mode_tone">Alleen toon</string>
     <string name="equil_tone_mode_tone_and_shake">Trillen en geluid</string>
-    <string name="equil_unit_u">%1$s E</string>
     <string name="equil_ble_config_confirmation_title">Koppel Equil patch pomp</string>
     <string name="equil_error">Communicatiefout</string>
     <string name="equil_change">Vervang pomp</string>
     <string name="equil_change_content">Haal de pomp los van de bodemplaat.</string>
     <string name="equil_unpair_alert">Weet u zeker dat u de controle over %1$s wilt opgeven?</string>
-    <string name="equil_devices_number_hint">Apparaat nummer</string>
     <string name="equil_record_basal">Basaal snelheid %1$s E/u</string>
     <string name="equil_record_basal_temp">Tijdelijke basaal snelheid %1$s E/u</string>
     <string name="equil_record_bolus">Bolus %1$s E</string>
     <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="equil_not_enough_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
-    <string name="equil_low_battery">Batterij laag</string>
-    <string name="equil_low_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
     <string name="equil_pump_not_run">Pomp niet actief</string>
     <string name="equil_pair">Koppel</string>
     <string name="equil_pair_error">Koppel fout</string>
@@ -106,38 +102,19 @@
     <string name="equil_history_item18">Abnormale toediening gestopt</string>
     <string name="equil_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="equil_common_overview_button_resume_delivery">Insulinetoediening hervatten</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fE/u @%2$s (%3$d/%4$d min)</string>
-    <string name="equil_common_moments_ago">Zojuist</string>
-    <string name="equil_common_less_than_a_minute_ago">Minder dan een minuut geleden</string>
-    <string name="equil_common_time_ago">%1$s geleden</string>
-    <string name="equil_common_composite_time">%1$s en %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Je hebt nog niet alle stappen voltooid. Weet je zeker dat je wilt afsluiten?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Afsluiten</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minuut</item>
-        <item quantity="other">%1$d minuten</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uren</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagen</item>
-    </plurals>
     <string name="equil_support_error">Firmware versie te laag. Niet ondersteund</string>
     <string name="equil_set_pair_password">Instellen koppelwachtwoord</string>
     <string name="equil_hint1">Na het installeren van de pomp op het basisplaat, selecteer of de lucht uit de binnenste naald moet worden verwijderd.</string>
     <string name="equil_unbind">Apparaat ontkoppelen</string>
     <string name="equil_device_unpaired">Apparaat niet gekoppeld</string>
     <string name="equil_assemble">Monteer de pomp, het gevulde reservoir en de opgeladen batterij</string>
-    <string name="equil_devices_number">Voer nieuw pomp ID in</string>
     <string name="equil_insert">Prime het reservoir totdat er een druppel insuline aan de punt van de naald zichtbaar is</string>
     <string name="equil_insert2">De pomp mag niet op de pompbasis zitten.</string>
     <string name="equil_attach">Bevestig de pomp aan de basis</string>
     <string name="equil_hint2">Canule vullen</string>
     <string name="equil_pump_updated">Pomp bijgewerkt</string>
     <string name="equil_replace_reservoir">Het reservoir is leeg. Vervang het reservoir</string>
-    <string name="error_mustbe6hexadidits">Moet 6 tekens bevatten uit ABCDEF0123456789</string>
     <string name="equil_removed_anyway">Ontkoppel opdracht is mislukt. Pomp wordt toch verwijderd. Wachtwoord ingesteld tijdens het koppelen wordt niet van de pomp verwijderd.</string>
 </resources>

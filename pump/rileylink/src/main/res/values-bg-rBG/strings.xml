@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Никога не се е свързвана</string>
+    <string name="pump_status_sleeping">Спящ режим</string>
+    <string name="pump_status_waking_up">Събуждане</string>
+    <string name="pump_status_active">Активна</string>
+    <string name="pump_status_error_comm">Грешка в комуникацията</string>
+    <string name="pump_status_timeout_comm">Изтече времето за връзка</string>
+    <string name="pump_status_invalid_config">Грешна конфигурация</string>
+    <string name="medtronic_pump_encoding_title">Medtronic коодиране</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Encoding</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Encoding</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Сканиране</string>
     <string name="riley_link_ble_config_connected_never">Никога</string>
@@ -60,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Използвай сканиране</string>
     <string name="orange_use_scanning_level_summary">Сканирай преди да се свържеш с OrangeLink, това би трябвало да подобри връзката (също може да се използва с други RileyLink клонинги, ако е необходимо)</string>
+    <string name="rileylink_pair">Свързване на RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink успешно свързан</string>
+    <string name="rileylink_config_reset">RileyLink нулиране на конфигурация</string>
 </resources>

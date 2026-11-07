@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">从未连接</string>
+    <string name="pump_status_sleeping">休眠</string>
+    <string name="pump_status_waking_up">唤醒中</string>
+    <string name="pump_status_active">启用</string>
+    <string name="pump_status_error_comm">通信错误</string>
+    <string name="pump_status_timeout_comm">通讯超时</string>
+    <string name="pump_status_invalid_config">无效配置</string>
+    <string name="medtronic_pump_encoding_title">美敦力 编码</string>
+    <string name="medtronic_pump_encoding_4b6b_local">软件 4b6b 编码</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">硬件 4b6b 编码</string>
+    <string name="medtronic_pump_frequency_us_ca">美国 &amp; 加拿大 (916MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">全球 (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">扫描中</string>
     <string name="riley_link_ble_config_connected_never">从不</string>
@@ -58,4 +70,7 @@
     </plurals>
     <string name="orange_use_scanning_level">使用扫描</string>
     <string name="orange_use_scanning_level_summary">在连接到OrangeLink之前进行扫描，它应该可以改善连接 (如果需要，也可以用于其他RileyLink 克隆版本)</string>
+    <string name="rileylink_pair">配对 RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink已成功配对</string>
+    <string name="rileylink_config_reset">RileyLink配置重置</string>
 </resources>

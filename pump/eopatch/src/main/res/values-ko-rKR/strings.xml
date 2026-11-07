@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day를 위한 펌프 통합</string>
     <string name="low_reservoir">레저버 적음 경고</string>
     <string name="patch_expiration_reminders">패치 만료 알림</string>
@@ -12,7 +11,6 @@
     <string name="eopatch_base_basal_rate">기본 basal 양</string>
     <string name="eopatch_temp_basal_rate">임시 basal 양</string>
     <string name="invalid_basal_rate">프로파일의 basal이 0.05 U/보다 적습니다. EOPatch의 최소 주입량은 0.05U입니다. 최소 주입량보다 높게 프로파일 설정 후 다시 시도하십시오.</string>
-    <string name="no_profile_selected">프로파일이 선택되지 않았습니다. 프로파일을 선택하고 다시 시도하십시오.</string>
     <string name="symbol_day">일</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -81,5 +79,4 @@
     <string name="string_resumed_insulin_delivery_message">인슐린 주입이 재시작되었습니다.</string>
     <string name="string_temp_basal_remained_hhmm">남은 시간: %1$s:%2$s</string>
     <string name="string_resume_failed">재시작 실패함</string>
-    <!-- Permission rationales -->
 </resources>

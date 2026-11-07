@@ -14,21 +14,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 
 class EquilComposeContent(
     private val pluginName: String,
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck
+    private val blePreCheck: BlePreCheck,
+    private val config: Config
 ) : ComposablePluginContent {
+
+    /**
+     * The emulated pump has no radio behind it, so the real BLE readiness check would fail the wizard
+     * before it starts. Mirrors `DanaRSPairWizardViewModel.isEmulating`.
+     */
+    private val isEmulating: Boolean get() = config.isEnabled(ExternalOptions.EMULATE_EQUIL)
 
     @Composable
     override fun Render(
@@ -38,7 +47,7 @@ class EquilComposeContent(
     ) {
         LocalContext.current
         val snackbarHostState = LocalSnackbarHostState.current
-        val overviewViewModel: EquilOverviewViewModel = hiltViewModel()
+        val overviewViewModel: EquilOverviewViewModel = metroViewModel()
 
         // Navigation state
         var showHistory by remember { mutableStateOf(false) }
@@ -97,7 +106,7 @@ class EquilComposeContent(
         }
 
         if (showHistory) {
-            val historyViewModel: EquilHistoryViewModel = hiltViewModel()
+            val historyViewModel: EquilHistoryViewModel = metroViewModel()
             EquilHistoryScreen(
                 viewModel = historyViewModel,
                 onNavigateBack = { showHistory = false }
@@ -105,20 +114,24 @@ class EquilComposeContent(
         } else if (showWizardWorkflow) {
             KeepScreenOnEffect()
 
-            // BLE pre-check — gate wizard until BLE is confirmed ready
-            var bleReady by remember { mutableStateOf(false) }
-            BlePreCheckHost(
-                blePreCheck = blePreCheck,
-                onReady = { bleReady = true },
-                onFailed = {
-                    showWizardWorkflow = false
-                    startWorkflow = null
-                }
-            )
+            // BLE pre-check — gate wizard until BLE is confirmed ready. While emulating there is no
+            // radio to check, so skip it and start ready: the host is what flips `bleReady`, and
+            // without it the wizard would never render.
+            var bleReady by remember { mutableStateOf(isEmulating) }
+            if (!isEmulating) {
+                BlePreCheckHost(
+                    blePreCheck = blePreCheck,
+                    onReady = { bleReady = true },
+                    onFailed = {
+                        showWizardWorkflow = false
+                        startWorkflow = null
+                    }
+                )
+            }
 
             if (bleReady) {
                 // Create WizardViewModel scoped to the workflow
-                val wizardViewModel: EquilWizardViewModel = hiltViewModel()
+                val wizardViewModel: EquilWizardViewModel = metroViewModel()
                 // Initialize with the start workflow
                 LaunchedEffect(startWorkflow) {
                     startWorkflow?.let { workflow ->

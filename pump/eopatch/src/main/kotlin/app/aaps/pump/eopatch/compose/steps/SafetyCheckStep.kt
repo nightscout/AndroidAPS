@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.pump.announceWhenShown
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
 import app.aaps.pump.eopatch.compose.EopatchPatchViewModel.SetupStep
@@ -65,9 +66,12 @@ fun SafetyCheckStep(viewModel: EopatchPatchViewModel) {
     }
 
     WizardStepLayout {
+        // This step has no buttons and moves on by itself, so its title is said when it appears.
+        val title = stringResource(R.string.patch_safety_check)
         Text(
-            text = stringResource(R.string.patch_safety_check),
-            style = MaterialTheme.typography.titleLarge
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.announceWhenShown(title)
         )
         Text(
             text = stringResource(R.string.patch_safety_check_desc_1),

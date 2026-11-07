@@ -4,15 +4,22 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.notify
+import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
+import kotlin.math.roundToInt
 
+/**
+ * Bolus. The pump takes the amount ([step], 160 per unit) and the duration in seconds ([stepTime]), so
+ * the duration sets the bolus speed: [secondsPerUnit] 40 = 1.5 U/min (standard).
+ */
 class CmdLargeBasalSet(
     var insulin: Double,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
-    equilManager: EquilManager
+    equilManager: EquilManager,
+    secondsPerUnit: Int = EquilConst.EQUIL_BOLUS_SECONDS_PER_UNIT_STANDARD
 ) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     var step: Int = 0
@@ -21,7 +28,8 @@ class CmdLargeBasalSet(
     init {
         if (insulin != 0.0) {
             step = (insulin / 0.05 * 8).toInt()
-            stepTime = (insulin / 0.05 * 2).toInt()
+            // Whole seconds, at least 1: a small bolus at a fast speed would otherwise be sent with 0 s.
+            stepTime = (insulin * secondsPerUnit).roundToInt().coerceAtLeast(1)
         }
     }
 

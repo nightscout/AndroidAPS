@@ -9,9 +9,9 @@
     <string name="medtronic_pump_bolus_delay">Atraso antes que o Bólus seja iniciado (s)</string>
     <string name="medtronic_pump_max_bolus">Max Bolus na Bomba (U)</string>
     <string name="medtronic_pump_max_basal">Máxima Basal na Bomba (U/h)</string>
-    <string name="medtronic_pump_encoding">Codificação Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Acordar e Configurar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Limpar Bloco de Bólus</string>
+    <string name="medtronic_custom_action_reset_rileylink">Redefinir RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo de Bateria (Visão Detalhada)</string>
     <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
@@ -19,6 +19,13 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Outro (não suportado)</string>
+    <string name="medtronic_pump_type_523_24a">523 (FW 2.4A ou inferior)</string>
+    <string name="medtronic_pump_type_723_24a">723 (FW 2.4A ou inferior)</string>
+    <string name="medtronic_pump_type_554_eu">554 (UE FW. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (UE FW. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA FW. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA FW. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
@@ -26,7 +33,6 @@
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de Bomba não definido.</string>
     <string name="medtronic_error_pump_type_invalid">Tipo de Bomba não suportado.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frequência da Bomba não suportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">A bomba detectada não é a mesma que a bomba configurada.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">A configuração de perfis/padrões da basal não éstá ativada na bomba. Ative-a na bomba.</string>
@@ -43,7 +49,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bolus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá obter as alterações, na próxima actualização (em menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler a TBR actual.</string>
@@ -75,7 +80,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Definir as basais temporárias neutras</string>
     <string name="set_neutral_temps_summary">Se ativado, cancelará uma basal temporária antes do final de cada hora. Este método pode ajudar a parar algumas bombas de alarmar/vibrar por uma hora.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Dados inválidos do histórico da bomba detectados. Abra nova solicitação e forneça logs.</string>
     <string name="riley_statistics">Status RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Atualização em andamento</string>

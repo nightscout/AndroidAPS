@@ -4,5 +4,4 @@
     <!-- Omnipod Dash - Overview -->
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
-    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
 </resources>

@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Kvittera Larm</string>
     <string name="omnipod_common_overview_pod_status">Pod-status</string>
     <string name="omnipod_common_overview_total_delivered">Totalt levererat</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2fU</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikt ID</string>
     <string name="omnipod_common_overview_lot_number">LOT-nummer</string>
     <string name="omnipod_common_overview_pod_sequence_number">Sekvensnummer</string>
@@ -101,6 +100,10 @@
     <string name="omnipod_common_pod_status_pod_fault">Podfel</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Podfel: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod löper snart ut</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod löper snart ut</string>
@@ -148,4 +151,7 @@
         <item quantity="one">Pod-varning: %1$s</item>
         <item quantity="other">Pod-varningar: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2fU</string>
+    <string name="omnipod_common_history_total_delivered">Totalt levererat: %1$.2f U</string>
 </resources>

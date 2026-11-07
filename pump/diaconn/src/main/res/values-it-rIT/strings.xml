@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Resetta associazione</string>
+    <string name="resetpairing">Resettare le informazioni di associazione?</string>
     <string name="diaconn_pairing">Associazione micro Diaconn</string>
     <string name="diaconn_g8_history_alarm">Allarmi</string>
     <string name="diaconn_g8_history_basalhours">Ore basali</string>
@@ -14,7 +14,7 @@
     <string name="largetimedifftitle">Grande differenza oraria</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="startingbolus">Avvio erogazione bolo</string>
-    <string name="waitingforestimatedbolusend">In attesa della fine stimata del bolo</string>
+    <string name="waitingforbolusend">In attesa della fine stimata del bolo</string>
     <string name="gettingbolusstatus">Ricezione stato bolo</string>
     <string name="stoppingtempbasal">Stop basale temporanea</string>
     <string name="settingtempbasal">Impostazione basale temporanea</string>
@@ -23,19 +23,16 @@
     <string name="updatingbasalrates">Aggiornamento velocità basali</string>
     <string name="description_pump_diaconn_g8">Integrazione del microinfusore Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Violazione bolo massimo</string>
     <string name="commanderror">Errore comando</string>
     <string name="speederror">Errore velocità</string>
     <string name="insulinlimitviolation">Violazione limite insulina</string>
     <string name="boluserrorcode">Chiesto: %1$.2fU Erogato: %2$.2fU Codice errore: %3$s</string>
     <string name="selectedpump">Micro selezionato</string>
-    <string name="diaconn_g8_bluetooth_status">Stato bluetooth</string>
     <string name="bolus_step">Incremento bolo</string>
     <string name="basal_step">Incremento basale</string>
-    <string name="diaconn_g8_user_options">OPZIONI UTENTE</string>
     <string name="pairfirst">Associa il micro col tuo telefono!</string>
-    <string name="processinghistory">"Elaborazione "</string>
+    <string name="processinghistory">Evento di elaborazione</string>
     <string name="diaconn_g8_history_tempbasal">Basale temporanea</string>
     <string name="diaconng8_pump_settings">Impostazioni micro Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Suono</string>
@@ -128,4 +125,14 @@
     <string name="diaconn_g8_errorcode_36">Lo stop della basale temporanea viene rifiutato quando non è in esecuzione alcuna basale temporanea</string>
     <string name="diaconn_g8_cloudsend_summary">Invia i log del micro a Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Sincronizzazione Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Associazione riuscita!</string>
+    <string name="diaconn_pairing_successful_message">Il micro è ora connesso e pronto per l\'uso.</string>
 </resources>

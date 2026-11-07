@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Preferências</string>
-    <string name="delta">Delta</string>
-    <string name="save">Salvar</string>
-    <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
-    <string name="invalid">INVÁLIDO</string>
-    <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
-    <string name="close_navigation">Fechar a navegação</string>
-    <string name="remove_items">Remover itens</string>
-    <string name="sort_items">Ordenar itens</string>
-    <string name="unitsnosemicolon">Unidades</string>
     <string name="authorizationfailed">Falha na autorização</string>
-    <string name="cannula">Cânula</string>
     <string name="identification_not_set">Identificação não definida no modo de desenvolvimento</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Remover itens selecionados</string>
-    <string name="count_selected">%1$d selecionado(s)</string>
-    <string name="sort_label">Ordenar</string>
-    <string name="search">Pesquisar</string>
+    <string name="select">Selecionar</string>
+    <string name="set">Definir</string>
+    <string name="migrating_preferences">Migrando preferências…</string>
+    <string name="optimizing_database">Otimizando banco de dados…</string>
+    <string name="initializing_plugins">Inicializando plugins…</string>
+    <string name="initializing">Inicializando…</string>
+    <string name="migrating_profile_switches">Migrando trocas de perfil…</string>
+    <string name="migrating_effective_profile_switches">Migrando trocas de perfil efetivas…</string>
+    <string name="migrating_boluses">Migrando bolus…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Registros antigos não tinham configuração de insulina e nenhum perfil estava ativo, então %1$s foi usado para eles. Verifique suas configurações de insulina — os registros já migrados não serão atualizados depois.</string>
 </resources>

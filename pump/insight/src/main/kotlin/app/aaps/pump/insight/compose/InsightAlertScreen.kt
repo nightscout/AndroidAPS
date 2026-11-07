@@ -17,7 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,10 +29,10 @@ import app.aaps.pump.insight.descriptors.AlertStatus
  * from observing [app.aaps.pump.insight.InsightAlertService.alertLiveData].
  */
 data class InsightAlertUiState(
-    val iconRes: Int,
+    val icon: ImageVector,
     val errorCode: String,
     val title: String,
-    val description: CharSequence?,
+    val description: String?,
     val alertStatus: AlertStatus?,
     val muteEnabled: Boolean,
     val confirmEnabled: Boolean
@@ -53,7 +53,7 @@ fun InsightAlertScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Icon(
-            painter = painterResource(id = state.iconRes),
+            imageVector = state.icon,
             contentDescription = null,
             modifier = Modifier.size(48.dp),
             tint = MaterialTheme.colorScheme.onSurface
@@ -70,7 +70,7 @@ fun InsightAlertScreen(
         )
         state.description?.let { desc ->
             Text(
-                text = desc.toString(),
+                text = desc,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )

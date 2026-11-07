@@ -4,10 +4,14 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.BluetoothDisabled
+import androidx.compose.material.icons.filled.Refresh
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -19,8 +23,11 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.NullDisplayFrame
 import info.nightscout.comboctl.parser.BatteryState
@@ -36,10 +43,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
 import kotlin.math.max
 import kotlin.time.ExperimentalTime
+import app.aaps.core.ui.R as CoreUiR
 import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.Pump as ComboCtlPump
 
@@ -55,17 +63,22 @@ data class ComboV2OverviewUiState(
     val currentActivityProgress: Float = 0f
 )
 
-@HiltViewModel
-class ComboV2OverviewViewModel @Inject constructor(
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
+@Inject
+class ComboV2OverviewViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     rxBus: RxBus,
     private val commandQueue: CommandQueue,
     private val combov2Plugin: ComboV2Plugin,
-    @ApplicationContext context: Context
+    private val ch: ConcentrationHelper,
+    context: Context
 ) : ViewModel() {
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private data class PumpSnapshot(
         val isPaired: Boolean,
@@ -134,7 +147,7 @@ class ComboV2OverviewViewModel @Inject constructor(
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Refresh button clicked")
         combov2Plugin.clearPumpErrorObservedFlag()
-        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.user_request), null)
+        viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.user_request)) }
     }
 
     fun onPairClick() {
@@ -153,14 +166,14 @@ class ComboV2OverviewViewModel @Inject constructor(
     private fun managementActions(isPaired: Boolean): List<PumpAction> = listOf(
         if (isPaired) {
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
+                label = rh.gs(CoreUiR.string.pump_unpair),
                 icon = Icons.Filled.BluetoothDisabled,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { onUnpairClick() }
             )
         } else {
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pairing),
+                label = rh.gs(CoreUiR.string.pairing),
                 icon = Icons.Filled.Bluetooth,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { onPairClick() }
@@ -205,17 +218,18 @@ class ComboV2OverviewViewModel @Inject constructor(
             lastBolusRow(snapshot.lastBolus)?.let { add(it) }
             currentTbrRow(snapshot.currentTbr)?.let { add(it) }
             snapshot.baseBasalRate?.let {
+                val basalRateString = ch.basalRateString(PumpRate(it), true)
                 add(
                     PumpInfoRow(
-                        label = rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label),
-                        value = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, it)
+                        label = rh.gs(CoreUiR.string.base_basal_rate_label),
+                        value = basalRateString
                     )
                 )
             }
             if (snapshot.serialNumber.isNotEmpty()) {
                 add(
                     PumpInfoRow(
-                        label = rh.gs(app.aaps.core.ui.R.string.serial_number),
+                        label = rh.gs(CoreUiR.string.serial_number),
                         value = snapshot.serialNumber
                     )
                 )
@@ -240,8 +254,8 @@ class ComboV2OverviewViewModel @Inject constructor(
 
         val primaryActions = listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
-                iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
+                label = rh.gs(CoreUiR.string.refresh),
+                icon = Icons.Filled.Refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = refreshEnabled,
                 onClick = { onRefreshClick() }
@@ -264,12 +278,12 @@ class ComboV2OverviewViewModel @Inject constructor(
 
     private fun driverStateText(state: ComboV2Plugin.DriverState): String = when (state) {
         ComboV2Plugin.DriverState.NotInitialized      -> rh.gs(R.string.combov2_not_initialized)
-        ComboV2Plugin.DriverState.Disconnected        -> rh.gs(app.aaps.core.ui.R.string.disconnected)
-        ComboV2Plugin.DriverState.Connecting          -> rh.gs(app.aaps.core.ui.R.string.connecting)
+        ComboV2Plugin.DriverState.Disconnected        -> rh.gs(CoreUiR.string.disconnected)
+        ComboV2Plugin.DriverState.Connecting          -> rh.gs(CoreUiR.string.connecting)
         ComboV2Plugin.DriverState.CheckingPump        -> rh.gs(R.string.combov2_checking_pump)
         ComboV2Plugin.DriverState.Ready               -> rh.gs(R.string.combov2_ready)
         ComboV2Plugin.DriverState.Suspended           -> rh.gs(R.string.combov2_suspended)
-        ComboV2Plugin.DriverState.Error               -> rh.gs(app.aaps.core.ui.R.string.error)
+        ComboV2Plugin.DriverState.Error               -> rh.gs(CoreUiR.string.error)
         is ComboV2Plugin.DriverState.ExecutingCommand ->
             when (val desc = state.description) {
                 is ComboCtlPump.GettingBasalProfileCommandDesc  ->
@@ -285,7 +299,7 @@ class ComboV2OverviewViewModel @Inject constructor(
                         rh.gs(R.string.combov2_cancelling_tbr)
 
                 is ComboCtlPump.DeliveringBolusCommandDesc      ->
-                    rh.gs(R.string.combov2_delivering_bolus_cmddesc, desc.immediateBolusAmount.cctlBolusToIU())
+                    ch.bolusProgressString(PumpInsulin(desc.immediateBolusAmount.cctlBolusToIU()))
 
                 is ComboCtlPump.FetchingTDDHistoryCommandDesc   ->
                     rh.gs(R.string.combov2_fetching_tdd_history_cmddesc)
@@ -309,7 +323,7 @@ class ComboV2OverviewViewModel @Inject constructor(
             else             -> rh.gs(R.string.combov2_no_connection_for_n_mins, secondsPassed / 60) to StatusLevel.CRITICAL
         }
         return PumpInfoRow(
-            label = rh.gs(app.aaps.core.ui.R.string.last_connection_label),
+            label = rh.gs(CoreUiR.string.last_connection_label),
             value = text,
             level = level
         )
@@ -323,7 +337,7 @@ class ComboV2OverviewViewModel @Inject constructor(
             BatteryState.FULL_BATTERY -> rh.gs(R.string.combov2_battery_full) to StatusLevel.NORMAL
         }
         return PumpInfoRow(
-            label = rh.gs(app.aaps.core.ui.R.string.battery_label),
+            label = rh.gs(CoreUiR.string.battery_label),
             value = text,
             level = level
         )
@@ -337,8 +351,8 @@ class ComboV2OverviewViewModel @Inject constructor(
             ReservoirState.FULL  -> StatusLevel.NORMAL
         }
         return PumpInfoRow(
-            label = rh.gs(app.aaps.core.ui.R.string.reservoir_label),
-            value = "${reservoirLevel.availableUnits} ${rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)}",
+            label = rh.gs(CoreUiR.string.reservoir_label),
+            value = ch.insulinAmountString(PumpInsulin(reservoirLevel.availableUnits.toDouble())),
             level = level
         )
     }
@@ -346,21 +360,16 @@ class ComboV2OverviewViewModel @Inject constructor(
     @OptIn(ExperimentalTime::class)
     private fun lastBolusRow(lastBolus: ComboCtlPump.LastBolus?): PumpInfoRow? {
         if (lastBolus == null) return null
-        val secondsPassed = (System.currentTimeMillis() - lastBolus.timestamp.toEpochMilliseconds()) / 1000
-        val bolusAgoText = when (secondsPassed) {
-            in 0..59 -> rh.gs(R.string.combov2_less_than_one_minute_ago)
-            else     -> rh.gs(app.aaps.core.interfaces.R.string.minago, secondsPassed / 60)
+        val text = ch.insulinAmountAgoString(
+            PumpInsulin(lastBolus.bolusAmount.cctlBolusToIU()),
+            lastBolus.timestamp.toEpochMilliseconds()
+        )
+        return text?.let {
+            PumpInfoRow(
+                label = rh.gs(CoreUiR.string.last_bolus_label),
+                value = it
+            )
         }
-        val text = rh.gs(
-            R.string.combov2_last_bolus,
-            lastBolus.bolusAmount.cctlBolusToIU(),
-            rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
-            bolusAgoText
-        )
-        return PumpInfoRow(
-            label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label),
-            value = text
-        )
     }
 
     @OptIn(ExperimentalTime::class)
@@ -375,7 +384,7 @@ class ComboV2OverviewViewModel @Inject constructor(
         else
             rh.gs(R.string.combov2_current_tbr_less_than_1min, currentTbr.percentage)
         return PumpInfoRow(
-            label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label),
+            label = rh.gs(CoreUiR.string.tempbasal_label),
             value = text
         )
     }

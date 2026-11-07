@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pumpeintegration til EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">Lavt reservoir Alarmer</string>
     <string name="patch_expiration_reminders">Patch Udløbspåmindelser</string>
@@ -12,7 +11,6 @@
     <string name="eopatch_base_basal_rate">Standard basal rate</string>
     <string name="eopatch_temp_basal_rate">Midlertidig basal rate</string>
     <string name="invalid_basal_rate">Profilens basal er under 0.05 IE/t. EOPatch har en minimum injektionsenhed på 0.05IE. Prøv venligst igen efter profilen er sat til mere end den mindste injektionsenhed.</string>
-    <string name="no_profile_selected">Ingen profil valgt. Vælg venligst en profil og prøv igen.</string>
     <string name="symbol_day">dag</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -81,5 +79,4 @@
     <string name="string_resumed_insulin_delivery_message">Insulintilførsel genoptaget.</string>
     <string name="string_temp_basal_remained_hhmm">resterende tid: %1$s:%2$s</string>
     <string name="string_resume_failed">Genoptagelse mislykkedes.</string>
-    <!-- Permission rationales -->
 </resources>

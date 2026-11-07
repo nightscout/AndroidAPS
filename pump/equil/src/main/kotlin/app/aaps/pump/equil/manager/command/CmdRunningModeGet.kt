@@ -34,6 +34,7 @@ class CmdRunningModeGet(
         val mode = data[6].toInt() and 0xff
         aapsLogger.debug(LTag.PUMPCOMM, "CmdRunningModeGet====$mode")
         equilManager.setRunMode(mode)
+        equilManager.setLastDataTime(System.currentTimeMillis())
         cmdSuccess = true
         synchronized(this) {
             notify()

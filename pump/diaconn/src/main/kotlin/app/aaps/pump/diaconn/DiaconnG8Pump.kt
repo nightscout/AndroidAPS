@@ -8,16 +8,18 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
-@Singleton
-class DiaconnG8Pump @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class DiaconnG8Pump(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter
@@ -44,12 +46,12 @@ class DiaconnG8Pump @Inject constructor(
     var injectionBlockRemainAmount: Double = 0.0
     var injectionBlockProcess: Int = 0
     var injectionBlockGrade: Int = 0
-    val lastConnectionFlow: StateFlow<Long>
-        field = MutableStateFlow(0L)
+    private val _lastConnectionFlow = MutableStateFlow(0L)
+    val lastConnectionFlow: StateFlow<Long> = _lastConnectionFlow.asStateFlow()
     var lastConnection: Long
         get() = lastConnectionFlow.value
         set(value) {
-            lastConnectionFlow.value = value
+            _lastConnectionFlow.value = value
         }
     var lastSettingsRead: Long = 0
     var mealLimitTime: Int = 0
@@ -67,26 +69,27 @@ class DiaconnG8Pump @Inject constructor(
     var pumpSuspended = false
     var dailyTotalUnits = 0.0
     var maxDailyTotalUnits = 0
-    var bolusStep = 0.01
-    var basalStep = 0.01
+    // Fixed on the G8 and the same as its pump type. Not read from the pump, only shown in the overview.
+    val bolusStep = 0.01
+    val basalStep = 0.01
     var iob = 0.0
 
     var bolusBlocked = false
 
-    val lastBolusTimeFlow: StateFlow<Long?>
-        field = MutableStateFlow(null)
+    private val _lastBolusTimeFlow = MutableStateFlow<Long?>(null)
+    val lastBolusTimeFlow: StateFlow<Long?> = _lastBolusTimeFlow.asStateFlow()
     var lastBolusTime: Long?
         get() = lastBolusTimeFlow.value
         set(value) {
-            lastBolusTimeFlow.value = value
+            _lastBolusTimeFlow.value = value
         }
 
-    val lastBolusAmountFlow: StateFlow<Double?>
-        field = MutableStateFlow(null)
+    private val _lastBolusAmountFlow = MutableStateFlow<Double?>(null)
+    val lastBolusAmountFlow: StateFlow<Double?> = _lastBolusAmountFlow.asStateFlow()
     var lastBolusAmount: Double?
         get() = lastBolusAmountFlow.value
         set(value) {
-            lastBolusAmountFlow.value = value
+            _lastBolusAmountFlow.value = value
         }
 
     /*
@@ -274,20 +277,20 @@ class DiaconnG8Pump @Inject constructor(
     var result: Int = 0 // 조회결과
 
     // 1. pump setting info
-    val systemRemainInsulinFlow: StateFlow<Double>
-        field = MutableStateFlow(0.0)
+    private val _systemRemainInsulinFlow = MutableStateFlow(0.0)
+    val systemRemainInsulinFlow: StateFlow<Double> = _systemRemainInsulinFlow.asStateFlow()
     var systemRemainInsulin: Double // 인슐린 잔량
         get() = systemRemainInsulinFlow.value
         set(value) {
-            systemRemainInsulinFlow.value = value
+            _systemRemainInsulinFlow.value = value
         }
 
-    val systemRemainBatteryFlow: StateFlow<Int?>
-        field = MutableStateFlow(null)
+    private val _systemRemainBatteryFlow = MutableStateFlow<Int?>(null)
+    val systemRemainBatteryFlow: StateFlow<Int?> = _systemRemainBatteryFlow.asStateFlow()
     var systemRemainBattery: Int? // 배터리 잔량(0~100%)
         get() = systemRemainBatteryFlow.value
         set(value) {
-            systemRemainBatteryFlow.value = value
+            _systemRemainBatteryFlow.value = value
         }
     var systemBasePattern = 0 // 기저주입 패턴(0=없음, 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
     var systemTbStatus = 0 // 임시기저 상태(1=임시기저 중, 2=임시기저 해제)

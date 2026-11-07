@@ -5,17 +5,19 @@ import app.aaps.pump.eopatch.core.api.BasalHistoryIndexGet
 import app.aaps.pump.eopatch.core.api.TempBasalHistoryGetExBig
 import app.aaps.pump.eopatch.core.response.BasalHistoryIndexResponse
 import app.aaps.pump.eopatch.core.response.BasalHistoryResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Suppress("unused", "PrivatePropertyName")
-@Singleton
-class SyncBasalHistoryTask @Inject constructor() : TaskBase(TaskFunc.SYNC_BASAL_HISTORY) {
+@SingleIn(AppScope::class)
+@Inject
+class SyncBasalHistoryTask() : TaskBase(TaskFunc.SYNC_BASAL_HISTORY) {
 
     @Inject lateinit var basalHistoryIndexGet: BasalHistoryIndexGet
     @Inject lateinit var basalHistoryGetExBig: BasalHistoryGetExBig

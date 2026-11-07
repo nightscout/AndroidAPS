@@ -13,16 +13,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.pump.medtrum.code.PatchStep
+import app.aaps.core.ui.R as CoreUiR
+import app.aaps.pump.medtrum.R as MedtrumR
 
 class MedtrumComposeContent(
     private val pluginName: String,
@@ -36,7 +39,8 @@ class MedtrumComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: MedtrumOverviewViewModel = hiltViewModel()
+        val overviewViewModel: MedtrumOverviewViewModel = metroViewModel()
+        val patchViewModel: MedtrumPatchViewModel = metroViewModel()
 
         // Patch workflow state
         var showPatchWorkflow by remember { mutableStateOf(false) }
@@ -46,17 +50,18 @@ class MedtrumComposeContent(
         var showDialog by remember { mutableStateOf(false) }
         var dialogTitle by remember { mutableStateOf("") }
         var dialogMessage by remember { mutableStateOf("") }
+        var showUnpairConfirm by remember { mutableStateOf(false) }
 
         // Toolbar configuration
         val overviewNavIcon: @Composable () -> Unit = {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiR.string.back))
             }
         }
         val settingsAction: @Composable RowScope.() -> Unit = {
             onSettings?.let { action ->
                 IconButton(onClick = action) {
-                    Icon(Icons.Filled.Settings, contentDescription = stringResource(app.aaps.core.ui.R.string.settings))
+                    Icon(Icons.Filled.Settings, contentDescription = stringResource(CoreUiR.string.settings))
                 }
             }
         }
@@ -78,10 +83,13 @@ class MedtrumComposeContent(
             overviewViewModel.events.collect { event ->
                 when (event) {
                     is MedtrumOverviewEvent.StartPatchWorkflow -> {
-                        protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
-                            if (result == ProtectionResult.GRANTED) {
-                                startPatchStep = event.startStep
-                                showPatchWorkflow = true
+                        if (!showPatchWorkflow) {
+                            protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                                if (result == ProtectionResult.GRANTED) {
+                                    patchViewModel.reset()
+                                    startPatchStep = event.startStep
+                                    showPatchWorkflow = true
+                                }
                             }
                         }
                     }
@@ -91,6 +99,8 @@ class MedtrumComposeContent(
                         dialogMessage = event.message
                         showDialog = true
                     }
+
+                    is MedtrumOverviewEvent.ConfirmUnpair      -> showUnpairConfirm = true
                 }
             }
         }
@@ -103,45 +113,55 @@ class MedtrumComposeContent(
             )
         }
 
+        if (showUnpairConfirm) {
+            OkCancelDialog(
+                title = stringResource(CoreUiR.string.pump_unpair_confirm_title),
+                message = stringResource(MedtrumR.string.unpair_confirm_message),
+                onConfirm = {
+                    showUnpairConfirm = false
+                    overviewViewModel.performUnpair()
+                },
+                onDismiss = { showUnpairConfirm = false }
+            )
+        }
+
         if (showPatchWorkflow) {
             KeepScreenOnEffect()
 
-            // BLE pre-check — shows dialog on failure, cancels workflow
+            // BLE pre-check — shows dialog on failure, cancels workflow.
+            // The workflow uses Bluetooth, so it starts only after the check has passed.
+            var bleReady by remember { mutableStateOf(false) }
             BlePreCheckHost(
                 blePreCheck = blePreCheck,
+                onReady = { bleReady = true },
                 onFailed = {
                     showPatchWorkflow = false
                     startPatchStep = null
                 }
             )
 
-            // Create PatchViewModel scoped to the workflow
-            val patchViewModel: MedtrumPatchViewModel = hiltViewModel()
-
-            // Reset and initialize with the start step
-            LaunchedEffect(startPatchStep) {
-                startPatchStep?.let { step ->
-                    patchViewModel.reset()
-                    patchViewModel.initializePatchStep(step)
+            if (bleReady) {
+                // Initialize with the start step (reset was already called before showing workflow)
+                LaunchedEffect(startPatchStep) {
+                    startPatchStep?.let { step ->
+                        patchViewModel.initializePatchStep(step)
+                    }
                 }
-            }
 
-            // Observe finish events
-            LaunchedEffect(patchViewModel) {
-                patchViewModel.events.collect { event ->
-                    when (event) {
-                        is PatchEvent.Finish -> {
-                            showPatchWorkflow = false
-                            startPatchStep = null
-                        }
-
-                        is PatchEvent.ShowError -> { /* handled by step composables */
+                // Observe finish events
+                LaunchedEffect(patchViewModel) {
+                    patchViewModel.events.collect { event ->
+                        when (event) {
+                            is PatchEvent.Finish -> {
+                                showPatchWorkflow = false
+                                startPatchStep = null
+                            }
                         }
                     }
                 }
-            }
 
-            MedtrumPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+                MedtrumPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+            }
         } else {
             MedtrumOverviewScreen(viewModel = overviewViewModel)
         }

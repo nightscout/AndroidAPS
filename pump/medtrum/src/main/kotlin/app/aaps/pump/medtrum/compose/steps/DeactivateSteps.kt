@@ -2,6 +2,8 @@ package app.aaps.pump.medtrum.compose.steps
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,14 +12,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -69,6 +72,9 @@ private fun ConfirmDeactivateStepContent(
     )
 }
 
+/**
+ * @see PreviewConfirmDeactivate
+ */
 @Composable
 internal fun ConfirmDeactivateContent(
     onNext: () -> Unit,
@@ -105,13 +111,21 @@ fun DeactivatingStep(
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
 
+    var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(Unit) {
         viewModel.deactivatePatch()
     }
 
     LaunchedEffect(setupStep) {
-        if (setupStep == MedtrumPatchViewModel.SetupStep.STOPPED) {
-            viewModel.moveStep(PatchStep.DEACTIVATION_COMPLETE)
+        when (setupStep) {
+            MedtrumPatchViewModel.SetupStep.INITIAL,
+            MedtrumPatchViewModel.SetupStep.START_DEACTIVATION -> Unit
+
+            MedtrumPatchViewModel.SetupStep.STOPPED            -> viewModel.moveStep(PatchStep.DEACTIVATION_COMPLETE)
+            MedtrumPatchViewModel.SetupStep.ERROR              -> Unit // Handled by inline UI
+
+            else                                               -> unexpectedStateMessage = setupStep.toString()
         }
     }
 
@@ -120,8 +134,23 @@ fun DeactivatingStep(
         onDiscard = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) },
         onCancel = onCancel
     )
+
+    unexpectedStateMessage?.let { msg ->
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.unexpected_state, msg),
+            onDismiss = {
+                unexpectedStateMessage = null
+                viewModel.moveStep(PatchStep.CANCEL)
+            }
+        )
+    }
 }
 
+/**
+ * @see PreviewDeactivating
+ * @see PreviewDeactivatingError
+ */
 @Composable
 internal fun DeactivatingContent(
     isError: Boolean,
@@ -132,22 +161,24 @@ internal fun DeactivatingContent(
         primaryButton = if (isError) WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.discard),
             onClick = onDiscard
-        ) else WizardButton(
-            text = stringResource(app.aaps.core.ui.R.string.next),
-            onClick = {},
-            loading = true
-        ),
+        ) else null,
         secondaryButton = if (isError) WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
             onClick = onCancel
         ) else null
     ) {
         if (isError) {
-            WizardErrorBanner(message = stringResource(R.string.deactivating_error).stripHtml())
+            ErrorBanner(message = stringResource(R.string.deactivating_error).stripHtml())
         } else {
             Text(
                 text = stringResource(R.string.deactivating_pump),
                 style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(Modifier.height(48.dp))
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(64.dp)
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }
@@ -163,6 +194,9 @@ fun DeactivateCompleteStep(
     )
 }
 
+/**
+ * @see PreviewDeactivateComplete
+ */
 @Composable
 internal fun DeactivateCompleteContent(
     onNewPatch: () -> Unit,
@@ -193,39 +227,5 @@ internal fun DeactivateCompleteContent(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-    }
-}
-
-// region Previews
-
-@Preview(showBackground = true, name = "Confirm Deactivate")
-@Composable
-private fun PreviewConfirmDeactivate() {
-    MaterialTheme {
-        ConfirmDeactivateContent(onNext = {}, onCancel = {})
-    }
-}
-
-@Preview(showBackground = true, name = "Deactivating - In Progress")
-@Composable
-private fun PreviewDeactivating() {
-    MaterialTheme {
-        DeactivatingContent(isError = false, onDiscard = {}, onCancel = {})
-    }
-}
-
-@Preview(showBackground = true, name = "Deactivating - Error")
-@Composable
-private fun PreviewDeactivatingError() {
-    MaterialTheme {
-        DeactivatingContent(isError = true, onDiscard = {}, onCancel = {})
-    }
-}
-
-@Preview(showBackground = true, name = "Deactivate Complete")
-@Composable
-private fun PreviewDeactivateComplete() {
-    MaterialTheme {
-        DeactivateCompleteContent(onNewPatch = {}, onDone = {})
     }
 }

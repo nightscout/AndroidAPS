@@ -6,15 +6,16 @@ import app.aaps.pump.eopatch.ble.PatchStateManager
 import app.aaps.pump.eopatch.core.api.BasalScheduleSetBig
 import app.aaps.pump.eopatch.core.response.BasalScheduleSetResponse
 import app.aaps.pump.eopatch.vo.NormalBasal
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class StartNormalBasalTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class StartNormalBasalTask(
     val patchStateManager: PatchStateManager,
     val aapsSchedulers: AapsSchedulers,
 ) : TaskBase(TaskFunc.START_NORMAL_BASAL) {
@@ -26,17 +27,20 @@ class StartNormalBasalTask @Inject constructor(
     }
 
     fun startJob(basal: NormalBasal): Single<BasalScheduleSetResponse> {
-        return basalScheduleSetBig.set(basal.doseUnitPerSegmentArray)
+        val doses = basal.doseUnitPerSegmentArray
+        return basalScheduleSetBig.set(doses)
             .doOnSuccess(Consumer { response: BasalScheduleSetResponse -> this.checkResponse(response) })
             .observeOn(aapsSchedulers.io)
-            .doOnSuccess(Consumer { v: BasalScheduleSetResponse -> onStartNormalBasalResponse(v, basal) })
+            .doOnSuccess(Consumer { v: BasalScheduleSetResponse -> onStartNormalBasalResponse(v, basal, doses) })
             .doOnError(Consumer { e: Throwable -> aapsLogger.error(LTag.PUMPCOMM, e.message ?: "StartNormalBasalTask error") })
     }
 
-    private fun onStartNormalBasalResponse(response: BasalScheduleSetResponse, basal: NormalBasal) {
+    private fun onStartNormalBasalResponse(response: BasalScheduleSetResponse, basal: NormalBasal, doses: FloatArray) {
         val timeStamp = response.timestamp
         patchStateManager.onBasalStarted(basal, timeStamp + 1000)
 
+        // What the patch runs now, which AAPS reports as the running basal (#2454)
+        basal.sentDoses = doses
         normalBasalManager.normalBasal = basal
         pm.flushNormalBasalManager()
         enqueue(TaskFunc.UPDATE_CONNECTION)

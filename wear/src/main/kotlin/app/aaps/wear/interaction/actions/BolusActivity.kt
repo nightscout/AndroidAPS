@@ -36,6 +36,7 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionBolusPreCheck
@@ -43,12 +44,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
-import dagger.android.support.DaggerAppCompatActivity
-import java.text.DecimalFormat
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 import kotlin.math.roundToInt
 
-class BolusActivity : DaggerAppCompatActivity() {
+class BolusActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
@@ -75,10 +75,9 @@ class BolusActivity : DaggerAppCompatActivity() {
                             0 -> PlusMinusInputScreen(
                                 value = insulin,
                                 onValueChange = { insulin = it },
-                                min = 0.0,
-                                max = maxBolus,
+                                valueRange = 0.0..maxBolus,
                                 stepValues = stepValues,
-                                format = DecimalFormat("#0.0"),
+                                format = NumberFormat.DECIMAL_1,
                                 label = stringResource(R.string.action_insulin_units),
                                 allowZero = false,
                                 isActive = pagerState.currentPage == 0,
@@ -115,7 +114,7 @@ class BolusActivity : DaggerAppCompatActivity() {
 
 @Composable
 private fun BolusConfirmScreen(insulin: Double, onConfirm: () -> Unit) {
-    val fmt = remember { DecimalFormat("#0.0") }
+    val fmt = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 

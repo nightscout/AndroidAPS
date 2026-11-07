@@ -45,7 +45,7 @@
     <string name="rileylink_state_not_started">Nepornit</string>
     <string name="rileylink_state_rl_init">Se inițializează RileyLink…</string>
     <string name="rileylink_state_rl_error">Eroare RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">Se îmbunătățește RileyLink și pompa</string>
+    <string name="rileylink_state_pc_tune_up">Se ajustează RileyLink și pompa</string>
     <string name="rileylink_state_pc_error">Probleme la conectarea cu pompa</string>
     <string name="rileylink_state_connected">Conectat</string>
     <string name="rileylink_state_rl_ready">RileyLink este gata</string>
@@ -60,7 +60,7 @@
     <string name="rileylink_target_device_medtronic">Pompă Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Afișare nivel baterie raportat de OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level">Afișați nivel baterie raportat de OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NU funcționează cu RileyLink original. Este posibil să nu funcționeze nici cu versiuni alternative de RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
@@ -72,8 +72,8 @@
         <item quantity="few">%1$d ore</item>
         <item quantity="other">%1$d ore</item>
     </plurals>
-    <string name="orange_use_scanning_level">Folosește Scanarea</string>
-    <string name="orange_use_scanning_level_summary">Scanează înainte de conectarea la OrangeLink, ar trebui să îmbunătățească conexiunile (poate fi utilizat, de asemenea, cu alte clone RileyLink, dacă este necesar)</string>
+    <string name="orange_use_scanning_level">Folosiți scanarea</string>
+    <string name="orange_use_scanning_level_summary">Scanați înainte de conectarea la OrangeLink, ar trebui să îmbunătățească conexiunile (poate fi utilizat, de asemenea, cu alte clone RileyLink, dacă este necesar)</string>
     <string name="rileylink_pair">Asociați RileyLink</string>
     <string name="rileylink_pair_success">RileyLink asociat cu succes</string>
     <string name="rileylink_config_reset">Configurația RileyLink resetată</string>

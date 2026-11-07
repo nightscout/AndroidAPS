@@ -4,7 +4,9 @@ import app.aaps.pump.eopatch.AppConstant
 import app.aaps.pump.eopatch.code.BolusExDuration
 import app.aaps.pump.eopatch.core.code.BolusType
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
+import dev.zacsweers.metro.HasMemberInjections
 
+@HasMemberInjections
 abstract class BolusTask(func: TaskFunc) : TaskBase(func) {
 
     fun onQuickBolusStarted(nowDoseU: Float, exDoseU: Float, exDuration: BolusExDuration) {

@@ -7,23 +7,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.equil.EquilConst
@@ -55,8 +60,12 @@ import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdStepSet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.command.CmdUnPair
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,12 +74,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
-@HiltViewModel
-class EquilWizardViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
+@Inject
+class EquilWizardViewModel(
+    private val context: Context,
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
@@ -81,12 +92,14 @@ class EquilWizardViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val constraintsChecker: ConstraintsChecker,
+    private val ch: ConcentrationHelper,
     private val profileFunction: ProfileFunction,
+    private val profileRepository: ProfileRepository,
     private val rxBus: RxBus,
     private val insulinManager: InsulinManager,
     private val bleTransport: EquilBleTransport,
     private val hardLimits: HardLimits
-) : ViewModel(), SiteLocationStepHost {
+) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region State
 
@@ -129,6 +142,13 @@ class EquilWizardViewModel @Inject constructor(
     private val _airRemovalDone = MutableStateFlow(false)
     val airRemovalDone: StateFlow<Boolean> = _airRemovalDone.asStateFlow()
 
+    /**
+     * CHANGE_INSULIN: whether the user also put on a new infusion set (base and cannula). Null until
+     * answered on the first step, which cannot be left before that. PAIR is always a new set.
+     */
+    private val _newInfusionSet = MutableStateFlow<Boolean?>(null)
+    val newInfusionSet: StateFlow<Boolean?> = _newInfusionSet.asStateFlow()
+
     // Unpair result (shown as OkDialog after unpair completes)
     private val _unpairResultMessage = MutableStateFlow<String?>(null)
     val unpairResultMessage: StateFlow<String?> = _unpairResultMessage.asStateFlow()
@@ -155,6 +175,13 @@ class EquilWizardViewModel @Inject constructor(
     /** Whether the insulin selection step should be shown (multiple insulins available) */
     val showInsulinStep: Boolean
         get() = _availableInsulins.value.size > 1
+
+    // Profile gate state (for PROFILE_GATE step) — implements ProfileGateStepHost
+    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
+    override val availableProfiles: StateFlow<List<String>> = _availableProfiles.asStateFlow()
+
+    private val _selectedProfile = MutableStateFlow<String?>(null)
+    override val selectedProfile: StateFlow<String?> = _selectedProfile.asStateFlow()
 
     val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
@@ -191,12 +218,30 @@ class EquilWizardViewModel @Inject constructor(
 
     private var workflowSteps: List<EquilWizardStep> = emptyList()
 
+    // Kept so the step list can be built again when the new-infusion-set answer changes it.
+    private var siteRotationEnabled = false
+    private var needsProfileGate = false
+
+    private fun buildSteps(): List<EquilWizardStep> =
+        _workflow.value.steps(
+            siteRotationEnabled,
+            insulinSelectionEnabled = showInsulinStep,
+            needsProfileGate = needsProfileGate,
+            newInfusionSet = _newInfusionSet.value != false
+        )
+
     fun initializeWorkflow(workflow: EquilWorkflow) {
+        // Synchronously clear step state so a reopened wizard never flashes the previous
+        // session's last step while the async PS lookup below is still running.
+        _wizardStep.value = null
+        workflowSteps = emptyList()
+        _totalSteps.value = 0
+        _currentStepIndex.value = 0
+
         _workflow.value = workflow
         loadInsulins()
-        val siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump)
-        workflowSteps = workflow.steps(siteRotationEnabled, insulinSelectionEnabled = showInsulinStep)
-        _totalSteps.value = workflowSteps.size
+        siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump)
+        _newInfusionSet.value = if (workflow == EquilWorkflow.PAIR) true else null
         _errorMessage.value = null
         _isLoading.value = false
         _fillComplete.value = false
@@ -210,14 +255,65 @@ class EquilWizardViewModel @Inject constructor(
         autoFillActive = false
 
         viewModelScope.launch {
-            siteRotationEntriesCache = persistenceLayer.getTherapyEventDataFromTime(
+            _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+
+            // PS lookup is async; resolve it before building the page list so PROFILE_GATE
+            // is included only when needed and only on the PAIR workflow.
+            needsProfileGate = workflow == EquilWorkflow.PAIR && profileFunction.getRequestedProfile() == null
+            if (needsProfileGate) loadAvailableProfiles()
+            workflowSteps = buildSteps()
+            _totalSteps.value = workflowSteps.size
+            moveStep(workflowSteps.first())
         }
-        // Note: cache loads async but site location step is never the first step,
-        // so the data will be available by the time the user reaches it.
-        moveStep(workflowSteps.first())
     }
+
+    /**
+     * CHANGE_INSULIN: the answer to "did you also put on a new infusion set?". Without a new set the
+     * site location and prime cannula steps are dropped, and only an insulin change is logged (#5199).
+     */
+    fun selectNewInfusionSet(newSet: Boolean) {
+        _newInfusionSet.value = newSet
+        workflowSteps = buildSteps()
+        _totalSteps.value = workflowSteps.size
+        _wizardStep.value?.let { updateStepProgress(it) }
+    }
+
+    // region ProfileGateStepHost
+
+    private suspend fun loadAvailableProfiles() {
+        val names = profileRepository.profiles.value.map { it.name }
+        _availableProfiles.value = names
+        if (_selectedProfile.value !in names) {
+            // Default to the active profile — getOriginalProfileName() returns the clean
+            // name without %/timeshift decoration (matches names from the profile store).
+            val activeName = profileFunction.getOriginalProfileName()
+            _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
+        }
+    }
+
+    override fun selectProfile(name: String) {
+        _selectedProfile.value = name
+    }
+
+    override fun activateSelectedProfile() {
+        val name = _selectedProfile.value ?: return
+        val store = profileRepository.profile.value ?: return
+        val iCfg = insulinManager.insulins.firstOrNull() ?: return
+        viewModelScope.launch {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Equil, System.currentTimeMillis()))
+                moveToNextStep(EquilWizardStep.PROFILE_GATE)
+            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+        }
+    }
+
+    override fun cancelGate() {
+        viewModelScope.launch { _events.emit(EquilWizardEvent.Finish) }
+    }
+
+    // endregion
 
     /** Move to the step that follows [currentStep] in the workflow. */
     fun moveToNextStep(currentStep: EquilWizardStep) {
@@ -270,6 +366,7 @@ class EquilWizardViewModel @Inject constructor(
 
     val canGoBack: StateFlow<Boolean> = _wizardStep.mapState { step ->
         step in listOf(
+            EquilWizardStep.PROFILE_GATE,
             EquilWizardStep.ASSEMBLE,
             EquilWizardStep.CHANGE_INSULIN,
             EquilWizardStep.UNPAIR_DETACH
@@ -330,7 +427,9 @@ class EquilWizardViewModel @Inject constructor(
                     }
                     scanHandler.removeCallbacks(scanTimeoutRunnable)
                     stopBLEScan()
-                    getVersion(device.name, device.address)
+                    // Launch a new coroutine: stopBLEScan() cancels this scanJob, so the
+                    // pair chain must run outside it to survive cancellation.
+                    viewModelScope.launch { getVersion(device.name, device.address) }
                 }
             }
         }
@@ -407,89 +506,72 @@ class EquilWizardViewModel @Inject constructor(
         _scanning.value = true
         _scanError.value = null
 
-        getVersion(_selectedDeviceName.value, selectedDeviceAddress)
+        viewModelScope.launch { getVersion(_selectedDeviceName.value, selectedDeviceAddress) }
     }
 
     // --- End new scan-first flow ---
 
-    private fun getVersion(deviceName: String, deviceAddress: String) {
+    private suspend fun getVersion(deviceName: String, deviceAddress: String) {
         val cmdDevicesOldGet = CmdDevicesOldGet(deviceAddress, aapsLogger, preferences, equilManager)
-        commandQueue.customCommand(cmdDevicesOldGet, object : Callback() {
-            override fun run() {
-                aapsLogger.debug(LTag.PUMPCOMM, "getVersion result=${result.success}")
-                if (result.success) {
-                    if (cmdDevicesOldGet.isSupport(serialNumber)) {
-                        viewModelScope.launch {
-                            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            pair(deviceName, deviceAddress)
-                        }
-                    } else {
-                        _scanning.value = false
-                        _scanError.value = rh.gs(R.string.equil_support_error)
-                    }
-                } else {
-                    _scanning.value = false
-                    _scanError.value = rh.gs(R.string.equil_pair_error)
-                    equilManager.setAddress("")
-                    equilManager.setSerialNumber("")
-                }
+        val r = commandQueue.customCommand(cmdDevicesOldGet)
+        aapsLogger.debug(LTag.PUMPCOMM, "getVersion result=${r.success}")
+        if (r.success) {
+            if (cmdDevicesOldGet.isSupport(serialNumber)) {
+                delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+                pair(deviceName, deviceAddress)
+            } else {
+                _scanning.value = false
+                _scanError.value = rh.gs(R.string.equil_support_error)
             }
-        })
+        } else {
+            _scanning.value = false
+            _scanError.value = rh.gs(R.string.equil_pair_error)
+            equilManager.setAddress("")
+            equilManager.setSerialNumber("")
+        }
     }
 
-    private fun pair(deviceName: String, deviceAddress: String) {
+    private suspend fun pair(deviceName: String, deviceAddress: String) {
         equilManager.setActivationProgress(ActivationProgress.PRIMING)
         equilManager.setBluetoothConnectionState(BluetoothConnectionState.CONNECTED)
         aapsLogger.debug(LTag.PUMPCOMM, "pair: $deviceName / $deviceAddress")
-        commandQueue.customCommand(
-            CmdPair(deviceName, deviceAddress, password, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    aapsLogger.debug(LTag.PUMPCOMM, "pair result=${result.success}, enacted=${result.enacted}")
-                    if (result.success) {
-                        if (result.enacted) {
-                            viewModelScope.launch {
-                                delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                                pumpSettings(deviceAddress, deviceName)
-                            }
-                        } else {
-                            _scanning.value = false
-                            _scanError.value = rh.gs(R.string.equil_password_error)
-                        }
-                    } else {
-                        _scanning.value = false
-                        _scanError.value = rh.gs(R.string.equil_pair_error)
-                        equilManager.setAddress("")
-                        equilManager.setSerialNumber("")
-                    }
-                }
+        val r = commandQueue.customCommand(CmdPair(deviceName, deviceAddress, password, aapsLogger, preferences, equilManager))
+        aapsLogger.debug(LTag.PUMPCOMM, "pair result=${r.success}, enacted=${r.enacted}")
+        if (r.success) {
+            if (r.enacted) {
+                delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+                pumpSettings(deviceAddress, deviceName)
+            } else {
+                _scanning.value = false
+                _scanError.value = rh.gs(R.string.equil_password_error)
             }
-        )
+        } else {
+            _scanning.value = false
+            _scanError.value = rh.gs(R.string.equil_pair_error)
+            equilManager.setAddress("")
+            equilManager.setSerialNumber("")
+        }
     }
 
-    private fun pumpSettings(address: String, serial: String) {
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
-        val maxBasal = if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()
-        commandQueue.customCommand(
-            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        equilManager.setAddress(address)
-                        equilManager.setSerialNumber(serial)
-                        equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
-                        _scanning.value = false
-                        _scanError.value = null
-                        moveStep(EquilWizardStep.FILL)
-                    } else {
-                        _scanning.value = false
-                        _scanError.value = rh.gs(R.string.equil_pair_error)
-                        equilManager.setAddress("")
-                        equilManager.setSerialNumber("")
-                    }
-                }
-            }
-        )
+    private suspend fun pumpSettings(address: String, serial: String) {
+        val profile = pumpSync.expectedPumpState().profile
+        // The pod stores its thresholds in pump units (cU); convert the IU limits to cU first (no-op at U100).
+        val maxBasal = ch.toPumpRate(if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()).cU
+        val maxBolus = ch.toPump(constraintsChecker.getMaxBolusAllowed().value()).cU
+        val r = commandQueue.customCommand(CmdSettingSet(maxBolus, maxBasal, aapsLogger, preferences, equilManager))
+        if (r.success) {
+            equilManager.setAddress(address)
+            equilManager.setSerialNumber(serial)
+            equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
+            _scanning.value = false
+            _scanError.value = null
+            moveStep(EquilWizardStep.FILL)
+        } else {
+            _scanning.value = false
+            _scanError.value = rh.gs(R.string.equil_pair_error)
+            equilManager.setAddress("")
+            equilManager.setSerialNumber("")
+        }
     }
 
     // endregion
@@ -501,7 +583,7 @@ class EquilWizardViewModel @Inject constructor(
         _autoFilling.value = true
         _fillComplete.value = false
         _errorMessage.value = null
-        fillSetStep()
+        viewModelScope.launch { fillLoop() }
     }
 
     fun stopFill() {
@@ -519,71 +601,58 @@ class EquilWizardViewModel @Inject constructor(
             resolvedAt = System.currentTimeMillis(),
             resolvedStatus = ResolvedResult.SUCCESS
         )
-        equilPumpPlugin.handler?.post {
+        // Was posted to the pump plugin's Handler. viewModelScope ties the write to the wizard that
+        // caused it, and the insert is a blocking Room call so it still needs a background
+        // dispatcher. The old form also dropped the record silently whenever the plugin was not
+        // started, because the handler was null then.
+        viewModelScope.launch(Dispatchers.IO) {
             equilHistoryRecordDao.insert(record)
         }
         moveStep(EquilWizardStep.ATTACH)
     }
 
-    private fun fillSetStep() {
-        aapsLogger.debug(LTag.PUMPCOMM, "fillSetStep: step=$fillStepCount, increment=${EquilConst.EQUIL_STEP_FILL}")
-        commandQueue.customCommand(
-            CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    aapsLogger.debug(LTag.PUMPCOMM, "fillSetStep result=${result.success}")
-                    if (result.success) {
-                        fillStepCount += EquilConst.EQUIL_STEP_FILL
-                        aapsLogger.debug(LTag.PUMPCOMM, "fillSetStep: moved to $fillStepCount")
-                        fillReadStatus()
-                    } else {
-                        aapsLogger.warn(LTag.PUMPCOMM, "fillSetStep FAILED at $fillStepCount")
-                        autoFillActive = false
-                        _autoFilling.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
+    private suspend fun fillLoop() {
+        while (autoFillActive) {
+            aapsLogger.debug(LTag.PUMPCOMM, "fillSetStep: step=$fillStepCount, increment=${EquilConst.EQUIL_STEP_FILL}")
+            val setResult = commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL, aapsLogger, preferences, equilManager))
+            aapsLogger.debug(LTag.PUMPCOMM, "fillSetStep result=${setResult.success}")
+            if (!setResult.success) {
+                aapsLogger.warn(LTag.PUMPCOMM, "fillSetStep FAILED at $fillStepCount")
+                autoFillActive = false
+                _autoFilling.value = false
+                _errorMessage.value = rh.gs(R.string.equil_error)
+                return
             }
-        )
-    }
+            fillStepCount += EquilConst.EQUIL_STEP_FILL
+            aapsLogger.debug(LTag.PUMPCOMM, "fillSetStep: moved to $fillStepCount")
 
-    private fun fillReadStatus() {
-        aapsLogger.debug(LTag.PUMPCOMM, "fillReadStatus: checking resistance at step $fillStepCount")
-        commandQueue.customCommand(
-            CmdResistanceGet(aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    aapsLogger.debug(LTag.PUMPCOMM, "fillReadStatus result=${result.success}, enacted=${result.enacted}")
-                    if (result.success) {
-                        if (!result.enacted) {
-                            // Pin not at piston yet
-                            if (autoFillActive) {
-                                if (fillStepCount > EquilConst.EQUIL_STEP_MAX) {
-                                    aapsLogger.error(LTag.PUMPCOMM, "fillReadStatus: MAX STEP EXCEEDED $fillStepCount")
-                                    autoFillActive = false
-                                    _autoFilling.value = false
-                                    _errorMessage.value = rh.gs(R.string.equil_replace_reservoir)
-                                    return
-                                }
-                                fillSetStep()
-                            }
-                            // Manual mode: just stop, user taps fill again
-                        } else {
-                            // Pin reached piston
-                            aapsLogger.info(LTag.PUMPCOMM, "fillReadStatus: piston reached at step $fillStepCount")
-                            autoFillActive = false
-                            _autoFilling.value = false
-                            _fillComplete.value = true
-                        }
-                    } else {
-                        aapsLogger.warn(LTag.PUMPCOMM, "fillReadStatus FAILED at $fillStepCount")
-                        autoFillActive = false
-                        _autoFilling.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
+            aapsLogger.debug(LTag.PUMPCOMM, "fillReadStatus: checking resistance at step $fillStepCount")
+            val statusResult = commandQueue.customCommand(CmdResistanceGet(aapsLogger, preferences, equilManager))
+            aapsLogger.debug(LTag.PUMPCOMM, "fillReadStatus result=${statusResult.success}, enacted=${statusResult.enacted}")
+            if (!statusResult.success) {
+                aapsLogger.warn(LTag.PUMPCOMM, "fillReadStatus FAILED at $fillStepCount")
+                autoFillActive = false
+                _autoFilling.value = false
+                _errorMessage.value = rh.gs(R.string.equil_error)
+                return
             }
-        )
+            if (statusResult.enacted) {
+                aapsLogger.info(LTag.PUMPCOMM, "fillReadStatus: piston reached at step $fillStepCount")
+                autoFillActive = false
+                _autoFilling.value = false
+                _fillComplete.value = true
+                return
+            }
+            if (fillStepCount > EquilConst.EQUIL_STEP_MAX) {
+                aapsLogger.error(LTag.PUMPCOMM, "fillReadStatus: MAX STEP EXCEEDED $fillStepCount")
+                autoFillActive = false
+                _autoFilling.value = false
+                _errorMessage.value = rh.gs(R.string.equil_replace_reservoir)
+                return
+            }
+            // autoFillActive still true, piston not reached, not at max — continue loop
+        }
+        // autoFillActive set to false by stopFill() — exit cleanly
     }
 
     // endregion
@@ -593,122 +662,102 @@ class EquilWizardViewModel @Inject constructor(
     fun startAirRemoval() {
         _isLoading.value = true
         _errorMessage.value = null
-        commandQueue.customCommand(
-            CmdStepSet(false, EquilConst.EQUIL_STEP_AIR, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isLoading.value = false
-                    if (result.success) {
-                        _airRemovalDone.value = true
-                    } else {
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_AIR, aapsLogger, preferences, equilManager))
+            _isLoading.value = false
+            if (r.success) {
+                _airRemovalDone.value = true
+            } else {
+                _errorMessage.value = rh.gs(R.string.equil_error)
             }
-        )
+        }
+    }
+
+    /**
+     * Next on the Attach step. With a new infusion set the cannula is primed next (Air step), which
+     * then finishes the pump setup. Without one there is no prime, so the setup runs from here.
+     */
+    fun finishAttachStep() {
+        if (EquilWizardStep.AIR in workflowSteps) moveStep(EquilWizardStep.AIR)
+        else finishAirStep()
+    }
+
+    /** After the pump setup: the step that follows the prime, or Attach when the prime was skipped. */
+    private fun moveToStepAfterPriming() {
+        moveToNextStep(if (EquilWizardStep.AIR in workflowSteps) EquilWizardStep.AIR else EquilWizardStep.ATTACH)
     }
 
     fun finishAirStep() {
         _isLoading.value = true
         _errorMessage.value = null
-        if (_workflow.value == EquilWorkflow.PAIR) {
-            setAlarmMode()
-        } else {
-            // CHANGE_INSULIN: check if basal schedule needs setting
-            if (equilManager.equilState?.basalSchedule == null) setProfile()
-            else setTime()
-        }
-    }
-
-    private fun setAlarmMode() {
-        val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
-        commandQueue.customCommand(
-            CmdAlarmSet(mode, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        viewModelScope.launch {
-                            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            setProfile()
-                        }
-                    } else {
-                        _isLoading.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
-            }
-        )
-    }
-
-    private fun setProfile() {
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            if (profile == null) {
-                setTime()
-                return@launch
+            if (_workflow.value == EquilWorkflow.PAIR) {
+                setAlarmMode()
+            } else {
+                // CHANGE_INSULIN: check if basal schedule needs setting
+                if (equilManager.equilState?.basalSchedule == null) setProfile()
+                else setTime()
             }
-            val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
-            if (basalSchedule.getEntries().size < 24) {
-                setTime()
-                return@launch
-            }
-            commandQueue.customCommand(
-                CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager),
-                object : Callback() {
-                    override fun run() {
-                        if (result.success) {
-                            equilManager.setBasalSchedule(basalSchedule)
-                            viewModelScope.launch {
-                                delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                                setTime()
-                            }
-                        } else {
-                            _isLoading.value = false
-                            _errorMessage.value = rh.gs(R.string.equil_error)
-                        }
-                    }
-                }
-            )
         }
     }
 
-    private fun setTime() {
-        commandQueue.customCommand(
-            CmdTimeSet(aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        viewModelScope.launch {
-                            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            if (_workflow.value == EquilWorkflow.PAIR) readFirmware()
-                            else {
-                                _isLoading.value = false
-                                moveToNextStep(EquilWizardStep.AIR)
-                            }
-                        }
-                    } else {
-                        _isLoading.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
-            }
-        )
+    private suspend fun setAlarmMode() {
+        val mode = preferences.get(EquilIntPreferenceKey.EquilTone)
+        val r = commandQueue.customCommand(CmdAlarmSet(mode, aapsLogger, preferences, equilManager))
+        if (r.success) {
+            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+            setProfile()
+        } else {
+            _isLoading.value = false
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
     }
 
-    private fun readFirmware() {
-        commandQueue.customCommand(
-            CmdDevicesGet(aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isLoading.value = false
-                    if (result.success) {
-                        moveToNextStep(EquilWizardStep.AIR)
-                    } else {
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
+    private suspend fun setProfile() {
+        val profile = pumpSync.expectedPumpState().profile
+        if (profile == null) {
+            setTime()
+            return
+        }
+        val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
+        if (basalSchedule.getEntries().size < 24) {
+            setTime()
+            return
+        }
+        val r = commandQueue.customCommand(CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager))
+        if (r.success) {
+            equilManager.setBasalSchedule(basalSchedule)
+            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+            setTime()
+        } else {
+            _isLoading.value = false
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
+    }
+
+    private suspend fun setTime() {
+        val r = commandQueue.customCommand(CmdTimeSet(aapsLogger, preferences, equilManager))
+        if (r.success) {
+            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+            if (_workflow.value == EquilWorkflow.PAIR) readFirmware()
+            else {
+                _isLoading.value = false
+                moveToStepAfterPriming()
             }
-        )
+        } else {
+            _isLoading.value = false
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
+    }
+
+    private suspend fun readFirmware() {
+        val r = commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager))
+        _isLoading.value = false
+        if (r.success) {
+            moveToStepAfterPriming()
+        } else {
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
     }
 
     // endregion
@@ -718,88 +767,62 @@ class EquilWizardViewModel @Inject constructor(
     fun startConfirm() {
         _isLoading.value = true
         _errorMessage.value = null
-        getCurrentInsulin()
+        viewModelScope.launch { getCurrentInsulin() }
     }
 
-    private fun getCurrentInsulin() {
-        commandQueue.customCommand(
-            CmdInsulinGet(aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        viewModelScope.launch {
-                            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            setModel()
-                        }
-                    } else {
-                        _isLoading.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
-            }
-        )
+    private suspend fun getCurrentInsulin() {
+        val r = commandQueue.customCommand(CmdInsulinGet(aapsLogger, preferences, equilManager))
+        if (r.success) {
+            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+            setModel()
+        } else {
+            _isLoading.value = false
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
     }
 
-    private fun setModel() {
-        commandQueue.customCommand(
-            CmdModelSet(RunMode.RUN.command, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    if (result.success) {
-                        viewModelScope.launch {
-                            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
-                            setLimits()
-                        }
-                    } else {
-                        _isLoading.value = false
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
-            }
-        )
+    private suspend fun setModel() {
+        val r = commandQueue.customCommand(CmdModelSet(RunMode.RUN.command, aapsLogger, preferences, equilManager))
+        if (r.success) {
+            delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+            setLimits()
+        } else {
+            _isLoading.value = false
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
     }
 
-    private fun setLimits() {
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
-        val maxBasal = if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()
-        commandQueue.customCommand(
-            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isLoading.value = false
-                    if (result.success) {
-                        equilManager.setRunMode(RunMode.RUN)
-                        saveActivation()
-                    } else {
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
-            }
-        )
+    private suspend fun setLimits() {
+        val profile = pumpSync.expectedPumpState().profile
+        // The pod stores its thresholds in pump units (cU); convert the IU limits to cU first (no-op at U100).
+        val maxBasal = ch.toPumpRate(if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()).cU
+        val maxBolus = ch.toPump(constraintsChecker.getMaxBolusAllowed().value()).cU
+        val r = commandQueue.customCommand(CmdSettingSet(maxBolus, maxBasal, aapsLogger, preferences, equilManager))
+        _isLoading.value = false
+        if (r.success) {
+            equilManager.setRunMode(RunMode.RUN)
+            saveActivation()
+        } else {
+            _errorMessage.value = rh.gs(R.string.equil_error)
+        }
     }
 
-    private fun saveActivation() {
+    private suspend fun saveActivation() {
         activationTimestamp = System.currentTimeMillis()
         executeInsulinProfileSwitch()
         if (_workflow.value == EquilWorkflow.PAIR) {
             pumpSync.connectNewPump()
         }
         val time = activationTimestamp
-        if (_workflow.value == EquilWorkflow.PAIR || _workflow.value == EquilWorkflow.CHANGE_INSULIN) {
-            runBlocking {
-                pumpSync.insertTherapyEventIfNewWithTimestamp(
-                    timestamp = time,
-                    type = TE.Type.CANNULA_CHANGE,
-                    pumpType = PumpType.EQUIL,
-                    pumpSerial = equilPumpPlugin.serialNumber()
-                )
-                pumpSync.insertTherapyEventIfNewWithTimestamp(
-                    timestamp = time,
-                    type = TE.Type.INSULIN_CHANGE,
-                    pumpType = PumpType.EQUIL,
-                    pumpSerial = equilPumpPlugin.serialNumber()
-                )
-            }
+        // A cannula change only with a new infusion set; a reservoir or battery change alone keeps
+        // the cannula age (#5199). Not answered counts as a new set, the behaviour before the question.
+        for (type in _workflow.value.therapyEvents(newInfusionSet = _newInfusionSet.value != false)) {
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = time,
+                type = type,
+                pumpType = PumpType.EQUIL,
+                pumpSerial = equilPumpPlugin.serialNumber()
+            )
         }
         val location = _siteLocation.value.takeIf { it != TE.Location.NONE }
         val arrow = _siteArrow.value.takeIf { it != TE.Arrow.NONE }
@@ -816,20 +839,27 @@ class EquilWizardViewModel @Inject constructor(
                 }
             }
         }
-        val record = EquilHistoryRecord(
-            id = time,
-            type = EquilHistoryRecord.EventType.INSERT_CANNULA,
-            timestamp = time,
-            serialNumber = equilPumpPlugin.serialNumber(),
-            resolvedAt = System.currentTimeMillis(),
-            resolvedStatus = ResolvedResult.SUCCESS
-        )
-        equilPumpPlugin.handler?.post {
-            equilHistoryRecordDao.insert(record)
+        // The pump history entry says "insert cannula", so only write it when a cannula was inserted.
+        if (_newInfusionSet.value != false) {
+            val record = EquilHistoryRecord(
+                id = time,
+                type = EquilHistoryRecord.EventType.INSERT_CANNULA,
+                timestamp = time,
+                serialNumber = equilPumpPlugin.serialNumber(),
+                resolvedAt = System.currentTimeMillis(),
+                resolvedStatus = ResolvedResult.SUCCESS
+            )
+            // Was posted to the pump plugin's Handler. viewModelScope ties the write to the wizard that
+            // caused it, and the insert is a blocking Room call so it still needs a background
+            // dispatcher. The old form also dropped the record silently whenever the plugin was not
+            // started, because the handler was null then.
+            viewModelScope.launch(Dispatchers.IO) {
+                equilHistoryRecordDao.insert(record)
+            }
         }
         equilManager.setLastDataTime(System.currentTimeMillis())
         equilManager.setActivationProgress(ActivationProgress.COMPLETED)
-        viewModelScope.launch { _events.emit(EquilWizardEvent.Finish) }
+        _events.emit(EquilWizardEvent.Finish)
     }
 
     override fun updateSiteLocation(location: TE.Location) {
@@ -853,9 +883,9 @@ class EquilWizardViewModel @Inject constructor(
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(app.aaps.core.keys.IntKey.SiteRotationUserProfile))
 
-    private var siteRotationEntriesCache: List<TE> = emptyList()
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
-    override fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
 
     // endregion
 
@@ -865,7 +895,7 @@ class EquilWizardViewModel @Inject constructor(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -877,13 +907,16 @@ class EquilWizardViewModel @Inject constructor(
         _selectedInsulin.value = iCfg
     }
 
-    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    /**
+     * Execute profile switch if user selected a different insulin. Called after activation completes, so the
+     * pump is running by then: a refused switch cannot stop the wizard, but it says why.
+     */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Equil)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.Equil)
         }
     }
 
@@ -894,22 +927,21 @@ class EquilWizardViewModel @Inject constructor(
     fun startChangeInsulin() {
         _isLoading.value = true
         _errorMessage.value = null
-        commandQueue.customCommand(
-            CmdInsulinChange(aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isLoading.value = false
-                    if (result.success) {
-                        equilPumpPlugin.resetData()
-                        equilManager.setRunMode(RunMode.STOP)
-                        equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
-                        moveStep(EquilWizardStep.ASSEMBLE)
-                    } else {
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                    }
-                }
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdInsulinChange(aapsLogger, preferences, equilManager))
+            _isLoading.value = false
+            if (r.success) {
+                equilPumpPlugin.resetData()
+                equilManager.setRunMode(RunMode.STOP)
+                // The battery can be swapped now. The pump sends the new level only in its advertisement,
+                // which is read at the next new connection, so show "unknown" until then, not the old level.
+                equilManager.setBattery(null)
+                equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
+                moveStep(EquilWizardStep.ASSEMBLE)
+            } else {
+                _errorMessage.value = rh.gs(R.string.equil_error)
             }
-        )
+        }
     }
 
     // endregion
@@ -919,48 +951,40 @@ class EquilWizardViewModel @Inject constructor(
     fun startUnpairDetach() {
         _isLoading.value = true
         _errorMessage.value = null
-        commandQueue.customCommand(
-            CmdInsulinChange(aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isLoading.value = false
-                    if (result.success) {
-                        equilManager.setRunMode(RunMode.STOP)
-                        equilPumpPlugin.resetData()
-                        equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
-                        moveStep(EquilWizardStep.UNPAIR_CONFIRM)
-                    } else {
-                        // Still proceed but warn — pump may already be physically detached
-                        equilManager.setRunMode(RunMode.STOP)
-                        equilPumpPlugin.resetData()
-                        equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
-                        _errorMessage.value = rh.gs(R.string.equil_error)
-                        moveStep(EquilWizardStep.UNPAIR_CONFIRM)
-                    }
-                }
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdInsulinChange(aapsLogger, preferences, equilManager))
+            _isLoading.value = false
+            if (r.success) {
+                equilManager.setRunMode(RunMode.STOP)
+                equilPumpPlugin.resetData()
+                equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
+                moveStep(EquilWizardStep.UNPAIR_CONFIRM)
+            } else {
+                // Still proceed but warn — pump may already be physically detached
+                equilManager.setRunMode(RunMode.STOP)
+                equilPumpPlugin.resetData()
+                equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
+                _errorMessage.value = rh.gs(R.string.equil_error)
+                moveStep(EquilWizardStep.UNPAIR_CONFIRM)
             }
-        )
+        }
     }
 
     fun confirmUnpair() {
         val name = equilManager.equilState?.serialNumber ?: return
         _isLoading.value = true
         _errorMessage.value = null
-        commandQueue.customCommand(
-            CmdUnPair(name, preferences.get(EquilStringKey.PairPassword), aapsLogger, preferences, equilManager),
-            object : Callback() {
-                override fun run() {
-                    _isLoading.value = false
-                    val message = if (!result.success) rh.gs(R.string.equil_removed_anyway) else rh.gs(R.string.equil_device_unpaired)
-                    equilManager.setSerialNumber("")
-                    equilManager.setAddress("")
-                    rxBus.send(EventEquilUnPairChanged())
-                    equilPumpPlugin.clearData()
-                    _serialNumberDisplay.value = ""
-                    _unpairResultMessage.value = message
-                }
-            }
-        )
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdUnPair(name, preferences.get(EquilStringKey.PairPassword), aapsLogger, preferences, equilManager))
+            _isLoading.value = false
+            val message = if (!r.success) rh.gs(R.string.equil_removed_anyway) else rh.gs(R.string.equil_device_unpaired)
+            equilManager.setSerialNumber("")
+            equilManager.setAddress("")
+            rxBus.send(EventEquilUnPairChanged())
+            equilPumpPlugin.clearData()
+            _serialNumberDisplay.value = ""
+            _unpairResultMessage.value = message
+        }
     }
 
     fun dismissUnpairResult() {
@@ -972,13 +996,6 @@ class EquilWizardViewModel @Inject constructor(
     val serialNumberDisplay: StateFlow<String> = _serialNumberDisplay.asStateFlow()
 
     // endregion
-
-    // region Attach step
-
-    fun getAttachNextStep(): EquilWizardStep {
-        val index = workflowSteps.indexOf(EquilWizardStep.ATTACH)
-        return workflowSteps[index + 1]
-    }
 
     // endregion
 

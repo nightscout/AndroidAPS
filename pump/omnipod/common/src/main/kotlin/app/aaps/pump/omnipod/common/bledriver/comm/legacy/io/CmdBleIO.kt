@@ -10,10 +10,10 @@ import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmError
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmIncorrectData
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmResult
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleConfirmSuccess
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CmdBleIO as CmdBleIOInterface
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
 import java.util.concurrent.BlockingQueue
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CmdBleIO as CmdBleIOInterface
 
 class CmdBleIO(
     logger: AAPSLogger,

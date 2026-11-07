@@ -66,6 +66,9 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.PatchState.Companion.create
 import app.aaps.pump.eopatch.vo.TempBasal
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -94,8 +97,6 @@ import java.util.Arrays
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray
@@ -108,8 +109,9 @@ import kotlin.Throws
 import kotlin.check
 import kotlin.synchronized
 
-@Singleton
-class PatchManagerExecutor @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class PatchManagerExecutor(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,
     private val normalBasalManager: NormalBasalManager,
@@ -133,7 +135,20 @@ class PatchManagerExecutor @Inject constructor(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject fun onInit() {
+    /**
+     * Opens the patch BLE client and wires the observers. Called from [EopatchPumpPlugin.onStart],
+     * beside `preferenceManager.init()`, `patchManager.init()` and `alarmManager.init()`.
+     *
+     * **Must not become an `init` block.** That would run `RxBleClient.create(context)` and register a
+     * bond-state receiver the moment the class is constructed - for *every* user, whether or not
+     * eopatch is their pump - and it would put the class out of Metro's reach, because a contributed
+     * class is built for real in the plain-JVM graph tests where the Bluetooth service is a stand-in
+     * and the cast fails. On the plugin's own lifecycle it starts only when eopatch is enabled.
+     *
+     * Idempotent: `Patch.init` already guards on its own `initDone`, and the disposables are added to a
+     * `CompositeDisposable` that `onStop` clears.
+     */
+    fun init() {
         patch.init(context)
         patch.setSeq(patchConfig.seq15)
 
@@ -200,7 +215,7 @@ class PatchManagerExecutor @Inject constructor(
                 .filter(Predicate { patch.connectionState.isConnected })
                 .concatMapIterable<AlarmCode>(EventEoPatchAlarm::alarmCodes)
                 .filter(AlarmCode::isPatchOccurrenceAlarm)
-                .flatMap(Function { it: AlarmCode -> pauseBasalImpl(0.0f, System.currentTimeMillis(), it).toObservable() })
+                .flatMap(Function { it: AlarmCode -> pauseBasalImpl(0.0f, it).toObservable() })
                 .subscribe()
         )
 
@@ -388,9 +403,11 @@ class PatchManagerExecutor @Inject constructor(
     }
 
     fun pauseBasal(pauseDurationHour: Float): Single<out BaseResponse> {
-        return pauseBasalImpl(pauseDurationHour, 0, null)
+        return pauseBasalImpl(pauseDurationHour, null)
             .observeOn(SS)
-            .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS)
+            // Longer than the other commands: the pause first waits until a bolus, an SMB and a temp basal are
+            // stopped. With 10 s for all of it, a suspend during an SMB timed out and failed.
+            .timeout(PAUSE_API_TIME_OUT, TimeUnit.SECONDS)
     }
 
     //==============================================================================================
@@ -398,8 +415,8 @@ class PatchManagerExecutor @Inject constructor(
     //==============================================================================================
     @Inject lateinit var pauseBasalTask: PauseBasalTask
 
-    private fun pauseBasalImpl(pauseDurationHour: Float, alarmOccurredTime: Long, alarmCode: AlarmCode?): Single<out BaseResponse> {
-        return pauseBasalTask.pause(pauseDurationHour, alarmOccurredTime, alarmCode)
+    private fun pauseBasalImpl(pauseDurationHour: Float, alarmCode: AlarmCode?): Single<out BaseResponse> {
+        return pauseBasalTask.pause(pauseDurationHour, alarmCode)
     }
 
     //==============================================================================================
@@ -627,6 +644,9 @@ class PatchManagerExecutor @Inject constructor(
     companion object {
 
         private const val DEFAULT_API_TIME_OUT: Long = 10 // SECONDS
+
+        /** A pause waits for queued commands that stop delivery before it is sent, see [pauseBasal]. */
+        private const val PAUSE_API_TIME_OUT: Long = 60 // SECONDS
 
         //==============================================================================================
         // Security

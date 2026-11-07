@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
-    <string name="omnipod_eros_name" translatable="false">Omnipod</string>
-    <string name="omnipod_eros_name_short" translatable="false">Pod</string>
+    <string name="omnipod_eros_name" translatable="false">Omnipod Eros</string>
     <string name="omnipod_eros_pump_description">Pump integration for Omnipod Eros (the older model with a transparent needle cap). Requires a RileyLink device with at least firmware version 2.0.</string>
     <string name="omnipod_eros_frequency" translatable="false">Omnipod (433.91 MHz)</string>
 
@@ -54,7 +53,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Stats</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Reset RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Read Pulse Log</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse Log</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (copied to clipboard)</string>
 

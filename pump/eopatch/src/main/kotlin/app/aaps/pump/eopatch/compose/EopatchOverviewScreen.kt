@@ -1,13 +1,12 @@
 package app.aaps.pump.eopatch.compose
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,19 +23,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.LocalSnackbarHostState
-import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
-import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
-import app.aaps.core.ui.compose.pump.PumpOverviewUiState
-import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.pump.eopatch.R
 
+/**
+ * @see EopatchOverviewActivatedPreview
+ * @see EopatchOverviewNotActivatedPreview
+ */
 @Composable
 fun EopatchOverviewScreen(
     viewModel: EopatchOverviewViewModel
@@ -118,16 +115,19 @@ fun EopatchOverviewScreen(
             text = {
                 Column {
                     durationLabels.forEachIndexed { index, label ->
+                        // One radio button per duration: the clickable row and the RadioButton were
+                        // two stops, the radio one without a name.
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { selectedDurationIndex = index },
+                                .selectable(
+                                    selected = selectedDurationIndex == index,
+                                    role = Role.RadioButton,
+                                    onClick = { selectedDurationIndex = index }
+                                ),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            RadioButton(
-                                selected = selectedDurationIndex == index,
-                                onClick = { selectedDurationIndex = index }
-                            )
+                            RadioButton(selected = selectedDurationIndex == index, onClick = null)
                             Text(label)
                         }
                     }
@@ -188,42 +188,4 @@ fun EopatchOverviewScreen(
             )
         }
     )
-}
-
-@Preview(showBackground = true, name = "Overview - Activated")
-@Composable
-private fun EopatchOverviewActivatedPreview() {
-    MaterialTheme {
-        PumpOverviewScreen(
-            state = PumpOverviewUiState(
-                infoRows = listOf(
-                    PumpInfoRow(label = "Status", value = "Running"),
-                    PumpInfoRow(label = "Basal Rate", value = "1.00 U/h"),
-                    PumpInfoRow(label = "Reservoir", value = "185 U"),
-                    PumpInfoRow(label = "Serial", value = "EO00-AB12")
-                ),
-                primaryActions = listOf(
-                    PumpAction(label = "Suspend pump", iconRes = app.aaps.core.ui.R.drawable.ic_loop_paused, onClick = {})
-                ),
-                managementActions = listOf(
-                    PumpAction(label = "Discard Patch", iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz, category = ActionCategory.MANAGEMENT, onClick = {})
-                )
-            )
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Overview - Not Activated")
-@Composable
-private fun EopatchOverviewNotActivatedPreview() {
-    MaterialTheme {
-        PumpOverviewScreen(
-            state = PumpOverviewUiState(
-                statusBanner = StatusBanner(text = "Patch not activated", level = StatusLevel.WARNING),
-                primaryActions = listOf(
-                    PumpAction(label = "Activate Patch", iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz, onClick = {})
-                )
-            )
-        )
-    }
 }
