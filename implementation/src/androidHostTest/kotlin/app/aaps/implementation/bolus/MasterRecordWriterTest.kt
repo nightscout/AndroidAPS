@@ -13,6 +13,9 @@ import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.SensorCalibrationResult
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.Translator
@@ -26,6 +29,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -43,12 +47,14 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
     @Mock lateinit var xDripSource: XDripSource
     @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var calibration: Calibration
+    @Mock lateinit var bgSource: BgSource
 
     private lateinit var sut: MasterRecordWriter
 
     @BeforeEach
     fun setUp() {
         whenever(activePlugin.activeCalibration).thenReturn(calibration)
+        whenever(activePlugin.activeBgSource).thenReturn(bgSource)
         sut = MasterRecordWriter(
             persistenceLayer, baseText, dateUtil, profileUtil, profileFunction, decimalFormatter, translator, activePlugin,
             uel, xDripSource, xDripBroadcast, aapsLogger
@@ -152,14 +158,14 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
     fun `a calibration the master cannot take now is refused with its reason`() = runTest {
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Rejected.NoSession)
 
-        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
     }
 
     @Test
     fun `a calibration the master can take is not refused`() = runTest {
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted)
 
-        assertThat(sut.calibrationRefusal()).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isNull()
     }
 
     @Test
@@ -184,5 +190,66 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_pair))
         verify(xDripBroadcast, never()).sendCalibration(any())
+    }
+
+    // ---- A BG source that calibrates in the sensor ----
+
+    /** The writer with a [ProfileUtil] that formats a value without the unit strings, which these tests do not check. */
+    private fun withUnitText(): MasterRecordWriter {
+        val units: ProfileUtil = mock()
+        whenever(units.fromMgdlToStringWithUnits(any())).thenReturn("120 mg/dL")
+        return MasterRecordWriter(
+            persistenceLayer, baseText, dateUtil, units, profileFunction, decimalFormatter, translator, activePlugin,
+            uel, xDripSource, xDripBroadcast, aapsLogger
+        )
+    }
+
+    @Test
+    fun `a sensor that calibrates itself is asked, not the calibration plugin`() = runTest {
+        whenever(bgSource.calibratesInSensor()).thenReturn(true)
+        whenever(bgSource.sensorCalibrationRefusal(eq(120), any())).thenReturn("changing too fast")
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo("changing too fast")
+        verify(calibration, never()).checkPreconditions()
+    }
+
+    @Test
+    fun `a value for the sensor carries a warning line in the confirmation`() {
+        whenever(bgSource.calibratesInSensor()).thenReturn(true)
+
+        val lines = withUnitText().calibrationLines(BatchAction.Calibration(120.0))
+
+        assertThat(lines.map { it.role }).containsExactly(ConfirmationRole.PRIMARY, ConfirmationRole.WARNING).inOrder()
+        assertThat(lines[1].text).isEqualTo(baseText.gs(CoreUiStrings.calibration_to_sensor_warning))
+    }
+
+    @Test
+    fun `a value for the app has no warning line`() {
+        assertThat(withUnitText().calibrationLines(BatchAction.Calibration(120.0)).map { it.role }).containsExactly(ConfirmationRole.PRIMARY)
+    }
+
+    @Test
+    fun `a value for the sensor goes to the sensor and is never also stored in the app`() = runTest {
+        whenever(bgSource.calibratesInSensor()).thenReturn(true)
+        whenever(bgSource.calibrateSensor(eq(120), any())).thenReturn(SensorCalibrationResult.Queued)
+        var failure: MasterActionExecutor.Failure? = null
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure).isNull()
+        verify(calibration, never()).addEntry(any(), any())
+        verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), eq(baseText.gs(CoreUiStrings.calibration_sent_to_sensor)), any<ValueWithUnit>())
+    }
+
+    @Test
+    fun `a value the sensor side refuses reports the reason and stores nothing`() = runTest {
+        whenever(bgSource.calibratesInSensor()).thenReturn(true)
+        whenever(bgSource.calibrateSensor(eq(120), any())).thenReturn(SensorCalibrationResult.Refused("warming up"))
+        var failure: MasterActionExecutor.Failure? = null
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo("warming up")
+        verify(calibration, never()).addEntry(any(), any())
     }
 }

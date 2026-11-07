@@ -31,12 +31,19 @@ import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.ui.UiStrings
 
 /**
  * Status rows content — sensor/insulin/cannula/battery with optional action buttons.
  * Does not include a card wrapper — caller provides the container.
  *
+ * [warmUpStatus] and [secondSensorStatus] are shown right below the sensor. They are null for every
+ * CGM source that does not report them, and then the section is unchanged.
+ * [onPromoteSecondSensorClick] is null until the second sensor is ready, so the Switch button is
+ * missing rather than shown and refused.
+ *
  * @see StatusSectionContentPreview
+ * @see StatusSectionContentCgmRowsPreview
  */
 @Composable
 internal fun StatusSectionContent(
@@ -44,14 +51,18 @@ internal fun StatusSectionContent(
     insulinStatus: StatusItem?,
     cannulaStatus: StatusItem?,
     batteryStatus: StatusItem?,
+    warmUpStatus: StatusItem? = null,
+    secondSensorStatus: StatusItem? = null,
     onSensorInsertClick: (() -> Unit)? = null,
     onFillClick: (() -> Unit)? = null,
     onInsulinChangeClick: (() -> Unit)? = null,
-    onBatteryChangeClick: (() -> Unit)? = null
+    onBatteryChangeClick: (() -> Unit)? = null,
+    onPromoteSecondSensorClick: (() -> Unit)? = null
 ) {
     val addLabel = stringResource(CoreUiStrings.add)
     val cannulaChangeLabel = stringResource(CoreUiStrings.btn_status_cannula_change)
     val insulinFillLabel = stringResource(CoreUiStrings.btn_status_insulin_fill)
+    val switchLabel = stringResource(UiStrings.overview_second_sensor_switch)
 
     cannulaStatus?.let {
         StatusRow(item = it, actionLabel = cannulaChangeLabel, onActionClick = onFillClick)
@@ -68,7 +79,22 @@ internal fun StatusSectionContent(
     sensorStatus?.let {
         StatusRow(item = it, actionLabel = addLabel, onActionClick = onSensorInsertClick)
     }
-    if (sensorStatus != null && batteryStatus != null) {
+    // True once any row is shown, so each CGM row knows if it needs a divider above it.
+    var anythingAbove = cannulaStatus != null || insulinStatus != null || sensorStatus != null
+    warmUpStatus?.let {
+        if (anythingAbove) {
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        }
+        StatusRow(item = it)
+        anythingAbove = true
+    }
+    secondSensorStatus?.let {
+        if (anythingAbove) {
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        }
+        StatusRow(item = it, actionLabel = switchLabel, onActionClick = onPromoteSecondSensorClick)
+    }
+    if ((sensorStatus != null || warmUpStatus != null || secondSensorStatus != null) && batteryStatus != null) {
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
     }
     batteryStatus?.let {

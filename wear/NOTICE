@@ -1,0 +1,70 @@
+AAPS watch app - notices for code that came from elsewhere
+
+CgmAlarmWatch (src/main/kotlin/app/aaps/wear/alarm/CgmAlarmWatch.kt)
+--------------------------------------------------------------------
+Adapted from CgmAlarmWear in nightscout/AndroidAPS pull request 5397
+(Dexcom G7 direct, by t1dude), path
+wear/src/main/kotlin/app/aaps/wear/comm/CgmAlarmWear.kt at commit bec1b16ba20:
+https://github.com/nightscout/AndroidAPS/pull/5397
+
+That code was written for AndroidAPS and is under the same licence as
+AndroidAPS (GNU Affero General Public License v3, see LICENSE.txt at the root
+of this repository). The vibration pattern (pulses at full strength, as an
+alarm vibration that the silent mode of the watch does not block) and the
+Acknowledge round trip to the phone follow it. It does not contain code from
+Trio or from G7SensorKit.
+
+THIRD-PARTY NOTICE — :wear, direct-to-watch
+===========================================
+
+The watch side of direct-to-watch (package app.aaps.wear.watchdirect) follows
+the behaviour of nightscout/AndroidAPS pull request 5397, "Dexcom G7 direct"
+(author t1dude / Magnus), at commit bec1b16ba20:
+
+  - wear/src/main/kotlin/app/aaps/wear/g7/G7WatchReadings.kt
+      -> WatchDirectReadings.kt (closely ported: the same rules for which
+         reading the face shows, the graph merge, the delta, and when the
+         watch raises its own low alarm)
+  - wear/src/main/kotlin/app/aaps/wear/g7/G7WatchDirect.kt
+  - wear/src/main/kotlin/app/aaps/wear/g7/G7WatchService.kt
+  - wear/src/main/kotlin/app/aaps/wear/g7/G7WatchActivity.kt
+      -> WatchDirect.kt, WatchDirectService.kt, WatchDirectActivity.kt
+         (re-built on this repository's own Dexcom ONE+ / G7 driver,
+         :plugins:dexcom_oneplus, through WatchSensorLink; the structure and
+         some text follow the originals)
+
+The phone side (plugins/source, DexcomOnePlusWatchDirectRules and
+DexcomOnePlusWatchHandover) follows
+cgm/dexcomg7/src/main/kotlin/app/aaps/cgm/dexcomg7/watch/G7WatchHandover.kt of
+the same pull request and commit.
+
+No sensor protocol code was taken from that pull request. The sensor protocol
+used on the watch is this repository's own driver and the vendored xDrip keks
+library (:plugins:libkeks, GPL-3.0, see plugins/libkeks/NOTICE). The protocol
+code of pull request 5397 is itself a port of Trio's G7SensorKit
+(https://github.com/nightscout/Trio), under the MIT license below; it is named
+here because the pull request carries that notice for its G7 code.
+
+    Copyright (c) LoopKit Authors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+Pull request 5397 is part of nightscout/AndroidAPS, which is distributed under
+the GNU Affero General Public License v3; this code is distributed under the
+same terms (AGPL-3.0-or-later).

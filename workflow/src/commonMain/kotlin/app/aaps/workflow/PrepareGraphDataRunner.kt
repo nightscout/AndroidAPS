@@ -184,7 +184,16 @@ class PrepareGraphDataRunner(
         val workingCopy = dataLock.withLock {
             bucketedData?.map { it.copy(smoothed = null, calibrated = null) }?.toMutableList()
         } ?: return
-        val calibrated = activePlugin.activeCalibration.calibrate(workingCopy, CalibrationContext.NONE)
+        // A sensor that holds its own calibration: the fingerstick went to the sensor, its algorithm
+        // re-based itself, and the readings arriving here are already corrected. Fitting a line in the
+        // app on top would correct them twice. This rule has to live here and not only where an entry
+        // is stored, because entries made BEFORE the user switched sending on are still in the
+        // database and would otherwise keep correcting readings the sensor has already corrected.
+        //
+        // Smoothing still runs: it is a local filter, not a per sensor correction.
+        val calibrated =
+            if (activePlugin.activeBgSource.calibratesInSensor()) workingCopy
+            else activePlugin.activeCalibration.calibrate(workingCopy, CalibrationContext.NONE)
         val smoothed = activePlugin.activeSmoothing.smooth(calibrated)
         dataLock.withLock {
             bucketedData = smoothed

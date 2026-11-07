@@ -48,6 +48,8 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -55,12 +57,14 @@ import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.statusLights.StatusItem
 import app.aaps.ui.compose.overview.statusLights.StatusSectionContent
 
 /**
  * @see OverviewStatusSectionCollapsedPreview
  * @see OverviewStatusSectionExpandedPreview
+ * @see OverviewStatusSectionCgmRowsPreview
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,6 +73,18 @@ fun OverviewStatusSection(
     insulinStatus: StatusItem?,
     cannulaStatus: StatusItem?,
     batteryStatus: StatusItem?,
+    // Only set while a CGM source reports a warm-up, or a second sensor that warms up next to the one
+    // in use. Null for every other source, so nothing changes for them.
+    warmUpStatus: StatusItem? = null,
+    secondSensorStatus: StatusItem? = null,
+    // The second sensor is ready, so its row offers the Switch button. False until then, so the
+    // button is missing rather than shown and refused.
+    canPromoteSecondSensor: Boolean = false,
+    // Switches the loop to the second sensor, after the user has confirmed it.
+    onPromoteSecondSensor: () -> Unit = {},
+    // Result of the last switch, shown in a dialog until the user closes it.
+    promotionMessage: String? = null,
+    onDismissPromotionMessage: () -> Unit = {},
     showFill: Boolean,
     showPumpBatteryChange: Boolean,
     // The status-row action buttons (fill / sensor insert / battery change) open mutating screens — hidden on an
@@ -80,11 +96,12 @@ fun OverviewStatusSection(
     onExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val items = listOfNotNull(cannulaStatus, insulinStatus, sensorStatus, batteryStatus)
+    val items = listOfNotNull(cannulaStatus, insulinStatus, sensorStatus, warmUpStatus, secondSensorStatus, batteryStatus)
     if (items.isEmpty()) return
     val compactItems = items.filter { it.compactAge || (it.compactLevel && it.level != null) }
 
     var showSettingsSheet by rememberSaveable { mutableStateOf(false) }
+    var showPromoteDialog by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     AapsCard(
@@ -158,6 +175,8 @@ fun OverviewStatusSection(
                         insulinStatus = insulinStatus,
                         cannulaStatus = cannulaStatus,
                         batteryStatus = batteryStatus,
+                        warmUpStatus = warmUpStatus,
+                        secondSensorStatus = secondSensorStatus,
                         onSensorInsertClick = if (commandsAllowed && role.allows(ElementType.SENSOR_INSERT.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.SENSOR_INSERT)) }
                         } else null,
@@ -169,11 +188,38 @@ fun OverviewStatusSection(
                         } else null,
                         onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed && role.allows(ElementType.BATTERY_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.BATTERY_CHANGE)) }
+                        } else null,
+                        onPromoteSecondSensorClick = if (canPromoteSecondSensor && commandsAllowed) {
+                            { showPromoteDialog = true }
                         } else null
                     )
                 }
             }
         }
+    }
+
+    // The switch changes where the loop gets its glucose from, so it is confirmed first. The result is
+    // shown in a dialog and not in a message that goes away by itself: a refusal has a reason to read.
+    if (showPromoteDialog) {
+        OkCancelDialog(
+            title = stringResource(UiStrings.overview_second_sensor_label),
+            message = stringResource(UiStrings.overview_second_sensor_switch_confirm),
+            onConfirm = {
+                showPromoteDialog = false
+                // Called even if the sensor stopped being ready while the dialog was open: the source
+                // checks its own rules again, and a refusal is then shown with its reason.
+                onPromoteSecondSensor()
+            },
+            onDismiss = { showPromoteDialog = false }
+        )
+    }
+
+    promotionMessage?.let { message ->
+        OkDialog(
+            title = stringResource(UiStrings.overview_second_sensor_label),
+            message = message,
+            onDismiss = onDismissPromotionMessage
+        )
     }
 
     if (showSettingsSheet) {

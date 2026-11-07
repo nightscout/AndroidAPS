@@ -94,6 +94,52 @@
     <string name="uploader">Uploader</string>
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="alert_hypo_message" comment="%1$s = current glucose value with unit, e.g. 68 mg/dL or 3.8 mmol/L">Low glucose: %1$s</string>
+    <string name="alert_hypo_treated" comment="Short button label on the low glucose alarm. The user tells AAPS that the hypo (low glucose) was treated, for example by eating sugar.">Hypo treated</string>
+    <string name="alert_hyper_message" comment="%1$s = current glucose value with unit, e.g. 260 mg/dL or 14.4 mmol/L">High glucose: %1$s</string>
+    <string name="alert_rapid_fall_message" comment="%1$s = glucose drop with unit (e.g. 35 mg/dL), %2$d = time window in minutes">Glucose dropping fast: %1$s in %2$d min</string>
+    <string name="cgm_alarm_urgent_low_message" comment="%1$s = current glucose value with unit, e.g. 52 mg/dL or 2.9 mmol/L">Urgent low glucose: %1$s</string>
+    <string name="cgm_alarm_urgent_low_soon_message" comment="%1$s = current glucose value with unit, e.g. 75 mg/dL or 4.2 mmol/L">Glucose %1$s is falling and will be urgent low within 20 minutes.</string>
+    <string name="cgm_alarm_rapid_rise_message" comment="%1$s = glucose rise with unit (e.g. 35 mg/dL), %2$d = time window in minutes">Glucose rising fast: %1$s in %2$d min</string>
+    <string name="cgm_alert_failed_sensor_error">The CGM sensor reports an error. Glucose readings may stop. Check the sensor and replace it if needed.</string>
+    <string name="cgm_alert_failed_ended_early">The CGM sensor stopped before the end of its life. Replace the sensor.</string>
+    <string name="cgm_alert_failed_other">The CGM sensor cannot be used. Open the BG source screen to see why.</string>
+    <string name="cgm_alert_expired" comment="%1$s = date and time when the usable time of the sensor ended, e.g. 29.10.2026 14:05">The CGM sensor has ended. Replace the sensor. End of its usable time: %1$s.</string>
+    <string name="cgm_alert_expiring" comment="%1$s = date and time when the usable time of the sensor ends, e.g. 29.10.2026 14:05">The usable time of the CGM sensor ends at %1$s. Prepare a new sensor.</string>
+    <string name="cgm_alert_signal_lost" comment="%1$s = time of the last link or the last reading of the sensor, e.g. 14:05">No signal from the CGM sensor since %1$s.</string>
+    <string name="cgm_alert_sensor_issue" comment="%1$s = time since when the sensor sends no usable value, e.g. 14:05">The CGM sensor sends no usable glucose value since %1$s. This often passes by itself. Check your glucose with a meter if you need to.</string>
+    <string name="cgm_alert_warmup_done" comment="%1$s = time of the first usable reading, e.g. 14:05">Warm-up finished. The CGM sensor is active, first usable reading at %1$s.</string>
+    <string name="cgm_alert_second_sensor_ready" comment="%1$s = time when the pre-soak sensor became ready, e.g. 14:05">The pre-soak CGM sensor has been ready to promote since %1$s. You can switch to it now.</string>
+    <string name="cgm_alarm_acknowledge" comment="Short button label on a CGM alarm: the user has seen the alarm, it stops and comes back later if the cause is still there">Acknowledge</string>
+    <string name="cgm_alarm_test_message" comment="%1$s = name of the alarm, e.g. Urgent low">Test of the alarm: %1$s. Dismiss it to stop.</string>
+    <string name="cgm_alarm_urgent_low">Urgent low</string>
+    <string name="cgm_alarm_urgent_low_soon">Urgent low soon</string>
+    <string name="cgm_alarm_low">Low</string>
+    <string name="cgm_alarm_fall_rate">Fall rate</string>
+    <string name="cgm_alarm_high">High</string>
+    <string name="cgm_alarm_rise_rate">Rise rate</string>
+    <string name="cgm_alarm_sensor_failed">Sensor failed</string>
+    <string name="cgm_alarm_sensor_ended">Sensor ended</string>
+    <string name="cgm_alarm_sensor_ending_soon">Sensor ending soon</string>
+    <string name="cgm_alarm_signal_loss">Signal loss</string>
+    <string name="cgm_alarm_sensor_issue">Sensor issue</string>
+    <string name="cgm_alarm_second_sensor_ready">Second sensor ready</string>
+    <string name="cgm_alarm_warmup_done">Warm-up done</string>
+    <string name="cgm_alarms_title">CGM alarms</string>
+    <string name="cgm_alarms_summary">Glucose and sensor alarms for every BG source. They only notify, they never change dosing.</string>
+    <string name="cgm_alarms_controls_title">Mute and test CGM alarms</string>
+    <string name="cgm_alarms_controls_summary">Mute the CGM alarms for a while, or hear what an alarm sounds like.</string>
+    <string name="cgm_alarms_mute_section">Mute</string>
+    <string name="cgm_alarms_mute_explanation">Muted alarms stay quiet until the mute ends. Urgent low is never muted.</string>
+    <string name="cgm_alarms_mute_minutes" comment="Button label. %1$d = number of minutes, e.g. Mute 30 min">Mute %1$d min</string>
+    <string name="cgm_alarms_mute_hours" comment="Button label. %1$d = number of hours, e.g. Mute 2 h">Mute %1$d h</string>
+    <string name="cgm_alarms_muted_until" comment="%1$s = time when the mute ends, e.g. 14:05">Muted until %1$s. Urgent low is never muted.</string>
+    <string name="cgm_alarms_not_muted">The CGM alarms are not muted.</string>
+    <string name="cgm_alarms_unmute">End the mute</string>
+    <string name="cgm_alarms_test_section">Test an alarm</string>
+    <string name="cgm_alarms_test_explanation">Plays the alarm with its sound, the same way as a real alarm, until you dismiss it. Test at night volume.</string>
+    <string name="cgm_alarms_platform_android">An alarm with sound plays its sound until you acknowledge or dismiss it. The setting Override Do Not Disturb mode decides if it rings while the phone is in Do Not Disturb.</string>
+    <string name="cgm_alarms_platform_ios">On iPhone, alarms are time-sensitive notifications. They get through a Focus when Override Do Not Disturb mode is on. The alarm sound plays only while the app runs: when iOS has stopped the app, the notification comes without the alarm sound. Critical alerts, which always sound, need a permission (an entitlement) from Apple that this app does not have.</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Mute for 5 minutes</string>
     <string name="mute">Mute</string>
@@ -182,6 +228,8 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
+    <string name="calibration_to_sensor_warning">This value goes to the sensor. The sensor keeps it for good: it cannot be removed later. Make sure it is right.</string>
+    <string name="calibration_sent_to_sensor">Sent to the sensor</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>
     <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>

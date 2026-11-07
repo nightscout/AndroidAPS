@@ -11,11 +11,17 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
+import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
+import app.aaps.ui.UiStringIds
+import com.google.common.truth.Truth.assertThat
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,6 +37,13 @@ class StatusSectionContentTest {
 
     @get:Rule
     val compose = createComposeRule()
+
+    // What MainApp does at startup. Without it the ui strings render as their raw names, and this
+    // class passed only when another test class had registered them first.
+    @Before
+    fun setUp() {
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+    }
 
     @Test
     fun rendersAllStatusItems() {
@@ -119,5 +132,59 @@ class StatusSectionContentTest {
 
         compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.ProgressBarRangeInfo))
             .assertCountEquals(0)
+    }
+
+    @Test
+    fun rendersWarmUpAndSecondSensorRows() {
+        compose.setContent {
+            MaterialTheme {
+                StatusSectionContent(
+                    sensorStatus = StatusItem(
+                        label = "Sensor", age = "9d4h", ageStatus = StatusLevel.WARNING, agePercent = 0.9f, icon = IcCgmInsert
+                    ),
+                    insulinStatus = null,
+                    cannulaStatus = null,
+                    batteryStatus = null,
+                    warmUpStatus = StatusItem(
+                        label = "Warm-up", age = "23 min", agePercent = 0.24f, icon = IcCgmInsert, compactLevel = false
+                    ),
+                    secondSensorStatus = StatusItem(
+                        label = "New sensor", age = "Ready in 8 h", agePercent = 0.33f, level = "Readings: 12",
+                        icon = IcGenericCgm, compactLevel = false
+                    )
+                )
+            }
+        }
+        compose.onNodeWithText("Warm-up").assertIsDisplayed()
+        compose.onNodeWithText("23 min").assertIsDisplayed()
+        compose.onNodeWithText("New sensor").assertIsDisplayed()
+        compose.onNodeWithText("Ready in 8 h").assertIsDisplayed()
+        compose.onNodeWithText("Readings: 12").assertIsDisplayed()
+        // Not ready: no Switch button at all.
+        compose.onAllNodes(hasText("Switch")).assertCountEquals(0)
+    }
+
+    @Test
+    fun theSwitchButtonIsShownOnlyWithACallbackAndCallsIt() {
+        var clicks = 0
+        compose.setContent {
+            MaterialTheme {
+                StatusSectionContent(
+                    sensorStatus = null,
+                    insulinStatus = null,
+                    cannulaStatus = null,
+                    batteryStatus = null,
+                    secondSensorStatus = StatusItem(
+                        label = "New sensor", age = "Ready to switch", ageStatus = StatusLevel.NORMAL,
+                        level = "Readings: 72", icon = IcGenericCgm, compactLevel = false
+                    ),
+                    onPromoteSecondSensorClick = { clicks++ }
+                )
+            }
+        }
+        // Named after its row, like the other row buttons.
+        compose.onNode(hasContentDescription("New sensor") and hasClickAction()).assertIsDisplayed()
+        compose.onNodeWithText("Switch").performClick()
+        assertThat(clicks).isEqualTo(1)
     }
 }

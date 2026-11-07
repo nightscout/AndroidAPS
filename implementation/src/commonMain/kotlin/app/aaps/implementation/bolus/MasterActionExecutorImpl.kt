@@ -582,7 +582,7 @@ class MasterActionExecutorImpl(
             return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
         // A calibration is checked on the MASTER's sensor data (session, warm-up, BG changing too fast): that is the
         // BG the loop doses on. Refused here, before the user confirms; checked again when it is stored.
-        if (cal != null) masterRecordWriter.calibrationRefusal()?.let { return MasterActionExecutor.PrepareResult.Error(it) }
+        if (cal != null) masterRecordWriter.calibrationRefusal(cal)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
         // Removals: the master finds its own copies by Nightscout id. With none of them here there is nothing to
         // confirm — refused with the reason, or a plain no-op when the master's own records were removed meanwhile.
         val removalPlan = if (removals.isNotEmpty()) masterRecordWriter.planRemovals(removals) else null
@@ -630,7 +630,8 @@ class MasterActionExecutorImpl(
             tes.flatMap { buildTherapyEventLine(it) } +
             teEdits.flatMap { buildTherapyEventEditLine(it) } +
             (removalPlan?.lines ?: emptyList()) +
-            listOfNotNull(rse?.let { masterRecordWriter.removeStartEventsLine() }, cal?.let { masterRecordWriter.calibrationLine(it) })
+            listOfNotNull(rse?.let { masterRecordWriter.removeStartEventsLine() }) +
+            (cal?.let { masterRecordWriter.calibrationLines(it) } ?: emptyList())
         return MasterActionExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
     }
 

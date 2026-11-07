@@ -8,6 +8,7 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.DEXCOM_UNKNOWN    -> SourceSensor.DEXCOM_UNKNOWN
         GlucoseValue.SourceSensor.DEXCOM_G6         -> SourceSensor.DEXCOM_G6
         GlucoseValue.SourceSensor.DEXCOM_G7         -> SourceSensor.DEXCOM_G7
+        GlucoseValue.SourceSensor.DEXCOM_ONEPLUS_NATIVE -> SourceSensor.DEXCOM_ONEPLUS_NATIVE
         GlucoseValue.SourceSensor.LIBRE_1           -> SourceSensor.LIBRE_1
         GlucoseValue.SourceSensor.LIBRE_2           -> SourceSensor.LIBRE_2
         GlucoseValue.SourceSensor.LIBRE_3           -> SourceSensor.LIBRE_3
@@ -48,6 +49,7 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.DEXCOM_UNKNOWN    -> GlucoseValue.SourceSensor.DEXCOM_UNKNOWN
         SourceSensor.DEXCOM_G6         -> GlucoseValue.SourceSensor.DEXCOM_G6
         SourceSensor.DEXCOM_G7         -> GlucoseValue.SourceSensor.DEXCOM_G7
+        SourceSensor.DEXCOM_ONEPLUS_NATIVE -> GlucoseValue.SourceSensor.DEXCOM_ONEPLUS_NATIVE
         SourceSensor.LIBRE_1           -> GlucoseValue.SourceSensor.LIBRE_1
         SourceSensor.LIBRE_2           -> GlucoseValue.SourceSensor.LIBRE_2
         SourceSensor.LIBRE_3           -> GlucoseValue.SourceSensor.LIBRE_3
