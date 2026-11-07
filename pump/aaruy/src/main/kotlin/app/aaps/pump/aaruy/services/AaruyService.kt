@@ -165,6 +165,13 @@ class AaruyService : MetroService() {
             aaruyBle.syncCurTimeToPump()
         }
 
+        // Once for a pump, for the overview. The old screen read it at each connect, outside the queue, and the move to
+        // Compose lost that, so the firmware was never shown.
+        if (aaruyPump.swVersion.isEmpty()) {
+            aaruyPump.swVersion = aaruyBle.getPumpVersionNum()
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump firmware: ${aaruyPump.swVersion}")
+        }
+
         // The pump log can hold what no status shows, as an alarm while the link was down.
         if (aaruyPump.canSaveHistory) aaruyBle.requestHistoryData(aaruyPump.lastHistoryTime)
         aaruyBle.waitForHistoryAfterReconnect()
@@ -397,37 +404,6 @@ class AaruyService : MetroService() {
         return result
     }
 
-    fun replaceDevice():Boolean {
-        if (!isConnected) return false
-
-        aaruyBle.replaceDevice()
-        return true
-    }
-
-    fun pushForward():Boolean {
-        if (!isConnected) return false
-
-        aaruyBle.pushForward()
-        return true
-    }
-
-    fun needlePushAir(softNeedleType: Byte):Boolean {
-        if (!isConnected) return false
-
-        aaruyBle.needlePushAir(softNeedleType)
-        return true
-    }
-
-    fun startBaseInject():Boolean {
-        if (!isConnected) return false
-
-        return aaruyBle.startBaseInject()
-    }
-
-    fun unbindDevice() {
-        aaruyBle.unbindDevice()
-    }
-
     private fun canSetBolus(): Boolean {
         if (!isConnected) {
             aapsLogger.warn(LTag.PUMPCOMM, "Pump not connected, not setting bolus")
@@ -457,26 +433,5 @@ class AaruyService : MetroService() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return mBinder
-    }
-
-    fun clearAlarms(): Boolean {
-        // loadHistory
-
-        // reset alarm
-        aaruyBle.clearAlarmStatus(AlarmState.PUMP_LOW_POWER.state)
-        aaruyBle.clearAlarmStatus(AlarmState.PUMP_MOTOR_BUSY.state)
-        aaruyPump.clearAlarmState()
-        return true
-    }
-
-    fun getPumpVersionNum(): String {
-        aaruyPump.swVersion = aaruyBle.getPumpVersionNum()
-        aapsLogger.debug(LTag.PUMPCOMM, "getPumpVersionNum swVersion is ${aaruyPump.swVersion}")
-        return aaruyPump.swVersion
-    }
-
-    fun readDailyData() {
-        if (!isConnected) return
-        aaruyBle.readDailyData(aaruyPump.lastHistoryDailyTime)
     }
 }

@@ -1,6 +1,5 @@
 package app.aaps.pump.aaruy.services
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -9,11 +8,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Handler
 import android.os.SystemClock
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
@@ -213,16 +209,12 @@ class AaruyBLE(
         handler.postDelayed(detectionRunnable, 2000)
     }
 
+    /** Only the command queue calls this, and it checks the Bluetooth permission first, for every pump. */
+    @SuppressLint("MissingPermission")
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         if (stopped) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "no connect, the driver is off: $from")
-            return false
-        }
-        if (emulatorTransport == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
-                        aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
@@ -266,12 +258,6 @@ class AaruyBLE(
 
     @Synchronized
     fun disconnect(from: String) {
-        if (emulatorTransport == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-        ) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
-            return
-        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
         if (isConnecting) {

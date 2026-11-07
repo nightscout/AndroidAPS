@@ -650,7 +650,11 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
      */
     fun reset(newPump: Boolean) {
         aapsLogger.debug(LTag.PUMP, "Aaruy Pump reset, new pump: $newPump")
-        if (newPump) lastConnection = 0
+        if (newPump) {
+            lastConnection = 0
+            // The next status read asks the new pump.
+            swVersion = ""
+        }
         reservoir = null
         remainBattery = null
         pumpState = AaruyPumpState.FIRST_INIT

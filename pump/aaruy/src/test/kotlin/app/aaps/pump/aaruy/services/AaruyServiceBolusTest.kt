@@ -29,6 +29,7 @@ import org.mockito.kotlin.argThat
 import org.mockito.kotlin.whenever
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyDouble
+import org.mockito.Mockito
 import org.mockito.Mockito.RETURNS_SMART_NULLS
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
@@ -220,6 +221,23 @@ class AaruyServiceBolusTest {
         }
         assertEquals(AaruyBolusOutcome.FINISHED, runBlocking { service.setBolus(info) })
         assertTrue("more than the 3 retries, because each answer is progress: $asked", asked >= 5)
+    }
+
+    /**
+     * The status read asks for the firmware once for a pump, for the overview. The old screen read it at each connect,
+     * outside the queue, and the move to Compose lost that: the firmware was never shown.
+     */
+    @Test
+    fun theStatusReadAsksForTheFirmwareOnceForAPump() {
+        `when`(ble.getPumpVersionNum()).thenReturn("V1.2")
+        service.readPumpStatus()
+        assertEquals("V1.2", pump.swVersion)
+        service.readPumpStatus()
+        verify(ble).getPumpVersionNum()
+
+        pump.reset(newPump = true)
+        service.readPumpStatus()
+        verify(ble, Mockito.times(2)).getPumpVersionNum()
     }
 
     @Test
