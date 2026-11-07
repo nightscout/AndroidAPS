@@ -52,7 +52,11 @@ abstract class SharedBleManager(
      * Exceptions are handled by the enclosing operation: the connection is disconnected and the
      * observable emits the error.
      */
-    protected open fun onCommandWriteCompleted() = Unit
+    protected open fun onCommandWriteCompleted() {
+        onCommandSent()
+    }
+
+    protected open fun onCommandSent() = Unit
 
     /**
      * Called on the subscription thread before [PodEvent.ResponseReceived] is emitted.
@@ -109,6 +113,7 @@ abstract class SharedBleManager(
                     }
 
                     is CommandReceiveError   -> {
+                        readResult.result?.let(::onResponse)
                         emitter.tryOnError(MessageIOException("Could not read response: $readResult"))
                         return@create
                     }
@@ -155,6 +160,7 @@ abstract class SharedBleManager(
                 emitter.onNext(PodEvent.Connected)
                 complete(emitter::onComplete) { busyReleasedBeforeCompletion = true }
             } catch (ex: Exception) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "$connectionName connection failed", ex)
                 disconnect(false)
                 emitter.tryOnError(ex)
             } finally {

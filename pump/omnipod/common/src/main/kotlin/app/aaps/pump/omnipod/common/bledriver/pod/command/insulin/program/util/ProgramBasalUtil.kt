@@ -38,9 +38,9 @@ object ProgramBasalUtil {
                         (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement).toShort()
                     )
                 )
+                startSlotIndex = (numberOfSlotsInCurrentElement + startSlotIndex).toByte()
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i]
                 numberOfSlotsInCurrentElement = 1
-                startSlotIndex = (numberOfSlotsInCurrentElement + startSlotIndex).toByte()
             } else {
                 numberOfSlotsInCurrentElement++
             }
