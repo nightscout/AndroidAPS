@@ -150,9 +150,11 @@ interface Pump {
     val baseBasalRate: PumpRate
 
     /**
-     * Reservoir level at time of last connection [Units of insulin]
+     * Reservoir level at time of last connection [Units of insulin].
+     * Null when it is not known, as after an app start before the pump was read. A 0 here is an empty reservoir:
+     * it goes to Nightscout, to the watch and to automation rules as one.
      */
-    val reservoirLevel: StateFlow<PumpInsulin>
+    val reservoirLevel: StateFlow<PumpInsulin?>
 
     /**
      * Battery level at time of last connection [%]

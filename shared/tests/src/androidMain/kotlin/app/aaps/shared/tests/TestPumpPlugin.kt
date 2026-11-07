@@ -75,8 +75,15 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
     override val lastDataTime: StateFlow<Long> = _lastDataTime
     override val baseBasalRate: PumpRate get() = PumpRate(baseBasal)
-    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
-    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+    private val _reservoirLevel = MutableStateFlow<PumpInsulin?>(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin?> = _reservoirLevel
+
+    /** What the pump reports in its reservoir. null: not known yet. */
+    var reservoir: PumpInsulin?
+        get() = _reservoirLevel.value
+        set(value) {
+            _reservoirLevel.value = value
+        }
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevel
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)
