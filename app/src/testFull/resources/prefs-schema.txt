@@ -190,6 +190,10 @@ eopatch_patch_buzzer_reminders|EopatchBooleanKey|true
 eopatch_patch_config|EopatchStringNonKey|true
 eopatch_patch_state|EopatchStringNonKey|true
 eopatch_temp_basal|EopatchStringNonKey|true
+eversense_alert_high|EversenseStringKey|true
+eversense_alert_low|EversenseStringKey|true
+eversense_target_high|EversenseStringKey|true
+eversense_target_low|EversenseStringKey|true
 export_all_cloud_enabled|BooleanNonKey|true
 export_csv_cloud_enabled|BooleanNonKey|true
 export_csv_local_enabled|BooleanNonKey|true

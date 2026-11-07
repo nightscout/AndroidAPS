@@ -42,6 +42,7 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(project(":plugins:eversense"))
                 implementation(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.compose.material3)
                 implementation(libs.androidx.compose.runtime)
