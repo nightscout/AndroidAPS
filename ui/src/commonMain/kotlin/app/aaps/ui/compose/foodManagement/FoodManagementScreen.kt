@@ -24,7 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -116,6 +118,8 @@ fun FoodManagementScreen(
     if (state.showDeleteConfirm) {
         DeleteDialog(summary = viewModel.deleteSummary(), onConfirm = viewModel::confirmDelete, onDismiss = viewModel::dismissDelete)
     }
+    if (state.showCsvExport) CsvExportDialog(onExport = viewModel::exportCsv, onDismiss = viewModel::closeCsvExport)
+    state.restoreFiles?.let { files -> RestoreDialog(files = files, onRestore = viewModel::restore, onDismiss = viewModel::closeRestore) }
 
     Scaffold(
         topBar = {
@@ -138,6 +142,37 @@ fun FoodManagementScreen(
                 actions = {
                     IconButton(onClick = { viewModel.openImport() }) {
                         Icon(Icons.Filled.CloudDownload, contentDescription = stringResource(UiStrings.food_off_import))
+                    }
+                    if (viewModel.exportAvailable) {
+                        var showMenu by remember { mutableStateOf(false) }
+                        Box {
+                            IconButton(onClick = { showMenu = true }) {
+                                Icon(Icons.Filled.MoreVert, contentDescription = stringResource(CoreUiStrings.more_options))
+                            }
+                            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(UiStrings.food_csv_export)) },
+                                    onClick = {
+                                        showMenu = false
+                                        viewModel.openCsvExport()
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(UiStrings.food_backup)) },
+                                    onClick = {
+                                        showMenu = false
+                                        viewModel.exportBackup()
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(UiStrings.food_restore)) },
+                                    onClick = {
+                                        showMenu = false
+                                        viewModel.openRestore()
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             )

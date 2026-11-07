@@ -71,6 +71,14 @@ class FoodBookRepository(
 
     suspend fun addEatenMeal(meal: EatenMeal) = change { book -> book.copy(eaten = listOf(meal) + book.eaten) }
 
+    /** Adds what a restore found missing. Nothing already there is changed. */
+    suspend fun addRestored(merge: BackupMerge) = change { book ->
+        book.copy(
+            recipes = (book.recipes + merge.recipes).sortedBy { it.name.lowercase() },
+            eaten = (book.eaten + merge.meals).sortedByDescending { it.timestamp },
+        )
+    }
+
     /**
      * Ties the meals of [linked] (meal id to the treatment found for it) to their treatment, and
      * removes the meals of [removed].

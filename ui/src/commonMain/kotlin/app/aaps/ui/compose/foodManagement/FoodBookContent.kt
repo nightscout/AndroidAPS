@@ -61,6 +61,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.foodManagement.book.EatenMeal
+import app.aaps.ui.compose.foodManagement.book.ExportFile
 import app.aaps.ui.compose.foodManagement.book.MealTarget
 import app.aaps.ui.compose.foodManagement.book.Nutrition
 import app.aaps.ui.compose.foodManagement.book.Recipe
@@ -544,5 +545,64 @@ internal fun DeleteDialog(summary: DeleteSummary, onConfirm: () -> Unit, onDismi
         },
         confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(CoreUiStrings.delete), color = MaterialTheme.colorScheme.error) } },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
+}
+
+/** Asks which meals go in the CSV export: those of the last days, or all. A tap exports. */
+@Composable
+internal fun CsvExportDialog(onExport: (days: Int?) -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(UiStrings.food_csv_period_title)) },
+        text = {
+            Column {
+                CSV_EXPORT_DAYS.forEach { days ->
+                    DialogChoice(
+                        text = if (days == null) stringResource(UiStrings.food_csv_all) else stringResource(UiStrings.food_csv_last_days, days),
+                        onClick = { onExport(days) }
+                    )
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
+}
+
+/**
+ * The backups found in the exports folder, newest first. The text says what a restore does, so a
+ * tap on a file restores it without one more question.
+ */
+@Composable
+internal fun RestoreDialog(files: List<ExportFile>, onRestore: (ExportFile) -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(UiStrings.food_restore)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
+            ) {
+                if (files.isEmpty()) Text(stringResource(UiStrings.food_restore_none), style = MaterialTheme.typography.bodyMedium)
+                else {
+                    Text(stringResource(UiStrings.food_restore_text), style = MaterialTheme.typography.bodyMedium)
+                    files.forEach { file -> DialogChoice(text = file.name, onClick = { onRestore(file) }) }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
+}
+
+@Composable
+private fun DialogChoice(text: String, onClick: () -> Unit) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = AapsSpacing.large)
     )
 }

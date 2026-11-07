@@ -1,8 +1,10 @@
 package app.aaps.ui.compose.foodManagement.book
 
 import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.ICfg
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -142,5 +144,40 @@ class FoodBookMathTest {
     fun `a cancelled dialog leaves the meal without a treatment`() {
         val meal = eaten("m", timestamp = 1_000_000, carbs = 40, note = "x", target = MealTarget.CARBS)
         assertTrue(link(listOf(meal), results = emptyList(), carbs = emptyList()).isEmpty())
+    }
+
+    // ---- The bolus really given for a calculation ----
+
+    private val iCfg = ICfg(insulinLabel = "test", peak = 75, dia = 5.0, concentration = 1.0)
+
+    private fun bolus(id: Long, timestamp: Long, amount: Double, note: String?, type: BS.Type = BS.Type.NORMAL) =
+        BS(id = id, timestamp = timestamp, amount = amount, type = type, notes = note, iCfg = iCfg)
+
+    private fun given(results: List<BCR>, boluses: List<BS>) =
+        FoodBookMath.bolusesGiven(results, boluses, slackMs = 60_000, noteWindowMs = 1_800_000, timeWindowMs = 300_000)
+
+    @Test
+    fun `the bolus with the note of the calculation is the one given, with its real amount`() {
+        // Calculated 2.5 U; the user stopped the bolus at 1.8 U. A correction bolus came just before.
+        val result = bcr(1, timestamp = 1_000_000, carbs = 40.0, note = "Bread 80 g (40 g)")
+        val boluses = listOf(bolus(10, 1_010_000, 1.0, null), bolus(11, 1_200_000, 1.8, "Bread 80 g (40 g)"))
+        assertEquals(1.8, given(listOf(result), boluses).getValue(1L).amount, 0.0001)
+    }
+
+    @Test
+    fun `without the note only a normal bolus given soon after counts, never an SMB`() {
+        val result = bcr(1, timestamp = 1_000_000, carbs = 40.0, note = "x")
+        assertEquals(10L, given(listOf(result), listOf(bolus(9, 1_020_000, 0.3, null, BS.Type.SMB), bolus(10, 1_030_000, 2.5, null))).getValue(1L).id)
+        // 20 minutes later and without the note: not this meal's bolus.
+        assertTrue(given(listOf(result), listOf(bolus(10, 2_200_000, 2.5, null))).isEmpty())
+    }
+
+    @Test
+    fun `a calculation without a bolus has none, and a bolus counts once`() {
+        val first = bcr(1, timestamp = 1_000_000, carbs = 40.0, note = "x")
+        val second = bcr(2, timestamp = 1_010_000, carbs = 40.0, note = "x")
+        val result = given(listOf(first, second), listOf(bolus(10, 1_020_000, 2.5, "x")))
+        assertEquals(10L, result.getValue(1L).id)
+        assertNull(result[2L])
     }
 }

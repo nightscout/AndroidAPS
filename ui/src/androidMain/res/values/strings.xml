@@ -439,5 +439,26 @@
     <string name="food_book_edit_title" comment="Title while a dish or a meal is changed. %1$s = its name. Example: Change Breakfast">Change %1$s</string>
     <string name="food_book_edit_bar" comment="Bar at the bottom of the screen while a dish or a meal is changed. %1$s = its name, %2$s = total carbs with unit. Example: Changing Breakfast: 64 g">Changing %1$s: %2$s</string>
     <string name="food_book_edit_hint">Tap a line to change its quantity. Tap a food, a dish or a meal in the lists to add it.</string>
+    <string name="food_csv_export">Export to a spreadsheet (csv)</string>
+    <string name="food_csv_exported">Meal history and food list saved in the exports folder of the AAPS directory.</string>
+    <string name="food_csv_period_title">Meals to export</string>
+    <string name="food_csv_last_days" comment="A period for the export of the meals. %1$d = number of days, always 7 or more. Example: Last 7 days">Last %1$d days</string>
+    <string name="food_csv_all">All meals</string>
+    <string name="food_csv_carbs_entered" comment="Column header in the exported meal history: the carbs saved with the treatment of the meal, in grams">Carbs entered (g)</string>
+    <string name="food_csv_insulin_given" comment="Column header in the exported meal history: the insulin really given by the pump for the meal (not the calculated amount), in units">Insulin given (U)</string>
+    <string name="food_export_no_folder">Choose the AAPS directory in Maintenance first.</string>
+    <string name="food_export_failed">It did not work. See the log for details.</string>
+    <string name="food_backup">Back up foods, dishes, meals and history (json)</string>
+    <string name="food_backup_saved">Backup saved in the exports folder of the AAPS directory.</string>
+    <string name="food_restore">Restore a backup</string>
+    <string name="food_restore_text">Adds what the backup has and this phone does not: foods, dishes, standard meals and eaten meals. Nothing is deleted or changed.</string>
+    <string name="food_restore_none">No backup found in the exports folder of the AAPS directory.</string>
+    <string name="food_restore_invalid">This file is not a food backup that this version can read.</string>
+    <string name="food_restore_done" comment="After a restore. %1$d = foods added, %2$d = dishes and standard meals added, %3$d = eaten meals added. Example: Restored: 12 foods, 3 dishes and meals, 25 eaten meals.">Restored: %1$d foods, %2$d dishes and meals, %3$d eaten meals.</string>
+    <string name="food_csv_entered_with" comment="Column header in the exported meal history: the dialog the meal was entered with (Bolus wizard or Carbs)">Entered with</string>
+    <string name="food_csv_quantity" comment="Column header in the exported meal history: quantity eaten of a food">Quantity</string>
+    <string name="food_csv_type" comment="Column header in the exported food list: Food, Dish or Standard meal">Type</string>
+    <string name="food_csv_contents" comment="Column header in the exported food list: the foods a dish or a meal is made of">Contents</string>
+    <string name="food_csv_kind_food" comment="Value of the Type column in the exported food list, for a single food">Food</string>
 
 </resources>

@@ -10,6 +10,7 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -24,7 +25,12 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.foodManagement.book.EatenItem
 import app.aaps.ui.compose.foodManagement.book.EatenMeal
+import app.aaps.ui.compose.foodManagement.book.ExportFile
+import app.aaps.ui.compose.foodManagement.book.FileResult
+import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
 import app.aaps.ui.compose.foodManagement.book.FoodBookMath
+import app.aaps.ui.compose.foodManagement.book.FoodCsv
+import app.aaps.ui.compose.foodManagement.book.FoodExportFiles
 import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
 import app.aaps.ui.compose.foodManagement.book.MealTarget
 import app.aaps.ui.compose.foodManagement.book.Nutrition
@@ -56,6 +62,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -74,7 +81,121 @@ class FoodManagementViewModel(
     private val dateUtil: DateUtil,
     /** For the bolus calculation detail shown from the history. */
     val decimalFormatter: DecimalFormatter,
+    private val foodCsv: FoodCsv,
+    private val exportFiles: FoodExportFiles,
 ) : ViewModel() {
+
+    // ---- Export, backup and restore (proof of concept, personal use) ----
+
+    /** False where the platform has no exports folder: the menu does not offer these actions. */
+    val exportAvailable: Boolean get() = exportFiles.available
+
+    fun openCsvExport() = _uiState.update { it.copy(showCsvExport = true) }
+
+    fun closeCsvExport() = _uiState.update { it.copy(showCsvExport = false) }
+
+    /**
+     * Saves the meal history and the list of foods, dishes and meals as two CSV files in the exports
+     * folder. The treatments and the boluses given are looked up first, so the carbs and insulin
+     * columns are filled.
+     *
+     * @param days only the meals of the last [days] days, or all meals when null
+     */
+    fun exportCsv(days: Int?) {
+        closeCsvExport()
+        viewModelScope.launch {
+            loadTreatmentLinks()
+            val state = uiState.value
+            val from = days?.let { dateUtil.now() - it * DAY_MS }
+            val result = withContext(aapsIoDispatcher) {
+                runCatching { foodCsv.export(state.eatenMeals, state.treatmentLinks, insulinGiven(state.treatmentLinks), from, state.foods, state.recipes) }
+                    .onFailure { aapsLogger.error(LTag.UI, "Food CSV export failed", it) }
+                    .getOrDefault(FileResult.FAILED)
+            }
+            showResult(result, UiStrings.food_csv_exported)
+        }
+    }
+
+    /** Eaten meal id to the insulin really given for its bolus calculation. See [FoodBookMath.bolusesGiven]. */
+    private suspend fun insulinGiven(links: Map<String, TreatmentLink>): Map<String, Double> {
+        val results = links.mapNotNull { (mealId, link) -> link.bcr?.let { mealId to it } }
+        if (results.isEmpty()) return emptyMap()
+        val boluses = persistenceLayer.getBolusesFromTime(results.minOf { it.second.timestamp } - LINK_SLACK_MS, true)
+        val given = FoodBookMath.bolusesGiven(results.map { it.second }, boluses, LINK_SLACK_MS, LINK_WINDOW_MS, BOLUS_TIME_WINDOW_MS)
+        return results.mapNotNull { (mealId, result) -> given[result.id]?.let { mealId to it.amount } }.toMap()
+    }
+
+    /** Saves all the data of the food POC (foods, dishes, meals, history) in one JSON file. */
+    fun exportBackup() {
+        viewModelScope.launch {
+            val result = runCatching {
+                val text = FoodBackupMath.encode(persistenceLayer.getFoods(), foodBook.book.value, dateUtil.now())
+                withContext(aapsIoDispatcher) { exportFiles.save(FoodBackupMath.FILE_NAME, BACKUP_MIME_TYPE, text) }
+            }
+                .onFailure { aapsLogger.error(LTag.UI, "Food backup failed", it) }
+                .getOrDefault(FileResult.FAILED)
+            showResult(result, UiStrings.food_backup_saved)
+        }
+    }
+
+    /** Opens the list of the backups found in the exports folder. */
+    fun openRestore() {
+        viewModelScope.launch {
+            val files = withContext(aapsIoDispatcher) { exportFiles.list(FoodBackupMath.FILE_NAME) }
+            _uiState.update { it.copy(restoreFiles = files) }
+        }
+    }
+
+    fun closeRestore() = _uiState.update { it.copy(restoreFiles = null) }
+
+    /**
+     * Adds what [file] has and this phone does not: foods (in the database), dishes, standard meals
+     * and eaten meals. Nothing already here is deleted or changed.
+     */
+    fun restore(file: ExportFile) {
+        closeRestore()
+        viewModelScope.launch {
+            try {
+                val backup = withContext(aapsIoDispatcher) { exportFiles.read(file) }?.let { FoodBackupMath.decode(it) }
+                if (backup == null) {
+                    showMessage(UiStrings.food_restore_invalid)
+                    return@launch
+                }
+                // The database does not give back the id of a new food: read the foods again after.
+                val missing = FoodBackupMath.missingFoods(backup, persistenceLayer.getFoods())
+                missing.forEach { persistenceLayer.insertOrUpdateFood(it) }
+                foodBook.load()
+                val merge = FoodBackupMath.merge(backup, persistenceLayer.getFoods(), foodBook.book.value)
+                val meals = merge.meals.map { checkedTreatment(it) }
+                foodBook.addRestored(merge.copy(meals = meals))
+                showMessage(UiStrings.food_restore_done, missing.size, merge.recipes.size, meals.size)
+                loadTreatmentLinks()
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.UI, "Food restore failed", e)
+                showMessage(UiStrings.food_export_failed)
+            }
+        }
+    }
+
+    /**
+     * On another phone, or after a new install, the treatment id of a meal can be the id of another
+     * record. It is kept only when that record has the time of the meal. Otherwise the meal is found
+     * again by time and note, like a meal of an older POC.
+     */
+    private suspend fun checkedTreatment(meal: EatenMeal): EatenMeal {
+        val id = meal.treatmentId ?: return meal
+        val time = when (meal.target) {
+            MealTarget.WIZARD -> persistenceLayer.getBolusCalculatorResultById(id)?.timestamp
+            MealTarget.CARBS  -> persistenceLayer.getCarbsById(id)?.timestamp
+        }
+        return if (time != null && time == meal.validatedAt) meal else meal.copy(treatmentId = null)
+    }
+
+    private fun showResult(result: FileResult, saved: TextRef) = when (result) {
+        FileResult.SAVED     -> showMessage(saved)
+        FileResult.NO_FOLDER -> showMessage(UiStrings.food_export_no_folder)
+        FileResult.FAILED    -> showMessage(UiStrings.food_export_failed)
+    }
 
     /** Gives every meal item its own key, so the same food can be in the meal twice. */
     private var nextMealKey = 1L
@@ -540,56 +661,58 @@ class FoodManagementViewModel(
      * confirmed, it is cleared.
      */
     fun refreshTreatmentLinks() {
-        viewModelScope.launch {
-            try {
-                val meals = foodBook.book.value.eaten
-                if (meals.isEmpty()) return@launch
-                // A meal tied to its treatment follows that record, found by its id. When the record
-                // is deleted in the treatments history, the meal goes too. A record that is simply
-                // not found (not expected) keeps the meal: nothing is removed on a guess.
-                val known = mutableMapOf<String, TreatmentLink>()
-                val deleted = mutableSetOf<String>()
-                for (meal in meals) {
-                    val id = meal.treatmentId ?: continue
-                    when (meal.target) {
-                        MealTarget.WIZARD -> persistenceLayer.getBolusCalculatorResultById(id)?.let { if (it.isValid) known[meal.id] = FoodBookMath.linkOf(meal, it) else deleted += meal.id }
-                        MealTarget.CARBS  -> persistenceLayer.getCarbsById(id)?.let { if (it.isValid) known[meal.id] = FoodBookMath.linkOf(meal, it) else deleted += meal.id }
-                    }
+        viewModelScope.launch { loadTreatmentLinks() }
+    }
+
+    private suspend fun loadTreatmentLinks() {
+        try {
+            val meals = foodBook.book.value.eaten
+            if (meals.isEmpty()) return
+            // A meal tied to its treatment follows that record, found by its id. When the record
+            // is deleted in the treatments history, the meal goes too. A record that is simply
+            // not found (not expected) keeps the meal: nothing is removed on a guess.
+            val known = mutableMapOf<String, TreatmentLink>()
+            val deleted = mutableSetOf<String>()
+            for (meal in meals) {
+                val id = meal.treatmentId ?: continue
+                when (meal.target) {
+                    MealTarget.WIZARD -> persistenceLayer.getBolusCalculatorResultById(id)?.let { if (it.isValid) known[meal.id] = FoodBookMath.linkOf(meal, it) else deleted += meal.id }
+                    MealTarget.CARBS  -> persistenceLayer.getCarbsById(id)?.let { if (it.isValid) known[meal.id] = FoodBookMath.linkOf(meal, it) else deleted += meal.id }
                 }
-                // The other meals are still waiting, or were saved by an older POC: find their
-                // treatment by time and note. A treatment already tied to a meal is not used again.
-                val open = meals.filter { it.treatmentId == null }
-                val found = if (open.isEmpty()) emptyMap() else {
-                    val from = open.minOf { it.timestamp } - LINK_SLACK_MS
-                    val tied = meals.filter { it.treatmentId != null }
-                    val tiedResults = tied.filter { it.target == MealTarget.WIZARD }.mapNotNull { it.treatmentId }.toSet()
-                    val tiedCarbs = tied.filter { it.target == MealTarget.CARBS }.mapNotNull { it.treatmentId }.toSet()
-                    val results = persistenceLayer.getBolusCalculatorResultsFromTime(from, true).filter { it.id !in tiedResults }
-                    // A carbs entry can be dated in the past in the dialog: look further back for those.
-                    val carbs = persistenceLayer.getCarbsFromTime(from - CARBS_LOOK_BACK_MS, true).filter { it.id !in tiedCarbs }
-                    FoodBookMath.linkTreatments(open, results, carbs, LINK_SLACK_MS, LINK_WINDOW_MS)
-                }
-                val now = dateUtil.now()
-                val removed = deleted + open.filter { it.validatedAt == null && it.id !in found && now - it.timestamp > LINK_WINDOW_MS + LINK_SLACK_MS }.map { it.id }
-                if (found.isNotEmpty() || removed.isNotEmpty()) foodBook.updateEatenMeals(found, removed)
-                val links = known + found
-                val validated = found.keys
-                _uiState.update { s ->
-                    val pending = s.pendingMealId
-                    when {
-                        // The meal was entered: the next one starts empty. While a dish is being
-                        // changed, the meal is the one put aside.
-                        pending != null && pending in validated ->
-                            if (s.editing != null) s.copy(treatmentLinks = links, parkedItems = emptyList(), parkedSource = null, pendingMealId = null)
-                            else s.copy(treatmentLinks = links, mealItems = emptyList(), mealSource = null, pendingMealId = null)
-                        // Cancelled long ago: the meal stays, it is only not waited for any more.
-                        pending != null && pending in removed   -> s.copy(treatmentLinks = links, pendingMealId = null)
-                        else                                    -> s.copy(treatmentLinks = links)
-                    }
-                }
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Food POC: cannot read the treatments", e)
             }
+            // The other meals are still waiting, or were saved by an older POC: find their
+            // treatment by time and note. A treatment already tied to a meal is not used again.
+            val open = meals.filter { it.treatmentId == null }
+            val found = if (open.isEmpty()) emptyMap() else {
+                val from = open.minOf { it.timestamp } - LINK_SLACK_MS
+                val tied = meals.filter { it.treatmentId != null }
+                val tiedResults = tied.filter { it.target == MealTarget.WIZARD }.mapNotNull { it.treatmentId }.toSet()
+                val tiedCarbs = tied.filter { it.target == MealTarget.CARBS }.mapNotNull { it.treatmentId }.toSet()
+                val results = persistenceLayer.getBolusCalculatorResultsFromTime(from, true).filter { it.id !in tiedResults }
+                // A carbs entry can be dated in the past in the dialog: look further back for those.
+                val carbs = persistenceLayer.getCarbsFromTime(from - CARBS_LOOK_BACK_MS, true).filter { it.id !in tiedCarbs }
+                FoodBookMath.linkTreatments(open, results, carbs, LINK_SLACK_MS, LINK_WINDOW_MS)
+            }
+            val now = dateUtil.now()
+            val removed = deleted + open.filter { it.validatedAt == null && it.id !in found && now - it.timestamp > LINK_WINDOW_MS + LINK_SLACK_MS }.map { it.id }
+            if (found.isNotEmpty() || removed.isNotEmpty()) foodBook.updateEatenMeals(found, removed)
+            val links = known + found
+            val validated = found.keys
+            _uiState.update { s ->
+                val pending = s.pendingMealId
+                when {
+                    // The meal was entered: the next one starts empty. While a dish is being
+                    // changed, the meal is the one put aside.
+                    pending != null && pending in validated ->
+                        if (s.editing != null) s.copy(treatmentLinks = links, parkedItems = emptyList(), parkedSource = null, pendingMealId = null)
+                        else s.copy(treatmentLinks = links, mealItems = emptyList(), mealSource = null, pendingMealId = null)
+                    // Cancelled long ago: the meal stays, it is only not waited for any more.
+                    pending != null && pending in removed   -> s.copy(treatmentLinks = links, pendingMealId = null)
+                    else                                    -> s.copy(treatmentLinks = links)
+                }
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.UI, "Food POC: cannot read the treatments", e)
         }
     }
 
@@ -867,6 +990,10 @@ data class FoodManagementUiState(
     val selectedFoodIds: Set<Long> = emptySet(),
     val selectedRecipeIds: Set<String> = emptySet(),
     val showDeleteConfirm: Boolean = false,
+    /** The dialog that asks which period of meals to export as CSV. */
+    val showCsvExport: Boolean = false,
+    /** The backups offered to restore, newest first, or null when that dialog is closed. */
+    val restoreFiles: List<ExportFile>? = null,
 ) {
 
     val selectedCount: Int get() = selectedFoodIds.size + selectedRecipeIds.size
@@ -876,6 +1003,16 @@ data class FoodManagementUiState(
 }
 
 enum class FoodTab { FOODS, DISHES, MEALS, HISTORY }
+
+private const val DAY_MS = 24 * 60 * 60 * 1000L
+
+/** A bolus without the note of the calculation belongs to it only when given this soon after it. */
+private const val BOLUS_TIME_WINDOW_MS = 5 * 60 * 1000L
+
+private const val BACKUP_MIME_TYPE = "application/json"
+
+/** The periods offered for the CSV export of the meals, in days. Null is "all". */
+val CSV_EXPORT_DAYS: List<Int?> = listOf(7, 14, 30, null)
 
 /** A bolus calculation made this long after the meal was sent to the wizard still belongs to it. */
 private const val LINK_WINDOW_MS = 30 * 60 * 1000L

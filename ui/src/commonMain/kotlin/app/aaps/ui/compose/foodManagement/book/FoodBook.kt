@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.foodManagement.book
 
 import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.FD
 import kotlinx.serialization.Serializable
@@ -219,6 +220,30 @@ internal object FoodBookMath {
     fun linkOf(meal: EatenMeal, carbs: CA) = TreatmentLink(carbs.id, carbs.timestamp, insulin = null, carbs = carbs.amount, sameNote = carbs.notes == meal.note)
 
     private fun createdAt(carbs: CA): Long = if (carbs.dateCreated > 0) carbs.dateCreated else carbs.timestamp
+
+    /**
+     * The bolus really given for each bolus calculation, by calculation id. What counts for the user
+     * and the care team is what was given: the user can change the amount or stop the bolus.
+     *
+     * The database does not link a calculation to its bolus. The bolus of the wizard carries the
+     * same note, so a normal bolus (not an SMB, not priming) with that note within [noteWindowMs]
+     * after the calculation is it. Without a note match (a pump that loses the note), only a normal
+     * bolus within [timeWindowMs] counts, the nearest one. A bolus is given to one calculation only.
+     * A calculation without a bolus (cancelled, or 0 U) is not in the result.
+     */
+    fun bolusesGiven(results: List<BCR>, boluses: List<BS>, slackMs: Long, noteWindowMs: Long, timeWindowMs: Long): Map<Long, BS> {
+        val normal = boluses.filter { it.isValid && it.type == BS.Type.NORMAL }
+        val used = mutableSetOf<Long>()
+        val given = mutableMapOf<Long, BS>()
+        for (result in results.sortedBy { it.timestamp }) {
+            val free = normal.filter { it.id !in used && it.timestamp >= result.timestamp - slackMs }
+            val byNote = free.firstOrNull { result.note.isNotEmpty() && it.notes == result.note && it.timestamp <= result.timestamp + noteWindowMs }
+            val match = byNote ?: free.filter { it.timestamp <= result.timestamp + timeWindowMs }.minByOrNull { abs(it.timestamp - result.timestamp) } ?: continue
+            used += match.id
+            given[result.id] = match
+        }
+        return given
+    }
 
     private fun nutritionOf(recipe: Recipe, foods: Map<Long, FD>, recipes: Map<String, Recipe>, visiting: List<String>): Nutrition? {
         if (recipe.id in visiting || visiting.size >= MAX_DEPTH) return null

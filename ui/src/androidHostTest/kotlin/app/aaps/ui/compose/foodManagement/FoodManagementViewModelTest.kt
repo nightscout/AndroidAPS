@@ -11,9 +11,14 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.ui.compose.foodManagement.book.EatenMeal
+import app.aaps.ui.compose.foodManagement.book.ExportFile
+import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
+import app.aaps.ui.compose.foodManagement.book.FoodBook
 import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
+import app.aaps.ui.compose.foodManagement.book.FoodCsv
 import app.aaps.ui.compose.foodManagement.book.MealTarget
 import app.aaps.ui.compose.foodManagement.book.MemoryFoodBookStore
+import app.aaps.ui.compose.foodManagement.book.NoFoodExportFiles
 import app.aaps.ui.compose.foodManagement.book.Recipe
 import app.aaps.ui.compose.foodManagement.book.RecipeItem
 import app.aaps.ui.compose.foodManagement.book.RecipeKind
@@ -61,7 +66,7 @@ internal class FoodManagementViewModelTest {
         whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(BCR::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(CA::class)).thenReturn(emptyFlow())
-        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter)
+        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles())
     }
 
     @AfterEach
@@ -346,7 +351,7 @@ internal class FoodManagementViewModelTest {
     /** A screen on [book], with [foods] in the database. Runs the start of the screen. */
     private fun screenWith(book: FoodBookRepository, vararg foods: FD): FoodManagementViewModel {
         runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(foods.toList()) }
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles())
         dispatcher.scheduler.runCurrent()
         return vm
     }
@@ -514,6 +519,54 @@ internal class FoodManagementViewModelTest {
         val meal = book.book.value.eaten.single()
         assertThat(meal.treatmentId).isEqualTo(7L)
         assertThat(meal.validatedAt).isEqualTo(900_000L)
+    }
+
+    // ---- Backup and restore (proof of concept, personal use) ----
+
+    @Test
+    fun `restore adds the missing food, points the dish to it and checks the treatment ids`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        val dish = Recipe("dish", "Sweet yogurt", RecipeKind.DISH, listOf(RecipeItem("Yogurt", 1.0, "pot", foodId = 30)))
+        val text = FoodBackupMath.encode(
+            listOf(bread, yogurt),
+            FoodBook(
+                recipes = listOf(dish),
+                // "same" points to the same carbs entry here; "other" to a record of another meal.
+                eaten = listOf(eaten("same", MealTarget.CARBS, treatmentId = 7, validatedAt = 900_000), eaten("other", MealTarget.CARBS, treatmentId = 8, validatedAt = 950_000)),
+            ),
+            now = 0
+        )
+        val files = object : NoFoodExportFiles() {
+            override val available = true
+            override fun read(file: ExportFile): String = text
+        }
+        // Only bread is in this database. A new food gets the next id.
+        val inDb = mutableListOf(bread)
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
+                inDb += (it.arguments[0] as FD).copy(id = 100)
+                PersistenceLayer.TransactionResult<FD>()
+            }
+            whenever(persistenceLayer.getCarbsById(7)).thenReturn(CA(id = 7, timestamp = 900_000, duration = 0, amount = 40.0))
+            whenever(persistenceLayer.getCarbsById(8)).thenReturn(CA(id = 8, timestamp = 123, duration = 0, amount = 10.0))
+            whenever(persistenceLayer.getBolusCalculatorResultsFromTime(any(), eq(true))).thenReturn(emptyList())
+            whenever(persistenceLayer.getCarbsFromTime(any(), eq(true))).thenReturn(emptyList())
+        }
+        whenever(dateUtil.now()).thenReturn(1_000_000)
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files)
+        dispatcher.scheduler.runCurrent()
+
+        vm.restore(ExportFile("backup", "ref"))
+        runUntil { book.book.value.eaten.size == 2 }
+
+        assertThat(inDb.map { it.name }).containsExactly("Bread", "Yogurt")
+        assertThat(book.book.value.recipes.single().items.single().foodId).isEqualTo(100L)
+        val meals = book.book.value.eaten.associateBy { it.id }
+        assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
+        assertThat(meals.getValue("other").treatmentId).isNull()
+        assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
     }
 
     @Test
