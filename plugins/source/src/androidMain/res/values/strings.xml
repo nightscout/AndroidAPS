@@ -59,4 +59,25 @@
     <string name="aidex_signal_lost">Sensor signal lost, please check the connection</string>
     <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplicate reading</string>
 
+    <string name="source_eversense">Eversense</string>
+    <string name="description_source_eversense">Eversense E3/365 driver</string>
+    <string name="eversense_my_glucose">My Glucose</string>
+    <string name="eversense_calibrate">Calibrate</string>
+    <string name="eversense_calibrate_summary">Enter blood glucose value</string>
+    <string name="eversense_history">Alert History</string>
+    <string name="eversense_device">Device</string>
+    <string name="eversense_connect">Connect</string>
+    <string name="eversense_connect_summary">Pair with Smart Transmitter</string>
+    <string name="eversense_configuration">Configuration</string>
+    <string name="eversense_glucose_settings">Glucose settings</string>
+    <string name="eversense_target_levels">Glucose Target Levels</string>
+    <string name="eversense_alert_levels">Glucose Alert Levels</string>
+    <string name="eversense_target_high">High Target</string>
+    <string name="eversense_target_low">Low Target</string>
+    <string name="eversense_alert_high">High Alert</string>
+    <string name="eversense_alert_low">Low Alert</string>
+    <string name="eversense_mmol_unit">mmol/L</string>
+    <string name="eversense_calibration_message">Opening Calibration Interface</string>
+    <string name="eversense_connect_message">Scanning for Smart Transmitter</string>
+    <string name="eversense_not_implemented">Connection, calibration and alert history are not implemented yet.</string>
 </resources>
