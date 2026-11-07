@@ -154,6 +154,26 @@ class AaruyHistoryViewModelTest {
         assertEquals(listOf("s${R.string.actions_reservoir_prime}", "s${R.string.aaruy_rewind}"), records.map { viewModel.valueText(it) })
     }
 
+    /** The first list is read on another thread. Read last, it replaced the list of the type the user chose after it. */
+    @Test
+    fun aSlowerReadOfTheTypeBeforeDoesNotReplaceTheListOfTheTypeNow() {
+        whenever(historyDao.querySince(any())).thenAnswer {
+            Thread.sleep(500)
+            emptyList<HistoryUnitInfo>()
+        }
+        whenever(dailyDao.queryAll()).thenReturn(listOf(HistoryDailyUnitInfo().also {
+            it.dateTimestamp = now - 1000
+            it.dailyTotal = 145
+            it.dailyBolus = 111
+        }))
+        val viewModel = viewModel()
+        viewModel.show(AaruyHistoryTypes.DAILY)
+        viewModel.recordsWhen { it.isNotEmpty() }
+        // The read of the bolus list ends now.
+        Thread.sleep(800)
+        assertEquals(1, viewModel.uiState.value.records.size)
+    }
+
     @Test
     fun aDayIsSplitIntoBolusAndBasal() {
         whenever(dailyDao.queryAll()).thenReturn(listOf(HistoryDailyUnitInfo().also {

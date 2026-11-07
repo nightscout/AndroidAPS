@@ -111,8 +111,9 @@ class AaruyHistoryViewModel(
             }
             else historyDao.querySince(since).filter { matches(it, type) }.map { toRecord(it, type) }
         }
+        // A slower read of the type chosen before must not replace the list of the type chosen now.
         // Equal rows would give equal list keys, and that crashes the list.
-        _uiState.update { it.copy(records = records.distinct().sortedByDescending { record -> record.timestamp }) }
+        _uiState.update { if (it.selectedType?.type != type) it else it.copy(records = records.distinct().sortedByDescending { record -> record.timestamp }) }
     }
 
     private fun matches(item: HistoryUnitInfo, type: Byte): Boolean =
