@@ -91,20 +91,27 @@ class AaruyService : MetroService() {
         }
     }
 
-    private suspend fun notifyPumpWarning(alarmState: AlarmState) {
+    /**
+     * A notification replaces the one with the same id, and its sound. So the errors share one notification that lists all
+     * of them: a later error, as a low battery, used to remove an occlusion the user had not seen. "Stopped too long" has
+     * its own id, so a later reminder cannot make it a quiet notification.
+     */
+    internal suspend fun notifyPumpWarning(alarmState: AlarmState) {
         // Notification on pump warning/error
         if (alarmState != AlarmState.NONE) {
             if (AlarmState.isHighAlarm(alarmState) || AlarmState.isLowAlarm(alarmState)) {
+                // The copy, not the set: the pump thread changes the set while this runs.
+                val errors = aaruyPump.activeAlarmsFlow.value + alarmState
                 notificationManager.post(
                     NotificationId.PUMP_ERROR,
-                    rh.gs(R.string.aaruy_pump_error, aaruyPump.alarmStateToString(alarmState)),
+                    rh.gs(R.string.aaruy_pump_error, errors.joinToString("\n") { aaruyPump.alarmStateToString(it) }),
                     sound = AlarmSound.ALARM
                 )
             }
             else if (alarmState == AlarmState.PUMP_STOP_TOO_LONG) {
                 // Seen on a real pump: after 15 minutes stopped it beeps once and never again. No insulin goes in, so AAPS rings.
                 notificationManager.post(
-                    NotificationId.PUMP_WARNING,
+                    NotificationId.PUMP_SUSPENDED,
                     rh.gs(R.string.aaruy_pump_warning, aaruyPump.alarmStateToString(alarmState)),
                     level = NotificationLevel.URGENT,
                     sound = AlarmSound.ALARM
