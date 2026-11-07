@@ -31,6 +31,7 @@
     <string name="pref_title_alert_carbs_required">Alarm gdy wymagane jest podanie węglowodanów</string>
     <string name="pref_title_alert_urgent_as_android_notification">Do pilnych alarmów użyj powiadomień Androida</string>
     <string name="pref_title_alert_increase_volume">Stopniowo zwiększaj głośność powiadomień</string>
+    <string name="pref_title_alert_override_dnd">Powiadamiaj pomimo trybu Nie przeszkadzać</string>
     <string name="pref_summary_alert_override_dnd">Włączone: alarmy dzwonią nawet wtedy, gdy telefon jest wyciszony lub w trybie \"Nie przeszkadzać\". Wyłączone: alarmy nie dzwonią. W trybie \"Nie przeszkadzać\" tylko wibracja.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Przekaż glikemię do NS</string>
