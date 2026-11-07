@@ -28,6 +28,7 @@ import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
+import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
@@ -63,6 +64,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import java.time.Duration
+import java.util.concurrent.CopyOnWriteArrayList
 
 /** The wizard on the driver and the emulator, which follows what a real pump did in this flow. */
 @RunWith(RobolectricTestRunner::class)
@@ -71,7 +73,9 @@ class AaruyReplaceWizardTest {
 
     private fun tempBasalSyncMock() = mock(AaruyTempBasalSync::class.java)
 
-    private val logger = mock(AAPSLogger::class.java)
+    /** What the driver logged, so a test can wait for something that has no other sign. */
+    private val logged = CopyOnWriteArrayList<String>()
+    private val logger = mock(AAPSLogger::class.java) { logged += it.arguments.joinToString(); null }
     private val dateUtil = mock(DateUtil::class.java)
     private val pumpSync = mock(PumpSync::class.java)
     private val wizardPreferences = mock(Preferences::class.java)
@@ -90,6 +94,23 @@ class AaruyReplaceWizardTest {
     private val transport = AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))
     private lateinit var ble: AaruyBLE
     private lateinit var steps: AaruyReplaceSteps
+
+    /** The pump log as the driver stored it. Empty unless a test gives entries, newest first. */
+    private val historyDao = mock(HistoryUnitInfoDao::class.java)
+
+    private fun newDriver() = AaruyBLE(
+        transport,
+        logger,
+        RuntimeEnvironment.getApplication() as Context,
+        pump,
+        dateUtil,
+        mock(RxBus::class.java),
+        mock(Preferences::class.java),
+        historyDao,
+        mock(HistoryDailyUnitInfoDao::class.java),
+        mock(DetailedBolusInfoStorage::class.java),
+        pumpSync, tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+    )
     private lateinit var wizard: AaruyReplaceWizardViewModel
 
     /** Runs each step as the queue does. The link stays up: the test opened it, and no queue closes it. */
@@ -112,20 +133,9 @@ class AaruyReplaceWizardTest {
     fun setUp() {
         `when`(dateUtil.now()).thenAnswer { System.currentTimeMillis() + clockOffset }
         runBlocking { whenever(pumpSync.insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(true) }
-        ble = AaruyBLE(
-            transport,
-            logger,
-            RuntimeEnvironment.getApplication() as Context,
-            pump,
-            dateUtil,
-            mock(RxBus::class.java),
-            mock(Preferences::class.java),
-            mock(HistoryUnitInfoDao::class.java),
-            mock(HistoryDailyUnitInfoDao::class.java),
-            mock(DetailedBolusInfoStorage::class.java),
-            pumpSync, tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
-        )
-        steps = AaruyReplaceSteps(ble, pump, dateUtil)
+        whenever(historyDao.querySince(any())).thenReturn(emptyList())
+        ble = newDriver()
+        steps = AaruyReplaceSteps(ble, pump, dateUtil, historyDao)
         runBlocking {
             whenever(commandQueue.customCommand(any())).doSuspendableAnswer { steps.execute(it.arguments[0] as CustomCommand, FakeResult()) }
         }
@@ -140,10 +150,65 @@ class AaruyReplaceWizardTest {
     /** Created after the stubs of a test, because the steps are chosen when it starts. */
     private fun startWizard() {
         wizard = AaruyReplaceWizardViewModel(
-            logger, commandQueue, pump, pumpSync, dateUtil, mock(ResourceHelper::class.java), mock(RxBus::class.java),
+            logger, commandQueue, steps, pump, pumpSync, dateUtil, mock(ResourceHelper::class.java), mock(RxBus::class.java),
             wizardPreferences, profileFunction, insulinManager, persistenceLayer
         )
         shadowOf(Looper.getMainLooper()).idle()
+    }
+
+    private fun logEntry(time: Long, type: Byte) = HistoryUnitInfo().also {
+        it.time = time
+        it.type = type.toInt()
+    }
+
+    /**
+     * Review #60: the app was restarted after the prime, before basal ran. The pump is still stopped. The new app run knows
+     * from the pump log how far the change came: it goes on with connect and fill, and basal starts with no new rewind and
+     * prime. Its client never saw the rewind, which it used to need before it sent the restore.
+     */
+    @Test
+    fun afterARestartTheChangeGoesOnFromThePumpLog() {
+        startWizard()
+        wizard.rewind()
+        waitFor("rewound") { wizard.uiState.value.step == AaruyReplaceStep.ASSEMBLE && !wizard.uiState.value.busy }
+        wizard.assembled()
+        wizard.prime()
+        waitFor("primed") { wizard.uiState.value.primed }
+        val primedAt = System.currentTimeMillis()
+        whenever(historyDao.querySince(any())).thenReturn(listOf(logEntry(primedAt, AaruyHistoryTypes.PRIME), logEntry(primedAt - 60_000, AaruyHistoryTypes.REWIND)))
+
+        // The restart: a new driver with a new client, and a new screen.
+        ble.disconnect("app restart")
+        // Both clients share the one emulated radio, so the old link reports its end late, and the report must reach the old
+        // client. On a phone a restart is a new process, and the old link is gone with it.
+        waitFor("old link reported its end") { logged.any { it.contains("a closed link reported connected=false") } }
+        ble = newDriver()
+        steps = AaruyReplaceSteps(ble, pump, dateUtil, historyDao)
+        ble.connect("test", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("connected again") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("still stopped") { pump.pumpState == AaruyPumpState.STOP_RUNNING }
+        startWizard()
+        waitFor("on from where it stopped") { wizard.uiState.value.step == AaruyReplaceStep.CONNECT }
+        assertTrue(wizard.uiState.value.primed)
+        assertTrue("the fill step says the log cannot tell", wizard.uiState.value.resumed)
+
+        wizard.connectedToBody()
+        wizard.fillCannula()
+        waitFor("done") { wizard.uiState.value.step == AaruyReplaceStep.DONE }
+        assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
+    }
+
+    /** Nothing in the log since the last rewind: a pump stopped for another reason is changed from the start. */
+    @Test
+    fun withoutARewindInTheLogTheChangeStartsAtTheRewind() {
+        startWizard()
+        wizard.rewind()
+        waitFor("rewound") { wizard.uiState.value.step == AaruyReplaceStep.ASSEMBLE && !wizard.uiState.value.busy }
+        startWizard()
+        Thread.sleep(300)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(AaruyReplaceStep.REWIND, wizard.uiState.value.step)
+        assertFalse(wizard.uiState.value.resumed)
     }
 
     private fun untilFillCannula() {

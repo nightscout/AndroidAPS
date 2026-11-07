@@ -28,10 +28,12 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
+import app.aaps.pump.aaruy.common.enums.AaruyReplaceProgress
 import app.aaps.pump.aaruy.common.util.AaruyConst
 import app.aaps.pump.aaruy.services.AaruyFillCannulaCommand
 import app.aaps.pump.aaruy.services.AaruyMotorResult
 import app.aaps.pump.aaruy.services.AaruyPrimeCommand
+import app.aaps.pump.aaruy.services.AaruyReplaceSteps
 import app.aaps.pump.aaruy.services.AaruyRewindCommand
 import app.aaps.pump.aaruy.services.AaruyStartBasalCommand
 import app.aaps.pump.aaruy.services.toMotorResult
@@ -77,6 +79,8 @@ data class AaruyReplaceUiState(
     val dropletsSeenByPump: Boolean = false,
     /** The cannula is filled. A second fill would go into the body, so only the basal start can be tried again. */
     val cannulaFilled: Boolean = false,
+    /** It goes on from where an earlier run stopped, as after an app restart. The pump log cannot say if the cannula was filled. */
+    val resumed: Boolean = false,
     val error: Int? = null
 )
 
@@ -87,6 +91,7 @@ data class AaruyReplaceUiState(
 class AaruyReplaceWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val commandQueue: CommandQueue,
+    private val replaceSteps: AaruyReplaceSteps,
     private val aaruyPump: AaruyPump,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
@@ -160,6 +165,25 @@ class AaruyReplaceWizardViewModel(
                         else                            -> true
                     }
                 })
+            }
+            resumeWhereTheChangeStopped()
+        }
+    }
+
+    /**
+     * The pump is still stopped where a change of reservoir stopped, as after an app restart: it goes on from there. Only this
+     * screen knew how far it came, so it started again with a rewind and a prime, with more insulin.
+     */
+    private suspend fun resumeWhereTheChangeStopped() {
+        if (aaruyPump.pumpState != AaruyPumpState.STOP_RUNNING) return
+        val progress = replaceSteps.progressFromLog()
+        _uiState.update { state ->
+            // Not when the user went on already.
+            if (state.step != AaruyReplaceStep.REWIND || state.busy) state
+            else when (progress) {
+                AaruyReplaceProgress.REWOUND -> state.copy(step = AaruyReplaceStep.ASSEMBLE, resumed = true)
+                AaruyReplaceProgress.PRIMED  -> state.copy(step = AaruyReplaceStep.CONNECT, primed = true, resumed = true)
+                AaruyReplaceProgress.NONE    -> state
             }
         }
     }

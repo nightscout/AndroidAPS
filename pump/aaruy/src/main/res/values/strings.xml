@@ -79,6 +79,7 @@
     <string name="actions_reservoir_prime">Prime</string>
     <string name="aaruy_rewind">Rewind</string>
     <string name="aaruy_replace_done">Reservoir change finished. Basal is running.</string>
+    <string name="aaruy_replace_resumed">The reservoir change goes on from where it stopped. Fill the cannula only if you did not fill it before.</string>
     <string name="actions_reservoir_prime_cannula_action">Fill cannula</string>
     <string name="is_backing">Rewinding</string>
     <string name="locate_check_liquid">Priming. Check that droplets came out of the needle.</string>

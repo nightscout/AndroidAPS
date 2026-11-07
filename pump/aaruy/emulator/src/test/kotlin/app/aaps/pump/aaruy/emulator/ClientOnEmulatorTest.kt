@@ -57,6 +57,15 @@ class ClientOnEmulatorTest {
 
     private fun logged(prefix: String) = log.any { it.startsWith(prefix) }
 
+    private val listener = Proxy.newProxyInstance(javaClass.classLoader, arrayOf(AaruyBleListener::class.java)) { _, method, args ->
+        log.add(method.name + "(" + args.orEmpty().joinToString() + ")")
+        Unit
+    } as AaruyBleListener
+
+    /** Also the one of an app run after a restart: it knows nothing of what the one before did. */
+    private fun newClient() =
+        AaruyBleClient(RuntimeEnvironment.getApplication(), mock(AAPSLogger::class.java), transport, Looper.getMainLooper()).also { it.setOnBleListener(listener) }
+
     @Before
     fun connect() {
         val context = RuntimeEnvironment.getApplication()
@@ -66,13 +75,7 @@ class ClientOnEmulatorTest {
 
         emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
         transport = AaruyEmulatorBleTransport(emulator)
-        util = AaruyBleClient(context, mock(AAPSLogger::class.java), transport, Looper.getMainLooper())
-        util.setOnBleListener(
-            Proxy.newProxyInstance(javaClass.classLoader, arrayOf(AaruyBleListener::class.java)) { _, method, args ->
-                log.add(method.name + "(" + args.orEmpty().joinToString() + ")")
-                Unit
-            } as AaruyBleListener
-        )
+        util = newClient()
         util.bindDevice(device)
         waitFor("connected") { logged("onBleStatusChanged(CONNECTED") }
         util.setupBasicParamInfo(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
@@ -229,6 +232,33 @@ class ClientOnEmulatorTest {
         assertTrue("rewind event: $log", logged("onReceiveErrorData(17, 0"))
         util.startBasal()
         waitFor("back to not running, then basal by the AAR's own flow") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
+    }
+
+    /**
+     * Review #60: the app was restarted after the rewind, and the client of the new app run does not know of it. It sent no
+     * restore, so basal started only after a new rewind and prime. The driver tells it from the pump log.
+     */
+    @Test
+    fun aClientToldOfAnEarlierRewindStartsBasalWithTheRestore() {
+        util.replaceDevice()
+        waitFor("stopped") { log.any { it.contains("runningStatus=8") } }
+        util.closeLink()
+        waitFor("closed") { logged("onBleStatusChanged(DISCONNECTED") }
+
+        util = newClient()
+        log.clear()
+        util.bindDevice(pumpDevice())
+        waitFor("connected") { logged("onBleStatusChanged(CONNECTED") }
+        util.getCurStatus()
+        waitFor("status") { log.any { it.contains("runningStatus=8") } }
+
+        util.startBasal()
+        waitWhile(500, Duration.ofSeconds(2))
+        assertEquals("no restore without a rewind it knows of", AaruyPumpEmulator.STATUS_STOPPED, emulator.runningStatus)
+
+        util.allowRestoreAfterRewind()
+        util.startBasal()
+        waitFor("basal") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
     }
 
     @Test

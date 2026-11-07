@@ -851,6 +851,11 @@ fun syncAndLoadBasicParam() {
         aaBleUtil.replaceDevice()
     }
 
+    /** See [AaruyBleClient.allowRestoreAfterRewind]: the pump log shows the rewind, also one from before an app restart. */
+    fun allowRestoreAfterRewind() {
+        aaBleUtil.allowRestoreAfterRewind()
+    }
+
     fun pushForward() {
         // aaBleUtil.drainLiquid()
         aaBleUtil.pushPosition()

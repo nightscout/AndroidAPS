@@ -358,6 +358,15 @@ fun setOnBleListener(listener: AaruyBleListener) {
         sendTotalControl(AaruyTotalControl.REPLACE)
     }
 
+    /**
+     * The rewind of a change of reservoir was done in an earlier app run, and the pump log shows no delivery since. The pump
+     * leaves its stop only with a restore, and this client sends one only after a rewind it knows of. Without this the user
+     * had to rewind and prime again after an app restart, with more insulin.
+     */
+    fun allowRestoreAfterRewind() {
+        needRestoreUnRunState = true
+    }
+
     fun needlePushAir(softNeedleType: Byte) = sendTotalControl(AaruyTotalControl.PUSH_AIR, softNeedleType)
 
     private fun sendTotalControl(action: Byte, extra: Byte = 0) {

@@ -108,6 +108,8 @@ fun AaruyReplaceWizardScreen(
             AaruyReplaceStep.FILL_CANNULA -> Step(
                 text = stringResource(R.string.actions_reservoir_prime_cannula),
                 note = stringResource(R.string.actions_reservoir_prime_cannula_note),
+                // The pump log cannot say if the cannula was filled before the change stopped.
+                hint = if (state.resumed) stringResource(R.string.aaruy_replace_resumed) else null,
                 state = state,
                 primary = WizardButton(
                     stringResource(if (state.cannulaFilled) R.string.aaruy_start_basal else R.string.actions_reservoir_prime_cannula_action),
