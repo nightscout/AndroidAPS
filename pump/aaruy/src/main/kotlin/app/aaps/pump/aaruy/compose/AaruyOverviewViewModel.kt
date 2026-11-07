@@ -236,7 +236,7 @@ class AaruyOverviewViewModel(
             if (isInitialized && pump.pumpState != AaruyPumpState.LARGEDOSE_RUNNING) {
                 add(ScreenAction(label = rh.gs(R.string.replace_label), icon = Icons.Filled.SwapHoriz, onClick = { _events.tryEmit(AaruyOverviewEvent.StartReplace) }))
             }
-            // Only with a link: the pump must hear it, see AaruyBLE.confirmAlarms.
+            // Also without a link: the queue opens one for it.
             if (alarms.isNotEmpty()) add(ScreenAction(label = rh.gs(R.string.confirm_alarms_label), icon = Icons.Filled.Check, onClick = { onConfirmAlarmsClick() }))
             add(
                 if (isConfigured) ScreenAction(label = rh.gs(CoreUiR.string.pump_unpair), icon = Icons.Filled.Bluetooth, onClick = { _events.tryEmit(AaruyOverviewEvent.ConfirmUnpair) })
