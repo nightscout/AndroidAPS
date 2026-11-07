@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Назва місяця (коротка)</string>
     <string name="cwf_comment_loop">Статус петлі і скільки часу тому</string>
     <string name="cwf_comment_direction">Стрілка тренду</string>
-    <string name="cwf_comment_timestamp">Хвилин тому для останньої отриманої ГК</string>
     <string name="cwf_comment_sgv">Значення ГК</string>
     <string name="cwf_comment_cover_plate">Обкладинка поверх тексту (набір)</string>
     <string name="cwf_comment_hour_hand">Зображення годинної стрілки (аналоговий годинник)</string>

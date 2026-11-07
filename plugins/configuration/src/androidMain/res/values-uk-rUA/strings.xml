@@ -6,7 +6,6 @@
     <string name="previous_button">Назад</string>
     <string name="setupwizard_finish">ЗАВЕРШИТИ</string>
     <string name="welcome">Ласкаво просимо</string>
-    <string name="welcometosetupwizard">Ласкаво просимо до майстра налаштування. Він проведе вас через процес налаштування\n</string>
     <string name="end_user_license_agreement">Ліцензійна угода кінцевого користувача</string>
     <string name="end_user_license_agreement_text">НЕ МОЖЕ ВИКОРИСТОВУВАТИСЯ ДЛЯ МЕДИЧНИХ РІШЕНЬ. ПРОГРАМА ПОСТАЧАЄТЬСЯ БЕЗ ЖОДНИХ ГАРАНТІЙ У МЕЖАХ, ДОЗВОЛЕНИХ ЗАКОНОМ. ЯКЩО НЕ ВКАЗАНО ІНШЕ, АВТОРИ ТА ІНШІ СТОРОНИ НАДАЮТЬ ПРОГРАМУ «ЯК Є» БЕЗ ЖОДНИХ ПРЯМИХ ЧИ НЕПРЯМИХ ГАРАНТІЙ, ЗОКРЕМА ГАРАНТІЙ ТОВАРНОЇ ПРИДАТНОСТІ ТА ВІДПОВІДНОСТІ ПЕВНІЙ МЕТІ. УВЕСЬ РИЗИК, ПОВ’ЯЗАНИЙ ІЗ ЯКІСТЮ ТА РОБОТОЮ ПРОГРАМИ, ЛЕЖИТЬ НА ВАС. ЯКЩО ПРОГРАМА ВИЯВИТЬСЯ НЕДОСКОНАЛОЮ, ВИ БЕРЕТЕ НА СЕБЕ ВИТРАТИ НА НЕОБХІДНИЙ РЕМОНТ ЧИ ВИПРАВЛЕННЯ.</string>
     <string name="end_user_license_agreement_i_understand">Я РОЗУМІЮ ТА ПОГОДЖУЮСЯ</string>
@@ -27,7 +26,6 @@
     <string name="exitwizard">Пропустити майстер налаштування</string>
     <string name="setupwizard_sensitivity_description">Плагін чутливості використовується для визначення чутливості та розрахунку COB. Детальніше за посиланням:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Виберіть один із доступних алгоритмів. Вони впорядковані від найстарішого до найновішого. Новіший алгоритм зазвичай потужніший. Не забудьте прочитати документацію OpenAPS і налаштувати алгоритм перед використанням.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Будь ласка, налаштуйте свій RileyLink нижче. Після вибору RileyLink продовження буде доступним, коли статус буде «Підключено». Це може тривати хвилину.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примітка:</b> Ви можете продовжити налаштування, щойно буде налаштовано помпу.\n</string>
     <string name="startobjective">Почніть перше завдання</string>
@@ -57,7 +55,6 @@
     <string name="configbuilder_pump_description">Яку помпу ви хочете використовувати з AAPS?</string>
     <string name="configbuilder_aps_description">Який APS-алгоритм має виконувати коригування терапії?</string>
     <string name="configbuilder_sync_description">Плагіни для вивантаження даних, синхронізації та зв’язку.</string>
-    <string name="configbuilder_bgsource_description">Звідки AAPS має отримувати дані?</string>
     <string name="configbuilder_sensitivity_description">Який алгоритм чутливості слід використовувати?</string>
     <string name="allow_hardware_pump_text">Увага: якщо ви активуєте апаратну помпу та підключитеся до неї, AAPS скопіює налаштування базалу з профілю в помпу і перезапише базальну швидкість, збережену в помпі. Переконайтеся, що в AAPS правильні налаштування базалу. Якщо ви не впевнені або не хочете перезаписувати налаштування базалу в помпі, натисніть «Скасувати» і перемкніться на помпу пізніше.</string>
     <string name="nsclient_version_does_not_match">Версія AAPSClient не збігається з версією AAPS. Оновіть застосунок.</string>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Патч-помпа Equil 5.3 або новіша </string>
     <!--  start  -->
     <string name="equil_basal_speed">Базовий базал</string>
     <string name="equil_dressing">Замінити резервуар</string>
@@ -77,7 +76,6 @@
     <string name="equil_common_cmd_resume_delivery">Відновити введення</string>
     <string name="equil_common_cmd_pair">Спарувати Equil</string>
     <string name="equil_common_cmd_insert_cannula">Вставити канюлю</string>
-    <string name="equil_common_cmd_unpair">Розпарувати Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Встановити подовжений болюс</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Скасувати подовжений болюс</string>
     <!--    推杆回退-->
@@ -93,9 +91,7 @@
     <string name="equil_command_connect_error">Не вдалося підключитися до помпи</string>
     <string name="equil_command_connect_no_response">Немає відповіді від помпи</string>
     <string name="equil_command__unknown">Невідомий стан команди</string>
-    <string name="equil_install">Встановіть помпу на тіло</string>
     <string name="equil_settings_alarm_battery">Сигнал низького заряду акумулятора</string>
-    <string name="equil_settings_alarm_insulin">Сигнал низького рівня інсуліну</string>
     <string name="equil_init_insulin_error">Ініціалізацію резервуара не завершено</string>
     <string name="equil_history_group_all">Усе</string>
     <string name="equil_history_group_pair">Спарювання</string>
@@ -111,7 +107,6 @@
     <string name="equil_history_item3">Виявлено закупорку</string>
     <string name="equil_history_item4">Виявлено зворотний хід двигуна</string>
     <string name="equil_history_item5">Виявлено несправність двигуна</string>
-    <string name="equil_history_item6">Початок паузи введення</string>
     <string name="equil_history_item7">Введення вже призупинено</string>
     <string name="equil_history_item8">Скоро автоматичне вимкнення</string>
     <string name="equil_history_item9">Автовимкнення!</string>

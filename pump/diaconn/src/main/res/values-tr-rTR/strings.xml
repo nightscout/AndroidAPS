@@ -27,7 +27,7 @@
     <string name="commanderror">Komut hatası</string>
     <string name="speederror">Hız hatası</string>
     <string name="insulinlimitviolation">İnsülin limit ihlali</string>
-    <string name="boluserrorcode">İstenen: %1$.2fÜ İletilen: %2$.2fÜ Hata kodu: %3$s</string>
+    <string name="boluserrorcode">İstenen: %1$.2f Ü İletilen: %2$.2f Ü Hata kodu: %3$s</string>
     <string name="selectedpump">Seçilen pompa</string>
     <string name="bolus_step">Bolus Adımı</string>
     <string name="basal_step">Bazal Adımı</string>
@@ -77,7 +77,7 @@
     <string name="diaconn_g8_reasoncomplete">Tamamlandı</string>
     <string name="diaconn_g8_reasoninjectonblock">Enjeksiyon bloğu</string>
     <string name="diaconn_g8_reasonbatteryshortage">Pil bitiyor</string>
-    <string name="diaconn_g8_reasoninsulinshortage">İnsülin bitiyor</string>
+    <string name="diaconn_g8_reasoninsulinshortage">İnsülin eksikliği</string>
     <string name="diaconn_g8_reasonuserstop">Kullanıcı durdurdu</string>
     <string name="diaconn_g8_reasonsystemreset">Sistem yeniden başlatma</string>
     <string name="diaconn_g8_reasonother">Diğer</string>
@@ -102,8 +102,8 @@
     <string name="diaconn_g8_logsuccess">Başarılı</string>
     <string name="diaconn_g8_logmealsuccess">Yemek başarılı</string>
     <string name="diaconn_g8_errorcode_1">Paket CRC hatası nedeniyle arama yapılamıyor.</string>
-    <string name="diaconn_g8_errorcode_2">Giriş parametresi hatasına ayarlanamaz.</string>
-    <string name="diaconn_g8_errorcode_3">Protokol spesifikasyon hatasına ayarlanamaz.</string>
+    <string name="diaconn_g8_errorcode_2">Ayarlanamıyor: giriş parametresi hatası.</string>
+    <string name="diaconn_g8_errorcode_3">Ayarlanamıyor: protokol tanımı hatası.</string>
     <string name="diaconn_g8_errorcode_4">Zamanlanmış yeme, enjekte edilemez.</string>
     <string name="diaconn_g8_errorcode_6">Pompa tarafından iptal edildi</string>
     <string name="diaconn_g8_errorcode_7">Başka bir işlem yapılıyor, uygulama ayarları kısıtlandı.</string>
@@ -113,7 +113,7 @@
     <string name="diaconn_g8_errorcode_11">Düşük pil nedeniyle enjeksiyon mümkün değildir.</string>
     <string name="diaconn_g8_errorcode_12">İnsülin yetersiz olduğu için enjekte edilemez.</string>
     <string name="diaconn_g8_errorcode_13">Tek seferlik limiti aştığı için enjekte edilemez.</string>
-    <string name="diaconn_g8_errorcode_14">Günlük enjeksiyon limitini aştığı için enjeksiyon yapılamaz.</string>
+    <string name="diaconn_g8_errorcode_14">Bugünkü enjeksiyon miktarını aştığı için enjeksiyon yapılamıyor.</string>
     <string name="diaconn_g8_errorcode_15">Bazal kurulum tamamlandıktan sonra bazal enjeksiyon yapılabilir.</string>
     <string name="diaconn_g8_logtubechange_title">Hortum değişimini günlüğe kaydet</string>
     <string name="diaconn_g8_logtubechange_summary">Geçmişte tespit edildiğinde Not\'a \"Tüp Değişikliği\" olayı ekleyin</string>
@@ -121,8 +121,8 @@
     <string name="diaconn_g8_errorcode_32">LGS çalışırken, enjeksiyon kısıtlanır</string>
     <string name="diaconn_g8_errorcode_33">LGS durumu AÇIK, AÇ Komutu reddedildi.</string>
     <string name="diaconn_g8_errorcode_34">LGS durumu KAPALI, KAPAT komutu reddedildi.</string>
-    <string name="diaconn_g8_errorcode_35">Geçici bazal çalışırken Geçici bazal başlatma reddedilir</string>
-    <string name="diaconn_g8_errorcode_36">Geçici bazal çalışmıyorken Geçici bazal durdurma reddedilir</string>
+    <string name="diaconn_g8_errorcode_35">Geçici bazal çalışırken geçici bazal başlatma reddedilir</string>
+    <string name="diaconn_g8_errorcode_36">Geçici bazal çalışmıyorken geçici bazal durdurma reddedilir</string>
     <string name="diaconn_g8_cloudsend_summary">Pompa günlüklerini Diaconn Bulut Deposuna gönderin.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Bulut Senkronizasyonu</string>
     <string name="bolus_speed_1">1 Ü/dk</string>

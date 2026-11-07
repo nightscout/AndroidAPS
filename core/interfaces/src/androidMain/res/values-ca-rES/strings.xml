@@ -62,5 +62,4 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
     <string name="basal_value">Valor basal</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
 </resources>

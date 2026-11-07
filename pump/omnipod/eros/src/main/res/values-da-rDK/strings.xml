@@ -11,7 +11,6 @@
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logning af batteriskift i menuen Handlinger</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f IE</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f IE, CH=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Rate: %1$.2f IE, varighed: %2$d minutter</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Kommunikation mislykkedes: Bekræftelse af meddelelsesintegritet mislykkedes</string>
     <string name="omnipod_eros_error_invalid_packet_type">Kommunikation mislykkedes: modtaget en ugyldig pakke fra Pod</string>
@@ -28,16 +27,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Intet svar fra RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink afbrudt</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Intet svar fra pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Indstilling af basal profil mislykkedes. Afgivelse kan være suspenderet! Opdater venligst Pod status manuelt fra Omnipod fanen og genoptag leveringen hvis nødvendigt.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Indstilling af basal profil mislykkedes måske. Afgivelse kan være suspenderet! Opdater venligst Pod status manuelt fra Omnipod fanen og genoptag leveringen hvis nødvendigt.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Indstilling af basal profil mislykkedes. Levering er suspenderet! Genoptag manuelt levering fra Omnipod fanen.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Annullering af midlertidig basal kan være mislykkedes. Opdater venligst Pod status manuelt fra Omnipod fanen.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Indstilling af midlertidig basal mislykkedes. Hvis en midlertidig basal tidligere var kørt, kan den være blevet annulleret. Opdater venligst Pod status manuelt fra Omnipod fanen.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Indstilling af midlertidig basal mislykkedes måske. Hvis en midlertidig basal tidligere var kørt, kan den være blevet annulleret. Opdater venligst Pod status manuelt fra Omnipod fanen.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR-varigheden skal være større end nul og et multiplum af %1$s minutter.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Indstilling af tiden mislykkedes måske. Afgivelse kan være suspenderet! Opdater venligst Pod status manuelt fra Omnipod fanen og genoptag leveringen hvis nødvendigt.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Indstilling af tiden mislykkedes. Levering er suspenderet! Genoptag manuelt levering fra Omnipod fanen.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Kunne ikke automatisk ændre tiden på Pod. Du bør manuelt synkronisere tiden i Omnipod fanen.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Kan ikke verificere om bolus lykkedes. Kontroller venligst manuelt, at din Pod afgiver bolus ved at lytte efter klik. <b>Hvis du er sikker på, at bolus ikke lykkedes, bør du manuelt slette bolus posten fra behandlinger, selvom du klikker på \'Annuller bolus\' nu!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Kan ikke verificere, om SMB bolus (%1$.2f IE) lykkedes. <b>Hvis du er sikker på, at Bolus ikke lykkedes, bør du manuelt slette SMB-posten fra behandlinger.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En midlertidig basal kører på Pod, men AAPS er uvidende om denne midlertidige basal. Annuller venligst din midlertidige basal manuelt.</string>

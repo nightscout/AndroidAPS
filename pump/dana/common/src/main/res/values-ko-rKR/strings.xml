@@ -8,7 +8,7 @@
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 오류</string>
     <string name="insulinlimitviolation">인슐린 제한 위반</string>
-    <string name="boluserrorcode">요청: %1$.2fU 주입: %2$.2fU 오류 코드: %3$s</string>
+    <string name="boluserrorcode">요청: %1$.2f U 주입: %2$.2f U 오류 코드: %3$s</string>
     <string name="danai2_bolus_error_no_prime">펌프가 프라임되지 않았습니다</string>
     <string name="danai2_bolus_error_not_enough_insulin">레저버에 인슐린이 부족합니다</string>
     <string name="danai2_bolus_error_easy_sleep">펌프에서 이지 수면 모드가 켜져 있습니다</string>

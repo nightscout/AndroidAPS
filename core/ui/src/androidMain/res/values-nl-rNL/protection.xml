@@ -5,12 +5,6 @@
     <string name="settings_protection">Instellingen beveiliging</string>
     <string name="application_protection">App beveiliging</string>
     <string name="bolus_protection">Bolus beveiliging</string>
-    <string name="settings_password">Instellingen wachtwoord</string>
-    <string name="settings_pin">Pincode instellingen</string>
-    <string name="application_password">App wachtwoord</string>
-    <string name="application_pin">Pincode applicatie</string>
-    <string name="bolus_password">Bolus wachtwoord</string>
-    <string name="bolus_pin">Pincode bolus</string>
     <string name="protection_timeout_title">Geldigheid wachtwoord en pincode [s]</string>
     <string name="protection_timeout_summary">Tijd voordat het wachtwoord of de pincode opnieuw moet worden ingevoerd</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

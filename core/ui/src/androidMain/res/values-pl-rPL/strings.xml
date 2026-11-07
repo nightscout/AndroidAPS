@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nie została przełączona: %1$s Twoja poprzednia insulina nadal jest w użyciu.</string>
     <string name="insulin_activation_unconfirmed">Nie udało się potwierdzić zmiany insuliny. Sprawdź, która insulina jest aktywna w swoim profilu, zanim podasz dawkę.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulina nie została zmieniona. Twoja poprzednia insulina nadal jest używana.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina także nie została przełączona.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina również nie została zmieniona. Jeśli nowa insulina jest już w pompie, nie podłączaj pompy i uruchom zmianę insuliny ponownie.</string>
     <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Pseudonim insuliny</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Wybierz profil, który zostanie zastosowany podczas aktywacji.</string>
     <string name="pump_wizard_profile_gate_no_store">Nie zdefiniowano żadnego profilu. Otwórz \"Zarządzaj / Profil\", aby utworzyć profil, a następnie ponownie rozpocznij aktywację.</string>
     <string name="reset">Resetuj</string>
-    <string name="profileswitch_ismissing">Brakuje ZmianyProfilu. Proszę wykonać ZmianęProfilu lub nacisnąć \"Aktywuj Profil\" w ProfiluLokalnym</string>
+    <string name="profileswitch_ismissing">Brak zmiany profilu. Wykonaj zmianę profilu lub naciśnij \"Aktywuj profil\" w profilu lokalnym.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procent</string>
     <string name="timeshift_label">Zmiana czasu</string>
-    <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
+    <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć pozycje (%1$d)?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Urządzenie pacjenta nie ma %1$d z tych wpisów. Nie zostały one usunięte.</string>
     <string name="overview_treatment_label">Bolus i węglowodany</string>
     <string name="copytolocalprofile">Utworzyć nowy profil na bazie wybranego profilu?</string>
@@ -344,7 +344,7 @@
     <string name="careportal_exercise">Ćwiczenia</string>
     <string name="careportal_announcement_message">Ogłoszenie: %1$s</string>
     <string name="careportal_note_message">Wskazówka: %1$s</string>
-    <string name="careportal_question_message">Pytanie : %1$s</string>
+    <string name="careportal_question_message">Pytanie: %1$s</string>
     <string name="careportal_exercise_message">Ćwiczenie: %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Zmiana miejsca wkłucia pompy : %1$s</string>
     <string name="careportal_pump_site_change">Zmiana wkłucia</string>
@@ -661,7 +661,7 @@
     <string name="uel_ns_queue_cleared">KOLEJKA NS WYCZYSZCZONA</string>
     <string name="uel_ns_settings_copied">USTAWIENIA NS SKOPIOWANE</string>
     <string name="uel_error_dialog_ok">DIALOG BŁĘDU OK</string>
-    <string name="uel_error_dialog_mute">DIALOG BŁĘDU WYCISZ </string>
+    <string name="uel_error_dialog_mute">WYCISZENIE OKNA BŁĘDU</string>
     <string name="uel_error_dialog_mute_5min">DIALOG BŁĘDU WYCISZ NA 5 MINUT</string>
     <string name="uel_objective_started">ZADANIE ROZPOCZĘTE</string>
     <string name="uel_objective_unstarted">ZADANIE NIE ROZPOCZĘTE</string>
@@ -726,7 +726,7 @@
     <string name="error_in_isf_values">Błąd w wartościach ISF</string>
     <string name="error_in_basal_values">Błąd w wartościach bazy</string>
     <string name="error_in_target_values">Błąd w wartościach docelowych</string>
-    <string name="profile_name_contains_dot">Nazwa któregoś z profili zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfile nie zostaną przesłane do NS.</string>
+    <string name="profile_name_contains_dot">Nazwy niektórych profili zawierają kropki.\nNS tego nie obsługuje.\nProfile nie zostaną przesłane do NS.</string>
     <string name="invalid_profile_not_accepted">Błędny profil %1$s nie został zaakceptowany z NS</string>
     <string name="errors">Błędy</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +891,7 @@
     <string name="export_result_message_exported">Ustawienia wyeksportowane</string>
     <string name="export_result_message_failed">Eksport ustawień nie powiódł się!</string>
     <string name="export_result_message_about_to_expire">Ustawienia wyeksportowane: hasło wkrótce wygasa. Eksportuj ręcznie i (ponownie) wprowadź hasło.</string>
-    <string name="export_result_message_expired">Eksport ustawień anulowany: hasło wygasło. Eksportuj ręcznie i (ponownie) podaj hasło!</string>
+    <string name="export_result_message_expired">Eksport ustawień anulowany: hasło wygasło. Eksportuj ręcznie i podaj hasło ponownie!</string>
     <string name="export_result_message_disabled">Ostrzeżenie (automatyzacja): Eksport ustawień nie jest włączony!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Eksport do chmury pomyślny</string>
@@ -998,7 +998,7 @@
     <string name="cannula">Kaniula</string>
     <string name="patch_pump">Pompa bezdrenowa</string>
     <!-- Site Rotation -->
-    <string name="select_location">Kliknij poniżej, aby wybrać miejsce wkłucia.</string>
+    <string name="select_location">Dotknij poniżej, aby wybrać miejsce</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="fabric_upload_disabled">Przesyłanie dzienników awarii jest wyłączone!</string>
@@ -1053,7 +1053,7 @@
     <string name="unsaved_changes">Niezapisane zmiany</string>
     <string name="unsaved_changes_message">Masz niezapisane zmiany. Co chcesz zrobić?</string>
     <string name="discard">Odrzuć</string>
-    <string name="ic_dynamic_label_warning">Twój algorytm potrafi dostarczyć dynamiczne obliczenia IC. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych lub wyłącznie jako wartości referencyjne</string>
+    <string name="ic_dynamic_label_warning">Twój algorytm może dynamicznie obliczać IC. Wartości poniżej mogą być używane tylko awaryjnie w przypadku braku danych lub tylko jako wartości referencyjne</string>
     <string name="isf_dynamic_label_warning">Twój algorytm potrafi dostarczyć dynamiczne obliczenia ISF. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych lub wyłącznie jako wartości referencyjne</string>
     <string name="add_time_block">Dodaj przedział czasowy</string>
     <string name="remove_entry">Usuń pozycję</string>
@@ -1116,6 +1116,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Ustawienia do zmiany: %1$d. Zmienione wtyczki zostaną uruchomione ponownie.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Ustawienia do zmiany: %1$d. Zachowano ustawienia pompy: %2$d, więc pompa nadal będzie działać.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Zaimportowane ustawienia nie wskazywały żadnej pompy dostępnej na tym telefonie. Aktywna jest teraz %1$s - sprawdź ustawienia pompy.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Dodano do listy insulin z kopii zapasowej: %1$s. Jeszcze nieużywana: wybierz właściwą podczas aktywowania profilu i zrób to, zanim Nightscout pobierze starsze wpisy leczenia.</string>
     <string name="import_applying">Stosowanie ustawień…</string>
     <string name="import_replace_pump_settings">Także zastąp ustawienia pompy</string>
     <string name="import_replace_pump_settings_summary">Pozostaw wyłączone, aby zachować pompę, z którą ten telefon jest sparowany. Włącz, gdy przywracasz ustawienia na nowy telefon z tą samą pompą.</string>

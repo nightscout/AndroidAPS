@@ -19,7 +19,7 @@
     <string name="combov2_error_10">Lỗi bình chứa</string>
     <string name="combov2_error_11">Bộ dây truyền chưa được làm đầy</string>
     <string name="combov2_extended_bolus_not_supported">Không hỗ trợ liều bolus kéo dài</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Ghép nối với bơm</string>
     <string name="combov2_unpair_pump_title">Hủy ghép nối bơm</string>
     <string name="combov2_driver_state_label">Trạng thái điều khiển</string>
@@ -31,12 +31,10 @@
 2. Kiểm tra xem có thiết bị nào đã được ghép nối chưa; nếu có, vào màn hình \"Delete device\" trên bơm để delete/unpair thiết bị đó.\n
 3. Vào màn hình \"Add device\" trên bơm và bắt đầu quá trình ghép nối trên bơm.\n
 4. Nhấn nút \"Start pairing\" bên dưới để khởi động quá trình ghép nối trong AndroidAPS.\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Sau một lúc, tên điện thoại sẽ hiển thị trên màn hình bơm; nhấn nút CHECK để xác nhận.\n\n
-Khi quá trình ghép đôi hoàn tất, xác nhận ghép đôi thành công trên bơm và quay lại màn hình chính của bơm bằng cách nhấn nút CHECK hai lần.\n\n
-Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
-1. Nhấn Back hoặc nút \"Cancel Pairing\".\n
-2. Hủy ghép nối trên bơm Combo (nhấn đồng thời hai nút UP và MENU để hủy ghép đôi).\n
-3. Thử ghép nối lại từ đầu</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Sau một lúc, tên điện thoại sẽ hiển thị trên màn hình bơm. Nhấn CHECK để xác nhận.\n\nKhi ghép nối thành công, hãy xác nhận hoàn tất ghép nối trên bơm và nhấn nút CHECK hai lần để quay lại màn hình chính của bơm.\n\nNếu sau khoảng 5 phút mà vẫn chưa thiết lập được kết nối:\n\n
+1. Nhấn Back hoặc nút \"Hủy ghép nối\".\n
+2. Hủy ghép nối trên bơm Combo (nhấn đồng thời hai nút UP và MENU để hủy).\n
+3. Thử ghép nối lại</string>
     <string name="combov2_enter_pin">Nhập PIN</string>
     <string name="combov2_cancel_pairing">Hủy ghép nối</string>
     <string name="combov2_confirm_cancel_pairing_message">Bạn có thực sự muốn hủy ghép nối không?</string>

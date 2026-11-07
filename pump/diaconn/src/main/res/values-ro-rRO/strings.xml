@@ -27,7 +27,7 @@
     <string name="commanderror">Eroare de comandă</string>
     <string name="speederror">Eroare de viteză</string>
     <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
-    <string name="boluserrorcode">Solicitat: %1$.2fU Administrat: %2$.2fU Cod eroare: %3$s</string>
+    <string name="boluserrorcode">Solicitat: %1$.2f U Administrat: %2$.2f U Cod eroare: %3$s</string>
     <string name="selectedpump">Pompa selectată</string>
     <string name="bolus_step">Pas bolus</string>
     <string name="basal_step">Pas bazală</string>
@@ -102,8 +102,8 @@
     <string name="diaconn_g8_logsuccess">Succes</string>
     <string name="diaconn_g8_logmealsuccess">Masă cu succes</string>
     <string name="diaconn_g8_errorcode_1">Nu se poate căuta din cauza erorii pachetului CRC.</string>
-    <string name="diaconn_g8_errorcode_2">Nu poate fi setat la o eroare de introducere a parametrului.</string>
-    <string name="diaconn_g8_errorcode_3">Nu poate fi setat la o eroare de specificare a protocolului.</string>
+    <string name="diaconn_g8_errorcode_2">Nu se poate seta: eroare de parametru de intrare.</string>
+    <string name="diaconn_g8_errorcode_3">Nu se poate seta: eroare de specificare a protocolului.</string>
     <string name="diaconn_g8_errorcode_4">Masa a fost înregistrată, nu poate fi injectat.</string>
     <string name="diaconn_g8_errorcode_6">Anulat de pompă</string>
     <string name="diaconn_g8_errorcode_7">Se iau alte acțiuni, se limitează setările aplicației.</string>
@@ -121,8 +121,8 @@
     <string name="diaconn_g8_errorcode_32">În timpul rulării Suspendării la glicemie scăzută, injectarea este restricționată.</string>
     <string name="diaconn_g8_errorcode_33">Starea LGS este activă, comanda de activare este refuzată.</string>
     <string name="diaconn_g8_errorcode_34">Starea LGS este inactivă, comanda de inactivare este refuzată.</string>
-    <string name="diaconn_g8_errorcode_35">Pornirea bazalei temporare este respinsă atunci când se execută bazala temporară</string>
-    <string name="diaconn_g8_errorcode_36">Oprirea bazalei temporare este respinsă atunci când bazala temporară nu rulează</string>
+    <string name="diaconn_g8_errorcode_35">Pornirea bazalei temporare este respinsă atunci când rulează o bazală temporară</string>
+    <string name="diaconn_g8_errorcode_36">Oprirea bazalei temporare este respinsă atunci când nu rulează o bazală temporară</string>
     <string name="diaconn_g8_cloudsend_summary">Trimiteți jurnalele pompei către Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Sincronizați în Cloud Diaconn</string>
     <string name="bolus_speed_1">1 U/min</string>

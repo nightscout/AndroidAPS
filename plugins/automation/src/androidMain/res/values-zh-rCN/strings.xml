@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">将 SMS 发送到所有号码</string>
     <string name="sendsmsactiontext">使用文本发送 SMS</string>
     <string name="starttemptarget">启动临时目标</string>
-    <string name="islesser">小于</string>
-    <string name="isequalorlesser">等于或小于</string>
     <string name="isequal">等于</string>
     <string name="isequalorgreater">等于或大于</string>
     <string name="isgreater">大于</string>
@@ -88,7 +86,6 @@
     <string name="add_short">添加</string>
     <string name="temptargetcompared">临时目标 %1$s</string>
     <string name="btdevicecompared">蓝牙连接设备 %1$s %2$s</string>
-    <string name="btdevice">连接到蓝牙设备 </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">自动传感器 %1$s %2$s %%</string>
     <string name="autosenslabel">自动传感器 %</string>

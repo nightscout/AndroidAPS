@@ -48,7 +48,6 @@
     <string name="cwf_comment_month">Название месяца (краткое)</string>
     <string name="cwf_comment_loop">Статус цикла и история</string>
     <string name="cwf_comment_direction">Стрелка тренда</string>
-    <string name="cwf_comment_timestamp">Минут с последнего чтения ГК</string>
     <string name="cwf_comment_sgv">Значение ГК</string>
     <string name="cwf_comment_cover_plate">Изображение перед текстом (циферблаты…)</string>
     <string name="cwf_comment_hour_hand">Изображение для часовой стрелки (Аналоговые часы)</string>

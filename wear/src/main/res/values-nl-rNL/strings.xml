@@ -71,7 +71,7 @@
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
     <string name="pref_moreWatchfaceSettings">Meer Watchface instellingen</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Kijk naar de Watchface configuratie, alsjeblieft.</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Bekijk de Watchface configuratie.</string>
     <string name="menu_tempt">TijdStreefd</string>
     <string name="menu_tempt_long">Tijdelijk streefdoel</string>
     <string name="menu_wizard">Calculator</string>
@@ -105,7 +105,7 @@
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
-    <string name="action_profile_switch_confirmation">Profiel wisselen aangevraagd</string>
+    <string name="action_profile_switch_confirmation">Profielwissel aangevraagd</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Streefdoel [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Laag [%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Hoog [%s]</string>
@@ -134,7 +134,7 @@
     <string name="cancel_bolus">BOLUS ANNULEREN</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
-    <string name="status_profile_switch">Profiel wissel</string>
+    <string name="status_profile_switch">Profielwissel</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Khd</string>
     <string name="activity_IOB">IOB</string>
@@ -171,7 +171,7 @@
     <string name="complication_summary_none">Tik om een gegevensbron te selecteren</string>
     <string name="pref_complication_type_priority">Complicatietype prioriteit</string>
     <string name="pref_complication_type_priority_all">Standaard voor alle slots</string>
-    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een verandering hier wordt de volgende keer dat u een databron kiest toegepast. Dezelfde kiezen is niet genoeg; kies een andere bron eerst, kies daarna degene die u wilt.</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een wijziging hier wordt toegepast wanneer de volgende keer een databron wordt gekozen. Het opnieuw selecteren van dezelfde databron is niet voldoende. Selecteer eerst een andere databron en kies daarna de gewenste databron.</string>
     <string name="complication_type_priority_value">Waarde of wijzer</string>
     <string name="complication_type_priority_text">Tekst</string>
     <string name="complication_type_priority_icon">Icoon</string>
@@ -273,14 +273,14 @@
     <string name="complication_uploader_phone_battery">Uploader/Telefoon Batterij</string>
     <string name="running_mode_resume">Hervat loop</string>
     <string name="running_mode_reconnect">Pomp opnieuw verbinden</string>
-    <string name="label_running_mode_title">Bedrijfsmodus</string>
+    <string name="label_running_mode_title">Loopmodus</string>
     <string name="label_bg_graph_tile">BG Grafiek</string>
     <string name="tile_tap_action">Tik actie</string>
     <string name="tile_graph_time_range">Tijdsinterval</string>
     <string name="tile_tap_bg_graph">BG Grafiek</string>
     <string name="tile_tap_main_menu">Hoofdmenu</string>
     <string name="tile_tap_loop_status">Loop status</string>
-    <string name="action_running_mode_selected">Bedrijfsmodus aangevraagd</string>
+    <string name="action_running_mode_selected">Loopmodus aangevraagd</string>
     <string name="title_activity_disconnect_pump">Verbreek verbinding met de pomp</string>
     <string name="title_activity_suspend_loop">Onderbreek loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
@@ -341,7 +341,7 @@
     <string name="loop_status_targets">Streefdoelen</string>
     <string name="loop_status_temp_target">Tijdelijk streefdoel</string>
     <string name="loop_status_target_range">Interval</string>
-    <string name="loop_status_target">Streefwaarde</string>
+    <string name="loop_status_target">Streefdoel</string>
     <string name="loop_status_adjusted_target">Aangepast streefdoel</string>
     <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Tot einde</string>
     <string name="loop_status_scene_ended">Geëindigd</string>
@@ -355,14 +355,14 @@
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+du</string>
     <string name="loop_status_sensitivity">Gevoeligheid</string>
     <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Veranderd door de actieve scène</string>
-    <string name="loop_status">Loop status</string>
+    <string name="loop_status">Loopstatus</string>
     <string name="loop_status_refresh">Vernieuwen</string>
     <string name="confirm">Bevestigen</string>
     <string name="request">Aanvraag</string>
     <string name="constraint_applied">Beperking toegepast!</string>
     <string name="wizard_total_insulin">Totaal Insuline</string>
     <string name="wizard_calculation">Berekening</string>
-    <string name="wizard_settings_format">Kh/I:%1$s | ISF %2$s</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">15 min trend</string>

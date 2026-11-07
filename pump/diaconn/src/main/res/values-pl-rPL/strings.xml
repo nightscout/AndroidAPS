@@ -27,7 +27,7 @@
     <string name="commanderror">Błąd polecenia</string>
     <string name="speederror">Błąd prędkości</string>
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
-    <string name="boluserrorcode">Zadano: %1$.2fU Dostarczono: %2$.2fU Kod błędu: %3$s</string>
+    <string name="boluserrorcode">Zadano: %1$.2f U Dostarczono: %2$.2f U Kod błędu: %3$s</string>
     <string name="selectedpump">Wybrana pompa</string>
     <string name="bolus_step">Krok bolusa</string>
     <string name="basal_step">Krok bazy</string>
@@ -63,7 +63,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Dodaj zdarzenie \"Zmiana baterii\" do portalu opieki Nightscout, gdy wykryto je w historii pompy</string>
     <string name="diaconn_g8_logbatterychange_title">Zapisz zmianę baterii</string>
     <string name="diaconn_g8_logsyncinprogress">Dodaj do dziennika że synchronizacja jest w toku</string>
-    <string name="diaconn_g8_loginsulinshorage">Dodaj do dziennika niedobór insuliny</string>
+    <string name="diaconn_g8_loginsulinshorage">Niedobór insuliny</string>
     <string name="diaconn_g8_logbatteryshorage">Dodaj do dziennika niedobór baterii</string>
     <string name="diaconn_g8_logneedleprime">Wypełnienie wkłucia: %1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Wypełnienie zbiorniczka: %1$.2fU</string>
@@ -102,8 +102,8 @@
     <string name="diaconn_g8_logsuccess">Sukces</string>
     <string name="diaconn_g8_logmealsuccess">Podano bolus około-posiłkowy</string>
     <string name="diaconn_g8_errorcode_1">Błąd CRC - Wyszukanie niemożliwe z powodu błędów transmisji.</string>
-    <string name="diaconn_g8_errorcode_2">Błąd #2: Nie można ustawić - błędny parametr.</string>
-    <string name="diaconn_g8_errorcode_3">Błąd #3: Nie można ustawić - błąd protokołu.</string>
+    <string name="diaconn_g8_errorcode_2">Nie można ustawić: błąd parametru wejściowego.</string>
+    <string name="diaconn_g8_errorcode_3">Nie można ustawić: błąd specyfikacji protokołu.</string>
     <string name="diaconn_g8_errorcode_4">Błąd #4: Nie można podać bolusa - upłynął limit czasu na posiłek.</string>
     <string name="diaconn_g8_errorcode_6">Anulowano przez pompę</string>
     <string name="diaconn_g8_errorcode_7">Błąd #7: Urządzenie zajęte - nie można zmienić ustawień.</string>
@@ -113,7 +113,7 @@
     <string name="diaconn_g8_errorcode_11">Błąd #11: Bolus niemożliwy z powodu słabej baterii.</string>
     <string name="diaconn_g8_errorcode_12">Błąd #12: Za mało insuliny aby podać bolus.</string>
     <string name="diaconn_g8_errorcode_13">Błąd #13: Nie można podać bolusa ponieważ przekracza on limit jednorazowej dawki.</string>
-    <string name="diaconn_g8_errorcode_14">Błąd #14: Nie można podać bolusa ponieważ przekracza on limit dziennej dawki.</string>
+    <string name="diaconn_g8_errorcode_14">Nie można podać insuliny, ponieważ przekracza to dzienny limit podawania.</string>
     <string name="diaconn_g8_errorcode_15">Błąd #15: Podanie bazy możliwe dopiero po dokończeniu ustawień bazy.</string>
     <string name="diaconn_g8_logtubechange_title">Zapisz zmianę drenu</string>
     <string name="diaconn_g8_logtubechange_summary">Dodaj zdarzenie \"Zmiana drenu\" do wpisu, gdy wykryto je w historii pompy</string>
@@ -121,8 +121,8 @@
     <string name="diaconn_g8_errorcode_32">Błąd #32: W trybie LGS, bolusy są ograniczone</string>
     <string name="diaconn_g8_errorcode_33">Błąd #33: Tryb LGS jest już włączony, polecenie ON jest odrzucone.</string>
     <string name="diaconn_g8_errorcode_34">Błąd #34: Tryb LGS jest już wyłączony, polecenie OFF jest odrzucone.</string>
-    <string name="diaconn_g8_errorcode_35">Błąd #35: Początek tymczasowej bazy jest odrzucony, gdy uruchomiona jest tymczasowa baza</string>
-    <string name="diaconn_g8_errorcode_36">Błąd #36: Koniec tymczasowej bazy jest odrzucony, gdy tymczasowa baza nie jest uruchomiona</string>
+    <string name="diaconn_g8_errorcode_35">Start bazy tymczasowej jest odrzucany, gdy baza tymczasowa jest uruchomiona</string>
+    <string name="diaconn_g8_errorcode_36">Zatrzymanie bazy tymczasowej jest odrzucane, gdy baza tymczasowa nie jest uruchomiona</string>
     <string name="diaconn_g8_cloudsend_summary">Wyślij dzienniki pompy do Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Synchronizacja z Diaconn Cloud</string>
     <string name="bolus_speed_1">1 U/min</string>

@@ -56,8 +56,6 @@
     <string name="sendsmsactiondescription">Αποστολή SMS σε όλους τους αριθμούς</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
     <string name="starttemptarget">Έναρξη προσ. στόχου</string>
-    <string name="islesser">είναι λιγότερο από</string>
-    <string name="isequalorlesser">είναι ίσο ή μικρότερο από</string>
     <string name="isequal">είναι ίσο με</string>
     <string name="isequalorgreater">είναι ίσο ή μεγαλύτερο από</string>
     <string name="isgreater">είναι μεγαλύτερο από</string>
@@ -88,7 +86,6 @@
     <string name="add_short">Προσθήκη</string>
     <string name="temptargetcompared">Προσ. στόχος %1$s</string>
     <string name="btdevicecompared">Σύνδεση Bluetooth στη συσκευή %1$s %2$s</string>
-    <string name="btdevice">Σύνδεση σε συσκευή Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

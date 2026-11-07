@@ -3,8 +3,6 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Integração para EOPatch2 / GlucoMen Day</string>
     <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">O patch não confirmou o fim do bólus. %1$s foi registrado, mas o patch pode ter administrado mais. Verifique o patch antes de dar mais insulina.</string>
-    <string name="low_reservoir">Alertas de Reservatório Baixo</string>
-    <string name="patch_expiration_reminders">Lembrete de Expiração do Patch</string>
     <string name="patch_buzzer_reminders">Lembrete do sinal sonoro do patch</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Número de série</string>
@@ -24,10 +22,7 @@
     <string name="patch_safe_deactivation_desc">Para trocar por um novo patch, o patch atual deve ser descartado. Toda a administração de insulina do patch será cancelada.</string>
     <string name="patch_discard_complete_title">O descarte do patch foi concluído.</string>
     <string name="patch_discard_complete_desc">O patch foi desativado.\nDescarte o patch.\nRemova o patch preso ao seu corpo.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Um bólus está sendo administrado agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
-    <string name="patch_change_confirm_temp_basal_is_active_desc">Uma basal temporária está sendo administrada agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Um bólus e uma basal temporária estão sendo administrados agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
-    <string name="patch_change_confirm_desc">Tem certeza de que deseja descartar um patch?</string>
     <string name="patch_forced_discard">Descartar</string>
     <string name="patch_comm_error_during_discard_desc_2">Para desativação unilateral, toque em \"Descartar\".</string>
     <string name="patch_manually_turning_off_alarm_title">Desligar manualmente o alarme do patch</string>
@@ -41,7 +36,6 @@
     <string name="patch_wake_up_pairing_info">Durante o pareamento, duas janelas pop-up do sistema Android serão exibidas. Você deve confirmar ambas para concluir o pareamento Bluetooth.</string>
     <string name="patch_start_pairing">Iniciar pareamento</string>
     <string name="patch_connect_new">Pareamento do patch</string>
-    <string name="patch_connect_new_desc">O novo patch está sendo pareado.\nMantenha a distância entre o patch e o dispositivo inteligente o mais curta possível</string>
     <string name="patch_remove_needle_cap">Prepare-se para colocar o patch.</string>
     <string name="patch_remove_needle_cap_desc_1">Remova a fita adesiva e toque em \'Próximo\'.</string>
     <string name="patch_remove_needle_cap_desc_2">Se a agulha estiver para fora, toque em \'Descartar\'.</string>
@@ -54,14 +48,12 @@
     <string name="patch_safety_check_desc_1">Levará cerca de 30 segundos.</string>
     <string name="patch_safety_check_desc_2">Para usar com segurança, não remova a alavanca de acionamento da agulha até que a verificação de segurança seja concluída!</string>
     <string name="patch_rotate_knob">Inserindo a agulha</string>
-    <string name="patch_rotate_knob_desc_1">Gire a alavanca de acionamento da agulha mais de 100° para inserir a agulha e depois gire-a completamente para removê-la</string>
     <string name="patch_rotate_knob_desc_2">Verifique se há 1 bipe e toque em \'Próximo\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Verifique se há 1 bipe e toque em \'Tentar novamente\'.</string>
     <string name="patch_basal_schedule">Ativação do patch concluída!</string>
     <string name="patch_basal_schedule_desc_1">O programa \'%1$s\' foi ativado.</string>
     <string name="patch_basal_schedule_desc_2">Alerta quando o patch estiver perto de expirar.\nAltere o horário do lembrete, se necessário.</string>
     <string name="patch_expiration_reminder_setting_title">Lembretes de expiração do patch</string>
-    <string name="patch_activate_reminder_desc">Ativação do patch não foi concluída.\n Continuar.</string>
     <string name="patch_communication_check_helper_1">Deixe seu smartphone mais perto do Patch</string>
     <string name="patch_communication_check_helper_2">Por favor, mova para outro local e tente novamente.</string>
     <string name="patch_safety_check_failed_desc">Falha na verificação de segurança. Tente novamente.</string>
@@ -69,15 +61,11 @@
     <string name="patch_communication_succeed">Sucesso na comunicação</string>
     <string name="patch_communication_succeed_message">Conectado com o patch.</string>
     <string name="patch_cancel_pairing">Pareamento cancelado</string>
-    <string name="insulin_suspend_msg1">Após a suspensão, o Bólus &amp; Basal temporária atualmente em entrega será cancelado. \n\nTaxa : %1$s U/hr\nTempo restante : %2$s\n&amp; Insulina será: %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Após a suspensão, o Bólus atual será cancelado. \n\nInsulina será: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Após a suspensão, a basal temporária em andamento será cancelada. \n\nTaxa : %1$s U/hr\nTempo restante : %2$s</string>
     <string name="insulin_suspend_msg4">A apliacação da insulina está suspensa.</string>
     <string name="string_activate_patch">Ativar patch</string>
     <string name="string_discard_patch">Descartar patch</string>
     <string name="string_running">Funcionando</string>
     <string name="retry">Tentar novamente</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Tem certeza de que deseja descartar este Patch?</string>
     <string name="needle_insertion_error_1">Erro de inserção de Agulha.</string>
     <string name="needle_insertion_error_3">Toque em \'Descartar\' para desativar o patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Tempo de suspensão da basal</string>

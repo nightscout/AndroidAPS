@@ -248,7 +248,6 @@
     <string name="profile_switches">切换配置文件</string>
     <string name="basal_pct_from_tdd_label">基础率%</string>
     <string name="selected_profile">已选择:</string>
-    <string name="comparation">比较</string>
     <string name="profile_tab_1">配置文件 1</string>
     <string name="profile_tab_2">配置文件 2</string>
     <string name="motol_default_profile">默认个人配置文件</string>

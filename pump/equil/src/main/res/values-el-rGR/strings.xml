@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Αντλία patch Equil 5.3 ή νεότερη </string>
     <!--  start  -->
     <string name="equil_basal_speed">Βάση βασικού ρυθμού</string>
     <string name="equil_dressing">Αλλαγή δεξαμενής</string>
@@ -77,7 +76,6 @@
     <string name="equil_common_cmd_resume_delivery">Συνέχιση έγχυσης</string>
     <string name="equil_common_cmd_pair">Σύζευξη Equil</string>
     <string name="equil_common_cmd_insert_cannula">Εισαγωγή καθετήρα</string>
-    <string name="equil_common_cmd_unpair">Κατάργηση σύζευξης Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Ορισμός εκτεταμένου bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Ακύρωση εκτεταμένου bolus</string>
     <!--    推杆回退-->
@@ -93,9 +91,7 @@
     <string name="equil_command_connect_error">Σφάλμα σύνδεσης με την αντλία</string>
     <string name="equil_command_connect_no_response">Καμία ανταπόκριση από την αντλία</string>
     <string name="equil_command__unknown">Άγνωστη κατάσταση της εντολής</string>
-    <string name="equil_install">Τοποθετήστε την αντλία στο σώμα</string>
     <string name="equil_settings_alarm_battery">Συναγερμός χαμηλής μπαταρίας</string>
-    <string name="equil_settings_alarm_insulin">Συναγερμός χαμηλής ινσουλίνης</string>
     <string name="equil_init_insulin_error">Η προετοιμασία της δεξαμενής δεν έχει ολοκληρωθεί</string>
     <string name="equil_history_group_all">Όλα</string>
     <string name="equil_history_group_pair">Σύζευξη</string>
@@ -111,7 +107,6 @@
     <string name="equil_history_item3">Εντοπίστηκε έμφραξη έγχυσης</string>
     <string name="equil_history_item4">Εντοπίστηκε αντίστροφη κίνηση μοτέρ</string>
     <string name="equil_history_item5">Εντοπίστηκε βλάβη μοτέρ</string>
-    <string name="equil_history_item6">Έναρξη παύσης έγχυσης</string>
     <string name="equil_history_item7">Η έγχυση είναι ήδη σε παύση</string>
     <string name="equil_history_item8">Επικείμενη αυτόματη απενεργοποίηση</string>
     <string name="equil_history_item9">Αυτόματη απενεργοποίηση!</string>

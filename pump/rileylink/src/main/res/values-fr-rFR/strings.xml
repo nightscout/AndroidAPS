@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding_4b6b_local">Encodage logiciel 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Encodage matériel 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">États-Unis &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Mondial (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Recherche en cours</string>
     <string name="riley_link_ble_config_connected_never">Jamais</string>

@@ -5,13 +5,13 @@
     <string name="medtrum_pump_description">Pomp integratie voor Medtrum Nano en Medtrum 300U</string>
     <string name="medtrum_pump_setting">Medtrum pomp instellingen</string>
     <string name="pump_error">Pomp fout: %1$s!! </string>
-    <string name="pump_warning">Pomp waarschuwing: %1$s </string>
+    <string name="pump_warning">Pomp waarschuwing: %1$s</string>
     <string name="pump_is_suspended">Pomp is onderbroken</string>
     <string name="pump_is_suspended_hour_max">Pomp is onderbroken als gevolg van overschrijding max insuline per uur</string>
     <string name="pump_is_suspended_day_max">Pomp is onderbroken als gevolg van overschrijding max insuline per dag</string>
     <string name="patch_not_active">Patch niet geactiveerd</string>
     <string name="pump_setting_failed">Gebruikersinstellingen instellen op de pomp mislukt!</string>
-    <string name="pump_sync_error">Fout bij het synchroniseren van de geschiedenis van de pomp: een record is overgeslagen. Controleer in het behandeling tabblad of de bolus correct is gesynchroniseerd. Stel het alarm uit en vervang als de fout blijft terugkomen de patch of pompbasis.</string>
+    <string name="pump_sync_error">Fout bij het synchroniseren van de pomphistorie: een registratie is overgeslagen. Controleer in het tabblad Behandelingen of de bolus correct is gesynchroniseerd. Sluimer het alarm. Vervang de patch of pompbasis als de fout blijft terugkomen.</string>
     <string name="patch_reset_after_primed_error">De patch is zelf opnieuw gestart, heeft zijn sessie verloren en kan geen insuline meer aanleveren. Verwijder de patch en start een nieuwe patch.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Actieve bolus</string>
@@ -94,12 +94,12 @@
     <string name="medtrum_deactivate_pump_confirm">Weet u het zeker? Deze actie kan niet ongedaan worden gemaakt!!</string>
     <string name="press_next_or_cancel">Druk op <b>Volgende</b> om te deactiveren of op <b>Annuleren</b> om terug te keren naar het hoofdscherm.</string>
     <string name="deactivating_pump">Patch deactiveren. Even geduld.</string>
-    <string name="deactivating_error">Deactivatie mislukt, druk op <b>Weggooien</b> om de patch te vergeten.</string>
+    <string name="deactivating_error">Deactivatie mislukt, druk op <b>Verwijderen</b> om de patch te vergeten.</string>
     <string name="retract_needle">Trek de naald terug. Verwijder patch van het lichaam.</string>
     <string name="remove_base_discard_patch">Verwijder pomp basis en voer de gebruikte patch op de juiste manier af.</string>
     <string name="press_next_or_OK">Druk op <b>OK</b> om terug te keren naar het hoofdscherm. Druk op <b>Volgende</b> om te beginnen met de activering van een nieuwe patch.</string>
     <string name="activation_in_progress">Oeps! Er ging iets mis, het lijkt erop dat er al een activatie bezig is.</string>
-    <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of op <b>Weggooien</b> om de activeringsstatus te resetten.</string>
+    <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of op <b>Verwijderen</b> om de activeringsstatus te resetten.</string>
     <string name="reading_activation_status">Een ogenblik geduld, activeringsstatus van de pomp wordt gelezen.</string>
     <!-- settings-->
     <string name="alarm_setting_title">Alarminstellingen</string>

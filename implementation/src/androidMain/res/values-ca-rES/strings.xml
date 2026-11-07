@@ -12,10 +12,8 @@
     <string name="filenotfound">Arxiu no trobat</string>
     <string name="ue_exported">Entrades d\'usuari exportades</string>
     <string name="exported_at" comment="at placeholder we add export date">exportat a les %1$s</string>
-    <string name="exported_less_than_hour_ago">exportat fa menys d\'una hora</string>
     <string name="metadata_warning_different_flavour">La configuració va ser creada amb una altra versió d\'AAPS (%1$s) i ara teniu la: %2$s.\n\nAlguns dels valors poden faltar o no ser vàlids - si us plau, comproveu la configuració després d\'importar.</string>
     <string name="metadata_warning_different_device">La configuració va ser creada en un altre dispositiu. No hi ha problema si esteu important des d\'un telèfon més antic/diferent però comproveu que la configuració importada és correcta!</string>
-    <string name="metadata_warning_old_export">La configuració importada és de fa %1$s dies! Potser teniu una configuració més recent o heu escollit el fitxer incorrecte? Recordeu exportar la configuració regularment!</string>
     <string name="metadata_warning_date_format">Format de data-hora incorrecte!</string>
     <string name="metadata_warning_different_version">Configuració d\'una versió menor diferent. Cap problema si esteu important després d\'una actualització, però comproveu després d\'importar que la configuració encara sigui correcta!</string>
     <string name="metadata_urgent_different_version">Configuració d\'una versió major diferent. Les versions majors poden tenir grans diferències i tenir configuracions incompatibles! Comproveu després d\'importar que la configuració encara sigui correcta!</string>

@@ -42,7 +42,7 @@
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">Dager</string>
     <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
-    <string name="cgp_title">Glukose Pentagon (CGP) – 14 dager</string>
+    <string name="cgp_title">Glukosepentagon (CGP) – 14 dager</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
@@ -56,7 +56,7 @@
     <string name="cgp_pgr_moderate">Moderat risiko</string>
     <string name="cgp_pgr_high">Høy risiko</string>
     <string name="cgp_pgr_extremely_high">Ekstremt høy risiko</string>
-    <string name="do_you_want_recalculate_tdd_stats">Vil du rekalkulere TDD-statistikken?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Vil du beregne TDD-statistikken på nytt?</string>
     <string name="calculation_in_progress">Beregning pågår</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vekt</string>
@@ -68,23 +68,23 @@
     <!-- SiteRotationDialog -->
     <string name="edit_site">Rediger</string>
     <string name="record_site_location">Infusjonssted: %1$s</string>
-    <string name="record_site_arrow">Områdepil: %1$s</string>
-    <string name="record_site_note">Notat: %1$s</string>
-    <string name="delete_site_note">Notat slettet</string>
+    <string name="record_site_arrow">Pil: %1$s</string>
+    <string name="record_site_note">Merknad: %1$s</string>
+    <string name="delete_site_note">Merknad slettet</string>
     <!-- FillDialog -->
-    <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
+    <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for infusjonssettet ditt!</string>
     <string name="record_pump_site_change">Logg bytte av pumpested</string>
-    <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
+    <string name="record_insulin_cartridge_change">Logg bytte av insulinampulle</string>
     <string name="fill_prime_amount">Prime-mengde</string>
     <string name="fill_pump_units_note">Prime-mengden er i pumpeenheter</string>
-    <string name="fill_insulin_change">Bytt insulin til: %1$s (profilbytte vil bli brukt)</string>
+    <string name="fill_insulin_change">Bytt insulin til: %1$s (et profilbytte blir utført)</string>
     <!-- Scene -->
     <string name="scene_cat_aaps">AAPS</string>
     <string name="scene_cat_activity">Aktivitet</string>
     <string name="scene_cat_health">Helse</string>
     <string name="scene_cat_food">Mat</string>
     <string name="scene_cat_sleep">Søvn</string>
-    <string name="scene_cat_dailylife">Daglig liv</string>
+    <string name="scene_cat_dailylife">Hverdag</string>
     <string name="scene_cat_wellness">Velvære</string>
     <string name="scene_cat_general">Generelt</string>
     <string name="aaps_tt_high_icon_label">Midlertidig mål</string>
@@ -101,7 +101,7 @@
     <string name="aaps_note_icon_label">Merknad</string>
     <string name="aaps_automation_icon_label">Automasjon</string>
     <string name="aaps_calibration_icon_label">Kalibrering</string>
-    <string name="exercise_icon_label">Løpe</string>
+    <string name="exercise_icon_label">Løping</string>
     <string name="fitness_icon_label">Trening</string>
     <string name="swim_icon_label">Svømming</string>
     <string name="hiking_icon_label">Gåturer</string>
@@ -118,7 +118,7 @@
     <string name="surfing_icon_label">Surfing</string>
     <string name="hospital_icon_label">Sykehus</string>
     <string name="medication_icon_label">Medisinering</string>
-    <string name="monitor_heart_icon_label">Overvåk</string>
+    <string name="monitor_heart_icon_label">Overvåking</string>
     <string name="thermostat_icon_label">Termostat</string>
     <string name="blood_type_icon_label">Blod</string>
     <string name="health_safety_icon_label">Helse</string>
@@ -129,7 +129,7 @@
     <string name="bakery_icon_label">Bakeri</string>
     <string name="sleep_icon_label">Søvn</string>
     <string name="night_icon_label">Natt</string>
-    <string name="nights_stay_icon_label">Natt opphold</string>
+    <string name="nights_stay_icon_label">Overnatting</string>
     <string name="hotel_icon_label">Hotell</string>
     <string name="seat_flat_icon_label">Hvile</string>
     <string name="work_icon_label">Arbeid</string>
@@ -138,7 +138,7 @@
     <string name="car_icon_label">Bilkjøring</string>
     <string name="flight_icon_label">Flyreise</string>
     <string name="shopping_icon_label">Shopping</string>
-    <string name="relax_icon_label">Meditere</string>
+    <string name="relax_icon_label">Meditasjon</string>
     <string name="spa_icon_label">Spa</string>
     <string name="heart_icon_label">Hjerte</string>
     <string name="psychology_icon_label">Sinn</string>
@@ -153,12 +153,12 @@
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
     <string name="insulin_external_update_title">Insulinkonfigurasjonen er endret</string>
-    <string name="insulin_external_update_message">En paret klient har endret insulinkonfigurasjonen. Trykk OK for å laste inn endringene og forkaste ulagrede endringer, eller Avbryt for å fortsette redigeringen (neste lagring vil overskrive deres endringer).</string>
-    <string name="insulin_edit_target_gone">Denne insulinen ble fjernet et annet sted, så endringen kunne ikke lagres. Listen er lastet inn på nytt.</string>
+    <string name="insulin_external_update_message">En sammenkoblet klient har endret insulinkonfigurasjonen. Trykk OK for å laste inn endringene og forkaste ulagrede endringer, eller Avbryt for å fortsette redigeringen (neste lagring vil overskrive deres endringer).</string>
+    <string name="insulin_edit_target_gone">Dette insulinet ble fjernet et annet sted, så endringen kunne ikke lagres. Listen er lastet inn på nytt.</string>
     <string name="insulin_activation_applied">Insulinaktivering utført</string>
     <!-- Client→master round-trip pending dialog -->
     <string name="clientcontrol_pending_working_title">Utfører…</string>
-    <string name="clientcontrol_pending_working_text">Venter på at hovedenhet skal bekrefte…</string>
+    <string name="clientcontrol_pending_working_text">Venter på at hovedenheten skal bekrefte…</string>
     <string name="clientcontrol_pending_rejected_title">Ikke utført</string>
     <string name="clientcontrol_pending_failed_format">%1$s kunne ikke utføres.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
@@ -175,7 +175,7 @@
     <string name="cannot_delete_last_insulin">Kan ikke slette siste insulin</string>
     <string name="cannot_delete_active_insulin">Kan ikke slette aktivt insulin</string>
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
-    <string name="percentage_label">Percentage</string>
+    <string name="percentage_label">Prosent</string>
     <!-- LoopDialog -->
     <string name="disconnectpump">Koble fra pumpen</string>
     <string name="resume">Gjenoppta</string>
@@ -194,7 +194,7 @@
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IK: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% karbo umiddelbart, ingen forlenget karbo</string>
     <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Karbo redusert med %1$d%%, lagt til eKarbo %2$d%% forsinket med %3$d min over %4$d t</string>
-    <string name="wizard_include_info">Trykk for å inkludere/ekskludere fra beregning:\n• BS — blodsukker (på ved start)\n• TT — midl. mål (på ved start)\n• Trend — BS-trend (siste huskede tilstand)\n• IOB — insulin ombord (på ved start)\n• COB — karbo ombord (siste huskede tilstand)</string>
+    <string name="wizard_include_info">Trykk for å inkludere/ekskludere fra beregningen:\n• BS — blodsukker (på ved start)\n• TT — midl. mål (på ved start)\n• Trend — BS-trend (siste valg huskes)\n• IOB — aktivt insulin (på ved start)\n• COB — aktive karbohydrater (siste valg huskes)</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -207,11 +207,11 @@
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glukosegraf. Nylige verdier %1$s. %2$s. %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Vis kontroller</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Varsler: %1$d</string>
-    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">intet midlertidig mål, profilmål</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">ikke noe midlertidig mål, profilmål</string>
     <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">justert av loop</string>
-    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s ved %2$s</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s kl. %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
-    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">gammel avlesning</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">gammel måling</string>
     <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Glukosegraf. Nylige verdier %1$s</string>
     <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Prediksjoner. %1$s</string>
@@ -222,7 +222,7 @@
     <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">COB-prediksjon</string>
     <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Absorbert COB-prediksjon</string>
     <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">UAM-prediksjon</string>
-    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Prediksjon for null-midlertidig basal</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Prediksjon for null midlertidig basal</string>
     <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">handling nødvendig</string>
     <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d tilgjengelig</string>
     <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d av %2$d fullført</string>
@@ -233,8 +233,8 @@
     <string name="activate_profile">Aktiver profil</string>
     <string name="remove_label">Fjern</string>
     <string name="active_profile_indicator">AKTIV</string>
-    <string name="confirm_remove_profile">Fjern profil \"%1$s\"?</string>
-    <string name="confirm_clone_profile">Klon profil \"%1$s\"?</string>
+    <string name="confirm_remove_profile">Fjern profil «%1$s»?</string>
+    <string name="confirm_clone_profile">Dupliser profil «%1$s»?</string>
     <string name="profile_no_longer_exists">Profillisten er endret i mellomtiden – prøv på nytt</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
@@ -251,17 +251,17 @@
     <string name="comparation">Sammenligning</string>
     <string name="profile_tab_1">Profil 1</string>
     <string name="profile_tab_2">Profil 2</string>
-    <string name="motol_default_profile">Standard profil</string>
+    <string name="motol_default_profile">Standardprofil</string>
     <string name="current_profile">Gjeldende profil</string>
-    <string name="available_profile">Tilgjengelige profiler</string>
+    <string name="available_profile">Tilgjengelig profil</string>
     <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f E</string>
     <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f E %3$d%%</string>
     <string name="format_with_weight">Alder: %1$d Vekt: %2$.0f kg</string>
-    <string name="dpv_default_profile">DPV standardprofil</string>
+    <string name="dpv_default_profile">DPV-standardprofil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Knappetekst</string>
-    <string name="quick_wizard_mode_wizard">Hurtigknapp</string>
+    <string name="quick_wizard_mode_wizard">Kalkulator</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Karbo</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
@@ -289,22 +289,22 @@
     <string name="carb_time">Karbotid</string>
     <string name="save_changes_question">Lagre endringer i denne oppføringen?</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
-    <string name="carbs_constraint_violation">Karbo begrenset av begrensninger</string>
-    <string name="insulin_constraint_violation">Insulin begrenset av begrensninger</string>
+    <string name="carbs_constraint_violation">Karbomengden er redusert av begrensninger</string>
+    <string name="insulin_constraint_violation">Insulinmengden er redusert av begrensninger</string>
     <string name="confirm_treatment">Bekreft behandling</string>
-    <string name="recalculate">Rekalkuler</string>
+    <string name="recalculate">Beregn på nytt</string>
     <!--    Widget-->
     <string name="use_black_color">Bruk svart farge</string>
-    <string name="widget_configuration">Widget konfigurasjon</string>
+    <string name="widget_configuration">Widget-konfigurasjon</string>
     <string name="until_changed">Inntil endret</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Tillatelser kreves</string>
     <string name="permission_sheet_subtitle">Noen tillatelser er nødvendige for at appen skal fungere ordentlig</string>
     <string name="permission_grant">Tillat</string>
     <string name="permission_change">Endre</string>
-    <string name="permission_denied_go_to_settings">Tillatelse nektet permanent. Vennligst aktiver det i appinnstillingene.</string>
+    <string name="permission_denied_go_to_settings">Tillatelsen er avslått permanent. Aktiver den i appinnstillingene.</string>
     <string name="permission_open_settings">Innstillinger</string>
-    <string name="permission_directory_picker_error">Kan ikke starte mappe-velgeren. Vanligvis et problem med Android eller Family Link.</string>
+    <string name="permission_directory_picker_error">Kan ikke starte mappevelgeren. Vanligvis et problem med Android eller Family Link.</string>
     <string name="permission_nav_label">Tillatelser</string>
     <!--    TDD Cycle Pattern -->
     <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Syklus</string>
@@ -326,7 +326,7 @@
     <string name="quick_launch_selected_actions">Valgte handlinger</string>
     <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Legg til %1$s</string>
     <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Fjern %1$s</string>
-    <string name="quick_launch_no_dynamic_items">Ingen ting tilgjengelig</string>
+    <string name="quick_launch_no_dynamic_items">Ingen elementer tilgjengelig</string>
     <string name="quick_launch_category_treatment">Behandling</string>
     <string name="quick_launch_category_care">Helseportal</string>
     <string name="quick_launch_category_profile">Profil</string>
@@ -334,8 +334,8 @@
     <string name="quick_launch_category_quick_wizard">Hurtigknapp</string>
     <string name="quick_launch_category_automation">Automasjon</string>
     <string name="quick_launch_all_selected">Alle elementer valgt</string>
-    <string name="quick_launch_no_quick_wizard">Legg til hurtigknapp-oppføringer for å bruke dem her</string>
-    <string name="quick_launch_no_automation">Legg til automasjon-brukerhandlinger for å bruke dem her</string>
+    <string name="quick_launch_no_quick_wizard">Legg til hurtigknapper for å bruke dem her</string>
+    <string name="quick_launch_no_automation">Opprett brukerhandlinger i Automasjon for å bruke dem her</string>
     <string name="quick_launch_no_tt_presets">Legg til forhåndsinnstillinger for midlertidige mål for å bruke dem her</string>
     <string name="quick_launch_no_profiles">Opprett profiler i Lokal profil for å bruke dem her</string>
     <string name="quick_launch_edit_profile_preset">Rediger forhåndsinnstilling for profil</string>
@@ -351,9 +351,9 @@
     <string name="widget_rm_resume">Gjenoppta</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Sensoren er fortsatt i oppvarmingsperioden. Kalibrering blir tilgjengelig kl. %1$s.</string>
-    <string name="cal_precheck_no_session">Ingen aktiv sensorsesjon.</string>
+    <string name="cal_precheck_no_session">Ingen aktiv sensorøkt.</string>
     <string name="cal_precheck_no_pair">Ingen CGM-måling de siste 10 minuttene. Kontroller sensorforbindelsen.</string>
     <string name="cal_precheck_delta_too_high">Glukosen endrer seg for raskt (Δ %1$s %3$s per 5 min, grense %2$s). Vent til den er stabil.</string>
-    <string name="cal_precheck_mark_sensor_change">Registrer sensorbytte</string>
+    <string name="cal_precheck_mark_sensor_change">Logg sensorbytte</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>

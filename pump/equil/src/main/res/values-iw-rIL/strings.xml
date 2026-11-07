@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">משאבת פאץ\' Equil גרסה 5.3 ומעלה </string>
+    <string name="equil_pump_description">משאבת פאץ\' Equil גרסה 5.3 ומעלה</string>
     <!--  start  -->
     <string name="equil_basal_speed">קצב בזאלי בסיסי</string>
     <string name="equil_dressing">החלפת מכל</string>

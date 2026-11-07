@@ -6,9 +6,9 @@
     <string name="automation_new_rule">Regel toevoegen</string>
     <string name="automation_empty_desc">Maak een regel om acties automatisch uit te voeren op basis van triggers.</string>
     <string name="automation_edit_rule">Regel bewerken</string>
-    <string name="automation_discard_title">Wijzigingen weggooien?</string>
-    <string name="automation_discard_message">De regel is onvolledig en kan niet worden opgeslagen. Wijzigingen weggooien?</string>
-    <string name="automation_discard_confirm">Weggooien</string>
+    <string name="automation_discard_title">Wijzigingen verwijderen?</string>
+    <string name="automation_discard_message">De regel is onvolledig en kan niet worden opgeslagen. Wijzigingen verwijderen?</string>
+    <string name="automation_discard_confirm">Verwijderen</string>
     <string name="automation_category_time">Tijd &amp; planning</string>
     <string name="automation_category_glucose">Glucose &amp; behandeling</string>
     <string name="automation_category_device">Apparaatstatus</string>
@@ -88,7 +88,7 @@
     <string name="add_short">TOEV</string>
     <string name="temptargetcompared">Tijdelijk streefdoel %1$s</string>
     <string name="btdevicecompared">Bluetooth verbinding met apparaat %1$s %2$s</string>
-    <string name="btdevice">Verbinding met Bluetooth apparaat </string>
+    <string name="btdevice">Verbinding met Bluetooth apparaat</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Gevoeligheid %1$s %2$s %%</string>
     <string name="autosenslabel">Gevoeligheid %</string>
@@ -124,7 +124,7 @@
     <string name="condition">Voorwaarde:</string>
     <string name="action">Actie:</string>
     <string name="taskname">Taaknaam</string>
-    <string name="edit_short">EDIT</string>
+    <string name="edit_short">BEWERKEN</string>
     <string name="preconditions">Voorwaarden:</string>
     <string name="user_action">Gebruikersactie</string>
     <string name="system_automation">Systeem automatisering</string>
@@ -138,10 +138,10 @@
     <!--    Autotune-->
     <string name="autotune_profile_name">Autotune profiel %1$s</string>
     <string name="autotune_run">Autotune uitvoeren</string>
-    <string name="autotune_run_without_autoswitch">Autotune uitgevoerd zonder profiel wissel</string>
-    <string name="autotune_run_with_autoswitch">Autotune uitgevoerd en profiel automatisch gewisseld</string>
-    <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
-    <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
+    <string name="autotune_run_without_autoswitch">Autotune is uitgevoerd zonder profielwissel</string>
+    <string name="autotune_run_with_autoswitch">Autotune is uitgevoerd en profiel is automatisch gewisseld</string>
+    <string name="autotune_run_with_error">Fout tijdens het uitvoeren van Autotune</string>
+    <string name="autotune_run_cancelled">Autotune wordt reeds uitgevoerd. Het nieuwe verzoek is geannuleerd</string>
     <!--    Steps count-->
     <string name="triggerStepsCountLabel">Aantal stappen</string>
     <string name="triggerStepsCountDesc">Aantal stappen per %1$s minuten %2$s %3$.0f</string>
@@ -150,7 +150,7 @@
     <!--    SMB mode-->
     <string name="changeSmbState">SMB in-/uitschakelen</string>
     <string name="changeSmbTo">Wijzig SMB naar %1$s</string>
-    <string name="newSmbMode">Nieuwe SMB modus:</string>
+    <string name="newSmbMode">Nieuwe SMB-modus:</string>
     <string name="on">AAN</string>
     <string name="off">UIT</string>
     <!--    Smoothing-->

@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Kunne ikke bekræfte aktiveringsforløb. Prøv igen.</string>
     <string name="omnipod_common_error_pod_suspended">Pod er pauset</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Kunne ikke afspille test bip</string>
-    <string name="omnipod_common_error_time_out_of_sync">Tiden på Pod er ude af synk. Opdater venligst tiden i Omnipod fanen.</string>
     <string name="omnipod_common_error_unexpected_exception">Der opstod en uventet fejl. Rapporter venligst! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alarm konfiguration er blevet opdateret i Pod.</string>
@@ -79,7 +78,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal bip aktiveret</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB bip aktiveret</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR bip aktiveret</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knappen \"Suspendér levering\" i Omnipod fanen</string>
     <string name="omnipod_common_preferences_time_change_enabled">Automatisk tidszone og sommer/vintertid aktiveret</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Udløbspåmindelse aktiveret</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Efter den er aktiveret, vil podden bippe når den specificerede mængde tid er gået</string>

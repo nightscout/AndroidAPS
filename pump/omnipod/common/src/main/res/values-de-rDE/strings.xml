@@ -20,13 +20,13 @@
     <string name="omnipod_common_error_failed_to_suspend_delivery">Insulinabgabe konnte nicht unterbrochen werden.</string>
     <string name="omnipod_common_error_failed_to_set_time">Zeiteinstellung fehlgeschlagen</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Insulinabgabe konnte nicht gestartet werden.</string>
-    <string name="omnipod_common_error_failed_to_initialize_pod">Pod konnte nicht initalisiert werden.</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Pod konnte nicht initialisiert werden.</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Kanüle konnte nicht eingeführt werden.</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Die Aktivierungszeit des Pods wurde überschritten. Dieser Pod kann nicht mehr aktiviert werden.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Überprüfen des Aktivierungsfortschritts gescheitert. Bitte erneut versuchen.</string>
     <string name="omnipod_common_error_pod_suspended">Pod unterbrochen</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Test-Piepton konnte nicht abgespielt werden</string>
-    <string name="omnipod_common_error_time_out_of_sync">Zeit auf dem Pod ist nicht synchron. Aktualisiere die Zeit auf der Registerkarte \"Omnipod\".</string>
+    <string name="omnipod_common_error_time_out_of_sync">Die Uhrzeit des Pods ist nicht synchron. Bitte aktualisiere sie in der Pumpenansicht.</string>
     <string name="omnipod_common_error_unexpected_exception">Es ist ein unerwarteter Fehler aufgetreten. Bitte melden! (%1$s: %2$s)</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alarm-Einstellungen auf dem Pod geändert.</string>
@@ -36,6 +36,7 @@
     <string name="omnipod_common_overview_button_suspend_delivery">Unterbrechungen</string>
     <string name="omnipod_common_overview_button_resume_delivery">Abgabe fortsetzen</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarme stummschalten</string>
+    <string name="omnipod_common_overview_pod_status">Pod Status</string>
     <string name="omnipod_common_overview_total_delivered">Insgesamt abgegeben</string>
     <string name="omnipod_common_overview_pod_unique_id">Eindeutige ID</string>
     <string name="omnipod_common_overview_lot_number">LOT Nummer</string>
@@ -48,6 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Aktive Pod-Warnungen</string>
     <string name="omnipod_common_overview_firmware_version">Firmware-Version</string>
     <string name="omnipod_common_overview_time_on_pod">Zeit auf dem Pod</string>
+    <string name="omnipod_common_uncertain">unsicher</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Du hast noch nicht alle Schritte abgeschlossen. Willst Du wirklich beenden?</string>
@@ -65,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Pod deaktivieren</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Drücke <b>Weiter</b> um den Pod zu deaktivieren.\n\n<b>Hinweis:</b> Dies unterbricht die gesamte Insulinabgabe und deaktiviert den Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Ein deaktivierter Pod kann nicht mehr verwendet werden. Diesen Pod jetzt deaktivieren?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktiviere den Pod...</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktiviere den Pod.\n\nNachdem die Deaktivierung komplett abgeschlossen wurde, kannst Du <b>Weiter</b> drücken.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktiviert</string>
@@ -78,9 +81,11 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal-Piep aktiviert</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-Piep aktiviert</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR-Piep aktiviert</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Button \'Insulinabgabe unterbrechen\' im Omnipod Tab anzeigen</string>
     <string name="omnipod_common_preferences_time_change_enabled">Sommerzeit/Zeitzonen-Erkennung aktiviert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Ablauferinnerung aktiviert</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Wenn aktiviert, piepst der Pod wenn die angegebene Zeit erreicht ist</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Ablaufbenachrichtigung aktiviert</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Wenn aktiviert, piepst der Pod wenn die angegebene Zeit erreicht ist und 1 Stunde vor dem Herunterfahren</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Warnung niedriger Reservoirstand aktiviert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Anzahl der Einheiten</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod-Alarme automatisch stummschalten</string>
@@ -89,7 +94,9 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bestätigungstöne</string>
     <string name="omnipod_common_preferences_category_notifications">Benachrichtigungen</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Ton für unsichere SMB Benachrichtigungen aktiviert</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Ton für unsichere Bolus-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Ton bei aktivierter Benachrichtigung über angehaltene Abgabe aktiviert</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Kein aktiver Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Einrichtung im Gange (Warten auf Pod-Aktivierung)</string>
@@ -103,6 +110,13 @@
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulinabgabe gestoppt! Tausche jetzt den Pod.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod ist abgelaufen</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulin Abgabe gestoppt. Tausche den Pod jetzt.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Verstopfung erkannt</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulin Abgabe gestoppt. Tausche den Pod jetzt. Prüfe Deinen Blutzucker</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod Fehler</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulin Abgabe gestoppt. Tausche den Pod jetzt.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod läuft in Kürze ab</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod läuft in Kürze ab</string>

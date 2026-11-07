@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">胰島素未切換：%1$s 您先前的胰島素仍在使用中。</string>
     <string name="insulin_activation_unconfirmed">無法確認胰島素是否已切換。注射前，請先檢查你的設定檔中目前啟用的是哪一種胰島素。</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">胰島素未切換。您先前的胰島素仍在使用中。\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰島素也未切換。</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰島素也未切換。如果新胰島素已在幫浦中，請勿連線幫浦，並再次執行胰島素變更。</string>
     <string name="active"><![CDATA[<已啟用的設定檔>]]></string>
     <string name="date">日期</string>
     <string name="insulin_nickname_label">胰島素暱稱</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">請選擇要在啟用時套用的設定檔。</string>
     <string name="pump_wizard_profile_gate_no_store">未建立任何設定檔。請開啟設定檔管理以建立一個，然後請再次開始啟用。</string>
     <string name="reset">重設</string>
-    <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
+    <string name="profileswitch_ismissing">找不到設定檔切換紀錄。請切換設定檔，或在 LocalProfile 中按下「註冊設定檔」。</string>
     <string name="profile">檔案</string>
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">時間偏移</string>
-    <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
+    <string name="confirm_remove_multiple_items">確定要移除 %1$d 個項目嗎？</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主手機沒有這些記錄中的 %1$d 筆，因此不會將其移除。</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
@@ -663,7 +663,7 @@
     <string name="uel_ns_queue_cleared">NS 佇列已清除</string>
     <string name="uel_ns_settings_copied">NS 設定已複製</string>
     <string name="uel_error_dialog_ok">錯誤對話框確定</string>
-    <string name="uel_error_dialog_mute">錯誤對話框靜音</string>
+    <string name="uel_error_dialog_mute">錯誤對話方塊靜音</string>
     <string name="uel_error_dialog_mute_5min">錯誤對話框靜音 5 分鐘</string>
     <string name="uel_objective_started">目標已開始</string>
     <string name="uel_objective_unstarted">目標未開始</string>
@@ -728,7 +728,7 @@
     <string name="error_in_isf_values">ISF 數值錯誤</string>
     <string name="error_in_basal_values">基礎率數值錯誤</string>
     <string name="error_in_target_values">目標值錯誤</string>
-    <string name="profile_name_contains_dot">部分設定檔名稱包含點號。\nNS 不支援此格式。\n將不會把設定檔上傳到 NS。</string>
+    <string name="profile_name_contains_dot">部分設定檔名稱含有句點。\nNS 不支援此格式。\n這些設定檔將不會上傳至 NS。</string>
     <string name="invalid_profile_not_accepted">來自 NS 的無效設定檔 %1$s 未被接受</string>
     <string name="errors">錯誤</string>
     <!-- Command Queue + readStatus reasons -->
@@ -893,7 +893,7 @@
     <string name="export_result_message_exported">設定已匯出</string>
     <string name="export_result_message_failed">設定匯出失敗!</string>
     <string name="export_result_message_about_to_expire">設定已匯出: 密碼即將過期。請手動匯出並（重新）輸入密碼。</string>
-    <string name="export_result_message_expired">設定匯出已取消: 密碼已過期。請手動匯出並（重新）輸入!</string>
+    <string name="export_result_message_expired">設定匯出已取消：密碼已逾期。請手動匯出，並重新輸入密碼！</string>
     <string name="export_result_message_disabled">警告（自動化）: 設定匯出未啟用!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">雲端匯出成功</string>
@@ -1000,7 +1000,7 @@
     <string name="cannula">套管</string>
     <string name="patch_pump">貼片式幫浦</string>
     <!-- Site Rotation -->
-    <string name="select_location">請點選下方以選擇部位</string>
+    <string name="select_location">點選下方以選擇網站</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">不要關閉我的應用程式？</string>
     <string name="fabric_upload_disabled">異常日誌上傳已停用！</string>
@@ -1046,7 +1046,7 @@
     <string name="unsaved_changes">未儲存的變更</string>
     <string name="unsaved_changes_message">你有未儲存的變更。要如何處理？</string>
     <string name="discard">捨棄</string>
-    <string name="ic_dynamic_label_warning">你的演算法可提供 IC 的動態計算。以下數值僅能在缺少資料時作為備援，或僅供參考</string>
+    <string name="ic_dynamic_label_warning">你的演算法可以動態計算 IC。以下數值僅可在資料遺失時作為備用值，或僅供參考。</string>
     <string name="isf_dynamic_label_warning">你的演算法可提供 ISF 的動態計算。以下數值僅能在缺少資料時作為備援，或僅供參考</string>
     <string name="add_time_block">新增時段</string>
     <string name="remove_entry">移除項目</string>
@@ -1109,6 +1109,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">將變更 %1$d 項設定。已變更的外掛程式將會重新啟動。</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">將變更 %1$d 項設定。已保留 %2$d 項幫浦設定，因此你的幫浦可以繼續運作。</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">匯入的設定所選擇的幫浦不在此手機上。現在已啟用 %1$s — 請檢查你的幫浦設定。</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">已從備份新增至你的胰島素清單：%1$s。目前尚未使用：請在註冊設定檔時選擇正確的胰島素，並務必在 Nightscout 下載較舊的治療資料之前完成。</string>
     <string name="import_applying">正在套用設定……</string>
     <string name="import_replace_pump_settings">同時取代幫浦設定</string>
     <string name="import_replace_pump_settings_summary">關閉此選項，可保留目前與此手機配對的幫浦。若要還原到新手機，且使用相同的幫浦，請開啟此選項。</string>

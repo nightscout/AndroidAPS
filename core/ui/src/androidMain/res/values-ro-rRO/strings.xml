@@ -58,9 +58,9 @@
     <string name="settings">Setări</string>
     <string name="open_plugin">Deschideți modulul</string>
     <string name="configbuilder_pick_one_hint">Alegeți unul. Doar unul poate fi activ odată.</string>
-    <string name="configbuilder_pick_many_hint">Alegeți oricare care se potrivește.</string>
+    <string name="configbuilder_pick_many_hint">Alegeți toate variantele potrivite.</string>
     <string name="configbuilder_no_selection_warning">Nu este selectat niciun modul în această categorie.</string>
-    <string name="configbuilder_switch_confirmation_title">Schimbați modul?</string>
+    <string name="configbuilder_switch_confirmation_title">Schimbați modulul?</string>
     <string name="configbuilder_switch_confirmation">Acest lucru va dezactiva %1$s și va activa %2$s.</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
@@ -136,7 +136,6 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina nu a fost de asemenea schimbată.</string>
     <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Pseudonim insulină</string>
@@ -226,11 +225,11 @@
     <string name="pump_wizard_profile_gate_pick">Selectați profilul pentru a fi aplicat la activare.</string>
     <string name="pump_wizard_profile_gate_no_store">Niciun profil definit. Deschideți gestionarea profilului pentru a crea unul, apoi începeți activarea din nou.</string>
     <string name="reset">Resetați</string>
-    <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
+    <string name="profileswitch_ismissing">Lipsește schimbarea de profil. Efectuați o schimbare de profil sau apăsați „Activați profil” în LocalProfile.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procentaj</string>
     <string name="timeshift_label">Decalaj</string>
-    <string name="confirm_remove_multiple_items">Sigur vreți să eliminați %1$d elemente</string>
+    <string name="confirm_remove_multiple_items">Sigur doriți să eliminați %1$d elemente?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Dispozitivul principal nu are %1$d dintre aceste înregistrări. Ele nu sunt șterse.</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
@@ -342,9 +341,9 @@
     <string name="careportal_note">Notă</string>
     <string name="careportal_question">Întrebare</string>
     <string name="careportal_exercise">Activitate fizică</string>
-    <string name="careportal_announcement_message">Anunț : %1$s</string>
+    <string name="careportal_announcement_message">Anunț: %1$s</string>
     <string name="careportal_note_message">Notă: %1$s</string>
-    <string name="careportal_question_message">Întrebare : %1$s</string>
+    <string name="careportal_question_message">Întrebare: %1$s</string>
     <string name="careportal_exercise_message">Exercițiu fizic: %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Schimbare loc pompă : %1$s</string>
     <string name="careportal_pump_site_change">Schimbare canulă/loc infuzie</string>
@@ -613,7 +612,7 @@
     <string name="uel_profile_switch">SCHIMBARE PROFIL</string>
     <string name="uel_profile_switch_cloned">SCHIMBARE PROFIL CLONATĂ</string>
     <string name="uel_closed_loop_mode">MOD BUCLĂ ÎNCHISĂ</string>
-    <string name="uel_lgs_loop_mode">MOD BUCLĂ SUSPENDARE LA HIPOGLICEMIE</string>
+    <string name="uel_lgs_loop_mode">MOD BUCLĂ SUSPENDARE LA GLICEMIE SCĂZUTĂ</string>
     <string name="uel_open_loop_mode">MOD BUCLĂ DESCHISĂ</string>
     <string name="uel_loop_disabled">BUCLĂ DEZACTIVATĂ</string>
     <string name="uel_loop_resumed">BUCLĂ RELUATĂ</string>
@@ -661,7 +660,7 @@
     <string name="uel_ns_queue_cleared">CURĂȚARE COADĂ NS</string>
     <string name="uel_ns_settings_copied">COPIERE SETĂRI NS</string>
     <string name="uel_error_dialog_ok">DIALOG EROARE OK</string>
-    <string name="uel_error_dialog_mute">AMUȚIRE DIALOG EROARE </string>
+    <string name="uel_error_dialog_mute">AMUȚIRE DIALOG EROARE</string>
     <string name="uel_error_dialog_mute_5min">AMUȚIRE DIALOG EROARE 5MIN</string>
     <string name="uel_objective_started">OBIECTIV ÎNCEPUT</string>
     <string name="uel_objective_unstarted">OBIECTIV NEÎNCEPUT</string>
@@ -726,7 +725,7 @@
     <string name="error_in_isf_values">Eroare în valorile ISF</string>
     <string name="error_in_basal_values">Eroare în valorile ratei bazale</string>
     <string name="error_in_target_values">Eroare în valorile țintă</string>
-    <string name="profile_name_contains_dot">Unele nume de profiluri conțin puncte.\nAcest lucru nu este permis de NS.\nProfilurile nu vor fi încărcate în NS.</string>
+    <string name="profile_name_contains_dot">Unele nume de profil conțin puncte.\nAcest lucru nu este suportat de NS.\nProfilurile nu vor fi încărcate în NS.</string>
     <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
     <string name="errors">Erori</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +890,7 @@
     <string name="export_result_message_exported">Setări exportate</string>
     <string name="export_result_message_failed">Exportare setări EȘUATĂ!</string>
     <string name="export_result_message_about_to_expire">Setări exportate: parolă pe cale să expire în curând. Exportați manual și (re)introduceți parola.</string>
-    <string name="export_result_message_expired">Exportare setări anulată: parola expirată. Exportați manual și (re)introduceți parola!</string>
+    <string name="export_result_message_expired">Exportul setărilor a fost anulat: parola a expirat. Exportați manual și introduceți din nou parola!</string>
     <string name="export_result_message_disabled">Avertisment (automatizare): Exportarea setărilor nu este activată!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Exportare în cloud cu succes</string>
@@ -909,7 +908,7 @@
     <string name="send_logs">Trimiteți jurnale</string>
     <string name="file_management">Gestionarea fișierelor</string>
     <string name="database_management">Gestionarea bazei de date</string>
-    <string name="data_choices">Alegeri date</string>
+    <string name="data_choices">Opțiuni de date</string>
     <string name="unattended_settings_export">Exportare nesupravegheată a setărilor</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configurare niveluri de detaliere ale jurnalului</string>
@@ -998,7 +997,7 @@
     <string name="cannula">Canulă</string>
     <string name="patch_pump">Pompă plasture</string>
     <!-- Site Rotation -->
-    <string name="select_location">Apăsați mai jos pentru a selecta locul de inserție</string>
+    <string name="select_location">Atingeți mai jos pentru a selecta locul de inserție</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Nu-mi opriți aplicația?</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivată!</string>
@@ -1094,7 +1093,7 @@
     <string name="delete_logs">Ștergeți jurnalele</string>
     <string name="logs_deleted">Jurnale șterse</string>
     <string name="aaps_directory">Dosar AAPS</string>
-    <string name="import_setting">Importați setări</string>
+    <string name="import_setting">Importați setările</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Decriptați &amp; Revizuiți</string>
     <string name="import_decrypt">Decriptați</string>
@@ -1113,6 +1112,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Setări de modificat: %1$d. Modulele modificate vor fi repornite.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Setări de modificat: %1$d. Setări ale pompei păstrate: %2$d, astfel încât pompa dumneavoastră continuă să funcționeze.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Setările importate nu au selectat nicio pompă pe care o are acest telefon. %1$s este acum activă — verificați setările pompei.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Adăugata la lista dumneavoastră de insulină din copia de rezervă: %1$s. Nu este încă în uz: selectați-o pe cea corectă când vă activați profilul, și faceți acest lucru înainte ca Nightscout să descarce tratamentele dumneavoastră mai vechi.</string>
     <string name="import_applying">Se aplică setările…</string>
     <string name="import_replace_pump_settings">Înlocuiți și setările pompei</string>
     <string name="import_replace_pump_settings_summary">Lăsați dezactivat pentru a păstra pompa cu care este asociat acest telefon. Activați când restaurați pe un telefon nou cu aceeași pompă.</string>

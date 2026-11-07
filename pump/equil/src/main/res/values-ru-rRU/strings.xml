@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="equil_pump_description">Помпа Equil Patch 5.3 или новее </string>
     <!--  start  -->
     <string name="equil_basal_speed">Базовая скорость базала</string>
     <string name="equil_dressing">Замена резервуара</string>
@@ -57,7 +56,6 @@
     <string name="equil_common_cmd_resume_delivery">Возобновить ввод</string>
     <string name="equil_common_cmd_pair">Выполнить сопряжение с Equil</string>
     <string name="equil_common_cmd_insert_cannula">Вставить катетер</string>
-    <string name="equil_common_cmd_unpair">Выполнить разъединение с Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Настроить пролонгированный болюс</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Отменить пролонгированный болюс</string>
     <!--    推杆回退-->
@@ -73,9 +71,7 @@
     <string name="equil_command_connect_error">Сбой подключения к помпе</string>
     <string name="equil_command_connect_no_response">Нет ответа от помпы</string>
     <string name="equil_command__unknown">Неизвестный статус команды</string>
-    <string name="equil_install">Установите помпу на тело</string>
     <string name="equil_settings_alarm_battery">Оповещение о низком заряде батареи</string>
-    <string name="equil_settings_alarm_insulin">Оповещение о низком запасе инсулина</string>
     <string name="equil_init_insulin_error">Инициализация резервуара не завершена</string>
     <string name="equil_history_group_all">Все</string>
     <string name="equil_history_group_pair">Сопряжение</string>
@@ -91,7 +87,6 @@
     <string name="equil_history_item3">Обнаружена блокировка инфузионной системы</string>
     <string name="equil_history_item4">Обнаружен обратный ход двигателя</string>
     <string name="equil_history_item5">Обнаружена неисправность двигателя</string>
-    <string name="equil_history_item6">Пауза на начале ввода</string>
     <string name="equil_history_item7">Ввод уже приостановлен</string>
     <string name="equil_history_item8">Автоматическое выключение неизбежно</string>
     <string name="equil_history_item9">Авто выкл!</string>

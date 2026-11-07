@@ -27,7 +27,7 @@
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
-    <string name="boluserrorcode">Įvesta: %1$.2fV Suleista: %2$.2fV. Klaidos kodas: %3$s</string>
+    <string name="boluserrorcode">Įvesta: %1$.2f V Suleista: %2$.2f V Klaidos kodas: %3$s</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
@@ -102,8 +102,8 @@
     <string name="diaconn_g8_logsuccess">Atlikta</string>
     <string name="diaconn_g8_logmealsuccess">Maistas įrašytas</string>
     <string name="diaconn_g8_errorcode_1">Negalima ieškoti dėl CRC paketo klaidos.</string>
-    <string name="diaconn_g8_errorcode_2">Neįmanoma nustatyti dėl įvesties parametro klaidos.</string>
-    <string name="diaconn_g8_errorcode_3">Neįmanoma nustatyti dėl protokolo specifikacijos klaidos.</string>
+    <string name="diaconn_g8_errorcode_2">Nepavyko nustatyti: įvesties parametro klaida.</string>
+    <string name="diaconn_g8_errorcode_3">Nepavyko nustatyti: protokolo specifikacijos klaida.</string>
     <string name="diaconn_g8_errorcode_4">Nustatytas valgymo laikas. Insulino leisti negalima.</string>
     <string name="diaconn_g8_errorcode_6">Atšaukta pompos</string>
     <string name="diaconn_g8_errorcode_7">Atliekami kiti veiksmai, apribojami programos nustatymai.</string>
@@ -113,7 +113,7 @@
     <string name="diaconn_g8_errorcode_11">Suleidimas neįmanomas dėl per žemos baterijos įkrovos.</string>
     <string name="diaconn_g8_errorcode_12">Negalima suleisti, nes nepakanka insulino.</string>
     <string name="diaconn_g8_errorcode_13">Suleidimas negalimas, nes viršijamas limitas.</string>
-    <string name="diaconn_g8_errorcode_14">Suleidimas negalimas, nes viršijama dienos riba.</string>
+    <string name="diaconn_g8_errorcode_14">Suleisti negalima, nes viršijamas šiai dienai leistinas suleidimo kiekis.</string>
     <string name="diaconn_g8_errorcode_15">Po bazės nustatymo galima pradėti leisti bazę.</string>
     <string name="diaconn_g8_logtubechange_title">Įrašyti infuzijos vamzdelio pakeitimą</string>
     <string name="diaconn_g8_logtubechange_summary">Įtraukti į Pastabas įvykį „Infuzijos vamzdelio pakeitimas“, jei jis aptinkamas istorijoje</string>

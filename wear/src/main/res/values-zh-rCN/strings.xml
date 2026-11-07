@@ -178,7 +178,6 @@
     <string name="cwf_complication_layout">小工具布局</string>
     <string name="cwf_complication_layout_description">小工具的位置和大小，取自所加载的自定义表盘。</string>
     <string name="pref_include_external">在模板中包含外部视图</string>
-    <string name="pref_switch_external">在表盘中切换外部数据</string>
     <string name="custom_pref_show_seconds">显示秒</string>
     <string name="digitalstyle_pref_your_style">您的样式</string>
     <string name="digitalstyle_style_none">无样式</string>

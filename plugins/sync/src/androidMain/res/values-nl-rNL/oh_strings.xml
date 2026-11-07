@@ -4,7 +4,7 @@
     <string name="open_humans_description">Met Open Humans kunt u uw diabetesgegevens uploaden en doneren aan wetenschappelijke projecten.</string>
     <string name="logout">Uitloggen</string>
     <string name="setup">Instellen</string>
-    <string name="setup_completed_info">Open Humans is ingesteld. Als u wilt stoppen met uploaden, klik dan op \'Uitloggen\'.</string>
+    <string name="setup_completed_info">Open Humans is ingesteld. Klik op ‘Uitloggen’ om het uploaden te stoppen.</string>
     <string name="not_setup_info">Open Humans is momenteel inactief. Klik op \'Instellen\' om gegevens te uploaden.</string>
     <string name="project_member_id">Projectdeelnemer ID: %1$s</string>
     <string name="open_humans_uploading">Uploaden naar Open Humans…</string>
@@ -25,7 +25,7 @@
     <string name="extended_boluses">Vertraagde bolus</string>
     <string name="carbohydrates">Koolhydraten</string>
     <string name="careportal_events">Careportal gebeurtenissen (behalve notities)</string>
-    <string name="profile_switches">Profiel wisselingen</string>
+    <string name="profile_switches">Profielwisselingen</string>
     <string name="total_daily_doses">Totaal Dagelijkse Doses</string>
     <string name="temporary_basal_rates">Tijdelijke basaalstanden</string>
     <string name="temporary_targets">Tijdelijke streefdoelen</string>
@@ -48,6 +48,6 @@
     <string name="finishing">Voltooien...</string>
     <string name="this_may_take_a_few_seconds">Dit kan enkele seconden duren.</string>
     <string name="we_re_done">We zijn klaar!</string>
-    <string name="silently_upload_date_note">Voortaan zal je telefoon zo nu en dan op de achtergrond gegevens uploaden.</string>
+    <string name="silently_upload_date_note">Vanaf nu uploadt de telefoon af en toe automatisch gegevens op de achtergrond.</string>
     <string name="close">Sluiten</string>
 </resources>

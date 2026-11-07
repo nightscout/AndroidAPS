@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Verbindings instellingen</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synchroniseert je data met Nightscout via de API v3</string>
     <string name="blocked_by_charging">Geblokkeerd door oplaad instellingen</string>
     <string name="blocked_by_connectivity">Geblokkeerd door verbindings instellingen</string>
@@ -39,7 +38,7 @@
     <string name="authorized_clients_method_qr_pair_summary">Scan eenmalig op de nieuwe telefoon. Het krijgt zijn eigen Nightscout token en is gekoppeld.</string>
     <string name="authorized_clients_method_qr_ns">QR-code: alleen Nightscout</string>
     <string name="authorized_clients_method_qr_ns_summary">De telefoon krijgt zijn eigen Nightscout token en kan de gegevens lezen. Hij is niet gekoppeld en kan geen opdrachten verzenden.</string>
-    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin">PIN-code</string>
     <string name="authorized_clients_method_pin_summary">Voor een telefoon zonder camera. Deze moet al verbonden zijn met Nightscout.</string>
     <string name="authorized_clients_qr_working">Nightscout token aanmaken…</string>
     <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Instellen %1$s</string>
@@ -116,12 +115,12 @@
     <string name="status_label">Status:</string>
     <string name="clear_log">Logboek wissen</string>
     <string name="full_sync">Volledige synchronisatie</string>
-    <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
+    <string name="full_sync_comment">Volledige synchronisatie uitvoeren? Dit kan een aantal uren duren. Totdat de synchronisatie is voltooid, zijn er geen nieuwe gegevens zichtbaar in NS.</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_alarm_options">Alarm opties</string>
     <string name="ns_remote_control_options">Afstandsbediening</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Indien ingeschakeld zullen uploads naar de test servers gaan in plaats van de standaard servers</string>
+    <string name="summary_tidepool_dev_servers">Indien ingeschakeld, worden uploads naar testservers verzonden in plaats van naar de reguliere servers</string>
     <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
     <string name="title_tidepool_use_ns_connection">Gebruik Nightscout-verbindingsinstellingen</string>
     <string name="summary_tidepool_use_ns_connection">Schakel dit uit om aparte verbindingsinstellingen voor Tidepool in te stellen</string>
@@ -131,7 +130,7 @@
     <string name="tidepool_purge_data">Verwijder alle gegevens</string>
     <string name="tidepool_purge_data_confirm">Alle gegevens die AAPS naar Tidepool heeft geüpload, verwijderen? Dit kan niet ongedaan worden gemaakt. Gebruik deze functie om gegevens te verwijderen die door een oudere versie zijn beschadigd, en voer vervolgens \"Volledige synchronisatie\" uit om de gegevens opnieuw te uploaden.</string>
     <string name="tidepool_full_sync_comment">Volledige synchronisatie? AAPS zal alle gegevens opnieuw naar Tidepool uploaden. Het kan even duren.</string>
-    <string name="tidepool_logout_confirm">Uitloggen uit Tidepool? Uploads stoppen totdat je opnieuw inlogt.</string>
+    <string name="tidepool_logout_confirm">Uitloggen bij Tidepool? Het versturen van gegevens wordt stopgezet totdat opnieuw wordt ingelogd.</string>
     <string name="tidepool_status_not_logged_in">Niet ingelogd</string>
     <string name="tidepool_status_no_session">Ingelogd en nog niet verbonden</string>
     <string name="tidepool_status_blocked">Geblokkeerd door verbindings instellingen</string>
@@ -197,13 +196,13 @@
     <string name="pump_old_data">TDD: Nog steeds oude gegevens! Kan niet laden van de pomp.</string>
     <string name="units_short">E</string>
     <string name="hour_short">u</string>
-    <string name="no_active_profile">Geen actieve profielwissel!</string>
+    <string name="no_active_profile">Er is geen actief profiel ingesteld!</string>
     <string name="target_only_aps_mode">Streefdoelen zijn alleen van toepassing in de APS modus!</string>
     <string name="no_history">Geen geschiedenisgegevens!</string>
     <string name="temp_target">Tijdelijk streefdoel</string>
     <string name="until">tot</string>
     <string name="default_range">Standaard streefbereik</string>
-    <string name="target">streefwaarde</string>
+    <string name="target">streefdoel</string>
     <string name="rate_duration">Basaal: %1$.2fE/uur (%2$.2f%%) \nDuur %3$d min</string>
     <string name="no_profile">Geen profiel geladen</string>
     <string name="aps_only">Alleen gebruiken in de APS modus!</string>
@@ -221,7 +220,7 @@
     <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Probeer het opnieuw.</string>
     <string name="wear_action_loop_state_invalid">Ongeldige loop status aangevraagd</string>
-    <string name="wear_action_running_mode_title">Bedrijfsmodus</string>
+    <string name="wear_action_running_mode_title">Loopmodus</string>
     <string name="garmin_request_key">Sleutel aanvragen</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Commando\'s</string>
@@ -230,16 +229,16 @@
     <string name="smscommunicator_tab_otp_label">Authenticatie instellingen</string>
     <string name="smscommunicator_code_verify_label">Te controleren code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">De verificatiecode bestaat uit 6 cijfers die worden afgebeeld door de Authenticator-app (bekend als OTP), gevolgd door 3 of meer cijfers van de verplichte PIN-code.</string>
+    <string name="smscommunicator_code_verify_info">De verificatiecode bestaat uit de 6 cijfers die worden weergegeven in de Authenticator-app (de eenmalige code, OTP), gevolgd door 3 of meer cijfers van de verplichte pincode.</string>
     <string name="smscommunicator_otp_reset_btn">Reset Authenticatie</string>
     <string name="smscommunicator_otp_reset_title">Reset Authenticatie-sleutel</string>
-    <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Authenticatie-sleutel wilt resetten? Met deze actie maak je alle Authenticatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
+    <string name="smscommunicator_otp_reset_prompt">Authenticator-sleutel resetten? Alle ingestelde authenticatie-instellingen op verbonden apparaten worden hierdoor ongeldig en moeten opnieuw worden ingesteld.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authenticatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Door de authenticator opnieuw in te stellen maakt u alle reeds aangemaakte authenticatoren ongeldig. U moet ze opnieuw instellen!</string>
+    <string name="smscommunicator_otp_reset_warning">Door de authenticator te resetten, worden alle ingestelde authenticators ongeldig. Deze moeten daarna opnieuw worden ingesteld!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">ONGELDIGE LENGTE!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">FOUTIEVE PIN</string>
@@ -250,10 +249,10 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Om een maaltijd bolus van %1$.2fE te geven antwoord met de code %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Om tijdelijk streefdoel %1$s in te stellen antwoord met code %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Om tijdelijk streefdoel te annuleren antwoord met code %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">Om de SMS Remote Service uit te zetten, antwoord met code %1$s.\n\nDenk er aan dat je deze alleen weer aan kunt zetten op de AAPS master smartphone.</string>
+    <string name="smscommunicator_stops_ns_with_code">Antwoord met de code %1$s om de SMS Remote Service uit te schakelen.\n\nHoud er rekening mee dat deze alleen opnieuw kan worden geactiveerd vanaf de AAPS-mastertelefoon zelf.</string>
     <string name="smscommunicator_stopped_sms">De controle via SMS is uitgezet. Gebruik AAPS op de master smartphone om deze weer te aan te zetten.</string>
     <string name="smscommunicator_calibration_reply_with_code">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus is mislukt. Controleer werkelijke status voordat je een andere opdracht verzendt!</string>
+    <string name="smscommunicator_bolus_failed">Bolus is mislukt. Controleer de daadwerkelijke status voordat een nieuwe opdracht wordt gegeven!</string>
     <string name="smscommunicator_bolus_delivered">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="smscommunicator_meal_bolus_delivered">Maaltijdbolus van %1$.2f E succesvol toegediend</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Streefdoel %1$s gedurende %2$d minuten</string>
@@ -269,29 +268,29 @@
     <string name="smscommunicator_remote_command_not_allowed">Commando\'s op afstand zijn niet toegestaan</string>
     <string name="smscommunicator_remote_command_not_possible">Opdracht op afstand is niet mogelijk</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus op afstand niet beschikbaar. Probeer het later opnieuw.</string>
-    <string name="smscommunicator_basal_reply_with_code">Om een basaal van %1$.2f E/uur gedurende %2$d min te starten, antwoord met code %3$s</string>
-    <string name="smscommunicator_profile_reply_with_code">Om naar profiel %1$s %2$d%% te wisselen antwoord met code %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">Om een vertraagde bolus van %1$.2f E gedurende %2$d min te starten, antwoord met code %3$s</string>
-    <string name="smscommunicator_carbs_reply_with_code">Om %1$dg in te voeren om %2$s antwoord met code %3$s</string>
-    <string name="smscommunicator_basal_pct_reply_with_code">Om een basaal van %1$d%% gedurende %2$d min te starten antwoord met code %3$s</string>
-    <string name="smscommunicator_suspend_reply_with_code">Om de loop te onderbreken gedurende %1$d minuten antwoord met de code %2$s</string>
-    <string name="smscommunicator_loop_resume_reply_with_code">Om loop te hervatten antwoord met code %1$s</string>
-    <string name="smscommunicator_loop_disable_reply_with_code">Om loop uit te schakelen antwoord met code %1$s</string>
-    <string name="smscommunicator_restart_reply_with_code">Om AAPS te herstarten, antwoord met code %1$s</string>
+    <string name="smscommunicator_basal_reply_with_code">Antwoord met de code %3$s om gedurende %2$d minuten een basaalstand van %1$.2f E/u in te stellen</string>
+    <string name="smscommunicator_profile_reply_with_code">Antwoord met code %3$s om naar profiel %1$s %2$d%% te wisselen</string>
+    <string name="smscommunicator_extended_reply_with_code">Antwoord met code %3$s om een verlengde bolus van %1$.2f E gedurende %2$d minuten te starten</string>
+    <string name="smscommunicator_carbs_reply_with_code">Antwoord met code %3$s om %1$dg koolhydraten om %2$s in te voeren</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Antwoord met code %3$s om gedurende %2$d minuten een basaalstand van %1$d%% in te stellen</string>
+    <string name="smscommunicator_suspend_reply_with_code">Antwoord met code %2$s om de loop gedurende %1$d minuten te onderbreken</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Antwoord met code %1$s om de loop te hervatten</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Antwoord met code %1$s om de loop uit te schakelen</string>
+    <string name="smscommunicator_restart_reply_with_code">Antwoord met code %1$s om AAPS opnieuw op te starten</string>
     <string name="smscommunicator_restarting">AAPS wordt opnieuw opgestart</string>
-    <string name="smscommunicator_tempbasal_set">Tijdelijk basaal %1$.2fE/uur voor %2$d minuten succesvol gestart</string>
-    <string name="smscommunicator_extended_set">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>
-    <string name="smscommunicator_carbs_set">Koolhydraten %1$d g succesvol ingevoerd</string>
+    <string name="smscommunicator_tempbasal_set">Tijdelijk basaal van %1$.2f E/u gedurende %2$d minuten is succesvol gestart</string>
+    <string name="smscommunicator_extended_set">Verlengde bolus van %1$.2fE voor %2$d minuten is succesvol gestart</string>
+    <string name="smscommunicator_carbs_set">%1$dg koolhydraten succesvol ingevoerd</string>
     <string name="smscommunicator_carbs_failed">Invoeren van %1$dg koolhydraten is mislukt</string>
-    <string name="smscommunicator_tempbasal_set_percent">Tijdelijk basaal van %1$d%% voor %2$d minuten succesvol gestart</string>
-    <string name="smscommunicator_tempbasal_failed">Start tijdelijk basaal mislukt</string>
-    <string name="smscommunicator_extended_failed">Starten vertraagde bolus is mislukt</string>
-    <string name="smscommunicator_basal_stop_reply_with_code">Om het tijdelijke basaal te stoppen antwoord met de code %1$s</string>
-    <string name="smscommunicator_extended_stop_reply_with_code">Om de vertraagde bolus te stoppen antwoord met de code %1$s</string>
-    <string name="smscommunicator_tempbasal_canceled">Tijdelijk basaal geannuleerd</string>
-    <string name="smscommunicator_extended_canceled">Vertraagde bolus is geannuleerd</string>
-    <string name="smscommunicator_tempbasal_cancel_failed">Afbreken van tijdelijk basaal mislukt</string>
-    <string name="smscommunicator_extended_cancel_failed">Annuleren van vertraagde bolus is mislukt</string>
+    <string name="smscommunicator_tempbasal_set_percent">Tijdelijk basaal van %1$d%% gedurende %2$d minuten is succesvol gestart</string>
+    <string name="smscommunicator_tempbasal_failed">Het starten van de tijdelijke basaalstand is mislukt</string>
+    <string name="smscommunicator_extended_failed">Het starten van de vertraagde bolus is mislukt</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Antwoord met de code %1$s om het tijdelijke basaal te stoppen</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Antwoord met de code %1$s om de verlengde bolus te stoppen</string>
+    <string name="smscommunicator_tempbasal_canceled">Tijdelijke basaalstand is geannuleerd</string>
+    <string name="smscommunicator_extended_canceled">Verlengde bolus is geannuleerd</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Het annuleren van de tijdelijke basaalstand is mislukt</string>
+    <string name="smscommunicator_extended_cancel_failed">Het annuleren van de verlengde bolus is mislukt</string>
     <string name="smscommunicator_unknown_command">Onbekende opdracht of verkeerd antwoord</string>
     <string name="smscommunicator_another_bolus_in_queue">Er staat een andere bolus in de wachtrij. Probeer het later opnieuw.</string>
     <string name="smscommunicator_wrong_duration">Verkeerde tijdsduur</string>
@@ -303,7 +302,7 @@
     <string name="smscommunicator_message_body">Ongeldige inhoud van het bericht</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Om van Loop mode te wisselen naar LGS (Low Glucose Suspend) antwoord met code %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Om van Loop mode te wisselen naar Closed Loop antwoord met code %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Huidige bedrijfsmodus: %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Huidige loopmodus: %1$s</string>
     <string name="wrong_format">Verkeerde invoer</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Laatste BG:</string>
@@ -314,9 +313,9 @@
     <string name="sms_min_ago">%1$dmin geleden</string>
     <string name="sms_loop_suspended_for">Gepauzeerd (%1$d m)</string>
     <string name="sms_read_status_failed">Lezen van status mislukt</string>
-    <string name="sms_profile_switch_created">Profiel wissel aangemaakt</string>
+    <string name="sms_profile_switch_created">Profielwissel aangemaakt</string>
     <string name="sms_wrong_tbr_duration">Tijdelijk basaal duur moet een veelvoud van %1$d minuten en groter dan 0 zijn.</string>
-    <string name="sms_tbr_percent_only">Deze pomp accepteert een tijdelijke basale snelheid alleen in procenten, niet in E/u.</string>
+    <string name="sms_tbr_percent_only">Deze pomp accepteert een tijdelijke basaalstand alleen in procenten, niet in E/u.</string>
     <string name="sms_tbr_absolute_only">Deze pomp accepteert een tijdelijke basaalstand alleen in E/u, niet in procenten.</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
     <string name="permission_sms_title">SMS</string>

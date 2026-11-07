@@ -105,7 +105,7 @@
     <string name="selectedpump">Vald pump</string>
     <string name="rs_loginsulinchange_title">Logga reservoarbyten</string>
     <string name="rs_loginsulinchange_summary">Logga reservoarbyte automatiskt när det upptäcks i historiken</string>
-    <string name="rs_logcanulachange_title">Logga kanylbyten</string>
+    <string name="rs_logcanulachange_title">Logga kanylbyte</string>
     <string name="rs_logcanulachange_summary">Logga kanylbyte automatiskt när det upptäcks i historiken</string>
     <string name="press_ok_on_the_pump">Tryck på OK på pumpen\noch ange de 2 nummer som visas\nHåll pumpens skärm PÅ genom att trycka på minusknappen tills du har angett koden.</string>
     <string name="num1pin">1: (12 siffror)</string>

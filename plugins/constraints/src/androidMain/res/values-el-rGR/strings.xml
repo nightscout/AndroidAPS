@@ -9,7 +9,6 @@
     <string name="application_expired">Η εφαρμογή έχει λήξει</string>
     <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
-    <string name="version_expire">Η έκδοση %1$s λήγει στις %2$s και θα περάσει σε λειτουργία LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Χρησιμοποιούνται επανυπολογισμένα δεδομένα</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">Επιλέχθηκε APS</string>
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
-    <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
     <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>
     <string name="objectives_button_unstart">Επαναφορά κατάστασης εκκίνησης</string>
     <string name="bg_doubled_lgs">Λειτουργία LGS λόγω διπλών τιμών στην πηγή γλυκόζης</string>

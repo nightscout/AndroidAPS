@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Не вдалося перевірити прогрес активації. Спробуйте ще раз.</string>
     <string name="omnipod_common_error_pod_suspended">Pod призупинено</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Не вдалося програти тестовий сигнал</string>
-    <string name="omnipod_common_error_time_out_of_sync">Час на Pod не синхронізований. Оновіть час на вкладці Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Сталася несподівана помилка. Будь ласка, повідомте! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Конфігурація сповіщень оновлена на Pod.</string>
@@ -81,7 +80,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Сигнали базалу увімкнено</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Сигнали SMB увімкнено</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Сигнали TBR увімкнено</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Показувати кнопку призупинення введення на вкладці Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Автовизначення літнього часу/часового поясу увімкнено</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Нагадування про закінчення терміну увімкнено</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Якщо увімкнено, Pod подасть сигнал, коли настане вказаний час</string>

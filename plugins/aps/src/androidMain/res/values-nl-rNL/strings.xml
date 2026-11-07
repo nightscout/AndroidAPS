@@ -10,37 +10,37 @@
     <string name="openaps_no_as_data">Geen autosens-gegevens beschikbaar</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
+    <string name="array_of_elements">Lijst van %1$d elementen. \nActuele waarde:</string>
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
     <string name="description_auto_isf">Experimenteel algoritme voor gevorderde gebruikers met AutoISF uitbreidingen</string>
     <string name="openapsma_last_run_label">Laatste berekening</string>
     <string name="openapsma_input_parameters_label">Invoerparameters</string>
-    <string name="openapsma_glucose_status_label">Glucose status</string>
+    <string name="openapsma_glucose_status_label">Glucosestatus</string>
     <string name="openapsma_current_temp_label">Actueel</string>
     <string name="openapsma_iob_data_label">IOB gegevens</string>
     <string name="openapsma_profile_label">Profiel</string>
     <string name="openapsma_meal_data_label">Maaltijd gegevens</string>
     <string name="openapsma_request_label">Voorstel</string>
     <string name="constraints">Beperkingen</string>
-    <string name="openapsma_autosensdata_label">Autosens gegevens</string>
-    <string name="openapsma_script_debug_data_label">Script debug</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Opgelet!\n Onderstaande waardes moeten normaal gezien niet worden aangepast. KLIK HIER en LEES de tekst zodat je alles volledig BEGRIJPT voordat je een waarde wijzigt.</string>
+    <string name="openapsma_autosensdata_label">Autosens-gegevens</string>
+    <string name="openapsma_script_debug_data_label">Scriptfoutopsporing</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Let op!\nNormaal gesproken hoeven de onderstaande waarden niet te worden gewijzigd. Klik HIER, LEES de tekst en BEGRIJP wat er staat voordat een van deze waarden wordt gewijzigd.</string>
     <string name="increasing_max_basal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
     <string name="max_basal_multiplier">Max basaal vermenigvuldiger</string>
     <string name="max_daily_basal_multiplier">Max dagelijks basaal vermenigvuldiger</string>
-    <string name="smb_disabled_in_preferences">SMB gedeactiveerd in de instellingen</string>
-    <string name="uam_disabled_in_preferences">UAM gedeactiveerd in de instellingen</string>
-    <string name="autosens_disabled_in_preferences">Autosens gedeactiveerd in de instellingen</string>
+    <string name="smb_disabled_in_preferences">SMB is uitgeschakeld in de instellingen</string>
+    <string name="uam_disabled_in_preferences">UAM is uitgeschakeld in de instellingen</string>
+    <string name="autosens_disabled_in_preferences">Autosens is uitgeschakeld in de instellingen</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
-    <string name="hardlimit">max limiet (SC)</string>
+    <string name="hardlimit">harde limiet</string>
     <!--    Autotune   -->
     <string name="autotune_peak">Piek</string>
     <!--    Loop -->
-    <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
+    <string name="smb_frequency_exceeded">Er is in de afgelopen 3 minuten een bolus toegediend, SMB wordt overgeslagen</string>
     <string name="pump_not_initialized">Pomp niet geïnitialiseerd!</string>
     <string name="zero_basal_not_set">De pomp heeft de tijdelijke nul-basaalstand niet geaccepteerd. Mogelijk wordt er nog steeds basale insuline afgegeven. Controleer de pomp.</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
@@ -61,20 +61,20 @@
     <string name="loop_tbr_request_time_label">Tijdelijk basaal aanvraag tijd</string>
     <string name="loop_tbr_execution_time_label">Tijdelijk basaal uitvoer tijd</string>
     <string name="loop_tbr_set_by_pump_label">Tijdelijk basaal ingesteld door pomp</string>
-    <string name="loop_smb_request_time_label">SMB aanvraagtijd</string>
-    <string name="loop_smb_execution_time_label">SMB uitvoeringstijd</string>
+    <string name="loop_smb_request_time_label">Tijdstip waarop SMB is aangevraagd</string>
+    <string name="loop_smb_execution_time_label">Tijdstip waarop SMB is uitgevoerd</string>
     <string name="loop_smb_set_by_pump_label">SMB ingesteld door pomp</string>
-    <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
-    <string name="fallback_to_isf_no_tdd">Terugval naar profiel gevoeligheid. Niet genoeg gegevens. Reden: %1$s</string>
+    <string name="fallback_smb_no_tdd">Teruggevallen op SMB. Onvoldoende gegevens over de totale dagelijkse dosis (TDD).</string>
+    <string name="fallback_to_isf_no_tdd">Teruggevallen op de insulinegevoeligheid uit het profiel. Onvoldoende gegevens: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Hulp voor mogelijke aanpassingen van het profiel (ISF, koolhydraten en basaal insuline)</string>
+    <string name="autotune_description">Hulp bij mogelijke profielaanpassingen (ISF, insuline-koolhydraatverhouding en basaalstanden)</string>
     <string name="autotune_default_tune_days_title">Aantal dagen data</string>
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profiel :</string>
     <string name="autotune_last_run">Laatste berekening :</string>
     <string name="autotune_warning">Waarschuwing :</string>
-    <string name="autotune_ic_warning">Het geselecteerde profiel heeft %1$d IC waarden. Autotune gebruikt %2$.2f g/E</string>
-    <string name="autotune_isf_warning">Het geselecteerde profiel heeft %1$d ISF waarden. Autotune gebruikt %2$.1f %3$s/E</string>
+    <string name="autotune_ic_warning">Het geselecteerde profiel bevat %1$d koolhydraatratio\'s. Autotune gebruikt %2$.2f g/E</string>
+    <string name="autotune_isf_warning">Het geselecteerde profiel bevat %1$d ISF waarden. Autotune gebruikt %2$.1f %3$s/E</string>
     <string name="autotune_error">Fout in invoergegevens, probeer autotune opnieuw te starten of het aantal dagen te verminderen</string>
     <string name="autotune_error_more_days">Fout in invoergegevens, verhoog het aantal dagen</string>
     <string name="autotune_warning_during_run">Autotune berekening gestart, even geduld a.u.b.</string>
@@ -96,6 +96,6 @@
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
     <!--    autoISF -->
-    <string name="autoISF_settings_title">AutoISF instellingen</string>
-    <string name="smb_delivery_settings_title">SMB leveringsinstellingen</string>
+    <string name="autoISF_settings_title">AutoISF-instellingen</string>
+    <string name="smb_delivery_settings_title">SMB-toedieningsinstellingen</string>
 </resources>

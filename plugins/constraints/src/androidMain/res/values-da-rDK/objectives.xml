@@ -15,9 +15,7 @@
     <string name="objectives_maxbasal_gate">Baseret på denne erfaring, beslut hvad max basal skal være og indstil det både på pumpen og i indstillinger</string>
     <string name="objectives_maxbasal_learned">Vær opmærksom på sikkerhedsfunktionerne og juster sikkerhedsparametre, når det er nødvendigt.</string>
     <string name="objectives_maxiobzero_objective">Begynde at bruge lukket loop med lav glukose suspendering</string>
-    <string name="objectives_maxiobzero_learned">Indstilling af MaxIOB til nul forhindrer dig i at få hypoglykæmi og vil ikke tilføje mere insulin udover basalraten (undtagen i situationer med negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning af lukket loop, hæv max IOB over 0 og sænk gradvist BG målet</string>
-    <string name="objectives_maxiob_gate">Kør i et par dage, og mindst én nat uden lave BG alarmer, før du sætter målet for BG ned</string>
     <string name="objectives_autosens_objective">Justér om nødvendigt basaler og forhold og aktivér derefter auto-sens</string>
     <string name="objectives_autosens_gate">1 uges vellykket looping i dagtimerne med alle måltider tastet ind</string>
     <string name="objectives_smb_objective">Aktivering af yderligere funktioner til brug i dagtimerne, såsom SMB</string>
@@ -49,7 +47,6 @@
     <string name="objectives_exam_learned_sensitivity">Følsomhedsdetektion er en del af algoritmen, som giver mulighed for at tilpasse insulindosis til forskellige situationer.</string>
     <string name="objectives_exam_learned_objectives">Dine fremskridt i Målsætninger gemmes sammen med andre indstillinger, og du bør sikkerhedskopiere dem.</string>
     <string name="objectives_exam_learned_objectives2">Behold altid eksporterede indstillinger og genererede APK, også uden for telefonen, hvis telefonen går tabt, bliver beskadiget osv. Et godt sted kan være enhver cloud-løsning tilgængelig fra telefonen. I dette tilfælde kan du gendanne AAPS på en anden enhed på et par minutter. God praksis er at gemme din hovedadgangskode et sikkert sted også. Uden den er din backup ubrugelig. Det samme gælder for signeringsnøgler (. ks fil) og adgangskoder, der bruges til at opbygge AAPS. Resten er ikke vigtigt - det kan når som helst downloades fra internettet igen.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Hvis du har lavet forkert input til AAPS eller det ikke matcher virkeligheden, så løs det så hurtigt som muligt, da det kan føre til overdosering. AAPS skal altid informeres bedst muligt om kulhydrat, insulin osv.</string>
     <string name="objectives_exam_learned_breadgrams">Kun gram er tilladt ved indtastning af kulhydrater.</string>
     <string name="objectives_exam_learned_ecarbs">E-kulhydrater er en erstatning for udvidet bolus i pumpeverdenen.</string>
     <string name="answerdisabledto">Svar deaktiveret indtil: %1$s</string>

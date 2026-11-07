@@ -9,7 +9,6 @@
     <string name="application_expired">Термін дії застосунку закінчився</string>
     <string name="running_invalid_version">Виявлено, що ви використовуєте недійсну версію. Петлю вимкнено!</string>
     <string name="versionavailable">Доступна версія %1$s</string>
-    <string name="version_expire">Термін дії версії %1$s закінчується %2$s, після цього вона перейде в режим LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Використано перераховані дані</string>
@@ -38,7 +37,6 @@
     <string name="apsselected">APS вибрано</string>
     <string name="closedmodeenabled">Закритий режим увімкнено</string>
     <string name="description_objectives">Навчальна програма</string>
-    <string name="doyouwantresetstart">Бажаєте скинути початок завдання? Ви можете втратити свій прогрес.</string>
     <string name="objectives_button_unfinish">Скинути стан «завершено»</string>
     <string name="objectives_button_unstart">Скинути стан «розпочато»</string>
     <string name="bg_doubled_lgs">Режим LGS через подвоєні значення в джерелі ГК</string>

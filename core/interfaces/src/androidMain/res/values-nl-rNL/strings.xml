@@ -4,8 +4,8 @@
     <string name="confirmation">Bevestiging</string>
     <!--    Events-->
     <string name="bolus_delivering">Toedienen van %1$.2fE</string>
-    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E toegediend</string>
-    <string name="bolus_delivered_successfully">Bolus van %1$.2fE succesvol toegediend</string>
+    <string name="bolus_delivered_so_far">%1$.2fE / %2$.2fE toegediend</string>
+    <string name="bolus_delivered_successfully">Bolus van %1$.2fE is succesvol toegediend</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
     <!--    DateUtil-->
@@ -65,10 +65,10 @@
     <string name="handshaking">Verbinding maken</string>
     <string name="connected">Verbonden</string>
     <string name="authorized">Geautoriseerd</string>
-    <string name="disconnecting">Verbinding aan het verbreken</string>
-    <string name="waiting_for_disconnection">Wachten op het loskoppelen</string>
+    <string name="disconnecting">Verbinding verbreken</string>
+    <string name="waiting_for_disconnection">Wachten op verbreken van de verbinding</string>
     <!-- Custom Watchface -->
-    <string name="metadata_label_watchface_created_at">Gemaakt op: %1$s</string>
+    <string name="metadata_label_watchface_created_at">Aangemaakt op: %1$s</string>
     <string name="metadata_label_watchface_author">Auteur: %1$s</string>
     <string name="metadata_label_watchface_name">Naam: %1$s</string>
     <string name="metadata_wear_import_filename">Bestandsnaam: %1$s</string>
@@ -81,7 +81,7 @@
     <string name="pref_show_delta">Toon Delta</string>
     <string name="pref_show_detailed_delta">Toon gedetailleerde Delta</string>
     <string name="pref_show_avgdelta">Toon gemiddelde delta</string>
-    <string name="pref_show_tempTarget">Toon tijdelijk doel</string>
+    <string name="pref_show_tempTarget">Toon tijdelijk streefdoel</string>
     <string name="pref_show_reservoir_level">Toon reservoir niveau</string>
     <string name="pref_show_phone_battery">Toon Telefoon Batterij</string>
     <string name="pref_show_rig_battery">Toon Rig batterij</string>
@@ -99,9 +99,9 @@
     <string name="pref_show_complication3">Toon Complicatie 3</string>
     <string name="pref_show_complication4">Toon Complicatie 4</string>
     <string name="pref_show_complication5">Toon Complicatie 5</string>
-    <string name="default_custom_watchface_comment">Standaard watchface, u kunt op de EXPORT WATCHFACE knop klikken om een sjabloon te genereren</string>
-    <string name="default_custom_watchface_external_comment">Standaard watchface inclusief externe weergaven voor volgers, u kunt klikken op EXPORT WATCHFACE knop om een sjabloon te genereren</string>
-    <string name="wear_default_watchface">Standaard watchface</string>
+    <string name="default_custom_watchface_comment">Standaard wijzerplaat, druk op EXPORT WATCHFACE om een sjabloon te genereren</string>
+    <string name="default_custom_watchface_external_comment">Standaard wijzerplaat inclusief externe weergaven voor volgers, druk op EXPORT WATCHFACE om een sjabloon te genereren</string>
+    <string name="wear_default_watchface">Standaard wijzerplaat</string>
     <string name="wear_more_watchfaces">Meer wijzerplaten</string>
     <string name="temp_basal_absolute_rate">%1$.2f E/u @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
@@ -131,33 +131,33 @@
     <string name="profile_isf_units_mmol">mmol/L/E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s %2$s</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Koolhydraten</string>
-    <string name="alarminxmin">Start alarm over %1$d min</string>
+    <string name="alarminxmin">Herinnering (alarm) over %1$d min</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
-    <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Minimum basaalwaarde is vervangen door minimaal ondersteunde waarde: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %1$s</string>
+    <string name="basalprofilenotaligned">Basaalstanden beginnen niet op gehele uren: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basaalstand vervangen door de laagst toegestane waarde: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basaalstand vervangen door de hoogst toegestane waarde: %1$s</string>
     <string name="profile_ins_units_per_hour">E/u</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <string name="mins">%1$d min</string>
     <string name="record">Opnemen</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">VERLENGDE KOOLHYDRATEN</string>
-    <string name="profile_low_target">Profiel laag doel</string>
-    <string name="profile_high_target">Profiel hoog doel</string>
-    <string name="profile_dia">Profiel DIA waarde</string>
-    <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>
-    <string name="profile_carbs_ratio_value">Profiel koolhydraten ratio waarde</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f is buiten de harde limiet</string>
-    <string name="basal_value">Basaal waarde</string>
+    <string name="profile_low_target">Ondergrens streefdoel in het profiel</string>
+    <string name="profile_high_target">Bovengrens streefdoel in het profiel</string>
+    <string name="profile_dia">DIA waarde in het profiel</string>
+    <string name="profile_sensitivity_value">Insulinegevoeligheid in het profiel</string>
+    <string name="profile_carbs_ratio_value">Koolhydraatratio\'s in het profiel</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f valt buiten de vaste grenswaarden</string>
+    <string name="basal_value">Basaalstand</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Trage koolhydraten absorptie gedetecteerd: %1$d%% van de tijd. Controleer je berekening nogmaals. COB kan overschat worden waardoor er meer insuline kan worden gegeven !!!!!</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Langzame koolhydraatabsorptie gedetecteerd: %1$d%% van de tijd. Controleer de berekening zorgvuldig. COB kan worden overschat, waardoor mogelijk meer insuline wordt toegediend !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
-    <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
+    <string name="advisoralarm">Herinnering (alarm) wanneer het tijd is om te eten</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs: %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f E</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>

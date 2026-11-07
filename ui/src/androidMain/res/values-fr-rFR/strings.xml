@@ -248,7 +248,6 @@
     <string name="profile_switches">Changements de profil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Sélectionné :</string>
-    <string name="comparation">Comparaison</string>
     <string name="profile_tab_1">Profil 1</string>
     <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Profil par défaut</string>

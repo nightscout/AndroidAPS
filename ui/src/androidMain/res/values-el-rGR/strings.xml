@@ -248,7 +248,6 @@
     <string name="profile_switches">Αλλαγές Προφίλ</string>
     <string name="basal_pct_from_tdd_label">% Ποσοστό βασικού ρυθμού basal</string>
     <string name="selected_profile">Επιλεγμένο:</string>
-    <string name="comparation">Σύγκριση</string>
     <string name="profile_tab_1">Προφίλ 1</string>
     <string name="profile_tab_2">Προφίλ 2</string>
     <string name="motol_default_profile">Προεπιλεγμένο προφίλ</string>

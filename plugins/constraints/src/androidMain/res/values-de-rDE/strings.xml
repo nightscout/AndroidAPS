@@ -9,6 +9,7 @@
     <string name="application_expired">Anwendung abgelaufen</string>
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
+    <string name="version_expire">Version %1$s läuft am %2$s ab und AAPS wird in den LGS-Modus versetzt.</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
@@ -19,10 +20,11 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
     <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
+    <string name="safety">Sicherheit</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
-    <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>
+    <string name="smbalwaysdisabled">„SMB immer aktivieren“ und „SMB nach Mahlzeiten aktivieren“ sind abgeschaltet, weil die aktive BZ-Quelle keine erweiterte Filterung unterstützt.</string>
     <string name="smbnotallowedinopenloopmode">SMB sind im Open Loop Modus nicht erlaubt</string>
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>
@@ -36,7 +38,8 @@
     <string name="apsselected">APS ausgewählt</string>
     <string name="closedmodeenabled">Closed mode aktiviert</string>
     <string name="description_objectives">Das Programm kennenlernen</string>
-    <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
+    <string name="doyouwantresetstart">Möchtest du den Start des Ziels zurücksetzen? Dabei könnte dein Fortschritt verloren gehen.</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
     <string name="objectives_button_unstart">Ziel neu starten</string>
+    <string name="bg_doubled_lgs">LGS-Modus wegen doppelter Werte in der BZ-Quelle</string>
 </resources>

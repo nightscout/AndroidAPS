@@ -8,8 +8,8 @@
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Tilkoblingskvalitet</string>
     <string name="omnipod_dash_overview_delivery_status">Leveringsstatus</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Fyll en ny Pod med nok insulin for 3 dager.\n\nLytt etter to lydsignaler fra Pod under fyllingen. De indikerer at minimumsvolum på 80E er fylt opp. Vær nøye med å tømme fyllingssprøyten helt, selv etter at du har hørt de to lydsignalene.\n\nEtter fylling av Pod, vennligst trykk <b>Neste</b>.\n\n<b>Merk:</b> vent med å fjerne kanylebeskyttelsen fra Pod.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Prøver å koble til den nye Pod\'en og prime den.\n\nNår oppstartsprosessen er ferdig, kan du trykke <b>Neste</b>.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Fyll en ny pod med nok insulin for 3 dager.\n\nLytt etter to lydsignaler fra podden under fyllingen. De viser at minimumsvolumet på 80E er fylt opp. Vær nøye med å tømme fyllesprøyten helt, selv etter at du har hørt de to lydsignalene.\n\nNår podden er fylt, trykker du <b>Neste</b>.\n\n<b>Merk:</b> ikke fjern kanylehetten på podden ennå.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Prøver å koble sammen med den nye podden og prime den.\n\nNår oppstartsprosessen er ferdig, kan du trykke <b>Neste</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Kunne ikke koble til</string>
     <string name="omnipod_dash_found_too_many_pods">Fant for mange pods</string>
@@ -21,17 +21,17 @@
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Kommando er ikke bekreftet</string>
     <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
-    <string name="suspend_delivery_is_unconfirmed">Pausing av insulinlevering ble ikke bekreftet! Vennligst oppdater Podstatus fra Omnipod-fanen og gjenoppta insulinlevering om nødvendig.</string>
+    <string name="suspend_delivery_is_unconfirmed">Pause av insulinlevering er ikke bekreftet! Oppdater pod-statusen manuelt på pumpeskjermen, og gjenoppta leveringen hvis nødvendig.</string>
     <string name="insulin_delivery_suspended">Insulinlevering er pauset</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Tidssone på pod er forskjellig fra tidssonen på telefon. Basaldoser er feil. Bytt profil for å korrigere</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Tidssonen på podden er forskjellig fra tidssonen på telefonen. Basaldosen er feil. Bytt profil for å korrigere</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke sette ny basalprofil. Insulinlevering er pauset</string>
-    <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha feilet. Insulinlevering kan bli pauset! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
-    <string name="bolus_delivery_status_uncertain">Status for levering av bolus er usikker. Oppdater podstatus for å bekrefte eller avkrefte.</string>
-    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Kunne ikke bekrefte om SMB (%1$s) ble utført. Oppdater pod-statusen for å bekrefte om kommandoen ble utført eller avvist.</string>
-    <string name="temp_basal_out_of_sync">Midlertidig basalstatus er ikke som forventet! Dersom en midlertidig basal tidligere kjørte, har den blitt avbrutt. Kontroller levert insulin og pod historikk</string>
+    <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha mislyktes. Insulinlevering kan være pauset! Oppdater pod-statusen manuelt på pumpeskjermen, og gjenoppta leveringen hvis nødvendig.</string>
+    <string name="bolus_delivery_status_uncertain">Status for levering av bolus er usikker. Oppdater pod-statusen for å bekrefte eller avkrefte.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Kunne ikke bekrefte om SMB (%1$s) ble utført. Oppdater pod-statusen for å bekrefte eller avkrefte denne kommandoen.</string>
+    <string name="temp_basal_out_of_sync">Midlertidig basalstatus er ikke som forventet! Dersom en midlertidig basal tidligere kjørte, har den blitt avbrutt. Kontroller levert insulin og Pod-historikk</string>
     <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Innstillingen av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktivert, så har den blitt kansellert. Vennligst oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Innstilling av midlertidig basal kan ha mislyktes. Hvis en midlertidig basal var aktiv, er den avbrutt. Oppdater pod-statusen manuelt på pumpeskjermen.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Kansellering av midl. basal er ikke bekreftet</string>
-    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ubekreftet \"gjennoppta levering\"-kommando. Vennligst oppdater podstatus</string>
-    <string name="cancelling_temp_basal_might_have_failed">Endring av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktiv så har den blitt kansellert. Oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ubekreftet kommando «Gjenoppta levering». Oppdater pod-statusen</string>
+    <string name="cancelling_temp_basal_might_have_failed">Avbryting av midlertidig basal kan ha mislyktes. Hvis en midlertidig basal var aktiv, kan den ha blitt avbrutt. Oppdater pod-statusen manuelt på pumpeskjermen.</string>
 </resources>

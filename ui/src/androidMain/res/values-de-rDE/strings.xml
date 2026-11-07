@@ -35,7 +35,7 @@
     <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
     <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
     <string name="agp_average">Durchschnitt</string>
-    <string name="agp_median">Mittelwert</string>
+    <string name="agp_median">Median</string>
     <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
     <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
     <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
@@ -234,7 +234,7 @@
     <string name="remove_label">Entfernen</string>
     <string name="active_profile_indicator">AKTIV</string>
     <string name="confirm_remove_profile">Profil „%1$s“ entfernen?</string>
-    <string name="confirm_clone_profile">Profil \"%1$s \"klonen?</string>
+    <string name="confirm_clone_profile">Profil „%1$s“ klonen?</string>
     <string name="profile_no_longer_exists">Profilliste wurde zwischenzeitig geändert — Bitte versuche es erneut</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>

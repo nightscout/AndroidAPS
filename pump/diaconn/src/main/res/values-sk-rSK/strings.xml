@@ -27,7 +27,7 @@
     <string name="commanderror">Chyba príkazu</string>
     <string name="speederror">Chyba rýchlosti</string>
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
-    <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
+    <string name="boluserrorcode">Požadované: %1$.2f U Podané: %2$.2f U Kód chyby: %3$s</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
@@ -102,8 +102,8 @@
     <string name="diaconn_g8_logsuccess">Hotovo</string>
     <string name="diaconn_g8_logmealsuccess">Bolus na jedlo podaný</string>
     <string name="diaconn_g8_errorcode_1">Nie je možné vyhľadať kvôli chybe CRC.</string>
-    <string name="diaconn_g8_errorcode_2">Nemôže byť nastavené na základe chybných vstupných parametrov.</string>
-    <string name="diaconn_g8_errorcode_3">Nemôže byť nastavené na základe chyby špecifikácie protokolu.</string>
+    <string name="diaconn_g8_errorcode_2">Nie je možné nastaviť: chyba vstupného parametra.</string>
+    <string name="diaconn_g8_errorcode_3">Nie je možné nastaviť: chyba špecifikácie protokolu.</string>
     <string name="diaconn_g8_errorcode_4">Čas na jedlo nastavený. Nie je možný výdaj inzulínu.</string>
     <string name="diaconn_g8_errorcode_6">Zrušené pumpou</string>
     <string name="diaconn_g8_errorcode_7">Prebiehajú iné akcie, nastavenia z aplikácie sú obmedzené.</string>
@@ -113,7 +113,7 @@
     <string name="diaconn_g8_errorcode_11">Podávanie nie je možné z dôvodu slabej batérie.</string>
     <string name="diaconn_g8_errorcode_12">Podanie nie je možné, z dôvodu nedostatku inzulínu.</string>
     <string name="diaconn_g8_errorcode_13">Nemôžete podať, pretože bol prekročený limit jednorázovej dávky.</string>
-    <string name="diaconn_g8_errorcode_14">Dávka nemôže byť podaná, pretože bol prekročený denný limit.</string>
+    <string name="diaconn_g8_errorcode_14">Dávku nie je možné podať, pretože by sa prekročil denný limit podania.</string>
     <string name="diaconn_g8_errorcode_15">Podávanie bazálu je možné až po dokončení nastavenia bazálov.</string>
     <string name="diaconn_g8_logtubechange_title">Zaznamenať výmenu hadičky</string>
     <string name="diaconn_g8_logtubechange_summary">Pridať udalosť \"Výmena hadičky\" do poznámok, ak bola zistená v histórii</string>

@@ -49,7 +49,6 @@
     <string name="cwf_comment_month">Όνομα μήνα (σύντομο)</string>
     <string name="cwf_comment_loop">Κατάσταση κυκλώματος και πόσο πριν</string>
     <string name="cwf_comment_direction">Βέλος κατεύθυνσης</string>
-    <string name="cwf_comment_timestamp">Λεπτά πριν από την τελευταία λήψη BG</string>
     <string name="cwf_comment_sgv">Τιμή γλυκόζης αίματος</string>
     <string name="cwf_comment_cover_plate">Εικόνα εξωφύλλου μπροστά από το κείμενο (κλήσεις...)</string>
     <string name="cwf_comment_hour_hand">Εικόνα ώρας χεριού (Αναλογικό ρολόι)</string>

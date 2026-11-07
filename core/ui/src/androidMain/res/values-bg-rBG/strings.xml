@@ -136,7 +136,6 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Превключването на инсулина не е направено: %1$s Старият ви инсулин е още избран.</string>
     <string name="insulin_activation_unconfirmed">Не мога да потвърдя смяната на инсулин. Проверете кой инсулин е активен в профила преди да направите болус.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Превключването на инсулина не е направено. Старият ви инсулин е още избран.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n Инсулинът не е сменен.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
     <string name="insulin_nickname_label">Никнейм на инсулин</string>
@@ -226,11 +225,11 @@
     <string name="pump_wizard_profile_gate_pick">Изберете профил за прилагане при активация.</string>
     <string name="pump_wizard_profile_gate_no_store">Няма профили. Отворете профилите и създайте такъв, тогава стартирайте активацията отново.</string>
     <string name="reset">Нулирай</string>
-    <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
+    <string name="profileswitch_ismissing">Липсва смяна на профила. Моля, направете смяна на профила или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
     <string name="percentage_label">Процент</string>
     <string name="timeshift_label">Време на отместване</string>
-    <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
+    <string name="confirm_remove_multiple_items">Сигурни ли сте, че искате да премахнете %1$d елемента?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Главният телефон няма %1$d от тези записи. Те не са премахнати.</string>
     <string name="overview_treatment_label">Лечение</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
@@ -661,7 +660,7 @@
     <string name="uel_ns_queue_cleared">NS ОПАШКАТА Е ИЗЧИСТЕНА</string>
     <string name="uel_ns_settings_copied">NS настройки копирани</string>
     <string name="uel_error_dialog_ok">ДИАЛОГ ЗА ГРЕШКА ОК</string>
-    <string name="uel_error_dialog_mute">ДИАЛОГ ЗА ГРЕШКА ЗАГЛУШЕН</string>
+    <string name="uel_error_dialog_mute">ЗАГЛУШАВАНЕ НА ДИАЛОГ ЗА ГРЕШКА</string>
     <string name="uel_error_dialog_mute_5min">ДИАЛОГ ЗА ГРЕШКА ЗАГЛУШЕН ЗА 5 МИН</string>
     <string name="uel_objective_started">ЦЕЛТА Е СТАРТИРАНА</string>
     <string name="uel_objective_unstarted">СТАРТИРАНЕТО НА ЦЕЛТА Е ОТМЕНЕНО</string>
@@ -726,7 +725,7 @@
     <string name="error_in_isf_values">Грешка в стойностите на чувствителност ISF</string>
     <string name="error_in_basal_values">Грешка в базалите</string>
     <string name="error_in_target_values">Грешка в целевите захари</string>
-    <string name="profile_name_contains_dot">Някой от имената на профили съдържат точки.\nТова е непозволено от NS.\nПрофилите няма да се качат в NS.</string>
+    <string name="profile_name_contains_dot">Някои имена на профили съдържат точки.\nNS не поддържа това.\nПрофилите няма да бъдат качени в NS.</string>
     <string name="invalid_profile_not_accepted">Грешен профил %1$s не може да бъде качен в NS</string>
     <string name="errors">Грешки</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +890,7 @@
     <string name="export_result_message_exported">Настройките са експортирани</string>
     <string name="export_result_message_failed">Експорт на настройки СЕ ИЗДЪНИ!</string>
     <string name="export_result_message_about_to_expire">Настройките са експортирани: паролата изтича скоро. Експортирайте ръчно и потвърдете паролата.</string>
-    <string name="export_result_message_expired">Експорт на настройките е невъзможен: изтекла парола. Експортирайте ръчно и я въведете отново.</string>
+    <string name="export_result_message_expired">Експортът на настройките е отменен: паролата е изтекла. Експортирайте ръчно и въведете паролата отново!</string>
     <string name="export_result_message_disabled">Внимание (автоматизация): експортът на настройки не е позволен!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Експорт в клауда успешен!</string>
@@ -998,7 +997,7 @@
     <string name="cannula">Игла</string>
     <string name="patch_pump">Пач помпа</string>
     <!-- Site Rotation -->
-    <string name="select_location">Натиснете долу за избор на място</string>
+    <string name="select_location">Натиснете по-долу, за да изберете мястото</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app? (как телефонът да не спира приложението)</string>
     <string name="fabric_upload_disabled">Качването на логове е изключено!</string>
@@ -1047,7 +1046,7 @@
     <string name="unsaved_changes">Незаписани промени</string>
     <string name="unsaved_changes_message">Има незаписани промени. Какво правим?</string>
     <string name="discard">Изхвърли</string>
-    <string name="ic_dynamic_label_warning">Алгоритъмът може да прави динамична калкулация на инс/въгл. Стойностите ще се използват като резерва при липсващи данни или като отправна точка</string>
+    <string name="ic_dynamic_label_warning">Вашият алгоритъм може да изчислява IC динамично. Стойностите по-долу могат да се използват само като резерва при липсващи данни или само като отправна стойност</string>
     <string name="isf_dynamic_label_warning">Алгоритъмът може да направи динамична калкулация на ISF. /стойностите долу ще се използват като резерва при липсващи данни или само като рефентни</string>
     <string name="add_time_block">Добави времева част</string>
     <string name="remove_entry">Премахни запис</string>

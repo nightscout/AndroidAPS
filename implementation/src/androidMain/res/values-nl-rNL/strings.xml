@@ -3,6 +3,9 @@
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
     <string name="smb_being_delivered">Er wordt nu een SMB toegediend. Probeer het opnieuw wanneer die klaar is.</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
+    <string name="concentration_change_failed_title">Insulinewissel mislukt</string>
+    <string name="concentration_change_failed">De nieuwe insuline zit in de pomp, maar AAPS kon het profiel niet naar de pomp schrijven. De pomp dient daardoor een onjuiste hoeveelheden insuline toe. Koppel de pomp nu los of verwijder deze. Controleer de bloedglucose en dien zo nodig op een andere manier insuline toe. Sluit de pomp pas weer aan nadat het profiel naar de pomp is geschreven.</string>
+    <string name="concentration_change_pending">Het profiel met de nieuwe insuline is nog niet naar de pomp geschreven. Er kan pas insuline worden toegediend nadat dit is gebeurd.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basaal profiel in de pomp is bijgewerkt. De pomp rondt het basaal af op zijn eigen stapgrootte: het geeft %1$s per dag in plaats van %2$s.</string>
     <string name="basal_reported_far_from_profile">De pomp rapporteert een basaal ver van het profiel. AAPS houdt het profielbasaal aan. Controleer de basaalstanden in de pomp.</string>
     <!--       Stats -->
@@ -57,13 +60,13 @@
     <string name="ue_exported">Gebruikers invoer geëxporteerd</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
     <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
-    <string name="exported_less_than_hour_ago">minder dan uur geleden geëxporteerd</string>
-    <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn - controleer aub jouw instellingen na het importeren en corrigeer ze zonodig.</string>
-    <string name="metadata_warning_different_device">Instellingen zijn gemaakt op een ander apparaat. Het is OK als ze zijn geïmporteerd van een oude/andere telefoon, maar zorg ervoor dat de geïmporteerde instellingen correct zijn!</string>
-    <string name="metadata_warning_old_export">Geïmporteerde instellingen zijn al %1$s dagen oud! Misschien heb je een meer recente versie of heb je het verkeerde bestand gekozen? Vergeet niet om regelmatig jouw instellingen te exporteren!</string>
+    <string name="exported_less_than_hour_ago">minder dan een uur geleden geëxporteerd</string>
+    <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn. Controleer en actualiseer de instellingen daarom na het importeren.</string>
+    <string name="metadata_warning_different_device">De instellingen zijn aangemaakt op een ander apparaat. Dit is geen probleem wanneer ze worden geïmporteerd vanaf een oudere of andere telefoon. Controleer na het importeren of de instellingen correct zijn!</string>
+    <string name="metadata_warning_old_export">De geïmporteerde instellingen zijn %1$s dagen oud! Mogelijk zijn er recentere instellingen beschikbaar of is het verkeerde bestand geselecteerd. Denk eraan regelmatig de instellingen te exporteren!</string>
     <string name="metadata_warning_date_format">Ongeldige notatie voor datum/tijd!</string>
-    <string name="metadata_warning_different_version">Instellingen zijn afkomstig van een vorige minor versie van de AAPS app. Het is OK als je deze importeert na een app upgrade, maar controleer na importeren dan wel of de instellingen nog steeds correct zijn!</string>
-    <string name="metadata_urgent_different_version">Instellingen van een andere major versie van de AAPS app. Deze versies kunnen aanzienlijk verschillen en kunnen instellingen hebben die incompatibel zijn! Zorg ervoor dat na het importeren alle instellingen nog steeds correct zijn!</string>
+    <string name="metadata_warning_different_version">Instellingen uit een andere subversie van de applicatie. Dit is geen probleem wanneer de instellingen na een upgrade worden geïmporteerd. Controleer na het importeren wel of de instellingen correct zijn!</string>
+    <string name="metadata_urgent_different_version">Instellingen uit een andere hoofdversie van de applicatie. Hoofdversies kunnen aanzienlijk verschillen en instellingen kunnen daardoor incompatibel zijn. Controleer na het importeren zorgvuldig of alle instellingen correct zijn!</string>
     <string name="prefdecrypt_settings_tampered">Geknoeid met instellingenbestand</string>
     <string name="prefdecrypt_settings_secure">Instellingenbestand is veilig</string>
     <string name="prefdecrypt_settings_unencrypted">Gebruikt niet veilige, niet-versleutelde indeling voor instellingen</string>

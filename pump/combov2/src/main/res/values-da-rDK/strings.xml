@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Reservoir-fejl</string>
     <string name="combov2_error_11">Infusionssæt ikke klargjort</string>
     <string name="combov2_extended_bolus_not_supported">Udvidet bolus understøttes ikke</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Par med pumpe</string>
     <string name="combov2_unpair_pump_title">Upar pumpe</string>
     <string name="combov2_driver_state_label">Driver-status</string>
@@ -31,12 +30,6 @@
 2. Tjek om en enhed allerede er vist som parret. I så fald, gå til pumpeskærmen \"Slet enhed\" for at slette/fjerne enheden\n
 3. Gå til skærmen med \"Tilføj enhed\" og start parring på pumpen\n
 4. Klik på knappen \"Start parring\" nedenfor for at starte parring i AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Efter et stykke tid vises telefonens navn på pumpens skærm; tryk på CHECK for at bekræfte.\n\n
-bekræft den færdige parring på din pumpe efter parringen er fuldført og vend tilbage til hovedpumpeskærmen ved at trykke to gange på CHECK-knappen.\n\n
-Hvis der ikke oprettes forbindelse efter mere end omkring 5 minutter:\n\n
-1. Tryk på Tilbage eller \"Annuller Parring\"-knappen\n
-2. Annuller parringen på Combo (tryk på både OP- og MENU-knapperne på samme tid for at annullere parring)\n
-3. Prøv at parre igen</string>
     <string name="combov2_enter_pin">Indtast PIN</string>
     <string name="combov2_cancel_pairing">Annullér parring</string>
     <string name="combov2_pin_hint">10-cifret PIN</string>
@@ -95,7 +88,6 @@ Hvis der ikke oprettes forbindelse efter mere end omkring 5 minutter:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorerer redundant 100% TBR-anmodning</string>
     <string name="combov2_hit_unexpected_tbr_limit">Uventet grænse opstod under justering af TBR: målprocent var %1$d%%, ramte en grænse på %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan ikke indstille absolut TBR hvis basalraten er nul</string>
-    <string name="combov2_unpair_pump_summary">Frakobl AndroidAPS og Android med en pt. parret Accu-Chek Combo-pumpe</string>
     <string name="combov2_unknown_tbr_detected">Ukendt TBR blev fundet og stoppet; procent: %1$d%%; resterende varighed: %2$s</string>
     <string name="combov2_connection_error">Forbindelsesfejl: %1$s</string>
     <string name="combov2_short_status_alert">Alarm %s</string>

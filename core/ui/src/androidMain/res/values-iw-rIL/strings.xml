@@ -2,10 +2,10 @@
 <resources>
     <string name="error_field_must_not_be_empty">שדה זה לא יכול להיות ריק</string>
     <string name="error_mustbe4hexadidits">חייב להיות באורך 4 תוים, מהתוים הבאים: ABCDEF0123456789</string>
-    <string name="authorized_clients_manage_label">לקוחות מורשים</string>
-    <string name="authorized_clients_manage_desc">ניהול מכשירי לקוח מצומדים השולטים במכשיר הראשי הזה.</string>
+    <string name="authorized_clients_manage_label">עוקבים מורשים</string>
+    <string name="authorized_clients_manage_desc">ניהול מכשירי עוקב מצומדים השולטים במכשיר הראשי הזה.</string>
     <string name="pair_with_master_manage_label">צימוד למכשיר ראשי</string>
-    <string name="pair_with_master_manage_desc">הזינו את קוד ה־PIN לצימוד של המכשיר הראשי כדי לאפשר ללקוח הזה לשלוח פקודות חתומות.</string>
+    <string name="pair_with_master_manage_desc">הזינו את קוד ה־PIN לצימוד של המכשיר הראשי כדי לאפשר לעוקב הזה לשלוח פקודות חתומות.</string>
     <!--    General-->
     <string name="treatments">טיפולים</string>
     <string name="treatments_history">היסטוריית טיפולים</string>
@@ -85,7 +85,7 @@
     <string name="protection">הגנה בסיסמאות</string>
     <string name="value_unavailable_short">לא זמין</string>
     <!-- master_password moved to core/keys/strings.xml -->
-    <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
+    <string name="ue_export_to_csv">ייצוא רישומי המשתמש לאקסל (csv)</string>
     <string name="confirm">אישור</string>
     <string name="pump">משאבה</string>
     <string name="pump_management">משאבה</string>
@@ -136,7 +136,6 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">האינסולין לא הוחלף: %1$s האינסולין הקודם עדיין פעיל.</string>
     <string name="insulin_activation_unconfirmed">לא ניתן היה לאשר את החלפת האינסולין. בדקו איזה אינסולין פעיל בפרופיל לפני מתן מינון.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">האינסולין לא הוחלף. האינסולין הקודם עדיין בשימוש.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nגם האינסולין לא הוחלף.</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
     <string name="insulin_nickname_label">כינוי לאינסולין</string>
@@ -230,7 +229,7 @@
     <string name="profile">פרופיל</string>
     <string name="percentage_label">אחוזים</string>
     <string name="timeshift_label">היסט זמן</string>
-    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
+    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">במכשיר הראשי אין %1$d מהרשומות האלה. הן לא יוסרו.</string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
@@ -437,7 +436,7 @@
     <string name="client_roles_info_open">על התפקידים</string>
     <string name="client_roles_info">לכל טלפון מצומד יש תפקיד. הטלפון הראשי בודק אותו בכל פקודה, והטלפון מציג רק את מה שהתפקיד שלו מאפשר. תפקיד חדש נכנס לתוקף מיד, בלי צימוד מחדש.\n\nקריאה בלבד: הטלפון נשאר מצומד, אבל רק מציג נתונים.\n\nארוחות: בולוס, אשף בולוס, אשף מהיר ופחמימות. אפשר גם לעצור בולוס שפועל. פחמימות שמוזנות כאן יכולות לגרום ללולאה לתת יותר אינסולין.\n\nטיפול: כל מה שמשתמשים עושים ב-AAPS, כמו יעדים זמניים, החלפות פרופיל ואינסולין, מצב לולאה, בזאלי זמני, בולוס ממושך, תרחישים, אירועי פורטל הטיפולים, כיולים ומחיקת רשומות. לא ניתן לשנות הגדרות או הגדרות מוכנות.\n\nניהול: הכול, כולל הגדרות והגדרות מוכנות (אשף מהיר, יעדים זמניים מוגדרים מראש, תרחישים, פרופילים, אוטומציה, אינסולין).</string>
     <string name="client_read_only_banner">טלפון זה במצב קריאה בלבד בטלפון הראשי.</string>
-    <string name="hardened_mode_info">הטלפון הראשי מקבל שינויים רק ממכשירי לקוח מצומדים. הוא לא מקבל טיפולים, יעדים זמניים, שינויי פרופיל, שינויים במצב הפעולה או מחיקות שנעשים ישירות ב-Nightscout, למשל באתר או באפליקציות אחרות. ההגדרות לקבלת נתונים מ-Nightscout מוסתרות כל עוד מצב מוקשח מופעל. פקודות SMS לא מושפעות.\n\nהטלפון הראשי עדיין מעלה את כל הנתונים ל-Nightscout, כולל ערכי הסוכר. אם הוא מקבל את ערכי הסוכר מ-Nightscout, הוא ממשיך לקבל אותם משם.\n\nכדי לטעון את ההיסטוריה בטלפון ראשי חדש, יש להשתמש בסנכרון מלא ב-NSClient. סנכרון מלא לוקח את כל מה שיש ב-Nightscout, כולל פרופילים.\n\nשליטה מרחוק ממכשירי לקוח דורשת חיבור WebSocket תקין ל-Nightscout, בטלפון הראשי ובמכשירי הלקוח המצומדים. מצב פשוט תמיד מפעיל את המצב המוקשח. כדי לכבות אותו, יש לצאת ממצב פשוט ולכבות את השליטה ממכשירי לקוח בטלפון הראשי.</string>
+    <string name="hardened_mode_info">הטלפון הראשי מקבל שינויים רק ממכשירי מעקב מצומדים. הוא לא מקבל טיפולים, יעדים זמניים, שינויי פרופיל, שינויים במצב הפעולה או מחיקות שנעשים ישירות ב-Nightscout, למשל באתר או באפליקציות אחרות. ההגדרות לקבלת נתונים מ-Nightscout מוסתרות כל עוד מצב מוקשח מופעל. פקודות SMS לא מושפעות.\n\nהטלפון הראשי עדיין מעלה את כל הנתונים ל-Nightscout, כולל ערכי הסוכר. אם הוא מקבל את ערכי הסוכר מ-Nightscout, הוא ממשיך לקבל אותם משם.\n\nכדי לטעון את ההיסטוריה בטלפון ראשי חדש, יש להשתמש בסנכרון מלא ב-NSClient. סנכרון מלא לוקח את כל מה שיש ב-Nightscout, כולל פרופילים.\n\nשליטה מרחוק ממכשירי לקוח דורשת חיבור WebSocket תקין ל-Nightscout, בטלפון הראשי ובמכשירי הלקוח המצומדים. מצב פשוט תמיד מפעיל את המצב המוקשח. כדי לכבות אותו, יש לצאת ממצב פשוט ולכבות את השליטה ממכשירי לקוח בטלפון הראשי.</string>
     <string name="scene_lock_reason_master_offline">המכשיר הראשי מנותק</string>
     <string name="scene_lock_reason_control_disabled">השליטה מרחוק מושבתת</string>
     <string name="scene_lock_reason_scene_active">יש לסיים תחילה את התרחיש הפעיל</string>
@@ -661,7 +660,7 @@
     <string name="uel_ns_queue_cleared">תור Nightscout נוקה</string>
     <string name="uel_ns_settings_copied">הגדרות Nightscout הועתקו</string>
     <string name="uel_error_dialog_ok">אישור דיאלוג שגיאה</string>
-    <string name="uel_error_dialog_mute">השתקת דיאלוג שגיאה </string>
+    <string name="uel_error_dialog_mute">השתקת דיאלוג שגיאה</string>
     <string name="uel_error_dialog_mute_5min">השתקת דיאלוג שגיאה 5 דק\'</string>
     <string name="uel_objective_started">המשימה החלה</string>
     <string name="uel_objective_unstarted">המשימה לא החלה</string>
@@ -726,7 +725,7 @@
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
     <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
     <string name="error_in_target_values">שגיאה בערכי היעד</string>
-    <string name="profile_name_contains_dot">ישנם שמות פרופיל המכילים נקודות.\nשמות כאלו אינם נתמכים ע\"י Nightscout.\nהפרופילים לא יועלו ל-Nightscout.</string>
+    <string name="profile_name_contains_dot">ישנם שמות פרופיל המכילים נקודות.\nשמות כאלו אינם נתמכים ע\"י NS.\nהפרופילים לא יועלו ל-NS.</string>
     <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
     <string name="errors">שגיאות</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +890,7 @@
     <string name="export_result_message_exported">הגדרות יוצאו</string>
     <string name="export_result_message_failed">יצוא ההגדרות נכשל!</string>
     <string name="export_result_message_about_to_expire">ההגדרות יוצאו: תוקף הסיסמה עומד לפוג בקרוב. בצעו ייצוא ידני והזינו מחדש את הסיסמה.</string>
-    <string name="export_result_message_expired">ייצוא ההגדרות בוטל: תוקף הסיסמה פג. בצעו ייצוא ידני והזינו מחדש את הסיסמה.</string>
+    <string name="export_result_message_expired">ייצוא ההגדרות בוטל: תוקף הסיסמה פג. בצעו ייצוא ידני והזינו את הסיסמה שוב!</string>
     <string name="export_result_message_disabled">אזהרה (אוטומציה): ייצוא הגדרות אינו מופעל!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">הייצוא לענן הצליח</string>
@@ -998,7 +997,7 @@
     <string name="cannula">צינורית</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Site Rotation -->
-    <string name="select_location">לחצו למטה כדי לבחור אתר</string>
+    <string name="select_location">הקישו למטה כדי לבחור את האתר</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
@@ -1050,7 +1049,7 @@
     <string name="unsaved_changes">שינויים שלא נשמרו</string>
     <string name="unsaved_changes_message">יש שינויים שלא נשמרו. מה ברצונכם לעשות?</string>
     <string name="discard">השלכה</string>
-    <string name="ic_dynamic_label_warning">האלגוריתם יכול לחשב IC באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
+    <string name="ic_dynamic_label_warning">האלגוריתם יכול לחשב IC באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים, או כערכי ייחוס בלבד</string>
     <string name="isf_dynamic_label_warning">האלגוריתם יכול לחשב ISF באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
     <string name="add_time_block">הוספת מקטע זמן</string>
     <string name="remove_entry">הסרת רשומה</string>

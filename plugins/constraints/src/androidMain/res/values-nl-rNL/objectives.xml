@@ -2,80 +2,79 @@
 <resources>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verifieer</string>
-    <string name="nth_objective">%1$d. Doel</string>
-    <string name="objectivenotstarted">Doel %1$d niet gestart</string>
-    <string name="objectivenotfinished">Doel %1$d niet gereed</string>
-    <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyseren van basalen en ratio\'s</string>
-    <string name="objectives_0_gate">Verifieer dat BG beschikbaar is in Nightscout, en dat de insuline gegevens van de pomp worden geüpload</string>
-    <string name="objectives_0_learned">Je hebt de basisinstellingen van het AAPS ecosysteem aangemaakt. Nightscout is niet nodig om AAPS uit te voeren, maar het is wel erg nuttig voor rapportage\'s en monitoren. Het is niet nodig om constant met NS verbonden te zijn als je NS alleen voor jezelf gebruikt. Bijvoorbeeld met alleen uploaden via de thuis wifi kan je de batterij sparen.</string>
+    <string name="nth_objective">%1$d. Leerdoel</string>
+    <string name="objectivenotstarted">Leerdoel %1$d niet gestart</string>
+    <string name="objectivenotfinished">Leerdoel %1$d niet afgerond</string>
+    <string name="objectives_0_objective">Visualisatie en monitoring instellen, basaalstanden en ratio’s analyseren</string>
+    <string name="objectives_0_gate">Controleer of de bloedglucosegegevens beschikbaar zijn in Nightscout en of de insulinegegevens van de pomp naar Nightscout worden verzonden</string>
+    <string name="objectives_0_learned">De basisconfiguratie van het AAPS-ecosysteem is voltooid. Nightscout (NS) is niet noodzakelijk om AAPS te gebruiken, maar is handig voor rapportages en het op afstand volgen van patiënten. Bij gebruik voor eigen monitoring is een permanente verbinding met NS niet nodig. Stel bijvoorbeeld in dat gegevens alleen via de wifi thuis worden verzonden om batterij te besparen.</string>
     <string name="objectives_openloop_objective">Starten met de Open Loop modus</string>
-    <string name="objectives_openloop_gate">Draai enkele dagen In Open Loop modus en voer meermaals handmatig tijdelijke basalen uit. Stel standaard en aangepaste tijdelijke streefdoelen in (bv. bij sporten of koolhydraten inname bij hypo)</string>
-    <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen, als je een pomp hebt die niet geschikt is voor AAPS of als je de loop niet wilt sluiten.</string>
-    <string name="objectives_maxbasal_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basalen</string>
-    <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen, beslis wat het maximale basaal mag zijn en stel dit in op de pomp en in de instellingen. In de eenvoudige modus wordt deze waarde berekend volgens de aanbeveling in de wiki en hoef je deze niet in te stellen.</string>
-    <string name="objectives_maxbasal">Actie uitvoeren om aanbeveling uit te voeren</string>
+    <string name="objectives_openloop_gate">Laat AAPS enkele dagen in de open-loopmodus draaien en pas meermaals tijdelijke basaalstanden toe. Stel tijdelijke en standaard tijdelijke streefdoelen in en gebruik deze (bijvoorbeeld voor lichamelijke inspanning of koolhydraten bij de behandeling van een hypo)</string>
+    <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen als er geen compatibele pomp beschikbaar is of als er nog niet kan worden overgeschakeld naar de closed-loopmodus.</string>
+    <string name="objectives_maxbasal_objective">Het begrijpen van de open-loopmodus, inclusief de aanbevelingen voor tijdelijke basaalstanden</string>
+    <string name="objectives_maxbasal_gate">Bepaal op basis van de opgedane ervaring wat de maximale basaalstand moet zijn en stel deze in op de pomp en in de AAPS-instellingen. In de eenvoudige modus wordt deze waarde berekend volgens de aanbevelingen in de wiki en hoeft deze niet handmatig te worden ingesteld.</string>
+    <string name="objectives_maxbasal">Voer de aanbevolen actie uit</string>
     <string name="objectives_maxbasal_learned">Ga zorgvuldig om met de veiligheidsfuncties en pas de veiligheidsparameters aan indien nodig.</string>
-    <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
-    <string name="objectives_maxiobzero_gate">Closed loop uitvoeren in Stop bij laag-modus (d. w. z. max IOB = 0 wordt automatisch ingesteld) gedurende enkele dagen zonder te veel LGS-gebeurtenissen.</string>
-    <string name="objectives_maxiobzero_learned">MaxIOB instellen op 0 is om te voorkomen dat u een hypo krijgt en zal niet meer insuline dan de basaal instelling toevoegen (behalve in een situatie met negatieve IOB)</string>
-    <string name="objectives_maxiob_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat geleidelijk het streef BG dalen</string>
-    <string name="objectives_maxiob_gate">Test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
-    <string name="objectives_maxiob_learned">Pas MaxIOB aan naarmate een kind ouder wordt. Laat het systeem niet meer insuline geven dan wat door te eten gecompenseerd kan worden = een erg hoge waarde is niet verstandig. In de eenvoudige modus wordt Max IOB automatisch berekend</string>
+    <string name="objectives_maxiobzero_objective">Begin met het gebruik van de loopmodus Low Glucose Suspend (LGS)</string>
+    <string name="objectives_maxiobzero_gate">Laat AAPS enkele dagen in de loopmodus Low Glucose Suspend (LGS, \'stop bij laag\') draaien (waarbij MaxIOB automatisch op 0 wordt ingesteld), zonder dat de insulinetoediening te vaak door de loop wordt onderbroken.</string>
+    <string name="objectives_maxiobzero_learned">Door MaxIOB op 0 te stellen, wordt het risico op hypo’s verkleind. Ook wordt voorkomen dat er meer insuline wordt toegediend dan de basaalstand toestaat (behalve bij een negatieve IOB)</string>
+    <string name="objectives_maxiob_objective">De closed-loopmodus afstellen, MaxIOB boven 0 verhogen en de streefdoelen voor de bloedglucose geleidelijk verlagen</string>
+    <string name="objectives_maxiob_gate">Laat de loop enkele dagen draaien, waaronder ten minste één nacht zonder hypo-alarmen, voordat het streefdoel voor de bloedglucose wordt verlaagd</string>
+    <string name="objectives_maxiob_learned">Pas MaxIOB aan naarmate het kind groeit. Zorg ervoor dat het AAPS nooit meer insuline kan toedienen dan met voeding kan worden opgevangen: een zeer hoge waarde is daarom af te raden. In de eenvoudige modus wordt MaxIOB automatisch berekend</string>
     <string name="maxiobset">Maximale IOB correct ingesteld (niet nodig in eenvoudige modus)</string>
-    <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
-    <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten. In de eenvoudige modus is autosens standaard ingeschakeld.</string>
-    <string name="objectives_autosens_learned">Als het resultaat van je autosens niet rond de 100% schommelt, is je profiel waarschijnlijk onjuist.</string>
-    <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
-    <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen! Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal. In de eenvoudige modus wordt deze waarde berekend volgens de aanbeveling in de wiki en hoef je deze niet in te stellen.</string>
-    <string name="objectives_smb_learned">Het gebruik van SMB is het uiteindelijke doel. Het Oref1 algoritme is ontworpen om je ook te helpen met je bolussen. Je hoeft geen volledige bolus te geven voor jouw voeding, maar slechts een deel ervan en AAPS zal de rest geven als dat nodig is. Op deze manier heb je meer ruimte voor verkeerd berekende koolhydraten. Wist je dat je een percentage in de bolus calculator kan instellen om de hoeveelheid bolus te verminderen?</string>
+    <string name="objectives_autosens_objective">Pas zo nodig de basaalstanden en verhoudingen aan en schakel daarna Autosens in</string>
+    <string name="objectives_autosens_gate">Eén week lang overdag succesvol loopen en regelmatig koolhydraten invoeren. In de eenvoudige modus is Autosens standaard ingeschakeld.</string>
+    <string name="objectives_autosens_learned">Als het Autosens-resultaat niet rond de 100% schommelt, zijn de profielinstellingen waarschijnlijk onjuist.</string>
+    <string name="objectives_smb_objective">Overdag aanvullende functies inschakelen, zoals SMB</string>
+    <string name="objectives_smb_gate">Lees de wiki en verhoog MaxIOB om SMB goed te laten functioneren. Een goed uitgangspunt is: MaxIOB = gemiddelde maaltijdbolus + 3 × maximale dagelijkse basaalstand. In de eenvoudige modus wordt deze waarde berekend volgens de aanbevelingen in de wiki en hoeft deze niet handmatig te worden ingesteld.</string>
+    <string name="objectives_smb_learned">Het gebruik van SMB is het uiteindelijke doel. Het Oref1-algoritme is ook ontworpen om te helpen bij de bolustoediening. Dien bij een maaltijd niet de volledige berekende bolus toe, maar slechts een deel ervan. Laat AAPS zo nodig de rest toedienen. Op deze manier ontstaat er meer ruimte voor eventuele fouten bij het berekenen van de hoeveelheid koolhydraten. Wist je dat het mogelijk is om een percentage van de uitkomst van de boluscalculator in te stellen, zodat de bolus wordt verlaagd?</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
-    <string name="objectives_auto_gate">Lees de documentatie over hoe automatisering werkt. Maak daarna je eerste simpele regels, waarbij je in plaats van acties eerst gebruikt maakt van de notificaties. Wanneer je er dan zeker van bent, dat je automatisering op de goede momenten wordt geactiveerd, kan je de noticifcatie omzetten naar een echte actie. 
-(https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/Automations.html)</string>
-    <string name="objectives_auto_learned">Automatisering kan een goede dienaar zijn, maar een slechte meester. Vermijdt overmatig gebruik. Probeer niet om het onderliggende algoritme te vervangen. Test de regel alleen met het bericht voor het gebruik. De uitvoering hangt af van de volgorde waarin ze staan.</string>
-    <string name="objectives_bgavailableinns">BG beschikbaar in NS of Tidepool</string>
-    <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS of Tidepool</string>
-    <string name="objectives_manualenacts">Handmatige aanpassingen</string>
+    <string name="objectives_auto_gate">Lees de documentatie over de werking van automatiseringen. Begin met enkele eenvoudige regels. Laat AAPS in plaats van een actie uit te voeren eerst alleen een melding weergeven. Zo kun je controleren of de automatisering op het juiste moment wordt geactiveerd. Vervang de melding pas door de daadwerkelijke actie wanneer zeker is dat de automatisering op het juiste moment wordt geactiveerd.(https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Automatisering kan nuttig zijn, maar heeft zijn beperkingen. Gebruik automatiseringen daarom met mate en probeer het onderliggende algoritme niet te vervangen. Test een regel eerst met alleen een melding voordat deze daadwerkelijk acties uitvoert. Ook de volgorde waarin regels worden uitgevoerd, is van belang.</string>
+    <string name="objectives_bgavailableinns">Bloedglucosegegevens beschikbaar in NS of Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Pompstatus beschikbaar in NS of Tidepool</string>
+    <string name="objectives_manualenacts">Handmatige acties</string>
     <string name="accomplished">Voltooid: %1$s</string>
     <string name="objectives_usage_objective">Leer hoe AAPS te gebruiken</string>
-    <string name="objectives_usage_gate">Voer verschillende acties uit in AAPS</string>
-    <string name="objectives_usage_learned">Je hebt de basis van AAPS geleerd. De meeste bedieningselementen bevinden zich op het overzichtsscherm. Meer acties vind je in de menu\'s \'Behandelingen\' en \'Beheer\' onderaan het scherm, en in het zijmenu.</string>
-    <string name="objectives_useprofileswitch">Stel profiel in op 90% gedurende 10 min</string>
-    <string name="objectives_usedisconnectpump">Simuleer douchen. Ontkoppel de pomp gedurende 1 uur</string>
-    <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>
+    <string name="objectives_usage_gate">Verschillende acties uitvoeren in AAPS</string>
+    <string name="objectives_usage_learned">De basis van AAPS is nu bekend. De meeste bedieningsmogelijkheden bevinden zich op het scherm Overzicht. Meer acties zijn te vinden in de menu’s Behandelingen en Beheren onderaan het scherm en in het zijmenu.</string>
+    <string name="objectives_useprofileswitch">Stel het profiel in op 90% gedurende 10 min</string>
+    <string name="objectives_usedisconnectpump">Simuleer douchen. Koppel de pomp gedurende 1 uur los</string>
+    <string name="objectives_usereconnectpump">… en sluit de pomp daarna weer aan</string>
     <string name="objectives_usetemptarget">Maak een aangepast, tijdelijk streefdoel met een duur van 10 minuten</string>
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
-    <string name="objectives_usescale">Gebruik scrol of zoom op de BG grafiek</string>
-    <string name="objectives_exam_objective">Bewijs je kennis</string>
-    <string name="objectives_exam_gate">Bekijk de vragen. Elke vraag heeft meerdere mogelijke antwoorden, en er kunnen meerdere antwoorden juist zijn. Vink alle juiste antwoorden aan en selecteer \'Controleren\'.</string>
-    <string name="objectives_exam_learned_prerequisites">Je hoeft geen ontwikkelaar te zijn. Je hebt Nightscout of Tidepool nodig om de doelstellingen te voltooien, een compatibele pomp en een manier om AAPS te bouwen (via een webbrowser of met Android Studio) voor de eerste installatie en voor elke update.</string>
-    <string name="objectives_exam_learned_prerequisites2">AAPS kan offline worden uitgevoerd.</string>
-    <string name="objectives_exam_learned_basaltest">Het profiel moet worden beoordeeld en bijgewerkt. Een beter profiel = betere resultaten.</string>
-    <string name="objectives_exam_learned_dia">DIA in een loop heeft een andere betekenis (tijd totdat alle insuline is geabsorbeerd) dan in klassieke pomptherapie (tijd tot de meeste insuline is geabsorbeerd).</string>
-    <string name="objectives_exam_learned_isf">Je hebt de betekenis van ISF geleerd en welke invloed deze heeft op de hoeveelheid insuline die voor BG correctie wordt gebruikt.</string>
-    <string name="objectives_exam_learned_ic">Je hebt de betekenis van de KH-ratio geleerd en welke invloed deze heeft op de hoeveelheid insuline die nodig is om koolhydraten te dekken.</string>
-    <string name="objectives_exam_learned_hypott">Hypo tijdelijk doel wordt alleen gebruikt om overcorrectie na een hypo te voorkomen, wanneer er meestal een negatieve IOB aanwezig is. Aanvullende maatregelen zijn nodig om deze situatie in de toekomst te voorkomen.</string>
-    <string name="objectives_exam_learned_profileswitch" formatted="false">Het gebruik van een percentage heeft geen invloed op de BG-streefdoelen. De basaalstanden, ISF en IC worden echter wel aangepast, zodat er meer insuline (bij een percentage boven 100%) of minder insuline (bij een percentage onder 100%) wordt toegediend.</string>
-    <string name="objectives_exam_learned_profileswitchtime">Door gebruik te maken van Tijd verschuiving in je profiel switch kunt u het circadian profiel aanpassen aan onregelmatigheden zoals laat opstaan.</string>
-    <string name="objectives_exam_learned_profileswitch4">Het profiel zelf bewerken is niet voldoende om de verandering door te voeren. Je moet nog een profiel wissel uitvoeren om de wijzigingen te activeren.</string>
-    <string name="objectives_exam_learned_exercise">Om de hoeveelheid insuline in je lichaam voordat je begint met sporten te verlagen zul je minimaal een uur van tevoren een profiel wissel naar minder dan 100% moeten instellen.</string>
-    <string name="objectives_exam_learned_exercise2">Het instellen van een hoger tijdelijk streefdoel minstens 1 uur voor de oefening helpt ook om de hoeveelheid insuline in het lichaam te verminderen.</string>
-    <string name="objectives_exam_learned_noisycgm">Wanneer je de CGM-waarden niet kunt vertrouwen is het af te raden om de loop zonder toezicht te gebruiken.</string>
-    <string name="objectives_exam_learned_pumpdisconnect">AAPS moet weten wanneer de pomp niet verbonden is om zo een correcte IOB te berekenen.</string>
-    <string name="objectives_exam_learned_insulin">AAPS moet weten welke insuline zich in de pomp bevindt, omdat dit van invloed is op de berekening van de IOB.</string>
-    <string name="objectives_exam_learned_sensitivity">Gevoeligheid detectie maakt deel uit van het algoritme waarmee de insuline dosering kan worden aangepast aan verschillende situaties.</string>
-    <string name="objectives_exam_learned_objectives">Uw voortgang in Doelen wordt samen met andere instellingen opgeslagen en deze moeten worden bewaard (backup).</string>
-    <string name="objectives_exam_learned_objectives2">Bewaar de geëxporteerde instellingen en de gegenereerde APK ook buiten de telefoon. De telefoon kan verloren gaan, beschadigd raken, etc. Cloud storage welke toegankelijk is vanaf je telefoon is hiervoor een geschikte locatie. In zo\'n geval kan je AAPS binnen enkele minuten herstellen op een ander toestel. Het is ook een goede gewoonte om het gebruikte hoofdwachtwoord ook op een veilige plaats te bewaren. Zonder dit wachtwoord is de backup onbruikbaar. Hetzelfde geldt voor het sleutelbestand (.jks file) en de wachtwoorden welke gebruikt zijn om AAPS te bouwen. De rest is niet belangrijk - en kan op elk moment opnieuw van internet gedownload worden.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Als je een verkeerde invoer in AAPS hebt gedaan, of als deze niet overeenkomt met de realiteit, los deze dan zo snel mogelijk op. Dit kan leiden tot overdosering. AAPS moet altijd zo goed mogelijk geïnformeerd worden over koolhydraten, insuline etc.</string>
-    <string name="objectives_exam_learned_iob">Als je analyseert of AAPS goed voor je werkt, kan het bekijken van de IOB-grafiek veel nuttige informatie opleveren.</string>
-    <string name="objectives_exam_learned_cob">De COB-berekening is afhankelijk van de relatie tussen ISF en IC. Een verhoging van ISF of een verlaging van IC leidt tot langere absorptietijden. Bij een profielwijziging met een procentuele verandering van beide waarden tegelijkertijd wordt de absorptietijd echter niet beïnvloed.</string>
-    <string name="objectives_exam_learned_breadgrams">Alleen gram is toegestaan voor de invoer van koolhydraten.</string>
+    <string name="objectives_usescale">Gebruik scrollen of zoomen op de bloedglucosegrafiek</string>
+    <string name="objectives_exam_objective">Toets je kennis</string>
+    <string name="objectives_exam_gate">Neem de vragen door. Elke vraag heeft één of meerdere juiste antwoorden. Vink alle juiste antwoorden aan en druk daarna op \'Verifieer\'.</string>
+    <string name="objectives_exam_learned_prerequisites">Je hoeft geen ontwikkelaar te zijn. Om de leerdoelen te kunnen afronden, heb je wel Nightscout of Tidepool en een ondersteunde pomp nodig. Daarnaast moet je AAPS kunnen bouwen, via een webbrowser of met Android Studio. Dat is nodig bij de eerste installatie en bij elke update.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS kan ook zonder internetverbinding worden gebruikt.</string>
+    <string name="objectives_exam_learned_basaltest">Controleer en actualiseer het profiel regelmatig. Een beter profiel leidt tot betere resultaten.</string>
+    <string name="objectives_exam_learned_dia">De DIA (insulinewerkingsduur) heeft in AAPS een andere betekenis dan bij klassieke pomptherapie. In AAPS is dit de tijd totdat alle insuline is opgenomen, terwijl het bij klassieke pomptherapie gaat om de tijd totdat het grootste deel van de insuline is opgenomen.</string>
+    <string name="objectives_exam_learned_isf">De betekenis van de ISF-waarde en de invloed ervan op de hoeveelheid insuline die nodig is om een hoge bloedglucose te corrigeren, zijn nu bekend.</string>
+    <string name="objectives_exam_learned_ic">De betekenis van de koolhydraat-ratio (IC) en de invloed ervan op de hoeveelheid insuline die nodig is om de koolhydraten te dekken, zijn nu bekend.</string>
+    <string name="objectives_exam_learned_hypott">Het tijdelijke hypo-streefdoel wordt uitsluitend gebruikt om overcorrectie na een hypo te voorkomen. Na een hypo is er doorgaans sprake van een opeenstapeling van negatieve IOB. Overweeg aanvullende maatregelen om herhaling in de toekomst te voorkomen.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Het gebruik van een percentage heeft geen invloed op de streefdoelen voor de bloedglucose. Wel worden de basaalstanden, ISF en koolhydraat-ratio\'s aangepast om meer insuline (boven 100%) of minder insuline (onder 100%) toe te dienen.</string>
+    <string name="objectives_exam_learned_profileswitchtime">Met de tijdverschuiving bij een profielwissel kan het profiel worden aangepast aan afwijkingen in het dagritme, zoals later wakker worden.</string>
+    <string name="objectives_exam_learned_profileswitch4">Alleen het bewerken van het profiel is niet voldoende om wijzigingen door te voeren. Voer ook een profielwissel uit om de wijzigingen te activeren.</string>
+    <string name="objectives_exam_learned_exercise">Verlaag de hoeveelheid insuline in het lichaam door minstens één uur voor het sporten een profiel van minder dan 100% te kiezen.</string>
+    <string name="objectives_exam_learned_exercise2">Een andere manier om de hoeveelheid insuline in het lichaam te verminderen, is door minstens één uur voor het sporten een hoger tijdelijk streefdoel in te stellen.</string>
+    <string name="objectives_exam_learned_noisycgm">Als de CGM-waarden niet betrouwbaar zijn, mag de loop niet onbeheerd worden gebruikt.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">Om de IOB correct te kunnen berekenen, moet AAPS weten wanneer de pomp is afgekoppeld.</string>
+    <string name="objectives_exam_learned_insulin">Om de IOB correct te kunnen berekenen, moet AAPS weten welke insuline zich in de pomp bevindt.</string>
+    <string name="objectives_exam_learned_sensitivity">Gevoeligheidsdetectie maakt deel uit van het algoritme en zorgt ervoor dat de insulinedosering aan verschillende situaties kan worden aangepast.</string>
+    <string name="objectives_exam_learned_objectives">De voortgang van de leerdoelen wordt samen met de overige instellingen opgeslagen en moet daarom ook worden geback-upt.</string>
+    <string name="objectives_exam_learned_objectives2">Bewaar geëxporteerde instellingen en het gegenereerde APK-bestand altijd ook buiten de telefoon. De telefoon kan immers kwijtraken of beschadigd raken. Een geschikte plek is bijvoorbeeld een cloudopslag die vanaf de telefoon toegankelijk is. Zo kan AAPS binnen enkele minuten op een ander apparaat worden hersteld. Bewaar ook het hoofdwachtwoord op een veilige plek. Zonder dit wachtwoord is de back-up onbruikbaar. Hetzelfde geldt voor de ondertekeningssleutels (.jks bestand) en de wachtwoorden die zijn gebruikt om AAPS te bouwen. De overige bestanden zijn niet belangrijk en kunnen op elk moment opnieuw van internet worden gedownload.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Als de gegevens in AAPS onjuist zijn of niet overeenkomen met de werkelijkheid, corrigeer deze dan zo snel mogelijk. Onjuiste gegevens kunnen leiden tot een overdosering. AAPS moet altijd zo goed mogelijk op de hoogte zijn van de toegediende koolhydraten, insuline enzovoort.</string>
+    <string name="objectives_exam_learned_iob">Om te beoordelen of AAPS goed werkt, kan het bekijken van de IOB-grafiek veel nuttige informatie opleveren.</string>
+    <string name="objectives_exam_learned_cob">De COB-berekening is afhankelijk van de ISF en de koolhydraatratio. Een verhoging van ISF of een verlaging van koolhydraatratio leidt tot een langzamere koolhydraatabsorptie. Bij een profielwissel met een procentuele aanpassing worden beide waarden echter tegelijkertijd aangepast, waardoor de koolhydraatabsorptie niet verandert.</string>
+    <string name="objectives_exam_learned_breadgrams">Koolhydraten kunnen alleen in grammen worden ingevoerd.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs kunnen worden gezien als een vervanging van een vertraagde bolus in het algemene pomp jargon.</string>
-    <string name="objectives_exam_learned_nsclient">Je kunt AAPS op afstand volgen met AAPSClient of Nightscout. Wanneer AAPSClient is gekoppeld aan de AAPS-telefoon, kun je AAPS ook op afstand bedienen.</string>
-    <string name="objectives_exam_learned_concentration1">Het gebruik van U200-insuline met een profielinstelling van 50% vereist een permanente omrekening: voor externe bolussen met pennen, en omdat alle standaardrapporten van AAPS of NS onjuist zullen zijn en voor het medisch team moeten worden omgerekend naar IE.</string>
-    <string name="objectives_exam_learned_concentration2" formatted="false">Overschakelen van U200 met een 50% profiel naar U200 met de insuline concentratie functie vereist het maken van een nieuw, sterker profiel. Schakel \'DynISF\' uit voor een week en train het systeem om in Internationale Eenheden te denken.</string>
-    <string name="objectives_exam_learned_concentration3">Insuline concentratie kan alleen worden gewijzigd wanneer de insuline of de patch wordt gewijzigd. Belangrijk, vooral voor de tube pompen: gebruik nooit de interface van de pomp om bolussen direct vanuit de pomp toe te dienen.</string>
+    <string name="objectives_exam_learned_nsclient">AAPS kan op afstand worden gevolgd met AAPSClient of Nightscout. Wanneer AAPSClient is gekoppeld aan de AAPS-mastertelefoon, kan AAPS ook op afstand worden bediend.</string>
+    <string name="objectives_exam_learned_concentration1">Bij gebruik van U200-insuline in combinatie met een profiel van 50% is een permanente omrekening nodig. Dit geldt zowel voor externe bolussen die met een insulinepen worden toegediend als voor de standaardrapporten van AAPS en Nightscout. Deze rapporten geven namelijk onjuiste waarden weer en moeten voor het behandelteam worden omgerekend naar internationale eenheden (IE).</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Bij de overstap van U200 met een 50%-profiel naar U200 met de insulineconcentratiefunctie is een nieuw, sterker profiel nodig. Dynamische ISF dient gedurende de eerste week te worden uitgeschakeld. Ook is het belangrijk om te leren rekenen met internationale eenheden (IE).</string>
+    <string name="objectives_exam_learned_concentration3">De insulineconcentratie kan alleen worden gewijzigd bij het vervangen van de insuline of de Patch. Daarnaast is het, vooral bij pompen met een slangetje, belangrijk om nooit rechtstreeks via de gebruikersinterface van de pomp een bolus toe te dienen.</string>
     <string name="answerdisabledto">Beantwoorden uitgeschakeld tot: %1$s</string>
-    <string name="wronganswer">Verkeerd antwoord!</string>
+    <string name="wronganswer">Onjuist antwoord!</string>
     <string name="unfinshed_button">Volgende onvoltooide</string>
     <string name="requestcode">Aanvraagcode: %1$s</string>
     <string name="objectives_hint">(controleer alle juiste antwoorden)</string>
@@ -85,22 +84,22 @@
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Niet verbonden met het internet</string>
     <string name="failedretrievetime">Tijd kon niet worden opgehaald</string>
-    <string name="requirementnotmet">Vereisten van doel niet behaald</string>
+    <string name="requirementnotmet">Niet voldaan aan de vereisten van het leerdoel</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
-    <string name="verify_master_password">Verifieer dat u het hoofdwachtwoord kent</string>
+    <string name="verify_master_password">Bevestig het hoofdwachtwoord</string>
     <string name="objectives_collapse">Minder</string>
     <string name="objectives_expand">Meer</string>
-    <string name="objectives_no_learned">Geen lessen vastgelegd voor dit doel.</string>
+    <string name="objectives_no_learned">Er zijn geen lessen geregistreerd voor dit leerdoel.</string>
     <string name="objectives_open_exam">Start examen</string>
     <string name="objectives_exam_question_progress">Vraag %1$d van %2$d</string>
     <string name="objectives_exam_reset">Herstart</string>
     <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Klaar</string>
     <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Bezig</string>
-    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Not started</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Niet gestart</string>
     <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Vergrendeld</string>
     <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">juist antwoord</string>
     <string name="objectives_exam_previous">Vorige</string>
     <string name="objectives_exam_next">Volgende</string>
-    <string name="objectives_exam_next_unanswered">Volgende onbeantwoord</string>
-    <string name="objectives_show_hint">Tip</string>
+    <string name="objectives_exam_next_unanswered">Volgende onbeantwoorde vraag</string>
+    <string name="objectives_show_hint">Hint</string>
 </resources>

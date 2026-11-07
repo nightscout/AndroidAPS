@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Chưa chuyển sang loại insulin mới: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_unconfirmed">Không thể xác nhận việc chuyển đổi loại insulin. Hãy kiểm tra loại insulin nào đang hoạt động trong cấu hình trước khi tiêm insulin.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Chưa chuyển đổi loại insulin. Loại insulin trước đó vẫn đang được sử dụng.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulin cũng chưa được chuyển đổi. Nếu insulin mới đã có trong bơm, không kết nối bơm và thực hiện lại quy trình thay đổi insulin.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
     <string name="date">Ngày</string>
     <string name="insulin_nickname_label">Tên gọi insulin</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Chọn cấu hình để áp dụng khi kích hoạt.</string>
     <string name="pump_wizard_profile_gate_no_store">Chưa có cấu hình nào được thiết lập. Mở Quản lý cấu hình để tạo cấu hình rồi kích hoạt lại.</string>
     <string name="reset">Đặt lại</string>
-    <string name="profileswitch_ismissing">Thiếu Chuyển đổi Cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn “Kích hoạt cấu hình” trong cấu hình cục bộ.</string>
+    <string name="profileswitch_ismissing">Chưa chuyển đổi cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn \"Kích hoạt cấu hình\" trong Cấu hình cục bộ.</string>
     <string name="profile">Cấu hình</string>
     <string name="percentage_label">Phần trăm</string>
     <string name="timeshift_label">Dịch chuyển thời gian</string>
-    <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
+    <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Thiết bị chính không có %1$d mục trong số này. Các mục đó sẽ không bị xóa.</string>
     <string name="overview_treatment_label">Điều trị</string>
     <string name="copytolocalprofile">Tạo cấu hình mới từ cấu hình này không?</string>
@@ -661,7 +661,7 @@
     <string name="uel_ns_queue_cleared">ĐÃ XOÁ HÀNG ĐỢI NS</string>
     <string name="uel_ns_settings_copied">ĐÃ SAO CHÉP CÀI ĐẶT NS</string>
     <string name="uel_error_dialog_ok">THÔNG BÁO LỖI OK</string>
-    <string name="uel_error_dialog_mute">TẮT ÂM BÁO LỖI </string>
+    <string name="uel_error_dialog_mute">TẮT ÂM BÁO LỖI</string>
     <string name="uel_error_dialog_mute_5min">TẮT ÂM BÁO LỖI TRONG 5 PHÚT</string>
     <string name="uel_objective_started">MỤC TIÊU ĐÃ BẮT ĐẦU</string>
     <string name="uel_objective_unstarted">MỤC TIÊU CHƯA BẮT ĐẦU</string>
@@ -726,7 +726,7 @@
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
     <string name="error_in_basal_values">Lỗi ở các giá trị liều nền</string>
     <string name="error_in_target_values">Lỗi ở các giá trị mục tiêu</string>
-    <string name="profile_name_contains_dot">Một số tên cấu hình chứa dấu chấm (.).\nĐiều này không được NS hỗ trợ.\nCác cấu hình sẽ không được tải lên NS.</string>
+    <string name="profile_name_contains_dot">Một số tên cấu hình có chứa dấu chấm.\nNS không hỗ trợ ký tự này.\nCác cấu hình sẽ không được tải lên NS.</string>
     <string name="invalid_profile_not_accepted">Cấu hình %1$s không hợp lệ, không được chấp nhận từ NS</string>
     <string name="errors">Lỗi</string>
     <!-- Command Queue + readStatus reasons -->
@@ -891,7 +891,7 @@
     <string name="export_result_message_exported">Đã xuất cài đặt</string>
     <string name="export_result_message_failed">Xuất cài đặt THẤT BẠI!</string>
     <string name="export_result_message_about_to_expire">Đã xuất cài đặt: mật khẩu sắp hết hạn. Vui lòng xuất thủ công và nhập lại mật khẩu.</string>
-    <string name="export_result_message_expired">Xuất cài đặt bị hủy: mật khẩu đã hết hạn. Vui lòng xuất thủ công và nhập lại!</string>
+    <string name="export_result_message_expired">Đã hủy xuất cài đặt: mật khẩu đã hết hạn. Vui lòng xuất thủ công và nhập lại mật khẩu!</string>
     <string name="export_result_message_disabled">Cảnh báo (tự động hoá): Xuất cài đặt chưa được bật!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Xuất dữ liệu lên đám mây thành công</string>
@@ -998,7 +998,7 @@
     <string name="cannula">Kim luồn</string>
     <string name="patch_pump">Patch pump</string>
     <!-- Site Rotation -->
-    <string name="select_location">Nhấn bên dưới để chọn vị trí</string>
+    <string name="select_location">Nhấn vào bên dưới để chọn vị trí</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Đừng tắt ứng dụng!</string>
     <string name="fabric_upload_disabled">Đã vô hiệu hóa tải lên nhật ký sự cố!</string>
@@ -1044,7 +1044,7 @@
     <string name="unsaved_changes">Chưa lưu thay đổi</string>
     <string name="unsaved_changes_message">Có thay đổi chưa lưu. Bạn muốn làm gì?</string>
     <string name="discard">Loại bỏ</string>
-    <string name="ic_dynamic_label_warning">Thuật toán của bạn có thể tính toán IC động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
+    <string name="ic_dynamic_label_warning">Thuật toán của bạn có thể tính toán IC động. Các giá trị bên dưới chỉ được sử dụng làm phương án dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
     <string name="isf_dynamic_label_warning">Thuật toán của bạn có thể tính toán ISF động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
     <string name="add_time_block">Thêm thời gian</string>
     <string name="remove_entry">Xóa mục</string>
@@ -1107,6 +1107,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Số các cài đặt cần thay đổi: %1$d. Các plugin có thay đổi sẽ được khởi động lại.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Số các cài đặt cần thay đổi: %1$d. Các cài đặt bơm được giữ lại: %2$d, vì vậy bơm của bạn vẫn tiếp tục hoạt động.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Các cài đặt đã nhập chọn một loại bơm không có trên điện thoại này. %1$s hiện đang hoạt động — hãy kiểm tra cài đặt bơm.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Đã thêm vào danh sách insulin của bạn từ bản sao lưu: %1$s. Hiện chưa được sử dụng: hãy chọn loại insulin phù hợp khi kích hoạt cấu hình và thực hiện việc này trước khi Nightscout tải xuống các dữ liệu điều trị cũ của bạn.</string>
     <string name="import_applying">Áp dụng các cài đặt…</string>
     <string name="import_replace_pump_settings">Đồng thời thay thế cài đặt bơm</string>
     <string name="import_replace_pump_settings_summary">Để tắt tùy chọn này để giữ lại bơm mà điện thoại này đang ghép nối. Bật tùy chọn này khi khôi phục trên điện thoại mới với cùng một bơm.</string>

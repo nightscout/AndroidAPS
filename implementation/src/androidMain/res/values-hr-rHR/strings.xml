@@ -10,10 +10,8 @@
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="filenotfound">Datoteka nije pronađena</string>
     <string name="exported_at" comment="at placeholder we add export date">izvezeno u %1$s</string>
-    <string name="exported_less_than_hour_ago">izvezeno prije manje od sat vremena</string>
     <string name="metadata_warning_different_flavour">Postavke su stvorene s drugom varijantom AAPS-a (%1$s) dok vi imate: %2$s.\n\nNeke postavke možda nedostaju ili su nevažeće - nakon uvoza provjerite i ažurirajte svoje postavke.</string>
     <string name="metadata_warning_different_device">Postavke su stvorene na drugom uređaju. U redu je ako uvozite sa starijeg/drugog telefona, ali provjerite jesu li uvezene postavke točne!</string>
-    <string name="metadata_warning_old_export">Uvezene postavke stare su već %1$s dana! Možda imate ažurnije postavke ili ste odabrali pogrešnu datoteku? Ne zaboravite redovito izvoziti postavke!</string>
     <string name="metadata_warning_date_format">Nevažeći format datuma i vremena!</string>
     <string name="metadata_warning_different_version">Postavke iz različite manje verzije aplikacije. U redu je ako uvozite nakon nadogradnje, ali nakon uvoza provjerite jesu li postavke još uvijek točne!</string>
     <string name="metadata_urgent_different_version">Postavke iz različitih glavnih verzija aplikacije. Glavne verzije se značajno razlikuju i mogu imati nekompatibilne postavke! Provjerite jesu li postavke još uvijek točne nakon uvoza!</string>

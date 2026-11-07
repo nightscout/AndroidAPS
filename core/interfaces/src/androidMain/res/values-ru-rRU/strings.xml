@@ -141,6 +141,5 @@
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
-    <string name="advisoralarm">Напомнить о еде</string>
     <string name="format_insulin_units">%1$.2f ед</string>
 </resources>

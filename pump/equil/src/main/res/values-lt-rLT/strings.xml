@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Equil 5.3 ar naujesnė patch pompa </string>
+    <string name="equil_pump_description">Equil 5.3 ar naujesnė patch pompa</string>
     <!--  start  -->
     <string name="equil_basal_speed">Bazinis insulinas</string>
     <string name="equil_dressing">Rezervuaro keitimas</string>

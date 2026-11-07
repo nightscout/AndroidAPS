@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, 碳水=%2$.1f 克</string>
-    <string name="omnipod_eros_history_tbr_value">速率： %1$.2f U，持续时间： %2$d 分钟</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">通信失败：消息完整性验证失败</string>
     <string name="omnipod_eros_error_invalid_packet_type">通信失败：从 Pod 收到无效的数据包</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">RileyLink 没有响应</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink已中断</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Pod无响应</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">设置基础率配置失败。输注可能被暂停！请手动从Omnipod 选项卡刷新Pod 状态，如果需要则恢复基础率输注。</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">设置基础率配置可能已失败。输注可能已暂停！请手动从 Omnipod 选项卡刷新Pod 状态，如果需要则恢复基础率输注。</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">设置基础率配置失败。输注已暂停！请从Omnipod 选项卡手动恢复基础率输注。</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">取消临时基础率可能失败。请从Omnipod 标签页手动刷新Pod 状态。</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">设置临时基础率失败。如果临时基础率先前运行，它可能已被取消。 请手动从 Omnipod 标签页刷新Pod 状态。</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">设置临时基础率可能已经失败。如果临时基础率先前正在运行，它已被取消。 请手动从 Omnipod 标签页刷新Pod 状态。</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">临时基础率TBR 持续时间必须大于零，且是 %1$s 分钟的倍数。</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">设置时间可能失败。胰岛素输注可能被暂停！请手动从 Omnipod 选项卡刷新Pod 状态，如果需要则恢复输注。</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">设置时间失败。胰岛素输注已暂停！请从Omnipod 选项卡手动恢复输注。</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">在 Pod上自动更改时间失败。您应该手动同步Omnipod 标签页上的时间。</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">无法验证大剂量是否成功。请手动验证你的Pod是否输注成功，通过点击listening功能。 <b>如果你确定大剂量没有成功。 您应该手动删除治疗中的大剂量条目，即使您现在点击“取消大剂量”！</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">无法验证SMB微型大剂量(%1$.2f U)是否成功。 <b>如果你确定大剂量没有成功，你应该手动删除治疗记录中的 SMB条目。</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod上运行了一个临时基础率，但AAPS不知道这个临时基础。请手动取消您的临时基础率。</string>

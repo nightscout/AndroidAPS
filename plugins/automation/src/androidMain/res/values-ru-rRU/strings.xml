@@ -21,8 +21,6 @@
     <string name="sendsmsactiondescription">Отправить SMS на все номера</string>
     <string name="sendsmsactiontext">Отправить SMS с текстом</string>
     <string name="starttemptarget">Начать врем цель</string>
-    <string name="islesser">меньше чем</string>
-    <string name="isequalorlesser">равно или меньше чем</string>
     <string name="isequal">равно</string>
     <string name="isequalorgreater">равно или больше чем</string>
     <string name="isgreater">больше чем</string>
@@ -52,7 +50,6 @@
     <string name="add_short">ДОБАВИТЬ</string>
     <string name="temptargetcompared">Врем цель %1$s</string>
     <string name="btdevicecompared">Подключение Bluetooth к устройству %1$s %2$s</string>
-    <string name="btdevice">Соединение с устройством Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Автосенс %1$s %2$s %%</string>
     <string name="autosenslabel">Автосенс %</string>

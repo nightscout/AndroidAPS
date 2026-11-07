@@ -136,7 +136,6 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Das Insulin wurde nicht gewechselt: %1$s Dein bisheriges Insulin ist weiterhin aktiv.</string>
     <string name="insulin_activation_unconfirmed">Der Insulin-Wechsel konnte nicht bestätigt werden. Prüfe vor der Insulinabgabe, welches Insulin in deinem Profil aktiv ist.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">​Das Insulin wurde nicht gewechselt. Dein vorheriges Insulin ist immer noch in Verwendung.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAuch das Insulin wurde nicht gewechselt.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="insulin_nickname_label">Insulin-Kurzbezeichnung</string>
@@ -226,11 +225,11 @@
     <string name="pump_wizard_profile_gate_pick">Wähle das Profil aus, das bei der Aktivierung angewendet werden soll.</string>
     <string name="pump_wizard_profile_gate_no_store">Kein Profil vorhanden. Öffne die Profilverwaltung, erstelle ein Profil und starte anschließend die Aktivierung erneut.</string>
     <string name="reset">Zurücksetzen</string>
-    <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
+    <string name="profileswitch_ismissing">Profilwechsel fehlt. Führe einen Profilwechsel durch oder tippe im lokalen Profil auf „Profil aktivieren“.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Prozentsatz</string>
     <string name="timeshift_label">Zeitverschiebung</string>
-    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="confirm_remove_multiple_items">Möchtest du wirklich %1$d Einträge entfernen?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">%1$d dieser Einträge sind auf dem Master nicht vorhanden. Sie werden nicht entfernt.</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
@@ -316,7 +315,7 @@
     <string name="record_insulin_hint">Wenn du mit einem Pen verabreichtes Insulin einträgst, wähle unten den passenden Insulintyp aus. Die Dosis wird immer in Internationalen Einheiten angegeben.</string>
     <!--       Stats -->
     <string name="average">Durchschnitt</string>
-    <string name="tir">Zeit im Zielbereich</string>
+    <string name="tir">TIR</string>
     <string name="below" comment="below &quot;in range&quot;">Unter</string>
     <string name="in_range">Im Zielbereich</string>
     <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
@@ -342,9 +341,9 @@
     <string name="careportal_note">Notiz</string>
     <string name="careportal_question">Frage</string>
     <string name="careportal_exercise">Bewegung</string>
-    <string name="careportal_announcement_message">Ankündigung : %1$s</string>
+    <string name="careportal_announcement_message">Mitteilung: %1$s</string>
     <string name="careportal_note_message">Hinweis : %1$s</string>
-    <string name="careportal_question_message">Frage : %1$s</string>
+    <string name="careportal_question_message">Frage: %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">​Setzstelle wechseln.: %1$s</string>
     <string name="careportal_pump_site_change">Pumpenkatheter-Wechsel</string>
@@ -437,7 +436,7 @@
     <string name="client_roles_info_open">​Über Rollen</string>
     <string name="client_roles_info">Jedes gekoppelte Telefon hat eine Rolle. Das Haupttelefon prüft diese bei jedem Befehl. Auf dem gekoppelten Telefon werden nur die Funktionen angezeigt, die seine Rolle erlaubt. Eine neue Rolle gilt sofort, ohne erneute Kopplung.\n\nNur lesen: Das Telefon bleibt gekoppelt, zeigt aber ausschließlich Daten an.\n\nMahlzeiten: Bolus, Bolusrechner, QuickWizard und Kohlenhydrate. Ein laufender Bolus kann ebenfalls gestoppt werden. Hier eingetragene Kohlenhydrate können dazu führen, dass der Loop mehr Insulin abgibt.\n\nBetreuung: Alle Bedienfunktionen in AAPS, etwa temporäre Ziele, Profil- und Insulinwechsel, Loop-Modus, temporäre Basalraten, verlängerte Boli, Szenen, Careportal-Ereignisse, Kalibrierungen und das Entfernen von Einträgen. Einstellungen und Voreinstellungen können nicht geändert werden.\n\nAdmin: Vollzugriff, einschließlich Einstellungen und Voreinstellungen (QuickWizard, Voreinstellungen für temporäre Ziele, Szenen, Profile, Automatisierung und Insulin).</string>
     <string name="client_read_only_banner">Dieses Telefon ist auf dem Haupttelefon auf „Nur lesen“ gesetzt.</string>
-    <string name="hardened_mode_info">Das Haupttelefon nimmt Änderungen nur von gekoppelten Clients an. Behandlungen, temporäre Ziele, Profilwechsel, Änderungen des Betriebsmodus oder Löschungen, die direkt in Nightscout vorgenommen werden, etwa über die Website oder andere Apps, werden nicht übernommen. Im abgesicherten Modus sind die Einst ellungen zur Übernahme von Daten aus Nightscout ausgeblendet. SMS-Befehle sind davon nicht betroffen.\n\nDas Haupttelefon lädt weiterhin alle Daten einschließlich der Glukosewerte zu Nightscout hoch. Wenn es seine Glukosewerte aus Nightscout bezieht, empfängt es diese weiterhin von dort.\n\nUm den Verlauf auf ein neues Haupttelefon zu laden, verwende die vollständige Synchronisierung in NSClient. Dabei werden alle in Nightscout vorhandenen Daten einschließlich der Profile übernommen.\n\nDie Fernsteuerung über Clients erfordert sowohl auf dem Haupttelefon als auch auf den gekoppelten Clients eine funktionierende WebSocket-Verbindung zu Nightscout. Der einfache Modus aktiviert immer den abgesicherten Modus. Um den abgesicherten Modus auszuschalten, verlasse den einfachen Modus und deaktiviere die Client-Steuerung auf dem Haupttelefon.</string>
+    <string name="hardened_mode_info">Das Haupttelefon nimmt Änderungen nur von gekoppelten Clients an. Behandlungen, temporäre Ziele, Profilwechsel, Änderungen des AAPS-Modus oder Löschungen, die direkt in Nightscout vorgenommen werden, etwa über die Website oder andere Apps, werden nicht übernommen. Im abgesicherten Modus sind die Einstellungen zur Übernahme von Daten aus Nightscout ausgeblendet. SMS-Befehle sind davon nicht betroffen.\n\nDas Haupttelefon lädt weiterhin alle Daten einschließlich der Glukosewerte zu Nightscout hoch. Wenn es seine Glukosewerte aus Nightscout bezieht, empfängt es diese weiterhin von dort.\n\nUm den Verlauf auf ein neues Haupttelefon zu laden, verwende die vollständige Synchronisierung in NSClient. Dabei werden alle in Nightscout vorhandenen Daten einschließlich der Profile übernommen.\n\nDie Fernsteuerung über Clients erfordert sowohl auf dem Haupttelefon als auch auf den gekoppelten Clients eine funktionierende WebSocket-Verbindung zu Nightscout. Der einfache Modus aktiviert immer den abgesicherten Modus. Um den abgesicherten Modus auszuschalten, verlasse den einfachen Modus und deaktiviere die Client-Steuerung auf dem Haupttelefon.</string>
     <string name="scene_lock_reason_master_offline">Master nicht verbunden</string>
     <string name="scene_lock_reason_control_disabled">Fernsteuerung deaktiviert</string>
     <string name="scene_lock_reason_scene_active">Beende zuerst die aktive Szene</string>
@@ -661,7 +660,7 @@
     <string name="uel_ns_queue_cleared">NS WARTESCHLANGE GELÖSCHT</string>
     <string name="uel_ns_settings_copied">NS EINSTELLUNGEN KOPIERT</string>
     <string name="uel_error_dialog_ok">WARNMELDUNG OK</string>
-    <string name="uel_error_dialog_mute">WARNMELDUNGEN STUMM</string>
+    <string name="uel_error_dialog_mute">FEHLERDIALOG STUMMGESCHALTET</string>
     <string name="uel_error_dialog_mute_5min">WARNMELDUNGEN STUMM 5 MIN</string>
     <string name="uel_objective_started">OBJECTIVE GESTARTET</string>
     <string name="uel_objective_unstarted">OBJECTIVE NICHT GESTARTET</string>
@@ -726,7 +725,7 @@
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
-    <string name="profile_name_contains_dot">Einige Profilnamen enthalten Punkte.\nDies wird von NS nicht unterstützt.\nProfile werden nicht zu NS hochgeladen.</string>
+    <string name="profile_name_contains_dot">Einige Profilnamen enthalten Punkte.\nDies wird von Nightscout nicht unterstützt.\nDie Profile werden nicht zu Nightscout hochgeladen.</string>
     <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
     <string name="errors">Fehler</string>
     <!-- Command Queue + readStatus reasons -->
@@ -737,7 +736,7 @@
     <string name="clear_alarms">ALARME LÖSCHEN</string>
     <string name="deactivate">DEAKTIVIEREN</string>
     <string name="update_time">ZEIT AKTUALIEREN</string>
-    <string name="load_history">HISTORIE LADEN %1$d</string>
+    <string name="load_history">VERLAUF LADEN %1$d</string>
     <string name="load_tdds">Lade TDDs</string>
     <string name="set_profile">PROFIL SETZEN</string>
     <string name="set_user_settings">NUTZER-EINSTELLUNGEN SETZEN</string>
@@ -780,7 +779,7 @@
     <string name="carbs_type_cake">Knödel, Nudeln, kohlenhydrat- und fettreiche asiatische Gerichte, Süß- und Hefegebäck, Frühstückscerealien, Getreidebrei, Honig, Marmelade</string>
     <string name="carbs_type_pizza">Lasagne, Pizza, Hamburger, Pommes, gebackene Kartoffeln, Chips und ähnliche Snacks</string>
     <string name="wizard_total">Gesamtsumme</string>
-    <string name="wizard_carb_time">Zeitpunkt der KH-Aufnamhe</string>
+    <string name="wizard_carb_time">Zeitpunkt der KH-Aufnahme</string>
     <string name="carb_time_now">Jetzt</string>
     <string name="change">Ändern</string>
     <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
@@ -891,7 +890,7 @@
     <string name="export_result_message_exported">Einstellungen exportiert</string>
     <string name="export_result_message_failed">Export der Einstellungen FEHLGESCHLAGEN!</string>
     <string name="export_result_message_about_to_expire">Einstellungen exportiert: Das Passwort läuft bald ab. Exportiere die Einstellungen manuell und gib das Passwort erneut ein.</string>
-    <string name="export_result_message_expired">Export der Einstellungen abgebrochen: Das Passwort ist abgelaufen. Exportiere die Einstellungen manuell und gib das Passwort erneut ein.</string>
+    <string name="export_result_message_expired">Einstellungsexport abgebrochen: Passwort abgelaufen. Exportiere die Einstellungen manuell und gib das Passwort erneut ein!</string>
     <string name="export_result_message_disabled">Warnung (Automatisierung): Export der Einstellungen nicht aktiviert!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Cloud-Export erfolgreich</string>
@@ -912,7 +911,7 @@
     <string name="data_choices">Datenübermittlung</string>
     <string name="unattended_settings_export">Automatischer Einstellungsexport</string>
     <!-- Maintenance bottom sheet descriptions -->
-    <string name="maintenance_log_settings_desc">Detailgrad der Protokollierung einstellen</string>
+    <string name="maintenance_log_settings_desc">Umfang der Protokollierung festlegen</string>
     <string name="maintenance_send_logs_desc">Protokolldateien zur Fehleranalyse teilen</string>
     <string name="maintenance_delete_logs_desc">Alte Protokolldateien löschen</string>
     <string name="maintenance_aaps_directory_desc">Lokalen Speicherordner auswählen</string>
@@ -944,7 +943,7 @@
     <string name="user_request" comment="26 characters max for translation">Benutzeranfrage</string>
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Koppeln</string>
-    <string name="pump_unpair">Kopplung Aufheben</string>
+    <string name="pump_unpair">Kopplung aufheben</string>
     <string name="pump_unpair_confirm_title">Kopplung mit der Pumpe aufheben?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <!--    BlePreCheck-->
@@ -954,12 +953,12 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- Navigation -->
-    <string name="nav_about">Über</string>
+    <string name="nav_about">Über AAPS</string>
     <string name="nav_about_desc">App-Version und Informationen anzeigen</string>
     <string name="nav_exit">Schließen</string>
     <string name="open_navigation">Menü öffnen</string>
-    <string name="nav_history_browser">Historie</string>
-    <string name="nav_history_browser_desc">Historische Diagramme durchsuchen</string>
+    <string name="nav_history_browser">Verlauf</string>
+    <string name="nav_history_browser_desc">Frühere Diagramme anzeigen</string>
     <string name="appearance">Darstellung</string>
     <string name="manage">Verwalten</string>
     <string name="localprofile">Profil</string>
@@ -1016,8 +1015,8 @@
         <item quantity="other">%1$d Minuten</item>
     </plurals>
     <!--    Maintenance-->
-    <string name="cleanup_db_confirm">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.</string>
-    <string name="cleanup_db_confirm_sync">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
+    <string name="cleanup_db_confirm">Möchtest du die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.</string>
+    <string name="cleanup_db_confirm_sync">Möchtst du die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
     <string name="cleared_entries">Gelöschte Einträge</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="reset_aps_results_confirm">Möchtest du die gespeicherten APS-Ergebnisse wirklich zurücksetzen?</string>
@@ -1047,7 +1046,7 @@
     <string name="unsaved_changes">Ungespeicherte Änderungen</string>
     <string name="unsaved_changes_message">Du hast ungespeicherte Änderungen. Was möchtest du tun?</string>
     <string name="discard">Verwerfen</string>
-    <string name="ic_dynamic_label_warning">Dein Algorithmus kann das Kohlenhydrat-Insulin-Verhältnis (IC) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatzwerte bei fehlenden Daten oder als Referenzwerte.</string>
+    <string name="ic_dynamic_label_warning">Dein Algorithmus kann den Kohlenhydratfaktor (IC) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatz bei fehlenden Daten oder als Referenzwerte</string>
     <string name="isf_dynamic_label_warning">Dein Algorithmus kann den Insulinempfindlichkeitsfaktor (ISF) dynamisch berechnen. Die folgenden Werte dienen nur als Ersatzwerte bei fehlenden Daten oder als Referenzwerte.</string>
     <string name="add_time_block">Zeitblock hinzufügen</string>
     <string name="remove_entry">Eintrag entfernen</string>
@@ -1082,11 +1081,11 @@
     <string name="label_protein_g">Proteine (g)</string>
     <string name="label_energy_kj">Energie (kJ)</string>
     <!--    Log Settings-->
-    <string name="nav_logsettings">Protokollierungseinstellungen</string>
+    <string name="nav_logsettings">Protokoll-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <!--    Maintenance-->
     <string name="maintenance">Wartung</string>
-    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
+    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Protokollen oder Löschen dieser)</string>
     <string name="log_files">Log Dateien</string>
     <string name="delete_logs">Logs löschen</string>
     <string name="logs_deleted">Protokolle gelöscht</string>
@@ -1109,10 +1108,11 @@
     -->
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Zu ändernde Einstellungen: %1$d. Die geänderten Plugins werden neu gestartet.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Zu ändernde Einstellungen: %1$d. Pumpeneinstellungen beibehalten: %2$d, also funktioniert deine Pumpe weiter.</string>
-    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Die importierten Einstellungen enthalten eine Pumpe, die dieses Smartphone nicht enthält. %1$s ist jetzt aktiv — überprüfen Sie Ihre Pump-Einstellungen.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Die importierten Einstellungen enthalten eine Pumpe, die dieses Smartphone nicht enthält. %1$s ist jetzt aktiv — überprüfe deine Pumpen-Einstellungen.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Aus der Sicherung zu deiner Insulinliste hinzugefügt: %1$s. Noch nicht in Verwendung: Wähle beim Aktivieren deines Profils das passende Insulin aus, bevor deine älteren Behandlungen aus Nightscout heruntergeladen werden.</string>
     <string name="import_applying">Einstellungen werden angewendet…</string>
     <string name="import_replace_pump_settings">Pumpeneinstellungen auch ersetzen</string>
-    <string name="import_replace_pump_settings_summary">Lassen Sie dies aus, um die Pumpe mit diesem Telefon verbunden zu halten. Schalten Sie es ein, wenn Sie auf ein neues Telefon mit der gleichen Pumpe zurückkehren.</string>
+    <string name="import_replace_pump_settings_summary">Lass dies aus, um die Pumpe mit diesem Telefon verbunden zu halten. Schalte es ein, wenn du auf ein neues Telefon mit der gleichen Pumpe zurückkehren.</string>
     <string name="import_apply_waiting">Warte auf Pumpe…</string>
     <string name="import_apply_pump_busy">Die Pumpe ist immer noch beschäftigt, so dass die Einstellungen nicht angewendet wurden.</string>
     <string name="import_apply_retry_question">Jetzt erneut versuchen?</string>

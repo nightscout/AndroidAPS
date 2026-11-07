@@ -3,6 +3,9 @@
     <string name="executing_right_now">Il comando è in esecuzione adesso</string>
     <string name="smb_being_delivered">Un SMB è in fase di erogazione. Riprova quando è finito.</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
+    <string name="concentration_change_failed_title">Modifica dell\'insulina non riuscita</string>
+    <string name="concentration_change_failed">La nuova insulina è presente nel micro, ma AAPS non ha potuto scrivere il profilo. Il micro sta dando la quantità errata di insulina. Scollegare o rimuoverlo ora, controllare la glicemia e somministrare l’insulina in un altro modo se necessario. Collegare nuovamente il micro solo dopo che il profilo è stato scritto.</string>
+    <string name="concentration_change_pending">Il profilo con la nuova insulina non è ancora scritto sul micro. L’insulina non può essere somministrata fino a quando non viene scritta.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Profilo basale nel micro aggiornato. Il micro arrotonda la basale al proprio passo: eroga %1$s al giorno invece di %2$s.</string>
     <string name="basal_reported_far_from_profile">Il micro riporta una basale lontana dal profilo. AAPS mantiene la basale del profilo. Controlla le velocità basali nel micro.</string>
     <!--       Stats -->

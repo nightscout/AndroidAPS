@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Configuració de connexió</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
@@ -16,7 +15,6 @@
     <string name="queue">Cua:</string>
     <string name="clear_log">Buidar log</string>
     <string name="full_sync">Sincronització completa</string>
-    <string name="full_sync_comment">Sincronització completa? Pot tardar hores i fins que no es completi, no veuràs dades noves a NS.</string>
     <string name="ns_sync_options">Sincronització</string>
     <string name="ns_alarm_options">Configuració alarmes</string>
     <!-- Tidepool -->
@@ -39,10 +37,8 @@
     <string name="smscommunicator_tab_otp_label">Configuració de l\'Autenticador</string>
     <string name="smscommunicator_code_verify_label">Codi per comprovar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">El codi de verificació consta de 6 dígits mostrats per l\'app Autenticador (coneguts com OTP), seguits de 3 o més dígits del PIN obligatori.</string>
     <string name="smscommunicator_otp_reset_btn">Restablir autenticadors</string>
     <string name="smscommunicator_otp_reset_title">Restablir clau d\'Autenticador</string>
-    <string name="smscommunicator_otp_reset_prompt">Esteu segurs que voleu restablir la clau de l\'Autenticador (OTP)? Els Autenticadors configurats fins ara deixaran de ser vàlids i els haureu de tornar a configurar.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instal·lar autenticador</string>
     <string name="smscommunicator_otp_step3_test_header">3. Provar clau d\'un sol ús</string>
     <string name="smscommunicator_otp_reset_header">Restablir autenticadors</string>
@@ -53,7 +49,6 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Per lliurar bolus d\'àpat %1$.2fU contesteu amb el codi %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Per definir un Objectiu Temporal %1$s contesteu amb el codi %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Per cancel·lar Objectiu Temporal contesteu amb el codi %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">Per desactivar el Servei Remot d\'SMS contesteu amb el codi %1$s.\n\nRecordeu que només el podreu reactivar des del mòbil amb AAPS principal.</string>
     <string name="smscommunicator_stopped_sms">Servei Remot d\'SMS aturat. Per reactivar-lo, utilitzeu AAPS des del mòbil principal.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per enviar calibració %1$.2f contesteu amb el codi %2$s</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
@@ -80,7 +75,6 @@
     <string name="smscommunicator_loop_disable_reply_with_code">Per desactivar el llaç contesteu amb el codi %1$s</string>
     <string name="smscommunicator_tempbasal_set">Basal temporal %1$.2fU/h durant %2$d min iniciada correctament</string>
     <string name="smscommunicator_extended_set">Bolus estès %1$.2fU durant %2$d min iniciat correctament</string>
-    <string name="smscommunicator_carbs_set">Carbs %1$d  g introduïts correctament</string>
     <string name="smscommunicator_carbs_failed">Error en introduir %1$dg de carbs</string>
     <string name="smscommunicator_tempbasal_set_percent">Basal temporal %1$d%% durant %2$d min iniciada ok</string>
     <string name="smscommunicator_tempbasal_failed">Error en iniciar basal temporal</string>
