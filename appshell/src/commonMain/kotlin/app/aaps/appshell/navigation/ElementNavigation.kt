@@ -150,6 +150,7 @@ class ElementNavigator(
             ElementType.CGM_XDRIP               -> onOpenCgmApp("com.eveningoutpost.dexdrip")
             ElementType.CGM_DEX                 -> dexcomBoyda.dexcomPackages().forEach { onOpenCgmApp(it) }
 
+            ElementType.EVERSENSE_CALIBRATION -> navController.navigate(AppRoute.EversenseCalibrationDialog.route)
             ElementType.CALIBRATION             -> navController.navigate(AppRoute.CalibrationDialog.route)
 
             // Careportal

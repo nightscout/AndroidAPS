@@ -64,6 +64,7 @@ import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.manageSheet.ManageSheetState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.overview.EversenseCalibrationProgress
 import app.aaps.ui.compose.overview.EatReminderBanner
 import app.aaps.ui.compose.overview.OverviewScreen
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
@@ -300,6 +301,7 @@ fun MainScreen(
                         commandsAllowed = masterOrPairedClient,
                         formatDuration = mainViewModel::formatDuration,
                         eatReminderBanner = {
+                            EversenseCalibrationProgress()
                             EatReminderBanner(
                                 state = eatReminderState,
                                 onStop = mainViewModel::stopEatReminder,

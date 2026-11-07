@@ -9,6 +9,10 @@ interface StringPreferenceKey : PreferenceKey, StringNonPreferenceKey {
     val isPassword: Boolean
     val isPin: Boolean
 
+    /** Whether the password dialog asks for the value a second time. */
+    val requiresPasswordConfirmation: Boolean
+        get() = true
+
     /**
      * Whether the value should be hashed before storing.
      * When true, [hashPassword] is applied before persisting.
