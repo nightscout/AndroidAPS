@@ -1125,6 +1125,8 @@
     <string name="wiki_search_offline">Documentation search requires internet connection</string>
     <string name="no_search_results">No results found</string>
     <string name="search_plugin_disabled">Plugin %1$s disabled</string>
+    <string name="search_recent">Recent searches</string>
+    <string name="search_history_remove">Remove from recent searches</string>
 
     <!--    Food Management -->
     <string name="food_management">Food</string>
