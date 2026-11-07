@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.notify
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
@@ -85,10 +86,14 @@ class CmdHistoryGet(
         parm = data[23].toInt() and 0xff
         if (currentIndex != 0) equilManager.decodeHistory(data)
         resultIndex = index
+        // Update lastDataTime from command response (not just BLE advertisements)
+        // This ensures lastDataTime stays fresh even when BLE scan
+        // doesn't return advertisement packets (phone-specific BLE behavior)
+        equilManager.setLastDataTime(System.currentTimeMillis())
         aapsLogger.debug(LTag.PUMPCOMM, this.toString())
         synchronized(this) {
             cmdSuccess = true
-            (this as Object).notify()
+            notify()
         }
     }
 

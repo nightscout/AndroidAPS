@@ -3,6 +3,7 @@ package app.aaps.pump.equil.manager.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.notify
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilCmdModel
@@ -116,11 +117,12 @@ class CmdDevicesOldGet(
         return null
     }
 
-    override fun decode(): EquilResponse? {
+    override fun decode(): EquilResponse {
         val reqModel = decodeModel()
         val data = Utils.hexStringToBytes(reqModel.ciphertext!!)
         val fv = data[12].toString() + "." + data[13]
         firmwareVersion = fv.toFloat()
+        equilManager.setFirmwareVersion(fv)
         aapsLogger.debug(
             LTag.PUMPCOMM, "CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "========" + firmwareVersion + "===" + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL)
@@ -128,14 +130,14 @@ class CmdDevicesOldGet(
         reqModel.ciphertext = Utils.bytesToHex(getNextData())
         synchronized(this) {
             cmdSuccess = true
-            (this as Object).notify()
+            notify()
         }
         return responseCmd(reqModel, "0000" + reqModel.code)
     }
 
     override fun decodeModel(): EquilCmdModel {
         val equilCmdModel = EquilCmdModel()
-        val list: MutableList<Byte?> = ArrayList<Byte?>()
+        val list: MutableList<Byte?> = ArrayList()
         var index = 0
         for (b in response!!.send) {
             if (index == 0) {
@@ -163,6 +165,7 @@ class CmdDevicesOldGet(
         val value = Utils.bytesToInt(data[7], data[6])
         val fv = data[18].toString() + "." + data[19]
         firmwareVersion = fv.toFloat()
+        equilManager.setFirmwareVersion(fv)
         aapsLogger.debug(
             LTag.PUMPCOMM, ("CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "=====" + value + "===" + firmwareVersion + "===="
@@ -170,7 +173,7 @@ class CmdDevicesOldGet(
         )
         synchronized(this) {
             cmdSuccess = true
-            (this as Object).notify()
+            notify()
         }
     }
 

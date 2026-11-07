@@ -13,6 +13,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class PumpIOTest : TestBase() {
@@ -184,7 +185,7 @@ class PumpIOTest : TestBase() {
         // This amounts to 2 pairs of RT_BUTTON_STATUS packets plus the
         // final CTRL_DISCONNECT packets, for a total of 5 packets.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -253,17 +254,20 @@ class PumpIOTest : TestBase() {
         // to avoid having to deal with RT_KEEP_ALIVE packets in the
         // testIO.sentPacketData list.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val testIO = testStates.testIO
             val pumpIO = testStates.pumpIO
 
             // First, test long UP button press.
 
+            aapsLogger.debug("Phase 1 - feeding initial packets for UP press")
             testStates.feedInitialPackets()
 
+            aapsLogger.debug("Phase 1 - connecting")
             pumpIO.connect(runHeartbeat = false)
 
+            aapsLogger.debug("Phase 1 - starting long UP button press")
             var counter = 0
             pumpIO.startLongRTButtonPress(ApplicationLayer.RTButton.UP) {
                 // Return true the first time, false the second time.
@@ -271,10 +275,13 @@ class PumpIOTest : TestBase() {
                 // send a button status to the Combo once (= when
                 // we return true).
                 counter++
+                aapsLogger.debug("Phase 1 - keepGoing called, counter=$counter, returning=${counter <= 1}")
                 counter <= 1
             }
+            aapsLogger.debug("Phase 1 - waiting for long press to finish")
             pumpIO.waitForLongRTButtonPressToFinish()
 
+            aapsLogger.debug("Phase 1 - disconnecting")
             pumpIO.disconnect()
 
             testStates.checkAndRemoveInitialSentPackets()
@@ -285,22 +292,31 @@ class PumpIOTest : TestBase() {
             // test that function. Waiting for a while and calling it should
             // amount to the same behavior as calling waitForLongRTButtonPressToFinish().
 
+            aapsLogger.debug("Phase 2 - resetting IO")
             testIO.resetSentPacketData()
             testIO.resetIncomingPacketDataChannel()
 
+            aapsLogger.debug("Phase 2 - feeding initial packets for DOWN press")
             testStates.feedInitialPackets()
 
+            aapsLogger.debug("Phase 2 - connecting")
             pumpIO.connect(runHeartbeat = false)
 
+            aapsLogger.debug("Phase 2 - starting long DOWN button press")
             pumpIO.startLongRTButtonPress(ApplicationLayer.RTButton.DOWN)
+            aapsLogger.debug("Phase 2 - delaying 500ms before stop")
             delay(500L)
+            aapsLogger.debug("Phase 2 - stopping long press")
             pumpIO.stopLongRTButtonPress()
+            aapsLogger.debug("Phase 2 - delaying 500ms after stop")
             delay(500L)
 
+            aapsLogger.debug("Phase 2 - disconnecting")
             pumpIO.disconnect()
 
             testStates.checkAndRemoveInitialSentPackets()
             testStates.checkLongRTButtonPressPacketSequence(ApplicationLayer.RTButton.DOWN)
+            aapsLogger.debug("Test completed successfully")
         }
     }
 
@@ -309,7 +325,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant startLongRTButtonPress()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
@@ -342,7 +358,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant waitForLongRTButtonPressToFinish()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
@@ -379,7 +395,7 @@ class PumpIOTest : TestBase() {
         // RT sequence numbers are monotonically increasing, which
         // is the correct behavior.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -421,7 +437,7 @@ class PumpIOTest : TestBase() {
 
     @Test
     fun cmdCMDReadErrorWarningStatus() {
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             // Check that a simulated CMD error/warning status retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that contain
             // error/warning status data. Check that these packets are correctly parsed and that
@@ -479,195 +495,199 @@ class PumpIOTest : TestBase() {
         }
     }
 
+    // Recorded history packets. They were made with these keys instead of the default test keys.
+    private val historyInvariantPumpData = InvariantPumpData(
+        keyResponseAddress = 0x10,
+        clientPumpCipher = Cipher(
+            byteArrayOfInts(
+                0x75, 0xb8, 0x88, 0xa8, 0xe7, 0x68, 0xc9, 0x25,
+                0x66, 0xc9, 0x3c, 0x4b, 0xd8, 0x09, 0x27, 0xd8
+            )
+        ),
+        pumpClientCipher = Cipher(
+            byteArrayOfInts(
+                0xb8, 0x75, 0x8c, 0x54, 0x88, 0x71, 0x78, 0xed,
+                0xad, 0xb7, 0xb7, 0xc1, 0x48, 0x37, 0xf3, 0x07
+            )
+        ),
+        pumpID = "testPump"
+    )
+
+    private val historyBlockPacketData = listOf(
+        // CMD_READ_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0xa3, 0x65, 0x00, 0x01, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x10, 0x00, 0x48, 0xb7, 0x05, 0xaa, 0x0d, 0x93, 0x54, 0x0f, 0x00, 0x00,
+            0x00, 0x04, 0x00, 0x6b, 0xf3, 0x09, 0x3b, 0x01, 0x00, 0x92, 0x4c, 0xb1, 0x0d, 0x93, 0x54, 0x0f, 0x00, 0x00,
+            0x00, 0x05, 0x00, 0xa1, 0x25, 0x0b, 0x3b, 0x01, 0x00, 0xe4, 0x75, 0x46, 0x0e, 0x93, 0x54, 0x1d, 0x00, 0x00,
+            0x00, 0x06, 0x00, 0xb7, 0xda, 0x0d, 0x3b, 0x01, 0x00, 0x7e, 0x3e, 0x54, 0x0e, 0x93, 0x54, 0x1d, 0x00, 0x00,
+            0x00, 0x07, 0x00, 0x73, 0x49, 0x0f, 0x3b, 0x01, 0x00, 0x08, 0x07, 0x77, 0x0e, 0x93, 0x54, 0x05, 0x00, 0x00,
+            0x00, 0x04, 0x00, 0x2f, 0xd8, 0x11, 0x3b, 0x01, 0x00, 0xeb, 0x6a, 0x81, 0xf5, 0x6c, 0x43, 0xf0, 0x88, 0x15, 0x3b
+        ),
+        // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0x23, 0x06, 0x00, 0x01, 0x0a, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0x8f, 0xec, 0xfa, 0xa7, 0xf5, 0x0d, 0x01, 0x6c
+        ),
+        // CMD_READ_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0xa3, 0x65, 0x00, 0x01, 0x0c, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x0b, 0x00, 0x48, 0xb7, 0x05, 0x79, 0x0e, 0x93, 0x54, 0x05, 0x00, 0x00,
+            0x00, 0x05, 0x00, 0x0c, 0x40, 0x13, 0x3b, 0x01, 0x00, 0x9d, 0x53, 0xad, 0x0e, 0x93, 0x54, 0x12, 0x00, 0x00,
+            0x00, 0x06, 0x00, 0x46, 0xa5, 0x15, 0x3b, 0x01, 0x00, 0x07, 0x18, 0xb6, 0x0e, 0x93, 0x54, 0x12, 0x00, 0x00,
+            0x00, 0x07, 0x00, 0x8c, 0x73, 0x17, 0x3b, 0x01, 0x00, 0x71, 0x21, 0x13, 0x10, 0x93, 0x54, 0xb1, 0x00, 0x0f,
+            0x00, 0x08, 0x00, 0xbb, 0x78, 0x1a, 0x3b, 0x01, 0x00, 0xfe, 0xaa, 0xd2, 0x13, 0x93, 0x54, 0xb1, 0x00, 0x0f,
+            0x00, 0x09, 0x00, 0xce, 0x68, 0x1c, 0x3b, 0x01, 0x00, 0x64, 0xe1, 0x2c, 0xc8, 0x37, 0xb3, 0xe5, 0xb7, 0x7c, 0xc4
+        ),
+        // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0x23, 0x06, 0x00, 0x01, 0x0e, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0xe5, 0xab, 0x11, 0x6d, 0xfc, 0x60, 0xfb, 0xee
+        ),
+        // CMD_READ_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0xa3, 0x65, 0x00, 0x01, 0x10, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x06, 0x00, 0x48, 0xb7, 0x05, 0x5f, 0x15, 0x93, 0x54, 0xc1, 0x94, 0xe0,
+            0x01, 0x0a, 0x00, 0x76, 0x3b, 0x1e, 0x3b, 0x01, 0x00, 0x12, 0xd8, 0xc8, 0x1c, 0x93, 0x54, 0xc1, 0x94, 0xe0,
+            0x01, 0x0b, 0x00, 0xc8, 0xa4, 0x20, 0x3b, 0x01, 0x00, 0xa2, 0x3a, 0x59, 0x20, 0x93, 0x54, 0x40, 0x30, 0x93,
+            0x54, 0x18, 0x00, 0xbb, 0x0c, 0x23, 0x3b, 0x01, 0x00, 0x6f, 0x1f, 0x40, 0x30, 0x93, 0x54, 0x00, 0x00, 0x00,
+            0x00, 0x19, 0x00, 0x2b, 0x80, 0x24, 0x3b, 0x01, 0x00, 0x4e, 0x48, 0x85, 0x30, 0x93, 0x54, 0x14, 0x00, 0x00,
+            0x00, 0x04, 0x00, 0xe8, 0x98, 0x2b, 0x3b, 0x01, 0x00, 0xb7, 0xfa, 0x0e, 0x32, 0x37, 0x19, 0xb6, 0x59, 0x5a, 0xb1
+        ),
+        // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0x23, 0x06, 0x00, 0x01, 0x12, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0xae, 0xaa, 0xa7, 0x3a, 0xbc, 0x82, 0x8c, 0x15
+        ),
+        // CMD_READ_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0xa3, 0x1d, 0x00, 0x01, 0x14, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x01, 0x00, 0xb7, 0xb7, 0x01, 0x8f, 0x30, 0x93, 0x54, 0x14, 0x00, 0x00,
+            0x00, 0x05, 0x00, 0x57, 0xb0, 0x2d, 0x3b, 0x01, 0x00, 0x2d, 0xb1, 0x29, 0x32, 0xde, 0x3c, 0xa0, 0x80, 0x33, 0xd3
+        ),
+        // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
+        byteArrayListOfInts(
+            0x10, 0x23, 0x06, 0x00, 0x01, 0x16, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0x15, 0x63, 0xa5, 0x60, 0x3d, 0x75, 0xff, 0xfc
+        )
+    )
+
+    private val expectedHistoryDeltaEvents = listOf(
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 54, second = 42),
+            80649,
+            ApplicationLayer.CMDHistoryEventDetail.QuickBolusRequested(15)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 54, second = 49),
+            80651,
+            ApplicationLayer.CMDHistoryEventDetail.QuickBolusInfused(15)
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 6),
+            80653,
+            ApplicationLayer.CMDHistoryEventDetail.StandardBolusRequested(29, true)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 20),
+            80655,
+            ApplicationLayer.CMDHistoryEventDetail.StandardBolusInfused(29, true)
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 55),
+            80657,
+            ApplicationLayer.CMDHistoryEventDetail.QuickBolusRequested(5)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 57),
+            80659,
+            ApplicationLayer.CMDHistoryEventDetail.QuickBolusInfused(5)
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 58, second = 45),
+            80661,
+            ApplicationLayer.CMDHistoryEventDetail.StandardBolusRequested(18, true)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 58, second = 54),
+            80663,
+            ApplicationLayer.CMDHistoryEventDetail.StandardBolusInfused(18, true)
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 0, second = 19),
+            80666,
+            ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusStarted(177, 15, true)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 15, second = 18),
+            80668,
+            ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusEnded(177, 15, true)
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 21, second = 31),
+            80670,
+            ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusStarted(193, 37, 30, true)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 51, second = 8),
+            80672,
+            ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusEnded(193, 37, 30, true)
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 18, minute = 1, second = 25),
+            80675,
+            ApplicationLayer.CMDHistoryEventDetail.NewDateTimeSet(
+                LocalDateTime(year = 2021, month = 2, day = 9, hour = 19, minute = 1, second = 0)
+            )
+        ),
+
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 19, minute = 2, second = 5),
+            80683,
+            ApplicationLayer.CMDHistoryEventDetail.QuickBolusRequested(20)
+        ),
+        ApplicationLayer.CMDHistoryEvent(
+            LocalDateTime(year = 2021, month = 2, day = 9, hour = 19, minute = 2, second = 15),
+            80685,
+            ApplicationLayer.CMDHistoryEventDetail.QuickBolusInfused(20)
+        )
+    )
+
+    private suspend fun connectForHistoryRead(): TestStates {
+        val testStates = TestStates(setupInvariantPumpData = false)
+        testStates.testPumpStateStore.createPumpState(
+            testStates.testBluetoothDevice.address, historyInvariantPumpData, UtcOffset.ZERO, CurrentTbrState.NoTbrOngoing
+        )
+        testStates.testIO.pumpClientCipher = historyInvariantPumpData.pumpClientCipher
+
+        testStates.feedInitialPackets()
+
+        testStates.pumpIO.connect(
+            initialMode = PumpIO.Mode.COMMAND,
+            runHeartbeat = false
+        )
+
+        return testStates
+    }
+
     @Test
     fun checkCMDHistoryDeltaRetrieval() {
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(60000) {
             // Check that a simulated CMD history delta retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that
             // contain history data with a series of events inside. Check that these packets
             // are correctly parsed and that the retrieved history is correct.
 
-            val testStates = TestStates(setupInvariantPumpData = false)
+            val testStates = connectForHistoryRead()
             val pumpIO = testStates.pumpIO
-            val testIO = testStates.testIO
 
-            // Need to set up custom keys since the test data was
-            // created with those instead of the default test keys.
-            val invariantPumpData = InvariantPumpData(
-                keyResponseAddress = 0x10,
-                clientPumpCipher = Cipher(
-                    byteArrayOfInts(
-                        0x75, 0xb8, 0x88, 0xa8, 0xe7, 0x68, 0xc9, 0x25,
-                        0x66, 0xc9, 0x3c, 0x4b, 0xd8, 0x09, 0x27, 0xd8
-                    )
-                ),
-                pumpClientCipher = Cipher(
-                    byteArrayOfInts(
-                        0xb8, 0x75, 0x8c, 0x54, 0x88, 0x71, 0x78, 0xed,
-                        0xad, 0xb7, 0xb7, 0xc1, 0x48, 0x37, 0xf3, 0x07
-                    )
-                ),
-                pumpID = "testPump"
-            )
-            testStates.testPumpStateStore.createPumpState(
-                testStates.testBluetoothDevice.address, invariantPumpData, UtcOffset.ZERO, CurrentTbrState.NoTbrOngoing
-            )
-            testIO.pumpClientCipher = invariantPumpData.pumpClientCipher
-
-            val historyBlockPacketData = listOf(
-                // CMD_READ_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0xa3, 0x65, 0x00, 0x01, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x10, 0x00, 0x48, 0xb7, 0x05, 0xaa, 0x0d, 0x93, 0x54, 0x0f, 0x00, 0x00,
-                    0x00, 0x04, 0x00, 0x6b, 0xf3, 0x09, 0x3b, 0x01, 0x00, 0x92, 0x4c, 0xb1, 0x0d, 0x93, 0x54, 0x0f, 0x00, 0x00,
-                    0x00, 0x05, 0x00, 0xa1, 0x25, 0x0b, 0x3b, 0x01, 0x00, 0xe4, 0x75, 0x46, 0x0e, 0x93, 0x54, 0x1d, 0x00, 0x00,
-                    0x00, 0x06, 0x00, 0xb7, 0xda, 0x0d, 0x3b, 0x01, 0x00, 0x7e, 0x3e, 0x54, 0x0e, 0x93, 0x54, 0x1d, 0x00, 0x00,
-                    0x00, 0x07, 0x00, 0x73, 0x49, 0x0f, 0x3b, 0x01, 0x00, 0x08, 0x07, 0x77, 0x0e, 0x93, 0x54, 0x05, 0x00, 0x00,
-                    0x00, 0x04, 0x00, 0x2f, 0xd8, 0x11, 0x3b, 0x01, 0x00, 0xeb, 0x6a, 0x81, 0xf5, 0x6c, 0x43, 0xf0, 0x88, 0x15, 0x3b
-                ),
-                // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0x23, 0x06, 0x00, 0x01, 0x0a, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0x8f, 0xec, 0xfa, 0xa7, 0xf5, 0x0d, 0x01, 0x6c
-                ),
-                // CMD_READ_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0xa3, 0x65, 0x00, 0x01, 0x0c, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x0b, 0x00, 0x48, 0xb7, 0x05, 0x79, 0x0e, 0x93, 0x54, 0x05, 0x00, 0x00,
-                    0x00, 0x05, 0x00, 0x0c, 0x40, 0x13, 0x3b, 0x01, 0x00, 0x9d, 0x53, 0xad, 0x0e, 0x93, 0x54, 0x12, 0x00, 0x00,
-                    0x00, 0x06, 0x00, 0x46, 0xa5, 0x15, 0x3b, 0x01, 0x00, 0x07, 0x18, 0xb6, 0x0e, 0x93, 0x54, 0x12, 0x00, 0x00,
-                    0x00, 0x07, 0x00, 0x8c, 0x73, 0x17, 0x3b, 0x01, 0x00, 0x71, 0x21, 0x13, 0x10, 0x93, 0x54, 0xb1, 0x00, 0x0f,
-                    0x00, 0x08, 0x00, 0xbb, 0x78, 0x1a, 0x3b, 0x01, 0x00, 0xfe, 0xaa, 0xd2, 0x13, 0x93, 0x54, 0xb1, 0x00, 0x0f,
-                    0x00, 0x09, 0x00, 0xce, 0x68, 0x1c, 0x3b, 0x01, 0x00, 0x64, 0xe1, 0x2c, 0xc8, 0x37, 0xb3, 0xe5, 0xb7, 0x7c, 0xc4
-                ),
-                // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0x23, 0x06, 0x00, 0x01, 0x0e, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0xe5, 0xab, 0x11, 0x6d, 0xfc, 0x60, 0xfb, 0xee
-                ),
-                // CMD_READ_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0xa3, 0x65, 0x00, 0x01, 0x10, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x06, 0x00, 0x48, 0xb7, 0x05, 0x5f, 0x15, 0x93, 0x54, 0xc1, 0x94, 0xe0,
-                    0x01, 0x0a, 0x00, 0x76, 0x3b, 0x1e, 0x3b, 0x01, 0x00, 0x12, 0xd8, 0xc8, 0x1c, 0x93, 0x54, 0xc1, 0x94, 0xe0,
-                    0x01, 0x0b, 0x00, 0xc8, 0xa4, 0x20, 0x3b, 0x01, 0x00, 0xa2, 0x3a, 0x59, 0x20, 0x93, 0x54, 0x40, 0x30, 0x93,
-                    0x54, 0x18, 0x00, 0xbb, 0x0c, 0x23, 0x3b, 0x01, 0x00, 0x6f, 0x1f, 0x40, 0x30, 0x93, 0x54, 0x00, 0x00, 0x00,
-                    0x00, 0x19, 0x00, 0x2b, 0x80, 0x24, 0x3b, 0x01, 0x00, 0x4e, 0x48, 0x85, 0x30, 0x93, 0x54, 0x14, 0x00, 0x00,
-                    0x00, 0x04, 0x00, 0xe8, 0x98, 0x2b, 0x3b, 0x01, 0x00, 0xb7, 0xfa, 0x0e, 0x32, 0x37, 0x19, 0xb6, 0x59, 0x5a, 0xb1
-                ),
-                // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0x23, 0x06, 0x00, 0x01, 0x12, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0xae, 0xaa, 0xa7, 0x3a, 0xbc, 0x82, 0x8c, 0x15
-                ),
-                // CMD_READ_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0xa3, 0x1d, 0x00, 0x01, 0x14, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x10, 0xb7, 0x96, 0xa9, 0x00, 0x00, 0x01, 0x00, 0xb7, 0xb7, 0x01, 0x8f, 0x30, 0x93, 0x54, 0x14, 0x00, 0x00,
-                    0x00, 0x05, 0x00, 0x57, 0xb0, 0x2d, 0x3b, 0x01, 0x00, 0x2d, 0xb1, 0x29, 0x32, 0xde, 0x3c, 0xa0, 0x80, 0x33, 0xd3
-                ),
-                // CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
-                byteArrayListOfInts(
-                    0x10, 0x23, 0x06, 0x00, 0x01, 0x16, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x10, 0xb7, 0x99, 0xa9, 0x00, 0x00, 0x15, 0x63, 0xa5, 0x60, 0x3d, 0x75, 0xff, 0xfc
-                )
-            )
-
-            val expectedHistoryDeltaEvents = listOf(
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 54, second = 42),
-                    80649,
-                    ApplicationLayer.CMDHistoryEventDetail.QuickBolusRequested(15)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 54, second = 49),
-                    80651,
-                    ApplicationLayer.CMDHistoryEventDetail.QuickBolusInfused(15)
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 6),
-                    80653,
-                    ApplicationLayer.CMDHistoryEventDetail.StandardBolusRequested(29, true)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 20),
-                    80655,
-                    ApplicationLayer.CMDHistoryEventDetail.StandardBolusInfused(29, true)
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 55),
-                    80657,
-                    ApplicationLayer.CMDHistoryEventDetail.QuickBolusRequested(5)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 57, second = 57),
-                    80659,
-                    ApplicationLayer.CMDHistoryEventDetail.QuickBolusInfused(5)
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 58, second = 45),
-                    80661,
-                    ApplicationLayer.CMDHistoryEventDetail.StandardBolusRequested(18, true)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 16, minute = 58, second = 54),
-                    80663,
-                    ApplicationLayer.CMDHistoryEventDetail.StandardBolusInfused(18, true)
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 0, second = 19),
-                    80666,
-                    ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusStarted(177, 15, true)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 15, second = 18),
-                    80668,
-                    ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusEnded(177, 15, true)
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 21, second = 31),
-                    80670,
-                    ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusStarted(193, 37, 30, true)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 17, minute = 51, second = 8),
-                    80672,
-                    ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusEnded(193, 37, 30, true)
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 18, minute = 1, second = 25),
-                    80675,
-                    ApplicationLayer.CMDHistoryEventDetail.NewDateTimeSet(
-                        LocalDateTime(year = 2021, month = 2, day = 9, hour = 19, minute = 1, second = 0)
-                    )
-                ),
-
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 19, minute = 2, second = 5),
-                    80683,
-                    ApplicationLayer.CMDHistoryEventDetail.QuickBolusRequested(20)
-                ),
-                ApplicationLayer.CMDHistoryEvent(
-                    LocalDateTime(year = 2021, month = 2, day = 9, hour = 19, minute = 2, second = 15),
-                    80685,
-                    ApplicationLayer.CMDHistoryEventDetail.QuickBolusInfused(20)
-                )
-            )
-
-            testStates.feedInitialPackets()
-
-            pumpIO.connect(
-                initialMode = PumpIO.Mode.COMMAND,
-                runHeartbeat = false
-            )
-
-            historyBlockPacketData.forEach { testIO.feedIncomingData(it) }
+            historyBlockPacketData.forEach { testStates.testIO.feedIncomingData(it) }
 
             val historyDelta = pumpIO.getCMDHistoryDelta(100)
 
@@ -676,6 +696,33 @@ class PumpIOTest : TestBase() {
             assertEquals(expectedHistoryDeltaEvents.size, historyDelta.size)
             for (events in expectedHistoryDeltaEvents.zip(historyDelta))
                 assertEquals(events.first, events.second)
+        }
+    }
+
+    @Test
+    fun eventsOfConfirmedBlocksAreKeptWhenTheReadFails() {
+        runBlockingWithWatchdog(60000) {
+            // The pump does not send a confirmed block again. When the read fails after it,
+            // the caller must still get its events, or a bolus in it is lost (#5377).
+
+            val testStates = connectForHistoryRead()
+            val pumpIO = testStates.pumpIO
+
+            // Only the first block and its confirmation arrive, then the link is lost. A timeout
+            // cannot do this: a request and its answer are not cancellable, by design.
+            historyBlockPacketData.take(2).forEach { testStates.testIO.feedIncomingData(it) }
+            testStates.testIO.incomingPacketDataChannel.close(ComboIOException("Link lost", null))
+
+            val readEvents = mutableListOf<ApplicationLayer.CMDHistoryEvent>()
+            assertFailsWith<TransportLayer.PacketReceiverException> {
+                pumpIO.getCMDHistoryDelta(readEvents = readEvents)
+            }
+
+            pumpIO.disconnect()
+
+            assertTrue(readEvents.isNotEmpty())
+            assertTrue(readEvents.size < expectedHistoryDeltaEvents.size)
+            assertEquals(expectedHistoryDeltaEvents.take(readEvents.size), readEvents)
         }
     }
 }

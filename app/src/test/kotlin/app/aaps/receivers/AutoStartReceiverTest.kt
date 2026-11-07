@@ -1,7 +1,7 @@
 package app.aaps.receivers
 
 import android.content.Intent
-import app.aaps.plugins.main.general.persistentNotification.DummyServiceHelper
+import app.aaps.persistentNotification.DummyServiceHelper
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,6 +38,17 @@ class AutoStartReceiverTest : TestBaseWithProfile() {
 
         // Assert
         // Verify that dummyServiceHelper.startService() was called exactly once with the correct context.
+        verify(dummyServiceHelper).startService(context)
+    }
+
+    /** After an update nothing else starts AAPS until a CGM broadcast or a job, so the loop would wait. */
+    @Test
+    fun `processIntent calls startService when AAPS was updated`() {
+        val updateIntent: Intent = mock()
+        whenever(updateIntent.action).thenReturn(Intent.ACTION_MY_PACKAGE_REPLACED)
+
+        autoStartReceiver.processIntent(context, updateIntent)
+
         verify(dummyServiceHelper).startService(context)
     }
 

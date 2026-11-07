@@ -1,5 +1,6 @@
 package app.aaps.pump.eopatch.vo
 
+import app.aaps.pump.eopatch.FloatFormatters
 import app.aaps.pump.eopatch.code.UnitOrPercent
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -60,13 +61,13 @@ class TempBasalTest {
         assertThat(tempBasal.running).isFalse()
     }
 
+    /** The suspend messages carry "U/hr" themselves. With the unit here too, they showed "0.00 U/hr U/hr". */
     @Test
-    fun `doseUnitText should format correctly`() {
+    fun `doseText is the rate without a unit`() {
         val tempBasal = TempBasal.createAbsolute(60, 1.25f)
 
-        // The format depends on FloatFormatters.insulin implementation
-        // We just verify the format contains the value and unit
-        assertThat(tempBasal.doseUnitText).contains("U/hr")
+        assertThat(tempBasal.doseText).isEqualTo(FloatFormatters.insulin(1.25f))
+        assertThat(tempBasal.doseText).doesNotContain("U")
     }
 
     @Test

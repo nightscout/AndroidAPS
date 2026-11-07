@@ -4,9 +4,10 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshButtonState
 import app.aaps.pump.common.hw.rileylink.ble.RFSpy
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class ResetRileyLinkConfigurationTask @Inject constructor(activePlugin: ActivePlugin, private val rxBus: RxBus, private val rfSpy: RFSpy) : PumpTask(activePlugin) {
+@Inject
+class ResetRileyLinkConfigurationTask(activePlugin: ActivePlugin, private val rxBus: RxBus, private val rfSpy: RFSpy) : PumpTask(activePlugin) {
 
     override fun run() {
         if (!isRileyLinkDevice) return

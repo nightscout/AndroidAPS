@@ -56,7 +56,7 @@ data class EquilHistoryRecord(
         SET_ALARM_TONE(R.string.equil_common_set_alarm_tone),
         SET_ALARM_TONE_AND_SHAK(R.string.equil_common_set_alarm_tone_and_shake),
         READ_DEVICES(R.string.equil_common_read_devices),
-        EQUIL_ALARM(R.string.equil_common_cmd_alarm)
+        EQUIL_ALARM(app.aaps.core.ui.R.string.alarm)
     }
 }
 

@@ -1,0 +1,256 @@
+package app.aaps.ui.widget.glance
+
+import androidx.compose.ui.graphics.toArgb
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.IsfStep
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.SensitivityOverview
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.core.keys.IntComposedKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.DarkGeneralColors
+import app.aaps.core.ui.compose.loopColor
+import app.aaps.core.ui.compose.ttReasonColor
+import app.aaps.core.ui.extensions.directionToDescription
+import app.aaps.core.ui.extensions.displayText
+import app.aaps.ui.R
+import app.aaps.ui.UiStrings
+import app.aaps.ui.widget.directionToDrawableRes
+import dev.zacsweers.metro.Inject
+import kotlin.math.abs
+
+@Inject
+class WidgetStateLoader(
+    private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
+    private val lastBgData: LastBgData,
+    private val trendCalculator: TrendCalculator,
+    private val rh: TextResolver,
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val dateUtil: DateUtil,
+    private val iobCobCalculator: IobCobCalculator,
+    private val loop: Loop,
+    private val config: Config,
+    private val preferences: Preferences,
+    private val decimalFormatter: DecimalFormatter,
+    private val persistenceLayer: PersistenceLayer,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val sensitivityOverview: SensitivityOverview
+) {
+
+    suspend fun loadState(appWidgetId: Int): WidgetRenderState {
+        val alpha = preferences.get(IntComposedKey.WidgetOpacity, appWidgetId)
+        val useBlack = preferences.get(BooleanComposedKey.WidgetUseBlack, appWidgetId)
+        val backgroundColor = resolveWidgetBackground(config, useBlack, alpha)
+
+        val lastBg = lastBgData.lastBg()
+        val bgText = lastBg?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) }
+            ?: rh.gs(CoreUiStrings.value_unavailable_short)
+        val bgColor = when {
+            lastBgData.isLow()  -> BgGraphColors.WIDGET.low
+            lastBgData.isHigh() -> BgGraphColors.WIDGET.high
+            else                -> BgGraphColors.WIDGET.inRange
+        }
+        val strikeThrough = !lastBgData.isActualBg()
+
+        val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
+        val arrowResId = lastBg?.let { (trendArrow ?: TrendArrow.FLAT).directionToDrawableRes() }
+
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
+        val unavailable = rh.gs(CoreUiStrings.value_unavailable_short)
+        val deltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.delta) } ?: unavailable
+        val timeAgoText = dateUtil.minAgo(rh, lastBg?.timestamp)
+
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val iobTotal = bolusIob.iob + basalIob.basaliob
+        val iobText = rh.gs(InterfacesStrings.format_insulin_units, iobTotal)
+        val iobActive = abs(iobTotal) > 0.001
+
+        val cobInfo = iobCobCalculator.getCobInfo("Overview COB")
+        var cobText = cobInfo.displayText(rh, decimalFormatter) ?: unavailable
+        var cobActive = (cobInfo.displayCob ?: 0.0) > 0.0
+        var carbsRequired = false
+        val constraintsProcessed = loop.lastRun?.constraintsProcessed
+        val lastRun = loop.lastRun
+        if (config.APS && constraintsProcessed != null && lastRun != null) {
+            if (constraintsProcessed.carbsReq > 0) {
+                val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
+                if (lastCarbsTime < lastRun.lastAPSRun) {
+                    cobText += "\n" + rh.gs(CoreUiStrings.value_with_unit, constraintsProcessed.carbsReq.toString(), rh.gs(CoreUiStrings.required))
+                    cobActive = true
+                    carbsRequired = true
+                }
+            }
+        }
+
+        val units = profileFunction.getUnits()
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        // With no temp target the chip shows the profile target. That is not a manual target, so it
+        // gets the plain target, not the one with the pencil (#5340).
+        val tempTargetIconResId = when {
+            tempTarget == null                           -> R.drawable.ic_widget_target
+            tempTarget.reason == TT.Reason.EATING_SOON  -> R.drawable.ic_widget_tt_eating_soon
+            tempTarget.reason == TT.Reason.ACTIVITY     -> R.drawable.ic_widget_tt_activity
+            tempTarget.reason == TT.Reason.HYPOGLYCEMIA -> R.drawable.ic_widget_tt_hypo
+            else                                        -> R.drawable.ic_widget_tt_manual
+        }
+        var tempTargetText = ""
+        var tempTargetColor = WidgetTextMuted
+        var tempTargetActive = false
+        if (tempTarget != null) {
+            // A target without an end (a scene without a duration) shows no remaining time, like the overview chip.
+            val range = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units)
+            tempTargetText = if (tempTarget.hasEnd) rh.gs(InterfacesStrings.value_with_detail, range, dateUtil.untilString(tempTarget.end, rh, withParentheses = false))
+            else range
+            tempTargetColor = tempTarget.reason.ttReasonColor(DarkGeneralColors).toArgb()
+            tempTargetActive = true
+        } else {
+            profileFunction.getProfile()?.let { profile ->
+                val adjustedTarget = profile.apsAdjustedTargetMgdl(loop, config, processedDeviceStatusData)
+                if (adjustedTarget != null) {
+                    tempTargetText = profileUtil.toTargetRangeString(adjustedTarget, adjustedTarget, GlucoseUnit.MGDL, units)
+                    tempTargetColor = DarkGeneralColors.adjusted.toArgb()
+                    tempTargetActive = true
+                } else {
+                    tempTargetText = profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                }
+            }
+        }
+
+        val profileText = profileFunction.getProfileNameWithRemainingTime()
+        val profileModified = profileFunction.getProfile()?.let {
+            it is ProfileSealed.EPS && (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
+        } ?: false
+
+        // What the overview chip and the watch show. The widget had its own copy of the rule, which
+        // knew only the autosens ratio: with DynISF it showed "100%" and not the ISF in use (#5340).
+        val sensitivity = sensitivityOverview.build()
+        val sensitivityIconResId = if (sensitivity.isEnabled)
+            when {
+                sensitivity.ratio > 1.0 -> R.drawable.ic_widget_as_above
+                sensitivity.ratio < 1.0 -> R.drawable.ic_widget_as_below
+                else                    -> R.drawable.ic_widget_as_equal
+            }
+        else
+            when {
+                sensitivity.ratio > 1.0 -> R.drawable.ic_widget_as_x_above
+                sensitivity.ratio < 1.0 -> R.drawable.ic_widget_as_x_below
+                else                    -> R.drawable.ic_widget_as_x_equal
+            }
+        // Spoken as what the step means, like the overview chip. Equal values need no word.
+        val (isfStepIconResId, isfStepDescription) = when (sensitivity.isfStep) {
+            IsfStep.UP   -> R.drawable.ic_widget_arrow_fortyfiveup to rh.gs(CoreUiStrings.arrow_up)
+            IsfStep.DOWN -> R.drawable.ic_widget_arrow_fortyfivedown to rh.gs(CoreUiStrings.arrow_down)
+            IsfStep.SAME -> R.drawable.ic_widget_arrow_flat to null
+        }
+
+        val profile = profileFunction.getProfile()
+        // The icon and its spoken name are chosen together, so the two cannot drift apart. Same
+        // three states the overview chip uses, so the same words describe them.
+        val (tbrIconResId, tbrDescription) = if (profile == null) {
+            R.drawable.ic_widget_no_tbr to rh.gs(CoreUiStrings.tbr_state_none)
+        } else {
+            val basalData = iobCobCalculator.getBasalData(profile, dateUtil.now())
+            when {
+                !basalData.isTempBasalRunning                             -> R.drawable.ic_widget_no_tbr to rh.gs(CoreUiStrings.tbr_state_none)
+                abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01 -> R.drawable.ic_widget_no_tbr to rh.gs(CoreUiStrings.tbr_state_none)
+                basalData.tempBasalAbsolute > basalData.basal             -> R.drawable.ic_widget_tbr_high to rh.gs(CoreUiStrings.tbr_state_above_profile)
+                else                                                      -> R.drawable.ic_widget_tbr_low to rh.gs(CoreUiStrings.tbr_state_below_profile)
+            }
+        }
+
+        val mode = loop.runningMode()
+        val runningModeText = rh.gs(
+            when (mode) {
+                RM.Mode.OPEN_LOOP         -> CoreUiStrings.openloop
+                RM.Mode.CLOSED_LOOP       -> CoreUiStrings.closedloop
+                RM.Mode.CLOSED_LOOP_LGS   -> UiStrings.widget_rm_lgs
+                RM.Mode.DISABLED_LOOP     -> UiStrings.widget_rm_disabled
+                RM.Mode.SUPER_BOLUS       -> CoreUiStrings.superbolus
+                RM.Mode.DISCONNECTED_PUMP -> CoreUiStrings.disconnected
+                RM.Mode.SUSPENDED_BY_PUMP,
+                RM.Mode.SUSPENDED_BY_USER,
+                RM.Mode.SUSPENDED_BY_DST  -> UiStrings.widget_rm_suspended
+
+                RM.Mode.RESUME            -> UiStrings.widget_rm_resume
+            }
+        )
+        val runningModeColor = mode.loopColor(DarkGeneralColors).toArgb()
+        val runningModeIconResId = when (mode) {
+            RM.Mode.OPEN_LOOP         -> R.drawable.ic_widget_loop_open
+            RM.Mode.CLOSED_LOOP,
+            RM.Mode.RESUME            -> R.drawable.ic_widget_loop_closed
+
+            RM.Mode.CLOSED_LOOP_LGS   -> R.drawable.ic_widget_loop_lgs
+            RM.Mode.DISABLED_LOOP     -> R.drawable.ic_widget_loop_disabled
+            RM.Mode.SUPER_BOLUS       -> R.drawable.ic_widget_loop_superbolus
+            RM.Mode.DISCONNECTED_PUMP -> R.drawable.ic_widget_loop_disconnected
+            RM.Mode.SUSPENDED_BY_PUMP,
+            RM.Mode.SUSPENDED_BY_USER,
+            RM.Mode.SUSPENDED_BY_DST  -> R.drawable.ic_widget_loop_paused
+        }
+        val runningModeActive = mode != RM.Mode.CLOSED_LOOP
+
+        return WidgetRenderState(
+            bgText = bgText,
+            bgColor = bgColor,
+            strikeThrough = strikeThrough,
+            arrowResId = arrowResId,
+            trendArrow = lastBg?.let { trendArrow },
+            arrowDescription = lastBg?.let { rh.gs(trendArrow.directionToDescription()) },
+            tbrDescription = tbrDescription,
+            iobLabel = rh.gs(CoreUiStrings.iob),
+            cobLabel = rh.gs(CoreUiStrings.cob),
+            bgSpoken = if (strikeThrough) rh.gs(InterfacesStrings.values_with_comma, bgText, rh.gs(UiStrings.a11y_bg_old_reading)) else bgText,
+            deltaText = deltaText,
+            timeAgoText = timeAgoText,
+            iobText = iobText,
+            iobActive = iobActive,
+            cobText = cobText,
+            cobActive = cobActive,
+            carbsRequired = carbsRequired,
+            tempTargetText = tempTargetText,
+            tempTargetColor = tempTargetColor,
+            tempTargetActive = tempTargetActive,
+            tempTargetIconResId = tempTargetIconResId,
+            profileText = profileText,
+            profileModified = profileModified,
+            profileIconResId = R.drawable.ic_widget_profile,
+            iobIconResId = R.drawable.ic_widget_bolus,
+            cobIconResId = R.drawable.ic_widget_carbs,
+            runningModeText = runningModeText,
+            runningModeColor = runningModeColor,
+            runningModeIconResId = runningModeIconResId,
+            runningModeActive = runningModeActive,
+            sensitivityIconResId = sensitivityIconResId,
+            sensitivityText = sensitivity.asText,
+            isfFromText = sensitivity.isfFrom,
+            isfToText = sensitivity.isfTo,
+            isfStepIconResId = isfStepIconResId,
+            isfStepDescription = isfStepDescription,
+            tbrIconResId = tbrIconResId,
+            backgroundColor = backgroundColor
+        )
+    }
+}

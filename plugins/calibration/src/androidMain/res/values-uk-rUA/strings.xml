@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_calibration_name">Без калібрування</string>
+    <string name="description_no_calibration">"Калібрування не застосовується. Значення сенсора використовуються без змін. Використовуйте це, коли сенсор уже відкалібрований на заводі і точний."</string>
+    <string name="linear_calibration_name">Лінійне калібрування</string>
+    <string name="description_linear_calibration">"Лінійне калібрування для кожного сенсора (нахил і зсув), розраховане з ваших вимірювань з пальця. Новіші записи мають більшу вагу. Калібрування застосовується після початку поточної сесії сенсора; перші 2 години пропускаються як прогрівання."</string>
+    <string name="sensor_change_detected_text">Можливу заміну сенсора виявлено о %1$s. Позначити як новий сенсор?</string>
+    <string name="sensor_change_detected_action">Позначити заміну сенсора</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Запишіть заміну сенсора, щоб увімкнути калібрування.</string>
+    <string name="cal_status_warmup">Прогрівання сенсора — калібрування активне після %1$s.</string>
+    <string name="cal_status_need_more_entries">Потрібно щонайменше 2 вимірювання з пальця (зараз %1$d).</string>
+    <string name="cal_status_unsafe_fit">Розрахунок поза безпечним діапазоном — калібрування не застосовано.</string>
+    <string name="cal_status_applied">Калібрування застосовано.</string>
+    <string name="cal_status_applied_offset_only">Застосовано калібрування лише зсувом — діапазон значень сенсора надто вузький для нахилу.</string>
+    <string name="cal_status_applied_slope_clamped">Калібрування застосовано — нахил обмежено безпечним діапазоном. Додайте більше записів, щоб послабити обмеження.</string>
+    <string name="cal_slope_offset">Нахил %1$.2f, корекція в середині діапазону %2$s</string>
+    <string name="cal_session_started">Сесію розпочато: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Записати заміну сенсора</string>
+    <string name="cal_add_calibration">Додати калібрування</string>
+    <string name="cal_entries_header">Вимірювання з пальця (%1$d)</string>
+    <string name="cal_no_entries">Ще немає вимірювань з пальця.</string>
+    <string name="cal_entry_pair">З пальця %1$s → сенсор %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Запис %1$d/%2$d · %3$s · сенсор %4$s → ГК %5$s</string>
+</resources>

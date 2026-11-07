@@ -3,6 +3,7 @@ package app.aaps.pump.equil.manager.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.notify
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilManager
@@ -37,14 +38,15 @@ class CmdResistanceGet(
 
     override fun decodeConfirmData(data: ByteArray) {
         val value = Utils.bytesToInt(data[7], data[6])
+        val resistanceThreshold = equilManager.getResistanceThreshold()
         cmdSuccess = true
-        enacted = value >= 500
+        enacted = value >= resistanceThreshold
         aapsLogger.debug(
             LTag.PUMPCOMM,
-            "CmdResistanceGet: resistance=$value, threshold=500, enacted=$enacted (pin ${if (enacted) "REACHED" else "NOT reached"} piston)"
+            "CmdResistanceGet: resistance=$value, threshold=$resistanceThreshold, enacted=$enacted (pin ${if (enacted) "REACHED" else "NOT reached"} piston)"
         )
         synchronized(this) {
-            (this as Object).notify()
+            notify()
         }
     }
 

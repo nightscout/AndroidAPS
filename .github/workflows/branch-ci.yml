@@ -1,0 +1,323 @@
+name: Branch CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      buildVariant:
+        description: 'Select Build Variant'
+        required: true
+        default: 'fullRelease'
+        type: choice
+        options:
+          - fullRelease
+          - fullDebug
+          - aapsclientRelease
+          - aapsclientDebug
+          - aapsclient2Release
+          - aapsclient2Debug
+          - pumpcontrolRelease
+          - pumpcontrolDebug
+
+jobs:
+  build:
+    name: Build AAPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decode Secrets Keystore Set and Oauth2 to Env
+        env:
+          # Secrets arrive as environment variables. They must not be pasted into
+          # the script text, because bash then parses them as source: any $,
+          # backtick, quote or newline inside a password changes or truncates the
+          # value before it is ever used, and jarsigner then blames the password.
+          S_KEYSTORE_SET: ${{ secrets.KEYSTORE_SET }}
+          S_KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          S_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          S_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          S_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          S_GDRIVE_OAUTH2: ${{ secrets.GDRIVE_OAUTH2 }}
+        run: |
+          # The heredoc form of GITHUB_ENV keeps any value intact, newlines
+          # included. The delimiter is random so that no value can close the
+          # block early and add variables of its own.
+          DELIM="AAPS_EOF_$(openssl rand -hex 16)"
+          emit() { printf '%s<<%s\n%s\n%s\n' "$1" "$DELIM" "$2" "$DELIM" >> "$GITHUB_ENV"; }
+          # Values cut out of KEYSTORE_SET are not registered secrets, so the
+          # runner does not hide them in the log unless we ask it to.
+          emit_masked() { echo "::add-mask::$2"; emit "$1" "$2"; }
+
+          if [ -n "$S_KEYSTORE_SET" ]; then
+            echo "🔐 Decoding KEYSTORE_SET..."
+            DECODED=$(printf '%s' "$S_KEYSTORE_SET" | base64 -d)
+
+            emit_masked KEYSTORE_BASE64   "$(printf '%s' "$DECODED" | cut -d'|' -f1)"
+            emit_masked KEYSTORE_PASSWORD "$(printf '%s' "$DECODED" | cut -d'|' -f2)"
+            emit_masked KEY_ALIAS         "$(printf '%s' "$DECODED" | cut -d'|' -f3)"
+            emit_masked KEY_PASSWORD      "$(printf '%s' "$DECODED" | cut -d'|' -f4)"
+
+            echo "✅ Keystore parameters extracted from KEYSTORE_SET"
+          else
+            echo "ℹ️ KEYSTORE_SET not provided, using separate secrets."
+            emit KEYSTORE_BASE64   "$S_KEYSTORE_BASE64"
+            emit KEYSTORE_PASSWORD "$S_KEYSTORE_PASSWORD"
+            emit KEY_ALIAS         "$S_KEY_ALIAS"
+            emit KEY_PASSWORD      "$S_KEY_PASSWORD"
+          fi
+          emit GDRIVE_OAUTH2 "$S_GDRIVE_OAUTH2"
+
+      - name: Check Secrets
+        run: |
+          echo "🔍 Checking required secrets..."
+          MISSING=0
+
+          check_secret() {
+            if [ -z "$1" ]; then
+              echo "❌ Missing secret: $2"
+              MISSING=1
+            fi
+          }
+
+          # Check secrets
+          check_secret "$GDRIVE_OAUTH2" "GDRIVE_OAUTH2"
+          
+          check_secret "$KEYSTORE_BASE64" "KEYSTORE_BASE64"
+          check_secret "$KEYSTORE_PASSWORD" "KEYSTORE_PASSWORD"
+          check_secret "$KEY_ALIAS" "KEY_ALIAS"
+          check_secret "$KEY_PASSWORD" "KEY_PASSWORD"
+
+          if [ "$MISSING" -eq 1 ]; then
+            echo "🛑 Missing required secrets. Stopping build."
+            exit 1
+          fi
+
+          echo "✅ All required secrets are present."
+
+      - name: Decode keystore file
+        run: |
+          mkdir -p "$RUNNER_TEMP/keystore"
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore/keystore.jks"
+
+      - name: Validating keystore, alias and password
+        run: |
+          set -x
+          echo "🔐 Validating keystore, alias and password"
+
+          # Create a dummy JAR file (quick method using zip)
+          echo "test" > dummy.txt
+          zip -q dummy.jar dummy.txt
+          rm dummy.txt
+          
+          # Attempt to validate using jarsigner
+          JARSIGNER_LOG=$(mktemp)
+          if ! jarsigner \
+              -keystore "$RUNNER_TEMP/keystore/keystore.jks" \
+              -storepass "$KEYSTORE_PASSWORD" \
+              -keypass "$KEY_PASSWORD" \
+              dummy.jar "$KEY_ALIAS" > "$JARSIGNER_LOG" 2>&1; then
+            echo "❌ Either KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_PASSWORD, or KEY_ALIAS is incorrect"
+            echo "🔍 jarsigner error output:"
+            cat "$JARSIGNER_LOG"
+            rm -f "$JARSIGNER_LOG" dummy.jar
+            exit 1
+          fi
+          rm -f "$JARSIGNER_LOG" dummy.jar
+          echo "✅ Keystore, alias, and key password are valid."
+
+          rm -f "$KEYTOOL_LOG"
+          echo "✅ Keystore and credentials validated."
+
+      - name: Decode GDrive OAuth2 secrets
+        run: |
+          # GDRIVE_OAUTH2 is already in the environment from the decode step
+          # above, so nothing has to be pasted into the script text here either.
+          DELIM="AAPS_EOF_$(openssl rand -hex 16)"
+          emit_masked() {
+            echo "::add-mask::$2"
+            printf '%s<<%s\n%s\n%s\n' "$1" "$DELIM" "$2" "$DELIM" >> "$GITHUB_ENV"
+          }
+
+          echo "🔐 Decoding GDRIVE_OAUTH2..."
+          DECODED=$(printf '%s' "$GDRIVE_OAUTH2" | base64 -d)
+
+          emit_masked GDRIVE_CLIENT_ID     "$(printf '%s' "$DECODED" | cut -d'|' -f1)"
+          emit_masked GDRIVE_REFRESH_TOKEN "$(printf '%s' "$DECODED" | cut -d'|' -f2)"
+
+          echo "✅ GDRIVE_CLIENT_ID and GDRIVE_REFRESH_TOKEN extracted from GDRIVE_OAUTH2"
+
+      - name: Retrieving Google Drive access token
+        run: |
+          echo "🔐 Getting Google OAuth2 access token..."
+          TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
+            -d client_id="$GDRIVE_CLIENT_ID" \
+            -d refresh_token="$GDRIVE_REFRESH_TOKEN" \
+            -d grant_type=refresh_token)
+          ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r .access_token)
+          echo "::add-mask::$ACCESS_TOKEN"
+          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
+            echo "❌ Failed to get access token."
+            echo "$TOKEN_RESPONSE"
+            exit 1
+          fi
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+          echo "✅ Access token obtained."
+
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      - name: Load jdk versions
+        run: |
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Set BUILD_VARIANT
+        run: |
+          BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
+          echo "BUILD_VARIANT=$BUILD_VARIANT" >> $GITHUB_ENV
+          VARIANT_FLAVOR=$(echo "$BUILD_VARIANT" | sed -E 's/(Release|Debug)$//' | tr '[:upper:]' '[:lower:]')
+          VARIANT_TYPE=$(echo "$BUILD_VARIANT" | grep -oE '(Release|Debug)$' | tr '[:upper:]' '[:lower:]')
+          echo "VARIANT_FLAVOR=$VARIANT_FLAVOR" >> $GITHUB_ENV
+          echo "VARIANT_TYPE=$VARIANT_TYPE" >> $GITHUB_ENV
+          VERSION_SUFFIX=""
+          if [[ "$VARIANT_FLAVOR" != "full" ]]; then VERSION_SUFFIX="$VARIANT_FLAVOR"; fi
+          if [[ "$VARIANT_TYPE" == "debug" ]]; then VERSION_SUFFIX="$VERSION_SUFFIX-debug"; fi
+          if [[ -n "$VERSION_SUFFIX" && "$VERSION_SUFFIX" != -* ]]; then VERSION_SUFFIX="-$VERSION_SUFFIX"; fi
+          echo "VERSION_SUFFIX=$VERSION_SUFFIX" >> $GITHUB_ENV
+
+      - name: Extract VERSION
+        run: |
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+          if echo "$BRANCH_NAME" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+            VERSION="$BRANCH_NAME"
+          else
+            VERSION=$(grep 'val appVersion' buildSrc/src/main/kotlin/Versions.kt | awk -F '"' '{print $2}')
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          # Java version is defined in .github/versions.env
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build APKs
+        run: |
+              ./gradlew :app:assemble${{ env.BUILD_VARIANT }} :wear:assemble${{ env.BUILD_VARIANT }} \
+              -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss4m" \
+              -Dkotlin.daemon.jvm.options="-Xmx2g" \
+              -Dkotlin.compiler.execution.strategy="in-process" \
+              -Dorg.gradle.daemon=true \
+              -Dorg.gradle.workers.max=8 \
+              -Dorg.gradle.caching=true \
+              -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
+              -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+              -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+              -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+
+      - name: Rename APKs with version
+        run: |
+          mv app/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk aaps-${{ env.VERSION }}${{ env.VERSION_SUFFIX }}.apk
+          mv wear/build/outputs/apk/${{ env.VARIANT_FLAVOR }}/${{ env.VARIANT_TYPE }}/*.apk aaps-wear-${{ env.VERSION }}${{ env.VERSION_SUFFIX }}.apk
+
+      - name: Upload APKs to Google Drive
+        run: |
+          set -e
+          echo "🔐 Start uploading APKs to Google Drive..."
+
+          echo "📁 Checking or creating AAPS folder"
+          AAPS_FOLDER_ID=$(curl -s -X GET \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            "https://www.googleapis.com/drive/v3/files?q=name='AAPS'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false" \
+            | jq -r '.files[0].id')
+
+          if [ "$AAPS_FOLDER_ID" == "null" ] || [ -z "$AAPS_FOLDER_ID" ]; then
+            AAPS_FOLDER_ID=$(curl -s -X POST \
+              -H "Authorization: Bearer $ACCESS_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{"name": "AAPS", "mimeType": "application/vnd.google-apps.folder"}' \
+              "https://www.googleapis.com/drive/v3/files" | jq -r '.id')
+            echo "📂 Created AAPS folder: $AAPS_FOLDER_ID"
+          else
+            echo "📂 Found AAPS folder: $AAPS_FOLDER_ID"
+          fi
+
+          echo "📁 Checking or creating version folder: $VERSION"
+          VERSION_FOLDER_ID=$(curl -s -X GET \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            "https://www.googleapis.com/drive/v3/files?q=name='${VERSION}'+and+mimeType='application/vnd.google-apps.folder'+and+'$AAPS_FOLDER_ID'+in+parents+and+trashed=false" \
+            | jq -r '.files[0].id')
+
+          if [ "$VERSION_FOLDER_ID" == "null" ] || [ -z "$VERSION_FOLDER_ID" ]; then
+            VERSION_FOLDER_ID=$(curl -s -X POST \
+              -H "Authorization: Bearer $ACCESS_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"name\": \"${VERSION}\", \"mimeType\": \"application/vnd.google-apps.folder\", \"parents\": [\"$AAPS_FOLDER_ID\"]}" \
+              "https://www.googleapis.com/drive/v3/files" | jq -r '.id')
+            echo "📂 Created version folder: $VERSION_FOLDER_ID"
+          else
+            echo "📂 Found version folder: $VERSION_FOLDER_ID"
+          fi
+
+          upload_to_gdrive() {
+            FILE=$1
+            NAME=$2
+            if [ ! -f "$FILE" ]; then
+              echo "❌ File not found: $FILE"
+              exit 26
+            fi
+
+            echo "📄 Checking if file $NAME already exists in Google Drive..."
+            QUERY="name='${NAME}' and '${VERSION_FOLDER_ID}' in parents and trashed=false"
+            ENCODED_QUERY=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$QUERY'''))")
+            FILE_ID=$(curl -s \
+              -H "Authorization: Bearer $ACCESS_TOKEN" \
+              "https://www.googleapis.com/drive/v3/files?q=${ENCODED_QUERY}&fields=files(id)" \
+              | jq -r '.files[0].id')
+
+            if [[ -n "$FILE_ID" && "$FILE_ID" != "null" ]]; then
+              echo "🗑️ Deleting existing file with ID: $FILE_ID"
+              curl -s -X DELETE \
+                -H "Authorization: Bearer $ACCESS_TOKEN" \
+                "https://www.googleapis.com/drive/v3/files/${FILE_ID}"
+            fi
+
+            echo "⬆️ Uploading $FILE as $NAME to Google Drive..."
+            RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/gdrive_response.json \
+              -X POST \
+              -H "Authorization: Bearer $ACCESS_TOKEN" \
+              -F "metadata={\"name\":\"$NAME\", \"parents\":[\"$VERSION_FOLDER_ID\"]};type=application/json;charset=UTF-8" \
+              -F "file=@$FILE;type=application/vnd.android.package-archive" \
+              "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart")
+
+            HTTP_CODE="${RESPONSE: -3}"
+            if [[ "$HTTP_CODE" != "200" && "$HTTP_CODE" != "201" ]]; then
+              echo "❌ Upload failed with HTTP status: $HTTP_CODE"
+              cat /tmp/gdrive_response.json
+              exit 1
+            fi
+
+            echo "✅ Uploaded: $NAME"
+          }
+
+          upload_to_gdrive "aaps-${VERSION}${VERSION_SUFFIX}.apk" "aaps-${VERSION}${VERSION_SUFFIX}.apk"
+          upload_to_gdrive "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk" "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk"
+
+          echo "🎉 APKs successfully uploaded to Google Drive!"
+
+
+  # Configuration: Threshold-based cleanup
+  # Cleanup only occurs when total runs exceed: keep_runs + keep_threshold (e.g., 30 + 10 = 40)
+  cleanup:
+    name: Cleanup Old Workflow Runs
+    needs: build
+    if: always()
+    permissions:
+      actions: write
+    uses: ./.github/workflows/cleanup-workflow-runs.yml
+    with:
+      workflow_name: 'Branch CI'
+      keep_runs: 30
+      keep_threshold: 10

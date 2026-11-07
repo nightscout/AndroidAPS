@@ -1,36 +1,17 @@
 package app.aaps.pump.equil.ble
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
-import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
-import android.bluetooth.le.ScanResult
-import android.bluetooth.le.ScanSettings
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
-import android.text.TextUtils
-import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.pump.equil.EquilConst
-import app.aaps.pump.equil.ble.GattAttributes.characteristicConfigDescriptor
 import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.manager.EquilManager
@@ -42,51 +23,118 @@ import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdInsulinGet
 import app.aaps.pump.equil.manager.command.CmdPair
 import app.aaps.pump.equil.manager.command.CmdRunningModeGet
-import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
-@SuppressLint("MissingPermission")
-@Singleton
-class EquilBLE @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class EquilBLE(
     private val aapsLogger: AAPSLogger,
-    private val context: Context,
+    private val bleTransport: EquilBleTransport,
     private val rxBus: RxBus
-) {
+) : BleTransportListener {
 
     private var equilManager: EquilManager? = null
-    private var mGattCallback: BluetoothGattCallback? = null
-    private var notifyChara: BluetoothGattCharacteristic? = null
-    private var writeChara: BluetoothGattCharacteristic? = null
-
-    private var bluetoothGatt: BluetoothGatt? = null
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     var isConnected = false
     var connecting = false
+    private var connectInitiated = false
+    private var connectRunnable: Runnable? = null
     var macAddress: String? = null
     private var bleHandler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var scanJob: Job? = null
 
-    @Synchronized
-    fun unBond(transmitterMAC: String?) {
-        if (transmitterMAC == null) return
-        try {
-            val pairedDevices = bluetoothAdapter?.bondedDevices ?: return
-            if (pairedDevices.isNotEmpty()) {
-                for (device in pairedDevices) {
-                    if (device.address == transmitterMAC) {
-                        try {
-                            val method = device.javaClass.getMethod("removeBond")
-                            method.invoke(device)
-                        } catch (e: Exception) {
-                            aapsLogger.error(LTag.PUMPCOMM, "Error", e)
-                        }
-                    }
-                }
+    fun init(equilManager: EquilManager) {
+        macAddress = equilManager.equilState?.address
+        this.equilManager = equilManager
+        aapsLogger.debug(LTag.PUMPBTCOMM, "initGatt======= ")
+        bleTransport.setListener(this)
+        bleTransport.onGattError133 = {
+            aapsLogger.debug(LTag.PUMPCOMM, "error133 ")
+            baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
+        }
+        bleTransport.onDescriptorWriteFailed = { linkSetupFailed("enabling notifications failed") }
+    }
+
+    /**
+     * The link is up, but services or notifications could not be set up, so no answer from the pump
+     * can arrive. Fail the waiting command at once and close the link, so the next connect starts
+     * clean. Before, the command waited for its full timeout.
+     */
+    private fun linkSetupFailed(reason: String) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Link setup failed: $reason")
+        baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
+        bleConnectErrorForResult()
+        disconnect()
+    }
+
+    // --- BleTransportListener ---
+
+    override fun onConnectionStateChanged(connected: Boolean) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChanged connected=$connected")
+        connecting = false
+        if (connected) {
+            isConnected = true
+            equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
+            handler.removeMessages(TIME_OUT_CONNECT_WHAT)
+            // Link up: stop the parallel advert-harvest scan (the pump stops advertising once connected; if it
+            // already caught an advert it stopped itself in the scan collector).
+            stopScan()
+            synchronized(notifyLock) {
+                // New link: notifications not yet enabled. Block command dispatch until onDescriptorWritten.
+                notificationEnabled = false
+                dispatchedCmd = null
             }
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.PUMPCOMM, "Error", e)
+            bleTransport.gatt.discoverServices()
+            updateCmdStatus(ResolvedResult.FAILURE)
+        } else {
+            // For error 133, resolvedResult is already set to CONNECT_ERROR via onGattError133 callback
+            bleConnectErrorForResult()
+            disconnect()
         }
     }
+
+    override fun onServicesDiscovered(success: Boolean) {
+        if (!success) {
+            linkSetupFailed("service discovery failed")
+            return
+        }
+        bleTransport.gatt.enableNotifications()
+        bleTransport.gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+    }
+
+    override fun onDescriptorWritten() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWritten: Wrote GATT Descriptor successfully.")
+        synchronized(notifyLock) {
+            notificationEnabled = true
+            // Notifications are now live: send the pending command (queue-opened or the one that opened
+            // this link). Null-safe + send-once via dispatchedCmd, so it can't collide with the descriptor
+            // write and can't double-send with writeCmd().
+            dispatchCmd()
+        }
+    }
+
+    override fun onCharacteristicChanged(data: ByteArray) {
+        bleTransport.gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+        decode(data)
+    }
+
+    override fun onCharacteristicWritten() {
+        try {
+            SystemClock.sleep(EquilConst.EQUIL_BLE_WRITE_TIME_OUT)
+            writeData()
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Error", e)
+        }
+    }
+
+    // --- Command sequencing ---
 
     private fun bleConnectErrorForResult() {
         baseCmd?.let { baseCmd ->
@@ -97,109 +145,7 @@ class EquilBLE @Inject constructor(
         }
     }
 
-    @Suppress("deprecation", "OVERRIDE_DEPRECATION")
-    fun init(equilManager: EquilManager) {
-        macAddress = equilManager.equilState?.address
-        this.equilManager = equilManager
-        aapsLogger.debug(LTag.PUMPBTCOMM, "initGatt======= ")
-        mGattCallback = object : BluetoothGattCallback() {
-            @Synchronized
-            override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, i2: Int) {
-                super.onConnectionStateChange(gatt, status, i2)
-                val str = if (i2 == BluetoothProfile.STATE_CONNECTED) "CONNECTED" else "DISCONNECTED"
-                val sb = "onConnectionStateChange called with status:$status, state:$str， i2: $i2， error133: "
-                aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange $sb")
-                connecting = false
-                if (status == 133) {
-                    unBond(macAddress)
-                    SystemClock.sleep(50)
-                    aapsLogger.debug(LTag.PUMPCOMM, "error133 ")
-                    baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
-                    bleConnectErrorForResult()
-                    disconnect()
-                    return
-                }
-                if (i2 == BluetoothProfile.STATE_CONNECTED) {
-                    isConnected = true
-                    equilManager.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
-                    handler.removeMessages(TIME_OUT_CONNECT_WHAT)
-                    bluetoothGatt?.discoverServices()
-                    updateCmdStatus(ResolvedResult.FAILURE)
-                    //                    rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
-                } else if (i2 == BluetoothProfile.STATE_DISCONNECTED) {
-                    bleConnectErrorForResult()
-                    disconnect()
-                }
-            }
-
-            @Synchronized
-            override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-                if (status != BluetoothGatt.GATT_SUCCESS) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered received: $status")
-                    return
-                }
-                val service = gatt.getService(UUID.fromString(GattAttributes.SERVICE_RADIO))
-                if (service != null) {
-                    notifyChara = service.getCharacteristic(UUID.fromString(GattAttributes.NRF_UART_NOTIFY))
-                    writeChara = service.getCharacteristic(UUID.fromString(GattAttributes.NRF_UART_WRITE))
-                    //                    rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
-                    openNotification()
-                    requestHighPriority()
-                }
-            }
-
-            override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-                try {
-                    SystemClock.sleep(EquilConst.EQUIL_BLE_WRITE_TIME_OUT)
-                    writeData()
-                } catch (e: Exception) {
-                    aapsLogger.error(LTag.PUMPBTCOMM, "Error", e)
-                }
-            }
-
-            override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-                onCharacteristicChanged(gatt, characteristic)
-            }
-
-            override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-                requestHighPriority()
-                decode(characteristic.value)
-            }
-
-            @Synchronized
-            override fun onDescriptorWrite(
-                gatt: BluetoothGatt,
-                descriptor: BluetoothGattDescriptor,
-                status: Int
-            ) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite received: $status")
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite: Wrote GATT Descriptor successfully.")
-                    ready()
-                }
-            }
-        }
-    }
-
-    @Suppress("deprecation")
-    fun openNotification() {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "openNotification: $isConnected")
-        val r0 = bluetoothGatt?.setCharacteristicNotification(notifyChara, true)
-        if (r0 == true) {
-            val descriptor = notifyChara?.getDescriptor(characteristicConfigDescriptor)
-            val v = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-            descriptor?.setValue(v)
-            val flag = bluetoothGatt?.writeDescriptor(descriptor)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "openNotification: $flag")
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    fun requestHighPriority() {
-        bluetoothGatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
-    }
-
-    fun ready() {
+    @Synchronized fun ready() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "ready: ===$baseCmd")
         dataList = ArrayList()
         baseCmd?.let { baseCmd ->
@@ -209,7 +155,7 @@ class EquilBLE @Inject constructor(
         }
     }
 
-    private fun nextCmd2() {
+    @Synchronized private fun nextCmd2() {
         dataList = ArrayList()
         aapsLogger.debug(LTag.PUMPBTCOMM, "nextCmd===== ${baseCmd?.isEnd}====")
         baseCmd?.let { baseCmd ->
@@ -226,46 +172,84 @@ class EquilBLE @Inject constructor(
 
     fun disconnect() {
         isConnected = false
-        startTrue = false
+        connecting = false
+        connectInitiated = false
+        // Cancel any pending delayed connect so a stale runnable can't re-open a GATT after teardown.
+        connectRunnable?.let { handler.removeCallbacks(it) }
+        connectRunnable = null
+        stopScan() // cancel any in-flight advert-harvest scan (hybrid connect); also clears startTrue
         autoScan = false
         equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
         aapsLogger.debug(LTag.PUMPBTCOMM, "Closing GATT connection")
-        bluetoothGatt?.disconnect()
-        bluetoothGatt?.close()
-        bluetoothGatt = null
+        bleTransport.gatt.disconnect()
+        bleTransport.gatt.close()
         baseCmd = null
         preCmd = null
+        synchronized(notifyLock) {
+            notificationEnabled = false
+            dispatchedCmd = null
+        }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
     }
 
     fun closeBleAuto() {
-        handler.postDelayed({
-            disconnect()
-        }, EquilConst.EQUIL_BLE_NEXT_CMD)
+        // Tear down immediately. The AAPS command queue owns the connection lifecycle: after the last
+        // command it holds the link for waitForDisconnectionInSeconds() (5 s) for reuse and only then
+        // calls Pump.disconnect() -> here. No extra driver-side linger is needed, and an immediate
+        // teardown avoids the mid-command race that a deferred, cancellable timer would introduce.
+        disconnect()
     }
 
     var autoScan = true
     private fun findEquil(mac: String) {
         if (mac.isEmpty()) return
         if (isConnected) return
-        val equilDevice: BluetoothDevice? = bluetoothAdapter?.getRemoteDevice(mac)
         if (autoScan) startScan()
-        else connectEquil(equilDevice)
+        else connectEquil(mac)
     }
 
-    fun connectEquil(device: BluetoothDevice?) {
-        handler.postDelayed({
-            if (device != null) {
-                aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
-                bluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
-            }
-        }, 500)
+    private fun connectEquil(address: String) {
+        // Guard against the scan emitting the same device multiple times (and other re-entrant
+        // calls): only one connect attempt per session, reset on disconnect(). Prevents stacking
+        // overlapping GATT clients. See also the close-before-connect guard in EquilBleTransportImpl.
+        if (connectInitiated) return
+        connectInitiated = true
+        val runnable = Runnable {
+            aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
+            bleTransport.gatt.connect(address)
+        }
+        connectRunnable = runnable
+        handler.postDelayed(runnable, 500)
     }
 
     private var baseCmd: BaseCmd? = null
     private var preCmd: BaseCmd? = null
+
+    // Notification-readiness gate for the current GATT link. Android allows only ONE outstanding GATT
+    // operation at a time. `isConnected` flips true at onConnectionStateChanged BEFORE onServicesDiscovered
+    // has enabled notifications (the notify-descriptor write). If a command's first characteristic write
+    // goes out in that window it collides with the descriptor write: writeDescriptor returns false,
+    // notifications never turn on, the pump's replies never arrive, and the command idle-times-out ->
+    // "Pump connection failure / manually check delivered insulin" (bolus, tempBasal and profile/CmdSettingSet
+    // all hit this through different writeCmd branches). Fix: never send the FIRST command on a link until
+    // onDescriptorWritten confirms notifications; dispatchedCmd makes that send-once so it can't double with
+    // writeCmd(). See #4910 (this is its follow-up).
+    private val notifyLock = Any()
+    @Volatile private var notificationEnabled = false
+    private var dispatchedCmd: BaseCmd? = null
+
+    // Send the current command's first packet exactly once per link, only after notifications are enabled.
+    // Null-safe (no-op during the pure connect handshake). Caller MUST hold notifyLock.
+    private fun dispatchCmd() {
+        val cmd = baseCmd
+        if (cmd != null && cmd !== dispatchedCmd) {
+            dispatchedCmd = cmd
+            ready()
+        }
+    }
+
     fun writeCmd(baseCmd: BaseCmd) {
-        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
+        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd $baseCmd")
         this.baseCmd = baseCmd
         val mac: String = when (baseCmd) {
             is CmdPair -> baseCmd.address
@@ -273,13 +257,30 @@ class EquilBLE @Inject constructor(
             else -> equilManager?.equilState?.address ?: error("Unknown MAC address")
         }
         autoScan = baseCmd is CmdRunningModeGet || baseCmd is CmdInsulinGet
+        if (isConnected) {
+            synchronized(notifyLock) {
+                if (!notificationEnabled) {
+                    // Fresh link, notifications not enabled yet: defer EVERY send path (pair step,
+                    // continuation, first command). onDescriptorWritten -> dispatchCmd() sends it once
+                    // notifications are up, avoiding the descriptor-write collision.
+                    preCmd = baseCmd
+                    return
+                }
+            }
+        }
         if (isConnected && baseCmd.isPairStep()) {
-            ready()
+            synchronized(notifyLock) { dispatchCmd() }
         } else if (isConnected) {
-            preCmd?.let { preCmd ->
-                baseCmd.runCode = preCmd.runCode
-                baseCmd.runPwd = preCmd.runPwd
+            val prevCmd = preCmd
+            if (prevCmd != null) {
+                baseCmd.runCode = prevCmd.runCode
+                baseCmd.runPwd = prevCmd.runPwd
                 nextCmd2()
+            } else {
+                // GATT link opened by the queue's connect() phase, notifications already up: send this
+                // command as the first one on the open link (else the pump idle-disconnects, status 19).
+                // See issue #4910.
+                synchronized(notifyLock) { dispatchCmd() }
             }
         } else {
             findEquil(mac)
@@ -288,44 +289,42 @@ class EquilBLE @Inject constructor(
         preCmd = baseCmd
     }
 
-    fun readHistory(baseCmd: CmdHistoryGet) {
+    /**
+     * Sends a history request on the open link.
+     *
+     * @return false when there is no open link, so nothing was sent and no answer will come. The
+     * caller must not wait for one then. The pump closes the link about 10 s after a command, so
+     * this is the normal case after a bolus. It used to notify the command instead, but that
+     * happened before the caller started to wait, so the caller waited its full 22 s timeout.
+     */
+    fun readHistory(baseCmd: CmdHistoryGet): Boolean {
         if (isConnected && preCmd != null) {
             baseCmd.runCode = preCmd!!.runCode
             baseCmd.runPwd = preCmd!!.runPwd
             this.baseCmd = baseCmd
             nextCmd2()
             preCmd = baseCmd
-        } else {
-            aapsLogger.debug(LTag.PUMPCOMM, "readHistory error")
+            return true
         }
+        aapsLogger.debug(LTag.PUMPCOMM, "readHistory: no open link, history not requested")
+        return false
     }
 
     private var equilResponse: EquilResponse? = null
     private var indexData = 0
-    fun writeData() {
+    @Synchronized fun writeData() {
         equilResponse?.let { equilResponse ->
             val diff = System.currentTimeMillis() - equilResponse.cmdCreateTime
             if (diff < EquilConst.EQUIL_CMD_TIME_OUT) {
                 if (indexData < equilResponse.send.size) {
                     val data = equilResponse.send[indexData].array()
-                    write(data)
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "write: ${Utils.bytesToHex(data)}")
+                    bleTransport.gatt.writeCharacteristic(data)
                     indexData++
                 } else { // no more data to send
                 }
             } else aapsLogger.debug(LTag.PUMPCOMM, "equil cmd time out ")
         }
-    }
-
-    @Suppress("deprecation")
-    private fun write(bytes: ByteArray) {
-        if (writeChara == null || bluetoothGatt == null) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "write disconnect ")
-            disconnect()
-            return
-        }
-        writeChara?.setValue(bytes)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "write: ${Utils.bytesToHex(bytes)}")
-        bluetoothGatt?.writeCharacteristic(writeChara)
     }
 
     private var dataList: List<String> = ArrayList()
@@ -340,7 +339,7 @@ class EquilBLE @Inject constructor(
         }
     }
 
-    private fun writeConf(equilResponse: EquilResponse?) {
+    @Synchronized private fun writeConf(equilResponse: EquilResponse?) {
         try {
             dataList = ArrayList()
             this.equilResponse = equilResponse
@@ -349,6 +348,86 @@ class EquilBLE @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // --- Scanning ---
+
+    private var startTrue = false
+    private fun startScan() {
+        macAddress = equilManager?.equilState?.address
+        aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
+        if (macAddress.isNullOrEmpty()) return
+        if (startTrue) return
+        startTrue = true
+        connecting = true
+        equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+
+        bleTransport.scanAddress = macAddress
+        updateCmdStatus(ResolvedResult.NOT_FOUNT)
+        // With a known address the connection does not need the scan, it only reads the advertisement
+        // (battery, reservoir, history index). Stop it after a while, or with the pump out of range the
+        // most power hungry scan mode runs until the queue gives up. A scan that has to find the pump
+        // (autoScan) keeps running; the connect timeout of the command ends it.
+        if (!autoScan) handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, EquilConst.EQUIL_ADVERT_SCAN_TIME_OUT)
+
+        scanJob = scope.launch {
+            bleTransport.scanner.scannedDevices.collect { device ->
+                device.scanRecordBytes?.let { bytes ->
+                    bleHandler.post {
+                        equilManager?.decodeData(bytes)
+                    }
+                }
+                stopScan()
+                if (autoScan) {
+                    updateCmdStatus(ResolvedResult.CONNECT_ERROR)
+                    connectEquil(device.address)
+                }
+            }
+        }
+
+        bleTransport.scanner.startScan()
+    }
+
+    private fun updateCmdStatus(result: ResolvedResult) {
+        baseCmd?.resolvedResult = result
+    }
+
+    fun connect(from: String) {
+        aapsLogger.debug(LTag.PUMPCOMM, "connect====connecting=$connecting====isConnected=$isConnected from $from")
+        if (connecting || isConnected) {
+            return
+        }
+        baseCmd = null
+        macAddress = equilManager?.equilState?.address
+        val mac = macAddress
+        if (!mac.isNullOrEmpty()) {
+            // Known/bonded pump: connect straight to its MAC (autoConnect, see EquilBleTransportImpl) instead of
+            // scan-to-connect. Scan discovery was the #5040 bottleneck (60-90 s on many phones). In parallel run
+            // a best-effort advert harvest that does NOT gate the connection - it refreshes the pump's current
+            // history index + battery/reservoir/alarm. Scanning stays as the fallback for an unknown MAC.
+            connecting = true
+            equilManager?.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+            connectEquil(mac)
+            autoScan = false
+            startScan()
+        } else {
+            autoScan = true
+            startScan()
+        }
+    }
+
+    fun stopScan() {
+        startTrue = false
+        handler.removeMessages(TIME_OUT_WHAT)
+        scanJob?.cancel()
+        scanJob = null
+        bleTransport.scanner.stopScan()
+    }
+
+    @Synchronized
+    fun unBond(transmitterMAC: String?) {
+        if (transmitterMAC == null) return
+        bleTransport.adapter.removeBond(transmitterMAC)
     }
 
     var handler: Handler = object : Handler(HandlerThread(this::class.simpleName + "MessageHandler").also { it.start() }.looper) {
@@ -367,88 +446,6 @@ class EquilBLE @Inject constructor(
             }
         }
     }
-    private var startTrue = false
-    private fun startScan() {
-        macAddress = equilManager?.equilState?.address
-        aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
-        if (macAddress.isNullOrEmpty()) return
-        if (startTrue) return
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
-                if (bluetoothLeScanner != null) {
-                    updateCmdStatus(ResolvedResult.NOT_FOUNT)
-                    connecting = true
-                    bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback)
-                }
-            } catch (_: IllegalStateException) {
-            } // ignore BT not on
-        } else {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
-        }
-    }
-
-    private fun updateCmdStatus(result: ResolvedResult) {
-        baseCmd?.resolvedResult = result
-    }
-
-    fun connect(from: String) {
-        aapsLogger.debug(LTag.PUMPCOMM, "connect====startTrue=$startTrue====isConnected=$isConnected from $from")
-        if (startTrue || isConnected) {
-            return
-        }
-        autoScan = true
-        baseCmd = null
-        startScan()
-    }
-
-    private fun buildScanFilters(): List<ScanFilter> {
-        val scanFilterList = ArrayList<ScanFilter>()
-        if (TextUtils.isEmpty(macAddress)) {
-            return scanFilterList
-        }
-        val scanFilterBuilder = ScanFilter.Builder()
-        scanFilterBuilder.setDeviceAddress(macAddress)
-        scanFilterList.add(scanFilterBuilder.build())
-        return scanFilterList
-    }
-
-    private fun buildScanSettings(): ScanSettings {
-        val builder = ScanSettings.Builder()
-        builder.setReportDelay(0)
-        return builder.build()
-    }
-
-    private var scanCallback: ScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            super.onScanResult(callbackType, result)
-            val name: String? = result.device.name
-            if (name?.isNotEmpty() == true) {
-                try {
-                    bleHandler.post {
-                        equilManager?.decodeData(result.scanRecord!!.bytes, autoScan)
-                    }
-                    stopScan()
-                    if (autoScan) {
-                        updateCmdStatus(ResolvedResult.CONNECT_ERROR)
-                        connectEquil(result.device)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
-
-    fun stopScan() {
-        startTrue = false
-        handler.removeMessages(TIME_OUT_WHAT)
-        val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
-        if (isBluetoothAvailable) bluetoothLeScanner?.stopScan(scanCallback)
-    }
-
-    private val isBluetoothAvailable: Boolean
-        get() = bluetoothAdapter?.isEnabled == true && bluetoothAdapter?.state == BluetoothAdapter.STATE_ON
 
     companion object {
 

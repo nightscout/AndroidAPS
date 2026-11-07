@@ -1,35 +1,42 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
-    id("kotlin-android")
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
+    id("kmp-android-library")
+    // Metro, only for its annotations: the fixtures here mock `Provider<T>` fields that production
+    // constructors take, so the type has to be the same one production uses.
+    alias(libs.plugins.metro)
 }
 
-android {
-    namespace = "app.aaps.shared.tests"
-    defaultConfig {
-        minSdk = Versions.minSdk
+// No withHostTest: this module has no tests of its own - it is the fixtures other modules test with.
+kotlin {
+    android {
+        namespace = "app.aaps.shared.tests"
     }
-}
 
-dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
-    implementation(project(":implementation"))
-    implementation(project(":plugins:aps"))
-    implementation(project(":shared:impl"))
+    // Very little can live in commonMain here, and the reason is worth writing down: JUnit 5, Mockito
+    // and RxJava are all JVM-only, so anything built on them - TestBase, TestBaseWithProfile,
+    // TestAapsSchedulers - is Android by nature, not by accident. The same goes for the generated
+    // `*StringIds` maps that TextRefStubs needs, which only exist on Android.
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+            }
+        }
 
+        getByName("androidMain") {
+            dependencies {
+                implementation(project(":core:objects"))
+                implementation(project(":core:ui"))
+                implementation(project(":implementation"))
+                implementation(project(":plugins:aps"))
+                implementation(project(":shared:impl"))
 
-    api(libs.org.mockito.junit.jupiter)
-    api(libs.org.mockito.kotlin)
-    api(libs.org.junit.jupiter.api)
-
-    ksp(libs.com.google.dagger.compiler)
+                // api, not implementation: every consumer writes its tests against these.
+                api(libs.org.mockito.junit.jupiter)
+                api(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.kotlin)
+            }
+        }
+    }
 }

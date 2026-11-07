@@ -1,0 +1,644 @@
+package app.aaps.ui.compose.overview.graphs
+
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.endOf
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.overview.graph.BgDataPoint
+import app.aaps.core.interfaces.overview.graph.BgRange
+import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
+import app.aaps.core.interfaces.overview.graph.BolusType
+import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
+import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
+import app.aaps.core.interfaces.overview.graph.GraphDataPoint
+import app.aaps.core.interfaces.overview.graph.RunningModeSegment
+import app.aaps.core.interfaces.overview.graph.TbrState
+import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalDecimalFormatter
+import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.icons.IcBgCheck
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.compose.overview.chips.toIcon
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
+import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerVisibilityListener
+import com.patrykandpatrick.vico.compose.cartesian.marker.Interaction
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import kotlin.math.abs
+import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+
+// Press and hold on any graph: a dot on the reading in the BG graph, a line in every graph and a pill with the values.
+
+/** Max distance from the finger's time for a reading or value, in ms. */
+private const val INSPECT_MATCH_MS = 5 * 60_000L
+
+/**
+ * Max distance from the snapped time for a treatment, in ms, when the snapped time is not a reading.
+ *
+ * Treatments are matched against the time the pill snapped to, not against the finger, so they
+ * change together with the reading and the dot, once per reading. Matched against the finger they
+ * changed at their own times in between, and the pill showed a reading with the SMB of its
+ * neighbour. At a reading, a treatment is listed when that reading is the nearest reading to it,
+ * so every treatment belongs to exactly one reading, also when readings come more than five
+ * minutes apart: a fixed half interval left a bolus in the middle of such a gap unlisted at both
+ * sides. After the last reading, or with no reading within [INSPECT_MATCH_MS], the snapped time is
+ * the finger's own, and this window finds a treatment in a gap when it is held.
+ */
+private const val INSPECT_TREATMENT_MS = 150_000L
+
+/** How long the pill stays after the finger is lifted. */
+private const val INSPECT_LINGER_MS = 2_000L
+
+/** How long the pill stays after a tap on the treatment belt. Longer than after a hold, so a note can be read. */
+private const val INSPECT_TAP_LINGER_MS = 4_000L
+
+/** A long note in the pill is cut after this many lines, so the pill does not grow far into the BG graph. */
+private const val PILL_EVENT_MAX_LINES = 2
+
+private val PILL_ICON_SIZE = 14.dp
+
+/** The carbs icon fills more of its box than the insulin icon. */
+private val PILL_COB_ICON_SIZE = 12.dp
+
+/**
+ * Shared between Vico and the compose side. The [controller] sets [targetX] from the finger; the
+ * compose side snaps it to a reading and sets [shownX], [dotValue] and [dotColor].
+ */
+@Stable
+class GraphInspectState {
+
+    /** True from the long press until the finger is lifted. */
+    var fingerDown by mutableStateOf(false)
+
+    /** Set by the touch layer. Not a state: only read in callbacks. */
+    var pointerDown = false
+
+    /**
+     * How the graphs map x to pixels, set by [InspectLine] on every draw and read only in
+     * [fingerX] and [xAtPx]. Not state. The graphs share one x axis, so the last graph drawn speaks
+     * for all. [originPx] is where x = [minX] is drawn, scroll included.
+     */
+    var pxPerX = 0f
+    var originPx = 0f
+    var minX = 0.0
+    var maxX = 0.0
+
+    /** Graph x under the finger, in minutes from the start of the graph. */
+    var targetX by mutableStateOf<Double?>(null)
+
+    /** Graph x of the reading that is shown. */
+    var shownX by mutableStateOf<Double?>(null)
+
+    /** What the pill shows, or null when it is hidden. Set by [GraphInspectOverlay]. */
+    var pill by mutableStateOf<InspectData?>(null)
+
+    /**
+     * Graph x of a tap on the treatment belt, or null. A tap shows the pill for that time with no
+     * finger on the graph, see [beltController]. Cleared when the pill goes away.
+     */
+    var tapX by mutableStateOf<Double?>(null)
+
+    /** How far from [tapX] an icon on the belt can be and still be the one tapped, in graph x. */
+    var tapRadiusX = 0.0
+
+    /** Where the line is drawn, or null when no finger is down and no tapped time is shown. */
+    val lineX: Double? get() = if (fingerDown || tapX != null && pill != null) shownX else null
+    var dotValue by mutableStateOf<Double?>(null)
+    var dotColor by mutableStateOf(Color.Unspecified)
+
+    val controller: CartesianMarkerController = object : CartesianMarkerController {
+        override val acceptsLongPress: Boolean = true
+
+        // Only a long press starts it; it ends on lift or zoom
+        override fun shouldAcceptInteraction(interaction: Interaction, targets: List<CartesianMarker.Target>): Boolean =
+            when (interaction) {
+                is Interaction.LongPress                                          -> true
+                is Interaction.Move, is Interaction.Release, is Interaction.Zoom -> fingerDown
+                else                                                              -> false
+            }
+
+        override fun shouldShowMarker(interaction: Interaction, targets: List<CartesianMarker.Target>): Boolean {
+            val show = interaction is Interaction.LongPress || interaction is Interaction.Move
+            fingerDown = show
+            if (show) targetX = fingerX(interaction.point.x, targets.firstOrNull())
+            return show
+        }
+    }
+
+    /**
+     * The treatment belt: the same press and hold as every graph, and a tap shows the pill for the
+     * tapped time. The belt had a Vico tooltip of its own before. Vico cannot close a tooltip from
+     * outside, so it stayed over the belt and the BG graph until a second tap in the belt.
+     *
+     * The tap's x comes from the graph's own geometry, not from Vico's targets. Vico clears its
+     * targets whenever the chart is measured and fills them again only when it draws, and the belt
+     * seldom draws, so a tap often got none. [iconRadiusPx] is how near to an icon the finger has
+     * to be for the icon's event to count as tapped, see [beltTapTimestamp].
+     */
+    fun beltController(iconRadiusPx: Float): CartesianMarkerController = object : CartesianMarkerController {
+        override val acceptsLongPress: Boolean = true
+
+        override fun shouldAcceptInteraction(interaction: Interaction, targets: List<CartesianMarker.Target>): Boolean =
+            interaction is Interaction.Tap || controller.shouldAcceptInteraction(interaction, targets)
+
+        override fun shouldShowMarker(interaction: Interaction, targets: List<CartesianMarker.Target>): Boolean {
+            if (interaction !is Interaction.Tap) return controller.shouldShowMarker(interaction, targets)
+            tapRadiusX = if (pxPerX > 0f) (iconRadiusPx / pxPerX).toDouble() else 0.0
+            tapX = xAtPx(interaction.point.x)
+            return false
+        }
+    }
+
+    /** A new touch on the graphs closes the pill that stays after a lift or a tap. */
+    fun onTouchDown() {
+        if (fingerDown) return
+        tapX = null
+        pill = null
+    }
+
+    /**
+     * The graph x under the finger. Vico snaps to the nearest point of the held graph, and that
+     * stops at its last point: the COB graph has nothing after now, the BG graph has predictions.
+     * The finger's distance from that point in pixels gives the finger's own x, so a hold on any
+     * graph reaches as far as the BG graph. Clamped to the graph's range.
+     *
+     * Without a point, the graph's own geometry, see [xAtPx]. Vico has no points after the chart
+     * was measured until it draws again, which for a graph that seldom changes can be a while.
+     */
+    internal fun fingerX(fingerPx: Float, nearest: CartesianMarker.Target?): Double? {
+        nearest ?: return xAtPx(fingerPx)
+        if (pxPerX <= 0f || maxX < minX) return nearest.x
+        return (nearest.x + (fingerPx - nearest.canvasX) / pxPerX).coerceIn(minX, maxX)
+    }
+
+    /** The graph x drawn at [px], clamped to the graph's range. Null before a graph was drawn. */
+    internal fun xAtPx(px: Float): Double? {
+        if (pxPerX <= 0f || maxX < minX) return null
+        return (minX + (px - originPx) / pxPerX).coerceIn(minX, maxX)
+    }
+
+    val visibilityListener: CartesianMarkerVisibilityListener = object : CartesianMarkerVisibilityListener {
+        // Vico also hides the marker when the finger leaves the plotted area. Keep inspecting while it is down.
+        override fun onHidden(marker: CartesianMarker) {
+            if (!pointerDown) fingerDown = false
+        }
+    }
+}
+
+/**
+ * The marker of every graph. It draws nothing: it is only there so Vico delivers the time under
+ * the finger to the shared [GraphInspectState], whichever graph the user presses and holds. The
+ * line and the dot are drawn by [InspectLine], so they show in every graph no matter which one
+ * is held.
+ */
+object SilentInspectMarker : CartesianMarker
+
+/**
+ * The dashed line at the shown reading, in every graph, drawn like [NowLine]. With [dotOnReading]
+ * also the dot on the reading, for the BG graph. Vico snaps the finger to its own nearest point
+ * (it can be a basal or an IOB point), so the x comes from the state, which holds the reading.
+ */
+class InspectLine(
+    private val state: GraphInspectState,
+    private val color: Color,
+    private val dotOnReading: Boolean = false,
+    private val strokeWidthPx: Float = 2f,
+    private val dashLengthPx: Float = 6f,
+    private val gapLengthPx: Float = 4f
+) : Decoration {
+
+    private val dotCenter = ShapeComponent(fill = Fill(Color.White), shape = CircleShape)
+
+    override fun drawOverLayers(context: CartesianDrawingContext) {
+        with(context) {
+            val xStep = ranges.xStep
+            if (xStep == 0.0) return
+            // Before the line itself, so the mapping is fresh when the long press comes, see GraphInspectState.fingerX
+            state.pxPerX = (layerDimensions.xSpacing / xStep).toFloat()
+            state.originPx = layerBounds.left + layerDimensions.startPadding - scroll
+            state.minX = ranges.minX
+            state.maxX = ranges.maxX
+            val x = state.lineX ?: return
+            val canvasX = layerBounds.left +
+                layerDimensions.startPadding +
+                layerDimensions.xSpacing * ((x - ranges.minX) / xStep).toFloat() -
+                scroll
+            if (canvasX < layerBounds.left || canvasX > layerBounds.right) return
+            with(mutableDrawScope) {
+                drawLine(
+                    color = this@InspectLine.color,
+                    start = Offset(canvasX, layerBounds.top),
+                    end = Offset(canvasX, layerBounds.bottom),
+                    strokeWidth = strokeWidthPx,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashLengthPx, gapLengthPx), 0f)
+                )
+            }
+            if (!dotOnReading) return
+            val value = state.dotValue ?: return
+            val yRange = ranges.getYRange(Axis.Position.Vertical.Start)
+            val canvasY = layerBounds.bottom - ((value - yRange.minY) / yRange.length).toFloat() * layerBounds.height
+            val outer = 7.dp.pixels
+            val inner = 3.dp.pixels
+            ShapeComponent(fill = Fill(state.dotColor), shape = CircleShape)
+                .draw(context, canvasX - outer, canvasY - outer, canvasX + outer, canvasY + outer)
+            dotCenter.draw(context, canvasX - inner, canvasY - inner, canvasX + inner, canvasY + inner)
+        }
+    }
+}
+
+/** The [InspectLine] for one graph, or null when [state] is null. [dotOnReading] is true for the BG graph only. */
+@Composable
+fun rememberInspectLine(state: GraphInspectState?, dotOnReading: Boolean = false): InspectLine? {
+    val color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+    return remember(state, color, dotOnReading) { state?.let { InspectLine(it, color, dotOnReading) } }
+}
+
+/**
+ * While inspecting, consumes moves so the graph does not scroll. Vico still uses consumed moves
+ * for the marker, but not for scrolling.
+ * Inspecting ends in the Final pass, after Vico has seen the lift. Otherwise Vico keeps the marker.
+ */
+fun Modifier.graphInspectTouch(state: GraphInspectState): Modifier = pointerInput(state) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            state.pointerDown = event.changes.any { it.pressed }
+            if (state.fingerDown && event.type == PointerEventType.Move) event.changes.forEach { it.consume() }
+            // Same event, after Vico. Also covers a lift that Vico did not get.
+            awaitPointerEvent(PointerEventPass.Final)
+            if (!state.pointerDown) state.fingerDown = false
+        }
+    }
+}
+
+/**
+ * Closes the pill that stays after a lift or a tap as soon as the graphs are touched again. Only
+ * watches, in the Initial pass, and consumes nothing, so the touch still scrolls, holds and taps.
+ */
+fun Modifier.closesInspectPillOnTouch(state: GraphInspectState): Modifier = pointerInput(state) {
+    awaitEachGesture {
+        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        state.onTouchDown()
+    }
+}
+
+/**
+ * Snaps the finger, or a tap on the treatment belt, to a reading, gives haptic feedback for the
+ * finger and shows the pill until [INSPECT_LINGER_MS] after the lift, or [INSPECT_TAP_LINGER_MS]
+ * after a tap. A new touch on the graphs closes it sooner, see [closesInspectPillOnTouch]. Uses
+ * snapshotFlow, not effect keys, so a move only recomposes when the reading changes.
+ */
+@Composable
+fun GraphInspectOverlay(
+    inspect: GraphInspectState,
+    graphViewModel: GraphViewModel,
+    bgReadings: List<BgDataPoint>,
+    minTimestamp: Long?,
+    modifier: Modifier = Modifier
+) {
+    val iobGraph by graphViewModel.iobGraphFlow.collectAsStateWithLifecycle()
+    val cobGraph by graphViewModel.cobGraphFlow.collectAsStateWithLifecycle()
+    val basalGraph by graphViewModel.basalGraphFlow.collectAsStateWithLifecycle()
+    val treatmentGraph by graphViewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
+    val runningModeGraph by graphViewModel.runningModeGraphFlow.collectAsStateWithLifecycle()
+    val predictions by graphViewModel.predictionsFlow.collectAsStateWithLifecycle()
+    val currentBgReadings by rememberUpdatedState(bgReadings)
+    val currentMinTimestamp by rememberUpdatedState(minTimestamp)
+    val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(inspect, haptic) {
+        snapshotFlow { Triple(inspect.fingerDown, inspect.targetX, inspect.tapX) }.collect { (fingerDown, targetX, tapX) ->
+            val x = if (fingerDown) targetX else tapX
+            val min = currentMinTimestamp
+            if (x == null || min == null) return@collect
+            val fingerTimestamp = min + (x * 60_000).toLong()
+            val data = inspectDataAt(
+                timestamp = if (fingerDown) fingerTimestamp
+                else beltTapTimestamp(fingerTimestamp, (inspect.tapRadiusX * 60_000).toLong(), treatmentGraph.therapyEvents),
+                bgReadings = currentBgReadings,
+                predictions = predictions,
+                iob = iobGraph.iob,
+                cob = cobGraph.cob,
+                actualBasal = basalGraph.actualBasal,
+                profileBasal = basalGraph.profileBasal,
+                boluses = treatmentGraph.boluses,
+                carbs = treatmentGraph.carbs,
+                calibrations = treatmentGraph.calibrations,
+                therapyEvents = treatmentGraph.therapyEvents,
+                runningModes = runningModeGraph.segments
+            )
+            if (fingerDown && data.timestamp != inspect.pill?.timestamp) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            inspect.shownX = timestampToX(data.timestamp, min)
+            inspect.dotValue = data.bg?.value
+            inspect.pill = data
+        }
+    }
+    LaunchedEffect(inspect, haptic) {
+        snapshotFlow { inspect.fingerDown }.collect { if (it) haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
+    }
+    LaunchedEffect(inspect) {
+        snapshotFlow { Triple(inspect.fingerDown, inspect.pill, inspect.tapX) }.collectLatest { (fingerDown, pill, tapX) ->
+            if (!fingerDown && pill != null) {
+                delay(if (tapX != null) INSPECT_TAP_LINGER_MS else INSPECT_LINGER_MS)
+                inspect.pill = null
+                inspect.tapX = null
+            }
+        }
+    }
+
+    val data = inspect.pill
+    val dotColor = data?.bg?.range?.inspectColor() ?: Color.Unspecified
+    SideEffect { inspect.dotColor = dotColor }
+    if (data != null) GraphInspectPill(data = data, modifier = modifier)
+}
+
+/** The values at one reading. Null means no data near that time. */
+data class InspectData(
+    val timestamp: Long,
+    val bg: BgDataPoint?,
+    val iob: Double?,
+    val cob: Double?,
+    val basal: Double?,
+    val tbrState: TbrState,
+    val boluses: List<BolusGraphPoint>,
+    val carbs: List<CarbsGraphPoint>,
+    val measured: List<String>,
+    /** The running mode at that time, or null for closed loop, which the belt does not colour either. */
+    val runningMode: RM.Mode? = null,
+    /** The treatment belt's events at that time: notes, exercise, announcements. */
+    val events: List<TherapyEventGraphPoint> = emptyList()
+)
+
+/** The nearest reading to [timestamp], with the values and treatments at its time. */
+fun inspectDataAt(
+    timestamp: Long,
+    bgReadings: List<BgDataPoint>,
+    predictions: List<BgDataPoint>,
+    iob: List<GraphDataPoint>,
+    cob: List<GraphDataPoint>,
+    actualBasal: List<GraphDataPoint>,
+    profileBasal: List<GraphDataPoint>,
+    boluses: List<BolusGraphPoint>,
+    carbs: List<CarbsGraphPoint>,
+    calibrations: List<CalibrationGraphPoint>,
+    therapyEvents: List<TherapyEventGraphPoint>,
+    runningModes: List<RunningModeSegment> = emptyList()
+): InspectData {
+    // The time snaps to a reading or, after the last reading, to a prediction point. So a hold on
+    // any graph steps through the same times as a hold on the BG graph, in steps of a reading, not
+    // of a pixel. Only a reading has a glucose value to show.
+    val bg = bgReadings.nearest(timestamp) { it.timestamp }
+    val time = bg?.timestamp ?: predictions.nearest(timestamp) { it.timestamp }?.timestamp ?: timestamp
+    // A treatment belongs to the nearest reading, see INSPECT_TREATMENT_MS
+    fun belongsHere(at: Long): Boolean =
+        if (bg != null) bgReadings.nearest(at) { it.timestamp }?.timestamp == time
+        else abs(at - time) <= INSPECT_TREATMENT_MS
+    // Basal is stored at each change
+    val basal = actualBasal.lastOrNull { it.timestamp <= time }?.value
+    return InspectData(
+        timestamp = time,
+        bg = bg,
+        iob = iob.nearest(time) { it.timestamp }?.value,
+        cob = cob.nearest(time) { it.timestamp }?.value,
+        basal = basal,
+        tbrState = tbrState(basal, profileBasal.lastOrNull { it.timestamp <= time }?.value),
+        boluses = boluses.filter { it.isValid && belongsHere(it.timestamp) },
+        carbs = carbs.filter { it.isValid && belongsHere(it.timestamp) },
+        measured = calibrations
+            .filter { it.isValid && belongsHere(it.timestamp) }
+            .map { it.label } +
+            therapyEvents
+                .filter { it.glucoseUserUnits != null && belongsHere(it.timestamp) }
+                .map { it.label },
+        // What the treatment belt shows at that time. The pill is drawn over the belt.
+        runningMode = runningModes.lastOrNull { time in it.startTime..it.endTime }?.mode
+            ?.takeIf { it != RM.Mode.CLOSED_LOOP && it != RM.Mode.RESUME },
+        events = therapyEvents.filter { event ->
+            event.isOnBelt() &&
+                (belongsHere(event.timestamp) || event.duration > 0 && time in event.timestamp..endOf(event.timestamp, event.duration))
+        }
+    )
+}
+
+/**
+ * The time a tap on the treatment belt stands for: the time of the icon under the finger, or the
+ * finger's own time beside the icons. An icon is about 17 minutes wide on a 6 h graph, so the time
+ * under the finger could snap to a reading the tapped event does not belong to, and the pill then
+ * did not list it (seen on a phone). A duration event has an icon at both ends.
+ */
+internal fun beltTapTimestamp(fingerTimestamp: Long, radiusMs: Long, events: List<TherapyEventGraphPoint>): Long =
+    events
+        .filter { it.isOnBelt() }
+        .flatMap { if (it.duration > 0) listOf(it.timestamp, endOf(it.timestamp, it.duration)) else listOf(it.timestamp) }
+        .minByOrNull { abs(it - fingerTimestamp) }
+        ?.takeIf { abs(it - fingerTimestamp) <= radiusMs }
+        ?: fingerTimestamp
+
+/** Same rule as the TBR chip in the overview. */
+internal fun tbrState(basal: Double?, profileBasal: Double?): TbrState = when {
+    basal == null || profileBasal == null -> TbrState.NONE
+    abs(basal - profileBasal) < 0.01      -> TbrState.NONE
+    basal > profileBasal                  -> TbrState.HIGH
+    else                                  -> TbrState.LOW
+}
+
+/** COB in whole grams, or null at 0 g so it is left out. */
+internal fun shownCob(cob: Double?): Int? = cob?.roundToInt()?.takeIf { it > 0 }
+
+private fun <T> List<T>.nearest(timestamp: Long, time: (T) -> Long): T? =
+    minByOrNull { abs(time(it) - timestamp) }?.takeIf { abs(time(it) - timestamp) <= INSPECT_MATCH_MS }
+
+/** BG range to the BG color of the graph. */
+@Composable
+internal fun BgRange.inspectColor(): Color = when (this) {
+    BgRange.HIGH     -> AapsTheme.generalColors.bgHigh
+    BgRange.IN_RANGE -> AapsTheme.generalColors.bgInRange
+    BgRange.LOW      -> AapsTheme.generalColors.bgLow
+}
+
+/** Time, glucose, IOB, COB, basal rate and treatments at the shown reading. */
+@Composable
+fun GraphInspectPill(
+    data: InspectData,
+    modifier: Modifier = Modifier
+) {
+    val dateUtil = LocalDateUtil.current
+    val profileUtil = LocalProfileUtil.current
+    val decimalFormatter = LocalDecimalFormatter.current
+    Surface(
+        shape = RoundedCornerShape(percent = 50),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
+        shadowElevation = 2.dp,
+        modifier = modifier
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = AapsSpacing.large)
+        ) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall),
+                modifier = Modifier.padding(vertical = AapsSpacing.small)
+            ) {
+                PillText(dateUtil.timeString(data.timestamp), MaterialTheme.colorScheme.onSurfaceVariant)
+                data.bg?.let { bg ->
+                    val text = if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(bg.value) else decimalFormatter.to1Decimal(bg.value)
+                    PillText(text, bg.range.inspectColor())
+                }
+                data.iob?.let {
+                    PillItem(ElementType.INSULIN.icon(), stringResource(InterfacesStrings.format_insulin_units, it), ElementType.INSULIN.color())
+                }
+                shownCob(data.cob)?.let {
+                    PillItem(ElementType.COB.icon(), stringResource(InterfacesStrings.format_carbs, it), ElementType.COB.color(), iconSize = PILL_COB_ICON_SIZE)
+                }
+                data.basal?.let {
+                    PillItem(data.tbrState.toIcon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
+                }
+                // Same triangles as the BG and IOB graphs: a manual bolus down, an SMB up, carbs up
+                data.boluses.forEach { bolus ->
+                    PillTriangleItem(pointsUp = bolus.bolusType == BolusType.SMB, text = bolus.label, color = ElementType.INSULIN.color())
+                }
+                data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = true, text = carbs.label, color = ElementType.CARBS.color()) }
+                // Calibration or BG check, same icon as on the BG graph
+                data.measured.forEach { label ->
+                    PillItem(IcBgCheck, label, AapsTheme.elementColors.bgCheck)
+                }
+                // The treatment belt's items, same icons and colours as on the belt
+                data.runningMode?.let { mode ->
+                    PillItem(mode.toIcon(), mode.label(), mode.beltColor(AapsTheme.elementColors))
+                }
+                data.events.forEach { event ->
+                    PillItem(
+                        event.eventType.beltIcon(), event.label, event.eventType.beltColor(AapsTheme.elementColors),
+                        maxLines = PILL_EVENT_MAX_LINES
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PillText(text: String, color: Color, maxLines: Int = Int.MAX_VALUE) {
+    Text(
+        text, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = color,
+        maxLines = maxLines, overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+private fun PillItem(icon: ImageVector, text: String, color: Color, iconSize: Dp = PILL_ICON_SIZE, maxLines: Int = Int.MAX_VALUE) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(PILL_ICON_SIZE)) {
+            Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(iconSize))
+        }
+        PillText(text, color, maxLines)
+    }
+}
+
+/** The running mode's name. */
+@Composable
+private fun RM.Mode.label(): String = stringResource(
+    when (this) {
+        RM.Mode.CLOSED_LOOP, RM.Mode.RESUME -> CoreUiStrings.closedloop
+        RM.Mode.OPEN_LOOP                   -> CoreUiStrings.openloop
+        RM.Mode.CLOSED_LOOP_LGS             -> CoreUiStrings.lowglucosesuspend
+        RM.Mode.DISABLED_LOOP               -> CoreUiStrings.disabled_loop
+        RM.Mode.SUPER_BOLUS                 -> CoreUiStrings.superbolus
+        RM.Mode.DISCONNECTED_PUMP           -> CoreUiStrings.disconnected
+        RM.Mode.SUSPENDED_BY_PUMP           -> InterfacesStrings.pumpsuspended
+        RM.Mode.SUSPENDED_BY_USER           -> InterfacesStrings.loopsuspended
+        RM.Mode.SUSPENDED_BY_DST            -> CoreUiStrings.loop_suspended_by_dst
+    }
+)
+
+@Composable
+private fun PillTriangleItem(pointsUp: Boolean, text: String, color: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
+        PillTriangle(pointsUp = pointsUp, color = color)
+        PillText(text, color)
+    }
+}
+
+/**
+ * Same proportions as [TriangleShape] and [InvertedTriangleShape]. Those only fill the top half of
+ * their box, so the triangle is drawn here to be centered.
+ */
+@Composable
+private fun PillTriangle(pointsUp: Boolean, color: Color) {
+    Canvas(modifier = Modifier.size(PILL_ICON_SIZE)) {
+        val baseHalf = size.width * 0.3f
+        val height = size.width * 0.5f
+        val cx = size.width / 2f
+        val top = (size.height - height) / 2f
+        val bottom = top + height
+        val path = Path().apply {
+            if (pointsUp) {
+                moveTo(cx, top)
+                lineTo(cx + baseHalf, bottom)
+                lineTo(cx - baseHalf, bottom)
+            } else {
+                moveTo(cx - baseHalf, top)
+                lineTo(cx + baseHalf, top)
+                lineTo(cx, bottom)
+            }
+            close()
+        }
+        drawPath(path, color)
+    }
+}

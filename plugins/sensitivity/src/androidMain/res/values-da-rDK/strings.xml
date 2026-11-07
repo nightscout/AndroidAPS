@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Følsomhed Oref1</string>
+    <string name="sensitivity_aaps">Følsomhed AAPS</string>
+    <string name="sensitivity_weighted_average">Følsomhed Vægtet Gennemsnit</string>
+    <string name="description_sensitivity_aaps">Sensitiviteten er beregnet på samme måde som Oref0, men du kan angive tidsramme for fortiden. Minimal optagelse af kulhydrater beregnes fra maks. kulhydrat optagelse fra præferencer.</string>
+    <string name="description_sensitivity_oref1">Sensitiviteten beregnes fra 8t-eller 24t-data i fortiden (Ved hjælp af den der er mest sensitiv). Kulhydrater (hvis ikke optaget) er opdelt, efter den tid der er angivet i Indstillinger. Pluginnet beregner også UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensitiviteten er beregnet som et vægtet gennemsnit fra afvigelser. Nyere afvigelser har større vægt. Minimal kulhydratoptagelse beregnes fra maks. kulhydrats optagelsestid fra Indstillinger. Denne algoritme er den hurtigste til at følge følsomhedsændringer.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM deaktiveret, fordi det er afhængig af Oref1 følsomheds pluginnet</string>
+    <string name="absorption_settings_title">Indstillinger for absorbering</string>
+</resources>

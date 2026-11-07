@@ -1,0 +1,41 @@
+package app.aaps.ui.compose.main
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalConfig
+import app.aaps.core.ui.compose.LocalPreferences
+
+/**
+ * @see VersionOverlayPreview
+ */
+@Composable
+fun VersionOverlay(
+    modifier: Modifier = Modifier,
+) {
+    val config = LocalConfig.current
+    val preferences = LocalPreferences.current
+    if (config.APS || config.PUMPCONTROL) {
+        val colors = AapsTheme.generalColors
+        val versionColor = when {
+            config.COMMITTED                                                          -> colors.versionCommitted
+            preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME) != 0L -> colors.versionWarning
+            else                                                                      -> colors.versionUncommitted
+        }
+        Text(
+            text = "${config.VERSION_NAME} (${config.HEAD.substring(0, minOf(4, config.HEAD.length))})",
+            color = versionColor,
+            fontSize = 10.sp,
+            // Own line height: the inherited one (24 sp) made the box of this one line as tall as a
+            // chip, so where it is placed is where its text is.
+            lineHeight = 12.sp,
+            maxLines = 1,
+            modifier = modifier.padding(end = 4.dp)
+        )
+    }
+}

@@ -4,7 +4,6 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.base.CommandType
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.NonceEnabledCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.insulin.program.ShortInsulinProgramElement
 import java.nio.ByteBuffer
-import java.util.*
 
 // Always followed by one of: 0x13, 0x16, 0x17
 class ProgramInsulinCommand internal constructor(
