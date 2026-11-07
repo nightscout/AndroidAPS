@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
@@ -26,10 +27,14 @@ import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
-import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.util.AaruyConst
-import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyFillCannulaCommand
+import app.aaps.pump.aaruy.services.AaruyMotorResult
+import app.aaps.pump.aaruy.services.AaruyPrimeCommand
+import app.aaps.pump.aaruy.services.AaruyRewindCommand
+import app.aaps.pump.aaruy.services.AaruyStartBasalCommand
+import app.aaps.pump.aaruy.services.toMotorResult
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -38,12 +43,8 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -85,7 +86,7 @@ data class AaruyReplaceUiState(
 @Inject
 class AaruyReplaceWizardViewModel(
     private val aapsLogger: AAPSLogger,
-    private val aaruyBle: AaruyBLE,
+    private val commandQueue: CommandQueue,
     private val aaruyPump: AaruyPump,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
@@ -100,11 +101,8 @@ class AaruyReplaceWizardViewModel(
     private val _uiState = MutableStateFlow(AaruyReplaceUiState(needleType = aaruyPump.softNeedleType))
     val uiState: StateFlow<AaruyReplaceUiState> = _uiState
 
-    private var primeTimeout: Job? = null
-
-    val connected: StateFlow<Boolean> = aaruyPump.connectionStateFlow
-        .map { it == ConnectionState.CONNECTED }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, aaruyPump.connectionState == ConnectionState.CONNECTED)
+    /** The wait for the answer of a prime. The command itself runs in the queue and cannot be taken back. */
+    private var primeWait: Job? = null
 
     // Insulin selection, as on the other pumps
     private val _availableInsulins = MutableStateFlow<List<ICfg>>(emptyList())
@@ -135,7 +133,7 @@ class AaruyReplaceWizardViewModel(
      * starts where the last one ended.
      */
     fun reset() {
-        primeTimeout?.cancel()
+        primeWait?.cancel()
         _uiState.value = AaruyReplaceUiState(needleType = aaruyPump.softNeedleType)
         _siteLocation.value = TE.Location.NONE
         _siteArrow.value = TE.Arrow.NONE
@@ -199,34 +197,18 @@ class AaruyReplaceWizardViewModel(
     }
 
     /**
-     * Sends a motor command and waits for the pump to pass through [during] and end in [end]. Seen on a real pump: the
-     * pump is in [end] already before a cannula fill, so [end] alone says nothing: a refused or lost command looked done.
+     * Through the command queue, like every step that moves the motor: a bolus queued before it ends first, and nothing
+     * comes in between. The queue opens the link for it.
      */
-    private suspend fun runMotor(during: AaruyPumpState, end: AaruyPumpState, send: () -> Unit): MotorResult {
-        aaruyPump.forgetSeenStates()
-        send()
-        val start = dateUtil.now()
-        var lostAt = 0L
-        while (dateUtil.now() - start < MOTOR_TIMEOUT_MS) {
-            if (aaruyPump.hasSeen(during) && aaruyPump.pumpState == end) return MotorResult.DONE
-            if (lostAt == 0L && aaruyPump.connectionState != ConnectionState.CONNECTED) lostAt = dateUtil.now()
-            // Back, and a status came on the new link: what was not seen by now is not seen.
-            if (lostAt != 0L && aaruyPump.lastConnection > lostAt) return MotorResult.UNKNOWN
-            delay(POLL_MS)
-        }
-        // It began, or the command may have reached the pump before the link was lost.
-        return if (aaruyPump.hasSeen(during) || lostAt != 0L) MotorResult.UNKNOWN else MotorResult.NOT_RUN
-    }
-
     fun rewind() {
-        // Not through the command queue: a bolus the loop started after the wizard opened would be ended. Also one that is being set up.
+        // The step checks this too when the queue runs it. Here it is only to say why at once.
         if (aaruyPump.pumpState == AaruyPumpState.LARGEDOSE_RUNNING || !aaruyPump.bolusDone) {
             _uiState.update { it.copy(error = R.string.aaruy_state_bolus) }
             return
         }
         command(R.string.alarm_rewinding_fail) {
             // A second rewind does no harm, so only a seen one counts.
-            val ok = runMotor(AaruyPumpState.PUSHBACK_RUNNING, AaruyPumpState.STOP_RUNNING) { aaruyBle.replaceDevice() } == MotorResult.DONE
+            val ok = commandQueue.customCommand(AaruyRewindCommand()).toMotorResult() == AaruyMotorResult.DONE
             if (ok) next(AaruyReplaceStep.REWIND)
             ok
         }
@@ -240,15 +222,14 @@ class AaruyReplaceWizardViewModel(
 
     fun insulinSelected() = next(AaruyReplaceStep.SELECT_INSULIN)
 
-    /** A real pump says it is done long before the piston stops, so the answer ends the wait. */
+    /** The answer of the pump ends the wait, in [onPumpMessage], which also learns whether the pump saw insulin come out. */
     fun prime() {
         if (_uiState.value.busy) return
         _uiState.update { it.copy(busy = true, error = null) }
-        primeTimeout?.cancel()
-        primeTimeout = viewModelScope.launch(Dispatchers.IO) {
-            aaruyBle.pushForward()
-            delay(PRIME_TIMEOUT_MS)
-            if (_uiState.value.busy && _uiState.value.step == AaruyReplaceStep.PRIME) {
+        primeWait?.cancel()
+        primeWait = viewModelScope.launch {
+            val answered = commandQueue.customCommand(AaruyPrimeCommand()).success
+            if (!answered && _uiState.value.busy && _uiState.value.step == AaruyReplaceStep.PRIME) {
                 _uiState.update { it.copy(busy = false, error = R.string.alarm_discharge_liquid_fail) }
             }
         }
@@ -298,20 +279,19 @@ class AaruyReplaceWizardViewModel(
         }
         if (_uiState.value.busy) return
         _uiState.update { it.copy(busy = true, error = null) }
-        viewModelScope.launch(Dispatchers.IO) {
-            aaruyBle.syncAndLoadBasicParam()
-            val fill = runMotor(AaruyPumpState.EXHAUSTING, AaruyPumpState.STOP_RUNNING) { aaruyBle.needlePushAir(_uiState.value.needleType.toByte()) }
+        viewModelScope.launch {
+            val fill = commandQueue.customCommand(AaruyFillCannulaCommand(_uiState.value.needleType)).toMotorResult()
             // Not known is taken as filled: a cannula left empty delays the insulin, a second fill puts it into the body.
-            val filled = fill != MotorResult.NOT_RUN
+            val filled = fill != AaruyMotorResult.NOT_RUN
             _uiState.update { it.copy(cannulaFilled = filled) }
-            val ok = fill == MotorResult.DONE && startBasal(cannulaChanged = true)
+            val ok = fill == AaruyMotorResult.DONE && startBasal(cannulaChanged = true)
             aapsLogger.debug(LTag.PUMP, "Replace fill: $fill, basal $ok")
             _uiState.update {
                 it.copy(busy = false, error = when {
-                    ok                         -> null
-                    fill == MotorResult.UNKNOWN -> R.string.aaruy_fill_unknown
-                    filled                     -> R.string.alarm_basal_run_fail
-                    else                       -> R.string.alarm_discharge_liquid_fail
+                    ok                               -> null
+                    fill == AaruyMotorResult.UNKNOWN -> R.string.aaruy_fill_unknown
+                    filled                           -> R.string.alarm_basal_run_fail
+                    else                             -> R.string.alarm_discharge_liquid_fail
                 })
             }
         }
@@ -320,15 +300,7 @@ class AaruyReplaceWizardViewModel(
     fun skipFillingCannula() = command(R.string.alarm_basal_run_fail) { startBasal(cannulaChanged = false) }
 
     private suspend fun startBasal(cannulaChanged: Boolean): Boolean {
-        aaruyPump.alreadyPushBack = false
-        aaruyPump.clearAlarmState()
-        aaruyBle.startBaseInject()
-        val start = dateUtil.now()
-        // Any delivery: on a second try the loop can have set a temp basal already, and the client then sends nothing.
-        while (aaruyPump.pumpState !in AaruyPumpState.BASALRATE_RUNNING..AaruyPumpState.LARGEDOSE_RUNNING) {
-            if (dateUtil.now() - start > BASAL_TIMEOUT_MS) return false
-            delay(POLL_MS)
-        }
+        if (!commandQueue.customCommand(AaruyStartBasalCommand()).success) return false
         val now = dateUtil.now()
         pumpSync.insertTherapyEventIfNewWithTimestamp(now, TE.Type.INSULIN_CHANGE, pumpType = aaruyPump.pumpType(), pumpSerial = aaruyPump.pumpSN)
         if (cannulaChanged) {
@@ -367,16 +339,4 @@ class AaruyReplaceWizardViewModel(
         }
     }
 
-    /** UNKNOWN: it began and its end was not seen, or the link was lost after the command went out. */
-    private enum class MotorResult { DONE, NOT_RUN, UNKNOWN }
-
-    private companion object {
-
-        const val POLL_MS = 50L
-
-        // UNVERIFIED: how long the motor takes with a full reservoir. A real pump with none was done in less than a second.
-        const val MOTOR_TIMEOUT_MS = 120_000L
-        const val PRIME_TIMEOUT_MS = 30_000L
-        const val BASAL_TIMEOUT_MS = 5_000L
-    }
 }

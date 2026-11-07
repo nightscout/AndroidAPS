@@ -33,7 +33,6 @@ fun AaruyReplaceWizardScreen(
     onFinish: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val connected by viewModel.connected.collectAsStateWithLifecycle()
 
     if (state.confirmDroplets) {
         OkCancelDialog(
@@ -55,12 +54,12 @@ fun AaruyReplaceWizardScreen(
         title = title,
         setToolbarConfig = setToolbarConfig
     ) { step, _ ->
-        val canSend = connected && !state.busy
+        // The queue opens the link for each step, so no link has to be up for a button.
+        val canSend = !state.busy
         when (step) {
             AaruyReplaceStep.REWIND       -> Step(
                 text = stringResource(R.string.actions_reservoir_rewind_prompt),
                 state = state,
-                connected = connected,
                 primary = WizardButton(stringResource(R.string.aaruy_rewind), viewModel::rewind, enabled = canSend, loading = state.busy)
             )
 
@@ -68,7 +67,6 @@ fun AaruyReplaceWizardScreen(
                 text = stringResource(R.string.actions_reservoir_prime_before),
                 hint = stringResource(R.string.aaruy_motor_still_running),
                 state = state,
-                connected = connected,
                 primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::assembled, enabled = canSend)
             )
 
@@ -95,7 +93,6 @@ fun AaruyReplaceWizardScreen(
                 note = stringResource(R.string.actions_reservoir_prime_comment_note),
                 hint = if (state.primed) stringResource(R.string.aaruy_motor_still_running) else null,
                 state = state,
-                connected = connected,
                 primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::askDroplets, enabled = canSend && state.primed),
                 secondary = WizardButton(stringResource(R.string.actions_reservoir_prime), viewModel::prime, enabled = canSend, loading = state.busy)
             )
@@ -103,7 +100,6 @@ fun AaruyReplaceWizardScreen(
             AaruyReplaceStep.CONNECT      -> Step(
                 text = stringResource(R.string.actions_reservoir_prime_cannula_before),
                 state = state,
-                connected = connected,
                 primary = WizardButton(stringResource(CoreUiR.string.next), viewModel::connectedToBody, enabled = canSend)
             )
 
@@ -113,7 +109,6 @@ fun AaruyReplaceWizardScreen(
                 text = stringResource(R.string.actions_reservoir_prime_cannula),
                 note = stringResource(R.string.actions_reservoir_prime_cannula_note),
                 state = state,
-                connected = connected,
                 primary = WizardButton(
                     stringResource(if (state.cannulaFilled) R.string.aaruy_start_basal else R.string.actions_reservoir_prime_cannula_action),
                     viewModel::fillCannula, enabled = canSend, loading = state.busy
@@ -128,7 +123,6 @@ fun AaruyReplaceWizardScreen(
             AaruyReplaceStep.DONE         -> Step(
                 text = stringResource(R.string.aaruy_replace_done),
                 state = state,
-                connected = true,
                 primary = WizardButton(stringResource(CoreUiR.string.ok), onFinish)
             )
         }
@@ -139,7 +133,6 @@ fun AaruyReplaceWizardScreen(
 private fun Step(
     text: String,
     state: AaruyReplaceUiState,
-    connected: Boolean,
     primary: WizardButton,
     note: String? = null,
     hint: String? = null,
@@ -153,7 +146,6 @@ private fun Step(
         extra()
         note?.let { Text(text = it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
         state.error?.let { Text(text = stringResource(it), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
-        if (!connected) Text(text = stringResource(R.string.bluetooth_disconnect), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
     }
 }
 

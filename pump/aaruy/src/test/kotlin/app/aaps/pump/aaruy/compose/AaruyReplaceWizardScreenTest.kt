@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
@@ -18,19 +17,26 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.FakeResult
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
-import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyMotorResult
+import app.aaps.pump.aaruy.services.AaruyRewindCommand
+import app.aaps.pump.aaruy.services.withMotorResult
+import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -52,11 +58,13 @@ class AaruyReplaceWizardScreenTest {
     private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), dateUtil, mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
 
     /** As on a real pump: the rewind shows its own state, then the stopped one. */
-    private val ble: AaruyBLE = mock<AaruyBLE>().also {
-        whenever(it.replaceDevice()).thenAnswer {
-            pump.pumpState = AaruyPumpState.PUSHBACK_RUNNING
-            pump.pumpState = AaruyPumpState.STOP_RUNNING
-            Unit
+    private val commandQueue: CommandQueue = mock<CommandQueue>().also {
+        runBlocking {
+            whenever(it.customCommand(any())).thenAnswer {
+                pump.pumpState = AaruyPumpState.PUSHBACK_RUNNING
+                pump.pumpState = AaruyPumpState.STOP_RUNNING
+                FakeResult().withMotorResult(AaruyMotorResult.DONE)
+            }
         }
     }
 
@@ -64,7 +72,7 @@ class AaruyReplaceWizardScreenTest {
         whenever(dateUtil.now()).thenAnswer { System.currentTimeMillis() }
         pump.connectionState = if (connected) ConnectionState.CONNECTED else ConnectionState.DISCONNECTED
         val viewModel = AaruyReplaceWizardViewModel(
-            mock(), ble, pump, mock<PumpSync>(), dateUtil, mock<ResourceHelper>(), mock<RxBus>(), mock<Preferences>(),
+            mock(), commandQueue, pump, mock<PumpSync>(), dateUtil, mock<ResourceHelper>(), mock<RxBus>(), mock<Preferences>(),
             mock<ProfileFunction>(), insulinManager, mock<PersistenceLayer>()
         )
         compose.setContent { MaterialTheme { AaruyReplaceWizardScreen(viewModel, "Change reservoir and battery", setToolbarConfig = {}, onFinish = {}) } }
@@ -78,12 +86,16 @@ class AaruyReplaceWizardScreenTest {
         compose.onNodeWithText(context.getString(R.string.aaruy_rewind)).assertIsEnabled()
     }
 
-    /** Nothing may be sent to a pump that is not connected, and the screen says why. */
+    /**
+     * The command queue opens the link for each step, as for every command, so a step can be sent while no link is up.
+     * The screen used to wait for a link that stayed up by itself.
+     */
     @Test
-    fun withoutAConnectionNothingCanBeSent() {
-        show(connected = false)
-        compose.onNodeWithText(context.getString(R.string.aaruy_rewind)).assertIsNotEnabled()
-        compose.onNodeWithText(context.getString(R.string.bluetooth_disconnect)).assertIsDisplayed()
+    fun aStepCanBeSentWithoutALinkBecauseTheQueueConnects() {
+        val viewModel = show(connected = false)
+        compose.onNodeWithText(context.getString(R.string.aaruy_rewind)).assertIsEnabled().performClick()
+        compose.waitUntil(10_000) { viewModel.uiState.value.step == AaruyReplaceStep.ASSEMBLE }
+        runBlocking { verify(commandQueue).customCommand(any<AaruyRewindCommand>()) }
     }
 
     @Test

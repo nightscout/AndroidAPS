@@ -14,12 +14,15 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.FakeResult
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
@@ -29,6 +32,12 @@ import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyFillCannulaCommand
+import app.aaps.pump.aaruy.services.AaruyMotorResult
+import app.aaps.pump.aaruy.services.AaruyPrimeCommand
+import app.aaps.pump.aaruy.services.AaruyReplaceSteps
+import app.aaps.pump.aaruy.services.AaruyRewindCommand
+import app.aaps.pump.aaruy.services.AaruyStartBasalCommand
 import app.aaps.pump.aaruy.services.AaruyTempBasalSync
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -43,6 +52,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -79,7 +89,11 @@ class AaruyReplaceWizardTest {
     )
     private val transport = AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))
     private lateinit var ble: AaruyBLE
+    private lateinit var steps: AaruyReplaceSteps
     private lateinit var wizard: AaruyReplaceWizardViewModel
+
+    /** Runs each step as the queue does. The link stays up: the test opened it, and no queue closes it. */
+    private val commandQueue: CommandQueue = mock(CommandQueue::class.java)
 
     private fun waitFor(what: String, condition: () -> Boolean) {
         val end = System.currentTimeMillis() + 20_000
@@ -111,6 +125,10 @@ class AaruyReplaceWizardTest {
             mock(DetailedBolusInfoStorage::class.java),
             pumpSync, tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
         )
+        steps = AaruyReplaceSteps(ble, pump, dateUtil)
+        runBlocking {
+            whenever(commandQueue.customCommand(any())).doSuspendableAnswer { steps.execute(it.arguments[0] as CustomCommand, FakeResult()) }
+        }
         ble.connect("test", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         waitFor("connected") { pump.connectionState == ConnectionState.CONNECTED }
         waitFor("status") { pump.pumpState == AaruyPumpState.BASALRATE_RUNNING }
@@ -122,7 +140,7 @@ class AaruyReplaceWizardTest {
     /** Created after the stubs of a test, because the steps are chosen when it starts. */
     private fun startWizard() {
         wizard = AaruyReplaceWizardViewModel(
-            logger, ble, pump, pumpSync, dateUtil, mock(ResourceHelper::class.java), mock(RxBus::class.java),
+            logger, commandQueue, pump, pumpSync, dateUtil, mock(ResourceHelper::class.java), mock(RxBus::class.java),
             wizardPreferences, profileFunction, insulinManager, persistenceLayer
         )
         shadowOf(Looper.getMainLooper()).idle()
@@ -149,6 +167,22 @@ class AaruyReplaceWizardTest {
         waitFor("done") { wizard.uiState.value.step == AaruyReplaceStep.DONE }
         assertEquals(AaruyPumpState.BASALRATE_RUNNING, pump.pumpState)
         runBlocking { verify(pumpSync, times(2)).insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any()) }
+        // Every step that moves the motor went through the queue, as every command of every pump.
+        runBlocking {
+            verify(commandQueue).customCommand(any<AaruyRewindCommand>())
+            verify(commandQueue).customCommand(any<AaruyPrimeCommand>())
+            verify(commandQueue).customCommand(any<AaruyFillCannulaCommand>())
+            verify(commandQueue).customCommand(any<AaruyStartBasalCommand>())
+        }
+    }
+
+    /** The queue lets a bolus command end first. A bolus the pump runs with no command, as after an app restart, must not be ended. */
+    @Test
+    fun theRewindStepRefusesARunningBolus() {
+        pump.pumpState = AaruyPumpState.LARGEDOSE_RUNNING
+        val writes = transport.writes.size
+        assertEquals(AaruyMotorResult.NOT_RUN, runBlocking { steps.rewind() })
+        assertEquals("nothing was sent", writes, transport.writes.size)
     }
 
     @Test
@@ -199,7 +233,8 @@ class AaruyReplaceWizardTest {
 
     /**
      * The link was lost after the fill went out, so its state was never seen. The pump may have filled the cannula, which
-     * is in the body by now: Fill must not be offered again, only the basal start.
+     * is in the body by now: Fill must not be offered again, only the basal start. Nothing connects again while a
+     * command of the queue runs, so it is not known at once.
      */
     @Test
     fun aFillWhoseLinkWasLostIsTakenAsFilled() {
@@ -210,13 +245,12 @@ class AaruyReplaceWizardTest {
         Thread.sleep(300)
         transport.loseConnection()
         waitFor("link lost") { pump.connectionState != ConnectionState.CONNECTED }
-        ble.connect("back", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
         waitFor("not known") { !wizard.uiState.value.busy }
         assertEquals(R.string.aaruy_fill_unknown, wizard.uiState.value.error)
         assertTrue("no second fill offered", wizard.uiState.value.cannulaFilled)
     }
 
-    /** Not through the command queue: a rewind would end a bolus the loop started after the wizard opened. */
+    /** The screen says at once why there is no rewind. The step itself checks it again when the queue runs it. */
     @Test
     fun noRewindDuringABolus() {
         startWizard()

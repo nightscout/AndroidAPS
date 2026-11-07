@@ -59,6 +59,7 @@ import app.aaps.pump.aaruy.keys.AaruyStringKey
 import app.aaps.pump.aaruy.services.AaruyBLE
 import app.aaps.pump.aaruy.services.AaruyBolusOutcome
 import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
+import app.aaps.pump.aaruy.services.AaruyReplaceSteps
 import app.aaps.pump.aaruy.services.AaruyService
 import app.aaps.pump.aaruy.services.AaruyUnpairCommand
 import dev.zacsweers.metro.AppScope
@@ -78,6 +79,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.math.min
 import kotlin.math.abs
 import java.util.Calendar
@@ -101,6 +103,7 @@ class AaruyPlugin(
     private val aaruyHistoryDatabase: AaruyHistoryDatabase,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val aaruyBle: AaruyBLE,
+    private val replaceSteps: AaruyReplaceSteps,
     private val blePreCheck: BlePreCheck,
     private val pumpSync: PumpSync,
     private val ch: ConcentrationHelper,
@@ -346,7 +349,8 @@ class AaruyPlugin(
         is AaruyConfirmAlarmsCommand -> pumpEnactResultProvider().also { it.success = aaruyBle.confirmAlarms() }
         // Without a link nothing is forgotten here: the screen asks whether to forget a pump that was not told.
         is AaruyUnpairCommand        -> pumpEnactResultProvider().also { it.success = aaruyBle.isConnected && aaruyBle.unbindDevice() }
-        else                         -> null
+        // The steps wait for the motor. The queue runs one command at a time, on its own thread.
+        else                         -> runBlocking { replaceSteps.execute(customCommand, pumpEnactResultProvider()) }
     }
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Aaruy

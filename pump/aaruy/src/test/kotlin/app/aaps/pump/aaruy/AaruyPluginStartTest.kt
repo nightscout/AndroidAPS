@@ -17,6 +17,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
 import app.aaps.pump.aaruy.services.AaruyBLE
+import app.aaps.pump.aaruy.services.AaruyReplaceSteps
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,7 @@ class AaruyPluginStartTest {
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), rh, preferences, commandQueue, mock<RxBus>(), mock<Context>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { mock<PumpEnactResult>() },
-        mock<AaruyBLE>(), mock<BlePreCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>()
+        mock<AaruyBLE>(), mock<AaruyReplaceSteps>(), mock<BlePreCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>()
     )
 
     /**

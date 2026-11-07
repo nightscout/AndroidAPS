@@ -19,6 +19,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
 import app.aaps.pump.aaruy.services.AaruyBLE
 import app.aaps.pump.aaruy.services.AaruyBolusOutcome
+import app.aaps.pump.aaruy.services.AaruyReplaceSteps
 import app.aaps.pump.aaruy.services.AaruyService
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,7 +41,7 @@ class AaruyPluginBolusTest {
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), rh, mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), mock<Context>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },
-        mock<AaruyBLE>(), mock<BlePreCheck>(), mock<PumpSync>(), ch, mock<NotificationManager>()
+        mock<AaruyBLE>(), mock<AaruyReplaceSteps>(), mock<BlePreCheck>(), mock<PumpSync>(), ch, mock<NotificationManager>()
     ).also { plugin ->
         // Set by the service binding in a running app.
         AaruyPlugin::class.java.getDeclaredField("aaruyService").apply { isAccessible = true }.set(plugin, service)

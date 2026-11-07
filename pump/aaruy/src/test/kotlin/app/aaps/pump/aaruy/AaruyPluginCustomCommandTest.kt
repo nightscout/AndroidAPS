@@ -17,11 +17,20 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
 import app.aaps.pump.aaruy.services.AaruyBLE
 import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
+import app.aaps.pump.aaruy.services.AaruyMotorResult
+import app.aaps.pump.aaruy.services.AaruyReplaceSteps
+import app.aaps.pump.aaruy.services.AaruyRewindCommand
 import app.aaps.pump.aaruy.services.AaruyUnpairCommand
+import app.aaps.pump.aaruy.services.toMotorResult
+import app.aaps.pump.aaruy.services.withMotorResult
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -31,12 +40,28 @@ import org.mockito.kotlin.whenever
 class AaruyPluginCustomCommandTest {
 
     private val ble: AaruyBLE = mock()
+    private val replaceSteps: AaruyReplaceSteps = mock()
     private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), mock<Context>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },
-        ble, mock<BlePreCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>()
+        ble, replaceSteps, mock<BlePreCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>()
     )
+
+    /** The steps of a reservoir change wait for the motor. The queue runs them like every other command. */
+    @Test
+    fun aStepOfTheReservoirChangeIsRunByTheReplaceSteps() {
+        val stepResult = FakeResult().withMotorResult(AaruyMotorResult.DONE)
+        runBlocking { whenever(replaceSteps.execute(any<AaruyRewindCommand>(), any())).thenReturn(stepResult) }
+        assertSame(stepResult, plugin.executeCustomCommand(AaruyRewindCommand()))
+    }
+
+    /** A step that may have reached the pump is not taken for one that never ran, also after the queue. */
+    @Test
+    fun aMotorResultSurvivesTheQueue() {
+        AaruyMotorResult.entries.forEach { assertEquals(it, FakeResult().withMotorResult(it).toMotorResult()) }
+        assertEquals(AaruyMotorResult.NOT_RUN, FakeResult().toMotorResult(), "a command the queue never ran")
+    }
 
     @Test
     fun confirmingTheAlarmsSaysWhetherThePumpWasTold() {

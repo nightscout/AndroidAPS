@@ -80,7 +80,6 @@
     <string name="aaruy_rewind">Rewind</string>
     <string name="aaruy_replace_done">Reservoir change finished. Basal is running.</string>
     <string name="actions_reservoir_prime_cannula_action">Fill cannula</string>
-    <string name="bluetooth_disconnect">The pump is not connected. Waiting for it to reconnect.</string>
     <string name="is_backing">Rewinding</string>
     <string name="locate_check_liquid">Priming. Check that droplets came out of the needle.</string>
     <string name="actions_reservoir_prime_confirm">Did droplets come out of the needle?</string>
