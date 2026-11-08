@@ -20,7 +20,7 @@ import app.aaps.pump.equil.keys.EquilIntPreferenceKey
 
 /**
  * The Equil pump for [PumpScenario]. The pod is activated and removed as the wizard does it, with the wizard's own
- * ViewModel from the app's factory and no screen. Its screens have their own test, `EquilActivationWizardUiTest`.
+ * ViewModel from the app's factory and no screen. Its screens have their own test, [EquilUiTest].
  */
 class EquilPumpUnderTest : PumpUnderTest {
 

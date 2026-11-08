@@ -320,7 +320,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
             assertWithMessage("AAPS has a temp basal the pump does not run").that(stored).isNull()
             return
         }
-        checkNotNull(stored) { "The pump runs a temp basal AAPS does not have: $running" }
+        // An AssertionError, not checkNotNull: a wrong result, which RetryRule must not retry.
+        if (stored == null) throw AssertionError("The pump runs a temp basal AAPS does not have: $running")
         val pumpRate = running.absolute ?: running.percent?.toDouble()
         assertWithMessage("temp basal is absolute").that(stored.isAbsolute).isEqualTo(running.absolute != null)
         assertWithMessage("temp basal rate").that(abs(stored.rate - checkNotNull(pumpRate)) < RATE_TOLERANCE).isTrue()
@@ -334,7 +335,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
             assertWithMessage("AAPS has an extended bolus the pump does not run").that(stored).isNull()
             return
         }
-        checkNotNull(stored) { "The pump runs an extended bolus AAPS does not have: $running" }
+        if (stored == null) throw AssertionError("The pump runs an extended bolus AAPS does not have: $running")
         assertWithMessage("extended bolus amount").that(abs(stored.amount - running.units) < RATE_TOLERANCE).isTrue()
         assertWithMessage("extended bolus minutes").that(stored.duration).isEqualTo(running.minutes * MS_PER_MINUTE)
         assertWithMessage("a real extended bolus, not one that stands for a temp basal").that(stored.isEmulatingTempBasal).isFalse()

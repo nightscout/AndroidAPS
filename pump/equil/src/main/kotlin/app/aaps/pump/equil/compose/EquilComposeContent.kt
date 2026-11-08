@@ -14,6 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -104,6 +107,14 @@ class EquilComposeContent(
                 }
             }
         }
+
+        // System Back on the history goes to the overview, as its arrow does. Without this handler the event reaches the
+        // app NavHost, which pops the whole pump page (found by the pump UI test). The wizard has its own handler.
+        NavigationBackHandler(
+            state = rememberNavigationEventState(NavigationEventInfo.None),
+            isBackEnabled = showHistory,
+            onBackCompleted = { showHistory = false }
+        )
 
         if (showHistory) {
             val historyViewModel: EquilHistoryViewModel = metroViewModel()

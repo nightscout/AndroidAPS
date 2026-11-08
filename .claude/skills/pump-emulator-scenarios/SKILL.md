@@ -86,7 +86,9 @@ the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@
 - `commandQueue.clear()` leaves the running command running. A driver stopped under it connects again for it and
   writes its pump into the settings, which the next test has already cleared: that test starts as paired, and its
   pairing hung. `tearDown` waits for the queue before it stops the driver.
-- `RetryRule` runs a failed test again, so a flake shows only in the log: grep the logcat for `FAILED attempt`.
+- `RetryRule` runs a test once more after a timeout, never after a wrong result (an `AssertionError`). A flake shows
+  only in the log: grep the logcat for `RetryRule: `. So a scenario check reports a wrong result with an assertion,
+  not with `check`/`checkNotNull`, which throw `IllegalStateException` and would be retried.
 - The queue drops a status read while another one waits or runs, and reports it as failed. A driver start queues one,
   and during a bolus it waits for the bolus end. The `readStatus` step waits for that one first.
 - A driver that keeps no pump state is ready (`isInitialized()`) only after its first status read, as at an app start.

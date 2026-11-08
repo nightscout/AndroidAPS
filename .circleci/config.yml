@@ -204,8 +204,9 @@ jobs:
             DEV=emulator-5554
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
             # RetryRule and the screen dumps of a failed test (tags E2E_*) write to logcat only, so they are
-            # printed after each attempt. Without them a test that passed on its third try looks the same as a
-            # clean pass. The default buffer is too small to keep a whole shard.
+            # printed after each attempt. Without them a test that passed on its second try looks the same as a
+            # clean pass. "RetryRule: " with the colon: the bare name also matched stack frames of the rule.
+            # The default buffer is too small to keep a whole shard.
             adb -s $DEV logcat -G 16M || true
             RC=1
             for attempt in 1 2 3; do
@@ -230,7 +231,7 @@ jobs:
                 $PKG.test/app.aaps.runners.AapsTestRunner > shard-A-$attempt.txt 2>&1 || true
               tail -n 200 shard-A-$attempt.txt
               echo "--- shard A attempt $attempt: retries and failure dumps from logcat ---"
-              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|EquilActivationE2E" || true
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_" || true
               adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
               echo "shard A attempt $attempt coverage: ${sz:-0} bytes"
@@ -276,7 +277,7 @@ jobs:
                 $PKG.test/app.aaps.runners.AapsTestRunner > shard-B-$attempt.txt 2>&1 || true
               tail -n 200 shard-B-$attempt.txt
               echo "--- shard B attempt $attempt: retries and failure dumps from logcat ---"
-              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|EquilActivationE2E" || true
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_" || true
               adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
               echo "shard B attempt $attempt coverage: ${sz:-0} bytes"
@@ -322,7 +323,7 @@ jobs:
                 $PKG.test/app.aaps.runners.AapsTestRunner > shard-C-$attempt.txt 2>&1 || true
               tail -n 200 shard-C-$attempt.txt
               echo "--- shard C attempt $attempt: retries and failure dumps from logcat ---"
-              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|EquilActivationE2E" || true
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_" || true
               adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
               echo "shard C attempt $attempt coverage: ${sz:-0} bytes"
@@ -367,7 +368,7 @@ jobs:
                 $RUNNER > shard-D-$attempt.txt 2>&1 || true
               tail -n 200 shard-D-$attempt.txt
               echo "--- shard D attempt $attempt: retries and failure dumps from logcat ---"
-              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_" || true
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_" || true
               adb -s $DEV exec-out run-as $PKG cat cov-D.ec > "$COVDIR/cov-D.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-D.ec" 2>/dev/null || echo 0)
               echo "shard D attempt $attempt coverage: ${sz:-0} bytes"
@@ -391,7 +392,7 @@ jobs:
                 tail -n 40 restart-D-$part.txt
                 if ! grep -q "^OK (1 test)" restart-D-$part.txt; then
                   echo "app restart run $part of $c FAILED"
-                  adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|PUMPCOMM|PUMPQUEUE" | tail -n 120 || true
+                  adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_|PUMPCOMM|PUMPQUEUE" | tail -n 120 || true
                   RC=1
                   break
                 fi
@@ -471,8 +472,8 @@ jobs:
           # "Kill emulators", and the shard still running lost its emulator ("adb: device offline"). So a
           # slow shard C looked like an emulator crash in SetupWizardE2ETest.
           #
-          # The limit is 2400 s, not 1200 s. A healthy shard C takes about 600 s, but RetryRule runs a failing test
-          # three times, so a few real failures make it much slower. In builds 41881-41900 six Equil tests failed,
+          # The limit is 2400 s, not 1200 s. A healthy shard C takes about 600 s, but RetryRule ran a failing test
+          # three times (now a timeout twice, a wrong result once), so a few real failures made it much slower. In builds 41881-41900 six Equil tests failed,
           # shard C needed more than 1200 s, Collect gave up, and the emulator was killed in the middle of the last
           # test. The shard log then ended with "adb: device offline" and the real failures looked like a flake.
           # A shard that does not finish in time prints the failures it has so far, so the cause is visible here.
