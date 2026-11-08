@@ -271,6 +271,14 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
 
+    /**
+     * The queue gives up on a link after [SHORT_CONNECTION_LIMIT_S] instead of about two minutes: the same path, a
+     * shorter wait. Only this graph's queue; the next test starts with the real limit.
+     */
+    fun shortenQueueConnectionLimit() {
+        testGraphs.rootGraph.commandExecutor.maxConnectionSeconds = SHORT_CONNECTION_LIMIT_S
+    }
+
     private val pumpDescription get() = testGraphs.activePlugin.activePumpInternal.pumpDescription
 
     /** The pump can give an extended bolus, see [extendedBolus]. */
@@ -469,6 +477,13 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val RECORD_TIMEOUT = 10_000L
         const val LINK_TIMEOUT = 30_000L
         const val SERVICE_STOP_TIMEOUT = 10_000L
+
+        /**
+         * Long enough for a driver to fail one connect attempt and start the next one: Carelevo gives up an attempt
+         * after about 21 s. A driver that scans until the queue stops it, as Equil does, makes one attempt with this
+         * limit and with the real one.
+         */
+        const val SHORT_CONNECTION_LIMIT_S = 30L
 
         /** A command that runs at the test end: a status read that waits for its link, or a bolus to its end. */
         const val QUEUE_END_TIMEOUT = 60_000L

@@ -278,6 +278,47 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     /**
+     * The link closed while the queue waited to disconnect after its last command: nothing is left to send, so the
+     * queue ends without connecting again. It used to connect only to disconnect; with a pump that could not connect
+     * (a stopped driver) it went on trying until the connection timeout, and the Bluetooth watchdog then switched the
+     * phone's Bluetooth off and on for no command.
+     */
+    @Test
+    fun `a link that closes while the queue waits to disconnect is not opened again`() = runTest {
+        testPumpPlugin.connected = false
+        testPumpPlugin.lingerSeconds = 30
+        lateinit var executor: CommandExecutor
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
+        )
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
+        )
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+        assertThat(result?.success).isTrue()
+        val connects = testPumpPlugin.connectCalls
+
+        // The queue now keeps the link for 30 s. The pump ends it.
+        testPumpPlugin.connected = false
+        waitedMs = 0
+        while (executor.isProcessing() && waitedMs < 5000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+
+        assertThat(executor.isProcessing()).isFalse()
+        assertThat(testPumpPlugin.connectCalls).isEqualTo(connects)
+        assertThat(testPumpPlugin.connected).isFalse()
+    }
+
+    /**
      * The queue does not reach the pump before the app has finished starting. Until then there is no profile, so the
      * records a command brings were dropped by PumpSync for good: seen on a real pump, whose status read at app start
      * read a bolus from the pump history and lost it. Every driver queues a status read while the app starts, through

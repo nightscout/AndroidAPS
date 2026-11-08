@@ -165,6 +165,7 @@ abstract class AbstractPumpScenarioTest {
         scenario.pair()
         scenario.checkLinkClosed()
         assertWithMessage("fault").that(scenario.control.setOutOfRange(true)).isTrue()
+        scenario.shortenQueueConnectionLimit()
 
         // Both wait for the same link, so the queue gives up on both at once.
         val bolus = scenario.startBolus(BOLUS)
@@ -295,8 +296,11 @@ abstract class AbstractPumpScenarioTest {
         const val KILLED_BOLUS = 2.0
         const val KILL_AFTER = 0.3
 
-        /** The queue waits about two minutes for a link before it gives up, see `Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS`. */
-        const val QUEUE_GIVES_UP = 180_000L
+        /**
+         * The test lowers the queue's link limit to `PumpScenario.SHORT_CONNECTION_LIMIT_S`. This leaves time for the
+         * queue to end the command after that limit.
+         */
+        const val QUEUE_GIVES_UP = 90_000L
 
         fun killRestartPart(): Int? = InstrumentationRegistry.getArguments().getString(KILL_RESTART_ARGUMENT)?.toIntOrNull()
     }
