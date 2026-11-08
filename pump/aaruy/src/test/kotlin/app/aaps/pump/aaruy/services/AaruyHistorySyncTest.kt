@@ -9,6 +9,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -20,6 +21,7 @@ import app.aaps.pump.aaruy.comm.DailyInfo
 import app.aaps.pump.aaruy.comm.DailyItem
 import app.aaps.pump.aaruy.comm.LogInfo
 import app.aaps.pump.aaruy.comm.LogItem
+import app.aaps.pump.aaruy.comm.StatusInfo
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
@@ -36,6 +38,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.timeout
@@ -332,6 +335,23 @@ class AaruyHistorySyncTest {
         verify(dailyDao, timeout(5000)).insert(any())
         Thread.sleep(300)
         runBlocking { verify(pumpSync, never()).createOrUpdateTotalDailyDose(any(), any(), any(), any(), anyOrNull(), any(), any()) }
+    }
+
+    /**
+     * A bolus start that no status answered, and the pump never had it. On a new link the driver asks for the log before
+     * the status, so the status that decides can come after the read.
+     */
+    @Test
+    fun aStatusAfterTheReadDecidesAStartThePumpNeverHad() {
+        val start = now - 3 * minute
+        pump.unconfirmedBolus = AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = now - minute)
+        ble.requestHistoryData(pump.lastHistoryTime)
+        receive()
+        Thread.sleep(300)
+        runBlocking { verify(pumpSync, never()).syncBolusWithTempId(any(), any(), any(), anyOrNull(), anyOrNull(), any(), any()) }
+
+        ble.onStatusForDatabase(StatusInfo(remainAmount = 100, runningStatus = 1, basalStatus = null, tempBasalStatus = null, bolusStatus = null, pauseStatus = null))
+        runBlocking { verify(pumpSync, timeout(5000)).syncBolusWithTempId(eq(start), argThat<PumpInsulin> { cU == 0.0 }, eq(start), anyOrNull(), eq(start), any(), any()) }
     }
 
     @Test

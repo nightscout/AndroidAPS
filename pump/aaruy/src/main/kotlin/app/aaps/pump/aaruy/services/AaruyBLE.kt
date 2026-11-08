@@ -151,6 +151,15 @@ class AaruyBLE(
     /** Where the read asked last starts. A read the driver did not ask for has none, so it decides no unconfirmed bolus. */
     @Volatile private var historyReadFrom = Long.MAX_VALUE
 
+    /** When the read asked last was asked. */
+    @Volatile private var historyReadAskedAt = 0L
+
+    /**
+     * The unconfirmed bolus that a complete read covered: from before its start, asked after it would have ended. The
+     * status that decides with it can come before or after it. Used only by the history jobs.
+     */
+    private var unconfirmedBolusLogRead: AaruyPump.UnconfirmedBolus? = null
+
     /** The pump clock can be some seconds behind the phone, and a start can reach the pump a moment after it was sent. */
     private val BOLUS_LOG_WINDOW_MS = 60_000L
 
@@ -808,7 +817,7 @@ class AaruyBLE(
     }
 
     /** The flags that end a waiting command come after the write, so the command finds the result in the database. */
-    private fun onStatusForDatabase(statusInfo: StatusInfo) {
+    internal fun onStatusForDatabase(statusInfo: StatusInfo) {
         val snapshot = AaruyStatusSnapshot(
             status = statusInfo.runningStatus,
             rate = statusInfo.tempBasalStatus?.curValue ?: 0.0,
@@ -823,6 +832,7 @@ class AaruyBLE(
             syncedStatusAt = dateUtil.now()
             // The pump runs a bolus, so it had the start: the log gives its amount.
             if (snapshot.status == STATUS_BOLUS) aaruyPump.unconfirmedBolus = null
+            else decideUnconfirmedBolus()
             tempBasalSync.onStatus(snapshot, live)
             if (snapshot.status == STATUS_TEMP_BASAL) sendTmpBasalOk = true
             else if (snapshot.status != STATUS_BOLUS) cancelTmpBasalOk = true
@@ -900,6 +910,7 @@ class AaruyBLE(
             nextHistoryPage = 0
             lastHistoryPageAt = System.currentTimeMillis()
             historyReadFrom = from
+            historyReadAskedAt = dateUtil.now()
             receivingHistory = true
             CoroutineScope(Dispatchers.Default).launch {
                 delay(20)
@@ -979,6 +990,7 @@ class AaruyBLE(
     /** Only now: an entry not yet written must come again if the app stops here. */
     private suspend fun onHistoryReadComplete(lastPage: LogInfo) {
         val readFrom = historyReadFrom
+        val readAskedAt = historyReadAskedAt
         historyReadFrom = Long.MAX_VALUE
         // Nothing came after it: it is the newest, and only the status can tell.
         tempBasalWaitingForNextPage?.let { (waiting, nextStart) -> tempBasalSync.onHistoryTempBasal(waiting, nextStart, null, syncedStatus?.status) }
@@ -987,20 +999,26 @@ class AaruyBLE(
         receivingHistory = false
         readDailyData(aaruyPump.lastHistoryDailyTime)
         historyRead(complete = true)
-        decideUnconfirmedBolus(readFrom)
+        aaruyPump.unconfirmedBolus?.let { unconfirmed ->
+            if (readFrom <= unconfirmed.start - BOLUS_LOG_WINDOW_MS && readAskedAt >= unconfirmed.decideAfter) unconfirmedBolusLogRead = unconfirmed
+        }
+        decideUnconfirmedBolus()
     }
 
     /**
      * A bolus start that no status answered, decided by the pump log. The pump logs a bolus when it ends, so the log can tell
-     * only when a bolus started then has surely ended: the time it takes has passed, a status since then shows no bolus, and
-     * this read went back to before the start and is complete. A bolus entry at that time has already set the record to what
-     * the pump gave. Without one the pump never gave it, and the record that counted the whole amount becomes 0 U.
+     * only when a bolus started then has surely ended: a complete read went back to before the start and was asked once the
+     * bolus would have ended, and a status since then shows no bolus. A pump that still gives it sends status 3, which ends
+     * the question. A bolus entry at that time has already set the record to what the pump gave. Without one the pump never
+     * gave it, and the record that counted the whole amount becomes 0 U. Runs as a history job, after the read and after
+     * each status, as the two can come in either order.
      */
-    private suspend fun decideUnconfirmedBolus(readFrom: Long) {
+    private suspend fun decideUnconfirmedBolus() {
         val unconfirmed = aaruyPump.unconfirmedBolus ?: return
+        if (unconfirmedBolusLogRead !== unconfirmed) return
         if (syncedStatusAt < unconfirmed.decideAfter || syncedStatus?.status == STATUS_BOLUS) return
-        if (readFrom > unconfirmed.start - BOLUS_LOG_WINDOW_MS) return
         aaruyPump.unconfirmedBolus = null
+        unconfirmedBolusLogRead = null
         val logged = historyUnitInfoDao.querySince(unconfirmed.start - BOLUS_LOG_WINDOW_MS)
             .any { it.type == HISTORY_BOLUS && it.delayBolus == 0L && it.time <= unconfirmed.start + BOLUS_LOG_WINDOW_MS }
         if (logged) return
