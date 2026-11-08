@@ -128,8 +128,8 @@
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="tidepool_purge_data">Verwijder alle gegevens</string>
-    <string name="tidepool_purge_data_confirm">Alle gegevens die AAPS naar Tidepool heeft geüpload, verwijderen? Dit kan niet ongedaan worden gemaakt. Gebruik deze functie om gegevens te verwijderen die door een oudere versie zijn beschadigd, en voer vervolgens \"Volledige synchronisatie\" uit om de gegevens opnieuw te uploaden.</string>
-    <string name="tidepool_full_sync_comment">Volledige synchronisatie? AAPS zal alle gegevens opnieuw naar Tidepool uploaden. Het kan even duren.</string>
+    <string name="tidepool_purge_data_confirm">Alle gegevens die AAPS naar Tidepool heeft verstuurd verwijderen? Deze actie kan niet ongedaan worden gemaakt. Gebruik deze optie om gegevens te verwijderen die door een oudere versie zijn beschadigd. Voer daarna ‘Volledige synchronisatie’ uit om de gegevens opnieuw te versturen.</string>
+    <string name="tidepool_full_sync_comment">Volledige synchronisatie? AAPS zal alle gegevens opnieuw naar Tidepool versturen. Het kan even duren.</string>
     <string name="tidepool_logout_confirm">Uitloggen bij Tidepool? Het versturen van gegevens wordt stopgezet totdat opnieuw wordt ingelogd.</string>
     <string name="tidepool_status_not_logged_in">Niet ingelogd</string>
     <string name="tidepool_status_no_session">Ingelogd en nog niet verbonden</string>
