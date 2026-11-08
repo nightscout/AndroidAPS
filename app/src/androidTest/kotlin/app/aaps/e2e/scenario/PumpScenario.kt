@@ -216,25 +216,32 @@ class PumpScenario(private val pump: PumpUnderTest) {
         return queued { commandQueue.readStatus("scenario") }
     }
 
-    /** A bolus to its end. */
+    /** A bolus to its end, straight through the queue. This path raises no alarm, see [userBolus]. */
     fun bolus(units: Double): PumpEnactResult = queued { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units }) }
 
-    /** A bolus the user stops once the pump has given at least [stopAfter] units. */
-    fun stoppedBolus(units: Double, stopAfter: Double): PumpEnactResult {
-        val answer = startBolus(units)
+    /**
+     * A bolus as the user gives it from the insulin dialog, to its end: through `MasterActionExecutor`, the one place
+     * that raises the BOLUS_DELIVERY_FAILED alarm when the pump does not give a bolus. True when it went through, also
+     * when the user stopped it.
+     */
+    fun userBolus(units: Double): Boolean = await(startUserBolus(units))
+
+    /** A bolus the user gives and then stops, once the pump has given at least [stopAfter] units. True as [userBolus]. */
+    fun stoppedBolus(units: Double, stopAfter: Double): Boolean {
+        val answer = startUserBolus(units)
         awaitGiven(stopAfter)
         stopBolus()
         return await(answer)
     }
 
-    /** The user stops the running bolus. */
+    /** The user stops the running bolus, as the stop button does. */
     fun stopBolus() = commandQueue.cancelAllBoluses(null)
 
     /**
      * The answer of a command that runs while the test goes on, as from [startBolus]. Then the queue is idle: a status
      * read the driver asked for can wait for the end of a bolus, so the same limit holds for it.
      */
-    fun await(answer: Deferred<PumpEnactResult>, timeoutMs: Long = BOLUS_TIMEOUT): PumpEnactResult =
+    fun <T> await(answer: Deferred<T>, timeoutMs: Long = BOLUS_TIMEOUT): T =
         runBlocking { withTimeout(timeoutMs) { answer.await() } }.also { awaitQueueIdle(timeoutMs) }
 
     /** A temp basal that runs while the test goes on. */
@@ -247,10 +254,27 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /** A bolus that runs while the test goes on. The answer of the queue comes at its end. */
     fun startBolus(units: Double): Deferred<PumpEnactResult> {
-        bolusReservoirBefore = checkNotNull(control.state().reservoir) { "A bolus the test follows needs a pump that reports its reservoir" }
+        followBolus()
         val answer = CompletableDeferred<PumpEnactResult>()
         scope.launch { answer.complete(commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units })) }
         return answer
+    }
+
+    /** A bolus of [userBolus] that runs while the test goes on. The answer comes at its end. */
+    fun startUserBolus(units: Double): Deferred<Boolean> {
+        followBolus()
+        val answer = CompletableDeferred<Boolean>()
+        scope.launch {
+            testGraphs.rootGraph.masterActionExecutor.deliverInsulin(
+                insulin = units, note = null, source = Sources.InsulinDialog,
+                onError = { answer.complete(false) }, onSuccess = { answer.complete(true) }
+            )
+        }
+        return answer
+    }
+
+    private fun followBolus() {
+        bolusReservoirBefore = checkNotNull(control.state().reservoir) { "A bolus the test follows needs a pump that reports its reservoir" }
     }
 
     /** Waits until the bolus of [startBolus] has given at least [units]. */
@@ -316,9 +340,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
         return stored.size == given.size && stored.zip(given).all { (record, gave) -> record >= gave && record - gave <= over }
     }
 
+    /** AAPS does not show [id]. Only a [userBolus] can raise BOLUS_DELIVERY_FAILED, a bolus of [bolus] never does. */
     fun checkNoAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
-        assertWithMessage("alarm $id").that(testGraphs.notificationManager.notifications.value.map { it.id }).doesNotContain(id)
+        assertWithMessage("alarm $id").that(shownNotifications()).doesNotContain(id)
     }
+
+    private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
     fun checkTempBasal() {

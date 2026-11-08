@@ -56,12 +56,13 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
         scenario.checkNoBurst()
 
-        assertWithMessage("bolus").that(scenario.bolus(BOLUS).success).isTrue()
+        assertWithMessage("bolus").that(scenario.userBolus(BOLUS)).isTrue()
         scenario.checkBolusRecords()
         scenario.checkNoAlarm()
         scenario.checkLinkClosed()
 
-        scenario.stoppedBolus(STOPPED_BOLUS, stopAfter = STOP_AFTER)
+        // A stop by the user is no delivery failure: no alarm.
+        assertWithMessage("bolus the user stops").that(scenario.stoppedBolus(STOPPED_BOLUS, stopAfter = STOP_AFTER)).isTrue()
         scenario.checkBolusRecords()
         scenario.checkNoAlarm()
 
