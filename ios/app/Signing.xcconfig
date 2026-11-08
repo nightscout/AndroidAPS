@@ -20,6 +20,17 @@
 // from a profile, because the Keychain refuses to work without them. That file says
 // why.
 //
+// The bundle ids `app.aaps.client` and `app.aaps.client2` belong to the team that
+// publishes to TestFlight. Another team cannot make a profile for them, so a device
+// build stops with "cannot be registered to your development team". To build for a
+// device with your own team, also put a prefix of your own in Signing.local.xcconfig:
+//
+//     AAPS_BUNDLE_ID_PREFIX = com.example.aaps
+//
+// The targets add `.client` and `.client2` to it. Keep those endings: the shared code
+// picks the client flavour from the end of the bundle id (see `clientFlavorFor` in
+// ios/shell). Without the prefix the project uses `app.aaps`, as before.
+//
 // This file itself must stay committed. Xcode treats a missing base configuration
 // as an error, not a warning, so pointing the project straight at an ignored file
 // would break every fresh clone.
