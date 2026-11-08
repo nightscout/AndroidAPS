@@ -18,6 +18,8 @@ import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.database.EquilTempBasalRecord
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilResumed
+import app.aaps.pump.equil.data.BolusProfile
+import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdLargeBasalSet
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -41,6 +43,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
+import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.times
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -637,6 +641,32 @@ class EquilManagerTest : TestBaseWithProfile() {
         assertEquals(-1, result)
         assertTrue(System.currentTimeMillis() - start < 5_000, "must not wait for the 22 s timeout")
         verify(equilBLE).readHistory(any())
+    }
+
+    /**
+     * The app restart scenario: the pump gives the whole bolus also when the app is killed meanwhile. Recorded only at the
+     * end, a killed app left no record at all.
+     */
+    @Test
+    fun `a bolus is recorded with its whole amount before it runs`() = runTest {
+        prepareRunMode(RunMode.RUN)
+        whenever(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)).thenReturn("OK")
+        val sentAt = now - 60_000
+        // The pump answers every command at once.
+        doAnswer { (it.arguments[0] as BaseCmd).apply { commandSent = true; commandSentAt = sentAt; cmdSuccess = true }; Unit }
+            .whenever(equilBLE).writeCmd(any())
+        var recordedBeforeProgress = false
+        doAnswer { recordedBeforeProgress = mockingDetails(pumpSync).invocations.any { it.method.name == "syncBolusWithPumpId" }; Unit }
+            .whenever(bolusProgressData).updateProgress(0)
+        val bolus = DetailedBolusInfo().apply { insulin = 2.0; timestamp = sentAt - 1000 }
+
+        equilManager.bolus(bolus, BolusProfile())
+
+        assertTrue(recordedBeforeProgress)
+        // The start and the end, both at the bolus start, the same record.
+        verify(pumpSync, times(2)).syncBolusWithPumpId(
+            eq(sentAt), argThat<PumpInsulin> { abs(cU - 2.0) < 0.0001 }, anyOrNull(), eq(sentAt - 1000), eq(PumpType.EQUIL), eq("7000F3")
+        )
     }
 
     /** The link answers every history request at once. */

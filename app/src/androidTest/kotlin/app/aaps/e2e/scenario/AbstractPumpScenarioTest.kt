@@ -70,6 +70,14 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("cancel temp basal").that(scenario.cancelTempBasal().success).isTrue()
         scenario.checkTempBasal()
 
+        if (scenario.canGiveExtendedBolus) {
+            assertWithMessage("extended bolus").that(scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES).success).isTrue()
+            scenario.checkExtendedBolus()
+            assertWithMessage("cancel extended bolus").that(scenario.cancelExtendedBolus().success).isTrue()
+            scenario.checkExtendedBolus()
+        }
+        if (scenario.canReadTdds) assertWithMessage("daily totals").that(scenario.readTdds().success).isTrue()
+
         scenario.unpair()
     }
 
@@ -282,6 +290,8 @@ abstract class AbstractPumpScenarioTest {
         const val STOP_AFTER = 0.2
         const val TEMP_BASAL_RATE = 1.0
         const val TEMP_BASAL_MINUTES = 30
+        const val EXTENDED_BOLUS = 1.0
+        const val EXTENDED_MINUTES = 30
         const val KILLED_BOLUS = 2.0
         const val KILL_AFTER = 0.3
 

@@ -271,6 +271,20 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
 
+    private val pumpDescription get() = testGraphs.activePlugin.activePumpInternal.pumpDescription
+
+    /** The pump can give an extended bolus, see [extendedBolus]. */
+    val canGiveExtendedBolus: Boolean get() = pumpDescription.isExtendedBolusCapable
+
+    /** The pump keeps daily totals that AAPS reads, see [readTdds]. */
+    val canReadTdds: Boolean get() = pumpDescription.supportsTDDs
+
+    fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
+
+    fun cancelExtendedBolus(): PumpEnactResult = queued { commandQueue.cancelExtended() }
+
+    fun readTdds(): PumpEnactResult = queued { commandQueue.loadTDDs() }
+
     private fun queued(step: suspend () -> PumpEnactResult): PumpEnactResult = runBlocking { step() }.also { awaitQueueIdle() }
 
     // ---- Checks -----------------------------------------------------------------------------
@@ -310,6 +324,20 @@ class PumpScenario(private val pump: PumpUnderTest) {
         val pumpRate = running.absolute ?: running.percent?.toDouble()
         assertWithMessage("temp basal is absolute").that(stored.isAbsolute).isEqualTo(running.absolute != null)
         assertWithMessage("temp basal rate").that(abs(stored.rate - checkNotNull(pumpRate)) < RATE_TOLERANCE).isTrue()
+    }
+
+    /** The extended bolus AAPS has is the one the pump runs, or neither has one. */
+    fun checkExtendedBolus() {
+        val running = control.state().extendedBolus
+        val stored = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(System.currentTimeMillis()) }
+        if (running == null) {
+            assertWithMessage("AAPS has an extended bolus the pump does not run").that(stored).isNull()
+            return
+        }
+        checkNotNull(stored) { "The pump runs an extended bolus AAPS does not have: $running" }
+        assertWithMessage("extended bolus amount").that(abs(stored.amount - running.units) < RATE_TOLERANCE).isTrue()
+        assertWithMessage("extended bolus minutes").that(stored.duration).isEqualTo(running.minutes * MS_PER_MINUTE)
+        assertWithMessage("a real extended bolus, not one that stands for a temp basal").that(stored.isEmulatingTempBasal).isFalse()
     }
 
     /** The queue closes the link when it has nothing more to do. */
@@ -449,5 +477,6 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
         private const val CENTI = 100.0
         private const val RATE_TOLERANCE = 0.01
+        private const val MS_PER_MINUTE = 60_000L
     }
 }

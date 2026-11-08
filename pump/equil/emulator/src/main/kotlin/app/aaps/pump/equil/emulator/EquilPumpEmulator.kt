@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedExtendedBolus
 import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
 import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
@@ -684,7 +685,10 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             suspended = state.runningMode != RUNNING_MODE_RUNNING,
             reservoir = state.reservoir,
             linkUp = linkUp,
-            commands = state.commands
+            commands = state.commands,
+            // UNVERIFIED: that the pump gives an extended bolus while it is suspended; the emulator reports it only while it runs.
+            extendedBolus = if (state.isExtendedBolusRunning && state.runningMode == RUNNING_MODE_RUNNING)
+                EmulatedExtendedBolus(units = state.extendedBolusStep / BOLUS_STEPS_PER_UNIT, minutes = state.extendedBolusDuration / SECONDS_PER_MINUTE) else null
         )
     }
 
@@ -946,6 +950,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
         /** CmdLargeBasalSet: 160 steps per unit. */
         private const val BOLUS_STEPS_PER_UNIT = 160.0
+
+        /** CmdExtendedBolusSet sends its time in seconds. */
+        private const val SECONDS_PER_MINUTE = 60
 
         /** CmdTempBasalSet: the rate in U/h times 80. */
         private const val TEMP_BASAL_STEPS_PER_UNIT = 80.0

@@ -544,6 +544,10 @@ class CarelevoPumpEmulator(
             state.extendedBolusRunning = true
             state.extendedInfusedAmount = 0.0
             state.modeRaw = MODE_EXTEND_BOLUS
+            // [0x25][immediate U][immediate centi][speed U][speed centi][hour][min], the speed in U/h.
+            val speed = if (request.size > 4) request.u(3) + request.u(4) / CENTI else 0.0
+            state.extendedBolusMinutes = hour * MINUTES_PER_HOUR + min
+            state.extendedBolusUnits = speed * state.extendedBolusMinutes / MINUTES_PER_HOUR
         }
         val totalMinutes = (hour * MINUTES_PER_HOUR + min).coerceAtMost(MAX_REPORTABLE_MINUTES)
         return listOf(byteArrayOf(RESP_EXTEND_BOLUS, result.toByte(), totalMinutes.toByte(), 0))

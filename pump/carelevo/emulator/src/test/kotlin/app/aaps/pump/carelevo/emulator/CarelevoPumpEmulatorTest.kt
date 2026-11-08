@@ -861,6 +861,9 @@ class CarelevoPumpEmulatorTest {
         assertThat(decoded.expectedTimeSeconds).isEqualTo(5400)
         assertThat(state.extendedBolusRunning).isTrue()
         assertThat(state.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_EXTEND_BOLUS)
+        // 0.5 U/h for 90 minutes: what the scenario compares with the AAPS record.
+        assertThat(state.extendedBolusMinutes).isEqualTo(90)
+        assertThat(state.extendedBolusUnits).isWithin(1e-9).of(0.75)
     }
 
     @Test

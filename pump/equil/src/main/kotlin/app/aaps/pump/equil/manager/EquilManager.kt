@@ -273,7 +273,9 @@ class EquilManager(
                         currentTimeMillis,
                         PumpRate(insulin),
                         time.toLong() * 60 * 1000,
-                        true,
+                        // A real extended bolus: Equil has its own temp basals. With true, NS sync could upload it as a
+                        // temp basal and autotune counted it as basal.
+                        false,
                         currentTimeMillis,
                         PumpType.EQUIL,
                         getSerialNumber()
@@ -339,6 +341,10 @@ class EquilManager(
             aapsLogger.debug(LTag.PUMPCOMM, "sleep===" + detailedBolusInfo.insulin + "===" + percent1)
             var percent = 0f
             val start = bolusStart(command)
+            // The pump gives the whole bolus also when the app is killed meanwhile, so it is recorded now with the whole
+            // amount and corrected at the end. Recorded only at the end, a killed app left no record at all (found by the
+            // app restart scenario). The bolus time is its start.
+            if (start != BolusStart.NOT_SENT) recordBolus(bolusStart, detailedBolusInfo.insulin, detailedBolusInfo)
             when (start) {
                 BolusStart.STARTED   -> {
                     result.success = true
@@ -385,19 +391,9 @@ class EquilManager(
                 }
             }
             result.bolusDelivered = stoppedAmount ?: (percent / 100.0 * detailedBolusInfo.insulin)
-            val currentTime = System.currentTimeMillis()
             if (result.enacted) {
                 if (start == BolusStart.STARTED) command.resolvedResult = ResolvedResult.SUCCESS
-                pumpSync.syncBolusWithPumpId(
-                    currentTime,
-                    PumpInsulin(result.bolusDelivered),
-                    detailedBolusInfo.bolusType,
-                    detailedBolusInfo.timestamp,
-                    PumpType.EQUIL,
-                    getSerialNumber()
-                )
-                val equilBolusRecord = EquilBolusRecord(result.bolusDelivered, BolusType.SMB, currentTime)
-                setBolusRecord(equilBolusRecord)
+                recordBolus(bolusStart, result.bolusDelivered, detailedBolusInfo)
                 // The start got no answer, or a stop had none yet when the bolus ended: the pump log tells what was
                 // given, once the bolus is over. A stop that never reached the pump leaves the whole bolus in the log.
                 val stopNotAnswered = bolusProfile.stopRequested && !bolusProfile.stop
@@ -411,7 +407,7 @@ class EquilManager(
                         decideAfter = bolusStart + command.stepTime * 1000L + UNCERTAIN_BOLUS_MARGIN_MS,
                         bolusType = detailedBolusInfo.bolusType,
                         pumpId = detailedBolusInfo.timestamp,
-                        recordTime = currentTime
+                        recordTime = bolusStart
                     )
                 }
             }
@@ -420,11 +416,17 @@ class EquilManager(
             // no link left. Then connect again and read the run mode and history now: otherwise a pump alarm
             // during the bolus (e.g. empty reservoir) was only seen at the next loop run (#3467).
             if (equilBLE.isConnected) loadEquilHistory() else readModeAndHistory()
-            if (result.success) correctBolusIfDeliveryStopped(result, detailedBolusInfo, bolusStart, currentTime, unitsPerSecond)
+            if (result.success) correctBolusIfDeliveryStopped(result, detailedBolusInfo, bolusStart, bolusStart, unitsPerSecond)
         } catch (ex: Exception) {
             result.success(false).enacted(false).comment(ex.message ?: "Exception")
         }
         return result
+    }
+
+    /** The AAPS record of the bolus of [detailedBolusInfo], at [time], with [units]. Called again, it corrects the same record. */
+    private suspend fun recordBolus(time: Long, units: Double, detailedBolusInfo: DetailedBolusInfo) {
+        pumpSync.syncBolusWithPumpId(time, PumpInsulin(units), detailedBolusInfo.bolusType, detailedBolusInfo.timestamp, PumpType.EQUIL, getSerialNumber())
+        setBolusRecord(EquilBolusRecord(units, BolusType.SMB, time))
     }
 
     /**

@@ -1,6 +1,5 @@
 package app.aaps.e2e
 
-import android.Manifest
 import android.os.SystemClock
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -10,24 +9,13 @@ import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
-import androidx.work.WorkManager
 import app.aaps.ComposeMainActivity
-import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.StringKey
-import app.aaps.core.objects.extensions.singleBlock
-import app.aaps.core.objects.extensions.singleTargetBlock
-import app.aaps.di.EmulatedOptions
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.e2e.scenario.PumpScenario
 import app.aaps.pump.equil.di.EquilAccessors
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -37,194 +25,158 @@ import org.junit.runner.RunWith
 import java.util.regex.Pattern
 
 /**
- * Drives the **Equil pod activation wizard through its real Compose UI** end to end, against the
- * in-tree Equil emulator: Manage → Pump → the overview's "Pair" button → the whole PAIR wizard
- * (ASSEMBLE → BLE scan → PASSWORD → FILL → ATTACH → AIR → CONFIRM), each screen's button clicked with
- * uiautomator, until the pod reports `COMPLETED` and the overview repaints as paired.
+ * Drives the **Equil wizards and overview through their real Compose UI**, against the in-tree Equil emulator, each
+ * screen's button clicked with uiautomator:
+ * - PAIR: Manage → Pump → "Pair" → ASSEMBLE → BLE scan → PASSWORD → FILL → ATTACH → AIR → CONFIRM, the genuine ~13
+ *   command activation chain, until the overview repaints as paired;
+ * - the History screen with both tabs;
+ * - Suspend and Resume on the overview, checked on the emulated pump;
+ * - CHANGE_INSULIN with the same infusion set: no AIR step, the branch pairing never takes;
+ * - UNPAIR: DETACH → CONFIRM → result, until the overview offers "Pair" again.
  *
- * Unlike `DanaRSPairWizardUiTest` — whose emulator can't complete a first-time handshake, so it
- * *injects* pairing states and only asserts each screen renders — the Equil emulator implements real
- * pre-shared-key pairing, so this walks the genuine ~13-command activation chain the buttons trigger.
- * `EquilEmulatorActivationTest` covers the same chain headlessly at the ViewModel level; this one adds
- * the actual screens and their button wiring on top.
+ * The scenario tests (`EquilScenarioTest`) drive the same driver headless through the wizard ViewModels; this one adds
+ * the screens and their button wiring. Set up and torn down by [PumpScenario], so it starts unpaired and leaves nothing
+ * behind, and the emulator runs at the fast speed unless `-e emulatorSpeed real`.
  *
- * ## Reaching exactly the seven PAIR steps
- * `initializeWorkflow` inserts conditional steps: a PROFILE_GATE when no profile is active, a
- * SELECT_INSULIN when more than one insulin is configured, and a SITE_LOCATION when
- * `SiteRotationManagePump` is on. [setUp] seeds an active profile, leaves a single insulin, and turns
- * site rotation off, so none of the three appear and the path is the fixed seven above.
+ * ## Reaching exactly these steps
+ * `initializeWorkflow` inserts conditional steps: a PROFILE_GATE when no profile is active, a SELECT_INSULIN when more
+ * than one insulin is configured, and a SITE_LOCATION when `SiteRotationManagePump` is on. [PumpScenario.bringUp]
+ * activates a profile and leaves a single insulin, and [setUp] turns site rotation off, so none of the three appear.
  *
  * ## Fragility (read before editing)
- * Selectors match case-insensitively against text OR content-desc; steps are gated on a **unique**
- * in-content string before the (often ambiguously-labelled, e.g. several "Next") button is clicked;
- * the FILL/AIR "Next" only enables after its async command settles, so [clickWhenEnabled] polls. It is
- * English-only. The activation chain is ~75s of real command round-trips, so the step timeouts are
- * generous.
+ * Selectors match case-insensitively against text OR content-desc; steps are gated on a **unique** in-content string
+ * before the (often ambiguously-labelled, e.g. several "Next") button is clicked; the FILL/AIR "Next" only enables after
+ * its async command settles, so [openVia] retries. A click that starts a command chain is clicked once, never retried.
+ * It is English-only.
  */
 @RunWith(AndroidJUnit4::class)
 class EquilActivationWizardUiTest {
 
-
     // RetryRule outermost: a flaky UI timeout self-heals on a fresh attempt; see [RetryRule].
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    private val preferences get() = testGraphs.preferences
-    private val pluginStore get() = testGraphs.pluginStore
-    private val commandQueue get() = testGraphs.commandQueue
-    private val equilPumpPlugin get() = (testGraphs.rootGraph as EquilAccessors).equilPumpPlugin
+    private lateinit var scenario: PumpScenario
+
     private val equilManager get() = (testGraphs.rootGraph as EquilAccessors).equilManager
-    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
-    private val configBuilder get() = testGraphs.configBuilder
-    private val profileFunction get() = testGraphs.profileFunction
-    private val profileRepository get() = testGraphs.profileRepository
-    private val insulinManager get() = testGraphs.insulinManager
-    private val dateUtil get() = testGraphs.dateUtil
-    private val activePlugin get() = testGraphs.activePlugin
-    private val config get() = testGraphs.config
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val device: UiDevice get() = UiDevice.getInstance(instrumentation)
 
     @Before
     fun setUp() {
-        // A prior activation persists the pod state (EquilStringKey.State); clear before inject() or
-        // the fresh EquilManager reads back a COMPLETED pod and the overview never offers "Pair".
-        clearAllSharedPrefs()
-        EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_EQUIL)
-
-        instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
-        runCatching { instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_SCAN) }
-        runCatching { instrumentation.uiAutomation.grantRuntimePermission(PKG, "android.permission.POST_NOTIFICATIONS") }
-
-        seedConfiguredApp()
-        seedEquilAsActivePump()
-
-        pluginStore.plugins = pluginList
-        configBuilder.initialize()
-        config.initCompleted()
-        seedLocalProfile()
-        activateSeededProfile()
-
-        // EquilManager is @Singleton: a pod activated by an earlier @Test in this shard's process leaves
-        // activationProgress = COMPLETED in memory, and a lingering storePodState() can re-persist it to
-        // prefs after clearAllSharedPrefs(). Reset write-through (clears the singleton AND writes an empty
-        // state to prefs) so the launched app's onStart -> loadPodState() reads clean and the overview still
-        // offers "Pair". Read-only loadPodState() would read the re-persisted COMPLETED back. See #5040.
-        equilManager.clearPodState()
-
+        scenario = PumpScenario(EquilPumpUnderTest())
+        scenario.bringUp()
+        // Keep the wizards to their fixed steps: no SITE_LOCATION.
+        testGraphs.preferences.put(BooleanKey.SiteRotationManagePump, false)
         device.executeShellCommand("settings put global heads_up_notifications_enabled 0")
     }
 
     @After
     fun tearDown() {
-        runCatching { commandQueue.clear() }
-        runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
-        runCatching { equilPumpPlugin.disconnect("test end") }
-        runCatching { equilPumpPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
-        EmulatedOptions.enabled = emptySet()
-        clearAllSharedPrefs()
+        scenario.tearDown()
     }
 
     @Test
-    fun equilActivationWizard_activatesThroughUi() {
+    fun equilWizards_workThroughTheirScreens() {
         assertThat(equilManager.isActivationCompleted()).isFalse()
 
-        val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
+        val activity = ActivityScenario.launch(ComposeMainActivity::class.java)
         try {
             waitForOverview()
 
             // Manage → Pump → the Equil overview; unpaired, so it offers "Pair".
             openVia("Manage", expect = PUMP_MANAGEMENT)
             openVia(PUMP_MANAGEMENT, expect = "Pair")
-            openVia("Pair", expect = "Pair Equil patch pump")   // overview "Pair" → ASSEMBLE header
 
-            // Every wizard step transition retries its click until the next screen's unique text
-            // appears (openVia): a single "Next" tap is routinely dropped during Compose recomposition,
-            // and the plain moveStep transitions are idempotent so re-clicking is safe.
-            openVia("Next", expect = "Select your pump")        // ASSEMBLE → BLE_SCAN
-
-            // BLE_SCAN: the emulator advertises one device row "Equil - A#####".
-            openVia("Equil -", expect = "Enter password for")   // tap device row (prefix) → PASSWORD
-
-            // PASSWORD: empty code is accepted; "Pair" runs getVersion → pair → pumpSettings (a command
-            // chain, so a single click — retrying would re-start pairing).
-            click("Pair")
-            assertVisibleContains("Please prime the reservoir", PAIR_TIMEOUT)  // FILL
-
-            // FILL: "Prime/Fill" runs the fill loop; the emulator's resistance completes it in one pass,
-            // then the primary relabels to "Next".
-            click("Prime/Fill")
-            waitForVisibleOrThrow("Next", FILL_TIMEOUT)
-            openVia("Next", expect = "Please attach the pump")  // FILL → ATTACH
-
-            // ATTACH → AIR
-            openVia("Next", expect = "purge the air")           // AIR (equil_hint1 body)
-
-            // AIR: "Purge air" runs the air command; once it settles the "Next" enables and runs the
-            // alarm → basal → time → firmware tail into CONFIRM. Retry "Next" until CONFIRM appears —
-            // each attempt's wait outlasts the tail chain, so it never double-fires finishAirStep.
-            click("Purge air")
-            openVia("Next", expect = "Attach the pump", attempts = 6)  // AIR → CONFIRM
-
-            // CONFIRM: "Finish" runs insulin → model → final settings → saveActivation → COMPLETED,
-            // then the wizard closes back to the (now paired) overview.
-            openVia("Finish", expect = "Unpair device", attempts = 4)  // paired-state overview
-
-            // History screen: the paired overview → "History" renders EquilHistoryScreen with its two
-            // tabs (command history + pump events). Visiting both covers the history Compose files.
-            openVia("History", expect = "History action")   // command-history tab
-            click("Equil history")                          // switch to the pump-events tab
-            assertVisibleContains("Equil history")
+            pair()
+            history()
+            suspendAndResume()
+            changeReservoir()
+            unpair()
         } catch (t: Throwable) {
             logScreen("E2E_EQUIL_WIZARD")
             throw t
         } finally {
-            scenario.close()
+            activity.close()
         }
+    }
 
+    private fun pair() {
+        openVia("Pair", expect = "Pair Equil patch pump")   // overview "Pair" → ASSEMBLE header
+
+        // Every plain step transition retries its click until the next screen's unique text appears (openVia): a
+        // single "Next" tap is routinely dropped during Compose recomposition, and those transitions are idempotent.
+        openVia("Next", expect = "Select your pump")        // ASSEMBLE → BLE_SCAN
+
+        // BLE_SCAN: the emulator advertises one device row "Equil - A#####".
+        openVia("Equil -", expect = "Enter password for")   // tap device row (prefix) → PASSWORD
+
+        // PASSWORD: an empty code is accepted; "Pair" runs getVersion → pair → pumpSettings, a command chain, so one click.
+        click("Pair")
+        assertVisibleContains("Please prime the reservoir", COMMAND_TIMEOUT)  // FILL
+
+        // FILL: "Prime/Fill" runs the fill loop; the emulator's resistance completes it, then the primary relabels to "Next".
+        click("Prime/Fill")
+        waitForVisibleOrThrow("Next", COMMAND_TIMEOUT)
+        openVia("Next", expect = "attach the pump to the base")   // FILL → ATTACH
+        openVia("Next", expect = "purge the air")                 // ATTACH → AIR (equil_hint1 body)
+
+        // AIR: "Purge air" runs the air command; once it settles the "Next" enables and runs the alarm → basal → time →
+        // firmware tail into CONFIRM. Each attempt's wait outlasts the tail chain, so it never double-fires.
+        click("Purge air")
+        openVia("Next", expect = "to your body", attempts = 6)    // AIR → CONFIRM
+
+        // CONFIRM: "Finish" runs insulin → model → final settings → saveActivation, then the wizard closes back to the
+        // overview, now paired.
+        openVia("Finish", expect = "Unpair device", attempts = 4)
         assertThat(equilManager.isActivationCompleted()).isTrue()
     }
 
-    // ---- seeding --------------------------------------------------------------------------------
-
-    private fun seedConfiguredApp() {
-        preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
-        preferences.put(StringKey.GeneralUnits, "mg/dl")
-        preferences.put(BooleanKey.GeneralSimpleMode, false)
-        // Keep the wizard to the seven PAIR steps — no SITE_LOCATION.
-        preferences.put(BooleanKey.SiteRotationManagePump, false)
+    /** The History screen with both tabs: command history and pump events. */
+    private fun history() {
+        openVia("History", expect = "History action")
+        click("Equil history")
+        assertVisibleContains("Equil history")
+        device.pressBack()
+        waitForVisibleOrThrow("Unpair device")
     }
 
-    private fun seedEquilAsActivePump() {
-        preferences.put(BooleanComposedKey.ConfigBuilderEnabled, "PUMP_EquilPumpPlugin", value = true)
-        preferences.put(BooleanComposedKey.ConfigBuilderEnabled, "PUMP_VirtualPumpPlugin", value = false)
+    /** The overview's Suspend and Resume, each checked on the emulated pump. */
+    private fun suspendAndResume() {
+        openVia("Suspend", expect = "Resume delivery")
+        scenario.awaitTrue("the pump is suspended", COMMAND_TIMEOUT) { scenario.control.state().suspended }
+        click("Resume delivery")
+        scenario.awaitTrue("the pump runs again", COMMAND_TIMEOUT) { !scenario.control.state().suspended }
+        waitForExactOrThrow("Suspend")
     }
 
-    private fun seedLocalProfile() {
-        val profile = profileRepository.newDraft().copy(
-            mgdl = true,
-            ic = singleBlock(10.0),
-            isf = singleBlock(50.0),
-            basal = singleBlock(0.5),
-            target = singleTargetBlock(100.0, 110.0)
-        )
-        runBlocking { profileRepository.add(profile) }.getOrThrow()
+    /** A new reservoir in the same infusion set: no AIR step, and no cannula change recorded. */
+    private fun changeReservoir() {
+        openVia("Change reservoir", expect = "Will you also put on a new infusion set")
+        click("No, only reservoir or battery")
+        // "Next" runs the change command, which moves the plunger back: once.
+        click("Next")
+        assertVisibleContains("Please assemble the pump", COMMAND_TIMEOUT)       // ASSEMBLE ("Change cartridge")
+        openVia("Next", expect = "Please prime the reservoir")                     // ASSEMBLE → FILL
+        click("Prime/Fill")
+        waitForVisibleOrThrow("Next", COMMAND_TIMEOUT)
+        openVia("Next", expect = "attach the pump to the base")                    // FILL → ATTACH
+        openVia("Next", expect = "to your body")                                   // ATTACH → CONFIRM, no AIR
+        openVia("Finish", expect = "Unpair device", attempts = 4)                  // back to the paired overview
+        assertThat(equilManager.isActivationCompleted()).isTrue()
+        assertThat(scenario.control.state().suspended).isFalse()
     }
 
-    private fun activateSeededProfile() {
-        val store = checkNotNull(
-            awaitNotNull(PROFILE_STORE_TIMEOUT) {
-                profileRepository.profile.value?.takeIf { it.getSpecificProfile(PROFILE_NAME) != null }
-            }
-        ) { "The profile store never published '$PROFILE_NAME'" }
-        val switch = runBlocking {
-            profileFunction.createProfileSwitch(
-                profileStore = store, profileName = PROFILE_NAME, durationInMinutes = 0, percentage = 100,
-                timeShiftInHours = 0, timestamp = dateUtil.now(), action = Action.PROFILE_SWITCH,
-                source = Sources.Aaps, listValues = emptyList(), iCfg = insulinManager.insulins.first()
-            )
-        }
-        checkNotNull(switch) { "Could not activate the seeded local profile" }
+    private fun unpair() {
+        openVia("Unpair device", expect = "plunger to retract")    // UNPAIR_DETACH
+        // "Next" runs the detach command, "Finish" the unpair: each once.
+        click("Next")
+        assertVisibleContains("relinquish control", COMMAND_TIMEOUT)  // UNPAIR_CONFIRM
+        click("Finish")
+        assertVisibleContains("Device unpaired", COMMAND_TIMEOUT)    // the result
+        click("Finish")
+        waitForExactOrThrow("Pair", COMMAND_TIMEOUT)                 // the overview offers "Pair" again
+        assertThat(equilManager.equilState?.serialNumber ?: "").isEmpty()
     }
 
     // ---- ui helpers (same contract as DanaRSPairWizardUiTest) -----------------------------------
@@ -268,6 +220,16 @@ class EquilActivationWizardUiTest {
 
     private fun waitForVisibleOrThrow(label: String, timeout: Long = STEP_TIMEOUT) {
         if (!waitForVisible(label, timeout)) error("Timed out after ${timeout}ms looking for '$label'")
+    }
+
+    /** A text that is exactly [label]: "Pair" must not match "Unpair device", nor "Suspend" match "Suspended". */
+    private fun waitForExactOrThrow(label: String, timeout: Long = STEP_TIMEOUT) {
+        val end = SystemClock.uptimeMillis() + timeout
+        while (SystemClock.uptimeMillis() < end) {
+            if (device.findObject(byText(label)) != null) return
+            device.waitForIdle(IDLE_MS)
+        }
+        error("Timed out after ${timeout}ms looking for exactly '$label'")
     }
 
     private fun assertVisibleContains(substring: String, timeout: Long = STEP_TIMEOUT) {
@@ -314,35 +276,19 @@ class EquilActivationWizardUiTest {
         }
     }
 
-    private fun <T> awaitNotNull(timeoutMs: Long, supplier: () -> T?): T? {
-        val end = SystemClock.uptimeMillis() + timeoutMs
-        while (SystemClock.uptimeMillis() < end) {
-            runCatching(supplier).getOrNull()?.let { return it }
-            SystemClock.sleep(POLL_MS)
-        }
-        return null
-    }
-
-    private fun clearAllSharedPrefs() = clearAppSettings(instrumentation.targetContext)
-
     companion object {
 
         private const val PKG = "info.nightscout.androidaps"
         private const val PUMP_MANAGEMENT = "Pump"
-        private const val PROFILE_NAME = "LocalProfile1"
 
-        // Generous: the activation UI launches the full ComposeMainActivity and then runs a long
-        // command chain, so first paint can lag well past a lighter screen's under CI/host load.
+        // Generous: the test launches the full ComposeMainActivity, so first paint can lag under CI load.
         private const val INIT_TIMEOUT = 120_000L
         private const val STEP_TIMEOUT = 30_000L
         private const val IDLE_MS = 300L
         private const val STALE_RETRIES = 10
         private const val STALE_SETTLE_MS = 700L
-        private const val PROFILE_STORE_TIMEOUT = 20_000L
-        private const val POLL_MS = 250L
 
-        // Command-driven transitions: each spans several BLE round-trips with 500ms inter-command pacing.
-        private const val PAIR_TIMEOUT = 60_000L
-        private const val FILL_TIMEOUT = 30_000L
+        // Command-driven transitions: each spans several pump commands.
+        private const val COMMAND_TIMEOUT = 60_000L
     }
 }

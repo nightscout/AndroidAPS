@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedExtendedBolus
 import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
 import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
@@ -239,7 +240,8 @@ class CarelevoEmulatorBleTransport(
             suspended = state.stopped,
             reservoir = emulator.reservoir,
             linkUp = connected,
-            commands = emulator.commands
+            commands = emulator.commands,
+            extendedBolus = if (state.extendedBolusRunning) EmulatedExtendedBolus(state.extendedBolusUnits, state.extendedBolusMinutes) else null
         )
     }
 
