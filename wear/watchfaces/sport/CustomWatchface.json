@@ -1,0 +1,183 @@
+{
+    "metadata": {
+        "name": "AAPS Sport",
+        "author": "OpenCode",
+        "created_at": "16/10/2026",
+        "author_version": "1.14",
+        "cwf_version": "1.0",
+        "comment": "Digital sport dashboard. Lower-right light-blue reservoir gauge: 0-200 U, 4 U steps. Native basal text, COB, IOB, trend and warning hooks. No chart, battery display or app changes."
+    },
+    "enableSecond": false,
+    "pointSize": 2,
+    "highColor": "#FFD166",
+    "midColor": "#B5F46A",
+    "lowColor": "#FF727C",
+    "reservoirColor": "#65DEED",
+    "background": {
+        "width": 400, "height": 400, "leftmargin": 0, "topmargin": 0,
+        "visibility": "visible"
+    },
+    "chart": {
+        "width": 1, "height": 1, "leftmargin": 200, "topmargin": 200,
+        "visibility": "gone"
+    },
+    "cover_chart": {
+        "width": 208, "height": 208, "leftmargin": 192, "topmargin": 192,
+        "visibility": "visible", "dynPref": "reservoirGauge"
+    },
+    "direction": {
+        "width": 146, "height": 146, "leftmargin": 59, "topmargin": 24,
+        "visibility": "visible"
+    },
+    "freetext1": {
+        "width": 72, "height": 20, "leftmargin": 96, "topmargin": 49,
+        "visibility": "visible", "textsize": 12, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontColor": "#ABB8C2", "dynPref": "glucoseUnits"
+    },
+    "sgv": {
+        "width": 110, "height": 54, "leftmargin": 77, "topmargin": 65,
+        "visibility": "visible", "textsize": 40, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontStyle": "normal"
+    },
+    "timestamp": {
+        "width": 60, "height": 28, "leftmargin": 102, "topmargin": 116,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontColor": "#ABB8C2"
+    },
+    "freetext2": {
+        "width": 140, "height": 22, "leftmargin": 198, "topmargin": 40,
+        "visibility": "visible", "textsize": 12, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#65DEED", "dynPref": "basalLabel"
+    },
+    "basalRate": {
+        "width": 140, "height": 30, "leftmargin": 198, "topmargin": 62,
+        "visibility": "visible", "textsize": 20, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#65DEED"
+    },
+    "iob1": {
+        "width": 88, "height": 44, "leftmargin": 252, "topmargin": 286,
+        "visibility": "visible", "textsize": 32, "gravity": "left",
+        "font": "roboto_condensed_bold", "fontColor": "#65DEED", "dynPref": "iobTotal"
+    },
+    "iob2": {
+        "width": 88, "height": 44, "leftmargin": 252, "topmargin": 286,
+        "visibility": "visible", "textsize": 32, "gravity": "left",
+        "font": "roboto_condensed_bold", "fontColor": "#65DEED", "dynPref": "iobValue"
+    },
+    "time": {
+        "width": 284, "height": 116, "leftmargin": 58, "topmargin": 159,
+        "visibility": "visible", "textsize": 92, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontStyle": "normal", "fontColor": "#F3F7FA"
+    },
+    "timePeriod": {
+        "width": 46, "height": 22, "leftmargin": 177, "topmargin": 258,
+        "visibility": "visible", "textsize": 14, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontColor": "#ABB8C2"
+    },
+    "day": {
+        "width": 32, "height": 28, "leftmargin": 34, "topmargin": 189,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontColor": "#ABB8C2"
+    },
+    "month": {
+        "width": 64, "height": 28, "leftmargin": 18, "topmargin": 217,
+        "visibility": "visible", "textsize": 18, "gravity": "center", "allCaps": true,
+        "font": "roboto_condensed_regular", "fontColor": "#ABB8C2"
+    },
+    "cob1": {
+        "width": 24, "height": 24, "leftmargin": 72, "topmargin": 293,
+        "visibility": "visible", "textsize": 14, "gravity": "center", "textvalue": "",
+        "font": "roboto_condensed_bold", "fontColor": "#FFAB5C", "dynPref": "cobIcon"
+    },
+    "cob2": {
+        "width": 120, "height": 44, "leftmargin": 100, "topmargin": 286,
+        "visibility": "visible", "textsize": 32, "gravity": "left",
+        "font": "roboto_condensed_bold", "fontColor": "#FFAB5C"
+    },
+    "freetext3": {
+        "width": 108, "height": 22, "leftmargin": 146, "topmargin": 323,
+        "visibility": "visible", "textsize": 12, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#65DEED", "dynPref": "reservoirLabel"
+    },
+    "reservoir": {
+        "width": 136, "height": 38, "leftmargin": 132, "topmargin": 342,
+        "visibility": "visible", "textsize": 20, "gravity": "center",
+        "font": "roboto_condensed_bold"
+    },
+    "loop": {
+        "width": 44, "height": 44, "leftmargin": 246, "topmargin": 104,
+        "visibility": "visible", "textsize": 20, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#F3F7FA"
+    },
+    "freetext4": {
+        "width": 24, "height": 24, "leftmargin": 224, "topmargin": 293,
+        "visibility": "visible", "textsize": 14, "gravity": "center", "textvalue": "",
+        "font": "roboto_condensed_bold", "fontColor": "#65DEED", "dynPref": "iobIcon"
+    },
+    "dynPref": {
+        "reservoirGauge": {
+            "prefKey": "key_show_reservoir_level",
+            "true": {
+                "valueKey": "reservoir", "minData": 0, "maxData": 204, "invalidImage": "Empty",
+                "image1": "Reservoir000", "image2": "Reservoir004", "image3": "Reservoir008",
+                "image4": "Reservoir012", "image5": "Reservoir016", "image6": "Reservoir020",
+                "image7": "Reservoir024", "image8": "Reservoir028", "image9": "Reservoir032",
+                "image10": "Reservoir036", "image11": "Reservoir040", "image12": "Reservoir044",
+                "image13": "Reservoir048", "image14": "Reservoir052", "image15": "Reservoir056",
+                "image16": "Reservoir060", "image17": "Reservoir064", "image18": "Reservoir068",
+                "image19": "Reservoir072", "image20": "Reservoir076", "image21": "Reservoir080",
+                "image22": "Reservoir084", "image23": "Reservoir088", "image24": "Reservoir092",
+                "image25": "Reservoir096", "image26": "Reservoir100", "image27": "Reservoir104",
+                "image28": "Reservoir108", "image29": "Reservoir112", "image30": "Reservoir116",
+                "image31": "Reservoir120", "image32": "Reservoir124", "image33": "Reservoir128",
+                "image34": "Reservoir132", "image35": "Reservoir136", "image36": "Reservoir140",
+                "image37": "Reservoir144", "image38": "Reservoir148", "image39": "Reservoir152",
+                "image40": "Reservoir156", "image41": "Reservoir160", "image42": "Reservoir164",
+                "image43": "Reservoir168", "image44": "Reservoir172", "image45": "Reservoir176",
+                "image46": "Reservoir180", "image47": "Reservoir184", "image48": "Reservoir188",
+                "image49": "Reservoir192", "image50": "Reservoir196", "image51": "Reservoir200"
+            },
+            "false": { "valueKey": "day", "image1": "Empty" }
+        },
+        "glucoseUnits": {
+            "prefKey": "key_show_bg",
+            "true": { "dynPref": "units" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "units": {
+            "prefKey": "key_units",
+            "true": { "valueKey": "day", "textvalue1": "mg/dL" },
+            "false": { "valueKey": "day", "textvalue1": "mmol/L" }
+        },
+        "basalLabel": {
+            "prefKey": "key_show_temp_basal",
+            "true": { "valueKey": "day", "textvalue1": "BASAL" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "iobTotal": {
+            "prefKey": "key_show_detailed_iob",
+            "true": { "valueKey": "day", "fontColor1": "#65DEED" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "iobValue": {
+            "prefKey": "key_show_detailed_iob",
+            "true": { "valueKey": "day", "topOffset1": 38, "leftOffset1": -16, "textsize1": 12, "fontColor1": "#ABB8C2" },
+            "false": { "valueKey": "day", "topOffset1": 0, "leftOffset1": 0, "textsize1": 32, "fontColor1": "#65DEED" }
+        },
+        "iobIcon": {
+            "prefKey": "key_show_iob",
+            "true": { "valueKey": "day", "image1": "IobIcon", "textvalue1": "" },
+            "false": { "valueKey": "day", "image1": "Empty", "textvalue1": "" }
+        },
+        "cobIcon": {
+            "prefKey": "key_show_cob",
+            "true": { "valueKey": "day", "image1": "CobIcon", "textvalue1": "" },
+            "false": { "valueKey": "day", "image1": "Empty", "textvalue1": "" }
+        },
+        "reservoirLabel": {
+            "prefKey": "key_show_reservoir_level",
+            "true": { "valueKey": "day", "textvalue1": "RES / U" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        }
+    }
+}
