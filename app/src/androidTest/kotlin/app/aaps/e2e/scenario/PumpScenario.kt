@@ -154,7 +154,11 @@ class PumpScenario(private val pump: PumpUnderTest) {
         awaitTrue("${pump.pluginName} is the active pump") { testGraphs.activePlugin.activePumpInternal.javaClass.simpleName == pump.pluginName }
         pump.control().speed = speed
         pump.awaitStarted(this)
+        appStarted = true
     }
+
+    /** A skipped test never started the app, so there is no driver to stop. */
+    private var appStarted = false
 
     fun tearDown() {
         if (killed) return
@@ -162,7 +166,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { testGraphs.activePlugin.activePump.disconnect("test end") }
-        stopDriver()
+        if (appStarted) stopDriver()
         EmulatedOptions.enabled = emptySet()
         clearAppSettings(instrumentation.targetContext)
     }
