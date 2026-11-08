@@ -3,6 +3,7 @@
     <!-- PumpDeviceState -->
     <string name="pump_status_never_contacted">Noch nie verbunden</string>
     <string name="pump_status_sleeping">Schlafend</string>
+    <string name="pump_status_waking_up">Aufwachen</string>
     <string name="pump_status_active">Aktiv</string>
     <string name="pump_status_error_comm">Kommunikationsfehler</string>
     <string name="pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
