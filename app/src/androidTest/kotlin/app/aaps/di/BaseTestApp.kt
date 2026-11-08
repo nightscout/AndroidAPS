@@ -9,6 +9,7 @@ import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.metro.MetroGraphs
@@ -16,6 +17,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
+import kotlinx.coroutines.cancel
 
 /**
  * Base application for instrumented tests. Mirrors [app.aaps.MainApp]: both build the one Metro root
@@ -36,11 +38,18 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
     private val metroGraphs: MetroGraphs
         get() = metroGraphsOrNull ?: newGraph().also { metroGraphsOrNull = it }
 
+    /** The emulated pumps. [resetGraph] starts with new ones, [restartApp] keeps them. */
+    @Volatile private var pumpEmulators = PumpEmulators()
+
+    /** In memory, unless the test restarts the app: see [useDatabaseFile]. */
+    @Volatile private var databaseConfig = DatabaseConfig.IN_MEMORY
+
     private fun newGraph() = MetroGraphs(
         context = this,
         memberInjector = this,
-        databaseConfig = DatabaseConfig.IN_MEMORY,
-        externalOptionsOverride = ExternalOptionsOverride { EmulatedOptions.enabled }
+        databaseConfig = databaseConfig,
+        externalOptionsOverride = ExternalOptionsOverride { EmulatedOptions.enabled },
+        pumpEmulators = pumpEmulators
     )
 
     /**
@@ -56,6 +65,29 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
      * application - the graph would otherwise live for every test in the run.
      */
     fun resetGraph() {
+        metroGraphsOrNull = null
+        pumpEmulators = PumpEmulators()
+        databaseConfig = DatabaseConfig.IN_MEMORY
+    }
+
+    /**
+     * For a test that restarts the app: an empty database file, which outlives the graph as the database of a real
+     * app does. Call it before the test first reads the graph.
+     */
+    fun useDatabaseFile() {
+        check(metroGraphsOrNull == null) { "The graph is already built on another database" }
+        deleteDatabase(RESTART_DATABASE)
+        databaseConfig = DatabaseConfig(inMemory = false, fileName = RESTART_DATABASE)
+    }
+
+    /**
+     * As when the app is killed and started again: a new graph on the same database file, with the same emulated
+     * pumps, which run on meanwhile as real pumps would. The coroutines of the old graph are cancelled, as a killed
+     * process stops them.
+     */
+    fun restartApp() {
+        check(!databaseConfig.inMemory) { "A restart needs useDatabaseFile(), or the new graph has an empty database" }
+        metroGraphsOrNull?.applicationScope?.cancel()
         metroGraphsOrNull = null
     }
 
@@ -118,5 +150,10 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
      * Keep in step with `MainApp.registerStringOwners`. Each of these modules generates its own name
      * to `R.string` id map, and the registry is what a `TextRef.Named` is resolved through.
      */
+
+    private companion object {
+
+        const val RESTART_DATABASE = "e2e-restart.db"
+    }
 }
 

@@ -74,6 +74,10 @@ class CarelevoPumpState {
     // ---- Temp basal / bolus -----------------------------------------------------------------
 
     var tempBasalRunning: Boolean = false
+
+    /** What the running temp basal was set to: a rate in U/h or a percent. The other one is null. */
+    var tempBasalAbsolute: Double? = null
+    var tempBasalPercent: Int? = null
     var extendedBolusRunning: Boolean = false
 
     /** actionId of the in-flight immediate bolus; echoed back on 0x84 for correlation. */
