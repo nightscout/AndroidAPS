@@ -2,6 +2,7 @@ package app.aaps.pump.equil.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
 import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
@@ -17,6 +18,8 @@ import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.security.MessageDigest
+import java.util.Calendar
+import kotlin.math.roundToInt
 
 /**
  * Emulates the Equil pump's command processing.
@@ -55,6 +58,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     /** The passwordKey sent to app during pairing, becomes runPwd for phase 2. */
     private var pairingRunPwd: ByteArray? = null
+
+    /** Called when a bolus starts, for the transport: the pump closes the link some time after it. */
+    @Volatile var onBolusStarted: (() -> Unit)? = null
 
     /** Test hooks: commands that never reach the pump, and commands whose answer is lost. */
     private val lostCommands = mutableListOf<EmulatedCommand>()
@@ -368,15 +374,14 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         // CmdHistoryGet.decodeConfirmData format (24 bytes total):
         // [4:index][5:padding][6:year][7:month][8:day][9:hour][10:min][11:sec]
         // [12:battery][13:insulin][14-15:rate][16-17:largeRate][18-19:histIndex]
-        // [20:padding][21:type][22:level][23:parm]
+        // [20:port][21:type][22:level][23:parm]
         val response = ByteArray(24)
         putIndex(response)
 
-        // TODO: use requestedIndex to return matching history event for proper navigation
-        val event = if (state.historyEvents.isNotEmpty()) {
-            state.historyEvents.lastOrNull() ?: HistoryEvent.now(state.historyIndex, 0)
-        } else {
-            HistoryEvent.now(state.historyIndex, 0)
+        // CmdHistoryGet asks for one entry by its index: [index(4)][0x02,0x01][history index(4)].
+        val requested = if (data.size >= 10) getInt(data, 6) else state.historyIndex
+        val event = synchronized(state) {
+            state.historyEvents.lastOrNull { it.index == requested } ?: state.historyEvents.lastOrNull() ?: HistoryEvent.now(state.historyIndex, 0)
         }
 
         response[6] = event.year.toByte()
@@ -396,7 +401,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         // index: 2 bytes big-endian
         response[18] = (event.index and 0xFF).toByte()
         response[19] = ((event.index shr 8) and 0xFF).toByte()
-        response[20] = 0x00 // port padding
+        // The driver reads the event from port, type and level. With port 0 no entry was an alarm.
+        response[20] = event.port.toByte()
         response[21] = event.type.toByte()
         response[22] = event.level.toByte()
         response[23] = event.parm.toByte()
@@ -406,11 +412,17 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     // --- SET handlers ---
 
     private fun processTempBasalSet(data: ByteArray): ByteArray {
-        if (data.size >= 14) {
+        if (data.size >= 14) synchronized(state) {
+            val step = getInt(data, 6)
+            if (step > 0 && refusesTempBasal(step)) return refusedResponse()
+            // UNVERIFIED: the entries for a temp basal set while one runs. The end of a temp basal is (4,11,0), as in
+            // the real records; a start is taken to be a status entry with the new rate.
+            if (state.isTempBasalRunning) log(TYPE_TEMP_BASAL_END)
             state.tempBasalStep = getInt(data, 6)
             state.tempBasalDuration = getInt(data, 10)
             state.isTempBasalRunning = state.tempBasalStep > 0
             state.tempBasalStartTime = System.currentTimeMillis()
+            if (state.isTempBasalRunning) log(TYPE_STATUS)
         }
         return indexedResponse()
     }
@@ -432,6 +444,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
             if (field1 != 0 || field2 != 0) {
                 // CmdLargeBasalSet (bolus)
+                if (synchronized(state) { refusesBolus(field1) }) return refusedResponse()
                 state.lastBolusStep = field1
                 state.lastBolusStepTime = field2
                 state.lastBolusTime = System.currentTimeMillis()
@@ -453,16 +466,28 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         return indexedResponse()
     }
 
-    /** UNVERIFIED: a bolus sent while one runs. The emulator ends the first one where it is. */
+    /**
+     * UNVERIFIED: a bolus sent while one runs. The emulator ends the first one where it is.
+     * UNVERIFIED: the log entry of a bolus start, a status entry with the bolus speed as largeRate. It is what the
+     * history screen of the driver reads a bolus from.
+     */
     private fun startBolus(steps: Int, seconds: Int) = synchronized(state) {
         stopBolus()
+        // #5142: 30 U/min ended at once in "abnormal infusion stopped" (real records 1741-1743), 12 U/min worked.
+        // UNVERIFIED: where between the two the limit is. The driver promises never to go faster than 12 U/min.
+        if (steps / BOLUS_STEPS_PER_UNIT / seconds.coerceAtLeast(1) * 60 > MAX_UNITS_PER_MINUTE + LIMIT_ROUNDING) {
+            stopDelivery { log(TYPE_POWER_EVENT, LEVEL_ALARM, port = HistoryEvent.PORT_POWER) }
+            return@synchronized
+        }
         state.runningBolus = RunningBolus(startedAt = System.currentTimeMillis(), steps = steps, durationMs = seconds * 1000L)
+        log(TYPE_STATUS, largeRate = bolusSpeed(steps, seconds))
+        onBolusStarted?.invoke()
     }
 
     /** The bolus ends with what it gave until now. */
     private fun stopBolus() = synchronized(state) {
         settle()
-        finishBolus()
+        finishBolus(System.currentTimeMillis())
     }
 
     private fun processBasalSet(data: ByteArray): ByteArray {
@@ -512,6 +537,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             val second = data[11].toInt() and 0xFF
             val ldt = LocalDateTime(year, month, day, hour, minute, second)
             state.pumpTimeMillis = ldt.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+            // From now on the pump logs its entries in the time it was given.
+            synchronized(state) { state.clockOffsetMs = state.pumpTimeMillis - System.currentTimeMillis() }
         }
     }
 
@@ -527,13 +554,34 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         //   [lowAlarm(2)][fastBolus(2)][occlusion(2)][insulinUnit(2)]
         //   [basalThreshold(2)][bolusThreshold(2)]
         if (data.size >= 26) {
+            val lowAlarmOffset = 14
             val basalOffset = 22
             val bolusOffset = 24
+            state.lowAlarmStep = (data[lowAlarmOffset].toInt() and 0xFF) or ((data[lowAlarmOffset + 1].toInt() and 0xFF) shl 8)
             state.basalThresholdStep = (data[basalOffset].toInt() and 0xFF) or ((data[basalOffset + 1].toInt() and 0xFF) shl 8)
             state.bolusThresholdStep = (data[bolusOffset].toInt() and 0xFF) or ((data[bolusOffset + 1].toInt() and 0xFF) shl 8)
         }
         return indexedResponse()
     }
+
+    /**
+     * A bolus the pump does not give: it is stopped, or the amount is above the max bolus of CmdSettingSet. The limits are
+     * real settings of the pump, so a real pump refuses here too. UNVERIFIED: how it says so, see [refusedResponse].
+     */
+    private fun refusesBolus(steps: Int): Boolean =
+        state.runningMode != RUNNING_MODE_RUNNING ||
+            state.bolusThresholdStep > 0 && steps / BOLUS_STEPS_PER_UNIT > state.bolusThresholdStep * SPEED_UNITS_PER_STEP + LIMIT_ROUNDING
+
+    /** A temp basal the pump does not run: it is stopped, or the rate is above the max basal of CmdSettingSet. */
+    private fun refusesTempBasal(step: Int): Boolean =
+        state.runningMode != RUNNING_MODE_RUNNING ||
+            state.basalThresholdStep > 0 && step / TEMP_BASAL_STEPS_PER_UNIT > state.basalThresholdStep * SPEED_UNITS_PER_STEP + LIMIT_ROUNDING
+
+    /**
+     * UNVERIFIED: the answer to a command the pump refuses. Commands answer with a status in byte 6 (CmdInsulinChange
+     * reads it); a value other than 0 is taken here for a refusal. The driver reads no status for a bolus or a temp basal.
+     */
+    private fun refusedResponse(): ByteArray = indexedResponse().also { it[6] = STATUS_REFUSED }
 
     // --- Helpers ---
 
@@ -594,13 +642,14 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     /** What the pump holds now. @param linkUp a phone is connected, which only the transport knows */
     fun snapshot(linkUp: Boolean): EmulatedPumpState = synchronized(state) {
+        // It also ends a temp basal whose time is over.
         settle()
-        val now = System.currentTimeMillis()
-        val tempBasalRuns = state.isTempBasalRunning && now < state.tempBasalStartTime + state.tempBasalDuration * 1000L
         EmulatedPumpState(
             boluses = state.deliveredBoluses.toList(),
             bolusRunning = state.runningBolus != null,
-            tempBasal = if (tempBasalRuns) EmulatedTempBasal(absolute = state.tempBasalStep / TEMP_BASAL_STEPS_PER_UNIT, percent = null) else null,
+            // A suspend keeps the temp basal, and a resume runs it again (#3830): only while the pump runs is it given.
+            tempBasal = if (state.isTempBasalRunning && state.runningMode == RUNNING_MODE_RUNNING)
+                EmulatedTempBasal(absolute = state.tempBasalStep / TEMP_BASAL_STEPS_PER_UNIT, percent = null) else null,
             suspended = state.runningMode != RUNNING_MODE_RUNNING,
             reservoir = state.reservoir,
             linkUp = linkUp,
@@ -614,31 +663,225 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         ByteArrayOutputStream().also { bytes -> ObjectOutputStream(bytes).use { it.writeObject(state) } }.toByteArray()
     }
 
+    /** The newest log entry, or null, and the basal speed now: what the pump advertises. */
+    fun advertised(): Pair<HistoryEvent?, Int> = synchronized(state) {
+        settle()
+        state.historyEvents.lastOrNull() to basalSpeed()
+    }
+
+    /** The next bolus stops after [units], as at an occlusion. */
+    fun stopNextBolusAt(units: Double): Boolean = synchronized(state) {
+        state.stopNextBolusAtSteps = (units * BOLUS_STEPS_PER_UNIT).roundToInt()
+        true
+    }
+
     /**
-     * Brings a bolus up to now: the steps due by now are given, and a bolus whose time is over is done. The pump
-     * clock is the phone clock, so this is all a bolus needs.
+     * The pump reports [alarm] now, with the log entries a real pump writes for it, as in the real records in
+     * `EquilManagerTest` of the driver. False for an alarm this pump has not.
+     */
+    fun raise(alarm: EmulatedAlarm): Boolean = synchronized(state) {
+        settle()
+        when (alarm) {
+            EmulatedAlarm.LOW_RESERVOIR    -> log(TYPE_RESERVOIR, LEVEL_WARNING)
+            // Real records 1711-1717: the temp basal ends, the reservoir is empty, the pump rewinds and stops.
+            EmulatedAlarm.EMPTY_RESERVOIR  -> {
+                state.reservoir = 0.0
+                stopDelivery { log(TYPE_RESERVOIR, LEVEL_ALARM) }
+            }
+
+            EmulatedAlarm.OCCLUSION        -> blockage(System.currentTimeMillis())
+            EmulatedAlarm.LOW_BATTERY      -> log(TYPE_BATTERY, LEVEL_WARNING, port = HistoryEvent.PORT_POWER)
+            EmulatedAlarm.STOPPED_TOO_LONG -> return@synchronized false
+        }
+        true
+    }
+
+    /**
+     * Brings the pump up to now: the bolus steps due by now are given, and a bolus or a temp basal whose time is over
+     * ends, with its log entry at that time. The pump clock is the phone clock, so this is all the pump needs.
      */
     private fun settle() = synchronized(state) {
-        val bolus = state.runningBolus ?: return@synchronized
-        val elapsed = (System.currentTimeMillis() - bolus.startedAt).coerceAtLeast(0)
-        val due = if (elapsed >= bolus.durationMs) bolus.steps else (bolus.steps.toLong() * elapsed / bolus.durationMs).toInt()
-        give(bolus, due)
-        if (elapsed >= bolus.durationMs) finishBolus()
+        val now = System.currentTimeMillis()
+        // The time since the last look: the basal used insulin, and the pump used battery.
+        val since = state.lastSettleAt
+        state.lastSettleAt = now
+        if (since in 1 until now) {
+            takeInsulin(basalSpeed(since) * SPEED_UNITS_PER_STEP * (now - since) / MS_PER_HOUR)
+            useBattery(now - since)
+        }
+        state.runningBolus?.let { bolus ->
+            val elapsed = (now - bolus.startedAt).coerceAtLeast(0)
+            val due = if (elapsed >= bolus.durationMs) bolus.steps else (bolus.steps.toLong() * elapsed / bolus.durationMs).toInt()
+            val stopAt = state.stopNextBolusAtSteps
+            if (stopAt != null && due >= stopAt) {
+                state.stopNextBolusAtSteps = null
+                give(bolus, stopAt)
+                blockage(at = bolus.startedAt + bolus.durationMs * stopAt / bolus.steps)
+            } else {
+                give(bolus, due)
+                if (elapsed >= bolus.durationMs) finishBolus(at = bolus.startedAt + bolus.durationMs)
+            }
+        }
+        if (state.isTempBasalRunning && now >= tempBasalEnd()) {
+            log(TYPE_TEMP_BASAL_END, at = tempBasalEnd())
+            clearTempBasal()
+        }
     }
 
+    /** Gives the bolus steps due up to [upTo], as far as the reservoir has insulin for them. */
     private fun give(bolus: RunningBolus, upTo: Int) {
-        val more = (upTo - bolus.givenSteps).coerceAtLeast(0)
+        val more = (upTo - bolus.givenSteps).coerceAtLeast(0).coerceAtMost((state.reservoir * BOLUS_STEPS_PER_UNIT).toInt())
         bolus.givenSteps += more
-        state.reservoir = (state.reservoir - more / BOLUS_STEPS_PER_UNIT).coerceAtLeast(0.0)
+        takeInsulin(more / BOLUS_STEPS_PER_UNIT)
     }
 
-    private fun finishBolus() {
+    /**
+     * Takes [units] from the reservoir. Going below the reservoir alarm of CmdSettingSet the pump logs (4,1,1); at 0 it
+     * stops all delivery, as in the real records 1711-1717.
+     */
+    private fun takeInsulin(units: Double) {
+        if (units <= 0) return
+        val before = state.reservoir
+        state.reservoir = (before - units).coerceAtLeast(0.0)
+        val low = state.lowAlarmStep * SPEED_UNITS_PER_STEP
+        if (before > low && state.reservoir <= low && state.reservoir > 0) log(TYPE_RESERVOIR, LEVEL_WARNING)
+        if (before > 0 && state.reservoir <= 0) stopDelivery { log(TYPE_RESERVOIR, LEVEL_ALARM) }
+    }
+
+    /** UNVERIFIED: how fast the battery goes down. One percent per hour the pump runs. */
+    private fun useBattery(ms: Long) {
+        state.batteryUseMs += ms
+        val percents = (state.batteryUseMs / BATTERY_MS_PER_PERCENT).toInt()
+        if (percents == 0) return
+        state.batteryUseMs -= percents * BATTERY_MS_PER_PERCENT
+        setBattery(state.battery - percents)
+    }
+
+    /**
+     * Sets the battery, with the entries a real pump writes. UNVERIFIED: the level of the low battery warning (5,0,1).
+     * At 0 the real records 1561-1564: battery empty, the temp basal ends, a status with rate 0, rewind; delivery stops.
+     */
+    fun setBattery(percent: Int) = synchronized(state) {
+        val before = state.battery
+        state.battery = percent.coerceIn(0, 100)
+        if (before > BATTERY_LOW_PERCENT && state.battery <= BATTERY_LOW_PERCENT && state.battery > 0) log(TYPE_BATTERY, LEVEL_WARNING, port = HistoryEvent.PORT_POWER)
+        if (before > 0 && state.battery == 0) {
+            finishBolus(System.currentTimeMillis(), logEnd = false)
+            log(TYPE_BATTERY, LEVEL_ALARM, port = HistoryEvent.PORT_POWER)
+            if (state.isTempBasalRunning) {
+                log(TYPE_TEMP_BASAL_END)
+                clearTempBasal()
+            }
+            state.runningMode = RUNNING_MODE_STOP
+            log(TYPE_STATUS)
+            log(TYPE_REWIND)
+        }
+    }
+
+    /** The pump clock goes [offsetMs] further off the phone clock, as a clock that drifted or was not set. */
+    fun shiftClock(offsetMs: Long): Boolean = synchronized(state) {
+        state.clockOffsetMs += offsetMs
+        true
+    }
+
+    /**
+     * @param logEnd UNVERIFIED: the entry at the end of a bolus, a status entry with largeRate 0. An entry that stops
+     * delivery ends a bolus by itself, so it needs none.
+     */
+    private fun finishBolus(at: Long, logEnd: Boolean = true) {
         val bolus = state.runningBolus ?: return
         state.deliveredBoluses.add(bolus.givenSteps / BOLUS_STEPS_PER_UNIT)
         state.runningBolus = null
+        if (logEnd) log(TYPE_STATUS, at = at)
     }
 
+    /** UNVERIFIED: a blockage ends the bolus, and the pump logs (4,2,2). Whether it stops the basal too is not known. */
+    private fun blockage(at: Long) {
+        finishBolus(at, logEnd = false)
+        log(TYPE_BLOCKAGE, LEVEL_ALARM, at = at)
+    }
+
+    /** All delivery stops now: the bolus and the temp basal end, the pump logs [event], rewinds and stops. */
+    private fun stopDelivery(event: () -> Unit) {
+        finishBolus(System.currentTimeMillis(), logEnd = false)
+        if (state.isTempBasalRunning) {
+            log(TYPE_TEMP_BASAL_END)
+            clearTempBasal()
+        }
+        event()
+        log(TYPE_REWIND)
+        state.runningMode = RUNNING_MODE_STOP
+    }
+
+    private fun tempBasalEnd(): Long = state.tempBasalStartTime + state.tempBasalDuration * 1000L
+
+    private fun clearTempBasal() {
+        state.isTempBasalRunning = false
+        state.tempBasalStep = 0
+        state.tempBasalDuration = 0
+    }
+
+    /** Adds an entry to the pump log as the pump writes one: the next index, the time, the battery, the reservoir and the rate. */
+    private fun log(type: Int, level: Int = 0, port: Int = HistoryEvent.PORT_STATUS, largeRate: Int = 0, at: Long = System.currentTimeMillis()) {
+        state.historyIndex++
+        state.historyEvents.add(
+            // In the pump's own time.
+            HistoryEvent.at(
+                at + state.clockOffsetMs, index = state.historyIndex, type = type, level = level, port = port, rate = basalSpeed(at), largeRate = largeRate,
+                battery = state.battery, insulin = state.currentInsulin
+            )
+        )
+    }
+
+    /** The basal the pump gives at [at], in steps of 0.00625 U/h, as the log and the advertisement show it. */
+    private fun basalSpeed(at: Long = System.currentTimeMillis()): Int = when {
+        state.runningMode != RUNNING_MODE_RUNNING           -> 0
+        state.isTempBasalRunning && at < tempBasalEnd()     -> (state.tempBasalStep / TEMP_BASAL_STEPS_PER_UNIT / SPEED_UNITS_PER_STEP).roundToInt()
+        else                                                -> state.basalRates[Calendar.getInstance().apply { timeInMillis = at }.get(Calendar.HOUR_OF_DAY)]
+    }
+
+    /**
+     * The bolus speed in steps of 0.00625 U/h, as the log shows it. UNVERIFIED: the log has two bytes for it, and 12 U/min
+     * does not fit in them; the emulator writes the largest value then.
+     */
+    private fun bolusSpeed(steps: Int, seconds: Int): Int =
+        (steps / BOLUS_STEPS_PER_UNIT / seconds.coerceAtLeast(1) * 3600 / SPEED_UNITS_PER_STEP).roundToInt().coerceIn(1, 0xFFFF)
+
     companion object {
+
+        /** Log entries on port 4, from the real records in `EquilManagerTest` and from `PumpEvent` of the driver. */
+        private const val TYPE_STATUS = 0
+        private const val TYPE_RESERVOIR = 1
+        private const val TYPE_BLOCKAGE = 2
+        private const val TYPE_REWIND = 8
+        private const val TYPE_TEMP_BASAL_END = 11
+
+        /** On port 5. TYPE_POWER_EVENT with level 0 is a power-on reset, with level 2 "abnormal infusion stopped". */
+        private const val TYPE_BATTERY = 0
+        private const val TYPE_POWER_EVENT = 1
+        private const val LEVEL_WARNING = 1
+        private const val LEVEL_ALARM = 2
+
+        /** The fastest bolus that worked on a real pump (#5142). */
+        private const val MAX_UNITS_PER_MINUTE = 12.0
+
+        /** A limit holds, also for a value that is on it but off by floating point. */
+        private const val LIMIT_ROUNDING = 1e-9
+
+        /** UNVERIFIED, see refusedResponse. */
+        private const val STATUS_REFUSED: Byte = 1
+
+        /** UNVERIFIED, see setBattery and useBattery. */
+        private const val BATTERY_LOW_PERCENT = 20
+        private const val BATTERY_MS_PER_PERCENT = 3_600_000L
+
+        private const val MS_PER_HOUR = 3_600_000.0
+
+        /** The rates in the log and the advertisement count in these. */
+        private const val SPEED_UNITS_PER_STEP = 0.00625
+
+        /** The run mode after an empty reservoir, as the driver reads it: STOP. */
+        private const val RUNNING_MODE_STOP = 2
 
         /** The port CmdResistanceGet sends on. */
         private const val RESISTANCE_PORT = "1515"

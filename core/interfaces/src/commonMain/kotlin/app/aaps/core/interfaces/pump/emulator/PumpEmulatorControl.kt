@@ -36,6 +36,12 @@ interface PumpEmulatorControl {
     /** The next bolus stops after [units], as at an occlusion. */
     fun stopNextBolusAt(units: Double): Boolean
 
+    /**
+     * The pump clock goes [offsetMs] further off the phone clock, as a clock that drifted or was not set. A pump that logs
+     * its own time then logs it off by that much. False for an emulator that cannot.
+     */
+    fun shiftPumpClock(offsetMs: Long): Boolean = false
+
     /** What the emulated pump holds now. */
     fun state(): EmulatedPumpState
 

@@ -80,14 +80,34 @@ class EquilEmulatorBleTransport(
     override fun loseCommand(command: EmulatedCommand): Boolean = emulator.loseCommand(command)
     override fun loseAnswer(command: EmulatedCommand): Boolean = emulator.loseAnswer(command)
 
-    /** Not built yet: the alarms of a real pump come through its history, which the emulator does not page through. */
-    override fun raise(alarm: EmulatedAlarm): Boolean = false
+    /** The pump logs the alarm: the driver reads it from the pump log at its next connection. */
+    override fun raise(alarm: EmulatedAlarm): Boolean = emulator.raise(alarm)
 
-    /** Not built yet: the driver learns of a stop from the pump history, which the emulator does not page through. */
-    override fun stopNextBolusAt(units: Double): Boolean = false
+    /** The pump logs a blockage when the bolus stops. */
+    override fun stopNextBolusAt(units: Double): Boolean = emulator.stopNextBolusAt(units)
 
     override fun state(): EmulatedPumpState = emulator.snapshot(linkUp = connected)
     override fun saveState(): ByteArray = emulator.saveState()
+    override fun shiftPumpClock(offsetMs: Long): Boolean = emulator.shiftClock(offsetMs)
+
+    init {
+        emulator.onBolusStarted = { closeLinkAfterBolus() }
+    }
+
+    /**
+     * #3467, seen on a real pump: it closes the link about 10 s after a bolus command, so after a longer bolus the driver
+     * has no link left. A time of the pump, not an action, so the same at both speeds.
+     */
+    private fun closeLinkAfterBolus() {
+        val generation = connectionGeneration
+        launchAsync {
+            Thread.sleep(LINK_CLOSE_AFTER_BOLUS_MS)
+            if (generation == connectionGeneration && connected) {
+                aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: the pump closes the link after the bolus command")
+                breakLink()
+            }
+        }
+    }
 
     // Packet reassembly buffer
     private var receiveBuffer = EquilResponse(System.currentTimeMillis())
@@ -373,7 +393,9 @@ class EquilEmulatorBleTransport(
     @Suppress("SleepInsteadOfDelay")
     private fun deliverResponse(gen: Int, responsePackets: EquilResponse) {
         launchAsync {
-            Thread.sleep(5) // Simulate BLE response latency
+            // UNVERIFIED: how long a real pump takes to answer. The real-speed run uses a slower answer, to find races
+            // that only show when an answer does not come at once.
+            Thread.sleep(if (speed == EmulatorSpeed.REAL) REAL_ANSWER_MS else FAST_ANSWER_MS)
             if (gen == connectionGeneration) {
                 for (buf in responsePackets.send) {
                     listener?.onCharacteristicChanged(buf.array())
@@ -416,16 +438,36 @@ class EquilEmulatorBleTransport(
     }
 
     /**
-     * Build fake advertisement data.
-     * The scan record format is pump-specific — for now return minimal valid data
-     * that won't crash EquilManager.decodeData().
+     * The advertisement, as EquilManager.decodeData() reads it. The newest log index is how the driver learns that there
+     * is something to read: with 0 here it never read the pump log of the emulator.
      */
     private fun buildAdvertisementData(): ByteArray {
-        // Scan record layout read by EquilManager.decodeData():
-        // [17] = battery, [18] = insulin
+        // [17] battery, [18] insulin, [19-20] basal rate, [23-24] newest log index (low byte first),
+        // [25-27] port, type and level of the newest log entry.
+        val (newest, basalSpeed) = emulator.advertised()
         val data = ByteArray(62)
         data[17] = pumpState.battery.toByte()
         data[18] = pumpState.currentInsulin.toByte()
+        data[19] = (basalSpeed and 0xFF).toByte()
+        data[20] = ((basalSpeed shr 8) and 0xFF).toByte()
+        val index = newest?.index ?: 0
+        data[23] = (index and 0xFF).toByte()
+        data[24] = ((index shr 8) and 0xFF).toByte()
+        if (newest != null) {
+            data[25] = newest.port.toByte()
+            data[26] = newest.type.toByte()
+            data[27] = newest.level.toByte()
+        }
         return data
+    }
+
+    private companion object {
+
+        /** #3467: "about 10 s" after a bolus command. */
+        const val LINK_CLOSE_AFTER_BOLUS_MS = 10_000L
+
+        /** UNVERIFIED: the time a real pump takes to answer one message. */
+        const val REAL_ANSWER_MS = 100L
+        const val FAST_ANSWER_MS = 5L
     }
 }

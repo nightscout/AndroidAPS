@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.Utils
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.security.MessageDigest
+import java.util.Calendar
 
 class EquilPumpEmulatorTest {
 
@@ -220,6 +222,161 @@ class EquilPumpEmulatorTest {
         // CmdTempBasalSet: 0.6 U/h for 30 minutes
         sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(48), Utils.intToBytes(1800)))
         assertEquals(0.6, emulator.snapshot(linkUp = true).tempBasal!!.absolute!!, 0.0001)
+    }
+
+    // --- The pump log ---
+
+    private fun lastEvent() = state.historyEvents.last()
+    private fun code(event: HistoryEvent) = listOf(event.port, event.type, event.level)
+
+    @Test
+    fun `an alarm is in the pump log and is read back by its index`() {
+        emulator.raise(EmulatedAlarm.LOW_RESERVOIR)
+        emulator.raise(EmulatedAlarm.LOW_BATTERY)
+        val first = state.historyEvents.first().index
+        sendInitial()
+        val answer = decryptResponse(sendCommand(byteArrayOf(0x02, 0x01), Utils.intToBytes(first))!!, state.sessionPassword)
+        assertEquals(first, (answer[18].toInt() and 0xFF) or ((answer[19].toInt() and 0xFF) shl 8))
+        // CmdHistoryGet reads port, type and level from bytes 20 to 22: (4,1,1) is "reservoir low".
+        assertEquals(listOf(4, 1, 1), listOf(answer[20].toInt(), answer[21].toInt(), answer[22].toInt()))
+    }
+
+    @Test
+    fun `a bolus is logged with its speed at the start and ends at its time`() {
+        bolus(steps = 80, seconds = 1)
+        val start = lastEvent()
+        assertTrue(start.largeRate > 0)
+        Thread.sleep(1100)
+        emulator.snapshot(linkUp = true)
+        val end = lastEvent()
+        assertEquals(start.index + 1, end.index)
+        assertEquals(0, end.largeRate)
+    }
+
+    @Test
+    fun `a temp basal ends at its time and the pump logs the end`() {
+        sendInitial()
+        sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(48), Utils.intToBytes(1)))
+        Thread.sleep(1100)
+        assertEquals(null, emulator.snapshot(linkUp = true).tempBasal)
+        assertEquals(listOf(4, 11, 0), code(lastEvent()))
+        assertEquals(0, state.tempBasalStep)
+    }
+
+    @Test
+    fun `an occlusion stops the bolus where it was set and the pump logs a blockage`() {
+        emulator.stopNextBolusAt(0.2)
+        bolus(steps = 160, seconds = 2)
+        Thread.sleep(700)
+        val snapshot = emulator.snapshot(linkUp = true)
+        assertFalse(snapshot.bolusRunning)
+        assertEquals(listOf(0.2), snapshot.boluses)
+        assertEquals(listOf(4, 2, 2), code(lastEvent()))
+    }
+
+    // --- What a real pump does, beyond the commands ---
+
+    private fun setMode(mode: Int) {
+        emulator.resetToInitial()
+        sendInitial()
+        sendCommand(byteArrayOf(0x01, 0x00), Utils.intToBytes(mode))
+    }
+
+    private fun tempBasal(step: Int, seconds: Int) {
+        emulator.resetToInitial()
+        sendInitial()
+        sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(step), Utils.intToBytes(seconds)))
+    }
+
+    @Test
+    fun `a bolus above the max bolus of the pump is refused`() {
+        state.bolusThresholdStep = 160 // 1 U in steps of 0.00625 U
+        sendInitial()
+        val answer = decryptResponse(
+            sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(320), Utils.intToBytes(10), Utils.intToBytes(0), Utils.intToBytes(0)))!!,
+            state.sessionPassword
+        )
+        assertTrue(answer[6].toInt() != 0)
+        assertFalse(emulator.snapshot(linkUp = true).bolusRunning)
+    }
+
+    @Test
+    fun `a stopped pump refuses a bolus and a temp basal`() {
+        setMode(0)
+        bolus(steps = 80, seconds = 5)
+        tempBasal(step = 48, seconds = 1800)
+        setMode(1)
+        val snapshot = emulator.snapshot(linkUp = true)
+        assertFalse(snapshot.bolusRunning)
+        assertEquals(null, snapshot.tempBasal)
+    }
+
+    /** #5142: 30 U/min ended at once in "abnormal infusion stopped", as in the real records 1741-1743. */
+    @Test
+    fun `a bolus faster than 12 U per minute stops at once as abnormal`() {
+        tempBasal(step = 48, seconds = 1800)
+        val before = state.historyEvents.size
+        bolus(steps = 80, seconds = 1) // 0.5 U in 1 s is 30 U/min
+        val snapshot = emulator.snapshot(linkUp = true)
+        assertFalse(snapshot.bolusRunning)
+        assertEquals(emptyList<Double>(), snapshot.boluses)
+        assertEquals(listOf(listOf(4, 11, 0), listOf(5, 1, 2), listOf(4, 8, 0)), state.historyEvents.drop(before).map { code(it) })
+        assertTrue(snapshot.suspended)
+    }
+
+    @Test
+    fun `the basal uses insulin from the reservoir`() {
+        emulator.snapshot(linkUp = true)
+        state.lastSettleAt -= 3_600_000 // an hour ago, at 1 U/h
+        assertEquals(149.0, emulator.snapshot(linkUp = true).reservoir!!, 0.01)
+    }
+
+    @Test
+    fun `going below the reservoir alarm is logged once`() {
+        state.reservoir = 10.05
+        bolus(steps = 32, seconds = 4) // 0.2 U
+        Thread.sleep(4100)
+        emulator.snapshot(linkUp = true)
+        assertEquals(1, state.historyEvents.count { code(it) == listOf(4, 1, 1) })
+    }
+
+    /** As the real records 1561-1564: battery empty, the temp basal ends, a status with rate 0, rewind. */
+    @Test
+    fun `an empty battery stops the pump with the entries of a real one`() {
+        tempBasal(step = 48, seconds = 1800)
+        val before = state.historyEvents.size
+        emulator.setBattery(0)
+        assertEquals(listOf(listOf(5, 0, 2), listOf(4, 11, 0), listOf(4, 0, 0), listOf(4, 8, 0)), state.historyEvents.drop(before).map { code(it) })
+        assertTrue(emulator.snapshot(linkUp = true).suspended)
+    }
+
+    @Test
+    fun `the pump logs in its own clock`() {
+        emulator.shiftClock(2 * 3_600_000L)
+        emulator.raise(EmulatedAlarm.LOW_RESERVOIR)
+        val hour = Calendar.getInstance().apply { timeInMillis = System.currentTimeMillis() + 2 * 3_600_000L }.get(Calendar.HOUR_OF_DAY)
+        assertEquals(hour, lastEvent().hour)
+    }
+
+    /** #3830, seen on a real pump: after a resume the pump runs again the temp basal it had before the suspend. */
+    @Test
+    fun `a resume runs the temp basal of before the suspend again`() {
+        tempBasal(step = 48, seconds = 1800)
+        setMode(0)
+        assertEquals(null, emulator.snapshot(linkUp = true).tempBasal)
+        setMode(1)
+        assertEquals(0.6, emulator.snapshot(linkUp = true).tempBasal!!.absolute!!, 0.0001)
+    }
+
+    /** As the real records 1711-1717: the temp basal ends, the reservoir is empty, the pump rewinds and stops. */
+    @Test
+    fun `an empty reservoir ends the temp basal, is logged and stops the pump`() {
+        sendInitial()
+        sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(48), Utils.intToBytes(1800)))
+        val before = state.historyEvents.size
+        emulator.raise(EmulatedAlarm.EMPTY_RESERVOIR)
+        assertEquals(listOf(listOf(4, 11, 0), listOf(4, 1, 2), listOf(4, 8, 0)), state.historyEvents.drop(before).map { code(it) })
+        assertTrue(emulator.snapshot(linkUp = true).suspended)
     }
 
     // --- Basal profile set (0x01, 0x02) ---
