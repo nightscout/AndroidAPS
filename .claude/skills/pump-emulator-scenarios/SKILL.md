@@ -74,9 +74,24 @@ CircleCI shard D (fourth emulator, `.circleci/config.yml`) runs `-e annotation a
 the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@Inherited` and set on
 `AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
 
+The pump UI tests (`AbstractPumpUiTest`, one `PumpScreens` per pump) have no shard annotation, so they run in shard C.
+CI makes its AVDs without a device, which gives the emulator default screen: **320 x 640 at 160 dpi**, on API 31. A
+test that passes on a phone-sized emulator can fail there: Compose does not lay out what is below the screen, so
+uiautomator cannot find it. `ScreenDriver` scrolls for a text to tap. To run a test on the same screen, make the AVD as
+CI does (on Windows through `cmd`: PowerShell puts a byte-order mark before the answer, which avdmanager refuses):
+
+```
+cmd /c "echo no| <sdk>\cmdline-tools\latest\bin\avdmanager.bat create avd -n citest_local -k system-images;android-31;google_apis_playstore;x86_64"
+```
+
+Shard C's logcat can rotate before CI reads it, so the UI base adds the screen to the error, which the test output keeps.
+
 ## Traps
 
 - `activePlugin.activePump` is the concentration wrapper. Compare the driver with `activePumpInternal`.
+- Only `MasterActionExecutor` raises the BOLUS_DELIVERY_FAILED alarm, when the queue reports a bolus as not given. A
+  bolus straight through the queue (`bolus`, `startBolus`) never alarms, so a check of that alarm needs `userBolus`,
+  the insulin dialog's path. A bolus the pump cut short must come back as not given, or the user hears nothing.
 - The queue drops every command while `isConfigured()` is false, also a profile switch. A wizard that needs the
   profile before pairing takes the requested one, `PumpSync.expectedPumpState().profile`, as Equil does.
 - `getBolusesFromTime(..., ascending = true)` returns the newest first. Sort by timestamp.
