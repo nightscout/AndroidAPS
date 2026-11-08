@@ -114,6 +114,10 @@ abstract class BaseSetting(
         try {
             aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse=== start ")
             var equilCmdModel: EquilCmdModel = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd!!), data)
+            // On a link that is still open the command goes out at once, with the session of the command before: no
+            // decode() runs for it. Found by the pump scenario tests, where the flag was never set.
+            commandSentAt = System.currentTimeMillis()
+            commandSent = true
             return responseCmd(equilCmdModel, port + runCode)
         } catch (e: Exception) {
             aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse===" + e.message)

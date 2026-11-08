@@ -55,6 +55,20 @@ class CmdLargeBasalSetTest : TestBaseWithProfile() {
         assertEquals(2, CmdLargeBasalSet(0.05, aapsLogger, preferences, equilManager, 40).stepTime)
     }
 
+    /** Found by the pump scenario tests: rounded to the nearest second, a bolus went faster than the speed setting. */
+    @Test
+    fun `a bolus is never faster than the speed setting`() {
+        // 0.25 U at 12 U/min is 1.25 s: 1 s would be 15 U/min.
+        assertEquals(2, CmdLargeBasalSet(0.25, aapsLogger, preferences, equilManager, 5).stepTime)
+        assertEquals(2, CmdLargeBasalSet(0.3, aapsLogger, preferences, equilManager, 5).stepTime)
+        assertEquals(3, CmdLargeBasalSet(0.45, aapsLogger, preferences, equilManager, 5).stepTime)
+        for (tenths in 1..200) {
+            val insulin = tenths / 20.0
+            val stepTime = CmdLargeBasalSet(insulin, aapsLogger, preferences, equilManager, 5).stepTime
+            assertTrue(insulin / stepTime * 60 <= 12.0 + 1e-9, "$insulin U in $stepTime s")
+        }
+    }
+
     @Test
     fun `constructor should handle zero insulin`() {
         val cmd = CmdLargeBasalSet(0.0, aapsLogger, preferences, equilManager)
