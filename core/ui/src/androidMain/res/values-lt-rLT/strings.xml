@@ -97,7 +97,7 @@
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="mute5min">Nutildyti 5 min</string>
     <string name="mute">Nutildyti</string>
-    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Nutildyti</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Nutildyti signalą</string>
     <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Nutildyti ir uždaryti</string>
     <string name="success">Atlikta</string>
     <string name="advanced_settings_title">Papildomi nustatymai</string>
