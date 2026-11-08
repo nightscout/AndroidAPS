@@ -294,7 +294,7 @@
     <string name="smscommunicator_unknown_command">Onbekende opdracht of verkeerd antwoord</string>
     <string name="smscommunicator_another_bolus_in_queue">Er staat een andere bolus in de wachtrij. Probeer het later opnieuw.</string>
     <string name="smscommunicator_wrong_duration">Verkeerde tijdsduur</string>
-    <string name="smscommunicator_loop_suspended">Loop pauzeren</string>
+    <string name="smscommunicator_loop_suspended">Loop onderbroken</string>
     <string name="smscommunicator_loop_resumed">Loop hervat</string>
     <string name="smscommunicator_invalid_phone_number">Foutief SMS telefoon nummer</string>
     <string name="smscommunicator_calibration_sent">Kalibratie verzonden. xDrip+ moet zo zijn ingesteld dat hij het ontvangen van kalibraties toestaat.</string>
