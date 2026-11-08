@@ -17,8 +17,10 @@ import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
@@ -401,6 +403,75 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
         verifyBlocking(pumpSync) { syncBolusWithPumpId(eq(START_PUMP_ID), any(), eq(BS.Type.PRIMING), eq(START_PUMP_ID), any(), any()) }
     }
+
+    /**
+     * Found by the emulator scenario test: the patch gave the bolus, its answer was lost, and nothing was recorded. The
+     * patch shows the bolus running, so it is recorded in full and saved for the correction at the next status read.
+     */
+    @Test
+    fun `a start whose answer is lost is recorded when the patch shows the bolus running`() {
+        whenever(dateUtil.now()).thenReturn(START_PUMP_ID)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.1, modeRaw = IMME_BOLUS_MODE))
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }.thenAnswer { answerTimeout() }
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(1.0)
+        verify(startImmeBolusInfusionUseCase).persistImmeBolusStarted(any(), eq(1.0), eq(0), eq(START_PUMP_ID), eq(BS.Type.NORMAL), eq(2.0))
+        verifyBolusRecorded(pumpId = START_PUMP_ID, amount = 1.0)
+    }
+
+    @Test
+    fun `a start that got no answer and that the patch did not start is not recorded`() {
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.0))
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }.thenAnswer { answerTimeout() }
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.0)
+        verify(startImmeBolusInfusionUseCase, never()).persistImmeBolusStarted(any(), any(), any(), any(), any(), anyOrNull())
+        verifyBlocking(pumpSync, never()) { syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }
+    }
+
+    /** The whole dose counts: too much is the safer error, the loop then gives less. The alarm tells the user. */
+    @Test
+    fun `a start that got no answer is counted in full when the patch cannot be asked`() {
+        whenever(dateUtil.now()).thenReturn(START_PUMP_ID)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0)).thenAnswer { throw RuntimeException("link down") }
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }.thenAnswer { answerTimeout() }
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(1.0)
+        verifyBolusRecorded(pumpId = START_PUMP_ID, amount = 1.0)
+    }
+
+    /** A start counted in full that the patch never gave: its totals show it, and the record is set to 0 U. */
+    @Test
+    fun `the status read sets a left bolus to 0 U when the patch total shows nothing was given`() {
+        leftover(volume = 0.6, bolusTotalBefore = 12.5)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 12.5))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyLeftoverRecorded(amount = 0.0, type = BS.Type.NORMAL)
+        verify(cancelImmeBolusInfusionUseCase).persistImmeBolusCancelled()
+    }
+
+    private fun verifyBolusRecorded(pumpId: Long, amount: Double) {
+        val recorded = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(eq(pumpId), recorded.capture(), any(), eq(pumpId), any(), any()) }
+        assertThat(recorded.firstValue.cU).isWithin(0.001).of(amount)
+    }
+
+    /** Throws a real `TimeoutCancellationException`, as the session does when the patch does not answer. */
+    private fun answerTimeout(): Any = runBlocking { withTimeout(1) { delay(10_000) } }
 
     /** A record of an earlier bolus is left, as after the app stopped during that bolus. */
     private fun leftover(
