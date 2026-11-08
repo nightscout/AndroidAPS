@@ -219,10 +219,26 @@ class PumpScenario(private val pump: PumpUnderTest) {
     fun stoppedBolus(units: Double, stopAfter: Double): PumpEnactResult {
         val answer = startBolus(units)
         awaitGiven(stopAfter)
-        commandQueue.cancelAllBoluses(null)
-        val result = runBlocking { withTimeout(BOLUS_TIMEOUT) { answer.await() } }
-        awaitQueueIdle()
-        return result
+        stopBolus()
+        return await(answer)
+    }
+
+    /** The user stops the running bolus. */
+    fun stopBolus() = commandQueue.cancelAllBoluses(null)
+
+    /**
+     * The answer of a command that runs while the test goes on, as from [startBolus]. Then the queue is idle: a status
+     * read the driver asked for can wait for the end of a bolus, so the same limit holds for it.
+     */
+    fun await(answer: Deferred<PumpEnactResult>, timeoutMs: Long = BOLUS_TIMEOUT): PumpEnactResult =
+        runBlocking { withTimeout(timeoutMs) { answer.await() } }.also { awaitQueueIdle(timeoutMs) }
+
+    /** A temp basal that runs while the test goes on. */
+    fun startTempBasal(rate: Double, minutes: Int): Deferred<PumpEnactResult> {
+        val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+        val answer = CompletableDeferred<PumpEnactResult>()
+        scope.launch { answer.complete(commandQueue.tempBasalAbsolute(rate, minutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)) }
+        return answer
     }
 
     /** A bolus that runs while the test goes on. The answer of the queue comes at its end. */
