@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
@@ -362,6 +363,73 @@ internal class CarelevoTempBasalCoordinatorTest {
     }
 
     // endregion
+
+    // region An answer that does not come. Found by the pump scenario tests.
+
+    private fun infusionInfo(modeRaw: Int) = InfusionInfoResponse(
+        subId = 0,
+        runningMinutes = 100,
+        insulinRemaining = 60.0,
+        infusedTotalBasalAmount = 1.0,
+        infusedTotalBolusAmount = 0.0,
+        pumpStateRaw = 0,
+        modeRaw = modeRaw,
+        currentInfusedProgramVolume = 0.0,
+        realInfusedTime = 0
+    )
+
+    @Test
+    fun `a temp basal whose answer is lost is recorded when the patch runs it`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = TEMP_BASAL_MODE))
+
+        val result = sut.setTempBasalAbsolute(1.2, 30, PumpSync.TemporaryBasalType.NORMAL, serial) {}
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(pumpSync) { syncTemporaryBasalWithPumpId(any(), any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `a temp basal whose answer is lost is not recorded when the patch runs none`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = BASAL_MODE))
+
+        val result = sut.setTempBasalAbsolute(1.2, 30, PumpSync.TemporaryBasalType.NORMAL, serial) {}
+
+        assertThat(result.success).isFalse()
+        verifyBlocking(pumpSync, never()) { syncTemporaryBasalWithPumpId(any(), any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `a cancel whose answer is lost is recorded when the patch runs no temp basal`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCancelCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = BASAL_MODE))
+
+        val result = sut.cancelTempBasal(serial) {}
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `a cancel whose answer is lost is not recorded when the temp basal still runs`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCancelCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = TEMP_BASAL_MODE))
+
+        val result = sut.cancelTempBasal(serial) {}
+
+        assertThat(result.success).isFalse()
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
+    }
+
+    // endregion
+
+    private companion object {
+
+        /** `InfusionModeResult`: 1 basal, 2 temp basal. */
+        const val BASAL_MODE = 1
+        const val TEMP_BASAL_MODE = 2
+    }
 
     /** Concrete [PumpEnactResult] so the builder chain and field mutations are observable in assertions. */
     private class FakePumpEnactResult : PumpEnactResult {

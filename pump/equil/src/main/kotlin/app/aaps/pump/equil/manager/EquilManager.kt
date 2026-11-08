@@ -165,6 +165,9 @@ class EquilManager(
         return result
     }
 
+    /** Whether the pump runs a temp basal now, or null when it does not answer. */
+    private fun tempBasalRunsOnPump(): Boolean? = getTempBasalPump().takeIf { it.success }?.enacted
+
     suspend fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider()
         try {
@@ -175,8 +178,20 @@ class EquilManager(
             synchronized(command) {
                 command.waitMillis(command.timeOut.toLong())
             }
-            if (command.cmdSuccess) {
-                val currentTime = System.currentTimeMillis()
+            var applied = command.cmdSuccess
+            // Without its answer AAPS knew nothing, while the pump may have done it: what the pump runs now decides.
+            var currentTime = System.currentTimeMillis()
+            if (!applied && command.commandSent) {
+                SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                val runs = tempBasalRunsOnPump()
+                aapsLogger.warn(LTag.PUMPCOMM, "Temp basal ${if (cancel) "cancel" else "start"} got no answer. The pump runs a temp basal: $runs")
+                if (runs != null && runs != cancel) {
+                    applied = true
+                    // It took effect when it reached the pump, not now.
+                    currentTime = command.createTime
+                }
+            }
+            if (applied) {
                 if (cancel) {
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         currentTime,
@@ -207,8 +222,8 @@ class EquilManager(
             }
             updateHistory(equilHistoryRecord, command.resolvedResult)
             loadEquilHistory()
-            result.success = command.cmdSuccess
-            result.enacted(command.cmdSuccess)
+            result.success = applied
+            result.enacted(applied)
         } catch (ex: Exception) {
             ex.printStackTrace()
             result.success(false).enacted(false).comment(ex.message ?: "Exception")
