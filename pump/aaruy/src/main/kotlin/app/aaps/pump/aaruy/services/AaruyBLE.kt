@@ -1000,7 +1000,9 @@ class AaruyBLE(
         readDailyData(aaruyPump.lastHistoryDailyTime)
         historyRead(complete = true)
         aaruyPump.unconfirmedBolus?.let { unconfirmed ->
-            if (readFrom <= unconfirmed.start - BOLUS_LOG_WINDOW_MS && readAskedAt >= unconfirmed.decideAfter) unconfirmedBolusLogRead = unconfirmed
+            val covers = readFrom <= unconfirmed.start - BOLUS_LOG_WINDOW_MS && readAskedAt >= unconfirmed.decideAfter
+            aapsLogger.debug(LTag.PUMPCOMM, "Unconfirmed bolus start ${unconfirmed.start}: read from $readFrom asked at $readAskedAt, decide after ${unconfirmed.decideAfter}, covers it: $covers")
+            if (covers) unconfirmedBolusLogRead = unconfirmed
         }
         decideUnconfirmedBolus()
     }
@@ -1016,7 +1018,10 @@ class AaruyBLE(
     private suspend fun decideUnconfirmedBolus() {
         val unconfirmed = aaruyPump.unconfirmedBolus ?: return
         if (unconfirmedBolusLogRead !== unconfirmed) return
-        if (syncedStatusAt < unconfirmed.decideAfter || syncedStatus?.status == STATUS_BOLUS) return
+        if (syncedStatusAt < unconfirmed.decideAfter || syncedStatus?.status == STATUS_BOLUS) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Unconfirmed bolus start ${unconfirmed.start}: the log is read, a status after ${unconfirmed.decideAfter} is missing (last $syncedStatusAt, ${syncedStatus?.status})")
+            return
+        }
         aaruyPump.unconfirmedBolus = null
         unconfirmedBolusLogRead = null
         val logged = historyUnitInfoDao.querySince(unconfirmed.start - BOLUS_LOG_WINDOW_MS)
