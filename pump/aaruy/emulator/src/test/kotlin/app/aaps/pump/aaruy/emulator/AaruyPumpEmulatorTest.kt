@@ -117,9 +117,25 @@ class AaruyPumpEmulatorTest {
 
     @Test
     fun basicParamIsStoredAndEchoed() {
+        // Stopped, as in a reservoir change: then all of it is taken, also the bolus step.
+        write(PARAM_TOTAL_CONTROL, control(3))
+        advance(AaruyPumpEmulator.TRANSITION_MS)
         val param = ByteArray(32) { it.toByte() }
         assertTrue(write(PARAM_BASIC, param).single().payload.contentEquals(param))
         assertTrue(read(PARAM_BASIC).single().payload.contentEquals(param))
+    }
+
+    /** Seen on a real pump: while it delivers, it keeps its bolus step and answers with the old one. The rest is taken. */
+    @Test
+    fun theBolusStepChangesOnlyWhileStopped() {
+        val param = ByteArray(32) { it.toByte() }.also { it[BOLUS_STEP] = 1 }
+        val answer = write(PARAM_BASIC, param).single().payload
+        assertEquals(2, answer[BOLUS_STEP].toInt())
+        assertEquals(param.toList().filterIndexed { index, _ -> index != BOLUS_STEP }, answer.toList().filterIndexed { index, _ -> index != BOLUS_STEP })
+
+        write(PARAM_TOTAL_CONTROL, control(3))
+        advance(AaruyPumpEmulator.TRANSITION_MS)
+        assertEquals(1, write(PARAM_BASIC, param).single().payload[BOLUS_STEP].toInt())
     }
 
     @Test
@@ -373,6 +389,7 @@ class AaruyPumpEmulatorTest {
     private companion object {
 
         const val BASE_TIME_MS = 1609430400000L
+        const val BOLUS_STEP = 14
         const val PARAM_BASIC = 0
         const val PARAM_BASAL = 1
         const val PARAM_BOLUS_SETTING = 4

@@ -318,6 +318,45 @@ class AaruyBleReconnectTest {
     }
 
     /**
+     * Seen on a real pump: while it delivers, it keeps its bolus step and answers a write with the old one. Each answer
+     * started a new write, so the settings were written again and again for as long as the link was up.
+     */
+    @Test
+    fun aBolusStepThePumpKeepsIsWrittenOnlyOnce() {
+        val preferences = preferencesWithDefaults()
+        // 0.025 U. The pump runs 0.05 U.
+        `when`(preferences.get(AaruyIntPreferenceKey.BolusStep)).thenReturn(0)
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        val emulator = transport.emulator
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+
+        ble.syncAndLoadBasicParam()
+        waitFor("settings written") { emulator.settingsWrites > 0 }
+        repeat(30) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+
+        assertEquals(1, emulator.settingsWrites)
+        assertEquals("the step of the pump is used", 0.05, pump.bolusStepUnits, 1e-9)
+        assertFalse(pump.pumpHasTheSettings())
+        transport.shutdown()
+    }
+
+    /**
      * As after an app restart during a bolus: the pump runs one that no bolus command of this app run started. It
      * must get a progress with a Stop button, as this pump has no screen of its own, and the progress must close
      * when the pump ends it.

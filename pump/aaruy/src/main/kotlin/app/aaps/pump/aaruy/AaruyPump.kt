@@ -485,12 +485,14 @@ class AaruyPump(
 
     /**
      * Seen on a real pump: set to 0.05 U it refuses 0.125 U and accepts 0.10 U. The setting reaches the pump only at the
-     * next status read, so until then the coarser one is used. A coarser amount is valid on both.
+     * next status read, and the pump takes a new step only while it is stopped, as in a reservoir change. Until then the
+     * coarser one is used. A coarser amount is valid on both.
      */
     val bolusStepUnits: Double
         get() = max(bolusStep, if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1) * BOLUS_PRECISION_UNITS
 
-    fun handleLoadBasicParam(basicParam: BasicParam): Boolean {
+    /** What the pump holds. It can differ from the user settings: a real pump takes a new bolus step only while it is stopped. */
+    fun handleLoadBasicParam(basicParam: BasicParam) {
         pumpType = (basicParam.pumpType and 0x7f)
         maxBasal = basicParam.maxBasal
         maxBolus = basicParam.maxBolus
@@ -498,7 +500,7 @@ class AaruyPump(
         lowAlert = basicParam.lowAlert
         closeInjectSound = basicParam.closeInjectSound
 
-        return pumpHasTheSettings()
+        if (!pumpHasTheSettings()) aapsLogger.info(LTag.PUMP, "The pump does not hold the user settings")
     }
 
     /** @return false when AAPS has no request that fits this temp basal. */

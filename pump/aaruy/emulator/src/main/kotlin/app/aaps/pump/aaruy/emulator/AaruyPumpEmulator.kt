@@ -60,6 +60,10 @@ class AaruyPumpEmulator(
     var rejectedFrames = 0
         private set
 
+    /** How many times the app wrote the settings. */
+    var settingsWrites = 0
+        private set
+
     private var lastSequence: Short = 0
     private var basicParam = defaultBasicParam()
     private var basalSetting: ByteArray? = null
@@ -144,7 +148,13 @@ class AaruyPumpEmulator(
     private fun handleWrite(paramId: Short, payload: ByteArray): List<ByteArray> = when (paramId) {
         PARAM_REPORT_DEVICE -> handleReportDevice()
         PARAM_BASIC         -> {
+            val oldStep = basicParam.getOrNull(BOLUS_STEP_OFFSET)
             basicParam = payload.copyOf()
+            // Seen on a real pump (firmware 1.1.0.01): a new bolus step is taken only while the pump is stopped. While it
+            // delivers, it keeps the old one and answers with it.
+            if (runningStatus in STATUS_BASAL..STATUS_BOLUS && oldStep != null && basicParam.size > BOLUS_STEP_OFFSET)
+                basicParam[BOLUS_STEP_OFFSET] = oldStep
+            settingsWrites++
             listOf(message(PARAM_BASIC, basicParam))
         }
 

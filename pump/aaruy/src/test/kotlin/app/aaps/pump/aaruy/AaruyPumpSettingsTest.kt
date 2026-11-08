@@ -41,8 +41,10 @@ class AaruyPumpSettingsTest {
         val written = pump.settingsForPump()
         assertEquals(15.0, written.lowAlert, 0.0)
         assertEquals(10.0, written.maxBolus, 0.0)
-        assertFalse(pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 1, 20.0, 0, 3)), "the first time it is written")
-        assertTrue(pump.handleLoadBasicParam(written), "the pump holds what was written")
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 1, 20.0, 0, 3))
+        assertFalse(pump.pumpHasTheSettings(), "the first time it is written")
+        pump.handleLoadBasicParam(written)
+        assertTrue(pump.pumpHasTheSettings(), "the pump holds what was written")
     }
 
     /** 0.1 * 1000 is 99.99999 in floating point. The protocol rounds the same way. */
@@ -59,11 +61,13 @@ class AaruyPumpSettingsTest {
     @Test
     fun theBolusStepOfThePumpStaysUntilThePumpReportsTheNewOne() {
         settings(lowReservoir = 20.0)
-        assertFalse(pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3)))
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        assertFalse(pump.pumpHasTheSettings())
         assertEquals(0.05, pump.bolusStepUnits, 1e-9)
         assertEquals(1, pump.settingsForPump().bolusStep)
 
-        assertTrue(pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 1, 20.0, 0, 3)))
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 1, 20.0, 0, 3))
+        assertTrue(pump.pumpHasTheSettings())
         assertEquals(0.025, pump.bolusStepUnits, 1e-9)
     }
 

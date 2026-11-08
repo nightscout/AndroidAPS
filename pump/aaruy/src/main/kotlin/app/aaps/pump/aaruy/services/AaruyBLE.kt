@@ -530,9 +530,10 @@ class AaruyBLE(
 
             override fun onReceiveBasicParamSetting(basicParam: BasicParam) {
                 aapsLogger.debug(LTag.PUMPCOMM, "onReceiveBasicParamSetting basicParam = $basicParam")
-                if (!aaruyPump.handleLoadBasicParam(basicParam) && aaruyPump.pumpState.isCanDoRefresh()) {
-                    syncAndLoadBasicParam()
-                }
+                // Taken, not written again. Seen on a real pump: while it delivers, it keeps its bolus step and answers each
+                // write with the old one, so a write here started the next answer, for as long as the link was up. The
+                // status read writes the settings once, and a change of a setting asks for a status read.
+                aaruyPump.handleLoadBasicParam(basicParam)
             }
 
             override fun onReceiveBasalSetting(basalInfo: BasalInfo) {
