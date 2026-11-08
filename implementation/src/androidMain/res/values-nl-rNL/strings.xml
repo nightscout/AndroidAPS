@@ -53,7 +53,7 @@
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Instellingen succesvol geëxporteerd naar cloudopslag</string>
     <string name="export_to_cloud_failed">Exporteren naar cloudopslag is mislukt</string>
-    <string name="csv_uploaded_to_cloud">Gebruiker invoer CSV succesvol geüpload naar cloud opslag</string>
+    <string name="csv_uploaded_to_cloud">CSV-bestand met gebruikersinvoer succesvol opgeslagen in de cloud</string>
     <string name="exported">Instellingen geëxporteerd</string>
     <string name="exported_failed">Export instellingen mislukt!</string>
     <string name="filenotfound">Bestand niet gevonden</string>
