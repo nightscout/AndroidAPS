@@ -345,6 +345,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
         assertWithMessage("alarm $id").that(shownNotifications()).doesNotContain(id)
     }
 
+    /** AAPS shows [id]. The executor posts it once the queue has answered, so it may come a moment after that answer. */
+    fun checkAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
+        awaitValue(RECORD_TIMEOUT) { (id in shownNotifications()).takeIf { it } }
+        assertWithMessage("alarm $id").that(shownNotifications()).contains(id)
+    }
+
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */

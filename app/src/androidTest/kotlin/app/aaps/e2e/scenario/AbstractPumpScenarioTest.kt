@@ -113,6 +113,27 @@ abstract class AbstractPumpScenarioTest {
     }
 
     /**
+     * The pump stops a bolus on its own, as at an occlusion. AAPS must count what the pump gave, once, and must tell the
+     * user that the bolus was not given in full: the bolus is not reported as given, and the alarm rings.
+     */
+    @Test
+    fun aBolusThePumpStopsCountsWhatItGave() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.stopNextBolusAt(PUMP_STOPS_AT)).isTrue()
+
+        val wentThrough = scenario.userBolus(STOPPED_BOLUS)
+        scenario.readStatus()
+
+        val given = scenario.control.state().boluses
+        assertWithMessage("the pump gave one bolus").that(given).hasSize(1)
+        assertWithMessage("the pump stopped it early").that(given.single()).isLessThan(STOPPED_BOLUS)
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
+        assertWithMessage("the bolus is reported as given").that(wentThrough).isFalse()
+        scenario.checkAlarm()
+    }
+
+    /**
      * The driver stopped and started between commands, as a settings import does it. After its start it must hold the
      * same pump: a driver's start loads everything again, and its stop drops everything.
      */
@@ -290,6 +311,7 @@ abstract class AbstractPumpScenarioTest {
         const val BOLUS = 0.5
         const val STOPPED_BOLUS = 2.0
         const val STOP_AFTER = 0.2
+        const val PUMP_STOPS_AT = 0.5
         const val TEMP_BASAL_RATE = 1.0
         const val TEMP_BASAL_MINUTES = 30
         const val EXTENDED_BOLUS = 1.0
