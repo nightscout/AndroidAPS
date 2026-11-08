@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.pump.aaruy.comm.AaruyBleTransport
 import app.aaps.pump.aaruy.comm.AaruyBleTransportImpl
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
@@ -31,10 +32,11 @@ object AaruyBindings {
     /** The emulator when the `emulate_aaruy` file is in the AAPS extra folder, otherwise the radio. */
     @Provides
     @SingleIn(AppScope::class)
-    fun provideTransport(context: Context, config: Config, aapsLogger: AAPSLogger): AaruyBleTransport =
+    fun provideTransport(context: Context, config: Config, aapsLogger: AAPSLogger, pumpEmulators: PumpEmulators): AaruyBleTransport =
         if (config.isEnabled(ExternalOptions.EMULATE_AARUY)) {
             aapsLogger.warn(LTag.PUMPEMULATOR, "Aaruy pump EMULATOR is active. No insulin is delivered.")
-            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))
+            // The same pump after a test restarts the app: it runs on, as a real one would. The radio is new.
+            AaruyEmulatorBleTransport(pumpEmulators.getOrCreate(AaruyPumpEmulator.KEY) { AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }) })
         } else {
             AaruyBleTransportImpl(context, aapsLogger)
         }

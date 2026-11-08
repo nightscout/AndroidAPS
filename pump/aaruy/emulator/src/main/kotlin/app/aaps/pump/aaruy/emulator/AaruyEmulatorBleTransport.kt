@@ -6,21 +6,29 @@ import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
+import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.pump.aaruy.comm.AaruyBleTransport
 import app.aaps.pump.aaruy.comm.AaruyTransportExtras
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 /**
  * The radio side of [AaruyPumpEmulator]. Everything runs on one thread with radio-like delays: a write is
  * confirmed first and the pump answers later, because the driver has windows that real delays can break.
  */
-class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTransport {
+class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTransport, PumpEmulatorControl {
 
     private val thread: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { Thread(it, "AaruyEmulator").apply { isDaemon = true } }
 
@@ -140,7 +148,18 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
             later(RADIO_MS) {
                 listener?.onCharacteristicWritten()
                 later(PUMP_ANSWER_MS) {
+                    val (param, action) = emulator.peek(data) ?: (-1 to null)
+                    lostCommands.firstOrNull { emulator.isCommand(it, param, action) }?.let {
+                        // The pump never got it: it does nothing and sends nothing.
+                        lostCommands.remove(it)
+                        return@later
+                    }
                     val answer = emulator.handle(data)
+                    lostAnswers.firstOrNull { emulator.isCommand(it, param, action) }?.let {
+                        // The pump did it, and its answer is lost. The link stays.
+                        lostAnswers.remove(it)
+                        return@later
+                    }
                     if (emulator.lastParamId == loseAnswerToParam) {
                         // The pump did it, and the answer never comes.
                         loseAnswerToParam = -1
@@ -185,6 +204,57 @@ class AaruyEmulatorBleTransport(val emulator: AaruyPumpEmulator) : AaruyBleTrans
     fun shutdown() {
         thread.shutdownNow()
     }
+
+    // ---- PumpEmulatorControl. The emulator is not thread safe, so each call runs on its thread and waits. ----
+
+    /** Faults for the next command of each kind. Read and written on the pump thread only. */
+    private val lostCommands = ArrayList<EmulatedCommand>()
+    private val lostAnswers = ArrayList<EmulatedCommand>()
+
+    private fun <T> onPumpThreadAndWait(block: () -> T): T = thread.submit(Callable { block() }).get()
+
+    override var speed: EmulatorSpeed
+        get() = emulator.speed
+        set(value) {
+            emulator.speed = value
+        }
+
+    override fun breakLink(): Boolean {
+        loseConnection()
+        return true
+    }
+
+    override fun setOutOfRange(outOfRange: Boolean): Boolean {
+        this.outOfRange = outOfRange
+        if (outOfRange) loseConnection()
+        return true
+    }
+
+    override fun loseCommand(command: EmulatedCommand): Boolean = onPumpThreadAndWait { lostCommands.add(command) }
+
+    override fun loseAnswer(command: EmulatedCommand): Boolean = onPumpThreadAndWait { lostAnswers.add(command) }
+
+    override fun raise(alarm: EmulatedAlarm): Boolean = onPumpThreadAndWait { emulator.raise(alarm)?.also { deliver(it) } != null }
+
+    override fun stopNextBolusAt(units: Double): Boolean = onPumpThreadAndWait {
+        emulator.stopNextBolusAt = (units * 1000).roundToInt()
+        true
+    }
+
+    override fun state(): EmulatedPumpState = onPumpThreadAndWait {
+        EmulatedPumpState(
+            boluses = emulator.boluses,
+            bolusRunning = emulator.bolusRunning,
+            tempBasal = emulator.tempBasalRate?.let { EmulatedTempBasal(absolute = it / 1000.0, percent = null) },
+            suspended = emulator.runningStatus !in AaruyPumpEmulator.STATUS_BASAL..AaruyPumpEmulator.STATUS_BOLUS,
+            reservoir = emulator.reservoir,
+            linkUp = connected,
+            commands = emulator.commands
+        )
+    }
+
+    /** The pump, not the radio: after the app start a new transport connects to it. */
+    override fun saveState(): ByteArray = onPumpThreadAndWait { emulator.saveState() }
 
     companion object {
 

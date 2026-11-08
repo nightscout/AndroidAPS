@@ -1,5 +1,14 @@
 package app.aaps.pump.aaruy.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.crypto.Cipher
@@ -20,9 +29,13 @@ import kotlin.math.min
  * @param clock time in ms. Tests give their own.
  */
 class AaruyPumpEmulator(
-    private val keyProvider: () -> ByteArray,
-    private val clock: () -> Long = System::currentTimeMillis
-) {
+    keyProvider: () -> ByteArray,
+    clock: () -> Long = System::currentTimeMillis
+) : Serializable {
+
+    // First, because the other fields read the clock. Not saved: [restore] gives them again.
+    @Transient private var keyProvider: () -> ByteArray = keyProvider
+    @Transient private var clock: () -> Long = clock
 
     private class Bolus(
         val startedAt: Long,
@@ -30,18 +43,50 @@ class AaruyPumpEmulator(
         val delayed: Int,
         val delayMinutes: Int,
         val resumeStatus: Int,
+        /** Kept with the bolus, so one restored after an app restart goes on at the same rate. */
+        val stepMs: Long,
+        /** The pump stops here, as at an occlusion. */
+        val stopAt: Int?,
         var delivered: Int = 0,
         // The first step comes at once: a real pump reports 0.05 U about 100 ms after it reports 0.
-        var lastStepAt: Long = startedAt - BOLUS_STEP_MS,
+        var lastStepAt: Long = startedAt - stepMs,
         var delayedDelivered: Int = 0
-    ) {
+    ) : Serializable {
 
         val isExtended: Boolean get() = now == 0
     }
 
-    private class TempBasal(val startedAt: Long, val rate: Int, val minutes: Int)
+    private class TempBasal(val startedAt: Long, val rate: Int, val minutes: Int) : Serializable
 
-    private class History(val time: Int, val type: Int, val data: Int, val injectTime: Int, val delayBolus: Int, val reserved: Int)
+    private class History(val time: Int, val type: Int, val data: Int, val injectTime: Int, val delayBolus: Int, val reserved: Int) : Serializable
+
+    /** How fast a bolus runs. The pump clock stays the phone clock. */
+    @Volatile var speed: EmulatorSpeed = EmulatorSpeed.REAL
+
+    /** Commands the pump received, also the ones it refused. */
+    var commands = 0
+        private set
+
+    /** Every immediate bolus the pump gave, oldest first, each with the amount it really gave. */
+    private val deliveredBoluses = ArrayList<Double>()
+    val boluses: List<Double> get() = deliveredBoluses.toList()
+
+    /** In thousandths: the next bolus stops there, with a blocked motor, as at an occlusion. */
+    var stopNextBolusAt: Int? = null
+
+    val bolusRunning: Boolean get() = bolus != null
+
+    /** The temp basal that runs now, in thousandths of U/h. */
+    val tempBasalRate: Int? get() = tempBasal?.rate.takeIf { runningStatus == STATUS_TEMP_BASAL }
+
+    /** Seen on a real pump: one step every 2 seconds. */
+    private fun bolusStepMs(): Long = when (speed) {
+        EmulatorSpeed.REAL -> BOLUS_STEP_MS
+        EmulatorSpeed.FAST -> FAST_BOLUS_STEP_MS
+    }
+
+    /** All the pump holds, with the bolus it is giving, for a test that kills the app. See [restore]. */
+    fun saveState(): ByteArray = ByteArrayOutputStream().also { bytes -> ObjectOutputStream(bytes).use { it.writeObject(this) } }.toByteArray()
 
     /** Running status. Same numbers as `AaruyPumpState`. */
     var runningStatus = STATUS_BASAL
@@ -90,7 +135,36 @@ class AaruyPumpEmulator(
     /** Seen on a real pump (firmware 1.1.0.01): the first request after pairing gets an empty reply. */
     private val history = ArrayList<History>()
 
-    private class BolusSetting(val total: Int, val now: Int, val delayMinutes: Int)
+    private class BolusSetting(val total: Int, val now: Int, val delayMinutes: Int) : Serializable
+
+    /** Whether a frame with [param] and [action] (see [peek]) is [command]. */
+    fun isCommand(command: EmulatedCommand, param: Int, action: Int?): Boolean = when (command) {
+        EmulatedCommand.BOLUS_START      -> param == PARAM_BOLUS_CONTROL.toInt() && action == ACTION_START
+        EmulatedCommand.BOLUS_STOP       -> param == PARAM_BOLUS_CONTROL.toInt() && action != ACTION_START
+        EmulatedCommand.TEMP_BASAL_START -> param == PARAM_TEMP_BASAL.toInt() && action == ACTION_START
+        EmulatedCommand.TEMP_BASAL_STOP  -> param == PARAM_TEMP_BASAL.toInt() && action != ACTION_START
+        EmulatedCommand.BASAL_PROFILE    -> param == PARAM_BASAL.toInt()
+        EmulatedCommand.STATUS           -> param == PARAM_STATUS.toInt()
+    }
+
+    /** The pump reports [alarm] now. @return what it sends, or null when it has no such alarm */
+    fun raise(alarm: EmulatedAlarm): List<ByteArray>? = when (alarm) {
+        EmulatedAlarm.LOW_RESERVOIR    -> listOf(raiseAlarm(ALARM_LOW_RESERVOIR))
+        EmulatedAlarm.EMPTY_RESERVOIR  -> {
+            reservoir = 0.0
+            checkReservoir()
+        }
+        EmulatedAlarm.OCCLUSION        -> blockMotor()
+        EmulatedAlarm.STOPPED_TOO_LONG -> listOf(error(WARNING_STOPPED_TOO_LONG))
+        // UNVERIFIED: the code of a low battery alarm is not known.
+        EmulatedAlarm.LOW_BATTERY      -> null
+    }
+
+    /** The parameter and the action of [frame], without handling it. Null when it does not decrypt. */
+    fun peek(frame: ByteArray): Pair<Int, Int?>? {
+        val plain = runCatching { cipher(Cipher.DECRYPT_MODE).doFinal(frame.copyOfRange(OUTER_HEADER, frame.size)) }.getOrNull() ?: return null
+        return reader(plain).getShort(PARAM_ID_OFFSET).toInt() to plain.getOrNull(INNER_HEADER + ACTION_OFFSET)?.toInt()
+    }
 
     /** Handles one frame from the app. @return what the pump sends back, in order. */
     fun handle(frame: ByteArray): List<ByteArray> {
@@ -100,6 +174,7 @@ class AaruyPumpEmulator(
             // UNVERIFIED: a frame that does not decrypt gets no answer.
             return emptyList()
         }
+        commands++
         val reader = reader(plain)
         reader.short
         val command = reader.get().toInt()
@@ -293,7 +368,8 @@ class AaruyPumpEmulator(
             endSegment()
             // Seen on a real pump: with a step of 0.05 U it answers 0.125 U with these two errors, and the segment has ended anyway.
             if (setting.now % bolusStepThousandths() != 0) return listOf(error(ERROR_BOLUS_NOT_ON_STEP), error(ALARM_RUN_BOLUS))
-            bolus = Bolus(clock(), setting.now, setting.total - setting.now, setting.delayMinutes, runningStatus)
+            bolus = Bolus(clock(), setting.now, setting.total - setting.now, setting.delayMinutes, runningStatus, bolusStepMs(), stopNextBolusAt)
+            stopNextBolusAt = null
             bolusSetting = null
             bolusSettingEcho = buffer(BOLUS_SETTING_SIZE).putInt(pumpTime()).array()
             runningStatus = STATUS_BOLUS
@@ -488,11 +564,12 @@ class AaruyPumpEmulator(
         }
         // Seen on a real pump: one step every 2 seconds.
         val stepUnits = bolusStepThousandths()
-        while (running.delivered < running.now && now - running.lastStepAt >= BOLUS_STEP_MS) {
-            running.lastStepAt += BOLUS_STEP_MS
+        while (running.delivered < running.now && now - running.lastStepAt >= running.stepMs) {
+            running.lastStepAt += running.stepMs
             running.delivered = min(running.delivered + stepUnits, running.now)
             reservoir = (reservoir - stepUnits / 1000.0).coerceAtLeast(0.0)
             out.add(statusMessage())
+            if (running.stopAt != null && running.delivered >= running.stopAt) return out + blockMotor()
         }
         if (running.delivered >= running.now) out.addAll(finishBolus(running))
         return out
@@ -509,6 +586,7 @@ class AaruyPumpEmulator(
     }
 
     private fun addBolusHistory(running: Bolus) {
+        if (!running.isExtended) deliveredBoluses += running.delivered / 1000.0
         val time = ((running.startedAt - BASE_TIME_MS) / 1000).toInt()
         // Seen on a real pump: the delivered amount, with the start of the bolus as the time, even after a stop.
         addHistoryAt(
@@ -625,7 +703,7 @@ class AaruyPumpEmulator(
                 val state = bolusStateOverride ?: if (running?.isExtended == true) BOLUS_STATE_EXTENDED else BOLUS_STATE_NOW
                 val delivered = if (running?.isExtended == true) running.delayedDelivered else running?.delivered ?: 0
                 // Seen on a real pump: the time left in seconds, so 0.5 U starts at 20 and ends at 0.
-                val left = ((running?.now ?: 0) - delivered).coerceAtLeast(0) / bolusStepThousandths() * (BOLUS_STEP_MS / 1000).toInt()
+                val left = ((running?.now ?: 0) - delivered).coerceAtLeast(0) / bolusStepThousandths() * ((running?.stepMs ?: BOLUS_STEP_MS) / 1000).toInt()
                 out.put(state.toByte()).putShort(delivered.toShort()).putShort((running?.delayed ?: 0).toShort()).putShort(left.toShort()).putShort(0)
             }
 
@@ -687,6 +765,25 @@ class AaruyPumpEmulator(
 
         const val TRANSITION_MS = 200L
         const val BOLUS_STEP_MS = 2000L
+
+        /** As short as the driver's progress allows. */
+        const val FAST_BOLUS_STEP_MS = 100L
+
+        /** Where the app graph keeps this emulator, so a test that restarts the app gets the same pump. */
+        val KEY = PumpEmulators.Key<AaruyPumpEmulator>("aaruy")
+
+        /** The pump [saveState] saved, in a new process. A bolus it was giving goes on by the clock. */
+        fun restore(saved: ByteArray, keyProvider: () -> ByteArray, clock: () -> Long = System::currentTimeMillis): AaruyPumpEmulator =
+            (ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() } as AaruyPumpEmulator).apply {
+                this.keyProvider = keyProvider
+                this.clock = clock
+            }
+
+        /** Read back only by the same build, in the second run of an app restart test. */
+        private const val serialVersionUID = 1L
+
+        /** In the decrypted frame: length (2), command (1), then the parameter. */
+        private const val PARAM_ID_OFFSET = 3
 
         private const val PARAM_BASIC: Short = 0
         private const val PARAM_BASAL: Short = 1

@@ -1,6 +1,8 @@
 package app.aaps.pump.aaruy.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.nio.ByteBuffer
@@ -58,6 +60,49 @@ class AaruyPumpEmulatorTest {
     private fun startBolus(units: Int): List<Message> {
         write(PARAM_BOLUS_SETTING, bolusSetting(units))
         return write(PARAM_BOLUS_CONTROL, control(1))
+    }
+
+    /** For a test that kills the app: the pump in the new process is the same, and its bolus goes on by the clock. */
+    @Test
+    fun aSavedPumpIsRestoredWithTheBolusItIsGiving() {
+        emulator.reservoir = 100.0
+        startBolus(1000)
+        advance(4 * AaruyPumpEmulator.BOLUS_STEP_MS)
+
+        val restored = AaruyPumpEmulator.restore(emulator.saveState(), keyProvider = { key }, clock = { now })
+
+        assertTrue(restored.bolusRunning)
+        assertEquals(emulator.reservoir, restored.reservoir, 1e-9)
+        // 20 steps of 0.05 U, 2 s each: 40 s in all.
+        repeat(200) {
+            now += 200L
+            restored.tick()
+        }
+        assertFalse(restored.bolusRunning)
+        assertEquals(listOf(1.0), restored.boluses)
+        assertEquals(99.0, restored.reservoir, 0.01)
+    }
+
+    @Test
+    fun aFastBolusTakesShorterSteps() {
+        emulator.speed = EmulatorSpeed.FAST
+        startBolus(1000)
+        advance(20 * AaruyPumpEmulator.FAST_BOLUS_STEP_MS)
+
+        assertFalse(emulator.bolusRunning)
+        assertEquals(listOf(1.0), emulator.boluses)
+    }
+
+    /** As at an occlusion: the motor blocks, the bolus ends at what it gave, and the pump stops. */
+    @Test
+    fun aBolusToldToStopEarlyEndsWithABlockedMotor() {
+        emulator.stopNextBolusAt = 300
+        startBolus(1000)
+        val messages = advance(10 * AaruyPumpEmulator.BOLUS_STEP_MS)
+
+        assertEquals(listOf(0.3), emulator.boluses)
+        assertEquals(AaruyPumpEmulator.STATUS_NOT_RUNNING, emulator.runningStatus)
+        assertTrue(messages.any { it.paramId == PARAM_ERROR })
     }
 
     /** Moves time in small steps, like the transport does, and gives all messages sent. */
