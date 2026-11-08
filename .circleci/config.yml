@@ -338,7 +338,7 @@ jobs:
 
       # Shard D: the pump emulator scenarios (@ShardD), then the app restart of each scenario class in two runs.
       # The second run must be a new process, as after a kill, so it cannot be part of the normal run, which skips
-      # it. See .claude/procedures/pump-emulator-scenarios.md. The classes are listed from the shard itself (`-e log
+      # it. See .claude/skills/pump-emulator-scenarios/SKILL.md. The classes are listed from the shard itself (`-e log
       # true` lists without running), so a new pump needs no change here. The restart runs collect no coverage.
       - run:
           name: App shard D — pump emulator scenarios + app restart (emu-5560, am instrument)

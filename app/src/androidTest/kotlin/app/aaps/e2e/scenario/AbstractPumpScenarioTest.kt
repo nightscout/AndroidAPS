@@ -99,7 +99,8 @@ abstract class AbstractPumpScenarioTest {
         scenario.readStatus()
 
         assertWithMessage("the pump gave nothing").that(scenario.control.state().boluses).isEmpty()
-        scenario.checkBolusRecords()
+        // A driver that cannot tell at once counts the whole amount, and decides from the pump once the bolus would have ended.
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
     }
 
     /**
@@ -115,8 +116,10 @@ abstract class AbstractPumpScenarioTest {
 
         scenario.reloadDriver()
 
-        assertWithMessage("the pump is still paired").that(testGraphs.activePlugin.activePump.isInitialized()).isTrue()
+        // Ready only after the first status read, as at an app start: a driver keeps no pump state it can read again.
+        assertWithMessage("the pump is still paired").that(testGraphs.activePlugin.activePump.isConfigured()).isTrue()
         assertWithMessage("status read after the reload").that(scenario.readStatus().success).isTrue()
+        assertWithMessage("the pump is ready after the status read").that(testGraphs.activePlugin.activePump.isInitialized()).isTrue()
         scenario.checkBolusRecords()
         scenario.checkTempBasal()
         assertWithMessage("bolus after the reload").that(scenario.bolus(BOLUS).success).isTrue()

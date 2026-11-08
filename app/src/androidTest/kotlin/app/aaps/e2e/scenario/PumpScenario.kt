@@ -1,6 +1,8 @@
 package app.aaps.e2e.scenario
 
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.os.SystemClock
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
@@ -152,7 +154,11 @@ class PumpScenario(private val pump: PumpUnderTest) {
         awaitTrue("${pump.pluginName} is the active pump") { testGraphs.activePlugin.activePumpInternal.javaClass.simpleName == pump.pluginName }
         pump.control().speed = speed
         pump.awaitStarted(this)
+        appStarted = true
     }
+
+    /** A skipped test never started the app, so there is no driver to stop. */
+    private var appStarted = false
 
     fun tearDown() {
         if (killed) return
@@ -160,9 +166,30 @@ class PumpScenario(private val pump: PumpUnderTest) {
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { testGraphs.activePlugin.activePump.disconnect("test end") }
+        if (appStarted) stopDriver()
         EmulatedOptions.enabled = emptySet()
         clearAppSettings(instrumentation.targetContext)
     }
+
+    /**
+     * The next test has a new graph, but an Android service of the driver is made once for the process. Left bound, the
+     * next test's driver binds to this one, and its link then runs on the objects of this test's graph. So the driver is
+     * stopped as a real one is, which unbinds its service, and the test waits until the system has destroyed it.
+     */
+    private fun stopDriver() {
+        val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
+        runCatching { runBlocking { plugin.setPluginEnabledAwaiting(PluginType.PUMP, false) } }
+        val driverPackage = plugin.javaClass.packageName
+        awaitTrue("the services of ${pump.pluginName} are stopped", SERVICE_STOP_TIMEOUT) { runningServices().none { it.startsWith(driverPackage) } }
+    }
+
+    /** The services of this app that run now. The call only returns the caller's own services, which is all this needs. */
+    @Suppress("DEPRECATION")
+    private fun runningServices(): List<String> =
+        (instrumentation.targetContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+            .getRunningServices(Int.MAX_VALUE)
+            .filter { it.service.packageName == instrumentation.targetContext.packageName }
+            .map { it.service.className }
 
     // ---- Steps ------------------------------------------------------------------------------
 
@@ -176,7 +203,14 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     fun unpair() = pump.unpair(this)
 
-    fun readStatus(): PumpEnactResult = queued { commandQueue.readStatus("scenario") }
+    /**
+     * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
+     * and during a bolus it waits for the bolus end. So wait for that one first: the step must read the pump itself.
+     */
+    fun readStatus(): PumpEnactResult {
+        awaitTrue("the status read before this one is done", BOLUS_TIMEOUT) { !commandQueue.statusInQueue() }
+        return queued { commandQueue.readStatus("scenario") }
+    }
 
     /** A bolus to its end. */
     fun bolus(units: Double): PumpEnactResult = queued { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units }) }
@@ -221,10 +255,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     // ---- Checks -----------------------------------------------------------------------------
 
-    /** AAPS stored each bolus the pump gave, once, with the amount it gave, and no bolus the pump did not give. */
-    fun checkBolusRecords() {
-        // Records are written by the driver as it learns of them. Give the last one a moment.
-        awaitValue(RECORD_TIMEOUT) { (storedBoluses() == givenBoluses()).takeIf { it } }
+    /**
+     * AAPS stored each bolus the pump gave, once, with the amount it gave, and no bolus the pump did not give.
+     * @param timeoutMs records are written by the driver as it learns of them. Some learn only once a bolus would have ended.
+     */
+    fun checkBolusRecords(timeoutMs: Long = RECORD_TIMEOUT) {
+        awaitValue(timeoutMs) { (storedBoluses() == givenBoluses()).takeIf { it } }
         assertWithMessage("bolus records in AAPS against the boluses the pump gave").that(storedBoluses()).isEqualTo(givenBoluses())
     }
 
@@ -265,6 +301,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
     private fun storedBoluses(): List<Long> =
         runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
             .filter { it.type != BS.Type.PRIMING }
+            // A driver that learns a bolus was never given can only set its record to 0 U: no insulin, as no record.
+            .filter { it.amount > 0.0 }
             .sortedBy { it.timestamp }
             .map { centi(it.amount) }
 
@@ -371,6 +409,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val STEP_TIMEOUT = 30_000L
         const val RECORD_TIMEOUT = 10_000L
         const val LINK_TIMEOUT = 30_000L
+        const val SERVICE_STOP_TIMEOUT = 10_000L
 
         /** A 2 U bolus at the real speed of the slowest emulated pump, with room. */
         const val BOLUS_TIMEOUT = 120_000L
