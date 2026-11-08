@@ -140,6 +140,7 @@ class EquilBLE(
         baseCmd?.let { baseCmd ->
             synchronized(baseCmd) {
                 baseCmd.cmdSuccess = false
+                baseCmd.failed = true
                 baseCmd.notifyAll()
             }
         }

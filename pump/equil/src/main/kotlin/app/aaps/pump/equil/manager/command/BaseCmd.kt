@@ -26,7 +26,10 @@ abstract class BaseCmd(
     var port: String = "0404"
     var config: Boolean = false
     var isEnd: Boolean = false
-    var cmdSuccess: Boolean = false
+    @Volatile var cmdSuccess: Boolean = false
+
+    /** The link failed before the answer came: nothing more will come for this command. */
+    @Volatile var failed: Boolean = false
 
     /**
      * The command itself went to the pump, after the pump opened the exchange. Without an answer after that the pump

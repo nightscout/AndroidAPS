@@ -152,9 +152,7 @@ class EquilManager(
         try {
             val command = CmdTempBasalGet(aapsLogger, preferences, this)
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
             result.success = command.cmdSuccess
             result.enacted(command.time != 0)
             SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
@@ -163,6 +161,23 @@ class EquilManager(
             result.success(false).enacted(false).comment(ex.message ?: "Exception")
         }
         return result
+    }
+
+    /**
+     * Waits for the answer of [command], at most its timeout. The answer can come before this wait begins: its wake-up
+     * then reached nobody, and a plain wait slept the whole timeout for a command that was done. Found by the pump
+     * scenario tests, where pairing hung at the password step. So the wait is for the answer itself, and a wake-up
+     * without one does not end it.
+     */
+    internal fun awaitAnswer(command: BaseCmd, timeoutMs: Long = command.timeOut.toLong()) {
+        val end = System.currentTimeMillis() + timeoutMs
+        synchronized(command) {
+            while (!command.cmdSuccess && !command.failed) {
+                val left = end - System.currentTimeMillis()
+                if (left <= 0) break
+                command.waitMillis(left)
+            }
+        }
     }
 
     /** Whether the pump runs a temp basal now, or null when it does not answer. */
@@ -175,9 +190,7 @@ class EquilManager(
             command.cancel = cancel
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
             var applied = command.cmdSuccess
             // Without its answer AAPS knew nothing, while the pump may have done it: what the pump runs now decides.
             var currentTime = System.currentTimeMillis()
@@ -237,9 +250,7 @@ class EquilManager(
             val command = CmdExtendedBolusSet(insulin, time, cancel, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
 
             result.success = command.cmdSuccess
             if (command.cmdSuccess) {
@@ -305,9 +316,7 @@ class EquilManager(
             val equilHistoryRecord = addHistory(command)
             lastDeliveryStoppedAt = null
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
             val bolusStart = System.currentTimeMillis()
             bolusProfile.stop = false
             val sleep = 2000
@@ -406,9 +415,7 @@ class EquilManager(
             val command: BaseCmd = CmdLargeBasalSet(0.0, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
             bolusProfile.stop = command.cmdSuccess
             aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===")
             result.success = command.cmdSuccess
@@ -430,9 +437,7 @@ class EquilManager(
             val historyGet = CmdHistoryGet(index, aapsLogger, preferences, dateUtil, this)
             // Nothing was sent, so no answer will come: do not wait the full timeout for it.
             if (!equilBLE.readHistory(historyGet)) return -1
-            synchronized(historyGet) {
-                historyGet.waitMillis(historyGet.timeOut.toLong())
-            }
+            awaitAnswer(historyGet)
             aapsLogger.debug(LTag.PUMPCOMM, "loadHistory end: ")
             if (!historyGet.cmdSuccess) return -1
             return historyGet.currentIndex
@@ -498,9 +503,7 @@ class EquilManager(
         try {
             val command: BaseCmd = CmdRunningModeGet(aapsLogger, preferences, this)
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
             if (command.cmdSuccess) {
                 command.resolvedResult = ResolvedResult.SUCCESS
                 SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
@@ -548,9 +551,7 @@ class EquilManager(
         try {
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
-            synchronized(command) {
-                command.waitMillis(command.timeOut.toLong())
-            }
+            awaitAnswer(command)
             if (command.cmdSuccess) {
                 command.resolvedResult = ResolvedResult.SUCCESS
             }

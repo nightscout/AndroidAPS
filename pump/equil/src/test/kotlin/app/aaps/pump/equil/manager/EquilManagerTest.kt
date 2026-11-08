@@ -27,10 +27,12 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import java.util.Calendar
 import kotlin.math.abs
+import app.aaps.core.utils.notifyAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.concurrent.thread
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -361,6 +363,37 @@ class EquilManagerTest : TestBaseWithProfile() {
         assertEquals(EquilManager.BolusStart.NO_ANSWER, equilManager.bolusStart(command))
         command.cmdSuccess = true
         assertEquals(EquilManager.BolusStart.STARTED, equilManager.bolusStart(command))
+    }
+
+    /** Found by the pump scenario tests: the answer came before the wait began, and the driver slept the whole timeout. */
+    @Test
+    fun `an answer that came before the wait ends it at once`() {
+        val command = CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 40)
+        command.cmdSuccess = true
+        val start = System.currentTimeMillis()
+        equilManager.awaitAnswer(command, timeoutMs = 5_000)
+        assertTrue(System.currentTimeMillis() - start < 1_000)
+    }
+
+    @Test
+    fun `a failed link ends the wait at once`() {
+        val command = CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 40)
+        command.failed = true
+        val start = System.currentTimeMillis()
+        equilManager.awaitAnswer(command, timeoutMs = 5_000)
+        assertTrue(System.currentTimeMillis() - start < 1_000)
+    }
+
+    @Test
+    fun `a wake-up without an answer does not end the wait`() {
+        val command = CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 40)
+        thread {
+            Thread.sleep(50)
+            synchronized(command) { command.notifyAll() }
+        }
+        val start = System.currentTimeMillis()
+        equilManager.awaitAnswer(command, timeoutMs = 500)
+        assertTrue(System.currentTimeMillis() - start >= 450)
     }
 
     @Test
