@@ -135,7 +135,7 @@
     <string name="carbs">Koolhydraten</string>
     <string name="alarminxmin">Herinnering (alarm) over %1$d min</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
-    <string name="loopsuspended">Loop pauzeren</string>
+    <string name="loopsuspended">Loop onderbroken</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
     <string name="basalprofilenotaligned">Basaalstanden beginnen niet op gehele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basaalstand vervangen door de laagst toegestane waarde: %1$s</string>
