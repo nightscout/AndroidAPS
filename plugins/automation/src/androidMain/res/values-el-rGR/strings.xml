@@ -129,7 +129,7 @@
     <string name="add_automation">Προσθήκη κανόνα</string>
     <string name="stop_processing">Διακοπή επεξεργασίας</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Ώρα για φαγητόt!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογίστε ξανά.</string>
+    <string name="time_to_eat">Ώρα για φαγητό!\nΤρέξτε τον οδηγό Bolus και υπολογίστε ξανά.</string>
     <string name="time_to_bolus">Ώρα για bolus!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογισμό ξανά.</string>
     <string name="error_setting_reminder">Σφάλμα κατά τη ρύθμιση μελλοντικού συναγερμού</string>
     <!--    Autotune-->
