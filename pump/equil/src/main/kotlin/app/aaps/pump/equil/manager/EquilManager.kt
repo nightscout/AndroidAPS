@@ -356,8 +356,17 @@ class EquilManager(
                     val stoppedAt = bolusProfile.stoppedAt
                     if (bolusProfile.stop && stoppedAt > 0)
                         stoppedAmount = unitsGivenUntil(bolusStart, stoppedAt, unitsPerSecond, detailedBolusInfo.insulin)
-                    bolusProgressData.updateProgress(percent = 100)
-                    result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+                    if (bolusProfile.stopRequested && !bolusProfile.stop) {
+                        // The user pressed stop and the pump did not answer it: "delivered successfully" would hide that
+                        // the stop may not have worked. The pump log decides later, see UncertainBolus.
+                        val requested = PumpInsulin(detailedBolusInfo.insulin)
+                        val text = rh.gs(R.string.equil_stop_not_answered, ch.insulinAmountString(requested))
+                        bolusProgressData.updateProgress(100, TextRef.Literal(text), requested)
+                        result.comment = text
+                    } else {
+                        bolusProgressData.updateProgress(percent = 100)
+                        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+                    }
                 }
 
                 // The pump may give it: the whole amount counts, and the user must not bolus again.
