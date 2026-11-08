@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
 import app.aaps.e2e.RetryRule
+import app.aaps.testcategories.ShardD
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.After
 import org.junit.Assume.assumeTrue
@@ -20,7 +21,10 @@ import org.junit.rules.RuleChain
  *
  * [appKilledDuringABolus] is a real app restart and needs two instrumentation runs, so a normal run skips it. See its
  * KDoc for how to run it.
+ *
+ * CI runs these on their own emulator, see [ShardD].
  */
+@ShardD
 abstract class AbstractPumpScenarioTest {
 
     abstract fun pumpUnderTest(): PumpUnderTest

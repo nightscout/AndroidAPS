@@ -60,6 +60,12 @@ adb -s <serial> shell am instrument -w -r -e killRestart 2 -e class app.aaps.e2e
 Run 1 starts a bolus at real speed, saves the emulator to a file and ends with no cleanup; its process ends with the
 run. Run 2 is a new process on the same database file and settings, with the emulator as saved.
 
+### CI
+
+CircleCI shard D (fourth emulator, `.circleci/config.yml`) runs `-e annotation app.aaps.testcategories.ShardD`, then
+the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@Inherited` and set on
+`AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
+
 ## Traps
 
 - `activePlugin.activePump` is the concentration wrapper. Compare the driver with `activePumpInternal`.
