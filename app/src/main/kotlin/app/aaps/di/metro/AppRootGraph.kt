@@ -72,6 +72,7 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -547,6 +548,12 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
             /** Extra external options to report enabled. `ExternalOptionsOverride.NONE` in production. */
             @Provides externalOptionsOverride: ExternalOptionsOverride,
+
+            /**
+             * The emulated pumps. Production passes a new one. A test that restarts the app passes the one of the
+             * graph before, so the emulated pump runs on, as a real one would.
+             */
+            @Provides pumpEmulators: PumpEmulators,
 
             @Includes coreObjects: CoreObjectsGraph
         ): AppRootGraph
