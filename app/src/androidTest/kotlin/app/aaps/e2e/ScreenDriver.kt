@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
+import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
@@ -17,6 +18,9 @@ import java.util.regex.Pattern
  * next screen, because labels like "Next" are on many screens. A single tap is routinely dropped while Compose
  * recomposes, so [openVia] taps again until the next screen shows; use it only for idempotent moves. A button that
  * starts a pump command is tapped once with [click], and the result is awaited with one of the waits. English only.
+ *
+ * A text to tap that is not on the screen is looked for by scrolling: on a small screen, as the 320 x 640 one of the CI
+ * emulators, Compose does not lay out what is below the visible part, so uiautomator cannot find it there.
  */
 class ScreenDriver(private val device: UiDevice) {
 
@@ -34,9 +38,21 @@ class ScreenDriver(private val device: UiDevice) {
             device.findObject(byText(label))?.let { return it }
             device.findObject(byDesc(label))?.let { return it }
             device.findObject(byTextContains(label))?.let { return it }
+            scrollOn()
             device.waitForIdle(IDLE_MS)
         }
         error("Timed out after ${timeout}ms looking for '$label'")
+    }
+
+    private var scrollDown = true
+
+    /** One scroll step of the app's scrollable view: down to its end, then up to its start, and so on. */
+    private fun scrollOn() {
+        val scrollable = device.findObject(By.pkg(packageName).scrollable(true)) ?: return
+        runCatching {
+            // scroll() says whether the view can still scroll that way.
+            if (!scrollable.scroll(if (scrollDown) Direction.DOWN else Direction.UP, SCROLL_PERCENT)) scrollDown = !scrollDown
+        }
     }
 
     /** One tap. For a button that starts a command: a second tap would start it again. */
@@ -59,6 +75,7 @@ class ScreenDriver(private val device: UiDevice) {
                     continue
                 }
             }
+            scrollOn()
             device.waitForIdle(IDLE_MS)
         }
         error("Timed out after ${timeout}ms looking for a button '$label'")
@@ -131,17 +148,16 @@ class ScreenDriver(private val device: UiDevice) {
         device.pressBack()
     }
 
-    /** Every text and description on the screen, to the log under [tag]: what a failed step was looking at. */
-    fun logScreen(tag: String) {
+    /** Every text and description on the screen, to the log under [tag] and returned: what a failed step was looking at. */
+    fun logScreen(tag: String): String =
         runCatching {
             val items = device.findObjects(By.pkg(packageName)).mapNotNull { o ->
                 val txt = runCatching { o.text }.getOrNull()?.takeIf { it.isNotBlank() }
                 val desc = runCatching { o.contentDescription }.getOrNull()?.takeIf { it.isNotBlank() }
                 if (txt != null || desc != null) "[t=$txt|d=$desc]" else null
             }
-            items.joinToString(" ").chunked(LOG_CHUNK).forEachIndexed { i, c -> Log.e(tag, "$i $c") }
-        }
-    }
+            items.joinToString(" ").also { all -> all.chunked(LOG_CHUNK).forEachIndexed { i, c -> Log.e(tag, "$i $c") } }
+        }.getOrDefault("")
 
     private inline fun withStaleRetry(times: Int = STALE_RETRIES, block: () -> Unit) {
         var last: StaleObjectException? = null
@@ -169,5 +185,6 @@ class ScreenDriver(private val device: UiDevice) {
         private const val STALE_RETRIES = 10
         private const val STALE_SETTLE_MS = 700L
         private const val LOG_CHUNK = 3500
+        private const val SCROLL_PERCENT = 0.5f
     }
 }

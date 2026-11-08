@@ -98,7 +98,8 @@ abstract class AbstractPumpUiTest {
             screen.waitForExactOrThrow(screens.unpairedMark, COMMAND_TIMEOUT)
             scenario.awaitTrue("AAPS has no pump any more", COMMAND_TIMEOUT) { !pump.isInitialized() }
         } catch (t: Throwable) {
-            screen.logScreen("E2E_${pump.javaClass.simpleName}")
+            // Also in the error, which the test output keeps: on CI the logcat can have rotated away by the time it is read.
+            t.addSuppressed(IllegalStateException("On the screen: " + screen.logScreen("E2E_${pump.javaClass.simpleName}")))
             throw t
         } finally {
             activity.close()
