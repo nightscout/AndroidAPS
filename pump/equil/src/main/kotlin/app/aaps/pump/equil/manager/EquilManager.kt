@@ -315,10 +315,16 @@ class EquilManager(
             val command = CmdLargeBasalSet(detailedBolusInfo.insulin, aapsLogger, preferences, this, secondsPerUnit)
             val equilHistoryRecord = addHistory(command)
             lastDeliveryStoppedAt = null
+            // Before the command: a stop that comes while it waits for its answer must not be undone.
+            bolusProfile.stoppedAt = 0
+            bolusProfile.stop = false
             equilBLE.writeCmd(command)
             awaitAnswer(command)
-            val bolusStart = System.currentTimeMillis()
-            bolusProfile.stop = false
+            // The pump starts when the command reaches it, before its answer. Counted from the sending, so a stop
+            // never makes AAPS count less than was given.
+            val bolusStart = command.commandSentAt.takeIf { it > 0 } ?: System.currentTimeMillis()
+            val unitsPerSecond = detailedBolusInfo.insulin / command.stepTime
+            var stoppedAmount: Double? = null
             val sleep = 2000
             // The pump gives the bolus in command.stepTime seconds; the progress follows that time.
             val percent1 = 100f * (sleep / 1000f) / command.stepTime
@@ -337,6 +343,11 @@ class EquilManager(
                     }
                     // constraint percent.
                     percent = min(percent, 100.0f)
+                    // A stop the pump answered: what it gave until then comes from the times, not from the timer, which
+                    // steps every 2 s. A stop without an answer is no stop: the whole amount counts.
+                    val stoppedAt = bolusProfile.stoppedAt
+                    if (bolusProfile.stop && stoppedAt > 0)
+                        stoppedAmount = unitsGivenUntil(bolusStart, stoppedAt, unitsPerSecond, detailedBolusInfo.insulin)
                     bolusProgressData.updateProgress(percent = 100)
                     result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
                 }
@@ -356,7 +367,7 @@ class EquilManager(
                     result.comment = rh.gs(R.string.equil_command_connect_error)
                 }
             }
-            result.bolusDelivered = percent / 100.0 * detailedBolusInfo.insulin
+            result.bolusDelivered = stoppedAmount ?: (percent / 100.0 * detailedBolusInfo.insulin)
             val currentTime = System.currentTimeMillis()
             if (result.enacted) {
                 if (start == BolusStart.STARTED) command.resolvedResult = ResolvedResult.SUCCESS
@@ -376,11 +387,20 @@ class EquilManager(
             // no link left. Then connect again and read the run mode and history now: otherwise a pump alarm
             // during the bolus (e.g. empty reservoir) was only seen at the next loop run (#3467).
             if (equilBLE.isConnected) loadEquilHistory() else readModeAndHistory()
-            if (result.success) correctBolusIfDeliveryStopped(result, detailedBolusInfo, bolusStart, currentTime, detailedBolusInfo.insulin / command.stepTime)
+            if (result.success) correctBolusIfDeliveryStopped(result, detailedBolusInfo, bolusStart, currentTime, unitsPerSecond)
         } catch (ex: Exception) {
             result.success(false).enacted(false).comment(ex.message ?: "Exception")
         }
         return result
+    }
+
+    /**
+     * What a bolus given at [unitsPerSecond] from [start] gave until [end]. Rounded up to the 0.05 U step and at most
+     * [requested]: AAPS must never count less insulin than was given.
+     */
+    internal fun unitsGivenUntil(start: Long, end: Long, unitsPerSecond: Double, requested: Double): Double {
+        val units = (end - start).coerceAtLeast(0) / 1000.0 * unitsPerSecond
+        return min(requested, ceil(units * BOLUS_STEPS_PER_UNIT - 1e-9) / BOLUS_STEPS_PER_UNIT)
     }
 
     /**
@@ -396,8 +416,7 @@ class EquilManager(
         // Pump time has whole seconds and may be a little off; an older stop is not about this bolus.
         if (stoppedAt < bolusStart - T.secs(10).msecs()) return
         val requested = result.bolusDelivered
-        val units = (stoppedAt - bolusStart).coerceAtLeast(0) / 1000.0 * unitsPerSecond
-        val given = ceil(units * BOLUS_STEPS_PER_UNIT - 1e-9) / BOLUS_STEPS_PER_UNIT
+        val given = unitsGivenUntil(bolusStart, stoppedAt, unitsPerSecond, requested)
         if (given >= requested) return
         aapsLogger.debug(LTag.PUMPCOMM, "Delivery stopped during the bolus: $given of $requested U")
         result.bolusDelivered = given
@@ -416,6 +435,8 @@ class EquilManager(
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             awaitAnswer(command)
+            // The pump stopped when the stop reached it, at the latest now. Counted from now: never less than was given.
+            if (command.cmdSuccess) bolusProfile.stoppedAt = System.currentTimeMillis()
             bolusProfile.stop = command.cmdSuccess
             aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===")
             result.success = command.cmdSuccess

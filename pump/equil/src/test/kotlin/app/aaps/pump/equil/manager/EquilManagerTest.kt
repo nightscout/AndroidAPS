@@ -365,6 +365,20 @@ class EquilManagerTest : TestBaseWithProfile() {
         assertEquals(EquilManager.BolusStart.STARTED, equilManager.bolusStart(command))
     }
 
+    /**
+     * Found by the pump scenario tests: a stopped bolus counted what the 2 s progress timer had reached, 0.40 U where the
+     * pump gave 0.27 U. Now from the times, rounded up to the 0.05 U step, never more than asked for.
+     */
+    @Test
+    fun `a stopped bolus counts what was given until the stop, rounded up`() {
+        // 1.3 s at 12 U/min (0.2 U/s) is 0.26 U.
+        assertEquals(0.30, equilManager.unitsGivenUntil(start = 0, end = 1_300, unitsPerSecond = 0.2, requested = 2.0), 0.0001)
+        // Exactly on a step stays on it.
+        assertEquals(0.20, equilManager.unitsGivenUntil(start = 0, end = 1_000, unitsPerSecond = 0.2, requested = 2.0), 0.0001)
+        // A stop after the end is the whole bolus.
+        assertEquals(2.0, equilManager.unitsGivenUntil(start = 0, end = 20_000, unitsPerSecond = 0.2, requested = 2.0), 0.0001)
+    }
+
     /** Found by the pump scenario tests: the answer came before the wait began, and the driver slept the whole timeout. */
     @Test
     fun `an answer that came before the wait ends it at once`() {

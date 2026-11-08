@@ -276,8 +276,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
      * @param timeoutMs records are written by the driver as it learns of them. Some learn only once a bolus would have ended.
      */
     fun checkBolusRecords(timeoutMs: Long = RECORD_TIMEOUT) {
-        awaitValue(timeoutMs) { (storedBoluses() == givenBoluses()).takeIf { it } }
-        assertWithMessage("bolus records in AAPS against the boluses the pump gave").that(storedBoluses()).isEqualTo(givenBoluses())
+        awaitValue(timeoutMs) { recordsMatch().takeIf { it } }
+        if (recordsMatch()) return
+        assertWithMessage("bolus records in AAPS against the boluses the pump gave, AAPS may count up to ${pump.bolusOvercount} U more")
+            .that(storedBoluses()).isEqualTo(givenBoluses())
+    }
+
+    /** One record for each bolus the pump gave, in order, each at least what it gave and at most [PumpUnderTest.bolusOvercount] more. */
+    private fun recordsMatch(): Boolean {
+        val stored = storedBoluses()
+        val given = givenBoluses()
+        val over = centi(pump.bolusOvercount)
+        return stored.size == given.size && stored.zip(given).all { (record, gave) -> record >= gave && record - gave <= over }
     }
 
     fun checkNoAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {

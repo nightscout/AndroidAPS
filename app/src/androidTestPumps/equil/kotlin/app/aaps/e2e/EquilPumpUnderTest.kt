@@ -30,6 +30,12 @@ class EquilPumpUnderTest : PumpUnderTest {
     /** A first guess with room, set from what a run shows. */
     override val maxCommandsPerStatusRead = 15
 
+    /**
+     * The driver works out a stopped bolus from the times and rounds it up to the 0.05 U step, and the stop reaches the
+     * pump a moment before its answer: at 12 U/min that moment is about 0.05 U more.
+     */
+    override val bolusOvercount = 0.1
+
     private val accessors get() = testGraphs.rootGraph as EquilAccessors
 
     override fun control(): PumpEmulatorControl =

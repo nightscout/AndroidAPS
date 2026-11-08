@@ -36,6 +36,9 @@ abstract class BaseCmd(
      * may have done it. Before it, the pump cannot have.
      */
     @Volatile var commandSent: Boolean = false
+
+    /** When [commandSent] became true. The pump cannot act on the command before it. */
+    @Volatile var commandSentAt: Long = 0
     var enacted = true
     var response: EquilResponse? = null
     var runPwd: String? = null
