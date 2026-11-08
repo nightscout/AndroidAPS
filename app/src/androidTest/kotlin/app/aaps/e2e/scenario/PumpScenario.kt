@@ -1,6 +1,8 @@
 package app.aaps.e2e.scenario
 
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.os.SystemClock
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
@@ -160,9 +162,30 @@ class PumpScenario(private val pump: PumpUnderTest) {
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { testGraphs.activePlugin.activePump.disconnect("test end") }
+        stopDriver()
         EmulatedOptions.enabled = emptySet()
         clearAppSettings(instrumentation.targetContext)
     }
+
+    /**
+     * The next test has a new graph, but an Android service of the driver is made once for the process. Left bound, the
+     * next test's driver binds to this one, and its link then runs on the objects of this test's graph. So the driver is
+     * stopped as a real one is, which unbinds its service, and the test waits until the system has destroyed it.
+     */
+    private fun stopDriver() {
+        val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
+        runCatching { runBlocking { plugin.setPluginEnabledAwaiting(PluginType.PUMP, false) } }
+        val driverPackage = plugin.javaClass.packageName
+        awaitTrue("the services of ${pump.pluginName} are stopped", SERVICE_STOP_TIMEOUT) { runningServices().none { it.startsWith(driverPackage) } }
+    }
+
+    /** The services of this app that run now. The call only returns the caller's own services, which is all this needs. */
+    @Suppress("DEPRECATION")
+    private fun runningServices(): List<String> =
+        (instrumentation.targetContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+            .getRunningServices(Int.MAX_VALUE)
+            .filter { it.service.packageName == instrumentation.targetContext.packageName }
+            .map { it.service.className }
 
     // ---- Steps ------------------------------------------------------------------------------
 
@@ -371,6 +394,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val STEP_TIMEOUT = 30_000L
         const val RECORD_TIMEOUT = 10_000L
         const val LINK_TIMEOUT = 30_000L
+        const val SERVICE_STOP_TIMEOUT = 10_000L
 
         /** A 2 U bolus at the real speed of the slowest emulated pump, with room. */
         const val BOLUS_TIMEOUT = 120_000L
