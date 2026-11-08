@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -371,10 +372,15 @@ class AaruyPlugin(
 
     override fun canHandleDST(): Boolean = true
 
-    /** The profile goes to the pump in a moved form. The keep alive worker sees that it no longer matches and sends it again. */
+    /**
+     * The profile goes to the pump in a moved form, so a new time zone needs it again. Asked at once, as the keep alive worker
+     * does: seen on a real pump, its next check came only minutes later, and the pump ran the old times until then. The
+     * queue sends the profile only when the pump does not have it.
+     */
     override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.info(LTag.PUMP, "Time or time zone changed: $timeChangeType")
         commandQueue.readStatus(rh.gs(R.string.aaruy_time_changed))
+        rxBus.send(EventProfileChangeRequested())
     }
 
     override fun clearAllTables() = aaruyHistoryDatabase.clearAllTables()

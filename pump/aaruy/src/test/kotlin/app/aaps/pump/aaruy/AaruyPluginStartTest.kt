@@ -1,6 +1,7 @@
 package app.aaps.pump.aaruy
 
 import android.content.Context
+import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
@@ -29,7 +31,9 @@ import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class AaruyPluginStartTest {
@@ -37,9 +41,10 @@ class AaruyPluginStartTest {
     private val preferences: Preferences = mock()
     private val commandQueue: CommandQueue = mock()
     private val rh: ResourceHelper = mock()
+    private val rxBus: RxBus = mock()
     private val pump = AaruyPump(mock<AAPSLogger>(), rh, preferences, mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
     private val plugin = AaruyPlugin(
-        mock<AAPSLogger>(), rh, preferences, commandQueue, mock<RxBus>(), mock<Context>(), pump,
+        mock<AAPSLogger>(), rh, preferences, commandQueue, rxBus, mock<Context>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { mock<PumpEnactResult>() },
         mock<AaruyBLE>(), mock<AaruyReplaceSteps>(), mock<BlePreCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>()
     )
@@ -66,6 +71,18 @@ class AaruyPluginStartTest {
             withTimeout(5_000) { readStarted.await() }
         } finally {
             scope.cancel()
+        }
+    }
+
+    /** Seen on a real pump: after a new time zone it ran the old times for minutes, until the keep alive worker came. */
+    @Test
+    fun aTimeZoneChangeAsksForTheProfileAtOnce(): Unit = runBlocking {
+        whenever(rh.gs(any<Int>())).thenReturn("Time or time zone changed")
+        whenever(commandQueue.readStatus(any())).thenReturn(mock<PumpEnactResult>())
+        plugin.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged)
+        inOrder(commandQueue, rxBus) {
+            verify(commandQueue).readStatus(any())
+            verify(rxBus).send(EventProfileChangeRequested())
         }
     }
 }
