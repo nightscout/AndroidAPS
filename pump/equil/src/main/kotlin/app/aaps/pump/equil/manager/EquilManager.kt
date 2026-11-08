@@ -621,7 +621,9 @@ class EquilManager(
             SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
             val currentIndex = loadEquilHistory(startIndex)
             aapsLogger.debug(LTag.PUMPCOMM, "while index===$startIndex===$index===$currentIndex")
-            if (currentIndex > 1) {
+            // -1 is a failed read. Index 1 is an entry like any other: with "> 1" the read stopped there every time,
+            // so after the log started again at 1 the driver read no more of it (found by the pump scenario tests).
+            if (currentIndex > 0) {
                 setStartHistoryIndex(currentIndex)
                 allCount++
             } else {

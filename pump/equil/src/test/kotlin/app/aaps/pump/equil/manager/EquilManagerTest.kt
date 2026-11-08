@@ -18,6 +18,7 @@ import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.database.EquilTempBasalRecord
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilResumed
+import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdLargeBasalSet
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
@@ -636,6 +637,38 @@ class EquilManagerTest : TestBaseWithProfile() {
         assertEquals(-1, result)
         assertTrue(System.currentTimeMillis() - start < 5_000, "must not wait for the 22 s timeout")
         verify(equilBLE).readHistory(any())
+    }
+
+    /** The link answers every history request at once. */
+    private fun answerHistoryReads() {
+        whenever(equilBLE.readHistory(any())).thenAnswer { (it.arguments[0] as CmdHistoryGet).cmdSuccess = true; true }
+    }
+
+    @Test
+    fun `a new log is read from its first entry`() {
+        prepareRunMode(RunMode.RUN)
+        answerHistoryReads()
+        equilManager.setStartHistoryIndex(0)
+        equilManager.setHistoryIndex(3)
+
+        equilManager.loadEquilHistory()
+
+        verify(equilBLE, times(3)).readHistory(any())
+        assertEquals(3, equilManager.getStartHistoryIndex())
+    }
+
+    @Test
+    fun `the log is read on after it started again at 1`() {
+        prepareRunMode(RunMode.RUN)
+        answerHistoryReads()
+        equilManager.setStartHistoryIndex(1999)
+        equilManager.setHistoryIndex(2)
+
+        equilManager.loadEquilHistory()
+
+        // 2000, then 1 and 2.
+        verify(equilBLE, times(3)).readHistory(any())
+        assertEquals(2, equilManager.getStartHistoryIndex())
     }
 
     @Test
