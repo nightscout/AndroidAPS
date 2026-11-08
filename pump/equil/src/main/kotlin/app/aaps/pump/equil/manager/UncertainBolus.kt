@@ -31,6 +31,16 @@ internal class UncertainBolus(
     val recordTime: Long
 ) {
 
+    /**
+     * "Not given" needs an advertisement from this time on. The advertisement brings the newest log index, and only a
+     * read up to it can show that the start is not there. Seen on a real pump (2026-11-08): an entry was in the
+     * advertisement 20 s after it was written. UNVERIFIED: how much sooner. A wrong "not given" counts less than was given.
+     */
+    val notGivenAfter: Long get() = sentAt + ADVERTISEMENT_FRESH_MS
+
+    /** The time from which a read can decide every case. */
+    val readAfter: Long get() = maxOf(decideAfter, notGivenAfter)
+
     /** A bolus as the log shows it, in pump time. [end] is null until its end entry is read. */
     class Logged(val start: Long, var end: Long? = null)
 
@@ -62,6 +72,9 @@ internal class UncertainBolus(
 
         /** The pump counts its log from 1 to 2000 and then starts at 1 again. */
         private const val LOG_SIZE = 2000
+
+        /** See [notGivenAfter]. */
+        private const val ADVERTISEMENT_FRESH_MS = 30_000L
 
         private const val PORT_STATUS = 4
         private const val TYPE_STATUS = 0

@@ -248,6 +248,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         // After pairing, the app stores pairingPasswordKey in preferences
         // and uses it as the encryption key for all subsequent commands.
         state.devicePassword = Utils.hexStringToBytes(state.pairingPasswordKey)
+        awaitingPrime = true
 
         // Must send a response so CmdPair.decodeEquilPacket() calls decodeConfirm()
         // which sets cmdSuccess=true. Without a response, the command times out.
@@ -352,8 +353,18 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         val resistance = state.resistance
         response[6] = (resistance and 0xFF).toByte()
         response[7] = ((resistance shr 8) and 0xFF).toByte()
+        // Seen on a real pump (2026-11-08): its activation logged (4,7,0) "prime" with rate 0. UNVERIFIED: that it is
+        // written when the fill reaches the piston. Without it a new emulated pump had an empty log, which advertises
+        // index 0, and a driver cannot learn anything from that.
+        if (awaitingPrime && resistance >= PISTON_REACHED) synchronized(state) {
+            awaitingPrime = false
+            log(TYPE_PRIME, rate = 0)
+        }
         return response
     }
+
+    /** Set by a pairing: the next fill that reaches the piston logs the prime. */
+    @Volatile private var awaitingPrime = false
 
     private fun processBasalGet(): ByteArray {
         // CmdBasalGet: [index(4)][2 unused][48 half hours, low byte first]. The emulator keeps one value per hour.
@@ -895,7 +906,11 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         private const val TYPE_RESERVOIR = 1
         private const val TYPE_BLOCKAGE = 2
         private const val TYPE_PAUSE = 5
+        private const val TYPE_PRIME = 7
         private const val TYPE_REWIND = 8
+
+        /** CmdResistanceGet: from this on the piston reached the insulin. */
+        private const val PISTON_REACHED = 500
         private const val TYPE_TEMP_BASAL_START = 10
         private const val TYPE_TEMP_BASAL_END = 11
 

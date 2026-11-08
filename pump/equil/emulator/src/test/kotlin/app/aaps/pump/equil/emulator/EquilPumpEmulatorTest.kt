@@ -652,6 +652,11 @@ class EquilPumpEmulatorTest {
         // Now should be back in AWAITING_INITIAL — normal flow should work
         val r = sendInitial()
         assertNotNull(r)
+
+        // The fill reaches the piston: a real pump logged the prime at its activation, so its log is never empty.
+        sendCommand(byteArrayOf(0x02, 0x02), port = "1515A1B2")
+        assertEquals(listOf(4, 7, 0), code(lastEvent()))
+        assertEquals(0, lastEvent().rate)
     }
 
     // --- Helper: convertString (mirrors CmdPair logic) ---

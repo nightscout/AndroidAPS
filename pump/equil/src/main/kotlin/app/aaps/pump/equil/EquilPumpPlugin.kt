@@ -468,11 +468,13 @@ class EquilPumpPlugin(
      * A bolus whose start or stop got no answer is decided from the pump log, read on a connection made after the bolus
      * was over (`EquilManager.decideUncertainBolus`). Ask for such reads now instead of waiting for the next loop run.
      * The queue closes an idle link, so a read some time after the last command comes on a new connection.
+     * On the scope of this start: a stopped driver asks for nothing more.
      */
     private fun readLogForUncertainBolus() {
         val bolus = equilManager.uncertainBolus ?: return
-        pluginScope.launch {
-            delay((bolus.decideAfter - System.currentTimeMillis()).coerceAtLeast(0) + UNCERTAIN_BOLUS_READ_DELAY_MS)
+        val startedScope = scope ?: return
+        startedScope.launch {
+            delay((bolus.readAfter - System.currentTimeMillis()).coerceAtLeast(0) + UNCERTAIN_BOLUS_READ_DELAY_MS)
             repeat(UNCERTAIN_BOLUS_READS) {
                 if (equilManager.uncertainBolus !== bolus) return@launch
                 commandQueue.customCommand(CmdModeAndHistoryGet())

@@ -164,6 +164,10 @@ class PumpScenario(private val pump: PumpUnderTest) {
         if (killed) return
         scope.cancel()
         runCatching { commandQueue.clear() }
+        // The clear leaves a running command running. Stopped under it, the driver connects again for it and writes its
+        // pump into the settings of the next test, which then starts as paired: its driver reads status in the middle of
+        // the pairing, and the pairing hung (seen with Equil).
+        runCatching { awaitQueueIdle(QUEUE_END_TIMEOUT) }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { testGraphs.activePlugin.activePump.disconnect("test end") }
         if (appStarted) stopDriver()
@@ -436,6 +440,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val RECORD_TIMEOUT = 10_000L
         const val LINK_TIMEOUT = 30_000L
         const val SERVICE_STOP_TIMEOUT = 10_000L
+
+        /** A command that runs at the test end: a status read that waits for its link, or a bolus to its end. */
+        const val QUEUE_END_TIMEOUT = 60_000L
 
         /** A 2 U bolus at the real speed of the slowest emulated pump, with room. */
         const val BOLUS_TIMEOUT = 120_000L

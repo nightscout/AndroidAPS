@@ -106,7 +106,7 @@ class EquilEmulatorBleTransport(
     private fun armIdleClose() {
         val generation = connectionGeneration
         idleClose?.cancel(false)
-        idleClose = idleCloser.schedule({
+        idleClose = timer.schedule({
             if (generation == connectionGeneration && connected) {
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: the pump closes the idle link")
                 breakLink()
@@ -178,27 +178,49 @@ class EquilEmulatorBleTransport(
 
     // --- BleScanner ---
 
+    /**
+     * As the real scanner: a listener sees only what the pump advertises after it started to listen, never an older
+     * advertisement. The pump advertises all the time, so while a scan runs it is found again and again, each time with
+     * what it holds now. An older advertisement kept for new listeners had the serial of before a discovery scan gave the
+     * pump a new one, so the wizard paired with a serial the pump no longer had, and with an old log index.
+     */
     private inner class EmulatorScanner : BleScanner {
 
-        private val _scannedDevices = MutableSharedFlow<ScannedDevice>(replay = 1, extraBufferCapacity = 10)
+        private val _scannedDevices = MutableSharedFlow<ScannedDevice>(extraBufferCapacity = 10)
         override val scannedDevices: SharedFlow<ScannedDevice> = _scannedDevices
 
+        @Volatile private var advertising: ScheduledFuture<*>? = null
+
+        @Synchronized
         override fun startScan() {
             // Generate new serial only for discovery scans (pairing), not reconnections
             if (scanAddress.isNullOrEmpty()) {
                 serialNumberProvider?.invoke()?.let { pumpState.serialNumber = it }
             }
-            // Immediately emit a fake device with scan record containing pump advertisement data
-            _scannedDevices.tryEmit(
-                ScannedDevice(
-                    name = "Equil - ${pumpState.serialNumber}",
-                    address = "00:00:00:00:00:00",
-                    scanRecordBytes = buildAdvertisementData()
-                )
+            advertising?.cancel(false)
+            // Seen on a real pump (2026-11-08): found 0.2 to 1 s after the scan started. UNVERIFIED: how often it advertises.
+            val real = speed == EmulatorSpeed.REAL
+            advertising = timer.scheduleWithFixedDelay(
+                {
+                    _scannedDevices.tryEmit(
+                        ScannedDevice(
+                            name = "Equil - ${pumpState.serialNumber}",
+                            address = "00:00:00:00:00:00",
+                            scanRecordBytes = buildAdvertisementData()
+                        )
+                    )
+                },
+                if (real) REAL_FIRST_ADVERTISEMENT_MS else FAST_ADVERTISEMENT_MS,
+                if (real) REAL_ADVERTISEMENT_MS else FAST_ADVERTISEMENT_MS,
+                TimeUnit.MILLISECONDS
             )
         }
 
-        override fun stopScan() {}
+        @Synchronized
+        override fun stopScan() {
+            advertising?.cancel(false)
+            advertising = null
+        }
     }
 
     // --- BleGatt ---
@@ -484,9 +506,14 @@ class EquilEmulatorBleTransport(
         const val REAL_PACKET_GAP_MS = 40L
         const val FAST_ANSWER_MS = 5L
 
-        /** One daemon thread for all emulated pumps, so a test never waits for it. */
-        val idleCloser: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { runnable ->
-            Thread(runnable, "EquilEmulatorIdleClose").apply { isDaemon = true }
+        /** See EmulatorScanner. */
+        const val REAL_FIRST_ADVERTISEMENT_MS = 200L
+        const val REAL_ADVERTISEMENT_MS = 500L
+        const val FAST_ADVERTISEMENT_MS = 20L
+
+        /** The pump's own times: the idle close and the advertisements. One daemon thread for all, so a test never waits for it. */
+        val timer: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { runnable ->
+            Thread(runnable, "EquilEmulatorPumpTimer").apply { isDaemon = true }
         }
     }
 }

@@ -479,8 +479,8 @@ class EquilManagerTest : TestBaseWithProfile() {
     private val sent = now - 10 * minute
 
     /** 2 U at 1.5 U/min, sent at [sentAt]. Its log entries come after index 1500. */
-    private fun uncertainBolus(sentAt: Long = sent) = UncertainBolus(
-        requested = 2.0, unitsPerSecond = 1.0 / 40, indexBefore = 1500, sentAt = sentAt, decideAfter = sentAt + 83_000,
+    private fun uncertainBolus(sentAt: Long = sent, decideAfter: Long = sentAt + 83_000) = UncertainBolus(
+        requested = 2.0, unitsPerSecond = 1.0 / 40, indexBefore = 1500, sentAt = sentAt, decideAfter = decideAfter,
         bolusType = BS.Type.NORMAL, pumpId = sentAt - 1000, recordTime = sentAt + 1000
     )
 
@@ -548,12 +548,26 @@ class EquilManagerTest : TestBaseWithProfile() {
     @Test
     fun `the decision waits for a whole read on a connection after the bolus`() = runTest {
         prepareHistory()
+        // First, while no advertisement came yet: one with log index 0 has no log in it.
+        val noLog = uncertainBolus(sentAt = System.currentTimeMillis() - 60_000, decideAfter = System.currentTimeMillis() - 50_000)
+        equilManager.uncertainBolus = noLog
+        advertise(0)
+        equilManager.decideUncertainBolus(complete = true)
+        assertEquals(noLog, equilManager.uncertainBolus)
+
         // Read before the bolus would have ended: the log may not have all of it yet.
         val running = uncertainBolus(sentAt = System.currentTimeMillis())
         equilManager.uncertainBolus = running
         advertise(1500)
         equilManager.decideUncertainBolus(complete = true)
         assertEquals(running, equilManager.uncertainBolus)
+
+        // A short bolus is over, but an advertisement 10 s after the command may not have its start yet (seen within 20 s).
+        val short = uncertainBolus(sentAt = System.currentTimeMillis() - 10_000, decideAfter = System.currentTimeMillis() - 5_000)
+        equilManager.uncertainBolus = short
+        advertise(1500)
+        equilManager.decideUncertainBolus(complete = true)
+        assertEquals(short, equilManager.uncertainBolus)
 
         // A read that did not reach the advertised index.
         equilManager.uncertainBolus = uncertainBolus()

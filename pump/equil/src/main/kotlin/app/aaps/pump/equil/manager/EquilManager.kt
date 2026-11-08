@@ -455,7 +455,8 @@ class EquilManager(
      * Decides the [uncertainBolus] after a read that reached the newest index the pump advertised at a connection made
      * after the bolus was over. No bolus in the log after the command: not given. A start and an end: (end - start + 1 s)
      * x the speed of the command, as the pump time has whole seconds. It is rounded up and at most the amount asked for,
-     * so AAPS never counts less than was given. A start without an end yet waits for the next read.
+     * so AAPS never counts less than was given. A start without an end yet waits for the next read, and "not given"
+     * waits for an advertisement from [UncertainBolus.notGivenAfter] on.
      * @param complete the read reached the advertised index
      */
     @VisibleForTesting
@@ -465,6 +466,7 @@ class EquilManager(
         val logged = bolus.inLog()
         val end = logged?.end
         if (logged != null && end == null) return
+        if (logged == null && advertisedAt < bolus.notGivenAfter) return
         uncertainBolus = null
         val given = if (logged == null || end == null) 0.0
         else unitsGivenUntil(logged.start, end + T.secs(1).msecs(), bolus.unitsPerSecond, bolus.requested)
@@ -1114,7 +1116,9 @@ class EquilManager(
         val type = data[26].toInt() and 0xff
         val level = data[27].toInt() and 0xff
         aapsLogger.debug(LTag.PUMPCOMM, "decodeData historyIndex $historyIndex newest event port:$port type:$type level:$level")
-        advertisedAt = System.currentTimeMillis()
+        // Index 0 is no log at all (the pump counts from 1), so it says nothing about the newest entry. Such an
+        // advertisement once made a given bolus look "not given" (an emulator that handed out an old advertisement).
+        if (historyIndex > 0) advertisedAt = System.currentTimeMillis()
         setHistoryIndex(historyIndex)
         setLastDataTime(System.currentTimeMillis())
         setCurrentInsulin(insulin)

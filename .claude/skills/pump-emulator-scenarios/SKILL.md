@@ -30,6 +30,9 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
   history has times no real pump gives. Things that wait for a time, as the end of a temp basal, are raised as events.
 - The emulator object lives in `PumpEmulators`, a graph input, not in the graph. Bind it with
   `pumpEmulators.getOrCreate(<its key>) { ... }`.
+- A scanner hands out only what the pump advertises now, as the real one does. A `SharedFlow` with `replay` kept an old
+  advertisement for new listeners: Equil's wizard paired with a serial the pump no longer had, and the driver read an
+  old log index. Advertise again and again while a scan runs instead, until `stopScan`.
 
 ## Adding a pump
 
@@ -80,6 +83,10 @@ the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@
 - An Android service of a driver is made once for the process, but each test has a new graph. Left bound, the next
   test's plugin binds the old service, whose objects belong to the old graph: its link runs there and the wizard waits
   for ever. `tearDown` therefore stops the driver as a real stop does and waits until its services are gone.
+- `commandQueue.clear()` leaves the running command running. A driver stopped under it connects again for it and
+  writes its pump into the settings, which the next test has already cleared: that test starts as paired, and its
+  pairing hung. `tearDown` waits for the queue before it stops the driver.
+- `RetryRule` runs a failed test again, so a flake shows only in the log: grep the logcat for `FAILED attempt`.
 - The queue drops a status read while another one waits or runs, and reports it as failed. A driver start queues one,
   and during a bolus it waits for the bolus end. The `readStatus` step waits for that one first.
 - A driver that keeps no pump state is ready (`isInitialized()`) only after its first status read, as at an app start.
