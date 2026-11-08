@@ -5,8 +5,10 @@ import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
 import com.google.common.truth.Truth.assertThat
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 /**
  * Regression tests for the one thing the Gson to kotlinx move changed that nothing was watching.
@@ -96,6 +98,59 @@ class FoodAndEntryToleranceTest {
         val response = nsSdkJson.decodeFromString(NSResponse.serializer(ListSerializer(RemoteFood.serializer())), json)
         assertThat(response.result).hasSize(2)
         assertThat(response.result?.mapNotNull { it.toNSFood() }).hasSize(1)
+    }
+
+    /**
+     * Another client (the Nightscout food editor, an app that computes values per portion) can write
+     * decimals. AAPS keeps whole numbers: they are rounded, instead of the decode failing.
+     */
+    @Test
+    fun `decimal food values are rounded`() {
+        val json = """{"type":"food","name":"Apple","portion":100.0,"carbs":10.5,"fat":12.0,"protein":"0.4","energy":197.6,"gi":40.2,"unit":"g"}"""
+
+        val food = nsSdkJson.decodeFromString(RemoteFood.serializer(), json).toNSFood()!!
+
+        assertThat(food.carbs).isEqualTo(11)
+        assertThat(food.fat).isEqualTo(12)
+        assertThat(food.protein).isEqualTo(0)
+        assertThat(food.energy).isEqualTo(198)
+        assertThat(food.gi).isEqualTo(40)
+    }
+
+    /** The case that mattered: one decimal value used to lose the whole page of foods. */
+    @Test
+    fun `a food with a decimal value does not lose the list`() {
+        val json = """
+            [{"type":"food","name":"Apple","portion":100.0,"carbs":12,"unit":"g"},
+             {"type":"food","name":"Pear","portion":100.0,"carbs":10.5,"unit":"g"}]
+        """.trimIndent()
+
+        val foods = nsSdkJson.decodeFromString(ListSerializer(RemoteFood.serializer()), json).mapNotNull { it.toNSFood() }
+
+        assertThat(foods.map { it.name to it.carbs }).containsExactly("Apple" to 12, "Pear" to 11)
+    }
+
+    /** Whole numbers, missing and null values read as before, and the upload format does not change. */
+    @Test
+    fun `whole numbers are read and written as before`() {
+        val json = """{"type":"food","name":"Apple","portion":100.0,"carbs":12,"fat":null,"unit":"g"}"""
+
+        val food = nsSdkJson.decodeFromString(RemoteFood.serializer(), json)
+        assertThat(food.carbs).isEqualTo(12)
+        assertThat(food.fat).isNull()
+        assertThat(food.protein).isNull()
+
+        val written = nsSdkJson.encodeToString(RemoteFood.serializer(), food)
+        assertThat(written).contains("\"carbs\":12")
+        assertThat(written).doesNotContain("\"carbs\":12.")
+    }
+
+    /** Text that is not a number still fails, as before: nothing is guessed. */
+    @Test
+    fun `a value that is not a number is still refused`() {
+        val json = """{"type":"food","name":"Apple","portion":100.0,"carbs":"a lot","unit":"g"}"""
+
+        assertThrows<SerializationException> { nsSdkJson.decodeFromString(RemoteFood.serializer(), json) }
     }
 
     // ---------------------------------------------------------------- entries
