@@ -16,6 +16,7 @@ import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilResumed
+import app.aaps.pump.equil.manager.command.CmdLargeBasalSet
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.toList
@@ -349,6 +350,17 @@ class EquilManagerTest : TestBaseWithProfile() {
             eq(empty), any(), eq(10_000L), any(), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(empty), any(), any()
         )
         assertEquals(null, equilManager.equilState?.deliveryStoppedAt)
+    }
+
+    /** Found by the pump scenario tests: a lost answer was taken for a bolus the pump never got, and nothing was recorded. */
+    @Test
+    fun `a bolus command that went out without an answer may run, one that never went out does not`() {
+        val command = CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 40)
+        assertEquals(EquilManager.BolusStart.NOT_SENT, equilManager.bolusStart(command))
+        command.commandSent = true
+        assertEquals(EquilManager.BolusStart.NO_ANSWER, equilManager.bolusStart(command))
+        command.cmdSuccess = true
+        assertEquals(EquilManager.BolusStart.STARTED, equilManager.bolusStart(command))
     }
 
     @Test

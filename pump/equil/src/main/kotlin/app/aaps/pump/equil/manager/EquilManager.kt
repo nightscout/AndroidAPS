@@ -261,6 +261,25 @@ class EquilManager(
         return result
     }
 
+    /** What came of a bolus command, as far as the driver can know it. */
+    internal enum class BolusStart {
+
+        /** The pump answered: it gives the bolus. */
+        STARTED,
+
+        /** The command never went to the pump, so it gives nothing. */
+        NOT_SENT,
+
+        /** The command went out, and its answer did not come: the pump may give the bolus. */
+        NO_ANSWER
+    }
+
+    internal fun bolusStart(command: BaseCmd): BolusStart = when {
+        command.cmdSuccess  -> BolusStart.STARTED
+        command.commandSent -> BolusStart.NO_ANSWER
+        else                -> BolusStart.NOT_SENT
+    }
+
     suspend fun bolus(detailedBolusInfo: DetailedBolusInfo, bolusProfile: BolusProfile): PumpEnactResult {
         val result = pumpEnactResultProvider()
         try {
@@ -281,28 +300,42 @@ class EquilManager(
             val percent1 = 100f * (sleep / 1000f) / command.stepTime
             aapsLogger.debug(LTag.PUMPCOMM, "sleep===" + detailedBolusInfo.insulin + "===" + percent1)
             var percent = 0f
-            if (command.cmdSuccess) {
-                result.success = true
-                result.enacted(true)
-                while (!bolusProfile.stop && percent < 100) {
-                    bolusProgressData.updateProgress(percent.toInt())
-                    SystemClock.sleep(sleep.toLong())
-                    percent += percent1
-                    aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.stop)
+            val start = bolusStart(command)
+            when (start) {
+                BolusStart.STARTED   -> {
+                    result.success = true
+                    result.enacted(true)
+                    while (!bolusProfile.stop && percent < 100) {
+                        bolusProgressData.updateProgress(percent.toInt())
+                        SystemClock.sleep(sleep.toLong())
+                        percent += percent1
+                        aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.stop)
+                    }
+                    // constraint percent.
+                    percent = min(percent, 100.0f)
+                    bolusProgressData.updateProgress(percent = 100)
+                    result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
                 }
-                // constraint percent.
-                percent = min(percent, 100.0f)
-                bolusProgressData.updateProgress(percent = 100)
-                result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
-            } else {
-                result.success = false
-                result.enacted(false)
-                result.comment = rh.gs(R.string.equil_command_connect_error)
+
+                // The pump may give it: the whole amount counts, and the user must not bolus again.
+                BolusStart.NO_ANSWER -> {
+                    aapsLogger.warn(LTag.PUMPCOMM, "The bolus command went out and got no answer: the pump may give it")
+                    result.success = false
+                    result.enacted(true)
+                    percent = 100f
+                    result.comment = rh.gs(R.string.equil_bolus_outcome_unknown, ch.insulinAmountString(PumpInsulin(detailedBolusInfo.insulin)))
+                }
+
+                BolusStart.NOT_SENT  -> {
+                    result.success = false
+                    result.enacted(false)
+                    result.comment = rh.gs(R.string.equil_command_connect_error)
+                }
             }
             result.bolusDelivered = percent / 100.0 * detailedBolusInfo.insulin
             val currentTime = System.currentTimeMillis()
-            if (result.success) {
-                command.resolvedResult = ResolvedResult.SUCCESS
+            if (result.enacted) {
+                if (start == BolusStart.STARTED) command.resolvedResult = ResolvedResult.SUCCESS
                 pumpSync.syncBolusWithPumpId(
                     currentTime,
                     PumpInsulin(result.bolusDelivered),

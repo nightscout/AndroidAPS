@@ -99,6 +99,8 @@ abstract class BaseSetting(
         val data = getFirstData()
         val equilCmdModel = AESUtil.aesEncrypt(Utils.hexStringToBytes(pwd2), data)
         runCode = reqModel.code
+        // What is returned here is written to the pump next: the command itself.
+        commandSent = true
         return responseCmd(equilCmdModel, port + runCode)
     }
 
