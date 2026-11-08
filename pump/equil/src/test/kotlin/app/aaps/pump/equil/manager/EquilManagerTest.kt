@@ -34,6 +34,7 @@ import java.util.Calendar
 import kotlin.math.abs
 import app.aaps.core.utils.notifyAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -433,6 +434,9 @@ class EquilManagerTest : TestBaseWithProfile() {
 
         // 477 s x 1.5 U/min = 11.925 U, rounded up to the 0.05 U step.
         assertEquals(11.95, result.bolusDelivered, 0.0001)
+        // Not given in full, so the bolus alarm rings.
+        assertFalse(result.success)
+        assertEquals("Bolus stopped", result.comment)
         verify(pumpSync).syncBolusWithPumpId(
             eq(bolusEnd), argThat<PumpInsulin> { abs(cU - 11.95) < 0.0001 }, anyOrNull(), eq(bolus.timestamp), eq(PumpType.EQUIL), eq("7000F3")
         )
@@ -451,6 +455,7 @@ class EquilManagerTest : TestBaseWithProfile() {
         equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusStart + 80_000, 2.0 / 80)
 
         assertEquals(2.0, result.bolusDelivered, 0.0001)
+        assertTrue(result.success)
         verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
     }
 
@@ -473,6 +478,7 @@ class EquilManagerTest : TestBaseWithProfile() {
 
         // Nothing was given; it used to be recorded as 1 U. The pump also stopped basal.
         assertEquals(0.0, result.bolusDelivered, 0.0001)
+        assertFalse(result.success)
         assertEquals(listOf("Abnormal infusion stopped", "Bolus stopped"), alarms.map { it.tips })
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             eq(bolusStart), any(), eq(4800 * minute), any(), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(bolusStart), any(), any()

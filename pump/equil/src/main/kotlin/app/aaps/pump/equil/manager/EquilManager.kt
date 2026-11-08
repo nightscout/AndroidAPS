@@ -461,6 +461,9 @@ class EquilManager(
         // The progress dialog is still open and said "delivered successfully" at 100 %.
         bolusProgressData.updateProgress((given / requested * 100).toInt(), TextRef.Literal(text), PumpInsulin(given))
         rxBus.send(EventEquilAlarm(text))
+        // Not given in full: so the bolus alarm of AAPS rings too, as for any bolus the pump did not give.
+        result.success = false
+        result.comment = text
     }
 
     /** See [UncertainBolus]. Set by [bolus], decided by [decideUncertainBolus]. */

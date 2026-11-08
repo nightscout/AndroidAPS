@@ -749,7 +749,8 @@ class CarelevoPumpPlugin @Inject constructor(
             onStatusRefreshRequested = {
                 scope?.launch { commandQueue.readStatus("Carelevo bolus completion") }
             },
-            pluginDisposable = pluginDisposable
+            pluginDisposable = pluginDisposable,
+            onAlarmsRefreshRequested = ::refreshActiveAlarmSnapshots
         )
     }
 

@@ -137,7 +137,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit = {},
-        pluginDisposable: CompositeDisposable
+        pluginDisposable: CompositeDisposable,
+        onAlarmsRefreshRequested: suspend () -> Unit = {}
     ): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverTreatment.start bolusType=${detailedBolusInfo.bolusType}")
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
@@ -181,7 +182,8 @@ class CarelevoBolusCoordinator @Inject constructor(
             serialNumber = serialNumber,
             onLastDataUpdated = onLastDataUpdated,
             onStatusRefreshRequested = onStatusRefreshRequested,
-            pluginDisposable = pluginDisposable
+            pluginDisposable = pluginDisposable,
+            onAlarmsRefreshRequested = onAlarmsRefreshRequested
         )
     }
 
@@ -332,7 +334,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit,
-        pluginDisposable: CompositeDisposable
+        pluginDisposable: CompositeDisposable,
+        onAlarmsRefreshRequested: suspend () -> Unit
     ): PumpEnactResult {
         val address = carelevoPatch.getPatchInfoAddress()
         if (address == null) {
@@ -403,6 +406,8 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result.bolusDelivered = immeBolusStopInfused
             } else if (!completed && bolusProgressData.isStopPressed) {
                 recordUnconfirmedStop(detailedBolusInfo, bolusTotalBefore, bolusStartMs, address, result, serialNumber, onStatusRefreshRequested)
+            } else if (completed) {
+                checkPatchGaveAll(detailedBolusInfo, bolusTotalBefore, address, result, serialNumber, onAlarmsRefreshRequested)
             }
             result
         } catch (e: Exception) {
@@ -553,6 +558,48 @@ class CarelevoBolusCoordinator @Inject constructor(
             result.success = false
             result.comment(text)
         }
+    }
+
+    /**
+     * The progress loop follows the time only, so a bolus the patch stopped on its own, as at an occlusion, looked given
+     * in full. The patch's bolus total tells: its total now minus the total before is what it gave. When it gave less,
+     * that amount is recorded, the bolus is not reported as given, so the user gets the bolus alarm, and the patch's
+     * alarms are read at once, so its reason shows too. When the patch cannot tell, the whole dose stays: counting too
+     * much is the safer error.
+     */
+    private fun checkPatchGaveAll(
+        detailedInfo: DetailedBolusInfo,
+        bolusTotalBefore: Double?,
+        address: String,
+        result: PumpEnactResult,
+        serialNumber: String,
+        onAlarmsRefreshRequested: suspend () -> Unit
+    ) {
+        if (bolusTotalBefore == null) return
+        val bolusTotalAfter = readBolusTotalAfterEnd(address) ?: return
+        val requested = detailedInfo.insulin
+        val given = bolusTotalAfter - bolusTotalBefore
+        // A total lower than before means the patch counter started again; the amount is not known then. More than
+        // asked for can come from a running extended bolus.
+        if (given < 0.0 || given >= requested - BOLUS_TOTAL_STEP / 2) return
+        val delivered = Round.roundTo(given, BOLUS_TOTAL_STEP)
+        aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment the patch stopped the bolus before=$bolusTotalBefore after=$bolusTotalAfter delivered=$delivered of $requested")
+        // The same pump id as the record of the whole dose, so that record is corrected, also to 0 U.
+        runBlocking {
+            pumpSync.syncBolusWithPumpId(detailedInfo.timestamp, PumpInsulin(delivered), detailedInfo.bolusType, immeBolusPumpId, PumpType.CAREMEDI_CARELEVO, serialNumber)
+        }
+        _lastBolusAmount.value = PumpInsulin(delivered)
+        val text = rh.gs(
+            R.string.carelevo_bolus_stopped_by_patch,
+            rh.gs(InterfacesStrings.format_insulin_units, delivered),
+            rh.gs(InterfacesStrings.format_insulin_units, requested)
+        )
+        bolusProgressData.updateProgress((delivered / requested * 100).toInt(), TextRef.Literal(text), PumpInsulin(delivered))
+        result.success = false
+        result.enacted = delivered > 0.0
+        result.bolusDelivered = delivered
+        result.comment(text)
+        runBlocking { onAlarmsRefreshRequested() }
     }
 
     /** What [recoverLeftoverBolus] found and did. */
