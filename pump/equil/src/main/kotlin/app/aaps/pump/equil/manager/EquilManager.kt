@@ -143,6 +143,11 @@ class EquilManager(
         equilBLE.closeBleAuto()
     }
 
+    /** The driver stops: the link closes and no new one opens until [startLink], see `EquilBLE.stop`. */
+    fun stopLink() = equilBLE.stop()
+
+    fun startLink() = equilBLE.start()
+
     fun connect() {
         equilBLE.connect("EquilManager::connect")
     }
@@ -318,7 +323,7 @@ class EquilManager(
             // Before the command: a stop that comes while it waits for its answer must not be undone.
             bolusProfile.stoppedAt = 0
             bolusProfile.stop = false
-            bolusProfile.stopNotAnswered = false
+            bolusProfile.stopRequested = false
             // The log entries of this bolus come after this index, see UncertainBolus.
             val indexBefore = getHistoryIndex()
             equilBLE.writeCmd(command)
@@ -384,8 +389,10 @@ class EquilManager(
                 )
                 val equilBolusRecord = EquilBolusRecord(result.bolusDelivered, BolusType.SMB, currentTime)
                 setBolusRecord(equilBolusRecord)
-                // The start or a stop got no answer: the pump log tells what was given, once the bolus is over.
-                if (indexBefore != null && (start == BolusStart.NO_ANSWER || bolusProfile.stopNotAnswered)) {
+                // The start got no answer, or a stop had none yet when the bolus ended: the pump log tells what was
+                // given, once the bolus is over. A stop that never reached the pump leaves the whole bolus in the log.
+                val stopNotAnswered = bolusProfile.stopRequested && !bolusProfile.stop
+                if (indexBefore != null && (start == BolusStart.NO_ANSWER || stopNotAnswered)) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Bolus outcome not known: decided from the pump log after the bolus")
                     uncertainBolus = UncertainBolus(
                         requested = detailedBolusInfo.insulin,
@@ -489,11 +496,11 @@ class EquilManager(
         try {
             val command: BaseCmd = CmdLargeBasalSet(0.0, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
+            bolusProfile.stopRequested = true
             equilBLE.writeCmd(command)
             awaitAnswer(command)
             // The pump stopped when the stop reached it, at the latest now. Counted from now: never less than was given.
             if (command.cmdSuccess) bolusProfile.stoppedAt = System.currentTimeMillis()
-            else if (command.commandSent) bolusProfile.stopNotAnswered = true
             bolusProfile.stop = command.cmdSuccess
             aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===")
             result.success = command.cmdSuccess

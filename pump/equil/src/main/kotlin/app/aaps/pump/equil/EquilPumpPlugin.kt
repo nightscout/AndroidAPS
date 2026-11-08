@@ -135,6 +135,8 @@ class EquilPumpPlugin(
     private var scope: CoroutineScope? = null
 
     override suspend fun onStart() {
+        // Before super.onStart, which asks for the first status read.
+        equilManager.startLink()
         super.onStart()
         equilManager.init()
 
@@ -208,6 +210,8 @@ class EquilPumpPlugin(
         aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()")
         scope?.cancel()
         scope = null
+        // A command that still runs in the queue would connect again for a stopped driver.
+        equilManager.stopLink()
     }
 
     override fun isConfigured(): Boolean = true
