@@ -19,6 +19,7 @@ import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -199,6 +200,26 @@ class AaruyServiceBolusTest {
         verify(bolusInfoStorage).add(info)
         runBlocking { verify(pumpSync).addBolusWithTempId(any(), argThat<PumpInsulin> { cU == 0.5 }, any(), any(), any(), any()) }
         assertTrue("a later status 3 blocks the next bolus, not this", pump.bolusDone)
+    }
+
+    /** The pump may never have had the start. The pump log decides, once the bolus would have ended. */
+    @Test
+    fun aStartWithNoAnswerWaitsForThePumpLog() {
+        `when`(ble.setBolus(anyDouble(), anyBoolean())).thenReturn(AaruyBolusStart.NO_ANSWER)
+        runBlocking { service.setBolus(info) }
+        val unconfirmed = checkNotNull(pump.unconfirmedBolus)
+        assertEquals(0.5, unconfirmed.amount, 0.0001)
+        // 0.5 U at a pump step of 0.05 U, one step every 2 seconds.
+        assertEquals(unconfirmed.start + 20_000, pump.estimatedBolusEnd(unconfirmed.start, 0.5))
+        assertTrue("not before the bolus would have ended", unconfirmed.decideAfter > unconfirmed.start + 20_000)
+    }
+
+    /** A bolus the pump reported is no question for the log. */
+    @Test
+    fun aStartedBolusIsNotLeftToThePumpLog() {
+        pumpAnswers { pump.handleBolusStatusUpdate(true, 0.5) }
+        runBlocking { service.setBolus(info) }
+        assertNull(pump.unconfirmedBolus)
     }
 
     @Test

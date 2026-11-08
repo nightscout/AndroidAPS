@@ -255,10 +255,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     // ---- Checks -----------------------------------------------------------------------------
 
-    /** AAPS stored each bolus the pump gave, once, with the amount it gave, and no bolus the pump did not give. */
-    fun checkBolusRecords() {
-        // Records are written by the driver as it learns of them. Give the last one a moment.
-        awaitValue(RECORD_TIMEOUT) { (storedBoluses() == givenBoluses()).takeIf { it } }
+    /**
+     * AAPS stored each bolus the pump gave, once, with the amount it gave, and no bolus the pump did not give.
+     * @param timeoutMs records are written by the driver as it learns of them. Some learn only once a bolus would have ended.
+     */
+    fun checkBolusRecords(timeoutMs: Long = RECORD_TIMEOUT) {
+        awaitValue(timeoutMs) { (storedBoluses() == givenBoluses()).takeIf { it } }
         assertWithMessage("bolus records in AAPS against the boluses the pump gave").that(storedBoluses()).isEqualTo(givenBoluses())
     }
 
@@ -299,6 +301,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
     private fun storedBoluses(): List<Long> =
         runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
             .filter { it.type != BS.Type.PRIMING }
+            // A driver that learns a bolus was never given can only set its record to 0 U: no insulin, as no record.
+            .filter { it.amount > 0.0 }
             .sortedBy { it.timestamp }
             .map { centi(it.amount) }
 

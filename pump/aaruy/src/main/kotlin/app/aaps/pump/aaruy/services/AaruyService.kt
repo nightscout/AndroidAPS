@@ -39,6 +39,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AaruyService : MetroService() {
@@ -57,6 +58,9 @@ class AaruyService : MetroService() {
 
     private val mBinder: IBinder = LocalBinder()
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    /** Room for a pump that is slower than the estimate, and for its clock. */
+    private val UNCONFIRMED_BOLUS_MARGIN_MS = 30_000L
 
     var isConnected: Boolean = false
     var isConnecting: Boolean = false
@@ -254,7 +258,10 @@ class AaruyService : MetroService() {
             aapsLogger.error(LTag.PUMPCOMM, "Bolus with tempId ${detailedBolusInfo.timestamp} already exists")
         }
         // The whole amount counts until the history gives the real one: the user must not bolus again.
-        if (start == AaruyBolusStart.NO_ANSWER) return AaruyBolusOutcome.UNKNOWN
+        if (start == AaruyBolusStart.NO_ANSWER) {
+            expectBolusInLog(bolusStart, insulin)
+            return AaruyBolusOutcome.UNKNOWN
+        }
 
         waitForBolusProgress()
 
@@ -286,6 +293,19 @@ class AaruyService : MetroService() {
             // Seen on a real pump with a blocked line: "done" after 0.55 U of 3 U. Half a step leaves room for rounding.
             aaruyPump.bolusDelivered < insulin - aaruyPump.bolusStepUnits / 2 -> AaruyBolusOutcome.CUT_SHORT
             else                                                  -> AaruyBolusOutcome.FINISHED
+        }
+    }
+
+    /**
+     * No status showed this start, so the pump may never have had it. A bolus is logged when it ends: once this one would
+     * have ended, a status read reads the log from before the start, and the log tells. See [AaruyPump.unconfirmedBolus].
+     */
+    private fun expectBolusInLog(start: Long, amount: Double) {
+        val decideAfter = aaruyPump.estimatedBolusEnd(start, amount) + UNCONFIRMED_BOLUS_MARGIN_MS
+        aaruyPump.unconfirmedBolus = AaruyPump.UnconfirmedBolus(start, amount, decideAfter)
+        scope.launch {
+            delay(decideAfter - dateUtil.now())
+            commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error))
         }
     }
 
@@ -332,8 +352,7 @@ class AaruyService : MetroService() {
             }
         }
 
-        val bolusDurationInMSec = (aaruyPump.bolusAmountToBeDelivered/(0.025 * aaruyPump.bolusStep) * 2 * 1000)
-        val expectedEnd = aaruyPump.bolusStartTime + bolusDurationInMSec + 1000
+        val expectedEnd = aaruyPump.estimatedBolusEnd(aaruyPump.bolusStartTime, aaruyPump.bolusAmountToBeDelivered) + 1000
         while (dateUtil.now() < expectedEnd && !aaruyPump.bolusDone) {
             val waitTime = expectedEnd - dateUtil.now()
             bolusProgressData.updateProgress(

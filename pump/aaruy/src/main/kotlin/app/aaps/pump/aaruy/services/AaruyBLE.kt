@@ -53,6 +53,7 @@ import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
@@ -143,6 +144,15 @@ class AaruyBLE(
      * see the status of its own time: the newest could end a temp basal at a split piece of it.
      */
     @Volatile private var syncedStatus: AaruyStatusSnapshot? = null
+
+    /** When [syncedStatus] came. */
+    @Volatile private var syncedStatusAt = 0L
+
+    /** Where the read asked last starts. A read the driver did not ask for has none, so it decides no unconfirmed bolus. */
+    @Volatile private var historyReadFrom = Long.MAX_VALUE
+
+    /** The pump clock can be some seconds behind the phone, and a start can reach the pump a moment after it was sent. */
+    private val BOLUS_LOG_WINDOW_MS = 60_000L
 
     /** One after the other and in the order they came, or a later status could overtake the log that explains it. */
     private val syncJobs by lazy {
@@ -810,6 +820,9 @@ class AaruyBLE(
         val live = !awaitingHistory || cancelTempBasalRunning
         syncJobs.trySend {
             syncedStatus = snapshot
+            syncedStatusAt = dateUtil.now()
+            // The pump runs a bolus, so it had the start: the log gives its amount.
+            if (snapshot.status == STATUS_BOLUS) aaruyPump.unconfirmedBolus = null
             tempBasalSync.onStatus(snapshot, live)
             if (snapshot.status == STATUS_TEMP_BASAL) sendTmpBasalOk = true
             else if (snapshot.status != STATUS_BOLUS) cancelTmpBasalOk = true
@@ -881,16 +894,29 @@ class AaruyBLE(
     }
 
     fun requestHistoryData(lastTime: Long) {
-        aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData lastTime = $lastTime, receivingHistory is $receivingHistory")
+        val from = historyReadStart(lastTime)
+        aapsLogger.debug(LTag.PUMPCOMM, "requestHistoryData lastTime = $lastTime, from = $from, receivingHistory is $receivingHistory")
         if (!receivingHistory) {
             nextHistoryPage = 0
             lastHistoryPageAt = System.currentTimeMillis()
+            historyReadFrom = from
             receivingHistory = true
             CoroutineScope(Dispatchers.Default).launch {
                 delay(20)
-                aaBleUtil.getHistoryLogData(lastTime)
+                aaBleUtil.getHistoryLogData(from)
             }
         }
+    }
+
+    /**
+     * Once a bolus whose start no status answered would have ended, the read goes back to before its start. A read from the
+     * last entry can miss it: the pump logs a bolus at its end with its start time, and an entry logged before it, as an
+     * alarm, can be newer.
+     */
+    private fun historyReadStart(lastTime: Long): Long {
+        val unconfirmed = aaruyPump.unconfirmedBolus ?: return lastTime
+        if (dateUtil.now() < unconfirmed.decideAfter) return lastTime
+        return min(lastTime, unconfirmed.start - BOLUS_LOG_WINDOW_MS)
     }
 
     fun readDailyData(lastTime: Long) {
@@ -952,6 +978,8 @@ class AaruyBLE(
 
     /** Only now: an entry not yet written must come again if the app stops here. */
     private suspend fun onHistoryReadComplete(lastPage: LogInfo) {
+        val readFrom = historyReadFrom
+        historyReadFrom = Long.MAX_VALUE
         // Nothing came after it: it is the newest, and only the status can tell.
         tempBasalWaitingForNextPage?.let { (waiting, nextStart) -> tempBasalSync.onHistoryTempBasal(waiting, nextStart, null, syncedStatus?.status) }
         lastPage.logItems.lastOrNull()?.let { aaruyPump.lastHistoryTime = it.timestamp }
@@ -959,6 +987,35 @@ class AaruyBLE(
         receivingHistory = false
         readDailyData(aaruyPump.lastHistoryDailyTime)
         historyRead(complete = true)
+        decideUnconfirmedBolus(readFrom)
+    }
+
+    /**
+     * A bolus start that no status answered, decided by the pump log. The pump logs a bolus when it ends, so the log can tell
+     * only when a bolus started then has surely ended: the time it takes has passed, a status since then shows no bolus, and
+     * this read went back to before the start and is complete. A bolus entry at that time has already set the record to what
+     * the pump gave. Without one the pump never gave it, and the record that counted the whole amount becomes 0 U.
+     */
+    private suspend fun decideUnconfirmedBolus(readFrom: Long) {
+        val unconfirmed = aaruyPump.unconfirmedBolus ?: return
+        if (syncedStatusAt < unconfirmed.decideAfter || syncedStatus?.status == STATUS_BOLUS) return
+        if (readFrom > unconfirmed.start - BOLUS_LOG_WINDOW_MS) return
+        aaruyPump.unconfirmedBolus = null
+        val logged = historyUnitInfoDao.querySince(unconfirmed.start - BOLUS_LOG_WINDOW_MS)
+            .any { it.type == HISTORY_BOLUS && it.delayBolus == 0L && it.time <= unconfirmed.start + BOLUS_LOG_WINDOW_MS }
+        if (logged) return
+        aapsLogger.warn(LTag.PUMPCOMM, "No bolus in the pump log at ${dateUtil.dateAndTimeAndSecondsString(unconfirmed.start)}: the pump never gave it")
+        val info = detailedBolusInfoStorage.findDetailedBolusInfo(unconfirmed.start, unconfirmed.amount)
+        val changed = pumpSync.syncBolusWithTempId(
+            timestamp = unconfirmed.start,
+            amount = PumpInsulin(0.0),
+            temporaryId = unconfirmed.start,
+            type = info?.bolusType,
+            pumpId = unconfirmed.start,
+            pumpType = aaruyPump.pumpType(),
+            pumpSerial = aaruyPump.pumpSN
+        )
+        if (changed) pumpSync.insertAnnouncement(rh.gs(R.string.aaruy_bolus_not_given, dateUtil.timeString(unconfirmed.start)), dateUtil.now(), aaruyPump.pumpType(), aaruyPump.pumpSN)
     }
 
     private suspend fun saveHistoryPage(logInfo: LogInfo, lastPage: Boolean) {

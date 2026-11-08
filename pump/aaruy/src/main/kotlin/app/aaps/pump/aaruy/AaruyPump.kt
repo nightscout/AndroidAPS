@@ -60,6 +60,9 @@ class AaruyPump(
         const val FAKE_TBR_LENGTH = 1440L
         private const val BASAL_STEP = 0.025
         private const val BOLUS_PRECISION_UNITS = 0.025
+
+        /** Measured on a real pump: one bolus step every 2 seconds. */
+        private const val BOLUS_MS_PER_STEP = 2000.0
         private const val SECONDS_PER_HALF_HOUR = 1800
 
         /** As the protocol rounds: 0.1 * 1000 is 99.99999 in floating point. */
@@ -215,6 +218,20 @@ class AaruyPump(
     var bolusStopRequested = false // A stop was sent on this link, so the pump leaving the bolus state is the answer to it
     var bolusDelivered = 0.0 // What the pump reported for the running bolus. Not from BolusProgressData: its state can be cleared by the queue.
     @Volatile var bolusCommandRunning = false // A bolus command of this app run is in the driver: it shows its own progress
+
+    /**
+     * A bolus start that no status answered, so the pump may never have had it. Its record counts the whole amount until the
+     * pump log tells, see `AaruyBLE.decideUnconfirmedBolus`. Only in memory: after an app restart the whole amount stays,
+     * which is the safe side.
+     */
+    @Volatile var unconfirmedBolus: UnconfirmedBolus? = null
+
+    /** @param decideAfter a bolus that started at [start] has ended by then, and the pump has logged it */
+    class UnconfirmedBolus(val start: Long, val amount: Double, val decideAfter: Long)
+
+    /** When a bolus that starts at [start] ends, with the bolus step the pump runs. */
+    fun estimatedBolusEnd(start: Long, amount: Double): Long =
+        start + (amount / (BOLUS_PRECISION_UNITS * bolusStep.coerceAtLeast(1)) * BOLUS_MS_PER_STEP).toLong()
 
     /** The progress of a bolus no command of this app run started, as after an app restart. Closed when the pump ends it. */
     @Volatile private var foundBolusGeneration: Long? = null

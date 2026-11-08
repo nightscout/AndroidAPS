@@ -99,7 +99,8 @@ abstract class AbstractPumpScenarioTest {
         scenario.readStatus()
 
         assertWithMessage("the pump gave nothing").that(scenario.control.state().boluses).isEmpty()
-        scenario.checkBolusRecords()
+        // A driver that cannot tell at once counts the whole amount, and decides from the pump once the bolus would have ended.
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
     }
 
     /**
