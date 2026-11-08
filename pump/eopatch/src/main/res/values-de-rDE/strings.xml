@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Pumpen-Integration für EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Der Patch hat das Ende des Bolus nicht bestätigt. %1$s wurde aufgezeichnet, aber der Patch hat eventuell mehr abgegeben. Prüfe den Patch bevor du mehr Insulin abgibst.</string>
     <string name="low_reservoir">Niedrige Reservoir-Warnungen</string>
     <string name="patch_expiration_reminders">Patch-Ablauf-Erinnerung</string>
     <string name="patch_buzzer_reminders">Patch Ton zur Erinnerung</string>
@@ -53,12 +54,14 @@
     <string name="patch_safety_check_desc_1">Es dauert etwa 30 Sekunden.</string>
     <string name="patch_safety_check_desc_2">Für eine sichere Anwendung den Nadelbetätigungshebel erst entfernen, wenn die Sicherheitsprüfung abgeschlossen ist!</string>
     <string name="patch_rotate_knob">Einfügen der Nadel</string>
+    <string name="patch_rotate_knob_desc_1">Drehe den Aktionshebel der Nadel mehr als 100°, um die Nadel einzuführen. Drehe dann weiter bis zur vollständigen Drehung, um ihn zu entfernen.</string>
     <string name="patch_rotate_knob_desc_2">Prüfe auf 1 Piepton und tippe auf \'Weiter\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Prüfe auf 1 Piepton und tippe auf \'Wiederholen\'.</string>
     <string name="patch_basal_schedule">Pod-Aktivierung abgeschlossen!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' Programm wurde aktiviert.</string>
     <string name="patch_basal_schedule_desc_2">Benachrichtigt dich, wenn der Patch seine Ablaufzeit naht.\nÄndert die Erinnerungszeit falls nötig.</string>
     <string name="patch_expiration_reminder_setting_title">Patch-Ablauf-Erinnerung</string>
+    <string name="patch_activate_reminder_desc">Patch-Aktivierung ist nicht abgeschlossen.\nFortsetzen.</string>
     <string name="patch_communication_check_helper_1">Bringen Sie Ihr Smartphone näher an den Pod.</string>
     <string name="patch_communication_check_helper_2">Bitte wechseln Sie zu einem anderen Ort und versuchen Sie es erneut.</string>
     <string name="patch_safety_check_failed_desc">Sicherheitscheck fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
@@ -66,11 +69,14 @@
     <string name="patch_communication_succeed">Kommunikation erfolgreich</string>
     <string name="patch_communication_succeed_message">Verbunden mit dem Patch.</string>
     <string name="patch_cancel_pairing">Kopplung abbrechen</string>
+    <string name="insulin_suspend_msg1">Bei der Unterbrechung wird der laufende Bolus &amp; sowie Temp Basal abgebrochen.\n\nRate: %1$s U/h\nVerbleibende Zeit: %2$s\nNoch abzugebende Insulinmenge: %3$.2f IE</string>
+    <string name="insulin_suspend_msg2">Bei der Unterbrechung wird der laufende Bolus abgebrochen.\n\nNoch abzugebende Insulinmenge: %1$.2f IE</string>
     <string name="insulin_suspend_msg4">Die Insulinlieferung wird ausgesetzt.</string>
     <string name="string_activate_patch">Patch aktivieren</string>
     <string name="string_discard_patch">Pod verwerfen</string>
     <string name="string_running">In Betrieb</string>
     <string name="retry">Erneut versuchen</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Bist du sicher, dass du den Patch verwerfen möchtest?</string>
     <string name="needle_insertion_error_1">Fehler beim Einfügen der Nadeln.</string>
     <string name="needle_insertion_error_3">Tippe auf \'Verwerfen\', um Patch zu deaktivieren.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal Suspendierung Zeit</string>
