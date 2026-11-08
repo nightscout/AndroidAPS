@@ -302,7 +302,7 @@ class AaruyService : MetroService() {
      */
     private fun expectBolusInLog(start: Long, amount: Double) {
         val decideAfter = aaruyPump.estimatedBolusEnd(start, amount) + UNCONFIRMED_BOLUS_MARGIN_MS
-        aaruyPump.unconfirmedBolus = AaruyPump.UnconfirmedBolus(start, amount, decideAfter)
+        aaruyPump.unconfirmedBolus = AaruyPump.UnconfirmedBolus(start, amount, decideAfter, aaruyBle.logIdBeforeStart)
         aapsLogger.debug(LTag.PUMPCOMM, "Unconfirmed bolus start $start of $amount U: the pump log decides after $decideAfter")
         scope.launch {
             delay(decideAfter - dateUtil.now())

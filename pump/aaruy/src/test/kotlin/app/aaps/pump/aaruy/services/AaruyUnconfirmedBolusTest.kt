@@ -124,7 +124,7 @@ class AaruyUnconfirmedBolusTest {
     @Test
     fun aStartThePumpNeverHadCountsNothingOnceTheLogHasNoBolus() {
         val start = System.currentTimeMillis() - 3 * minute
-        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + minute))
+        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + minute, logIdBefore = 0))
         readLogUntil("the log decided") { pump.unconfirmedBolus == null }
         zeroed(start)
         runBlocking { verify(pumpSync, timeout(5_000)).insertAnnouncement(any(), anyOrNull(), any(), any()) }
@@ -134,18 +134,31 @@ class AaruyUnconfirmedBolusTest {
     @Test
     fun aBolusInTheLogKeepsWhatItsEntryWrote() {
         val start = System.currentTimeMillis() - 3 * minute
-        `when`(historyDao.querySince(any())).thenReturn(listOf(HistoryUnitInfo().apply { type = 2; time = start + 5_000 }))
-        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + minute))
+        `when`(historyDao.querySince(any())).thenReturn(listOf(HistoryUnitInfo().apply { id = 8; type = 2; time = start - 5_000 }))
+        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + minute, logIdBefore = 7))
         readLogUntil("the log decided") { pump.unconfirmedBolus == null }
         Thread.sleep(300)
         neverZeroed()
+    }
+
+    /**
+     * Found by the scenario tests: a bolus 30 seconds before this start, stored before this start was sent, is an earlier
+     * bolus. Taken for this one, a start the pump never had kept its whole amount.
+     */
+    @Test
+    fun anEarlierBolusStoredBeforeTheStartIsNotThisOne() {
+        val start = System.currentTimeMillis() - 3 * minute
+        `when`(historyDao.querySince(any())).thenReturn(listOf(HistoryUnitInfo().apply { id = 7; type = 2; time = start - 30_000 }))
+        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + minute, logIdBefore = 7))
+        readLogUntil("the log decided") { pump.unconfirmedBolus == null }
+        zeroed(start)
     }
 
     /** A bolus is logged when it ends. Before it would have ended, no entry is no answer. */
     @Test
     fun nothingIsDecidedBeforeTheBolusWouldHaveEnded() {
         val start = System.currentTimeMillis()
-        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + 10 * minute))
+        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + 10 * minute, logIdBefore = 0))
         waitFor("a whole read") { pump.lastHistoryTime > 0 }
         Thread.sleep(300)
         assertNotNull(pump.unconfirmedBolus)
@@ -156,7 +169,7 @@ class AaruyUnconfirmedBolusTest {
     @Test
     fun aStatusThatShowsABolusEndsTheQuestion() {
         val start = System.currentTimeMillis()
-        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + 10 * minute))
+        connect(AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = start + 10 * minute, logIdBefore = 0))
         pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
         val writes = transport.writes.size
         ble.syncAndLoadBasicParam()

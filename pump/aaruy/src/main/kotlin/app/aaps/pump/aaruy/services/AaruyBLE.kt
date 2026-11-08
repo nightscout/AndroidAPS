@@ -765,9 +765,17 @@ class AaruyBLE(
         return waitForAnswer { sendBasalsInfoOk }
     }
 
+    /**
+     * The highest id in the stored pump log when the last bolus start was sent. The entry of that bolus can only be stored
+     * after it: a row up to it is an earlier bolus, also one within a minute of this one.
+     */
+    @Volatile var logIdBeforeStart = 0
+        private set
+
     fun setBolus(insulin: Double, isSmb: Boolean = true): AaruyBolusStart {
         sendBolusOk = false
         bolusStartRefused = false
+        logIdBeforeStart = historyUnitInfoDao.maxId()
         aaBleUtil.setupAndStartBolus(insulin, 0.0, 0, isSmb)
         // A status that comes late must not report a failure while the pump delivers: the user could bolus again.
         val end = System.currentTimeMillis() + BOLUS_START_TIMEOUT_MS
@@ -1025,7 +1033,7 @@ class AaruyBLE(
         aaruyPump.unconfirmedBolus = null
         unconfirmedBolusLogRead = null
         val logged = historyUnitInfoDao.querySince(unconfirmed.start - BOLUS_LOG_WINDOW_MS)
-            .any { it.type == HISTORY_BOLUS && it.delayBolus == 0L && it.time <= unconfirmed.start + BOLUS_LOG_WINDOW_MS }
+            .any { it.id > unconfirmed.logIdBefore && it.type == HISTORY_BOLUS && it.delayBolus == 0L && it.time <= unconfirmed.start + BOLUS_LOG_WINDOW_MS }
         if (logged) return
         aapsLogger.warn(LTag.PUMPCOMM, "No bolus in the pump log at ${dateUtil.dateAndTimeAndSecondsString(unconfirmed.start)}: the pump never gave it")
         val info = detailedBolusInfoStorage.findDetailedBolusInfo(unconfirmed.start, unconfirmed.amount)

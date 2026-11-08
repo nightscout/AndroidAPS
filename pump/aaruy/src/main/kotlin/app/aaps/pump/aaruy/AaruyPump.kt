@@ -226,8 +226,11 @@ class AaruyPump(
      */
     @Volatile var unconfirmedBolus: UnconfirmedBolus? = null
 
-    /** @param decideAfter a bolus that started at [start] has ended by then, and the pump has logged it */
-    class UnconfirmedBolus(val start: Long, val amount: Double, val decideAfter: Long)
+    /**
+     * @param decideAfter a bolus that started at [start] has ended by then, and the pump has logged it
+     * @param logIdBefore the highest id in the stored pump log when the start was sent. A row up to it is an earlier bolus.
+     */
+    class UnconfirmedBolus(val start: Long, val amount: Double, val decideAfter: Long, val logIdBefore: Int)
 
     /** When a bolus that starts at [start] ends, with the bolus step the pump runs. */
     fun estimatedBolusEnd(start: Long, amount: Double): Long =

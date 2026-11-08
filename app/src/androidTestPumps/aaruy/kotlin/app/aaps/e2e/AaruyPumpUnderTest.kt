@@ -26,8 +26,11 @@ class AaruyPumpUnderTest : PumpUnderTest {
     override val emulatorOption = ExternalOptions.EMULATE_AARUY
     override val pluginName: String = AaruyPlugin::class.java.simpleName
 
-    /** A status read: status and battery, the settings, the time, the log. With room. */
-    override val maxCommandsPerStatusRead = 15
+    /**
+     * A status read: status and battery, the settings, the time, the log, the daily totals. 11 to 16 were seen. A burst
+     * writes several times a second for as long as the link is up, so this is far below one.
+     */
+    override val maxCommandsPerStatusRead = 20
 
     private val accessors get() = testGraphs.rootGraph as AaruyAccessors
 

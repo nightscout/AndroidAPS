@@ -19,6 +19,10 @@ interface HistoryUnitInfoDao {
     @Query("SELECT * FROM history_unit_info WHERE time>=:since ORDER BY time DESC")
     fun querySince(since: Long): List<HistoryUnitInfo>
 
+    /** Rows get a higher id as they are stored, so a row with a higher id was stored later. 0 for an empty table. */
+    @Query("SELECT COALESCE(MAX(id), 0) FROM history_unit_info")
+    fun maxId(): Int
+
     /** The newest entry of this type, as the last bolus after an app restart. */
     @Query("SELECT * FROM history_unit_info WHERE type=:type ORDER BY time DESC LIMIT 1")
     fun newest(type: Int): HistoryUnitInfo?

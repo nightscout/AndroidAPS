@@ -344,7 +344,7 @@ class AaruyHistorySyncTest {
     @Test
     fun aStatusAfterTheReadDecidesAStartThePumpNeverHad() {
         val start = now - 3 * minute
-        pump.unconfirmedBolus = AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = now - minute)
+        pump.unconfirmedBolus = AaruyPump.UnconfirmedBolus(start, 0.5, decideAfter = now - minute, logIdBefore = 0)
         ble.requestHistoryData(pump.lastHistoryTime)
         receive()
         Thread.sleep(300)
