@@ -10,7 +10,9 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -31,14 +33,17 @@ import app.aaps.e2e.clearAppSettings
 import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import java.io.File
 import kotlin.math.abs
 import kotlin.math.roundToLong
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Runs one pump through what a user and the loop do, through the real command queue, and after each step compares
@@ -75,11 +80,11 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /**
      * A configured app with this pump as the active one and a profile running, as a user has it before pairing.
-     * @param restartable the database is a file, so [restartApp] can keep it
+     * @param restartable the database is a file, so run 2 of an app restart finds it, see [saveForKill]
      */
     fun bringUp(restartable: Boolean = false) {
         clearAppSettings(instrumentation.targetContext)
-        if (restartable) app.useDatabaseFile()
+        if (restartable) app.useDatabaseFile(fresh = true)
         EmulatedOptions.enabled = setOf(pump.emulatorOption)
         grantPermissions()
         startedAt = System.currentTimeMillis()
@@ -90,11 +95,53 @@ class PumpScenario(private val pump: PumpUnderTest) {
         seedRunningMode()
     }
 
-    /** As when the app is killed and started again. The emulated pump runs on, with what it was doing. */
-    fun restartApp() {
-        app.restartApp()
+    /**
+     * The driver stopped and started again between commands, with the queue held, as a settings import does it. A
+     * driver must then hold the same pump as before: its start loads everything again, and its stop drops everything.
+     * Not the same as an app restart: in-memory state of other objects stays, and the app start order is not run. See
+     * [saveForKill] for that.
+     */
+    fun reloadDriver() {
+        val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
+        val held = runBlocking {
+            commandQueue.withHold("scenario: driver reload", RELOAD_HOLD) {
+                plugin.setPluginEnabledAwaiting(PluginType.PUMP, false)
+                plugin.setPluginEnabledAwaiting(PluginType.PUMP, true)
+            }
+        }
+        check(held) { "The queue could not be held for the reload" }
+        pump.awaitStarted(this)
+    }
+
+    /**
+     * Run 1 of an app restart: what the emulated pump holds is saved to a file, and the test ends without any cleanup,
+     * as a killed app. The instrumentation run ends after it, and the process with it.
+     */
+    fun saveForKill() {
+        val saved = checkNotNull(control.saveState()) { "${pump.pluginName}: its emulator cannot save what it holds" }
+        killFile().writeBytes(saved)
+        killed = true
+    }
+
+    /**
+     * Run 2 of an app restart, in a new process: the app starts on the database and settings of run 1, with the
+     * emulated pump as it was saved. The time between the runs passed for the pump too, as for a real one.
+     */
+    fun resumeAfterKill() {
+        val saved = killFile().readBytes()
+        app.useDatabaseFile(fresh = false)
+        EmulatedOptions.enabled = setOf(pump.emulatorOption)
+        grantPermissions()
+        app.preloadEmulators { pump.restoreEmulator(saved, it) }
+        // The database is the one of run 1, so every record in it belongs to this scenario.
+        startedAt = 0
         startApp()
     }
+
+    private fun killFile() = File(instrumentation.targetContext.filesDir, KILL_FILE)
+
+    /** Set by [saveForKill]: a killed app does not clean up. */
+    private var killed = false
 
     /** As `MainApp.onCreate`: the plugins published, the active pump chosen from the settings and started. */
     private fun startApp() {
@@ -108,6 +155,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     fun tearDown() {
+        if (killed) return
         scope.cancel()
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
@@ -135,18 +183,32 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /** A bolus the user stops once the pump has given at least [stopAfter] units. */
     fun stoppedBolus(units: Double, stopAfter: Double): PumpEnactResult {
-        val before = checkNotNull(control.state().reservoir) { "A stopped bolus needs a pump that reports its reservoir" }
-        val answer = CompletableDeferred<PumpEnactResult>()
-        scope.launch { answer.complete(commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units })) }
-        awaitTrue("the pump gave $stopAfter U", BOLUS_TIMEOUT) {
-            val state = control.state()
-            state.bolusRunning && before - (state.reservoir ?: before) >= stopAfter
-        }
+        val answer = startBolus(units)
+        awaitGiven(stopAfter)
         commandQueue.cancelAllBoluses(null)
         val result = runBlocking { withTimeout(BOLUS_TIMEOUT) { answer.await() } }
         awaitQueueIdle()
         return result
     }
+
+    /** A bolus that runs while the test goes on. The answer of the queue comes at its end. */
+    fun startBolus(units: Double): Deferred<PumpEnactResult> {
+        bolusReservoirBefore = checkNotNull(control.state().reservoir) { "A bolus the test follows needs a pump that reports its reservoir" }
+        val answer = CompletableDeferred<PumpEnactResult>()
+        scope.launch { answer.complete(commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units })) }
+        return answer
+    }
+
+    /** Waits until the bolus of [startBolus] has given at least [units]. */
+    fun awaitGiven(units: Double) {
+        val before = bolusReservoirBefore
+        awaitTrue("the pump gave $units U", BOLUS_TIMEOUT) {
+            val state = control.state()
+            state.bolusRunning && before - (state.reservoir ?: before) >= units
+        }
+    }
+
+    private var bolusReservoirBefore = 0.0
 
     fun tempBasal(rate: Double, minutes: Int): PumpEnactResult {
         val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
@@ -300,6 +362,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
         const val SPEED_ARGUMENT = "emulatorSpeed"
         const val SPEED_REAL = "real"
+        const val KILL_FILE = "e2e-killed-pump.bin"
+        val RELOAD_HOLD = 30.seconds
         const val PROFILE_NAME = "LocalProfile1"
         const val BASAL_RATE = 0.5
 

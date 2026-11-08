@@ -7,6 +7,11 @@ import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.SnapshotAlarmFlag
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import kotlin.experimental.xor
 import kotlin.math.floor
 import kotlin.math.min
@@ -50,10 +55,26 @@ class CarelevoPumpEmulator(
     var stopNextBolusAt: Double? = null
         set(value) = synchronized(lock) { field = value }
 
-    private class RunningBolus(val startedAt: Long, val volume: Double, val stopAt: Double, val msPerUnit: Long)
+    private class RunningBolus(val startedAt: Long, val volume: Double, val stopAt: Double, val msPerUnit: Long) : Serializable
 
     private var bolus: RunningBolus? = null
-    private val deliveredBoluses = mutableListOf<Double>()
+    private val deliveredBoluses = ArrayList<Double>()
+
+    /** What [saveState] writes. The running bolus keeps its start time, so the time until the restore counts. */
+    private class Saved(
+        val state: CarelevoPumpState,
+        val bolus: RunningBolus?,
+        val deliveredBoluses: ArrayList<Double>,
+        val commands: Int,
+        val speed: EmulatorSpeed
+    ) : Serializable
+
+    /** All the patch holds, with the bolus it is giving, for a test that kills the app. See [restore]. */
+    fun saveState(): ByteArray = synchronized(lock) {
+        ByteArrayOutputStream().also { bytes ->
+            ObjectOutputStream(bytes).use { it.writeObject(Saved(state, bolus, ArrayList(deliveredBoluses), commands, speed)) }
+        }.toByteArray()
+    }
 
     /** Every bolus the patch gave, oldest first, each with the amount it really gave. */
     val boluses: List<Double>
@@ -633,6 +654,17 @@ class CarelevoPumpEmulator(
 
         /** Where the app graph keeps this emulator, so a test that restarts the app gets the same patch. */
         val KEY = PumpEmulators.Key<CarelevoPumpEmulator>("carelevo")
+
+        /** The patch [saveState] saved, in a new process. A bolus it was giving goes on by the clock. */
+        fun restore(saved: ByteArray, aapsLogger: AAPSLogger? = null, clock: () -> Long = System::currentTimeMillis): CarelevoPumpEmulator {
+            val read = ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() as Saved }
+            return CarelevoPumpEmulator(read.state, aapsLogger, clock).apply {
+                bolus = read.bolus
+                deliveredBoluses.addAll(read.deliveredBoluses)
+                commands = read.commands
+                speed = read.speed
+            }
+        }
 
         // Requests
         const val OP_SET_TIME: Byte = 0x11

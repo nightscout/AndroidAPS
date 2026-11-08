@@ -38,6 +38,12 @@ interface PumpEmulatorControl {
 
     /** What the emulated pump holds now. */
     fun state(): EmulatedPumpState
+
+    /**
+     * All the emulated pump holds, with the bolus it is giving, for a test that kills the app and starts it again in a
+     * new process. Each emulator reads its own format back. Null when it cannot save.
+     */
+    fun saveState(): ByteArray?
 }
 
 enum class EmulatorSpeed {

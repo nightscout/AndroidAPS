@@ -2,6 +2,7 @@ package app.aaps.e2e.scenario
 
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 
 /**
  * One driver with its emulator, as [PumpScenario] sees it. What differs between pumps is here: how the pump is paired,
@@ -32,4 +33,7 @@ interface PumpUnderTest {
 
     /** The pump is forgotten, and AAPS has no pump paired any more. */
     fun unpair(scenario: PumpScenario)
+
+    /** Puts the emulator that [PumpEmulatorControl.saveState] saved in place, for the app start after a kill. */
+    fun restoreEmulator(saved: ByteArray, emulators: PumpEmulators)
 }

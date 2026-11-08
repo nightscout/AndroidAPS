@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.di.testGraphs
 import app.aaps.e2e.scenario.PumpScenario
 import app.aaps.e2e.scenario.PumpUnderTest
@@ -13,6 +14,7 @@ import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.di.CarelevoAccessors
 import app.aaps.pump.carelevo.emulator.CarelevoEmulatorBleTransport
+import app.aaps.pump.carelevo.emulator.CarelevoPumpEmulator
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
@@ -98,6 +100,10 @@ class CarelevoPumpUnderTest : PumpUnderTest {
         check(result.success) { "Discard failed: ${result.comment}" }
         scenario.awaitQueueIdle()
         scenario.awaitTrue("no patch any more") { accessors.carelevoPatch.patchState.value?.getOrNull() == PatchState.NotConnectedNotBooting }
+    }
+
+    override fun restoreEmulator(saved: ByteArray, emulators: PumpEmulators) {
+        emulators.getOrCreate(CarelevoPumpEmulator.KEY) { CarelevoPumpEmulator.restore(saved) }
     }
 
     private fun CoroutineScope.collectInto(events: MutableList<Any>, vararg flows: Flow<Any>) {

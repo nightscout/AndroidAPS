@@ -243,6 +243,9 @@ class CarelevoEmulatorBleTransport(
         )
     }
 
+    /** The patch, not the radio: after the app start a new transport connects to it. */
+    override fun saveState(): ByteArray = emulator.saveState()
+
     private fun opcodesOf(command: EmulatedCommand): Set<Byte> = when (command) {
         EmulatedCommand.BOLUS_START      -> setOf(CarelevoPumpEmulator.OP_IMMEDIATE_BOLUS)
         EmulatedCommand.BOLUS_STOP       -> setOf(CarelevoPumpEmulator.OP_BOLUS_CANCEL)

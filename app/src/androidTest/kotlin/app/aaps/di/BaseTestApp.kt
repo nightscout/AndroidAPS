@@ -17,7 +17,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
-import kotlinx.coroutines.cancel
 
 /**
  * Base application for instrumented tests. Mirrors [app.aaps.MainApp]: both build the one Metro root
@@ -38,10 +37,10 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
     private val metroGraphs: MetroGraphs
         get() = metroGraphsOrNull ?: newGraph().also { metroGraphsOrNull = it }
 
-    /** The emulated pumps. [resetGraph] starts with new ones, [restartApp] keeps them. */
+    /** The emulated pumps. [resetGraph] starts with new ones, [preloadEmulators] puts saved ones in place. */
     @Volatile private var pumpEmulators = PumpEmulators()
 
-    /** In memory, unless the test restarts the app: see [useDatabaseFile]. */
+    /** In memory, unless the test restarts the app in a second run: see [useDatabaseFile]. */
     @Volatile private var databaseConfig = DatabaseConfig.IN_MEMORY
 
     private fun newGraph() = MetroGraphs(
@@ -71,24 +70,20 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
     }
 
     /**
-     * For a test that restarts the app: an empty database file, which outlives the graph as the database of a real
-     * app does. Call it before the test first reads the graph.
+     * For a test that restarts the app in a second instrumentation run: the database is a file, which outlives the
+     * process as the database of a real app does. Call it before the test first reads the graph.
+     * @param fresh an empty one, for the first run. The second run keeps what the first one wrote.
      */
-    fun useDatabaseFile() {
+    fun useDatabaseFile(fresh: Boolean) {
         check(metroGraphsOrNull == null) { "The graph is already built on another database" }
-        deleteDatabase(RESTART_DATABASE)
+        if (fresh) deleteDatabase(RESTART_DATABASE)
         databaseConfig = DatabaseConfig(inMemory = false, fileName = RESTART_DATABASE)
     }
 
-    /**
-     * As when the app is killed and started again: a new graph on the same database file, with the same emulated
-     * pumps, which run on meanwhile as real pumps would. The coroutines of the old graph are cancelled, as a killed
-     * process stops them.
-     */
-    fun restartApp() {
-        check(!databaseConfig.inMemory) { "A restart needs useDatabaseFile(), or the new graph has an empty database" }
-        metroGraphsOrNull?.applicationScope?.cancel()
-        metroGraphsOrNull = null
+    /** Puts emulated pumps in place before the graph is built, as the second run of an app restart does. */
+    fun preloadEmulators(block: (PumpEmulators) -> Unit) {
+        check(metroGraphsOrNull == null) { "The graph has already made its emulators" }
+        block(pumpEmulators)
     }
 
     override fun onCreate() {

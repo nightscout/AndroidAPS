@@ -449,6 +449,27 @@ class CarelevoPumpEmulatorTest {
         assertThat(state.criticalAlarmFlags.occlusionDetected).isTrue()
     }
 
+    /** For a test that kills the app: the patch in the new process is the same, and its bolus goes on by the clock. */
+    @Test
+    fun `a saved patch is restored with the bolus it is giving`() {
+        state.serialNumber = "CL24000000042"
+        state.insulinRemaining = 150.0
+        emulator.handle(ImmediateBolusCommand(actionId = 1, volume = 1.0).encode())
+        now += 20_000L
+        emulator.handle(ImmediateBolusCommand(actionId = 2, volume = 2.0).encode())
+        now += 10_000L
+
+        val restored = CarelevoPumpEmulator.restore(emulator.saveState(), clock = { now })
+
+        assertThat(restored.state.serialNumber).isEqualTo("CL24000000042")
+        assertThat(restored.bolusRunning).isTrue()
+        assertThat(restored.reservoir).isWithin(TOLERANCE).of(148.5)
+        now += 30_000L
+        assertThat(restored.bolusRunning).isFalse()
+        assertThat(restored.boluses).containsExactly(1.0, 2.0).inOrder()
+        assertThat(restored.reservoir).isWithin(TOLERANCE).of(147.0)
+    }
+
     @Test
     fun `fast speed reports and gives a bolus in a shorter time`() {
         emulator.speed = EmulatorSpeed.FAST

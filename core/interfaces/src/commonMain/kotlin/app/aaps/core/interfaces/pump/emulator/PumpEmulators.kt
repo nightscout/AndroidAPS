@@ -6,9 +6,9 @@ import app.aaps.core.interfaces.concurrent.withLock
 /**
  * The emulated pumps of one app run, kept outside the app graph.
  *
- * A test restarts the app by building a new graph. A real pump runs on meanwhile, so the new graph must get the same
- * emulator object, with the bolus it is giving. Production makes a new holder for its one graph, so each app start
- * has new emulated pumps, as before.
+ * A test that kills the app starts it again in a new process. A real pump runs on meanwhile, so that test puts the
+ * saved emulator in here before the graph is built, with the bolus it is giving. Production makes a new holder for
+ * its one graph, so each app start has new emulated pumps, as before.
  */
 class PumpEmulators {
 
