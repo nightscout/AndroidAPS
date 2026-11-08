@@ -167,32 +167,34 @@ class EquilPumpEmulatorTest {
         sendCommand(byteArrayOf(0x01, 0x03), ByteArray(16))
     }
 
+    // A real pump takes at most 12 U/min (#5142): 0.5 U needs 2.5 s, 10 U 50 s. The basal uses a little insulin meanwhile.
+
     @Test
     fun `a bolus takes the time its command asks for`() {
-        bolus(steps = 80, seconds = 1)
+        bolus(steps = 80, seconds = 3)
         assertTrue(emulator.snapshot(linkUp = true).bolusRunning)
-        Thread.sleep(1100)
+        Thread.sleep(3100)
         val after = emulator.snapshot(linkUp = true)
         assertFalse(after.bolusRunning)
         assertEquals(listOf(0.5), after.boluses)
-        assertEquals(149.5, after.reservoir!!, 0.0001)
+        assertEquals(149.5, after.reservoir!!, 0.01)
     }
 
     @Test
     fun `a stopped bolus counts what it gave until the stop`() {
-        bolus(steps = 1600, seconds = 10)
+        bolus(steps = 1600, seconds = 60)
         Thread.sleep(1000)
         stopBolus()
         val given = emulator.snapshot(linkUp = true).boluses.single()
         assertTrue(given > 0.0 && given < 10.0, "given $given")
-        assertEquals(150.0 - given, emulator.snapshot(linkUp = true).reservoir!!, 0.0001)
+        assertEquals(150.0 - given, emulator.snapshot(linkUp = true).reservoir!!, 0.01)
     }
 
     @Test
     fun `a lost bolus start gives nothing and gets no answer`() {
         emulator.loseCommand(EmulatedCommand.BOLUS_START)
         sendInitial()
-        val answer = sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(80), Utils.intToBytes(1), Utils.intToBytes(0), Utils.intToBytes(0)))
+        val answer = sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(80), Utils.intToBytes(3), Utils.intToBytes(0), Utils.intToBytes(0)))
         assertEquals(null, answer)
         assertFalse(emulator.snapshot(linkUp = true).bolusRunning)
         assertEquals(0, state.commands)
@@ -202,14 +204,14 @@ class EquilPumpEmulatorTest {
     fun `a bolus whose answer is lost is given`() {
         emulator.loseAnswer(EmulatedCommand.BOLUS_START)
         sendInitial()
-        val answer = sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(80), Utils.intToBytes(1), Utils.intToBytes(0), Utils.intToBytes(0)))
+        val answer = sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(80), Utils.intToBytes(3), Utils.intToBytes(0), Utils.intToBytes(0)))
         assertEquals(null, answer)
         assertTrue(emulator.snapshot(linkUp = true).bolusRunning)
     }
 
     @Test
     fun `a saved pump comes back with the bolus it gives`() {
-        bolus(steps = 1600, seconds = 10)
+        bolus(steps = 1600, seconds = 60)
         val restored = EquilPumpEmulator.restore(emulator.saveState())
         val snapshot = restored.snapshot(linkUp = false)
         assertTrue(snapshot.bolusRunning)
@@ -243,10 +245,10 @@ class EquilPumpEmulatorTest {
 
     @Test
     fun `a bolus is logged with its speed at the start and ends at its time`() {
-        bolus(steps = 80, seconds = 1)
+        bolus(steps = 80, seconds = 3)
         val start = lastEvent()
         assertTrue(start.largeRate > 0)
-        Thread.sleep(1100)
+        Thread.sleep(3100)
         emulator.snapshot(linkUp = true)
         val end = lastEvent()
         assertEquals(start.index + 1, end.index)
@@ -266,8 +268,8 @@ class EquilPumpEmulatorTest {
     @Test
     fun `an occlusion stops the bolus where it was set and the pump logs a blockage`() {
         emulator.stopNextBolusAt(0.2)
-        bolus(steps = 160, seconds = 2)
-        Thread.sleep(700)
+        bolus(steps = 160, seconds = 5) // 0.2 U after 1 s
+        Thread.sleep(1500)
         val snapshot = emulator.snapshot(linkUp = true)
         assertFalse(snapshot.bolusRunning)
         assertEquals(listOf(0.2), snapshot.boluses)
