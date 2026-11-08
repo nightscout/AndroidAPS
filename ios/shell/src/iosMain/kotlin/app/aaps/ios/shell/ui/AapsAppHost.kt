@@ -391,11 +391,21 @@ private fun AapsApp(app: StartedApp) {
             // has no request to render and a configured app-launch password never appears - the
             // setting looked saved and did nothing, which is how it was found.
             //
-            // Asked at launch **and every time the app comes back to the foreground**, which is
+            // Asked at launch **and every time the app comes back from the background**, which is
             // the case that matters: a phone handed to someone else while AAPS is backgrounded.
             // Android does the same from `onResume`. When protection is set to "No protection"
             // this costs nothing - `requestProtection` grants straight away without a dialog, so
             // the gate only appears for someone who asked for it.
+            //
+            // From the background, not on every `didBecomeActive`. That notification also fires
+            // when a system sheet closes, and the Face ID sheet is one. Asking again then made a
+            // loop: a correct scan granted the request, the sheet closed about a second later, the
+            // one-second session had expired, and the gate asked for Face ID again. It also broke
+            // the settings prompt - its sheet closing re-locked the app, which cancelled the
+            // settings request and started a second `LAContext` while the first was still going
+            // down, so the user got the password dialog instead. `IosProtectionLifecycle` draws the
+            // same line for the same reason: a sheet, a banner or the control centre is not leaving
+            // the app.
             var unlocked by remember { mutableStateOf(false) }
             var asking by remember { mutableStateOf(false) }
             val requestUnlock = remember {
@@ -419,13 +429,31 @@ private fun AapsApp(app: StartedApp) {
 
             DisposableEffect(Unit) {
                 requestUnlock()
-                val observer = NSNotificationCenter.defaultCenter.addObserverForName(
+                // Set when the app really left the screen, read and cleared when it is back. Plain
+                // state, not Compose state: nothing draws it.
+                var wasInBackground = false
+                val center = NSNotificationCenter.defaultCenter
+                val background = center.addObserverForName(
+                    name = UIApplicationDidEnterBackgroundNotification,
+                    `object` = null,
+                    queue = NSOperationQueue.mainQueue,
+                    usingBlock = { wasInBackground = true }
+                )
+                val active = center.addObserverForName(
                     name = UIApplicationDidBecomeActiveNotification,
                     `object` = null,
                     queue = NSOperationQueue.mainQueue,
-                    usingBlock = { requestUnlock() }
+                    usingBlock = {
+                        if (wasInBackground) {
+                            wasInBackground = false
+                            requestUnlock()
+                        }
+                    }
                 )
-                onDispose { NSNotificationCenter.defaultCenter.removeObserver(observer) }
+                onDispose {
+                    center.removeObserver(background)
+                    center.removeObserver(active)
+                }
             }
 
             // Nothing is drawn until it is granted. Showing the app behind the prompt would make
