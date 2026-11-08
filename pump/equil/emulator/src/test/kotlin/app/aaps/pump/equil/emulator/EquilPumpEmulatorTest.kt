@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.Utils
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -148,6 +149,77 @@ class EquilPumpEmulatorTest {
         )
         sendCommand(byteArrayOf(0x01, 0x03), params)
         assertFalse(state.isExtendedBolusRunning)
+    }
+
+    // --- A bolus over time, and the test hooks ---
+
+    private fun bolus(steps: Int, seconds: Int) {
+        sendInitial()
+        sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(steps), Utils.intToBytes(seconds), Utils.intToBytes(0), Utils.intToBytes(0)))
+    }
+
+    private fun stopBolus() {
+        // A new exchange, as the transport starts one on port 0F0F.
+        emulator.resetToInitial()
+        sendInitial()
+        sendCommand(byteArrayOf(0x01, 0x03), ByteArray(16))
+    }
+
+    @Test
+    fun `a bolus takes the time its command asks for`() {
+        bolus(steps = 80, seconds = 1)
+        assertTrue(emulator.snapshot(linkUp = true).bolusRunning)
+        Thread.sleep(1100)
+        val after = emulator.snapshot(linkUp = true)
+        assertFalse(after.bolusRunning)
+        assertEquals(listOf(0.5), after.boluses)
+        assertEquals(149.5, after.reservoir!!, 0.0001)
+    }
+
+    @Test
+    fun `a stopped bolus counts what it gave until the stop`() {
+        bolus(steps = 1600, seconds = 10)
+        Thread.sleep(1000)
+        stopBolus()
+        val given = emulator.snapshot(linkUp = true).boluses.single()
+        assertTrue(given > 0.0 && given < 10.0, "given $given")
+        assertEquals(150.0 - given, emulator.snapshot(linkUp = true).reservoir!!, 0.0001)
+    }
+
+    @Test
+    fun `a lost bolus start gives nothing and gets no answer`() {
+        emulator.loseCommand(EmulatedCommand.BOLUS_START)
+        sendInitial()
+        val answer = sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(80), Utils.intToBytes(1), Utils.intToBytes(0), Utils.intToBytes(0)))
+        assertEquals(null, answer)
+        assertFalse(emulator.snapshot(linkUp = true).bolusRunning)
+        assertEquals(0, state.commands)
+    }
+
+    @Test
+    fun `a bolus whose answer is lost is given`() {
+        emulator.loseAnswer(EmulatedCommand.BOLUS_START)
+        sendInitial()
+        val answer = sendCommand(byteArrayOf(0x01, 0x03), Utils.concat(Utils.intToBytes(80), Utils.intToBytes(1), Utils.intToBytes(0), Utils.intToBytes(0)))
+        assertEquals(null, answer)
+        assertTrue(emulator.snapshot(linkUp = true).bolusRunning)
+    }
+
+    @Test
+    fun `a saved pump comes back with the bolus it gives`() {
+        bolus(steps = 1600, seconds = 10)
+        val restored = EquilPumpEmulator.restore(emulator.saveState())
+        val snapshot = restored.snapshot(linkUp = false)
+        assertTrue(snapshot.bolusRunning)
+        assertEquals(state.serialNumber, restored.state.serialNumber)
+    }
+
+    @Test
+    fun `a temp basal is reported as its rate`() {
+        sendInitial()
+        // CmdTempBasalSet: 0.6 U/h for 30 minutes
+        sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(48), Utils.intToBytes(1800)))
+        assertEquals(0.6, emulator.snapshot(linkUp = true).tempBasal!!.absolute!!, 0.0001)
     }
 
     // --- Basal profile set (0x01, 0x02) ---

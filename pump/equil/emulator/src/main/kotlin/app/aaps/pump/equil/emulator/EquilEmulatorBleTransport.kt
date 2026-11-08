@@ -8,6 +8,11 @@ import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilPacketCodec
@@ -42,10 +47,47 @@ class EquilEmulatorBleTransport(
     private val serialNumberProvider: (() -> String)? = null,
     /** Called on connect to restore device password from stored preferences. Returns hex string or null. */
     private val storedPasswordProvider: (() -> String?)? = null
-) : EquilBleTransport {
+) : EquilBleTransport, PumpEmulatorControl {
 
     private var listener: BleTransportListener? = null
-    private var connected = false
+    @Volatile private var connected = false
+
+    /** While true, a connect never comes up. */
+    @Volatile private var outOfRange = false
+
+    // --- PumpEmulatorControl ---
+
+    /**
+     * Not used by this emulator: a bolus takes the time its command asks for, as on the pump. A test makes boluses
+     * shorter with the bolus speed setting of the driver, as a user does.
+     */
+    @Volatile override var speed: EmulatorSpeed = EmulatorSpeed.REAL
+
+    override fun breakLink(): Boolean {
+        // A response still on its way belongs to the old link.
+        connectionGeneration++
+        connected = false
+        listener?.onConnectionStateChanged(false)
+        return true
+    }
+
+    override fun setOutOfRange(outOfRange: Boolean): Boolean {
+        this.outOfRange = outOfRange
+        if (outOfRange && connected) breakLink()
+        return true
+    }
+
+    override fun loseCommand(command: EmulatedCommand): Boolean = emulator.loseCommand(command)
+    override fun loseAnswer(command: EmulatedCommand): Boolean = emulator.loseAnswer(command)
+
+    /** Not built yet: the alarms of a real pump come through its history, which the emulator does not page through. */
+    override fun raise(alarm: EmulatedAlarm): Boolean = false
+
+    /** Not built yet: the driver learns of a stop from the pump history, which the emulator does not page through. */
+    override fun stopNextBolusAt(units: Double): Boolean = false
+
+    override fun state(): EmulatedPumpState = emulator.snapshot(linkUp = connected)
+    override fun saveState(): ByteArray = emulator.saveState()
 
     // Packet reassembly buffer
     private var receiveBuffer = EquilResponse(System.currentTimeMillis())
@@ -140,6 +182,8 @@ class EquilEmulatorBleTransport(
 
         override fun connect(address: String): Boolean {
             aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: connect($address)")
+            // Out of range: the connect is started and never comes up, as with a real pump.
+            if (outOfRange) return true
             receiveBuffer = EquilResponse(System.currentTimeMillis())
             pumpReqIndex = 0
             connectionGeneration++

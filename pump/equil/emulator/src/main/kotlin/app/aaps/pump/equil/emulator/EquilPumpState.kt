@@ -3,13 +3,14 @@ package app.aaps.pump.equil.emulator
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import java.io.Serializable
 import kotlin.time.Instant
 
 /**
  * Mutable state of the emulated Equil pump.
- * Inspectable from tests for assertions.
+ * Inspectable from tests for assertions. Serializable, so a test that kills the app can keep the pump as it was.
  */
-class EquilPumpState {
+class EquilPumpState : Serializable {
 
     // Device info — serial must start with 'A' (real Equil format: Axxxxx)
     var serialNumber: String = "A00001"
@@ -34,8 +35,25 @@ class EquilPumpState {
     var extendedBolusStep: Int = 0
     var extendedBolusDuration: Int = 0 // seconds
 
+    /** The bolus the pump gives now, or null. */
+    var runningBolus: RunningBolus? = null
+
+    /** Every bolus the pump gave, oldest first, in units. A stopped one with what it gave until the stop. */
+    val deliveredBoluses: MutableList<Double> = mutableListOf()
+
+    /** How many commands reached the pump. */
+    var commands: Int = 0
+
+    /** Insulin left, in units. A bolus takes it step by step. */
+    var reservoir: Double = 150.0
+
     // Reservoir & battery
-    var currentInsulin: Int = 150 // units remaining (raw byte value from CmdInsulinGet)
+    /** Units remaining, as CmdInsulinGet reports them: whole units. */
+    var currentInsulin: Int
+        get() = reservoir.toInt()
+        set(value) {
+            reservoir = value.toDouble()
+        }
     var battery: Int = 80
 
     // Motor resistance (CmdResistanceGet) — >= 500 means piston reached insulin
@@ -73,6 +91,26 @@ class EquilPumpState {
 
     /** Pairing: password key (32 hex bytes = 64 hex chars) returned to app during CmdPair */
     var pairingPasswordKey: String = "FEDCBA9876543210FEDCBA9876543210FEDCBA9876543210FEDCBA9876543210"
+
+    private companion object {
+
+        private const val serialVersionUID = 1L
+    }
+}
+
+/**
+ * A bolus as the pump gives it: [steps] (160 per unit) spread over [durationMs], the time the command asked for.
+ * UNVERIFIED: that the steps are given evenly over that time. The driver shows its progress the same way.
+ */
+class RunningBolus(val startedAt: Long, val steps: Int, val durationMs: Long) : Serializable {
+
+    /** Steps given so far. */
+    var givenSteps: Int = 0
+
+    private companion object {
+
+        private const val serialVersionUID = 1L
+    }
 }
 
 data class HistoryEvent(
@@ -90,7 +128,7 @@ data class HistoryEvent(
     val type: Int,
     val level: Int,
     val parm: Int
-) {
+) : Serializable {
 
     companion object {
 

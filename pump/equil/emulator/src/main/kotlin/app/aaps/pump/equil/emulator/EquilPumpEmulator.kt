@@ -2,12 +2,20 @@ package app.aaps.pump.equil.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
+import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.Utils
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.security.MessageDigest
 
 /**
@@ -47,6 +55,10 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     /** The passwordKey sent to app during pairing, becomes runPwd for phase 2. */
     private var pairingRunPwd: ByteArray? = null
+
+    /** Test hooks: commands that never reach the pump, and commands whose answer is lost. */
+    private val lostCommands = mutableListOf<EmulatedCommand>()
+    private val lostAnswers = mutableListOf<EmulatedCommand>()
 
     enum class Phase {
         AWAITING_INITIAL,
@@ -168,11 +180,22 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         }
         val contentBytes = Utils.hexStringToBytes(contentHex)
         val cmdType = if (contentBytes.size >= 6) "%02X,%02X".format(contentBytes[4], contentBytes[5]) else "??"
+        val command = commandOf(contentBytes)
+        if (take(lostCommands, command)) {
+            // The pump never got it: it does nothing and sends nothing. The next command starts a new exchange.
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: $command lost before the pump")
+            return null
+        }
+        synchronized(state) { state.commands++ }
         val responseData = processCommand(contentBytes, incomingPort)
         lastCommandResponse = responseData
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: handleCommandData cmd=$cmdType responseSize=${responseData.size} response=${Utils.bytesToHex(responseData)}")
 
         phase = Phase.AWAITING_CONFIRM
+        if (take(lostAnswers, command)) {
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: $command done, its answer is lost")
+            return null
+        }
         return AESUtil.aesEncrypt(password, responseData)
     }
 
@@ -263,6 +286,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
         val cmdType1 = data[4].toInt() and 0xFF
         val cmdType2 = data[5].toInt() and 0xFF
+        // A read must see the reservoir and the bolus as they are now.
+        settle()
 
         return when {
             // --- GET commands (0x02, ...) ---
@@ -410,14 +435,34 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
                 state.lastBolusStep = field1
                 state.lastBolusStepTime = field2
                 state.lastBolusTime = System.currentTimeMillis()
-            } else {
+                startBolus(steps = field1, seconds = field2)
+            } else if (field3 != 0 || field4 != 0) {
                 // CmdExtendedBolusSet
                 state.extendedBolusStep = field3
                 state.extendedBolusDuration = field4
                 state.isExtendedBolusRunning = field3 > 0
+            } else {
+                // CmdLargeBasalSet(0), the stop of a bolus, and CmdExtendedBolusSet(0) look the same.
+                // UNVERIFIED: that the real pump ends both.
+                stopBolus()
+                state.extendedBolusStep = 0
+                state.extendedBolusDuration = 0
+                state.isExtendedBolusRunning = false
             }
         }
         return indexedResponse()
+    }
+
+    /** UNVERIFIED: a bolus sent while one runs. The emulator ends the first one where it is. */
+    private fun startBolus(steps: Int, seconds: Int) = synchronized(state) {
+        stopBolus()
+        state.runningBolus = RunningBolus(startedAt = System.currentTimeMillis(), steps = steps, durationMs = seconds * 1000L)
+    }
+
+    /** The bolus ends with what it gave until now. */
+    private fun stopBolus() = synchronized(state) {
+        settle()
+        finishBolus()
     }
 
     private fun processBasalSet(data: ByteArray): ByteArray {
@@ -516,9 +561,102 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     private fun getInt(data: ByteArray, offset: Int): Int =
         Utils.bytes2Int(byteArrayOf(data[offset], data[offset + 1], data[offset + 2], data[offset + 3]))
 
+    // --- Test hooks, see EquilEmulatorBleTransport ---
+
+    /** The next [command] never reaches the pump. */
+    fun loseCommand(command: EmulatedCommand): Boolean = synchronized(lostCommands) { lostCommands.add(command) }
+
+    /** The pump runs the next [command], and its answer is lost. */
+    fun loseAnswer(command: EmulatedCommand): Boolean = synchronized(lostAnswers) { lostAnswers.add(command) }
+
+    private fun take(list: MutableList<EmulatedCommand>, command: EmulatedCommand?): Boolean =
+        command != null && synchronized(list) { list.remove(command) }
+
+    /** What the pump does for [data], by its type and fields. Null for a command no hook names. */
+    private fun commandOf(data: ByteArray): EmulatedCommand? {
+        if (data.size < 10) return null
+        val type1 = data[4].toInt() and 0xFF
+        val type2 = data[5].toInt() and 0xFF
+        return when {
+            type1 == 0x01 && type2 == 0x03 && data.size >= 22 ->
+                when {
+                    getInt(data, 6) != 0 || getInt(data, 10) != 0  -> EmulatedCommand.BOLUS_START
+                    getInt(data, 14) != 0 || getInt(data, 18) != 0 -> null // an extended bolus
+                    else                                            -> EmulatedCommand.BOLUS_STOP
+                }
+
+            type1 == 0x01 && type2 == 0x04                      -> if (getInt(data, 6) > 0) EmulatedCommand.TEMP_BASAL_START else EmulatedCommand.TEMP_BASAL_STOP
+            type1 == 0x01 && type2 == 0x02                      -> EmulatedCommand.BASAL_PROFILE
+            type1 == 0x02 && type2 == 0x00                      -> EmulatedCommand.STATUS
+            else                                                -> null
+        }
+    }
+
+    /** What the pump holds now. @param linkUp a phone is connected, which only the transport knows */
+    fun snapshot(linkUp: Boolean): EmulatedPumpState = synchronized(state) {
+        settle()
+        val now = System.currentTimeMillis()
+        val tempBasalRuns = state.isTempBasalRunning && now < state.tempBasalStartTime + state.tempBasalDuration * 1000L
+        EmulatedPumpState(
+            boluses = state.deliveredBoluses.toList(),
+            bolusRunning = state.runningBolus != null,
+            tempBasal = if (tempBasalRuns) EmulatedTempBasal(absolute = state.tempBasalStep / TEMP_BASAL_STEPS_PER_UNIT, percent = null) else null,
+            suspended = state.runningMode != RUNNING_MODE_RUNNING,
+            reservoir = state.reservoir,
+            linkUp = linkUp,
+            commands = state.commands
+        )
+    }
+
+    /** All the pump holds, with the bolus it gives, for a test that kills the app. Read back with [restore]. */
+    fun saveState(): ByteArray = synchronized(state) {
+        settle()
+        ByteArrayOutputStream().also { bytes -> ObjectOutputStream(bytes).use { it.writeObject(state) } }.toByteArray()
+    }
+
+    /**
+     * Brings a bolus up to now: the steps due by now are given, and a bolus whose time is over is done. The pump
+     * clock is the phone clock, so this is all a bolus needs.
+     */
+    private fun settle() = synchronized(state) {
+        val bolus = state.runningBolus ?: return@synchronized
+        val elapsed = (System.currentTimeMillis() - bolus.startedAt).coerceAtLeast(0)
+        val due = if (elapsed >= bolus.durationMs) bolus.steps else (bolus.steps.toLong() * elapsed / bolus.durationMs).toInt()
+        give(bolus, due)
+        if (elapsed >= bolus.durationMs) finishBolus()
+    }
+
+    private fun give(bolus: RunningBolus, upTo: Int) {
+        val more = (upTo - bolus.givenSteps).coerceAtLeast(0)
+        bolus.givenSteps += more
+        state.reservoir = (state.reservoir - more / BOLUS_STEPS_PER_UNIT).coerceAtLeast(0.0)
+    }
+
+    private fun finishBolus() {
+        val bolus = state.runningBolus ?: return
+        state.deliveredBoluses.add(bolus.givenSteps / BOLUS_STEPS_PER_UNIT)
+        state.runningBolus = null
+    }
+
     companion object {
 
         /** The port CmdResistanceGet sends on. */
         private const val RESISTANCE_PORT = "1515"
+
+        /** CmdLargeBasalSet: 160 steps per unit. */
+        private const val BOLUS_STEPS_PER_UNIT = 160.0
+
+        /** CmdTempBasalSet: the rate in U/h times 80. */
+        private const val TEMP_BASAL_STEPS_PER_UNIT = 80.0
+
+        /** The running mode the pump delivers in. 0 is stopped, 2 suspended. */
+        private const val RUNNING_MODE_RUNNING = 1
+
+        /** The emulated pump of a test run, kept outside the graph, see [PumpEmulators]. */
+        val KEY = PumpEmulators.Key<EquilPumpEmulator>("equil")
+
+        /** The pump of [saveState], in a new process. */
+        fun restore(saved: ByteArray, aapsLogger: AAPSLogger? = null): EquilPumpEmulator =
+            EquilPumpEmulator(ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() } as EquilPumpState, aapsLogger)
     }
 }
