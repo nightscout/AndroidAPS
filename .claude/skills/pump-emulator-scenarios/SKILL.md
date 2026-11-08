@@ -1,3 +1,8 @@
+---
+name: pump-emulator-scenarios
+description: Test a pump driver against its emulator through the real command queue - pairing, bolus, temp basal, lost commands and answers, driver reload, app restart. Use when adding a pump to the scenario tests, when a pump scenario or CI shard D fails, or when changing a driver or its emulator in a way these tests cover.
+---
+
 # Pump emulator scenario tests
 
 Instrumented tests that run a real pump driver against its in-tree emulator, through the real command queue,
@@ -72,3 +77,15 @@ the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@
 - The queue drops every command while `isConfigured()` is false, also a profile switch. A wizard that needs the
   profile before pairing takes the requested one, `PumpSync.expectedPumpState().profile`, as Equil does.
 - `getBolusesFromTime(..., ascending = true)` returns the newest first. Sort by timestamp.
+- An Android service of a driver is made once for the process, but each test has a new graph. Left bound, the next
+  test's plugin binds the old service, whose objects belong to the old graph: its link runs there and the wizard waits
+  for ever. `tearDown` therefore stops the driver as a real stop does and waits until its services are gone.
+- The queue drops a status read while another one waits or runs, and reports it as failed. A driver start queues one,
+  and during a bolus it waits for the bolus end. The `readStatus` step waits for that one first.
+- A driver that keeps no pump state is ready (`isInitialized()`) only after its first status read, as at an app start.
+  Right after a reload, check `isConfigured()`.
+- A driver that cannot tell at once whether a bolus start reached the pump may count the whole amount and decide later,
+  from the pump, once the bolus would have ended. Give such a check a longer limit (`checkBolusRecords(BOLUS_TIMEOUT)`).
+  A record it sets to 0 U counts as no record.
+- A driver's own database, as the stored pump log of Aaruy, is a file. It outlives the test graph, so a test finds the
+  rows of the tests before it. A driver must not take an old row for a new event; Aaruy tells them apart by the row id.
