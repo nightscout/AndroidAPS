@@ -203,7 +203,14 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     fun unpair() = pump.unpair(this)
 
-    fun readStatus(): PumpEnactResult = queued { commandQueue.readStatus("scenario") }
+    /**
+     * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
+     * and during a bolus it waits for the bolus end. So wait for that one first: the step must read the pump itself.
+     */
+    fun readStatus(): PumpEnactResult {
+        awaitTrue("the status read before this one is done", BOLUS_TIMEOUT) { !commandQueue.statusInQueue() }
+        return queued { commandQueue.readStatus("scenario") }
+    }
 
     /** A bolus to its end. */
     fun bolus(units: Double): PumpEnactResult = queued { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units }) }
