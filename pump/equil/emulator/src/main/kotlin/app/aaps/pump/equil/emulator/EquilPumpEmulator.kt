@@ -59,9 +59,6 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     /** The passwordKey sent to app during pairing, becomes runPwd for phase 2. */
     private var pairingRunPwd: ByteArray? = null
 
-    /** Called when a bolus starts, for the transport: the pump closes the link some time after it. */
-    @Volatile var onBolusStarted: (() -> Unit)? = null
-
     /** Test hooks: commands that never reach the pump, and commands whose answer is lost. */
     private val lostCommands = mutableListOf<EmulatedCommand>()
     private val lostAnswers = mutableListOf<EmulatedCommand>()
@@ -415,14 +412,25 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         if (data.size >= 14) synchronized(state) {
             val step = getInt(data, 6)
             if (step > 0 && refusesTempBasal(step)) return refusedResponse()
-            // UNVERIFIED: the entries for a temp basal set while one runs. The end of a temp basal is (4,11,0), as in
-            // the real records; a start is taken to be a status entry with the new rate.
-            if (state.isTempBasalRunning) log(TYPE_TEMP_BASAL_END)
-            state.tempBasalStep = getInt(data, 6)
-            state.tempBasalDuration = getInt(data, 10)
-            state.isTempBasalRunning = state.tempBasalStep > 0
-            state.tempBasalStartTime = System.currentTimeMillis()
-            if (state.isTempBasalRunning) log(TYPE_STATUS)
+            settle()
+            // Seen on a real pump (2026-11-08): a start logs (4,10,0) and an end (4,11,0), each with the rate before it,
+            // then a status entry with the new rate if the rate changed. UNVERIFIED: a temp basal set while one runs;
+            // the driver ends the old one first.
+            // Seen too: step 47 (0.5875 U/h) ran at 0.6 U/h, step 40 at 0.5 U/h. The pump rounds a temp basal to a grid
+            // that is not known; the emulator runs the step as sent.
+            val before = basalSpeed()
+            if (state.isTempBasalRunning) {
+                log(TYPE_TEMP_BASAL_END)
+                clearTempBasal()
+            }
+            if (step > 0) {
+                log(TYPE_TEMP_BASAL_START)
+                state.tempBasalStep = step
+                state.tempBasalDuration = getInt(data, 10)
+                state.isTempBasalRunning = true
+                state.tempBasalStartTime = System.currentTimeMillis()
+            }
+            logRateChange(before)
         }
         return indexedResponse()
     }
@@ -467,9 +475,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     }
 
     /**
+     * Seen on a real pump (2026-11-08): a bolus logs a status entry at its start, with the bolus speed as largeRate and
+     * the basal, which goes on during the bolus, as rate. The history screen of the driver reads a bolus from it.
      * UNVERIFIED: a bolus sent while one runs. The emulator ends the first one where it is.
-     * UNVERIFIED: the log entry of a bolus start, a status entry with the bolus speed as largeRate. It is what the
-     * history screen of the driver reads a bolus from.
      */
     private fun startBolus(steps: Int, seconds: Int) = synchronized(state) {
         stopBolus()
@@ -481,7 +489,6 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         }
         state.runningBolus = RunningBolus(startedAt = System.currentTimeMillis(), steps = steps, durationMs = seconds * 1000L)
         log(TYPE_STATUS, largeRate = bolusSpeed(steps, seconds))
-        onBolusStarted?.invoke()
     }
 
     /** The bolus ends with what it gave until now. */
@@ -518,13 +525,26 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
                 // Likely a time set (year 2020-2050)
                 processTimeSet(data)
             } else {
-                // Mode set
-                state.runningMode = getInt(data, 6)
+                setRunningMode(getInt(data, 6))
             }
         } else if (data.size >= 10) {
-            state.runningMode = getInt(data, 6)
+            setRunningMode(getInt(data, 6))
         }
         return indexedResponse()
+    }
+
+    /**
+     * Seen on a real pump (2026-11-08): a suspend logs (4,5,0) with rate 0. A resume logs only a status entry with the
+     * rate it runs again, and that is the temp basal of before the suspend (#3830).
+     * UNVERIFIED: whether the time of the temp basal goes on during the suspend. The emulator lets it go on.
+     */
+    private fun setRunningMode(mode: Int) = synchronized(state) {
+        settle()
+        val before = basalSpeed()
+        val wasRunning = state.runningMode == RUNNING_MODE_RUNNING
+        state.runningMode = mode
+        if (wasRunning && mode != RUNNING_MODE_RUNNING) log(TYPE_PAUSE)
+        else logRateChange(before)
     }
 
     private fun processTimeSet(data: ByteArray) {
@@ -723,8 +743,12 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             }
         }
         if (state.isTempBasalRunning && now >= tempBasalEnd()) {
-            log(TYPE_TEMP_BASAL_END, at = tempBasalEnd())
+            // UNVERIFIED: that a temp basal whose time is over logs as a cancel does, see processTempBasalSet.
+            val end = tempBasalEnd()
+            val before = basalSpeed(end - 1)
+            log(TYPE_TEMP_BASAL_END, at = end, rate = before)
             clearTempBasal()
+            logRateChange(before, at = end)
         }
     }
 
@@ -785,8 +809,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     }
 
     /**
-     * @param logEnd UNVERIFIED: the entry at the end of a bolus, a status entry with largeRate 0. An entry that stops
-     * delivery ends a bolus by itself, so it needs none.
+     * @param logEnd the entry at the end of a bolus, seen on a real pump (2026-11-08): a status entry with largeRate 0, at
+     * the end or at the second the stop came. UNVERIFIED: an entry that stops delivery ends a bolus by itself and needs none.
      */
     private fun finishBolus(at: Long, logEnd: Boolean = true) {
         val bolus = state.runningBolus ?: return
@@ -822,15 +846,26 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     }
 
     /** Adds an entry to the pump log as the pump writes one: the next index, the time, the battery, the reservoir and the rate. */
-    private fun log(type: Int, level: Int = 0, port: Int = HistoryEvent.PORT_STATUS, largeRate: Int = 0, at: Long = System.currentTimeMillis()) {
+    private fun log(
+        type: Int, level: Int = 0, port: Int = HistoryEvent.PORT_STATUS, largeRate: Int = 0, at: Long = System.currentTimeMillis(),
+        rate: Int = basalSpeed(at)
+    ) {
         state.historyIndex++
         state.historyEvents.add(
             // In the pump's own time.
             HistoryEvent.at(
-                at + state.clockOffsetMs, index = state.historyIndex, type = type, level = level, port = port, rate = basalSpeed(at), largeRate = largeRate,
+                at + state.clockOffsetMs, index = state.historyIndex, type = type, level = level, port = port, rate = rate, largeRate = largeRate,
                 battery = state.battery, insulin = state.currentInsulin
             )
         )
+    }
+
+    /**
+     * Seen on a real pump (2026-11-08): a status entry is written when the basal changes, with the new rate. A temp basal
+     * at the rate of the base basal writes none.
+     */
+    private fun logRateChange(before: Int, at: Long = System.currentTimeMillis()) {
+        if (basalSpeed(at) != before) log(TYPE_STATUS, at = at)
     }
 
     /** The basal the pump gives at [at], in steps of 0.00625 U/h, as the log and the advertisement show it. */
@@ -841,11 +876,11 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     }
 
     /**
-     * The bolus speed in steps of 0.00625 U/h, as the log shows it. UNVERIFIED: the log has two bytes for it, and 12 U/min
-     * does not fit in them; the emulator writes the largest value then.
+     * The bolus speed in steps of 0.00625 U/h, as the log shows it. Seen on a real pump (2026-11-08): the log has two bytes
+     * for it and keeps the low 16 bits, so 12 U/min (115200) shows as 49664.
      */
     private fun bolusSpeed(steps: Int, seconds: Int): Int =
-        (steps / BOLUS_STEPS_PER_UNIT / seconds.coerceAtLeast(1) * 3600 / SPEED_UNITS_PER_STEP).roundToInt().coerceIn(1, 0xFFFF)
+        (steps / BOLUS_STEPS_PER_UNIT / seconds.coerceAtLeast(1) * 3600 / SPEED_UNITS_PER_STEP).roundToInt() and 0xFFFF
 
     companion object {
 
@@ -853,7 +888,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         private const val TYPE_STATUS = 0
         private const val TYPE_RESERVOIR = 1
         private const val TYPE_BLOCKAGE = 2
+        private const val TYPE_PAUSE = 5
         private const val TYPE_REWIND = 8
+        private const val TYPE_TEMP_BASAL_START = 10
         private const val TYPE_TEMP_BASAL_END = 11
 
         /** On port 5. TYPE_POWER_EVENT with level 0 is a power-on reset, with level 2 "abnormal infusion stopped". */
@@ -892,7 +929,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         /** CmdTempBasalSet: the rate in U/h times 80. */
         private const val TEMP_BASAL_STEPS_PER_UNIT = 80.0
 
-        /** The running mode the pump delivers in. 0 is stopped, 2 suspended. */
+        /** The running mode the pump delivers in. 0 is suspended, 2 stopped, as the driver reads them. */
         private const val RUNNING_MODE_RUNNING = 1
 
         /** The emulated pump of a test run, kept outside the graph, see [PumpEmulators]. */

@@ -261,7 +261,12 @@ class EquilPumpEmulatorTest {
         sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(48), Utils.intToBytes(1)))
         Thread.sleep(1100)
         assertEquals(null, emulator.snapshot(linkUp = true).tempBasal)
-        assertEquals(listOf(4, 11, 0), code(lastEvent()))
+        // The end with the rate of the temp basal (0.6 U/h), then the base rate of 1 U/h.
+        val (end, status) = state.historyEvents.takeLast(2)
+        assertEquals(listOf(4, 11, 0), code(end))
+        assertEquals(96, end.rate)
+        assertEquals(listOf(4, 0, 0), code(status))
+        assertEquals(160, status.rate)
         assertEquals(0, state.tempBasalStep)
     }
 
@@ -368,6 +373,49 @@ class EquilPumpEmulatorTest {
         assertEquals(null, emulator.snapshot(linkUp = true).tempBasal)
         setMode(1)
         assertEquals(0.6, emulator.snapshot(linkUp = true).tempBasal!!.absolute!!, 0.0001)
+    }
+
+    // The entries below are as a real pump wrote them on 2026-11-08 (records 1525-1540). Rates are in 0.00625 U/h.
+
+    private fun entries(before: Int) = state.historyEvents.drop(before).map { code(it) + it.rate }
+
+    @Test
+    fun `a temp basal start and cancel log as a real pump does`() {
+        val before = state.historyEvents.size
+        tempBasal(step = 48, seconds = 1800)
+        tempBasal(step = 0, seconds = 0)
+        // Start with the rate before, the new rate, end with the rate before, the base rate again.
+        assertEquals(
+            listOf(listOf(4, 10, 0, 160), listOf(4, 0, 0, 96), listOf(4, 11, 0, 96), listOf(4, 0, 0, 160)),
+            entries(before)
+        )
+    }
+
+    @Test
+    fun `a temp basal at the base rate logs no rate change`() {
+        val before = state.historyEvents.size
+        tempBasal(step = 80, seconds = 1800) // 1 U/h, as the base basal
+        assertEquals(listOf(listOf(4, 10, 0, 160)), entries(before))
+    }
+
+    @Test
+    fun `a suspend and a resume log as a real pump does`() {
+        tempBasal(step = 48, seconds = 1800)
+        val before = state.historyEvents.size
+        setMode(0)
+        setMode(1)
+        // The pause with rate 0, then the temp basal of before the suspend again.
+        assertEquals(listOf(listOf(4, 5, 0, 0), listOf(4, 0, 0, 96)), entries(before))
+    }
+
+    @Test
+    fun `a bolus logs the basal that goes on and its speed in two bytes`() {
+        bolus(steps = 80, seconds = 20) // 1.5 U/min
+        assertEquals(160, lastEvent().rate)
+        assertEquals(14400, lastEvent().largeRate)
+        stopBolus()
+        bolus(steps = 160, seconds = 5) // 12 U/min is 115200, the low 16 bits are 49664
+        assertEquals(49664, lastEvent().largeRate)
     }
 
     /** As the real records 1711-1717: the temp basal ends, the reservoir is empty, the pump rewinds and stops. */

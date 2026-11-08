@@ -23,6 +23,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.nio.ByteBuffer
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 /**
  * BleTransport implementation that emulates an Equil pump.
@@ -90,23 +94,24 @@ class EquilEmulatorBleTransport(
     override fun saveState(): ByteArray = emulator.saveState()
     override fun shiftPumpClock(offsetMs: Long): Boolean = emulator.shiftClock(offsetMs)
 
-    init {
-        emulator.onBolusStarted = { closeLinkAfterBolus() }
-    }
+    @Volatile private var idleClose: ScheduledFuture<*>? = null
 
     /**
-     * #3467, seen on a real pump: it closes the link about 10 s after a bolus command, so after a longer bolus the driver
-     * has no link left. A time of the pump, not an action, so the same at both speeds.
+     * Seen on a real pump (#3467, 2026-11-08): it closes the link about 9.5 s after the last message in either direction.
+     * During a bolus the driver sends nothing, so after a bolus at 1.5 U/min the link is gone. After a 5 s bolus the
+     * driver read the pump log at once, and the link stayed. A time of the pump, so the same at both speeds.
+     * Called on every message; the newest call wins.
      */
-    private fun closeLinkAfterBolus() {
+    @Synchronized
+    private fun armIdleClose() {
         val generation = connectionGeneration
-        launchAsync {
-            Thread.sleep(LINK_CLOSE_AFTER_BOLUS_MS)
+        idleClose?.cancel(false)
+        idleClose = idleCloser.schedule({
             if (generation == connectionGeneration && connected) {
-                aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: the pump closes the link after the bolus command")
+                aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: the pump closes the idle link")
                 breakLink()
             }
-        }
+        }, LINK_IDLE_CLOSE_MS, TimeUnit.MILLISECONDS)
     }
 
     // Packet reassembly buffer
@@ -216,6 +221,7 @@ class EquilEmulatorBleTransport(
                 }
             }
             connected = true
+            armIdleClose()
             listener?.onConnectionStateChanged(true)
             return true
         }
@@ -248,6 +254,7 @@ class EquilEmulatorBleTransport(
         @Suppress("SleepInsteadOfDelay")
         override fun writeCharacteristic(data: ByteArray) {
             val gen = connectionGeneration
+            armIdleClose()
 
             // Captured atomically inside the synchronized block when end-bit is set.
             // This prevents the callback thread from resetting receiveBuffer
@@ -393,13 +400,19 @@ class EquilEmulatorBleTransport(
     @Suppress("SleepInsteadOfDelay")
     private fun deliverResponse(gen: Int, responsePackets: EquilResponse) {
         launchAsync {
-            // UNVERIFIED: how long a real pump takes to answer. The real-speed run uses a slower answer, to find races
-            // that only show when an answer does not come at once.
-            Thread.sleep(if (speed == EmulatorSpeed.REAL) REAL_ANSWER_MS else FAST_ANSWER_MS)
+            // Seen on a real pump (2026-11-08): the first packet of an answer comes 60 to 100 ms after the last packet of
+            // the command, the next ones 10 to 65 ms apart. The real-speed run copies that, to find races that only show
+            // when an answer does not come at once.
+            val real = speed == EmulatorSpeed.REAL
+            Thread.sleep(if (real) REAL_ANSWER_MS else FAST_ANSWER_MS)
             if (gen == connectionGeneration) {
-                for (buf in responsePackets.send) {
+                for ((i, buf) in responsePackets.send.withIndex()) {
+                    if (i > 0 && real) Thread.sleep(REAL_PACKET_GAP_MS)
+                    // A link that broke during the answer gets no more of it.
+                    if (gen != connectionGeneration) break
                     listener?.onCharacteristicChanged(buf.array())
                 }
+                armIdleClose()
             } else {
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "EmulatorGatt: discarding stale response (gen=$gen, current=$connectionGeneration)")
             }
@@ -463,11 +476,17 @@ class EquilEmulatorBleTransport(
 
     private companion object {
 
-        /** #3467: "about 10 s" after a bolus command. */
-        const val LINK_CLOSE_AFTER_BOLUS_MS = 10_000L
+        /** See armIdleClose: 9.5 to 9.9 s on a real pump. */
+        const val LINK_IDLE_CLOSE_MS = 9_500L
 
-        /** UNVERIFIED: the time a real pump takes to answer one message. */
+        /** See deliverResponse. */
         const val REAL_ANSWER_MS = 100L
+        const val REAL_PACKET_GAP_MS = 40L
         const val FAST_ANSWER_MS = 5L
+
+        /** One daemon thread for all emulated pumps, so a test never waits for it. */
+        val idleCloser: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { runnable ->
+            Thread(runnable, "EquilEmulatorIdleClose").apply { isDaemon = true }
+        }
     }
 }
