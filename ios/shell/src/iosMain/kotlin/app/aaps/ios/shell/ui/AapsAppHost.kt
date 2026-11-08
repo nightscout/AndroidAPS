@@ -63,6 +63,8 @@ import app.aaps.implementation.protection.KeychainUnavailableException
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
+import app.aaps.ios.shell.platform.BiometricOutcome
+import app.aaps.ios.shell.platform.IosBiometricPrompt
 import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.ios.shell.platform.notOnThisPlatform
 import app.aaps.ios.shell.prefs.IosStorage
@@ -352,6 +354,22 @@ private fun AapsApp(app: StartedApp) {
             passwordHasher = graph.passwordHasher,
             passwordCheck = graph.passwordCheck,
             protectionCheck = graph.protectionCheck,
+            // The Face ID sheet, the one piece of protection the platform has to supply. The
+            // outcome is folded the way `ComposeMainActivity` does on Android, so a person who set
+            // biometric protection gets the same behaviour on either phone. Left out, the root's
+            // default fell back at once and the app never got past the lock.
+            showBiometricSimple = { title, onSuccess, onFallback, onCancel ->
+                IosBiometricPrompt().authenticate(title) { outcome ->
+                    when (outcome) {
+                        BiometricOutcome.GRANTED   -> onSuccess()
+                        BiometricOutcome.CANCELLED -> onCancel()
+                        // A refusal, "Enter Password", or no usable biometry: the host shows the
+                        // password and PIN dialog itself, so there is always a way in.
+                        BiometricOutcome.DENIED,
+                        BiometricOutcome.FALLBACK  -> onFallback()
+                    }
+                }
+            },
             exportPasswordDataStore = graph.exportPasswordDataStore,
             visibilityContext = graph.visibilityContext,
             nsClient = graph.nsClient,

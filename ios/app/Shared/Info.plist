@@ -35,6 +35,13 @@
 	-->
 	<key>NSCameraUsageDescription</key>
 	<string>AAPS uses the camera only to read the set-up QR code shown by your master phone.</string>
+	<!--
+	  Required before Face ID may be asked for anything, the same rule as the camera and location
+	  keys. `IosBiometricPrompt` makes the request when application protection is set to
+	  biometric, and without this key iOS terminates the app at that moment instead of refusing.
+	-->
+	<key>NSFaceIDUsageDescription</key>
+	<string>AAPS uses Face ID to unlock the app when you have set biometric protection.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>AAPS uses your location only to evaluate automation rules you set up yourself, such as starting a temporary target when you arrive somewhere.</string>
 	<!--
