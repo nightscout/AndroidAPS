@@ -318,6 +318,9 @@ class EquilManager(
             // Before the command: a stop that comes while it waits for its answer must not be undone.
             bolusProfile.stoppedAt = 0
             bolusProfile.stop = false
+            bolusProfile.stopNotAnswered = false
+            // The log entries of this bolus come after this index, see UncertainBolus.
+            val indexBefore = getHistoryIndex()
             equilBLE.writeCmd(command)
             awaitAnswer(command)
             // The pump starts when the command reaches it, before its answer. Counted from the sending, so a stop
@@ -381,6 +384,20 @@ class EquilManager(
                 )
                 val equilBolusRecord = EquilBolusRecord(result.bolusDelivered, BolusType.SMB, currentTime)
                 setBolusRecord(equilBolusRecord)
+                // The start or a stop got no answer: the pump log tells what was given, once the bolus is over.
+                if (indexBefore != null && (start == BolusStart.NO_ANSWER || bolusProfile.stopNotAnswered)) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "Bolus outcome not known: decided from the pump log after the bolus")
+                    uncertainBolus = UncertainBolus(
+                        requested = detailedBolusInfo.insulin,
+                        unitsPerSecond = unitsPerSecond,
+                        indexBefore = indexBefore,
+                        sentAt = bolusStart,
+                        decideAfter = bolusStart + command.stepTime * 1000L + UNCERTAIN_BOLUS_MARGIN_MS,
+                        bolusType = detailedBolusInfo.bolusType,
+                        pumpId = detailedBolusInfo.timestamp,
+                        recordTime = currentTime
+                    )
+                }
             }
             updateHistory(equilHistoryRecord, command.resolvedResult)
             // The pump closes the link about 10 s after the bolus command, so after a longer bolus there is
@@ -428,6 +445,43 @@ class EquilManager(
         rxBus.send(EventEquilAlarm(text))
     }
 
+    /** See [UncertainBolus]. Set by [bolus], decided by [decideUncertainBolus]. */
+    @Volatile internal var uncertainBolus: UncertainBolus? = null
+
+    /** Phone time of the last advertisement, which brings the newest log index. Answers set lastDataTime too. */
+    @Volatile private var advertisedAt: Long = 0
+
+    /**
+     * Decides the [uncertainBolus] after a read that reached the newest index the pump advertised at a connection made
+     * after the bolus was over. No bolus in the log after the command: not given. A start and an end: (end - start + 1 s)
+     * x the speed of the command, as the pump time has whole seconds. It is rounded up and at most the amount asked for,
+     * so AAPS never counts less than was given. A start without an end yet waits for the next read.
+     * @param complete the read reached the advertised index
+     */
+    @VisibleForTesting
+    internal fun decideUncertainBolus(complete: Boolean) {
+        val bolus = uncertainBolus ?: return
+        if (!complete || advertisedAt < bolus.decideAfter) return
+        val logged = bolus.inLog()
+        val end = logged?.end
+        if (logged != null && end == null) return
+        uncertainBolus = null
+        val given = if (logged == null || end == null) 0.0
+        else unitsGivenUntil(logged.start, end + T.secs(1).msecs(), bolus.unitsPerSecond, bolus.requested)
+        aapsLogger.debug(LTag.PUMPCOMM, "Bolus outcome from the pump log: $given of ${bolus.requested} U")
+        if (given >= bolus.requested) return
+        val serial = getSerialNumber()
+        launchPumpSync {
+            pumpSync.syncBolusWithPumpId(bolus.recordTime, PumpInsulin(given), bolus.bolusType, bolus.pumpId, PumpType.EQUIL, serial)
+        }
+        setBolusRecord(EquilBolusRecord(given, BolusType.SMB, bolus.recordTime))
+        val requested = ch.insulinAmountString(PumpInsulin(bolus.requested))
+        val text = if (given == 0.0) rh.gs(R.string.equil_bolus_not_given, requested)
+        else rh.gs(R.string.equil_bolus_stopped, ch.insulinAmountString(PumpInsulin(given)), requested)
+        // Information, not an alarm: the pump did less than AAPS counted, never more.
+        rxBus.send(EventEquilAlarm(text, sound = false))
+    }
+
     fun stopBolus(bolusProfile: BolusProfile): PumpEnactResult {
         val result = pumpEnactResultProvider()
         try {
@@ -437,6 +491,7 @@ class EquilManager(
             awaitAnswer(command)
             // The pump stopped when the stop reached it, at the latest now. Counted from now: never less than was given.
             if (command.cmdSuccess) bolusProfile.stoppedAt = System.currentTimeMillis()
+            else if (command.commandSent) bolusProfile.stopNotAnswered = true
             bolusProfile.stop = command.cmdSuccess
             aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===")
             result.success = command.cmdSuccess
@@ -564,6 +619,7 @@ class EquilManager(
                 break
             }
         }
+        decideUncertainBolus(complete = startIndex == index)
         return pumpEnactResult.success(true)
     }
 
@@ -650,6 +706,8 @@ class EquilManager(
     fun clearPodState() {
         synchronized(podStateLock) {
             this.equilState = EquilState()
+            // The log of another pump says nothing about it.
+            uncertainBolus = null
             podStateLoaded = true
             val podState = gsonInstance.toJson(equilState)
             aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: $podState")
@@ -759,6 +817,9 @@ class EquilManager(
     fun setRunMode(runMode: RunMode) {
         val previous = equilState?.runMode
         equilState?.runMode = runMode
+        // AAPS ends the temp basal at a stop (syncRunMode), and after a resume the driver cancels it on the pump: the
+        // driver's own record ends here too, or the Equil screen goes on showing it.
+        if (runMode.isStopped() && previous?.isStopped() == false) equilState?.tempBasal = null
         storePodState()
         if (previous == null || previous.isStopped() == runMode.isStopped()) return
         val time = dateUtil.now()
@@ -906,7 +967,8 @@ class EquilManager(
         val battery = data[12].toInt() and 0xff
         val insulin = data[13].toInt() and 0xff
         val rate = bytesToInt(data[15], data[14])
-        val largeRate = bytesToInt(data[17], data[16])
+        // All 16 bits: bytesToInt drops the top one, and a speed of 6 U/min (57600) needs it.
+        val largeRate = ((data[17].toInt() and 0xff) shl 8) or (data[16].toInt() and 0xff)
         val index = bytesToInt(data[19], data[18])
 
         val port = data[20].toInt() and 0xff
@@ -940,6 +1002,7 @@ class EquilManager(
         val id = equilHistoryPumpDao.insert(equilHistoryPump)
         aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id $id")
         val eventTime = calendar.timeInMillis
+        uncertainBolus?.onLogEntry(index, port, type, level, largeRate, eventTime)
         val errorTips = getEquilError(port, type, level)
         if (errorTips.isNotEmpty()) raiseAlarm(errorTips, eventTime)
         syncDeliveryStoppedGap(port, type, level, rate, eventTime)
@@ -1051,6 +1114,7 @@ class EquilManager(
         val type = data[26].toInt() and 0xff
         val level = data[27].toInt() and 0xff
         aapsLogger.debug(LTag.PUMPCOMM, "decodeData historyIndex $historyIndex newest event port:$port type:$type level:$level")
+        advertisedAt = System.currentTimeMillis()
         setHistoryIndex(historyIndex)
         setLastDataTime(System.currentTimeMillis())
         setCurrentInsulin(insulin)
@@ -1066,6 +1130,9 @@ class EquilManager(
 
         /** Bolus step 0.05 U. */
         private const val BOLUS_STEPS_PER_UNIT = 20.0
+
+        /** After the end a bolus would have, by the phone clock: its last log entry is written by then. */
+        private const val UNCERTAIN_BOLUS_MARGIN_MS = 3_000L
 
         val OLD_PUMP_SERIAL_PREFIXES = setOf('0', '1', '3', 'A', 'D')
 

@@ -31,10 +31,12 @@ class EquilPumpUnderTest : PumpUnderTest {
     override val maxCommandsPerStatusRead = 15
 
     /**
-     * The driver works out a stopped bolus from the times and rounds it up to the 0.05 U step, and the stop reaches the
-     * pump a moment before its answer: at 12 U/min that moment is about 0.05 U more.
+     * The driver works out a stopped bolus from the times and rounds it up to the 0.05 U step. When the stop got no
+     * answer, the times come from the pump log, which has whole seconds: up to 2 s more of the bolus speed. At the
+     * standard 1.5 U/min that is 0.1 U, at the 12 U/min of the fast runs 0.45 U.
      */
-    override val bolusOvercount = 0.1
+    override val bolusOvercount: Double
+        get() = 2.0 / testGraphs.preferences.get(EquilIntPreferenceKey.EquilBolusSpeed) + BOLUS_STEP
 
     private val accessors get() = testGraphs.rootGraph as EquilAccessors
 
@@ -117,6 +119,9 @@ class EquilPumpUnderTest : PumpUnderTest {
 
         /** The fastest bolus speed of the setting: 12 U/min, tested on a real pump. */
         const val FAST_SECONDS_PER_UNIT = 5
+
+        /** The driver rounds a stopped bolus up to this step. */
+        const val BOLUS_STEP = 0.05
 
         /** The pod knows no password before it is paired, so any one works. */
         const val PAIR_PASSWORD = "0000"

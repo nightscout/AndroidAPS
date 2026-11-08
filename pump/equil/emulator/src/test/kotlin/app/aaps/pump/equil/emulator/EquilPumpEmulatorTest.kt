@@ -409,6 +409,18 @@ class EquilPumpEmulatorTest {
     }
 
     @Test
+    fun `a basal change during a bolus keeps the bolus speed in the status entry`() {
+        tempBasal(step = 48, seconds = 1)
+        bolus(steps = 160, seconds = 20) // 3 U/min
+        Thread.sleep(1100)
+        emulator.snapshot(linkUp = true)
+        val (end, status) = state.historyEvents.takeLast(2)
+        assertEquals(listOf(4, 11, 0), code(end))
+        assertEquals(listOf(4, 0, 0), code(status))
+        assertEquals(28800, status.largeRate)
+    }
+
+    @Test
     fun `a bolus logs the basal that goes on and its speed in two bytes`() {
         bolus(steps = 80, seconds = 20) // 1.5 U/min
         assertEquals(160, lastEvent().rate)

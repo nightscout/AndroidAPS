@@ -30,6 +30,14 @@ class CmdLargeBasalSetTest : TestBaseWithProfile() {
         assertEquals(160, cmd.step)
     }
 
+    /** A real pump got 95 steps for a 0.6 U SMB on 2026-11-08 and logged it as 0.594 U. */
+    @Test
+    fun `an amount on the 0_05 grid keeps its last step`() {
+        assertEquals(96, CmdLargeBasalSet(0.6, aapsLogger, preferences, equilManager).step)
+        assertEquals(24, CmdLargeBasalSet(0.15, aapsLogger, preferences, equilManager).step)
+        assertEquals(24, CmdExtendedBolusSet(0.15, 30, false, aapsLogger, preferences, equilManager).step)
+    }
+
     @Test
     fun `constructor should calculate stepTime from insulin`() {
         val cmd = CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager)

@@ -27,7 +27,7 @@ class CmdLargeBasalSet(
 
     init {
         if (insulin != 0.0) {
-            step = (insulin / 0.05 * 8).toInt()
+            step = Utils.unitsToSteps(insulin)
             // Whole seconds, rounded up: rounded to the nearest, 0.25 U at 5 s/U got 1 s, that is 15 U/min, faster than
             // the 12 U/min the speed setting promises (found by the pump scenario tests). At least 1 s.
             stepTime = ceil(insulin * secondsPerUnit - ROUNDING).toInt().coerceAtLeast(1)

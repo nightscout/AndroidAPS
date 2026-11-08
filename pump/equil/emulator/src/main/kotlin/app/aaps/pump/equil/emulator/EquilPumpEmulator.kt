@@ -845,10 +845,14 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         state.tempBasalDuration = 0
     }
 
-    /** Adds an entry to the pump log as the pump writes one: the next index, the time, the battery, the reservoir and the rate. */
+    /**
+     * Adds an entry to the pump log as the pump writes one: the next index, the time, the battery, the reservoir and the
+     * rate. UNVERIFIED: a status entry while a bolus runs, for a basal change, has the speed of the bolus as largeRate.
+     */
     private fun log(
-        type: Int, level: Int = 0, port: Int = HistoryEvent.PORT_STATUS, largeRate: Int = 0, at: Long = System.currentTimeMillis(),
-        rate: Int = basalSpeed(at)
+        type: Int, level: Int = 0, port: Int = HistoryEvent.PORT_STATUS,
+        largeRate: Int = if (type == TYPE_STATUS && port == HistoryEvent.PORT_STATUS) runningBolusSpeed() else 0,
+        at: Long = System.currentTimeMillis(), rate: Int = basalSpeed(at)
     ) {
         state.historyIndex++
         state.historyEvents.add(
@@ -874,6 +878,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         state.isTempBasalRunning && at < tempBasalEnd()     -> (state.tempBasalStep / TEMP_BASAL_STEPS_PER_UNIT / SPEED_UNITS_PER_STEP).roundToInt()
         else                                                -> state.basalRates[Calendar.getInstance().apply { timeInMillis = at }.get(Calendar.HOUR_OF_DAY)]
     }
+
+    private fun runningBolusSpeed(): Int = state.runningBolus?.let { bolusSpeed(it.steps, (it.durationMs / 1000).toInt()) } ?: 0
 
     /**
      * The bolus speed in steps of 0.00625 U/h, as the log shows it. Seen on a real pump (2026-11-08): the log has two bytes

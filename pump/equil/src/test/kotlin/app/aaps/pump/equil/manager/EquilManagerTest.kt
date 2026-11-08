@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.manager
 
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -14,6 +15,7 @@ import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
+import app.aaps.pump.equil.database.EquilTempBasalRecord
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilResumed
 import app.aaps.pump.equil.manager.command.CmdLargeBasalSet
@@ -176,7 +178,7 @@ class EquilManagerTest : TestBaseWithProfile() {
     // --- pump history: alarms (#5077) and battery empty gap (#3830) ---
 
     /** One pump history record as CmdHistoryGet passes it to decodeHistory. [time] in whole seconds. */
-    private fun historyRecord(index: Int, time: Long, port: Int, type: Int, level: Int, rate: Int = 0): ByteArray {
+    private fun historyRecord(index: Int, time: Long, port: Int, type: Int, level: Int, rate: Int = 0, largeRate: Int = 0): ByteArray {
         val c = Calendar.getInstance().apply { timeInMillis = time }
         val d = ByteArray(24)
         d[6] = (c.get(Calendar.YEAR) - 2000).toByte()
@@ -187,6 +189,8 @@ class EquilManagerTest : TestBaseWithProfile() {
         d[11] = c.get(Calendar.SECOND).toByte()
         d[14] = (rate and 0xff).toByte()
         d[15] = (rate shr 8).toByte()
+        d[16] = (largeRate and 0xff).toByte()
+        d[17] = (largeRate shr 8).toByte()
         d[18] = (index and 0xff).toByte()
         d[19] = (index shr 8).toByte()
         d[20] = port.toByte()
@@ -468,6 +472,110 @@ class EquilManagerTest : TestBaseWithProfile() {
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             eq(bolusStart), any(), eq(4800 * minute), any(), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(bolusStart), any(), any()
         )
+    }
+
+    // --- A bolus whose start or stop got no answer, decided from the pump log ---
+
+    private val sent = now - 10 * minute
+
+    /** 2 U at 1.5 U/min, sent at [sentAt]. Its log entries come after index 1500. */
+    private fun uncertainBolus(sentAt: Long = sent) = UncertainBolus(
+        requested = 2.0, unitsPerSecond = 1.0 / 40, indexBefore = 1500, sentAt = sentAt, decideAfter = sentAt + 83_000,
+        bolusType = BS.Type.NORMAL, pumpId = sentAt - 1000, recordTime = sentAt + 1000
+    )
+
+    /** A connection: the advertisement with the newest log index. */
+    private fun advertise(newestIndex: Int) {
+        val data = ByteArray(28)
+        data[23] = (newestIndex and 0xff).toByte()
+        data[24] = (newestIndex shr 8).toByte()
+        equilManager.decodeData(data)
+    }
+
+    @Test
+    fun `a bolus that is not in the pump log is recorded as 0 U`() = runTest {
+        prepareHistory()
+        whenever(rh.gs(eq(R.string.equil_bolus_not_given), anyOrNull())).thenReturn("Not given")
+        val alarms = collectAlarms()
+        equilManager.uncertainBolus = uncertainBolus()
+        advertise(1502)
+        // A temp basal after the command, and no bolus.
+        equilManager.decodeHistory(historyRecord(1501, sent + 30_000, 4, 10, 0, rate = 160))
+        equilManager.decodeHistory(historyRecord(1502, sent + 30_000, 4, 0, 0, rate = 96))
+
+        equilManager.decideUncertainBolus(complete = true)
+
+        verify(pumpSync).syncBolusWithPumpId(
+            eq(sent + 1000), argThat<PumpInsulin> { cU == 0.0 }, anyOrNull(), eq(sent - 1000), eq(PumpType.EQUIL), eq("7000F3")
+        )
+        assertEquals(listOf(EventEquilAlarm("Not given", sound = false)), alarms)
+        assertEquals(null, equilManager.uncertainBolus)
+    }
+
+    @Test
+    fun `a stop without an answer counts what the pump log shows`() = runTest {
+        prepareHistory()
+        whenever(rh.gs(eq(R.string.equil_bolus_stopped), anyOrNull(), anyOrNull())).thenReturn("Bolus stopped")
+        val alarms = collectAlarms()
+        equilManager.uncertainBolus = uncertainBolus()
+        advertise(1502)
+        equilManager.decodeHistory(historyRecord(1501, sent, 4, 0, 0, rate = 160, largeRate = 14400))
+        equilManager.decodeHistory(historyRecord(1502, sent + 20_000, 4, 0, 0, rate = 160)) // stopped after 20 s
+
+        equilManager.decideUncertainBolus(complete = true)
+
+        // 21 s x 1.5 U/min = 0.525 U, rounded up to the 0.05 U step: never less than was given.
+        verify(pumpSync).syncBolusWithPumpId(
+            eq(sent + 1000), argThat<PumpInsulin> { abs(cU - 0.55) < 0.0001 }, anyOrNull(), eq(sent - 1000), eq(PumpType.EQUIL), eq("7000F3")
+        )
+        assertEquals(listOf(EventEquilAlarm("Bolus stopped", sound = false)), alarms)
+    }
+
+    @Test
+    fun `a whole bolus in the pump log keeps its record`() = runTest {
+        prepareHistory()
+        equilManager.uncertainBolus = uncertainBolus()
+        advertise(1502)
+        equilManager.decodeHistory(historyRecord(1501, sent, 4, 0, 0, rate = 160, largeRate = 14400))
+        equilManager.decodeHistory(historyRecord(1502, sent + 80_000, 4, 0, 0, rate = 160))
+
+        equilManager.decideUncertainBolus(complete = true)
+
+        verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
+        assertEquals(null, equilManager.uncertainBolus)
+    }
+
+    @Test
+    fun `the decision waits for a whole read on a connection after the bolus`() = runTest {
+        prepareHistory()
+        // Read before the bolus would have ended: the log may not have all of it yet.
+        val running = uncertainBolus(sentAt = System.currentTimeMillis())
+        equilManager.uncertainBolus = running
+        advertise(1500)
+        equilManager.decideUncertainBolus(complete = true)
+        assertEquals(running, equilManager.uncertainBolus)
+
+        // A read that did not reach the advertised index.
+        equilManager.uncertainBolus = uncertainBolus()
+        advertise(1502)
+        equilManager.decideUncertainBolus(complete = false)
+
+        // A bolus that started and has no end in the log yet.
+        equilManager.decodeHistory(historyRecord(1501, sent, 4, 0, 0, rate = 160, largeRate = 14400))
+        equilManager.decideUncertainBolus(complete = true)
+
+        verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
+        assertTrue(equilManager.uncertainBolus != null)
+    }
+
+    @Test
+    fun `a suspend ends the temp basal the Equil screen shows`() = runTest {
+        prepareRunMode(RunMode.RUN)
+        equilManager.setTempBasal(EquilTempBasalRecord(30 * minute.toInt(), 0.6, now))
+
+        equilManager.setRunMode(RunMode.SUSPEND)
+
+        assertEquals(null, equilManager.getTempBasal())
     }
 
     @Test
