@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import org.junit.Before
 import org.junit.Rule
@@ -61,5 +62,36 @@ class FoodEditorContentTest {
         }
         compose.onNodeWithText(saveLabel).performScrollTo().assertIsDisplayed()
         compose.onNodeWithText(cancelLabel).performScrollTo().assertIsDisplayed()
+    }
+
+    /**
+     * An import fills the category with "OFF". That value is not a search: opening the list must
+     * still show every category, not only the ones that contain "off" (there are none).
+     */
+    @Test
+    fun aFilledInCategoryStillShowsEveryChoice() {
+        compose.setContent {
+            MaterialTheme {
+                FoodEditorContent(
+                    state = FoodManagementUiState(editorCategory = "OFF"),
+                    categories = listOf("Dairy", "Fruits"),
+                    onNameChange = {},
+                    onCategoryChange = {},
+                    onSubCategoryChange = {},
+                    onPortionChange = {},
+                    onUnitChange = {},
+                    onCarbsChange = {},
+                    onFatChange = {},
+                    onProteinChange = {},
+                    onEnergyChange = {},
+                    onSave = {},
+                    onCancel = {},
+                    isEditing = false
+                )
+            }
+        }
+        compose.onNodeWithText("OFF").performClick()
+        compose.onNodeWithText("Dairy").assertIsDisplayed()
+        compose.onNodeWithText("Fruits").assertIsDisplayed()
     }
 }

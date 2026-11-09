@@ -16,6 +16,26 @@ import kotlin.math.abs
 data class FoodBook(
     val recipes: List<Recipe> = emptyList(),
     val eaten: List<EatenMeal> = emptyList(),
+    val offLinks: List<OffLink> = emptyList(),
+)
+
+/**
+ * A food imported from Open Food Facts, with the product it came from. Kept here because the POC
+ * does not change the database (the final version has a barcode column on the food).
+ *
+ * The photo itself is a small file named after the barcode, outside the database. It is not saved
+ * in a backup: [hasImage] and [imageUrl] are enough to download it again.
+ *
+ * @param hasImage false when OFF has no photo for this product: nothing is downloaded then
+ * @param imageUrl where the photo was. OFF changes it when a photo is replaced, so a missing photo
+ *   reads the product again to get the address of today.
+ */
+@Serializable
+data class OffLink(
+    val foodId: Long,
+    val barcode: String,
+    val hasImage: Boolean,
+    val imageUrl: String? = null,
 )
 
 @Serializable

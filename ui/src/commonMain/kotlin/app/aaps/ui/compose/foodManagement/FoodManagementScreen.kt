@@ -286,6 +286,7 @@ fun FoodManagementScreen(
                     items(filteredFoods, key = { it.id }) { food ->
                         FoodItem(
                             food = food,
+                            image = state.foodImages[food.id],
                             editing = editing,
                             selecting = selecting,
                             selected = food.id in state.selectedFoodIds,
@@ -407,6 +408,7 @@ fun FoodManagementScreen(
 @Composable
 private fun FoodItem(
     food: FD,
+    image: ByteArray?,
     editing: Boolean,
     selecting: Boolean,
     selected: Boolean,
@@ -433,6 +435,11 @@ private fun FoodItem(
             food.protein?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "P", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
             food.energy?.let { if (it > 0) add(stringResource(CoreUiStrings.value_with_unit, it.toString(), "kJ")) }
         }
+        // Only foods imported from Open Food Facts have a photo. It tells close products apart.
+        if (image != null) {
+            FoodPhoto(bytes = image, size = AapsSpacing.foodThumbnailSize)
+            Spacer(modifier = Modifier.width(AapsSpacing.medium))
+        }
         CardTexts(name = food.name, detail = joinLines(extras))
         CardValues(
             portion = if (food.portion > 0) stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(food.portion), food.unit) else null,
@@ -449,16 +456,19 @@ private fun FoodItem(
 @Composable
 private fun SuggestionField(value: String, onValueChange: (String) -> Unit, label: String, suggestions: List<String>, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
+    // True once the user types in the field. A value set from outside (the "OFF" category of an
+    // import) is not a search: it must not hide the other choices.
+    var typedByUser by remember { mutableStateOf(false) }
     val typed = value.trim()
-    // A value already chosen shows every choice, so another one can be picked without clearing it.
-    // While a new text is typed, only the values that contain it are shown.
-    val filtering = typed.isNotEmpty() && suggestions.none { it.equals(typed, ignoreCase = true) }
+    // A value already chosen or filled in shows every choice, so another one can be picked without
+    // clearing it. While a new text is typed, only the values that contain it are shown.
+    val filtering = typedByUser && typed.isNotEmpty() && suggestions.none { it.equals(typed, ignoreCase = true) }
     val shown = if (filtering) suggestions.filter { it.contains(typed, ignoreCase = true) } else suggestions
     val open = expanded && shown.isNotEmpty()
     ExposedDropdownMenuBox(expanded = open, onExpandedChange = { expanded = it }, modifier = modifier) {
         OutlinedTextField(
             value = value,
-            onValueChange = { onValueChange(it); expanded = true },
+            onValueChange = { onValueChange(it); typedByUser = true; expanded = true },
             label = { Text(label) },
             singleLine = true,
             // No arrow when there is nothing to propose: the label keeps the whole width.
@@ -471,7 +481,7 @@ private fun SuggestionField(value: String, onValueChange: (String) -> Unit, labe
             shown.forEach { item ->
                 DropdownMenuItem(
                     text = { Text(item) },
-                    onClick = { onValueChange(item); expanded = false },
+                    onClick = { onValueChange(item); typedByUser = false; expanded = false },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
             }
@@ -513,6 +523,9 @@ internal fun FoodEditorContent(
             text = stringResource(if (isEditing) CoreUiStrings.edit_food else CoreUiStrings.add_food),
             style = MaterialTheme.typography.titleLarge
         )
+
+        // The package, to check the values against it. Downloaded again when the file is missing.
+        state.editorImage?.let { FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize, modifier = Modifier.align(Alignment.CenterHorizontally)) }
 
         state.editorOffProduct?.let {
             OffEditorBanner(product = it, perServing = state.editorOffPerServing, onPerServingChange = onOffPerServingChange)
@@ -568,7 +581,7 @@ internal fun FoodEditorContent(
             label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
 
         Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
@@ -578,7 +591,7 @@ internal fun FoodEditorContent(
                 label = { Text(stringResource(CoreUiStrings.label_fat_g)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             OutlinedTextField(
                 value = state.editorProtein,
@@ -586,7 +599,7 @@ internal fun FoodEditorContent(
                 label = { Text(stringResource(CoreUiStrings.label_protein_g)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             OutlinedTextField(
                 value = state.editorEnergy,
@@ -594,7 +607,7 @@ internal fun FoodEditorContent(
                 label = { Text(stringResource(CoreUiStrings.label_energy_kj)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
         }
 

@@ -52,6 +52,27 @@ class FoodBackupMathTest {
     }
 
     @Test
+    fun `the product of an imported food follows the food found on this phone`() {
+        val yogurtLink = OffLink(foodId = 4, barcode = "3017620422003", hasImage = true, imageUrl = "https://images.openfoodfacts.org/a.jpg")
+        val text = FoodBackupMath.encode(listOf(bread, yogurt), FoodBook(offLinks = listOf(yogurtLink)), now = 5000)
+        val backup = assertNotNull(FoodBackupMath.decode(text))
+        // Here yogurt is food 51; bread is food 50 and already has a product of its own.
+        val here = listOf(FD(id = 50, name = "Bread", portion = 100.0, unit = "g", carbs = 50), FD(id = 51, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6))
+        val breadLink = OffLink(foodId = 50, barcode = "111", hasImage = false)
+
+        val merge = FoodBackupMath.merge(backup, here, FoodBook(offLinks = listOf(breadLink)))
+
+        assertEquals(listOf(yogurtLink.copy(foodId = 51)), merge.offLinks)
+    }
+
+    @Test
+    fun `a backup made before the products were kept is still read`() {
+        val old = FoodBackupMath.encode(listOf(bread), FoodBook(), now = 1).replace(Regex(",\\s*\"offLinks\": \\[\\s*]"), "")
+        assertTrue(!old.contains("offLinks"))
+        assertEquals(emptyList(), assertNotNull(FoodBackupMath.decode(old)).offLinks)
+    }
+
+    @Test
     fun `dishes point to the foods of this phone`() {
         val here = listOf(FD(id = 50, name = "Bread", portion = 100.0, unit = "g", carbs = 50), FD(id = 51, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6))
 

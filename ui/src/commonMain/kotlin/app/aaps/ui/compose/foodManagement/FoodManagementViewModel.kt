@@ -31,6 +31,7 @@ import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
 import app.aaps.ui.compose.foodManagement.book.FoodBookMath
 import app.aaps.ui.compose.foodManagement.book.FoodCsv
 import app.aaps.ui.compose.foodManagement.book.FoodExportFiles
+import app.aaps.ui.compose.foodManagement.book.FoodImages
 import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
 import app.aaps.ui.compose.foodManagement.book.MealTarget
 import app.aaps.ui.compose.foodManagement.book.Nutrition
@@ -83,6 +84,7 @@ class FoodManagementViewModel(
     val decimalFormatter: DecimalFormatter,
     private val foodCsv: FoodCsv,
     private val exportFiles: FoodExportFiles,
+    private val foodImages: FoodImages,
 ) : ViewModel() {
 
     // ---- Export, backup and restore (proof of concept, personal use) ----
@@ -251,11 +253,13 @@ class FoodManagementViewModel(
         viewModelScope.launch {
             try {
                 val foods = persistenceLayer.getFoods()
+                val images = foodImages.saved(foods.map { it.id })
                 val categories = foods.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct().sorted()
                 val subCategories = foods.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
                 _uiState.update {
                     it.copy(
                         foods = foods,
+                        foodImages = images,
                         allCategories = categories,
                         allSubCategories = subCategories,
                         isLoading = false
@@ -296,9 +300,11 @@ class FoodManagementViewModel(
                     editorEnergy = food.energy?.toString() ?: "",
                     editorSaveAttempted = false,
                     editorOffProduct = null,
+                    editorImage = it.foodImages[food.id],
                     showEditor = true
                 )
             }
+            if (uiState.value.editorImage == null) reloadImage(food.id)
         } else {
             _uiState.update {
                 it.copy(
@@ -314,7 +320,25 @@ class FoodManagementViewModel(
                     editorEnergy = "",
                     editorSaveAttempted = false,
                     editorOffProduct = null,
+                    editorImage = null,
                     showEditor = true
+                )
+            }
+        }
+    }
+
+    /**
+     * A food imported from OFF whose photo file is missing (new phone, restored backup) gets it
+     * again when it is opened. Nothing happens for a food typed by hand or a product without a photo.
+     */
+    private fun reloadImage(foodId: Long) {
+        if (!foodImages.available) return
+        viewModelScope.launch {
+            val bytes = foodImages.forFood(foodId) ?: return@launch
+            _uiState.update {
+                it.copy(
+                    foodImages = it.foodImages + (foodId to bytes),
+                    editorImage = if (it.editorFood?.id == foodId) bytes else it.editorImage,
                 )
             }
         }
@@ -347,7 +371,29 @@ class FoodManagementViewModel(
         _uiState.update { it.copy(importInProgress = true, importResult = null) }
         viewModelScope.launch {
             val result = openFoodFacts.lookup(query)
-            _uiState.update { it.copy(importInProgress = false, importResult = result) }
+            _uiState.update { it.copy(importInProgress = false, importResult = result, importImages = emptyMap()) }
+            if (result is OffResult.Found) loadImportImages(result.products)
+        }
+    }
+
+    /**
+     * The photos of the products found, one after the other, shown as they arrive: the package is
+     * often what tells two close products apart. They are files of the OFF image server, not API
+     * requests, so the OFF request limits are not used.
+     */
+    private suspend fun loadImportImages(products: List<OffProduct>) {
+        if (!foodImages.available) return
+        for (product in products.distinctBy { it.barcode }) {
+            if (product.imageUrl == null) continue
+            val bytes = foodImages.download(product) ?: continue
+            _uiState.update { s ->
+                // A new search has started: these photos are not for it.
+                if ((s.importResult as? OffResult.Found)?.products?.any { it.barcode == product.barcode } != true) s
+                else s.copy(
+                    importImages = s.importImages + (product.barcode to bytes),
+                    editorImage = if (s.editorOffProduct?.barcode == product.barcode) bytes else s.editorImage,
+                )
+            }
         }
     }
 
@@ -364,6 +410,7 @@ class FoodManagementViewModel(
                 editorName = MealMath.foodValuesFrom(product).name,
                 editorCategory = OFF_CATEGORY,
                 editorOffProduct = product,
+                editorImage = it.importImages[product.barcode],
             )
         }
         setOffPerServing(true)
@@ -796,22 +843,39 @@ class FoodManagementViewModel(
             // "1,5" typed with a comma keyboard must not become 0.
             portion = state.editorPortion.trim().replace(',', '.').toDoubleOrNull() ?: 0.0,
             unit = state.editorUnit.trim().ifBlank { "g" },
-            carbs = state.editorCarbs.toIntOrNull() ?: 0,
-            fat = state.editorFat.toIntOrNull(),
-            protein = state.editorProtein.toIntOrNull(),
-            energy = state.editorEnergy.toIntOrNull(),
+            // Values are typed as on the package ("14.8", "1,7"): they are rounded, not lost.
+            carbs = MealMath.parseNutrient(state.editorCarbs) ?: 0,
+            fat = MealMath.parseNutrient(state.editorFat),
+            protein = MealMath.parseNutrient(state.editorProtein),
+            energy = MealMath.parseNutrient(state.editorEnergy),
             // Not editable here, but must survive an edit (a food from Nightscout can have one).
             gi = state.editorFood?.gi,
         )
 
+        val product = state.editorOffProduct
+        val photo = state.editorImage
+        val lastId = state.foods.maxOfOrNull { it.id } ?: 0L
         viewModelScope.launch {
             try {
                 persistenceLayer.insertOrUpdateFood(food)
                 _uiState.update { it.copy(showEditor = false) }
+                if (product != null) linkOffProduct(food, lastId, product, photo)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to save food", e)
             }
         }
+    }
+
+    /**
+     * Remembers the OFF product of a food just saved, with its photo. The database does not give
+     * back the id of a new food, so it is the new food with this name, read after the save.
+     */
+    private suspend fun linkOffProduct(food: FD, lastId: Long, product: OffProduct, photo: ByteArray?) {
+        val foodId = if (food.id != 0L) food.id
+        else persistenceLayer.getFoods().filter { it.id > lastId && it.name == food.name }.maxOfOrNull { it.id } ?: return
+        foodImages.link(foodId, product, photo)
+        val saved = photo ?: foodImages.saved(listOf(foodId))[foodId] ?: return
+        _uiState.update { it.copy(foodImages = it.foodImages + (foodId to saved)) }
     }
 
     // ---- Category and subcategory suggestions ----
@@ -950,11 +1014,17 @@ data class FoodManagementUiState(
     val editorOffGramsPerUnit: Double = 1.0,
     /** The portion the editor values were last computed for from OFF. */
     val editorOffComputedPortion: Double = 0.0,
+    /** The product photo shown in the editor, or null when there is none (yet). */
+    val editorImage: ByteArray? = null,
+    /** The saved product photos, by food id. Only foods imported from OFF have one. */
+    val foodImages: Map<Long, ByteArray> = emptyMap(),
     // Open Food Facts import (proof of concept)
     val showImport: Boolean = false,
     val importQuery: String = "",
     val importInProgress: Boolean = false,
     val importResult: OffResult? = null,
+    /** The photos of the products found, by barcode, added as they are downloaded. */
+    val importImages: Map<String, ByteArray> = emptyMap(),
     val showScanner: Boolean = false,
     // Meal (proof of concept)
     val mealItems: List<MealItem> = emptyList(),

@@ -48,6 +48,13 @@ internal object MealMath {
     fun parseAmount(text: String): Double? =
         text.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it > 0 && it.isFinite() }
 
+    /**
+     * Reads a nutrition value typed from the package: "14.8" or "14,8". The food keeps whole numbers,
+     * so it is rounded (14.8 -> 15). Null when empty, negative or not a number.
+     */
+    fun parseNutrient(text: String): Int? =
+        text.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it >= 0 && it.isFinite() }?.roundToInt()
+
     /** 80.0 shows as "80", 12.25 as "12.3". */
     fun formatAmount(value: Double): String {
         val tenths = (value * 10).roundToInt()

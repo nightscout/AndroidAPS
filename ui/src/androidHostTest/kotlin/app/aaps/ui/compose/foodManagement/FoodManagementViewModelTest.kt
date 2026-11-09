@@ -16,9 +16,11 @@ import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
 import app.aaps.ui.compose.foodManagement.book.FoodBook
 import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
 import app.aaps.ui.compose.foodManagement.book.FoodCsv
+import app.aaps.ui.compose.foodManagement.book.FoodImages
 import app.aaps.ui.compose.foodManagement.book.MealTarget
 import app.aaps.ui.compose.foodManagement.book.MemoryFoodBookStore
 import app.aaps.ui.compose.foodManagement.book.NoFoodExportFiles
+import app.aaps.ui.compose.foodManagement.book.NoFoodImageStore
 import app.aaps.ui.compose.foodManagement.book.Recipe
 import app.aaps.ui.compose.foodManagement.book.RecipeItem
 import app.aaps.ui.compose.foodManagement.book.RecipeKind
@@ -66,7 +68,7 @@ internal class FoodManagementViewModelTest {
         whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(BCR::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(CA::class)).thenReturn(emptyFlow())
-        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles())
+        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger))
     }
 
     @AfterEach
@@ -351,7 +353,7 @@ internal class FoodManagementViewModelTest {
     /** A screen on [book], with [foods] in the database. Runs the start of the screen. */
     private fun screenWith(book: FoodBookRepository, vararg foods: FD): FoodManagementViewModel {
         runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(foods.toList()) }
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles())
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger))
         dispatcher.scheduler.runCurrent()
         return vm
     }
@@ -458,6 +460,28 @@ internal class FoodManagementViewModelTest {
     }
 
     @Test
+    fun `decimal values typed from the package are saved rounded, not as zero`() {
+        loadFoods()
+        sut.openEditor()
+        sut.updateEditorName("Biscuit")
+        sut.updateEditorPortion("30")
+        sut.updateEditorCarbs("14.8")
+        sut.updateEditorFat("1,7")
+        sut.updateEditorProtein("0.4")
+        sut.updateEditorEnergy("520.6")
+
+        sut.saveFood()
+        dispatcher.scheduler.runCurrent()
+
+        val saved = argumentCaptor<FD>()
+        runBlocking { verify(persistenceLayer).insertOrUpdateFood(saved.capture()) }
+        assertThat(saved.firstValue.carbs).isEqualTo(15)
+        assertThat(saved.firstValue.fat).isEqualTo(2)
+        assertThat(saved.firstValue.protein).isEqualTo(0)
+        assertThat(saved.firstValue.energy).isEqualTo(521)
+    }
+
+    @Test
     fun `only the subcategories of the chosen category are proposed`() {
         loadFoods(
             FD(id = 3, name = "Apple", portion = 100.0, carbs = 12, category = "Fruits", subCategory = "Fresh"),
@@ -555,7 +579,7 @@ internal class FoodManagementViewModelTest {
         }
         whenever(dateUtil.now()).thenReturn(1_000_000)
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger))
         dispatcher.scheduler.runCurrent()
 
         vm.restore(ExportFile("backup", "ref"))

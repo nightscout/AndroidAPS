@@ -3,6 +3,7 @@ package app.aaps.ui.compose.foodManagement.openfoodfacts
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.statement.bodyAsBytes
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
@@ -39,6 +40,8 @@ data class OffProduct(
     val servingSize: String? = null,
     /** The weight of that serving in g (or ml for a liquid). */
     val servingQuantity: Double? = null,
+    /** The small (200 px) photo of the front of the package, or null when OFF has none. */
+    val imageUrl: String? = null,
 )
 
 /** The answer to one OFF lookup. */
@@ -51,6 +54,30 @@ sealed interface OffResult {
     /** OFF refused the request because of too many requests (HTTP 429). Never retried. */
     data object RateLimited : OffResult
     data object Failed : OffResult
+}
+
+/** The answer to one photo download. */
+sealed interface OffImage {
+
+    class Found(val bytes: ByteArray) : OffImage
+
+    /** OFF has no photo at this address (it was replaced, or there never was one). */
+    data object Missing : OffImage
+
+    /** No answer, or a server error: try again another time. */
+    data object Failed : OffImage
+}
+
+/** Where the photo of a product is today. */
+sealed interface CurrentImage {
+
+    data class At(val url: String) : CurrentImage
+
+    /** OFF has no photo for this product. */
+    data object None : CurrentImage
+
+    /** OFF did not answer: nothing is known. */
+    data object Unknown : CurrentImage
 }
 
 /**
@@ -109,6 +136,30 @@ internal class OpenFoodFactsClient(
         if (products.isEmpty()) OffResult.NotFound else OffResult.Found(products)
     }
 
+    /**
+     * Downloads a product photo. Only an https address on openfoodfacts.org is read, and only a
+     * small file: the address comes from the OFF answer, so it is checked like any other input.
+     */
+    suspend fun image(url: String): OffImage {
+        if (!isOffImageUrl(url)) return OffImage.Missing
+        return try {
+            val response = http.get(url)
+            when {
+                response.status == HttpStatusCode.NotFound -> OffImage.Missing
+                !response.status.isSuccess()               -> OffImage.Failed.also { onFailure("image HTTP ${response.status.value}") }
+                else                                       -> {
+                    val bytes = response.bodyAsBytes()
+                    if (bytes.isEmpty() || bytes.size > MAX_IMAGE_BYTES) OffImage.Failed else OffImage.Found(bytes)
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            onFailure(e::class.simpleName ?: "exception")
+            OffImage.Failed
+        }
+    }
+
     private fun failureOf(status: HttpStatusCode): OffResult? = when {
         status.isSuccess()                       -> null
         status == HttpStatusCode.TooManyRequests -> OffResult.RateLimited.also { onFailure("HTTP 429, too many requests") }
@@ -118,7 +169,7 @@ internal class OpenFoodFactsClient(
     private fun fields(): String =
         listOf(
             "code", "product_name", "product_name_${language()}", "brands", "nutriments", "product_quantity_unit",
-            "serving_size", "serving_quantity"
+            "serving_size", "serving_quantity", "image_front_small_url"
         ).joinToString(",")
 
     /** A product without a name is skipped: the user could not tell it from the others. */
@@ -140,6 +191,7 @@ internal class OpenFoodFactsClient(
             isLiquid = product.text("product_quantity_unit").equals("ml", ignoreCase = true),
             servingSize = product.text("serving_size"),
             servingQuantity = product.number("serving_quantity")?.takeIf { it > 0 && it.isFinite() },
+            imageUrl = product.text("image_front_small_url")?.takeIf { isOffImageUrl(it) },
         )
     }
 
@@ -180,5 +232,15 @@ internal class OpenFoodFactsClient(
         private const val PAGE_SIZE = 20
         private val RETRY_DELAYS_MS = listOf(1_000L, 3_000L)
         private const val KJ_PER_KCAL = 4.184
+
+        /** A 200 px photo is about 10 to 30 kB. Anything much bigger is not what was asked for. */
+        private const val MAX_IMAGE_BYTES = 512 * 1024
+
+        /** True for an https address on openfoodfacts.org (images.openfoodfacts.org, ...). */
+        fun isOffImageUrl(url: String): Boolean {
+            if (!url.startsWith("https://")) return false
+            val host = url.removePrefix("https://").substringBefore('/').substringBefore(':').lowercase()
+            return host == "openfoodfacts.org" || host.endsWith(".openfoodfacts.org")
+        }
     }
 }

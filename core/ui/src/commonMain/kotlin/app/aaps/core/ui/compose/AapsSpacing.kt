@@ -64,4 +64,8 @@ object AapsSpacing {
 
     // Widest the value column of a food card may be (portion and carbs); a longer unit is cut with "…"
     val foodValueMaxWidth = 80.dp
+
+    // Product photo of a food: small on a list card, larger at the top of the food editor
+    val foodThumbnailSize = 48.dp
+    val foodPhotoSize = 120.dp
 }

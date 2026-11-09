@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.foodManagement
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,13 +38,17 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
@@ -53,6 +58,7 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.foodManagement.book.decodeFoodImage
 import app.aaps.ui.compose.foodManagement.openfoodfacts.BarcodeScanner
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OffProduct
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OffResult
@@ -126,7 +132,9 @@ internal fun OffImportContent(
             OffResult.Offline      -> Text(stringResource(UiStrings.food_off_offline), color = MaterialTheme.colorScheme.error)
             OffResult.RateLimited  -> Text(stringResource(UiStrings.food_off_rate_limited), color = MaterialTheme.colorScheme.error)
             OffResult.Failed       -> Text(stringResource(UiStrings.food_off_failed), color = MaterialTheme.colorScheme.error)
-            is OffResult.Found     -> result.products.forEach { product -> OffProductCard(product = product, onClick = { onSelect(product) }) }
+            is OffResult.Found     -> result.products.forEach { product ->
+                OffProductCard(product = product, image = state.importImages[product.barcode], onClick = { onSelect(product) })
+            }
         }
 
         Text(
@@ -138,30 +146,57 @@ internal fun OffImportContent(
 }
 
 @Composable
-private fun OffProductCard(product: OffProduct, onClick: () -> Unit) {
+private fun OffProductCard(product: OffProduct, image: ByteArray?, onClick: () -> Unit) {
     ElevatedCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
-        Column(modifier = Modifier.padding(AapsSpacing.large)) {
-            Text(text = product.name, style = MaterialTheme.typography.titleSmall)
-            product.brand?.let {
-                Text(text = it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-            val unit = if (product.isLiquid) "ml" else "g"
-            val carbs = product.carbsPer100?.let { grams(it) } ?: stringResource(UiStrings.food_off_unknown)
-            Text(
-                text = stringResource(InterfacesStrings.confirmation_line, stringResource(InterfacesStrings.carbs), stringResource(UiStrings.food_off_carbs_per_100, carbs, unit)),
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (product.carbsPer100 == null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-            )
-            product.servingSize?.let {
-                Text(text = stringResource(UiStrings.food_off_serving, it), style = MaterialTheme.typography.bodySmall)
-            }
-            Text(text = product.barcode, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        // The photo of the package is often what tells two close products apart.
+        Row(modifier = Modifier.padding(AapsSpacing.large), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
+            FoodPhoto(bytes = image, size = AapsSpacing.foodThumbnailSize)
+            OffProductTexts(product = product, modifier = Modifier.weight(1f))
         }
     }
+}
+
+@Composable
+private fun OffProductTexts(product: OffProduct, modifier: Modifier) {
+    Column(modifier = modifier) {
+        Text(text = product.name, style = MaterialTheme.typography.titleSmall)
+        product.brand?.let {
+            Text(text = it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        val unit = if (product.isLiquid) "ml" else "g"
+        val carbs = product.carbsPer100?.let { grams(it) } ?: stringResource(UiStrings.food_off_unknown)
+        Text(
+            text = stringResource(InterfacesStrings.confirmation_line, stringResource(InterfacesStrings.carbs), stringResource(UiStrings.food_off_carbs_per_100, carbs, unit)),
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (product.carbsPer100 == null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+        )
+        product.servingSize?.let {
+            Text(text = stringResource(UiStrings.food_off_serving, it), style = MaterialTheme.typography.bodySmall)
+        }
+        Text(text = product.barcode, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/**
+ * The product photo of a food, or nothing when there is none (a food typed by hand, a product
+ * without a photo, or a photo still downloading). The name is always written next to it, so the
+ * photo has no text for screen readers.
+ */
+@Composable
+internal fun FoodPhoto(bytes: ByteArray?, size: Dp, modifier: Modifier = Modifier) {
+    val bitmap = remember(bytes) { bytes?.let { decodeFoodImage(it) } } ?: return
+    Image(
+        bitmap = bitmap,
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+        modifier = modifier
+            .size(size)
+            .clip(MaterialTheme.shapes.small)
+    )
 }
 
 /**

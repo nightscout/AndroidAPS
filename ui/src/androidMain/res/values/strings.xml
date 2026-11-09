@@ -397,7 +397,7 @@
     <string name="food_off_serving" comment="The serving written on the package, as Open Food Facts has it. %1$s = serving text. Example: Serving: 1 pot (125 g)">Serving: %1$s</string>
     <string name="food_off_values_follow">Values follow the portion. A value you typed yourself is kept.</string>
     <string name="food_off_warning">Volunteers enter the Open Food Facts data, and it can be wrong. Check every value against the package before you save. This is not medical advice.</string>
-    <string name="food_off_attribution">Data from Open Food Facts (openfoodfacts.org), under the Open Database License.</string>
+    <string name="food_off_attribution">Data from Open Food Facts (openfoodfacts.org), under the Open Database License. Photos under the CC BY-SA license.</string>
     <string name="food_off_unknown" comment="Shown in place of a nutrition value that Open Food Facts does not have">?</string>
     <string name="food_off_carbs_per_100" comment="Carbs of a product per 100 g or 100 ml. %1$s = carbs with unit, %2$s = g or ml. Example: 12.5 g / 100 g">%1$s / 100 %2$s</string>
     <string name="food_off_exact_values" comment="Exact values from Open Food Facts, shown above the rounded values in the food editor. %1$s = g or ml, %2$s = carbs, %3$s = sugars, %4$s = fiber, each with its unit or ?. Example: Per 100 g: carbs 4.7 g, sugars 4.7 g, fiber 0 g">Per 100 %1$s: carbs %2$s, sugars %3$s, fiber %4$s</string>

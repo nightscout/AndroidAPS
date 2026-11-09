@@ -21,6 +21,8 @@ data class FoodBackup(
     val foods: List<BackupFood>,
     val recipes: List<Recipe>,
     val eaten: List<EatenMeal>,
+    /** Added later in format 1: an older file reads as "no imported product". */
+    val offLinks: List<OffLink> = emptyList(),
 )
 
 /** A food as saved in the backup. [id] is its database id on the phone that made the backup. */
@@ -40,7 +42,7 @@ data class BackupFood(
 )
 
 /** What a restore adds to the food book: only what is not there yet. */
-data class BackupMerge(val recipes: List<Recipe>, val meals: List<EatenMeal>)
+data class BackupMerge(val recipes: List<Recipe>, val meals: List<EatenMeal>, val offLinks: List<OffLink> = emptyList())
 
 /**
  * Writes and reads backups, and decides what a restore adds.
@@ -68,6 +70,7 @@ internal object FoodBackupMath {
                 foods = foods.map { BackupFood(it.id, it.name, it.category, it.subCategory, it.portion, it.unit, it.carbs, it.fat, it.protein, it.energy, it.gi) },
                 recipes = book.recipes,
                 eaten = book.eaten,
+                offLinks = book.offLinks,
             )
         )
 
@@ -109,7 +112,13 @@ internal object FoodBackupMath {
             }
         val eatenIds = book.eaten.map { it.id }.toSet()
         val meals = backup.eaten.filter { it.id !in eatenIds }
-        return BackupMerge(recipes, meals)
+        // The product of a food follows the food found for it. A food that already has one keeps it.
+        val linkedIds = book.offLinks.map { it.foodId }.toSet()
+        val offLinks = backup.offLinks
+            .mapNotNull { link -> foodIds[link.foodId]?.let { link.copy(foodId = it) } }
+            .filter { it.foodId !in linkedIds }
+            .distinctBy { it.foodId }
+        return BackupMerge(recipes, meals, offLinks)
     }
 
     private fun keyOf(name: String, portion: Double, unit: String, carbs: Int) = listOf(name.trim().lowercase(), portion.toString(), unit.trim().lowercase(), carbs.toString())

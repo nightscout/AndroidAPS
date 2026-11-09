@@ -121,6 +121,39 @@ class OpenFoodFactsClientTest {
     }
 
     @Test
+    fun `the photo address is read, and only an openfoodfacts address is kept`() = runTest {
+        val url = "https://images.openfoodfacts.org/images/products/1/front_fr.3.200.jpg"
+        val good = """{"status":1,"product":{"code":"1","product_name":"Yaourt","image_front_small_url":"$url","nutriments":{}}}"""
+        assertEquals(url, assertIs<OffResult.Found>(client(body = good).productByBarcode("12345678")).products.single().imageUrl)
+
+        val other = """{"status":1,"product":{"code":"1","product_name":"Yaourt","image_front_small_url":"https://example.com/a.jpg","nutriments":{}}}"""
+        assertNull(assertIs<OffResult.Found>(client(body = other).productByBarcode("12345678")).products.single().imageUrl)
+
+        val none = """{"status":1,"product":{"code":"1","product_name":"Yaourt","nutriments":{}}}"""
+        assertNull(assertIs<OffResult.Found>(client(body = none).productByBarcode("12345678")).products.single().imageUrl)
+    }
+
+    @Test
+    fun `only an https address on openfoodfacts is downloaded`() = runTest {
+        assertTrue(OpenFoodFactsClient.isOffImageUrl("https://images.openfoodfacts.org/images/products/1/front.200.jpg"))
+        assertTrue(OpenFoodFactsClient.isOffImageUrl("https://openfoodfacts.org/a.jpg"))
+        assertEquals(false, OpenFoodFactsClient.isOffImageUrl("http://images.openfoodfacts.org/a.jpg"))
+        assertEquals(false, OpenFoodFactsClient.isOffImageUrl("https://openfoodfacts.org.example.com/a.jpg"))
+        assertEquals(false, OpenFoodFactsClient.isOffImageUrl("https://example.com/openfoodfacts.org/a.jpg"))
+
+        assertEquals(OffImage.Missing, client(body = "x").image("https://example.com/a.jpg"))
+        assertTrue(requests.isEmpty())
+    }
+
+    @Test
+    fun `a photo is downloaded, a removed one is missing, a server error is a failure`() = runTest {
+        val url = "https://images.openfoodfacts.org/images/products/1/front_fr.3.200.jpg"
+        assertEquals("jpg", assertIs<OffImage.Found>(client(body = "jpg").image(url)).bytes.decodeToString())
+        assertEquals(OffImage.Missing, client(HttpStatusCode.NotFound, "").image(url))
+        assertEquals(OffImage.Failed, client(HttpStatusCode.InternalServerError, "").image(url))
+    }
+
+    @Test
     fun `only digits of the right length are a barcode`() {
         assertTrue(OpenFoodFactsRepository.isBarcode("3017620422003"))
         assertTrue(OpenFoodFactsRepository.isBarcode("12345678"))

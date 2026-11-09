@@ -56,6 +56,21 @@ class OpenFoodFactsRepository(
         return if (result == OffResult.Failed && !receiverStatusStore.isConnected) OffResult.Offline else result
     }
 
+    /** Downloads the photo at [url] (an address read from OFF). */
+    suspend fun image(url: String): OffImage = withContext(aapsIoDispatcher) { client.image(url) }
+
+    /**
+     * Reads the product again, to get the address of its photo today: OFF changes the address
+     * when a photo is replaced. A product OFF does not know any more has no photo.
+     */
+    suspend fun currentImageUrl(barcode: String): CurrentImage = withContext(aapsIoDispatcher) {
+        when (val result = client.productByBarcode(barcode)) {
+            is OffResult.Found -> result.products.firstOrNull()?.imageUrl?.let { CurrentImage.At(it) } ?: CurrentImage.None
+            OffResult.NotFound -> CurrentImage.None
+            else               -> CurrentImage.Unknown
+        }
+    }
+
     companion object {
 
         private const val TIMEOUT_MS = 15_000L

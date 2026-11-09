@@ -46,6 +46,18 @@ class MealMathTest {
     }
 
     @Test
+    fun `nutrition values typed from the package are rounded, not lost`() {
+        assertEquals(15, MealMath.parseNutrient("14.8"))
+        assertEquals(2, MealMath.parseNutrient("1,7"))
+        assertEquals(0, MealMath.parseNutrient("0.4"))
+        assertEquals(0, MealMath.parseNutrient("0"))
+        assertEquals(12, MealMath.parseNutrient(" 12 "))
+        assertNull(MealMath.parseNutrient("-1"))
+        assertNull(MealMath.parseNutrient("abc"))
+        assertNull(MealMath.parseNutrient(""))
+    }
+
+    @Test
     fun `amounts are shown with at most one decimal`() {
         assertEquals("80", MealMath.formatAmount(80.0))
         assertEquals("4.7", MealMath.formatAmount(4.66))

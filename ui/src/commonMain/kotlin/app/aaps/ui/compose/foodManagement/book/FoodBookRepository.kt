@@ -69,6 +69,11 @@ class FoodBookRepository(
 
     suspend fun deleteRecipes(ids: Set<String>) = change { book -> book.copy(recipes = book.recipes.filterNot { it.id in ids }) }
 
+    /** Adds [link], or replaces the link of the same food. */
+    suspend fun saveOffLink(link: OffLink) = change { book ->
+        book.copy(offLinks = book.offLinks.filterNot { it.foodId == link.foodId } + link)
+    }
+
     suspend fun addEatenMeal(meal: EatenMeal) = change { book -> book.copy(eaten = listOf(meal) + book.eaten) }
 
     /** Adds what a restore found missing. Nothing already there is changed. */
@@ -76,6 +81,7 @@ class FoodBookRepository(
         book.copy(
             recipes = (book.recipes + merge.recipes).sortedBy { it.name.lowercase() },
             eaten = (book.eaten + merge.meals).sortedByDescending { it.timestamp },
+            offLinks = book.offLinks + merge.offLinks,
         )
     }
 
