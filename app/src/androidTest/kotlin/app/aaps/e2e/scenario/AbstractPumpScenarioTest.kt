@@ -97,17 +97,22 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkBolusRecords()
     }
 
-    /** The start never reached the pump. AAPS must not count insulin that was not given. */
+    /**
+     * The start never reached the pump. AAPS must not count insulin that was not given. A driver may find out that the
+     * start was lost while it still waits for it, and send it again, as Aaruy does when the pump's count shows it. Then
+     * the pump gives it, and the result must say so.
+     */
     @Test
-    fun aBolusStartThatIsLostGivesNoRecord() {
+    fun aLostBolusStartIsCountedAsThePumpDid() {
         scenario.bringUp()
         scenario.pair()
         assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.BOLUS_START)).isTrue()
 
-        assertWithMessage("bolus").that(scenario.bolus(BOLUS).success).isFalse()
+        val result = scenario.bolus(BOLUS)
+        scenario.awaitTrue("the pump ended the bolus", PumpScenario.BOLUS_TIMEOUT) { !scenario.control.state().bolusRunning }
         scenario.readStatus()
 
-        assertWithMessage("the pump gave nothing").that(scenario.control.state().boluses).isEmpty()
+        assertWithMessage("success when the pump gave it").that(result.success).isEqualTo(scenario.control.state().boluses.isNotEmpty())
         // A driver that cannot tell at once counts the whole amount, and decides from the pump once the bolus would have ended.
         scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
     }
