@@ -2,6 +2,7 @@ package app.aaps.e2e.scenario
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.NotificationManager
 import android.content.Context
 import android.os.SystemClock
 import androidx.test.core.app.ApplicationProvider
@@ -16,6 +17,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -238,6 +240,17 @@ class PumpScenario(private val pump: PumpUnderTest) {
             runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
         }
         awaitQueueIdle()
+        // A driver may take a new profile only some time after the one before (Carelevo: 30 s) and leave it to the
+        // queue to send it again. Ask as the keep alive worker does, until the pump gives the new basal.
+        if (control.state().basal != null) awaitTrue("the pump gives the basal of $basal U/h", PROFILE_TIMEOUT) {
+            val onPump = control.state().basal?.firstOrNull()
+            if (onPump == null || abs(onPump - basal) > BASAL_TOLERANCE) {
+                testGraphs.rxBus.send(EventProfileChangeRequested())
+                SystemClock.sleep(PROFILE_RETRY_MS)
+                false
+            } else true
+        }
+        awaitQueueIdle()
     }
 
     /**
@@ -410,12 +423,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
-    /** AAPS raised an alarm the user hears ([NotificationLevel.URGENT]) at [since] or later. The driver may learn of it only at a status read. */
+    /**
+     * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT], or the
+     * full-screen alarm of `UiInteraction.runAlarm`, which a driver can use for the sound while its own card stays lower
+     * (Carelevo). Without a screen in the test, runAlarm posts that alarm as a system notification.
+     */
     fun checkUrgentAlarmSince(since: Long) {
-        fun urgent() = testGraphs.notificationManager.notifications.value.filter { it.level == NotificationLevel.URGENT && it.date >= since }
-        awaitValue(RECORD_TIMEOUT) { urgent().takeIf { it.isNotEmpty() } }
+        fun urgent() = testGraphs.notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT && it.date >= since }
+        fun fullScreen() = instrumentation.targetContext.getSystemService(NotificationManager::class.java)
+            .activeNotifications.any { it.id == AlarmNotificationManager.NOTIFICATION_ID_FULL_SCREEN && it.postTime >= since }
+        awaitValue(RECORD_TIMEOUT) { (urgent() || fullScreen()).takeIf { it } }
         assertWithMessage("an alarm since the pump raised it, AAPS shows ${testGraphs.notificationManager.notifications.value.map { "${it.id} ${it.level}" }}")
-            .that(urgent()).isNotEmpty()
+            .that(urgent() || fullScreen()).isTrue()
     }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
@@ -628,6 +647,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
         private const val HOURS_PER_DAY = 24
         private const val SECONDS_PER_HOUR = 3600
         private const val PERCENT = 100.0
+        /** Longer than the 30 s a Carelevo waits between two profile updates. */
+        private const val PROFILE_TIMEOUT = 90_000L
+        private const val PROFILE_RETRY_MS = 5_000L
         private const val MS_PER_MINUTE = 60_000L
     }
 }
