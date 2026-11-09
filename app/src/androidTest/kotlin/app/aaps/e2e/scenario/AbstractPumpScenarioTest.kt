@@ -115,9 +115,12 @@ abstract class AbstractPumpScenarioTest {
     /**
      * The pump stops a bolus on its own, as at an occlusion. AAPS must count what the pump gave, once, and must tell the
      * user that the bolus was not given in full: the bolus is not reported as given, and the alarm rings.
+     *
+     * Open, so a pump whose emulator cannot copy this from a real pump skips it with the reason: an `@Ignore` override.
+     * A guessed emulator would make a wrong guess look like a driver bug.
      */
     @Test
-    fun aBolusThePumpStopsCountsWhatItGave() {
+    open fun aBolusThePumpStopsCountsWhatItGave() {
         scenario.bringUp()
         scenario.pair()
         assertWithMessage("fault").that(scenario.control.stopNextBolusAt(PUMP_STOPS_AT)).isTrue()

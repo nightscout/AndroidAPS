@@ -87,8 +87,12 @@ class EquilEmulatorBleTransport(
     /** The pump logs the alarm: the driver reads it from the pump log at its next connection. */
     override fun raise(alarm: EmulatedAlarm): Boolean = emulator.raise(alarm)
 
-    /** The pump logs a blockage when the bolus stops. */
-    override fun stopNextBolusAt(units: Double): Boolean = emulator.stopNextBolusAt(units)
+    /**
+     * Not copied. How a real Equil goes on after a blockage during a bolus was never seen: whether the bolus stops there,
+     * and which log entries follow. A blockage cannot be made on a real pump to look. A guess here would make a test
+     * report a driver bug that may not exist.
+     */
+    override fun stopNextBolusAt(units: Double): Boolean = false
 
     override fun state(): EmulatedPumpState = emulator.snapshot(linkUp = connected)
     override fun saveState(): ByteArray = emulator.saveState()

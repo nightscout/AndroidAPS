@@ -44,9 +44,6 @@ class EquilPumpState : Serializable {
     /** How many commands reached the pump. */
     var commands: Int = 0
 
-    /** Test hook: the next bolus stops after these steps, as at an occlusion. */
-    var stopNextBolusAtSteps: Int? = null
-
     /** The reservoir alarm of CmdSettingSet, in steps of 0.00625 U. The driver sends 1600, that is 10 U. */
     var lowAlarmStep: Int = 1600
 

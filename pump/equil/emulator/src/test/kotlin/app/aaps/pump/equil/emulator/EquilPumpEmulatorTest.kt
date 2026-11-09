@@ -270,17 +270,6 @@ class EquilPumpEmulatorTest {
         assertEquals(0, state.tempBasalStep)
     }
 
-    @Test
-    fun `an occlusion stops the bolus where it was set and the pump logs a blockage`() {
-        emulator.stopNextBolusAt(0.2)
-        bolus(steps = 160, seconds = 5) // 0.2 U after 1 s
-        Thread.sleep(1500)
-        val snapshot = emulator.snapshot(linkUp = true)
-        assertFalse(snapshot.bolusRunning)
-        assertEquals(listOf(0.2), snapshot.boluses)
-        assertEquals(listOf(4, 2, 2), code(lastEvent()))
-    }
-
     // --- What a real pump does, beyond the commands ---
 
     private fun setMode(mode: Int) {

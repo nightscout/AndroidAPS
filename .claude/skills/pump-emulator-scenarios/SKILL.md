@@ -26,6 +26,10 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
 - Each hook copies something seen on a real pump. Mark a guess `UNVERIFIED`, with what is guessed.
 - A hook the pump cannot do returns false (or null for `saveState`). The scenario then fails with that, so a missing
   hook never looks like a passed test.
+- A case no real pump has shown, and that cannot be made on one to look, is not guessed when a scenario judges the
+  driver by it: a wrong guess would show as a driver bug. The hook returns false, says why in its KDoc, and the pump's
+  test class skips that scenario with an `@Ignore("<why>")` override (the shared scenario is `open` for that). Example:
+  a blockage during an Equil bolus.
 - Speed: shorter actions (`EmulatorSpeed.FAST`), never a faster clock. The pump clock is the phone clock, or the
   history has times no real pump gives. Things that wait for a time, as the end of a temp basal, are raised as events.
 - The emulator object lives in `PumpEmulators`, a graph input, not in the graph. Bind it with

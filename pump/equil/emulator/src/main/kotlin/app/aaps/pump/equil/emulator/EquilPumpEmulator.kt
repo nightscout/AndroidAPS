@@ -704,12 +704,6 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         state.historyEvents.lastOrNull() to basalSpeed()
     }
 
-    /** The next bolus stops after [units], as at an occlusion. */
-    fun stopNextBolusAt(units: Double): Boolean = synchronized(state) {
-        state.stopNextBolusAtSteps = (units * BOLUS_STEPS_PER_UNIT).roundToInt()
-        true
-    }
-
     /**
      * The pump reports [alarm] now, with the log entries a real pump writes for it, as in the real records in
      * `EquilManagerTest` of the driver. False for an alarm this pump has not.
@@ -747,15 +741,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         state.runningBolus?.let { bolus ->
             val elapsed = (now - bolus.startedAt).coerceAtLeast(0)
             val due = if (elapsed >= bolus.durationMs) bolus.steps else (bolus.steps.toLong() * elapsed / bolus.durationMs).toInt()
-            val stopAt = state.stopNextBolusAtSteps
-            if (stopAt != null && due >= stopAt) {
-                state.stopNextBolusAtSteps = null
-                give(bolus, stopAt)
-                blockage(at = bolus.startedAt + bolus.durationMs * stopAt / bolus.steps)
-            } else {
-                give(bolus, due)
-                if (elapsed >= bolus.durationMs) finishBolus(at = bolus.startedAt + bolus.durationMs)
-            }
+            give(bolus, due)
+            if (elapsed >= bolus.durationMs) finishBolus(at = bolus.startedAt + bolus.durationMs)
         }
         if (state.isTempBasalRunning && now >= tempBasalEnd()) {
             // UNVERIFIED: that a temp basal whose time is over logs as a cancel does, see processTempBasalSet.
