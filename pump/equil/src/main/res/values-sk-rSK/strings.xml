@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Slabá batéria: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">V zásobníku nie je dostatok inzulínu: %1$s</string>
     <string name="equil_reservoir_empty">Zásobník je prázdny. Pumpa už nepodáva inzulín.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Príkaz na bolus prišiel do pumpy, ale pumpa neodpovedá. Malo by stále podať %1$s. Nepodávajte bolus znovu. AAPS započíta celé množstvo.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Zastavenie neprešlo do pumpy, alebo jej odpoveď sa stratila. AAPS započítava celý bolus z %1$s pokiaľ záznam z pumpy neukáže čo bolo podané.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Záznam z pumpy ukázal, že bolus %1$s nebol podaný. AAPS ho nezapočíta.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpa sa zastavila počas podávania bolusu. Podané: %1$s z %2$s</string>
     <string name="equil_pump_not_run">Pumpa nebeží</string>
     <string name="equil_pair">Párovať</string>
