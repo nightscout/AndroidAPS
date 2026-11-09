@@ -28,10 +28,10 @@ volunteers and can be wrong: the user must always check them.
 | 1.6 | User-Agent: OFF asks for `AppName/Version (contact)`. The contact must be a project address chosen by the maintainers, never the e-mail of a user. | to do (final) |
 | 1.7 | Show the OFF attribution: data under ODbL, photos under CC BY-SA. | done in POC |
 | 1.8 | Nutrition values are typed as written on the package (14.8, 1,7). Comma and dot are both accepted. | done in POC (rounded to whole numbers, see 1.9) |
-| 1.9 | Keep decimal values. Today `FD`, the database and Nightscout keep whole numbers, so 0.4 g becomes 0. | to do (final: values as `Double`, one database migration) |
+| 1.9 | Keep decimal values. Today `FD`, the database and Nightscout keep whole numbers, so 0.4 g becomes 0. Decimals matter for small portions that are multiplied (a food counted per piece or per gram). The total of a meal sent to the wizard or the carbs dialog **stays a whole number**: it is rounded once, from the exact sum. With the precision of carbs counting, a total with decimals means nothing. | to do (final: values as `Double`, one database migration) |
 | 1.10 | The category list shows every category, also when the field was filled by an import ("OFF"). | done in POC |
 | 1.11 | A button at import time to correct the values or the portion when the OFF data is wrong. The corrected food is saved in AAPS; see 5.2 for sending the fix to OFF. | to do |
-| 1.12 | Carbs with or without fiber. A European label gives carbs without fiber; a US label gives total carbs, fiber included. OFF keeps what the label says, so "carbs" does not mean the same thing for every product. Keep the fiber value so it can at least be shown. Nothing is computed again without a decision. | idea: question for the OFF team and the maintainers |
+| 1.12 | Carbs with or without fiber. A European label gives carbs without fiber; a US label gives total carbs, fiber included. OFF keeps what the label says, so "carbs" does not mean the same thing for every product. Keep the fiber value (one optional column) so it can be shown later, or a warning given on a product with a US label. Nothing is computed again. See the sizes below. | idea, low priority |
 | 1.13 | "As sold" or "prepared" values. For a powder (mashed potatoes, cocoa, soup) OFF can have values for the dry product and for the prepared one. The import must show which ones it uses. The POC always uses "as sold" and does not say it. | to do |
 | 1.14 | OFF quality warnings (for example "energy does not match the other values"): shown at import time, not stored. | idea |
 | 1.15 | Ingredients, allergens and traces: not stored. Shown on demand from the barcode (a "see on Open Food Facts" button, or read when the food is opened). Useful for families who also manage coeliac disease, which is common with type 1 diabetes. | idea |
@@ -48,7 +48,7 @@ volunteers and can be wrong: the user must always check them.
 - 2026-11-09: one full OFF product was read to compare its fields with the food (376 fields, most
   of them for OFF itself). The comparison is below; it led to 1.12 to 1.15 and to the proposal
   "What to keep from OFF" in section 7.
-- 2026-11-09: a line typed by hand in a meal (3.5) and a comment field (3.7) asked after use.
+- 2026-11-09: a line typed by hand in a meal (3.5) and a comment field (3.6) asked after use.
 
 **Comparison: OFF product and AAPS food (2026-11-09)**
 
@@ -67,6 +67,35 @@ volunteers and can be wrong: the user must always check them.
 | Ingredients, allergens, traces | no | no | Not stored, see 1.15 |
 | Nutri-Score, NOVA, Eco-Score, labels, OFF categories | no | no | No: not about the therapy, and they change |
 | Glycemic index | `gi` | no | Not in OFF. In Nightscout `gi` is a group 1/2/3 (low, medium, high), not an index: it stays `Int`. |
+
+**Fiber: how big is the difference (1.12, 2026-11-09)**
+
+Approximate values per 100 g, from the Ciqual (ANSES) and USDA tables. They change from one
+product to another and are only sizes, not reference values.
+
+| Food | Carbs without fiber (EU label) | Fiber | More with a US label |
+|---|---|---|---|
+| Sugar, soda, juice, sweets | 10–100 g | ~0 | 0 % |
+| White rice, cooked | ~28 g | ~0.4 g | ~1 % |
+| White bread, cooked pasta | 30–50 g | 2–3 g | ~5 % |
+| Banana, potato | 17–20 g | 2–2.6 g | ~12 % |
+| Oat flakes, wholemeal bread | 40–60 g | 7–10 g | ~17 % |
+| Apple | ~11 g | ~2.4 g | ~20 % |
+| Dark chocolate 70 % | ~33 g | ~11 g | ~33 % |
+| Chickpeas cooked, raw carrot | 7–19 g | 3–8 g | ~40 % |
+| Lentils cooked, bran cereals | 13–46 g | 8–27 g | ~60 % |
+| Broccoli | ~3 g | ~2.6 g | 80–100 % |
+
+- A usual Western day has 15 to 25 g of fiber for 200 to 250 g of carbs: about **5 to 10 %**.
+- A user who always counts the same way has an insulin-to-carb ratio set for that way: a steady
+  difference is taken in by the ratio.
+- The big percentages are on foods with few carbs (150 g of carrot: 10.5 g or 14.7 g). The case
+  that counts in grams is a large portion of pulses or bran cereals (200 g of cooked lentils: about
+  26 g or 42 g, so 16 g apart).
+- The real risk is mixing labels (a product with a US label scanned in France, or US products with
+  foods typed from a European table): the difference is then not steady, and the ratio does not
+  take it in. Some US users also count "net carbs" (total minus some or all of the fiber).
+- Decision: no change to the computation. Keep the fiber value only.
 
 ## 2. Product photos
 
@@ -94,9 +123,8 @@ to pick the right one.
 | 3.2 | A meal is sent to the bolus wizard or to the carbs dialog. The history keeps a copy of what was eaten at that time. | done in POC |
 | 3.3 | A meal is kept only when its treatment is really saved. It follows the treatment: when the treatment is deleted, the meal is removed too. A record that is only "not found" never removes a meal. | done in POC |
 | 3.4 | Final: pass a meal id to the wizard and carbs dialogs, instead of finding the treatment again by note and time. | to do (final) |
-| 3.5 | A line typed by hand in a meal: a name and the carbs the user estimated, for something that is not in the list (a home-made quiche next to a grated carrot and a dessert that are). It counts in the total sent to the wizard or the carbs dialog. It is marked "estimated" in the meal, the dishes, the history and the CSV. Its fat, protein and energy are not known, so the meal shows them as not known. It can be part of a saved dish or meal, with a fixed value. | done in POC |
-| 3.6 | "Save as a food" from a line typed by hand, for something eaten often. | to do |
-| 3.7 | A free text comment on each food, dish and standard meal. For the final version: a `note` column on the food (same migration as 1.9), and a field in the new tables. To decide: is the comment of a standard meal copied into the meal history? | to do (final) |
+| 3.5 | A line typed by hand in a meal: a name and the carbs the user estimated, for something that is not in the list (a home-made quiche next to a grated carrot and a dessert that are). It counts in the total sent to the wizard or the carbs dialog. It is marked "estimated" in the meal, the dishes, the history and the CSV. Its fat, protein and energy are not known, so the meal shows them as not known. It can be part of a saved dish or meal, with a fixed value. Something eaten often is simply added to the food list, with the estimate as its carbs: no "save as a food" button is needed. The food screen only makes sense when at least one food exists (otherwise the user types the carbs in the carbs dialog or the wizard), so the line typed by hand is added from the meal sheet, after a food. Foods are listed, not eaten in that order. | done in POC |
+| 3.6 | A free text comment on each food, dish and standard meal. For the final version: a `note` column on the food (same migration as 1.9), and a field in the new tables. To decide: is the comment of a standard meal copied into the meal history? | to do (final) |
 
 UI rules agreed on 2026-11-05: a tap on a card adds it to the meal, the pencil changes it,
 orange/green buttons send to Carbs/Wizard (theme colours). Delete only with a long press and the
