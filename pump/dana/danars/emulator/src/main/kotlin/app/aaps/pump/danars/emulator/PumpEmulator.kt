@@ -265,6 +265,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
                     val value = ((params[1 + i * 2].toInt() and 0xFF) or ((params[2 + i * 2].toInt() and 0xFF) shl 8))
                     state.basalProfiles[profileNum][i] = value / 100.0
                 }
+                updateCurrentBasal()
             }
         }
         return byteArrayOf(0x00) // OK
@@ -273,8 +274,20 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     private fun processSetProfileNumber(params: ByteArray): ByteArray {
         if (params.isNotEmpty()) {
             state.activeProfileNumber = params[0].toInt() and 0xFF
+            updateCurrentBasal()
         }
         return byteArrayOf(0x00) // OK
+    }
+
+    /**
+     * The pump shows the rate of this hour in its active profile as its current basal. The driver takes that as the
+     * base rate, and a temp basal of the same rate is no temp basal for it. It is set when the profile changes, not
+     * each hour: a test may set it by hand.
+     */
+    private fun updateCurrentBasal() {
+        val profile = state.basalProfiles.getOrNull(state.activeProfileNumber) ?: return
+        val hour = Instant.fromEpochMilliseconds(state.pumpTimeMillis).toLocalDateTime(TimeZone.currentSystemDefault()).hour
+        state.currentBasal = profile[hour]
     }
 
     // --- Bolus ---
