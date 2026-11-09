@@ -109,6 +109,12 @@ class IosAppStartupTest {
         val calls = mutableListOf<String>()
         var registered: List<PluginBase> = emptyList()
 
+        /**
+         * The steps already done when the automation runtime was started, or null when it never was.
+         * A snapshot rather than another entry in [calls], which two tests below assert exactly.
+         */
+        var automationStartedAfter: List<String>? = null
+
         override fun register(plugins: List<PluginBase>) {
             calls.add("register")
             registered = plugins
@@ -124,8 +130,37 @@ class IosAppStartupTest {
         val registry = RecordingRegistry()
         // A bus and a scope that record nothing: this test is about the order of the startup
         // steps. The announcement itself is covered by StartPluginsTest in :core:interfaces.
-        IosAppStartup(SilentLogger, registry, plugins, SilentBus, CoroutineScope(Dispatchers.Unconfined), startPeriodicWork = {}).run()
+        IosAppStartup(
+            SilentLogger, registry, plugins, SilentBus, CoroutineScope(Dispatchers.Unconfined),
+            startPeriodicWork = {}, startAutomation = { registry.automationStartedAfter = registry.calls.toList() }
+        ).run()
         return registry
+    }
+
+    /**
+     * The automation runtime loads the stored rules in its own `start()`, and nothing else reads
+     * them. iOS used to skip the call on purpose, in the belief that starting the runtime would let a
+     * client fire rules; it does not - execution is gated on `config.APS` inside the runtime - and
+     * the only effect was that the Automation screen was empty on every start, master pushes were
+     * never picked up and local edits were never written back. Assert the call, so the screen cannot
+     * go quietly dead again.
+     */
+    @Test
+    fun `the automation runtime is started`() {
+        val registry = run(mapOf(1 to NamedPlugin("a")))
+
+        assertTrue(registry.automationStartedAfter != null, "automation runtime was not started")
+    }
+
+    /** After the plugins: an automation action's description can name the active pump. */
+    @Test
+    fun `automation starts after the plugins are initialized`() {
+        val registry = run(mapOf(1 to NamedPlugin("a")))
+
+        assertTrue(
+            registry.automationStartedAfter?.contains("initialize") == true,
+            "automation started before the plugins: ${registry.automationStartedAfter}"
+        )
     }
 
     @Test
