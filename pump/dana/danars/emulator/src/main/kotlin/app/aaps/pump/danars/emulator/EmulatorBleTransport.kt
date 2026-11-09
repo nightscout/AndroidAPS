@@ -246,8 +246,9 @@ class EmulatorBleTransport(
         else                                                                -> null
     }
 
+    /** Only the first fault can fire, so faults fire in the order the test set them. */
     private fun takeFault(faults: MutableList<EmulatedCommand>, command: EmulatedCommand?): Boolean =
-        command != null && synchronized(faults) { faults.remove(command) }
+        command != null && synchronized(faults) { faults.firstOrNull() == command && faults.removeAt(0) == command }
 
     // --- BleTransport ---
 

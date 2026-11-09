@@ -24,10 +24,17 @@ interface PumpEmulatorControl {
     /** While true, the pump cannot be reached: a connect never comes up. */
     fun setOutOfRange(outOfRange: Boolean): Boolean
 
-    /** The next [command] never reaches the pump: the pump does nothing and sends nothing. */
+    /**
+     * The next [command] never reaches the pump: the pump does nothing and sends nothing. Lost commands are used in the
+     * order they were set: one waits until those set before it are used.
+     */
     fun loseCommand(command: EmulatedCommand): Boolean
 
-    /** The pump runs the next [command], and its answer is lost. For the app this is not the same as [loseCommand]. */
+    /**
+     * The pump runs the next [command], and its answer is lost. For the app this is not the same as [loseCommand].
+     * Lost answers are used in the order they were set, so a test can name a sequence: "the cancel answer is lost, then
+     * the answer to the status read after it".
+     */
     fun loseAnswer(command: EmulatedCommand): Boolean
 
     /** The pump reports [alarm] now. */

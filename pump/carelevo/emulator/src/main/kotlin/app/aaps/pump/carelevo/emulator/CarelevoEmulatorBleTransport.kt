@@ -174,18 +174,22 @@ class CarelevoEmulatorBleTransport(
 
     // ---- PumpEmulatorControl ----------------------------------------------------------------
 
-    /** Opcodes whose next command, or next answer, is lost. Each fault is used once. */
-    private val lostCommands = mutableSetOf<Byte>()
-    private val lostAnswers = mutableSetOf<Byte>()
+    /**
+     * The opcodes of each fault, in the order the test set them. Each fault is used once, and only the first one can
+     * fire. A fault named for a command with two opcodes (the basal program) is used up by either.
+     */
+    private val lostCommands = mutableListOf<Set<Byte>>()
+    private val lostAnswers = mutableListOf<Set<Byte>>()
 
-    private fun takeFault(faults: MutableSet<Byte>, opcode: Byte): Boolean = synchronized(faults) {
-        // A fault named for a command with two opcodes (the basal program) is used up by either.
-        faults.removeAll(OPCODE_GROUPS.firstOrNull { opcode in it } ?: setOf(opcode))
+    private fun takeFault(faults: MutableList<Set<Byte>>, opcode: Byte): Boolean = synchronized(faults) {
+        if (faults.firstOrNull()?.contains(opcode) == true) {
+            faults.removeAt(0)
+            true
+        } else false
     }
 
-    private fun addFault(faults: MutableSet<Byte>, command: EmulatedCommand): Boolean = synchronized(faults) {
-        faults.addAll(opcodesOf(command))
-        true
+    private fun addFault(faults: MutableList<Set<Byte>>, command: EmulatedCommand): Boolean = synchronized(faults) {
+        faults.add(opcodesOf(command))
     }
 
     override var speed: EmulatorSpeed
@@ -271,6 +275,5 @@ class CarelevoEmulatorBleTransport(
 
         /** The basal program is set at activation and updated later, with two opcodes. */
         val BASAL_PROGRAM_OPCODES = setOf(CarelevoPumpEmulator.OP_BASAL_SET, CarelevoPumpEmulator.OP_BASAL_UPDATE)
-        val OPCODE_GROUPS = listOf(BASAL_PROGRAM_OPCODES)
     }
 }

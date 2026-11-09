@@ -649,8 +649,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     /** The pump runs the next [command], and its answer is lost. */
     fun loseAnswer(command: EmulatedCommand): Boolean = synchronized(lostAnswers) { lostAnswers.add(command) }
 
+    /** Only the first fault can fire, so faults fire in the order the test set them. */
     private fun take(list: MutableList<EmulatedCommand>, command: EmulatedCommand?): Boolean =
-        command != null && synchronized(list) { list.remove(command) }
+        command != null && synchronized(list) { list.firstOrNull() == command && list.removeAt(0) == command }
 
     /** What the pump does for [data], by its type and fields. Null for a command no hook names. */
     private fun commandOf(data: ByteArray): EmulatedCommand? {
