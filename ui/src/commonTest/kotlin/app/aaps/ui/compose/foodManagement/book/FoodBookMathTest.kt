@@ -63,6 +63,18 @@ class FoodBookMathTest {
     }
 
     @Test
+    fun `a line typed by hand counts its estimated carbs, its other values are not known`() {
+        val lunch = Recipe(
+            id = "lunch", name = "Lunch", kind = RecipeKind.MEAL,
+            items = listOf(RecipeItem("Bread", 80.0, "g", foodId = 3), RecipeItem("Quiche", 1.0, "", estimatedCarbs = 35.0))
+        )
+        val n = FoodBookMath.nutritionOf(lunch, foods, recipes)!!
+        assertEquals(75.0, n.carbs, 0.0001) // 40 + 35
+        assertNull(n.fat)
+        assertNull(n.energyKj)
+    }
+
+    @Test
     fun `a loop is found and gives no total`() {
         val looped = sweetYogurt.copy(items = sweetYogurt.items + RecipeItem("Breakfast", 1.0, "servings", recipeId = "meal"))
         val withLoop = recipes + ("dish" to looped)

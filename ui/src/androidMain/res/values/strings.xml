@@ -410,6 +410,11 @@
     <string name="food_meal_bar" comment="Bar at the bottom of the food list. %1$d = number of foods in the meal, %2$s = total carbs with unit. Example: Meal (3): 64 g">Meal (%1$d): %2$s</string>
     <string name="food_meal_total" comment="%1$s = total carbs with unit. Example: Total carbs: 64 g">Total carbs: %1$s</string>
     <string name="food_meal_check">Check the total before you use it for a bolus.</string>
+    <string name="food_meal_add_by_hand" comment="Button: add to the meal a line that is not in the food list, with a name and estimated carbs">Add by hand</string>
+    <string name="food_meal_by_hand_title">Add something that is not in the list</string>
+    <string name="food_meal_by_hand_hint">These carbs are your own estimate. They are not checked, and they are marked as estimated in the history and in the export.</string>
+    <string name="food_meal_estimated" comment="Shown instead of a quantity for a meal line typed by hand, whose carbs the user estimated">estimated</string>
+    <string name="food_book_estimated_item" comment="A line typed by hand in a dish or a meal. %1$s = carbs with unit. Example: 40 g carbs, estimated">%1$s carbs, estimated</string>
     <string name="food_meal_note_item" comment="One food in the note saved with the bolus. %1$s = food name, %2$s = quantity with unit, %3$s = carbs with unit. Example: Bread 80 g (40 g)">%1$s %2$s (%3$s)</string>
     <string name="food_meal_note_join" comment="Joins the foods of a meal in the note saved with the bolus. %1$s = the foods so far, %2$s = the next food. Example: Bread 80 g (40 g), Milk 250 ml (12 g)">%1$s, %2$s</string>
     <string name="food_book_tab_foods" comment="Tab of the food screen that lists single foods">Foods</string>

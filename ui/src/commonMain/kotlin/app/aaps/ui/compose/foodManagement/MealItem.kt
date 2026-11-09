@@ -15,6 +15,8 @@ import kotlin.math.roundToInt
  * @param carbs grams of carbs for this quantity, not rounded
  * @param foodId the food this line comes from, so the meal can be saved as a dish or a meal
  * @param recipeId the dish this line comes from (quantity is then in servings)
+ * @param estimated true for a line typed by hand: a name and the carbs the user estimated, without
+ *   a food or a dish behind it. Its quantity and unit mean nothing and are not shown.
  */
 data class MealItem(
     val key: Long,
@@ -27,6 +29,7 @@ data class MealItem(
     val energyKj: Double? = null,
     val foodId: Long? = null,
     val recipeId: String? = null,
+    val estimated: Boolean = false,
 )
 
 internal object MealMath {

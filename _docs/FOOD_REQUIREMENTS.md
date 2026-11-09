@@ -31,6 +31,10 @@ volunteers and can be wrong: the user must always check them.
 | 1.9 | Keep decimal values. Today `FD`, the database and Nightscout keep whole numbers, so 0.4 g becomes 0. | to do (final: values as `Double`, one database migration) |
 | 1.10 | The category list shows every category, also when the field was filled by an import ("OFF"). | done in POC |
 | 1.11 | A button at import time to correct the values or the portion when the OFF data is wrong. The corrected food is saved in AAPS; see 5.2 for sending the fix to OFF. | to do |
+| 1.12 | Carbs with or without fiber. A European label gives carbs without fiber; a US label gives total carbs, fiber included. OFF keeps what the label says, so "carbs" does not mean the same thing for every product. Keep the fiber value so it can at least be shown. Nothing is computed again without a decision. | idea: question for the OFF team and the maintainers |
+| 1.13 | "As sold" or "prepared" values. For a powder (mashed potatoes, cocoa, soup) OFF can have values for the dry product and for the prepared one. The import must show which ones it uses. The POC always uses "as sold" and does not say it. | to do |
+| 1.14 | OFF quality warnings (for example "energy does not match the other values"): shown at import time, not stored. | idea |
+| 1.15 | Ingredients, allergens and traces: not stored. Shown on demand from the barcode (a "see on Open Food Facts" button, or read when the food is opened). Useful for families who also manage coeliac disease, which is common with type 1 diabetes. | idea |
 
 **History**
 
@@ -41,6 +45,28 @@ volunteers and can be wrong: the user must always check them.
 - 2026-11-08: the OFF team pointed to their two reference pages:
   <https://world.openfoodfacts.org/data> and
   <https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/>.
+- 2026-11-09: one full OFF product was read to compare its fields with the food (376 fields, most
+  of them for OFF itself). The comparison is below; it led to 1.12 to 1.15 and to the proposal
+  "What to keep from OFF" in section 7.
+- 2026-11-09: a line typed by hand in a meal (3.5) and a comment field (3.7) asked after use.
+
+**Comparison: OFF product and AAPS food (2026-11-09)**
+
+| OFF data | Food today (`FD`) | POC | Final |
+|---|---|---|---|
+| Name, brand | `name` | Brand added to the name | As today. A `brand` column only if we want to filter by brand. |
+| Barcode | no | In the POC file | Column |
+| Has a photo | no | Flag in the POC file | Column `hasImage` |
+| Carbs | `Int` | Read as `Double`, rounded | `Double` |
+| Sugars, fiber | no | Read and shown at import, not saved | To decide (see 1.12) |
+| Polyols, starch, added sugars | no | no | Polyols to decide, not the others |
+| Fat, protein, energy | `Int` | Read as `Double` | `Double` |
+| Saturated fat, salt, sodium | no | no | No: not used for insulin |
+| Serving on the package, total quantity | `portion` + `unit` | Used to offer the portion | Covered |
+| As sold or prepared | no | no | See 1.13 |
+| Ingredients, allergens, traces | no | no | Not stored, see 1.15 |
+| Nutri-Score, NOVA, Eco-Score, labels, OFF categories | no | no | No: not about the therapy, and they change |
+| Glycemic index | `gi` | no | Not in OFF. In Nightscout `gi` is a group 1/2/3 (low, medium, high), not an index: it stays `Int`. |
 
 ## 2. Product photos
 
@@ -68,6 +94,9 @@ to pick the right one.
 | 3.2 | A meal is sent to the bolus wizard or to the carbs dialog. The history keeps a copy of what was eaten at that time. | done in POC |
 | 3.3 | A meal is kept only when its treatment is really saved. It follows the treatment: when the treatment is deleted, the meal is removed too. A record that is only "not found" never removes a meal. | done in POC |
 | 3.4 | Final: pass a meal id to the wizard and carbs dialogs, instead of finding the treatment again by note and time. | to do (final) |
+| 3.5 | A line typed by hand in a meal: a name and the carbs the user estimated, for something that is not in the list (a home-made quiche next to a grated carrot and a dessert that are). It counts in the total sent to the wizard or the carbs dialog. It is marked "estimated" in the meal, the dishes, the history and the CSV. Its fat, protein and energy are not known, so the meal shows them as not known. It can be part of a saved dish or meal, with a fixed value. | done in POC |
+| 3.6 | "Save as a food" from a line typed by hand, for something eaten often. | to do |
+| 3.7 | A free text comment on each food, dish and standard meal. For the final version: a `note` column on the food (same migration as 1.9), and a field in the new tables. To decide: is the comment of a standard meal copied into the meal history? | to do (final) |
 
 UI rules agreed on 2026-11-05: a tap on a card adds it to the meal, the pencil changes it,
 orange/green buttons send to Carbs/Wizard (theme colours). Delete only with a long press and the
@@ -115,12 +144,19 @@ must be studied first. Kept here so it is not lost.
 | # | Requirement | Status |
 |---|---|---|
 | 6.1 | A food in Nightscout with a decimal value ("carbs": 10.5) must not make the whole food list fail. | done: separate fix branch `Fix/ns-food-decimal-values` (values rounded when read, upload format unchanged). Not yet proposed. |
-| 6.2 | Final: keep decimals end to end (see 1.9), and check what older AAPS versions do with a decimal before uploading one. | to do (final) |
+| 6.2 | Final: keep decimals end to end (see 1.9). | to do (final) |
+| 6.3 | Older AAPS versions. A Nightscout site belongs to one person, and when that person moves to AAPS 4 their followers (AAPSClient) move too. So there is no long mix of versions. There is a short time during the update: a follower still on 3.x loses its whole food list when the main phone uploads a decimal (the bug of 6.1). Accepted, or decimals are only sent when the value has some. | decision: no long-term support of whole numbers only |
+| 6.4 | The Nightscout food editor (web page, `lib/food/food.js`) saves with `parseInt`: a food created by AAPS with 14.8 g becomes **14** when someone saves it in the web page (cut, not rounded). Today this already happens to `portion` (1.5 becomes 1). One line to change (`parseFloat`): propose a pull request to cgm-remote-monitor with the AAPS change. | to do |
+| 6.5 | Other programs that use the Nightscout food list (checked on 2026-11-09): the Nightscout server stores the values as sent and its bolus calculator works with decimals. Nocturne (the .NET rewrite of Nightscout) already has portion, carbs, fat, protein and energy as `double` and `gi` as `int`, and has connectors that write foods. A community tool imports a Brazilian carbs table into Nightscout (writes only). No program was found that reads foods and needs whole numbers. The search was a web search and a read of these projects, not a code search of all GitHub: private tools and forks are not covered. | checked |
 
 ## 7. Final version: open points for the maintainers
 
 - Database: values as `Double`, a `barcode` column on the food, tables for dishes, meals and the
   meal history. One migration, designed once from what the POC taught.
+- What to keep from OFF (proposal, see the comparison in section 1): on the food, `barcode`,
+  `hasImage` and `note`, maybe `fiber` and `sugars` (1.12). The photo address stays a local cache:
+  it changes when OFF replaces a photo, and the product is read again to find it. Ingredients,
+  allergens and scores are read from OFF when needed, never stored.
 - Proposed as small pull requests: (A) values and barcode, (B) OFF import, (C) dishes, meals,
   history and export.
 - Extended carbs from fat and protein: last, opt-in, and a decision for the maintainers and for

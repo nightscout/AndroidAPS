@@ -468,6 +468,10 @@ class FoodManagementViewModel(
     /** Opens the quantity dialog for one line of the meal, to change how much of it is eaten. */
     fun editLine(key: Long) {
         val item = uiState.value.mealItems.firstOrNull { it.key == key } ?: return
+        if (item.estimated) {
+            _uiState.update { it.copy(showHandLine = true, handLineKey = key, handLineName = item.name, handLineCarbs = MealMath.formatAmount(item.carbs)) }
+            return
+        }
         val food = item.foodId?.let { foodsById()[it] }
         val recipe = item.recipeId?.let { recipesById()[it] }
         if (food == null && recipe == null) return showMessage(UiStrings.food_book_missing)
@@ -495,6 +499,38 @@ class FoodManagementViewModel(
             foodId = food.id,
         )
     }
+
+    // ---- A line typed by hand: a name and estimated carbs, without a food (a home-made quiche) ----
+
+    fun openHandLine() = _uiState.update { it.copy(showHandLine = true, handLineKey = null, handLineName = "", handLineCarbs = "") }
+
+    fun updateHandLineName(v: String) = _uiState.update { it.copy(handLineName = v) }
+
+    fun updateHandLineCarbs(v: String) = _uiState.update { it.copy(handLineCarbs = v) }
+
+    fun dismissHandLine() = _uiState.update { it.copy(showHandLine = false, handLineKey = null) }
+
+    /**
+     * Adds the line typed by hand to the meal, or changes the line the dialog was opened from. It
+     * needs a name and carbs above 0. The carbs are the estimate of the user: they are marked as
+     * such in the meal, the history and the export.
+     */
+    fun confirmHandLine() {
+        val state = uiState.value
+        val name = state.handLineName.trim()
+        val carbs = MealMath.parseAmount(state.handLineCarbs) ?: return
+        if (name.isEmpty()) return
+        val key = state.handLineKey
+        val line = handLine(name, carbs, key ?: nextMealKey++)
+        _uiState.update { s ->
+            val items = if (key == null) s.mealItems + line else s.mealItems.map { if (it.key == key) line else it }
+            s.copy(showHandLine = false, handLineKey = null, mealItems = items)
+        }
+    }
+
+    /** Fat, protein and energy are not known for a line typed by hand, so the meal shows them as not known. */
+    private fun handLine(name: String, carbs: Double, key: Long = nextMealKey++) =
+        MealItem(key = key, name = name, quantity = 1.0, unit = "", carbs = carbs, estimated = true)
 
     fun removeMealItem(key: Long) = _uiState.update { s ->
         val items = s.mealItems.filterNot { it.key == key }
@@ -553,7 +589,8 @@ class FoodManagementViewModel(
 
     /** The lines of a dish or meal as meal lines, or null when one of them cannot be computed. */
     private fun linesOf(recipe: Recipe): List<MealItem>? = recipe.items.map { item ->
-        val line = item.foodId?.let { id -> foodsById()[id]?.let { foodLine(it, item.quantity) } }
+        val line = item.estimatedCarbs?.let { handLine(item.name, it) }
+            ?: item.foodId?.let { id -> foodsById()[id]?.let { foodLine(it, item.quantity) } }
             ?: item.recipeId?.let { id -> recipesById()[id]?.let { recipeLine(it, item.quantity) } }
         line ?: return null
     }
@@ -620,7 +657,9 @@ class FoodManagementViewModel(
     }
 
     private fun recipeItemsOf(items: List<MealItem>): List<RecipeItem> =
-        items.map { RecipeItem(name = it.name, quantity = it.quantity, unit = it.unit, foodId = it.foodId, recipeId = it.recipeId) }
+        items.map {
+            RecipeItem(name = it.name, quantity = it.quantity, unit = it.unit, foodId = it.foodId, recipeId = it.recipeId, estimatedCarbs = if (it.estimated) it.carbs else null)
+        }
 
     private fun nameUsed(name: String, kind: RecipeKind, except: String? = null): Boolean =
         uiState.value.recipes.any { it.kind == kind && it.id != except && it.name.equals(name, ignoreCase = true) }
@@ -688,7 +727,7 @@ class FoodManagementViewModel(
             name = name,
             note = note,
             wizardCarbs = carbs,
-            items = items.map { EatenItem(it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj) },
+            items = items.map { EatenItem(it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated) },
             target = target,
         )
         viewModelScope.launch { foodBook.addEatenMeal(meal) }
@@ -778,7 +817,7 @@ class FoodManagementViewModel(
                 rh.gs(
                     UiStrings.food_meal_note_item,
                     item.name,
-                    rh.gs(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
+                    if (item.estimated) rh.gs(UiStrings.food_meal_estimated) else rh.gs(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
                     rh.gs(InterfacesStrings.format_carbs, item.carbs.roundToInt())
                 )
             }
@@ -1047,6 +1086,12 @@ data class FoodManagementUiState(
     val treatmentLinks: Map<String, TreatmentLink> = emptyMap(),
     /** The line of the meal the quantity dialog changes, or null when the dialog adds a new line. */
     val quantityLineKey: Long? = null,
+    /** True while the dialog for a line typed by hand (name and estimated carbs) is open. */
+    val showHandLine: Boolean = false,
+    /** The hand-typed line the dialog changes, or null when the dialog adds a new line. */
+    val handLineKey: Long? = null,
+    val handLineName: String = "",
+    val handLineCarbs: String = "",
     /** The dish or meal being changed (pencil). While set, the meal lines are its lines. */
     val editing: Recipe? = null,
     val editName: String = "",

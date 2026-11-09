@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -297,6 +299,7 @@ internal fun MealBar(items: List<MealItem>, editingName: String?, onClick: () ->
  * Content of the meal bottom sheet: the foods, the total, and the way to the carbs dialog or the
  * wizard. A tap on a line changes its quantity.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun MealContent(
     items: List<MealItem>,
@@ -305,6 +308,7 @@ internal fun MealContent(
     onRemove: (Long) -> Unit,
     onClear: () -> Unit,
     onAddFood: () -> Unit,
+    onAddByHand: () -> Unit,
     onSave: () -> Unit,
     onCarbs: () -> Unit,
     onCalculate: () -> Unit,
@@ -328,8 +332,10 @@ internal fun MealContent(
             fontWeight = FontWeight.Bold
         )
         OffNotice(text = stringResource(UiStrings.food_meal_check))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        // Wraps to two lines on a narrow screen instead of squeezing the buttons.
+        FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             TextButton(onClick = onAddFood) { Text(stringResource(UiStrings.food_book_add_food)) }
+            TextButton(onClick = onAddByHand) { Text(stringResource(UiStrings.food_meal_add_by_hand)) }
             TextButton(onClick = onSave) { Text(stringResource(CoreUiStrings.save)) }
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -340,6 +346,55 @@ internal fun MealContent(
             }
         }
     }
+}
+
+/**
+ * Adds or changes a line typed by hand: a name and the carbs the user estimated, for something that
+ * is not in the food list (a home-made quiche). The line is marked as estimated everywhere.
+ */
+@Composable
+internal fun HandLineDialog(
+    state: FoodManagementUiState,
+    onNameChange: (String) -> Unit,
+    onCarbsChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    if (!state.showHandLine) return
+    val carbs = MealMath.parseAmount(state.handLineCarbs)
+    val valid = carbs != null && state.handLineName.isNotBlank()
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(UiStrings.food_meal_by_hand_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                OutlinedTextField(
+                    value = state.handLineName,
+                    onValueChange = onNameChange,
+                    label = { Text(stringResource(CoreUiStrings.name)) },
+                    singleLine = true,
+                    isError = state.handLineName.isBlank(),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                )
+                OutlinedTextField(
+                    value = state.handLineCarbs,
+                    onValueChange = onCarbsChange,
+                    label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
+                    singleLine = true,
+                    isError = carbs == null,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { if (valid) onConfirm() })
+                )
+                OffNotice(text = stringResource(UiStrings.food_meal_by_hand_hint))
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm, enabled = valid) {
+                Text(stringResource(if (state.handLineKey != null) CoreUiStrings.ok else UiStrings.food_meal_add))
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
 }
 
 /** A text button with the icon and the colour this action has everywhere in the app. */

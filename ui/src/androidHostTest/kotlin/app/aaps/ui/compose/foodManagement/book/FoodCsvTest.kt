@@ -86,6 +86,15 @@ internal class FoodCsvTest {
     }
 
     @Test
+    fun `a line typed by hand has no quantity and says it is estimated`() {
+        val quiche = EatenItem("Quiche", quantity = 1.0, unit = "", carbs = 35.0, fat = null, protein = null, energyKj = null, estimated = true)
+        val lines = sut.history(listOf(meal("m", validatedAt = 3000L, quiche)), emptyMap()).trimEnd().lines()
+
+        // Name, then an empty quantity, then the "estimated" text where the unit is.
+        assertThat(lines[1]).contains("\"Quiche\";;\"H\";35.0;")
+    }
+
+    @Test
     fun `text with quotes and new lines stays in one cell`() {
         assertThat(FoodCsv.text("Pain \"maison\"\nbio")).isEqualTo("\"Pain \"\"maison\"\" / bio\"")
         assertThat(FoodCsv.text("")).isEmpty()

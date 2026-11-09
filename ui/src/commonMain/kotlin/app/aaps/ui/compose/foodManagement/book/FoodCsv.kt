@@ -9,6 +9,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.Inject
+import kotlin.math.roundToInt
 
 /**
  * The food data as two CSV files, for a spreadsheet: the meals eaten, and the foods, dishes and
@@ -63,7 +64,9 @@ class FoodCsv(
                     val first = index == 0
                     listOf(
                         dateUtil.dateString(time), dateUtil.timeString(time), text(meal.name.orEmpty()), text(enteredWith(meal.target)),
-                        text(item.name), number(item.quantity), text(item.unit), number(item.carbs), number(item.fat),
+                        // A line typed by hand has no quantity: its unit column says the carbs are an estimate.
+                        text(item.name), if (item.estimated) "" else number(item.quantity),
+                        text(if (item.estimated) rh.gs(UiStrings.food_meal_estimated) else item.unit), number(item.carbs), number(item.fat),
                         number(item.protein), number(item.energyKj),
                         if (first) number(link?.carbs) else "",
                         if (first) given[meal.id]?.let { decimalFormatter.to2Decimal(it) }.orEmpty() else ""
@@ -108,7 +111,11 @@ class FoodCsv(
     /** "Bread 80 g, Milk 250 ml", with the same texts as the screen. */
     private fun contentsOf(recipe: Recipe): String =
         recipe.items
-            .map { item -> rh.gs(UiStrings.food_book_item, item.name, rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to1Decimal(item.quantity), item.unit)) }
+            .map { item ->
+                val amount = item.estimatedCarbs?.let { rh.gs(UiStrings.food_book_estimated_item, rh.gs(InterfacesStrings.format_carbs, it.roundToInt())) }
+                    ?: rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to1Decimal(item.quantity), item.unit)
+                rh.gs(UiStrings.food_book_item, item.name, amount)
+            }
             .reduceOrNull { acc, next -> rh.gs(UiStrings.food_meal_note_join, acc, next) }
             .orEmpty()
 

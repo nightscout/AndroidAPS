@@ -58,12 +58,14 @@ data class Recipe(
 )
 
 /**
- * One line of a dish or a meal: a food, or another dish.
+ * One line of a dish or a meal: a food, another dish, or a line typed by hand.
  *
  * @param name kept so the line can still be shown when its food or dish has been deleted
  * @param quantity for a food, in the unit of the food (g, ml, pot...). For a dish, in servings: 1 is
  *   the whole dish.
  * @param unit shown with the quantity
+ * @param estimatedCarbs set only for a line typed by hand ("home-made quiche"): the carbs the user
+ *   estimated. Such a line has no food and no dish, and its fat, protein and energy are not known.
  */
 @Serializable
 data class RecipeItem(
@@ -72,6 +74,7 @@ data class RecipeItem(
     val unit: String,
     val foodId: Long? = null,
     val recipeId: String? = null,
+    val estimatedCarbs: Double? = null,
 )
 
 /** Where a meal was sent from the food screen. */
@@ -113,6 +116,7 @@ data class EatenMeal(
     val treatmentId: Long? = null,
 )
 
+/** @param estimated true for a line typed by hand: its carbs are the estimate of the user. */
 @Serializable
 data class EatenItem(
     val name: String,
@@ -122,6 +126,7 @@ data class EatenItem(
     val fat: Double?,
     val protein: Double?,
     val energyKj: Double?,
+    val estimated: Boolean = false,
 )
 
 /**
@@ -273,6 +278,7 @@ internal object FoodBookMath {
     }
 
     private fun nutritionOf(item: RecipeItem, foods: Map<Long, FD>, recipes: Map<String, Recipe>, visiting: List<String>): Nutrition? {
+        item.estimatedCarbs?.let { return Nutrition(carbs = it, fat = null, protein = null, energyKj = null) }
         item.foodId?.let { id -> return foods[id]?.let { nutritionOf(it, item.quantity) } }
         item.recipeId?.let { id -> return recipes[id]?.let { recipe -> nutritionOf(recipe, foods, recipes, visiting)?.times(item.quantity) } }
         return null

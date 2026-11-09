@@ -348,6 +348,78 @@ internal class FoodManagementViewModelTest {
         assertThat(state.confirmedMeals).isEmpty()
     }
 
+    // ---- A line typed by hand (home-made quiche) ----
+
+    @Test
+    fun `a line typed by hand is added to the meal total as estimated`() {
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+
+        sut.openHandLine()
+        assertThat(sut.uiState.value.showHandLine).isTrue()
+        sut.updateHandLineName(" Home-made quiche ")
+        sut.updateHandLineCarbs("35,5")
+        sut.confirmHandLine()
+
+        val state = sut.uiState.value
+        assertThat(state.showHandLine).isFalse()
+        val line = state.mealItems.last()
+        assertThat(line.name).isEqualTo("Home-made quiche")
+        assertThat(line.carbs).isEqualTo(35.5)
+        assertThat(line.estimated).isTrue()
+        assertThat(line.foodId).isNull()
+        assertThat(line.fat).isNull() // not known, so the meal fat is shown as not known
+        assertThat(MealMath.wizardCarbs(state.mealItems)).isEqualTo(76) // 40 + 35.5, rounded once
+    }
+
+    @Test
+    fun `a line typed by hand needs a name and carbs above zero`() {
+        sut.openHandLine()
+        sut.updateHandLineCarbs("30")
+        sut.confirmHandLine()
+        assertThat(sut.uiState.value.mealItems).isEmpty() // no name
+
+        sut.updateHandLineName("Quiche")
+        sut.updateHandLineCarbs("0")
+        sut.confirmHandLine()
+        assertThat(sut.uiState.value.mealItems).isEmpty()
+        assertThat(sut.uiState.value.showHandLine).isTrue()
+    }
+
+    @Test
+    fun `tapping a line typed by hand changes it in place`() {
+        sut.openHandLine(); sut.updateHandLineName("Quiche"); sut.updateHandLineCarbs("30"); sut.confirmHandLine()
+        sut.askQuantity(bread); sut.confirmQuantity()
+        val key = sut.uiState.value.mealItems.first().key
+
+        sut.editLine(key)
+        assertThat(sut.uiState.value.handLineName).isEqualTo("Quiche")
+        assertThat(sut.uiState.value.handLineCarbs).isEqualTo("30")
+        sut.updateHandLineCarbs("45")
+        sut.confirmHandLine()
+
+        val items = sut.uiState.value.mealItems
+        assertThat(items).hasSize(2)
+        assertThat(items.first().key).isEqualTo(key)
+        assertThat(items.first().carbs).isEqualTo(45.0)
+        assertThat(sut.uiState.value.handLineKey).isNull()
+    }
+
+    @Test
+    fun `a line typed by hand is kept in a saved meal and comes back from it`() {
+        sut.openHandLine(); sut.updateHandLineName("Quiche"); sut.updateHandLineCarbs("30"); sut.confirmHandLine()
+        sut.openSave(); sut.updateSaveName("Lunch"); sut.confirmSave()
+
+        val saved = sut.uiState.value.mealSource!!
+        assertThat(saved.items.single().estimatedCarbs).isEqualTo(30.0)
+        assertThat(sut.nutritionOf(saved)!!.carbs).isEqualTo(30.0)
+
+        sut.clearMeal()
+        sut.addRecipeLines(saved)
+        val line = sut.uiState.value.mealItems.single()
+        assertThat(line.estimated).isTrue()
+        assertThat(line.carbs).isEqualTo(30.0)
+    }
+
     // ---- Delete with a long press, categories, unit ----
 
     /** A screen on [book], with [foods] in the database. Runs the start of the screen. */

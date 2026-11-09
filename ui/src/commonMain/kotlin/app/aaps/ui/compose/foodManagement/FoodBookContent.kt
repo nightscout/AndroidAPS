@@ -145,7 +145,11 @@ internal fun RecipeList(
                 CardTexts(
                     name = recipe.name,
                     detail = joinLines(recipe.items.map { item ->
-                        stringResource(UiStrings.food_book_item, item.name, stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit))
+                        val estimated = item.estimatedCarbs
+                        val amount =
+                            if (estimated != null) stringResource(UiStrings.food_book_estimated_item, stringResource(InterfacesStrings.format_carbs, estimated.roundToInt()))
+                            else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit)
+                        stringResource(UiStrings.food_book_item, item.name, amount)
                     }),
                     detailLines = 2,
                 )
@@ -344,7 +348,8 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long
                     text = stringResource(
                         UiStrings.food_meal_note_item,
                         item.name,
-                        stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
+                        if (item.estimated) stringResource(UiStrings.food_meal_estimated)
+                        else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
                         stringResource(InterfacesStrings.format_carbs, item.carbs.roundToInt())
                     ),
                     style = MaterialTheme.typography.bodySmall
@@ -392,7 +397,10 @@ private fun EmptyText(text: String) {
     }
 }
 
-/** One line of the meal or of the dish being changed. A tap changes its quantity. */
+/**
+ * One line of the meal or of the dish being changed. A tap changes its quantity, or for a line typed
+ * by hand its name and carbs.
+ */
 @Composable
 internal fun MealLine(item: MealItem, onEdit: () -> Unit, onRemove: () -> Unit) {
     Row(
@@ -404,9 +412,10 @@ internal fun MealLine(item: MealItem, onEdit: () -> Unit, onRemove: () -> Unit) 
         Column(modifier = Modifier.weight(1f)) {
             Text(text = item.name, style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
+                text = if (item.estimated) stringResource(UiStrings.food_meal_estimated)
+                else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = if (item.estimated) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
             )
         }
         Text(
@@ -433,6 +442,7 @@ internal fun RecipeEditContent(
     onEditLine: (Long) -> Unit,
     onRemove: (Long) -> Unit,
     onAddFood: () -> Unit,
+    onAddByHand: () -> Unit,
     onCancel: () -> Unit,
     onSave: () -> Unit,
 ) {
@@ -471,9 +481,11 @@ internal fun RecipeEditContent(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
             TextButton(onClick = onAddFood) { Text(stringResource(UiStrings.food_book_add_food)) }
-            Box(modifier = Modifier.weight(1f))
+            TextButton(onClick = onAddByHand) { Text(stringResource(UiStrings.food_meal_add_by_hand)) }
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             TextButton(onClick = onCancel) { Text(stringResource(CoreUiStrings.cancel)) }
             TextButton(onClick = onSave, enabled = name.isNotBlank() && items.isNotEmpty()) { Text(stringResource(CoreUiStrings.save)) }
         }

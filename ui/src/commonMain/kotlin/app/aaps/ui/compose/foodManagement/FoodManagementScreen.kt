@@ -368,6 +368,7 @@ fun FoodManagementScreen(
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
                         onAddFood = { viewModel.closeMeal(); viewModel.selectTab(FoodTab.FOODS) },
+                        onAddByHand = viewModel::openHandLine,
                         onCancel = viewModel::cancelEdit,
                         onSave = viewModel::saveEdit,
                     )
@@ -379,6 +380,7 @@ fun FoodManagementScreen(
                         onRemove = viewModel::removeMealItem,
                         onClear = viewModel::clearMeal,
                         onAddFood = { viewModel.closeMeal(); viewModel.selectTab(FoodTab.FOODS) },
+                        onAddByHand = viewModel::openHandLine,
                         onSave = viewModel::openSave,
                         onCarbs = { go(MealTarget.CARBS, viewModel.send(MealTarget.CARBS)) },
                         onCalculate = { go(MealTarget.WIZARD, viewModel.send(MealTarget.WIZARD)) },
@@ -393,6 +395,14 @@ fun FoodManagementScreen(
             onKindChange = viewModel::updateSaveKind,
             onConfirm = viewModel::confirmSave,
             onDismiss = viewModel::dismissSave,
+        )
+
+        HandLineDialog(
+            state = state,
+            onNameChange = viewModel::updateHandLineName,
+            onCarbsChange = viewModel::updateHandLineCarbs,
+            onConfirm = viewModel::confirmHandLine,
+            onDismiss = viewModel::dismissHandLine,
         )
 
         QuantityDialog(
