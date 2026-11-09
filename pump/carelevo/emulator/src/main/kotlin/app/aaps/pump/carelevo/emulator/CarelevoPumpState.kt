@@ -50,7 +50,10 @@ class CarelevoPumpState : Serializable {
 
     // ---- Lifecycle --------------------------------------------------------------------------
 
-    /** A real patch reports 0 after the safety check and while it gives basal (seen 2026-11-09). 2 was never seen. */
+    /**
+     * A real patch reports 0 after the safety check and while it gives basal or a temp basal, and 1 during a bolus
+     * (seen 2026-11-09). 2 was never seen.
+     */
     var pumpStateRaw: Int = 0
     var modeRaw: Int = 1
     var subId: Int = 0
