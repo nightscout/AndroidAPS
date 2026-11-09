@@ -188,6 +188,31 @@ class EquilManager(
     /** Whether the pump runs a temp basal now, or null when it does not answer. */
     private fun tempBasalRunsOnPump(): Boolean? = getTempBasalPump().takeIf { it.success }?.enacted
 
+    /**
+     * Ends the temp basal that AAPS keeps when the pump runs none. A cancel whose answer is lost, and then a lost read
+     * of what the pump runs, leave AAPS with a temp basal the pump has ended, and nothing else corrects it. The pump is
+     * read only while AAPS has a temp basal. A suspend is a PUMP_SUSPEND record that the run mode ends, so it is left
+     * alone. Found by the pump scenario tests.
+     */
+    suspend fun endTempBasalThePumpDoesNotRun() {
+        val tempBasal = pumpSync.expectedPumpState().temporaryBasal ?: return
+        if (tempBasal.type == PumpSync.TemporaryBasalType.PUMP_SUSPEND) return
+        endTempBasalWhenThePumpRunsNone(tempBasalRunsOnPump(), tempBasal.timestamp)
+    }
+
+    /**
+     * @param runsOnPump what the pump said, null when it did not answer: then nothing is decided
+     * @param since when the temp basal of AAPS started, for the log
+     */
+    internal suspend fun endTempBasalWhenThePumpRunsNone(runsOnPump: Boolean?, since: Long) {
+        if (runsOnPump != false) return
+        // The pump gives no end time, so the temp basal ends at this read.
+        val now = dateUtil.now()
+        if (!pumpSync.syncStopTemporaryBasalWithPumpId(now, now, PumpType.EQUIL, getSerialNumber())) return
+        setTempBasal(null)
+        aapsLogger.warn(LTag.PUMPCOMM, "Status: the pump runs no temp basal, but AAPS had one since ${dateUtil.dateAndTimeString(since)}. Ended it now.")
+    }
+
     suspend fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider()
         try {
