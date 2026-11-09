@@ -271,7 +271,9 @@ abstract class AbstractPumpScenarioTest {
 
     /**
      * The pump ends the temp basal, its answer is lost, and so is the answer to the status read that checks it. The
-     * driver cannot know then, so AAPS may keep the temp basal. The next status read must correct it.
+     * driver cannot know then, so AAPS may keep the temp basal. The next status read that gets an answer must correct it.
+     * A driver that checks in another way (Dana RS reads its history) leaves the lost status answer to the first read
+     * here, so there are two.
      */
     @Test
     fun aTempBasalCancelWhoseCheckIsLostTooIsKnownAfterAStatusRead() {
@@ -283,6 +285,7 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.STATUS)).isTrue()
         scenario.cancelTempBasal()
         assertWithMessage("the pump ended the temp basal").that(scenario.control.state().tempBasal).isNull()
+        scenario.readStatus()
         scenario.readStatus()
         scenario.checkTempBasal()
     }
