@@ -211,5 +211,7 @@
     <string name="carelevo_profile_update_skip_comment">Đã bỏ qua: chưa đến thời điểm cập nhật.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Miếng dán chưa xác nhận việc dừng. Đang chờ liều bolus kết thúc…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Đã bổ sung một liều bolus chưa được ghi nhận. Hãy kiểm tra IOB rồi thử lại.</string>
+    <string name="carelevo_bolus_outcome_unknown">Miếng dán chưa phản hồi về liều bolus. Toàn bộ liều bolus vẫn được tính là đã phân phối cho đến khi miếng dán xác nhận lượng insulin thực tế đã phân phối.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Miếng dán chưa xác nhận việc dừng. Toàn bộ liều bolus %1$s đã được ghi nhận.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Miếng dán đã dừng phân phối liều bolus. Lượng đã phân phối: %1$s trên tổng số %2$s</string>
 </resources>
