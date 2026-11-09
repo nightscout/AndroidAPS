@@ -616,7 +616,7 @@ private val VERSION_LABEL_LIFT: Dp = 6.dp
 /**
  * [QuickLaunchToolbar] with support for temp basal like in Manage tile:
  * it opens the dialog, or cancels the running temp basal,
- * or is disabled when the Manage sheet would hide the tile.
+ * or is hidden when the Manage sheet would hide the tile.
  */
 @Composable
 private fun QuickLaunchToolbarWithTempBasal(
@@ -643,11 +643,11 @@ private fun QuickLaunchToolbarWithTempBasal(
         when {
             manageState.showCancelTempBasal -> item.copy(icon = IcTbrCancel, label = manageState.cancelTempBasalText, description = null)
             manageState.showTempBasal       -> item
-            else                            -> item.copy(enabled = false)
+            else                            -> null // hidden, same as the Manage tile
         }
     }
     QuickLaunchToolbar(
-        items = items.toMutableList().apply { set(index, tempBasalItem) },
+        items = items.toMutableList().apply { if (tempBasalItem != null) set(index, tempBasalItem) else removeAt(index) },
         onActionClick = { action ->
             if (action == QuickLaunchAction.TempBasal && manageState.showCancelTempBasal) manageViewModel.cancelTempBasal()
             else onActionClick(action)
