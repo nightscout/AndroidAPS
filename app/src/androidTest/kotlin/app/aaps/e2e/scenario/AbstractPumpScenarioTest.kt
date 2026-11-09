@@ -343,7 +343,8 @@ abstract class AbstractPumpScenarioTest {
         scenario.pair()
         val raisedAt = System.currentTimeMillis()
         assertWithMessage("the pump raises $alarm").that(scenario.control.raise(alarm)).isTrue()
-        scenario.readStatus()
+        // AAPS learns of it at the latest at its next connection to the pump.
+        scenario.readStatusOnNewLink()
         scenario.checkUrgentAlarmSince(raisedAt)
     }
 

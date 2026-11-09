@@ -231,7 +231,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
         }
         checkNotNull(switch) { "The profile switch to $percentage % was refused" }
         testGraphs.rxBus.send(EventProfileChangeRequested())
-        awaitTrue("AAPS runs the profile at $percentage %") { runBlocking { testGraphs.profileFunction.getProfile() }?.percentage == percentage }
+        // Once the pump has it, AAPS runs it: the running profile has the basal at that percentage. Its `percentage` is
+        // not the sign, the switch AAPS runs then has the values with the percentage already in them.
+        val basal = BASAL_RATE * percentage / PERCENT
+        awaitTrue("AAPS runs the profile at $percentage %, a basal of $basal U/h") {
+            runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
+        }
         awaitQueueIdle()
     }
 
@@ -331,6 +336,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
+
+    /**
+     * A status read on a new connection, as AAPS makes one after the link was closed for a while. Some drivers learn what
+     * happened on the pump only then: Equil reads the pump's advertisement (battery, newest log entry) at a connect, and
+     * Carelevo the patch's alarm snapshot. A status read can queue more reads of its own (Equil reads its log after it),
+     * so it waits for those too.
+     */
+    fun readStatusOnNewLink() {
+        checkLinkClosed()
+        readStatus()
+        awaitQueueIdle()
+    }
 
     /**
      * The queue gives up on a link after [SHORT_CONNECTION_LIMIT_S] instead of about two minutes: the same path, a
@@ -435,8 +452,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
      * A driver that reads a value in the wrong unit or scale shows here. Values the emulator cannot tell are not checked.
      */
     fun checkStatusShown() {
-        // A status read can queue more reads of its own (Equil reads its log, where the battery is, after it).
-        awaitQueueIdle()
+        readStatusOnNewLink()
         val state = control.state()
         val driver = testGraphs.activePlugin.activePumpInternal
         state.reservoir?.let { onPump ->
@@ -611,6 +627,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         private const val BASAL_TOLERANCE = 0.0125
         private const val HOURS_PER_DAY = 24
         private const val SECONDS_PER_HOUR = 3600
+        private const val PERCENT = 100.0
         private const val MS_PER_MINUTE = 60_000L
     }
 }
