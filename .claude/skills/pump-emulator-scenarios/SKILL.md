@@ -47,6 +47,12 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
    `testGraphs.viewModelFactory`, or through its queue commands), how to unpair, how to restore a saved emulator.
 4. A test class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` that returns the adapter. Add the source dir to
    `pumpTestSources` in `app/build.gradle.kts`.
+5. The real radio code: the emulator replaces the transport, so the scenarios never run it. A unit test
+   `<Pump>BleTransportContractTest : BleTransportContract()` (`:shared:tests`, package `app.aaps.shared.tests.ble`)
+   runs it on Robolectric's Bluetooth: say how to build the transport and give the pump's service and characteristics.
+   The module needs `testImplementation(project(":shared:tests"))`, `testImplementation(libs.org.robolectric)` and
+   `testRuntimeOnly(libs.org.junit.vintage.engine)`. A transport that reports through its own callback sets
+   `reportsThroughListener = false`, and only the shared part runs.
 
 ## Running
 

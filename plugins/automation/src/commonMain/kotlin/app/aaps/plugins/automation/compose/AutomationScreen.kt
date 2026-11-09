@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
@@ -126,12 +127,17 @@ private fun EmptyState(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = stringResource(AutomationStrings.automation),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
         )
+        // `horizontalAlignment` above centres each Text as a block, which is not the same as centring
+        // the text inside it. This one wraps on a phone, and every line after the first then sat
+        // against the left edge of the block, under a centred heading.
         Text(
             text = stringResource(AutomationStrings.automation_empty_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = AapsSpacing.medium)
         )
     }
