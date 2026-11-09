@@ -10,7 +10,11 @@ import kotlin.math.abs
  *
  * Seen on a real pump (2026-11-08): a bolus logs a status entry (4,0,0) with its speed as largeRate when it starts, and
  * one with largeRate 0 when it ends or is stopped, in whole seconds of the pump clock. An empty reservoir, an empty
- * battery, "abnormal infusion stopped" and a blockage end it without that entry.
+ * battery and "abnormal infusion stopped" stop all delivery, so they end it too, without that entry.
+ *
+ * A blockage does not end it: how a real pump goes on after a blockage during a bolus was never seen, and it cannot be
+ * made on a real pump. If the bolus went on, its end entry comes later, and taking the blockage as the end would count
+ * less than was given. With a blockage and no end entry, the whole amount stays.
  *
  * In memory only: after an app restart the whole amount stays, which never counts less than was given.
  */
@@ -56,8 +60,7 @@ internal class UncertainBolus(
             // UNVERIFIED: a status entry during a bolus, for a basal change, keeps the bolus speed. It is no new bolus.
             status && largeRate > 0 -> if (open == null) logged += Logged(start = time)
             open == null            -> {}
-            status || PumpEvent.stopsDelivery(port, type, level) || port == PORT_STATUS && type == TYPE_BLOCKAGE && level == LEVEL_ALARM ->
-                open.end = time
+            status || PumpEvent.stopsDelivery(port, type, level) -> open.end = time
         }
     }
 
@@ -78,8 +81,6 @@ internal class UncertainBolus(
 
         private const val PORT_STATUS = 4
         private const val TYPE_STATUS = 0
-        private const val TYPE_BLOCKAGE = 2
-        private const val LEVEL_ALARM = 2
 
         /** [index] was written after [before], also when the count started again at 1 in between. */
         fun isAfter(index: Int, before: Int): Boolean {

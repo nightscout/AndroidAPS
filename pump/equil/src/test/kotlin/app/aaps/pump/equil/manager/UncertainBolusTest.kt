@@ -55,16 +55,21 @@ class UncertainBolusTest {
     }
 
     @Test
-    fun `a blockage and an empty reservoir end it without a status entry`() {
-        val blocked = bolus()
-        blocked.onLogEntry(1501, 4, 0, 0, 14400, sent)
-        blocked.onLogEntry(1502, 4, 2, 2, 0, sent + 30_000)
-        assertEquals(sent + 30_000, blocked.inLog()?.end)
-
+    fun `an empty reservoir ends it without a status entry`() {
         val empty = bolus()
         empty.onLogEntry(1501, 4, 0, 0, 14400, sent)
         empty.onLogEntry(1502, 4, 1, 2, 0, sent + 50_000)
         assertEquals(sent + 50_000, empty.inLog()?.end)
+    }
+
+    @Test
+    fun `a blockage does not end it but its end entry does`() {
+        val blocked = bolus()
+        blocked.onLogEntry(1501, 4, 0, 0, 14400, sent)
+        blocked.onLogEntry(1502, 4, 2, 2, 0, sent + 30_000)
+        assertNull(blocked.inLog()?.end)
+        blocked.onLogEntry(1503, 4, 0, 0, 0, sent + 80_000)
+        assertEquals(sent + 80_000, blocked.inLog()?.end)
     }
 
     @Test
