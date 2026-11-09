@@ -146,7 +146,12 @@ class EmulatorBleTransport(
         when (encryptionType) {
             EncryptionType.ENCRYPTION_DEFAULT -> pumpState.hwModel = 0x05 // Dana RS
             EncryptionType.ENCRYPTION_RSv3    -> pumpState.hwModel = 0x05 // Dana RS (RSv3)
-            EncryptionType.ENCRYPTION_BLE5    -> pumpState.hwModel = 0x09 // Dana-i (BLE5)
+            EncryptionType.ENCRYPTION_BLE5    -> {
+                pumpState.hwModel = 0x09 // Dana-i (BLE5)
+                // Seen on a real Dana-i (2026-11-09): its history comes in the UTC format from the start. The driver
+                // reads it so for every model from 7. Before, only a time set in UTC switched the emulator over.
+                pumpState.usingUTC = true
+            }
         }
         // productCode >= 2 required to avoid UNSUPPORTED_FIRMWARE notification
         pumpState.productCode = 2
