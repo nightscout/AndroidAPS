@@ -4,11 +4,30 @@ import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 class UtilsTest : TestBase() {
+
+    /** The old (u / 0.05 * 8).toInt() lost a step for 134 of these 400 amounts, 0.6 U among them. */
+    @Test
+    fun `unitsToSteps keeps every step of an amount on the 0_05 grid`() {
+        for (i in 1..400) assertEquals(i * 8, Utils.unitsToSteps(i * 0.05), "${i * 0.05} U")
+        assertEquals(96, Utils.unitsToSteps(0.6))
+        assertEquals(192, Utils.unitsToSteps(1.2))
+    }
+
+    @Test
+    fun `unitsToSteps never gives more than was asked`() {
+        for (i in 0..3000) {
+            val units = i * 0.0013
+            assertTrue(Utils.unitsToSteps(units) * 0.00625 <= units + 1e-9, "$units U")
+        }
+        assertEquals(19, Utils.unitsToSteps(0.123))
+        assertEquals(0, Utils.unitsToSteps(0.0))
+    }
 
     @Test
     fun `generateRandomPassword should create password of correct length`() {

@@ -26,10 +26,17 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
 - Each hook copies something seen on a real pump. Mark a guess `UNVERIFIED`, with what is guessed.
 - A hook the pump cannot do returns false (or null for `saveState`). The scenario then fails with that, so a missing
   hook never looks like a passed test.
+- A case no real pump has shown, and that cannot be made on one to look, is not guessed when a scenario judges the
+  driver by it: a wrong guess would show as a driver bug. The hook returns false, says why in its KDoc, and the pump's
+  test class skips that scenario with an `@Ignore("<why>")` override (the shared scenario is `open` for that). Example:
+  a blockage during an Equil bolus.
 - Speed: shorter actions (`EmulatorSpeed.FAST`), never a faster clock. The pump clock is the phone clock, or the
   history has times no real pump gives. Things that wait for a time, as the end of a temp basal, are raised as events.
 - The emulator object lives in `PumpEmulators`, a graph input, not in the graph. Bind it with
   `pumpEmulators.getOrCreate(<its key>) { ... }`.
+- A scanner hands out only what the pump advertises now, as the real one does. A `SharedFlow` with `replay` kept an old
+  advertisement for new listeners: Equil's wizard paired with a serial the pump no longer had, and the driver read an
+  old log index. Advertise again and again while a scan runs instead, until `stopScan`.
 
 ## Adding a pump
 
@@ -71,15 +78,36 @@ CircleCI shard D (fourth emulator, `.circleci/config.yml`) runs `-e annotation a
 the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@Inherited` and set on
 `AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
 
+The pump UI tests (`AbstractPumpUiTest`, one `PumpScreens` per pump) have no shard annotation, so they run in shard C.
+CI makes its AVDs without a device, which gives the emulator default screen: **320 x 640 at 160 dpi**, on API 31. A
+test that passes on a phone-sized emulator can fail there: Compose does not lay out what is below the screen, so
+uiautomator cannot find it. `ScreenDriver` scrolls for a text to tap. To run a test on the same screen, make the AVD as
+CI does (on Windows through `cmd`: PowerShell puts a byte-order mark before the answer, which avdmanager refuses):
+
+```
+cmd /c "echo no| <sdk>\cmdline-tools\latest\bin\avdmanager.bat create avd -n citest_local -k system-images;android-31;google_apis_playstore;x86_64"
+```
+
+Shard C's logcat can rotate before CI reads it, so the UI base adds the screen to the error, which the test output keeps.
+
 ## Traps
 
 - `activePlugin.activePump` is the concentration wrapper. Compare the driver with `activePumpInternal`.
+- Only `MasterActionExecutor` raises the BOLUS_DELIVERY_FAILED alarm, when the queue reports a bolus as not given. A
+  bolus straight through the queue (`bolus`, `startBolus`) never alarms, so a check of that alarm needs `userBolus`,
+  the insulin dialog's path. A bolus the pump cut short must come back as not given, or the user hears nothing.
 - The queue drops every command while `isConfigured()` is false, also a profile switch. A wizard that needs the
   profile before pairing takes the requested one, `PumpSync.expectedPumpState().profile`, as Equil does.
 - `getBolusesFromTime(..., ascending = true)` returns the newest first. Sort by timestamp.
 - An Android service of a driver is made once for the process, but each test has a new graph. Left bound, the next
   test's plugin binds the old service, whose objects belong to the old graph: its link runs there and the wizard waits
   for ever. `tearDown` therefore stops the driver as a real stop does and waits until its services are gone.
+- `commandQueue.clear()` leaves the running command running. A driver stopped under it connects again for it and
+  writes its pump into the settings, which the next test has already cleared: that test starts as paired, and its
+  pairing hung. `tearDown` waits for the queue before it stops the driver.
+- `RetryRule` runs a test once more after a timeout, never after a wrong result (an `AssertionError`). A flake shows
+  only in the log: grep the logcat for `RetryRule: `. So a scenario check reports a wrong result with an assertion,
+  not with `check`/`checkNotNull`, which throw `IllegalStateException` and would be retried.
 - The queue drops a status read while another one waits or runs, and reports it as failed. A driver start queues one,
   and during a bolus it waits for the bolus end. The `readStatus` step waits for that one first.
 - A driver that keeps no pump state is ready (`isInitialized()`) only after its first status read, as at an app start.

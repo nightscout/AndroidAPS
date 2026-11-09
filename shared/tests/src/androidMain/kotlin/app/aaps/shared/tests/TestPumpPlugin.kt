@@ -45,7 +45,14 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override fun isInitialized(): Boolean = true
     override fun isSuspended(): Boolean = pumpSuspended
     override fun isBusy(): Boolean = false
+    /** How often the queue asked to connect. */
+    var connectCalls = 0
+
+    /** How long the queue keeps the link after its last command, see [waitForDisconnectionInSeconds]. */
+    var lingerSeconds = 0
+
     override fun connect(reason: String) {
+        connectCalls++
         connected = true
     }
 
@@ -57,7 +64,7 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
         connected = false
     }
 
-    override fun waitForDisconnectionInSeconds(): Int = 0
+    override fun waitForDisconnectionInSeconds(): Int = lingerSeconds
     override suspend fun getPumpStatus(reason: String) { /* not needed */
     }
 

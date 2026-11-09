@@ -56,12 +56,13 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
         scenario.checkNoBurst()
 
-        assertWithMessage("bolus").that(scenario.bolus(BOLUS).success).isTrue()
+        assertWithMessage("bolus").that(scenario.userBolus(BOLUS)).isTrue()
         scenario.checkBolusRecords()
         scenario.checkNoAlarm()
         scenario.checkLinkClosed()
 
-        scenario.stoppedBolus(STOPPED_BOLUS, stopAfter = STOP_AFTER)
+        // A stop by the user is no delivery failure: no alarm.
+        assertWithMessage("bolus the user stops").that(scenario.stoppedBolus(STOPPED_BOLUS, stopAfter = STOP_AFTER)).isTrue()
         scenario.checkBolusRecords()
         scenario.checkNoAlarm()
 
@@ -69,6 +70,14 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
         assertWithMessage("cancel temp basal").that(scenario.cancelTempBasal().success).isTrue()
         scenario.checkTempBasal()
+
+        if (scenario.canGiveExtendedBolus) {
+            assertWithMessage("extended bolus").that(scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES).success).isTrue()
+            scenario.checkExtendedBolus()
+            assertWithMessage("cancel extended bolus").that(scenario.cancelExtendedBolus().success).isTrue()
+            scenario.checkExtendedBolus()
+        }
+        if (scenario.canReadTdds) assertWithMessage("daily totals").that(scenario.readTdds().success).isTrue()
 
         scenario.unpair()
     }
@@ -104,6 +113,30 @@ abstract class AbstractPumpScenarioTest {
     }
 
     /**
+     * The pump stops a bolus on its own, as at an occlusion. AAPS must count what the pump gave, once, and must tell the
+     * user that the bolus was not given in full: the bolus is not reported as given, and the alarm rings.
+     *
+     * Open, so a pump whose emulator cannot copy this from a real pump skips it with the reason: an `@Ignore` override.
+     * A guessed emulator would make a wrong guess look like a driver bug.
+     */
+    @Test
+    open fun aBolusThePumpStopsCountsWhatItGave() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.stopNextBolusAt(PUMP_STOPS_AT)).isTrue()
+
+        val wentThrough = scenario.userBolus(STOPPED_BOLUS)
+        scenario.readStatus()
+
+        val given = scenario.control.state().boluses
+        assertWithMessage("the pump gave one bolus").that(given).hasSize(1)
+        assertWithMessage("the pump stopped it early").that(given.single()).isLessThan(STOPPED_BOLUS)
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
+        assertWithMessage("the bolus is reported as given").that(wentThrough).isFalse()
+        scenario.checkAlarm()
+    }
+
+    /**
      * The driver stopped and started between commands, as a settings import does it. After its start it must hold the
      * same pump: a driver's start loads everything again, and its stop drops everything.
      */
@@ -125,6 +158,121 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("bolus after the reload").that(scenario.bolus(BOLUS).success).isTrue()
         scenario.checkBolusRecords()
         scenario.checkNoBurst()
+    }
+
+    // ---- Broken communication ------------------------------------------------------------------------------------
+
+    /**
+     * The link breaks while the pump gives a bolus, and the pump gives the rest alone. AAPS must count what the pump
+     * gave, once, at the latest after the bolus would have ended and a status read connected again.
+     */
+    @Test
+    fun aLinkLostDuringABolusIsCountedOnce() {
+        scenario.bringUp()
+        scenario.pair()
+        val answer = scenario.startBolus(STOPPED_BOLUS)
+        scenario.awaitGiven(STOP_AFTER)
+        assertWithMessage("fault").that(scenario.control.breakLink()).isTrue()
+        scenario.await(answer)
+        awaitBolusEndAndRead()
+
+        assertWithMessage("the pump gave the bolus").that(scenario.control.state().boluses).hasSize(1)
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
+    }
+
+    /**
+     * The pump cannot be reached. A bolus and a temp basal fail once the queue gives up waiting for the link, and AAPS
+     * stores neither. Back in range, a status read works, and AAPS and the pump agree.
+     */
+    @Test
+    fun aPumpOutOfRangeFailsCleanly() {
+        scenario.bringUp()
+        scenario.pair()
+        scenario.checkLinkClosed()
+        assertWithMessage("fault").that(scenario.control.setOutOfRange(true)).isTrue()
+        scenario.shortenQueueConnectionLimit()
+
+        // Both wait for the same link, so the queue gives up on both at once.
+        val bolus = scenario.startBolus(BOLUS)
+        val tempBasal = scenario.startTempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
+        assertWithMessage("bolus").that(scenario.await(bolus, QUEUE_GIVES_UP).success).isFalse()
+        assertWithMessage("temp basal").that(scenario.await(tempBasal, QUEUE_GIVES_UP).success).isFalse()
+        assertWithMessage("the pump gave nothing").that(scenario.control.state().boluses).isEmpty()
+        scenario.checkBolusRecords()
+        scenario.checkTempBasal()
+
+        assertWithMessage("back in range").that(scenario.control.setOutOfRange(false)).isTrue()
+        assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
+        scenario.checkBolusRecords()
+        scenario.checkTempBasal()
+    }
+
+    /** The pump stops the bolus, and its answer to the stop is lost. AAPS must count what the pump gave, once. */
+    @Test
+    fun aStopWhoseAnswerIsLostCountsWhatThePumpGave() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.BOLUS_STOP)).isTrue()
+        val answer = scenario.startBolus(STOPPED_BOLUS)
+        scenario.awaitGiven(STOP_AFTER)
+        scenario.stopBolus()
+        scenario.await(answer)
+        awaitBolusEndAndRead()
+
+        assertWithMessage("the pump gave the bolus").that(scenario.control.state().boluses).hasSize(1)
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
+    }
+
+    /**
+     * The stop never reaches the pump, so it goes on. AAPS must count what the pump gave, not the part it expected: all
+     * of it, unless the driver sends the stop again.
+     */
+    @Test
+    fun aStopThatIsLostCountsWhatThePumpGave() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.BOLUS_STOP)).isTrue()
+        val answer = scenario.startBolus(STOPPED_BOLUS)
+        scenario.awaitGiven(STOP_AFTER)
+        scenario.stopBolus()
+        scenario.await(answer)
+        awaitBolusEndAndRead()
+
+        assertWithMessage("the pump gave the bolus").that(scenario.control.state().boluses).hasSize(1)
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
+    }
+
+    /**
+     * The pump runs the temp basal, and its answer is lost. After a status read AAPS and the pump must agree: AAPS has
+     * the temp basal, or the driver has ended it on the pump.
+     */
+    @Test
+    fun aTempBasalWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.TEMP_BASAL_START)).isTrue()
+        scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
+        scenario.readStatus()
+        scenario.checkTempBasal()
+    }
+
+    /** The pump ends the temp basal, and its answer is lost. After a status read AAPS and the pump must agree. */
+    @Test
+    fun aTempBasalCancelWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("temp basal").that(scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+        scenario.checkTempBasal()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.TEMP_BASAL_STOP)).isTrue()
+        scenario.cancelTempBasal()
+        scenario.readStatus()
+        scenario.checkTempBasal()
+    }
+
+    /** The pump ends a bolus in its own time, and a status read then brings AAPS up to date. */
+    private fun awaitBolusEndAndRead() {
+        scenario.awaitTrue("the pump ended the bolus", PumpScenario.BOLUS_TIMEOUT) { !scenario.control.state().bolusRunning }
+        scenario.readStatus()
     }
 
     /**
@@ -166,10 +314,19 @@ abstract class AbstractPumpScenarioTest {
         const val BOLUS = 0.5
         const val STOPPED_BOLUS = 2.0
         const val STOP_AFTER = 0.2
+        const val PUMP_STOPS_AT = 0.5
         const val TEMP_BASAL_RATE = 1.0
         const val TEMP_BASAL_MINUTES = 30
+        const val EXTENDED_BOLUS = 1.0
+        const val EXTENDED_MINUTES = 30
         const val KILLED_BOLUS = 2.0
         const val KILL_AFTER = 0.3
+
+        /**
+         * The test lowers the queue's link limit to `PumpScenario.SHORT_CONNECTION_LIMIT_S`. This leaves time for the
+         * queue to end the command after that limit.
+         */
+        const val QUEUE_GIVES_UP = 90_000L
 
         fun killRestartPart(): Int? = InstrumentationRegistry.getArguments().getString(KILL_RESTART_ARGUMENT)?.toIntOrNull()
     }

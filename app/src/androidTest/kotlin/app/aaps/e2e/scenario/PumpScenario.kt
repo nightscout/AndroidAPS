@@ -164,6 +164,10 @@ class PumpScenario(private val pump: PumpUnderTest) {
         if (killed) return
         scope.cancel()
         runCatching { commandQueue.clear() }
+        // The clear leaves a running command running. Stopped under it, the driver connects again for it and writes its
+        // pump into the settings of the next test, which then starts as paired: its driver reads status in the middle of
+        // the pairing, and the pairing hung (seen with Equil).
+        runCatching { awaitQueueIdle(QUEUE_END_TIMEOUT) }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { testGraphs.activePlugin.activePump.disconnect("test end") }
         if (appStarted) stopDriver()
@@ -212,25 +216,65 @@ class PumpScenario(private val pump: PumpUnderTest) {
         return queued { commandQueue.readStatus("scenario") }
     }
 
-    /** A bolus to its end. */
+    /** A bolus to its end, straight through the queue. This path raises no alarm, see [userBolus]. */
     fun bolus(units: Double): PumpEnactResult = queued { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units }) }
 
-    /** A bolus the user stops once the pump has given at least [stopAfter] units. */
-    fun stoppedBolus(units: Double, stopAfter: Double): PumpEnactResult {
-        val answer = startBolus(units)
+    /**
+     * A bolus as the user gives it from the insulin dialog, to its end: through `MasterActionExecutor`, the one place
+     * that raises the BOLUS_DELIVERY_FAILED alarm when the pump does not give a bolus. True when it went through, also
+     * when the user stopped it.
+     */
+    fun userBolus(units: Double): Boolean = await(startUserBolus(units))
+
+    /** A bolus the user gives and then stops, once the pump has given at least [stopAfter] units. True as [userBolus]. */
+    fun stoppedBolus(units: Double, stopAfter: Double): Boolean {
+        val answer = startUserBolus(units)
         awaitGiven(stopAfter)
-        commandQueue.cancelAllBoluses(null)
-        val result = runBlocking { withTimeout(BOLUS_TIMEOUT) { answer.await() } }
-        awaitQueueIdle()
-        return result
+        stopBolus()
+        return await(answer)
+    }
+
+    /** The user stops the running bolus, as the stop button does. */
+    fun stopBolus() = commandQueue.cancelAllBoluses(null)
+
+    /**
+     * The answer of a command that runs while the test goes on, as from [startBolus]. Then the queue is idle: a status
+     * read the driver asked for can wait for the end of a bolus, so the same limit holds for it.
+     */
+    fun <T> await(answer: Deferred<T>, timeoutMs: Long = BOLUS_TIMEOUT): T =
+        runBlocking { withTimeout(timeoutMs) { answer.await() } }.also { awaitQueueIdle(timeoutMs) }
+
+    /** A temp basal that runs while the test goes on. */
+    fun startTempBasal(rate: Double, minutes: Int): Deferred<PumpEnactResult> {
+        val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+        val answer = CompletableDeferred<PumpEnactResult>()
+        scope.launch { answer.complete(commandQueue.tempBasalAbsolute(rate, minutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)) }
+        return answer
     }
 
     /** A bolus that runs while the test goes on. The answer of the queue comes at its end. */
     fun startBolus(units: Double): Deferred<PumpEnactResult> {
-        bolusReservoirBefore = checkNotNull(control.state().reservoir) { "A bolus the test follows needs a pump that reports its reservoir" }
+        followBolus()
         val answer = CompletableDeferred<PumpEnactResult>()
         scope.launch { answer.complete(commandQueue.bolus(DetailedBolusInfo().also { it.insulin = units })) }
         return answer
+    }
+
+    /** A bolus of [userBolus] that runs while the test goes on. The answer comes at its end. */
+    fun startUserBolus(units: Double): Deferred<Boolean> {
+        followBolus()
+        val answer = CompletableDeferred<Boolean>()
+        scope.launch {
+            testGraphs.rootGraph.masterActionExecutor.deliverInsulin(
+                insulin = units, note = null, source = Sources.InsulinDialog,
+                onError = { answer.complete(false) }, onSuccess = { answer.complete(true) }
+            )
+        }
+        return answer
+    }
+
+    private fun followBolus() {
+        bolusReservoirBefore = checkNotNull(control.state().reservoir) { "A bolus the test follows needs a pump that reports its reservoir" }
     }
 
     /** Waits until the bolus of [startBolus] has given at least [units]. */
@@ -251,6 +295,28 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
 
+    /**
+     * The queue gives up on a link after [SHORT_CONNECTION_LIMIT_S] instead of about two minutes: the same path, a
+     * shorter wait. Only this graph's queue; the next test starts with the real limit.
+     */
+    fun shortenQueueConnectionLimit() {
+        testGraphs.rootGraph.commandExecutor.maxConnectionSeconds = SHORT_CONNECTION_LIMIT_S
+    }
+
+    private val pumpDescription get() = testGraphs.activePlugin.activePumpInternal.pumpDescription
+
+    /** The pump can give an extended bolus, see [extendedBolus]. */
+    val canGiveExtendedBolus: Boolean get() = pumpDescription.isExtendedBolusCapable
+
+    /** The pump keeps daily totals that AAPS reads, see [readTdds]. */
+    val canReadTdds: Boolean get() = pumpDescription.supportsTDDs
+
+    fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
+
+    fun cancelExtendedBolus(): PumpEnactResult = queued { commandQueue.cancelExtended() }
+
+    fun readTdds(): PumpEnactResult = queued { commandQueue.loadTDDs() }
+
     private fun queued(step: suspend () -> PumpEnactResult): PumpEnactResult = runBlocking { step() }.also { awaitQueueIdle() }
 
     // ---- Checks -----------------------------------------------------------------------------
@@ -260,13 +326,32 @@ class PumpScenario(private val pump: PumpUnderTest) {
      * @param timeoutMs records are written by the driver as it learns of them. Some learn only once a bolus would have ended.
      */
     fun checkBolusRecords(timeoutMs: Long = RECORD_TIMEOUT) {
-        awaitValue(timeoutMs) { (storedBoluses() == givenBoluses()).takeIf { it } }
-        assertWithMessage("bolus records in AAPS against the boluses the pump gave").that(storedBoluses()).isEqualTo(givenBoluses())
+        awaitValue(timeoutMs) { recordsMatch().takeIf { it } }
+        if (recordsMatch()) return
+        assertWithMessage("bolus records in AAPS against the boluses the pump gave, AAPS may count up to ${pump.bolusOvercount} U more")
+            .that(storedBoluses()).isEqualTo(givenBoluses())
     }
 
-    fun checkNoAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
-        assertWithMessage("alarm $id").that(testGraphs.notificationManager.notifications.value.map { it.id }).doesNotContain(id)
+    /** One record for each bolus the pump gave, in order, each at least what it gave and at most [PumpUnderTest.bolusOvercount] more. */
+    private fun recordsMatch(): Boolean {
+        val stored = storedBoluses()
+        val given = givenBoluses()
+        val over = centi(pump.bolusOvercount)
+        return stored.size == given.size && stored.zip(given).all { (record, gave) -> record >= gave && record - gave <= over }
     }
+
+    /** AAPS does not show [id]. Only a [userBolus] can raise BOLUS_DELIVERY_FAILED, a bolus of [bolus] never does. */
+    fun checkNoAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
+        assertWithMessage("alarm $id").that(shownNotifications()).doesNotContain(id)
+    }
+
+    /** AAPS shows [id]. The executor posts it once the queue has answered, so it may come a moment after that answer. */
+    fun checkAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
+        awaitValue(RECORD_TIMEOUT) { (id in shownNotifications()).takeIf { it } }
+        assertWithMessage("alarm $id").that(shownNotifications()).contains(id)
+    }
+
+    private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
     fun checkTempBasal() {
@@ -276,10 +361,25 @@ class PumpScenario(private val pump: PumpUnderTest) {
             assertWithMessage("AAPS has a temp basal the pump does not run").that(stored).isNull()
             return
         }
-        checkNotNull(stored) { "The pump runs a temp basal AAPS does not have: $running" }
+        // An AssertionError, not checkNotNull: a wrong result, which RetryRule must not retry.
+        if (stored == null) throw AssertionError("The pump runs a temp basal AAPS does not have: $running")
         val pumpRate = running.absolute ?: running.percent?.toDouble()
         assertWithMessage("temp basal is absolute").that(stored.isAbsolute).isEqualTo(running.absolute != null)
         assertWithMessage("temp basal rate").that(abs(stored.rate - checkNotNull(pumpRate)) < RATE_TOLERANCE).isTrue()
+    }
+
+    /** The extended bolus AAPS has is the one the pump runs, or neither has one. */
+    fun checkExtendedBolus() {
+        val running = control.state().extendedBolus
+        val stored = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(System.currentTimeMillis()) }
+        if (running == null) {
+            assertWithMessage("AAPS has an extended bolus the pump does not run").that(stored).isNull()
+            return
+        }
+        if (stored == null) throw AssertionError("The pump runs an extended bolus AAPS does not have: $running")
+        assertWithMessage("extended bolus amount").that(abs(stored.amount - running.units) < RATE_TOLERANCE).isTrue()
+        assertWithMessage("extended bolus minutes").that(stored.duration).isEqualTo(running.minutes * MS_PER_MINUTE)
+        assertWithMessage("a real extended bolus, not one that stands for a temp basal").that(stored.isEmulatingTempBasal).isFalse()
     }
 
     /** The queue closes the link when it has nothing more to do. */
@@ -411,10 +511,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val LINK_TIMEOUT = 30_000L
         const val SERVICE_STOP_TIMEOUT = 10_000L
 
+        /**
+         * Long enough for a driver to fail one connect attempt and start the next one: Carelevo gives up an attempt
+         * after about 21 s. A driver that scans until the queue stops it, as Equil does, makes one attempt with this
+         * limit and with the real one.
+         */
+        const val SHORT_CONNECTION_LIMIT_S = 30L
+
+        /** A command that runs at the test end: a status read that waits for its link, or a bolus to its end. */
+        const val QUEUE_END_TIMEOUT = 60_000L
+
         /** A 2 U bolus at the real speed of the slowest emulated pump, with room. */
         const val BOLUS_TIMEOUT = 120_000L
 
         private const val CENTI = 100.0
         private const val RATE_TOLERANCE = 0.01
+        private const val MS_PER_MINUTE = 60_000L
     }
 }

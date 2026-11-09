@@ -36,6 +36,12 @@ interface PumpEmulatorControl {
     /** The next bolus stops after [units], as at an occlusion. */
     fun stopNextBolusAt(units: Double): Boolean
 
+    /**
+     * The pump clock goes [offsetMs] further off the phone clock, as a clock that drifted or was not set. A pump that logs
+     * its own time then logs it off by that much. False for an emulator that cannot.
+     */
+    fun shiftPumpClock(offsetMs: Long): Boolean = false
+
     /** What the emulated pump holds now. */
     fun state(): EmulatedPumpState
 
@@ -85,6 +91,8 @@ enum class EmulatedAlarm {
  * @param linkUp a phone is connected now
  * @param commands how many commands the pump has received since it started. A step that sends the same command again
  * and again shows here.
+ * @param extendedBolus the extended bolus that runs now, or null. An emulator of a pump that can give one must fill it,
+ * or the scenario finds an extended bolus in AAPS that the pump seems not to run.
  */
 data class EmulatedPumpState(
     val boluses: List<Double>,
@@ -93,8 +101,12 @@ data class EmulatedPumpState(
     val suspended: Boolean,
     val reservoir: Double?,
     val linkUp: Boolean,
-    val commands: Int
+    val commands: Int,
+    val extendedBolus: EmulatedExtendedBolus? = null
 )
 
 /** A pump sets a temp basal either as a rate or as a percent of the basal, so one of the two is set. */
 data class EmulatedTempBasal(val absolute: Double?, val percent: Int?)
+
+/** An extended bolus: [units] over [minutes]. */
+data class EmulatedExtendedBolus(val units: Double, val minutes: Int)

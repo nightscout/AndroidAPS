@@ -81,6 +81,10 @@ class CarelevoPumpState : Serializable {
     var tempBasalPercent: Int? = null
     var extendedBolusRunning: Boolean = false
 
+    /** What the running extended bolus was set to: its speed times its time, and its time. */
+    var extendedBolusUnits: Double = 0.0
+    var extendedBolusMinutes: Int = 0
+
     /** actionId of the in-flight immediate bolus; echoed back on 0x84 for correlation. */
     var activeBolusActionId: Int? = null
 

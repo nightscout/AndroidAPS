@@ -22,6 +22,13 @@ interface PumpUnderTest {
     /** A status read sends no more commands than this. More means the driver repeats itself, as in a write burst. */
     val maxCommandsPerStatusRead: Int
 
+    /**
+     * How much more than the pump gave AAPS may count for one bolus, in units. Never less. 0 for a driver that learns
+     * the exact amount from the pump. A driver that works it out from times rounds up, and its stop takes a moment to
+     * reach the pump: then this is that step plus that moment.
+     */
+    val bolusOvercount: Double get() = 0.0
+
     /** The test hooks of the emulator in the graph now. After an app restart this is a new object for the same pump. */
     fun control(): PumpEmulatorControl
 
