@@ -668,6 +668,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             type1 == 0x01 && type2 == 0x04                      -> if (getInt(data, 6) > 0) EmulatedCommand.TEMP_BASAL_START else EmulatedCommand.TEMP_BASAL_STOP
             type1 == 0x01 && type2 == 0x02                      -> EmulatedCommand.BASAL_PROFILE
             type1 == 0x02 && type2 == 0x00                      -> EmulatedCommand.STATUS
+            // The temp basal read, by which the driver checks a temp basal command that got no answer.
+            type1 == 0x02 && type2 == 0x04                      -> EmulatedCommand.STATUS
             else                                                -> null
         }
     }

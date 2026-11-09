@@ -69,6 +69,8 @@ enum class EmulatedCommand {
     TEMP_BASAL_START,
     TEMP_BASAL_STOP,
     BASAL_PROFILE,
+
+    /** A read of what the pump runs now: its status, or its temp basal. Not a read of its history. */
     STATUS
 }
 
