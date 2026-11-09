@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Pin yếu: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Lượng insulin còn lại trong bình chứa không đủ: %1$s</string>
     <string name="equil_reservoir_empty">Bình chứa đã hết insulin. Bơm không thể tiếp tục phân phối insulin.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Lệnh phân phối liều bolus đã được gửi đến bơm, nhưng bơm không phản hồi. Bơm vẫn có thể phân phối %1$s insulin. Không thực hiện phân phối liều bolus lần nữa. AAPS tính toàn bộ lượng insulin này là đã được phân phối.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Lệnh dừng chưa đến được bơm hoặc phản hồi từ bơm đã bị mất. AAPS vẫn tính toàn bộ liều bolus %1$s là đã phân phối cho đến khi nhật ký bơm xác nhận lượng insulin thực tế đã phân phối.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Nhật ký bơm cho thấy liều bolus %1$s chưa được phân phối. AAPS không tính liều này vào lượng insulin đã phân phối.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Bơm đã dừng trong khi thực hiện bolus. Đã phân phối: %1$s trên tổng %2$s</string>
     <string name="equil_pump_not_run">Bơm không chạy</string>
     <string name="equil_pair">Ghép đôi</string>
