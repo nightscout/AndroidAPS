@@ -655,7 +655,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     /** What the pump does for [data], by its type and fields. Null for a command no hook names. */
     private fun commandOf(data: ByteArray): EmulatedCommand? {
-        if (data.size < 10) return null
+        // A read is only the index and the two type bytes, 6 bytes. A setting carries its values after them.
+        if (data.size < 6) return null
         val type1 = data[4].toInt() and 0xFF
         val type2 = data[5].toInt() and 0xFF
         return when {
@@ -666,8 +667,8 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
                     else                                            -> EmulatedCommand.BOLUS_STOP
                 }
 
-            type1 == 0x01 && type2 == 0x04                      -> if (getInt(data, 6) > 0) EmulatedCommand.TEMP_BASAL_START else EmulatedCommand.TEMP_BASAL_STOP
-            type1 == 0x01 && type2 == 0x02                      -> EmulatedCommand.BASAL_PROFILE
+            type1 == 0x01 && type2 == 0x04 && data.size >= 10   -> if (getInt(data, 6) > 0) EmulatedCommand.TEMP_BASAL_START else EmulatedCommand.TEMP_BASAL_STOP
+            type1 == 0x01 && type2 == 0x02 && data.size >= 10   -> EmulatedCommand.BASAL_PROFILE
             type1 == 0x02 && type2 == 0x00                      -> EmulatedCommand.STATUS
             // The temp basal read, by which the driver checks a temp basal command that got no answer.
             type1 == 0x02 && type2 == 0x04                      -> EmulatedCommand.STATUS
