@@ -34,6 +34,13 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
   history has times no real pump gives. Things that wait for a time, as the end of a temp basal, are raised as events.
 - The emulator object lives in `PumpEmulators`, a graph input, not in the graph. Bind it with
   `pumpEmulators.getOrCreate(<its key>) { ... }`.
+- Lost commands and lost answers are each used in the order the test set them, so a test can name a sequence ("the
+  cancel answer is lost, then the answer to the read after it"). Only the first fault can fire.
+- `EmulatedCommand.STATUS` is every read of what the pump runs now (its status, its temp basal), not its history. Map
+  each such read, or a STATUS fault never fires. Then look in the log that a fault did fire: a scenario whose fault
+  never fired passes and tests nothing. The Equil emulator once named no message under 10 bytes, and its reads are 6.
+- The emulator reports as its base rate the rate of its active profile. Dana RS takes a temp basal at the base rate as
+  no temp basal; while its emulator said 1.0 U/h always, every Dana temp basal scenario passed without a temp basal.
 - A scanner hands out only what the pump advertises now, as the real one does. A `SharedFlow` with `replay` kept an old
   advertisement for new listeners: Equil's wizard paired with a serial the pump no longer had, and the driver read an
   old log index. Advertise again and again while a scan runs instead, until `stopScan`.
