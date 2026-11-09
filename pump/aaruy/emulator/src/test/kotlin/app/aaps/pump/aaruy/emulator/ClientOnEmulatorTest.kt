@@ -12,6 +12,7 @@ import app.aaps.pump.aaruy.comm.BasicParam
 import app.aaps.pump.aaruy.comm.AaruyBleListener
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import org.mockito.Mockito.mock
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -323,6 +324,61 @@ class ClientOnEmulatorTest {
             drain()
             logged("onReceiveCurrentStatus")
         }
+    }
+
+    /**
+     * Seen on a real pump: a frame refused for its number is not carried out, and the count read tells the number of the
+     * last frame the pump took. So the lost status read and the refused real data read go out again. Before, neither
+     * was ever answered.
+     */
+    @Test
+    fun readsAfterALostFrameAreSentAgain() {
+        // The answer to the time sync at connect also has a status.
+        waitWhile(1500, Duration.ofSeconds(1))
+        transport.loseCommand(EmulatedCommand.STATUS)
+        log.clear()
+        util.getCurStatus()
+        waitFor("status answered") { logged("onReceiveCurrentStatus") && logged("onReceiveRealData") }
+        assertTrue("the real data read was refused", emulator.rejectedFrames > 0)
+    }
+
+    /**
+     * The setting and the start of a bolus are refused for their number and go out again. The pump answers the count read
+     * twice: if the second answer were taken too, it would come after the pump took the frames sent again, and they would
+     * go out a third time.
+     */
+    @Test
+    fun aBolusRefusedForItsNumberIsGivenOnce() {
+        skipANumber()
+        log.clear()
+        util.setupAndStartBolus(0.15, 0.0, 0, false)
+        waitFor("bolus done") { emulator.boluses.isNotEmpty() && emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
+        waitWhile(1500, Duration.ofSeconds(3))
+        assertTrue("the setting was refused", emulator.rejectedFrames > 0)
+        assertEquals(listOf(0.15), emulator.boluses)
+    }
+
+    /** The driver asked about the start before the refusal was known, and was told it went out. It must not go out later. */
+    @Test
+    fun aStartTheDriverAskedAboutIsNotSentAgain() {
+        skipANumber()
+        log.clear()
+        util.setupAndStartBolus(0.15, 0.0, 0, false)
+        waitFor("start sent") {
+            transport.writes.any { frame -> emulator.peek(frame)?.let { (param, action) -> emulator.isCommand(EmulatedCommand.BOLUS_START, param, action) } == true }
+        }
+        assertTrue("the start went to the radio", util.abandonBolusStart())
+        waitFor("refusal seen") { logged("onReceiveErrorData(28, 128") }
+        waitWhile(1500, Duration.ofSeconds(3))
+        assertTrue(emulator.boluses.toString(), emulator.boluses.isEmpty())
+        assertFalse(emulator.bolusRunning)
+    }
+
+    /** As when a frame is lost on its way: the next frame has a number one too high. */
+    private fun skipANumber() {
+        val link = util.javaClass.getDeclaredField("link").apply { isAccessible = true }.get(util)
+        val sequence = link.javaClass.getDeclaredField("sequence").apply { isAccessible = true }
+        sequence.set(link, ((sequence.get(link) as Short) + 1).toShort())
     }
 
     @Test

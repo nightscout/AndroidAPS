@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.Locale
+import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
@@ -405,6 +406,9 @@ fun setOnBleListener(listener: AaruyBleListener) {
     /** @param bolusId not 0 for the start of a bolus: which bolus it starts */
     private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0), val bolusId: Int = 0)
 
+    /** A frame that went to the radio, with its number. */
+    private class Sent(val sequence: Short, val request: Request)
+
     /** NONE: no bolus asked. PENDING: the setting is sent, the start is not yet at the radio. SENT: the start went to the radio. DROPPED: the start must never be sent. */
     private enum class BolusStart { NONE, PENDING, SENT, DROPPED }
 
@@ -433,15 +437,39 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         /** The pump has answered the report of this link with its sequence. See `reportConnected`. */
         @Volatile private var reportAnswered = false
-        private val queue = ConcurrentLinkedQueue<Request>()
-        private val inFlight = ConcurrentLinkedQueue<Short>()
+        private val queue = ConcurrentLinkedDeque<Request>()
+        private val inFlight = ConcurrentLinkedQueue<Sent>()
         private var status = BleStatus.DISCONNECTED
+
+        /**
+         * Frames the pump counts and may not have taken yet, oldest first. Under [sendLock]. Seen on a real pump: a frame
+         * whose number is not the next one is refused (error 28) and not carried out, and the pump's count stays where it
+         * was. So the count tells which of these to send again, see [onPumpCount].
+         */
+        private val unconfirmed = ArrayDeque<Sent>()
+
+        /** A frame was refused for its number. Nothing but the count read goes out until the pump has told its count. */
+        private var resyncing = false
+
+        /** The count read is the next frame to go out. */
+        private var countWanted = false
+
+        /** A count read is out, and its answer is wanted. */
+        private var countAsked = false
+
+        /** When the last count read went out. Seen on a real pump: it answers a count read twice, the second answer later. */
+        private var countReadAt = 0L
+        private var countTries = 0
+        private val countTimeout = Runnable { askCount() }
 
         /** Changed only under [sendLock], so the start cannot go out while the driver gives up on it. */
         private var bolusStart = BolusStart.NONE
 
         /** The bolus [bolusStart] is about. A start of an older bolus is never sent. */
         private var bolusId = 0
+
+        /** The driver has asked whether the start of [bolusId] went out. From then on it never goes out again. */
+        private var bolusStartAsked = false
 
         var listener: AaruyBleListener? = null
         var maxBolus = 0.0
@@ -541,6 +569,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 writing = false
                 inFlight.clear()
                 queue.clear()
+                endResync()
                 if (bolusStart == BolusStart.PENDING) bolusStart = BolusStart.DROPPED
             }
             transport.gatt.disconnect()
@@ -565,6 +594,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 inFlight.clear()
                 // A command that waited here was asked on the old link, and the driver has given up on it. After a reconnect it would come too late.
                 queue.clear()
+                endResync()
                 if (bolusStart == BolusStart.PENDING) bolusStart = BolusStart.DROPPED
             }
             status = BleStatus.DISCONNECTED
@@ -624,7 +654,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
         }
 
         override fun onCharacteristicWritten() {
-            events.post { inFlight.poll()?.let { onWriteDone(it) } }
+            events.post { inFlight.poll()?.let { onWriteDone(it.request.paramId) } }
         }
 
         override fun onWriteFailed() {
@@ -658,6 +688,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
             abandonBolusStart()
             bolusId++
             bolusStart = BolusStart.NONE
+            bolusStartAsked = false
         }
 
         /** The start follows when the pump has taken the setting, see [onWriteDone]. */
@@ -668,6 +699,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
         }
 
         fun abandonBolusStart(): Boolean = synchronized(sendLock) {
+            bolusStartAsked = true
             when (bolusStart) {
                 BolusStart.SENT    -> true
 
@@ -684,8 +716,23 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         private fun sendNextIfIdle() {
             synchronized(sendLock) {
-                if (!writing) queue.poll()?.let { send(it) }
+                if (!writing) nextRequest()?.let { send(it) }
             }
+        }
+
+        private fun sendNext() {
+            synchronized(sendLock) { nextRequest()?.let { send(it) } }
+        }
+
+        /** Under [sendLock]. While the pump's count is asked, only the count read goes out. */
+        private fun nextRequest(): Request? = when {
+            countWanted -> {
+                countWanted = false
+                Request(AaruyParamId.SERIAL, isRead = true)
+            }
+
+            resyncing   -> null
+            else        -> queue.poll()
         }
 
         fun syncTime() {
@@ -708,15 +755,31 @@ fun setOnBleListener(listener: AaruyBleListener) {
             synchronized(sendLock) {
                 var request = first
                 // Taken from the queue just before the driver gave up on it.
-                while (request.bolusId != 0 && (request.bolusId != bolusId || bolusStart != BolusStart.PENDING)) request = queue.poll() ?: return
+                while (request.bolusId != 0 && (request.bolusId != bolusId || bolusStart != BolusStart.PENDING)) request = nextRequest() ?: return
                 if (request.bolusId != 0) bolusStart = BolusStart.SENT
                 sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
                 val frame =
                     if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
                     else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
                 aapsLogger.debug(LTag.PUMPBTCOMM, "TX ${if (request.isRead) "read" else "write"} param=${request.paramId} seq=${sequence.unsigned()} data=${if (request.isRead) "" else request.data.toHexText()}")
+                val sent = Sent(sequence, request)
+                when (request.paramId) {
+                    AaruyParamId.SERIAL        -> {
+                        countAsked = true
+                        countReadAt = SystemClock.uptimeMillis()
+                    }
+
+                    // The pump does not count the report: it answers it with its count.
+                    AaruyParamId.REPORT_DEVICE -> Unit
+
+                    else                       -> {
+                        unconfirmed.addLast(sent)
+                        // A refusal comes within a few frames. Older ones are taken, or lost for good as before this list.
+                        if (unconfirmed.size > MAX_UNCONFIRMED) unconfirmed.removeFirst()
+                    }
+                }
                 writing = true
-                inFlight.add(request.paramId)
+                inFlight.add(sent)
                 transport.gatt.writeCharacteristic(frame)
             }
         }
@@ -736,15 +799,88 @@ fun setOnBleListener(listener: AaruyBleListener) {
             }
             writing = false
             listener?.onRequestResult(true, paramId.unsigned())
-            queue.poll()?.let { send(it) }
+            sendNext()
         }
 
-        private fun onWriteFailed(paramId: Short) {
-            writing = false
-            listener?.onRequestResult(false, paramId.unsigned())
+        private fun onWriteFailed(sent: Sent) {
+            synchronized(sendLock) {
+                writing = false
+                // The driver hears that it failed, so it never goes out later. The pump never got it.
+                unconfirmed.remove(sent)
+            }
+            listener?.onRequestResult(false, sent.request.paramId.unsigned())
             // The commands behind it are still wanted now, not at the next command, when the driver has given up on them.
             // Not into a link that is gone: a bolus start sent there would count as sent, and its loss clears the queue anyway.
-            if (linkUp) queue.poll()?.let { send(it) }
+            if (linkUp) sendNext()
+        }
+
+        /**
+         * The pump refused a frame for its number (error 28). The frames sent behind it are refused too, so one count read
+         * covers them all. Not before both answers of the last count read can have come: the second one could be taken for
+         * the answer of this one, and its count is old.
+         */
+        private fun startResync() {
+            val wait = synchronized(sendLock) {
+                if (resyncing) return
+                resyncing = true
+                countTries = 0
+                countReadAt + COUNT_SECOND_ANSWER_MS - SystemClock.uptimeMillis()
+            }
+            if (wait > 0) events.postDelayed(countTimeout, wait) else askCount()
+        }
+
+        private fun askCount() {
+            events.removeCallbacks(countTimeout)
+            synchronized(sendLock) {
+                if (!resyncing) return
+                if (countTries++ == COUNT_TRIES) {
+                    // As before the count was used: what was refused stays lost, and the waits of the driver tell.
+                    aapsLogger.error(LTag.PUMPBTCOMM, "The pump did not tell its count")
+                    endResync()
+                } else {
+                    countWanted = true
+                    events.postDelayed(countTimeout, COUNT_ANSWER_TIMEOUT_MS)
+                }
+            }
+            sendNextIfIdle()
+        }
+
+        /**
+         * The pump's count: the number of the last frame it took. A frame with a higher number was refused or lost, and
+         * the pump did not carry it out. So it goes out again, in the same order, with a new number.
+         */
+        private fun onPumpCount(count: Short) {
+            synchronized(sendLock) {
+                // The second answer to a count read, or one to a read from before: its count can be old.
+                if (!resyncing || !countAsked) {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "count ${count.unsigned()} not asked for, ignored")
+                    return
+                }
+                sequence = count
+                val again = unconfirmed.filter { it.sequence.isAfter(count) }.mapNotNull { sendAgain(it.request) }
+                endResync()
+                again.asReversed().forEach { queue.addFirst(it) }
+                aapsLogger.debug(LTag.PUMPBTCOMM, "pump count ${count.unsigned()}, sent again: ${again.map { it.paramId }}")
+            }
+            sendNextIfIdle()
+        }
+
+        /** Under [sendLock]. @return the request to send again, or null when it must never go out again */
+        private fun sendAgain(request: Request): Request? {
+            if (request.bolusId == 0) return request
+            // A start the driver has asked about, or the start of an older bolus.
+            if (request.bolusId != bolusId || bolusStart != BolusStart.SENT || bolusStartAsked) return null
+            bolusStart = BolusStart.PENDING
+            return request
+        }
+
+        /** Under [sendLock]. */
+        private fun endResync() {
+            events.removeCallbacks(countTimeout)
+            resyncing = false
+            countWanted = false
+            countAsked = false
+            unconfirmed.clear()
         }
 
         private fun handleFrame(frame: ByteArray) {
@@ -755,7 +891,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
                     return
                 }
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RX param=${message.paramId} data=${message.payload.toHexText()}")
-                if (message.paramId != AaruyParamId.SERIAL) queue.poll()?.let { send(it) }
+                if (message.paramId != AaruyParamId.SERIAL) sendNext()
                 handleMessage(message.paramId, message.payload)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Failed to handle a pump message", e)
@@ -767,7 +903,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
                 AaruyParamId.REPORT_DEVICE                                 -> handleReportDevice(payload)
 
                 AaruyParamId.SERIAL                                        ->
-                    if (payload.size == 2) synchronized(sendLock) { sequence = AaruyByteReader(payload).u16() }
+                    if (payload.size == 2) onPumpCount(AaruyByteReader(payload).u16())
 
                 AaruyParamId.BASIC_PARAM                                   -> {
                     val param = BasicParamPacket.parse(payload).toBasicParam()
@@ -832,7 +968,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
         private fun handleError(payload: ByteArray) {
             val packet = ErrorInfoPacket.parse(payload)
             if (packet.error == 0 && packet.errorType == ERROR_TYPE_LIQUID_SHOW) listener?.onLiquidShow()
-            if (packet.error == ERROR_OPERATION && packet.errorType == ERROR_TYPE_READ_SERIAL) read(AaruyParamId.SERIAL)
+            if (packet.error == ERROR_OPERATION && packet.errorType == ERROR_TYPE_READ_SERIAL) startResync()
             listener?.onReceiveErrorData(packet.errorType, packet.error)
         }
     }
@@ -854,6 +990,17 @@ fun setOnBleListener(listener: AaruyBleListener) {
         /** How long the link waits for the pump's sequence before it is reported up anyway, and how often it looks. */
         private const val REPORT_ANSWER_TIMEOUT_MS = 5_000L
         private const val REPORT_ANSWER_POLL_MS = 100L
+
+        /** A refusal comes within a few frames. */
+        private const val MAX_UNCONFIRMED = 32
+
+        /** Seen on a real pump: the second answer to a count read came up to about 0.6 s after the read. */
+        private const val COUNT_SECOND_ANSWER_MS = 1_500L
+        private const val COUNT_ANSWER_TIMEOUT_MS = 1_000L
+        private const val COUNT_TRIES = 5
+
+        /** Whether this frame number comes after [count]. The numbers go round after 0xFFFF. */
+        private fun Short.isAfter(count: Short): Boolean = ((unsigned() - count.unsigned()) and 0xFFFF) in 1..0x7FFF
         private const val REQUESTED_MTU = 517
         private const val DEVICE_NAME = "aaruy"
         private const val DEFAULT_PIN = "210101"

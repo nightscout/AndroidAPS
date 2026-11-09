@@ -150,8 +150,10 @@ class AaruyPumpEmulatorTest {
         assertEquals(0x80, refused.payload[1].toInt() and 0xFF)
         assertEquals(1, emulator.rejectedFrames)
 
-        val serial = emulator.handle(frame(0, PARAM_SERIAL, seq = 500)).map { decode(it) }.single()
-        assertEquals(1, serial.reader().short.toInt())
+        // Seen on a real pump: the count read is answered twice.
+        val serial = emulator.handle(frame(0, PARAM_SERIAL, seq = 500)).map { decode(it) }
+        assertEquals(2, serial.size)
+        serial.forEach { assertEquals(1, it.reader().short.toInt()) }
     }
 
     @Test

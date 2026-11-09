@@ -182,7 +182,8 @@ class AaruyPumpEmulator(
         val sequence = reader.short
         val payload = plain.copyOfRange(INNER_HEADER, plain.size)
 
-        // UNVERIFIED: the AAR reads the serial (21) after error 0x801C, so that error looks like a sequence error.
+        // Seen on a real pump (firmware 1.1.0.01): a frame whose number is not the next one is refused with 0x801C and not
+        // carried out, and the count stays where it was. The report and the count read (21) are not counted.
         if (paramId != PARAM_REPORT_DEVICE && paramId != PARAM_SERIAL) {
             if (sequence != (lastSequence + 1).toShort()) {
                 rejectedFrames++
@@ -199,7 +200,9 @@ class AaruyPumpEmulator(
         PARAM_BASAL        -> listOf(message(PARAM_BASAL, basalSetting ?: defaultBasalSlot(0)))
         PARAM_STATUS       -> listOf(statusMessage())
         PARAM_REAL_DATA    -> listOf(message(PARAM_REAL_DATA, byteArrayOf(battery.toByte(), BLE_SIGNAL)))
-        PARAM_SERIAL       -> listOf(message(PARAM_SERIAL, buffer(2).putShort(lastSequence).array()))
+        // Seen on a real pump: every count read is answered twice, the second answer about 100 ms or more later. By then
+        // the count can be higher.
+        PARAM_SERIAL       -> message(PARAM_SERIAL, buffer(2).putShort(lastSequence).array()).let { listOf(it, it) }
         else               -> emptyList()
     }
 
