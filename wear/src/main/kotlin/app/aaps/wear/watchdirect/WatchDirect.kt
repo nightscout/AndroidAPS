@@ -96,6 +96,14 @@ class WatchDirect(
     val isBatteryUnrestricted: Boolean
         get() = context.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(context.packageName) == true
 
+    /**
+     * False on Wear OS 7 and newer. There the watch has no setting for unrestricted battery use (the
+     * Pixel Watch 4 has none), so a warning would ask for something the user cannot do and would never
+     * go away. On these watches the app does not ask for it.
+     */
+    private val canAskForUnrestrictedBattery: Boolean
+        get() = Build.VERSION.SDK_INT < WEAR_OS_7_API
+
     private val hasPermissions: Boolean
         get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
             (granted(Manifest.permission.BLUETOOTH_SCAN) && granted(Manifest.permission.BLUETOOTH_CONNECT))
@@ -220,7 +228,7 @@ class WatchDirect(
             address = address ?: waitingForPermission?.address,
             latestReadingAt = latestReadingAt,
             detail = refusal.takeIf { state == EventData.CgmWatchState.REFUSED },
-            batteryRestricted = state != EventData.CgmWatchState.OFF && !isBatteryUnrestricted
+            batteryRestricted = state != EventData.CgmWatchState.OFF && canAskForUnrestrictedBattery && !isBatteryUnrestricted
         )
     }
 
@@ -325,6 +333,9 @@ class WatchDirect(
 
         // Clear of the ids DataLayerListenerServiceWear (1, 2, 556677) and the other watch notifications use.
         const val NOTIFICATION_ID = 7972
+
+        /** The API level of Wear OS 7, which is based on Android 17. */
+        const val WEAR_OS_7_API = 37
 
         /** The ids of `CgmAlarmType.URGENT_LOW` and `CgmAlarmType.LOW` on the phone. */
         const val URGENT_LOW_ALARM_ID = "urgent_low"

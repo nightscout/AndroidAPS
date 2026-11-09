@@ -10,12 +10,9 @@ import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,9 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScrollIndicator
 import androidx.wear.compose.material3.Text
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.R
@@ -55,28 +55,51 @@ class WatchDirectActivity : WearMetroActivity() {
                     if (state == EventData.CgmWatchState.PAIRING) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 }
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp, vertical = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(stringResource(R.string.watch_direct_title), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
-                    Spacer(Modifier.height(8.dp))
-                    Text(stringResource(stateText(state)), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-                    if (state == EventData.CgmWatchState.NEEDS_PERMISSION) {
-                        Spacer(Modifier.height(12.dp))
-                        Button(onClick = { askPermission.launch(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }) {
-                            Text(stringResource(R.string.watch_direct_allow))
+                val listState = rememberScalingLazyListState()
+                Box(modifier = Modifier.fillMaxSize()) {
+                    // A list and not a plain column: it scrolls with the crown and keeps the text and the
+                    // button inside the round screen. A plain column cut off the bottom of the button.
+                    ScalingLazyColumn(
+                        state = listState,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        item {
+                            ListHeader {
+                                Text(stringResource(R.string.watch_direct_title), textAlign = TextAlign.Center)
+                            }
                         }
-                    } else if (status.batteryRestricted) {
-                        Spacer(Modifier.height(8.dp))
-                        Text(stringResource(R.string.watch_direct_notification_battery), style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
-                        Spacer(Modifier.height(12.dp))
-                        Button(onClick = { askForUnrestrictedBattery() }) {
-                            Text(stringResource(R.string.watch_direct_allow_battery))
+                        item {
+                            Text(stringResource(stateText(state)), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
                         }
+                        if (state == EventData.CgmWatchState.NEEDS_PERMISSION) {
+                            item {
+                                Button(
+                                    onClick = { askPermission.launch(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(stringResource(R.string.watch_direct_allow))
+                                }
+                            }
+                        } else if (status.batteryRestricted) {
+                            item {
+                                Text(stringResource(R.string.watch_direct_notification_battery), style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                            }
+                            item {
+                                Button(
+                                    onClick = { askForUnrestrictedBattery() },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(stringResource(R.string.watch_direct_allow_battery))
+                                }
+                            }
+                        }
+                    }
+                    // Only when there is something to scroll, as in MenuListActivity
+                    if (listState.canScrollForward || listState.canScrollBackward) {
+                        ScrollIndicator(
+                            state = listState,
+                            modifier = Modifier.align(Alignment.CenterEnd)
+                        )
                     }
                 }
             }
