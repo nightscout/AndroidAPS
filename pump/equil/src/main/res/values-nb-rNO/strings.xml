@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Lavt batterinivå: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Det er ikke nok insulin igjen i reservoaret: %1$s</string>
     <string name="equil_reservoir_empty">Insulinreservoaret er tomt. Pumpen leverer ikke lenger insulin.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Boluskommandoen nådde pumpen, men pumpen svarte ikke. Den kan likevel gi %1$s. Ikke gi en ny bolus. AAPS regner med hele mengden.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Stoppet nådde ikke pumpen, eller svaret gikk tapt. AAPS regner med hele bolusen på %1$s til pumpeloggen viser hva som ble gitt.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Pumpeloggen viser at bolusen på %1$s ikke ble gitt. AAPS regner den ikke med.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpen stoppet under bolusen. Gitt: %1$s av %2$s</string>
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
     <string name="equil_pair">Koble sammen</string>
