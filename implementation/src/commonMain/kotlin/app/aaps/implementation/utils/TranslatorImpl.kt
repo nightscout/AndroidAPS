@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.siteRotation.textRef
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -189,36 +190,7 @@ class TranslatorImpl internal constructor(
         else                            -> rh.gs(CoreUiStrings.unknown)
     }
 
-    override fun translate(location: TE.Location?): String = when (location) {
-        TE.Location.FRONT_RIGHT_UPPER_CHEST   -> rh.gs(CoreUiStrings.location_front_right_upper_chest)
-        TE.Location.FRONT_LEFT_UPPER_CHEST    -> rh.gs(CoreUiStrings.location_front_left_upper_chest)
-        TE.Location.SIDE_RIGHT_UPPER_ARM      -> rh.gs(CoreUiStrings.location_side_right_upper_arm)
-        TE.Location.SIDE_LEFT_UPPER_ARM       -> rh.gs(CoreUiStrings.location_side_left_upper_arm)
-        TE.Location.BACK_RIGHT_UPPER_ARM      -> rh.gs(CoreUiStrings.location_back_right_upper_arm)
-        TE.Location.BACK_LEFT_UPPER_ARM       -> rh.gs(CoreUiStrings.location_back_left_upper_arm)
-        TE.Location.SIDE_RIGHT_UPPER_ABDOMEN  -> rh.gs(CoreUiStrings.location_side_right_upper_abdomen)
-        TE.Location.SIDE_LEFT_UPPER_ABDOMEN   -> rh.gs(CoreUiStrings.location_side_left_upper_abdomen)
-        TE.Location.SIDE_RIGHT_LOWER_ABDOMEN  -> rh.gs(CoreUiStrings.location_side_right_lower_abdomen)
-        TE.Location.SIDE_LEFT_LOWER_ABDOMEN   -> rh.gs(CoreUiStrings.location_side_left_lower_abdomen)
-        TE.Location.FRONT_RIGHT_UPPER_ABDOMEN -> rh.gs(CoreUiStrings.location_front_right_upper_abdomen)
-        TE.Location.FRONT_LEFT_UPPER_ABDOMEN  -> rh.gs(CoreUiStrings.location_front_left_upper_abdomen)
-        TE.Location.FRONT_RIGHT_LOWER_ABDOMEN -> rh.gs(CoreUiStrings.location_front_right_lower_abdomen)
-        TE.Location.FRONT_LEFT_LOWER_ABDOMEN  -> rh.gs(CoreUiStrings.location_front_left_lower_abdomen)
-        TE.Location.BACK_RIGHT_BUTTOCK        -> rh.gs(CoreUiStrings.location_back_right_buttock)
-        TE.Location.BACK_LEFT_BUTTOCK         -> rh.gs(CoreUiStrings.location_back_left_buttock)
-        TE.Location.BACK_RIGHT_LOWER_BACK     -> rh.gs(CoreUiStrings.location_back_right_lower_back)
-        TE.Location.BACK_LEFT_LOWER_BACK      -> rh.gs(CoreUiStrings.location_back_left_lower_back)
-        TE.Location.FRONT_RIGHT_UPPER_THIGH   -> rh.gs(CoreUiStrings.location_front_right_upper_thigh)
-        TE.Location.FRONT_LEFT_UPPER_THIGH    -> rh.gs(CoreUiStrings.location_front_left_upper_thigh)
-        TE.Location.FRONT_RIGHT_LOWER_THIGH   -> rh.gs(CoreUiStrings.location_front_right_lower_thigh)
-        TE.Location.FRONT_LEFT_LOWER_THIGH    -> rh.gs(CoreUiStrings.location_front_left_lower_thigh)
-        TE.Location.SIDE_RIGHT_UPPER_THIGH    -> rh.gs(CoreUiStrings.location_side_right_upper_thigh)
-        TE.Location.SIDE_LEFT_UPPER_THIGH     -> rh.gs(CoreUiStrings.location_side_left_upper_thigh)
-        TE.Location.SIDE_RIGHT_LOWER_THIGH    -> rh.gs(CoreUiStrings.location_side_right_lower_thigh)
-        TE.Location.SIDE_LEFT_LOWER_THIGH     -> rh.gs(CoreUiStrings.location_side_left_lower_thigh)
-        TE.Location.NONE                      -> rh.gs(CoreUiStrings.unknown)
-        else                                  -> rh.gs(CoreUiStrings.unknown)
-    }
+    override fun translate(location: TE.Location?): String = rh.gs((location ?: TE.Location.NONE).textRef())
 
     override fun translate(arrow: TE.Arrow?): String = when (arrow) {
         TE.Arrow.UP         -> rh.gs(CoreUiStrings.arrow_up)
