@@ -70,9 +70,12 @@ dump_failed_tests() {
   local out=$1
   for t in $(sed -n 's/^[0-9]*) \([A-Za-z0-9_]*\)(.*/\1/p' "$out" | sort -u); do
     echo "--- what happened in $t ---"
+    # Without the radio chatter of each packet (Dana logs four lines a packet), which pushed the command itself out.
     adb -s "$DEV" logcat -d -v time \
       | sed -n "/TestRunner.*started: $t(/,/TestRunner.*finished: $t(/p" \
-      | grep -E "PUMP|DATABASE|TestRunner|AndroidRuntime| E " | tail -n 250 || true
+      | grep -E "PUMP|DATABASE|TestRunner|AndroidRuntime| E " \
+      | grep -vE "processMessage|no wait needed|notifyAll|handleMessage done|writeCharacteristic|onCharacteristic|>>>>> |<<<<< " \
+      | tail -n 400 || true
   done
 }
 
