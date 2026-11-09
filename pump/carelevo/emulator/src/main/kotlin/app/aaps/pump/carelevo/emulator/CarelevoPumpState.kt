@@ -50,7 +50,8 @@ class CarelevoPumpState : Serializable {
 
     // ---- Lifecycle --------------------------------------------------------------------------
 
-    var pumpStateRaw: Int = 2
+    /** A real patch reports 0 after the safety check and while it gives basal (seen 2026-11-09). 2 was never seen. */
+    var pumpStateRaw: Int = 0
     var modeRaw: Int = 1
     var subId: Int = 0
     var runningMinutes: Int = 0

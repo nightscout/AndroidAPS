@@ -15,8 +15,6 @@ import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult
 import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.codeToInfusionModeCommand
-import app.aaps.pump.carelevo.domain.model.bt.PumpStateResult
-import app.aaps.pump.carelevo.domain.model.bt.PumpStateResult.Companion.codeToPumpStateCommand
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
@@ -71,14 +69,14 @@ class CarelevoTempBasalCoordinator @Inject constructor(
     /**
      * Ends the temp basal that AAPS keeps when the patch runs none. A cancel whose answer is lost, and then a lost
      * read of what the patch runs, leave AAPS with a temp basal the patch has ended, and nothing else corrects it.
-     * Only a running patch in plain basal mode surely runs no temp basal: during a bolus the mode shows the bolus. A
-     * suspend is a PUMP_SUSPEND record that the resume ends, so it is left alone.
+     * Only plain basal mode surely means no temp basal: during a bolus the mode shows the bolus. The pump state does not
+     * help, a real patch reports 0 (READY) also while it gives basal. A suspend is a PUMP_SUSPEND record that the resume
+     * ends, so it is left alone.
      * The patch gives no end time, so the temp basal ends at this read.
      * @param info a status read of the patch
      */
     suspend fun endTempBasalThePatchDoesNotRun(info: InfusionInfoResponse, serialNumber: String) {
         if (info.modeRaw.codeToInfusionModeCommand() != InfusionModeResult.BASAL) return
-        if (info.pumpStateRaw.codeToPumpStateCommand() != PumpStateResult.RUNNING) return
         val tempBasal = pumpSync.expectedPumpState().temporaryBasal ?: return
         if (tempBasal.type == PumpSync.TemporaryBasalType.PUMP_SUSPEND) return
         val now = dateUtil.now()

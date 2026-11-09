@@ -265,7 +265,7 @@ class CarelevoPumpEmulator(
         val frames = mutableListOf<ByteArray>()
         repeat(state.safetyCheckProgressFrames) { frames += safetyFrame(SAFETY_PROGRESS_RESULT) }
         frames += safetyFrame(state.safetyCheckResult)
-        if (state.safetyCheckResult == CarelevoPumpState.RESULT_SUCCESS) state.pumpStateRaw = PUMP_STATE_RUNNING
+        // The pump state stays 0 (READY): a real patch reports 0 after the safety check and while it gives basal.
         return frames
     }
 
@@ -733,7 +733,6 @@ class CarelevoPumpEmulator(
         const val AUTH_FAILED = 1
 
         const val PUMP_STATE_READY = 0
-        const val PUMP_STATE_RUNNING = 2
 
         const val MODE_BASAL = 1
         const val MODE_TEMP_BASAL = 2
