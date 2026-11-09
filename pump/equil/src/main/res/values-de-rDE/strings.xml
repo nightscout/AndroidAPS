@@ -9,6 +9,9 @@
     <string name="equil_error">Verbindungsfehler</string>
     <string name="equil_change">Pumpe wechseln</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Der Bolus-Befehl hat die Pumpe erreicht, aber die Pumpe hat nicht geantwortet. Möglicherweise wird die Dosis von %1$s dennoch abgegeben. Geben Sie keinen weiteren Bolus ab. AAPS berücksichtigt die gesamte Menge.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Der Stop-Befehl erreichte die Pumpe nicht, oder die Rückmeldung ging verloren. AAPS rechnet den gesamten Bolus von %1$s an, bis im Pumpenprotokoll ersichtlich ist, welche Menge tatsächlich abgegeben wurde.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Das Pumpenprotokoll zeigt, dass der Bolus von %1$s nicht abgegeben wurde. AAPS berücksichtigt ihn daher nicht.</string>
     <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f IE/h, Dauer: %2$d min</string>
     <!-- equil - Commands -->
     <!--    推杆回退-->
