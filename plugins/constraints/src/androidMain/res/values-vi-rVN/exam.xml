@@ -7,7 +7,7 @@
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Nếu bạn thấy giá trị DIA mà bạn đã sử dụng trên Bơm trước khi dùng AAPS hoạt động tốt, thì không cần thay đổi giá trị này khi bắt đầu chạy vòng kín.</string>
     <string name="dia_valuemustbedetermined">Bạn nên tự xác định giá trị DIA phù hợp cho mình.</string>
-    <string name="hypott_label">Hypo Temp-Target</string>
+    <string name="hypott_label">Mục tiêu tạm khi hạ đường huyết</string>
     <string name="hypott_whenhypott">Tại sao cần đặt mục tiêu tạm thời khi bị hạ đường huyết?</string>
     <string name="hypott_wrongbasal">Để điều chỉnh hạ đường huyết do cài đặt tốc độ liều nền sai.</string>
     <string name="hypott_preventoversmb">Để ngăn AAPS điều chỉnh quá mức sự tăng đường huyết do carbs tác dụng nhanh được dùng để xử lý hạ đường huyết gây ra.</string>
