@@ -193,7 +193,6 @@ class AaruyBLE(
     /** Set when the emulator replaces the radio, see AaruyBindings. */
     val emulatorTransport: AaruyEmulatorBleTransport? = transport as? AaruyEmulatorBleTransport
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    private var connectDeviceName: String? = null
     @Volatile private var sendBasalsInfoOk = false
     @Volatile private var basalWanted: BasalInfo? = null
     private var sendBolusOk = false
@@ -266,7 +265,6 @@ class AaruyBLE(
         }
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
-        connectDeviceName = if (emulatorTransport != null) AaruyEmulatorBleTransport.DEVICE_NAME else device.name
         isConnected = false
         isConnecting = true
         aaruyPump.connectionState = ConnectionState.CONNECTING
