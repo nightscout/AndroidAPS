@@ -219,10 +219,11 @@ class CommandExecutor(
                     // With a pump that could not connect at the moment (a stopped driver) the loop went on trying
                     // until the connection timeout, and the Bluetooth watchdog then switched the phone's Bluetooth
                     // off and on for no command at all. A command that comes later sends a wake: the next drain.
+                    // No disconnect() either: there is no link to close, and a pump whose link someone else is opening
+                    // (its own driver, or in the instrumented tests a second app graph's queue on the same pump) would
+                    // lose it. In the Dana RS UI tests such a disconnect reached the live link of the next test.
                     if (wake.tryReceive().isSuccess) continue
                     aapsLogger.debug(LTag.PUMPQUEUE, "queue empty and no link: nothing to do")
-                    queue.waitingForDisconnect = true
-                    pump.disconnect("Queue empty")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return
                 }
