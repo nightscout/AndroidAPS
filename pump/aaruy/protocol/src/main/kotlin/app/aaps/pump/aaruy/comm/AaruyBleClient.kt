@@ -430,6 +430,9 @@ fun setOnBleListener(listener: AaruyBleListener) {
         private val sendLock = Any()
         private var sequence: Short = 0
         private var writing = false
+
+        /** The pump has answered the report of this link with its sequence. See `reportConnected`. */
+        @Volatile private var reportAnswered = false
         private val queue = ConcurrentLinkedQueue<Request>()
         private val inFlight = ConcurrentLinkedQueue<Short>()
         private var status = BleStatus.DISCONNECTED
@@ -597,9 +600,23 @@ fun setOnBleListener(listener: AaruyBleListener) {
             status = BleStatus.CONNECTED
             ready = true
             linkUp = true
+            reportAnswered = false
             sendReportDevice()
-            // On this thread, so it comes before or after a loss of the link, never over it. A link lost in these 500 ms is not reported as up.
-            events.postDelayed({ if (status == BleStatus.CONNECTED && ready) listener?.onBleStatusChanged(status) }, CONNECTED_DELAY_MS)
+            reportConnected(CONNECTED_DELAY_MS, System.currentTimeMillis() + REPORT_ANSWER_TIMEOUT_MS)
+        }
+
+        /**
+         * Tells the driver the link is up once the pump has answered the report with its sequence. After a fixed 500 ms,
+         * the driver's first frames could go out before a late answer, which then set the sequence back below them: the
+         * next frame was refused (error 28) and its request lost. Without an answer in [REPORT_ANSWER_TIMEOUT_MS] the link
+         * is reported up anyway, as before. On this thread, so it comes before or after a loss of the link, never over it.
+         */
+        private fun reportConnected(delayMs: Long, latest: Long) {
+            events.postDelayed({
+                if (status != BleStatus.CONNECTED || !ready) return@postDelayed
+                if (!reportAnswered && System.currentTimeMillis() < latest) reportConnected(REPORT_ANSWER_POLL_MS, latest)
+                else listener?.onBleStatusChanged(status)
+            }, delayMs)
         }
 
         override fun onCharacteristicChanged(data: ByteArray) {
@@ -802,6 +819,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
         private fun handleReportDevice(payload: ByteArray) {
             val packet = ReportDevicePacket.parse(payload)
             synchronized(sendLock) { sequence = packet.serial }
+            reportAnswered = true
             protocolVersion = packet.version.toInt()
             if (packet.deviceType.toInt() == REPORT_DEVICE_ACCEPTED) {
                 syncTime()
@@ -832,6 +850,10 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         /** As in the vendor library: the answers to the first frames come before the driver hears of the link. */
         private const val CONNECTED_DELAY_MS = 500L
+
+        /** How long the link waits for the pump's sequence before it is reported up anyway, and how often it looks. */
+        private const val REPORT_ANSWER_TIMEOUT_MS = 5_000L
+        private const val REPORT_ANSWER_POLL_MS = 100L
         private const val REQUESTED_MTU = 517
         private const val DEVICE_NAME = "aaruy"
         private const val DEFAULT_PIN = "210101"

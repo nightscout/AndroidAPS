@@ -284,6 +284,29 @@ class ClientOnEmulatorTest {
         waitFor("basal") { emulator.runningStatus == AaruyPumpEmulator.STATUS_BASAL }
     }
 
+    /**
+     * The link counts as up only when the pump has told its sequence. It counted as up after a fixed 500 ms: frames the
+     * pump took went out before the late answer, which then set the sequence back, and the next frame was refused
+     * (error 28) with its request lost. That is how a rewind got lost in a CI run of
+     * [aClientToldOfAnEarlierRewindStartsBasalWithTheRestore].
+     */
+    @Test
+    fun aLateFirstAnswerDoesNotPutTheSequenceBack() {
+        transport.shutdown()
+        emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
+        transport = AaruyEmulatorBleTransport(emulator)
+        emulator.answerDelayMs = 1500 // the first answer: the one with the pump's sequence
+        log.clear()
+        util = newClient()
+        util.bindDevice(pumpDevice())
+        waitFor("connected") { logged("onBleStatusChanged(CONNECTED") }
+        util.setupBasicParamInfo(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        util.getCurStatus()
+        waitFor("status") { logged("onReceiveCurrentStatus") }
+        waitWhile(500, Duration.ofSeconds(1))
+        assertEquals("frames refused for their sequence", 0, emulator.rejectedFrames)
+    }
+
     @Test
     fun sequenceErrorRecoversThroughSerialRead() {
         val manager = util.javaClass.getDeclaredField("link").apply { isAccessible = true }.get(util)
