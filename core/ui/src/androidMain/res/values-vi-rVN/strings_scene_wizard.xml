@@ -25,7 +25,7 @@
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <string name="scene_template_pre_meal">Trước bữa ăn</string>
     <string name="scene_wizard_pre_meal_desc">Giảm mục tiêu để đón trước mức tăng đường huyết sau bữa ăn.</string>
-    <string name="scene_wizard_info_pre_meal">Việc đặt mục tiêu thấp hơn khoảng 30–60 phút trước khi ăn sẽ giúp thuật toán bắt đầu “tích lũy” insulin đang hoạt động (IOB) trước khi carbohydrate được hấp thu. Điều này giúp giảm mức tăng đường huyết sau ăn, xảy ra khi thức ăn vào máu nhanh hơn so với tốc độ tác dụng của insulin. Hiệu quả nhất khi bạn biết trước sắp có bữa ăn.</string>
+    <string name="scene_wizard_info_pre_meal">Thiết lập mục tiêu đường huyết thấp hơn từ 30–60 phút trước khi ăn sẽ giúp thuật toán bắt đầu tăng lượng insulin còn tác dụng trước khi carbs được hấp thụ. Điều này giúp hạn chế tình trạng đường huyết tăng đột biến sau ăn, xảy ra khi thức ăn được hấp thụ vào máu nhanh hơn tốc độ insulin phát huy tác dụng. Nên sử dụng khi bạn biết mình sắp ăn.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
     <string name="scene_template_alcohol">Rượu bia</string>
     <string name="scene_wizard_alcohol_desc">Chế độ LGS, giảm cấu hình, tắt SMB — giúp bảo vệ khỏi hạ đường huyết muộn do rượu bia.</string>
