@@ -37,7 +37,6 @@ import app.aaps.pump.aaruy.comm.LogItem
 import app.aaps.pump.aaruy.comm.StatusInfo
 import app.aaps.pump.aaruy.comm.BleStatus
 import app.aaps.pump.aaruy.comm.AaruyBleListener
-import app.aaps.pump.aaruy.comm.ScanResultListener
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.code.ConnectionState
@@ -59,12 +58,14 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onSubscription
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import no.nordicsemi.android.support.v18.scanner.ScanResult
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -73,7 +74,7 @@ import app.aaps.pump.aaruy.keys.AaruyStringKey
 @SingleIn(AppScope::class)
 @Inject
 class AaruyBLE(
-    transport: AaruyBleTransport,
+    private val transport: AaruyBleTransport,
     private val aapsLogger: AAPSLogger,
     private val context: Context,
     private val aaruyPump: AaruyPump,
@@ -182,6 +183,7 @@ class AaruyBLE(
     private val TAG = "AaruyBLEService"
     private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
     val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices
+    private var scanJob: Job? = null
 
     val aaBleUtil = AaruyBleClient(context, aapsLogger, transport)
 
@@ -286,7 +288,7 @@ class AaruyBLE(
 
         if (isConnecting) {
             isConnecting = false
-            aaBleUtil.stopScanDevice()
+            stopScan()
             SystemClock.sleep(100)
         }
 
@@ -346,24 +348,23 @@ class AaruyBLE(
         stopped = false
     }
 
-    /** Pumps found so far are in [scannedDevices]. The emulator is always found. */
-    @SuppressLint("MissingPermission")
+    /** Pumps found so far are in [scannedDevices], through the transport: the radio, or the emulator in its place. */
     fun startScan() {
         aapsLogger.info(LTag.PUMP, "startScan")
         _scannedDevices.value = emptyList()
-        if (emulatorTransport != null) {
-            _scannedDevices.value = listOf(ScannedDevice(AaruyEmulatorBleTransport.DEVICE_NAME, AaruyEmulatorBleTransport.DEVICE_ADDRESS))
-            return
-        }
-        aaBleUtil.scanDevice(object : ScanResultListener {
-            override fun onScanResult(results: List<ScanResult>) {
-                _scannedDevices.value = results.mapNotNull { result -> result.device.name?.let { ScannedDevice(it, result.device.address) } }
+        scanJob?.cancel()
+        scanJob = scope.launch {
+            // Started only when this listens, so no pump found in between is missed.
+            transport.scanner.scannedDevices.onSubscription { transport.scanner.startScan() }.collect { device ->
+                _scannedDevices.update { found -> if (found.any { it.address == device.address }) found else found + device }
             }
-        })
+        }
     }
 
     fun stopScan() {
-        if (emulatorTransport == null) aaBleUtil.stopScanDevice()
+        scanJob?.cancel()
+        scanJob = null
+        transport.scanner.stopScan()
     }
 
     /** A new pump: its old history is not read as new, and the connection that follows does the pairing. */
@@ -409,14 +410,14 @@ class AaruyBLE(
      * Starts the emulator if the file `emulate_aaruy` is in the AAPS extra folder, as for the other pump emulators.
      */
     fun startEmulatorIfActive() {
-        val transport = emulatorTransport ?: return
+        val emulated = emulatorTransport ?: return
         // For tests: adb shell am broadcast -a app.aaps.pump.aaruy.emulator.OUT_OF_RANGE --ez value true
         ContextCompat.registerReceiver(context, object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val outOfRange = intent.getBooleanExtra("value", true)
                 aapsLogger.warn(LTag.PUMPEMULATOR, "Aaruy emulator: out of range = $outOfRange")
-                transport.outOfRange = outOfRange
-                if (outOfRange) transport.loseConnection()
+                emulated.outOfRange = outOfRange
+                if (outOfRange) emulated.loseConnection()
             }
         }, IntentFilter("app.aaps.pump.aaruy.emulator.OUT_OF_RANGE"), ContextCompat.RECEIVER_EXPORTED)
         // For tests: adb shell am broadcast -a app.aaps.pump.aaruy.emulator.SCENARIO --es value temp_basal_start --ei rate 500 --ei minutes 30
@@ -424,18 +425,18 @@ class AaruyBLE(
             override fun onReceive(context: Context, intent: Intent) {
                 val scenario = intent.getStringExtra("value")
                 aapsLogger.warn(LTag.PUMPEMULATOR, "Aaruy emulator: scenario $scenario")
-                transport.onPumpThread {
+                emulated.onPumpThread {
                     val message = when (scenario) {
-                        "lose_answer_temp_basal" -> { transport.loseAnswerToParam = TEMP_BASAL_PARAM; null }
-                        "lose_answer_bolus"      -> { transport.loseAnswerToParam = BOLUS_CONTROL_PARAM; null }
-                        "temp_basal_start"       -> transport.emulator.startTempBasalByItself(intent.getIntExtra("rate", 500), intent.getIntExtra("minutes", 30))
-                        "temp_basal_end"         -> transport.emulator.endTempBasalByItself()
-                        "stop"                   -> transport.emulator.stopByItself()
-                        "resume"                 -> transport.emulator.resumeByItself()
-                        "occlusion"              -> { transport.emulator.blockMotor().forEach { transport.pumpSends(it) }; null }
+                        "lose_answer_temp_basal" -> { emulated.loseAnswerToParam = TEMP_BASAL_PARAM; null }
+                        "lose_answer_bolus"      -> { emulated.loseAnswerToParam = BOLUS_CONTROL_PARAM; null }
+                        "temp_basal_start"       -> emulated.emulator.startTempBasalByItself(intent.getIntExtra("rate", 500), intent.getIntExtra("minutes", 30))
+                        "temp_basal_end"         -> emulated.emulator.endTempBasalByItself()
+                        "stop"                   -> emulated.emulator.stopByItself()
+                        "resume"                 -> emulated.emulator.resumeByItself()
+                        "occlusion"              -> { emulated.emulator.blockMotor().forEach { emulated.pumpSends(it) }; null }
                         else                     -> null
                     }
-                    message?.let { transport.pumpSends(it) }
+                    message?.let { emulated.pumpSends(it) }
                 }
             }
         }, IntentFilter("app.aaps.pump.aaruy.emulator.SCENARIO"), ContextCompat.RECEIVER_EXPORTED)
@@ -461,7 +462,7 @@ class AaruyBLE(
                     isConnecting = false
                     isUnbinding = false
                     receivingHistory = false
-                    aaBleUtil.stopScanDevice()
+                    stopScan()
                     val newPump = preferences.get(AaruyStringKey.PumpBoundAddress) == ""
                     // Before the name is taken: until then the name is a part of the address, not the serial number.
                     preferences.put(AaruyStringKey.PumpBoundAddress, preferences.get(AaruyStringKey.MacAddress))

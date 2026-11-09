@@ -1,7 +1,5 @@
 package app.aaps.pump.aaruy.comm
 
-import no.nordicsemi.android.support.v18.scanner.ScanResult
-
 enum class BleStatus {
     CONNECTED,
     DISCONNECTED,
@@ -31,9 +29,4 @@ interface AaruyBleListener {
     fun onCurrentNoSuspend(currentState: Int)
     fun onUnbindClearInfo()
     fun onPumpClosedMode(currentMode: Int)
-}
-
-fun interface ScanResultListener {
-
-    fun onScanResult(results: List<ScanResult>)
 }

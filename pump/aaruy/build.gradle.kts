@@ -34,7 +34,6 @@ dependencies {
     implementation(project(":pump:common"))
     implementation(project(":shared:impl"))
 
-    implementation("no.nordicsemi.android.support.v18:scanner:1.6.0")
     implementation(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)

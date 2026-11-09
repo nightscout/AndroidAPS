@@ -48,7 +48,6 @@ class AaruyBleClient(
 
     private val appContext = context
     private val link = PumpLink()
-    private val scanner = AaruyScanner()
 
     private var prepareStartBasal = false
     private var currentStatus: CurrentStatusPacket? = null
@@ -138,14 +137,6 @@ class AaruyBleClient(
         }
         appContext.registerReceiver(bondReceiver, filter)
     }
-
-    fun scanDevice(listener: ScanResultListener) {
-        aapsLogger.info(LTag.PUMPBTCOMM, "scanDevice")
-        scanner.start()
-        scanner.listener = listener
-    }
-
-    fun stopScanDevice() = scanner.stop()
 
     @SuppressLint("MissingPermission")
     fun bindDevice(device: BluetoothDevice) {

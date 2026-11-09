@@ -11,6 +11,9 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothStatusCodes
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -200,11 +203,56 @@ class AaruyBleTransportImpl(
         }
     }
 
-    /** Scanning for pumps is in [AaruyScanner]. */
-    override val scanner: BleScanner = object : BleScanner {
-        override val scannedDevices: SharedFlow<ScannedDevice> = MutableSharedFlow()
-        override fun startScan() {}
-        override fun stopScan() {}
+    override val scanner: BleScanner = PumpScanner()
+
+    /** Finds pumps by their name and lists each pump once in a scan. Other devices nearby are left out. */
+    internal inner class PumpScanner : BleScanner {
+
+        private val devices = MutableSharedFlow<ScannedDevice>(extraBufferCapacity = 10)
+        override val scannedDevices: SharedFlow<ScannedDevice> = devices
+        private val found = HashSet<String>()
+        private var scanning = false
+
+        private val callback = object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) = onFound(result.device.name, result.device.address, result.rssi)
+
+            override fun onBatchScanResults(results: List<ScanResult>) = results.forEach { onFound(it.device.name, it.device.address, it.rssi) }
+
+            override fun onScanFailed(errorCode: Int) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "Scan failed, error $errorCode")
+                scanning = false
+            }
+        }
+
+        override fun startScan() {
+            synchronized(found) { found.clear() }
+            if (scanning) return
+            if (!hasScanPermission()) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "No permission to scan")
+                return
+            }
+            val adapter = bluetoothAdapter ?: return
+            // Null while Bluetooth is off.
+            val leScanner = adapter.bluetoothLeScanner ?: return
+            val settings = ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                // As the vendor library did: also extended advertisements, where the radio knows them.
+                .apply { if (adapter.isLeExtendedAdvertisingSupported) setLegacy(false) }
+                .build()
+            scanning = true
+            leScanner.startScan(null, settings, callback)
+        }
+
+        override fun stopScan() {
+            if (!scanning) return
+            scanning = false
+            if (hasScanPermission()) bluetoothAdapter?.bluetoothLeScanner?.stopScan(callback)
+        }
+
+        internal fun onFound(name: String?, address: String, rssi: Int) {
+            if (name.isNullOrEmpty() || !name.contains(DEVICE_NAME_PREFIX)) return
+            if (synchronized(found) { found.add(address) }) devices.tryEmit(ScannedDevice(name, address, rssi = rssi))
+        }
     }
 
     @Suppress("deprecation")
@@ -296,9 +344,14 @@ class AaruyBleTransportImpl(
         Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
 
+    private fun hasScanPermission(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+
     private companion object {
 
         const val DEFAULT_MTU = 23
+        const val DEVICE_NAME_PREFIX = "aaruy_"
 
         /** Seen on a real pump: a write is answered in some ms, a read of the firmware in about 100 ms. */
         const val OPERATION_TIMEOUT_MS = 5_000L
