@@ -272,8 +272,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             Thread.sleep(100); waitedMs += 100
         }
 
-        // TestPumpPlugin.connect() sets connected. Without the call the queue waits for the connection until it times out.
-        assertThat(testPumpPlugin.connected).isTrue()
+        // Without the call the queue waits for the connection until it times out. Counted, not read from `connected`:
+        // the queue disconnects as soon as the bolus is done (the test pump keeps the link 0 s), often before this runs.
+        assertThat(testPumpPlugin.connectCalls).isAtLeast(1)
         assertThat(result?.success).isTrue()
     }
 
