@@ -346,6 +346,8 @@ abstract class AbstractPumpScenarioTest {
         // AAPS learns of it at the latest at its next connection to the pump.
         scenario.readStatusOnNewLink()
         scenario.checkUrgentAlarmSince(raisedAt)
+        // The alarm screen or its notification would stay into the next test.
+        testGraphs.uiInteraction.stopAlarm("scenario end")
     }
 
     /** The pump ends a bolus in its own time, and a status read then brings AAPS up to date. */

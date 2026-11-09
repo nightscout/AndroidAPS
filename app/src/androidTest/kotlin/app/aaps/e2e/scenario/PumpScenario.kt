@@ -7,6 +7,8 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
 import androidx.work.WorkManager
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.RM
@@ -432,9 +434,19 @@ class PumpScenario(private val pump: PumpUnderTest) {
         fun urgent() = testGraphs.notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT && it.date >= since }
         fun fullScreen() = instrumentation.targetContext.getSystemService(NotificationManager::class.java)
             .activeNotifications.any { it.id == AlarmNotificationManager.NOTIFICATION_ID_FULL_SCREEN && it.postTime >= since }
-        awaitValue(RECORD_TIMEOUT) { (urgent() || fullScreen()).takeIf { it } }
+        // From the main thread with the app in front, runAlarm opens its alarm screen at once instead.
+        fun alarmScreen(): Boolean {
+            var shown = false
+            onMain {
+                shown = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
+                    .any { testGraphs.uiInteraction.errorHelperActivity.isInstance(it) }
+            }
+            return shown
+        }
+        fun alarmed() = urgent() || fullScreen() || alarmScreen()
+        awaitValue(RECORD_TIMEOUT) { alarmed().takeIf { it } }
         assertWithMessage("an alarm since the pump raised it, AAPS shows ${testGraphs.notificationManager.notifications.value.map { "${it.id} ${it.level}" }}")
-            .that(urgent() || fullScreen()).isTrue()
+            .that(alarmed()).isTrue()
     }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
