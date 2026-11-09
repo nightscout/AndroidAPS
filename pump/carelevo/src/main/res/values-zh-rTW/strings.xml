@@ -211,5 +211,6 @@
     <string name="carelevo_profile_update_skip_comment">已略過：更新時機過早。</string>
     <string name="carelevo_bolus_stop_not_confirmed">貼片幫浦未確認停止。正在等待注射結束…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">先前未記錄的一筆注射已於現在補上。請檢查 IOB（活性胰島素），然後再試一次。</string>
+    <string name="carelevo_bolus_outcome_unknown">胰島素貼片幫浦未回應大劑量注射請求。在貼片幫浦回報實際輸注量之前，系統會將整筆大劑量視為已注射。</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">貼片幫浦未確認停止。已記錄完整的 %1$s 注射量。</string>
 </resources>
