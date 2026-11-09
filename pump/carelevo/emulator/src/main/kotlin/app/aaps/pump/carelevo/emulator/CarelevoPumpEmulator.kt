@@ -522,7 +522,7 @@ class CarelevoPumpEmulator(
             if (running != null) endBolus(infused)
             else {
                 state.activeBolusActionId = null
-                state.modeRaw = MODE_BASAL
+                state.modeRaw = if (state.tempBasalRunning) MODE_TEMP_BASAL else MODE_BASAL
             }
         }
         return listOf(byteArrayOf(RESP_BOLUS_CANCEL, result.toByte()) + encodeUnitsCenti(infused))

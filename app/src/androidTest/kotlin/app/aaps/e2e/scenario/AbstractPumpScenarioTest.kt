@@ -269,6 +269,24 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
     }
 
+    /**
+     * The pump ends the temp basal, its answer is lost, and so is the answer to the status read that checks it. The
+     * driver cannot know then, so AAPS may keep the temp basal. The next status read must correct it.
+     */
+    @Test
+    fun aTempBasalCancelWhoseCheckIsLostTooIsKnownAfterAStatusRead() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("temp basal").that(scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+        scenario.checkTempBasal()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.TEMP_BASAL_STOP)).isTrue()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.STATUS)).isTrue()
+        scenario.cancelTempBasal()
+        assertWithMessage("the pump ended the temp basal").that(scenario.control.state().tempBasal).isNull()
+        scenario.readStatus()
+        scenario.checkTempBasal()
+    }
+
     /** The pump ends a bolus in its own time, and a status read then brings AAPS up to date. */
     private fun awaitBolusEndAndRead() {
         scenario.awaitTrue("the pump ended the bolus", PumpScenario.BOLUS_TIMEOUT) { !scenario.control.state().bolusRunning }
