@@ -1,12 +1,13 @@
 package app.aaps.pump.danars.emulator
 
 import app.aaps.pump.dana.emulator.HistoryEventStore
+import java.io.Serializable
 
 /**
  * Mutable state of the emulated Dana RS pump.
- * Inspectable from tests for assertions.
+ * Inspectable from tests for assertions. Saved whole for a test that kills the app, see `PumpEmulator.saveState`.
  */
-class PumpState {
+class PumpState : Serializable {
 
     // History (shared with DanaR emulator)
     val historyStore = HistoryEventStore()
@@ -45,10 +46,16 @@ class PumpState {
     // Bolus
     var maxBolus: Double = 10.0
     var bolusStep: Double = 0.05
-    /** Interval between bolus delivery notifications in ms. Set to 0 for instant delivery in tests. */
+    /** 0 gives a whole bolus at once, for unit tests. Any other value gives it step by step at the speed of the command. */
     var bolusDeliveryIntervalMs: Long = 1000
     var lastBolusAmount: Double = 0.0
     var lastBolusTime: Long = 0
+
+    /** The bolus the pump gives now, or null. */
+    var runningBolus: RunningBolus? = null
+
+    /** Every bolus the pump gave, oldest first, each with the amount it really gave. */
+    val givenBoluses: MutableList<Double> = ArrayList()
     var isExtendedBolusRunning: Boolean = false
     var extendedBolusAmount: Double = 0.0
     var extendedBolusDurationHalfHours: Int = 0
@@ -68,8 +75,15 @@ class PumpState {
     // IOB
     var iob: Double = 0.0
 
-    // Time (pump internal clock)
-    var pumpTimeMillis: Long = System.currentTimeMillis()
+    /** How far the pump clock is off the phone clock. A real pump clock runs on, so only this is kept. */
+    var clockOffsetMs: Long = 0
+
+    /** The pump clock now. Setting it sets the pump clock, as the time commands do. */
+    var pumpTimeMillis: Long
+        get() = System.currentTimeMillis() + clockOffsetMs
+        set(value) {
+            clockOffsetMs = value - System.currentTimeMillis()
+        }
     var usingUTC: Boolean = false
     var zoneOffset: Int = 0
 
@@ -125,4 +139,41 @@ class PumpState {
     // BLE5 pairing key (6 ASCII digits, e.g. "474632")
     var ble5PairingKey: String = "474632"
 
+}
+
+/**
+ * A bolus the pump gives now. Seen on a real Dana-i (2026-11-09): 0.05 U steps, about 0.6 s apart at 12 s/U, with a
+ * progress message after each step.
+ *
+ * @param startedAt phone time of the start
+ * @param amountHundredths what the command asked for, in 0.01 U
+ * @param msPerStep time for one step, 0 for a whole bolus at once
+ * @param link the link the start came on: the progress goes only there
+ */
+class RunningBolus(val startedAt: Long, val amountHundredths: Int, val msPerStep: Long, var link: Int) : Serializable {
+
+    /** Steps given and reported so far. */
+    var stepsGiven = 0
+
+    /** Set by a stop: the pump ends after this many steps. */
+    var stopAfterSteps: Int? = null
+
+    val totalSteps: Int get() = (amountHundredths + STEP_HUNDREDTHS - 1) / STEP_HUNDREDTHS
+
+    /** The steps the pump has given by [now], up to its end. */
+    fun stepsDue(now: Long): Int {
+        val end = stopAfterSteps ?: totalSteps
+        if (msPerStep <= 0) return end
+        return minOf(end, ((now - startedAt) / msPerStep).toInt())
+    }
+
+    fun givenHundredths(steps: Int): Int = minOf(amountHundredths, steps * STEP_HUNDREDTHS)
+
+    fun ended(steps: Int): Boolean = steps >= (stopAfterSteps ?: totalSteps)
+
+    companion object {
+
+        /** 0.05 U. */
+        const val STEP_HUNDREDTHS = 5
+    }
 }
