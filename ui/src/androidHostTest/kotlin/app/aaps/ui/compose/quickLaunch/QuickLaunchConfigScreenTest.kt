@@ -3,6 +3,7 @@ package app.aaps.ui.compose.quickLaunch
 import android.content.Context
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasScrollToNodeAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -40,6 +41,7 @@ import app.aaps.core.ui.R as CoreUiR
  *  - an empty selection says so rather than showing an empty gap;
  *  - a category section is hidden completely while it has nothing in it, instead of leaving a
  *    heading with no rows under it;
+ *  - every static action the view model offers is drawn in some section, so none is lost;
  *  - Add and Remove really change the stored list, and the configuration button stays last so the
  *    user can always get back here;
  *  - only a profile entry offers the preset editor, and that editor calls a duration of zero
@@ -149,6 +151,27 @@ class QuickLaunchConfigScreenTest {
         compose.onNodeWithText(careHeader).assertDoesNotExist()
         // Treatment keeps CGM and calibration, which are not gated, so that heading stays.
         compose.onNodeWithText(treatmentHeader).assertIsDisplayed()
+    }
+
+    @Test
+    fun everyOfferedStaticActionIsDrawnInASection() {
+        // Each section picks its rows by element category. An action whose category no section takes
+        // is offered by the view model but never drawn. Temp basal (category BASAL) was lost this way.
+        val viewModel = viewModels.build().also { it.loadState() }
+        val offered = viewModel.uiState.value.availableStaticItems.map { it.action }
+        assertThat(offered).contains(QuickLaunchAction.TempBasal)
+
+        compose.setAapsContent(screen) {
+            QuickLauchConfigScreen(viewModel = viewModel, onNavigateBack = {})
+        }
+
+        // One by one: the list is lazy, so a row below the fold does not exist until it is scrolled
+        // to. performScrollToNode fails when no row matches, which is the case this test is about.
+        offered.forEach { action ->
+            val addLabel = addLabelFor(action.typeId)
+            compose.onNode(hasScrollToNodeAction()).performScrollToNode(hasContentDescription(addLabel))
+            compose.onNodeWithContentDescription(addLabel).assertIsDisplayed()
+        }
     }
 
     @Test
