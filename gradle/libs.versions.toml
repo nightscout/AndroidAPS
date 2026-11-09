@@ -129,7 +129,7 @@ androidx-room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", versio
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version = "2.7.1" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.7.0" }
-androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version = "2.4.0" }
+androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version = "2.4.1" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work" }
 androidx-wear = { group = "androidx.wear", name = "wear", version = "1.4.0" }
