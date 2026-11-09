@@ -64,6 +64,18 @@ settle() {
   done
 }
 
+# What the driver, the queue and the database did during each failed test of [out], from the logcat of this emulator.
+# A scenario failure names only the check that failed; these lines say why.
+dump_failed_tests() {
+  local out=$1
+  for t in $(sed -n 's/^[0-9]*) \([A-Za-z0-9_]*\)(.*/\1/p' "$out" | sort -u); do
+    echo "--- what happened in $t ---"
+    adb -s "$DEV" logcat -d -v time \
+      | sed -n "/TestRunner.*started: $t(/,/TestRunner.*finished: $t(/p" \
+      | grep -E "PUMP|DATABASE|TestRunner|AndroidRuntime| E " | tail -n 250 || true
+  done
+}
+
 # One part of a scenario class, with the retry and coverage rules of the app shards.
 run_part() {
   local cls=$1 part=$2 id=$3 rc=1
@@ -80,9 +92,17 @@ run_part() {
     sz=$(wc -c < "$COVDIR/cov-$id.ec" 2>/dev/null || echo 0)
     echo "$id attempt $attempt coverage: ${sz:-0} bytes"
     if grep -qE "Process crashed|INSTRUMENTATION_FAILED" "$Q/out-$id-$attempt.txt" || [ "${sz:-0}" -lt 50000 ]; then
-      echo "$id attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
+      echo "$id attempt $attempt: process crash or missing coverage - retry with a fresh process"
+      echo "--- $id attempt $attempt: what crashed ---"
+      adb -s "$DEV" logcat -d -v time | grep -E -A 40 "FATAL EXCEPTION|ANR in " | head -n 120 || true
+      continue
     fi
-    if grep -qE "FAILURES!!!" "$Q/out-$id-$attempt.txt"; then rc=1; else rc=0; fi
+    if grep -qE "FAILURES!!!" "$Q/out-$id-$attempt.txt"; then
+      rc=1
+      dump_failed_tests "$Q/out-$id-$attempt.txt"
+    else
+      rc=0
+    fi
     break
   done
   return $rc
