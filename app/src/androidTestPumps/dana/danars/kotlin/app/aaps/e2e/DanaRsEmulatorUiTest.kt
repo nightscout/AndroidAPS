@@ -7,6 +7,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
@@ -137,6 +138,8 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         seedPairingFor(variant)
         emulator.pairingDelayMs = 0
         emulator.writeLatencyMs = 0
+        // A bolus as short as the driver allows. At the real speed (12 s/U) each 1 U bolus of the flow waited 12 s.
+        emulator.speed = EmulatorSpeed.FAST
         // A value no default produces, so finding it on screen can only mean it came from the pump
         // (see refreshStatusFromPump). The emulator's own default here is 25.
         emulator.pumpState.maxDailyTotalUnits = MAX_DAILY_UNITS
