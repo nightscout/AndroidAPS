@@ -1631,16 +1631,21 @@ class DataHandlerMobile(
         // profile there is no IU conversion to make, so the reservoir is reported as unavailable
         // rather than converted at a guessed concentration.
         val concentration = profile?.iCfg?.concentration
-        val reservoir = concentration?.let { c ->
-            pump.reservoirLevel.value.iU(c).let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
-        } ?: 0.0
+        // Null also when the pump has not told it yet, as after an app start. On AAPSClient the local pump is the
+        // VirtualPump with a fixed 50 U: the master's reservoir comes with its device status, in insulin units already.
+        val reservoirKnown: Double? =
+            if (config.AAPSCLIENT) processedDeviceStatusData.pumpData?.reservoir
+            else concentration?.let { c ->
+                pump.reservoirLevel.value?.iU(c)?.let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+            }
+        val reservoir = reservoirKnown ?: 0.0
         val reservoirString = if (reservoir > 0) decimalFormatter.to0Decimal(reservoir, rh.gs(CoreUiStrings.insulin_unit_shortname)) else ""
         val resUrgent = preferences.get(IntKey.OverviewResCritical)
         val resWarn = preferences.get(IntKey.OverviewResWarning)
         val reservoirLevel = when {
             // Unknown must not fall through the thresholds: a 0.0 reservoir is <= resUrgent and would
             // raise a false critical-reservoir alarm on the watch.
-            concentration == null  -> 0
+            reservoirKnown == null -> 0
             reservoir <= resUrgent -> 2
             reservoir <= resWarn   -> 1
             else                   -> 0

@@ -100,7 +100,8 @@ class PumpStatusProviderImpl(
         val profileName = profileFunction.getProfileName()
 
         return buildJsonObject {
-            put("reservoir", pump.reservoirLevel.value.iU(profile.insulinConcentration()).toInt())
+            // Left out when not known: a 0 would read as an empty reservoir in Nightscout. A real 0 is sent.
+            pump.reservoirLevel.value?.let { put("reservoir", it.iU(profile.insulinConcentration()).toInt()) }
             put("clock", dateUtil.toISOString(now))
             putJsonObject("battery") {
                 putIfThereIsValue("percent", pump.batteryLevel.value)

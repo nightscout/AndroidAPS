@@ -8,6 +8,13 @@ import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedExtendedBolus
+import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
+import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +41,7 @@ class CarelevoEmulatorBleTransport(
     private val aapsLogger: AAPSLogger? = null,
     /** Serial reported by a discovery scan. Defaults to whatever the emulated patch already carries. */
     private val serialNumberProvider: (() -> String)? = null
-) : CarelevoBleTransport {
+) : CarelevoBleTransport, PumpEmulatorControl {
 
     private var listener: BleTransportListener? = null
 
@@ -151,8 +158,107 @@ class CarelevoEmulatorBleTransport(
         override fun writeCharacteristic(data: ByteArray) {
             writes += data
             listener?.onCharacteristicWritten()
-            emulator.handle(data).forEach { listener?.onCharacteristicChanged(it) }
+            val opcode = data.firstOrNull() ?: return
+            if (takeFault(lostCommands, opcode)) {
+                aapsLogger?.debug(LTag.PUMPEMULATOR, "emulator: command 0x%02X lost before the patch".format(opcode))
+                return
+            }
+            val answers = emulator.handle(data)
+            if (takeFault(lostAnswers, opcode)) {
+                aapsLogger?.debug(LTag.PUMPEMULATOR, "emulator: answer to 0x%02X lost".format(opcode))
+                return
+            }
+            answers.forEach { listener?.onCharacteristicChanged(it) }
         }
+    }
+
+    // ---- PumpEmulatorControl ----------------------------------------------------------------
+
+    /**
+     * The opcodes of each fault, in the order the test set them. Each fault is used once, and only the first one can
+     * fire. A fault named for a command with two opcodes (the basal program) is used up by either.
+     */
+    private val lostCommands = mutableListOf<Set<Byte>>()
+    private val lostAnswers = mutableListOf<Set<Byte>>()
+
+    private fun takeFault(faults: MutableList<Set<Byte>>, opcode: Byte): Boolean = synchronized(faults) {
+        if (faults.firstOrNull()?.contains(opcode) == true) {
+            faults.removeAt(0)
+            true
+        } else false
+    }
+
+    private fun addFault(faults: MutableList<Set<Byte>>, command: EmulatedCommand): Boolean = synchronized(faults) {
+        faults.add(opcodesOf(command))
+    }
+
+    override var speed: EmulatorSpeed
+        get() = emulator.speed
+        set(value) {
+            emulator.speed = value
+        }
+
+    override fun breakLink(): Boolean {
+        gatt.disconnect()
+        return true
+    }
+
+    override fun setOutOfRange(outOfRange: Boolean): Boolean {
+        // A real stack starts the connect and the patch never answers, so the connect times out.
+        reportConnected = !outOfRange
+        if (outOfRange) gatt.disconnect()
+        return true
+    }
+
+    override fun loseCommand(command: EmulatedCommand): Boolean = addFault(lostCommands, command)
+
+    override fun loseAnswer(command: EmulatedCommand): Boolean = addFault(lostAnswers, command)
+
+    /**
+     * UNVERIFIED which tier a real patch uses for each. The driver reads them from the 0x43 active-alarm snapshot. A low
+     * reservoir and a long stop are no snapshot flags: the driver works them out from the reported values.
+     */
+    override fun raise(alarm: EmulatedAlarm): Boolean {
+        val state = emulator.state
+        when (alarm) {
+            EmulatedAlarm.EMPTY_RESERVOIR  -> state.criticalAlarmFlags = state.criticalAlarmFlags.copy(outOfInsulin = true)
+            EmulatedAlarm.OCCLUSION        -> state.criticalAlarmFlags = state.criticalAlarmFlags.copy(occlusionDetected = true)
+            EmulatedAlarm.LOW_BATTERY      -> state.advisoryAlarmFlags = state.advisoryAlarmFlags.copy(lowBattery = true)
+            EmulatedAlarm.LOW_RESERVOIR,
+            EmulatedAlarm.STOPPED_TOO_LONG -> return false
+        }
+        return true
+    }
+
+    override fun stopNextBolusAt(units: Double): Boolean {
+        emulator.stopNextBolusAt = units
+        return true
+    }
+
+    override fun state(): EmulatedPumpState {
+        val state = emulator.state
+        return EmulatedPumpState(
+            boluses = emulator.boluses,
+            bolusRunning = emulator.bolusRunning,
+            tempBasal = if (state.tempBasalRunning) EmulatedTempBasal(state.tempBasalAbsolute, state.tempBasalPercent) else null,
+            suspended = state.stopped,
+            reservoir = emulator.reservoir,
+            linkUp = connected,
+            commands = emulator.commands,
+            extendedBolus = if (state.extendedBolusRunning) EmulatedExtendedBolus(state.extendedBolusUnits, state.extendedBolusMinutes) else null
+        )
+    }
+
+    /** The patch, not the radio: after the app start a new transport connects to it. */
+    override fun saveState(): ByteArray = emulator.saveState()
+
+    private fun opcodesOf(command: EmulatedCommand): Set<Byte> = when (command) {
+        EmulatedCommand.BOLUS_START      -> setOf(CarelevoPumpEmulator.OP_IMMEDIATE_BOLUS)
+        EmulatedCommand.BOLUS_STOP       -> setOf(CarelevoPumpEmulator.OP_BOLUS_CANCEL)
+        EmulatedCommand.TEMP_BASAL_START -> setOf(CarelevoPumpEmulator.OP_TEMP_BASAL)
+        EmulatedCommand.TEMP_BASAL_STOP  -> setOf(CarelevoPumpEmulator.OP_TEMP_BASAL_CANCEL)
+        EmulatedCommand.BASAL_PROFILE    -> BASAL_PROGRAM_OPCODES
+        EmulatedCommand.STATUS           -> setOf(CarelevoPumpEmulator.OP_INFUSION_INFO)
     }
 
     private fun deviceName(): String = "$DEVICE_NAME_PREFIX${pumpState.serialNumber}"
@@ -166,5 +272,8 @@ class CarelevoEmulatorBleTransport(
 
         /** Well above CarelevoPatchConnectViewModel.MIN_SCAN_RSSI (-45) — "right next to the phone". */
         const val EMULATED_RSSI = -30
+
+        /** The basal program is set at activation and updated later, with two opcodes. */
+        val BASAL_PROGRAM_OPCODES = setOf(CarelevoPumpEmulator.OP_BASAL_SET, CarelevoPumpEmulator.OP_BASAL_UPDATE)
     }
 }

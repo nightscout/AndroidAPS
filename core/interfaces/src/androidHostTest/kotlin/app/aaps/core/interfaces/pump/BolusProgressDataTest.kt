@@ -35,6 +35,44 @@ class BolusProgressDataTest {
         assertThat(second).isGreaterThan(first)
     }
 
+    /** A driver found a bolus running after an app restart: progress and Stop, as for a bolus the queue started. */
+    @Test
+    fun `startIfIdle shows a bolus the pump runs when nothing is shown`() {
+        val generation = sut.startIfIdle(insulin = 2.0, isSMB = false)
+        assertThat(generation).isNotNull()
+        assertThat(sut.state.value?.insulin).isEqualTo(2.0)
+        assertThat(sut.state.value?.stopDeliveryEnabled).isTrue()
+    }
+
+    /** The bolus the command queue is starting keeps its progress, and its generation still clears it. */
+    @Test
+    fun `startIfIdle leaves a bolus that is shown already`() {
+        val queueGeneration = sut.start(insulin = 1.1, isSMB = false)
+        assertThat(sut.startIfIdle(insulin = 2.0, isSMB = false)).isNull()
+        assertThat(sut.state.value?.insulin).isEqualTo(1.1)
+        sut.clear(queueGeneration)
+        assertThat(sut.state.value).isNull()
+    }
+
+    /** The queue starts a new bolus from another thread at the same time: one of them shows, and its generation is the last one. */
+    @Test
+    fun `startIfIdle and start from two threads never mix their state and generation`() {
+        repeat(200) {
+            val data = BolusProgressData(ch, TestScope())
+            var idleGeneration: Long? = null
+            var queueGeneration = 0L
+            val idle = Thread { idleGeneration = data.startIfIdle(insulin = 2.0, isSMB = false) }
+            val queue = Thread { queueGeneration = data.start(insulin = 1.1, isSMB = false) }
+            idle.start(); queue.start(); idle.join(); queue.join()
+            // The queue always shows its bolus last or alone. If the driver's one came first, it is replaced and its
+            // generation is older, so its clear cannot wipe the queue's bolus.
+            assertThat(data.state.value?.insulin).isEqualTo(1.1)
+            idleGeneration?.let { assertThat(it).isLessThan(queueGeneration) }
+            idleGeneration?.let { data.clear(it) }
+            assertThat(data.state.value?.insulin).isEqualTo(1.1)
+        }
+    }
+
     @Test
     fun `matching-generation clear wipes the current bolus state`() {
         val generation = sut.start(insulin = 1.1, isSMB = false)

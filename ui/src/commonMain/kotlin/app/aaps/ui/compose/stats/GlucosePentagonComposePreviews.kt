@@ -15,9 +15,9 @@ internal fun GlucosePentagonPreview() {
         hypoPct = 5.7,
         hyperPct = 22.3,
         meanGlucose = 154.0,
-        normalizedValues = listOf(0.41, 0.55, 0.41, 0.41, 0.60),
-        referenceValues = listOf(0.18, 0.41, 0.18, 0.18, 0.43),
-        pgr = 3.3
+        normalizedValues = listOf(0.26, 0.31, 0.20, 0.25, 0.27),
+        referenceValues = listOf(0.18, 0.18, 0.18, 0.18, 0.18),
+        pgr = 1.9
     )
 
     MaterialTheme {

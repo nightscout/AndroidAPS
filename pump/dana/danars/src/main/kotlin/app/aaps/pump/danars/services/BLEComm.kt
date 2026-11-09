@@ -818,9 +818,11 @@ class BLEComm(
                 var reBytes = ByteArray(bytes.size - sendBytes.size)
                 System.arraycopy(bytes, sendBytes.size, reBytes, 0, reBytes.size)
                 bytes = reBytes
-                // and send
-                bleTransport.gatt.writeCharacteristic(sendBytes)
-                // The rest split to parts per 20 bytes max
+                // The rest split to parts per 20 bytes max, and queued BEFORE the first part is written. The write
+                // callback sends the next queued part. A callback that came before the queueing found nothing, the
+                // message was never completed and the pump never answered ("Reply not received"). A profile upload of the
+                // emulator UI test under load got no answer at all, which fits. A real phone's callback is only slower,
+                // not ordered.
                 while (true) {
                     if (bytes.size > 20) {
                         val addBytes = ByteArray(20)
@@ -834,6 +836,8 @@ class BLEComm(
                         break
                     }
                 }
+                // and send
+                bleTransport.gatt.writeCharacteristic(sendBytes)
             } else {
                 bleTransport.gatt.writeCharacteristic(bytes)
             }

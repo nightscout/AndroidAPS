@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdNeedleCheck
 import app.aaps.pump.carelevo.command.CmdSetBasal
+import app.aaps.pump.carelevo.command.activationProfile
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
@@ -189,17 +190,18 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             triggerEvent(CarelevoConnectNeedleEvent.ShowMessageBluetoothNotEnabled)
             return
         }
-        if (carelevoPatch.profile.value?.getOrNull() == null) {
-            setUiState(UiState.Idle)
-            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageProfileNotSet)
-            return
-        }
 
         setUiState(UiState.Loading)
-        // Routed through the CommandQueue (connect/reconnect-before-execute). The executor reads the
-        // profile off the patch and programs the basal; the post-success bookkeeping (pump sync +
-        // therapy events) stays here on the VM.
+        // Routed through the CommandQueue (connect/reconnect-before-execute). The executor takes the same
+        // profile and programs the basal; the post-success bookkeeping (pump sync + therapy events) stays
+        // here on the VM.
         viewModelScope.launch {
+            // The requested profile when the patch has none, as for a first patch.
+            if (carelevoPatch.activationProfile(pumpSync) == null) {
+                setUiState(UiState.Idle)
+                triggerEvent(CarelevoConnectNeedleEvent.ShowMessageProfileNotSet)
+                return@launch
+            }
             val result = commandQueue.customCommand(CmdSetBasal())
             if (result.success) {
                 aapsLogger.debug(LTag.PUMPCOMM, "set basal success")

@@ -5,8 +5,9 @@ package app.aaps.testcategories
  * The app module's androidTest suite is filtered natively across three emulators:
  *  - **shard A** runs `-e annotation app.aaps.testcategories.ShardA`
  *  - **shard B** runs `-e annotation app.aaps.testcategories.ShardB`
- *  - **shard C** runs `-e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB`
+ *  - **shard C** runs `-e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB,app.aaps.testcategories.ShardD`
  *    — i.e. *everything else*, so a new, untagged test can never fall into no shard and be skipped.
+ *  - **shard D** runs the pump emulator scenarios on a fourth emulator, see [ShardD]
  *
  * Balance is by measured time, not test count. The heavy tests dominate, so they are spread one family
  * per emulator:

@@ -3,6 +3,7 @@ package app.aaps.pump.carelevo.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
@@ -69,7 +70,8 @@ class CarelevoActivationExecutor @Inject constructor(
     private val alarmClearRequestUseCase: AlarmClearRequestUseCase,
     private val alarmClearPatchDiscardUseCase: AlarmClearPatchDiscardUseCase,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
-    private val bleSession: CarelevoBleSession
+    private val bleSession: CarelevoBleSession,
+    private val pumpSync: PumpSync
 ) {
 
     private companion object {
@@ -116,7 +118,7 @@ class CarelevoActivationExecutor @Inject constructor(
      */
     private fun runSetBasal(): PumpEnactResult {
         val result = pumpEnactResultProvider()
-        val profile = carelevoPatch.profile.value?.getOrNull()
+        val profile = runBlocking { carelevoPatch.activationProfile(pumpSync) }
             ?: return result.success(false).enacted(false).comment("profile not set")
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")

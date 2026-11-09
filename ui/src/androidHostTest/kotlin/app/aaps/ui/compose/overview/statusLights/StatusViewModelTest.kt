@@ -177,10 +177,11 @@ internal class StatusViewModelTest {
             running.incrementAndGet()
             try {
                 gate.await()
+                // Before `running` drops: the test reads this as soon as `running` is 0. Seen on CI as 0 when it came after.
+                tddDone.incrementAndGet()
             } finally {
                 running.decrementAndGet()
             }
-            tddDone.incrementAndGet()
             TDD(timestamp = 0, totalAmount = 12.0)
         }
         val viewModel = newViewModel()

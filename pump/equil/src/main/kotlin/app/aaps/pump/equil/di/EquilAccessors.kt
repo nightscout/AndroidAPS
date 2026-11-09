@@ -1,9 +1,6 @@
 package app.aaps.pump.equil.di
 
-import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.ble.EquilBleTransport
-import app.aaps.pump.equil.database.EquilHistoryPumpDao
-import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.manager.EquilManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -20,9 +17,6 @@ import dev.zacsweers.metro.ContributesTo
 @ContributesTo(AppScope::class)
 interface EquilAccessors {
 
-    val equilPumpPlugin: EquilPumpPlugin
     val equilManager: EquilManager
     val equilBleTransport: EquilBleTransport
-    val equilHistoryRecordDao: EquilHistoryRecordDao
-    val equilHistoryPumpDao: EquilHistoryPumpDao
 }

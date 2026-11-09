@@ -2,10 +2,19 @@ package app.aaps.pump.carelevo.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.SnapshotAlarmFlag
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import kotlin.experimental.xor
+import kotlin.math.floor
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -27,24 +36,123 @@ import kotlin.math.roundToInt
  */
 class CarelevoPumpEmulator(
     val state: CarelevoPumpState = CarelevoPumpState(),
-    private val aapsLogger: AAPSLogger? = null
+    private val aapsLogger: AAPSLogger? = null,
+    /** The patch's clock. A test that moves time itself passes its own. */
+    private val clock: () -> Long = System::currentTimeMillis
 ) {
+
+    /** The driver writes on its own thread and a test looks from another. */
+    private val lock = Any()
+
+    /** How fast a bolus runs. The clock stays the phone's clock. */
+    @Volatile var speed: EmulatorSpeed = EmulatorSpeed.REAL
+
+    /** Commands the patch received since it started, also the ones it ignored. */
+    var commands: Int = 0
+        private set
+
+    /** The next bolus stops after this many units, as at an occlusion. */
+    var stopNextBolusAt: Double? = null
+        set(value) = synchronized(lock) { field = value }
+
+    private class RunningBolus(val startedAt: Long, val volume: Double, val stopAt: Double, val msPerUnit: Long) : Serializable
+
+    private var bolus: RunningBolus? = null
+    private val deliveredBoluses = ArrayList<Double>()
+
+    /** What [saveState] writes. The running bolus keeps its start time, so the time until the restore counts. */
+    private class Saved(
+        val state: CarelevoPumpState,
+        val bolus: RunningBolus?,
+        val deliveredBoluses: ArrayList<Double>,
+        val commands: Int,
+        val speed: EmulatorSpeed
+    ) : Serializable
+
+    /** All the patch holds, with the bolus it is giving, for a test that kills the app. See [restore]. */
+    fun saveState(): ByteArray = synchronized(lock) {
+        ByteArrayOutputStream().also { bytes ->
+            ObjectOutputStream(bytes).use { it.writeObject(Saved(state, bolus, ArrayList(deliveredBoluses), commands, speed)) }
+        }.toByteArray()
+    }
+
+    /** Every bolus the patch gave, oldest first, each with the amount it really gave. */
+    val boluses: List<Double>
+        get() = synchronized(lock) {
+            settle()
+            deliveredBoluses.toList()
+        }
+
+    val bolusRunning: Boolean
+        get() = synchronized(lock) {
+            settle()
+            bolus != null
+        }
+
+    /** Units left now, with what a running bolus has given so far. */
+    val reservoir: Double
+        get() = synchronized(lock) {
+            settle()
+            (state.insulinRemaining - runningBolusGiven()).coerceAtLeast(0.0)
+        }
 
     /** Frames the patch sends back for [request]; empty when it stays silent. */
     fun handle(request: ByteArray): List<ByteArray> {
-        if (request.isEmpty()) return emptyList()
-        val opcode = request[0]
-        if (opcode in state.silentOpcodes) {
-            aapsLogger?.debug(LTag.PUMPEMULATOR, "emulator: silently dropping 0x${hex(opcode)}")
-            return emptyList()
+        synchronized(lock) {
+            if (request.isEmpty()) return emptyList()
+            commands++
+            settle()
+            val opcode = request[0]
+            if (opcode in state.silentOpcodes) {
+                aapsLogger?.debug(LTag.PUMPEMULATOR, "emulator: silently dropping 0x${hex(opcode)}")
+                return emptyList()
+            }
+            val responses = dispatch(opcode, request)
+            aapsLogger?.debug(
+                LTag.PUMPEMULATOR,
+                "emulator: 0x${hex(opcode)} -> ${responses.joinToString(", ") { "0x${hex(it[0])}" }.ifEmpty { "(silence)" }}"
+            )
+            return responses
         }
-        val responses = dispatch(opcode, request)
-        aapsLogger?.debug(
-            LTag.PUMPEMULATOR,
-            "emulator: 0x${hex(opcode)} -> ${responses.joinToString(", ") { "0x${hex(it[0])}" }.ifEmpty { "(silence)" }}"
-        )
-        return responses
     }
+
+    // ---- Bolus over time --------------------------------------------------------------------
+
+    /**
+     * UNVERIFIED: the rate of a real patch. 20 s per unit is what the emulator reported before it gave a bolus over
+     * time; the real value is to be measured.
+     */
+    private fun msPerUnit(): Long = when (speed) {
+        EmulatorSpeed.REAL -> SECONDS_PER_UNIT * MS_PER_SECOND
+        EmulatorSpeed.FAST -> FAST_MS_PER_UNIT
+    }
+
+    /** In whole hundredths, as the patch reports amounts. */
+    private fun givenSoFar(running: RunningBolus): Double =
+        floor(min(running.stopAt, (clock() - running.startedAt).toDouble() / running.msPerUnit) * CENTI) / CENTI
+
+    /** Ends a bolus whose time is over: its insulin counts from then on, and the patch goes back to its basal. */
+    private fun settle() {
+        val running = bolus ?: return
+        if (clock() - running.startedAt < running.stopAt * running.msPerUnit) return
+        endBolus(running.stopAt)
+        // UNVERIFIED how a real patch reports an occlusion during a bolus. The driver reads it from the alarm snapshot.
+        if (running.stopAt < running.volume) state.criticalAlarmFlags = state.criticalAlarmFlags.copy(occlusionDetected = true)
+    }
+
+    private fun endBolus(given: Double) {
+        state.infusedTotalBolus += given
+        state.insulinRemaining = (state.insulinRemaining - given).coerceAtLeast(0.0)
+        state.bolusInfusedAmount = given
+        state.activeBolusActionId = null
+        state.modeRaw = if (state.tempBasalRunning) MODE_TEMP_BASAL else MODE_BASAL
+        state.pumpStateRaw = PUMP_STATE_READY
+        deliveredBoluses += given
+        bolus = null
+    }
+
+    /** What the bolus that runs now has given, in units. 0 without one. */
+    private fun runningBolusGiven(): Double = bolus?.let { givenSoFar(it) } ?: 0.0
 
     private fun dispatch(opcode: Byte, request: ByteArray): List<ByteArray> = when (opcode) {
         OP_SET_TIME              -> setTime(request)
@@ -58,7 +166,7 @@ class CarelevoPumpEmulator(
         OP_NEEDLE_STATUS         -> needleStatus()
         OP_THRESHOLD_SETUP       -> thresholdSetup(request)
         OP_ADDITIONAL_PRIMING    -> additionalPriming()
-        OP_TEMP_BASAL            -> tempBasal()
+        OP_TEMP_BASAL            -> tempBasal(request)
         OP_IMMEDIATE_BOLUS       -> immediateBolus(request)
         OP_EXTEND_BOLUS          -> extendBolus(request)
         OP_PUMP_STOP             -> pumpStop(request)
@@ -158,7 +266,7 @@ class CarelevoPumpEmulator(
         val frames = mutableListOf<ByteArray>()
         repeat(state.safetyCheckProgressFrames) { frames += safetyFrame(SAFETY_PROGRESS_RESULT) }
         frames += safetyFrame(state.safetyCheckResult)
-        if (state.safetyCheckResult == CarelevoPumpState.RESULT_SUCCESS) state.pumpStateRaw = PUMP_STATE_RUNNING
+        // The pump state stays 0 (READY): a real patch reports 0 after the safety check and while it gives basal.
         return frames
     }
 
@@ -348,11 +456,19 @@ class CarelevoPumpEmulator(
      * knowing that they are told apart by frame length alone (6 bytes BY_UNIT with a trailing 0x00,
      * 5 bytes BY_PERCENT), since the opcode and layout are otherwise identical.
      */
-    private fun tempBasal(): List<ByteArray> {
+    private fun tempBasal(request: ByteArray): List<ByteArray> {
         val result = state.resultFor(OP_TEMP_BASAL)
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
             state.tempBasalRunning = true
-            state.modeRaw = MODE_TEMP_BASAL
+            val value = if (request.size > 2) request.u(1) + request.u(2) / CENTI else 0.0
+            if (request.size >= TEMP_BASAL_BY_UNIT_LENGTH) {
+                state.tempBasalAbsolute = value
+                state.tempBasalPercent = null
+            } else {
+                state.tempBasalAbsolute = null
+                state.tempBasalPercent = (value * HUNDRED).roundToInt()
+            }
+            if (bolus == null) state.modeRaw = MODE_TEMP_BASAL
         }
         return listOf(byteArrayOf(RESP_TEMP_BASAL, result.toByte()))
     }
@@ -361,7 +477,9 @@ class CarelevoPumpEmulator(
         val result = state.resultFor(OP_TEMP_BASAL_CANCEL)
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
             state.tempBasalRunning = false
-            state.modeRaw = MODE_BASAL
+            state.tempBasalAbsolute = null
+            state.tempBasalPercent = null
+            if (bolus == null) state.modeRaw = MODE_BASAL
         }
         return listOf(byteArrayOf(RESP_TEMP_BASAL_CANCEL, result.toByte()))
     }
@@ -374,16 +492,18 @@ class CarelevoPumpEmulator(
         val actionId = if (request.size > 1) request[1] else 0
         val volume = if (request.size > 3) request.u(2) + request.u(3) / CENTI else 0.0
         val result = state.resultFor(OP_IMMEDIATE_BOLUS)
+        // UNVERIFIED: what a real patch reports here. As before, what is left after the whole dose.
+        val remainingAfter = (state.insulinRemaining - volume).coerceAtLeast(0.0)
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
             state.activeBolusActionId = actionId.toUByte().toInt()
             state.modeRaw = MODE_IMME_BOLUS
-            state.insulinRemaining = (state.insulinRemaining - volume).coerceAtLeast(0.0)
-            state.infusedTotalBolus += volume
-            // The emulated bolus lands immediately rather than ramping, so the whole dose counts as
-            // infused — a later cancel must report that, not 0 U for insulin the totals already hold.
-            state.bolusInfusedAmount = volume
+            state.pumpStateRaw = PUMP_STATE_BOLUS
+            state.bolusInfusedAmount = 0.0
+            // The insulin counts as it is given, so a stop reports the part given so far.
+            bolus = RunningBolus(clock(), volume, stopNextBolusAt?.coerceAtMost(volume) ?: volume, msPerUnit())
+            stopNextBolusAt = null
         }
-        val seconds = (volume * SECONDS_PER_UNIT).roundToInt()
+        val seconds = (volume * msPerUnit() / MS_PER_SECOND.toDouble()).roundToInt()
         return listOf(
             byteArrayOf(
                 RESP_IMMEDIATE_BOLUS,
@@ -391,17 +511,21 @@ class CarelevoPumpEmulator(
                 result.toByte(),
                 (seconds / SECONDS_PER_MINUTE).toByte(),
                 (seconds % SECONDS_PER_MINUTE).toByte()
-            ) + encodeHundredsUnitsCenti(state.insulinRemaining)
+            ) + encodeHundredsUnitsCenti(remainingAfter)
         )
     }
 
     /** `[0x8C][result][units][centi]` — the infused amount is 2 bytes here, with no hundreds byte. */
     private fun bolusCancel(): List<ByteArray> {
         val result = state.resultFor(OP_BOLUS_CANCEL)
-        val infused = state.bolusInfusedAmount
+        val running = bolus
+        val infused = if (running != null) givenSoFar(running) else state.bolusInfusedAmount
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
-            state.activeBolusActionId = null
-            state.modeRaw = MODE_BASAL
+            if (running != null) endBolus(infused)
+            else {
+                state.activeBolusActionId = null
+                state.modeRaw = if (state.tempBasalRunning) MODE_TEMP_BASAL else MODE_BASAL
+            }
         }
         return listOf(byteArrayOf(RESP_BOLUS_CANCEL, result.toByte()) + encodeUnitsCenti(infused))
     }
@@ -422,6 +546,10 @@ class CarelevoPumpEmulator(
             state.extendedBolusRunning = true
             state.extendedInfusedAmount = 0.0
             state.modeRaw = MODE_EXTEND_BOLUS
+            // [0x25][immediate U][immediate centi][speed U][speed centi][hour][min], the speed in U/h.
+            val speed = if (request.size > 4) request.u(3) + request.u(4) / CENTI else 0.0
+            state.extendedBolusMinutes = hour * MINUTES_PER_HOUR + min
+            state.extendedBolusUnits = speed * state.extendedBolusMinutes / MINUTES_PER_HOUR
         }
         val totalMinutes = (hour * MINUTES_PER_HOUR + min).coerceAtMost(MAX_REPORTABLE_MINUTES)
         return listOf(byteArrayOf(RESP_EXTEND_BOLUS, result.toByte(), totalMinutes.toByte(), 0))
@@ -442,6 +570,8 @@ class CarelevoPumpEmulator(
     private fun pumpStop(request: ByteArray): List<ByteArray> {
         val result = state.resultFor(OP_PUMP_STOP)
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
+            // UNVERIFIED: a stop ends a running bolus, with what it has given.
+            bolus?.let { endBolus(givenSoFar(it)) }
             state.stopped = true
             if (request.size > 3) state.subId = request.u(3)
         }
@@ -462,6 +592,7 @@ class CarelevoPumpEmulator(
     private fun patchDiscard(): List<ByteArray> {
         val result = state.resultFor(OP_PATCH_DISCARD)
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
+            bolus?.let { endBolus(givenSoFar(it)) }
             state.discarded = true
             state.pumpStateRaw = PUMP_STATE_READY
         }
@@ -479,15 +610,17 @@ class CarelevoPumpEmulator(
         val frame = ByteArray(INFUSION_INFO_LENGTH)
         frame[0] = RESP_INFUSION_INFO
         frame[1] = inquiryType.toByte()
+        // UNVERIFIED: a real patch may count a running bolus only at its end. Here it counts as it is given.
+        val given = runningBolusGiven()
         frame[2] = (state.runningMinutes / MINUTES_PER_HOUR).toByte()
         frame[3] = (state.runningMinutes % MINUTES_PER_HOUR).toByte()
-        encodeHundredsUnitsCenti(state.insulinRemaining).copyInto(frame, 4)
+        encodeHundredsUnitsCenti((state.insulinRemaining - given).coerceAtLeast(0.0)).copyInto(frame, 4)
         encodeUnitsCenti(state.infusedTotalBasal).copyInto(frame, 7)
-        encodeUnitsCenti(state.infusedTotalBolus).copyInto(frame, 9)
+        encodeUnitsCenti(state.infusedTotalBolus + given).copyInto(frame, 9)
         frame[11] = state.pumpStateRaw.toByte()
         frame[12] = state.modeRaw.toByte()
         // 13..14 (infuseSetMinutes) intentionally left zero — present but never read.
-        encodeUnitsCenti(state.infusedTotalBolus).copyInto(frame, 15)
+        encodeUnitsCenti(state.infusedTotalBolus + given).copyInto(frame, 15)
         frame[17] = (state.runningMinutes / MINUTES_PER_HOUR).toByte()
         frame[18] = (state.runningMinutes % MINUTES_PER_HOUR).toByte()
         frame[19] = 0
@@ -524,6 +657,20 @@ class CarelevoPumpEmulator(
 
     @Suppress("unused")
     companion object {
+
+        /** Where the app graph keeps this emulator, so a test that restarts the app gets the same patch. */
+        val KEY = PumpEmulators.Key<CarelevoPumpEmulator>("carelevo")
+
+        /** The patch [saveState] saved, in a new process. A bolus it was giving goes on by the clock. */
+        fun restore(saved: ByteArray, aapsLogger: AAPSLogger? = null, clock: () -> Long = System::currentTimeMillis): CarelevoPumpEmulator {
+            val read = ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() as Saved }
+            return CarelevoPumpEmulator(read.state, aapsLogger, clock).apply {
+                bolus = read.bolus
+                deliveredBoluses.addAll(read.deliveredBoluses)
+                commands = read.commands
+                speed = read.speed
+            }
+        }
 
         // Requests
         const val OP_SET_TIME: Byte = 0x11
@@ -588,7 +735,9 @@ class CarelevoPumpEmulator(
         const val AUTH_FAILED = 1
 
         const val PUMP_STATE_READY = 0
-        const val PUMP_STATE_RUNNING = 2
+
+        /** A real patch reports 1 during a bolus (seen 2026-11-09), the code the driver names PRIMING. */
+        const val PUMP_STATE_BOLUS = 1
 
         const val MODE_BASAL = 1
         const val MODE_TEMP_BASAL = 2
@@ -624,8 +773,15 @@ class CarelevoPumpEmulator(
         const val SECONDS_PER_MINUTE = 60
         const val MINUTES_PER_HOUR = 60
 
-        /** Rough delivery rate used to fabricate the 0x84 expected-duration bytes. */
+        /** UNVERIFIED delivery rate of a real patch, see [msPerUnit]. */
         const val SECONDS_PER_UNIT = 20
+
+        /** As short as the driver's progress allows: it waits the time the 0x84 answer reports. */
+        const val FAST_MS_PER_UNIT = 1_000L
+        const val MS_PER_SECOND = 1_000L
+
+        /** A temp basal as a rate has a sixth, trailing byte. One as a percent has five. */
+        const val TEMP_BASAL_BY_UNIT_LENGTH = 6
 
         /** Byte 2 of the 0x85 ack carries whole minutes, so the wire cannot report beyond this. */
         const val MAX_REPORTABLE_MINUTES = 255

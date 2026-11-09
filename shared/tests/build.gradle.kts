@@ -36,6 +36,10 @@ kotlin {
                 api(libs.org.mockito.junit.jupiter)
                 api(libs.org.junit.jupiter.api)
                 implementation(libs.org.mockito.kotlin)
+                // Only for the Bluetooth transport contract. A module that runs it adds Robolectric to its own tests,
+                // so the modules that do not, do not get it.
+                compileOnly(libs.org.robolectric)
+                compileOnly(libs.junit.junit)
             }
         }
     }

@@ -13,12 +13,15 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
@@ -45,8 +48,24 @@ class PumpSyncImplementation(
     private val notificationManager: NotificationManager,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    private val config: Config
 ) : PumpSync {
+
+    /**
+     * The profile a pump record is stored with. Null means the record is dropped, and that is logged as a warning.
+     *
+     * Until the app has finished starting there is no profile (see `ProfileFunctionImpl.getProfile`), so a record a
+     * driver stores during the start waits for it, at most 30 s. It used to be dropped at once with only a debug line,
+     * and the driver could not tell: `false` also means "already stored", so it went on. Seen on a real pump, whose
+     * history read at app start lost a bolus for good.
+     */
+    private suspend fun profileForRecord(time: Long, record: String): EffectiveProfile? {
+        config.awaitInitialized()
+        val profile = profileFunction.getProfile(time)
+        if (profile == null) aapsLogger.warn(LTag.DATABASE, "Storing of $record ${dateUtil.dateAndTimeAndSecondsString(time)} ignored. No profile running.")
+        return profile
+    }
 
     override fun connectNewPump(endRunning: Boolean) {
         if (endRunning) {
@@ -219,7 +238,7 @@ class PumpSyncImplementation(
 
     override suspend fun addBolusWithTempId(timestamp: Long, amount: PumpInsulin, temporaryId: Long, type: BS.Type, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val bolus = profileFunction.getProfile(timestamp)?.let { profile ->
+        val bolus = profileForRecord(timestamp, "bolus $amount")?.let { profile ->
             BS(
                 timestamp = timestamp,
                 amount = if (type == BS.Type.PRIMING) amount.cU else amount.iU(concentration = profile.insulinConcentration()),
@@ -231,17 +250,14 @@ class PumpSyncImplementation(
                 ),
                 iCfg = profile.iCfg
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of bolus $amount ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.insertBolusWithTempId(bolus)
         return result.inserted.isNotEmpty()
     }
 
     override suspend fun syncBolusWithTempId(timestamp: Long, amount: PumpInsulin, temporaryId: Long, type: BS.Type?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val bolus = profileFunction.getProfile(timestamp)?.let { profile ->
+        val bolus = profileForRecord(timestamp, "bolus $amount")?.let { profile ->
             BS(
                 timestamp = timestamp,
                 amount = if (type == BS.Type.PRIMING) amount.cU else amount.iU(concentration = profile.insulinConcentration()),
@@ -254,17 +270,14 @@ class PumpSyncImplementation(
                 ),
                 iCfg = profile.iCfg
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of bolus $amount ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.syncPumpBolusWithTempId(bolus, type)
         return result.updated.isNotEmpty()
     }
 
     override suspend fun syncBolusWithPumpId(timestamp: Long, amount: PumpInsulin, type: BS.Type?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val bolus = profileFunction.getProfile(timestamp)?.let { profile ->
+        val bolus = profileForRecord(timestamp, "bolus $amount")?.let { profile ->
             BS(
                 timestamp = timestamp,
                 amount = if (type == BS.Type.PRIMING) amount.cU else amount.iU(concentration = profile.insulinConcentration()),
@@ -276,10 +289,7 @@ class PumpSyncImplementation(
                 ),
                 iCfg = profile.iCfg
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of bolus $amount ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.syncPumpBolus(bolus, type)
         return result.inserted.isNotEmpty()
     }
@@ -385,7 +395,7 @@ class PumpSyncImplementation(
         val start = startInAaps(timestamp, duration, pumpType, pumpSerial) { from, to ->
             persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(from, to, true).any { it.ids.pumpId == pumpId && it.ids.pumpType == pumpType && it.ids.pumpSerial == pumpSerial }
         } ?: return false
-        val temporaryBasal = profileFunction.getProfile(start)?.let { profile ->
+        val temporaryBasal = profileForRecord(start, "temporary basal $rate")?.let { profile ->
             TB(
                 timestamp = start,
                 rate = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = isAbsolute),
@@ -398,10 +408,7 @@ class PumpSyncImplementation(
                     pumpSerial = pumpSerial
                 )
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of TemporaryBasal $rate ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.syncPumpTemporaryBasal(temporaryBasal, type?.toDbType())
         return result.inserted.isNotEmpty()
     }
@@ -426,7 +433,7 @@ class PumpSyncImplementation(
         pumpSerial: String
     ): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val temporaryBasal = profileFunction.getProfile(timestamp)?.let { profile ->
+        val temporaryBasal = profileForRecord(timestamp, "temporary basal $rate")?.let { profile ->
             TB(
                 timestamp = timestamp,
                 rate = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = isAbsolute),
@@ -439,10 +446,7 @@ class PumpSyncImplementation(
                     pumpSerial = pumpSerial
                 )
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of TemporaryBasal $rate ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.insertTemporaryBasalWithTempId(temporaryBasal)
         return result.inserted.isNotEmpty()
     }
@@ -459,7 +463,7 @@ class PumpSyncImplementation(
         pumpSerial: String
     ): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val temporaryBasal = profileFunction.getProfile(timestamp)?.let { profile ->
+        val temporaryBasal = profileForRecord(timestamp, "temporary basal $rate")?.let { profile ->
             TB(
                 timestamp = timestamp,
                 rate = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = isAbsolute),
@@ -473,10 +477,7 @@ class PumpSyncImplementation(
                     pumpSerial = pumpSerial
                 )
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of TemporaryBasal $rate ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.syncPumpTemporaryBasalWithTempId(temporaryBasal, type?.toDbType())
         return result.updated.isNotEmpty()
     }
@@ -508,7 +509,7 @@ class PumpSyncImplementation(
         } ?: return false
         // Taken from the registration: only the part that is still to come.
         val part = if (start == timestamp) 1.0 else (duration - (start - timestamp)) / duration.toDouble()
-        val extendedBolus = profileFunction.getProfile(start)?.let { profile ->
+        val extendedBolus = profileForRecord(start, "extended bolus $rate")?.let { profile ->
             EB(
                 timestamp = start,
                 amount = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = true) * part,
@@ -520,10 +521,7 @@ class PumpSyncImplementation(
                     pumpSerial = pumpSerial
                 )
             )
-        } ?: run {
-            aapsLogger.debug(LTag.DATABASE, "Storing of TemporaryBasal $rate ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ignored. No profile running.")
-            return false
-        }
+        } ?: return false
         val result = persistenceLayer.syncPumpExtendedBolus(extendedBolus)
         return result.inserted.isNotEmpty()
     }

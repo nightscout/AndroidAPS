@@ -255,7 +255,15 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
 
     // Before the composition, not beside it: the first view model built reads the active pump, and
     // an empty plugin list there throws from a coroutine and takes the process with it.
-    IosAppStartup(logger, PluginStoreRegistry(graph.pluginStore, graph.configBuilder), graph.contributedPlugins, graph.rxBus, graph.appScope) { graph.periodicMaintenance.start(graph.appScope) }.run()
+    IosAppStartup(
+        logger,
+        PluginStoreRegistry(graph.pluginStore, graph.configBuilder),
+        graph.contributedPlugins,
+        graph.rxBus,
+        graph.appScope,
+        startPeriodicWork = { graph.periodicMaintenance.start(graph.appScope) },
+        startAutomation = { graph.automationRuntime.start() }
+    ).run()
 
     // Attach to the notification centre. Registering a category only records it now, so that building
     // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
@@ -526,11 +534,18 @@ private fun AapsApp(app: StartedApp) {
                     rxBus = graph.rxBus,
                     activePlugin = graph.activePlugin,
                     pluginPermissions = graph.pluginPermissions,
-                    // Passed so the rules can be read and edited here. The runtime is deliberately
-                    // NOT started on a client: `MainApp` calls `automationRuntime.start()`, this shell
-                    // does not, and that is the design - a follower edits definitions and the master
-                    // runs them. Do not "fix" the missing start() call; it would give a second machine
-                    // the power to fire the same rules.
+                    // Passed so the rules can be read and edited here. A follower edits definitions
+                    // and the master runs them - and `start()` is what the follower needs to do its
+                    // half: it loads the rules and keeps them in step with the master. `IosAppStartup`
+                    // calls it, as `MainApp` does on every flavour.
+                    //
+                    // This does not give this phone the power to fire anything. `start()` returns
+                    // before the processing loop when `config.APS` is false, and `runEvent` - the one
+                    // place in the runtime that runs an action - refuses on the same flag, which also
+                    // covers the wear tile, quick launch, scenes and run-now. `executionEnabled` hides
+                    // the Run button here as well. An earlier comment in this spot said the missing
+                    // `start()` was the design and warned against calling it; it was not - the rule
+                    // list was simply always empty on iOS and desktop.
                     automationRuntime = graph.automationRuntime,
                     preferences = graph.preferences,
                     rh = graph.textResolver,

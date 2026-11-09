@@ -206,6 +206,7 @@ android {
         // Dana RS are separate keys so either one can be removed alone; `dana/common` holds the base
         // class both use and needs only :pump:dana:common.
         val pumpTestSources = mapOf(
+            ":pump:carelevo" to "src/androidTestPumps/carelevo/kotlin",
             ":pump:dana:common" to "src/androidTestPumps/dana/common/kotlin",
             ":pump:dana:danar" to "src/androidTestPumps/dana/danar/kotlin",
             ":pump:dana:danars" to "src/androidTestPumps/dana/danars/kotlin",

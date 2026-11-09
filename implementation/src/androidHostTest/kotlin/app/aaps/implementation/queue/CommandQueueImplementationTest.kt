@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -70,6 +71,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.verification.VerificationMode
 import java.util.Calendar
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -87,6 +89,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var smsCommunicator: SmsCommunicator
     private val smsCommunicatorProvider: () -> SmsCommunicator by lazy { { smsCommunicator } }
     @Mock lateinit var commandExecutor: CommandExecutor
+    @Mock lateinit var uiInteraction: UiInteraction
     private val commandExecutorProvider: () -> CommandExecutor by lazy { { commandExecutor } }
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -116,12 +119,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandExecutor: () -> CommandExecutor,
         appScope: CoroutineScope,
         bolusProgressData: BolusProgressData,
-        smbPause: SmbPause
+        smbPause: SmbPause,
+        uiInteraction: () -> UiInteraction
     ) : CommandQueueImplementation(
         aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, config, dateUtil, fabricPrivacy,
         notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, commandExecutor, appScope, bolusProgressData,
-        smbPause
+        smbPause, uiInteraction
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -157,7 +161,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             commandExecutorProvider,
             appScope,
             bolusProgressData,
-            smbPause
+            smbPause,
+            { uiInteraction }
         )
 
     @BeforeEach
@@ -180,6 +185,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 )
             )
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+            // The executor holds every command until the app has finished starting.
+            whenever(config.appInitialized).thenReturn(true)
 
             val bolusConstraint = ConstraintObject(0.0, aapsLogger)
             whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
@@ -205,7 +212,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
         executor = CommandExecutor(
@@ -252,7 +259,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
@@ -265,7 +272,86 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             Thread.sleep(100); waitedMs += 100
         }
 
-        // TestPumpPlugin.connect() sets connected. Without the call the queue waits for the connection until it times out.
+        // Without the call the queue waits for the connection until it times out. Counted, not read from `connected`:
+        // the queue disconnects as soon as the bolus is done (the test pump keeps the link 0 s), often before this runs.
+        assertThat(testPumpPlugin.connectCalls).isAtLeast(1)
+        assertThat(result?.success).isTrue()
+    }
+
+    /**
+     * The link closed while the queue waited to disconnect after its last command: nothing is left to send, so the
+     * queue ends without connecting again. It used to connect only to disconnect; with a pump that could not connect
+     * (a stopped driver) it went on trying until the connection timeout, and the Bluetooth watchdog then switched the
+     * phone's Bluetooth off and on for no command.
+     */
+    @Test
+    fun `a link that closes while the queue waits to disconnect is not opened again`() = runTest {
+        testPumpPlugin.connected = false
+        testPumpPlugin.lingerSeconds = 30
+        lateinit var executor: CommandExecutor
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
+        )
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
+        )
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+        assertThat(result?.success).isTrue()
+        val connects = testPumpPlugin.connectCalls
+
+        // The queue now keeps the link for 30 s. The pump ends it.
+        testPumpPlugin.connected = false
+        waitedMs = 0
+        while (executor.isProcessing() && waitedMs < 5000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+
+        assertThat(executor.isProcessing()).isFalse()
+        assertThat(testPumpPlugin.connectCalls).isEqualTo(connects)
+        assertThat(testPumpPlugin.connected).isFalse()
+    }
+
+    /**
+     * The queue does not reach the pump before the app has finished starting. Until then there is no profile, so the
+     * records a command brings were dropped by PumpSync for good: seen on a real pump, whose status read at app start
+     * read a bolus from the pump history and lost it. Every driver queues a status read while the app starts, through
+     * `PumpPluginBase.onStart`.
+     */
+    @Test
+    fun `the queue does not reach the pump before the app has finished starting`() = runTest {
+        val started = AtomicBoolean(false)
+        whenever(config.appInitialized).thenAnswer { started.get() }
+        testPumpPlugin.connected = false
+        lateinit var executor: CommandExecutor
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
+        )
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
+        )
+
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        Thread.sleep(1_500)
+        assertThat(testPumpPlugin.connected).isFalse()
+        assertThat(result).isNull()
+
+        started.set(true)
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
         assertThat(testPumpPlugin.connected).isTrue()
         assertThat(result?.success).isTrue()
     }
@@ -278,7 +364,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData,
@@ -339,7 +425,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData, smbPause
+            { executor }, testScope, bolusProgressData, smbPause, { uiInteraction }
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
@@ -463,6 +549,64 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
         assertThat(roundingNotices()).isEmpty()
         verifyNoPlainOkPosted()
+    }
+
+    // endregion
+
+    // region #5486 - a failed write after an insulin change: the new insulin is in the pump and the old program runs
+
+    /** A new PS whose write ends with [result] while the concentration change is [pending] or not. */
+    private suspend fun writeEndsWith(result: PumpEnactResult, pending: Boolean) {
+        givenActiveEpsFrom(139)
+        testPumpPlugin.isProfileSet = false
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(pending)
+        rxBus.send(EventProfileChangeRequested())
+        commandQueue.pickup()
+        commandQueue.performing()?.completion?.complete(result)
+        commandQueue.resetPerforming()
+    }
+
+    private fun verifyAlarm(mode: VerificationMode) =
+        verify(uiInteraction, mode).runAlarm(any(), eq("Insulin change failed"), eq(AlarmSound.BOLUS_ERROR))
+
+    @Test
+    fun `a failed write with a concentration change pending raises the alarm over the screen`() = runTest {
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = true)
+
+        verifyAlarm(times(1))
+        verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
+    }
+
+    /** KeepAlive tries again about every 5 minutes: a dismissed alarm must come back while the write keeps failing. */
+    @Test
+    fun `every failed retry raises the alarm again`() = runTest {
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = true)
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = true)
+
+        verifyAlarm(times(2))
+    }
+
+    /** The same failure with the same concentration, e.g. a percentage switch: the card only, as before. */
+    @Test
+    fun `a failed write without a concentration change raises no alarm`() = runTest {
+        writeEndsWith(enactResult(isSuccess = false, isEnacted = false), pending = false)
+
+        verifyAlarm(never())
+    }
+
+    /** Dropped on purpose (an import, a cleared queue): no failed update, and KeepAlive sets it again. */
+    @Test
+    fun `a cancelled write raises no alarm`() = runTest {
+        writeEndsWith(pumpEnactResultProvider().success(false).enacted(false).also { it.cancelled = true }, pending = true)
+
+        verifyAlarm(never())
+    }
+
+    @Test
+    fun `a successful write raises no alarm`() = runTest {
+        writeEndsWith(enactResult(isSuccess = true, isEnacted = true), pending = true)
+
+        verifyAlarm(never())
     }
 
     // endregion
