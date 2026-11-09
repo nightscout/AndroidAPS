@@ -75,6 +75,8 @@ enum class EmulatedCommand {
     BOLUS_STOP,
     TEMP_BASAL_START,
     TEMP_BASAL_STOP,
+    EXTENDED_BOLUS_START,
+    EXTENDED_BOLUS_STOP,
     BASAL_PROFILE,
 
     /** A read of what the pump runs now: its status, or its temp basal. Not a read of its history. */
@@ -102,6 +104,9 @@ enum class EmulatedAlarm {
  * and again shows here.
  * @param extendedBolus the extended bolus that runs now, or null. An emulator of a pump that can give one must fill it,
  * or the scenario finds an extended bolus in AAPS that the pump seems not to run.
+ * @param battery battery left in percent, or null when the pump does not say
+ * @param basal the basal the pump gives in each hour of the day, 24 rates in U/h from midnight, or null when the
+ * emulator cannot say. A scenario compares it with the profile AAPS runs.
  */
 data class EmulatedPumpState(
     val boluses: List<Double>,
@@ -111,7 +116,9 @@ data class EmulatedPumpState(
     val reservoir: Double?,
     val linkUp: Boolean,
     val commands: Int,
-    val extendedBolus: EmulatedExtendedBolus? = null
+    val extendedBolus: EmulatedExtendedBolus? = null,
+    val battery: Int? = null,
+    val basal: List<Double>? = null
 )
 
 /** A pump sets a temp basal either as a rate or as a percent of the basal, so one of the two is set. */

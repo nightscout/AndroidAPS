@@ -663,7 +663,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             type1 == 0x01 && type2 == 0x03 && data.size >= 22 ->
                 when {
                     getInt(data, 6) != 0 || getInt(data, 10) != 0  -> EmulatedCommand.BOLUS_START
-                    getInt(data, 14) != 0 || getInt(data, 18) != 0 -> null // an extended bolus
+                    getInt(data, 14) != 0 || getInt(data, 18) != 0 -> EmulatedCommand.EXTENDED_BOLUS_START
+                    // The same zeros stop a bolus and an extended bolus: the pump stops what runs.
+                    state.runningBolus == null && state.isExtendedBolusRunning -> EmulatedCommand.EXTENDED_BOLUS_STOP
                     else                                            -> EmulatedCommand.BOLUS_STOP
                 }
 
@@ -692,7 +694,10 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             commands = state.commands,
             // UNVERIFIED: that the pump gives an extended bolus while it is suspended; the emulator reports it only while it runs.
             extendedBolus = if (state.isExtendedBolusRunning && state.runningMode == RUNNING_MODE_RUNNING)
-                EmulatedExtendedBolus(units = state.extendedBolusStep / BOLUS_STEPS_PER_UNIT, minutes = state.extendedBolusDuration / SECONDS_PER_MINUTE) else null
+                EmulatedExtendedBolus(units = state.extendedBolusStep / BOLUS_STEPS_PER_UNIT, minutes = state.extendedBolusDuration / SECONDS_PER_MINUTE) else null,
+            battery = state.battery,
+            // Each hour holds what the pump gives in half an hour, in 0.00625 U steps: 96 is 1.2 U/h, as on a real pump.
+            basal = state.basalRates.map { it * BASAL_UNITS_PER_HOUR_PER_VALUE }
         )
     }
 
@@ -932,6 +937,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
         /** The rates in the log and the advertisement count in these. */
         private const val SPEED_UNITS_PER_STEP = 0.00625
+
+        /** A basal value is half an hour of insulin in 0.00625 U steps, so one step of it is 0.0125 U/h. */
+        private const val BASAL_UNITS_PER_HOUR_PER_VALUE = 0.0125
 
         /** The run mode after an empty reservoir, as the driver reads it: STOP. */
         private const val RUNNING_MODE_STOP = 2

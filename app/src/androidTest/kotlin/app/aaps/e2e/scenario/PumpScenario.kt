@@ -13,6 +13,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -293,6 +294,15 @@ class PumpScenario(private val pump: PumpUnderTest) {
         return queued { commandQueue.tempBasalAbsolute(rate, minutes, true, profile, PumpSync.TemporaryBasalType.NORMAL) }
     }
 
+    /**
+     * A temp basal in percent, the way the temp basal dialog sets one on such a pump. A Dana takes an hour or more on
+     * another command than the short one the loop uses.
+     */
+    fun tempBasalPercent(percent: Int, minutes: Int): PumpEnactResult {
+        val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+        return queued { commandQueue.tempBasalPercent(percent, minutes, true, profile, PumpSync.TemporaryBasalType.NORMAL) }
+    }
+
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
 
     /**
@@ -310,6 +320,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /** The pump keeps daily totals that AAPS reads, see [readTdds]. */
     val canReadTdds: Boolean get() = pumpDescription.supportsTDDs
+
+    /** The pump takes a temp basal in percent, see [tempBasalPercent]. */
+    val canSetPercentTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.PERCENT != 0
 
     fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
 
@@ -380,6 +393,33 @@ class PumpScenario(private val pump: PumpUnderTest) {
         assertWithMessage("extended bolus amount").that(abs(stored.amount - running.units) < RATE_TOLERANCE).isTrue()
         assertWithMessage("extended bolus minutes").that(stored.duration).isEqualTo(running.minutes * MS_PER_MINUTE)
         assertWithMessage("a real extended bolus, not one that stands for a temp basal").that(stored.isEmulatingTempBasal).isFalse()
+    }
+
+    /**
+     * After a status read AAPS shows what the pump holds: its reservoir, its battery, and as basal the profile that runs.
+     * A driver that reads a value in the wrong unit or scale shows here. Values the emulator cannot tell are not checked.
+     */
+    fun checkStatusShown() {
+        val state = control.state()
+        val driver = testGraphs.activePlugin.activePumpInternal
+        state.reservoir?.let { onPump ->
+            val shown = driver.reservoirLevel.value?.cU
+                ?: throw AssertionError("AAPS shows no reservoir, the pump has $onPump U")
+            assertWithMessage("reservoir AAPS shows ($shown U), the pump has $onPump U")
+                .that(abs(shown - onPump) <= RESERVOIR_TOLERANCE).isTrue()
+        }
+        state.battery?.let { onPump ->
+            assertWithMessage("battery AAPS shows, the pump has $onPump %").that(driver.batteryLevel.value).isEqualTo(onPump)
+        }
+        state.basal?.let { onPump ->
+            val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+            val running = (0 until HOURS_PER_DAY).map { profile.getBasalTimeFromMidnight(it * SECONDS_PER_HOUR) }
+            assertWithMessage("basal on the pump, hour by hour, against the profile AAPS runs").that(onPump.size).isEqualTo(HOURS_PER_DAY)
+            onPump.zip(running).forEachIndexed { hour, (pumpRate, profileRate) ->
+                assertWithMessage("basal at $hour:00, pump $pumpRate U/h, profile $profileRate U/h")
+                    .that(abs(pumpRate - profileRate) <= BASAL_TOLERANCE).isTrue()
+            }
+        }
     }
 
     /** The queue closes the link when it has nothing more to do. */
@@ -526,6 +566,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
         private const val CENTI = 100.0
         private const val RATE_TOLERANCE = 0.01
+        /** Pumps report the reservoir to 0.01 U, some to whole units. A scale mistake is far bigger. */
+        private const val RESERVOIR_TOLERANCE = 1.0
+        /** A pump cuts a rate down to its own step, as Equil to 0.0125 U/h. */
+        private const val BASAL_TOLERANCE = 0.0125
+        private const val HOURS_PER_DAY = 24
+        private const val SECONDS_PER_HOUR = 3600
         private const val MS_PER_MINUTE = 60_000L
     }
 }

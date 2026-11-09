@@ -55,6 +55,7 @@ abstract class AbstractPumpScenarioTest {
 
         assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
         scenario.checkNoBurst()
+        scenario.checkStatusShown()
 
         assertWithMessage("bolus").that(scenario.userBolus(BOLUS)).isTrue()
         scenario.checkBolusRecords()
@@ -70,6 +71,14 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
         assertWithMessage("cancel temp basal").that(scenario.cancelTempBasal().success).isTrue()
         scenario.checkTempBasal()
+
+        // The temp basal dialog sets one in percent on such a pump, for an hour: another path in some drivers.
+        if (scenario.canSetPercentTempBasal) {
+            assertWithMessage("temp basal in percent").that(scenario.tempBasalPercent(TEMP_BASAL_PERCENT, TEMP_BASAL_PERCENT_MINUTES).success).isTrue()
+            scenario.checkTempBasal()
+            assertWithMessage("cancel temp basal in percent").that(scenario.cancelTempBasal().success).isTrue()
+            scenario.checkTempBasal()
+        }
 
         if (scenario.canGiveExtendedBolus) {
             assertWithMessage("extended bolus").that(scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES).success).isTrue()
@@ -290,6 +299,58 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
     }
 
+    /** The temp basal command never reaches the pump. AAPS must not keep a temp basal the pump does not run. */
+    @Test
+    fun aTempBasalThatIsLostIsNotKept() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.TEMP_BASAL_START)).isTrue()
+        scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
+        assertWithMessage("the pump runs no temp basal").that(scenario.control.state().tempBasal).isNull()
+        scenario.readStatus()
+        scenario.checkTempBasal()
+    }
+
+    /** The cancel never reaches the pump, so its temp basal goes on. AAPS must still have it, or the loop counts too little. */
+    @Test
+    fun aTempBasalCancelThatIsLostKeepsTheTempBasal() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("temp basal").that(scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+        assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.TEMP_BASAL_STOP)).isTrue()
+        scenario.cancelTempBasal()
+        assertWithMessage("the pump still runs the temp basal").that(scenario.control.state().tempBasal).isNotNull()
+        scenario.readStatus()
+        scenario.checkTempBasal()
+    }
+
+    /** The pump starts the extended bolus and its answer is lost. After a status read AAPS and the pump must agree. */
+    @Test
+    fun anExtendedBolusWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        assumeTrue("The pump gives no extended bolus", scenario.canGiveExtendedBolus)
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.EXTENDED_BOLUS_START)).isTrue()
+        scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES)
+        assertWithMessage("the pump runs the extended bolus").that(scenario.control.state().extendedBolus).isNotNull()
+        scenario.readStatus()
+        scenario.checkExtendedBolus()
+    }
+
+    /** The pump ends the extended bolus and its answer is lost. After a status read AAPS and the pump must agree. */
+    @Test
+    fun anExtendedBolusCancelWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        assumeTrue("The pump gives no extended bolus", scenario.canGiveExtendedBolus)
+        scenario.pair()
+        assertWithMessage("extended bolus").that(scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES).success).isTrue()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.EXTENDED_BOLUS_STOP)).isTrue()
+        scenario.cancelExtendedBolus()
+        assertWithMessage("the pump ended the extended bolus").that(scenario.control.state().extendedBolus).isNull()
+        scenario.readStatus()
+        scenario.checkExtendedBolus()
+    }
+
     /** The pump ends a bolus in its own time, and a status read then brings AAPS up to date. */
     private fun awaitBolusEndAndRead() {
         scenario.awaitTrue("the pump ended the bolus", PumpScenario.BOLUS_TIMEOUT) { !scenario.control.state().bolusRunning }
@@ -338,6 +399,8 @@ abstract class AbstractPumpScenarioTest {
         const val PUMP_STOPS_AT = 0.5
         const val TEMP_BASAL_RATE = 1.0
         const val TEMP_BASAL_MINUTES = 30
+        const val TEMP_BASAL_PERCENT = 150
+        const val TEMP_BASAL_PERCENT_MINUTES = 60
         const val EXTENDED_BOLUS = 1.0
         const val EXTENDED_MINUTES = 30
         const val KILLED_BOLUS = 2.0
