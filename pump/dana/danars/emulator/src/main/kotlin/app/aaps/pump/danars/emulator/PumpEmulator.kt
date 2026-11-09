@@ -681,9 +681,18 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         /** The emulated pump of a test run, kept outside the graph, see [PumpEmulators]. */
         val KEY = PumpEmulators.Key<PumpEmulator>("danars")
 
-        /** The pump of [saveState], in a new process. */
-        fun restore(saved: ByteArray): PumpEmulator =
-            PumpEmulator(ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() } as PumpState)
+        /**
+         * The pump of [saveState], in a new process. The link of its bolus ended with the old process, and a link of
+         * the new one can have the same number, so the bolus belongs to no link.
+         */
+        fun restore(saved: ByteArray): PumpEmulator {
+            val state = ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() } as PumpState
+            state.runningBolus?.link = NO_LINK
+            return PumpEmulator(state)
+        }
+
+        /** No link has this number. */
+        private const val NO_LINK = -1
 
         /** The hardware model of a Dana-i. */
         private const val HW_MODEL_DANA_I = 0x09

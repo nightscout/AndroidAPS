@@ -150,7 +150,7 @@ class PumpState : Serializable {
  * @param msPerStep time for one step, 0 for a whole bolus at once
  * @param link the link the start came on: the progress goes only there
  */
-class RunningBolus(val startedAt: Long, val amountHundredths: Int, val msPerStep: Long, val link: Int) : Serializable {
+class RunningBolus(val startedAt: Long, val amountHundredths: Int, val msPerStep: Long, var link: Int) : Serializable {
 
     /** Steps given and reported so far. */
     var stepsGiven = 0

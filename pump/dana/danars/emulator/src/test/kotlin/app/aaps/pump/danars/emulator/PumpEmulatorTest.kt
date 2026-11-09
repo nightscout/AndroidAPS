@@ -198,7 +198,13 @@ class PumpEmulatorTest {
         emulator.cancelPendingWork()
 
         val restored = PumpEmulator.restore(saved)
+        val links = Collections.synchronizedList(mutableListOf<Int?>())
+        restored.onSpontaneousMessage = { link, _, _, _ -> links += link }
         restored.awaitPendingCallbacks()
+
+        // The link of the old process is gone: a link of the new one must never get its messages.
+        assertThat(links).isNotEmpty()
+        assertThat(links.toSet()).containsExactly(-1)
 
         assertThat(restored.state.runningBolus).isNull()
         assertThat(restored.state.givenBoluses).containsExactly(0.25)
