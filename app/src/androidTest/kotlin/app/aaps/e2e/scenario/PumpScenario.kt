@@ -15,6 +15,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -209,6 +210,32 @@ class PumpScenario(private val pump: PumpUnderTest) {
     fun unpair() = pump.unpair(this)
 
     /**
+     * A profile switch to [percentage] % of the profile, as the user makes one, and the new basal sent to the pump as the
+     * keep alive worker does when the pump lacks it. [checkStatusShown] then finds whether the pump holds it.
+     */
+    fun switchProfile(percentage: Int) {
+        val store = checkNotNull(testGraphs.profileRepository.profile.value) { "No profile store" }
+        val switch = runBlocking {
+            testGraphs.profileFunction.createProfileSwitch(
+                profileStore = store,
+                profileName = PROFILE_NAME,
+                durationInMinutes = 0,
+                percentage = percentage,
+                timeShiftInHours = 0,
+                timestamp = testGraphs.dateUtil.now(),
+                action = Action.PROFILE_SWITCH,
+                source = Sources.Aaps,
+                listValues = emptyList(),
+                iCfg = testGraphs.insulinManager.insulins.first()
+            )
+        }
+        checkNotNull(switch) { "The profile switch to $percentage % was refused" }
+        testGraphs.rxBus.send(EventProfileChangeRequested())
+        awaitTrue("AAPS runs the profile at $percentage %") { runBlocking { testGraphs.profileFunction.getProfile() }?.percentage == percentage }
+        awaitQueueIdle()
+    }
+
+    /**
      * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
      * and during a bolus it waits for the bolus end. So wait for that one first: the step must read the pump itself.
      */
@@ -366,6 +393,14 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
+    /** AAPS raised an alarm the user hears ([NotificationLevel.URGENT]) at [since] or later. The driver may learn of it only at a status read. */
+    fun checkUrgentAlarmSince(since: Long) {
+        fun urgent() = testGraphs.notificationManager.notifications.value.filter { it.level == NotificationLevel.URGENT && it.date >= since }
+        awaitValue(RECORD_TIMEOUT) { urgent().takeIf { it.isNotEmpty() } }
+        assertWithMessage("an alarm since the pump raised it, AAPS shows ${testGraphs.notificationManager.notifications.value.map { "${it.id} ${it.level}" }}")
+            .that(urgent()).isNotEmpty()
+    }
+
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
     fun checkTempBasal() {
         val running = control.state().tempBasal
@@ -400,15 +435,19 @@ class PumpScenario(private val pump: PumpUnderTest) {
      * A driver that reads a value in the wrong unit or scale shows here. Values the emulator cannot tell are not checked.
      */
     fun checkStatusShown() {
+        // A status read can queue more reads of its own (Equil reads its log, where the battery is, after it).
+        awaitQueueIdle()
         val state = control.state()
         val driver = testGraphs.activePlugin.activePumpInternal
         state.reservoir?.let { onPump ->
+            awaitValue(RECORD_TIMEOUT) { driver.reservoirLevel.value?.cU?.takeIf { abs(it - onPump) <= RESERVOIR_TOLERANCE } }
             val shown = driver.reservoirLevel.value?.cU
                 ?: throw AssertionError("AAPS shows no reservoir, the pump has $onPump U")
             assertWithMessage("reservoir AAPS shows ($shown U), the pump has $onPump U")
                 .that(abs(shown - onPump) <= RESERVOIR_TOLERANCE).isTrue()
         }
         state.battery?.let { onPump ->
+            awaitValue(RECORD_TIMEOUT) { driver.batteryLevel.value?.takeIf { it == onPump } }
             assertWithMessage("battery AAPS shows, the pump has $onPump %").that(driver.batteryLevel.value).isEqualTo(onPump)
         }
         state.basal?.let { onPump ->

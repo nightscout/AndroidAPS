@@ -1,6 +1,7 @@
 package app.aaps.e2e.scenario
 
 import androidx.test.platform.app.InstrumentationRegistry
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.di.ResetGraphRule
@@ -87,6 +88,11 @@ abstract class AbstractPumpScenarioTest {
             scenario.checkExtendedBolus()
         }
         if (scenario.canReadTdds) assertWithMessage("daily totals").that(scenario.readTdds().success).isTrue()
+
+        // A profile switch reaches the pump: it gives the new basal, hour by hour.
+        scenario.switchProfile(PROFILE_PERCENT)
+        assertWithMessage("status read after the profile switch").that(scenario.readStatus().success).isTrue()
+        scenario.checkStatusShown()
 
         scenario.unpair()
     }
@@ -351,6 +357,23 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkExtendedBolus()
     }
 
+    /** An occlusion stops the insulin. AAPS must raise an alarm the user hears. */
+    @Test
+    open fun anOcclusionRaisesAnAlarm() = pumpAlarmRaisesAnAlarm(EmulatedAlarm.OCCLUSION)
+
+    /** An empty reservoir stops the insulin. AAPS must raise an alarm the user hears. */
+    @Test
+    open fun anEmptyReservoirRaisesAnAlarm() = pumpAlarmRaisesAnAlarm(EmulatedAlarm.EMPTY_RESERVOIR)
+
+    private fun pumpAlarmRaisesAnAlarm(alarm: EmulatedAlarm) {
+        scenario.bringUp()
+        scenario.pair()
+        val raisedAt = System.currentTimeMillis()
+        assertWithMessage("the pump raises $alarm").that(scenario.control.raise(alarm)).isTrue()
+        scenario.readStatus()
+        scenario.checkUrgentAlarmSince(raisedAt)
+    }
+
     /** The pump ends a bolus in its own time, and a status read then brings AAPS up to date. */
     private fun awaitBolusEndAndRead() {
         scenario.awaitTrue("the pump ended the bolus", PumpScenario.BOLUS_TIMEOUT) { !scenario.control.state().bolusRunning }
@@ -401,6 +424,7 @@ abstract class AbstractPumpScenarioTest {
         const val TEMP_BASAL_MINUTES = 30
         const val TEMP_BASAL_PERCENT = 150
         const val TEMP_BASAL_PERCENT_MINUTES = 60
+        const val PROFILE_PERCENT = 150
         const val EXTENDED_BOLUS = 1.0
         const val EXTENDED_MINUTES = 30
         const val KILLED_BOLUS = 2.0
