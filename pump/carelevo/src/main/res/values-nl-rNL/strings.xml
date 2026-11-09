@@ -213,4 +213,5 @@
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Er is nu een bolus toegevoegd die niet was vastgelegd. Controleer IOB en probeer het opnieuw.</string>
     <string name="carelevo_bolus_outcome_unknown">De Pod heeft niet gereageerd op de bolusopdracht. De volledige bolus wordt als toegediend beschouwd totdat de Pod doorgeeft hoeveel insuline daadwerkelijk is toegediend.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">De patch heeft de stop niet bevestigd. De volledige bolus van %1$s is opgeslagen.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">De Pod heeft de bolustoediening afgebroken. Toegediend: %1$s van %2$s</string>
 </resources>
