@@ -102,6 +102,34 @@ class AaruyServiceTempBasalTest {
         assertFalse(setTempBasal())
 
         verify(ble, never()).setTempBasal(anyDouble(), anyInt())
+        verify(ble, never()).writeSettingsIfNeeded()
+    }
+
+    /**
+     * Seen on a real pump (2026-11-09): settings are refused while a temp basal runs. With a loop one runs nearly all the
+     * time, so the plain basal between the cancel and the new one is when they can go.
+     */
+    @Test
+    fun settingsGoBetweenTheCancelAndTheNewTempBasal() {
+        pump.pumpState = AaruyPumpState.TMPBASALRATE_RUNNING
+
+        assertTrue(setTempBasal())
+
+        val order = inOrder(ble)
+        order.verify(ble).cancelTempBasal()
+        order.verify(ble).writeSettingsIfNeeded()
+        order.verify(ble).setTempBasal(1.0, 30)
+    }
+
+    @Test
+    fun settingsGoAfterACancel() {
+        pump.pumpState = AaruyPumpState.TMPBASALRATE_RUNNING
+
+        assertTrue(runBlocking { service.cancelTempBasal() })
+
+        val order = inOrder(ble)
+        order.verify(ble).cancelTempBasal()
+        order.verify(ble).writeSettingsIfNeeded()
     }
 
     /** The pump ended it during a lost link. The client sends nothing then, and every cancel of the loop failed after 5 s. */

@@ -885,6 +885,16 @@ class AaruyBLE(
         aaBleUtil.setupBasicParamInfo(aaruyPump.settingsForPump())
     }
 
+    /**
+     * Writes the user settings only when the pump lacks some and takes them now, see [AaruyPump.settingsToWrite]. With a
+     * loop a temp basal runs nearly all the time, so the moment after a cancel is the one that counts. The state comes
+     * from the last status, which is set before its database job ends the wait of a cancel.
+     */
+    fun writeSettingsIfNeeded() {
+        val state = lastStatus?.let { AaruyPumpState.fromInt(it.status) } ?: aaruyPump.pumpState
+        if (aaruyPump.settingsToWrite(state)) syncAndLoadBasicParam()
+    }
+
     fun syncCurTimeToPump() {
         aaBleUtil.updatePumpTime()
     }

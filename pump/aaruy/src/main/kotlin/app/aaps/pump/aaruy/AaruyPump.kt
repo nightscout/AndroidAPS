@@ -623,8 +623,8 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         _lastHistoryTime = preferences.get(AaruyLongKey.PumpLastHistoryTime)
         _lastHistoryDailyTime = preferences.get(AaruyLongKey.PumpLastHistoryDailyTime)
         loadActiveAlarms()
-        // Each status read writes the user settings to the pump, so it holds them. Not the bolus step: the coarser step
-        // stays until the pump reports its own, see bolusStepUnits.
+        // Taken as written until the pump reports what it holds, which it does at every connect. Not the bolus step: the
+        // coarser step stays until the pump reports its own, see bolusStepUnits.
         settingsForPump().let {
             maxBasal = it.maxBasal
             maxBolus = it.maxBolus
@@ -657,8 +657,30 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         val wanted = settingsForPump()
         aapsLogger.debug(LTag.PUMP, "Pump settings: max basal $maxBasal (wanted ${wanted.maxBasal}), max bolus $maxBolus (${wanted.maxBolus}), " +
             "bolus step $bolusStep (${wanted.bolusStep}), low alert $lowAlert (${wanted.lowAlert}), sound $closeInjectSound (${wanted.closeInjectSound})")
-        return maxBasal == wanted.maxBasal && maxBolus == wanted.maxBolus && bolusStep == wanted.bolusStep &&
-            lowAlert == wanted.lowAlert && closeInjectSound == wanted.closeInjectSound
+        return settingsGap() == SettingsGap.NONE
+    }
+
+    /** What of the user settings the pump does not hold. NONE, only the bolus step, or others too. */
+    enum class SettingsGap { NONE, STEP_ONLY, OTHERS }
+
+    fun settingsGap(): SettingsGap {
+        val wanted = settingsForPump()
+        return when {
+            maxBasal != wanted.maxBasal || maxBolus != wanted.maxBolus || lowAlert != wanted.lowAlert || closeInjectSound != wanted.closeInjectSound -> SettingsGap.OTHERS
+            bolusStep != wanted.bolusStep                                                                                                            -> SettingsGap.STEP_ONLY
+            else                                                                                                                                     -> SettingsGap.NONE
+        }
+    }
+
+    /**
+     * Whether the user settings should be written to a pump in [state]. Seen on a real pump (2026-11-09): it takes them on
+     * plain basal and while stopped, and refuses them (0x8001) while a temp basal runs, also when nothing changed. A new
+     * bolus step it takes only while stopped, so on plain basal a step alone is no reason to write.
+     */
+    fun settingsToWrite(state: AaruyPumpState): Boolean = when (settingsGap()) {
+        SettingsGap.NONE      -> false
+        SettingsGap.STEP_ONLY -> state == AaruyPumpState.STOP_RUNNING
+        SettingsGap.OTHERS    -> state == AaruyPumpState.BASALRATE_RUNNING || state == AaruyPumpState.STOP_RUNNING
     }
 
 }

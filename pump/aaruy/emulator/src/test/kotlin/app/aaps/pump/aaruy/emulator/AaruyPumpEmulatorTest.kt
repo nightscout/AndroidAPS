@@ -185,6 +185,23 @@ class AaruyPumpEmulatorTest {
         assertEquals(1, write(PARAM_BASIC, param).single().payload[BOLUS_STEP].toInt())
     }
 
+    /** Seen on a real pump (2026-11-09): refused (0x8001) while a temp basal runs, and taken on plain basal after it. */
+    @Test
+    fun settingsAreRefusedWhileATempBasalRuns() {
+        val before = read(PARAM_BASIC).single().payload
+        val param = before.copyOf().also { it[LOW_ALERT] = 19 }
+        write(PARAM_TEMP_BASAL, tempBasal(1, 1500, 30))
+
+        val refused = write(PARAM_BASIC, param).single()
+        assertEquals(PARAM_ERROR, refused.paramId)
+        assertEquals(1, refused.payload[0].toInt())
+        assertEquals(0x80, refused.payload[1].toInt() and 0xFF)
+        assertTrue(read(PARAM_BASIC).single().payload.contentEquals(before))
+
+        write(PARAM_TEMP_BASAL, tempBasal(0, 0, 0))
+        assertEquals(19, write(PARAM_BASIC, param).single().payload[LOW_ALERT].toInt())
+    }
+
     @Test
     fun bolusDeliversInStepsAndReturnsToBasal() {
         val started = startBolus(100).single()
@@ -437,6 +454,9 @@ class AaruyPumpEmulatorTest {
 
         const val BASE_TIME_MS = 1609430400000L
         const val BOLUS_STEP = 14
+
+        /** The low reservoir alarm in whole units, its low byte. */
+        const val LOW_ALERT = 20
         const val PARAM_BASIC = 0
         const val PARAM_BASAL = 1
         const val PARAM_BOLUS_SETTING = 4

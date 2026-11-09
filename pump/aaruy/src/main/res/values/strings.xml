@@ -30,6 +30,9 @@
     <string name="actions_pump_disconnect_prompt" comment="%1$s=name of the pump">Unpair the pump %1$s?</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
+    <string name="aaruy_settings_label">Settings</string>
+    <string name="aaruy_settings_not_in_pump">Not all in the pump yet. They are sent when no temp basal runs.</string>
+    <string name="aaruy_bolus_step_not_in_pump">The new bolus step reaches the pump at the next reservoir change.</string>
     <string name="param_refresh">Pump settings changed</string>
     <string name="replace_label">Change reservoir</string>
     <string name="confirm_alarms_label">Confirm alarms</string>

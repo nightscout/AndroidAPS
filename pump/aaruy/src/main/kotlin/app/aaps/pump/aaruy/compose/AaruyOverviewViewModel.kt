@@ -224,6 +224,16 @@ class AaruyOverviewViewModel(
                 )
             )
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.firmware), value = pump.swVersion, visible = pump.swVersion.isNotEmpty()))
+            // Seen on a real pump: settings land only when no temp basal runs, a bolus step only while it is stopped.
+            val settingsGap = pump.settingsGap()
+            add(
+                PumpInfoRow(
+                    label = rh.gs(R.string.aaruy_settings_label),
+                    value = rh.gs(if (settingsGap == AaruyPump.SettingsGap.STEP_ONLY) R.string.aaruy_bolus_step_not_in_pump else R.string.aaruy_settings_not_in_pump),
+                    level = StatusLevel.WARNING,
+                    visible = isInitialized && settingsGap != AaruyPump.SettingsGap.NONE
+                )
+            )
         }
 
         val primaryActions = listOf(

@@ -173,7 +173,7 @@ class AaruyService : MetroService() {
         if (!aaruyBle.readStatusAndWait()) aapsLogger.warn(LTag.PUMPCOMM, "No status answer from the pump")
 
         if (aaruyPump.pumpState.isCanDoRefresh()) {
-            aaruyBle.syncAndLoadBasicParam()
+            aaruyBle.writeSettingsIfNeeded()
             aaruyBle.syncCurTimeToPump()
         }
 
@@ -372,7 +372,7 @@ class AaruyService : MetroService() {
         SystemClock.sleep(2000)
 
         if (aaruyPump.pumpState.isCanDoRefresh()) {
-            aaruyBle.syncAndLoadBasicParam()
+            aaruyBle.writeSettingsIfNeeded()
         }
     }
 
@@ -410,6 +410,8 @@ class AaruyService : MetroService() {
         if (aaruyPump.pumpState == AaruyPumpState.TMPBASALRATE_RUNNING) {
             result = aaruyBle.cancelTempBasal()
         }
+        // Plain basal for a moment: with a loop, nearly the only time the pump takes settings.
+        if (result) aaruyBle.writeSettingsIfNeeded()
         if (result) result = aaruyBle.setTempBasal(absoluteRate, durationInMinutes)
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         if (tbr != null) {
@@ -429,6 +431,8 @@ class AaruyService : MetroService() {
         val noTempBasalOnPump = aaruyPump.pumpState == AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpState.isSuspendedByPump()
         if (noTempBasalOnPump) aaruyBle.waitForHistoryAfterReconnect()
         val result = noTempBasalOnPump || aaruyBle.cancelTempBasal()
+        // The pump is on plain basal now, the state in which it takes settings.
+        if (result) aaruyBle.writeSettingsIfNeeded()
 
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         aaruyPump.fromTemporaryBasal(tbr)

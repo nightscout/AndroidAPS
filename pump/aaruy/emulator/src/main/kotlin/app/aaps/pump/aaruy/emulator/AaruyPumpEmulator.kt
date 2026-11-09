@@ -226,14 +226,19 @@ class AaruyPumpEmulator(
     private fun handleWrite(paramId: Short, payload: ByteArray): List<ByteArray> = when (paramId) {
         PARAM_REPORT_DEVICE -> handleReportDevice()
         PARAM_BASIC         -> {
-            val oldStep = basicParam.getOrNull(BOLUS_STEP_OFFSET)
-            basicParam = payload.copyOf()
-            // Seen on a real pump (firmware 1.1.0.01): a new bolus step is taken only while the pump is stopped. While it
-            // delivers, it keeps the old one and answers with it.
-            if (runningStatus in STATUS_BASAL..STATUS_BOLUS && oldStep != null && basicParam.size > BOLUS_STEP_OFFSET)
-                basicParam[BOLUS_STEP_OFFSET] = oldStep
             settingsWrites++
-            listOf(message(PARAM_BASIC, basicParam))
+            // Seen on a real pump (2026-11-09): refused while a temp basal runs, also with the same values, and taken on
+            // plain basal. UNVERIFIED during a bolus: taken here, except the step.
+            if (runningStatus == STATUS_TEMP_BASAL) listOf(message(PARAM_ERROR, errorPayload(ERROR_TYPE_SETTINGS_REFUSED, ERROR_OPERATION)))
+            else {
+                val oldStep = basicParam.getOrNull(BOLUS_STEP_OFFSET)
+                basicParam = payload.copyOf()
+                // Seen on a real pump (firmware 1.1.0.01): a new bolus step is taken only while the pump is stopped. While it
+                // delivers, it keeps the old one and answers with it.
+                if (runningStatus in STATUS_BASAL..STATUS_BOLUS && oldStep != null && basicParam.size > BOLUS_STEP_OFFSET)
+                    basicParam[BOLUS_STEP_OFFSET] = oldStep
+                listOf(message(PARAM_BASIC, basicParam))
+            }
         }
 
         PARAM_BASAL         -> handleBasal(payload)
@@ -829,6 +834,9 @@ class AaruyPumpEmulator(
         private const val PROTOCOL_VERSION: Byte = 1
 
         private const val ERROR_TYPE_SEQUENCE = 28
+
+        /** 0x8001, seen on a real pump for settings written while a temp basal runs. */
+        private const val ERROR_TYPE_SETTINGS_REFUSED = 1
         private const val ERROR_OPERATION = 0x80
         private const val EVENT_REWIND_DONE = 17
         private const val EVENT_POSITION_DONE = 22

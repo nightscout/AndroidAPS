@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.aaruy.comm.BasicParam
+import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -71,7 +72,32 @@ class AaruyPumpSettingsTest {
         assertEquals(0.025, pump.bolusStepUnits, 1e-9)
     }
 
-    /** Each status read writes the user settings, so after an app restart the pump holds them. The bolus step waits for the pump. */
+    /**
+     * Seen on a real pump (2026-11-09): settings are taken on plain basal and while stopped, refused while a temp basal runs.
+     * A new bolus step is taken only while stopped, so a step alone is written only then.
+     */
+    @Test
+    fun settingsAreWrittenOnlyInAStateThatTakesThem() {
+        settings(lowReservoir = 20.0)
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 1, 19.0, 0, 3))
+        assertEquals(AaruyPump.SettingsGap.OTHERS, pump.settingsGap())
+        assertTrue(pump.settingsToWrite(AaruyPumpState.BASALRATE_RUNNING))
+        assertTrue(pump.settingsToWrite(AaruyPumpState.STOP_RUNNING))
+        assertFalse(pump.settingsToWrite(AaruyPumpState.TMPBASALRATE_RUNNING))
+        assertFalse(pump.settingsToWrite(AaruyPumpState.LARGEDOSE_RUNNING))
+
+        // Only the step differs: the pump would keep its own on plain basal.
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 2, 20.0, 0, 3))
+        assertEquals(AaruyPump.SettingsGap.STEP_ONLY, pump.settingsGap())
+        assertFalse(pump.settingsToWrite(AaruyPumpState.BASALRATE_RUNNING))
+        assertTrue(pump.settingsToWrite(AaruyPumpState.STOP_RUNNING))
+
+        pump.handleLoadBasicParam(BasicParam(2.0, 10.0, 1, 20.0, 0, 3))
+        assertEquals(AaruyPump.SettingsGap.NONE, pump.settingsGap())
+        assertFalse(pump.settingsToWrite(AaruyPumpState.BASALRATE_RUNNING))
+    }
+
+    /** Taken as written until the pump reports what it holds, at the next connect. The bolus step waits for the pump. */
     @Test
     fun afterAnAppStartTheLimitsAreTheSettingsAndTheStepIsTheCoarserOne() {
         settings(lowReservoir = 30.0, maxBolus = 5.0, maxBasal = 1.2)

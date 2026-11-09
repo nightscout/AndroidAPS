@@ -357,6 +357,48 @@ class AaruyBleReconnectTest {
     }
 
     /**
+     * Seen on a real pump (2026-11-09): settings are refused while a temp basal runs, and taken on plain basal. A changed
+     * setting is not written into the refusal, and it lands right after a cancel.
+     */
+    @Test
+    fun aChangedSettingWaitsForThePlainBasal() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        val transport = ble.emulatorTransport!!
+        val emulator = transport.emulator
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        val held = pump.lowAlert
+        `when`(preferences.get(AaruyDoublePreferenceKey.LowReservoir)).thenReturn(held + 1)
+        assertTrue(ble.setTempBasal(1.0, 30))
+        val writes = emulator.settingsWrites
+
+        ble.writeSettingsIfNeeded()
+        repeat(10) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100))
+            Thread.sleep(20)
+        }
+        assertEquals("no write into a refusal", writes, emulator.settingsWrites)
+
+        assertTrue(ble.cancelTempBasal())
+        ble.writeSettingsIfNeeded()
+        waitFor("the pump holds the new setting") { pump.lowAlert == held + 1 }
+        assertTrue(pump.pumpHasTheSettings())
+        transport.shutdown()
+    }
+
+    /**
      * As after an app restart during a bolus: the pump runs one that no bolus command of this app run started. It
      * must get a progress with a Stop button, as this pump has no screen of its own, and the progress must close
      * when the pump ends it.
