@@ -358,7 +358,7 @@
     <string name="careportal_profileswitch">設定檔切換</string>
     <string name="profile_management">設定檔</string>
     <string name="careportal_snackbolus">零食注射</string>
-    <string name="careportal_mealbolus">餐食注射</string>
+    <string name="careportal_mealbolus">用餐追加量</string>
     <string name="careportal_correctionbolus">修正注射</string>
     <string name="careportal_combobolus">組合注射</string>
     <string name="careportal_tempbasalstart">臨時基礎率開始</string>
