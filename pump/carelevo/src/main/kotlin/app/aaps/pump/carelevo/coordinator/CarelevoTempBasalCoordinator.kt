@@ -12,6 +12,8 @@ import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult
+import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.codeToInfusionModeCommand
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
@@ -37,6 +39,31 @@ class CarelevoTempBasalCoordinator @Inject constructor(
 
         private const val RESULT_SUCCESS = 0
     }
+
+    /**
+     * Sends a temp basal command and tells whether it took effect. A patch that answers "no" did nothing. Without an
+     * answer the patch may still have done it, so then what it runs now decides. Found by the pump scenario tests: the
+     * patch ran a temp basal that AAPS did not know of, or AAPS kept one the patch had ended.
+     * @param doneWhenTempBasalRuns a start is done when a temp basal runs, a cancel when none runs
+     * @throws Exception the one of the command, when the patch does not show that it was done
+     */
+    private fun sentOrAsked(address: String, what: String, doneWhenTempBasalRuns: Boolean, send: suspend () -> Boolean): Boolean =
+        try {
+            runBlocking { send() }
+        } catch (e: Exception) {
+            val runs = tempBasalRunsOnPatch(address)
+            aapsLogger.warn(LTag.PUMPCOMM, "newBle.$what got no answer ($e). The patch runs a temp basal: $runs")
+            if (runs == doneWhenTempBasalRuns) true else throw e
+        }
+
+    /** Whether the patch runs a temp basal now, or null when it does not answer either. */
+    private fun tempBasalRunsOnPatch(address: String): Boolean? =
+        try {
+            runBlocking { bleSession.readInfusionInfo(address) }.modeRaw.codeToInfusionModeCommand() == InfusionModeResult.TEMP_BASAL
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo after a temp basal failed error=$e")
+            null
+        }
 
     /**
      * Set an absolute temp basal (**delivery-critical**). Discrete `TempBasalCommand.byUnit` (0x23→0x83)
@@ -68,15 +95,16 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         val hour = durationInMinutes / 60
         val min = durationInMinutes % 60
         return try {
-            val response = runBlocking { bleSession.runSingle(address, TempBasalCommand.byUnit(absoluteRate, hour, min)) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = sentOrAsked(address, "setTempBasalAbsolute", doneWhenTempBasalRuns = true) {
+                bleSession.runSingle(address, TempBasalCommand.byUnit(absoluteRate, hour, min)).resultCode == RESULT_SUCCESS
+            }
             // Pump-is-authoritative: once the patch ACKs, the TBR IS running — it must reach pumpSync
             // even if the local persist fails, or basal IOB modeling silently diverges from reality
             // for the whole TBR duration.
             val persisted = success && startTempBasalInfusionUseCase.persistTempBasalStarted(
                 StartTempBasalInfusionRequestModel(isUnit = true, speed = absoluteRate, minutes = durationInMinutes)
             )
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.setTempBasalAbsolute rate=$absoluteRate result=${response.resultCode} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.setTempBasalAbsolute rate=$absoluteRate success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.setTempBasalAbsolute persist failed — pump enacted, recording in pumpSync anyway")
             if (success) {
                 onLastDataUpdated()
@@ -130,13 +158,14 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         val hour = durationInMinutes / 60
         val min = durationInMinutes % 60
         return try {
-            val response = runBlocking { bleSession.runSingle(address, TempBasalCommand.byPercent(percent, hour, min)) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = sentOrAsked(address, "setTempBasalPercent", doneWhenTempBasalRuns = true) {
+                bleSession.runSingle(address, TempBasalCommand.byPercent(percent, hour, min)).resultCode == RESULT_SUCCESS
+            }
             // Pump-is-authoritative — see setTempBasalAbsolute.
             val persisted = success && startTempBasalInfusionUseCase.persistTempBasalStarted(
                 StartTempBasalInfusionRequestModel(isUnit = false, percent = percent, minutes = durationInMinutes)
             )
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.setTempBasalPercent percent=$percent result=${response.resultCode} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.setTempBasalPercent percent=$percent success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.setTempBasalPercent persist failed — pump enacted, recording in pumpSync anyway")
             if (success) {
                 onLastDataUpdated()
@@ -186,12 +215,13 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
-            val response = runBlocking { bleSession.runSingle(address, TempBasalCancelCommand()) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = sentOrAsked(address, "cancelTempBasal", doneWhenTempBasalRuns = false) {
+                bleSession.runSingle(address, TempBasalCancelCommand()).resultCode == RESULT_SUCCESS
+            }
             // Pump-is-authoritative — on ACK the TBR IS stopped on the patch; the stop must reach
             // pumpSync even if the local persist fails.
             val persisted = success && cancelTempBasalInfusionUseCase.persistTempBasalCancelled()
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelTempBasal result=${response.resultCode} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelTempBasal success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.cancelTempBasal persist failed — pump stopped, recording stop in pumpSync anyway")
             if (success) {
                 onLastDataUpdated()

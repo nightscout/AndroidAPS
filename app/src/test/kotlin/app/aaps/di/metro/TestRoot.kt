@@ -2,6 +2,7 @@ package app.aaps.di.metro
 
 import android.content.Context
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.database.di.DatabaseConfig
@@ -35,10 +36,11 @@ fun testRoot(): AppRootGraph {
         scope,
         mock<Context>(defaultAnswer = Answers.RETURNS_MOCKS),
         // Nothing in a plain-JVM graph test injects members or opens the database, and no test wants a
-        // forced external option - these are the inert values for all three.
+        // forced external option or an emulated pump - these are the inert values for all four.
         mock<MetroMemberInjector>(defaultAnswer = Answers.RETURNS_MOCKS),
         DatabaseConfig.IN_MEMORY,
         ExternalOptionsOverride.NONE,
+        PumpEmulators(),
         CoreObjectsGraph
     )
 }

@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.ble.commands
 
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.BleResponse
+import java.io.Serializable
 
 /**
  * `CURRENT_ACTIVE_ALARM_REQ` (0x43) → one of `CURRENT_ACTIVE_ALARM_RPT` (0xA4/0xA5/0xA6).
@@ -125,6 +126,7 @@ enum class ActiveAlarmSnapshotTier(val responseOpcode: Byte) {
         }
 }
 
+/** [Serializable] only for the emulator, which saves its patch for a test that kills the app. */
 data class ActiveAlarmSnapshotFlags(
     val outOfInsulin: Boolean,
     val operatingLifeExpired: Boolean,
@@ -139,7 +141,7 @@ data class ActiveAlarmSnapshotFlags(
     val patchError: Boolean,
     val occlusionDetected: Boolean,
     val userForcedTermination: Boolean
-)
+) : Serializable
 
 /**
  * One snapshot slot. [payloadIndex] is its byte position in the 15-byte report; [causeCode] is the

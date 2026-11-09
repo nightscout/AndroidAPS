@@ -45,6 +45,18 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
         Assertions.assertEquals("NOTIFY__DELIVERY_RATE_DISPLAY", packet.friendlyName)
     }
 
+    /** The pump goes on with a bolus the driver no longer follows, for example after a stop with no answer. */
+    @Test
+    fun progressOfABolusTheDriverDoesNotFollowIsOnlyLogged() {
+        danaPump.bolusingDetailedBolusInfo = null
+        val lastProgress = danaPump.bolusProgressLastTimeStamp
+        val packet = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, ch, bolusProgressData, danaPump)
+
+        packet.handleMessage(createArray(17, 1.toByte()))
+
+        Assertions.assertEquals(lastProgress, danaPump.bolusProgressLastTimeStamp)
+    }
+
     @BeforeEach
     fun mock() {
         danaRSPlugin =
