@@ -169,7 +169,8 @@ class AaruyService : MetroService() {
             if (!isConnected) return
         }
 
-        aaruyBle.syncPumpStatus()
+        // Waits for the answer: the steps below and the queue's next command need the pump state of now.
+        if (!aaruyBle.readStatusAndWait()) aapsLogger.warn(LTag.PUMPCOMM, "No status answer from the pump")
 
         if (aaruyPump.pumpState.isCanDoRefresh()) {
             aaruyBle.syncAndLoadBasicParam()

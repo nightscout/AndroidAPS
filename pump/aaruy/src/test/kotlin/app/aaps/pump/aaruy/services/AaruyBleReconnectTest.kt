@@ -762,4 +762,45 @@ class AaruyBleReconnectTest {
             TimeZone.setDefault(zoneBefore)
         }
     }
+
+    /**
+     * The queue's status read ends only when its answer is in the database. It ended at once, before the answer, so a
+     * command right after it worked with the old pump state, and a temp basal whose answer was lost was not known yet.
+     */
+    @Test
+    fun theStatusReadEndsWhenItsAnswerIsWritten() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val tempBasalSync = tempBasalSyncMock()
+        val ble = AaruyBLE(
+            AaruyEmulatorBleTransport(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })),
+            logger, RuntimeEnvironment.getApplication() as Context, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            mock(HistoryUnitInfoDao::class.java), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSync, mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        ble.startEmulatorIfActive()
+        `when`(preferences.get(AaruyStringKey.MacAddress)).thenReturn(AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        ble.connect("first", AaruyEmulatorBleTransport.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED && ble.isConnected }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+
+        fun statusesWritten() = mockingDetails(tempBasalSync).invocations.count { it.method.name == "onStatus" }
+        val before = statusesWritten()
+        var answered: Boolean? = null
+        var writtenWhenItEnded = 0
+        // On its own thread, as the queue's: the answer comes on the pump thread, and the test idles the main looper.
+        thread {
+            val result = ble.readStatusAndWait()
+            writtenWhenItEnded = statusesWritten()
+            answered = result
+        }
+        waitFor("the status read") { answered != null }
+        assertEquals(true, answered)
+        assertTrue("the answer is written when the read ends", writtenWhenItEnded > before)
+        ble.emulatorTransport?.shutdown()
+    }
 }

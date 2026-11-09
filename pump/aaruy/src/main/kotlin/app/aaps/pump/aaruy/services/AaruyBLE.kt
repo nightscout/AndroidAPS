@@ -844,7 +844,24 @@ class AaruyBLE(
             tempBasalSync.onStatus(snapshot, live)
             if (snapshot.status == STATUS_TEMP_BASAL) sendTmpBasalOk = true
             else if (snapshot.status != STATUS_BOLUS) cancelTmpBasalOk = true
+            statusesWritten++
         }
+    }
+
+    /** How many statuses were written to the database, counted at the end of their job. See [readStatusAndWait]. */
+    @Volatile private var statusesWritten = 0
+
+    /**
+     * Asks for the status and waits until it is in the database, so the queue's status read ends with AAPS knowing what
+     * the pump does, as the other drivers do. Without the wait the read ended before the answer (about 230 ms on a real
+     * pump), and a lost temp basal answer was still missing in AAPS right after it. Only from the queue's thread: the
+     * answer comes on the pump thread. False when no answer came in time.
+     */
+    fun readStatusAndWait(): Boolean {
+        // A status the pump pushes by itself in the meantime is as new as the answer, so it counts too.
+        val before = statusesWritten
+        aaBleUtil.getCurStatus()
+        return waitForAnswer { statusesWritten > before }
     }
 
     /** The log is read. What the status could not decide before can be decided now. */
