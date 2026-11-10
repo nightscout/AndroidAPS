@@ -56,9 +56,25 @@
     <string name="patch_prepare_dialog_title_insulin_amount">Füllmenge auswählen.</string>
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Bereich: %1$d ~ %2$d IE</string>
     <string name="carelevo_insulin_refill_step1">1. Entferne die Schutzfolie auf der Rückseite der Patch-Verpackung.</string>
+    <string name="carelevo_insulin_refill_step2">2. Desinfiziere die Kappe der Insulinampulle mit einem Alkoholtuch.</string>
+    <string name="carelevo_insulin_refill_step3">3. Entferne die Nadel-Schutzkappe der Insulinspritze, indem Du sie gerade abziehst.</string>
+    <string name="carelevo_insulin_refill_step4">4. Ziehe den Kolben der Spritze zurück, um ca. 2 ml Luft in die Spritze zu bekommen.</string>
+    <string name="carelevo_insulin_refill_step5">5. Stich mit der luftgefüllten Spritze in die Insulinampulle und injiziere die Luft in die Ampulle.</string>
+    <string name="carelevo_insulin_refill_step6">6. Während die Spritze noch in der Ampulle steckt, drehe beides auf den Kopf und nutze den Überdruck um ca. 2ml Insulin in die Spritze aufzuziehen.</string>
+    <string name="carelevo_insulin_refill_step7">7. Stich die Spritze senkrecht in die Füllöffnung des Patches (①) bis es sie das untere Ende erreicht. Zieh den Kolben vollständig nach oben und löse ihn dann. Ziehe nun die Spritze aus der Füllöffnung.</string>
+    <string name="carelevo_insulin_refill_step8">8. Halte die Spritze senkrecht nach oben und tippe vorsichtig dagegen, damit sich alle Luftblasen oben sammeln.</string>
+    <string name="carelevo_insulin_refill_step9">9. Stecke die Nadel wieder in die Insulinampulle, drücke die gesamte Luft in die Ampulle und zieh dann die Insulinmenge auf, die Du für die Laufzeit der Patch-Pumpe benötigst.</string>
+    <string name="carelevo_insulin_refill_step10">10. Entferne die Spritze aus der Ampulle. Sollten noch Luftblasen vorhanden sein, halte die Spritze senkrecht nach oben und tippe dagegen, damit sich die Blasen oben sammeln und dann aus der Spritze gedrückt werden können.</string>
+    <string name="carelevo_insulin_refill_step11">11. Richte die obere Kolbenkante an der Markierung aus, um die Insulindosis genau anpassen zu können.</string>
+    <string name="carelevo_insulin_refill_step12">12. Stich mit der Nadel senkrecht in die Füllöffnung des Patches (①) bis sie das untere Ende erreicht. Drücke dann den Kolben langsam nach vorne, um das gesamte Insulin in den Patch zu füllen.</string>
+    <string name="carelevo_connect_prepare_title">Patch gestartet</string>
+    <string name="carelevo_connect_patch_title">Patch verbinden</string>
+    <string name="carelevo_connect_safety_check_title">Sicherheitsprüfung</string>
+    <string name="carelevo_connect_patch_attach_title">Patch verwenden</string>
     <string name="carelevo_connect_needle_check_title">Nadel einführen</string>
     <string name="carelevo_patch_buzzer_alarm_title">Patchinfo-Alarm</string>
     <string name="carelevo_low_reservoir_reminders_title_value">Benachrichtigungseinstellung - Wenig Insulin</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Benachrichtigungseinstellung - Patchnutzung</string>
     <string name="carelevo_title_fill_insulin">Patch mit Insulin füllen</string>
     <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Fülle den Patch mit Insulin (%1$d–%2$d IE) und berücksichtige dabei die Nutzungsdauer (bis zu 168 Stunden). Tippe auf [Füllmenge], um die eingefüllte Insulinmenge anzugeben.</string>
     <string name="carelevo_patch_step_1">Schritt 1.</string>
@@ -70,7 +86,14 @@
     <string name="carelevo_patch_connect_step_2_desc">Halten Sie die Ein-/Aus-Taste länger als 1 Sekunde gedrückt. Tippen Sie nach dem Signalton auf die unten angezeigte Schaltfläche [Search Patch].</string>
     <string name="carelevo_patch_safety_check_start_title">Sicherheitsprüfung</string>
     <string name="carelevo_patch_safety_check_end_title">Sicherheitsprüfung abgeschlossen</string>
+    <string name="carelevo_patch_attach_step1_desc">Gründlich mit einem Alkoholtuch reinigen.</string>
+    <string name="carelevo_patch_attach_step2_title">Trägerfolie entfernen</string>
+    <string name="carelevo_patch_attach_step2_desc">Nimm den Patch aus der Verpackung und entferne die Nadelkappe.</string>
+    <string name="carelevo_patch_attach_step3_title">Patch setzen</string>
     <string name="carelevo_patch_attach_step4_desc">Tippe nach dem Anbringen des Patches auf „Weiter“.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Sicherheitskappe entfernen</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Sicherheitskappe in Pfeilrichtung drehen und entfernen.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Nadel einführen</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
