@@ -289,34 +289,63 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
 
     // --- debounce ----------------------------------------------------------------------------------
 
+    /** A clock that the wait moves on, so the spacing between updates takes no real time. */
+    private fun fakeTime(): MutableList<Long> {
+        var now = 1_000_000L
+        val waits = mutableListOf<Long>()
+        sut.clock = { now }
+        sut.sleep = { waits.add(it); now += it }
+        return waits
+    }
+
     @Test
-    fun `repeated call within the debounce window is skipped after a success`() {
+    fun `the same profile again within the spacing is skipped when the patch runs it`() {
+        val waits = fakeTime()
         var updateCount = 0
         val first = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updateCount++ })
         assertThat(first.success).isTrue()
         assertThat(first.enacted).isTrue()
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(true)
 
         val second = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updateCount++ })
 
-        // Benign debounce: success=true but NOT enacted, and the pump work happened only once.
+        // Nothing to do: success=true but NOT enacted, and the pump work happened only once.
         assertThat(second.success).isTrue()
         assertThat(second.enacted).isFalse()
         assertThat(updateCount).isEqualTo(1)
+        assertThat(waits).isEmpty()
         verifyBlocking(bleSession, times(1)) { runBasalProgram(any(), any(), any()) }
     }
 
+    /** It was skipped and reported as set, so AAPS recorded a profile the patch did not run. */
     @Test
-    fun `repeated call within the debounce window is skipped after a failure`() {
-        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(false)
-
-        val first = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
-        assertThat(first.success).isFalse()
+    fun `another profile within the spacing waits for its turn and is written`() {
+        val waits = fakeTime()
+        sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(false)
 
         val second = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
 
         assertThat(second.success).isTrue()
-        assertThat(second.enacted).isFalse()
-        verifyBlocking(bleSession, times(1)) { runBasalProgram(any(), any(), any()) }
+        assertThat(second.enacted).isTrue()
+        assertThat(waits).containsExactly(30_000L)
+        verifyBlocking(bleSession, times(2)) { runBasalProgram(any(), any(), any()) }
+    }
+
+    @Test
+    fun `a try again after a failure within the spacing waits and is written`() {
+        val waits = fakeTime()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(false)
+        val first = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        assertThat(first.success).isFalse()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
+
+        val second = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+
+        assertThat(second.success).isTrue()
+        assertThat(second.enacted).isTrue()
+        assertThat(waits).containsExactly(30_000L)
+        verifyBlocking(bleSession, times(2)) { runBasalProgram(any(), any(), any()) }
     }
 
     private companion object {

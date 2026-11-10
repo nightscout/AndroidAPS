@@ -31,6 +31,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -58,7 +59,8 @@ class DanaRPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRPlugin(
             aapsLogger, rh, preferences, config, commandQueue, rxBus, context, activePlugin, danaPump, dateUtil, pumpSync,
-            notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
+            notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, BolusInProgress(preferences, pumpSync, dateUtil, aapsLogger),
+            pumpEnactResultProvider
         )
     }
 
@@ -94,6 +96,19 @@ class DanaRPluginTest : TestBaseWithProfile() {
         val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isTrue()
+    }
+
+    /** Saved before the start, for an app killed during the bolus, and removed only after the record is written. */
+    @Test
+    fun theBolusIsSavedUntilItIsRecorded() {
+        bindBolusService(connectionOk = true, delivered = 1.0)
+        runBlocking<Unit> {
+            danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 })
+            val order = inOrder(preferences, pumpSync)
+            order.verify(preferences).put(eq(DanaStringNonKey.BolusInProgress), any<String>())
+            order.verify(pumpSync).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), eq(PumpType.DANA_R), any())
+            order.verify(preferences).remove(DanaStringNonKey.BolusInProgress)
+        }
     }
 
     /** A stopped bolus counts as a success, but if nothing was given nothing changed on the pump. */

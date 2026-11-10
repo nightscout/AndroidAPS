@@ -9,6 +9,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.di.EmulatedOptions
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
@@ -87,6 +88,8 @@ class DanaRsEmulatorPumpTest {
         emulator = bleTransport as EmulatorBleTransport
         emulator.pairingDelayMs = 0
         emulator.writeLatencyMs = 0
+        // A bolus as short as the driver allows. At the real speed (12 s/U) 1 U took 12 s of waiting here.
+        emulator.speed = EmulatorSpeed.FAST
         seedPairingFor(variant)
 
         // The plugin/config init MainApp.onCreate does, which the test app doesn't.
@@ -187,35 +190,9 @@ class DanaRsEmulatorPumpTest {
         EmulatedOptions.enabled = emptySet()
     }
 
-    @Test
-    fun bleTransport_isTheEmulator() {
-        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
-        assertThat(bleTransport).isInstanceOf(EmulatorBleTransport::class.java)
-    }
-
-    @Test
-    fun plugin_isConfiguredFromSeededPreferences() {
-        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
-        assertThat(danaRSPlugin.mDeviceName).isEqualTo(DEVICE_NAME)
-        assertThat(danaRSPlugin.isConfigured()).isTrue()
-    }
-
-    @Test
-    fun danaRSService_binds() {
-        // Separated from the handshake assertion so a binding failure and a protocol failure are
-        // distinguishable: this one failing means the service never came up at all.
-        bringUpPump(ExternalOptions.EMULATE_DANA_BLE5)
-        assertThat(serviceBound).isTrue()
-    }
-
-    // One per handshake the emulator speaks. They share everything above the transport, so what
-    // each actually proves is that its own encryption and pairing survive the real plugin/service
-    // path: BLE5 with a stored key, v3 with negotiated keys, v1 by pairing from scratch.
-
-    @Test
-    fun connect_completesBle5HandshakeAgainstEmulator() {
-        assertConnects(ExternalOptions.EMULATE_DANA_BLE5)
-    }
+    // One per handshake that no pump scenario covers yet. The scenarios (DanaRSScenarioTest) pair a Dana-i over
+    // BLE5 for real in every test, so the transport, the configured plugin, the bound service and the BLE5
+    // handshake are tested there. These two go when v1 and v3 get scenario adapters of their own.
 
     @Test
     fun connect_completesV1HandshakeAgainstEmulator() {

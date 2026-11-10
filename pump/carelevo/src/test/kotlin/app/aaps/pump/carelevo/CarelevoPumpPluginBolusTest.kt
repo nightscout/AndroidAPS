@@ -580,9 +580,10 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     )
 
     @Test
-    fun `cancelExtendedBolus should fail when the session throws`() {
+    fun `cancelExtendedBolus should fail when the session throws and the patch still runs it`() {
         whenever { bleSession.runSingle(any(), isA<ExtendBolusCancelCommand>(), any()) }
             .thenAnswer { throw IllegalStateException("failed") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = EXTEND_BOLUS_MODE))
 
         val result = runBlocking { plugin.cancelExtendedBolus() }
 
@@ -590,11 +591,50 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         assertThat(result.enacted).isFalse()
     }
 
+    /** The cancel reached the patch and only its answer was lost. AAPS kept an extended bolus the patch had ended. */
+    @Test
+    fun `cancelExtendedBolus whose answer is lost is recorded when the patch runs none`() {
+        whenever { bleSession.runSingle(any(), isA<ExtendBolusCancelCommand>(), any()) }
+            .thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = BASAL_MODE))
+
+        val result = runBlocking { plugin.cancelExtendedBolus() }
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+    }
+
+    /** The patch started it and only its answer was lost. AAPS had no record of insulin the patch gives. */
+    @Test
+    fun `setExtendedBolus whose answer is lost is recorded when the patch runs it`() {
+        whenever { bleSession.runSingle(any(), isA<ExtendBolusCommand>(), any()) }
+            .thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = EXTEND_BOLUS_MODE))
+
+        val result = runBlocking { plugin.setExtendedBolus(insulin = 1.2, durationInMinutes = 30) }
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(pumpSync) { syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `setExtendedBolus whose answer is lost is not recorded when the patch runs none`() {
+        whenever { bleSession.runSingle(any(), isA<ExtendBolusCommand>(), any()) }
+            .thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = BASAL_MODE))
+
+        val result = runBlocking { plugin.setExtendedBolus(insulin = 1.2, durationInMinutes = 30) }
+
+        assertThat(result.success).isFalse()
+        verifyBlocking(pumpSync, never()) { syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
     private companion object {
 
         // Raw infusion modes the patch reports in 0x91.
         const val BASAL_MODE = 1
         const val IMME_BOLUS_MODE = 3
+        const val EXTEND_BOLUS_MODE = 5
 
         const val LEFTOVER_PUMP_ID = 1_760_000_000_000L
         const val START_PUMP_ID = 1_760_000_100_000L

@@ -2,18 +2,25 @@ package app.aaps.e2e.scenario
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.NotificationManager
 import android.content.Context
 import android.os.SystemClock
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
 import androidx.work.WorkManager
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -203,9 +210,55 @@ class PumpScenario(private val pump: PumpUnderTest) {
         testGraphs.rxBus.send(EventProfileChangeRequested())
         awaitTrue("the profile runs") { runBlocking { testGraphs.profileFunction.getProfile() } != null }
         awaitQueueIdle()
+        // No wait here: a pump writes its records by its own clock, which can be a second or two behind the phone, so a
+        // record of the first command can have a time just before the first profile. AAPS must keep it.
     }
 
     fun unpair() = pump.unpair(this)
+
+    /**
+     * A profile switch to [percentage] % of the profile, as the user makes one, and the new basal sent to the pump as the
+     * keep alive worker does when the pump lacks it. [checkStatusShown] then finds whether the pump holds it.
+     */
+    fun switchProfile(percentage: Int) {
+        val store = checkNotNull(testGraphs.profileRepository.profile.value) { "No profile store" }
+        val switch = runBlocking {
+            testGraphs.profileFunction.createProfileSwitch(
+                profileStore = store,
+                profileName = PROFILE_NAME,
+                durationInMinutes = 0,
+                percentage = percentage,
+                timeShiftInHours = 0,
+                timestamp = testGraphs.dateUtil.now(),
+                action = Action.PROFILE_SWITCH,
+                source = Sources.Aaps,
+                listValues = emptyList(),
+                iCfg = testGraphs.insulinManager.insulins.first()
+            )
+        }
+        checkNotNull(switch) { "The profile switch to $percentage % was refused" }
+        testGraphs.rxBus.send(EventProfileChangeRequested())
+        // Once the pump has it, AAPS runs it: the running profile has the basal at that percentage. Its `percentage` is
+        // not the sign, the switch AAPS runs then has the values with the percentage already in them.
+        // A driver may take a new profile only some time after the one before (Carelevo: 30 s), or the answer of the
+        // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
+        val basal = BASAL_RATE * percentage / PERCENT
+        awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
+            val aapsRuns = runBlocking { testGraphs.profileFunction.getProfile() }
+                ?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
+            // Every hour: a pump that takes a profile in parts can hold a part of it.
+            val onPump = control.state().basal
+            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
+            if (aapsRuns && pumpGives) true
+            else {
+                awaitQueueIdle()
+                testGraphs.rxBus.send(EventProfileChangeRequested())
+                SystemClock.sleep(PROFILE_RETRY_MS)
+                false
+            }
+        }
+        awaitQueueIdle()
+    }
 
     /**
      * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
@@ -293,7 +346,28 @@ class PumpScenario(private val pump: PumpUnderTest) {
         return queued { commandQueue.tempBasalAbsolute(rate, minutes, true, profile, PumpSync.TemporaryBasalType.NORMAL) }
     }
 
+    /**
+     * A temp basal in percent, the way the temp basal dialog sets one on such a pump. A Dana takes an hour or more on
+     * another command than the short one the loop uses.
+     */
+    fun tempBasalPercent(percent: Int, minutes: Int): PumpEnactResult {
+        val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+        return queued { commandQueue.tempBasalPercent(percent, minutes, true, profile, PumpSync.TemporaryBasalType.NORMAL) }
+    }
+
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
+
+    /**
+     * A status read on a new connection, as AAPS makes one after the link was closed for a while. Some drivers learn what
+     * happened on the pump only then: Equil reads the pump's advertisement (battery, newest log entry) at a connect, and
+     * Carelevo the patch's alarm snapshot. A status read can queue more reads of its own (Equil reads its log after it),
+     * so it waits for those too.
+     */
+    fun readStatusOnNewLink() {
+        checkLinkClosed()
+        readStatus()
+        awaitQueueIdle()
+    }
 
     /**
      * The queue gives up on a link after [SHORT_CONNECTION_LIMIT_S] instead of about two minutes: the same path, a
@@ -310,6 +384,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /** The pump keeps daily totals that AAPS reads, see [readTdds]. */
     val canReadTdds: Boolean get() = pumpDescription.supportsTDDs
+
+    /** The pump takes a temp basal in percent, see [tempBasalPercent]. */
+    val canSetPercentTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.PERCENT != 0
 
     fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
 
@@ -353,7 +430,43 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
+    /**
+     * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT], or the
+     * full-screen alarm of `UiInteraction.runAlarm`, which a driver can use for the sound while its own card stays lower
+     * (Carelevo). Without a screen in the test, runAlarm posts that alarm as a system notification.
+     */
+    fun checkUrgentAlarmSince(since: Long) {
+        fun urgent() = testGraphs.notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT && it.date >= since }
+        fun fullScreen() = instrumentation.targetContext.getSystemService(NotificationManager::class.java)
+            .activeNotifications.any { it.id == AlarmNotificationManager.NOTIFICATION_ID_FULL_SCREEN && it.postTime >= since }
+        // From the main thread with the app in front, runAlarm opens its alarm screen at once instead.
+        fun alarmScreen(): Boolean {
+            var shown = false
+            onMain {
+                shown = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
+                    .any { testGraphs.uiInteraction.errorHelperActivity.isInstance(it) }
+            }
+            return shown
+        }
+        fun alarmed() = urgent() || fullScreen() || alarmScreen()
+        awaitValue(RECORD_TIMEOUT) { alarmed().takeIf { it } }
+        assertWithMessage("an alarm since the pump raised it, AAPS shows ${testGraphs.notificationManager.notifications.value.map { "${it.id} ${it.level}" }}")
+            .that(alarmed()).isTrue()
+    }
+
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
+    /**
+     * While the pump gives no insulin, AAPS runs a 0 U/h temp basal of type PUMP_SUSPEND, and only then. Without it AAPS
+     * counts basal the pump does not give, and IOB is too high.
+     */
+    fun checkSuspend() {
+        val suspended = control.state().suspended
+        val stored = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(System.currentTimeMillis()) }
+        assertWithMessage("AAPS records the stop of the pump (pump stopped: $suspended, AAPS: $stored)")
+            .that(stored?.type == TB.Type.PUMP_SUSPEND).isEqualTo(suspended)
+        if (suspended) assertWithMessage("the stop is 0 U/h").that(stored?.rate).isEqualTo(0.0)
+    }
+
     fun checkTempBasal() {
         val running = control.state().tempBasal
         val stored = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(System.currentTimeMillis()) }
@@ -368,7 +481,11 @@ class PumpScenario(private val pump: PumpUnderTest) {
         assertWithMessage("temp basal rate").that(abs(stored.rate - checkNotNull(pumpRate)) < RATE_TOLERANCE).isTrue()
     }
 
-    /** The extended bolus AAPS has is the one the pump runs, or neither has one. */
+    /**
+     * The extended bolus AAPS has is the one the pump runs, or neither has one. A pump that gives high temp basals as
+     * extended boluses (the DanaR with its "Use extended boluses for >200%" setting) stores every extended bolus as one
+     * that stands for a temp basal.
+     */
     fun checkExtendedBolus() {
         val running = control.state().extendedBolus
         val stored = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(System.currentTimeMillis()) }
@@ -379,7 +496,38 @@ class PumpScenario(private val pump: PumpUnderTest) {
         if (stored == null) throw AssertionError("The pump runs an extended bolus AAPS does not have: $running")
         assertWithMessage("extended bolus amount").that(abs(stored.amount - running.units) < RATE_TOLERANCE).isTrue()
         assertWithMessage("extended bolus minutes").that(stored.duration).isEqualTo(running.minutes * MS_PER_MINUTE)
-        assertWithMessage("a real extended bolus, not one that stands for a temp basal").that(stored.isEmulatingTempBasal).isFalse()
+        assertWithMessage("the extended bolus stands for a temp basal")
+            .that(stored.isEmulatingTempBasal).isEqualTo(testGraphs.activePlugin.activePumpInternal.isFakingTempsByExtendedBoluses)
+    }
+
+    /**
+     * After a status read AAPS shows what the pump holds: its reservoir, its battery, and as basal the profile that runs.
+     * A driver that reads a value in the wrong unit or scale shows here. Values the emulator cannot tell are not checked.
+     */
+    fun checkStatusShown() {
+        readStatusOnNewLink()
+        val state = control.state()
+        val driver = testGraphs.activePlugin.activePumpInternal
+        state.reservoir?.let { onPump ->
+            awaitValue(RECORD_TIMEOUT) { driver.reservoirLevel.value?.cU?.takeIf { abs(it - onPump) <= RESERVOIR_TOLERANCE } }
+            val shown = driver.reservoirLevel.value?.cU
+                ?: throw AssertionError("AAPS shows no reservoir, the pump has $onPump U")
+            assertWithMessage("reservoir AAPS shows ($shown U), the pump has $onPump U")
+                .that(abs(shown - onPump) <= RESERVOIR_TOLERANCE).isTrue()
+        }
+        state.battery?.let { onPump ->
+            awaitValue(RECORD_TIMEOUT) { driver.batteryLevel.value?.takeIf { it == onPump } }
+            assertWithMessage("battery AAPS shows, the pump has $onPump %").that(driver.batteryLevel.value).isEqualTo(onPump)
+        }
+        state.basal?.let { onPump ->
+            val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+            val running = (0 until HOURS_PER_DAY).map { profile.getBasalTimeFromMidnight(it * SECONDS_PER_HOUR) }
+            assertWithMessage("basal on the pump, hour by hour, against the profile AAPS runs").that(onPump.size).isEqualTo(HOURS_PER_DAY)
+            onPump.zip(running).forEachIndexed { hour, (pumpRate, profileRate) ->
+                assertWithMessage("basal at $hour:00, pump $pumpRate U/h, profile $profileRate U/h")
+                    .that(abs(pumpRate - profileRate) <= BASAL_TOLERANCE).isTrue()
+            }
+        }
     }
 
     /** The queue closes the link when it has nothing more to do. */
@@ -395,6 +543,19 @@ class PumpScenario(private val pump: PumpUnderTest) {
         checkLinkClosed()
         val sent = control.state().commands - before
         assertWithMessage("commands of one status read").that(sent).isAtMost(pump.maxCommandsPerStatusRead)
+    }
+
+    /**
+     * The newest bolus record of AAPS has the time the bolus was given, by the phone clock, not a time off by the pump
+     * clock. A record is written at the start or at the end of the bolus, so it may be up to [CLOCK_TOLERANCE_MS] off.
+     */
+    fun checkNewestBolusNear(givenAt: Long) {
+        val newest = runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
+            .filter { it.type != BS.Type.PRIMING && it.amount > 0.0 }
+            .maxByOrNull { it.timestamp } ?: throw AssertionError("AAPS has no bolus record")
+        val offMinutes = (newest.timestamp - givenAt) / MS_PER_MINUTE.toDouble()
+        assertWithMessage("time of the bolus record, $offMinutes min from the time it was given")
+            .that(abs(newest.timestamp - givenAt) <= CLOCK_TOLERANCE_MS).isTrue()
     }
 
     /** Sorted here: `getBolusesFromTime` gives the newest first, also with `ascending = true` (so since 3.x). */
@@ -526,6 +687,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
         private const val CENTI = 100.0
         private const val RATE_TOLERANCE = 0.01
+        /** Pumps report the reservoir to 0.01 U, some to whole units. A scale mistake is far bigger. */
+        private const val RESERVOIR_TOLERANCE = 1.0
+        /** A pump cuts a rate down to its own step, as Equil to 0.0125 U/h. */
+        private const val BASAL_TOLERANCE = 0.0125
+        private const val HOURS_PER_DAY = 24
+        private const val SECONDS_PER_HOUR = 3600
+        private const val PERCENT = 100.0
+        /** A bolus record may be written at the end of the bolus. A pump clock off by minutes is far more. */
+        private const val CLOCK_TOLERANCE_MS = 120_000L
+        /**
+         * A Carelevo waits 30 s between two profile updates, and one whose answer is lost times out after 30 s: skip, lost
+         * try, skip, and the next try takes it.
+         */
+        private const val PROFILE_TIMEOUT = 180_000L
+        private const val PROFILE_RETRY_MS = 5_000L
         private const val MS_PER_MINUTE = 60_000L
     }
 }
