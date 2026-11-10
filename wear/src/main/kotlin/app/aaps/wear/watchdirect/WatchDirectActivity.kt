@@ -118,11 +118,9 @@ class WatchDirectActivity : WearMetroActivity() {
      */
     @SuppressLint("BatteryLife")
     private fun askForUnrestrictedBattery() {
-        val intents = listOf(
-            Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")),
-            Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),
+        // The same screens WatchDirect looks for before it shows the warning, then app info as a last try.
+        val intents = batterySettingsIntents(packageName) +
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
-        )
         for (intent in intents) {
             try {
                 startActivity(intent)

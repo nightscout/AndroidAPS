@@ -31,6 +31,14 @@
     <queries>
         <package android:name="${applicationId}.watchfacepush.wfs" />
         <package android:name="${applicationId}.watchfacepush.cwf" />
+        <!-- So WatchDirect can see whether the watch has a battery setting before it asks for it. -->
+        <intent>
+            <action android:name="android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+            <data android:scheme="package" />
+        </intent>
+        <intent>
+            <action android:name="android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS" />
+        </intent>
     </queries>
 
     <application

@@ -8,8 +8,10 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -97,12 +99,19 @@ class WatchDirect(
         get() = context.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(context.packageName) == true
 
     /**
-     * False on Wear OS 7 and newer. There the watch has no setting for unrestricted battery use (the
-     * Pixel Watch 4 has none), so a warning would ask for something the user cannot do and would never
-     * go away. On these watches the app does not ask for it.
+     * True when the watch has a screen where the user can allow unrestricted battery use.
+     *
+     * Some watches have none (a Pixel Watch 4 was reported). There a warning would ask for something
+     * the user cannot do and would never go away, so the app does not ask. This looks for the screen
+     * itself rather than at the Android version: the version does not say whether a maker kept the
+     * setting, and a watch that has it must still be asked, or it may stop the link in the background.
+     * The app info screen does not count, it has no battery choice on these watches.
      */
-    private val canAskForUnrestrictedBattery: Boolean
-        get() = Build.VERSION.SDK_INT < WEAR_OS_7_API
+    private val canAskForUnrestrictedBattery: Boolean by lazy {
+        val found = batterySettingsIntents(context.packageName).any { context.packageManager.resolveActivity(it, 0) != null }
+        if (!found) aapsLogger.info(LTag.WEAR, "Direct to watch: this watch has no battery setting to ask for, the battery warning is not shown")
+        found
+    }
 
     private val hasPermissions: Boolean
         get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
@@ -334,9 +343,6 @@ class WatchDirect(
         // Clear of the ids DataLayerListenerServiceWear (1, 2, 556677) and the other watch notifications use.
         const val NOTIFICATION_ID = 7972
 
-        /** The API level of Wear OS 7, which is based on Android 17. */
-        const val WEAR_OS_7_API = 37
-
         /** The ids of `CgmAlarmType.URGENT_LOW` and `CgmAlarmType.LOW` on the phone. */
         const val URGENT_LOW_ALARM_ID = "urgent_low"
         const val LOW_ALARM_ID = "low"
@@ -346,3 +352,9 @@ class WatchDirect(
         const val LOW_VIBRATION_S = 5
     }
 }
+
+/** The screens where the user can allow unrestricted battery use, best first. */
+internal fun batterySettingsIntents(packageName: String): List<Intent> = listOf(
+    Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")),
+    Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+)
