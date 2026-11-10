@@ -329,13 +329,23 @@ class DanaRPumpEmulator(
         }
     }
 
+    /**
+     * MsgStatusTempBasal. An APS temp basal (15 or 30 minutes) has flag 0x02 and the duration code 150 or 160 instead of
+     * hours: UNVERIFIED on a DanaR, read from what the driver's parser looks for.
+     */
     private fun handleStatusTempBasal(): ByteArray {
         val running = state.isTempBasalRunning
         val elapsed = if (running) ((state.pumpTimeMillis - state.tempBasalStartTime) / 1000).toInt() else 0
-        val durationCode = state.tempBasalDurationMinutes / 60
+        val aps = running && state.tempBasalDurationMinutes < 60
+        val durationCode = when {
+            !aps                                -> state.tempBasalDurationMinutes / 60
+            state.tempBasalDurationMinutes == 15 -> APS_PARAM_15_MIN
+            else                                -> APS_PARAM_30_MIN
+        }
+        val flags = (if (running) 0x01 else 0x00) or (if (aps) 0x02 else 0x00)
 
         return byteArrayOf(
-            if (running) 0x01 else 0x00,                     // 0: status flags
+            flags.toByte(),                                   // 0: status flags
             state.tempBasalPercent.toByte(),                  // 1: percent
             durationCode.toByte(),                            // 2: duration code (hours)
             (elapsed and 0xFF).toByte(),                      // 3-5: running seconds (3 bytes LE)
@@ -769,5 +779,6 @@ class DanaRPumpEmulator(
         /** [EmulatorSpeed.FAST]: a bolus this many times shorter. */
         private const val FAST_DIVISOR = 20
         private const val APS_PARAM_30_MIN = 160
+        private const val APS_PARAM_15_MIN = 150
     }
 }
