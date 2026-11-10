@@ -1,6 +1,6 @@
 ---
 name: pump-emulator-scenarios
-description: Test a pump driver against its emulator through the real command queue - pairing, bolus, temp basal, lost commands and answers, driver reload, app restart. Use when adding a pump to the scenario tests, when a pump scenario or CI shard D fails, or when changing a driver or its emulator in a way these tests cover.
+description: Test a pump driver against its emulator through the real command queue - pairing, bolus, temp basal, lost commands and answers, driver reload, app restart. Use when adding a pump to the scenario tests, when a pump scenario fails locally or in the CI work list, or when changing a driver or its emulator in a way these tests cover.
 ---
 
 # Pump emulator scenario tests
@@ -60,6 +60,9 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
    The module needs `testImplementation(project(":shared:tests"))`, `testImplementation(libs.org.robolectric)` and
    `testRuntimeOnly(libs.org.junit.vintage.engine)`. A transport that reports through its own callback sets
    `reportsThroughListener = false`, and only the shared part runs.
+6. Before the push, run the class and then the two restart runs on a temporary emulator. CI runs the restart pair for
+   every class, and a normal local run skips it. The saved emulator must hold the bolus that runs and go on with it
+   when it is read back (the DanaR emulator once lost it, so the bolus never ended after the restart).
 
 ## Running
 
@@ -87,9 +90,12 @@ run. Run 2 is a new process on the same database file and settings, with the emu
 
 ### CI
 
-CircleCI shard D (fourth emulator, `.circleci/config.yml`) runs `-e annotation app.aaps.testcategories.ShardD`, then
-the two restart runs for each class it lists with `-e log true`. `@ShardD` is `@Inherited` and set on
+The scenarios (`@ShardD`) are a work list over the CircleCI emulators, `.circleci/scenario-worker.sh`. Its header
+says how it works: each class is split in parts (the runner's `numShards`/`shardIndex`), plus one item for the two
+restart runs, and every emulator with nothing else to do takes the next item. `@ShardD` is `@Inherited` and set on
 `AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
+The Collect step prints one line per item (emulator, result, seconds); a failed item's output has the driver log of
+the failed test.
 
 The pump UI tests (`AbstractPumpUiTest`, one `PumpScreens` per pump) have no shard annotation, so they run in shard C.
 CI makes its AVDs without a device, which gives the emulator default screen: **320 x 640 at 160 dpi**, on API 31. A
@@ -128,5 +134,15 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 - A driver that cannot tell at once whether a bolus start reached the pump may count the whole amount and decide later,
   from the pump, once the bolus would have ended. Give such a check a longer limit (`checkBolusRecords(BOLUS_TIMEOUT)`).
   A record it sets to 0 U counts as no record.
+- A record timed by the pump clock before the first profile in AAPS is dropped ("No profile running"), and a pump clock
+  can be a second or two behind the phone. So `pair()` waits a few seconds after the first profile before the first
+  command. Without it the first Dana temp basal failed now and then in CI.
+- A driver may send a command again after no answer (the DanaR sends a temp basal cancel again). Check the end state
+  after a status read, not the state between the two sends.
+- A pump that gives high temp basals as extended boluses (the DanaR with "Use extended boluses for >200%", on by
+  default) stores every extended bolus as one that stands for a temp basal. `checkExtendedBolus` expects what
+  `isFakingTempsByExtendedBoluses` says.
+- An alarm reaches the user in two ways: from a background thread as the full-screen alarm notification, from the main
+  thread as the alarm screen. `checkUrgentAlarmSince` accepts either.
 - A driver's own database, as the stored pump log of Aaruy, is a file. It outlives the test graph, so a test finds the
   rows of the tests before it. A driver must not take an old row for a new event; Aaruy tells them apart by the row id.
