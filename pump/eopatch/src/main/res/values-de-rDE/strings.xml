@@ -87,4 +87,5 @@
     <string name="string_temp_basal_remained_hhmm">verbleibende Zeit: %1$s:%2$s</string>
     <string name="string_pause_failed">Anhalten fehlgeschlagen.</string>
     <string name="string_resume_failed">Fortsetzen fehlgeschlagen.</string>
+    <string name="patch_force_reset">Zurücksetzen erzwingen</string>
 </resources>
