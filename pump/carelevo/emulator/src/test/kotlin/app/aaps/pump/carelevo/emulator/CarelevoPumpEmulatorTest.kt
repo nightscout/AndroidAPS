@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotCommand
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.AdditionalPrimingCommand
@@ -57,10 +58,13 @@ class CarelevoPumpEmulatorTest {
     private lateinit var state: CarelevoPumpState
     private lateinit var emulator: CarelevoPumpEmulator
 
+    /** The patch's clock. A bolus is given over time, so a test moves it. */
+    private var now = 1_000_000L
+
     @BeforeEach
     fun setUp() {
         state = CarelevoPumpState()
-        emulator = CarelevoPumpEmulator(state)
+        emulator = CarelevoPumpEmulator(state, clock = { now })
     }
 
     // ---- Pairing ---------------------------------------------------------------------------------
@@ -313,13 +317,14 @@ class CarelevoPumpEmulatorTest {
     }
 
     @Test
-    fun `safety check success moves the patch to RUNNING`() {
+    fun `safety check success leaves the pump state READY as a real patch does`() {
         state.pumpStateRaw = CarelevoPumpEmulator.PUMP_STATE_READY
         val cmd = SafetyCheckCommand()
 
-        cmd.decode(emulator.handle(cmd.encode()).last())
+        val decoded = cmd.decode(emulator.handle(cmd.encode()).last())
 
-        assertThat(state.pumpStateRaw).isEqualTo(CarelevoPumpEmulator.PUMP_STATE_RUNNING)
+        assertThat(decoded.resultCode).isEqualTo(CarelevoPumpState.RESULT_SUCCESS)
+        assertThat(state.pumpStateRaw).isEqualTo(CarelevoPumpEmulator.PUMP_STATE_READY)
     }
 
     @Test
@@ -376,19 +381,106 @@ class CarelevoPumpEmulatorTest {
     }
 
     @Test
-    fun `immediate bolus decrements the reservoir and adds to the bolus total`() {
+    fun `immediate bolus decrements the reservoir and adds to the bolus total when it ends`() {
         state.insulinRemaining = 100.0
         state.infusedTotalBolus = 3.0
         val cmd = ImmediateBolusCommand(actionId = 7, volume = 4.25)
 
-        cmd.decode(emulator.handle(cmd.encode()).single())
+        val decoded = cmd.decode(emulator.handle(cmd.encode()).single())
 
+        assertThat(decoded.expectedCompletionSeconds).isEqualTo(85)
+        assertThat(state.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_IMME_BOLUS)
+        assertThat(emulator.bolusRunning).isTrue()
+
+        now += 85_000L
+
+        assertThat(emulator.bolusRunning).isFalse()
         assertThat(state.insulinRemaining).isWithin(TOLERANCE).of(95.75)
         assertThat(state.infusedTotalBolus).isWithin(TOLERANCE).of(7.25)
-        assertThat(state.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_IMME_BOLUS)
-        // The emulated bolus lands immediately, so the whole dose is already infused — a later cancel
-        // reports this, rather than claiming 0 U for insulin the totals above have already counted.
-        assertThat(state.bolusInfusedAmount).isWithin(TOLERANCE).of(4.25)
+        assertThat(state.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_BASAL)
+        assertThat(emulator.boluses).containsExactly(4.25)
+    }
+
+    /** The driver reads the totals until the bolus has ended. A patch that stayed in bolus mode made it wait in vain. */
+    @Test
+    fun `a status read during a bolus shows the bolus mode and the part given so far`() {
+        state.infusedTotalBolus = 3.0
+        val bolus = ImmediateBolusCommand(actionId = 7, volume = 2.0)
+        bolus.decode(emulator.handle(bolus.encode()).single())
+
+        now += 20_000L
+        val status = InfusionInfoCommand(inquiryType = 1)
+        val during = status.decode(emulator.handle(status.encode()).single())
+
+        assertThat(during.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_IMME_BOLUS)
+        assertThat(during.infusedTotalBolusAmount).isWithin(TOLERANCE).of(4.0)
+
+        now += 20_000L
+        val after = status.decode(emulator.handle(status.encode()).single())
+
+        assertThat(after.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_BASAL)
+        assertThat(after.infusedTotalBolusAmount).isWithin(TOLERANCE).of(5.0)
+    }
+
+    @Test
+    fun `a cancel during a bolus reports the part given and ends it`() {
+        val bolus = ImmediateBolusCommand(actionId = 7, volume = 3.0)
+        bolus.decode(emulator.handle(bolus.encode()).single())
+        now += 25_000L
+
+        val cancel = BolusCancelCommand()
+        val decoded = cancel.decode(emulator.handle(cancel.encode()).single())
+
+        assertThat(decoded.infusedAmount).isWithin(TOLERANCE).of(1.25)
+        assertThat(emulator.bolusRunning).isFalse()
+        assertThat(emulator.boluses).containsExactly(1.25)
+        assertThat(state.infusedTotalBolus).isWithin(TOLERANCE).of(1.25)
+    }
+
+    @Test
+    fun `a bolus told to stop early ends there with an occlusion`() {
+        emulator.stopNextBolusAt = 0.5
+        val bolus = ImmediateBolusCommand(actionId = 7, volume = 2.0)
+        bolus.decode(emulator.handle(bolus.encode()).single())
+
+        now += 10_000L
+
+        assertThat(emulator.bolusRunning).isFalse()
+        assertThat(emulator.boluses).containsExactly(0.5)
+        assertThat(state.criticalAlarmFlags.occlusionDetected).isTrue()
+    }
+
+    /** For a test that kills the app: the patch in the new process is the same, and its bolus goes on by the clock. */
+    @Test
+    fun `a saved patch is restored with the bolus it is giving`() {
+        state.serialNumber = "CL24000000042"
+        state.insulinRemaining = 150.0
+        emulator.handle(ImmediateBolusCommand(actionId = 1, volume = 1.0).encode())
+        now += 20_000L
+        emulator.handle(ImmediateBolusCommand(actionId = 2, volume = 2.0).encode())
+        now += 10_000L
+
+        val restored = CarelevoPumpEmulator.restore(emulator.saveState(), clock = { now })
+
+        assertThat(restored.state.serialNumber).isEqualTo("CL24000000042")
+        assertThat(restored.bolusRunning).isTrue()
+        assertThat(restored.reservoir).isWithin(TOLERANCE).of(148.5)
+        now += 30_000L
+        assertThat(restored.bolusRunning).isFalse()
+        assertThat(restored.boluses).containsExactly(1.0, 2.0).inOrder()
+        assertThat(restored.reservoir).isWithin(TOLERANCE).of(147.0)
+    }
+
+    @Test
+    fun `fast speed reports and gives a bolus in a shorter time`() {
+        emulator.speed = EmulatorSpeed.FAST
+        val bolus = ImmediateBolusCommand(actionId = 7, volume = 2.0)
+
+        val decoded = bolus.decode(emulator.handle(bolus.encode()).single())
+        now += 2_000L
+
+        assertThat(decoded.expectedCompletionSeconds).isEqualTo(2)
+        assertThat(emulator.boluses).containsExactly(2.0)
     }
 
     @Test
@@ -428,7 +520,7 @@ class CarelevoPumpEmulatorTest {
         state.insulinRemaining = 187.65
         state.infusedTotalBasal = 12.34
         state.infusedTotalBolus = 5.5
-        state.pumpStateRaw = CarelevoPumpEmulator.PUMP_STATE_RUNNING
+        state.pumpStateRaw = 2 // not 0, so the test sees where the byte goes
         state.modeRaw = CarelevoPumpEmulator.MODE_BASAL
         val cmd = InfusionInfoCommand()
 
@@ -770,6 +862,9 @@ class CarelevoPumpEmulatorTest {
         assertThat(decoded.expectedTimeSeconds).isEqualTo(5400)
         assertThat(state.extendedBolusRunning).isTrue()
         assertThat(state.modeRaw).isEqualTo(CarelevoPumpEmulator.MODE_EXTEND_BOLUS)
+        // 0.5 U/h for 90 minutes: what the scenario compares with the AAPS record.
+        assertThat(state.extendedBolusMinutes).isEqualTo(90)
+        assertThat(state.extendedBolusUnits).isWithin(1e-9).of(0.75)
     }
 
     @Test

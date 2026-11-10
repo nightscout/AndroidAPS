@@ -6,3 +6,8 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   target-branch: dev
+  ignore:
+    # 2.3.13 can silently skip generated code when KSP tasks run in parallel (google/ksp#3286),
+    # and Room then has no *_Impl. Remove this when a fixed KSP is out.
+    - dependency-name: "com.google.devtools.ksp*"
+      versions: ["2.3.13"]

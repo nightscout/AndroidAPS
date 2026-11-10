@@ -594,13 +594,6 @@ private suspend fun submitBgModel(
     val activityData = input.activityData
     val treatmentData = input.treatmentData
 
-    // maxBgY/minBgY clamped against highMark/lowMark (same as legacy GraphData.maxY logic) —
-    // used only for the EPS baseline, NOT the axis range itself (see below for that — windowed,
-    // unlike these full-range values).
-    val allBgValues = (input.bgReadings + input.bucketedData).map { it.value }
-    val maxBgY = if (allBgValues.isNotEmpty()) maxOf(allBgValues.max(), chartConfig.highMark) else chartConfig.highMark
-    val minBgY = if (allBgValues.isNotEmpty()) minOf(allBgValues.min(), chartConfig.lowMark) else chartConfig.lowMark
-
     // Windowed axis min/max: BG values within the visible scroll/zoom window (not the full
     // loaded range), floored/ceiled at chartConfig.lowMark/highMark (the "Low mark"/"High mark"
     // target-range preferences) so the axis never shrinks past the configured target range —
@@ -748,14 +741,13 @@ private suspend fun submitBgModel(
         }
 
         // Block 4 → EPS layer (layer 3, start axis — Y based on profile %, scaled into BG coordinate space)
-        // Same principle as legacy (originalPercentage/100 * baseline); baseline = 75% of the BG axis
-        // height. Anchored at minBgY (not 0) — since the axis floor is no longer fixed at 0,
-        // a 0%-profile point must sit at the axis' actual bottom, not fall below it and disappear.
+        // Same principle as legacy (originalPercentage/100 * baseline), but measured on the axis that
+        // is drawn, so the icon keeps its height while the graph is scrolled and zoomed, and a strong
+        // profile is pinned below the top edge instead of leaving the graph. See epsY.
         lineModel {
             if (input.epsPoints.isNotEmpty()) {
-                val epsBaseline = (maxBgY - minBgY) * 0.75
                 val pts = input.epsPoints
-                    .map { eps -> timestampToX(eps.timestamp, minTimestamp) to (minBgY + eps.originalPercentage / 100.0 * epsBaseline) }
+                    .map { eps -> timestampToX(eps.timestamp, minTimestamp) to epsY(eps.originalPercentage, niceBgScale.min, niceBgScale.max) }
                     .sortedBy { it.first }
                 series(x = pts.map { it.first }, y = pts.map { it.second })
             } else {

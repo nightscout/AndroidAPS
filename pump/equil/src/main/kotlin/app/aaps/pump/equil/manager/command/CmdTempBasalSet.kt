@@ -20,7 +20,8 @@ class CmdTempBasalSet(
     var cancel: Boolean = false
 
     init {
-        step = if (insulin != 0.0) (insulin / 0.05 * 8).toInt() / 2
+        // The rate in steps of 0.0125 U/h, two pump steps.
+        step = if (insulin != 0.0) Utils.unitsToSteps(insulin) / 2
         else 0
         this.pumpTime = duration * 60
     }

@@ -17,4 +17,16 @@ class MsgBolusProgressTest : DanaRTestBase() {
         packet.handleMessage(array)
         Assertions.assertEquals(1.0, bolusProgressData.state.value?.delivered?.cU ?: 0.0, 0.0)
     }
+
+    /** The pump goes on with a bolus the driver no longer follows, for example after a stop with no answer. */
+    @Test fun progressOfABolusTheDriverDoesNotFollowIsOnlyLogged() {
+        danaPump.bolusingDetailedBolusInfo = null
+        val lastProgress = danaPump.bolusProgressLastTimeStamp
+        val array = ByteArray(100)
+        putIntToArray(array, 0, 2 * 100)
+
+        MsgBolusProgress(injector).handleMessage(array)
+
+        Assertions.assertEquals(lastProgress, danaPump.bolusProgressLastTimeStamp)
+    }
 }

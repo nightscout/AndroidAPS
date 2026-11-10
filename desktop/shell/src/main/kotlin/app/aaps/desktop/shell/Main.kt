@@ -318,7 +318,21 @@ private fun startPlugins(graph: DesktopAppGraph) {
     graph.configBuilder.initializeAndAnnounceReady(graph.appScope, graph.rxBus, graph.logger)
     // The periodic housekeeping Android gets from KeepAliveWorker. The work is shared; only the
     // trigger is not, because there is no WorkManager here.
+    //
+    // The pre-snooze first, which only `MainApp` did. `start` runs its first pass straight away and
+    // that pass asks whether the newest stored glucose value is stale. After a cold start it always
+    // is, by however long this client was not running, so without the five minute hold the app
+    // raises "BG readings missed" before the first Nightscout round can land
+    // (nightscout/AndroidAPS#5495, reported on iOS and true here for the same reason).
+    graph.localAlertUtils.preSnoozeAlarms()
     graph.periodicMaintenance.start(graph.appScope)
+    // Loads the automation rules and keeps them in step with the master. This is what fills the
+    // Automation screen - nothing else reads the stored rules - so without it the list was always
+    // empty here, a rule pushed by the master was never picked up, and a rule edited here was never
+    // written back. Execution stays on the master: `start()` returns before the processing loop when
+    // `config.APS` is false, which it always is on this client, and `runEvent` refuses on the same
+    // flag. After the plugins, like Android: an action's description can name the active pump.
+    graph.automationRuntime.start()
     // A snackbar sent while no window is showing one becomes a system notification instead of being
     // lost. The same shared class Android and iOS start.
     graph.snackbarNotificationFallback.start()
@@ -480,11 +494,15 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                     rxBus = graph.rxBus,
                     activePlugin = graph.activePlugin,
                     pluginPermissions = graph.pluginPermissions,
-                    // Passed so the rules can be read and edited here. The runtime is deliberately
-                    // NOT started on a client: `MainApp` calls `automationRuntime.start()`, this shell
-                    // does not, and that is the design - a follower edits definitions and the master
-                    // runs them. Do not "fix" the missing start() call; it would give a second machine
-                    // the power to fire the same rules.
+                    // Passed so the rules can be read and edited here. A follower edits definitions
+                    // and the master runs them - and `start()` is what the follower needs to do its
+                    // half: it loads the rules and keeps them in step with the master. It is called
+                    // during startup above, as `MainApp` does on every flavour.
+                    //
+                    // This does not give this machine the power to fire anything: see the comment on
+                    // that call. An earlier comment here said the missing `start()` was the design
+                    // and warned against calling it; it was not - the rule list was simply always
+                    // empty on desktop and iOS.
                     automationRuntime = graph.automationRuntime,
                     preferences = graph.preferences,
                     rh = graph.textResolver,

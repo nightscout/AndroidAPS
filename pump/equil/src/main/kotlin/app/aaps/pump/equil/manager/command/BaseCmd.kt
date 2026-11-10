@@ -26,7 +26,19 @@ abstract class BaseCmd(
     var port: String = "0404"
     var config: Boolean = false
     var isEnd: Boolean = false
-    var cmdSuccess: Boolean = false
+    @Volatile var cmdSuccess: Boolean = false
+
+    /** The link failed before the answer came: nothing more will come for this command. */
+    @Volatile var failed: Boolean = false
+
+    /**
+     * The command itself went to the pump, after the pump opened the exchange. Without an answer after that the pump
+     * may have done it. Before it, the pump cannot have.
+     */
+    @Volatile var commandSent: Boolean = false
+
+    /** When [commandSent] became true. The pump cannot act on the command before it. */
+    @Volatile var commandSentAt: Long = 0
     var enacted = true
     var response: EquilResponse? = null
     var runPwd: String? = null

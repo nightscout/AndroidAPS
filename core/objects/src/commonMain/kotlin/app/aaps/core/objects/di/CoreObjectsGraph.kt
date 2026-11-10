@@ -3,7 +3,6 @@ package app.aaps.core.objects.di
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -28,7 +27,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * Metro wiring for `:core:objects`, the module with the dependency cycle.
@@ -83,12 +81,10 @@ object CoreObjectsGraph {
     fun provideBolusWizard(
         logger: AAPSLogger,
         text: TextResolver,
-        bus: RxBus,
         prefs: Preferences,
         profile: ProfileFunction,
         profileU: ProfileUtil,
         constraints: ConstraintsChecker,
-        loopRef: Loop,
         iobCob: IobCobCalculator,
         dates: DateUtil,
         cfg: Config,
@@ -97,12 +93,9 @@ object CoreObjectsGraph {
         eatReminder: EatReminder,
         glucose: GlucoseStatusProvider,
         persistence: PersistenceLayer,
-        guard: RunningModeGuard,
-        ch: ConcentrationHelper,
-        executor: MasterActionExecutor,
-        scope: CoroutineScope
+        ch: ConcentrationHelper
     ): BolusWizard = BolusWizard(
-        logger, text, bus, prefs, profile, profileU, constraints, loopRef, iobCob, dates, cfg,
-        entryLogger, automationRef, eatReminder, glucose, persistence, guard, ch, executor, scope
+        logger, text, prefs, profile, profileU, constraints, iobCob, dates, cfg,
+        entryLogger, automationRef, eatReminder, glucose, persistence, ch
     )
 }

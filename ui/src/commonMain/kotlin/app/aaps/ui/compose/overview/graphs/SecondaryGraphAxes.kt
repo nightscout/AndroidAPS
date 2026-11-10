@@ -62,11 +62,15 @@ internal data class AxisBounds(val min: Double, val max: Double)
 /** The axis of a graph that has no values: a frame, so the grid and the now line still draw. */
 internal val EMPTY_AXIS = AxisBounds(0.0, 1.0)
 
-/** The range for [values] by [rule], or null when there are no values. */
+/**
+ * The range for [values] by [rule], or null when there are no values. A value that is NaN or infinite
+ * does not count: `min()` and `max()` would pass it on, and the whole axis would be NaN (#5525).
+ */
 internal fun axisRange(rule: AxisRule, values: List<Double>): AxisRange? {
-    if (values.isEmpty()) return null
-    val low = values.min()
-    val high = values.max()
+    val finite = values.filter { it.isFinite() }
+    if (finite.isEmpty()) return null
+    val low = finite.min()
+    val high = finite.max()
     return when (rule) {
         AxisRule.ZeroFloor -> zeroFloorNiceRange(low, high.coerceAtLeast(0.0)).let { AxisRange(it.min, it.max, 0.0) }
         is AxisRule.Pivot  -> niceScaleAroundPivot(low, high, rule.pivot, rule.minDeviation).let { AxisRange(it.min, it.max, rule.pivot) }

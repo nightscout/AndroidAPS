@@ -100,22 +100,6 @@ interface MasterActionExecutor {
     fun discard(bolusId: Long)
 
     /**
-     * Canonical wizard / quick-wizard bolus — a type-specific entry point taking exactly the wizard
-     * inputs. The executor preprocesses them into the `BOLUS_WIZARD` end state and funnels into the shared
-     * delivery core, so a wizard bolus is recorded identically from phone or watch — only [source] differs.
-     */
-    suspend fun deliverWizardBolus(
-        insulin: Double,
-        carbs: Int,
-        carbTimeMinutes: Int,
-        mgdlGlucose: Double?,
-        bolusCalculatorResult: BCR?,
-        notes: String?,
-        source: Sources,
-        onError: (Failure) -> Unit
-    )
-
-    /**
      * Correction-only advisor bolus (high BG with carbs imminent) — the canonical `CORRECTION_BOLUS` end
      * state with a `BOLUS_ADVISOR` user entry; the eat reminder is scheduled on delivery success. Shared by
      * the wizard dialog and the quick-wizard advisor branches so the advisor records identically too.
