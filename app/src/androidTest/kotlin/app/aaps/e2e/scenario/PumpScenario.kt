@@ -209,6 +209,13 @@ class PumpScenario(private val pump: PumpUnderTest) {
         testGraphs.rxBus.send(EventProfileChangeRequested())
         awaitTrue("the profile runs") { runBlocking { testGraphs.profileFunction.getProfile() } != null }
         awaitQueueIdle()
+        // A pump writes its records by its own clock, which can be a second or two behind the phone. A record of a
+        // command right after the first profile then has a time before any profile, and AAPS drops it ("No profile
+        // running"). So the steps start once the profile has run a little while.
+        awaitTrue("the profile has run for ${PROFILE_SETTLE_MS / 1000} s") {
+            val since = runBlocking { testGraphs.persistenceLayer.getEffectiveProfileSwitchActiveAt(System.currentTimeMillis()) }?.timestamp
+            since != null && System.currentTimeMillis() - since >= PROFILE_SETTLE_MS
+        }
     }
 
     fun unpair() = pump.unpair(this)
@@ -243,8 +250,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
         awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
             val aapsRuns = runBlocking { testGraphs.profileFunction.getProfile() }
                 ?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
-            val onPump = control.state().basal?.firstOrNull()
-            val pumpGives = onPump == null || abs(onPump - basal) <= BASAL_TOLERANCE
+            // Every hour: a pump that takes a profile in parts can hold a part of it.
+            val onPump = control.state().basal
+            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
             if (aapsRuns && pumpGives) true
             else {
                 awaitQueueIdle()
@@ -673,10 +681,15 @@ class PumpScenario(private val pump: PumpUnderTest) {
         private const val HOURS_PER_DAY = 24
         private const val SECONDS_PER_HOUR = 3600
         private const val PERCENT = 100.0
+        /** More than the few seconds a pump clock is behind the phone after it was set. */
+        private const val PROFILE_SETTLE_MS = 5_000L
         /** A bolus record may be written at the end of the bolus. A pump clock off by minutes is far more. */
         private const val CLOCK_TOLERANCE_MS = 120_000L
-        /** Longer than the 30 s a Carelevo waits between two profile updates. */
-        private const val PROFILE_TIMEOUT = 90_000L
+        /**
+         * A Carelevo waits 30 s between two profile updates, and one whose answer is lost times out after 30 s: skip, lost
+         * try, skip, and the next try takes it.
+         */
+        private const val PROFILE_TIMEOUT = 180_000L
         private const val PROFILE_RETRY_MS = 5_000L
         private const val MS_PER_MINUTE = 60_000L
     }
