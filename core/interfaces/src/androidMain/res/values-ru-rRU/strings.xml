@@ -39,16 +39,7 @@
     <string name="shorthour">ч</string>
     <string name="days">дн</string>
     <string name="hours">час</string>
-    <string name="unit_second">сек</string>
-    <string name="unit_minute">мин</string>
-    <string name="unit_hour">час</string>
-    <string name="unit_day">дн</string>
-    <string name="unit_week">нед</string>
-    <string name="unit_seconds">сек</string>
     <string name="unit_minutes">мин</string>
-    <string name="unit_hours">час</string>
-    <string name="unit_days">дн</string>
-    <string name="unit_weeks">нед</string>
     <string name="shortminute">м</string>
     <string name="time_remaining_h_m">%1$d ч %2$d мин осталось</string>
     <string name="time_remaining_m">%1$d мин осталось</string>
