@@ -49,6 +49,13 @@ interface PumpEmulatorControl {
      */
     fun shiftPumpClock(offsetMs: Long): Boolean = false
 
+    /**
+     * The user gives a bolus of [units] on the pump itself, without the app, and the pump logs it as it logs any bolus.
+     * The driver then finds it in the pump history. False for a pump that cannot give a bolus without the app, as a patch
+     * with no buttons.
+     */
+    fun bolusOnPump(units: Double): Boolean = false
+
     /** What the emulated pump holds now. */
     fun state(): EmulatedPumpState
 

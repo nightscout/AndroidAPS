@@ -217,6 +217,8 @@ class EmulatorBleTransport(
         return true
     }
 
+    override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
+
     override fun state(): EmulatedPumpState = synchronized(pumpState) {
         EmulatedPumpState(
             boluses = pumpState.givenBoluses.toList(),

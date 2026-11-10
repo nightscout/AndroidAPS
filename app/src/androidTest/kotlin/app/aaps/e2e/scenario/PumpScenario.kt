@@ -237,20 +237,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
         testGraphs.rxBus.send(EventProfileChangeRequested())
         // Once the pump has it, AAPS runs it: the running profile has the basal at that percentage. Its `percentage` is
         // not the sign, the switch AAPS runs then has the values with the percentage already in them.
+        // A driver may take a new profile only some time after the one before (Carelevo: 30 s), or the answer of the
+        // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
         val basal = BASAL_RATE * percentage / PERCENT
-        awaitTrue("AAPS runs the profile at $percentage %, a basal of $basal U/h") {
-            runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
-        }
-        awaitQueueIdle()
-        // A driver may take a new profile only some time after the one before (Carelevo: 30 s) and leave it to the
-        // queue to send it again. Ask as the keep alive worker does, until the pump gives the new basal.
-        if (control.state().basal != null) awaitTrue("the pump gives the basal of $basal U/h", PROFILE_TIMEOUT) {
+        awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
+            val aapsRuns = runBlocking { testGraphs.profileFunction.getProfile() }
+                ?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
             val onPump = control.state().basal?.firstOrNull()
-            if (onPump == null || abs(onPump - basal) > BASAL_TOLERANCE) {
+            val pumpGives = onPump == null || abs(onPump - basal) <= BASAL_TOLERANCE
+            if (aapsRuns && pumpGives) true
+            else {
+                awaitQueueIdle()
                 testGraphs.rxBus.send(EventProfileChangeRequested())
                 SystemClock.sleep(PROFILE_RETRY_MS)
                 false
-            } else true
+            }
         }
         awaitQueueIdle()
     }
@@ -523,6 +524,19 @@ class PumpScenario(private val pump: PumpUnderTest) {
         assertWithMessage("commands of one status read").that(sent).isAtMost(pump.maxCommandsPerStatusRead)
     }
 
+    /**
+     * The newest bolus record of AAPS has the time the bolus was given, by the phone clock, not a time off by the pump
+     * clock. A record is written at the start or at the end of the bolus, so it may be up to [CLOCK_TOLERANCE_MS] off.
+     */
+    fun checkNewestBolusNear(givenAt: Long) {
+        val newest = runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
+            .filter { it.type != BS.Type.PRIMING && it.amount > 0.0 }
+            .maxByOrNull { it.timestamp } ?: throw AssertionError("AAPS has no bolus record")
+        val offMinutes = (newest.timestamp - givenAt) / MS_PER_MINUTE.toDouble()
+        assertWithMessage("time of the bolus record, $offMinutes min from the time it was given")
+            .that(abs(newest.timestamp - givenAt) <= CLOCK_TOLERANCE_MS).isTrue()
+    }
+
     /** Sorted here: `getBolusesFromTime` gives the newest first, also with `ascending = true` (so since 3.x). */
     private fun storedBoluses(): List<Long> =
         runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
@@ -659,6 +673,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
         private const val HOURS_PER_DAY = 24
         private const val SECONDS_PER_HOUR = 3600
         private const val PERCENT = 100.0
+        /** A bolus record may be written at the end of the bolus. A pump clock off by minutes is far more. */
+        private const val CLOCK_TOLERANCE_MS = 120_000L
         /** Longer than the 30 s a Carelevo waits between two profile updates. */
         private const val PROFILE_TIMEOUT = 90_000L
         private const val PROFILE_RETRY_MS = 5_000L

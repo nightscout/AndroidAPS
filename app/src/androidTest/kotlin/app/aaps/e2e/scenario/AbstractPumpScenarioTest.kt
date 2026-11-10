@@ -330,6 +330,42 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
     }
 
+    /** The pump takes the new basal and its answer is lost. AAPS and the pump must agree on the basal in the end. */
+    @Test
+    fun aProfileWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.BASAL_PROFILE)).isTrue()
+        scenario.switchProfile(PROFILE_PERCENT)
+        scenario.checkStatusShown()
+    }
+
+    /** The user gives a bolus on the pump itself. AAPS must import it from the pump, and only once. */
+    @Test
+    open fun aBolusGivenOnThePumpIsImported() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("a bolus on the pump").that(scenario.control.bolusOnPump(BOLUS)).isTrue()
+        scenario.readStatusOnNewLink()
+        scenario.checkBolusRecords()
+        scenario.readStatusOnNewLink()
+        scenario.checkBolusRecords()
+    }
+
+    /** The pump clock is off by minutes. A bolus must still be stored at the time it was given. */
+    @Test
+    open fun aBolusWithThePumpClockOffIsStoredAtItsTime() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("the pump clock moves").that(scenario.control.shiftPumpClock(PUMP_CLOCK_OFFSET_MS)).isTrue()
+        // The driver can see the pump clock at its next connection, and set it.
+        scenario.readStatusOnNewLink()
+        val givenAt = System.currentTimeMillis()
+        assertWithMessage("bolus").that(scenario.bolus(BOLUS).success).isTrue()
+        scenario.checkBolusRecords(PumpScenario.BOLUS_TIMEOUT)
+        scenario.checkNewestBolusNear(givenAt)
+    }
+
     /** An occlusion stops the insulin. AAPS must raise an alarm the user hears. */
     @Test
     open fun anOcclusionRaisesAnAlarm() = pumpAlarmRaisesAnAlarm(EmulatedAlarm.OCCLUSION)
@@ -401,6 +437,8 @@ abstract class AbstractPumpScenarioTest {
         const val TEMP_BASAL_PERCENT = 150
         const val TEMP_BASAL_PERCENT_MINUTES = 60
         const val PROFILE_PERCENT = 150
+        /** Ten minutes: more than any record could be off by its own timing. */
+        const val PUMP_CLOCK_OFFSET_MS = 600_000L
         const val EXTENDED_BOLUS = 1.0
         const val EXTENDED_MINUTES = 30
         const val KILLED_BOLUS = 2.0

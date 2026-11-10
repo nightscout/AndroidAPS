@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.math.roundToInt
 import kotlin.time.Instant
 
 /**
@@ -440,6 +441,23 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun hundredthsBytes(value: Int): ByteArray = byteArrayOf((value and 0xFF).toByte(), ((value shr 8) and 0xFF).toByte())
+
+    /**
+     * A bolus the user gives on the pump itself: given at once, logged as the end of any bolus is (BOLUS with the amount).
+     * UNVERIFIED: that a real Dana-i logs a bolus from its own buttons with only that entry, without the STEP_BOLUS_COMMAND
+     * it logs for one from the app. False while a bolus runs.
+     */
+    fun bolusOnPump(units: Double): Boolean = synchronized(state) {
+        if (state.runningBolus != null) return false
+        val given = (units * 100).roundToInt()
+        state.reservoirRemainingUnits -= given / 100.0
+        addHistoryEvent(DanaPump.HistoryEntry.BOLUS.value, state.pumpTimeMillis, given, 0)
+        state.givenBoluses += given / 100.0
+        state.lastBolusAmount = given / 100.0
+        state.lastBolusTime = state.pumpTimeMillis
+        state.dailyTotalUnits += given / 100.0
+        true
+    }
 
     private fun processSetExtendedBolus(params: ByteArray): ByteArray {
         if (params.size >= 3) {
