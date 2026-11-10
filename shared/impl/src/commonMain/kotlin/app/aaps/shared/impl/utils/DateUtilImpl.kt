@@ -323,33 +323,6 @@ class DateUtilImpl(
         }
     }
 
-    override fun niceTimeScalar(time: Long, rh: TextResolver): String {
-        val duration = time.milliseconds
-        val (value, unit) = when {
-            duration.inWholeDays > 6     -> {
-                val weeks = duration.inWholeDays / 7
-                weeks to if (weeks == 1L) InterfacesStrings.unit_week else InterfacesStrings.unit_weeks
-            }
-            duration.inWholeHours > 23   -> {
-                val days = duration.inWholeDays
-                days to if (days == 1L) InterfacesStrings.unit_day else InterfacesStrings.unit_days
-            }
-            duration.inWholeMinutes > 59 -> {
-                val hours = duration.inWholeHours
-                hours to if (hours == 1L) InterfacesStrings.unit_hour else InterfacesStrings.unit_hours
-            }
-            duration.inWholeSeconds > 59 -> {
-                val minutes = duration.inWholeMinutes
-                minutes to if (minutes == 1L) InterfacesStrings.unit_minute else InterfacesStrings.unit_minutes
-            }
-            else                         -> {
-                val seconds = duration.inWholeSeconds
-                seconds to if (seconds == 1L) InterfacesStrings.unit_second else InterfacesStrings.unit_seconds
-            }
-        }
-        return rh.gs(InterfacesStrings.time_value_with_unit, qs(value.toDouble(), 0), rh.gs(unit))
-    }
-
     override fun qs(x: Double, numDigits: Int): String {
         var digits = numDigits
         if (digits == -1) {

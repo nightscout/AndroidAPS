@@ -1,9 +1,13 @@
 package app.aaps.implementation.alerts
 
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -11,6 +15,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
@@ -27,6 +32,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 
 class LocalAlertUtilsImplTest : TestBase() {
@@ -313,5 +319,81 @@ class LocalAlertUtilsImplTest : TestBase() {
 
         val expectedEarliestAlarm = lastDataTime + T.mins(thresholdMinutes.toLong()).msecs()
         verify(preferences).put(LocalAlertLongKey.NextPumpDisconnectedAlarm, expectedEarliestAlarm)
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // checkStaleBGAlert
+    //
+    // This is what `PeriodicMaintenance` runs, and on its very first pass. The alarm asks "how old
+    // is the newest reading I have stored", which silently assumes the app has been running all
+    // along to store them. Android keeps running, so that holds. A platform that suspends the whole
+    // process - iOS - or one that is simply started cold reads its own downtime as a CGM outage,
+    // which is nightscout/AndroidAPS#5495. The guard against it is the startup pre-snooze, so these
+    // tests pin both sides of that gate.
+    // -------------------------------------------------------------------------------------------
+
+    private val staleThresholdMinutes = 30
+
+    /** A stored reading [ageMinutes] old, with the snooze gate opening at [nextAlarmAt]. */
+    private fun stubStaleCheck(ageMinutes: Long, nextAlarmAt: Long) {
+        val timestamp = now - T.mins(ageMinutes).msecs()
+        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)).thenReturn(false)
+        whenever(preferences.get(IntKey.AlertsStaleDataThreshold)).thenReturn(staleThresholdMinutes)
+        whenever(preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm)).thenReturn(nextAlarmAt)
+        whenever(dateUtil.isOlderThan(timestamp, 5)).thenReturn(ageMinutes > 5)
+        runTest {
+            whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(
+                GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = timestamp, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+            )
+        }
+    }
+
+    @Test
+    fun `checkStaleBGAlert raises the alarm when the newest reading is older than the threshold`() = runTest {
+        stubStaleCheck(ageMinutes = 45, nextAlarmAt = now - 1)
+
+        localAlertUtils.checkStaleBGAlert()
+
+        // Re-arming the snooze happens inside the branch that posts the alarm and nowhere else, so
+        // this is that branch - and it also shows the next one is held off for a full threshold.
+        verify(preferences).put(LocalAlertLongKey.NextMissedReadingsAlarm, now + T.mins(staleThresholdMinutes.toLong()).msecs())
+        verify(notificationManager, never()).dismiss(NotificationId.BG_READINGS_MISSED)
+    }
+
+    @Test
+    fun `checkStaleBGAlert stays quiet while the startup pre-snooze is still running`() = runTest {
+        // Exactly the state `preSnoozeAlarms` leaves behind: the gate opens five minutes from now.
+        // This is the whole fix for a cold start - the first maintenance pass sees a database that
+        // is stale only because the app was not running, and must not call that a missed reading.
+        stubStaleCheck(ageMinutes = 45, nextAlarmAt = now + T.mins(5).msecs())
+
+        localAlertUtils.checkStaleBGAlert()
+
+        verify(preferences, never()).put(eq(LocalAlertLongKey.NextMissedReadingsAlarm), any<Long>())
+        verifyNoInteractions(notificationManager)
+    }
+
+    @Test
+    fun `checkStaleBGAlert clears a raised alarm once a fresh reading has arrived`() = runTest {
+        // The issue reported that nothing ever clears this alarm. It does clear, on the next pass
+        // after the data comes back - which is up to five minutes later, because that is how often
+        // `PeriodicMaintenance` runs.
+        stubStaleCheck(ageMinutes = 2, nextAlarmAt = now - 1)
+
+        localAlertUtils.checkStaleBGAlert()
+
+        verify(notificationManager).dismiss(NotificationId.BG_READINGS_MISSED)
+    }
+
+    @Test
+    fun `checkStaleBGAlert does nothing at all when the alert is switched off`() = runTest {
+        stubStaleCheck(ageMinutes = 45, nextAlarmAt = now - 1)
+        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(false)
+
+        localAlertUtils.checkStaleBGAlert()
+
+        // Not even a dismiss: an old reading with the alert off falls through both branches.
+        verifyNoInteractions(notificationManager)
     }
 }
