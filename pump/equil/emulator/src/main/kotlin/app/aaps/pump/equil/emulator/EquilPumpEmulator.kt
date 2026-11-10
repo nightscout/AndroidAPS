@@ -470,17 +470,26 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
                 state.lastBolusTime = System.currentTimeMillis()
                 startBolus(steps = field1, seconds = field2)
             } else if (field3 != 0 || field4 != 0) {
-                // CmdExtendedBolusSet
-                state.extendedBolusStep = field3
-                state.extendedBolusDuration = field4
-                state.isExtendedBolusRunning = field3 > 0
+                // CmdExtendedBolusSet. Seen on a real pump (2026-11-10): a status entry with the speed of the extended bolus
+                // as largeRate (160 for 0.5 U in 30 min).
+                synchronized(state) {
+                    state.extendedBolusStep = field3
+                    state.extendedBolusDuration = field4
+                    state.isExtendedBolusRunning = field3 > 0
+                    log(TYPE_STATUS)
+                }
             } else {
-                // CmdLargeBasalSet(0), the stop of a bolus, and CmdExtendedBolusSet(0) look the same.
-                // UNVERIFIED: that the real pump ends both.
+                // CmdLargeBasalSet(0), the stop of a bolus, and CmdExtendedBolusSet(0) look the same. UNVERIFIED: that the
+                // real pump ends both. Seen on a real pump (2026-11-10): the cancel of an extended bolus logs a status entry
+                // with largeRate 0.
                 stopBolus()
-                state.extendedBolusStep = 0
-                state.extendedBolusDuration = 0
-                state.isExtendedBolusRunning = false
+                synchronized(state) {
+                    val wasExtended = state.isExtendedBolusRunning
+                    state.extendedBolusStep = 0
+                    state.extendedBolusDuration = 0
+                    state.isExtendedBolusRunning = false
+                    if (wasExtended) log(TYPE_STATUS)
+                }
             }
         }
         return indexedResponse()
@@ -890,7 +899,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         else                                                -> state.basalRates[Calendar.getInstance().apply { timeInMillis = at }.get(Calendar.HOUR_OF_DAY)]
     }
 
-    private fun runningBolusSpeed(): Int = state.runningBolus?.let { bolusSpeed(it.steps, (it.durationMs / 1000).toInt()) } ?: 0
+    /** UNVERIFIED: that a status entry during an extended bolus, for a basal change, has its speed too. */
+    private fun runningBolusSpeed(): Int = state.runningBolus?.let { bolusSpeed(it.steps, (it.durationMs / 1000).toInt()) }
+        ?: if (state.isExtendedBolusRunning) bolusSpeed(state.extendedBolusStep, state.extendedBolusDuration) else 0
 
     /**
      * The bolus speed in steps of 0.00625 U/h, as the log shows it. Seen on a real pump (2026-11-08): the log has two bytes
