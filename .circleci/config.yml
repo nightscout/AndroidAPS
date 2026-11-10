@@ -32,13 +32,17 @@ jobs:
             # its old TEST-*.xml on the runner and it gets reported as if it had just passed.
             find . -type d -path "*/build/test-results" -prune -exec rm -rf {} +
             rm -f /tmp/rc-A /tmp/rc-B /tmp/rc-C /tmp/rc-D
+            rm -rf /tmp/scenarios
 
-      # FOUR emulators: the app suite splits three ways (@ShardA / @ShardB / the rest), and the fourth runs the
-      # pump emulator scenarios (@ShardD). See app/src/androidTest/.../testcategories/ShardA.kt and ShardD.kt.
+      # SIX emulators. The app suite splits three ways (@ShardA / @ShardB / the rest) on the first three. The pump
+      # emulator scenarios (@ShardD) are a work list (.circleci/scenario-worker.sh): emulators 4-6 take items from
+      # the start, and the first three join when their own shard is done. The scenarios mostly wait for driver
+      # timeouts, so more emulators make them shorter. See app/src/androidTest/.../testcategories/ShardA.kt and
+      # ShardD.kt.
       - run:
-          name: Create four AVDs
+          name: Create six AVDs
           command: |
-            for i in 0 1 2 3; do
+            for i in 0 1 2 3 4 5; do
               echo "no" | /usr/lib/android-sdk/cmdline-tools/13.0/bin/avdmanager --verbose \
                 create avd -n citest$i -k "system-images;android-31;google_apis_playstore;x86_64" --force
             done
@@ -55,22 +59,28 @@ jobs:
             done
 
       # Each emulator gets its OWN 3 cores (the proven-stable allocation - 2 cores/emulator starved the UI
-      # automation before), taken from the TOP of the range; Gradle gets everything below. On the 24-core
-      # runner: emu3 12-14, emu0 15-17, emu1 18-20, emu2 21-23, Gradle 0-11. Derived from nproc, guarded by
-      # NCORES > 15 (four 3-core emulators need headroom for Gradle). The unit suite no longer runs here, see
-      # the note at the non-app step, which is what left room for the fourth.
+      # automation before), taken from the TOP of the range. On the 24-core runner: emu3 12-14, emu0 15-17,
+      # emu1 18-20, emu2 21-23, Gradle 0-11. Derived from nproc, guarded by NCORES > 15 (four 3-core emulators
+      # need headroom for Gradle). The unit suite no longer runs here, see the note at the non-app step, which is
+      # what left room for the fourth.
+      #
+      # emu4 and emu5 run only pump scenarios, which wait far more than they compute (load ~2 on this box while
+      # only the scenarios ran, 2026-11-09, job 42391; 38 GB of 64 free with four emulators). They take 6-8 and
+      # 9-11, cores that Gradle uses at full load only for the compile at the start, while they boot.
       - run:
-          name: Launch four emulators
+          name: Launch six emulators
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
             NCORES=$(nproc 2>/dev/null || echo 0)
-            E0=""; E1=""; E2=""; E3=""
+            E0=""; E1=""; E2=""; E3=""; E4=""; E5=""
             if command -v taskset > /dev/null && [ "$NCORES" -gt 15 ]; then
               E0="taskset -c $((NCORES-9))-$((NCORES-7))"
               E1="taskset -c $((NCORES-6))-$((NCORES-4))"
               E2="taskset -c $((NCORES-3))-$((NCORES-1))"
               E3="taskset -c $((NCORES-12))-$((NCORES-10))"
+              E4="taskset -c $((NCORES-15))-$((NCORES-13))"
+              E5="taskset -c $((NCORES-18))-$((NCORES-16))"
             else
               echo "taskset unavailable or too few cores, running unpinned"
             fi
@@ -78,6 +88,8 @@ jobs:
             $E1 emulator -avd citest1 -port 5556 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             $E2 emulator -avd citest2 -port 5558 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             $E3 emulator -avd citest3 -port 5560 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+            $E4 emulator -avd citest4 -port 5562 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+            $E5 emulator -avd citest5 -port 5564 -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
             wait
           background: true
 
@@ -153,9 +165,9 @@ jobs:
             ls -la "$HOME"/.kotlin/daemon 2>/dev/null | tail -n 20 || true
 
       - run:
-          name: Wait for all four emulators to boot
+          name: Wait for all six emulators to boot
           command: |
-            for s in emulator-5554 emulator-5556 emulator-5558 emulator-5560; do
+            for s in emulator-5554 emulator-5556 emulator-5558 emulator-5560 emulator-5562 emulator-5564; do
               adb -s $s wait-for-device
               until [ "$(adb -s $s shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 ]; do sleep 2; done
               echo "$s booted"
@@ -169,7 +181,7 @@ jobs:
       # &&) keep the trailing exit 0 so set -eo pipefail can't abort early; am instrument is redirected (no
       # | tee, which masked its exit code) with || true so crashes are caught by the grep + size checks.
       - run:
-          name: Install app test APKs on all four emulators
+          name: Install app test APKs on all six emulators, make the scenario work list
           command: |
             APK=app/build/outputs/apk/full/debug/app-full-debug.apk
             TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
@@ -179,7 +191,7 @@ jobs:
             # install on 5554 or 5556 was swallowed whole. The symptom appeared 15 minutes later as a
             # shard reporting "Unable to find instrumentation info", which points nowhere near the cause.
             # So check the output text, and then assert the postcondition the shards actually depend on.
-            for s in emulator-5554 emulator-5556 emulator-5558 emulator-5560; do
+            for s in emulator-5554 emulator-5556 emulator-5558 emulator-5560 emulator-5562 emulator-5564; do
               for a in "$APK" "$TST"; do
                 out=$(adb -s $s install -r -d "$a" 2>&1)
                 echo "$s: $out"
@@ -188,6 +200,7 @@ jobs:
               adb -s $s shell pm list instrumentation | grep -q "$PKG.test/app.aaps.runners.AapsTestRunner" \
                 || { echo "INSTRUMENTATION MISSING on $s after a reported-successful install"; exit 1; }
             done
+            bash .circleci/scenario-worker.sh --make-list emulator-5560
 
       # Each shard runs its am instrument with a PROCESS-LEVEL retry: if the run crashes the app process
       # (SetupWizardE2ETest intermittently dies in a Compose/ViewRootImpl traversal - a process death
@@ -289,6 +302,8 @@ jobs:
             done
             echo $RC > /tmp/rc-B
             echo "shard B done rc=$RC"
+            # Then this emulator helps with the pump scenarios. Their results go to the Collect step.
+            bash .circleci/scenario-worker.sh $DEV
             exit $RC
 
       - run:
@@ -335,72 +350,28 @@ jobs:
             done
             echo $RC > /tmp/rc-C
             echo "shard C done rc=$RC"
+            # Then this emulator helps with the pump scenarios. Their results go to the Collect step.
+            bash .circleci/scenario-worker.sh $DEV
             exit $RC
 
-      # Shard D: the pump emulator scenarios (@ShardD), then the app restart of each scenario class in two runs.
-      # The second run must be a new process, as after a kill, so it cannot be part of the normal run, which skips
-      # it. See .claude/skills/pump-emulator-scenarios/SKILL.md. The classes are listed from the shard itself (`-e log
-      # true` lists without running), so a new pump needs no change here. The restart runs collect no coverage.
+      # The pump emulator scenarios (@ShardD): a work list over the emulators, see .circleci/scenario-worker.sh.
+      # Emulators 5560, 5562 and 5564 take items from the start; 5554, 5556 and 5558 join when their own shard is
+      # done. An item is one part of a scenario class, or the two app restart runs of a class (run 2 must be a new
+      # process, as after a kill). A new pump needs no change here. The results are judged in the Collect step.
       - run:
-          name: App shard D — pump emulator scenarios + app restart (emu-5560, am instrument)
+          name: Pump scenario worker (emu-5560)
           background: true
-          command: |
-            PKG=info.nightscout.androidaps
-            RUNNER=$PKG.test/app.aaps.runners.AapsTestRunner
-            DEV=emulator-5560
-            COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
-            # Retries and failure dumps from logcat, see shard A.
-            adb -s $DEV logcat -G 16M || true
-            RC=1
-            for attempt in 1 2 3; do
-              # The same settle before a retry as in shard A.
-              if [ "$attempt" -gt 1 ]; then
-                nc=$(nproc 2>/dev/null || echo 8)
-                for _ in $(seq 1 30); do
-                  la=$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)
-                  [ "${la:-99}" -lt "$((nc/2))" ] && break
-                  sleep 10
-                done
-              fi
-              adb -s $DEV logcat -c || true
-              adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardD \
-                -e coverage true -e coverageFile /data/data/$PKG/cov-D.ec \
-                $RUNNER > shard-D-$attempt.txt 2>&1 || true
-              tail -n 200 shard-D-$attempt.txt
-              echo "--- shard D attempt $attempt: retries and failure dumps from logcat ---"
-              adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_" || true
-              adb -s $DEV exec-out run-as $PKG cat cov-D.ec > "$COVDIR/cov-D.ec" 2>/dev/null || true
-              sz=$(wc -c < "$COVDIR/cov-D.ec" 2>/dev/null || echo 0)
-              echo "shard D attempt $attempt coverage: ${sz:-0} bytes"
-              if grep -qE "Process crashed|INSTRUMENTATION_FAILED" shard-D-$attempt.txt || [ "${sz:-0}" -lt 50000 ]; then
-                echo "shard D attempt $attempt: process crash or missing coverage - retry with a fresh process"; continue
-              fi
-              if grep -qE "FAILURES!!!" shard-D-$attempt.txt; then RC=1; else RC=0; fi
-              break
-            done
-            # The app restart, one class at a time. Run 1 ends with its process; run 2 is a new one.
-            CLASSES=$(adb -s $DEV shell am instrument -w -r -e log true -e annotation app.aaps.testcategories.ShardD $RUNNER 2>/dev/null \
-              | tr -d '\r' | sed -n 's/^INSTRUMENTATION_STATUS: class=//p' | sort -u)
-            echo "app restart classes: $CLASSES"
-            [ -n "$CLASSES" ] || { echo "no scenario classes listed"; RC=1; }
-            for c in $CLASSES; do
-              for part in 1 2; do
-                adb -s $DEV logcat -c || true
-                adb -s $DEV shell am instrument -w -r -e killRestart $part -e class "$c#appKilledDuringABolus" \
-                  $RUNNER > restart-D-$part.txt 2>&1 || true
-                echo "--- $c app restart, run $part ---"
-                tail -n 40 restart-D-$part.txt
-                if ! grep -q "^OK (1 test)" restart-D-$part.txt; then
-                  echo "app restart run $part of $c FAILED"
-                  adb -s $DEV logcat -d -v time | grep -E "RetryRule: |E2E_|PUMPCOMM|PUMPQUEUE" | tail -n 120 || true
-                  RC=1
-                  break
-                fi
-              done
-            done
-            echo $RC > /tmp/rc-D
-            echo "shard D done rc=$RC"
-            exit $RC
+          command: bash .circleci/scenario-worker.sh emulator-5560
+
+      - run:
+          name: Pump scenario worker (emu-5562)
+          background: true
+          command: bash .circleci/scenario-worker.sh emulator-5562
+
+      - run:
+          name: Pump scenario worker (emu-5564)
+          background: true
+          command: bash .circleci/scenario-worker.sh emulator-5564
 
       # workers.max is capped at 8 (below the 15 Gradle cores) on purpose: the unit suite saturating all
       # cores while the three emulators + shards run pushed the box hard enough that a heavy E2E test's app
@@ -425,7 +396,7 @@ jobs:
       # 150-300 s more. Shards B and C have their emulators to themselves and never lost an attempt. Shard A
       # ends at about 400 s and this step takes 50-90 s, so it still ends about when shard C does.
       - run:
-          name: Non-app module androidTests (Gradle, emu-5554)
+          name: Non-app module androidTests (Gradle, emu-5554), then pump scenarios
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
@@ -459,11 +430,16 @@ jobs:
             # if/else, not `cmd || echo`: the old form was meant for "there are no such modules" but
             # swallowed every non-zero exit, so a failing suite - or a Gradle configuration error -
             # left the step green. That is how these tests went unnoticed for months.
+            NONAPP_RC=0
             if [ -n "$TASKS" ]; then
-              $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS
+              $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || NONAPP_RC=$?
             else
               echo "no non-app test modules"
             fi
+            # Then emulator-5554 helps with the pump scenarios. Their results go to the Collect step; this step keeps
+            # its own result.
+            bash .circleci/scenario-worker.sh emulator-5554
+            exit $NONAPP_RC
 
       - run:
           name: Collect app shard results
@@ -478,20 +454,35 @@ jobs:
           # test. The shard log then ended with "adb: device offline" and the real failures looked like a flake.
           # A shard that does not finish in time prints the failures it has so far, so the cause is visible here.
           command: |
+            # The pump scenarios are done when every item of their work list has a result (scenario-worker.sh).
+            Q=/tmp/scenarios
+            scenarios_done() {
+              [ -f $Q/count ] && [ "$(ls $Q/rc 2>/dev/null | wc -l)" -ge "$(cat $Q/count)" ]
+            }
             for i in $(seq 1 1200); do
-              [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && [ -f /tmp/rc-D ] && break
+              [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && scenarios_done && break
               [ $((i % 30)) = 0 ] && echo "waiting for the shards: $((i * 2)) s"
               sleep 2
             done
-            for s in A B C D; do
+            for s in A B C; do
               if [ ! -f /tmp/rc-$s ]; then
                 echo "shard $s did not finish in 2400 s. Failures so far:"
                 grep -h -A2 "^Error in" shard-$s-*.txt 2>/dev/null || echo "  none"
               fi
             done
             RCA=$(cat /tmp/rc-A 2>/dev/null || echo 1); RCB=$(cat /tmp/rc-B 2>/dev/null || echo 1); RCC=$(cat /tmp/rc-C 2>/dev/null || echo 1)
-            RCD=$(cat /tmp/rc-D 2>/dev/null || echo 1)
-            echo "shard A rc=$RCA  shard B rc=$RCB  shard C rc=$RCC  shard D rc=$RCD"
+            echo "--- pump scenarios: item on emulator, result, time ---"
+            cat $Q/summary 2>/dev/null || echo "  no results"
+            RCD=0
+            if ! scenarios_done; then
+              echo "pump scenarios did not finish in 2400 s: $(ls $Q/rc 2>/dev/null | wc -l) of $(cat $Q/count 2>/dev/null || echo '?') items"
+              grep -h -A2 "^Error in" $Q/out-*.txt 2>/dev/null || true
+              RCD=1
+            fi
+            for f in $Q/rc/*; do
+              [ "$(cat "$f" 2>/dev/null)" = 0 ] || { echo "pump scenario item $(basename "$f") FAILED"; RCD=1; }
+            done
+            echo "shard A rc=$RCA  shard B rc=$RCB  shard C rc=$RCC  pump scenarios rc=$RCD"
             # rc is 1 if any leg failed a test OR produced missing/short coverage - so a silently dropped
             # shard .ec fails the build instead of leaking a coverage regression to Codecov.
             [ "$RCA" = 0 ] && [ "$RCB" = 0 ] && [ "$RCC" = 0 ] && [ "$RCD" = 0 ] && echo "all shards OK (tests passed + coverage present)" || { echo "a shard failed, timed out, or lost coverage"; exit 1; }

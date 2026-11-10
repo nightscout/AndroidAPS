@@ -69,6 +69,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.apache.commons.lang3.StringUtils
@@ -78,7 +79,9 @@ import org.joda.time.format.ISODateTimeFormat
 import java.util.Calendar
 import java.util.Optional
 import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 @SingleIn(AppScope::class)
 @Inject
@@ -277,12 +280,26 @@ class EquilManager(
     suspend fun setExtendedBolus(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
         val result = pumpEnactResultProvider()
         try {
+            val indexBefore = getHistoryIndex()
             val command = CmdExtendedBolusSet(insulin, time, cancel, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             awaitAnswer(command)
 
             result.success = command.cmdSuccess
+            // Without an answer the pump may have done it. AAPS keeps what counts more insulin, and the log decides later.
+            val unanswered = !command.cmdSuccess && command.commandSent
+            if (unanswered) {
+                aapsLogger.warn(LTag.PUMPCOMM, "Extended bolus ${if (cancel) "cancel" else "start"} got no answer: decided from the pump log")
+                if (indexBefore != null)
+                    uncertainExtended = UncertainExtended(start = !cancel, largeRate = extendedLargeRate(command), indexBefore = indexBefore, sentAt = command.createTime)
+                if (!cancel) {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        command.createTime, PumpRate(insulin), time.toLong() * 60 * 1000, false, command.createTime, PumpType.EQUIL, getSerialNumber()
+                    )
+                    result.enacted(true)
+                }
+            }
             if (command.cmdSuccess) {
                 command.resolvedResult = ResolvedResult.SUCCESS
                 val currentTimeMillis = System.currentTimeMillis()
@@ -317,6 +334,52 @@ class EquilManager(
             result.success(false).enacted(false).comment(ex.message ?: "Exception")
         }
         return result
+    }
+
+    /** See [UncertainExtended]. Set by [setExtendedBolus], decided by [decideUncertainExtended]. */
+    @Volatile internal var uncertainExtended: UncertainExtended? = null
+
+    /**
+     * The speed of an extended bolus [command] as the pump log shows it, in steps of 0.00625 U/h: the command has 1/160 U
+     * steps and seconds. A real pump logged 160 for 0.5 U in 30 min.
+     */
+    private fun extendedLargeRate(command: CmdExtendedBolusSet): Int =
+        if (command.pumpTime <= 0) 0
+        else (command.step / COMMAND_STEPS_PER_UNIT / command.pumpTime * SECONDS_PER_HOUR / LOG_SPEED_UNIT).roundToInt() and 0xFFFF
+
+    /**
+     * Decides the [uncertainExtended] from the log read just now. A start in the log keeps the record, a cancel in the log
+     * ends the extended bolus at its time. Nothing in the log after a read that reached the advertised index at a
+     * connection made after [UncertainExtended.notDoneAfter]: the command did not reach the pump, so a start is taken
+     * back and a cancel leaves the extended bolus running.
+     * @param complete the read reached the advertised index
+     */
+    @VisibleForTesting
+    internal fun decideUncertainExtended(complete: Boolean) {
+        val extended = uncertainExtended ?: return
+        val doneAt = extended.doneAt
+        if (doneAt == null && (!complete || advertisedAt < extended.notDoneAfter)) return
+        uncertainExtended = null
+        val serial = getSerialNumber()
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus ${if (extended.start) "start" else "cancel"} from the pump log: ${if (doneAt != null) "done" else "not done"}")
+        // Stored before the read ends, so the status read that decided it shows it (a scenario checked 0.3 s later and
+        // found the extended bolus still running).
+        runBlocking {
+            runModeSyncMutex.withLock {
+                when {
+                    extended.start && doneAt == null  -> pumpSync.syncStopExtendedBolusWithPumpId(extended.sentAt, extended.sentAt + 1, PumpType.EQUIL, serial)
+                    !extended.start && doneAt != null -> {
+                        // The log has whole seconds of the pump clock, which can be behind the phone (5 s on a real pump):
+                        // a cancel soon after the start can be logged before the start AAPS recorded, and nothing ran then.
+                        // The end must be after the start, or the database refuses it.
+                        val since = pumpSync.expectedPumpState().extendedBolus?.timestamp ?: doneAt
+                        val end = max(doneAt, since + 1)
+                        pumpSync.syncStopExtendedBolusWithPumpId(end, end, PumpType.EQUIL, serial)
+                    }
+                    else                              -> Unit
+                }
+            }
+        }
     }
 
     /** What came of a bolus command, as far as the driver can know it. */
@@ -670,6 +733,7 @@ class EquilManager(
             }
         }
         decideUncertainBolus(complete = startIndex == index)
+        decideUncertainExtended(complete = startIndex == index)
         return pumpEnactResult.success(true)
     }
 
@@ -1053,6 +1117,7 @@ class EquilManager(
         aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id $id")
         val eventTime = calendar.timeInMillis
         uncertainBolus?.onLogEntry(index, port, type, level, largeRate, eventTime)
+        uncertainExtended?.onLogEntry(index, port, type, largeRate, eventTime)
         val errorTips = getEquilError(port, type, level)
         if (errorTips.isNotEmpty()) raiseAlarm(errorTips, eventTime)
         syncDeliveryStoppedGap(port, type, level, rate, eventTime)
@@ -1182,6 +1247,13 @@ class EquilManager(
 
         /** Bolus step 0.05 U. */
         private const val BOLUS_STEPS_PER_UNIT = 20.0
+
+        /** The steps of a bolus or extended bolus command, see `Utils.unitsToSteps`. */
+        private const val COMMAND_STEPS_PER_UNIT = 160.0
+        private const val SECONDS_PER_HOUR = 3600.0
+
+        /** The speed unit of the pump log: 0.00625 U/h. */
+        private const val LOG_SPEED_UNIT = 0.00625
 
         /** After the end a bolus would have, by the phone clock: its last log entry is written by then. */
         private const val UNCERTAIN_BOLUS_MARGIN_MS = 3_000L

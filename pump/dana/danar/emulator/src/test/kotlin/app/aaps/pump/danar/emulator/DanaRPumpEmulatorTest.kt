@@ -1,9 +1,12 @@
 package app.aaps.pump.danar.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.pump.dana.DanaPump
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import java.util.Collections
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /**
  * Command-level tests for the DanaR RFCOMM emulator, the JVM counterpart to the Dana RS
@@ -49,15 +52,23 @@ class DanaRPumpEmulatorTest {
             dailyTotalUnits = 5.0
             reservoirRemainingUnits = 150.0
         }
-        val emulator = DanaRPumpEmulator(state)
+        val emulator = DanaRPumpEmulator(state).apply { speed = EmulatorSpeed.FAST }
+        val ended = CountDownLatch(1)
+        emulator.onAdditionalResponse = { command, _ -> if (command == 0x0101) ended.countDown() }
 
         // 0x0102 SET_STEP_BOLUS_START: amount in hundredths, big-endian. 1.50 U = 150 = 0x00 0x96.
         val response = emulator.processCommand(0x0102, byteArrayOf(0x00, 0x96.toByte()))
 
         assertThat(response[0].toInt() and 0xFF).isEqualTo(0x02) // documented success code
+        // The pump gives the bolus step by step and ends it with MsgBolusStop (0x0101), the message the driver waits for.
+        assertThat(ended.await(10, TimeUnit.SECONDS)).isTrue()
+        // As a real DanaRv2, the pump has the bolus in its status about 2 s after the end.
+        val loggedBy = System.currentTimeMillis() + 5_000
+        while (state.lastBolusAmount == 0.0 && System.currentTimeMillis() < loggedBy) Thread.sleep(50)
         assertThat(state.lastBolusAmount).isWithin(0.001).of(1.50)
         assertThat(state.dailyTotalUnits).isWithin(0.001).of(6.50)
         assertThat(state.reservoirRemainingUnits).isWithin(0.001).of(148.50)
+        assertThat(state.givenBoluses).containsExactly(1.50)
     }
 
     // --- temp basal ---

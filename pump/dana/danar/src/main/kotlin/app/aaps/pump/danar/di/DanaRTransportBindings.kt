@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -45,7 +46,8 @@ object DanaRTransportBindings {
         configBuilder: ConfigBuilder,
         danaRPlugin: DanaRPlugin,
         danaRKoreanPlugin: DanaRKoreanPlugin,
-        danaRv2Plugin: DanaRv2Plugin
+        danaRv2Plugin: DanaRv2Plugin,
+        pumpEmulators: PumpEmulators
     ): RfcommTransport {
         val variant = when {
             config.isEnabled(ExternalOptions.EMULATE_DANA_R)        -> DanaRVariant.DANA_R
@@ -75,11 +77,11 @@ object DanaRTransportBindings {
                 name = "DAN${String.format("%05d", (0..99999).random())}EM"
                 preferences.put(DanaStringNonKey.EmulatorDeviceName, name)
             }
+            // From PumpEmulators, a graph input: the pump outlives the graph, as a test of an app restart needs.
             EmulatorRfcommTransport(
-                emulator = DanaRPumpEmulator(
-                    state = DanaRPumpState(variant).apply { serialNumber = name },
-                    aapsLogger = aapsLogger
-                ),
+                emulator = pumpEmulators.getOrCreate(DanaRPumpEmulator.KEY) {
+                    DanaRPumpEmulator(state = DanaRPumpState(variant).apply { serialNumber = name }, aapsLogger = aapsLogger)
+                },
                 aapsLogger = aapsLogger,
                 deviceName = name
             )

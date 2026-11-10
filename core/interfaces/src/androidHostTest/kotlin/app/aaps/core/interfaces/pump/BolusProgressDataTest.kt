@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.pump
 
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -119,6 +120,17 @@ class BolusProgressDataTest {
         sut.clear()              // abort-everything — must wipe regardless of generation
 
         assertThat(sut.state.value).isNull()
+    }
+
+    @Test
+    fun `a new status text keeps the amount given`() {
+        sut.start(insulin = 2.0, isSMB = false)
+        sut.updateProgress(PumpInsulin(0.7))
+
+        sut.updateProgress(35, TextRef.Literal("Stopped"))
+
+        assertThat(sut.state.value?.delivered?.cU).isEqualTo(0.7)
+        assertThat(sut.state.value?.status).isEqualTo(TextRef.Literal("Stopped"))
     }
 
     @Test

@@ -642,6 +642,7 @@ class CarelevoPumpPlugin @Inject constructor(
             // when the app starts ("Pump driver changed"), so this runs seconds after a restart.
             bolusCoordinator.recoverLeftoverBolus(info, serialNumber())
             tempBasalCoordinator.endTempBasalThePatchDoesNotRun(info, serialNumber())
+            bolusCoordinator.endExtendedBolusThePatchDoesNotRun(info, serialNumber())
         } catch (e: Throwable) {
             aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo FAILED", e)
         }
