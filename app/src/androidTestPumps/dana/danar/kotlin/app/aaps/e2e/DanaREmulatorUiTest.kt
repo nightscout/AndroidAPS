@@ -29,12 +29,11 @@ import org.junit.runner.RunWith
  * pump emulator with no Bluetooth hardware — UI → `CommandQueue` → `DanaRv2Plugin` →
  * `DanaRv2ExecutionService` → [EmulatorRfcommTransport].
  *
- * Reuses the whole pump-agnostic insulin-delivery flow from [AbstractDanaEmulatorUiTest] (Treatments →
- * Insulin, Manage → Temp basal / Extended bolus). Only the pump wiring differs and is supplied through
- * the base's hooks. DanaRv2 is used because it is the command-capable variant; the RS-only pump-screen
- * legs (Refresh / Pump history / User options) are not reproduced here — DanaR renders its own
- * `DanaRComposeContent`, so the pump is initialized programmatically (`isInitialized`) rather than by
- * navigating that screen's labels, and the delivery flow itself never touches the pump's own screen.
+ * Only the DanaR pump page and its history read. The shared treatment dialogs get their one pass in
+ * [DanaRsEmulatorUiTest], and the DanaR family's commands are tested through the queue by the
+ * `DanaRScenarioTest`, `DanaRKoreanScenarioTest` and `DanaRv2ScenarioTest` classes. DanaR renders its own
+ * `DanaRComposeContent`, so the pump is initialized through the queue rather than by navigating that
+ * screen's labels.
  *
  * See [DanaREmulatorPumpTest] for the two RFCOMM-specific wiring notes reused here: the transport must
  * be resolved through a `Provider` (its provider eagerly enables the plugin, which needs plugins set),
@@ -93,43 +92,7 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
         assertThat(pump.hasComposeContent()).isTrue()
     }
 
-    override fun lastBolusAmount(): Double = emulatorState.lastBolusAmount
-    override fun isTempBasalRunning(): Boolean = emulatorState.isTempBasalRunning
-    override fun tempBasalPercent(): Int = emulatorState.tempBasalPercent
-    override fun isExtendedBolusRunning(): Boolean = emulatorState.isExtendedBolusRunning
-    override fun extendedBolusAmount(): Double = emulatorState.extendedBolusAmount
-    override fun deliveredHistoryCodes(): List<Int> =
-        emulatorState.historyStore.getEventsAfter(0).map { it.code }
-
-    // DanaR's bolus step is 0.1 → the quick-add chip renders with one decimal ("+1.0"). The confirm
-    // button uses format_insulin_units (always two decimals, "1.00 U"), so it keeps the base default.
-    override val bolusChipLabel get() = "+1.0"
-
     // ---- test --------------------------------------------------------------------------------------
-
-    /**
-     * Delivers a bolus, a temp basal and an extended bolus from the UI over RFCOMM and reads them back
-     * off the emulated pump — the same flow the RS test runs, proving the driver stack below the shared
-     * UI works for the DanaR family too.
-     */
-    @Test
-    fun danaR_deliversInsulinFromUi() {
-        bringUp(ExternalOptions.EMULATE_DANA_R_V2)
-        assertActivePumpIsThisDana()
-        val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
-        try {
-            waitForOverview()
-            // Initialize programmatically (no DanaR overview navigation): read status until the pump
-            // reports initialized, which the Manage temp-basal / extended-bolus actions gate on.
-            initializeDanaPump()
-            deliverInsulinFromUi()
-        } catch (t: Throwable) {
-            logScreen("E2E_DANAR_SCREEN")
-            throw t
-        } finally {
-            scenario.close()
-        }
-    }
 
     /**
      * Reads the pump's **review history** through the UI, the way a user does: Manage → Pump → Pump
@@ -146,7 +109,7 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
         val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
         try {
             waitForOverview()
-            initializeDanaPump()                            // Pump history appears only once initialized
+            initializePumpThroughQueue()                    // Pump history appears only once initialized
             // Seed AFTER connect: resolving emulatorState (the transport) before the pump is up eagerly
             // re-enables the plugin and can stall app startup (a first-launch ANR seen locally). One alarm
             // in the past - the driver asks for everything after a "from" instant and the store is strict.
@@ -165,15 +128,6 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
         }
     }
 
-    private fun initializeDanaPump() {
-        if (!awaitTrue(INIT_PUMP_TIMEOUT) {
-                if (queueIdle()) requestStatusRead()
-                activePlugin.activePump.isInitialized()
-            }
-        ) error("DanaR pump never reported initialized")
-        waitForQueueIdle()
-    }
-
     companion object {
 
         /** Shaped like the name DanaModules generates for an emulated DanaR ("DAN#####EM"). */
@@ -183,6 +137,5 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
         private const val HISTORY_ALARM_TEXT = "Occlusion"
         /** Matches DanaRPumpState.password on the emulator. */
         private const val EMULATOR_PASSWORD = 1234
-        private const val INIT_PUMP_TIMEOUT = 60_000L
     }
 }
