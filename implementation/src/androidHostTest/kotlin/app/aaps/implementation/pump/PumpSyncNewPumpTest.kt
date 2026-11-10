@@ -5,6 +5,7 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -44,6 +45,7 @@ class PumpSyncNewPumpTest : TestBase() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var activePump: PumpWithConcentration
+    @Mock lateinit var config: Config
 
     private lateinit var sut: PumpSyncImplementation
 
@@ -76,7 +78,8 @@ class PumpSyncNewPumpTest : TestBase() {
             }
         }
 
-        sut = PumpSyncImplementation(aapsLogger, dateUtil, preferences, notificationManager, profileFunction, persistenceLayer, activePlugin)
+        whenever(config.appInitialized).thenReturn(true)
+        sut = PumpSyncImplementation(aapsLogger, dateUtil, preferences, notificationManager, profileFunction, persistenceLayer, activePlugin, config)
     }
 
     private suspend fun insert(timestamp: Long, type: TE.Type) =

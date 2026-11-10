@@ -22,5 +22,8 @@ dependencies {
     implementation(project(":pump:dana:danars:emulator"))
 
     testImplementation(project(":shared:tests"))
+    // The shared Bluetooth transport contract runs on Robolectric, a JUnit 4 runner.
+    testImplementation(libs.org.robolectric)
+    testRuntimeOnly(libs.org.junit.vintage.engine)
 
 }

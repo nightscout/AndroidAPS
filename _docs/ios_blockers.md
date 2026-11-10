@@ -1071,7 +1071,8 @@ Both cost a false alarm today, so they are worth writing down even though neithe
 
 - `SerialIOThreadTest.testThreadLifecycle` (`:pump:dana:danar`, unit) failed one full gate run and passed
   the four runs after it, on a tree whose only changes were iOS files.
-- `EquilEmulatorActivationTest.activatedPod_readsCancelsAndTogglesMode` (instrumented, CI shard C)
+- `EquilEmulatorActivationTest.activatedPod_readsCancelsAndTogglesMode` (instrumented, CI shard C; the
+  class was removed 2026-11-08, its checks are in `EquilScenarioTest` and `EquilUiTest`)
   failed on a push whose only non-desktop change was a markdown file and a test moving between source
   sets. Build 41072 on `kmp` failed the DanaRS instrumented shard the same way, on an About-dialog
   commit.

@@ -19,7 +19,8 @@ interface ProcessedDeviceStatusData {
         var percent = 0
         var voltage = 0.0
         var status = "N/A"
-        var reservoir = 0.0
+        /** Null when the master did not send it: it did not know it yet. That is no empty reservoir. */
+        var reservoir: Double? = null
         var reservoirDisplayOverride = ""
         var extended: String? = null
         var activeProfileName: String? = null

@@ -165,6 +165,20 @@ internal class EquilHistoryViewModelTest {
         assertThat(items.map { it.listKey }).containsNoDuplicates()
     }
 
+    /**
+     * As a real pump logged them on 2026-11-08. The log has 16 bits for the speed: 12 U/min (115200) is 49664 there.
+     * The stored times hold the log index as milliseconds, so a time is a few ms over the whole second.
+     */
+    @Test
+    fun bolusUnits_findsTheSpeedThe16BitsStandFor() {
+        // The 0.6 U SMB that went out as 95 steps in 24 s.
+        assertThat(EquilHistoryViewModel.bolusUnits(14250, 24.002)).isWithin(1e-6).of(0.59375)
+        // 1 U at 12 U/min.
+        assertThat(EquilHistoryViewModel.bolusUnits(49664, 5.001)).isWithin(1e-6).of(1.0)
+        // 1 U at 6 U/min: 57600 fits, but the old read dropped its top bit.
+        assertThat(EquilHistoryViewModel.bolusUnits(57600, 10.001)).isWithin(1e-6).of(1.0)
+    }
+
     @Test
     fun failureStringRes_mapsResolvedResultToStringRes() {
         assertThat(EquilHistoryViewModel.failureStringRes(ResolvedResult.NOT_FOUNT))

@@ -92,6 +92,15 @@ class AgpStatsDataTest {
         assertEquals(now - T.days(90).msecs(), AgpStatsRange.DAYS_90.startTime(now))
     }
 
+    /** The IFCC table every lab uses: 6.5% is 48 mmol/mol and 7.0% is 53 mmol/mol (#5475). */
+    @Test
+    fun hba1cInPercentIsConvertedToWholeMmolPerMol() {
+        assertEquals(48, hba1cMmolMol(6.5))
+        assertEquals(53, hba1cMmolMol(7.0))
+        assertEquals(39, hba1cMmolMol(5.7))
+        assertEquals(75, hba1cMmolMol(9.0))
+    }
+
     private fun glucose(timestamp: Long, value: Double) = GV(
         timestamp = timestamp,
         raw = null,

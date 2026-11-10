@@ -1,6 +1,7 @@
 package app.aaps.pump.carelevo
 
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
@@ -124,10 +125,24 @@ class CarelevoPumpPluginTempBasalTest : CarelevoPumpPluginTestBase() {
         assertThat(result.isTempCancel).isTrue()
     }
 
+    /** Without an answer the patch decides: here it still runs the temp basal, so the cancel failed. */
     @Test
-    fun `cancelTempBasal should return success false and enacted false on timeout`() {
+    fun `cancelTempBasal should return success false and enacted false on timeout while the temp basal still runs`() {
         whenever { bleSession.runSingle(any(), isA<TempBasalCancelCommand>(), any()) }
             .thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(
+            InfusionInfoResponse(
+                subId = 0,
+                runningMinutes = 100,
+                insulinRemaining = 60.0,
+                infusedTotalBasalAmount = 1.0,
+                infusedTotalBolusAmount = 2.0,
+                pumpStateRaw = 0,
+                modeRaw = 2,
+                currentInfusedProgramVolume = 0.0,
+                realInfusedTime = 0
+            )
+        )
 
         val result = runBlocking { plugin.cancelTempBasal(false) }
 

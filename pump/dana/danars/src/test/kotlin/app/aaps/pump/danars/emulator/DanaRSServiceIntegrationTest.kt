@@ -649,9 +649,9 @@ class DanaRSServiceIntegrationTest : TestBase() {
         whenever(dateUtil.now()).thenReturn(System.currentTimeMillis() - 20_000)
 
         danaRSService.bolus(detailedBolusInfo)
+        // The pump sets its last bolus at the end of the bolus, on its own thread, as a real one does.
+        emulatorTransport.awaitPendingCallbacks()
 
-        // Bolus command was sent and processed by emulator (synchronously in sendMessage,
-        // before the polling loop)
         assertThat(emulatorTransport.pumpState.lastBolusAmount).isWithin(0.01).of(0.05)
         assertThat(emulatorTransport.pumpState.reservoirRemainingUnits)
             .isWithin(0.01).of(initialReservoir - 0.05)
@@ -666,6 +666,8 @@ class DanaRSServiceIntegrationTest : TestBase() {
         whenever(dateUtil.now()).thenReturn(System.currentTimeMillis() - 20_000)
 
         danaRSService.bolus(detailedBolusInfo)
+        // The pump sets its last bolus at the end of the bolus, on its own thread, as a real one does.
+        emulatorTransport.awaitPendingCallbacks()
 
         // bolus calls commandQueue.loadEvents which is mocked, but verify PumpSync was
         // queried during readPumpStatus (not called directly from bolus, but good to

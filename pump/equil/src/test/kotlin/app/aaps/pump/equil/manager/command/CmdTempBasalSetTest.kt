@@ -53,6 +53,13 @@ class CmdTempBasalSetTest : TestBaseWithProfile() {
         assertEquals(160, cmd2.step)
     }
 
+    /** Sent to a real pump as 95 and 47 on 2026-11-08: in Double, 1.2 / 0.05 * 8 is 191.99999999999997. */
+    @Test
+    fun `a rate on the grid keeps its last step`() {
+        assertEquals(96, CmdTempBasalSet(1.2, 30, aapsLogger, preferences, equilManager).step)
+        assertEquals(48, CmdTempBasalSet(0.6, 30, aapsLogger, preferences, equilManager).step)
+    }
+
     @Test
     fun `cancel flag should be false by default`() {
         val cmd = CmdTempBasalSet(1.0, 30, aapsLogger, preferences, equilManager)

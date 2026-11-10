@@ -8,7 +8,7 @@ import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
-import kotlin.math.roundToInt
+import kotlin.math.ceil
 
 /**
  * Bolus. The pump takes the amount ([step], 160 per unit) and the duration in seconds ([stepTime]), so
@@ -27,9 +27,10 @@ class CmdLargeBasalSet(
 
     init {
         if (insulin != 0.0) {
-            step = (insulin / 0.05 * 8).toInt()
-            // Whole seconds, at least 1: a small bolus at a fast speed would otherwise be sent with 0 s.
-            stepTime = (insulin * secondsPerUnit).roundToInt().coerceAtLeast(1)
+            step = Utils.unitsToSteps(insulin)
+            // Whole seconds, rounded up: rounded to the nearest, 0.25 U at 5 s/U got 1 s, that is 15 U/min, faster than
+            // the 12 U/min the speed setting promises (found by the pump scenario tests). At least 1 s.
+            stepTime = ceil(insulin * secondsPerUnit - ROUNDING).toInt().coerceAtLeast(1)
         }
     }
 
@@ -66,4 +67,10 @@ class CmdLargeBasalSet(
     override fun getEventType(): EquilHistoryRecord.EventType? =
         if (insulin == 0.0) EquilHistoryRecord.EventType.CANCEL_BOLUS
         else EquilHistoryRecord.EventType.SET_BOLUS
+
+    private companion object {
+
+        /** 0.3 U x 5 s/U is 1.5000000000000002 in floating point, and that must stay 2 s, not become 3. */
+        const val ROUNDING = 1e-9
+    }
 }

@@ -75,7 +75,7 @@ class PumpWithConcentrationImpl(
     override val lastDataTime: StateFlow<Long> get() = activePumpInternal.lastDataTime
     override val lastBolusTime: StateFlow<Long?> get() = activePumpInternal.lastBolusTime
     override val lastBolusAmount: StateFlow<PumpInsulin?> get() = activePumpInternal.lastBolusAmount
-    override val reservoirLevel: StateFlow<PumpInsulin> get() = activePumpInternal.reservoirLevel
+    override val reservoirLevel: StateFlow<PumpInsulin?> get() = activePumpInternal.reservoirLevel
     override val batteryLevel: StateFlow<Int?> get() = activePumpInternal.batteryLevel
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = activePumpInternal.cancelTempBasal(enforceNew)
     override suspend fun cancelExtendedBolus(): PumpEnactResult = activePumpInternal.cancelExtendedBolus()

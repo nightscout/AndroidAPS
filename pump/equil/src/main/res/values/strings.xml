@@ -60,6 +60,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Low battery: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Not enough insulin left in the reservoir: %1$s</string>
     <string name="equil_reservoir_empty">The reservoir is empty. The pump does not deliver insulin any more.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">The bolus command reached the pump, but the pump did not answer. It may still give %1$s. Do not bolus again. AAPS counts the whole amount.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">The stop did not reach the pump, or its answer was lost. AAPS counts the whole bolus of %1$s until the pump log shows what was given.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">The pump log shows that the bolus of %1$s was not given. AAPS does not count it.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">The pump stopped during the bolus. Given: %1$s of %2$s</string>
     <string name="equil_pump_not_run">Pump not running</string>
     <string name="equil_pair">Pair</string>

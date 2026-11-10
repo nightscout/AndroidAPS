@@ -912,11 +912,15 @@ class ComboV2Plugin(
     // levels are shown on the UI even when the driver connects to the
     // pump again and resets the current pump state.
 
+    // The last levels seen, also of a pump that was unpaired since: a higher level on the next pump gives the
+    // automatic reservoir and battery change records. What AAPS is told is kept apart, as an unpaired pump has none.
     private val _reservoirLevelValue = MutableStateFlow<Double?>(null)
-    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevelValue.mapState { PumpInsulin(it ?: 0.0) }
+    private val _reportedReservoirLevel = MutableStateFlow<PumpInsulin?>(null)
+    override val reservoirLevel: StateFlow<PumpInsulin?> = _reportedReservoirLevel
 
     private val _batteryLevelValue = MutableStateFlow<Int?>(null)
-    override val batteryLevel: StateFlow<Int?> = _batteryLevelValue
+    private val _reportedBatteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _reportedBatteryLevel
 
     private fun updateLevels() {
         pumpStatus?.availableUnitsInReservoir?.let { newLevel ->
@@ -937,6 +941,7 @@ class ComboV2Plugin(
             }
 
             _reservoirLevelValue.value = newLevel.toDouble()
+            _reportedReservoirLevel.value = PumpInsulin(newLevel.toDouble())
         }
 
         pumpStatus?.batteryState?.let { newState ->
@@ -963,6 +968,7 @@ class ComboV2Plugin(
             }
 
             _batteryLevelValue.value = newLevel
+            _reportedBatteryLevel.value = newLevel
         }
     }
 
@@ -1711,6 +1717,9 @@ class ComboV2Plugin(
         _lastConnectionTimestampUIFlow.value = null
         _batteryStateUIFlow.value = null
         _reservoirLevelUIFlow.value = null
+        // Not known until the next pump was read. The last values stay for the change records, see _reservoirLevelValue.
+        _reportedReservoirLevel.value = null
+        _reportedBatteryLevel.value = null
         _lastBolusUIFlow.value = null
         _baseBasalRateUIFlow.value = null
         _serialNumberUIFlow.value = ""

@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.keys.BooleanKey
@@ -109,15 +110,16 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     /**
      * `by lazy` so nothing is resolved before `onCreate` runs - the graph reaches Android services, and
      * an Application field initialiser runs before the framework is ready for that.
-     * The last two arguments are the only things an instrumented test does differently; see
-     * `AppRootGraph.Factory`. Production wants the real database and no forced options.
+     * The last three arguments are the only things an instrumented test does differently; see
+     * `AppRootGraph.Factory`. Production wants the real database, no forced options and new emulated pumps.
      */
     private val metroGraphs by lazy {
         MetroGraphs(
             context = this,
             memberInjector = this,
             databaseConfig = DatabaseConfig.PRODUCTION,
-            externalOptionsOverride = ExternalOptionsOverride.NONE
+            externalOptionsOverride = ExternalOptionsOverride.NONE,
+            pumpEmulators = PumpEmulators()
         )
     }
     // WorkManager on-demand initialization. `MetroWorkerFactory` builds every worker in the app; what
