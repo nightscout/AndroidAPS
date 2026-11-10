@@ -23,16 +23,7 @@
     <string name="shorthour">시간</string>
     <string name="days">일</string>
     <string name="hours">시간</string>
-    <string name="unit_second">초</string>
-    <string name="unit_minute">분</string>
-    <string name="unit_hour">시간</string>
-    <string name="unit_day">일</string>
-    <string name="unit_week">주</string>
-    <string name="unit_seconds">초</string>
     <string name="unit_minutes">분</string>
-    <string name="unit_hours">시간</string>
-    <string name="unit_days">일</string>
-    <string name="unit_weeks">주</string>
     <string name="shortminute">분</string>
     <string name="time_remaining_h_m">%1$d시간 %2$d분 남음</string>
     <string name="time_remaining_m">%1$d분 남음</string>
@@ -47,7 +38,6 @@
     <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$d시간 %2$d분</string>
     <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d분</string>
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
-    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">%1$d초 동안 연결 중</string>
     <string name="handshaking">통신 확인</string>
