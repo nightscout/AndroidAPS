@@ -152,7 +152,7 @@ open class DanaOverviewViewModel(
 
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
-        danaPump.reset()
+        danaPump.readAllAgain()
         viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.clicked_connect_to_pump)) }
     }
 

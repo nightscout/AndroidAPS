@@ -59,10 +59,17 @@ class PumpSyncImplementation(
      * driver stores during the start waits for it, at most 30 s. It used to be dropped at once with only a debug line,
      * and the driver could not tell: `false` also means "already stored", so it went on. Seen on a real pump, whose
      * history read at app start lost a bolus for good.
+     *
+     * A pump clock can be some seconds behind the phone. A command sent right after the first profile then has a time
+     * just before it, and the record was dropped (a Dana temp basal in CI, whose driver then reported the temp basal as
+     * failed). Such a record takes the first profile.
      */
     private suspend fun profileForRecord(time: Long, record: String): EffectiveProfile? {
         config.awaitInitialized()
         val profile = profileFunction.getProfile(time)
+            ?: profileFunction.getProfile(time + PUMP_CLOCK_BEHIND)?.also {
+                aapsLogger.debug(LTag.DATABASE, "$record ${dateUtil.dateAndTimeAndSecondsString(time)} is just before the first profile. Stored with it.")
+            }
         if (profile == null) aapsLogger.warn(LTag.DATABASE, "Storing of $record ${dateUtil.dateAndTimeAndSecondsString(time)} ignored. No profile running.")
         return profile
     }
@@ -553,4 +560,10 @@ class PumpSyncImplementation(
     }
 
     override suspend fun isProfileRunning(time: Long): Boolean = profileFunction.getProfile() != null
+
+    private companion object {
+
+        /** How far a pump clock may be behind the phone for a record to take the first profile. */
+        const val PUMP_CLOCK_BEHIND = 60_000L
+    }
 }

@@ -14,6 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -112,6 +115,14 @@ class DanaRComposeContent(
                 }
             )
         }
+
+        // System Back on a screen of the pump goes to the overview, as its arrow does. Without this handler the event
+        // reaches the app NavHost, which pops the whole pump page (found on the Dana RS by the pump UI test).
+        NavigationBackHandler(
+            state = rememberNavigationEventState(NavigationEventInfo.None),
+            isBackEnabled = currentScreen != DanaRScreen.OVERVIEW,
+            onBackCompleted = { currentScreen = DanaRScreen.OVERVIEW }
+        )
 
         // Handle one-time events from overview
         LaunchedEffect(overviewViewModel) {

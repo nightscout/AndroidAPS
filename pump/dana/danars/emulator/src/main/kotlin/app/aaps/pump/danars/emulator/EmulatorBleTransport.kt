@@ -217,6 +217,10 @@ class EmulatorBleTransport(
         return true
     }
 
+    override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
+
+    override fun suspendOnPump(suspended: Boolean): Boolean = emulator.suspendOnPump(suspended)
+
     override fun state(): EmulatedPumpState = synchronized(pumpState) {
         EmulatedPumpState(
             boluses = pumpState.givenBoluses.toList(),
@@ -228,7 +232,10 @@ class EmulatorBleTransport(
             linkUp = connected,
             commands = commands.get(),
             extendedBolus = if (pumpState.isExtendedBolusRunning)
-                EmulatedExtendedBolus(units = pumpState.extendedBolusAmount, minutes = pumpState.extendedBolusDurationHalfHours * 30) else null
+                EmulatedExtendedBolus(units = pumpState.extendedBolusAmount, minutes = pumpState.extendedBolusDurationHalfHours * 30) else null,
+            battery = pumpState.batteryRemaining,
+            // The pump gives the profile it has as active, one rate an hour.
+            basal = pumpState.basalProfiles.getOrNull(pumpState.activeProfileNumber)?.toList()
         )
     }
 
@@ -241,6 +248,8 @@ class EmulatorBleTransport(
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL,
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL   -> EmulatedCommand.TEMP_BASAL_START
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL    -> EmulatedCommand.TEMP_BASAL_STOP
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS        -> EmulatedCommand.EXTENDED_BOLUS_START
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS_CANCEL -> EmulatedCommand.EXTENDED_BOLUS_STOP
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_BASAL_RATE    -> EmulatedCommand.BASAL_PROFILE
         BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION -> EmulatedCommand.STATUS
         else                                                                -> null

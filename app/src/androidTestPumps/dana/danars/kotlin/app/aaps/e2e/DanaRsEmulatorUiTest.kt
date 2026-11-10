@@ -7,6 +7,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
@@ -137,8 +138,10 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         seedPairingFor(variant)
         emulator.pairingDelayMs = 0
         emulator.writeLatencyMs = 0
-        // A value no default produces, so finding it on screen can only mean it came from the pump
-        // (see refreshStatusFromPump). The emulator's own default here is 25.
+        // A bolus as short as the driver allows. At the real speed (12 s/U) each 1 U bolus of the flow waited 12 s.
+        emulator.speed = EmulatorSpeed.FAST
+        // A value no default produces, so finding it on screen can only mean it came from the pump.
+        // The emulator's own default here is 25.
         emulator.pumpState.maxDailyTotalUnits = MAX_DAILY_UNITS
         seedPumpHistory()
     }
@@ -317,24 +320,25 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
     // ---- RS-only screen legs --------------------------------------------------------------------
 
     /**
-     * Dana overview → Refresh, which resets `DanaPump` and re-reads status through the command
-     * queue (`DanaOverviewViewModel.onRefreshClick`).
+     * Dana overview → Refresh, which re-reads everything through the command queue
+     * (`DanaOverviewViewModel.onRefreshClick`).
      *
-     * Waits for [MAX_DAILY_UNITS] — seeded onto the emulator and matching no default in the app —
-     * to reach the screen. That makes this the pump → UI direction end to end: the reset means the
-     * number cannot be left over from the earlier read, it has to be fetched again.
+     * The pump gets a new `REFRESHED_MAX_DAILY_UNITS` first, a value no default in the app has. Only a
+     * read made after the tap can bring it to the screen, so this is the pump → UI direction end to
+     * end. Refresh keeps the values of the earlier read on screen until the new ones come.
      */
     private fun refreshStatusFromPump() {
+        emulator.pumpState.maxDailyTotalUnits = REFRESHED_MAX_DAILY_UNITS
         repeat(REFRESH_ATTEMPTS) {
-            waitForQueueIdle()   // tap into a settled list, not one mid-reset
-            click("Refresh")     // this itself resets the pump and queues the read
-            if (waitForVisible(MAX_DAILY_UNITS_TEXT, REFRESH_TIMEOUT)) {
+            waitForQueueIdle()   // tap into a settled list
+            click("Refresh")     // queues the read
+            if (waitForVisible(REFRESHED_MAX_DAILY_UNITS_TEXT, REFRESH_TIMEOUT)) {
                 waitForQueueIdle()   // let the read finish before the next step navigates
                 return
             }
             cancelStrayUnpairDialog()
         }
-        error("Refresh never brought '$MAX_DAILY_UNITS_TEXT' back from the pump")
+        error("Refresh never brought '$REFRESHED_MAX_DAILY_UNITS_TEXT' from the pump")
     }
 
     /**
@@ -446,7 +450,10 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
         /** Seeded onto the emulator; the app's own defaults never produce it. */
         private const val MAX_DAILY_UNITS = 42.0
-        private const val MAX_DAILY_UNITS_TEXT = "42.00 U"
+
+        /** Set on the emulator just before Refresh; only a read after the tap shows it. */
+        private const val REFRESHED_MAX_DAILY_UNITS = 43.0
+        private const val REFRESHED_MAX_DAILY_UNITS_TEXT = "43.00 U"
 
         /** The alarm seeded onto the pump, as DanaRSPacketHistory names it for the screen. */
         private const val HISTORY_ALARM_TEXT = "Occlusion"

@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntKey
@@ -150,7 +152,9 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
                 mSerialIOThread?.sendMessage(MsgSettingProfileRatiosAll(injector))
                 danaPump.lastSettingsRead = now
             }
-            loadEvents()
+            // The history has the exact times of a stop of the pump; the status only ends what the history did not
+            if (loadEvents().success)
+                DanaSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), danaRv2Plugin.model(), danaRv2Plugin.serialNumber())
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
             if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
@@ -290,7 +294,12 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             2 -> speed = 60
         }
         val bolusDurationInMSec = (detailedBolusInfo.insulin * speed * 1000).toLong()
-        val expectedEnd = bolusStart + bolusDurationInMSec + 2000
+        // The pump sent the end of the bolus (MsgBolusStop, also the answer to a stop), so it gives no more insulin: wait
+        // only for its history record. Only a bolus whose end was not seen waits until the whole amount must have been
+        // given. A stopped bolus waited for that too, about 18 s after a stop at 0.45 of 2 U on a real DanaRv2.
+        val expectedEnd =
+            if (danaPump.bolusDone && !connectionBroken) System.currentTimeMillis() + DanaPump.BOLUS_LOGGED_AFTER_END
+            else bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
             bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))

@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
+import app.aaps.pump.danar.BolusInProgress
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.comm.MsgBolusStart
 import app.aaps.pump.danar.comm.MsgSetExtendedBolusStart
@@ -50,6 +51,7 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
 
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
+    @Inject lateinit var bolusInProgress: BolusInProgress
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var messageHashTableRKorean: MessageHashTableRKorean
 
@@ -138,6 +140,8 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
+            // Here, after the settings read: right after an app start it brings the serial number the record needs.
+            if (statusBasicMsg.isReceived) bolusInProgress.recordWhole(PumpType.DANA_R_KOREAN, danaRKoreanPlugin.serialNumber())
             doSanityCheck()
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
@@ -218,6 +222,21 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
             }
             SystemClock.sleep(300)
             danaPump.bolusingDetailedBolusInfo = null
+            // The Korean DanaR has no read of what it gave. When the pump may have gone on without the link, the whole
+            // amount counts: more counted than given is the safe side. Counting only the progress seen made IOB too low.
+            val seen = bolusProgressData.state.value?.delivered?.cU ?: 0.0
+            val pumpTookStart = (start.isReceived && !start.failed) || seen > 0
+            if (connectionBroken && pumpTookStart) {
+                // A DanaR goes on with a bolus when the link breaks: a real one gave all of 1 U after a break at 0.15 U
+                // (2026-11-10).
+                bolusProgressData.updateProgress(PumpInsulin(detailedBolusInfo.insulin))
+            } else if (danaPump.bolusStopForced && pumpTookStart) {
+                // A real Korean DanaR gave what its last progress showed when it answered a stop: twice, 0.3 U and 0.4 U
+                // as in its history, once with a progress that came after the stop was sent (2026-11-10). A stop the pump
+                // did not answer may not have reached it, and then the pump goes on.
+                val counted = if (danaPump.bolusDone) seen else detailedBolusInfo.insulin
+                bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(counted))
+            }
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
             appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
         }

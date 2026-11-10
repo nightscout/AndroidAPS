@@ -22,8 +22,13 @@ class MsgStatusTempBasal(
         val isAPSTempBasalInProgress = intFromBuff(bytes, 0, 1) and 0x02 == 0x02
         var tempBasalPercent = intFromBuff(bytes, 1, 1)
         if (tempBasalPercent > 200) tempBasalPercent = (tempBasalPercent - 200) * 10
-        var tempBasalTotalMin = intFromBuff(bytes, 2, 1) * 60
-        tempBasalTotalMin = if (tempBasalTotalMin == 150) 15 else if (tempBasalTotalMin == 160) 30 else tempBasalTotalMin
+        // Hours, or a code for the 15 and 30 minutes of an APS temp basal. The code was compared after * 60, so it never
+        // matched, and a 30 minute temp basal was read as 160 hours.
+        val tempBasalTotalMin = when (val duration = intFromBuff(bytes, 2, 1)) {
+            150  -> 15
+            160  -> 30
+            else -> duration * 60
+        }
         val tempBasalTotalSec = tempBasalTotalMin * 60
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60

@@ -28,10 +28,12 @@ import app.aaps.e2e.AbstractDanaEmulatorUiTest.Companion.DECREMENT
 import app.aaps.e2e.AbstractDanaEmulatorUiTest.Companion.INCREMENT
 import app.aaps.pump.dana.DanaPump
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import java.util.regex.Pattern
+import kotlin.math.abs
 
 /**
  * Pump-agnostic base for the Dana **UI** E2E tests: everything that reaches the emulated pump through
@@ -275,10 +277,10 @@ abstract class AbstractDanaEmulatorUiTest {
      */
     protected fun initializePumpFromUi() {
         if (!awaitTrue(INIT_PUMP_TIMEOUT) {
-                // Only queue a read when the last one has finished. changePump() -> readStatus, and
-                // readStatus resets DanaPump first (onRefreshClick -> danaPump.reset), so a fresh one
-                // each poll would stack a backlog of reads that keep resetting the pump and churning
-                // the action list long after this returns — which is what made the later steps flaky.
+                // Only queue a read when the last one has finished. On Dana RS changePump() resets
+                // DanaPump before it queues the read, so a fresh one each poll would stack a backlog of
+                // reads that keep resetting the pump and churning the action list long after this
+                // returns — which is what made the later steps flaky.
                 if (queueIdle()) requestStatusRead()
                 waitForVisible("Pump history", 2_000)
             }
@@ -289,10 +291,9 @@ abstract class AbstractDanaEmulatorUiTest {
     /**
      * True when no command is queued or running.
      * The one deterministic "the overview has settled" signal: `isInitialized` is stable-true and
-     * every action present exactly while nothing is in flight. A read in flight has just called
-     * `danaPump.reset()`, so `isInitialized` is false and the whole action list is gone until it
-     * completes — tapping into that window is what mis-fired onto Unpair and timed out on absent
-     * buttons.
+     * every action present exactly while nothing is in flight. A read after a `danaPump.reset()` (a
+     * pump change) has `isInitialized` false and the whole action list gone until it completes — tapping into that window is what mis-fired onto Unpair and timed
+     * out on absent buttons.
      */
     // With the app-owned CommandExecutor, an empty queue with nothing performing is a sufficient idle
     // signal. The old "is the WorkManager worker still running its disconnect tail?" check existed only
@@ -384,6 +385,7 @@ abstract class AbstractDanaEmulatorUiTest {
         // times out. Wait for the queue to drain first, exactly as the temp-basal/extended legs do.
         waitForQueueIdle()
         assertThat(lastBolusAmount()).isEqualTo(0.0)
+        val startedAt = System.currentTimeMillis() - CLOCK_MARGIN_MS
 
         openVia("Treatments", expect = "Insulin")
         openVia("Insulin", expect = bolusChipLabel)
@@ -395,6 +397,12 @@ abstract class AbstractDanaEmulatorUiTest {
 
         val delivered = awaitTrue(BOLUS_TIMEOUT) { lastBolusAmount() == BOLUS_UNITS }
         assertThat(delivered).isTrue()
+        // And AAPS stored it: a dose the pump gave but AAPS lost is IOB the loop does not see.
+        val stored = awaitTrue(RECORD_TIMEOUT) {
+            runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
+                .any { abs(it.amount - BOLUS_UNITS) < UNITS_TOLERANCE }
+        }
+        assertWithMessage("AAPS has a bolus record of $BOLUS_UNITS U").that(stored).isTrue()
     }
 
     /**
@@ -419,6 +427,12 @@ abstract class AbstractDanaEmulatorUiTest {
         }
         assertThat(applied).isTrue()
         waitForQueueIdle()
+        // And AAPS has the same temp basal the pump runs.
+        val stored = awaitTrue(RECORD_TIMEOUT) {
+            val tb = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(System.currentTimeMillis()) }
+            tb != null && !tb.isAbsolute && tb.rate.toInt() == tempBasalPercent()
+        }
+        assertWithMessage("AAPS has the temp basal of ${tempBasalPercent()} %").that(stored).isTrue()
     }
 
     /**
@@ -439,6 +453,12 @@ abstract class AbstractDanaEmulatorUiTest {
         }
         assertThat(applied).isTrue()
         waitForQueueIdle()
+        // And AAPS has the same extended bolus the pump runs.
+        val stored = awaitTrue(RECORD_TIMEOUT) {
+            val eb = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(System.currentTimeMillis()) }
+            eb != null && abs(eb.amount - extendedBolusAmount()) < UNITS_TOLERANCE
+        }
+        assertWithMessage("AAPS has the extended bolus of ${extendedBolusAmount()} U").that(stored).isTrue()
     }
 
     protected fun assertVisible(label: String, timeout: Long = STEP_TIMEOUT) {
@@ -653,5 +673,12 @@ abstract class AbstractDanaEmulatorUiTest {
 
         private const val BOLUS_UNITS = 1.0
         private const val POLL_MS = 250L
+
+        // A Dana driver stores a bolus only after it has read the pump history, which follows the estimated
+        // end of the bolus. So the record can come well after the pump is done.
+        private const val RECORD_TIMEOUT = 60_000L
+        private const val UNITS_TOLERANCE = 0.001
+        /** The pump writes whole seconds, so a record can start a little before the test asked. */
+        private const val CLOCK_MARGIN_MS = 60_000L
     }
 }

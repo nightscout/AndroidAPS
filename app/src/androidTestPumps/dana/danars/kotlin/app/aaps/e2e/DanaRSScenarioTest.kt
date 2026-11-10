@@ -17,4 +17,14 @@ class DanaRSScenarioTest : AbstractPumpScenarioTest() {
     @Test
     override fun aBolusThePumpStopsCountsWhatItGave() {
     }
+
+    @Ignore("The Dana RS emulator sends no alarms yet: how a real Dana-i reports one was not looked at")
+    @Test
+    override fun anOcclusionRaisesAnAlarm() {
+    }
+
+    @Ignore("The Dana RS emulator sends no alarms yet: how a real Dana-i reports one was not looked at")
+    @Test
+    override fun anEmptyReservoirRaisesAnAlarm() {
+    }
 }

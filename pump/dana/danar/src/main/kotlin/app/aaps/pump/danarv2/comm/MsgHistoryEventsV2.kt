@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.danar.comm.MessageBase
 import kotlinx.coroutines.runBlocking
@@ -237,6 +238,7 @@ class MsgHistoryEventsV2(
                     LTag.PUMPBTCOMM,
                     "EVENT SUSPEND_ON (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")"
                 )
+                runBlocking { DanaSuspendSync.started(pumpSync, datetime, datetime, PumpType.DANA_RV2, danaPump.serialNumber) }
                 status = "SUSPEND_ON " + dateUtil.timeString(datetime)
             }
 
@@ -245,6 +247,7 @@ class MsgHistoryEventsV2(
                     LTag.PUMPBTCOMM,
                     "EVENT SUSPEND_OFF (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")"
                 )
+                runBlocking { DanaSuspendSync.ended(pumpSync, datetime, datetime, PumpType.DANA_RV2, danaPump.serialNumber) }
                 status = "SUSPEND_OFF " + dateUtil.timeString(datetime)
             }
 
