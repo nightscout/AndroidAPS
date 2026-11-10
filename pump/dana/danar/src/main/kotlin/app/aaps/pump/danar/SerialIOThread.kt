@@ -33,6 +33,10 @@ class SerialIOThread(
     // Written by the sending thread (sendMessage), read by the reader thread (run) to match a reply.
     @Volatile private var processedMessage: MessageBase? = null
 
+    /** Phone time of the last message from the pump, 0 before the first one. */
+    @Volatile var lastMessageAt: Long = 0
+        private set
+
     init {
         start()
     }
@@ -59,6 +63,7 @@ class SerialIOThread(
                 // process all messages we already got
                 while (mReadBuff.size > 3) { // 3rd byte is packet size. continue only if we an determine packet size
                     val extractedBuff = cutMessageFromBuffer() ?: break
+                    lastMessageAt = System.currentTimeMillis()
                     // message is not complete in buffer (wrong packet calls disconnection)
                     val command = extractedBuff[5].toInt() and 0xFF or (extractedBuff[4].toInt() shl 8 and 0xFF00)
                     val message: MessageBase = if (processedMessage?.command == command) {

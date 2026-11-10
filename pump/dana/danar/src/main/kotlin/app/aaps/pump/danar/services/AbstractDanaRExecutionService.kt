@@ -60,6 +60,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import java.io.IOException
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -250,7 +251,9 @@ abstract class AbstractDanaRExecutionService : MetroService() {
         mSerialIOThread?.sendMessage(MsgPCCommStart(injector))
         SystemClock.sleep(400)
         mSerialIOThread?.sendMessage(msg)
-        val completed = waitForHistoryDone()
+        // A real Korean DanaR sends its records and no "done" (2026-11-10): the read waited until the pump dropped the
+        // link about 100 s later, and the queue with it. Its records came about every 50 ms, so a quiet link is the end.
+        val completed = waitForHistoryDone(endWhenQuietFor = HISTORY_QUIET_MS)
         SystemClock.sleep(200)
         mSerialIOThread?.sendMessage(MsgPCCommStop(injector))
         if (completed) result.success(true).comment("OK")
@@ -264,14 +267,20 @@ abstract class AbstractDanaRExecutionService : MetroService() {
      * Capped at 5 minutes, like DanaRS. Without the cap, a lost "history done" message on a link that
      * still reported connected kept this loop, and so the whole command queue, busy forever (#5209).
      *
+     * @param endWhenQuietFor when not null, it also ends when the pump has sent nothing for this long
      * @return false only when it gave up because of the time limit
      */
-    protected fun waitForHistoryDone(): Boolean {
+    protected fun waitForHistoryDone(endWhenQuietFor: Long? = null): Boolean {
         val startWait = System.currentTimeMillis()
         while (!danaPump.historyDoneReceived && mRfcommSocket?.isConnected == true) {
-            if (System.currentTimeMillis() - startWait > T.mins(5).msecs()) {
+            val now = System.currentTimeMillis()
+            if (now - startWait > T.mins(5).msecs()) {
                 aapsLogger.error(LTag.PUMPCOMM, "Timeout waiting for history done")
                 return false
+            }
+            if (endWhenQuietFor != null && now - max(startWait, mSerialIOThread?.lastMessageAt ?: 0) > endWhenQuietFor) {
+                aapsLogger.debug(LTag.PUMPCOMM, "No history done, but the pump sent nothing for $endWhenQuietFor ms: the history is read")
+                return true
             }
             SystemClock.sleep(100)
         }
@@ -382,5 +391,11 @@ abstract class AbstractDanaRExecutionService : MetroService() {
                 )
             }
         }
+    }
+
+    protected companion object {
+
+        /** The records of a history read come about every 50 ms; this long with nothing means the pump has sent them all. */
+        const val HISTORY_QUIET_MS = 10_000L
     }
 }
