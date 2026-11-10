@@ -71,10 +71,11 @@ dump_failed_tests() {
   for t in $(sed -n 's/^[0-9]*) \([A-Za-z0-9_]*\)(.*/\1/p' "$out" | sort -u); do
     echo "--- what happened in $t ---"
     # Without the radio chatter of each packet (Dana logs four lines a packet), which pushed the command itself out.
+    # Only BLEComm's: the history records the driver reads are logged from a processMessage too, and they are the cause.
     adb -s "$DEV" logcat -d -v time \
       | sed -n "/TestRunner.*started: $t(/,/TestRunner.*finished: $t(/p" \
       | grep -E "PUMP|DATABASE|TestRunner|AndroidRuntime| E " \
-      | grep -vE "processMessage|no wait needed|notifyAll|handleMessage done|writeCharacteristic|onCharacteristic|>>>>> |<<<<< " \
+      | grep -vE "BLEComm.processMessage|no wait needed|notifyAll|handleMessage done|writeCharacteristic|onCharacteristic|>>>>> |<<<<< " \
       | tail -n 400 || true
   done
 }
