@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
+    <string name="equil_pump_description">Equil 5.3 oder neuere Patch-Pumpe</string>
     <!--  start  -->
+    <string name="equil_dressing">Reservoir wechseln</string>
+    <string name="equil_insulin_reservoir">Insulinreservoir</string>
+    <string name="equil_mode_stopped">Gestoppt</string>
+    <string name="equil_mode_suspended">Angehalten</string>
+    <string name="equil_serialnumber">Gerätenummer</string>
+    <string name="equil_stop">Stopp</string>
+    <string name="equil_success">Erfolgreich</string>
+    <string name="equil_title_dressing">Ampulle wechseln</string>
     <string name="equil_tone_mode_mute">Stummschalten</string>
     <string name="equil_tone_mode_shake">Nur vibrieren</string>
     <string name="equil_tone_mode_tone">Nur Töne</string>
@@ -25,6 +35,8 @@
     <string name="equil_history_group_bolus">Boli</string>
     <string name="equil_history_group_basal">Basalraten</string>
     <string name="equil_history_group_configuration">Konfigurationen</string>
+    <string name="equil_history_item7">Injektion bereits pausiert</string>
+    <string name="equil_history_item10">Reservoir füllen</string>
     <string name="equil_history_item15">Batteriestand niedrig</string>
     <string name="equil_history_item16">Batterie leer!</string>
     <string name="equil_common_overview_button_suspend_delivery">Anhalten</string>
@@ -37,6 +49,7 @@
     <string name="equil_device_unpaired">​Gerät entkoppelt</string>
     <string name="equil_pair_password_title">Passwort für %1$s eingeben</string>
     <string name="equil_attach">Bitte befestigen Sie die Pumpe an der Basis</string>
+    <string name="equil_hint2">Kanüle befüllen</string>
     <string name="equil_pump_updated">Pumpe aktualisiert</string>
     <string name="equil_replace_reservoir">Das Reservoir ist leer. Bitte ersetzen Sie das Reservoir</string>
 </resources>
