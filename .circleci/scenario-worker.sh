@@ -20,6 +20,20 @@ RUNNER=$PKG.test/app.aaps.runners.AapsTestRunner
 # Parts per scenario class. More parts, more emulators can share one class.
 PARTS=${SCENARIO_PARTS:-2}
 
+# About how long one part of a class takes, in seconds, measured on CircleCI 42428 (2026-11-10), to put the long parts
+# first. A class not listed counts as the longest, so a new one never comes last; add it here once it has run.
+part_seconds() {
+  case "${1##*.}" in
+    EquilScenarioTest) echo 390 ;;
+    CarelevoScenarioTest) echo 360 ;;
+    DanaRv2ScenarioTest) echo 340 ;;
+    DanaRScenarioTest) echo 270 ;;
+    DanaRSScenarioTest) echo 225 ;;
+    DanaRKoreanScenarioTest) echo 210 ;;
+    *) echo 999 ;;
+  esac
+}
+
 if [ "${1:-}" = "--make-list" ]; then
   DEV=$2
   rm -rf "$Q"; mkdir -p "$Q/rc"
@@ -28,10 +42,11 @@ if [ "${1:-}" = "--make-list" ]; then
     | tr -d '\r' | sed -n 's/^INSTRUMENTATION_STATUS: class=//p' | sort -u)
   [ -n "$CLASSES" ] || { echo "no scenario classes listed"; exit 1; }
   : > "$Q/list"
-  # The long items first, so the short ones fill the gaps at the end.
+  # The long items first, so the short ones fill the gaps at the end. The classes come sorted by name, and the slowest
+  # (Equil) was taken last: one emulator ran 4 minutes after the others were done (CircleCI 42428).
   for c in $CLASSES; do
-    for p in $(seq 0 $((PARTS - 1))); do echo "run $c $p" >> "$Q/list"; done
-  done
+    for p in $(seq 0 $((PARTS - 1))); do echo "$(part_seconds "$c") run $c $p"; done
+  done | sort -s -k1,1nr | cut -d' ' -f2- >> "$Q/list"
   for c in $CLASSES; do echo "restart $c" >> "$Q/list"; done
   wc -l < "$Q/list" | tr -d ' ' > "$Q/count"
   echo "scenario work list, $(cat "$Q/count") items:"
