@@ -35,16 +35,7 @@
     <string name="shorthour">sa</string>
     <string name="days">gün</string>
     <string name="hours">saat</string>
-    <string name="unit_second">saniye</string>
-    <string name="unit_minute">dakika</string>
-    <string name="unit_hour">saat</string>
-    <string name="unit_day">gün</string>
-    <string name="unit_week">hafta</string>
-    <string name="unit_seconds">saniye</string>
     <string name="unit_minutes">dakika</string>
-    <string name="unit_hours">saat</string>
-    <string name="unit_days">gün</string>
-    <string name="unit_weeks">hafta</string>
     <string name="shortminute">dk</string>
     <string name="time_remaining_h_m">%1$dsa %2$ddk kaldı</string>
     <string name="time_remaining_m">%1$ddk kaldı</string>
@@ -59,7 +50,6 @@
     <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
     <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
-    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">%1$d sn\'dir bağlanıyor</string>
     <string name="handshaking">El sıkışılıyor</string>
