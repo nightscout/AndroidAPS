@@ -473,7 +473,11 @@ class PumpScenario(private val pump: PumpUnderTest) {
         assertWithMessage("temp basal rate").that(abs(stored.rate - checkNotNull(pumpRate)) < RATE_TOLERANCE).isTrue()
     }
 
-    /** The extended bolus AAPS has is the one the pump runs, or neither has one. */
+    /**
+     * The extended bolus AAPS has is the one the pump runs, or neither has one. A pump that gives high temp basals as
+     * extended boluses (the DanaR with its "Use extended boluses for >200%" setting) stores every extended bolus as one
+     * that stands for a temp basal.
+     */
     fun checkExtendedBolus() {
         val running = control.state().extendedBolus
         val stored = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(System.currentTimeMillis()) }
@@ -484,7 +488,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
         if (stored == null) throw AssertionError("The pump runs an extended bolus AAPS does not have: $running")
         assertWithMessage("extended bolus amount").that(abs(stored.amount - running.units) < RATE_TOLERANCE).isTrue()
         assertWithMessage("extended bolus minutes").that(stored.duration).isEqualTo(running.minutes * MS_PER_MINUTE)
-        assertWithMessage("a real extended bolus, not one that stands for a temp basal").that(stored.isEmulatingTempBasal).isFalse()
+        assertWithMessage("the extended bolus stands for a temp basal")
+            .that(stored.isEmulatingTempBasal).isEqualTo(testGraphs.activePlugin.activePumpInternal.isFakingTempsByExtendedBoluses)
     }
 
     /**

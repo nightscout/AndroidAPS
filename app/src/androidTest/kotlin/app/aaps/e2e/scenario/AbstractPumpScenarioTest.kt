@@ -317,7 +317,10 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
     }
 
-    /** The cancel never reaches the pump, so its temp basal goes on. AAPS must still have it, or the loop counts too little. */
+    /**
+     * The cancel never reaches the pump, so its temp basal goes on. AAPS must still have it, or the loop counts too little.
+     * A driver that sends the cancel again (the DanaR does) ends it: then neither may have it.
+     */
     @Test
     fun aTempBasalCancelThatIsLostKeepsTheTempBasal() {
         scenario.bringUp()
@@ -325,7 +328,6 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("temp basal").that(scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
         assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.TEMP_BASAL_STOP)).isTrue()
         scenario.cancelTempBasal()
-        assertWithMessage("the pump still runs the temp basal").that(scenario.control.state().tempBasal).isNotNull()
         scenario.readStatus()
         scenario.checkTempBasal()
     }
