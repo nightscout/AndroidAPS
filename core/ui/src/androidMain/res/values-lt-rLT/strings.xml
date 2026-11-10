@@ -80,7 +80,7 @@
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_aps">DKS</string>
     <string name="configbuilder_loop">Ciklas</string>
-    <string name="configbuilder_sync">Ryšys</string>
+    <string name="configbuilder_sync">Ryšiai</string>
     <string name="configbuilder_general">Bendrieji</string>
     <string name="protection">Apsauga</string>
     <string name="value_unavailable_short">n/a</string>
@@ -532,7 +532,7 @@
     <string name="unknown">Nežinoma</string>
     <string name="eatingsoon">Netrukus valgysiu</string>
     <string name="hypo">Hipo</string>
-    <string name="activity">Sportas</string>
+    <string name="activity">Aktyvumas</string>
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="automation">Automatizacija</string>
     <string name="automation_management_desc">Kurkite taisykles, kurios automatiškai atliks veiksmus pagal nustatytas sąlygas</string>
@@ -869,7 +869,7 @@
     <string name="message">Pranešimas</string>
     <string name="ok">OK</string>
     <string name="cancel">Atšaukti</string>
-    <string name="dismiss">Atmesti</string>
+    <string name="dismiss">Gerai</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
     <string name="close">Uždaryti</string>
