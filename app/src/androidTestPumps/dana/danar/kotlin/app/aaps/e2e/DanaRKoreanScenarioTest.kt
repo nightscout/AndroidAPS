@@ -28,4 +28,9 @@ class DanaRKoreanScenarioTest : AbstractPumpScenarioTest() {
     @Test
     override fun anEmptyReservoirRaisesAnAlarm() {
     }
+
+    @Ignore("Only the DanaR v2 driver imports the pump history")
+    @Test
+    override fun aBolusGivenOnThePumpIsImported() {
+    }
 }
