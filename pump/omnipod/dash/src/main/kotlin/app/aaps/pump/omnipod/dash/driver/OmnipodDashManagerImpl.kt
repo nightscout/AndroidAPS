@@ -40,6 +40,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -221,6 +222,8 @@ class OmnipodDashManagerImpl(
     private fun observeSendProgramBasalCommand(basalProgram: BasalProgram, hasBasalBeepEnabled: Boolean): Observable<PodEvent> {
         return Observable.defer {
             val currentTime = Date()
+            val timeZone = PodTimeZone.now(currentTime.time)
+            podStateManager.recordBasalProgramTimeZone(timeZone)
             logger.debug(LTag.PUMPCOMM, "Programming basal. currentTime={}, basalProgram={}", currentTime, basalProgram)
             bleManager.sendCommand(
                 ProgramBasalCommand.Builder()
@@ -232,9 +235,10 @@ class OmnipodDashManagerImpl(
                     .setCurrentTime(currentTime)
                     .build(),
                 DefaultStatusResponse::class
-            )
-        }.doOnComplete {
-            podStateManager.updateTimeZone()
+            ).doOnComplete {
+                // Activation has no active command; other programs record the zone on confirmation.
+                if (podStateManager.activeCommand == null) podStateManager.confirmTimeZone(timeZone)
+            }
         }
     }
 

@@ -10,8 +10,11 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -103,9 +106,12 @@ import app.aaps.pump.omnipod.omnipod5.keys.O5IntentKey
 import app.aaps.pump.omnipod.omnipod5.ui.O5CertificateStoreScreen
 import app.aaps.pump.omnipod.omnipod5.ui.compose.OmnipodO5ComposeContent
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
+import app.aaps.pump.omnipod.common.util.OmnipodTimeChange
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -200,12 +206,13 @@ class O5PumpPlugin @Inject constructor(
     ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries +
         DashBooleanPreferenceKey.entries + O5IntentKey.ConfigEnabledEntries(config),
     aapsLogger, rh, preferences, commandQueue, notificationManager
-), Pump, OwnDatabasePlugin {
+), Pump, OwnDatabasePlugin, PluginConstraints {
 
     @Volatile private var bolusCanceled = false
     @Volatile private var bolusDeliveryInProgress = false
     @Volatile private var stopConnecting: CountDownLatch? = null
     private val doseMutex = Mutex()
+    private val timeChangeHandler = OmnipodTimeChange()
 
     @VisibleForTesting
     internal var bolusTimeSource: TimeSource = TimeSource.Monotonic
@@ -252,6 +259,7 @@ class O5PumpPlugin @Inject constructor(
         housekeepingChecker = Runnable {
             updatePodWarnings()
             scope?.launch {
+                checkTimeChange()
                 try {
                     createFakeTBRWhenNoActivePod()
                 } catch (e: Exception) {
@@ -335,6 +343,9 @@ class O5PumpPlugin @Inject constructor(
             pumpType = PumpType.OMNIPOD_5,
             pumpSerial = pumpSerial
         )
+        podStateManager.activeTempBasalStartTime = now
+        podStateManager.activeTempBasalRate = 0.0
+        podStateManager.activeTempBasalDurationMinutes = PodConstants.MAX_POD_LIFETIME.toMinutes().toShort()
     }
 
     /**
@@ -398,6 +409,7 @@ class O5PumpPlugin @Inject constructor(
         handler?.postDelayed(housekeepingChecker, STATUS_CHECK_INTERVAL_MS)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        newScope.launch { checkTimeChange() }
         merge(
             preferences.observe(OmnipodBooleanPreferenceKey.ExpirationReminder).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.ExpirationReminderHours).drop(1).map {},
@@ -722,9 +734,6 @@ class O5PumpPlugin @Inject constructor(
 
             O5PodStateManager.PendingDoseType.TEMP_BASAL_CANCEL  ->
                 if (podStateManager.deliveryStatus?.tempBasalActive() != true) {
-                    podStateManager.activeTempBasalStartTime = null
-                    podStateManager.activeTempBasalRate = null
-                    podStateManager.activeTempBasalDurationMinutes = null
                     syncTempBasalCancelled(pending.startedAt, pending.historyId ?: pending.startedAt)
                     markDoseSuccess(pending)
                     podStateManager.pendingDoseCommand = null
@@ -734,7 +743,7 @@ class O5PumpPlugin @Inject constructor(
                 if (status.basalActive()) {
                     val program = pending.requestedBasalProgram ?: return
                     podStateManager.basalProgram = program
-                    onBasalProgramConfirmed(pending.startedAt, pending.historyId ?: pending.startedAt)
+                    onBasalProgramConfirmed(pending.startedAt, pending.historyId ?: pending.startedAt, pending.basalTimeZone)
                     markDoseSuccess(pending)
                     podStateManager.pendingDoseCommand = null
                 }
@@ -789,6 +798,9 @@ class O5PumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, "O5 temp basal cancelled while delivery is suspended - keeping the zero temp basal")
             return
         }
+        podStateManager.activeTempBasalStartTime = null
+        podStateManager.activeTempBasalRate = null
+        podStateManager.activeTempBasalDurationMinutes = null
         syncTempBasalStopped(timestamp, endPumpId)
     }
 
@@ -798,12 +810,13 @@ class O5PumpPlugin @Inject constructor(
      * clock's time zone, because the same command sets the pod clock. Mirrors Dash's
      * `SET_BASAL_PROFILE` / `RESUME_DELIVERY` confirmation handling.
      */
-    private suspend fun onBasalProgramConfirmed(timestamp: Long, endPumpId: Long) {
+    private suspend fun onBasalProgramConfirmed(timestamp: Long, endPumpId: Long, timeZone: PodTimeZone?) {
         podStateManager.deliverySuspended = false
         podStateManager.activeTempBasalStartTime = null
         podStateManager.activeTempBasalRate = null
         podStateManager.activeTempBasalDurationMinutes = null
-        podStateManager.updateTimeZone()
+        timeZone?.let { podStateManager.confirmTimeZone(it) } ?: podStateManager.updateTimeZone()
+        podStateManager.timeChangeInProgress = false
         syncTempBasalStopped(timestamp, endPumpId)
         notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
         notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
@@ -920,12 +933,14 @@ class O5PumpPlugin @Inject constructor(
                 syncZeroTempBasal(serialNumber())
             }
 
+            val currentTime = Date()
             podStateManager.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
                 type = O5PodStateManager.PendingDoseType.BASAL_PROGRAM,
                 startedAt = System.currentTimeMillis(),
                 sequenceNumber = podStateManager.msgSequenceNumber.toShort(),
                 historyId = historyId,
-                requestedBasalProgram = basalProgram
+                requestedBasalProgram = basalProgram,
+                basalTimeZone = PodTimeZone.now(currentTime.time)
             )
             armStatusChecker()
             val basalBeeps = preferences.get(OmnipodBooleanPreferenceKey.BasalBeepsEnabled)
@@ -935,7 +950,7 @@ class O5PumpPlugin @Inject constructor(
                 .setNonce(FIXED_NONCE)
                 .setBasalProgram(basalProgram)
                 .setProgramReminder(ProgramReminder(atStart = basalBeeps, atEnd = false, atInterval = 0))
-                .setCurrentTime(Date())
+                .setCurrentTime(currentTime)
                 .build()
             bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
             val accepted = pendingDoseAccepted()
@@ -978,7 +993,7 @@ class O5PumpPlugin @Inject constructor(
     override val baseBasalRate: PumpRate
         get() {
             val rate = if (podStateManager.alarmType != null) 0.0
-            else podStateManager.basalProgram?.rateAt(System.currentTimeMillis()) ?: 0.0
+            else podStateManager.basalProgram?.rateAt(System.currentTimeMillis(), podStateManager.timeZoneOffset) ?: 0.0
             return PumpRate(rate)
         }
 
@@ -1303,7 +1318,9 @@ class O5PumpPlugin @Inject constructor(
         durationInMinutes: Int,
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
-    ): PumpEnactResult = doseMutex.withLock { setTempBasalAbsoluteLocked(absoluteRate, durationInMinutes, enforceNew, tbrType) }
+    ): PumpEnactResult = doseMutex.withLock {
+        setTempBasalAbsoluteLocked(absoluteRate, durationInMinutes, enforceNew, tbrType)
+    }
 
     private suspend fun setTempBasalAbsoluteLocked(
         absoluteRate: Double,
@@ -1363,7 +1380,9 @@ class O5PumpPlugin @Inject constructor(
         error("Pump doesn't support percent basal rate")
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult =
-        doseMutex.withLock { cancelTempBasalLocked(enforceNew) }
+        doseMutex.withLock {
+            cancelTempBasalLocked(enforceNew)
+        }
 
     private suspend fun cancelTempBasalLocked(enforceNew: Boolean): PumpEnactResult {
         if (!pendingDoseResolved()) return unresolvedDoseResult()
@@ -1405,9 +1424,6 @@ class O5PumpPlugin @Inject constructor(
             .build()
         bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
         history.markSent(historyId).andThen(history.markSuccess(historyId)).blockingAwait()
-        podStateManager.activeTempBasalStartTime = null
-        podStateManager.activeTempBasalRate = null
-        podStateManager.activeTempBasalDurationMinutes = null
         syncTempBasalCancelled(startedAt, historyId)
         notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
         podStateManager.pendingDoseCommand = null
@@ -1431,7 +1447,14 @@ class O5PumpPlugin @Inject constructor(
         pumpEnactResultProvider.get().success(false).enacted(false)
             .comment(rh.gs(R.string.omnipod_5_error_tdd_not_supported))
 
-    override fun canHandleDST(): Boolean = false
+    override fun canHandleDST(): Boolean = !isInitialized() || podStateManager.timeZoneOffset != null
+
+    override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (isInitialized() && (timeCorrectionNeeded() || timeChangeHandler.isInProgress())) {
+            value.set(false, rh.gs(R.string.omnipod_common_loop_waiting_for_time_update), this)
+        }
+        return value
+    }
 
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult =
         when (customCommand) {
@@ -1441,7 +1464,7 @@ class O5PumpPlugin @Inject constructor(
             is CommandResumeDelivery  -> runBlocking { resumeOrHandleTimeChange() }
             is CommandSuspendDelivery -> suspendDelivery()
             is CommandPlayTestBeep    -> playTestBeep()
-            is CommandHandleTimeChange -> runBlocking { resumeOrHandleTimeChange() }
+            is CommandHandleTimeChange -> runBlocking { handleTimeChange(customCommand.requestedByUser) }
             is CommandUpdateAlertConfiguration -> updateAlertConfiguration()
             is CommandDisableSuspendAlerts     -> disableSuspendAlerts()
             is CommandDeliverBasalCorrection   -> deliverBasalCorrection()
@@ -1509,6 +1532,7 @@ class O5PumpPlugin @Inject constructor(
 
     private fun suspendDelivery(): PumpEnactResult =
         try {
+            podStateManager.timeChangeInProgress = false
             val basalBeeps = preferences.get(OmnipodBooleanPreferenceKey.BasalBeepsEnabled)
             val cmd = SuspendDeliveryCommand.Builder()
                 .setUniqueId(requirePodId())
@@ -1519,10 +1543,6 @@ class O5PumpPlugin @Inject constructor(
             bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
             podStateManager.deliverySuspended = true
             podStateManager.suspendAlertsEnabled = true
-            // Suspending stops any temp basal on the pod as well.
-            podStateManager.activeTempBasalStartTime = null
-            podStateManager.activeTempBasalRate = null
-            podStateManager.activeTempBasalDurationMinutes = null
             history.recordSuccess(OmnipodCommandType.SUSPEND_DELIVERY)
             runBlocking { syncZeroTempBasal(serialNumber()) }
             pumpEnactResultProvider.get().success(true).enacted(true)
@@ -1550,12 +1570,93 @@ class O5PumpPlugin @Inject constructor(
             handleCommandFailure(R.string.omnipod_common_error_failed_to_play_test_beep)
         }
 
-    /** Resume Delivery and Handle Time Change are both just "(re)program the current
-     *  basal profile" - [ProgramBasalCommand] always sets the pod's current time and
-     *  implicitly resumes delivery, same as Dash's identical handling of both. */
+    /** Resuming sends the current basal program, which also sets the pod's local time. */
     private suspend fun resumeOrHandleTimeChange(): PumpEnactResult =
         pumpSync.expectedPumpState().profile?.let { setNewBasalProfile(it, OmnipodCommandType.RESUME_DELIVERY) }
             ?: pumpEnactResultProvider.get().success(false).enacted(false).comment(rh.gs(R.string.omnipod_5_error_no_active_profile))
+
+    private suspend fun handleTimeChange(requestedByUser: Boolean): PumpEnactResult = doseMutex.withLock {
+        if (!requestedByUser) {
+            fetchStatus().blockingAwait()
+            reconcilePendingDoseLocked()
+            if (!timeCorrectionNeeded() || !canCorrectTime()) {
+                aapsLogger.info(LTag.PUMP, "Deferring automatic O5 time update")
+                return@withLock pumpEnactResultProvider.get().success(true).enacted(false)
+            }
+        }
+        pumpSync.expectedPumpState().profile?.let {
+            // Persisted before suspending, so a crash mid-correction can still resume it after restart
+            // even though the pod now looks suspended. Any active temp basal is lost here, the same way
+            // the Medtrum driver accepts one may be cancelled by its own time update: the loop sets a
+            // new one next cycle, this driver does not reconstruct the old one.
+            podStateManager.timeChangeInProgress = true
+            setNewBasalProfileLocked(it, OmnipodCommandType.SET_TIME)
+        } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment(rh.gs(R.string.omnipod_5_error_no_active_profile))
+    }
+
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+        aapsLogger.info(LTag.PUMP, "Checking O5 pod time after ${timeChangeType.name}")
+        checkTimeChange()
+    }
+
+    private fun timeCorrectionNeeded(): Boolean = OmnipodTimeChange.needsCorrection(
+        podStateManager.timeZoneOffset, PodTimeZone.now().offset, podStateManager.timeChangeInProgress
+    )
+
+    private fun canCorrectTime(): Boolean = OmnipodTimeChange.canProgram(
+        isInitialized(),
+        podStateManager.deliverySuspended,
+        bolusDeliveryInProgress || podStateManager.deliveryStatus?.bolusDeliveringActive() == true,
+        podStateManager.pendingDoseCommand != null,
+        podStateManager.timeChangeInProgress
+    )
+
+    @VisibleForTesting
+    internal suspend fun checkTimeChange() {
+        if (!timeCorrectionNeeded()) {
+            // Also covers a manual command having fixed it outside this polling loop.
+            timeChangeHandler.resetFailureAlert()
+            return
+        }
+        if (!canCorrectTime() || bleManager.isActivationRunning ||
+            commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class) ||
+            commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class) ||
+            commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class) ||
+            !timeChangeHandler.tryStart(System.nanoTime() / 1000000)
+        ) return
+        try {
+            val result = commandQueue.customCommand(CommandHandleTimeChange(false))
+            if (!result.success) {
+                notifyTimeChangeFailure(result.comment)
+            } else if (!timeCorrectionNeeded()) {
+                timeChangeHandler.resetFailureAlert()
+                notificationManager.dismiss(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED)
+                notificationManager.post(
+                    NotificationId.TIME_OR_TIMEZONE_CHANGE,
+                    TextRef.AndroidRes(R.string.omnipod_common_confirmation_time_on_pod_updated),
+                    validMinutes = 60
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            notifyTimeChangeFailure(e.message)
+        } finally {
+            timeChangeHandler.finish(System.nanoTime() / 1000000)
+        }
+    }
+
+    private fun notifyTimeChangeFailure(reason: String?) {
+        aapsLogger.error(LTag.PUMP, "Automatic O5 time update failed: $reason")
+        // Only the first of a run of retries sounds an alarm; repeated retries every minute would
+        // otherwise alarm continuously while the pod is unreachable.
+        notificationManager.post(
+            NotificationId.PUMP_TIMEZONE_UPDATE_FAILED,
+            TextRef.AndroidRes(R.string.omnipod_common_automatic_time_update_failed),
+            level = NotificationLevel.IMPORTANT,
+            sound = if (timeChangeHandler.shouldSoundOnFailure()) AlarmSound.BOLUS_ERROR else null
+        )
+    }
 
     private fun notifyUncertain(id: NotificationId, message: String) {
         if (podStateManager.pendingDoseCommand != null) {

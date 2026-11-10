@@ -18,6 +18,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoActivationTime
 import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoTriggeredAlertsResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5IdRotation
 import java.io.Serializable
 import java.util.Calendar
@@ -113,6 +114,10 @@ interface O5PodStateManager {
      *  successful basal program, because that command also sets the pod clock. Mirrors
      *  `OmnipodDashPodStateManager.updateTimeZone`. */
     fun updateTimeZone()
+    fun confirmTimeZone(timeZone: PodTimeZone)
+
+    /** Allows recovery of a suspend started by automatic time correction, including after restart. */
+    var timeChangeInProgress: Boolean
 
     /** False when the phone's current UTC offset differs from the pod's, so the pod runs
      *  the basal schedule at the wrong hours. True when the pod offset is not known yet
@@ -188,6 +193,7 @@ interface O5PodStateManager {
         val historyId: Long? = null,
         val tempBasalType: PumpSync.TemporaryBasalType? = null,
         val requestedBasalProgram: BasalProgram? = null,
+        val basalTimeZone: PodTimeZone? = null,
         /** A stop command replaces the pod's last programming sequence. Keep its intent
          *  separate from acceptance of the original bolus, including across restarts.
          *  Null in older state files, where cancellation intent was not saved. */
@@ -422,17 +428,18 @@ class InMemoryO5PodStateManager : O5PodStateManager {
     @Volatile override var activeTempBasalRate: Double? = null
     @Volatile override var activeTempBasalDurationMinutes: Short? = null
     @Volatile override var pendingDoseCommand: O5PodStateManager.PendingDoseCommand? = null
+    @Volatile override var timeChangeInProgress: Boolean = false
 
     override fun increaseMessageSequenceNumber() {
         msgSequenceNumber = ((msgSequenceNumber.toInt() + 1) and 0x0f).toByte()
     }
 
-    override fun updateTimeZone() {
-        val timeZone = TimeZone.getDefault()
-        val now = System.currentTimeMillis()
-        timeZoneOffset = timeZone.getOffset(now)
+    override fun updateTimeZone() = confirmTimeZone(PodTimeZone.now())
+
+    override fun confirmTimeZone(timeZone: PodTimeZone) {
+        timeZoneOffset = timeZone.offset
         timeZoneId = timeZone.id
-        timeZoneUpdated = now
+        timeZoneUpdated = timeZone.updatedAt
     }
 
     @Volatile override var podStatus: PodStatus? = null
@@ -628,6 +635,7 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         timeZoneId = null
         timeZoneOffset = null
         timeZoneUpdated = null
+        timeChangeInProgress = false
         deliverySuspended = false
         lastBolusStartTime = null
         lastBolusRequestedUnits = null

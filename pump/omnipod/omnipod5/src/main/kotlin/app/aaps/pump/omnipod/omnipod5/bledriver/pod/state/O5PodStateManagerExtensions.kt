@@ -90,11 +90,8 @@ val O5PodStateManager.basalDrift: Double
 /**
  * Integrates expected basal delivery (units) over `[startTime, endTime]`, accounting for
  * an active temp basal overriding the scheduled program during its window. Mirrors
- * `OmnipodDashPodStateManagerImpl.integrateExpectedDelivery`, simplified: O5 doesn't track
- * a separate pod-timezone offset the way Dash does (every other O5 basal-rate lookup -
- * see [app.aaps.pump.omnipod.omnipod5.O5PumpPlugin.baseBasalRate] - already calls
- * [BasalProgram.rateAt] directly against device-local time, so this does the same rather
- * than introducing a cross-conversion no other O5 code performs).
+ * `OmnipodDashPodStateManagerImpl.integrateExpectedDelivery`. A known pod offset stays
+ * fixed until a basal program confirms the new time, including during a DST transition.
  */
 fun integrateO5ExpectedDelivery(
     startTime: Long,
@@ -102,7 +99,8 @@ fun integrateO5ExpectedDelivery(
     activeTempBasalStartTime: Long?,
     activeTempBasalRate: Double?,
     activeTempBasalDurationMinutes: Short?,
-    basalProgram: BasalProgram?
+    basalProgram: BasalProgram?,
+    podOffset: Int? = null
 ): Double? {
     if (startTime > endTime) return null
 
@@ -116,8 +114,8 @@ fun integrateO5ExpectedDelivery(
         if (tempBasalEnd in startTime until endTime) boundaries.add(tempBasalEnd)
     }
     basalProgram?.segments?.forEach { segment ->
-        val deviceOffsetMs = TimeZone.getDefault().getOffset(startTime)
-        val dayStartLocal = ((startTime + deviceOffsetMs) / 86400_000L) * 86400_000L - deviceOffsetMs
+        val offset = podOffset ?: TimeZone.getDefault().getOffset(startTime)
+        val dayStartLocal = ((startTime + offset) / 86400_000L) * 86400_000L - offset
         var segmentStart = dayStartLocal + segment.startSlotIndex.toLong() * 30 * 60_000L
         if (segmentStart <= startTime) segmentStart += 86400_000L
         while (segmentStart < endTime) {
@@ -134,7 +132,7 @@ fun integrateO5ExpectedDelivery(
         ) {
             activeTempBasalRate
         } else {
-            basalProgram?.rateAt(segmentMid) ?: return null
+            basalProgram?.rateAt(segmentMid, podOffset) ?: return null
         }
         rate * segmentHours
     }.sum()
@@ -150,7 +148,7 @@ fun O5PodStateManager.nextBasalExpected(previousUpdate: Long?, now: Long): Doubl
     basalExpected?.let { current ->
         previousUpdate?.let { start ->
             integrateO5ExpectedDelivery(
-                start, now, activeTempBasalStartTime, activeTempBasalRate, activeTempBasalDurationMinutes, basalProgram
+                start, now, activeTempBasalStartTime, activeTempBasalRate, activeTempBasalDurationMinutes, basalProgram, timeZoneOffset
             )?.let { delta -> current + delta }
         } ?: current
     } ?: basalDelivered.takeIf { activationProgress == ActivationProgress.COMPLETED }

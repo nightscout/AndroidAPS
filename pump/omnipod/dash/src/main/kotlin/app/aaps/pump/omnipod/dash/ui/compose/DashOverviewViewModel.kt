@@ -269,7 +269,7 @@ class DashOverviewViewModel(
             // Base basal rate
             val basalText = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                 ch.basalRateString(
-                    rate = PumpRate(omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))),
+                    rate = PumpRate(omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis(), podStateManager.timeZoneOffset))),
                     isAbsolute = true
                 )
             } else PLACEHOLDER

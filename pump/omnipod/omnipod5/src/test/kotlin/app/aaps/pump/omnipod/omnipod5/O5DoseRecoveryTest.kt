@@ -1,6 +1,8 @@
 package app.aaps.pump.omnipod.omnipod5
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -21,18 +23,23 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBolusCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramTempBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.StopDeliveryCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.command.SuspendDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
+import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.InMemoryO5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.PersistedO5PodStateManager
+import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.nextBasalExpected
 import app.aaps.pump.omnipod.omnipod5.history.O5History
 import app.aaps.pump.omnipod.omnipod5.history.database.O5HistoryDatabase
 import app.aaps.pump.omnipod.omnipod5.keys.O5StringNonPreferenceKey
@@ -66,6 +73,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -159,6 +167,175 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
         bolusCancelSequenceNumber = if (cancelled) 6 else null,
         bolusCancelHistoryId = if (cancelled) 8L else null
     )
+
+    private fun loopAllowed(): Boolean {
+        var allowed = true
+        val constraint = mock<Constraint<Boolean>>()
+        doAnswer { allowed = it.getArgument(0); constraint }.whenever(constraint).set(any(), anyOrNull(), any())
+        plugin.isLoopInvocationAllowed(constraint)
+        return allowed
+    }
+
+    private suspend fun prepareTimeChange(offsetDifference: Int = 3600000) {
+        state.activationProgress = ActivationProgress.COMPLETED
+        val zone = PodTimeZone.now()
+        state.confirmTimeZone(zone.copy(offset = zone.offset - offsetDifference))
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 1.2)))
+        whenever(sync.expectedPumpState()).thenReturn(PumpSync.PumpState(null, null, null, profile, "12345"))
+    }
+
+    private fun respondToTimeCommands() {
+        var delivery = state.deliveryStatus ?: DeliveryStatus.BASAL_ACTIVE
+        var acceptedSequence = state.sequenceNumberOfLastProgrammingCommand?.toInt() ?: 0
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            Observable.defer {
+                when (command) {
+                    is SuspendDeliveryCommand  -> delivery = DeliveryStatus.SUSPENDED
+                    is ProgramBasalCommand     -> delivery = DeliveryStatus.BASAL_ACTIVE
+                    is ProgramTempBasalCommand -> delivery = DeliveryStatus.TEMP_BASAL_ACTIVE
+                }
+                if (command !is GetStatusCommand) {
+                    acceptedSequence = state.msgSequenceNumber.toInt()
+                    state.increaseMessageSequenceNumber()
+                }
+                val response = status(acceptedSequence, delivery)
+                state.updateFromDefaultStatusResponse(response)
+                Observable.just<PodEvent>(PodEvent.ResponseReceived(command, response))
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [3600000, -3600000])
+    fun `automatic DST correction releases loop after confirmation in both directions`(difference: Int) = runBlocking<Unit> {
+        prepareTimeChange(difference)
+        respondToTimeCommands()
+        assertThat(loopAllowed()).isFalse()
+
+        val result = plugin.executeCustomCommand(CommandHandleTimeChange(false))
+
+        assertThat(result.success).isTrue()
+        assertThat(state.sameTimeZone).isTrue()
+        assertThat(state.timeChangeInProgress).isFalse()
+        assertThat(loopAllowed()).isTrue()
+        verify(ble).sendCommand(argThat { this is ProgramBasalCommand }, any())
+        verify(ble, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = [0.0, 0.7, 1.5, 1.2])
+    fun `a DST correction suspends and loses any active temp basal, like Medtrum accepts`(rate: Double) = runBlocking<Unit> {
+        prepareTimeChange()
+        val start = System.currentTimeMillis() - 60000
+        state.activeTempBasalStartTime = start
+        state.activeTempBasalRate = rate
+        state.activeTempBasalDurationMinutes = 30
+        state.updateFromDefaultStatusResponse(status(0, DeliveryStatus.TEMP_BASAL_ACTIVE))
+        respondToTimeCommands()
+
+        val result = plugin.executeCustomCommand(CommandHandleTimeChange(false))
+
+        assertThat(result.success).isTrue()
+        assertThat(state.activeTempBasalRate).isNull()
+        verify(ble, never()).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
+        assertThat(state.timeChangeInProgress).isFalse()
+    }
+
+    @Test
+    fun `reported suspend stores the same zero and expected basal stays unchanged`() = runBlocking<Unit> {
+        state.activationProgress = ActivationProgress.COMPLETED
+        state.basalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+        state.basalExpected = 2.0
+        respondToTimeCommands()
+
+        val result = plugin.executeCustomCommand(CommandSuspendDelivery())
+
+        assertThat(result.success).isTrue()
+        val start = requireNotNull(state.activeTempBasalStartTime)
+        val duration = requireNotNull(state.activeTempBasalDurationMinutes)
+        assertThat(state.activeTempBasalRate).isEqualTo(0.0)
+        assertThat(state.nextBasalExpected(start, start + 3_600_000L)).isEqualTo(state.basalExpected)
+        verify(sync).syncTemporaryBasalWithPumpId(
+            eq(start), argThat { cU == 0.0 }, eq(duration * 60_000L), eq(true),
+            eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(start), eq(PumpType.OMNIPOD_5), eq("12345")
+        )
+    }
+
+    @Test
+    fun `a denied time update keeps the loop blocked for a retry`() = runBlocking<Unit> {
+        prepareTimeChange()
+        respondToTimeCommands()
+        whenever(ble.sendCommand(argThat { this is ProgramBasalCommand }, any())).thenReturn(Observable.error(IllegalStateException("denied")))
+
+        val result = plugin.executeCustomCommand(CommandHandleTimeChange(false))
+
+        assertThat(result.success).isFalse()
+        assertThat(state.timeChangeInProgress).isTrue()
+        assertThat(loopAllowed()).isFalse()
+        assertThat(state.activeTempBasalRate).isEqualTo(0.0)
+    }
+
+    @Test
+    fun `automatic time update does not resume a user suspended pod`() = runBlocking<Unit> {
+        prepareTimeChange()
+        state.deliverySuspended = true
+        state.updateFromDefaultStatusResponse(status(0, DeliveryStatus.SUSPENDED))
+        respondToTimeCommands()
+
+        plugin.executeCustomCommand(CommandHandleTimeChange(false))
+
+        assertThat(state.deliverySuspended).isTrue()
+        verify(ble, never()).sendCommand(argThat { this is ProgramBasalCommand || this is SuspendDeliveryCommand }, any())
+    }
+
+    @Test
+    fun `automatic time update never interrupts a bolus`() = runBlocking<Unit> {
+        prepareTimeChange()
+        state.updateFromDefaultStatusResponse(status(0, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 10))
+        respondToTimeCommands()
+
+        plugin.executeCustomCommand(CommandHandleTimeChange(false))
+
+        verify(ble, never()).sendCommand(argThat { this is ProgramBasalCommand || this is SuspendDeliveryCommand }, any())
+    }
+
+    @Test
+    fun `DST callback queues correction and polling detects a missed callback after restart`() = runBlocking<Unit> {
+        prepareTimeChange()
+        respondToTimeCommands()
+        whenever(queue.customCommand(any<CommandHandleTimeChange>())).thenAnswer {
+            plugin.executeCustomCommand(it.getArgument(0))
+        }
+
+        plugin.timezoneOrDSTChanged(TimeChangeType.DSTStarted)
+        plugin.checkTimeChange()
+        verify(queue, times(1)).customCommand(any<CommandHandleTimeChange>())
+        state.confirmTimeZone(PodTimeZone.now().let { it.copy(offset = it.offset - 3600000) })
+        plugin = newPlugin()
+        plugin.checkTimeChange()
+        verify(queue, times(2)).customCommand(any<CommandHandleTimeChange>())
+    }
+
+    @Test
+    fun `time correction in-progress flag survives persisted pod restart`() {
+        val storage = mock<Preferences>()
+        var json: String? = null
+        whenever(storage.put(eq(O5StringNonPreferenceKey.PodState), any())).thenAnswer {
+            json = it.getArgument(1)
+            Unit
+        }
+        whenever(storage.getIfExists(O5StringNonPreferenceKey.PodState)).thenAnswer { json }
+        whenever(storage.get(O5StringNonPreferenceKey.PodState)).thenAnswer { json ?: "" }
+        val writer = PersistedO5PodStateManager(aapsLogger, storage)
+        writer.timeChangeInProgress = true
+        val reader = PersistedO5PodStateManager(aapsLogger, storage)
+
+        assertThat(reader.timeChangeInProgress).isTrue()
+        reader.reset()
+        assertThat(PersistedO5PodStateManager(aapsLogger, storage).timeChangeInProgress).isFalse()
+    }
 
     private fun useBolusClock(): TestTimeSource = TestTimeSource().also { clock ->
         plugin.bolusTimeSource = clock

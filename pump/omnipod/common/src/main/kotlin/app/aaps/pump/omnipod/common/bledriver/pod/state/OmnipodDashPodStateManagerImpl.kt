@@ -24,6 +24,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
 import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import com.google.gson.Gson
 import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
@@ -149,6 +150,16 @@ class OmnipodDashPodStateManagerImpl(
 
     override val timeZoneId: String?
         get() = podState.timeZone
+
+    override val timeZoneOffset: Int?
+        get() = podState.timeZoneOffset
+
+    override var timeChangeInProgress: Boolean
+        get() = podState.timeChangeInProgress
+        set(value) {
+            podState.timeChangeInProgress = value
+            store()
+        }
 
     override val sameTimeZone: Boolean
         get() {
@@ -322,10 +333,6 @@ class OmnipodDashPodStateManagerImpl(
             }
         }
 
-        // Offset to convert UTC epoch to pod-local time for rateAt (which uses device timezone internally)
-        val deviceOffsetMs = TimeZone.getDefault().getOffset(startTime)
-        val podTimeAdjustmentMs = timeZoneOffset - deviceOffsetMs
-        
         // Integrate over each segment
         return boundaries.sorted().windowed(2).mapIndexed { index, (boundaryStart, boundaryEnd) ->
             val segmentHours = (boundaryEnd - boundaryStart) / 3600_000.0
@@ -335,7 +342,7 @@ class OmnipodDashPodStateManagerImpl(
             val rate = tempBasal?.let { tb ->
                 val tempBasalEnd = tb.startTime + tb.durationInMinutes * 60_000L
                 tb.rate.takeIf { segmentMid in tb.startTime until tempBasalEnd }
-            } ?: basalProgram?.rateAt(segmentMid + podTimeAdjustmentMs) ?: return null  // Abort if rate unknown
+            } ?: basalProgram?.rateAt(segmentMid, timeZoneOffset) ?: return null  // Abort if rate unknown
             
             val delivery = rate * segmentHours
             
@@ -436,13 +443,18 @@ class OmnipodDashPodStateManagerImpl(
             return podState.timeZoneUpdated
         }
 
-    override fun updateTimeZone() {
-        val timeZone = TimeZone.getDefault()
-        val now = System.currentTimeMillis()
+    override fun updateTimeZone() = confirmTimeZone(PodTimeZone.now())
 
-        podState.timeZoneOffset = timeZone.getOffset(now)
+    override fun confirmTimeZone(timeZone: PodTimeZone) {
+        podState.timeZoneOffset = timeZone.offset
         podState.timeZone = timeZone.id
-        podState.timeZoneUpdated = now
+        podState.timeZoneUpdated = timeZone.updatedAt
+        store()
+    }
+
+    override fun recordBasalProgramTimeZone(timeZone: PodTimeZone) {
+        podState.activeCommand?.basalTimeZone = timeZone
+        store()
     }
 
     override val expiry: ZonedDateTime?
@@ -815,16 +827,7 @@ class OmnipodDashPodStateManagerImpl(
             ).toInt().toShort()
         }
 
-        // Update basal expected delivery
-        podState.basalExpected = podState.basalExpected?.let {
-            integrateExpectedDelivery(
-                startTime = podState.lastUpdatedSystem,
-                endTime = now,
-                timeZoneOffset = podState.timeZoneOffset,
-                tempBasal = tempBasal,
-                basalProgram = basalProgram
-            )?.let { delta -> it + delta }
-        } ?: basalDelivered.takeIf { isActivationCompleted }
+        updateBasalExpected(now)
         
         // Update bolus pulses delivered (exclude basal corrections)
         podState.bolusPulsesDelivered = podState.bolusPulsesDelivered?.let {
@@ -854,6 +857,25 @@ class OmnipodDashPodStateManagerImpl(
         podState.lastUpdatedSystem = now
         podState.lastStatusResponseReceived = nowRealtime
         updateLastBolusFromResponse(bolusPulsesRemaining)
+    }
+
+    @Synchronized
+    override fun updateBasalExpected(now: Long) {
+        val start = podState.basalExpectedUpdatedAt ?: podState.lastUpdatedSystem
+        val end = maxOf(start, now)
+        if (end != now) {
+            logger.warn(LTag.PUMP, "Expected basal already counted to $end; requested update time was $now")
+        }
+        podState.basalExpected = podState.basalExpected?.let {
+            integrateExpectedDelivery(
+                startTime = start,
+                endTime = end,
+                timeZoneOffset = podState.timeZoneOffset,
+                tempBasal = tempBasal,
+                basalProgram = basalProgram
+            )?.let { delta -> it + delta }
+        } ?: basalDelivered.takeIf { isActivationCompleted }
+        podState.basalExpectedUpdatedAt = end
     }
 
     private inline fun logBasalTracking(block: () -> Unit) {
@@ -1031,6 +1053,7 @@ class OmnipodDashPodStateManagerImpl(
         var timeZone: String? = null, // TimeZone ID (e.g. "Europe/Amsterdam")
         var timeZoneOffset: Int? = null,
         var timeZoneUpdated: Long? = null,
+        var timeChangeInProgress: Boolean = false,
         var alarmSynced: Boolean = false,
         var suspendAlertsEnabled: Boolean = false,
 
@@ -1067,6 +1090,7 @@ class OmnipodDashPodStateManagerImpl(
 
         var bolusPulsesDelivered: Short? = null,  // Cumulative count of bolus pulses for basal tracking
         var basalExpected: Double? = null,  // Initialized to actual on first drift calculation
+        var basalExpectedUpdatedAt: Long? = null, // Null in state saved before this field was added
         
         var lastBasalCorrectionTime: Long? = null,  // Timestamp of last basal correction attempt (for cooldown)
         @Transient var basalCorrectionInProgress: Boolean = false  // Transient flag: true while basal correction is delivering

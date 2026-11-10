@@ -10,6 +10,8 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -73,8 +75,11 @@ import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
+import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
+import app.aaps.pump.omnipod.common.util.OmnipodTimeChange
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
@@ -92,6 +97,7 @@ import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -152,7 +158,7 @@ class OmnipodDashPumpPlugin(
         DashStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ),
-    Pump, OmnipodDash, OwnDatabasePlugin {
+    Pump, OmnipodDash, OwnDatabasePlugin, PluginConstraints {
 
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
@@ -161,6 +167,7 @@ class OmnipodDashPumpPlugin(
     private var statusChecker: Runnable
     private var nextPodWarningCheck: Long = 0
     @Volatile var stopConnecting: CountDownLatch? = null
+    private val timeChangeHandler = OmnipodTimeChange()
     private var scope: CoroutineScope? = null
 
     companion object {
@@ -177,6 +184,7 @@ class OmnipodDashPumpPlugin(
         statusChecker = Runnable {
             refreshStatusOnUnacknowledgedCommands()
             updatePodWarnings()
+            scope?.launch { checkTimeChange() }
             aapsLogger.info(LTag.PUMP, "statusChecker")
 
             try {
@@ -512,6 +520,7 @@ class OmnipodDashPumpPlugin(
         handler?.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        newScope.launch { checkTimeChange() }
         merge(
             preferences.observe(OmnipodBooleanPreferenceKey.ExpirationReminder).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.ExpirationReminderHours).drop(1).map {},
@@ -637,7 +646,7 @@ class OmnipodDashPumpPlugin(
     override val baseBasalRate: PumpRate
         get() {
             val date = System.currentTimeMillis()
-            val ret = podStateManager.basalProgram?.rateAt(date) ?: 0.0
+            val ret = podStateManager.basalProgram?.rateAt(date, podStateManager.timeZoneOffset) ?: 0.0
             aapsLogger.info(LTag.PUMP, "baseBasalRate: $ret at $date}")
             return PumpRate(
                 if (podStateManager.alarmType != null) {
@@ -993,6 +1002,12 @@ class OmnipodDashPumpPlugin(
             pumpType = PumpType.OMNIPOD_DASH,
             pumpSerial = serialNumber()
         )
+        if (tbrType == PumpSync.TemporaryBasalType.PUMP_SUSPEND) {
+            podStateManager.updateBasalExpected(historyEntry.createdAt)
+            podStateManager.tempBasal = OmnipodDashPodStateManager.TempBasal(
+                historyEntry.createdAt, absoluteRate, durationInMinutes.toShort()
+            )
+        }
         aapsLogger.debug(LTag.PUMP, "pumpSyncTempBasal: $ret")
         return ret
     }
@@ -1092,7 +1107,14 @@ class OmnipodDashPumpPlugin(
         pumpEnactResultProvider().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support TDD")
 
-    override fun canHandleDST(): Boolean = false
+    override fun canHandleDST(): Boolean = !isInitialized() || podStateManager.timeZoneOffset != null
+
+    override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (isInitialized() && (timeCorrectionNeeded() || timeChangeHandler.isInProgress())) {
+            value.set(false, rh.gs(CommonR.string.omnipod_common_loop_waiting_for_time_update), this)
+        }
+        return value
+    }
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult {
         return when (customCommand) {
             is CommandSilenceAlerts            ->
@@ -1105,7 +1127,7 @@ class OmnipodDashPumpPlugin(
                 deactivatePod()
 
             is CommandHandleTimeChange         ->
-                runBlocking { handleTimeChange() }
+                runBlocking { handleTimeChange(customCommand.requestedByUser) }
 
             is CommandUpdateAlertConfiguration ->
                 updateAlertConfiguration()
@@ -1203,8 +1225,20 @@ class OmnipodDashPumpPlugin(
         return ret
     }
 
-    private suspend fun handleTimeChange(): PumpEnactResult {
+    private suspend fun handleTimeChange(requestedByUser: Boolean): PumpEnactResult {
+        if (!requestedByUser) {
+            getPodStatus().await()
+            if (!timeCorrectionNeeded() || !canCorrectTime()) {
+                aapsLogger.info(LTag.PUMP, "Deferring automatic pod time update")
+                return pumpEnactResultProvider().success(true).enacted(false)
+            }
+        }
         return pumpSync.expectedPumpState().profile?.let {
+            // Persisted before suspending, so a crash mid-correction can still resume it after restart
+            // even though the pod now looks suspended. Any active temp basal is lost here, the same way
+            // the Medtrum driver accepts one may be cancelled by its own time update: the loop sets a
+            // new one next cycle, this driver does not reconstruct the old one.
+            podStateManager.timeChangeInProgress = true
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
         } ?: pumpEnactResultProvider().success(false).enacted(false).comment("No profile active")
     }
@@ -1333,7 +1367,68 @@ class OmnipodDashPumpPlugin(
     }
 
     override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
-        aapsLogger.info(LTag.PUMP, "Ignoring time change because automatic time handling is not implemented. timeChangeType=${timeChangeType.name}")
+        aapsLogger.info(LTag.PUMP, "Checking pod time after ${timeChangeType.name}")
+        checkTimeChange()
+    }
+
+    private fun timeCorrectionNeeded(): Boolean = OmnipodTimeChange.needsCorrection(
+        podStateManager.timeZoneOffset, PodTimeZone.now().offset, podStateManager.timeChangeInProgress
+    )
+
+    private fun canCorrectTime(): Boolean = OmnipodTimeChange.canProgram(
+        isInitialized(),
+        podStateManager.isSuspended,
+        bolusDeliveryInProgress || podStateManager.deliveryStatus?.bolusDeliveringActive() == true ||
+            podStateManager.lastBolus?.deliveryComplete == false,
+        podStateManager.activeCommand != null,
+        podStateManager.timeChangeInProgress
+    )
+
+    @VisibleForTesting
+    internal suspend fun checkTimeChange() {
+        if (!timeCorrectionNeeded()) {
+            // Also covers a manual command having fixed it outside this polling loop.
+            timeChangeHandler.resetFailureAlert()
+            return
+        }
+        if (!canCorrectTime() || omnipodManager.isActivationRunning ||
+            commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class) ||
+            commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class) ||
+            commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class) ||
+            !timeChangeHandler.tryStart(System.nanoTime() / 1000000)
+        ) return
+        try {
+            val result = commandQueue.customCommand(CommandHandleTimeChange(false))
+            if (!result.success) {
+                notifyTimeChangeFailure(result.comment)
+            } else if (!timeCorrectionNeeded()) {
+                timeChangeHandler.resetFailureAlert()
+                notificationManager.dismiss(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED)
+                notificationManager.post(
+                    NotificationId.TIME_OR_TIMEZONE_CHANGE,
+                    TextRef.AndroidRes(CommonR.string.omnipod_common_confirmation_time_on_pod_updated),
+                    validMinutes = 60
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            notifyTimeChangeFailure(e.message)
+        } finally {
+            timeChangeHandler.finish(System.nanoTime() / 1000000)
+        }
+    }
+
+    private fun notifyTimeChangeFailure(reason: String?) {
+        aapsLogger.error(LTag.PUMP, "Automatic Dash time update failed: $reason")
+        // Only the first of a run of retries sounds an alarm; repeated retries every minute would
+        // otherwise alarm continuously while the pod is unreachable.
+        notificationManager.post(
+            NotificationId.PUMP_TIMEZONE_UPDATE_FAILED,
+            TextRef.AndroidRes(CommonR.string.omnipod_common_automatic_time_update_failed),
+            level = NotificationLevel.IMPORTANT,
+            sound = if (timeChangeHandler.shouldSoundOnFailure()) AlarmSound.BOLUS_ERROR else null
+        )
     }
 
     private fun executeProgrammingCommand(
@@ -1382,7 +1477,8 @@ class OmnipodDashPumpPlugin(
         aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation ${historyEntry.commandType}")
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL -> {
-                if (confirmation.success) {
+                // Cancelling a temp basal does not resume delivery; keep the reported zero basal while suspended.
+                if (confirmation.success && !podStateManager.isSuspended) {
                     val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
                         historyEntry.pumpId(),
@@ -1405,6 +1501,7 @@ class OmnipodDashPumpPlugin(
                 // We can't invalidate this command,
                 // and this is why it is pumpSync-ed at this point
                 if (confirmation.success) {
+                    confirmBasalProgramTime(command)
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
                         historyEntry.pumpId(),
@@ -1428,6 +1525,7 @@ class OmnipodDashPumpPlugin(
             OmnipodCommandType.SET_BASAL_PROFILE,
             OmnipodCommandType.SET_TIME               -> {
                 if (confirmation.success) {
+                    confirmBasalProgramTime(command)
                     podStateManager.basalProgram = command.basalProgram
                     if (podStateManager.basalProgram == null) {
                         aapsLogger.warn(LTag.PUMP, "Saving null basal profile")
@@ -1442,6 +1540,8 @@ class OmnipodDashPumpPlugin(
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
+                    // The confirmed basal program resumes delivery, so clear the zero basal kept during suspension.
+                    podStateManager.tempBasal = null
                     notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
                     notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
                     notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
@@ -1481,7 +1581,6 @@ class OmnipodDashPumpPlugin(
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
-                } else {
                     podStateManager.tempBasal = null
                 }
             }
@@ -1555,6 +1654,11 @@ class OmnipodDashPumpPlugin(
                         "success: ${confirmation.success}"
                 )
         }
+    }
+
+    private fun confirmBasalProgramTime(command: OmnipodDashPodStateManager.ActiveCommand) {
+        command.basalTimeZone?.let { podStateManager.confirmTimeZone(it) } ?: podStateManager.updateTimeZone()
+        podStateManager.timeChangeInProgress = false
     }
 
     private fun verifyPumpState(): Completable = rxCompletable(Dispatchers.IO) {
