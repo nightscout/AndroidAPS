@@ -136,6 +136,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Basalrate festlegen</string>
     <string name="omnipod_common_cmd_set_bolus">Mahlzeiten Bolus abgeben</string>
     <string name="omnipod_common_cmd_cancel_bolus">Bolus abbrechen</string>
+    <string name="omnipod_common_cmd_set_tbr">TBR setzen</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">TBR abbrechen</string>
     <string name="omnipod_common_cmd_discard_pod">Pod verwerfen</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod-Status abrufen</string>
     <string name="omnipod_common_cmd_set_time">Zeit einstellen</string>
@@ -144,6 +146,7 @@
     <string name="omnipod_common_cmd_read_pulse_log">Pulse-Log lesen</string>
     <string name="omnipod_common_cmd_suspend_delivery">Abgabe unterbrechen</string>
     <string name="omnipod_common_cmd_resume_delivery">Abgabe fortsetzen</string>
+    <string name="omnipod_common_cmd_cancel_tbr">lösche TBR (durch Anwender)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod-Info abrufen</string>
     <string name="omnipod_common_cmd_split_tbr">TBR aufteilen</string>
     <string name="omnipod_common_cmd_play_test_beep">Testton abspielen</string>
