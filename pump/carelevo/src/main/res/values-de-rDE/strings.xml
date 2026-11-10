@@ -55,7 +55,21 @@
     <string name="carelevo_overview_pump_resume_btn_label">Abgabe fortsetzen</string>
     <string name="patch_prepare_dialog_title_insulin_amount">Füllmenge auswählen.</string>
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Bereich: %1$d ~ %2$d IE</string>
+    <string name="carelevo_insulin_refill_step1">1. Entferne die Schutzfolie auf der Rückseite der Patch-Verpackung.</string>
+    <string name="carelevo_connect_needle_check_title">Nadel einführen</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patchinfo-Alarm</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Benachrichtigungseinstellung - Wenig Insulin</string>
+    <string name="carelevo_title_fill_insulin">Patch mit Insulin füllen</string>
     <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Fülle den Patch mit Insulin (%1$d–%2$d IE) und berücksichtige dabei die Nutzungsdauer (bis zu 168 Stunden). Tippe auf [Füllmenge], um die eingefüllte Insulinmenge anzugeben.</string>
+    <string name="carelevo_patch_step_1">Schritt 1.</string>
+    <string name="carelevo_patch_step_2">Schritt 2.</string>
+    <string name="carelevo_patch_step_3">Schritt 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Nadelkappe entfernen</string>
+    <string name="carelevo_patch_connect_step_1_desc">Patch aus der Verpackung nehmen und die Nadelkappe entfernen.</string>
+    <string name="carelevo_patch_connect_step_2_title">Einschalten und Verbinden</string>
+    <string name="carelevo_patch_connect_step_2_desc">Halten Sie die Ein-/Aus-Taste länger als 1 Sekunde gedrückt. Tippen Sie nach dem Signalton auf die unten angezeigte Schaltfläche [Search Patch].</string>
+    <string name="carelevo_patch_safety_check_start_title">Sicherheitsprüfung</string>
+    <string name="carelevo_patch_safety_check_end_title">Sicherheitsprüfung abgeschlossen</string>
     <string name="carelevo_patch_attach_step4_desc">Tippe nach dem Anbringen des Patches auf „Weiter“.</string>
     <!-- Connection -->
     <!-- Profile -->
