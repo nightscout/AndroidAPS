@@ -375,6 +375,10 @@ fun epsY(percentage: Int, axisMin: Double, axisMax: Double): Double {
  * Use this when you have data that might extend beyond the visible time range
  * and you want to exclude out-of-range points from rendering.
  *
+ * A point whose y is NaN or infinite is dropped too: Vico cannot draw it and crashes (#5525).
+ * [app.aaps.ui.compose.overview.OverviewDataCacheImpl] already removes and reports such values, so
+ * this is only the last check.
+ *
  * @param dataPoints List of (x, y) coordinate pairs
  * @param minX Minimum X value for the graph range
  * @param maxX Maximum X value for the graph range
@@ -386,7 +390,7 @@ fun filterToRange(
     maxX: Double
 ): List<Pair<Double, Double>> {
     return dataPoints
-        .filter { (x, _) -> x in minX..maxX }
+        .filter { (x, y) -> x in minX..maxX && y.isFinite() }
         .sortedBy { (x, _) -> x }  // CRITICAL: Sort by x-value for Vico
 }
 
