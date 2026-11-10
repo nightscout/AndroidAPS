@@ -192,7 +192,8 @@ class DanaRKoreanPlugin(
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-        if (detailedBolusInfo.insulin > 0)
+        // Only what the pump gave. A bolus it never gave was stored as a 0 U record, as the plain DanaR does not.
+        if (delivered.cU > 0)
             pumpSync.syncBolusWithPumpId(
                 dateUtil.now(),
                 delivered,

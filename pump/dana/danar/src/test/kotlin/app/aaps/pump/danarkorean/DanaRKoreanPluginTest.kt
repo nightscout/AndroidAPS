@@ -30,9 +30,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -133,5 +135,27 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
+    }
+
+    /** A start the pump never answered gave nothing: no record. It was stored as a 0 U bolus. */
+    @Test
+    fun aBolusThePumpDidNotGiveIsNotRecorded() {
+        whenever(rh.gs(eq(app.aaps.pump.dana.R.string.boluserrorcode), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("bolus error")
+        bindBolusService(connectionOk = false, delivered = 0.0)
+
+        runBlocking<Unit> {
+            danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 })
+            verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
+        }
+    }
+
+    @Test
+    fun aGivenBolusIsRecordedWithWhatThePumpGave() {
+        bindBolusService(connectionOk = true, delivered = 1.0)
+
+        runBlocking<Unit> {
+            danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 })
+            verify(pumpSync).syncBolusWithPumpId(any(), argThat<PumpInsulin> { cU == 1.0 }, anyOrNull(), any(), eq(PumpType.DANA_R_KOREAN), any())
+        }
     }
 }
