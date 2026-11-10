@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.ECarbs
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -682,12 +683,17 @@ class MasterActionExecutorImpl(
             // can still apply when the bolus was queued but later failed on the pump (the alarm is the mitigation).
             var accepted = true
             val wrapped: (MasterActionExecutor.Failure) -> Unit = { accepted = false; onError(it) }
+            // eCarbs split (e.g. a CARBS-mode QuickWizard entry with eCarbs configured), like the wizard's below
+            val eCarbs = if (p.eCarbsGrams > 0)
+                ECarbs(p.eCarbsGrams, dateUtil.now() + T.mins(p.eCarbsDelayMinutes.toLong()).msecs(), p.eCarbsDurationHours, p.eCarbsDelayMinutes)
+            else null
+            val eCarbsWithBolus = eCarbsWithBolus(p.insulin, eCarbs)
             when {
                 p.recordOnly                     -> {
                     // Record-only (a pen bolus, or a master that can't deliver): persist insulin AND carbs as given,
                     // NOT capped, optionally back-dated. deliver() (not deliverInsulin) so a Treatment record keeps its carbs.
                     val carbsTime = if (p.carbs > 0) dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs() else null
-                    deliver(
+                    executeTreatment(
                         p.insulin,
                         p.carbs,
                         carbsTime = carbsTime,
@@ -700,7 +706,8 @@ class MasterActionExecutorImpl(
                         recordOnly = true,
                         iCfg = p.iCfg,
                         timestamp = p.bolusTimestamp,
-                        onSuccess = fixedOnSuccess
+                        onSuccess = fixedOnSuccess,
+                        eCarbs = eCarbsWithBolus
                     )
                 }
 
@@ -715,18 +722,15 @@ class MasterActionExecutorImpl(
                     // Insulin (± carbs): deliver the parked amounts as-is. carbsTime = now + offset; carbsDuration in hours.
                     // With no insulin and no carbs this is a no-op, and onSuccess is not called (see confirm's contract).
                     val carbsTime = if (p.carbs > 0) dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs() else null
-                    deliver(
+                    executeTreatment(
                         p.insulin, p.carbs, carbsTime = carbsTime, carbsDuration = p.carbsDurationHours, bolusCalculatorResult = p.bcr, notes = notes, source = source,
-                        onError = wrapped, eventType = p.eventType, onSuccess = fixedOnSuccess
+                        onError = wrapped, eventType = p.eventType, recordOnly = false, iCfg = null, timestamp = null, onSuccess = fixedOnSuccess, eCarbs = eCarbsWithBolus
                     )
                 }
             }
-            // eCarbs split (e.g. a CARBS-mode QuickWizard entry with eCarbs configured): the immediate carbs are
-            // delivered above; the extended portion is scheduled here, mirroring the wizard path's carbs2 delivery.
-            if (p.eCarbsGrams > 0) {
-                val eCarbsTime = dateUtil.now() + T.mins(p.eCarbsDelayMinutes.toLong()).msecs()
-                deliverECarbs(p.eCarbsGrams, eCarbsTime, p.eCarbsDurationHours, p.eCarbsDelayMinutes, notes, source, wrapped)
-            }
+            // Without insulin there is no bolus to wait for: the eCarbs are stored at once, as the carbs above
+            if (eCarbs != null && eCarbsWithBolus == null)
+                deliverECarbs(eCarbs.grams, eCarbs.timestamp, eCarbs.durationHours, eCarbs.delayMinutes, notes, source, wrapped)
             if (tt != null && !raising && accepted) applyTempTarget(tt, source)
             // Insulin activation re-applies the active profile with the new insulin — run BEFORE any explicit PS
             // (insulin set first), independent of any dose (an InsulinActivate-only batch no-ops the deliver(0,0)).
@@ -788,8 +792,8 @@ class MasterActionExecutorImpl(
                 duration = qwe.duration()
             }
         } else if (p.eCarbsGrams > 0) {
-            // Manual wizard from a client (no QuickWizardEntry): the eCarbs split travels in PendingBolus so the
-            // extended-carbs portion is still scheduled on the master — matching the phone's executeNormal.
+            // Manual wizard, from this phone or a client (no QuickWizardEntry): the eCarbs split travels in
+            // PendingBolus, so the extended-carbs portion is stored on the master.
             eCarbsDelay = p.eCarbsDelayMinutes
             eventTime += (eCarbsDelay * 60000)
             carbs2 = p.eCarbsGrams
@@ -797,7 +801,7 @@ class MasterActionExecutorImpl(
         }
         // Super-bolus (a quick-wizard with useSuperBolus): write the SUPER_BOLUS mode change before the
         // bolus, driven off the CONSUMED entry — never the shared `pending` slot, which a stale unconfirmed
-        // wear prepare could leak into an unrelated bolus. Mirrors the phone's executeNormal.
+        // wear prepare could leak into an unrelated bolus.
         if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS) {
             profileFunction.getProfile()?.let { profile ->
                 if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
@@ -826,11 +830,15 @@ class MasterActionExecutorImpl(
         // The "time to eat" timer counts from the end of the bolus, as it did in 3.x: with a slow pump the
         // delivery takes minutes. It is not started when the bolus fails; it is when the user stopped the bolus,
         // because part of the insulin is in and the carbs are recorded.
+        val eCarbs = if (carbs2 > 0) ECarbs(carbs2, eventTime, duration, eCarbsDelay) else null
+        val eCarbsWithBolus = eCarbsWithBolus(correctedInsulin, eCarbs)
         executeWizardBolus(
             correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError,
-            withEatReminder(useAlarm && p.carbs > 0, carbTimeOffset.toInt(), onSuccess)
+            withEatReminder(useAlarm && p.carbs > 0, carbTimeOffset.toInt(), onSuccess),
+            eCarbs = eCarbsWithBolus
         )
-        if (carbs2 > 0) deliverECarbs(carbs2, eventTime, duration, eCarbsDelay, notes, source, onError)
+        // Without insulin there is no bolus to wait for: the eCarbs are stored at once, as the carbs are
+        if (eCarbs != null && eCarbsWithBolus == null) deliverECarbs(carbs2, eventTime, duration, eCarbsDelay, notes, source, onError)
         p.entry?.markAsUsed()
         return MasterActionExecutor.ConfirmResult.Delivered
     }
@@ -1298,17 +1306,6 @@ class MasterActionExecutorImpl(
         persistenceLayer.insertOrUpdateTherapyEvent(therapyEvent = updated)
     }
 
-    override suspend fun deliverWizardBolus(
-        insulin: Double,
-        carbs: Int,
-        carbTimeMinutes: Int,
-        mgdlGlucose: Double?,
-        bolusCalculatorResult: BCR?,
-        notes: String?,
-        source: Sources,
-        onError: (MasterActionExecutor.Failure) -> Unit
-    ) = executeWizardBolus(insulin, carbs, carbTimeMinutes, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
-
     /**
      * [onSuccess], which first starts the "time to eat" timer when [start] is true and the carbs are
      * [carbTimeMinutes] in the future. The success callback runs after the pump finished the bolus.
@@ -1321,7 +1318,11 @@ class MasterActionExecutorImpl(
             }
         } else onSuccess
 
-    /** [deliverWizardBolus] with an [onSuccess], for [confirm]'s caller. */
+    /**
+     * The canonical wizard / quick-wizard bolus of [confirm]: the `BOLUS_WIZARD` end state from the wizard
+     * inputs, so phone, watch and client record it the same way, only [source] differs. [eCarbs] go with the
+     * bolus, see [eCarbsWithBolus].
+     */
     private suspend fun executeWizardBolus(
         insulin: Double,
         carbs: Int,
@@ -1331,11 +1332,9 @@ class MasterActionExecutorImpl(
         notes: String?,
         source: Sources,
         onError: (MasterActionExecutor.Failure) -> Unit,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
+        eCarbs: ECarbs? = null
     ) {
-        // Type-specific entry point: build the canonical BOLUS_WIZARD end state from the wizard inputs,
-        // then funnel into the shared core. Phone (WizardDialog) and watch (QuickWizard) differ only in
-        // [source] — the recorded treatment is identical.
         val detailedBolusInfo = DetailedBolusInfo().apply {
             eventType = TE.Type.BOLUS_WIZARD
             this.insulin = insulin
@@ -1345,6 +1344,7 @@ class MasterActionExecutorImpl(
             carbsTimestamp = dateUtil.now() + T.mins(carbTimeMinutes.toLong()).msecs()
             this.notes = notes
             bolusCalculatorResult?.let { this.bolusCalculatorResult = it }
+            this.eCarbs = eCarbs
         }
         if (insulin > 0 || carbs != 0) {
             val action = when {
@@ -1480,6 +1480,24 @@ class MasterActionExecutorImpl(
         iCfg: ICfg?,
         timestamp: Long?,
         onSuccess: () -> Unit
+    ) = executeTreatment(amount, carbs, carbsTime, carbsDuration, bolusCalculatorResult, notes, source, onError, eventType, recordOnly, iCfg, timestamp, onSuccess, eCarbs = null)
+
+    /** [deliver], with the [eCarbs] of the same meal for [confirm]'s FIXED entries, see [eCarbsWithBolus]. */
+    private suspend fun executeTreatment(
+        amount: Double,
+        carbs: Int,
+        carbsTime: Long?,
+        carbsDuration: Int,
+        bolusCalculatorResult: BCR?,
+        notes: String?,
+        source: Sources,
+        onError: (MasterActionExecutor.Failure) -> Unit,
+        eventType: TE.Type?,
+        recordOnly: Boolean,
+        iCfg: ICfg?,
+        timestamp: Long?,
+        onSuccess: () -> Unit,
+        eCarbs: ECarbs?
     ) {
         val detailedBolusInfo = DetailedBolusInfo().apply {
             eventType?.let { this.eventType = it }
@@ -1490,6 +1508,7 @@ class MasterActionExecutorImpl(
             this.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
             this.notes = notes
             timestamp?.let { this.timestamp = it }
+            this.eCarbs = eCarbs
         }
         if (amount > 0 || carbs != 0) {
             val action = when {
@@ -1540,6 +1559,9 @@ class MasterActionExecutorImpl(
                 }
                 if (detailedBolusInfo.carbs != 0.0)
                     persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs(), action = action, source = source, note = recordNote)
+                detailedBolusInfo.eCarbs?.let { eCarbs ->
+                    persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createECarbs(), action = eCarbsAction(eCarbs.durationHours), source = source, note = recordNote)
+                }
                 onSuccess()
             }
             bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
@@ -1552,6 +1574,8 @@ class MasterActionExecutorImpl(
             }
         }
         uel.log(action = action, source = source, note = note, listValues = uelValues)
+        // The eCarbs that ride this bolus get their own line, the same one deliverECarbs writes
+        detailedBolusInfo.eCarbs?.let { uel.log(action = eCarbsAction(it.durationHours), source = source, note = detailedBolusInfo.notes, listValues = eCarbsUelValues(it)) }
         appScope.launch {
             val result = commandQueue.bolus(detailedBolusInfo)
             if (!result.success && !bolusProgressData.isStopPressed) {
@@ -1617,14 +1641,24 @@ class MasterActionExecutorImpl(
             this.notes = notes
         }
         if (carbs != 0) {
-            val action = if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS
-            val uelValues = listOfNotNull(
-                ValueWithUnit.Timestamp(carbsTime),
-                ValueWithUnit.Gram(carbs),
-                ValueWithUnit.Minute(delayMinutes).takeIf { delayMinutes != 0 },
-                ValueWithUnit.Hour(duration).takeIf { duration != 0 }
-            )
-            executeBolus(detailedBolusInfo, action, uelValues, note = notes, bolusCalculatorResult = null, source, onError, onSuccess)
+            val uelValues = eCarbsUelValues(ECarbs(grams = carbs, timestamp = carbsTime, durationHours = duration, delayMinutes = delayMinutes))
+            executeBolus(detailedBolusInfo, eCarbsAction(duration), uelValues, note = notes, bolusCalculatorResult = null, source, onError, onSuccess)
         }
     }
+
+    private fun eCarbsAction(durationHours: Int): Action = if (durationHours == 0) Action.CARBS else Action.EXTENDED_CARBS
+
+    private fun eCarbsUelValues(eCarbs: ECarbs): List<ValueWithUnit> = listOfNotNull(
+        ValueWithUnit.Timestamp(eCarbs.timestamp),
+        ValueWithUnit.Gram(eCarbs.grams),
+        ValueWithUnit.Minute(eCarbs.delayMinutes).takeIf { eCarbs.delayMinutes != 0 },
+        ValueWithUnit.Hour(eCarbs.durationHours).takeIf { eCarbs.durationHours != 0 }
+    )
+
+    /**
+     * The eCarbs of an entry with [insulin], or null. With insulin the pump decides, so the eCarbs go with the
+     * bolus: the queue stores them together with its carbs, only after the bolus succeeded (#5491). Without
+     * insulin nothing waits for a pump, so the caller stores them at once with [deliverECarbs], as the carbs are.
+     */
+    private fun eCarbsWithBolus(insulin: Double, eCarbs: ECarbs?): ECarbs? = eCarbs.takeIf { insulin > 0 }
 }

@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.ECarbs
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.Command
@@ -73,10 +74,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Focused tests for the canonical [MasterActionExecutorImpl.deliverWizardBolus] entry point — the shared
- * end state that the phone wizard dialog and the watch quick-wizard both funnel into. Asserts the
- * recorded [DetailedBolusInfo] fields, the user-entry log values, and that the BCR is persisted exactly
- * once. `appScope` is `Unconfined` so the bolus coroutine runs synchronously within the call.
+ * Tests for [MasterActionExecutorImpl]: prepare and confirm of every entry (wizard, quick-wizard, batch), the
+ * recorded [DetailedBolusInfo] fields, the user-entry log values, and that the BCR is persisted exactly once.
+ * `appScope` is `Unconfined` so the bolus coroutine runs synchronously within the call.
  */
 class MasterActionExecutorImplTest : TestBaseWithProfile() {
 
@@ -114,23 +114,18 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun deliverWizardBolus_recordsCanonicalBolusWizardAndPersistsBcrOnce() = runTest {
-        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+    fun confirm_wizard_recordsCanonicalBolusWizardAndPersistsBcrOnce() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val bcr = mock<BCR>()
+        whenever(bcr.glucoseValue).thenReturn(120.0)
         val executor = create()
+        val prepared = preparedManualWizard(
+            calculated = 2.0, afterConstraints = 2.0, carbs = 30, executor = executor, carbTime = 20, notes = "lunch", bcr = bcr
+        ) as MasterActionExecutor.PrepareResult.Preview
 
         val before = dateUtil.now()
-        executor.deliverWizardBolus(
-            insulin = 2.0,
-            carbs = 30,
-            carbTimeMinutes = 20,
-            mgdlGlucose = 120.0,
-            bolusCalculatorResult = bcr,
-            notes = "lunch",
-            source = Sources.WizardDialog,
-            onError = { }
-        )
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
         val after = dateUtil.now()
 
         val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
@@ -161,21 +156,13 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun deliverWizardBolus_bolusOnly_omitsGlucoseAndDoesNotPersistNullBcr() = runTest {
-        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+    fun confirm_wizardBolusOnly_logsABolus() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
+        val prepared = preparedManualWizard(calculated = 1.0, afterConstraints = 1.0, carbs = 0, executor = executor) as MasterActionExecutor.PrepareResult.Preview
 
-        executor.deliverWizardBolus(
-            insulin = 1.0,
-            carbs = 0,
-            carbTimeMinutes = 0,
-            mgdlGlucose = null,
-            bolusCalculatorResult = null,
-            notes = null,
-            source = Sources.QuickWizard,
-            onError = { }
-        )
+        executor.confirm(prepared.bolusId, Sources.QuickWizard, { })
 
         val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
         verify(commandQueue).bolus(dbiCaptor.capture())
@@ -183,9 +170,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         assertThat(dbi.eventType).isEqualTo(TE.Type.BOLUS_WIZARD)
         assertThat(dbi.insulin).isEqualTo(1.0)
         assertThat(dbi.carbs).isEqualTo(0.0)
-        // mgdlGlucose null → glucoseType is left untouched (not forced to MANUAL)
-        assertThat(dbi.mgdlGlucose).isNull()
-        assertThat(dbi.glucoseType).isNull()
+        assertThat(dbi.eCarbs).isNull()
 
         val uelValues = argumentCaptor<List<ValueWithUnit>>()
         verify(uel).log(eq(Action.BOLUS), eq(Sources.QuickWizard), anyOrNull(), uelValues.capture())
@@ -193,8 +178,116 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
             ValueWithUnit.TEType(TE.Type.BOLUS_WIZARD),
             ValueWithUnit.Insulin(1.0)
         ).inOrder()
+    }
 
-        verify(persistenceLayer, never()).insertOrUpdateBolusCalculatorResult(any())
+    // ---- eCarbs are stored exactly when the carbs of the same meal are (#5491) ----
+
+    /** With insulin the pump decides: the eCarbs go with the bolus, one queue call, and the queue stores them after it. */
+    @Test
+    fun confirm_wizardWithECarbs_sendsThemWithTheBolus() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        val executor = create()
+        val prepared = preparedManualWizard(
+            calculated = 2.0, afterConstraints = 2.0, carbs = 80, executor = executor, notes = "pizza",
+            eCarbsGrams = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3
+        ) as MasterActionExecutor.PrepareResult.Preview
+
+        val now = dateUtil.now()
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue, times(1)).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.carbs).isEqualTo(80.0)
+        assertThat(dbiCaptor.firstValue.eCarbs).isEqualTo(ECarbs(grams = 35, timestamp = now + T.mins(60).msecs(), durationHours = 3, delayMinutes = 60))
+        // Still the same line in the user entry log
+        verify(uel).log(
+            eq(Action.EXTENDED_CARBS), eq(Sources.WizardDialog), eq("pizza"),
+            eq(listOf(ValueWithUnit.Timestamp(now + T.mins(60).msecs()), ValueWithUnit.Gram(35), ValueWithUnit.Minute(60), ValueWithUnit.Hour(3)))
+        )
+    }
+
+    /** A bolus the running mode refuses stores no carbs, so it must not leave its eCarbs either. */
+    @Test
+    fun confirm_wizardWithECarbs_bolusRefused_noECarbs() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        val executor = create()
+        val prepared = preparedManualWizard(
+            calculated = 2.0, afterConstraints = 2.0, carbs = 80, executor = executor,
+            eCarbsGrams = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3
+        ) as MasterActionExecutor.PrepareResult.Preview
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn("suspended")
+        var error: MasterActionExecutor.Failure? = null
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { error = it })
+
+        assertThat(error).isNotNull()
+        verify(commandQueue, never()).bolus(anyOrNull())
+        verify(uel, never()).log(eq(Action.EXTENDED_CARBS), any(), anyOrNull(), any<List<ValueWithUnit>>())
+    }
+
+    /** Without insulin nothing waits for a pump: the carbs and the eCarbs are both stored at once, as before. */
+    @Test
+    fun confirm_wizardCarbsOnlyWithECarbs_storesThemAtOnce() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        val executor = create()
+        val prepared = preparedManualWizard(
+            calculated = 0.0, afterConstraints = 0.0, carbs = 80, executor = executor,
+            eCarbsGrams = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3
+        ) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue, times(2)).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.carbs).isEqualTo(80.0)
+        assertThat(dbiCaptor.firstValue.eCarbs).isNull()
+        assertThat(dbiCaptor.secondValue.insulin).isEqualTo(0.0)
+        assertThat(dbiCaptor.secondValue.carbs).isEqualTo(35.0)
+        assertThat(dbiCaptor.secondValue.carbsDuration).isEqualTo(T.hours(3).msecs())
+    }
+
+    /** A FIXED entry with insulin (Treatment dialog, or a QuickWizard batch) sends its eCarbs with the bolus too. */
+    @Test
+    fun confirm_fixedBolusWithECarbs_sendsThemWithTheBolus() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val bolus = BatchAction.Bolus(
+            insulin = 1.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null,
+            eCarbsGrams = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3
+        )
+        val prepared = executor.prepareBatch(listOf(bolus)) as MasterActionExecutor.PrepareResult.Preview
+
+        val now = dateUtil.now()
+        executor.confirm(prepared.bolusId, Sources.QuickWizard, { })
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue, times(1)).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.insulin).isEqualTo(1.0)
+        assertThat(dbiCaptor.firstValue.eCarbs).isEqualTo(ECarbs(grams = 35, timestamp = now + T.mins(60).msecs(), durationHours = 3, delayMinutes = 60))
+    }
+
+    /** A FIXED carbs-only entry has no bolus to wait for: its eCarbs are stored at once, beside the carbs. */
+    @Test
+    fun confirm_fixedCarbsOnlyWithECarbs_storesThemAtOnce() = runTest {
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val carbs = BatchAction.Bolus(
+            insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null,
+            eCarbsGrams = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3
+        )
+        val prepared = executor.prepareBatch(listOf(carbs)) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.CarbDialog, { })
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue, times(2)).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.allValues.map { it.carbs }).containsExactly(20.0, 35.0).inOrder()
+        assertThat(dbiCaptor.allValues.map { it.eCarbs }).containsExactly(null, null)
     }
 
     @Test
@@ -518,7 +611,12 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         carbs: Int = 20,
         executor: MasterActionExecutorImpl = create(),
         carbTime: Int = 0,
-        alarm: Boolean = false
+        alarm: Boolean = false,
+        notes: String = "",
+        bcr: BCR = mock(),
+        eCarbsGrams: Int = 0,
+        eCarbsDelayMinutes: Int = 0,
+        eCarbsDurationHours: Int = 0
     ): MasterActionExecutor.PrepareResult {
         whenever(config.appInitialized).thenReturn(true)
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
@@ -542,7 +640,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         // Read before the stubbing: dateUtil is a mock too, and a mock call inside thenReturn breaks the stubbing.
         val now = dateUtil.now()
         whenever(bw.timeStamp).thenReturn(now)
-        whenever(bw.createBolusCalculatorResult()).thenReturn(mock<BCR>())
+        whenever(bw.createBolusCalculatorResult()).thenReturn(bcr)
         whenever(bw.buildWizardDetail()).thenReturn(
             EventData.WizardDetail(
                 totalInsulin = calculated, carbs = carbs, insulinFromBG = 0.0, insulinFromTrend = 0.0, insulinFromCOB = 0.0, insulinFromCarbs = calculated,
@@ -552,7 +650,8 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         )
         val inputs = MasterActionExecutor.WizardInputs(
             bg = 0.0, carbs = carbs, percentage = 100, directCorrection = 0.0, carbTime = carbTime, useBg = false, useCob = false, useIob = false,
-            useTt = false, useTrend = false, alarm = alarm, notes = ""
+            useTt = false, useTrend = false, alarm = alarm, notes = notes,
+            eCarbsGrams = eCarbsGrams, eCarbsDelayMinutes = eCarbsDelayMinutes, eCarbsDurationHours = eCarbsDurationHours
         )
         return executor.prepareWizard(inputs)
     }
@@ -1648,10 +1747,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false))
         val executor = create()
 
-        executor.deliverWizardBolus(
-            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
-            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { }
-        )
+        executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { })
 
         // The async delivery failure raises the single URGENT alarm from the executor (not the now-gone dialog).
         verify(notificationManager).post(
@@ -1667,10 +1763,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         whenever(bolusProgressData.isStopPressed).thenReturn(true)
         val executor = create()
 
-        executor.deliverWizardBolus(
-            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
-            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { }
-        )
+        executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { })
 
         // A user-initiated cancel is not a failure: no URGENT alarm even though the command result is unsuccessful.
         verify(notificationManager, never()).post(
@@ -1690,10 +1783,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("import"))
         val executor = create()
 
-        executor.deliverWizardBolus(
-            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
-            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { }
-        )
+        executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { })
 
         verify(notificationManager, never()).post(
             eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
@@ -1719,10 +1809,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         val executor = create()
 
         var failure: MasterActionExecutor.Failure? = null
-        executor.deliverWizardBolus(
-            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
-            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { failure = it }
-        )
+        executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { failure = it })
 
         assertThat(failure).isNotNull()
         assertThat(failure!!.cancelled).isTrue()
@@ -1736,10 +1823,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         val executor = create()
 
         var failure: MasterActionExecutor.Failure? = null
-        executor.deliverWizardBolus(
-            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
-            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { failure = it }
-        )
+        executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { failure = it })
 
         assertThat(failure).isNotNull()
         assertThat(failure!!.cancelled).isFalse()

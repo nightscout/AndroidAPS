@@ -92,7 +92,7 @@ Constraint filtering: `allowedNextModes()` further removes OPEN/CLOSED/LGS modes
 | `CLOSED_LOOP`       | RunningMode UI, SMS, Wear                                      | —                                                                        |
 | `CLOSED_LOOP_LGS`   | RunningMode UI, SMS                                            | `runningModePreCheck`: from `CLOSED_LOOP` if `lgsModeForced=true`        |
 | `DISABLED_LOOP`     | RunningMode UI, SMS                                            | `runningModePreCheck`: from any working mode if `!loopInvocationAllowed` |
-| `SUPER_BOLUS`       | `BolusWizard.executeNormal` when `useSuperBolus=true`          | —                                                                        |
+| `SUPER_BOLUS`       | `MasterActionExecutorImpl.confirm`, QuickWizard with super bolus | —                                                                        |
 | `DISCONNECTED_PUMP` | RunningMode UI, SMS, Wear, Garmin                              | —                                                                        |
 | `SUSPENDED_BY_PUMP` | —                                                              | `runningModePreCheck`: when `pump.isSuspended()=true` (config.APS only)  |
 | `SUSPENDED_BY_USER` | RunningMode UI, SMS, Wear                                      | —                                                                        |
@@ -164,10 +164,10 @@ Per-dialog presentation:
   uses `runningModeGuard.checkWithSnackbar(BOLUS)` as defense-in-depth.
 - `TreatmentDialog` — no override switch. `WarningBanner` at top of dialog when forced;
   confirmation message lists "Bolus will be recorded only". Submit auto-routes to record-only.
-- `WizardDialog` / `BolusWizard.executeNormal`/`executeBolusAdvisor` — same banner + confirmation
-  line; the execute methods take `forcedRecordOnly: Boolean` and bypass `commandQueue.bolus`,
-  writing directly via `persistenceLayer.insertOrUpdateBolus`/`insertOrUpdateCarbs`. The mode
-  snackbar guard is suppressed when `forcedRecordOnly = true` (the user already saw the banner).
+- `WizardDialog` — same banner + confirmation line. A forced record-only entry goes to
+  `BolusWizard.executeRecordOnly`, which bypasses `commandQueue.bolus` and writes directly via
+  `persistenceLayer.insertOrUpdateBolus`/`insertOrUpdateCarbs`, with no mode snackbar (the user
+  already saw the banner). A delivered entry goes to the master's `MasterActionExecutor.confirm`.
 
 ² `ManageViewModel.kt:98–127` — hides EB/TBR if `!capable || !init || pump.isSuspended() ||
    isDisconnected || AAPSCLIENT` (+ `pump.isFakingTempsByExtendedBoluses` for EB only).
