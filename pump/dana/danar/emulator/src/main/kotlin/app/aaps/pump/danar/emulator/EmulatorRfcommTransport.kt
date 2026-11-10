@@ -46,6 +46,13 @@ class EmulatorRfcommTransport(
 
     @Volatile private var socket: EmulatorRfcommSocket? = null
     @Volatile private var outOfRange = false
+
+    /**
+     * Connect tries that fail after a broken link. Seen on a real DanaRv2 (2026-11-10, the phone's Bluetooth off for 8 s
+     * during a bolus): page timeouts for about 1.5 min, and the third try of a later read got a link. UNVERIFIED which
+     * side kept the link from coming back.
+     */
+    @Volatile private var failingConnects = 0
     private val commands = AtomicInteger()
     private val lostCommands = mutableListOf<EmulatedCommand>()
     private val lostAnswers = mutableListOf<EmulatedCommand>()
@@ -74,6 +81,7 @@ class EmulatorRfcommTransport(
 
     override fun breakLink(): Boolean {
         socket?.close() ?: return false
+        failingConnects = CONNECTS_FAILING_AFTER_BREAK
         return true
     }
 
@@ -103,6 +111,8 @@ class EmulatorRfcommTransport(
     }
 
     override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
+
+    override fun suspendOnPump(suspended: Boolean): Boolean = emulator.suspendOnPump(suspended)
 
     override fun state(): EmulatedPumpState = synchronized(emulator.state) {
         val state = emulator.state
@@ -152,42 +162,45 @@ class EmulatorRfcommTransport(
         override val outputStream: OutputStream = EmulatorOutputStream()
         override val isConnected: Boolean get() = connected
 
+        /**
+         * Puts a whole packet in the input stream. The bolus thread sends its messages while the answer to a command is
+         * being put there: byte by byte without a lock, the two mixed, and the driver dropped the link ("wrong packet").
+         */
+        private fun send(packet: ByteArray) = synchronized(responseQueue) {
+            for (byte in packet) responseQueue.put(byte)
+        }
+
         override fun connect() {
             // Simulate BT 2.0 connection time (~2 seconds for pairing + RFCOMM channel setup)
             pause(CONNECT_MS)
             if (outOfRange) throw IOException("Emulator: the pump is out of range")
+            if (failingConnects > 0) {
+                failingConnects--
+                throw IOException("Emulator: page timeout after a broken link")
+            }
             connected = true
             // Wire up callback for multi-packet responses (e.g., history events)
             emulator.onAdditionalResponse = { command, data ->
                 if (connected) {
-                    val packet = buildResponsePacket(command, data)
-                    for (byte in packet) responseQueue.put(byte)
+                    send(buildResponsePacket(command, data))
                 }
             }
             aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: socket connected, sending init sequence for ${emulator.state.variant}")
 
             // DanaR handshake is pump-initiated: the pump sends init messages after connection.
             // The sequence differs by variant:
-            //   Korean: 0x0301 → 0x0303 → 0x0302 (finishHandshaking in 0x0302)
+            //   Korean: 0x0301 → 0x0302 → 0x0303 (finishHandshaking in 0x0303), seen on a real one (2026-11-10)
             //   DanaR/v2: 0x0301 → 0x0302 → 0x0303 → 0x0304 (finishHandshaking in 0x0304)
             Thread {
                 pause(INIT_MS) // pump needs time to prepare init data after connection
                 sendInitMessage(0x0301, emulator.processCommand(0x0301, ByteArray(0)))
                 pause(INIT_STEP_MS)
-                when (emulator.state.variant) {
-                    DanaRVariant.DANA_R_KOREAN -> {
-                        sendInitMessage(0x0303, emulator.processCommand(0x0303, ByteArray(0)))
-                        pause(INIT_STEP_MS)
-                        sendInitMessage(0x0302, emulator.processCommand(0x0302, ByteArray(0)))
-                    }
-
-                    else                       -> {
-                        sendInitMessage(0x0302, emulator.processCommand(0x0302, ByteArray(0)))
-                        pause(INIT_STEP_MS)
-                        sendInitMessage(0x0303, emulator.processCommand(0x0303, ByteArray(0)))
-                        pause(INIT_STEP_MS)
-                        sendInitMessage(0x0304, emulator.processCommand(0x0304, ByteArray(0)))
-                    }
+                sendInitMessage(0x0302, emulator.processCommand(0x0302, ByteArray(0)))
+                pause(INIT_STEP_MS)
+                sendInitMessage(0x0303, emulator.processCommand(0x0303, ByteArray(0)))
+                if (emulator.state.variant != DanaRVariant.DANA_R_KOREAN) {
+                    pause(INIT_STEP_MS)
+                    sendInitMessage(0x0304, emulator.processCommand(0x0304, ByteArray(0)))
                 }
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: init sequence sent")
             }.start()
@@ -197,7 +210,7 @@ class EmulatorRfcommTransport(
             if (!connected) return
             val packet = buildResponsePacket(command, data)
             aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator TX init: cmd=${String.format("%04X", command)} packetLen=${packet.size}")
-            for (byte in packet) responseQueue.put(byte)
+            send(packet)
         }
 
         private var readerThread: Thread? = null
@@ -364,9 +377,7 @@ class EmulatorRfcommTransport(
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator TX: cmd=${String.format("%04X", command)} responseLen=${responseData.size} packetLen=${responsePacket.size}")
 
                 // Enqueue response bytes for the input stream
-                for (byte in responsePacket) {
-                    responseQueue.put(byte)
-                }
+                send(responsePacket)
             }
 
         }
@@ -377,6 +388,7 @@ class EmulatorRfcommTransport(
         /** [EmulatorSpeed.FAST]: the waits of the link this many times shorter. */
         private const val FAST_DIVISOR = 10
         private const val CONNECT_MS = 2000L
+        private const val CONNECTS_FAILING_AFTER_BREAK = 2
         private const val INIT_MS = 500L
         private const val INIT_STEP_MS = 200L
 

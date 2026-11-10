@@ -592,6 +592,12 @@ class DanaPump(
         const val DELIVERY_EXT_BOLUS = 0x08
         const val PROFILE_PREFIX = "DanaR-"
 
+        /**
+         * How long after the end of a bolus the pump has it in its history and in its status. A real DanaRv2 wrote the
+         * BOLUS record about 2 s after it sent the end (2026-11-10).
+         */
+        const val BOLUS_LOGGED_AFTER_END = 3000L
+
         // Dana R btModel
         const val DOMESTIC_MODEL = 0x01
         const val EXPORT_MODEL = 0x03

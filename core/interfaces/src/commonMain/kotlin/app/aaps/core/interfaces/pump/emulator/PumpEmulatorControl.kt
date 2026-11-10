@@ -56,6 +56,12 @@ interface PumpEmulatorControl {
      */
     fun bolusOnPump(units: Double): Boolean = false
 
+    /**
+     * The user stops ([suspended] true) or starts again the insulin on the pump itself, without the app, and the pump
+     * logs it as it logs any stop. False for a pump that cannot be stopped without the app, as a patch with no buttons.
+     */
+    fun suspendOnPump(suspended: Boolean): Boolean = false
+
     /** What the emulated pump holds now. */
     fun state(): EmulatedPumpState
 

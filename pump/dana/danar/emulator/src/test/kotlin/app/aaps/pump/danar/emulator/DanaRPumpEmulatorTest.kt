@@ -62,6 +62,9 @@ class DanaRPumpEmulatorTest {
         assertThat(response[0].toInt() and 0xFF).isEqualTo(0x02) // documented success code
         // The pump gives the bolus step by step and ends it with MsgBolusStop (0x0101), the message the driver waits for.
         assertThat(ended.await(10, TimeUnit.SECONDS)).isTrue()
+        // As a real DanaRv2, the pump has the bolus in its status about 2 s after the end.
+        val loggedBy = System.currentTimeMillis() + 5_000
+        while (state.lastBolusAmount == 0.0 && System.currentTimeMillis() < loggedBy) Thread.sleep(50)
         assertThat(state.lastBolusAmount).isWithin(0.001).of(1.50)
         assertThat(state.dailyTotalUnits).isWithin(0.001).of(6.50)
         assertThat(state.reservoirRemainingUnits).isWithin(0.001).of(148.50)

@@ -3,6 +3,7 @@ package app.aaps.pump.danar.services
 import android.os.Binder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.profile.Profile
@@ -16,9 +17,11 @@ import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntKey
+import app.aaps.pump.danar.BolusInProgress
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MessageHashTableR
@@ -54,6 +57,7 @@ import kotlin.math.abs
 class DanaRExecutionService : AbstractDanaRExecutionService() {
 
     @Inject lateinit var danaRPlugin: DanaRPlugin
+    @Inject lateinit var bolusInProgress: BolusInProgress
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var messageHashTableR: MessageHashTableR
 
@@ -143,6 +147,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
+            // Here, after the settings read: right after an app start it brings the serial number the record needs.
+            if (statusMsg.isReceived) bolusInProgress.recordFromPump(danaPump.lastBolusTime, danaPump.lastBolusAmount, PumpType.DANA_R, danaRPlugin.serialNumber())
             doSanityCheck()
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
@@ -233,33 +239,46 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
             }
             // try to find real amount if bolusing was interrupted or comm failed
             if ((bolusProgressData.state.value?.delivered?.cU ?: 0.0) != detailedBolusInfo.insulin) {
-                disconnect("bolusingInterrupted")
-                for (i in 0..59) {
-                    rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.pump.danar.R.string.waiting_1_minute, i, 60)))
-                    SystemClock.sleep(1000)
-                }
-                val bolusDurationInMSec = (detailedBolusInfo.insulin * speed * 1000).toLong()
-                val expectedEnd = bolusStart + bolusDurationInMSec + 3000
-                while (System.currentTimeMillis() < expectedEnd) {
-                    val waitTime = expectedEnd - System.currentTimeMillis()
-                    val currentPercent = bolusProgressData.state.value?.percent ?: 0
-                    bolusProgressData.updateProgress(currentPercent, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
-                    SystemClock.sleep(1000)
-                }
-                connect()
-                for (i in 0..30) {
-                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, i))
-                    if (isConnected) break
-                    SystemClock.sleep(1000)
-                }
-                if (!isConnected) {
-                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), EventShowSnackbar.Type.Error))
-                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(0.0))
-                    return false
+                if (danaPump.bolusDone && isConnected) {
+                    // The pump ended the bolus or answered the stop, and the link is up: it gives no more insulin. Its
+                    // status has the amount once it has logged the bolus. This waited more than 60 s for a new link, as
+                    // after a broken one. A real pump gave one more step after the last progress it sent.
+                    SystemClock.sleep(DanaPump.BOLUS_LOGGED_AFTER_END)
+                } else {
+                    disconnect("bolusingInterrupted")
+                    for (i in 0..59) {
+                        rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.pump.danar.R.string.waiting_1_minute, i, 60)))
+                        SystemClock.sleep(1000)
+                    }
+                    val bolusDurationInMSec = (detailedBolusInfo.insulin * speed * 1000).toLong()
+                    val expectedEnd = bolusStart + bolusDurationInMSec + 3000
+                    while (System.currentTimeMillis() < expectedEnd) {
+                        val waitTime = expectedEnd - System.currentTimeMillis()
+                        val currentPercent = bolusProgressData.state.value?.percent ?: 0
+                        bolusProgressData.updateProgress(currentPercent, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)))
+                        SystemClock.sleep(1000)
+                    }
+                    // One connect() is one try. A real DanaR paged after a broken link answered only after about 1.5
+                    // min and three tries, and a single try then recorded the bolus as 0 U though the pump gave it all.
+                    for (i in 0..RECONNECT_SECONDS) {
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, i))
+                        if (isConnected) break
+                        connect() // a new try once the last one has failed, a running one is left alone
+                        SystemClock.sleep(1000)
+                    }
+                    if (!isConnected) {
+                        rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), EventShowSnackbar.Type.Error))
+                        // The pump took the start and goes on without the link (a real one gave all of 1 U after a break
+                        // at 0.15 U), so the whole amount counts. It counted 0 U, and IOB was too low.
+                        val pumpTookStart = (start.isReceived && !start.failed) || (bolusProgressData.state.value?.delivered?.cU ?: 0.0) > 0
+                        val counted = if (pumpTookStart) detailedBolusInfo.insulin else 0.0
+                        bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(counted))
+                        return false
+                    }
                 }
                 mSerialIOThread?.sendMessage(MsgStatus(injector))
                 val lastBolusTime = danaPump.lastBolusTime
-                if (lastBolusTime != null && lastBolusTime > System.currentTimeMillis() - 2 * 60 * 1000L) { // last bolus max 2 min old
+                if (lastBolusTime != null && lastBolusTime >= bolusStart - LAST_BOLUS_BEFORE_START) {
                     val lastAmount = danaPump.lastBolusAmount ?: 0.0
                     bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(lastAmount))
                     aapsLogger.debug(LTag.PUMP, "Used bolus amount from history: " + danaPump.lastBolusAmount)
@@ -311,5 +330,19 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
 
         val serviceInstance: DanaRExecutionService
             get() = this@DanaRExecutionService
+    }
+
+    companion object {
+
+        /**
+         * How much earlier than the start of this bolus the pump's last bolus may be and still be this bolus. The pump
+         * gives that time in whole minutes, and the driver keeps the pump clock within 10 s of the phone. The rule was
+         * "at most 2 minutes before the read", but the read comes more than a minute after the start, so a bolus that
+         * started late in a minute was taken as an old one and recorded as 0 U.
+         */
+        private const val LAST_BOLUS_BEFORE_START = 70_000L
+
+        /** How long the driver tries to reach the pump again after a broken bolus link, to read what it gave. */
+        private const val RECONNECT_SECONDS = 180
     }
 }

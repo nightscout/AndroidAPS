@@ -219,6 +219,8 @@ class EmulatorBleTransport(
 
     override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
 
+    override fun suspendOnPump(suspended: Boolean): Boolean = emulator.suspendOnPump(suspended)
+
     override fun state(): EmulatedPumpState = synchronized(pumpState) {
         EmulatedPumpState(
             boluses = pumpState.givenBoluses.toList(),

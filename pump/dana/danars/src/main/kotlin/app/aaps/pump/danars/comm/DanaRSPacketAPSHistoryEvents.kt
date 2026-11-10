@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.danars.encryption.BleEncryption
@@ -351,17 +352,19 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.SUSPEND_ON          -> {
+                val newRecord = runBlocking<Boolean?> { DanaSuspendSync.started(pumpSync, datetime, pumpId, danaPump.pumpType(), danaPump.serialNumber) } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "[$pumpId] EVENT SUSPEND_ON ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime)"
+                    "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT SUSPEND_ON ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime)"
                 )
                 status = "SUSPEND_ON " + dateUtil.timeString(datetime)
             }
 
             DanaPump.HistoryEntry.SUSPEND_OFF         -> {
+                val newRecord = runBlocking<Boolean?> { DanaSuspendSync.ended(pumpSync, datetime, pumpId, danaPump.pumpType(), danaPump.serialNumber) } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "[$pumpId] EVENT SUSPEND_OFF ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime)"
+                    "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT SUSPEND_OFF ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime)"
                 )
                 status = "SUSPEND_OFF " + dateUtil.timeString(datetime)
             }

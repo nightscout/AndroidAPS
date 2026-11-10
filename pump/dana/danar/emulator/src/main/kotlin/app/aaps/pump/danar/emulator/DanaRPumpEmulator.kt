@@ -467,9 +467,9 @@ class DanaRPumpEmulator(
     val bolusRunning: Boolean get() = state.runningBolus != null
 
     /**
-     * Starts a bolus that the pump gives step by step, a step of its bolus step (0.1 U) at 12 s/U as the Dana family, and
-     * reports each step with MsgBolusProgress (0x0202, what is left). UNVERIFIED for a DanaR: the speed and the step,
-     * taken from the Dana RS. A start while a bolus runs is refused, UNVERIFIED how.
+     * Starts a bolus that the pump gives step by step, 0.05 U at 12 s/U, and reports what is left with MsgBolusProgress
+     * (0x0202): the whole amount at the start, then after each step. Seen on a real DanaRv2 (2026-11-10): a step every
+     * 0.59 s. A start while a bolus runs is refused, UNVERIFIED how.
      */
     private fun handleBolusStart(params: ByteArray): ByteArray {
         if (params.size < 2 || state.runningBolus != null) return byteArrayOf(0x00)
@@ -482,12 +482,21 @@ class DanaRPumpEmulator(
     }
 
     /**
-     * Gives [bolus] until it is all given or stopped. At its end the pump logs what it gave and sends MsgBolusStop
-     * (0x0101): the driver waits for that message to end a bolus (`MsgBolusStop.handleMessage` sets `bolusStopped`).
+     * Gives [bolus] until it is all given or stopped, and sends MsgBolusStop (0x0101) at its end: the driver waits for
+     * that message to end a bolus (`MsgBolusStop.handleMessage` sets `bolusStopped`). Seen on a real DanaRv2
+     * (2026-11-10): a stop at 0.45 of 2 U gave 0.5, one more step than the last progress, and the pump had the bolus in
+     * its history and status about 2 s after the end.
      */
     private fun deliver(bolus: RunningBolus) {
-        val stepHundredths = (state.bolusStep * 100).roundToInt().coerceAtLeast(1)
+        val stepHundredths = if (state.variant == DanaRVariant.DANA_R_KOREAN) KOREAN_PROGRESS_STEP_HUNDREDTHS else PROGRESS_STEP_HUNDREDTHS
         val msPerStep = SECONDS_PER_UNIT * 1000L * stepHundredths / 100 / (if (speed == EmulatorSpeed.FAST) FAST_DIVISOR else 1)
+        if (bolus.given == 0) {
+            // After the answer to the start, as on the real pump.
+            @Suppress("SleepInsteadOfDelay")
+            Thread.sleep(FIRST_PROGRESS_MS)
+            val all = bolus.hundredths
+            onAdditionalResponse?.invoke(0x0202, byteArrayOf((all shr 8 and 0xFF).toByte(), (all and 0xFF).toByte()))
+        }
         while (bolus.given < bolus.hundredths && !bolus.stopped) {
             @Suppress("SleepInsteadOfDelay")
             Thread.sleep(msPerStep.coerceAtLeast(1L))
@@ -499,18 +508,32 @@ class DanaRPumpEmulator(
             // MsgBolusProgress: 2 bytes remaining insulin (int16 big-endian)
             onAdditionalResponse?.invoke(0x0202, byteArrayOf((remaining shr 8 and 0xFF).toByte(), (remaining and 0xFF).toByte()))
         }
-        synchronized(state) {
+        val given = synchronized(state) {
+            // A DanaRv2 gives the step that runs when the stop comes, with no progress for it. A Korean DanaR stops at
+            // its last progress.
+            if (bolus.stopped && bolus.given < bolus.hundredths && state.variant != DanaRVariant.DANA_R_KOREAN) {
+                val step = minOf(stepHundredths, bolus.hundredths - bolus.given)
+                bolus.given += step
+                state.reservoirRemainingUnits -= step / 100.0
+            }
             val given = bolus.given / 100.0
-            val time = state.pumpTimeMillis
-            state.historyStore.addEvent(DanaPump.HistoryEntry.BOLUS.value, time, bolus.given, 0)
-            state.lastBolusAmount = given
-            state.lastBolusTime = time
             state.dailyTotalUnits += given
             state.givenBoluses += given
             state.runningBolus = null
+            given
         }
-        aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ends, ${bolus.given / 100.0}U given")
+        aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ends, ${given}U given")
         onAdditionalResponse?.invoke(0x0101, byteArrayOf(0x00))
+        val end = state.pumpTimeMillis
+        Thread {
+            @Suppress("SleepInsteadOfDelay")
+            Thread.sleep(LOGGED_AFTER_END_MS)
+            synchronized(state) {
+                state.historyStore.addEvent(DanaPump.HistoryEntry.BOLUS.value, end, bolus.given, 0)
+                state.lastBolusAmount = given
+                state.lastBolusTime = end
+            }
+        }.start()
     }
 
     /** The user stops the bolus: it ends at once with what it has given. */
@@ -530,6 +553,17 @@ class DanaRPumpEmulator(
         state.lastBolusTime = time
         state.dailyTotalUnits += given / 100.0
         state.givenBoluses += given / 100.0
+        true
+    }
+
+    /**
+     * The user stops or starts again the insulin on the pump itself: the status says so, and the history logs SUSPEND_ON
+     * or SUSPEND_OFF. UNVERIFIED: what a real DanaR does with a temp basal that runs at that time; the emulator keeps it.
+     */
+    fun suspendOnPump(suspended: Boolean): Boolean = synchronized(state) {
+        state.isSuspended = suspended
+        val code = if (suspended) DanaPump.HistoryEntry.SUSPEND_ON else DanaPump.HistoryEntry.SUSPEND_OFF
+        state.historyStore.addEvent(code.value, state.pumpTimeMillis, 0, 0)
         true
     }
 
@@ -774,6 +808,17 @@ class DanaRPumpEmulator(
         private const val SECONDS_PER_UNIT = 12
         /** [EmulatorSpeed.FAST]: a bolus this many times shorter. */
         private const val FAST_DIVISOR = 20
+        /** The bolus step a real DanaRv2 reported progress in, also when its bolus step setting is larger. */
+        private const val PROGRESS_STEP_HUNDREDTHS = 5
+        /**
+         * A real Korean DanaR set to a bolus step of 0.1 U sent a progress every 0.1 U, 1.2 s apart (2026-11-10). After a
+         * stop it had given what its last progress showed, twice.
+         */
+        private const val KOREAN_PROGRESS_STEP_HUNDREDTHS = 10
+        /** How long after the end of a bolus a real DanaRv2 had it in its history: about 2 s. Not shortened in FAST. */
+        private const val LOGGED_AFTER_END_MS = 2000L
+        /** The first progress comes after the answer to the start. */
+        private const val FIRST_PROGRESS_MS = 50L
         private const val APS_PARAM_30_MIN = 160
         private const val APS_PARAM_15_MIN = 150
     }

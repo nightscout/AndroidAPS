@@ -459,6 +459,17 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         true
     }
 
+    /**
+     * The user stops or starts again the insulin on the pump itself: the status says so, and the history logs SUSPEND_ON
+     * or SUSPEND_OFF. UNVERIFIED: what a real Dana-i does with a temp basal that runs at that time; the emulator keeps it.
+     */
+    fun suspendOnPump(suspended: Boolean): Boolean = synchronized(state) {
+        state.isSuspended = suspended
+        val code = if (suspended) DanaPump.HistoryEntry.SUSPEND_ON else DanaPump.HistoryEntry.SUSPEND_OFF
+        addHistoryEvent(code.value, state.pumpTimeMillis, 0, 0)
+        true
+    }
+
     private fun processSetExtendedBolus(params: ByteArray): ByteArray {
         if (params.size >= 3) {
             val amountHundredths = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)

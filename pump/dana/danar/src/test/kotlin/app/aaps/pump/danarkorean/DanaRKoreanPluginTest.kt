@@ -16,6 +16,7 @@ import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danar.BolusInProgress
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -58,7 +59,8 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRKoreanPlugin(
             aapsLogger, rxBus, context, rh, activePlugin, commandQueue, danaPump, dateUtil,
-            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
+            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData,
+            BolusInProgress(preferences, pumpSync, dateUtil, aapsLogger), pumpEnactResultProvider
         )
     }
 
