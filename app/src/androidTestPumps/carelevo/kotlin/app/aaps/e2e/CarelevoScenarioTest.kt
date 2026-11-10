@@ -18,6 +18,11 @@ class CarelevoScenarioTest : AbstractPumpScenarioTest() {
     override fun aBolusGivenOnThePumpIsImported() {
     }
 
+    @Ignore("A Carelevo patch has no buttons: it stops the insulin only from the app")
+    @Test
+    override fun aSuspendOnThePumpIsRecorded() {
+    }
+
     @Ignore("The Carelevo emulator keeps no pump clock: it only answers the set time command")
     @Test
     override fun aBolusWithThePumpClockOffIsStoredAtItsTime() {

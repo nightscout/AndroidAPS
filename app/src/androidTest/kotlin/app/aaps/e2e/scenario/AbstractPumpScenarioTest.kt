@@ -342,6 +342,49 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkStatusShown()
     }
 
+    /** The pump starts the extended bolus and its answer is lost. After a status read AAPS and the pump must agree. */
+    @Test
+    fun anExtendedBolusWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        assumeTrue("The pump gives no extended bolus", scenario.canGiveExtendedBolus)
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.EXTENDED_BOLUS_START)).isTrue()
+        scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES)
+        assertWithMessage("the pump runs the extended bolus").that(scenario.control.state().extendedBolus).isNotNull()
+        scenario.readStatus()
+        scenario.checkExtendedBolus()
+    }
+
+    /** The pump ends the extended bolus and its answer is lost. After a status read AAPS and the pump must agree. */
+    @Test
+    fun anExtendedBolusCancelWhoseAnswerIsLostIsKnown() {
+        scenario.bringUp()
+        assumeTrue("The pump gives no extended bolus", scenario.canGiveExtendedBolus)
+        scenario.pair()
+        assertWithMessage("extended bolus").that(scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES).success).isTrue()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.EXTENDED_BOLUS_STOP)).isTrue()
+        scenario.cancelExtendedBolus()
+        assertWithMessage("the pump ended the extended bolus").that(scenario.control.state().extendedBolus).isNull()
+        scenario.readStatus()
+        scenario.checkExtendedBolus()
+    }
+
+    /**
+     * The user stops the insulin on the pump itself, and later starts it again. AAPS must record the stop, or it counts
+     * basal the pump does not give and IOB is too high.
+     */
+    @Test
+    open fun aSuspendOnThePumpIsRecorded() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("a stop on the pump").that(scenario.control.suspendOnPump(true)).isTrue()
+        scenario.readStatusOnNewLink()
+        scenario.checkSuspend()
+        assertWithMessage("a start on the pump").that(scenario.control.suspendOnPump(false)).isTrue()
+        scenario.readStatusOnNewLink()
+        scenario.checkSuspend()
+    }
+
     /** The user gives a bolus on the pump itself. AAPS must import it from the pump, and only once. */
     @Test
     open fun aBolusGivenOnThePumpIsImported() {

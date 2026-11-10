@@ -134,9 +134,18 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 - A driver that cannot tell at once whether a bolus start reached the pump may count the whole amount and decide later,
   from the pump, once the bolus would have ended. Give such a check a longer limit (`checkBolusRecords(BOLUS_TIMEOUT)`).
   A record it sets to 0 U counts as no record.
-- A record timed by the pump clock before the first profile in AAPS is dropped ("No profile running"), and a pump clock
-  can be a second or two behind the phone. So `pair()` waits a few seconds after the first profile before the first
-  command. Without it the first Dana temp basal failed now and then in CI.
+- A pump clock can be a second or two behind the phone, so the record of the first command can be timed just before the
+  first profile. AAPS once dropped it ("No profile running") and the first Dana temp basal failed now and then in CI;
+  now PumpSync gives such a record the first profile. `pair()` does not wait, so the scenarios keep checking that.
+- A scenario checks the records as soon as the queue is idle. A driver that stores what a status read found from a
+  launched coroutine can store it after the check: the Equil decision on an extended bolus whose answer was lost was
+  right in the log and still failed the check. Store it before the read ends.
+- After a real-pump test, copy what the pump did into the emulator (mark the source and the date). The DanaR emulator
+  gives progress in 0.05 U steps, one more step after a stop, writes the bolus to its history 2 s after the end, and
+  refuses two connects after a broken link, all as a real DanaRv2 did. Its Korean variant steps 0.1 U and stops at its
+  last progress, and starts a link with 0x0301, 0x0302, 0x0303, as a real Korean DanaR did.
+- A stop of the insulin on the pump is a 0 U/h temp basal of type PUMP_SUSPEND in AAPS. `checkSuspend` checks it, and a
+  temp basal check while the pump is stopped would compare the wrong things.
 - A driver may send a command again after no answer (the DanaR sends a temp basal cancel again). Check the end state
   after a status read, not the state between the two sends.
 - A pump that gives high temp basals as extended boluses (the DanaR with "Use extended boluses for >200%", on by

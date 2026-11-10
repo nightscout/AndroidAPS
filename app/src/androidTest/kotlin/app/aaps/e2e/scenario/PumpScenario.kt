@@ -12,6 +12,7 @@ import androidx.test.runner.lifecycle.Stage
 import androidx.work.WorkManager
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -209,13 +210,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
         testGraphs.rxBus.send(EventProfileChangeRequested())
         awaitTrue("the profile runs") { runBlocking { testGraphs.profileFunction.getProfile() } != null }
         awaitQueueIdle()
-        // A pump writes its records by its own clock, which can be a second or two behind the phone. A record of a
-        // command right after the first profile then has a time before any profile, and AAPS drops it ("No profile
-        // running"). So the steps start once the profile has run a little while.
-        awaitTrue("the profile has run for ${PROFILE_SETTLE_MS / 1000} s") {
-            val since = runBlocking { testGraphs.persistenceLayer.getEffectiveProfileSwitchActiveAt(System.currentTimeMillis()) }?.timestamp
-            since != null && System.currentTimeMillis() - since >= PROFILE_SETTLE_MS
-        }
+        // No wait here: a pump writes its records by its own clock, which can be a second or two behind the phone, so a
+        // record of the first command can have a time just before the first profile. AAPS must keep it.
     }
 
     fun unpair() = pump.unpair(this)
@@ -459,6 +455,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
+    /**
+     * While the pump gives no insulin, AAPS runs a 0 U/h temp basal of type PUMP_SUSPEND, and only then. Without it AAPS
+     * counts basal the pump does not give, and IOB is too high.
+     */
+    fun checkSuspend() {
+        val suspended = control.state().suspended
+        val stored = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(System.currentTimeMillis()) }
+        assertWithMessage("AAPS records the stop of the pump (pump stopped: $suspended, AAPS: $stored)")
+            .that(stored?.type == TB.Type.PUMP_SUSPEND).isEqualTo(suspended)
+        if (suspended) assertWithMessage("the stop is 0 U/h").that(stored?.rate).isEqualTo(0.0)
+    }
+
     fun checkTempBasal() {
         val running = control.state().tempBasal
         val stored = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(System.currentTimeMillis()) }
@@ -686,8 +694,6 @@ class PumpScenario(private val pump: PumpUnderTest) {
         private const val HOURS_PER_DAY = 24
         private const val SECONDS_PER_HOUR = 3600
         private const val PERCENT = 100.0
-        /** More than the few seconds a pump clock is behind the phone after it was set. */
-        private const val PROFILE_SETTLE_MS = 5_000L
         /** A bolus record may be written at the end of the bolus. A pump clock off by minutes is far more. */
         private const val CLOCK_TOLERANCE_MS = 120_000L
         /**
