@@ -277,10 +277,10 @@ abstract class AbstractDanaEmulatorUiTest {
      */
     protected fun initializePumpFromUi() {
         if (!awaitTrue(INIT_PUMP_TIMEOUT) {
-                // Only queue a read when the last one has finished. changePump() -> readStatus, and
-                // readStatus resets DanaPump first (onRefreshClick -> danaPump.reset), so a fresh one
-                // each poll would stack a backlog of reads that keep resetting the pump and churning
-                // the action list long after this returns — which is what made the later steps flaky.
+                // Only queue a read when the last one has finished. On Dana RS changePump() resets
+                // DanaPump before it queues the read, so a fresh one each poll would stack a backlog of
+                // reads that keep resetting the pump and churning the action list long after this
+                // returns — which is what made the later steps flaky.
                 if (queueIdle()) requestStatusRead()
                 waitForVisible("Pump history", 2_000)
             }
@@ -291,10 +291,9 @@ abstract class AbstractDanaEmulatorUiTest {
     /**
      * True when no command is queued or running.
      * The one deterministic "the overview has settled" signal: `isInitialized` is stable-true and
-     * every action present exactly while nothing is in flight. A read in flight has just called
-     * `danaPump.reset()`, so `isInitialized` is false and the whole action list is gone until it
-     * completes — tapping into that window is what mis-fired onto Unpair and timed out on absent
-     * buttons.
+     * every action present exactly while nothing is in flight. A read after a `danaPump.reset()` (a
+     * pump change) has `isInitialized` false and the whole action list gone until it completes — tapping into that window is what mis-fired onto Unpair and timed
+     * out on absent buttons.
      */
     // With the app-owned CommandExecutor, an empty queue with nothing performing is a sufficient idle
     // signal. The old "is the WorkManager worker still running its disconnect tail?" check existed only
