@@ -1,6 +1,7 @@
 package app.aaps.pump.danar.emulator
 
 import app.aaps.pump.dana.emulator.HistoryEventStore
+import java.io.Serializable
 
 enum class DanaRVariant(val hwModel: Int, val protocol: Int) {
     DANA_R(hwModel = 0x03, protocol = 0x00),
@@ -10,9 +11,13 @@ enum class DanaRVariant(val hwModel: Int, val protocol: Int) {
 
 /**
  * Mutable state of the emulated DanaR pump.
- * Inspectable from tests for assertions.
+ * Inspectable from tests for assertions. Serializable: a test that kills the app saves it and starts a new process
+ * with the pump as it was.
  */
-class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) {
+class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) : Serializable {
+
+    /** Every bolus the pump gave, oldest first, with the amount it really gave. */
+    val givenBoluses: MutableList<Double> = mutableListOf()
 
     // History
     val historyStore = HistoryEventStore()
@@ -72,10 +77,15 @@ class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) {
     // IOB
     var iob: Double = 0.0
 
-    // Time (pump internal clock) — returns real time by default
+    /** How far the pump clock is off the phone clock. A real pump clock runs on, so only this is kept. */
+    var clockOffsetMs: Long = 0
+
+    /** The pump clock now. Setting it sets the pump clock, as the time command does. */
     var pumpTimeMillis: Long
-        get() = System.currentTimeMillis()
-        set(_) {} // SetTime command is a no-op — emulator always tracks real time
+        get() = System.currentTimeMillis() + clockOffsetMs
+        set(value) {
+            clockOffsetMs = value - System.currentTimeMillis()
+        }
 
     // Status
     var isSuspended: Boolean = false
