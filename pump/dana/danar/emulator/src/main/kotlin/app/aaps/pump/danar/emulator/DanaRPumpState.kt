@@ -19,6 +19,9 @@ class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) : Seria
     /** Every bolus the pump gave, oldest first, with the amount it really gave. */
     val givenBoluses: MutableList<Double> = mutableListOf()
 
+    /** The bolus the pump gives now, or null. Saved with the rest, so a pump read back after an app kill goes on with it. */
+    @Volatile var runningBolus: RunningBolus? = null
+
     // History
     val historyStore = HistoryEventStore()
 
@@ -102,4 +105,11 @@ class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) : Seria
     var glucoseUnit: Int = 0  // 0=mg/dL, 1=mmol/L
     var shutdownHour: Int = 0
     var lowReservoirRate: Int = 20
+}
+
+/** A bolus the pump gives: [hundredths] asked, [given] hundredths given until now. */
+class RunningBolus(val hundredths: Int) : Serializable {
+
+    @Volatile var given = 0
+    @Volatile var stopped = false
 }

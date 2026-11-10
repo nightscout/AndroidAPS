@@ -464,17 +464,7 @@ class DanaRPumpEmulator(
     /** How long a bolus takes, see [EmulatorSpeed]. */
     @Volatile var speed: EmulatorSpeed = EmulatorSpeed.REAL
 
-    /** The bolus the pump gives now, or null. */
-    @Volatile private var runningBolus: RunningBolus? = null
-
-    val bolusRunning: Boolean get() = runningBolus != null
-
-    /** [hundredths] asked, [given] hundredths given until now. */
-    private class RunningBolus(val hundredths: Int) {
-
-        @Volatile var given = 0
-        @Volatile var stopped = false
-    }
+    val bolusRunning: Boolean get() = state.runningBolus != null
 
     /**
      * Starts a bolus that the pump gives step by step, a step of its bolus step (0.1 U) at 12 s/U as the Dana family, and
@@ -482,10 +472,10 @@ class DanaRPumpEmulator(
      * taken from the Dana RS. A start while a bolus runs is refused, UNVERIFIED how.
      */
     private fun handleBolusStart(params: ByteArray): ByteArray {
-        if (params.size < 2 || runningBolus != null) return byteArrayOf(0x00)
+        if (params.size < 2 || state.runningBolus != null) return byteArrayOf(0x00)
         val amountInt = (params[0].toInt() and 0xFF shl 8) or (params[1].toInt() and 0xFF)
         val bolus = RunningBolus(amountInt)
-        runningBolus = bolus
+        state.runningBolus = bolus
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ${amountInt / 100.0}U starts")
         Thread { deliver(bolus) }.start()
         return byteArrayOf(0x02) // success code = 2
@@ -517,7 +507,7 @@ class DanaRPumpEmulator(
             state.lastBolusTime = time
             state.dailyTotalUnits += given
             state.givenBoluses += given
-            runningBolus = null
+            state.runningBolus = null
         }
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ends, ${bolus.given / 100.0}U given")
         onAdditionalResponse?.invoke(0x0101, byteArrayOf(0x00))
@@ -525,13 +515,13 @@ class DanaRPumpEmulator(
 
     /** The user stops the bolus: it ends at once with what it has given. */
     private fun handleBolusStop(): ByteArray {
-        runningBolus?.stopped = true
+        state.runningBolus?.stopped = true
         return byteArrayOf(0x00)
     }
 
     /** A bolus the user gives on the pump itself: given at once and logged as any bolus. False while a bolus runs. */
     fun bolusOnPump(units: Double): Boolean = synchronized(state) {
-        if (runningBolus != null) return false
+        if (state.runningBolus != null) return false
         val given = (units * 100).roundToInt()
         val time = state.pumpTimeMillis
         state.reservoirRemainingUnits -= given / 100.0
@@ -744,6 +734,12 @@ class DanaRPumpEmulator(
      * Set by [EmulatorRfcommTransport] to enqueue extra packets on the response stream.
      */
     var onAdditionalResponse: ((Int, ByteArray) -> Unit)? = null
+
+    init {
+        // A pump read back after an app kill goes on with its bolus, as a real one does. Here, after the fields
+        // the bolus thread reads.
+        state.runningBolus?.let { bolus -> Thread { deliver(bolus) }.start() }
+    }
 
     private fun handleApsHistoryEvents(params: ByteArray): ByteArray {
         // Local: MsgHistoryEventsV2 builds the request from a plain GregorianCalendar, and a DanaR
