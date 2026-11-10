@@ -402,8 +402,16 @@ abstract class AbstractDanaEmulatorUiTest {
             runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
                 .any { abs(it.amount - BOLUS_UNITS) < UNITS_TOLERANCE }
         }
-        assertWithMessage("AAPS has a bolus record of $BOLUS_UNITS U").that(stored).isTrue()
+        // CI reads the log of a shard only at its end, and the tests after this one can push these lines out of it.
+        // So the failure carries what the queue, the driver and the database did (CI run 42425 had nothing to read).
+        if (!stored) assertWithMessage("AAPS has a bolus record of $BOLUS_UNITS U. The app's log:\n" + appLog(BOLUS_RECORD_EVIDENCE)).fail()
     }
+
+    /** The last [lines] lines of this app's own log that match [pattern], without the queue's waiting lines. */
+    protected fun appLog(pattern: Regex, lines: Int = APP_LOG_LINES): String = runCatching {
+        Runtime.getRuntime().exec(arrayOf("logcat", "-d", "-v", "time", "-t", APP_LOG_READ.toString())).inputStream.bufferedReader()
+            .readLines().filter { pattern.containsMatchIn(it) && !QUEUE_WAITING.containsMatchIn(it) }.takeLast(lines).joinToString("\n")
+    }.getOrElse { "The log could not be read: ${it.message}" }
 
     /**
      * Overview → Manage → Temp basal: raise the rate above 100% and commit it to the pump.
@@ -678,6 +686,12 @@ abstract class AbstractDanaEmulatorUiTest {
         // end of the bolus. So the record can come well after the pump is done.
         private const val RECORD_TIMEOUT = 60_000L
         private const val UNITS_TOLERANCE = 0.001
+
+        /** How a bolus gets its record: the queue, the bolus end, the history read and its BOLUS event, a refused record. */
+        private val BOLUS_RECORD_EVIDENCE = Regex("PUMPQUEUE|DELIVERY_COMPLETE|Loading event history|EVENT BOLUS|Inserted Bolus|Ignoring|WRONG_PUMP|Reply not received|Disconnect")
+        private val QUEUE_WAITING = Regex("waiting for disconnect|connecting \\d")
+        private const val APP_LOG_LINES = 60
+        private const val APP_LOG_READ = 5000
         /** The pump writes whole seconds, so a record can start a little before the test asked. */
         private const val CLOCK_MARGIN_MS = 60_000L
     }
