@@ -95,7 +95,11 @@ says how it works: each class is split in parts (the runner's `numShards`/`shard
 restart runs, and every emulator with nothing else to do takes the next item. `@ShardD` is `@Inherited` and set on
 `AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
 The Collect step prints one line per item (emulator, result, seconds); a failed item's output has the driver log of
-the failed test.
+the failed test. The longest parts go first, by the seconds in `part_seconds` of the script. A class not in it counts
+as the longest; once it has run on CI, add its seconds from the Collect lines, or it keeps going first.
+
+Shared UI gets one pass. The treatment dialogs run once, in `DanaRsEmulatorUiTest` on BLE5; a driver's commands are
+tested through the queue by its scenario class, not again through the dialogs.
 
 The pump UI tests (`AbstractPumpUiTest`, one `PumpScreens` per pump) have no shard annotation, so they run in shard C.
 CI makes its AVDs without a device, which gives the emulator default screen: **320 x 640 at 160 dpi**, on API 31. A
