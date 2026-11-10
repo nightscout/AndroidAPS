@@ -32,16 +32,7 @@
     <string name="shorthour">h</string>
     <string name="days">ngày</string>
     <string name="hours">giờ</string>
-    <string name="unit_second">giây</string>
-    <string name="unit_minute">phút</string>
-    <string name="unit_hour">giờ</string>
-    <string name="unit_day">ngày</string>
-    <string name="unit_week">tuần</string>
-    <string name="unit_seconds">giây</string>
     <string name="unit_minutes">phút</string>
-    <string name="unit_hours">giờ</string>
-    <string name="unit_days">ngày</string>
-    <string name="unit_weeks">tuần</string>
     <string name="shortminute">m</string>
     <string name="time_remaining_h_m">Còn %1$d giờ %2$d phút</string>
     <string name="time_remaining_m">Còn %1$d phút</string>
@@ -56,7 +47,6 @@
     <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
     <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
-    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Đang kết nối trong %1$d giây</string>
     <string name="handshaking">Đang bắt tay</string>
