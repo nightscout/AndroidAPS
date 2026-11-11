@@ -62,6 +62,7 @@
     <string name="pref_single_target">单一目标</string>
     <string name="pref_wizard_percentage">计算百分比</string>
     <string name="pref_wizard_carbs_type">计算器餐食类型</string>
+    <string name="pref_wizard_carb_time">计算器碳水时间</string>
     <string name="pref_complication_tap_action">折叠Tap操作</string>
     <string name="pref_complication_bg_graph_hours">血糖图表时间范围</string>
     <string name="duration_1_hour">1 小时</string>
@@ -178,6 +179,7 @@
     <string name="cwf_complication_layout">小工具布局</string>
     <string name="cwf_complication_layout_description">小工具的位置和大小，取自所加载的自定义表盘。</string>
     <string name="pref_include_external">在模板中包含外部视图</string>
+    <string name="pref_switch_external">切换表盘外部数据</string>
     <string name="custom_pref_show_seconds">显示秒</string>
     <string name="digitalstyle_pref_your_style">您的样式</string>
     <string name="digitalstyle_style_none">无样式</string>
@@ -286,9 +288,22 @@
     <string name="wizard_carbs_type_bread">面包</string>
     <string name="wizard_carbs_type_cake">蛋糕</string>
     <string name="wizard_carbs_type_pizza">披萨</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">碳水时间\n[分]</string>
+    <string name="wizard_carb_time_now">现在</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d 分</string>
     <string name="wizard_set_alarm">设置闹钟</string>
     <string name="eat_reminder_title">吃饭时间</string>
+    <string name="eat_reminder_silence">静音</string>
+    <string name="eat_reminder_stop">停止</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">在 %1$s 响铃</string>
+    <string name="eat_reminder_countdown_channel">进餐时间到了，正在运行</string>
+    <string name="eat_reminder_channel_silent">勿扰模式期间的进餐提醒</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">来自手机的警报</string>
+    <string name="phone_alarm_channel_silent">勿扰模式期间来自手机的警报</string>
+    <string name="phone_alarm_silence">静音</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">静音 %1$d 分</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
