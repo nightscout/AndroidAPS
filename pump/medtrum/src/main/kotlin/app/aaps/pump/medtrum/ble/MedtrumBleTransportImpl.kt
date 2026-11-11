@@ -302,7 +302,7 @@ class MedtrumBleTransportImpl(
     }
 
     @Synchronized
-    private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, status: Int, newState: Int) {
+    private fun onConnectionStateChangeSynchronized(bleGatt: BluetoothGatt, status: Int, newState: Int) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState: $newState status: $status")
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             isConnected = true
@@ -324,7 +324,7 @@ class MedtrumBleTransportImpl(
             isConnected = false
             isConnecting = false
             medtrumCallback?.onDisconnected()
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Device disconnected: ${gatt.device.name}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Device disconnected: ${bleGatt.device.name}")
         }
     }
 
