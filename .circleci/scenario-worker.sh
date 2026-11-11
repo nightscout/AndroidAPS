@@ -31,6 +31,8 @@ part_seconds() {
     DanaRv2ScenarioTest) echo 445 ;;
     DanaRScenarioTest) echo 410 ;;
     CarelevoScenarioTest) echo 360 ;;
+    # On the aaruy branch only; measured on CircleCI 42455.
+    AaruyScenarioTest) echo 325 ;;
     DanaRKoreanScenarioTest) echo 295 ;;
     DanaRSScenarioTest) echo 240 ;;
     *) echo 999 ;;
