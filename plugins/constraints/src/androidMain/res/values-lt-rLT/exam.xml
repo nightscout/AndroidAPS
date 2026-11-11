@@ -82,7 +82,7 @@
     <string name="update_askfriend">Jei kyla sunkumų kuriant apk failą, galite instaliuoti apk failą, kurį sukūrė draugas.</string>
     <string name="update_hint1">https://wiki.aaps.app/lt/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Trikčių šalinimas</string>
-    <string name="troubleshooting_wheretoask">Kur galima ieškoti pagalbos su AAPS?</string>
+    <string name="troubleshooting_wheretoask">Kur galima ieškoti pagalbos dėl AAPS?</string>
     <string name="troubleshooting_fb">Galima kreiptis patarimo AAPS Users Facebook grupėje.</string>
     <string name="troubleshooting_wiki">Būtina skaityti (ir pakartotinai skaityti) AAPS dokumentaciją.</string>
     <string name="troubleshooting_discord">Galima prašyti patarimo, aptarti ar registruoti techninę problemą ar funkciją AAPS Discord kanale.</string>
