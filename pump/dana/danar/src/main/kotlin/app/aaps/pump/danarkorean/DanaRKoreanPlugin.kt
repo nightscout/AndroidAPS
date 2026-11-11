@@ -35,6 +35,7 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
+import app.aaps.pump.danar.BolusInProgress
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -74,6 +75,7 @@ class DanaRKoreanPlugin(
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
     private val bolusProgressData: BolusProgressData,
+    private val bolusInProgress: BolusInProgress,
     pumpEnactResultProvider: () -> PumpEnactResult
 ) : AbstractDanaRPlugin(
     danaPump,
@@ -162,6 +164,16 @@ class DanaRKoreanPlugin(
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
+        // Kept until the bolus is recorded: after an app kill during the bolus, a status read records it from this.
+        bolusInProgress.save(dateUtil.now(), detailedBolusInfo.insulin, detailedBolusInfo.bolusType)
+        try {
+            return giveBolus(detailedBolusInfo)
+        } finally {
+            bolusInProgress.clear()
+        }
+    }
+
+    private suspend fun giveBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0)
             connectionOK = executionService?.bolus(detailedBolusInfo) == true
@@ -180,7 +192,8 @@ class DanaRKoreanPlugin(
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-        if (detailedBolusInfo.insulin > 0)
+        // Only what the pump gave. A bolus it never gave was stored as a 0 U record, as the plain DanaR does not.
+        if (delivered.cU > 0)
             pumpSync.syncBolusWithPumpId(
                 dateUtil.now(),
                 delivered,

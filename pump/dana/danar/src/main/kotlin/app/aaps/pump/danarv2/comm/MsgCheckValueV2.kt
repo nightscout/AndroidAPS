@@ -28,26 +28,22 @@ class MsgCheckValueV2(
             notificationManager.post(NotificationId.WRONG_DRIVER, TextRef.AndroidRes(app.aaps.pump.dana.R.string.pumpdrivercorrected))
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
-            danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRPlugin.setPluginEnabled(PluginType.PUMP, false)
+            // The same switch as in Configuration. Turning the plugins on and off here left the screens on the old driver,
+            // and it turned off the DanaR plugin, not this one.
+            configBuilder.performPluginSwitch(danaRKoreanPlugin, true, PluginType.PUMP)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
-            //If profile coming from pump, switch it as well
-            configBuilder.storeSettings("ChangingDanaRv2Driver")
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
             appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change)) } // force new connection
             return
         }
         if (danaPump.protocol != 2) {
             notificationManager.post(NotificationId.WRONG_DRIVER, TextRef.AndroidRes(app.aaps.pump.dana.R.string.pumpdrivercorrected))
-            danaRKoreanPlugin.disconnect("Wrong Model")
+            danaRv2Plugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to non APS DanaR")
-            danaRv2Plugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
+            configBuilder.performPluginSwitch(danaRPlugin, true, PluginType.PUMP)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
-            //If profile coming from pump, switch it as well
-            configBuilder.storeSettings("ChangingDanaRv2Driver")
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
             appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change)) } // force new connection
             return

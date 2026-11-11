@@ -464,6 +464,18 @@ class DanaPump(
             ignoreCase = true
         ) || ignoreUserPassword
 
+    /**
+     * The next status read reads all settings and the whole history again, as after [reset]. Unlike [reset] it keeps
+     * what identifies the pump and what was read: a command that runs now still writes its records for this pump. The
+     * Refresh button used [reset], and the records of a read that ran at that time were refused as coming from another
+     * pump (empty serial number).
+     */
+    fun readAllAgain() {
+        aapsLogger.debug(LTag.PUMP, "DanaRPump: read all again")
+        lastSettingsRead = 0
+        readHistoryFrom = 0
+    }
+
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
         lastConnection = 0
@@ -591,6 +603,12 @@ class DanaPump(
         const val DELIVERY_BASAL = 0x04
         const val DELIVERY_EXT_BOLUS = 0x08
         const val PROFILE_PREFIX = "DanaR-"
+
+        /**
+         * How long after the end of a bolus the pump has it in its history and in its status. A real DanaRv2 wrote the
+         * BOLUS record about 2 s after it sent the end (2026-11-10).
+         */
+        const val BOLUS_LOGGED_AFTER_END = 3000L
 
         // Dana R btModel
         const val DOMESTIC_MODEL = 0x01

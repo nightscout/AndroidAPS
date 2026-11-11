@@ -146,6 +146,7 @@ class CarelevoPumpEmulator(
         state.bolusInfusedAmount = given
         state.activeBolusActionId = null
         state.modeRaw = if (state.tempBasalRunning) MODE_TEMP_BASAL else MODE_BASAL
+        state.pumpStateRaw = PUMP_STATE_READY
         deliveredBoluses += given
         bolus = null
     }
@@ -265,7 +266,7 @@ class CarelevoPumpEmulator(
         val frames = mutableListOf<ByteArray>()
         repeat(state.safetyCheckProgressFrames) { frames += safetyFrame(SAFETY_PROGRESS_RESULT) }
         frames += safetyFrame(state.safetyCheckResult)
-        if (state.safetyCheckResult == CarelevoPumpState.RESULT_SUCCESS) state.pumpStateRaw = PUMP_STATE_RUNNING
+        // The pump state stays 0 (READY): a real patch reports 0 after the safety check and while it gives basal.
         return frames
     }
 
@@ -496,6 +497,7 @@ class CarelevoPumpEmulator(
         if (result == CarelevoPumpState.RESULT_SUCCESS) {
             state.activeBolusActionId = actionId.toUByte().toInt()
             state.modeRaw = MODE_IMME_BOLUS
+            state.pumpStateRaw = PUMP_STATE_BOLUS
             state.bolusInfusedAmount = 0.0
             // The insulin counts as it is given, so a stop reports the part given so far.
             bolus = RunningBolus(clock(), volume, stopNextBolusAt?.coerceAtMost(volume) ?: volume, msPerUnit())
@@ -522,7 +524,7 @@ class CarelevoPumpEmulator(
             if (running != null) endBolus(infused)
             else {
                 state.activeBolusActionId = null
-                state.modeRaw = MODE_BASAL
+                state.modeRaw = if (state.tempBasalRunning) MODE_TEMP_BASAL else MODE_BASAL
             }
         }
         return listOf(byteArrayOf(RESP_BOLUS_CANCEL, result.toByte()) + encodeUnitsCenti(infused))
@@ -733,7 +735,9 @@ class CarelevoPumpEmulator(
         const val AUTH_FAILED = 1
 
         const val PUMP_STATE_READY = 0
-        const val PUMP_STATE_RUNNING = 2
+
+        /** A real patch reports 1 during a bolus (seen 2026-11-09), the code the driver names PRIMING. */
+        const val PUMP_STATE_BOLUS = 1
 
         const val MODE_BASAL = 1
         const val MODE_TEMP_BASAL = 2

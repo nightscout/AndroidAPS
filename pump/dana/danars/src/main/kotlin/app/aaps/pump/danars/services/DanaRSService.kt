@@ -37,6 +37,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.events.EventDanaRNewStatus
@@ -278,7 +279,9 @@ class DanaRSService : MetroService() {
                 }
             }
             rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.reading_pump_history)))
-            loadEvents()
+            // The history has the exact times of a stop of the pump; the status only ends what the history did not
+            if (loadEvents().success)
+                DanaSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), danaPump.pumpType(), danaPump.serialNumber)
             // RS doesn't provide exact timestamp = rely on history
             val expectedState = pumpSync.expectedPumpState()
             val eb = expectedState.extendedBolus
@@ -367,6 +370,11 @@ class DanaRSService : MetroService() {
             }
         }
         danaPump.bolusingDetailedBolusInfo = null
+        // The pump answers a stop before it ends the bolus: a real Dana-i gave one more step, then DELIVERY_COMPLETE
+        if (danaPump.bolusStopped && !danaPump.bolusDone && !start.failed && !connectionBroken) {
+            val giveUpAt = dateUtil.now() + BOLUS_END_AFTER_STOP
+            while (!danaPump.bolusDone && isConnected && dateUtil.now() < giveUpAt) SystemClock.sleep(100)
+        }
         // We saw the bolus end (delivered or stopped), so now is the time the pump writes to the BOLUS record
         if ((danaPump.bolusDone || danaPump.bolusStopped) && !start.failed && !connectionBroken)
             updateStoredBolusTime(detailedBolusInfo, dateUtil.now())
@@ -377,7 +385,12 @@ class DanaRSService : MetroService() {
             2 -> speed = 60
         }
         val bolusDurationInMSec = (detailedBolusInfo.insulin * speed * 1000).toLong()
-        val expectedEnd = bolusStart + bolusDurationInMSec + 2000
+        // A bolus whose end the pump reported gives no more insulin: wait only a moment for its history record. Only a
+        // bolus whose end was not seen waits until the whole amount must have been given. A stopped bolus waited for
+        // that too, about 25 s after a stop of 2 U.
+        val expectedEnd =
+            if (danaPump.bolusDone) min(bolusStart + bolusDurationInMSec + 2000, dateUtil.now() + 2000)
+            else bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
             bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
@@ -431,6 +444,25 @@ class DanaRSService : MetroService() {
         }
     }
 
+    /**
+     * Reads the pump history until AAPS has what the pump now runs, as [isKnown] tells, at most [HISTORY_READS] times.
+     * AAPS takes Dana temp basals and extended boluses only from the history. A command the pump refused is read once.
+     * A fixed 4.5 s wait after one read was here: it cost 4.5 s on each command, and a read that missed the record was
+     * not read again.
+     * @param accepted the pump answered the command with OK
+     */
+    private suspend fun loadEventsUntil(accepted: Boolean, isKnown: (PumpSync.PumpState) -> Boolean): PumpSync.PumpState {
+        var reads = 0
+        var state: PumpSync.PumpState
+        do {
+            loadEvents()
+            reads++
+            state = pumpSync.expectedPumpState()
+        } while (accepted && !isKnown(state) && reads < HISTORY_READS && isConnected)
+        if (accepted && !isKnown(state)) aapsLogger.warn(LTag.PUMPCOMM, "The pump history has no record of the command after $reads reads")
+        return state
+    }
+
     suspend fun tempBasal(percent: Int, durationInHours: Int): Boolean {
         if (!isConnected) return false
         val status = danaRSPacketGeneralInitialScreenInformation()
@@ -445,9 +477,7 @@ class DanaRSService : MetroService() {
         val msgTBR = danaRSPacketBasalSetTemporaryBasal().with(percent, durationInHours)
         sendMessage(msgTBR)
         SystemClock.sleep(200)
-        loadEvents()
-        SystemClock.sleep(4500)
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val tbr = loadEventsUntil(msgTBR.success()) { it.temporaryBasal?.let { tbr -> !tbr.isAbsolute && tbr.rate.toInt() == percent } == true }.temporaryBasal
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
@@ -465,9 +495,7 @@ class DanaRSService : MetroService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
         val msgTBR = danaRSPacketAPSBasalSetTemporaryBasal().with(percent)
         sendMessage(msgTBR)
-        loadEvents()
-        SystemClock.sleep(4500)
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val tbr = loadEventsUntil(msgTBR.success()) { it.temporaryBasal?.let { tbr -> !tbr.isAbsolute && tbr.rate.toInt() == percent } == true }.temporaryBasal
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgTBR.success()
@@ -489,9 +517,7 @@ class DanaRSService : MetroService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
         val msgTBR = danaRSPacketAPSBasalSetTemporaryBasal().with(percent)
         sendMessage(msgTBR)
-        loadEvents()
-        SystemClock.sleep(4500)
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val tbr = loadEventsUntil(msgTBR.success()) { it.temporaryBasal?.let { tbr -> !tbr.isAbsolute && tbr.rate.toInt() == percent } == true }.temporaryBasal
         aapsLogger.debug(LTag.PUMPCOMM, "Expected TBR found: $tbr")
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
@@ -503,9 +529,7 @@ class DanaRSService : MetroService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
         val msgCancel = danaRSPacketBasalSetCancelTemporaryBasal()
         sendMessage(msgCancel)
-        loadEvents()
-        SystemClock.sleep(4500)
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        val tbr = loadEventsUntil(msgCancel.success()) { it.temporaryBasal == null }.temporaryBasal
         danaPump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgCancel.success()
@@ -517,9 +541,7 @@ class DanaRSService : MetroService() {
         val msgExtended = danaRSPacketBolusSetExtendedBolus().with(insulin, durationInHalfHours)
         sendMessage(msgExtended)
         SystemClock.sleep(200)
-        loadEvents()
-        SystemClock.sleep(4500)
-        val eb = pumpSync.expectedPumpState().extendedBolus
+        val eb = loadEventsUntil(msgExtended.success()) { it.extendedBolus?.let { eb -> abs(eb.amount - insulin) < EXTENDED_AMOUNT_TOLERANCE } == true }.extendedBolus
         danaPump.fromExtendedBolus(eb)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgExtended.success()
@@ -530,9 +552,7 @@ class DanaRSService : MetroService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingextendedbolus)))
         val msgStop = danaRSPacketBolusSetExtendedBolusCancel()
         sendMessage(msgStop)
-        loadEvents()
-        SystemClock.sleep(4500)
-        val eb = pumpSync.expectedPumpState().extendedBolus
+        val eb = loadEventsUntil(msgStop.success()) { it.extendedBolus == null }.extendedBolus
         danaPump.fromExtendedBolus(eb)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return msgStop.success()
@@ -611,5 +631,17 @@ class DanaRSService : MetroService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.waitingfortimesynchronization, (timeToWholeMinute / 1000).toInt())))
             SystemClock.sleep(min(timeToWholeMinute, 100))
         }
+    }
+
+    companion object {
+
+        /** How long the pump may take to end a bolus after it answered the stop. A real Dana-i took about 0.6 s. */
+        private const val BOLUS_END_AFTER_STOP = 5000L
+
+        /** How many times a command's history is read before AAPS goes on without its record. */
+        private const val HISTORY_READS = 3
+
+        /** Half the extended bolus step of the Dana pumps. */
+        private const val EXTENDED_AMOUNT_TOLERANCE = 0.025
     }
 }

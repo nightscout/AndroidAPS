@@ -243,6 +243,8 @@ class EquilPumpPlugin(
 
     override suspend fun getPumpStatus(reason: String) {
         if (equilManager.isActivationCompleted()) {
+            // Runs here, on the queue worker, as the commands of the driver do.
+            equilManager.endTempBasalThePumpDoesNotRun()
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
             pluginScope.launch { commandQueue.customCommand(CmdModeAndHistoryGet()) }
             pluginScope.launch { commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager)) }

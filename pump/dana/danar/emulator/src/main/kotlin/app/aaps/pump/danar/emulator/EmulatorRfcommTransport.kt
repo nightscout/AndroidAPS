@@ -2,40 +2,153 @@ package app.aaps.pump.danar.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedExtendedBolus
+import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
+import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.core.interfaces.pump.rfcomm.RfcommDevice
 import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.pump.utils.CRC
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.io.OutputStream
 import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Emulated RFCOMM transport for DanaR pump testing.
  * Replaces real Bluetooth with an in-process [DanaRPumpEmulator].
  *
- * Adds realistic BT 2.0 delays to match real hardware timing.
+ * Adds realistic BT 2.0 delays to match real hardware timing, shorter at [EmulatorSpeed.FAST].
  * This is important because the DanaR protocol relies on timing
  * for operations like auto-switching between DanaR and Korean DanaR plugins.
  *
  * Data flow:
  *   App writes to [EmulatorOutputStream] → parses DanaR packet → routes to emulator →
  *   builds response packet → enqueues to [EmulatorInputStream] → app reads response
+ *
+ * The test hooks are [PumpEmulatorControl]. No real DanaR was looked at for them, so how a DanaR takes a lost command,
+ * a broken link or a pump clock off is copied from the Dana RS and the driver code, UNVERIFIED on a DanaR.
  */
 class EmulatorRfcommTransport(
     val emulator: DanaRPumpEmulator = DanaRPumpEmulator(),
     private val aapsLogger: AAPSLogger? = null,
     private val deviceName: String = "DAN12345AB"
-) : RfcommTransport {
+) : RfcommTransport, PumpEmulatorControl {
+
+    @Volatile private var socket: EmulatorRfcommSocket? = null
+    @Volatile private var outOfRange = false
+
+    /**
+     * Connect tries that fail after a broken link. Seen on a real DanaRv2 (2026-11-10, the phone's Bluetooth off for 8 s
+     * during a bolus): page timeouts for about 1.5 min, and the third try of a later read got a link. UNVERIFIED which
+     * side kept the link from coming back.
+     */
+    @Volatile private var failingConnects = 0
+    private val commands = AtomicInteger()
+    private val lostCommands = mutableListOf<EmulatedCommand>()
+    private val lostAnswers = mutableListOf<EmulatedCommand>()
 
     override fun getSocketForDevice(deviceName: String): RfcommSocket {
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: creating socket for '$deviceName'")
-        return EmulatorRfcommSocket()
+        return EmulatorRfcommSocket().also { socket = it }
     }
 
     override fun getBondedDevices(): List<RfcommDevice> =
         listOf(RfcommDevice(name = deviceName, address = "EM:UL:AT:OR:00:01"))
+
+    // ---- PumpEmulatorControl ----------------------------------------------------------------
+
+    override var speed: EmulatorSpeed
+        get() = emulator.speed
+        set(value) {
+            emulator.speed = value
+        }
+
+    /** A wait of the pump, as long as a real one or shorter at [EmulatorSpeed.FAST]. */
+    private fun pause(ms: Long) {
+        @Suppress("SleepInsteadOfDelay")
+        Thread.sleep(if (speed == EmulatorSpeed.FAST) ms / FAST_DIVISOR else ms)
+    }
+
+    override fun breakLink(): Boolean {
+        socket?.close() ?: return false
+        failingConnects = CONNECTS_FAILING_AFTER_BREAK
+        return true
+    }
+
+    override fun setOutOfRange(outOfRange: Boolean): Boolean {
+        this.outOfRange = outOfRange
+        if (outOfRange) socket?.close()
+        return true
+    }
+
+    override fun loseCommand(command: EmulatedCommand): Boolean = synchronized(lostCommands) { lostCommands.add(command) }
+
+    override fun loseAnswer(command: EmulatedCommand): Boolean = synchronized(lostAnswers) { lostAnswers.add(command) }
+
+    /** Only the first fault can fire, so faults fire in the order the test set them. */
+    private fun takeFault(faults: MutableList<EmulatedCommand>, command: EmulatedCommand?): Boolean =
+        command != null && synchronized(faults) { faults.firstOrNull() == command && faults.removeAt(0) == command }
+
+    /** How a DanaR reports an alarm was not looked at. */
+    override fun raise(alarm: EmulatedAlarm): Boolean = false
+
+    /** How a DanaR goes on when it stops a bolus by itself was not seen. */
+    override fun stopNextBolusAt(units: Double): Boolean = false
+
+    override fun shiftPumpClock(offsetMs: Long): Boolean {
+        emulator.state.clockOffsetMs += offsetMs
+        return true
+    }
+
+    override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
+
+    override fun suspendOnPump(suspended: Boolean): Boolean = emulator.suspendOnPump(suspended)
+
+    override fun state(): EmulatedPumpState = synchronized(emulator.state) {
+        val state = emulator.state
+        EmulatedPumpState(
+            boluses = state.givenBoluses.toList(),
+            bolusRunning = emulator.bolusRunning,
+            // A Dana sets a temp basal as a percent of the basal.
+            tempBasal = if (state.isTempBasalRunning) EmulatedTempBasal(absolute = null, percent = state.tempBasalPercent) else null,
+            suspended = state.isSuspended,
+            reservoir = state.reservoirRemainingUnits,
+            linkUp = socket?.isConnected == true,
+            commands = commands.get(),
+            extendedBolus = if (state.isExtendedBolusRunning)
+                EmulatedExtendedBolus(units = state.extendedBolusAmount, minutes = state.extendedBolusDurationHalfHours * 30) else null,
+            battery = state.batteryRemaining,
+            basal = state.basalProfiles.getOrNull(state.activeProfile)?.toList()
+        )
+    }
+
+    /** The pump, for a test that kills the app: [restore] reads it back. */
+    override fun saveState(): ByteArray = synchronized(emulator.state) {
+        ByteArrayOutputStream().also { bytes -> ObjectOutputStream(bytes).use { it.writeObject(emulator.state) } }.toByteArray()
+    }
+
+    /** The command a test can name for [code], or null. */
+    private fun commandOf(code: Int): EmulatedCommand? = when (code) {
+        0x0102, 0x0104                 -> EmulatedCommand.BOLUS_START
+        0x0101                         -> EmulatedCommand.BOLUS_STOP
+        0x0401, 0xE002                 -> EmulatedCommand.TEMP_BASAL_START
+        0x0403                         -> EmulatedCommand.TEMP_BASAL_STOP
+        0x0407                         -> EmulatedCommand.EXTENDED_BOLUS_START
+        0x0406                         -> EmulatedCommand.EXTENDED_BOLUS_STOP
+        0x3302, 0x3306                 -> EmulatedCommand.BASAL_PROFILE
+        0x020B, 0x0205, 0x0207, 0xE001 -> EmulatedCommand.STATUS
+        else                           -> null
+    }
 
     /**
      * Emulated RFCOMM socket using blocking queues for I/O.
@@ -49,50 +162,55 @@ class EmulatorRfcommTransport(
         override val outputStream: OutputStream = EmulatorOutputStream()
         override val isConnected: Boolean get() = connected
 
+        /**
+         * Puts a whole packet in the input stream. The bolus thread sends its messages while the answer to a command is
+         * being put there: byte by byte without a lock, the two mixed, and the driver dropped the link ("wrong packet").
+         */
+        private fun send(packet: ByteArray) = synchronized(responseQueue) {
+            for (byte in packet) responseQueue.put(byte)
+        }
+
         override fun connect() {
             // Simulate BT 2.0 connection time (~2 seconds for pairing + RFCOMM channel setup)
-            @Suppress("SleepInsteadOfDelay")
-            Thread.sleep(2000)
+            pause(CONNECT_MS)
+            if (outOfRange) throw IOException("Emulator: the pump is out of range")
+            if (failingConnects > 0) {
+                failingConnects--
+                throw IOException("Emulator: page timeout after a broken link")
+            }
             connected = true
             // Wire up callback for multi-packet responses (e.g., history events)
             emulator.onAdditionalResponse = { command, data ->
-                val packet = buildResponsePacket(command, data)
-                for (byte in packet) responseQueue.put(byte)
+                if (connected) {
+                    send(buildResponsePacket(command, data))
+                }
             }
             aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: socket connected, sending init sequence for ${emulator.state.variant}")
 
             // DanaR handshake is pump-initiated: the pump sends init messages after connection.
             // The sequence differs by variant:
-            //   Korean: 0x0301 → 0x0303 → 0x0302 (finishHandshaking in 0x0302)
+            //   Korean: 0x0301 → 0x0302 → 0x0303 (finishHandshaking in 0x0303), seen on a real one (2026-11-10)
             //   DanaR/v2: 0x0301 → 0x0302 → 0x0303 → 0x0304 (finishHandshaking in 0x0304)
             Thread {
-                @Suppress("SleepInsteadOfDelay")
-                Thread.sleep(500) // pump needs time to prepare init data after connection
+                pause(INIT_MS) // pump needs time to prepare init data after connection
                 sendInitMessage(0x0301, emulator.processCommand(0x0301, ByteArray(0)))
-                Thread.sleep(200)
-                when (emulator.state.variant) {
-                    DanaRVariant.DANA_R_KOREAN -> {
-                        sendInitMessage(0x0303, emulator.processCommand(0x0303, ByteArray(0)))
-                        Thread.sleep(200)
-                        sendInitMessage(0x0302, emulator.processCommand(0x0302, ByteArray(0)))
-                    }
-
-                    else                       -> {
-                        sendInitMessage(0x0302, emulator.processCommand(0x0302, ByteArray(0)))
-                        Thread.sleep(200)
-                        sendInitMessage(0x0303, emulator.processCommand(0x0303, ByteArray(0)))
-                        Thread.sleep(200)
-                        sendInitMessage(0x0304, emulator.processCommand(0x0304, ByteArray(0)))
-                    }
+                pause(INIT_STEP_MS)
+                sendInitMessage(0x0302, emulator.processCommand(0x0302, ByteArray(0)))
+                pause(INIT_STEP_MS)
+                sendInitMessage(0x0303, emulator.processCommand(0x0303, ByteArray(0)))
+                if (emulator.state.variant != DanaRVariant.DANA_R_KOREAN) {
+                    pause(INIT_STEP_MS)
+                    sendInitMessage(0x0304, emulator.processCommand(0x0304, ByteArray(0)))
                 }
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: init sequence sent")
             }.start()
         }
 
         private fun sendInitMessage(command: Int, data: ByteArray) {
+            if (!connected) return
             val packet = buildResponsePacket(command, data)
             aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator TX init: cmd=${String.format("%04X", command)} packetLen=${packet.size}")
-            for (byte in packet) responseQueue.put(byte)
+            send(packet)
         }
 
         private var readerThread: Thread? = null
@@ -178,11 +296,13 @@ class EmulatorRfcommTransport(
             private val writeBuffer = mutableListOf<Byte>()
 
             override fun write(b: Int) {
+                if (!connected) throw IOException("Socket closed")
                 writeBuffer.add(b.toByte())
                 tryProcessPacket()
             }
 
             override fun write(b: ByteArray, off: Int, len: Int) {
+                if (!connected) throw IOException("Socket closed")
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator write: $len bytes, buffer was ${writeBuffer.size}")
                 for (i in off until off + len) {
                     writeBuffer.add(b[i])
@@ -236,8 +356,20 @@ class EmulatorRfcommTransport(
 
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator RX: cmd=${String.format("%04X", command)} paramsLen=$paramsLen")
 
+                val named = commandOf(command)
+                if (takeFault(lostCommands, named)) {
+                    aapsLogger?.debug(LTag.PUMPEMULATOR, "fault: $named never reaches the pump")
+                    return
+                }
+                commands.incrementAndGet()
+
                 // Process command
                 val responseData = emulator.processCommand(command, params)
+
+                if (takeFault(lostAnswers, named)) {
+                    aapsLogger?.debug(LTag.PUMPEMULATOR, "fault: the pump did $named, its answer is lost")
+                    return
+                }
 
                 // Build response packet
                 val responsePacket = buildResponsePacket(command, responseData)
@@ -245,11 +377,23 @@ class EmulatorRfcommTransport(
                 aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator TX: cmd=${String.format("%04X", command)} responseLen=${responseData.size} packetLen=${responsePacket.size}")
 
                 // Enqueue response bytes for the input stream
-                for (byte in responsePacket) {
-                    responseQueue.put(byte)
-                }
+                send(responsePacket)
             }
 
         }
+    }
+
+    companion object {
+
+        /** [EmulatorSpeed.FAST]: the waits of the link this many times shorter. */
+        private const val FAST_DIVISOR = 10
+        private const val CONNECT_MS = 2000L
+        private const val CONNECTS_FAILING_AFTER_BREAK = 2
+        private const val INIT_MS = 500L
+        private const val INIT_STEP_MS = 200L
+
+        /** A pump saved by [saveState], for the emulator of a new process. */
+        fun restore(saved: ByteArray): DanaRPumpState =
+            ObjectInputStream(ByteArrayInputStream(saved)).use { it.readObject() as DanaRPumpState }
     }
 }

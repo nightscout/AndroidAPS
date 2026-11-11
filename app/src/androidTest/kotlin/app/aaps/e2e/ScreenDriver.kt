@@ -148,6 +148,26 @@ class ScreenDriver(private val device: UiDevice) {
         device.pressBack()
     }
 
+    /** Types [text] into the text field on the screen, as the DanaR password. For a screen with one text field. */
+    fun typeIntoTheField(text: String, timeout: Long = STEP_TIMEOUT) {
+        val end = SystemClock.uptimeMillis() + timeout
+        while (SystemClock.uptimeMillis() < end) {
+            val field = device.findObject(By.pkg(packageName).clazz(EDIT_TEXT))
+            if (field != null) {
+                try {
+                    field.text = text
+                    return
+                } catch (_: StaleObjectException) {
+                    device.waitForIdle(STALE_SETTLE_MS)
+                    continue
+                }
+            }
+            scrollOn()
+            device.waitForIdle(IDLE_MS)
+        }
+        error("Timed out after ${timeout}ms looking for a text field")
+    }
+
     /** Every text and description on the screen, to the log under [tag] and returned: what a failed step was looking at. */
     fun logScreen(tag: String): String =
         runCatching {
@@ -186,5 +206,6 @@ class ScreenDriver(private val device: UiDevice) {
         private const val STALE_SETTLE_MS = 700L
         private const val LOG_CHUNK = 3500
         private const val SCROLL_PERCENT = 0.5f
+        private const val EDIT_TEXT = "android.widget.EditText"
     }
 }

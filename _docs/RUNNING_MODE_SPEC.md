@@ -51,8 +51,8 @@ fix it.
 | `CLOSED_LOOP`       | yes        | no         | no              | Working        | all                         | NoOp                                     |
 | `CLOSED_LOOP_LGS`   | yes        | no         | no              | Working        | all                         | NoOp                                     |
 | `DISABLED_LOOP`     | no         | no         | no              | Stopped        | all                         | CancelTbr                                |
-| `SUPER_BOLUS`       | no         | yes (¹)    | no              | ZeroDelivery   | CANCEL_TBR, TBR_ZERO, BOLUS | IssueZeroTbr + cancelExtendedBolus       |
-| `DISCONNECTED_PUMP` | no         | yes        | yes             | ZeroDelivery   | CANCEL_TBR, TBR_ZERO        | IssueZeroTbr + cancelExtendedBolus       |
+| `SUPER_BOLUS`       | no         | yes (¹)    | no              | ZeroDelivery   | CANCEL_TBR, TBR_ZERO, BOLUS, PRIME | IssueZeroTbr + cancelExtendedBolus |
+| `DISCONNECTED_PUMP` | no         | yes        | yes             | ZeroDelivery   | CANCEL_TBR, TBR_ZERO, PRIME (²) | IssueZeroTbr + cancelExtendedBolus  |
 | `SUSPENDED_BY_PUMP` | no         | yes        | yes             | PumpReported   | CANCEL_TBR                  | NoOp (handled by `runningModePreCheck`)  |
 | `SUSPENDED_BY_USER` | no         | yes        | no              | Stopped        | all                         | CancelTbr                                |
 | `SUSPENDED_BY_DST`  | no         | yes        | no              | SuspendedNoTbr | CANCEL_TBR                  | CancelTbr                                |
@@ -62,6 +62,12 @@ fix it.
 "loop algorithm paused" while the wizard delivers the bolus and runs basal at 0.
 Not the same as "manual bolus blocked": `PumpCommandGate` allows BOLUS during
 SUPER_BOLUS.
+
+² PRIME is a bolus of type `BS.Type.PRIMING` (`PumpCommandGate.bolusKind`). Its insulin goes into
+the air and is not counted in IOB, so it is allowed while the pump is disconnected: that is when the
+user primes a new set. Refusing it made the user reconnect first, and the loop then sent basal and
+SMBs into the air (#5469). It is still refused in `SUSPENDED_BY_PUMP` and `SUSPENDED_BY_DST`, like
+every command except CANCEL_TBR. In every other mode it is allowed like BOLUS.
 
 `RESUME` is a synthetic mode: `handleRunningModeChange` cancels the current temporary
 RM row and restores the underlying mode. Never persisted as `RESUME`.
@@ -92,7 +98,7 @@ Constraint filtering: `allowedNextModes()` further removes OPEN/CLOSED/LGS modes
 | `CLOSED_LOOP`       | RunningMode UI, SMS, Wear                                      | —                                                                        |
 | `CLOSED_LOOP_LGS`   | RunningMode UI, SMS                                            | `runningModePreCheck`: from `CLOSED_LOOP` if `lgsModeForced=true`        |
 | `DISABLED_LOOP`     | RunningMode UI, SMS                                            | `runningModePreCheck`: from any working mode if `!loopInvocationAllowed` |
-| `SUPER_BOLUS`       | `BolusWizard.executeNormal` when `useSuperBolus=true`          | —                                                                        |
+| `SUPER_BOLUS`       | `MasterActionExecutorImpl.confirm`, QuickWizard with super bolus | —                                                                        |
 | `DISCONNECTED_PUMP` | RunningMode UI, SMS, Wear, Garmin                              | —                                                                        |
 | `SUSPENDED_BY_PUMP` | —                                                              | `runningModePreCheck`: when `pump.isSuspended()=true` (config.APS only)  |
 | `SUSPENDED_BY_USER` | RunningMode UI, SMS, Wear                                      | —                                                                        |
@@ -164,10 +170,10 @@ Per-dialog presentation:
   uses `runningModeGuard.checkWithSnackbar(BOLUS)` as defense-in-depth.
 - `TreatmentDialog` — no override switch. `WarningBanner` at top of dialog when forced;
   confirmation message lists "Bolus will be recorded only". Submit auto-routes to record-only.
-- `WizardDialog` / `BolusWizard.executeNormal`/`executeBolusAdvisor` — same banner + confirmation
-  line; the execute methods take `forcedRecordOnly: Boolean` and bypass `commandQueue.bolus`,
-  writing directly via `persistenceLayer.insertOrUpdateBolus`/`insertOrUpdateCarbs`. The mode
-  snackbar guard is suppressed when `forcedRecordOnly = true` (the user already saw the banner).
+- `WizardDialog` — same banner + confirmation line. A forced record-only entry goes to
+  `BolusWizard.executeRecordOnly`, which bypasses `commandQueue.bolus` and writes directly via
+  `persistenceLayer.insertOrUpdateBolus`/`insertOrUpdateCarbs`, with no mode snackbar (the user
+  already saw the banner). A delivered entry goes to the master's `MasterActionExecutor.confirm`.
 
 ² `ManageViewModel.kt:98–127` — hides EB/TBR if `!capable || !init || pump.isSuspended() ||
    isDisconnected || AAPSCLIENT` (+ `pump.isFakingTempsByExtendedBoluses` for EB only).
@@ -189,10 +195,15 @@ the running-mode dimension. Sites:
 - `handleWizardPreCheck`
 - `handleQuickWizardPreCheck`
 - `handleBolusPreCheck`
+
+The two prime handlers consult `rejectionMessage(PRIME)` instead, so a prime works while the
+pump is disconnected (see ² above):
+
 - `handleFillPresetPreCheck`
 - `handleFillPreCheck`
 
-Plus `doFillBolus` (post-confirm path) which already used the guard.
+The confirmed prime then goes through `MasterActionExecutor.deliverFillBolus`, whose
+`executeBolus` checks the same kind via `PumpCommandGate.bolusKind`.
 
 `SmsCommunicatorPlugin` does not need the AAPSCLIENT block — SMS is not
 available in client mode. Its dispatcher previously short-circuited BOLUS with

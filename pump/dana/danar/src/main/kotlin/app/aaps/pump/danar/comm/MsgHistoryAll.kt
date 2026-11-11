@@ -39,7 +39,18 @@ open class MsgHistoryAll(
             )
             var messageType = ""
             when (recordCode) {
-                RecordTypes.RECORD_TYPE_BOLUS     -> {
+                RecordTypes.RECORD_TYPE_BOLUS     -> if (0xF0 and paramByte8.toInt() !in EXPORT_BOLUS_TYPES) {
+                    // A real Korean DanaR logs a bolus as the other records: the time with seconds, then a letter, 'B'
+                    // in 399 of 400 records and 'E' once (2026-11-10). Read as below, each showed type "None" and a
+                    // duration of more than 2 h. UNVERIFIED: what 'E' is.
+                    danaHistoryRecord.timestamp = dateTimeSecFromBuff(bytes, 1) // 6 bytes
+                    danaHistoryRecord.bolusType = when (val letter = paramByte8.toInt() and 0xFF) {
+                        KOREAN_BOLUS -> "S"
+                        else         -> letter.toChar().toString()
+                    }
+                    messageType += "${danaHistoryRecord.bolusType} bolus"
+                    danaHistoryRecord.value = value * 0.01
+                } else {
                     val datetime = dateTimeFromBuff(bytes, 1) // 5 bytes
                     danaHistoryRecord.timestamp = datetime
                     when (0xF0 and paramByte8.toInt()) {
@@ -62,8 +73,6 @@ open class MsgHistoryAll(
                             danaHistoryRecord.bolusType = "DE"
                             messageType += "DE bolus"
                         }
-
-                        else -> danaHistoryRecord.bolusType = "None"
                     }
                     danaHistoryRecord.duration = T.mins((paramByte8.toInt() and 0x0F) * 60 + paramByte7.toLong()).msecs()
                     danaHistoryRecord.value = value * 0.01
@@ -161,5 +170,14 @@ open class MsgHistoryAll(
             aapsLogger.error(e.stackTraceToString())
             return
         }
+    }
+
+    private companion object {
+
+        /** The bolus types of an export DanaR, in the high 4 bits of the byte that also holds the hours of the duration. */
+        val EXPORT_BOLUS_TYPES = setOf(0x80, 0x90, 0xA0, 0xC0)
+
+        /** 'B': a bolus in the history of a Korean DanaR. */
+        const val KOREAN_BOLUS = 0x42
     }
 }

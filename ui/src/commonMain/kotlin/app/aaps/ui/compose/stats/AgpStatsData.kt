@@ -8,6 +8,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.MidnightTime
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import kotlin.time.Instant
 import kotlinx.datetime.toLocalDateTime
@@ -161,6 +162,13 @@ private fun percentile(sorted: List<Double>, fraction: Double): Double {
 }
 
 private fun percentage(count: Int, total: Int): Double = count * 100.0 / total
+
+/**
+ * An HbA1c in percent (DCCT/NGSP) as a whole number in mmol/mol (IFCC). Doctors use one or the other, by
+ * country and not by the glucose units, so the statistics show both (#5475). The eA1c and GMI of the AGP card
+ * and the HbA1c of the Dexcom TIR card use this one conversion.
+ */
+internal fun hba1cMmolMol(percent: Double): Int = ((percent - 2.15) * 10.929).roundToInt()
 
 private const val MIN_VALID_BG = 39.0
 private const val VERY_LOW_MGDL = 54.0

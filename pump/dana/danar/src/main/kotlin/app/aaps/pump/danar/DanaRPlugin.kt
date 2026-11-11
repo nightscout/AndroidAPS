@@ -75,6 +75,7 @@ class DanaRPlugin(
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
     private val bolusProgressData: BolusProgressData,
+    private val bolusInProgress: BolusInProgress,
     pumpEnactResultProvider: () -> PumpEnactResult
 ) : AbstractDanaRPlugin(
     danaPump,
@@ -159,6 +160,16 @@ class DanaRPlugin(
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
+        // Kept until the bolus is recorded: after an app kill during the bolus, a status read records it from this.
+        bolusInProgress.save(dateUtil.now(), detailedBolusInfo.insulin, detailedBolusInfo.bolusType)
+        try {
+            return giveBolus(detailedBolusInfo)
+        } finally {
+            bolusInProgress.clear()
+        }
+    }
+
+    private suspend fun giveBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         var resultOK = false
         if (detailedBolusInfo.insulin > 0) resultOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider()

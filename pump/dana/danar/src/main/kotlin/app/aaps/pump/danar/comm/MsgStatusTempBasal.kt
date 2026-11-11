@@ -22,16 +22,25 @@ class MsgStatusTempBasal(
         val isAPSTempBasalInProgress = intFromBuff(bytes, 0, 1) and 0x02 == 0x02
         var tempBasalPercent = intFromBuff(bytes, 1, 1)
         if (tempBasalPercent > 200) tempBasalPercent = (tempBasalPercent - 200) * 10
-        var tempBasalTotalMin = intFromBuff(bytes, 2, 1) * 60
-        tempBasalTotalMin = if (tempBasalTotalMin == 150) 15 else if (tempBasalTotalMin == 160) 30 else tempBasalTotalMin
+        // Hours, or a code for the 15 and 30 minutes of an APS temp basal. The code was compared after * 60, so it never
+        // matched, and a 30 minute temp basal was read as 160 hours.
+        val tempBasalTotalMin = when (val duration = intFromBuff(bytes, 2, 1)) {
+            150  -> 15
+            160  -> 30
+            else -> duration * 60
+        }
         val tempBasalTotalSec = tempBasalTotalMin * 60
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60
         val tempBasalStart = if (isTempBasalInProgress) getDateFromSecAgo(tempBasalRunningSeconds) else 0
-        if (isTempBasalInProgress && !isWithin3Sec(tempBasalStart)) {
+        val tempBasalDuration = T.mins(tempBasalTotalMin.toLong()).msecs()
+        // Another percent or duration is another temp basal, also when it started within 3 s of the one before: the loop
+        // can set a zero temp 2 s after a high one. Only the same values with a close start are the one already known.
+        val isNew = !isWithin3Sec(tempBasalStart) || tempBasalPercent != danaPump.tempBasalPercent || tempBasalDuration != danaPump.tempBasalDuration
+        if (isTempBasalInProgress && isNew) {
             danaPump.tempBasalStart = tempBasalStart
             danaPump.tempBasalPercent = tempBasalPercent
-            danaPump.tempBasalDuration = T.mins(tempBasalTotalMin.toLong()).msecs()
+            danaPump.tempBasalDuration = tempBasalDuration
             aapsLogger.debug(LTag.PUMPCOMM, "New temp basal detected")
         } else if (!isTempBasalInProgress) {
             aapsLogger.debug(LTag.PUMPCOMM, "Temp basal stopped. Previous state: ${danaPump.isTempBasalInProgress}")
