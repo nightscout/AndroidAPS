@@ -101,7 +101,9 @@ restart runs, and every emulator with nothing else to do takes the next item. `@
 `AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
 The Collect step prints one line per item (emulator, result, seconds); a failed item's output has the driver log of
 the failed test. The longest parts go first, by the seconds in `part_seconds` of the script. A class not in it counts
-as the longest; once it has run on CI, add its seconds from the Collect lines, or it keeps going first.
+as the longest; once it has run on CI, add its seconds from the Collect lines, or it keeps going first. An emulator
+whose system dies ("Can't connect to activity manager") takes no more items and gives its item back; a summary line
+"the emulator is lost" says so, and the item's result comes from another emulator.
 
 Shared UI gets one pass. The treatment dialogs run once, in `DanaRsEmulatorUiTest` on BLE5; a driver's commands are
 tested through the queue by its scenario class, not again through the dialogs.
