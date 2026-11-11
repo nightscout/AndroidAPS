@@ -209,7 +209,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
     fun pair() {
         pump.pair(this)
         testGraphs.rxBus.send(EventProfileChangeRequested())
-        awaitTrue("the profile runs") { runBlocking { testGraphs.profileFunction.getProfile() } != null }
+        // A profile write can take longer than the default wait: a Diaconn G8 waits 30 s after it, as a Carelevo does.
+        awaitTrue("the profile runs", PROFILE_TIMEOUT) { runBlocking { testGraphs.profileFunction.getProfile() } != null }
         awaitQueueIdle()
         // No wait here: a pump writes its records by its own clock, which can be a second or two behind the phone, so a
         // record of the first command can have a time just before the first profile. AAPS must keep it.

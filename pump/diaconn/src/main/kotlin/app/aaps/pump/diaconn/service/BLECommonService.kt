@@ -169,20 +169,19 @@ class BLECommonService internal constructor(
             // handle the big log answer.
             if (data[1] == 0xb2.toByte()) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "(big log answer) onCharacteristicChanged: " + DiaconnG8Packet.toHex(data))
+                // The page request that waits for it. The answer has a number of the pump's own, not the request's (real
+                // G8: request 54 got 0x27, request 55 got 0x29), so it cannot be matched by number. It woke nothing: each
+                // page waited its whole time, and the history read could not tell a read page from a lost one.
+                val request = processedMessage as? BigLogInquirePacket
+                // Answered now, also when storing its records takes longer than the request waits (the first record of
+                // a new pump took 1.8 s on an emulator).
+                request?.setReceived()
                 val message = BigLogInquireResponsePacket(injector)
                 message.handleMessage(data)
 
                 // reset
                 mSendQueue.clear()
-                // Wake the page request that waits for it. The answer has a number of the pump's own, not the request's
-                // (real G8: request 54 got 0x27, request 55 got 0x29), so it cannot be matched by number. It woke
-                // nothing: each page waited its whole time, and the history read could not tell a read page from a lost one.
-                (processedMessage as? BigLogInquirePacket)?.let { request ->
-                    synchronized(request) {
-                        request.setReceived()
-                        request.notifyAll()
-                    }
-                }
+                request?.let { synchronized(it) { it.notifyAll() } }
             } else {
                 processResponseMessage(data)
             }
