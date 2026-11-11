@@ -183,14 +183,16 @@ class DanaRPumpEmulatorTest {
         val state = DanaRPumpState(DanaRVariant.DANA_R_V2)
         val emulator = DanaRPumpEmulator(state)
 
-        // 0x330B: the 33 bytes of the 0x320B answer with the changes, at the same places.
+        // 0x330B: the 33 bytes of the 0x320B answer with the changes, at the same places, but the low reservoir in
+        // byte 27 (a real DanaRv2 reports it in byte 32 and takes it from byte 27).
         val params = ByteArray(33)
         params[0] = 1     // 12h
         params[2] = 2     // beep+alarm
         params[3] = 30    // lcd on time
         params[8] = 1     // mmol/L
         params[9] = 22    // shutdown hour
-        params[32] = 15   // low reservoir rate
+        params[27] = 15   // low reservoir rate
+        params[32] = 20   // the old value, as read
         emulator.processCommand(0x330B, params)
 
         assertThat(state.timeDisplayType24).isFalse()

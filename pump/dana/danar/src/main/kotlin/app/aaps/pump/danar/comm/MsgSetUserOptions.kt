@@ -21,6 +21,7 @@ class MsgSetUserOptions(
             danaPump.userOptionsFromPump!![5] = danaPump.selectedLanguage.toByte()
             danaPump.userOptionsFromPump!![8] = danaPump.units.toByte()
             danaPump.userOptionsFromPump!![9] = danaPump.shutdownHour.toByte()
+            // Not byte 32, where MsgSettingUserOptions reads it: a real DanaRv2 takes it from byte 27 (2026-11-11).
             danaPump.userOptionsFromPump!![27] = danaPump.lowReservoirRate.toByte()
             for (element in danaPump.userOptionsFromPump!!) {
                 addParamByte(element)
