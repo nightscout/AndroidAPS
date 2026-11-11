@@ -11,6 +11,7 @@
     <string name="equil_stop">Stopp</string>
     <string name="equil_success">Erfolgreich</string>
     <string name="equil_title_dressing">Ampulle wechseln</string>
+    <string name="equil_title_serial">Gerät verbinden</string>
     <string name="equil_tone_mode_mute">Stummschalten</string>
     <string name="equil_tone_mode_shake">Nur vibrieren</string>
     <string name="equil_tone_mode_tone">Nur Töne</string>
@@ -18,12 +19,29 @@
     <string name="equil_unbind_content">Dieser Vorgang stoppt die Insulininfusion und zieht den Pumpenkolben nach unten zurück! Außerdem wird der Bindungsstatus gelöscht!</string>
     <string name="equil_error">Verbindungsfehler</string>
     <string name="equil_change">Pumpe wechseln</string>
+    <string name="equil_record_bolus">Bolus %1$s IE</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
+    <string name="equil_not_enough_insulin">Nicht mehr genügend Insulin im Reservoir übrig</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Niedriger Batteriestand: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Nicht genügend Insulin im Reservoir übrig: %1$s</string>
+    <string name="equil_reservoir_empty">Das Reservoir ist leer. Die Pumpe liefert kein Insulin mehr.</string>
     <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Der Bolus-Befehl hat die Pumpe erreicht, aber die Pumpe hat nicht geantwortet. Möglicherweise wird die Dosis von %1$s dennoch abgegeben. Geben Sie keinen weiteren Bolus ab. AAPS berücksichtigt die gesamte Menge.</string>
     <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Der Stop-Befehl erreichte die Pumpe nicht, oder die Rückmeldung ging verloren. AAPS rechnet den gesamten Bolus von %1$s an, bis im Pumpenprotokoll ersichtlich ist, welche Menge tatsächlich abgegeben wurde.</string>
     <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Das Pumpenprotokoll zeigt, dass der Bolus von %1$s nicht abgegeben wurde. AAPS berücksichtigt ihn daher nicht.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Die Pumpe wurde während des Bolus gestoppt. Abgegeben: %1$s von \%2$s</string>
+    <string name="equil_pump_not_run">Pumpe läuft nicht</string>
+    <string name="equil_pair">Verbinden</string>
+    <string name="equil_pair_error">Kopplungsfehler</string>
+    <string name="equil_air">Luft entfernen</string>
+    <string name="equil_temp_basal_rate">Temporäre Basalrate</string>
+    <string name="equil_total_delivered">Insgesamt abgegeben</string>
+    <string name="equil_firmware_version">Firmware-Version</string>
+    <string name="equil_shutdown_be">Equil schaltet sich automatisch aus</string>
+    <string name="equil_shutdown">Equil automatisch aus</string>
     <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f IE/h, Dauer: %2$d min</string>
+    <string name="equil_common_history_bolus_value">%1$.2f IE</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_cancel_bolus">Bolus abbrechen</string>
     <!--    推杆回退-->
     <string name="equil_command_connect_error">Pumpenverbindungsfehler</string>
     <string name="equil_command_connect_no_response">Keine Antwort von der Pumpe</string>
