@@ -64,6 +64,8 @@ class DanaRPumpState(val variant: DanaRVariant = DanaRVariant.DANA_R_V2) : Seria
     var isExtendedBolusRunning: Boolean = false
     var extendedBolusAmount: Double = 0.0
     var extendedBolusDurationHalfHours: Int = 0
+    /** By the pump clock. The status gives how long the extended bolus runs, and the driver takes its start from that. */
+    var extendedBolusStartTime: Long = 0
     var isExtendedEnabled: Boolean = true
 
     // Reservoir & battery
