@@ -4,6 +4,7 @@ import android.os.SystemClock
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.di.testGraphs
@@ -23,7 +24,8 @@ import kotlin.math.abs
 /**
  * The scenarios of the three DanaR drivers, on top of the ones every pump runs: the user picks the wrong DanaR driver,
  * sets a temp basal or an extended bolus on the pump itself, the pump history of every record type, a pump clock far
- * off, the daily insulin limit, and the user options. Each step is checked against what the emulated pump did.
+ * off, the daily insulin limit, the user options, and a profile write that is lost or whose answer is lost. Each step is
+ * checked against what the emulated pump did.
  */
 abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
 
@@ -240,6 +242,37 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
     }
 
     /**
+     * The profile write never reaches the pump, so the pump goes on with its basal. A write with no answer was taken as
+     * done, and AAPS ran a basal the pump did not give. Sent again, it reaches the pump.
+     */
+    @Test
+    fun aLostProfileWriteIsNotDone() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.BASAL_PROFILE)).isTrue()
+        assertWithMessage("AAPS takes the write as done, the pump gives ${scenario.control.state().basal}")
+            .that(scenario.profileWrittenOnce(PROFILE_PERCENT)).isFalse()
+        scenario.checkAlarm(NotificationId.FAILED_UPDATE_PROFILE)
+        scenario.switchProfile(PROFILE_PERCENT)
+        scenario.checkStatusShown()
+    }
+
+    /**
+     * The pump takes the profile and its answer is lost. The basal the pump gives then tells that the write is done, so
+     * AAPS runs the new basal and raises no alarm of a failed write.
+     */
+    @Test
+    fun aProfileWriteWhoseAnswerIsLostIsDoneAsThePumpHasIt() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseAnswer(EmulatedCommand.BASAL_PROFILE)).isTrue()
+        assertWithMessage("AAPS takes the write as done, the pump gives ${scenario.control.state().basal}")
+            .that(scenario.profileWrittenOnce(PROFILE_PERCENT)).isTrue()
+        scenario.checkNoAlarm(NotificationId.FAILED_UPDATE_PROFILE)
+        scenario.checkStatusShown()
+    }
+
+    /**
      * The user takes the pump and goes through its menu, which takes more than a few seconds. The DanaR drivers take a
      * temp basal or an extended bolus that starts within 3 s of the one they know for the same one, as the start they
      * work out from the status can be a second off.
@@ -311,5 +344,11 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
         const val LCD_ON_SECONDS = 30
         const val SHUTDOWN_HOUR = 6
         const val LOW_RESERVOIR = 10
+
+        /**
+         * Close to the basal before (0.6 against 0.5 U/h), so AAPS takes the basal the pump reports after a write. Further
+         * off, AAPS refuses that report with its own alarm, and a lost write taken as done fails as well, unseen.
+         */
+        const val PROFILE_PERCENT = 120
     }
 }

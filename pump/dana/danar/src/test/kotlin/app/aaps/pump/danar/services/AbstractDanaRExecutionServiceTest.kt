@@ -1,5 +1,6 @@
 package app.aaps.pump.danar.services
 
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -13,8 +14,13 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danar.SerialIOThread
+import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MessageHashTableBase
 import app.aaps.pump.danar.comm.MsgBolusStop
+import app.aaps.pump.danar.comm.MsgSetBasalProfile
+import app.aaps.pump.danar.comm.MsgSettingBasal
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -30,17 +36,26 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.whenever
+import kotlin.math.roundToInt
 
 class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var messageHashTable: MessageHashTableBase
     @Mock lateinit var pumpEnactResult: PumpEnactResult
+    @Mock lateinit var danaRPlugin: DanaRPlugin
 
     lateinit var danaPump: DanaPump
 
     init {
         addInjector { injector ->
+            if (injector is MessageBase) {
+                injector.aapsLogger = aapsLogger
+                injector.danaPump = danaPump
+                injector.danaRPlugin = danaRPlugin
+            }
             if (injector is MsgBolusStop) {
                 injector.aapsLogger = aapsLogger
                 injector.rh = rh
@@ -66,12 +81,49 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         override fun extendedBolus(insulin: Double, durationInHalfHours: Int): Boolean = true
         override fun extendedBolusStop(): Boolean = true
         override fun setUserOptions(): PumpEnactResult = pumpEnactResult
+
+        fun useLink(serialIOThread: SerialIOThread?) {
+            mSerialIOThread = serialIOThread
+        }
+
+        fun send(message: MessageBase): Boolean = sendToPump(message)
+        fun basalGiven(written: Boolean, read: MessageBase, basal: Array<Double>): Boolean = pumpGivesBasal(written, read, basal)
     }
+
+    /** A link to a pump that answers each message with the bytes [answer] gives, or not at all for null. */
+    private fun pumpAnswers(answer: (MessageBase) -> ByteArray?) {
+        val serialIOThread = mock(SerialIOThread::class.java)
+        doAnswer { invocation ->
+            val message = invocation.getArgument<MessageBase>(0)
+            answer(message)?.let {
+                message.handleMessage(it)
+                message.isReceived = true
+            }
+            null
+        }.whenever(serialIOThread).sendMessage(any())
+        testService.useLink(serialIOThread)
+    }
+
+    /** The answer to a write: 1 when the pump took it. */
+    private fun result(value: Int): ByteArray = ByteArray(ANSWER_SIZE).also { it[6] = value.toByte() }
+
+    /** The answer to a basal read: 24 rates in hundredths of a unit, two bytes each. */
+    private fun basalAnswer(rate: Double): ByteArray = ByteArray(ANSWER_SIZE).also {
+        val hundredths = (rate * 100).roundToInt()
+        for (hour in 0 until HOURS) {
+            it[6 + 2 * hour] = (hundredths shr 8).toByte()
+            it[6 + 2 * hour + 1] = (hundredths and 0xFF).toByte()
+        }
+    }
+
+    /** As `DanaPump.buildDanaRProfileRecord` makes it: the rate and a little more against a cut. */
+    private fun profileRecord(rate: Double): Array<Double> = Array(HOURS) { rate + 0.00001 }
 
     @BeforeEach
     fun setup() {
         `when`(rh.gs(anyInt())).thenReturn("test string")
         `when`(rh.gs(anyInt(), any())).thenReturn("test string")
+        `when`(danaRPlugin.pumpDescription).thenReturn(PumpDescription())
 
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         testService = TestDanaRExecutionService()
@@ -326,5 +378,75 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.getSocketForSelectedPump()
 
         verify(bus, times(2)).send(any<EventShowSnackbar>())
+    }
+
+    @Test
+    fun aMessageWithNoLinkIsNotDone() {
+        testService.useLink(null)
+
+        assertThat(testService.send(MsgSetBasalProfile(injector, 0, profileRecord(RATE)))).isFalse()
+    }
+
+    // `failed` is set only from an answer, so it stays false here. A profile write with no answer was taken as done.
+    @Test
+    fun aMessageWithNoAnswerIsNotDone() {
+        pumpAnswers { null }
+        val message = MsgSetBasalProfile(injector, 0, profileRecord(RATE))
+
+        assertThat(testService.send(message)).isFalse()
+        assertThat(message.failed).isFalse()
+    }
+
+    @Test
+    fun aMessageThePumpRefusesIsNotDone() {
+        pumpAnswers { result(2) }
+
+        assertThat(testService.send(MsgSetBasalProfile(injector, 0, profileRecord(RATE)))).isFalse()
+    }
+
+    @Test
+    fun aMessageThePumpTakesIsDone() {
+        pumpAnswers { result(1) }
+
+        assertThat(testService.send(MsgSetBasalProfile(injector, 0, profileRecord(RATE)))).isTrue()
+    }
+
+    @Test
+    fun aProfileWriteThePumpAnsweredIsDoneWithNoRead() {
+        pumpAnswers { null }
+
+        assertThat(testService.basalGiven(true, MsgSettingBasal(injector), profileRecord(RATE))).isTrue()
+    }
+
+    // The pump took the write and its answer was lost: what it gives tells. Taken as failed, this rang a false alarm.
+    @Test
+    fun aProfileWriteWithNoAnswerIsDoneWhenThePumpGivesItsBasal() {
+        pumpAnswers { basalAnswer(RATE) }
+
+        assertThat(testService.basalGiven(false, MsgSettingBasal(injector), profileRecord(RATE))).isTrue()
+    }
+
+    @Test
+    fun aProfileWriteWithNoAnswerIsNotDoneWhenThePumpGivesAnotherBasal() {
+        pumpAnswers { basalAnswer(OTHER_RATE) }
+
+        assertThat(testService.basalGiven(false, MsgSettingBasal(injector), profileRecord(RATE))).isFalse()
+    }
+
+    // A basal read before the write is no proof: the read after it must be answered.
+    @Test
+    fun aProfileWriteIsNotDoneWhenTheReadBackIsNotAnsweredEither() {
+        pumpAnswers { null }
+        danaPump.pumpProfiles = Array(4) { Array(48) { RATE } }
+
+        assertThat(testService.basalGiven(false, MsgSettingBasal(injector), profileRecord(RATE))).isFalse()
+    }
+
+    private companion object {
+
+        const val ANSWER_SIZE = 60
+        const val HOURS = 24
+        const val RATE = 0.8
+        const val OTHER_RATE = 0.5
     }
 }
