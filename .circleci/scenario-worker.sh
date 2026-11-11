@@ -23,17 +23,16 @@ RUNNER=$PKG.test/app.aaps.runners.AapsTestRunner
 # Parts per scenario class. More parts, more emulators can share one class.
 PARTS=${SCENARIO_PARTS:-2}
 
-# About how long one part of a class takes, in seconds, to put the long parts first. Equil, DanaR v2 and Carelevo
-# measured on CircleCI 42439 (2026-11-11), the others guessed from it: the DanaR classes grew by 8 scenarios. A class
-# not listed counts as the longest, so a new one never comes last; add it here once it has run.
+# About how long one part of a class takes, in seconds, measured on CircleCI 42440 (2026-11-11), to put the long parts
+# first. A class not listed counts as the longest, so a new one never comes last; add it here once it has run.
 part_seconds() {
   case "${1##*.}" in
-    EquilScenarioTest) echo 485 ;;
-    DanaRv2ScenarioTest) echo 450 ;;
-    DanaRScenarioTest) echo 420 ;;
-    CarelevoScenarioTest) echo 395 ;;
-    DanaRKoreanScenarioTest) echo 380 ;;
-    DanaRSScenarioTest) echo 255 ;;
+    EquilScenarioTest) echo 470 ;;
+    DanaRv2ScenarioTest) echo 445 ;;
+    DanaRScenarioTest) echo 410 ;;
+    CarelevoScenarioTest) echo 360 ;;
+    DanaRKoreanScenarioTest) echo 295 ;;
+    DanaRSScenarioTest) echo 240 ;;
     *) echo 999 ;;
   esac
 }
