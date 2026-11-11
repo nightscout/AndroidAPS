@@ -13,8 +13,7 @@ import java.util.concurrent.TimeUnit
  * Command-level tests for the DanaR RFCOMM emulator, the JVM counterpart to the Dana RS
  * emulator's `PumpEmulatorTest`.
  *
- * `DanaRPumpEmulator` was exercised only through `DanaREmulatorPumpTest`, which connects each variant
- * on a device but issues no commands, so its handlers sat near zero. These call `processCommand`
+ * On a device the DanaR scenario classes drive `DanaRPumpEmulator` through the drivers. These call `processCommand`
  * directly — no device, no execution service — and assert on the mutable [DanaRPumpState] or the
  * response bytes. Command values mirror the wire format the DanaR `Msg*` packets produce (amounts in
  * hundredths, big-endian).

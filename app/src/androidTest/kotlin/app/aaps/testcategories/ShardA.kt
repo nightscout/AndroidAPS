@@ -11,7 +11,7 @@ package app.aaps.testcategories
  *
  * What is where now:
  *  - **A** = `DanaRsEmulatorUiTest`, the Dana RS screens over all three handshakes
- *  - **B** = the DanaR family (`DanaREmulatorPumpTest`, `DanaRUiTest`), the Dana RS
+ *  - **B** = the DanaR family (`DanaRUiTest`), the Dana RS
  *    pump and pair wizard tests, and a few non-pump tests moved there to balance shard C
  *  - **C** = `SetupWizardE2ETest` (the long one), `CarelevoUiTest`, `EquilUiTest` and the other tests
  *
