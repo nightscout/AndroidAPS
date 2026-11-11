@@ -180,3 +180,17 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   the driver's own result: keep the new basal close to the old one in such a test.
 - Both a stored profile switch and `EventProfileChangeRequested` make AAPS write the profile. `switchProfile` sends
   both and tries again until the pump has it; to see the result of one write, only store the switch.
+- A temp basal at the base rate of the test profile (`PumpScenario.BASAL_RATE`) is no temp basal: a driver cancels
+  instead and AAPS stores none. A pump-specific test that wants a temp basal asks a rate above it.
+- A driver may wait a fixed time after a write: the Diaconn G8 waits 30 s after a basal write. The pairing writes the
+  profile, so give such a pump a longer pairing limit, and expect each profile step to take that long.
+- A pump with a vendor cloud (the Diaconn G8 sends its log there): an emulated pump must never reach it. The driver skips
+  the cloud while it is emulated, the emulated serial is random and not a real pump's, and the adapter turns the cloud
+  setting off. One run with a copied real serial once asked the real cloud for that pump's log.
+- A real pump may carry out a setting a moment after it answered the confirm: a Diaconn G8 starts a temp basal 1.8 s
+  later and stops one 1.2 s later. It holds a request that comes in between and answers it when the setting is done. An
+  emulator that answers at once with the old state makes failures no real pump gives (a start after a stop refused, a
+  history read with no record yet). Copy the hold, not only the delay.
+- A driver may take the time of a pump record, in whole seconds, as its id (the Diaconn G8 does). A real pump's own
+  timing keeps two records of one kind out of one second; an emulator at FAST speed does not, and AAPS then takes two
+  records for one. Keep the FAST time of such an action at 1 s or more.

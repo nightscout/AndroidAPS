@@ -26,6 +26,8 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":pump:common"))
+    // The in-tree emulator, picked by the `emulate_diaconn` option (DiaconnTransportBindings).
+    implementation(project(":pump:diaconn:emulator"))
     implementation(project(":shared:impl"))
 
     api(libs.androidx.room.runtime)
