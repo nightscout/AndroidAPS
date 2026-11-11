@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.pump.PumpSuspendSync
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
@@ -100,20 +101,20 @@ class BigLogInquireResponsePacket(
             return
         } else failed = false
 
-        val bufferData = prefixDecode(data) // 데이타 영역 15바이트 버퍼
-        val result2 = getByteToInt(bufferData)  // 조회결과 1 byte
+        val bufferData = prefixDecode(data) // the data part, 15 bytes for each log
+        val result2 = getByteToInt(bufferData)  // inquiry result, 1 byte
         if (!isSuccInquireResponseResult(result2)) {
             failed = true
             return
         }
-        val logLength = getByteToInt(bufferData) // 로그의 갯수. 1byte
+        val logLength = getByteToInt(bufferData) // number of logs, 1 byte
 
         // initialize
         val dailyMaxValInfo = mutableMapOf<String, MutableMap<String, Double>>()
         dailyMaxValInfo[""] = mutableMapOf()
         val pumpLogs: MutableList<PumpLog> = mutableListOf()
 
-        // 15 byte 를 로그갯수만큼 돌기.
+        // one 15-byte log at a time
         runBlocking {
             for (i in 0 until logLength) {
                 val wrappingCount = getByteToInt(bufferData) // 1byte
@@ -384,7 +385,7 @@ class BigLogInquireResponsePacket(
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
 
-                            // dual square 처리.
+                            // the square (extended) part of a dual bolus
                             val newRecord = pumpSync.syncExtendedBolusWithPumpId(
                                 timestamp = logDateTime,
                                 rate = PumpRate(logItem.setSquareAmount / 100.0),
@@ -521,6 +522,10 @@ class BigLogInquireResponsePacket(
                             aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
+                            // The user stopped the insulin on the pump. It went only to this list, and AAPS counted the
+                            // basal the pump did not give.
+                            val newRecord = PumpSuspendSync.started(pumpSync, logDateTime, logDateTime, PumpType.DIACONN_G8, diaconnG8Pump.serialNo.toString())
+                            aapsLogger.debug(LTag.PUMPCOMM, "${if (newRecord) "**NEW** " else ""}EVENT SUSPEND ($pumpLogKind) ${dateUtil.dateAndTimeString(logDateTime)} ($logDateTime)")
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                             diaconnG8HistoryRecord.timestamp = logDateTime
                             diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgosuspend, logItem.getBasalPattern())
@@ -536,6 +541,8 @@ class BigLogInquireResponsePacket(
                             aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
+                            val newRecord = PumpSuspendSync.ended(pumpSync, logDateTime, logDateTime, PumpType.DIACONN_G8, diaconnG8Pump.serialNo.toString())
+                            aapsLogger.debug(LTag.PUMPCOMM, "${if (newRecord) "**NEW** " else ""}EVENT SUSPEND_RELEASE ($pumpLogKind) ${dateUtil.dateAndTimeString(logDateTime)} ($logDateTime)")
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                             diaconnG8HistoryRecord.timestamp = logDateTime
                             diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgorelease, logItem.getBasalPattern())
@@ -906,7 +913,7 @@ class BigLogInquireResponsePacket(
             }
         }
 
-        // 플랫폼 동기화이면,
+        // when this is the sync to the Diaconn cloud
         if (diaconnG8Pump.isPlatformUploadStarted) {
             aapsLogger.debug(LTag.PUMPCOMM, "Diaconn api upload start!!")
             var appUid: String = preferences.get(DiaconnStringNonKey.AppUuid)

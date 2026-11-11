@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
@@ -236,6 +237,20 @@ class BigLogInquireResponsePacketTest : TestBaseWithProfile() {
         // Each processed record updates the pump's sync cursor to the latest log number / wrapping count.
         assertThat(diaconnG8Pump.apslastLogNum).isEqualTo(5)
         assertThat(diaconnG8Pump.apsWrappingCount).isEqualTo(7)
+    }
+
+    // A stop of the insulin on the pump and its end. They went only to the driver's own history list, and AAPS counted
+    // the basal the pump did not give.
+    @Test
+    fun aStopOnThePumpIsRecordedAsAPumpSuspendUntilItsEnd() {
+        BigLogInquireResponsePacket(packetInjector).handleMessage(bigLogPacket(listOf(1 to 0x03.toByte(), 2 to 0x04.toByte())))
+
+        val calls = mockingDetails(pumpSync).invocations
+        // The rate is a value class, so the JVM name of the method has a suffix.
+        val start = calls.single { it.method.name.startsWith("syncTemporaryBasalWithPumpId") }
+        // timestamp, rate, duration, isAbsolute, type, ...
+        assertThat(start.arguments[4]).isEqualTo(PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+        assertThat(calls.count { it.method.name.startsWith("syncStopTemporaryBasalWithPumpId") }).isEqualTo(1)
     }
 
     @Test

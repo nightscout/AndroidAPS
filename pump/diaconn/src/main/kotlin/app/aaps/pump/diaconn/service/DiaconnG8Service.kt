@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpSuspendSync
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -267,6 +268,9 @@ class DiaconnG8Service : MetroService() {
                 return
             }
             loadHistory()
+            // The pump history gives the exact times of a stop of the insulin on the pump. The status (1 = stopped) ends or
+            // starts what the history did not give, as for Dana.
+            PumpSuspendSync.followStatus(pumpSync, aapsLogger, diaconnG8Pump.basePauseStatus == 1, dateUtil.now(), PumpType.DIACONN_G8, diaconnG8Pump.serialNo.toString())
             // Sync TBR/EB state directly from pump response fields instead of pumpSync.expectedPumpState()
             // This prevents timing issues where pumpSync DB may not be updated yet
             diaconnG8Pump.syncTempBasalFromPump()
