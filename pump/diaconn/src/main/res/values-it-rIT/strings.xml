@@ -135,4 +135,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Associazione riuscita!</string>
     <string name="diaconn_pairing_successful_message">Il micro è ora connesso e pronto per l\'uso.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Cloud sync: %1$d / %2$d</string>
 </resources>
