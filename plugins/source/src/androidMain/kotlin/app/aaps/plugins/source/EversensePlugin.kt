@@ -312,7 +312,7 @@ class EversensePlugin(
             EversenseIntentKey.EversenseDocumentation.withClick {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
-                    "https://github.com/BernhardRo/AndroidAPS/blob/dev_es365/plugins/eversense/README.md".toUri()
+                    "https://github.com/BernhardRo/AndroidAPS/blob/master/plugins/eversense/README.md".toUri()
                 )
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
