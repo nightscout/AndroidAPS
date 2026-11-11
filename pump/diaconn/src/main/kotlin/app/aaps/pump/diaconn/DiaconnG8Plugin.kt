@@ -72,6 +72,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.max
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
@@ -322,7 +323,9 @@ class DiaconnG8Plugin(
 
         if (result.success) result.enacted = true
         if (!result.success) {
-            setErrorMsg(diaconnG8Pump.resultErrorCode, result)
+            if (diaconnG8Pump.bolusStoppedByPump)
+                result.comment = rh.gs(R.string.diaconn_g8_bolus_stopped_by_pump, rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, diaconnG8Pump.lastBolusAmount))
+            else setErrorMsg(diaconnG8Pump.resultErrorCode, result)
         } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
@@ -373,15 +376,13 @@ class DiaconnG8Plugin(
                     }
                 }
             }
-            temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), absoluteRate, true, tbrType, 0L, 0L))
-            // Convert duration from minutes to hours
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteRate U for $durationInMinutes mins (doLowTemp || doHighTemp)")
-            val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
-                diaconnG8Service?.tempBasalShortDuration(absoluteRate, durationInMinutes) == true
-            } else {
-                val durationInHours = max(durationInMinutes / 60.0, 1.0)
-                diaconnG8Service?.tempBasal(absoluteRate, durationInHours) == true
-            }
+            // The G8 runs a temp basal in whole 30-minute steps (2..96 quarters of an hour in its log). A 15-minute one
+            // was sent as 30 minutes and a 45-minute one as 60, but stored as asked: AAPS counted the base rate while the
+            // pump still gave the temp basal. It is sent and stored as the pump runs it.
+            val pumpMinutes = max(ceil(durationInMinutes / TBR_STEP_MINUTES).toInt(), 1) * TBR_STEP_MINUTES.toInt()
+            temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(pumpMinutes.toLong()).msecs(), absoluteRate, true, tbrType, 0L, 0L))
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteRate U for $pumpMinutes mins, asked $durationInMinutes (doLowTemp || doHighTemp)")
+            val connectionOK = diaconnG8Service?.tempBasal(absoluteRate, pumpMinutes / 60.0) == true
 
             if (connectionOK && diaconnG8Pump.isTempBasalInProgress && diaconnG8Pump.tempBasalAbsoluteRate == absoluteRate) {
                 result.enacted = true
@@ -542,4 +543,9 @@ class DiaconnG8Plugin(
         icon = pluginDescription.icon
     )
 
+    private companion object {
+
+        /** The temp basal step of the G8, in minutes. */
+        const val TBR_STEP_MINUTES = 30.0
+    }
 }

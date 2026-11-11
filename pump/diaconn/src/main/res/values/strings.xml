@@ -26,7 +26,7 @@
     <string name="commanderror">Command error</string>
     <string name="speederror">Speed error</string>
     <string name="insulinlimitviolation">Insulin limit violation</string>
-    <string name="boluserrorcode">Asked: %1$.2f U Delivered: %2$.2f U Error code: %3$s</string>
+    <string name="diaconn_g8_bolus_stopped_by_pump" comment="%1$s=insulin given, with unit. Example: 0.30 U">The pump stopped the bolus after %1$s. Check the pump before the next bolus.</string>
 
     <string name="selectedpump">Selected pump</string>
     <string name="bolus_step">Bolus Step</string>

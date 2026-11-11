@@ -23,6 +23,7 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.di.DiaconnBle
 import app.aaps.pump.diaconn.packet.BatteryWarningReportPacket
+import app.aaps.pump.diaconn.packet.BigLogInquirePacket
 import app.aaps.pump.diaconn.packet.BigLogInquireResponsePacket
 import app.aaps.pump.diaconn.packet.DiaconnG8Packet
 import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
@@ -173,6 +174,15 @@ class BLECommonService internal constructor(
 
                 // reset
                 mSendQueue.clear()
+                // Wake the page request that waits for it. The answer has a number of the pump's own, not the request's
+                // (real G8: request 54 got 0x27, request 55 got 0x29), so it cannot be matched by number. It woke
+                // nothing: each page waited its whole time, and the history read could not tell a read page from a lost one.
+                (processedMessage as? BigLogInquirePacket)?.let { request ->
+                    synchronized(request) {
+                        request.setReceived()
+                        request.notifyAll()
+                    }
+                }
             } else {
                 processResponseMessage(data)
             }
@@ -212,15 +222,13 @@ class BLECommonService internal constructor(
             return
         }
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() before mSendQueue.size :: ${mSendQueue.size}")
-        // send the request to the pump.
-        bleTransport.gatt.writeCharacteristic(bytes)
-        // put the bytes of the request in the send queue.
+        // The request is in the send queue before it is written: an answer is matched to it there, and one that came
+        // before the add was dropped as an unknown message.
         synchronized(mSendQueue) {
             if (mSendQueue.size > 10) mSendQueue.clear()
             mSendQueue.add(bytes)
         }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() after mSendQueue.size :: ${mSendQueue.size}")
+        bleTransport.gatt.writeCharacteristic(bytes)
 
         // Waits until the answer is in, at most waitMillis. The answer wakes this request in processResponseMessage. It woke
         // only the answer packet, so each request waited its whole time: 5 s a message, a status read 41 s on a real G8

@@ -8,6 +8,8 @@ import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -91,7 +93,9 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Android service that runs the Diaconn G8 commands over [BLECommonService]: status and history read, bolus, temp
@@ -103,6 +107,7 @@ class DiaconnG8Service : MetroService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var config: Config
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var context: Context
@@ -250,8 +255,8 @@ class DiaconnG8Service : MetroService() {
                 val msgPacket = TimeSettingPacket(injector, dateUtil.now())
                 sendMessage(msgPacket)
 
-                // otp process
-                if (!processConfirm(msgPacket.msgType)) return
+                // otp process. With no answer the clock read below tells whether it was set.
+                if (processConfirm(msgPacket.msgType) == Confirm.NOT_DONE) return
 
                 diaconnG8Pump.clearPumpClock()
                 sendMessage(TimeInquirePacket(injector))
@@ -320,13 +325,15 @@ class DiaconnG8Service : MetroService() {
             result.comment = "pump not initialized"
             return result
         }
-        sendMessage(LogStatusInquirePacket(injector))
+        val result = pumpEnactResultProvider()
+        val logStatus = LogStatusInquirePacket(injector)
+        sendMessage(logStatus)
+        if (!logStatus.isReceived) return result.success(false).comment("no answer to the log status")
         // pump version check
         if (diaconnG8Pump.isPumpVersionGe2_63) {
             sendMessage(IncarnationInquirePacket(injector))
         }
 
-        val result = pumpEnactResultProvider()
         var apsLastLogNum = 9999
         var apsWrappingCount = -1
         // get saved last log info
@@ -369,22 +376,31 @@ class DiaconnG8Service : MetroService() {
 
         // pump log loop size
         val pumpLogPageSize = 11
-        val (start, end, loopSize) = getLogLoopCount(apsLastLogNum, apsWrappingCount, pumpLastNum, pumpWrappingCount)
-        aapsLogger.debug(LTag.PUMPCOMM, "loopinfo start : $start, end : $end, loopSize : $loopSize")
+        val ranges = logRanges(apsLastLogNum, apsWrappingCount, pumpLastNum, pumpWrappingCount)
+        aapsLogger.debug(LTag.PUMPCOMM, "log ranges to read: $ranges")
         // log sync start!
-        if (loopSize > 0) {
-            for (i in 0 until loopSize) {
-                val startLogNo: Int = start + i * pumpLogPageSize
+        // A read that finds nothing new is a good read too. It failed, so the daily totals of a pump with no new record failed.
+        // A page with no answer ends the read: the next read starts after the last stored record, so a later page read now
+        // would skip the lost one for good.
+        var allPagesRead = true
+        pages@ for ((start, end) in ranges) {
+            for (startLogNo in start until end step pumpLogPageSize) {
                 val endLogNo: Int = startLogNo + min(end - startLogNo, pumpLogPageSize)
                 aapsLogger.debug(LTag.PUMPCOMM, "pumplog request : $startLogNo ~ $endLogNo")
                 val msg = BigLogInquirePacket(injector, startLogNo, endLogNo, 100)
                 sendMessage(msg, 2000)
+                if (!msg.isReceived) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "no answer to the log page $startLogNo ~ $endLogNo, the read ends")
+                    allPagesRead = false
+                    break@pages
+                }
             }
-            result.success(true)
-            diaconnG8Pump.lastConnection = System.currentTimeMillis()
         }
+        result.success(allPagesRead)
+        if (allPagesRead) diaconnG8Pump.lastConnection = System.currentTimeMillis()
         // upload pump log to Diaconn Cloud
-        if (preferences.get(DiaconnBooleanKey.SendLogsToCloud)) {
+        // Never from the emulator: it sent the log of an emulated pump to the Diaconn cloud, under the identity of a real one.
+        if (preferences.get(DiaconnBooleanKey.SendLogsToCloud) && !config.isEnabled(ExternalOptions.EMULATE_DIACONN)) {
             SystemClock.sleep(1000)
             try {
                 // getting last uploaded log number
@@ -428,23 +444,6 @@ class DiaconnG8Service : MetroService() {
         return result
     }
 
-    private fun getLogLoopCount(lastLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
-        val start: Int// log sync start number
-        val end: Int // log sync end number
-        aapsLogger.debug(LTag.PUMPCOMM, "lastLogNum : $lastLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount : $pumpWrappingCount")
-
-        if (pumpWrappingCount > wrappingCount) {
-            start = (lastLogNum + 1)
-            end = 10000
-        } else {
-            start = (lastLogNum + 1)
-            end = pumpLastNum
-        }
-        val size = ceil((end - start) / 11.0).toInt()
-        //
-        return Triple(start, end, size)
-    }
-
     private fun getCloudLogLoopCount(platformLastNo: Int, platformPumpLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
         val start: Int// log sync start number
         val end: Int // log sync end number
@@ -483,17 +482,9 @@ class DiaconnG8Service : MetroService() {
         } ?: return result.success(false)
 
         sendMessage(msg)
-        // pump confirm
-        if (diaconnG8Pump.otpNumber == 0) {
-            aapsLogger.error(LTag.PUMPCOMM, "otp is not received yet")
-            result.success(false)
-            result.comment("")
-            return result
-        }
-        sendMessage(AppConfirmSettingPacket(injector, msg.msgType, diaconnG8Pump.otpNumber))
-        diaconnG8Pump.otpNumber = 0
-        SystemClock.sleep(100)
-        return result.success(true)
+        // It looked at the confirmation code at once, before the pump could send it, and reported a setting done whatever
+        // the pump answered to its confirm.
+        return result.success(processConfirm(msg.msgType) == Confirm.DONE)
     }
 
     fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
@@ -505,8 +496,8 @@ class DiaconnG8Service : MetroService() {
         if (updateBolusSpeedInPump) {
             val msg = BolusSpeedSettingPacket(injector, preferences.get(DiaconnIntKey.BolusSpeed))
             sendMessage(msg)
-            sendMessage(AppConfirmSettingPacket(injector, msg.msgType, diaconnG8Pump.otpNumber))
-            diaconnG8Pump.otpNumber = 0
+            // The speed the pump runs is read below, so a speed it did not take only makes the progress less exact.
+            processConfirm(msg.msgType)
             updateBolusSpeedInPump = false
         }
 
@@ -514,34 +505,24 @@ class DiaconnG8Service : MetroService() {
         // pump bolus speed inquire
         sendMessage(BolusSpeedInquirePacket(injector))
         diaconnG8Pump.bolusDone = false
+        diaconnG8Pump.bolusGivenInFull = false
         diaconnG8Pump.bolusingDetailedBolusInfo = detailedBolusInfo
         diaconnG8Pump.bolusStopped = false
         diaconnG8Pump.bolusStopForced = false
         diaconnG8Pump.bolusProgressLastTimeStamp = dateUtil.now()
-        val start = InjectionSnackSettingPacket(injector, (insulin * 100).toInt())
+        val start = InjectionSnackSettingPacket(injector, hundredths(insulin))
         val bolusStart = System.currentTimeMillis()
         if (insulin > 0) {
             if (!diaconnG8Pump.bolusStopped) {
                 sendMessage(start, 100)
-                // otp process
-                if (!processConfirm(start.msgType)) return false
+                // With no answer to the confirm the pump may give the bolus: its end report tells, as after a taken one.
+                // It returned success for it without waiting, so a bolus the pump never gave was reported as given.
+                if (processConfirm(start.msgType) == Confirm.NOT_DONE) return false
             } else {
                 return false
             }
         }
-        var speed = 12
-        when (diaconnG8Pump.speed) {
-            1 -> speed = 60
-            2 -> speed = 30
-            3 -> speed = 20
-            4 -> speed = 15
-            5 -> speed = 12
-            6 -> speed = 10
-            7 -> speed = 9
-            8 -> speed = 8
-        }
-
-        val bolusDurationInMSec = (insulin * speed * 1000).toLong()
+        val bolusDurationInMSec = (insulin * diaconnG8Pump.secondsPerUnit * 1000).toLong()
         val expectedEnd = bolusStart + bolusDurationInMSec + 3500L
         val totalwaitTime = (expectedEnd - System.currentTimeMillis()) / 1000
         // reset bolus progress history
@@ -558,7 +539,7 @@ class DiaconnG8Service : MetroService() {
         // the pump history by the loadEvents() below.
         val giveUpAt = bolusStart + (insulin * 60 * 1000).toLong() + 60 * 1000L
         var connectionBroken = false
-        if (diaconnG8Pump.isReadyToBolus) {
+        if (insulin > 0) {
             while (!diaconnG8Pump.bolusDone) {
                 if (!isConnected || System.currentTimeMillis() > giveUpAt) {
                     aapsLogger.error(LTag.PUMPCOMM, "Bolus end not received (connected=$isConnected), giving up")
@@ -580,7 +561,6 @@ class DiaconnG8Service : MetroService() {
                 SystemClock.sleep(200)
             }
         }
-        diaconnG8Pump.isReadyToBolus = false
 
         // do not call loadHistory() directly, reconnection may be needed
         scope?.launch {
@@ -591,7 +571,11 @@ class DiaconnG8Service : MetroService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
         }
         diaconnG8Pump.bolusingDetailedBolusInfo = null
-        return !start.failed && !connectionBroken
+        // A bolus the pump stopped itself, as at an occlusion, is not given: it was reported as given, so the user was
+        // not told. A stop by the user is no failure.
+        val stoppedByPump = diaconnG8Pump.bolusStoppedByPump
+        if (stoppedByPump) aapsLogger.warn(LTag.PUMPCOMM, "The pump stopped the bolus of $insulin U: ${diaconnG8Pump.lastBolusAmount} U given")
+        return !connectionBroken && !stoppedByPump
     }
 
     fun bolusStop() {
@@ -600,7 +584,7 @@ class DiaconnG8Service : MetroService() {
         if (isConnected) {
             sendMessage(stop, 100)
             // otp process
-            if (!processConfirm(stop.msgType)) return
+            if (processConfirm(stop.msgType) == Confirm.NOT_DONE) return
             // Bounded like DanaR's bolusStop: a lost stop report or a link drop must not keep this
             // thread waiting forever (#5209).
             val giveUpAt = System.currentTimeMillis() + 10 * 1000L
@@ -619,14 +603,15 @@ class DiaconnG8Service : MetroService() {
     fun tempBasal(absoluteRate: Double, durationInHours: Double): Boolean {
         if (!isConnected) return false
 
+        val steps = ((durationInHours * 60) / 15).toInt()
+        val tbInjectRate = hundredths(absoluteRate) + 1000
         // temp state check
         sendMessage(TempBasalInquirePacket(injector))
-        val result: DiaconnG8Packet
+        val confirm: Confirm
         if (diaconnG8Pump.isPumpVersionGe3_53) {
-            val tbrPacket = TempBasalSettingPacket(injector, 3, ((durationInHours * 60) / 15).toInt(), ((absoluteRate * 100) + 1000).toInt())
+            val tbrPacket = TempBasalSettingPacket(injector, 3, steps, tbInjectRate)
             sendMessage(tbrPacket, 100)
-            result = tbrPacket
-            if (!processConfirm(tbrPacket.msgType)) return false
+            confirm = processConfirm(tbrPacket.msgType)
         } else {
 
             if (diaconnG8Pump.tbStatus == 1) {
@@ -634,22 +619,24 @@ class DiaconnG8Service : MetroService() {
                 val tbrPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
                 // tempbasal stop
                 sendMessage(tbrPacket, 100)
-                // otp process
-                if (!processConfirm(tbrPacket.msgType)) return false
+                // otp process. With no answer the new temp basal below replaces the old one anyway.
+                if (processConfirm(tbrPacket.msgType) == Confirm.NOT_DONE) return false
                 diaconnG8Pump.tempBasalStart = dateUtil.now()
             }
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
-            val tbInjectRate = ((absoluteRate * 100) + 1000).toInt()
-            val tbrPacket = TempBasalSettingPacket(injector, 1, ((durationInHours * 60) / 15).toInt(), tbInjectRate)
+            val tbrPacket = TempBasalSettingPacket(injector, 1, steps, tbInjectRate)
             sendMessage(tbrPacket, 100)
-            result = tbrPacket
-            // otp process
-            if (!processConfirm(tbrPacket.msgType)) return false
-            // pump tempbasal status inquire
+            confirm = processConfirm(tbrPacket.msgType)
         }
+        if (confirm == Confirm.NOT_DONE) return false
 
+        // With no answer to the confirm, only the pump tells whether it took the temp basal. It reported every temp basal
+        // set, whatever the pump answered.
+        val started = confirm == Confirm.DONE || pumpShows({ sendMessage(TempBasalInquirePacket(injector)) }) {
+            diaconnG8Pump.tbStatus == 1 && diaconnG8Pump.tbInjectRateRatio == tbInjectRate
+        }
         // Set TBR state directly after successful setting (don't rely solely on loadHistory/pumpSync)
-        if (result.success()) {
+        if (started) {
             val durationInMinutes = (durationInHours * 60).toLong()
             diaconnG8Pump.tempBasalStart = dateUtil.now()
             diaconnG8Pump.tempBasalDuration = T.mins(durationInMinutes).msecs()
@@ -657,67 +644,13 @@ class DiaconnG8Service : MetroService() {
             aapsLogger.debug(LTag.PUMPCOMM, "TBR set directly: start=${diaconnG8Pump.tempBasalStart}, duration=${durationInMinutes}min, rate=${absoluteRate}U/h")
         }
 
-        sendMessage(TempBasalInquirePacket(injector))
         // do not call loadHistory() directly, reconnection may be needed
         scope?.launch {
             commandQueue.loadEvents()
             rxBus.send(EventDiaconnG8NewStatus())
         }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return result.success()
-    }
-
-    fun tempBasalShortDuration(absoluteRate: Double, durationInMinutes: Int): Boolean {
-        if (durationInMinutes != 15 && durationInMinutes != 30) {
-            aapsLogger.error(LTag.PUMPCOMM, "Wrong duration param")
-            return false
-        }
-
-        // temp state check
-        val result: DiaconnG8Packet
-        sendMessage(TempBasalInquirePacket(injector))
-        if (diaconnG8Pump.isPumpVersionGe3_53) {
-            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
-            val tbrSettingPacket = TempBasalSettingPacket(injector, 3, 2, ((absoluteRate * 100) + 1000).toInt())
-            sendMessage(tbrSettingPacket, 100)
-            result = tbrSettingPacket
-            // otp process
-            if (!processConfirm(tbrSettingPacket.msgType)) return false
-            sendMessage(TempBasalInquirePacket(injector))
-        } else {
-            if (diaconnG8Pump.tbStatus == 1) {
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
-                val tbrPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
-                // tempbasal stop
-                sendMessage(tbrPacket, 100)
-                // otp process
-                if (!processConfirm(tbrPacket.msgType)) return false
-                SystemClock.sleep(500)
-            }
-            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
-            val tbInjectRate = absoluteRate * 100 + 1000
-            val msgTBR = TempBasalSettingPacket(injector, 1, 2, tbInjectRate.toInt())
-            sendMessage(msgTBR, 100)
-            result = msgTBR
-            // otp process
-            if (!processConfirm(msgTBR.msgType)) return false
-        }
-        // Set TBR state directly after successful setting (don't rely solely on loadHistory/pumpSync)
-        if (result.success()) {
-            diaconnG8Pump.tempBasalStart = dateUtil.now()
-            diaconnG8Pump.tempBasalDuration = T.mins(durationInMinutes.toLong()).msecs()
-            diaconnG8Pump.tempBasalAbsoluteRate = absoluteRate
-            aapsLogger.debug(LTag.PUMPCOMM, "TBR set directly: start=${diaconnG8Pump.tempBasalStart}, duration=${durationInMinutes}min, rate=${absoluteRate}U/h")
-        }
-
-        sendMessage(TempBasalInquirePacket(injector))
-        // do not call loadHistory() directly, reconnection may be needed
-        scope?.launch {
-            commandQueue.loadEvents()
-            rxBus.send(EventDiaconnG8NewStatus())
-        }
-        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return result.success()
+        return started
     }
 
     fun tempBasalStop(): Boolean {
@@ -735,7 +668,10 @@ class DiaconnG8Service : MetroService() {
             // tempbasal stop
             sendMessage(msgPacket, 500)
             // otp process
-            if (!processConfirm(msgPacket.msgType)) return false
+            val confirm = processConfirm(msgPacket.msgType)
+            if (confirm == Confirm.NOT_DONE) return false
+            // Only the pump tells whether the stop came through.
+            if (confirm == Confirm.NO_ANSWER && !pumpShows({ sendMessage(TempBasalInquirePacket(injector)) }) { diaconnG8Pump.tbStatus != 1 }) return false
             SystemClock.sleep(500)
 
             // Clear TBR state directly after successful stop
@@ -759,13 +695,18 @@ class DiaconnG8Service : MetroService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingextendedbolus)))
         aapsLogger.debug(LTag.PUMPCOMM, "insulin: $insulin durationInMinutes: $durationInMinutes")
 
-        val msgExtended = InjectionExtendedBolusSettingPacket(injector, (insulin * 100).toInt(), durationInMinutes, dateUtil.now())
+        val msgExtended = InjectionExtendedBolusSettingPacket(injector, hundredths(insulin), durationInMinutes, dateUtil.now())
         sendMessage(msgExtended)
-        // otp process
-        if (!processConfirm(msgExtended.msgType)) return false
+        // otp process. It reported every extended bolus set, whatever the pump answered.
+        val started = when (processConfirm(msgExtended.msgType)) {
+            Confirm.DONE      -> true
+            Confirm.NOT_DONE  -> false
+            // Only the pump tells whether it took the extended bolus.
+            Confirm.NO_ANSWER -> pumpShows({ readMainInfo() }) { diaconnG8Pump.squareStatus == SQUARE_RUNNING }
+        }
 
         // Set EB state directly after successful setting (don't rely solely on loadHistory/pumpSync)
-        if (msgExtended.success()) {
+        if (started) {
             diaconnG8Pump.extendedBolusStart = dateUtil.now()
             diaconnG8Pump.extendedBolusDuration = T.mins(durationInMinutes.toLong()).msecs()
             diaconnG8Pump.extendedBolusAmount = insulin
@@ -778,7 +719,7 @@ class DiaconnG8Service : MetroService() {
             rxBus.send(EventDiaconnG8NewStatus())
         }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return msgExtended.success()
+        return started
     }
 
     fun extendedBolusStop(): Boolean {
@@ -788,7 +729,13 @@ class DiaconnG8Service : MetroService() {
         val msgStop = InjectionCancelSettingPacket(injector, msgType)
         sendMessage(msgStop)
         // otp process
-        if (!processConfirm(msgStop.msgType)) return false
+        val stopped = when (processConfirm(msgStop.msgType)) {
+            Confirm.DONE      -> true
+            Confirm.NOT_DONE  -> false
+            // Only the pump tells whether the stop came through.
+            Confirm.NO_ANSWER -> pumpShows({ readMainInfo() }) { diaconnG8Pump.squareStatus != SQUARE_RUNNING }
+        }
+        if (!stopped) return false
 
         // Clear EB state directly after successful stop
         diaconnG8Pump.extendedBolusStart = 0L
@@ -802,7 +749,29 @@ class DiaconnG8Service : MetroService() {
             rxBus.send(EventDiaconnG8NewStatus())
         }
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return msgStop.success()
+        return true
+    }
+
+    /**
+     * Reads the pump with [read] until [shows] holds, for a few seconds. A real G8 started a temp basal about 2 s after
+     * the answer to its confirm, and a read before that still gave the old state (2026-11-11).
+     */
+    private fun pumpShows(read: () -> Unit, shows: () -> Boolean): Boolean {
+        repeat(STATE_READS) {
+            read()
+            if (shows()) return true
+            SystemClock.sleep(STATE_READ_GAP_MS)
+        }
+        return false
+    }
+
+    /** Reads the main info of the pump: what it runs now, as its extended bolus. Firmware 3.0 and later has its own one. */
+    private fun readMainInfo() {
+        val pumpFirmwareVersion = preferences.get(DiaconnStringNonKey.PumpVersion)
+        if (pumpFirmwareVersion.isNotEmpty() && PumpLogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0))
+            sendMessage(BigAPSMainInfoInquirePacket(injector))
+        else
+            sendMessage(BigMainInfoInquirePacket(injector))
     }
 
     suspend fun updateBasalsInPump(profile: Profile): Boolean {
@@ -862,7 +831,8 @@ class DiaconnG8Service : MetroService() {
         sendMessage(requestReqPacket4)
 
         // otp process
-        if (!processConfirm(requestReqPacket4.msgType)) return false
+        val basalConfirm = processConfirm(requestReqPacket4.msgType)
+        if (basalConfirm == Confirm.NOT_DONE) return false
         // pump saving time about 30 second
         aapsLogger.debug(LTag.PUMPCOMM, "30 seconds Waiting!!")
         SystemClock.sleep(30000)
@@ -870,13 +840,37 @@ class DiaconnG8Service : MetroService() {
         val msgPacket = InjectionBasalSettingPacket(injector, 1)
         sendMessage(msgPacket)
         // otp process
-        if (!processConfirm(msgPacket.msgType)) return false
+        val activateConfirm = processConfirm(msgPacket.msgType)
+        if (activateConfirm == Confirm.NOT_DONE) return false
         readPumpStatus()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return requestReqPacket4.success()
+        if (basalConfirm == Confirm.DONE && activateConfirm == Confirm.DONE) return true
+        // A confirm with no answer: the basal the status read just read back tells whether the pump took the profile.
+        // It reported every profile set, whatever the pump answered.
+        val onPump = diaconnG8Pump.pumpProfiles?.get(diaconnG8Pump.activeProfile) ?: return false
+        return basalList.indices.all { abs(onPump[it] - basalList[it]) < BASAL_TOLERANCE }
     }
 
-    private fun processConfirm(msgType: Byte): Boolean {
+    /** What the pump said to the confirm of a setting. A setting takes effect only with its confirm. */
+    private enum class Confirm {
+
+        /** The pump took the setting. */
+        DONE,
+
+        /** The pump does not do it: no confirmation code came for the setting, or the pump refused the confirm. */
+        NOT_DONE,
+
+        /** The confirm got no answer: the pump may have taken the setting, only a read of the pump tells. */
+        NO_ANSWER
+    }
+
+    /**
+     * Sends the confirm of the setting [msgType] with the confirmation code (OTP) from the setting's answer.
+     *
+     * It reported done for every confirm it sent, and the answer to it was never read. So a bolus or a temp basal the pump
+     * refused, or whose confirm was lost, was reported as given.
+     */
+    private fun processConfirm(msgType: Byte): Confirm {
         // pump confirm
         var loopCnt = 0
         // waits up to 3 seconds for the OTP (30 loops of 100 ms)
@@ -888,12 +882,59 @@ class DiaconnG8Service : MetroService() {
         // check if otp received
         if (diaconnG8Pump.otpNumber == 0) {
             aapsLogger.error(LTag.PUMPCOMM, "otp is not received yet after ${loopCnt * 100}ms")
-            return false
+            return Confirm.NOT_DONE
         }
         aapsLogger.debug(LTag.PUMPCOMM, "OTP received: ${diaconnG8Pump.otpNumber} after ${loopCnt * 100}ms")
-        diaconnG8Pump.bolusConfirmMessage = msgType
-        sendMessage(AppConfirmSettingPacket(injector, msgType, diaconnG8Pump.otpNumber), 2000)
+        diaconnG8Pump.confirmResult = null
+        val confirm = AppConfirmSettingPacket(injector, msgType, diaconnG8Pump.otpNumber)
+        sendMessage(confirm, 2000)
         diaconnG8Pump.otpNumber = 0
-        return true
+        val result = when {
+            !confirm.isReceived                 -> Confirm.NO_ANSWER
+            diaconnG8Pump.confirmResult == 0 -> Confirm.DONE
+            else                                -> Confirm.NOT_DONE
+        }
+        aapsLogger.debug(LTag.PUMPCOMM, "Confirm of 0x${"%02X".format(msgType)}: $result (pump result ${diaconnG8Pump.confirmResult})")
+        return result
+    }
+
+    companion object {
+
+        /** The pump numbers its log 0 until this, then starts again at 0 with a higher wrap count. */
+        private const val LOG_NUMBERS = 10000
+
+        /** The square (extended) bolus status of the main info while one runs. */
+        private const val SQUARE_RUNNING = 1
+
+        /** How often and how far apart the pump is read after a confirm with no answer: about 5 s in all. */
+        private const val STATE_READS = 8
+        private const val STATE_READ_GAP_MS = 600L
+
+        /** The pump keeps a rate in hundredths of a unit; the record sent to it adds 0.00001 against a cut. */
+        private const val BASAL_TOLERANCE = 0.005
+
+        /**
+         * [units] in the hundredths the pump takes, rounded. A cut gave less: 0.29 * 100 is 28.99999..., so a bolus of
+         * 0.29 U went to the pump as 0.28 U.
+         */
+        internal fun hundredths(units: Double): Int = (units * 100).roundToInt()
+
+        /**
+         * The log numbers to read, as ranges from start (read) to end (not read), oldest first. [lastLogNum] and
+         * [wrappingCount] are the newest record AAPS has, [pumpLastNum] is one past the newest record of the pump.
+         *
+         * After a wrap the old wrap is read to its end and the new one from 0, in the same read. It read the old wrap to
+         * its end and then nothing more: AAPS records a bolus only from the pump log, so every bolus after it was lost.
+         * More than a whole log behind, it starts at the newest records, as after a first pairing: the whole log is 910
+         * pages of 2 s each.
+         */
+        internal fun logRanges(lastLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): List<Pair<Int, Int>> =
+            when (pumpWrappingCount - wrappingCount) {
+                0    -> listOf(lastLogNum + 1 to pumpLastNum)
+                1    -> listOf(lastLogNum + 1 to LOG_NUMBERS, 0 to pumpLastNum)
+                // A lower wrap count: the pump was reset. The serial and incarnation checks in loadHistory handle that.
+                in Int.MIN_VALUE..-1 -> listOf(lastLogNum + 1 to pumpLastNum)
+                else -> listOf(max(pumpLastNum - 2, 0) to pumpLastNum)
+            }.filter { (start, end) -> end > start }
     }
 }

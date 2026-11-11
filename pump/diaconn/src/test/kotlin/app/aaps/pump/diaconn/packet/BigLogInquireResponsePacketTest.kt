@@ -18,6 +18,7 @@ import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.stubbing.Answer
 
@@ -253,6 +254,34 @@ class BigLogInquireResponsePacketTest : TestBaseWithProfile() {
         assertThat(calls.count { it.method.name.startsWith("syncStopTemporaryBasalWithPumpId") }).isEqualTo(1)
     }
 
+    // A real G8 (fw 2.50, speed 5): a 1 U bolus confirmed 21:10:58 and ended 21:11:22 was logged 21:11:20. Stored at the
+    // log time, a longer bolus no longer matched the bolus AAPS asked for (1 minute apart at most) and lost its type.
+    @Test
+    fun aBolusIsStoredFromItsStartNotFromItsLogTime() {
+        diaconnG8Pump.speed = 5
+
+        BigLogInquireResponsePacket(packetInjector).handleMessage(bigLogRecordPacket(4125, "f8d9f46a8a640064000153ff"))
+
+        val sync = mockingDetails(pumpSync).invocations.single { it.method.name.startsWith("syncBolusWithPumpId") }
+        // timestamp, amount, type, pumpId, ...
+        val timestamp = sync.arguments[0] as Long
+        val pumpId = sync.arguments[3] as Long
+        // 1 U at 12 s a unit. The pump id stays the log time, which marks the record.
+        assertThat(pumpId - timestamp).isEqualTo(12_000L)
+        verify(detailedBolusInfoStorage).findDetailedBolusInfo(timestamp, 1.0)
+    }
+
+    @Test
+    fun aSlowerPumpStartedTheBolusEarlier() {
+        diaconnG8Pump.speed = 1
+
+        BigLogInquireResponsePacket(packetInjector).handleMessage(bigLogRecordPacket(4125, "f8d9f46a8a640064000153ff"))
+
+        val sync = mockingDetails(pumpSync).invocations.single { it.method.name.startsWith("syncBolusWithPumpId") }
+        // 1 U at 60 s a unit.
+        assertThat((sync.arguments[3] as Long) - (sync.arguments[0] as Long)).isEqualTo(60_000L)
+    }
+
     @Test
     fun handleMessageIgnoresUnknownLogKind() {
         // 0x3F is not a handled kind → the else arm emits an in-progress status and continues.
@@ -284,6 +313,23 @@ class BigLogInquireResponsePacketTest : TestBaseWithProfile() {
             data[off + 3 + 4] = kind                            // logData[4] = kind
             off += 15
         }
+        data[data.size - 1] = DiaconnG8Packet.getCRC(data, data.size - 1)
+        return data
+    }
+
+    /** A SOP_BIG packet with one record: its [logNum] and the 12 bytes of its log data, as a real pump sent them. */
+    private fun bigLogRecordPacket(logNum: Int, logDataHex: String): ByteArray {
+        val data = ByteArray(DiaconnG8Packet.MSG_LEN_BIG)
+        data[0] = DiaconnG8Packet.SOP_BIG
+        data[1] = 0xb2.toByte()
+        data[2] = 0x01
+        data[3] = 0x00
+        data[4] = 16          // result: success
+        data[5] = 1
+        data[6] = 0           // wrappingCount
+        data[7] = (logNum and 0xff).toByte()
+        data[8] = ((logNum shr 8) and 0xff).toByte()
+        logDataHex.chunked(2).forEachIndexed { i, byte -> data[9 + i] = byte.toInt(16).toByte() }
         data[data.size - 1] = DiaconnG8Packet.getCRC(data, data.size - 1)
         return data
     }

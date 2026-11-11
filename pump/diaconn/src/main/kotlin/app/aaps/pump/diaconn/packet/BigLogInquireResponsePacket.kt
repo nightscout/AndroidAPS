@@ -165,9 +165,11 @@ class BigLogInquireResponsePacket(
                             aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                            // The pump logs a bolus when it ends: AAPS stores it from its start. The pump history keeps the log time.
+                            val bolusStart = diaconnG8Pump.bolusStartOf(logDateTime, logItem.injectAmount / 100.0)
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, logItem.injectAmount / 100.0)
                             val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = logDateTime,
+                                timestamp = bolusStart,
                                 amount = PumpInsulin(logItem.injectAmount / 100.0),
                                 type = detailedBolusInfo?.bolusType,
                                 pumpId = logDateTime,
@@ -176,7 +178,7 @@ class BigLogInquireResponsePacket(
                             )
                             aapsLogger.debug(
                                 LTag.PUMPCOMM,
-                                "${if (newRecord) "**NEW** " else ""}EVENT MEAL_BOLUS ($pumpLogKind) ${dateUtil.dateAndTimeString(logDateTime)} ($logDateTime) Bolus: ${logItem.injectAmount / 100.0}U "
+                                "${if (newRecord) "**NEW** " else ""}EVENT MEAL_BOLUS ($pumpLogKind) ${dateUtil.dateAndTimeString(bolusStart)} ($bolusStart, logged $logDateTime) Bolus: ${logItem.injectAmount / 100.0}U "
                             )
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
                             diaconnG8HistoryRecord.timestamp = logDateTime
@@ -200,9 +202,11 @@ class BigLogInquireResponsePacket(
                             aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                            // The pump logs a bolus when it ends: AAPS stores it from its start. The pump history keeps the log time.
+                            val bolusStart = diaconnG8Pump.bolusStartOf(logDateTime, logItem.injectAmount / 100.0)
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, logItem.injectAmount / 100.0)
                             val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = logDateTime,
+                                timestamp = bolusStart,
                                 amount = PumpInsulin(logItem.injectAmount / 100.0),
                                 type = detailedBolusInfo?.bolusType,
                                 pumpId = logDateTime,
@@ -211,7 +215,7 @@ class BigLogInquireResponsePacket(
                             )
                             aapsLogger.debug(
                                 LTag.PUMPCOMM,
-                                "${if (newRecord) "**NEW** " else ""}EVENT MEAL_BOLUS ($pumpLogKind) ${dateUtil.dateAndTimeString(logDateTime)} ($logDateTime) Bolus: ${logItem.injectAmount / 100.0}U "
+                                "${if (newRecord) "**NEW** " else ""}EVENT MEAL_BOLUS ($pumpLogKind) ${dateUtil.dateAndTimeString(bolusStart)} ($bolusStart, logged $logDateTime) Bolus: ${logItem.injectAmount / 100.0}U "
                             )
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
                             diaconnG8HistoryRecord.timestamp = logDateTime
@@ -236,9 +240,11 @@ class BigLogInquireResponsePacket(
 
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                            // The pump logs a bolus when it ends: AAPS stores it from its start. The pump history keeps the log time.
+                            val bolusStart = diaconnG8Pump.bolusStartOf(logDateTime, logItem.injectAmount / 100.0)
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, logItem.injectAmount / 100.0)
                             val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = logDateTime,
+                                timestamp = bolusStart,
                                 amount = PumpInsulin(logItem.injectAmount / 100.0),
                                 type = detailedBolusInfo?.bolusType,
                                 pumpId = logDateTime,
@@ -247,7 +253,7 @@ class BigLogInquireResponsePacket(
                             )
                             aapsLogger.debug(
                                 LTag.PUMPCOMM,
-                                (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumpLogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U "
+                                (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumpLogKind + ") " + dateUtil.dateAndTimeString(bolusStart) + " (" + bolusStart + ", logged " + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U "
                             )
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
                             diaconnG8HistoryRecord.timestamp = logDateTime
@@ -273,9 +279,11 @@ class BigLogInquireResponsePacket(
                             val logDateTime = logStartDate.time
 
                             // APS DB process
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                            // The pump logs a bolus when it ends: AAPS stores it from its start. The pump history keeps the log time.
+                            val bolusStart = diaconnG8Pump.bolusStartOf(logDateTime, logItem.injectAmount / 100.0)
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, logItem.injectAmount / 100.0)
                             val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = logDateTime,
+                                timestamp = bolusStart,
                                 amount = PumpInsulin(logItem.injectAmount / 100.0),
                                 type = detailedBolusInfo?.bolusType,
                                 pumpId = logDateTime,
@@ -284,7 +292,7 @@ class BigLogInquireResponsePacket(
                             )
                             aapsLogger.debug(
                                 LTag.PUMPCOMM,
-                                (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumpLogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U "
+                                (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumpLogKind + ") " + dateUtil.dateAndTimeString(bolusStart) + " (" + bolusStart + ", logged " + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U "
                             )
                             // Diaconn History Process
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
@@ -419,9 +427,11 @@ class BigLogInquireResponsePacket(
                             aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                            // The pump logs a bolus when it ends: AAPS stores it from its start. The pump history keeps the log time.
+                            val bolusStart = diaconnG8Pump.bolusStartOf(logDateTime, logItem.injectAmount / 100.0)
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, logItem.injectAmount / 100.0)
                             val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = logDateTime,
+                                timestamp = bolusStart,
                                 amount = PumpInsulin(logItem.injectAmount / 100.0),
                                 type = detailedBolusInfo?.bolusType,
                                 pumpId = logDateTime,
@@ -430,11 +440,11 @@ class BigLogInquireResponsePacket(
                             )
                             aapsLogger.debug(
                                 LTag.PUMPCOMM,
-                                "${if (newRecord) "**NEW** " else ""}EVENT DUAL_BOLUS ($pumpLogKind) ${dateUtil.dateAndTimeString(logDateTime)} ($logDateTime) Bolus: ${logItem.injectAmount / 100.0}U Duration: ${logItem.getInjectTime()}min"
+                                "${if (newRecord) "**NEW** " else ""}EVENT DUAL_BOLUS ($pumpLogKind) ${dateUtil.dateAndTimeString(bolusStart)} ($bolusStart, logged $logDateTime) Bolus: ${logItem.injectAmount / 100.0}U Duration: ${logItem.getInjectTime()}min"
                             )
 
                             diaconnG8Pump.lastBolusAmount = logItem.injectAmount / 100.0
-                            diaconnG8Pump.lastBolusTime = logDateTime
+                            diaconnG8Pump.lastBolusTime = bolusStart
 
                             //Diaconn History
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
