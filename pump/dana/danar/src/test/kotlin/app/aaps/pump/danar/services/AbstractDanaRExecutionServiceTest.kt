@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -256,6 +257,30 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
 
         // Verify notification
         assertThat(mockingDetails(notificationManager).invocations.any { it.method.name == "post" }).isTrue()
+    }
+
+    /**
+     * An extended bolus the user set on the pump is stored with its own start as its pump id. With the start of the temp
+     * basal, 0 when none runs, a second one only updated the ended record of the first, and AAPS never counted it.
+     */
+    @Test
+    fun testDoSanityCheck_extendedBolusOnThePumpHasItsOwnPumpId() = runTest {
+        val activePump = mock(PumpWithConcentration::class.java)
+        `when`(dateUtil.now()).thenReturn(1500000L)
+        `when`(pumpSync.expectedPumpState()).thenReturn(PumpSync.PumpState(null, null, null, null, "TEST123"))
+        danaPump.isTempBasalInProgress = false
+        danaPump.extendedBolusStart = 1000000L
+        danaPump.extendedBolusAmount = 1.0
+        danaPump.extendedBolusDuration = 1800000L
+        `when`(activePlugin.activePump).thenReturn(activePump)
+        `when`(activePump.model()).thenReturn(PumpType.DANA_R)
+        `when`(activePump.serialNumber()).thenReturn("TEST123")
+
+        testService.doSanityCheck()
+
+        val sync = mockingDetails(pumpSync).invocations.single { it.method.name.startsWith("syncExtendedBolusWithPumpId") }
+        // timestamp, amount, duration, emulating a temp basal, pump id, ...
+        assertThat(sync.arguments[4]).isEqualTo(1000000L)
     }
 
     @Test

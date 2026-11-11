@@ -361,7 +361,9 @@ abstract class AbstractDanaRExecutionService : MetroService() {
                         PumpRate(danaPump.extendedBolusAmount),
                         danaPump.extendedBolusDuration,
                         activePlugin.activePump.isFakingTempsByExtendedBoluses,
-                        danaPump.tempBasalStart,
+                        // Its own start, as setExtendedBolus does. The temp basal's start was 0 with no temp basal, and a
+                        // second extended bolus set on the pump only updated the ended record of the first one.
+                        danaPump.extendedBolusStart,
                         activePlugin.activePump.model(),
                         activePlugin.activePump.serialNumber()
                     )
@@ -385,7 +387,7 @@ abstract class AbstractDanaRExecutionService : MetroService() {
                     PumpRate(danaPump.extendedBolusAmount),
                     danaPump.extendedBolusDuration,
                     activePlugin.activePump.isFakingTempsByExtendedBoluses,
-                    danaPump.tempBasalStart,
+                    danaPump.extendedBolusStart,
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
