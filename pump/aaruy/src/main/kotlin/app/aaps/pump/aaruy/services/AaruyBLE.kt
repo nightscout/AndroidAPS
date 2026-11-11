@@ -93,6 +93,8 @@ class AaruyBLE(
     private val BOLUS_START_TIMEOUT_MS = 5000L
     private val BOLUS_STOP_TIMEOUT_MS = 500L
     private val COMMAND_ANSWER_TIMEOUT_MS = 5000L
+    /** A frame sent just before the driver gave up on a temp basal is answered within this. */
+    private val ANSWER_AFTER_GIVING_UP_MS = 1000L
     private val STATUS_BASAL = 1
     private val STATUS_TEMP_BASAL = 2
     private val STATUS_BOLUS = 3
@@ -805,16 +807,28 @@ class AaruyBLE(
         aaBleUtil.setClosedMode(1)
         SystemClock.sleep(200)
         aaBleUtil.startTempBasal(absoluteRate, durationInMinutes)
-        return waitForAnswer { sendTmpBasalOk }
+        return waitForAnswer { sendTmpBasalOk } || giveUpOnTempBasal { sendTmpBasalOk }
     }
 
     fun cancelTempBasal(): Boolean {
         cancelTmpBasalOk = false
         cancelTempBasalRunning = true
         aaBleUtil.cancelTempBasal()
-        val answered = waitForAnswer { cancelTmpBasalOk }
+        val answered = waitForAnswer { cancelTmpBasalOk } || giveUpOnTempBasal { cancelTmpBasalOk }
         cancelTempBasalRunning = false
         return answered
+    }
+
+    /**
+     * No answer in time: the command is reported as failed, so it must not run later. A frame the pump's count shows lost
+     * is sent again, and it once ran 0.4 s after the driver had given up (CI under load). One sent again just before
+     * this still gets its answer within a moment.
+     */
+    private fun giveUpOnTempBasal(answered: () -> Boolean): Boolean {
+        aaBleUtil.abandonTempBasal()
+        val end = System.currentTimeMillis() + ANSWER_AFTER_GIVING_UP_MS
+        while (!answered() && System.currentTimeMillis() < end) SystemClock.sleep(50)
+        return answered()
     }
 
     /** After a reconnect the loop must not decide on what the driver knew before the log was read. */

@@ -301,6 +301,13 @@ fun setOnBleListener(listener: AaruyBleListener) {
         link.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 0).toBytes(protocolVersion))
     }
 
+    /**
+     * The driver gave up on the temp basal it set or ended: a frame of it that still waits in the queue, or that the
+     * pump's count shows lost, never goes out again. Sent again after the driver had reported the failure, it ran on
+     * the pump while AAPS said it had failed.
+     */
+    fun abandonTempBasal() = link.abandon(AaruyParamId.TEMP_BASAL_CONTROL)
+
     fun startTempBasal(rate: Double, durationMinutes: Int) {
         val listener = link.listener
         if (durationMinutes > 0 && durationMinutes % 30 != 0) {
@@ -395,7 +402,11 @@ fun setOnBleListener(listener: AaruyBleListener) {
     }
 
     /** @param bolusId not 0 for the start of a bolus: which bolus it starts */
-    private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0), val bolusId: Int = 0)
+    private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0), val bolusId: Int = 0) {
+
+        /** The driver gave up on it: it never goes out again. Set and read under the send lock. */
+        var abandoned = false
+    }
 
     /** A frame that went to the radio, with its number. */
     private class Sent(val sequence: Short, val request: Request)
@@ -705,6 +716,12 @@ fun setOnBleListener(listener: AaruyBleListener) {
             }
         }
 
+        /** See [AaruyBleClient.abandonTempBasal]. */
+        fun abandon(paramId: Short) = synchronized(sendLock) {
+            queue.removeIf { it.paramId == paramId && !it.isRead }
+            unconfirmed.forEach { if (it.request.paramId == paramId) it.request.abandoned = true }
+        }
+
         private fun sendNextIfIdle() {
             synchronized(sendLock) {
                 if (!writing) nextRequest()?.let { send(it) }
@@ -858,6 +875,7 @@ fun setOnBleListener(listener: AaruyBleListener) {
 
         /** Under [sendLock]. @return the request to send again, or null when it must never go out again */
         private fun sendAgain(request: Request): Request? {
+            if (request.abandoned) return null
             if (request.bolusId == 0) return request
             // A start the driver has asked about, or the start of an older bolus.
             if (request.bolusId != bolusId || bolusStart != BolusStart.SENT || bolusStartAsked) return null

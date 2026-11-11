@@ -374,6 +374,26 @@ class ClientOnEmulatorTest {
         assertFalse(emulator.bolusRunning)
     }
 
+    /**
+     * The driver gave up on a temp basal before the refusal of its frame was known, and reported a failure. The frame
+     * must not go out again: it once ran on the pump 0.4 s after the driver had given up.
+     */
+    @Test
+    fun aTempBasalTheDriverGaveUpOnIsNotSentAgain() {
+        util.setClosedMode(1)
+        waitFor("closed mode") { emulator.closedMode == 1 }
+        skipANumber()
+        log.clear()
+        util.startTempBasal(1.5, 30)
+        waitFor("temp basal sent") {
+            transport.writes.any { frame -> emulator.peek(frame)?.let { (param, action) -> emulator.isCommand(EmulatedCommand.TEMP_BASAL_START, param, action) } == true }
+        }
+        util.abandonTempBasal()
+        waitFor("refusal seen") { logged("onReceiveErrorData(28, 128") }
+        waitWhile(1500, Duration.ofSeconds(3))
+        assertEquals("no temp basal runs", AaruyPumpEmulator.STATUS_BASAL, emulator.runningStatus)
+    }
+
     /** As when a frame is lost on its way: the next frame has a number one too high. */
     private fun skipANumber() {
         val link = util.javaClass.getDeclaredField("link").apply { isAccessible = true }.get(util)
