@@ -26,6 +26,7 @@
     <string name="constraints">约束条件</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
     <string name="openapsma_script_debug_data_label">脚本调试</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
     <string name="increasing_max_basal">增加最大基础率，因为设置参数低于你配置文件中的最大基础率</string>
     <string name="max_basal_multiplier">最大基础率倍数</string>
     <string name="max_daily_basal_multiplier">最大日基础率倍数</string>
@@ -50,6 +51,7 @@
     <string name="carbs_suggestion">碳水建议</string>
     <string name="open_loop_new_suggestion">新的建议可用</string>
     <string name="loop_notification_channel_name">闭环建议</string>
+    <string name="loop_notification_channel_silent_name">勿扰模式期间的闭环建议</string>
     <string name="open_loop_suggestion_too_old">此建议已过时。未向泵发送任何指令。请等待下一条建议。</string>
     <string name="basal_set_correctly">正确地设置基础率</string>
     <string name="last_run_label">上次运行</string>
