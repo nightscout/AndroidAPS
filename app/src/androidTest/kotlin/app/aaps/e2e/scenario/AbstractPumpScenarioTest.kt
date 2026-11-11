@@ -347,14 +347,20 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
     }
 
-    /** The temp basal command never reaches the pump. AAPS must not keep a temp basal the pump does not run. */
+    /**
+     * The temp basal command never reaches the pump. AAPS must not keep a temp basal the pump does not run. A driver may
+     * find out that the command was lost and send it again, as Aaruy does when the pump's count shows it: then the pump
+     * runs it, and the result must say so. A low temp: a DanaR gives a high one as an extended bolus, and the lost temp
+     * basal command never fired there.
+     */
     @Test
-    fun aTempBasalThatIsLostIsNotKept() {
+    fun aLostTempBasalIsKnownAsThePumpRunsIt() {
         scenario.bringUp()
         scenario.pair()
         assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.TEMP_BASAL_START)).isTrue()
-        scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
-        assertWithMessage("the pump runs no temp basal").that(scenario.control.state().tempBasal).isNull()
+        val result = scenario.tempBasal(LOW_TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
+        assertWithMessage("success when the pump runs it, it runs ${scenario.control.state().tempBasal}")
+            .that(result.success).isEqualTo(scenario.control.state().tempBasal != null)
         scenario.readStatus()
         scenario.checkTempBasal()
     }
@@ -520,6 +526,8 @@ abstract class AbstractPumpScenarioTest {
         const val STOP_AFTER = 0.2
         const val PUMP_STOPS_AT = 0.5
         const val TEMP_BASAL_RATE = 1.0
+        /** 50 % of the basal: a temp basal on every pump, also on one that gives a high one as an extended bolus. */
+        const val LOW_TEMP_BASAL_RATE = 0.25
         const val TEMP_BASAL_MINUTES = 30
         const val TEMP_BASAL_PERCENT = 150
         const val TEMP_BASAL_PERCENT_MINUTES = 60
