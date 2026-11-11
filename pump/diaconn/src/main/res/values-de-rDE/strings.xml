@@ -134,4 +134,5 @@
     <string name="bolus_speed_8">8 IE/min</string>
     <string name="diaconn_pairing_successful">Verbindung erfolgreich!</string>
     <string name="diaconn_pairing_successful_message">Deine Pumpe ist jetzt verbunden und einsatzbereit.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Cloud-Synchronisierung: %1$d / %2$d</string>
 </resources>
