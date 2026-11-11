@@ -42,6 +42,10 @@ import dev.zacsweers.metro.SingleIn
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 
+/**
+ * Bluetooth link to the Diaconn G8 pump. It sends request packets and passes each answer from the pump to the packet
+ * that reads it.
+ */
 @Suppress("SpellCheckingInspection")
 @SingleIn(AppScope::class)
 @Inject
@@ -193,22 +197,27 @@ class BLECommonService internal constructor(
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "(응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
-            // 대량로그응답 처리.
-            if (characteristic.value[1] == 0xb2.toByte()) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "(대량 로그 처리 응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
-                val message = BigLogInquireResponsePacket(injector)
-                message.handleMessage(characteristic.value)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "(answer) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
+            // Android drops an exception thrown here and logs it only as a warning of its own, so it is logged here.
+            try {
+                // handle the big log answer.
+                if (characteristic.value[1] == 0xb2.toByte()) {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "(big log answer) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
+                    val message = BigLogInquireResponsePacket(injector)
+                    message.handleMessage(characteristic.value)
 
-                // 초기화
-                mSendQueue.clear()
-            } else {
-                processResponseMessage(characteristic.value)
+                    // reset
+                    mSendQueue.clear()
+                } else {
+                    processResponseMessage(characteristic.value)
+                }
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "A pump message could not be read: " + DiaconnG8Packet.toHex(characteristic.value), e)
             }
         }
 
         override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "(요청) onCharacteristicWrite: " + DiaconnG8Packet.toHex(characteristic.value))
+            aapsLogger.debug(LTag.PUMPBTCOMM, "(request) onCharacteristicWrite: " + DiaconnG8Packet.toHex(characteristic.value))
         }
     }
 
@@ -267,7 +276,7 @@ class BLECommonService internal constructor(
                     //setCharacteristicNotification(uartIndicate, true)
                     bluetoothGatt?.setCharacteristicNotification(uartIndicate, true)
 
-                    // nRF Connect 참고하여 추가함
+                    // added after looking at what nRF Connect does
                     val descriptor: BluetoothGattDescriptor = uartIndicate!!.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
                     descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                     bluetoothGatt?.writeDescriptor(descriptor)
@@ -296,12 +305,13 @@ class BLECommonService internal constructor(
     }
 
     // the rest of packets
+    /** Sends [message] to the pump and waits for its answer, at most [waitMillis]. */
     fun sendMessage(message: DiaconnG8Packet, waitMillis: Long) {
-        // 펌프로 요청하기전 변수에 담기. 마지막 요청정보 확인용.
+        // keep the request before it goes to the pump, to check the last request later.
         processedMessage = message
         val sequence = getMsgSequence()
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.friendlyName + "  Sequence >>" + sequence)
-        // 요청
+        // request
         val bytes = message.encode(sequence)
         processedMessageByte = bytes
 
@@ -311,21 +321,25 @@ class BLECommonService internal constructor(
         }
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() before mSendQueue.size :: ${mSendQueue.size}")
-        // 펌프에 요청 보내기.
+        // send the request to the pump.
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
-        // 요청 큐에 요청할 바이트 정보 담기.
+        // put the bytes of the request in the send queue.
         synchronized(mSendQueue) {
             if (mSendQueue.size > 10) mSendQueue.clear()
             mSendQueue.add(bytes)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() after mSendQueue.size :: ${mSendQueue.size}")
 
-        // 메시지동기화
+        // Waits until the answer is in, at most waitMillis. The answer wakes this request in processResponseMessage. It woke
+        // only the answer packet, so each request waited its whole time: 5 s a message, a status read 41 s on a real G8
+        // that answered each one in 0.1 s.
         synchronized(message) {
-            try {
-                message.waitMillis(waitMillis) //0.5초 대기.
-            } catch (e: InterruptedException) {
-                aapsLogger.error("sendMessage InterruptedException", e)
+            if (!message.isReceived) {
+                try {
+                    message.waitMillis(waitMillis)
+                } catch (e: InterruptedException) {
+                    aapsLogger.error("sendMessage InterruptedException", e)
+                }
             }
         }
     }
@@ -335,10 +349,10 @@ class BLECommonService internal constructor(
         isConnected = true
         isConnecting = false
 
-        //요청정보
+        // request info
         val originalMessageSeq = processedMessage?.getSeq(processedMessageByte ?: throw IllegalStateException())
 
-        // 응답정보
+        // answer info
         val receivedCommand = DiaconnG8Packet(injector).getCmd(data)
         val receivedSeq = DiaconnG8Packet(injector).getSeq(data)
         val receivedType = DiaconnG8Packet(injector).getType(data)
@@ -346,10 +360,10 @@ class BLECommonService internal constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "originalMessageSeq :: $originalMessageSeq, receivedSeq :: $receivedSeq")
         aapsLogger.debug(LTag.PUMPBTCOMM, "receivedCommand :: $receivedCommand")
 
-        // 응답메시지가 조회응답인지. 설정응답인지 구분해야됨.
+        // must find out if the answer is to an inquiry or to a setting.
         var message: DiaconnG8Packet? = null
-        // 요청시퀀스와 응답의 시퀀스가 동일한 경우에만 처리.
-        // 펌프로부터 받은 보고응답의 경우 처리
+        // handled only when the sequence of the request and of the answer are the same.
+        // handle a report that the pump sent
         if (receivedType == 3) {
             message = diaconnG8ResponseMessageHashTable.findMessage(receivedCommand)
             // injection Blocked Report
@@ -374,7 +388,7 @@ class BLECommonService internal constructor(
             }
 
         } else {
-            // 큐에 담긴 명령 대기중에 있는 것 조회 처리.
+            // find the waiting request in the send queue.
             synchronized(mSendQueue) {
                 val sendQueueSize = mSendQueue.size
                 if (sendQueueSize > 0) {
@@ -382,15 +396,15 @@ class BLECommonService internal constructor(
                         val sendQueueSeq = DiaconnG8Packet(injector).getSeq(mSendQueue[i])
                         val sendQueueType = DiaconnG8Packet(injector).getType(mSendQueue[i])
                         if (sendQueueSeq == receivedSeq) {
-                            // 설정명령에 대한 응답
+                            // answer to a setting command
                             if (sendQueueType == 0) {
                                 message = diaconnG8SettingResponseMessageHashTable.findMessage(receivedCommand)
 
-                                // 조회명령에 대한 응답
+                                // answer to an inquiry command
                             } else if (sendQueueType == 1) {
                                 message = diaconnG8ResponseMessageHashTable.findMessage(receivedCommand)
                             }
-                            // 처리 후 큐에서 삭제.
+                            // remove it from the queue after it is handled.
                             mSendQueue.removeAt(i)
                             break
                         }
@@ -402,11 +416,26 @@ class BLECommonService internal constructor(
         message?.let {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + it.friendlyName + " " + DiaconnG8Packet.toHex(data))
             // process received data
-            it.handleMessage(data)
+            try {
+                it.handleMessage(data)
+            } catch (e: Exception) {
+                // A pump clock at 00:70 threw here on the Bluetooth thread: Android dropped the rest of the answer, with
+                // nothing in the AAPS log.
+                it.failed = true
+                aapsLogger.error(LTag.PUMPBTCOMM, "The answer " + it.friendlyName + " could not be read", e)
+            }
             it.setReceived()
             synchronized(it) {
                 // notify to sendMessage
                 it.notifyAll()
+            }
+            // The answer is another packet than the request that sendMessage waits on: wake the request it answers.
+            val request = processedMessage
+            if (receivedType != 3 && request != null && originalMessageSeq == receivedSeq) {
+                synchronized(request) {
+                    request.setReceived()
+                    request.notifyAll()
+                }
             }
         } ?: aapsLogger.error("Unknown message received " + DiaconnG8Packet.toHex(data))
     }

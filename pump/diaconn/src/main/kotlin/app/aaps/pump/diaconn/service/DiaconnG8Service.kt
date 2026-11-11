@@ -86,14 +86,15 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
-import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Android service that runs the Diaconn G8 commands over [BLECommonService]: status and history read, bolus, temp
+ * basal, extended bolus, basal profile and user settings.
+ */
 class DiaconnG8Service : MetroService() {
 
     @Inject lateinit var injector: MetroMemberInjector
@@ -185,6 +186,7 @@ class DiaconnG8Service : MetroService() {
         bleCommonService.sendMessage(message, 5000)
     }
 
+    /** Reads the pump status and settings, checks the pump clock and sets it when needed, then reads the pump history. */
     suspend fun readPumpStatus() {
         try {
             val pump = activePlugin.activePump
@@ -215,11 +217,12 @@ class DiaconnG8Service : MetroService() {
                 }
             }
 
-            // 시간 설정
+            // time setting
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumptime)))
+            // A clock read now, not the one of the main info: each message since then moved it further off.
+            diaconnG8Pump.clearPumpClock()
             sendMessage(TimeInquirePacket(injector))
-            var timeDiff = (diaconnG8Pump.getPumpTime() - System.currentTimeMillis()) / 1000L
-            if (diaconnG8Pump.getPumpTime() == 0L) {
+            if (diaconnG8Pump.getPumpTime() == 0L && !diaconnG8Pump.pumpClockImpossible) {
                 // initial handshake was not successful
                 // de-initialize pump
                 diaconnG8Pump.reset()
@@ -227,36 +230,41 @@ class DiaconnG8Service : MetroService() {
                 rxBus.send(EventInitializationChanged())
                 return
             }
-            aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
-            // phone timezone
-            val tz = DateTimeZone.getDefault()
-            val instant = DateTime.now().millis
-            val offsetInMilliseconds = tz.getOffset(instant).toLong()
-            val offset = offsetInMilliseconds.milliseconds.inWholeHours.toInt()
-            if (timeDiff > 0 || abs(timeDiff) > 60) {
-                if (abs(timeDiff) > 60 * 60 * 1.5) {
-                    aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
-                    //If time-diff is very large, warn user until we can synchronize history readings properly
+            // Null: the pump has no real time, as a clock never set that showed 00:70. Then there is no time to keep.
+            val timeDiff = diaconnG8Pump.pumpClockOffsetSeconds()
+            aapsLogger.debug(LTag.PUMPCOMM, if (timeDiff == null) "The pump has no real time" else "Pump time difference: $timeDiff seconds")
+            if (timeDiff != null && abs(timeDiff) > 60 * 60 * 1.5) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
+                //If time-diff is very large, warn user until we can synchronize history readings properly
+                uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
+
+                //de-initialize pump
+                diaconnG8Pump.reset()
+                rxBus.send(EventDiaconnG8NewStatus())
+                rxBus.send(EventInitializationChanged())
+                return
+            }
+            if ((timeDiff == null || timeDiff > 0 || abs(timeDiff) > 60) && !diaconnG8Pump.isTempBasalInProgress) {
+                val msgPacket = TimeSettingPacket(injector, dateUtil.now())
+                sendMessage(msgPacket)
+
+                // otp process
+                if (!processConfirm(msgPacket.msgType)) return
+
+                diaconnG8Pump.clearPumpClock()
+                sendMessage(TimeInquirePacket(injector))
+                aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference after setting it: ${diaconnG8Pump.pumpClockOffsetSeconds()} seconds")
+            }
+            if (diaconnG8Pump.getPumpTime() == 0L) {
+                // Still no real time on the pump: it was not set while a temp basal ran. The pump history would get wrong
+                // times, so the user is told, as for a clock far off. With no answer to the clock read, it is only tried
+                // again at the next connection.
+                if (diaconnG8Pump.pumpClockImpossible)
                     uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
-
-                    //de-initialize pump
-                    diaconnG8Pump.reset()
-                    rxBus.send(EventDiaconnG8NewStatus())
-                    rxBus.send(EventInitializationChanged())
-                    return
-                } else {
-
-                    if (!diaconnG8Pump.isTempBasalInProgress) {
-                        val msgPacket = TimeSettingPacket(injector, dateUtil.now(), offset)
-                        sendMessage(msgPacket)
-
-                        // otp process
-                        if (!processConfirm(msgPacket.msgType)) return
-
-                        timeDiff = (diaconnG8Pump.getPumpTime() - System.currentTimeMillis()) / 1000L
-                        aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
-                    }
-                }
+                diaconnG8Pump.reset()
+                rxBus.send(EventDiaconnG8NewStatus())
+                rxBus.send(EventInitializationChanged())
+                return
             }
             loadHistory()
             // Sync TBR/EB state directly from pump response fields instead of pumpSync.expectedPumpState()
@@ -284,6 +292,10 @@ class DiaconnG8Service : MetroService() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pump status loaded")
     }
 
+    /**
+     * Reads the pump logs that are newer than the last log the app has stored. When the user turned it on, it also
+     * uploads the pump logs to the Diaconn cloud.
+     */
     fun loadHistory(): PumpEnactResult {
         if (!diaconnG8Plugin.isInitialized()) {
             val result = pumpEnactResultProvider().success(false)
@@ -372,7 +384,7 @@ class DiaconnG8Service : MetroService() {
                     }
                     aapsLogger.debug(LTag.PUMPCOMM, "platformLogNo: $platformLogNo, platformWrappingCount: $platformWrappingCount")
 
-                    // 페이지 사이즈로 처리할 때 루핑 횟수 계산
+                    // number of loops when the logs are read one page at a time
                     val (platformStart, platformEnd, platformLoopSize) = getCloudLogLoopCount(platformLastNo.toInt(), platformLogNo, platformWrappingCount, pumpLastNum, pumpWrappingCount)
                     if (platformLoopSize > 0) {
                         diaconnG8Pump.isPlatformUploadStarted = true
@@ -380,7 +392,7 @@ class DiaconnG8Service : MetroService() {
                             if (diaconnG8Pump.isPumpLogUploadFailed) {
                                 break
                             }
-                            rxBus.send(EventPumpStatusChanged("클라우드동기화 진행 중 : $i / $platformLoopSize"))
+                            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.diaconn_g8_cloud_sync_progress, i, platformLoopSize)))
                             val startLogNo: Int = platformStart + i * pumpLogPageSize
                             val endLogNo: Int = startLogNo + min(platformEnd - startLogNo, pumpLogPageSize)
                             val msg = BigLogInquirePacket(injector, startLogNo, endLogNo, 100)
@@ -400,7 +412,7 @@ class DiaconnG8Service : MetroService() {
 
     private fun getLogLoopCount(lastLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
         val start: Int// log sync start number
-        val end: Int // log sync end number1311
+        val end: Int // log sync end number
         aapsLogger.debug(LTag.PUMPCOMM, "lastLogNum : $lastLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount : $pumpWrappingCount")
 
         if (pumpWrappingCount > wrappingCount) {
@@ -417,7 +429,7 @@ class DiaconnG8Service : MetroService() {
 
     private fun getCloudLogLoopCount(platformLastNo: Int, platformPumpLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
         val start: Int// log sync start number
-        val end: Int // log sync end number1311
+        val end: Int // log sync end number
         aapsLogger.debug(
             LTag.PUMPCOMM,
             "platformLastNo: $platformLastNo, PlatformPumpLogNum : $platformPumpLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount :$pumpWrappingCount"
@@ -430,7 +442,7 @@ class DiaconnG8Service : MetroService() {
             start = (platformPumpLogNum + 1)
             end = 10000
         } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum >= 9999) {
-            start = 0 // 처음부터 시작
+            start = 0 // start from the beginning
             end = pumpLastNum
         } else {
             start = (platformPumpLogNum + 1)
@@ -849,7 +861,7 @@ class DiaconnG8Service : MetroService() {
     private fun processConfirm(msgType: Byte): Boolean {
         // pump confirm
         var loopCnt = 0
-        // waiting 2 seconds for otp (max 30 loops * 100ms = 2000ms)
+        // waits up to 3 seconds for the OTP (30 loops of 100 ms)
         while (loopCnt < 30 && diaconnG8Pump.otpNumber == 0) {
             SystemClock.sleep(100)
             aapsLogger.debug(LTag.PUMPCOMM, "OTP waiting 100ms $loopCnt / 30")
