@@ -145,6 +145,9 @@ class AaruyPumpEmulator(
         EmulatedCommand.TEMP_BASAL_STOP  -> param == PARAM_TEMP_BASAL.toInt() && action != ACTION_START
         EmulatedCommand.BASAL_PROFILE    -> param == PARAM_BASAL.toInt()
         EmulatedCommand.STATUS           -> param == PARAM_STATUS.toInt()
+        // The driver gives no extended bolus (decided 2026-11-05), so no frame it sends is one; the scenarios skip it.
+        EmulatedCommand.EXTENDED_BOLUS_START,
+        EmulatedCommand.EXTENDED_BOLUS_STOP -> false
     }
 
     /** The pump reports [alarm] now. @return what it sends, or null when it has no such alarm */
