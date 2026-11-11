@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batería baja: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Insulina insuficiente en el reservorio: %1$s</string>
     <string name="equil_reservoir_empty">El reservorio está vacío. La bomba ya no administra insulina</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">El comando del bolo llegó a la bomba, pero la bomba no respondió. Es posible que aún administre %1$s. No vuelva a administrar un bolo. AAPS cuenta la cantidad completa</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">El comando de parada no llegó a la bomba o se perdió su respuesta. AAPS cuenta el bolo completo de %1$s hasta que el registro de la bomba muestre lo que se administró</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">El registro de la bomba muestra que no se administró el bolo de %1$s. AAPS no lo cuenta</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">La bomba se detuvo durante el bolo. Administrado: %1$s de %2$s</string>
     <string name="equil_pump_not_run">La bomba no está funcionando</string>
     <string name="equil_pair">Emparejar</string>
