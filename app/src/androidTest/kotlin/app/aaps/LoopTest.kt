@@ -183,7 +183,8 @@ class LoopTest : AapsInstrumentedTest() {
         // The IOB/COB autosens phase may exit early ("No bucketed data") so EventAutosensCalculationFinished
         // is not guaranteed. Wait for EventAPSCalculationFinished which fires when loop runs.
         assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class, maxSeconds = 60, comment = "step6").first).isTrue()
-        Thread.sleep(5000)
-        assertThat(loop.lastRun).isNotNull()
+        // The loop runs after the calculation, in its own time: under CI load a fixed 5 s were not always enough
+        // (CircleCI 42446).
+        assertThat(rxHelper.waitUntil("step7: loop ran", maxSeconds = 60) { loop.lastRun != null }).isTrue()
     }
 }

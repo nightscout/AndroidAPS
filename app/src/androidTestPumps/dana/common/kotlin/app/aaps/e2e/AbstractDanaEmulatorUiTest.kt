@@ -519,7 +519,11 @@ abstract class AbstractDanaEmulatorUiTest {
 
         private const val PROFILE_NAME = "LocalProfile1"
 
-        private const val INIT_TIMEOUT = 60_000L
+        /**
+         * The first app start of a shard comes while the other emulators and Gradle load the CI box: as `ScreenDriver`
+         * waits, 2 minutes. With 1 minute the first test of shard A timed out on the splash (CircleCI 42443).
+         */
+        private const val INIT_TIMEOUT = 120_000L
         private const val STEP_TIMEOUT = 30_000L
         // Non-private: referenced from subclass legs and inlined into subclasses via withStaleRetry.
         const val IDLE_MS = 300L

@@ -226,6 +226,7 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
             beepAndAlarm = BEEP_AND_ALARM
             lcdOnTimeSec = LCD_ON_SECONDS
             shutdownHour = SHUTDOWN_HOUR
+            lowReservoirRate = LOW_RESERVOIR
         }
         assertWithMessage("user options").that(runBlocking { scenario.commandQueue.setUserOptions() }.success).isTrue()
         scenario.awaitQueueIdle()
@@ -234,6 +235,7 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
         assertWithMessage("beep and alarm").that(state.beepAndAlarm).isEqualTo(BEEP_AND_ALARM)
         assertWithMessage("screen on time").that(state.lcdOnTimeSec).isEqualTo(LCD_ON_SECONDS)
         assertWithMessage("shutdown hour").that(state.shutdownHour).isEqualTo(SHUTDOWN_HOUR)
+        assertWithMessage("low reservoir warning").that(state.lowReservoirRate).isEqualTo(LOW_RESERVOIR)
         assertWithMessage("units, not changed").that(state.glucoseUnit).isEqualTo(before)
     }
 
@@ -308,5 +310,6 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
         const val BEEP_AND_ALARM = 3
         const val LCD_ON_SECONDS = 30
         const val SHUTDOWN_HOUR = 6
+        const val LOW_RESERVOIR = 10
     }
 }
