@@ -222,6 +222,47 @@ class PumpScenario(private val pump: PumpUnderTest) {
      * keep alive worker does when the pump lacks it. [checkStatusShown] then finds whether the pump holds it.
      */
     fun switchProfile(percentage: Int) {
+        storeProfileSwitch(percentage)
+        testGraphs.rxBus.send(EventProfileChangeRequested())
+        // A driver may take a new profile only some time after the one before (Carelevo: 30 s), or the answer of the
+        // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
+        val basal = BASAL_RATE * percentage / PERCENT
+        awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
+            val aapsRuns = aapsRunsBasal(basal)
+            // Every hour: a pump that takes a profile in parts can hold a part of it.
+            val onPump = control.state().basal
+            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
+            if (aapsRuns && pumpGives) true
+            else {
+                awaitQueueIdle()
+                testGraphs.rxBus.send(EventProfileChangeRequested())
+                SystemClock.sleep(PROFILE_RETRY_MS)
+                false
+            }
+        }
+        awaitQueueIdle()
+    }
+
+    /**
+     * A profile switch to [percentage] % that AAPS sends to the pump once: when it stores the switch, with no second try.
+     *
+     * @return true when AAPS took the write as done and runs the switch, false when it reported a failed write. AAPS runs
+     * the switch with the basal the pump reports, so after a write taken as done by mistake it runs the old basal.
+     */
+    fun profileWrittenOnce(percentage: Int): Boolean {
+        storeProfileSwitch(percentage)
+        var done = false
+        awaitTrue("the write of the profile at $percentage % ends", PROFILE_TIMEOUT) {
+            val running = runBlocking { testGraphs.persistenceLayer.getEffectiveProfileSwitchActiveAt(testGraphs.dateUtil.now()) }
+            done = running?.originalPercentage == percentage
+            done || NotificationId.FAILED_UPDATE_PROFILE in shownNotifications()
+        }
+        awaitQueueIdle()
+        return done
+    }
+
+    /** A profile switch to [percentage] % of the profile, as the user makes one. Storing it makes AAPS send it to the pump. */
+    private fun storeProfileSwitch(percentage: Int) {
         val store = checkNotNull(testGraphs.profileRepository.profile.value) { "No profile store" }
         val switch = runBlocking {
             testGraphs.profileFunction.createProfileSwitch(
@@ -238,28 +279,14 @@ class PumpScenario(private val pump: PumpUnderTest) {
             )
         }
         checkNotNull(switch) { "The profile switch to $percentage % was refused" }
-        testGraphs.rxBus.send(EventProfileChangeRequested())
-        // Once the pump has it, AAPS runs it: the running profile has the basal at that percentage. Its `percentage` is
-        // not the sign, the switch AAPS runs then has the values with the percentage already in them.
-        // A driver may take a new profile only some time after the one before (Carelevo: 30 s), or the answer of the
-        // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
-        val basal = BASAL_RATE * percentage / PERCENT
-        awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
-            val aapsRuns = runBlocking { testGraphs.profileFunction.getProfile() }
-                ?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
-            // Every hour: a pump that takes a profile in parts can hold a part of it.
-            val onPump = control.state().basal
-            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
-            if (aapsRuns && pumpGives) true
-            else {
-                awaitQueueIdle()
-                testGraphs.rxBus.send(EventProfileChangeRequested())
-                SystemClock.sleep(PROFILE_RETRY_MS)
-                false
-            }
-        }
-        awaitQueueIdle()
     }
+
+    /**
+     * Once the pump has a profile, AAPS runs it: the running profile has the basal at that percentage. Its `percentage`
+     * is not the sign, the switch AAPS runs then has the values with the percentage already in them.
+     */
+    private fun aapsRunsBasal(basal: Double): Boolean =
+        runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
 
     /**
      * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,

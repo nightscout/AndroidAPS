@@ -173,3 +173,10 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   thread as the alarm screen. `checkUrgentAlarmSince` accepts either.
 - A driver's own database, as the stored pump log of Aaruy, is a file. It outlives the test graph, so a test finds the
   rows of the tests before it. A driver must not take an old row for a new event; Aaruy tells them apart by the row id.
+- After a profile write AAPS stores the switch with the basal the pump reports (`deliveredBasal`), not the asked one. A
+  write the driver took as done by mistake therefore does not show as the new basal: AAPS runs the switch with the old
+  basal. Check whether AAPS stored the switch (`profileWrittenOnce`), not its basal. A report further than
+  max(0.1 U/h, 2 basal steps) from the asked basal is refused with its own FAILED_UPDATE_PROFILE alarm, which hides
+  the driver's own result: keep the new basal close to the old one in such a test.
+- Both a stored profile switch and `EventProfileChangeRequested` make AAPS write the profile. `switchProfile` sends
+  both and tries again until the pump has it; to see the result of one write, only store the switch.
