@@ -417,8 +417,16 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
                 .any { abs(it.amount - BOLUS_UNITS) < UNITS_TOLERANCE }
         }
         // CI reads the log of a shard only at its end, and the tests after this one can push these lines out of it.
-        // So the failure carries what the queue, the driver and the database did (CI run 42425 had nothing to read).
-        if (!stored) assertWithMessage("AAPS has a bolus record of $BOLUS_UNITS U. The app's log:\n" + appLog(BOLUS_RECORD_EVIDENCE)).fail()
+        // So the failure carries what the queue, the driver and the database did (CI run 42425 had nothing to read),
+        // and what the emulated pump has in its history: in CI run 42438 no history read found any event, and the log
+        // could not tell whether the pump had the bolus in its history or the driver lost it.
+        if (!stored) {
+            val pumpHistory = emulator.pumpState.historyStore.getEventsAfter(0).joinToString { "${it.code}@${it.timestamp}:${it.param1}" }
+            assertWithMessage(
+                "AAPS has a bolus record of $BOLUS_UNITS U. The pump history (code@time:value): [$pumpHistory], " +
+                    "UTC ${emulator.pumpState.usingUTC}. The app's log:\n" + appLog(BOLUS_RECORD_EVIDENCE)
+            ).fail()
+        }
     }
 
     /** The pump runs a temp basal above 100 %, and AAPS has the same. */
@@ -610,6 +618,7 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         private const val CLOCK_MARGIN_MS = 60_000L
 
         /** How a bolus gets its record: the queue, the bolus end, the history read and its BOLUS event, a refused record. */
-        private val BOLUS_RECORD_EVIDENCE = Regex("PUMPQUEUE|DELIVERY_COMPLETE|Loading event history|EVENT BOLUS|Inserted Bolus|Ignoring|WRONG_PUMP|Reply not received|Disconnect")
+        private val BOLUS_RECORD_EVIDENCE =
+            Regex("PUMPQUEUE|DELIVERY_COMPLETE|Delivery complete|Loading event history|Last record|Events loaded|Timeout waiting for history|EVENT |Inserted Bolus|Ignoring|WRONG_PUMP|Reply not received|Disconnect")
     }
 }

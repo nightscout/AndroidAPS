@@ -743,8 +743,8 @@ class DanaRPumpEmulator(
     /**
      * MsgSetUserOptions sends back the bytes of [handleSettingUserOptions] with its changes, so the same places are
      * read here. Read from other places before (the units from byte 6), a save changed what the pump then reported.
-     * UNVERIFIED: the driver reads the low reservoir warning from byte 32 and writes it to byte 27, so one of the two is
-     * wrong on a real DanaR. This keeps byte 32, which the driver reads.
+     * Seen on a real DanaRv2 (2026-11-11): the low reservoir warning is taken from byte 27 of this command, and the
+     * pump reports it in byte 32 of its answer to 0x320B. 10 U sent in byte 27 (byte 32 still 20) was read back as 10.
      */
     private fun handleSetUserOptions(params: ByteArray): ByteArray {
         if (params.size >= USER_OPTIONS_SIZE) {
@@ -755,7 +755,7 @@ class DanaRPumpEmulator(
             state.backlightOnTimeSec = params[4].toInt() and 0xFF
             state.glucoseUnit = params[8].toInt() and 0xFF
             state.shutdownHour = params[9].toInt() and 0xFF
-            state.lowReservoirRate = params[USER_OPTIONS_SIZE - 1].toInt() and 0xFF
+            state.lowReservoirRate = params[SET_LOW_RESERVOIR].toInt() and 0xFF
         }
         return byteArrayOf(0x01)
     }
@@ -936,5 +936,7 @@ class DanaRPumpEmulator(
         private const val APS_PARAM_15_MIN = 150
         /** The user options the pump reports and takes back: 33 bytes, the last one the low reservoir warning. */
         private const val USER_OPTIONS_SIZE = 33
+        /** Where the command that sets the user options has the low reservoir warning, see [handleSetUserOptions]. */
+        private const val SET_LOW_RESERVOIR = 27
     }
 }

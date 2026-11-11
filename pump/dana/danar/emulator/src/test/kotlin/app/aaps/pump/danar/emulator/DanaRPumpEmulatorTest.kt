@@ -13,8 +13,7 @@ import java.util.concurrent.TimeUnit
  * Command-level tests for the DanaR RFCOMM emulator, the JVM counterpart to the Dana RS
  * emulator's `PumpEmulatorTest`.
  *
- * `DanaRPumpEmulator` was exercised only through `DanaREmulatorPumpTest`, which connects each variant
- * on a device but issues no commands, so its handlers sat near zero. These call `processCommand`
+ * On a device the DanaR scenario classes drive `DanaRPumpEmulator` through the drivers. These call `processCommand`
  * directly — no device, no execution service — and assert on the mutable [DanaRPumpState] or the
  * response bytes. Command values mirror the wire format the DanaR `Msg*` packets produce (amounts in
  * hundredths, big-endian).
@@ -183,14 +182,16 @@ class DanaRPumpEmulatorTest {
         val state = DanaRPumpState(DanaRVariant.DANA_R_V2)
         val emulator = DanaRPumpEmulator(state)
 
-        // 0x330B: the 33 bytes of the 0x320B answer with the changes, at the same places.
+        // 0x330B: the 33 bytes of the 0x320B answer with the changes, at the same places, but the low reservoir in
+        // byte 27 (a real DanaRv2 reports it in byte 32 and takes it from byte 27).
         val params = ByteArray(33)
         params[0] = 1     // 12h
         params[2] = 2     // beep+alarm
         params[3] = 30    // lcd on time
         params[8] = 1     // mmol/L
         params[9] = 22    // shutdown hour
-        params[32] = 15   // low reservoir rate
+        params[27] = 15   // low reservoir rate
+        params[32] = 20   // the old value, as read
         emulator.processCommand(0x330B, params)
 
         assertThat(state.timeDisplayType24).isFalse()
