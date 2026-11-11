@@ -66,6 +66,7 @@ import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Response
 import java.util.UUID
+import kotlin.math.max
 
 /**
  * BigLogInquireResponsePacket
@@ -542,6 +543,8 @@ class BigLogInquireResponsePacket(
                             val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                             val logDateTime = logStartDate.time
                             val newRecord = PumpSuspendSync.ended(pumpSync, logDateTime, logDateTime, PumpType.DIACONN_G8, diaconnG8Pump.serialNo.toString())
+                            // The pump goes back to a temp basal it ran before the stop: AAPS records it from here.
+                            diaconnG8Pump.lastPumpRestart = max(diaconnG8Pump.lastPumpRestart, logDateTime)
                             aapsLogger.debug(LTag.PUMPCOMM, "${if (newRecord) "**NEW** " else ""}EVENT SUSPEND_RELEASE ($pumpLogKind) ${dateUtil.dateAndTimeString(logDateTime)} ($logDateTime)")
                             diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                             diaconnG8HistoryRecord.timestamp = logDateTime

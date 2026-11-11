@@ -134,6 +134,8 @@ class DiaconnG8Pump(
     /*
      * TEMP BASALS
      */
+    /** When the user last started the insulin again on the pump after a stop, from the pump history. 0 when not known. */
+    var lastPumpRestart: Long = 0
     var tempBasalStart: Long = 0
     var tempBasalDuration: Long = 0 // in milliseconds
     var tempBasalAbsoluteRate: Double = 0.0

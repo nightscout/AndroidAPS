@@ -39,6 +39,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.diaconn.DiaconnTempBasalSync
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.api.DiaconnApiService
 import app.aaps.pump.diaconn.api.DiaconnLogUploader
@@ -275,6 +276,19 @@ class DiaconnG8Service : MetroService() {
             // This prevents timing issues where pumpSync DB may not be updated yet
             diaconnG8Pump.syncTempBasalFromPump()
             diaconnG8Pump.syncExtendedBolusFromPump()
+            // The temp basal the pump runs against the one AAPS has, while the pump gives insulin.
+            if (diaconnG8Pump.basePauseStatus != 1)
+                DiaconnTempBasalSync.followStatus(
+                    pumpSync = pumpSync,
+                    aapsLogger = aapsLogger,
+                    pumpRuns = diaconnG8Pump.isTempBasalInProgress,
+                    pumpStart = diaconnG8Pump.tempBasalStart,
+                    pumpEnd = diaconnG8Pump.tempBasalStart + diaconnG8Pump.tempBasalDuration,
+                    rate = diaconnG8Pump.tempBasalAbsoluteRate,
+                    notBefore = diaconnG8Pump.lastPumpRestart,
+                    now = dateUtil.now(),
+                    serial = diaconnG8Pump.serialNo.toString()
+                )
             rxBus.send(EventDiaconnG8NewStatus())
             rxBus.send(EventInitializationChanged())
             if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
