@@ -635,6 +635,8 @@ class DiaconnG8Service : MetroService() {
         val started = confirm == Confirm.DONE || pumpShows({ sendMessage(TempBasalInquirePacket(injector)) }) {
             diaconnG8Pump.tbStatus == 1 && diaconnG8Pump.tbInjectRateRatio == tbInjectRate
         }
+        // Its log record, which AAPS records from, is there only then.
+        if (confirm == Confirm.DONE) awaitCarriedOut("Temp basal")
         // Set TBR state directly after successful setting (don't rely solely on loadHistory/pumpSync)
         if (started) {
             val durationInMinutes = (durationInHours * 60).toLong()
@@ -672,7 +674,8 @@ class DiaconnG8Service : MetroService() {
             if (confirm == Confirm.NOT_DONE) return false
             // Only the pump tells whether the stop came through.
             if (confirm == Confirm.NO_ANSWER && !pumpShows({ sendMessage(TempBasalInquirePacket(injector)) }) { diaconnG8Pump.tbStatus != 1 }) return false
-            SystemClock.sleep(500)
+            // In place of a fixed 0.5 s: its log record is there only when the pump has carried it out.
+            if (confirm == Confirm.DONE) awaitCarriedOut("Temp basal stop")
 
             // Clear TBR state directly after successful stop
             diaconnG8Pump.tempBasalStart = 0L
@@ -699,7 +702,8 @@ class DiaconnG8Service : MetroService() {
         sendMessage(msgExtended)
         // otp process. It reported every extended bolus set, whatever the pump answered.
         val started = when (processConfirm(msgExtended.msgType)) {
-            Confirm.DONE      -> true
+            // Its log record, which AAPS records from, is there only when the pump has carried it out.
+            Confirm.DONE      -> true.also { awaitCarriedOut("Extended bolus") }
             Confirm.NOT_DONE  -> false
             // Only the pump tells whether it took the extended bolus.
             Confirm.NO_ANSWER -> pumpShows({ readMainInfo() }) { diaconnG8Pump.squareStatus == SQUARE_RUNNING }
@@ -730,7 +734,7 @@ class DiaconnG8Service : MetroService() {
         sendMessage(msgStop)
         // otp process
         val stopped = when (processConfirm(msgStop.msgType)) {
-            Confirm.DONE      -> true
+            Confirm.DONE      -> true.also { awaitCarriedOut("Extended bolus stop") }
             Confirm.NOT_DONE  -> false
             // Only the pump tells whether the stop came through.
             Confirm.NO_ANSWER -> pumpShows({ readMainInfo() }) { diaconnG8Pump.squareStatus != SQUARE_RUNNING }
@@ -753,8 +757,9 @@ class DiaconnG8Service : MetroService() {
     }
 
     /**
-     * Reads the pump with [read] until [shows] holds, for a few seconds. A real G8 started a temp basal about 2 s after
-     * the answer to its confirm, and a read before that still gave the old state (2026-11-11).
+     * Reads the pump with [read] until [shows] holds, for a few seconds. A real G8 carries out a setting 1.2 to 1.9 s
+     * after the answer to its confirm (2026-11-11). It mostly holds a read until then, but it answered one right after the
+     * start of an extended bolus with the state before it.
      */
     private fun pumpShows(read: () -> Unit, shows: () -> Boolean): Boolean {
         repeat(STATE_READS) {
@@ -886,6 +891,7 @@ class DiaconnG8Service : MetroService() {
         }
         aapsLogger.debug(LTag.PUMPCOMM, "OTP received: ${diaconnG8Pump.otpNumber} after ${loopCnt * 100}ms")
         diaconnG8Pump.confirmResult = null
+        confirmReportsBefore = diaconnG8Pump.confirmReports
         val confirm = AppConfirmSettingPacket(injector, msgType, diaconnG8Pump.otpNumber)
         sendMessage(confirm, 2000)
         diaconnG8Pump.otpNumber = 0
@@ -898,6 +904,23 @@ class DiaconnG8Service : MetroService() {
         return result
     }
 
+    /** The count of confirm reports when the last confirm was sent. */
+    private var confirmReportsBefore = 0
+
+    /**
+     * Waits until the pump has carried out the setting it last confirmed, at most [CARRY_OUT_WAIT_MS]. The pump says so
+     * with a confirm report. Real G8 fw 2.50 (2026-11-11): a temp basal or an extended bolus is carried out 1.2 to 1.9 s
+     * after the answer to its confirm, and only then is its log record written. A log read right after the start of an
+     * extended bolus came before that, so AAPS had no extended bolus until the next read, and the user could not cancel it.
+     */
+    private fun awaitCarriedOut(what: String) {
+        val start = System.currentTimeMillis()
+        while (diaconnG8Pump.confirmReports == confirmReportsBefore && isConnected && System.currentTimeMillis() - start < CARRY_OUT_WAIT_MS)
+            SystemClock.sleep(CARRY_OUT_POLL_MS)
+        if (diaconnG8Pump.confirmReports != confirmReportsBefore) aapsLogger.debug(LTag.PUMPCOMM, "$what carried out after ${System.currentTimeMillis() - start} ms")
+        else aapsLogger.warn(LTag.PUMPCOMM, "$what: no confirm report from the pump in ${System.currentTimeMillis() - start} ms")
+    }
+
     companion object {
 
         /** The pump numbers its log 0 until this, then starts again at 0 with a higher wrap count. */
@@ -905,6 +928,10 @@ class DiaconnG8Service : MetroService() {
 
         /** The square (extended) bolus status of the main info while one runs. */
         private const val SQUARE_RUNNING = 1
+
+        /** How long `awaitCarriedOut` waits for the pump: it took up to 1.9 s. */
+        private const val CARRY_OUT_WAIT_MS = 3_000L
+        private const val CARRY_OUT_POLL_MS = 50L
 
         /** How often and how far apart the pump is read after a confirm with no answer: about 5 s in all. */
         private const val STATE_READS = 8

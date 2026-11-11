@@ -287,6 +287,12 @@ class DiaconnG8Pump(
     /** The end report of the last bolus: the pump gave all it was set to give. */
     @Volatile var bolusGivenInFull = false
 
+    /**
+     * How many confirm reports (0xE8) came from the pump. It sends one when it has carried out a setting it confirmed;
+     * see `DiaconnG8Service.awaitCarriedOut`. Written only on the Bluetooth thread.
+     */
+    @Volatile var confirmReports = 0
+
     /** The pump stopped the last bolus itself, as at an occlusion: it gave less, and the user did not stop it. */
     val bolusStoppedByPump: Boolean get() = bolusDone && !bolusGivenInFull && !bolusStopForced
 

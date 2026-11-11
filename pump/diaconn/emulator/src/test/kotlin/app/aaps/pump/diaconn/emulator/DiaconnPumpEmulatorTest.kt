@@ -390,9 +390,22 @@ class DiaconnPumpEmulatorTest {
 
     // --- Extended bolus ---
 
+    // Real G8 (2026-11-11): a log status right after the confirm of an extended bolus start was answered at once, without
+    // its record. The record came about 1.8 s later.
+    @Test
+    fun aReadRightAfterAnExtendedBolusStartIsNotHeld() {
+        assertThat(set(EXTENDED_BOLUS) { u16(30).u16(150).u32(123) }?.u8(4)).isEqualTo(0)
+
+        val exchange = send(LOG_STATUS)
+
+        assertThat(exchange.heldUntil).isEqualTo(0L)
+        assertThat(records()).isEmpty()
+        awaitTrue { records().isNotEmpty() }
+    }
+
     @Test
     fun anExtendedBolusStartAndStopAreLogged() {
-        assertThat(set(EXTENDED_BOLUS) { u16(30).u16(150).u32(123) }?.u8(4)).isEqualTo(0)
+        assertThat(setCarriedOut(EXTENDED_BOLUS) { u16(30).u16(150).u32(123) }?.u8(4)).isEqualTo(0)
 
         val start = records().single()
         assertThat(start.u8(4) and 0x3F).isEqualTo(0x0C)
@@ -402,11 +415,18 @@ class DiaconnPumpEmulatorTest {
         assertThat(ask(BIG_MAIN_INFO).u8(64)).isEqualTo(1)
 
         assertThat(set(INJECTION_CANCEL) { u8(EXTENDED_BOLUS) }?.u8(4)).isEqualTo(0)
+        val reportsAfterTheStop = send(LOG_STATUS).reportsBefore
 
         val stop = records().last()
         assertThat(stop.u8(4) and 0x3F).isEqualTo(0x0E)
         assertThat(stop.u8(8)).isEqualTo(4)
         assertThat(emulator.snapshot(linkUp = false).extendedBolus).isNull()
+        // The confirm report, then the result report: stopped, 30 min set, 150 set.
+        assertThat(reportsAfterTheStop.map { it.u8(1) }).containsExactly(0xE8, 0xE5).inOrder()
+        val result = reportsAfterTheStop.last()
+        assertThat(result.u8(4)).isEqualTo(1)
+        assertThat(result.u16(5)).isEqualTo(30)
+        assertThat(result.u16(9)).isEqualTo(150)
     }
 
     // --- The log ---
@@ -572,13 +592,15 @@ class DiaconnPumpEmulatorTest {
         return send(APP_CONFIRM) { u8(msgType).u32(answer.i32(5).toLong()) }.answer
     }
 
+    private fun setTempBasal(status: Int, ratio: Int): ByteArray? = setCarriedOut(TEMP_BASAL_SETTING) { tempBasal(status, ratio) }
+
     /**
-     * A temp basal setting and its confirm, and then the wait until the pump carries it out. The snapshot brings the
+     * A setting the pump carries out a moment after its confirm, and then the wait until it has. The snapshot brings the
      * pump up to now, with no packet that a fault could take.
      */
-    private fun setTempBasal(status: Int, ratio: Int): ByteArray? =
-        set(TEMP_BASAL_SETTING) { tempBasal(status, ratio) }.also {
-            Thread.sleep(DiaconnPumpEmulator.FAST_TEMP_BASAL_DELAY_MS + 50)
+    private fun setCarriedOut(msgType: Int, fields: PacketData.() -> Unit): ByteArray? =
+        set(msgType, fields).also {
+            Thread.sleep(DiaconnPumpEmulator.FAST_CARRY_OUT_MS + 50)
             emulator.snapshot(linkUp = false)
         }
 

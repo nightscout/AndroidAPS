@@ -53,8 +53,11 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
      */
     internal class Exchange(val reportsBefore: List<ByteArray>, val answer: ByteArray?, val reportsAfter: List<ByteArray>, val heldUntil: Long = 0L)
 
-    /** A temp basal setting the pump confirmed at [confirmedAt] and carries out at [dueAt]. */
-    private class DelayedSetting(val dueAt: Long, val confirmedAt: Long, val apply: (Long) -> Unit)
+    /**
+     * A setting the pump confirmed at [confirmedAt] and carries out at [dueAt]. With [holdsRequests], a request that comes
+     * before then waits for it.
+     */
+    private class DelayedSetting(val dueAt: Long, val confirmedAt: Long, val holdsRequests: Boolean, val apply: (Long) -> Unit)
 
     /**
      * A setting that waits for its confirm. [refusal] is checked at the setting and again at the confirm,
@@ -102,12 +105,14 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
     /** The pump gets [request] from the driver. */
     internal fun receive(request: ByteArray): Exchange = synchronized(state) {
         val now = System.currentTimeMillis()
-        // Real G8 fw 2.50 (2026-11-11): a request that comes while the pump has yet to carry out a temp basal it confirmed
-        // waits until it is carried out, and is answered after its reports. A log status sent 0.2 s after the confirm of a
-        // start was answered 1.9 s later, and a start sent right after the confirm of a stop was answered when the stop
-        // was done, and was taken.
-        val heldUntil = delayed.maxOfOrNull { it.dueAt }?.takeIf { it > now } ?: 0L
-        carryOut(delayed.toList())
+        // Real G8 fw 2.50 (2026-11-11): a request that comes while the pump has yet to carry out a setting it confirmed
+        // mostly waits until it is carried out, and is answered after its reports. A log status sent 0.2 s after the
+        // confirm of a temp basal start was answered 1.9 s later, and a start sent right after the confirm of a stop was
+        // answered when the stop was done, and was taken. After the start of an extended bolus a log status was answered
+        // at once, without its record.
+        val holding = delayed.filter { it.holdsRequests }
+        val heldUntil = holding.maxOfOrNull { it.dueAt }?.takeIf { it > now } ?: 0L
+        carryOut(delayed.filter { it.holdsRequests || it.dueAt <= now || it.dueAt <= heldUntil })
         settle(now)
         val before = drainOutbox()
         val answer = answer(request, now)
@@ -361,11 +366,13 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
             log("confirm of 0x%02x refused with %d".format(target, refusal))
             return result(APP_CONFIRM_SETTING, seq, refusal)
         }
-        if (setting.command == EmulatedCommand.TEMP_BASAL_START || setting.command == EmulatedCommand.TEMP_BASAL_STOP) {
-            // Real G8 fw 2.50 (2026-11-11): a temp basal started 1.8 to 1.9 s after the answer to its confirm, a stop took
-            // 1.2 s. Its log record has the time of the confirm. See receive for a request in between.
-            val delay = if (speed == EmulatorSpeed.FAST) FAST_TEMP_BASAL_DELAY_MS else REAL_TEMP_BASAL_DELAY_MS
-            delayed += DelayedSetting(now + delay, now) { at ->
+        if (setting.command in CARRIED_OUT_LATER) {
+            // Real G8 fw 2.50 (2026-11-11): a temp basal or an extended bolus is carried out 1.2 to 1.9 s after the answer
+            // to its confirm, with a confirm report. Its log record has the time of the confirm. See receive for a request
+            // in between.
+            val delay = if (speed == EmulatorSpeed.FAST) FAST_CARRY_OUT_MS else REAL_CARRY_OUT_MS
+            val extendedStart = setting.command == EmulatedCommand.EXTENDED_BOLUS_START
+            delayed += DelayedSetting(now + delay, now, holdsRequests = !extendedStart) { at ->
                 outbox += report(CONFIRM_REPORT) { u8(APP_CONFIRM_SETTING) }
                 setting.apply(at)
             }
@@ -639,12 +646,17 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
         bolusGiven(extended.amountHundredths, BOLUS_KIND_SQUARE, logSeconds(extended.startedAt))
     }
 
+    /**
+     * Real G8 fw 2.50 (2026-11-11), 0.50 U over 30 min stopped after 3 min: the record `8e 0500 03 04 45` (0.05 U given,
+     * 3 min, reason 4) and the result report `01 1e00 0300 3200 0500` (stopped, 30 min, 3 min, 0.50 U set, 0.05 U given).
+     */
     private fun stopExtendedBolus(extended: RunningExtendedBolus, at: Long) {
         state.extendedBolus = null
         val given = extended.givenHundredths(at)
         val minutes = ((at - extended.startedAt) / MS_PER_MINUTE).toInt().coerceIn(0, 0xFF)
         record(DiaconnLog.SQUARE_FAIL, logSeconds(at)) { u16(given).u8(minutes).u8(REASON_USER_STOP).u8(state.battery) }
         bolusGiven(given, BOLUS_KIND_SQUARE, logSeconds(extended.startedAt))
+        outbox += report(EXTENDED_RESULT_REPORT) { u8(EXTENDED_STOPPED).u16(extended.minutes).u16(minutes).u16(extended.amountHundredths).u16(given) }
     }
 
     // --- Temp basal ---
@@ -1037,9 +1049,14 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
         internal const val INJECTION_BLOCK_REPORT = 0xD8
         internal const val SNACK_RESULT_REPORT = 0xE4
 
-        /** Real G8 (2026-11-11): `e8 .. 37` when it carries out a temp basal it confirmed; 0x37 is the confirm request. */
+        /**
+         * Real G8 (2026-11-11): `e8 .. 37` when it carries out a temp basal or an extended bolus it confirmed; 0x37 is the
+         * confirm request. Once, for the start of an extended bolus, it sent 0x16 in place of 0x37.
+         */
         internal const val CONFIRM_REPORT = 0xE8
         internal const val TEMP_BASAL_REPORT = 0xCA
+        internal const val EXTENDED_RESULT_REPORT = 0xE5
+        private const val EXTENDED_STOPPED = 1
         internal const val INJECTION_PROGRESS_REPORT = 0xEA
 
         // Result codes. Inquiries answer 16 when fine, settings 0.
@@ -1113,18 +1130,26 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
         private const val REAL_PROGRESS_MS = 1_000L
         private const val FAST_PROGRESS_MS = 200L
 
+        /** The settings the pump carries out a moment after the answer to their confirm. */
+        private val CARRIED_OUT_LATER = setOf(
+            EmulatedCommand.TEMP_BASAL_START, EmulatedCommand.TEMP_BASAL_STOP,
+            EmulatedCommand.EXTENDED_BOLUS_START, EmulatedCommand.EXTENDED_BOLUS_STOP
+        )
+
         /**
-         * How long after the answer to its confirm the pump carries out a temp basal. Real G8 (2026-11-11): 1.8 and 1.9 s
-         * for a start, 1.2 s for a stop.
+         * How long after the answer to its confirm the pump carries out a temp basal or an extended bolus. Real G8
+         * (2026-11-11): 1.8 and 1.9 s for a temp basal start, 1.2 s for its stop, 1.8 s for an extended bolus start, 1.9 s
+         * for its stop.
          */
-        private const val REAL_TEMP_BASAL_DELAY_MS = 1_800L
+        private const val REAL_CARRY_OUT_MS = 1_800L
 
         /**
          * Not shorter than 1 s. A log record has the time of its confirm in whole seconds, and AAPS takes that time as the
-         * id of the record. As the pump holds the next request this long, it never confirms two temp basal changes in one
-         * second. With 0.2 s, a zero temp and the high temp after it had one id, and AAPS kept the wrong one.
+         * id of the record. As the pump takes this long, it never confirms two changes of one kind in one second. With
+         * 0.2 s, a zero temp and the high temp after it had one id, and AAPS kept the wrong one; an extended bolus stopped
+         * in the second it started could not be ended in AAPS.
          */
-        internal const val FAST_TEMP_BASAL_DELAY_MS = 1_000L
+        internal const val FAST_CARRY_OUT_MS = 1_000L
 
         /** Longer gaps are not counted, so a pump that slept for weeks does not write thousands of hourly records. */
         private const val MAX_SETTLE_MS = 7 * 24 * 3_600_000L
