@@ -94,7 +94,17 @@
     <string name="carelevo_patch_needle_insertion_step1_title">Sicherheitskappe entfernen</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Sicherheitskappe in Pfeilrichtung drehen und entfernen.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Nadel einführen</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Drücken der [OK] -Taste stoppt das Insulin.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Ohne Start der Abgabe beenden?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Durch Drücken der [OK]-Taste wird dieser Patch unbrauchbar.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Patch-Aktivierung abbrechen?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Durch Drücken der [OK]-Taste werden Ihre Eingaben verworfen.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Wenn der unten erkannte Patch korrekt ist, tippen Sie bitte auf die Schaltfläche Bestätigen.</string>
+    <string name="carelevo_dialog_connect_detached">Applikator entfernt</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth ist nicht aktiviert. Bitte prüfen.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Kein Patch verbunden.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Der Patch ist noch nicht verbunden. Bitte versuchen Sie es in Kürze erneut.</string>
     <!-- Profile -->
     <!-- Needle Insertion -->
     <!-- Patch Discard -->
