@@ -152,7 +152,7 @@
     <string name="nsclient_label">Nuotolinis stebėjimas ir valdymas</string>
     <string name="nsclient_howcanyou">Kaip galite stebėti ir valdyti AAPS nuotoliniu būdu (pavyzdžiui, kai ją naudoja jūsų vaikas)?</string>
     <string name="nsclient_nightscout">Nuotoliniu būdu stebėti AAPS galima per AAPSClient, Nightscout programėlę bei Nightscout svetainę.</string>
-    <string name="nsclient_dexcomfollow">Kitos programėlės (pavyzdžiui, Dexcom Follow arba xDrip+ sekėjo režimu) leidžia nuotoliniu būdu stebėti kai kuriuos duomenis, pvz. gliukozę. Jos gali nerodyti AIO ar AAO arba apskaičiuoti juos kitaip.</string>
+    <string name="nsclient_dexcomfollow">Kitos programėlės (pavyzdžiui, Dexcom Follow arba xDrip+ follow) leidžia nuotoliniu būdu stebėti kai kuriuos duomenis, pvz. gliukozę. Jos gali nerodyti AIO ar AAO arba apskaičiuoti juos kitaip.</string>
     <string name="nsclient_data">Norint stebėti ar valdyti AAPS nuotoliniu būdu, abiejuose telefonuose reikia interneto ryšio (per Wi-Fi arba mobiliuosius duomenis).</string>
     <string name="nsclient_fullcontrol">Kai AAPSClient susieta su pagrindiniu telefonu, galite nuotoliniu būdu valdyti AAPS: suleisti bolusą, įvesti angliavandenius, nustatyti laikinus tikslus, keisti profilį ir ciklo režimą.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/lt/latest/RemoteFeatures/RemoteMonitoring.html</string>
