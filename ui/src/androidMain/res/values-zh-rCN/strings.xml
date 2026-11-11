@@ -42,6 +42,7 @@
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">天</string>
     <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="hba1c_mmol_mol" comment="%1$d=HbA1c (or eA1c, GMI) in the IFCC unit mmol/mol, a whole number. Shown under the same value in percent. Example: 48 mmol/mol">%1$d mmol/mol</string>
     <string name="cgp_title">血糖五边形（CGP）- 14天</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -248,6 +249,7 @@
     <string name="profile_switches">切换配置文件</string>
     <string name="basal_pct_from_tdd_label">基础率%</string>
     <string name="selected_profile">已选择:</string>
+    <string name="comparation">比较</string>
     <string name="profile_tab_1">配置文件 1</string>
     <string name="profile_tab_2">配置文件 2</string>
     <string name="motol_default_profile">默认个人配置文件</string>
