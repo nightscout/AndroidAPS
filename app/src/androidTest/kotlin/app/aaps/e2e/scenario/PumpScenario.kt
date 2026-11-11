@@ -80,7 +80,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
         if (InstrumentationRegistry.getArguments().getString(SPEED_ARGUMENT) == SPEED_REAL) EmulatorSpeed.REAL else EmulatorSpeed.FAST
 
     /** Records from before this are not part of the scenario. */
-    private var startedAt = 0L
+    var startedAt = 0L
+        private set
 
     /** For a bolus that runs while the test does something else, as stopping it. */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -356,6 +357,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
+
+    /**
+     * A temp basal as the loop asks for one (`LoopPlugin.applyTBRRequest`): with `enforceNew = false`, so the driver may
+     * keep a temp basal that already runs. [tempBasal] is the one of the dialog, which must always set it.
+     */
+    fun loopTempBasal(rate: Double, minutes: Int): PumpEnactResult {
+        val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+        return queued { commandQueue.tempBasalAbsolute(rate, minutes, false, profile, PumpSync.TemporaryBasalType.NORMAL) }
+    }
+
+    /** The end of a temp basal as the loop asks for it, back at the base rate: `enforceNew = false`. */
+    fun loopCancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = false) }
 
     /**
      * A status read on a new connection, as AAPS makes one after the link was closed for a while. Some drivers learn what

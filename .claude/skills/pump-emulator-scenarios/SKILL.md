@@ -41,6 +41,9 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
   never fired passes and tests nothing. The Equil emulator once named no message under 10 bytes, and its reads are 6.
 - The emulator reports as its base rate the rate of its active profile. Dana RS takes a temp basal at the base rate as
   no temp basal; while its emulator said 1.0 U/h always, every Dana temp basal scenario passed without a temp basal.
+- A status that says how long something runs must count it from its start. The DanaR emulator said 0 s for every
+  extended bolus, so each status read moved its start to "now", and 10 s later the driver took it for another one,
+  warned "unsupported action in pump" and stored it again. The scenarios checked within 10 s and passed.
 - A scanner hands out only what the pump advertises now, as the real one does. A `SharedFlow` with `replay` kept an old
   advertisement for new listeners: Equil's wizard paired with a serial the pump no longer had, and the driver read an
   old log index. Advertise again and again while a scan runs instead, until `stopScan`.
@@ -53,7 +56,9 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
 3. An adapter `<Pump>PumpUnderTest`: how to pair (through the wizard's own ViewModels from
    `testGraphs.viewModelFactory`, or through its queue commands), how to unpair, how to restore a saved emulator.
 4. A test class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` that returns the adapter. Add the source dir to
-   `pumpTestSources` in `app/build.gradle.kts`.
+   `pumpTestSources` in `app/build.gradle.kts`. What only a family of drivers does goes in an abstract class between
+   the two, as `AbstractDanaRScenarioTest` for the three DanaR drivers (a wrong driver picked, a temp basal set on the
+   pump, the history of every record type, the pump clock, the daily limit, the user options).
 5. The real radio code: the emulator replaces the transport, so the scenarios never run it. A unit test
    `<Pump>BleTransportContractTest : BleTransportContract()` (`:shared:tests`, package `app.aaps.shared.tests.ble`)
    runs it on Robolectric's Bluetooth: say how to build the transport and give the pump's service and characteristics.
@@ -116,6 +121,8 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 ## Traps
 
 - `activePlugin.activePump` is the concentration wrapper. Compare the driver with `activePumpInternal`.
+- The loop sends its temp basals with `enforceNew = false` (`loopTempBasal`, `loopCancelTempBasal`), the dialog with
+  `true` (`tempBasal`). Only the first reaches the branches where a driver keeps what already runs.
 - Only `MasterActionExecutor` raises the BOLUS_DELIVERY_FAILED alarm, when the queue reports a bolus as not given. A
   bolus straight through the queue (`bolus`, `startBolus`) never alarms, so a check of that alarm needs `userBolus`,
   the insulin dialog's path. A bolus the pump cut short must come back as not given, or the user hears nothing.
@@ -147,7 +154,8 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 - After a real-pump test, copy what the pump did into the emulator (mark the source and the date). The DanaR emulator
   gives progress in 0.05 U steps, one more step after a stop, writes the bolus to its history 2 s after the end, and
   refuses two connects after a broken link, all as a real DanaRv2 did. Its Korean variant steps 0.1 U and stops at its
-  last progress, and starts a link with 0x0301, 0x0302, 0x0303, as a real Korean DanaR did.
+  last progress, starts a link with 0x0301, 0x0302, 0x0303, and ends a history read with no "done", as a real Korean
+  DanaR did (the driver ends the read after 10 s with nothing from the pump).
 - A stop of the insulin on the pump is a 0 U/h temp basal of type PUMP_SUSPEND in AAPS. `checkSuspend` checks it, and a
   temp basal check while the pump is stopped would compare the wrong things.
 - A driver may send a command again after no answer (the DanaR sends a temp basal cancel again). Check the end state
