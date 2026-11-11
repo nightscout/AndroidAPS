@@ -433,6 +433,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
     /** The pump takes a temp basal in percent, see [tempBasalPercent]. */
     val canSetPercentTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.PERCENT != 0
 
+    /** The pump gives a bolus of [units] as it is: [units] is on its bolus step. */
+    fun takesBolus(units: Double): Boolean = onStep(units, pumpDescription.bolusStep)
+
+    /** The pump gives an extended bolus of [units] as it is. */
+    fun takesExtendedBolus(units: Double): Boolean = canGiveExtendedBolus && onStep(units, pumpDescription.extendedBolusStep)
+
+    /** The pump runs an absolute temp basal of [rate] U/h as it is. */
+    fun takesTempBasalRate(rate: Double): Boolean =
+        pumpDescription.tempBasalStyle and PumpDescription.ABSOLUTE != 0 && onStep(rate, pumpDescription.tempAbsoluteStep)
+
+    private fun onStep(value: Double, step: Double): Boolean = step > 0.0 && abs(value / step - (value / step).roundToLong()) < STEP_TOLERANCE
+
     fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
 
     fun cancelExtendedBolus(): PumpEnactResult = queued { commandQueue.cancelExtended() }
@@ -746,6 +758,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
          * try, skip, and the next try takes it.
          */
         private const val PROFILE_TIMEOUT = 180_000L
+
+        /** An amount is on a step when it is this close to a whole number of steps. */
+        private const val STEP_TOLERANCE = 1e-6
         private const val PROFILE_RETRY_MS = 5_000L
         private const val MS_PER_MINUTE = 60_000L
     }

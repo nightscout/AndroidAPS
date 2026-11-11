@@ -214,7 +214,7 @@ class DanaRKoreanPlugin(
         val doHighTemp = absoluteRate > baseBasalRate.cU && !preferences.get(DanaBooleanKey.UseExtended)
         val doExtendedTemp = absoluteRate > baseBasalRate.cU && preferences.get(DanaBooleanKey.UseExtended)
 
-        var percentRate: Int = java.lang.Double.valueOf(absoluteRate / baseBasalRate.cU * 100).toInt()
+        var percentRate: Int = DanaPump.tempBasalPercent(absoluteRate, baseBasalRate.cU)
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10) percentRate = 0
         percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()

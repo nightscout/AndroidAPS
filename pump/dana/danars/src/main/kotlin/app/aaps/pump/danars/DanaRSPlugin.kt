@@ -378,7 +378,7 @@ class DanaRSPlugin(
         var percentRate = 0
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate >= 0.10) {
-            percentRate = java.lang.Double.valueOf(absoluteRate / baseBasalRate.cU * 100).toInt()
+            percentRate = DanaPump.tempBasalPercent(absoluteRate, baseBasalRate.cU)
         } else {
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
         }

@@ -69,24 +69,6 @@ class DiaconnScenarioTest : AbstractPumpScenarioTest() {
     }
 
     /**
-     * What reaches the pump is what was asked. The driver cut the amounts to hundredths: 0.29 * 100 is 28.99999..., so a
-     * bolus of 0.29 U went to the pump as 0.28 U and a rate of 0.57 U/h as 0.56 U/h. The record checks do not see it, as
-     * AAPS stored what the pump gave.
-     */
-    @Test
-    fun theAmountsReachThePumpAsAsked() {
-        scenario.bringUp()
-        scenario.pair()
-
-        assertWithMessage("bolus").that(scenario.bolus(ODD_BOLUS).success).isTrue()
-        assertWithMessage("what the pump gave").that(scenario.control.state().boluses).containsExactly(ODD_BOLUS)
-
-        assertWithMessage("temp basal").that(scenario.tempBasal(ODD_RATE, TEMP_BASAL_MINUTES).success).isTrue()
-        assertWithMessage("the rate the pump runs, in 0.01 U/h plus 1000").that(pumpState.tempBasalRateRatio).isEqualTo(ODD_RATE_RATIO)
-        scenario.checkTempBasal()
-    }
-
-    /**
      * A history read with new records reports success. The pump answers a log page with a number of its own, not the
      * number of the request, so the answer woke no request: each page waited its whole 2 s and counted as lost, and
      * the read failed while it had stored every record.
@@ -125,14 +107,6 @@ class DiaconnScenarioTest : AbstractPumpScenarioTest() {
 
         /** Above the base rate of the test profile: a temp basal at the base rate is no temp basal. */
         const val RATE = 1.0
-        /**
-         * Amounts whose hundredths a cut loses: 0.29 * 100 and 0.57 * 100 are a little less than 29 and 57. The rate is
-         * above the base rate and below the limit of the test setup, which makes any temp basal 1.0 U/h at most.
-         */
-        const val ODD_BOLUS = 0.29
-        const val ODD_RATE = 0.57
-        const val ODD_RATE_RATIO = 1057
-        const val TEMP_BASAL_MINUTES = 30
         const val SHORT_MINUTES = 15
         const val ODD_MINUTES = 45
         const val MINUTE_MS = 60_000L

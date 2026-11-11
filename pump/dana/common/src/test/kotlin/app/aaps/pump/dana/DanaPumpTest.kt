@@ -17,6 +17,23 @@ class DanaPumpTest : TestBaseWithProfile() {
         sut = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
     }
 
+    // 1.2 / 0.8 * 100 is 149.99999...: a plain cut gave 149, which the step down to 10 % made 140 % for a temp basal of
+    // 150 %, and 0.88 / 0.8 gave 109, so 100 %: no temp basal in place of 110 %.
+    @Test
+    fun aTempBasalPercentIsCutOnTheExactValue() {
+        assertThat(DanaPump.tempBasalPercent(1.2, 0.8)).isEqualTo(150)
+        assertThat(DanaPump.tempBasalPercent(0.88, 0.8)).isEqualTo(110)
+        assertThat(DanaPump.tempBasalPercent(1.65, 1.1)).isEqualTo(150)
+        assertThat(DanaPump.tempBasalPercent(2.1, 0.7)).isEqualTo(300)
+    }
+
+    @Test
+    fun aTempBasalPercentIsStillCut() {
+        assertThat(DanaPump.tempBasalPercent(1.19, 0.8)).isEqualTo(148)
+        assertThat(DanaPump.tempBasalPercent(0.0, 0.8)).isEqualTo(0)
+        assertThat(DanaPump.tempBasalPercent(0.4, 0.8)).isEqualTo(50)
+    }
+
     @Test
     fun detectDanaRS() {
         sut.hwModel = 0x05

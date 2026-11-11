@@ -204,7 +204,7 @@ class DanaRv2Plugin(
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
         val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
         val doHighTemp = absoluteRate > baseBasalRate.cU
-        var percentRate = (absoluteRate / baseBasalRate.cU * 100).toInt()
+        var percentRate = DanaPump.tempBasalPercent(absoluteRate, baseBasalRate.cU)
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10) percentRate = 0
         percentRate =

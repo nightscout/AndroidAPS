@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
+import kotlin.math.roundToInt
 
 @Inject
 class DanaRSPacketBolusSetExtendedBolus(
@@ -24,7 +25,8 @@ class DanaRSPacketBolusSetExtendedBolus(
     }
 
     override fun getRequestParams(): ByteArray {
-        val extendedBolusRate = (extendedAmount * 100.0).toInt()
+        // Rounded, as the bolus packet does: a cut gave less, 1.15 * 100 is 114.99999..., so 1.15 U went as 1.14 U.
+        val extendedBolusRate = (extendedAmount * 100.0).roundToInt()
         val request = ByteArray(3)
         request[0] = (extendedBolusRate and 0xff).toByte()
         request[1] = (extendedBolusRate ushr 8 and 0xff).toByte()

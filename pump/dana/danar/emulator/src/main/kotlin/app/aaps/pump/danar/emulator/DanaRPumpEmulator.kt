@@ -147,8 +147,8 @@ class DanaRPumpEmulator(
     }
 
     private fun handleInitConnStatusBolus(): ByteArray {
-        val bolusStepInt = (state.bolusStep * 100).toInt()
-        val maxBolusInt = (state.maxBolus * 100).toInt()
+        val bolusStepInt = (state.bolusStep * 100).roundToInt()
+        val maxBolusInt = (state.maxBolus * 100).roundToInt()
         return when (state.variant) {
             DanaRVariant.DANA_R_KOREAN -> {
                 // Korean: MsgInitConnStatusBolusK — 13+ bytes, byte[12] = deliveryStatus
@@ -195,9 +195,9 @@ class DanaRPumpEmulator(
             else                       -> {
                 // DanaR / v2: standard 22-byte layout
                 val dailyInt = (state.dailyTotalUnits * 750).toInt()
-                val maxDailyInt = (state.maxDailyTotalUnits * 100).toInt()
+                val maxDailyInt = (state.maxDailyTotalUnits * 100).roundToInt()
                 val reservoirInt = (state.reservoirRemainingUnits * 750).toInt()
-                val currentBasalInt = (state.currentBasal * 100).toInt()
+                val currentBasalInt = (state.currentBasal * 100).roundToInt()
 
                 byteArrayOf(
                     if (state.isSuspended) 0x01 else 0x00,           // 0: pumpSuspended
@@ -248,8 +248,8 @@ class DanaRPumpEmulator(
 
     private fun handleStatus(): ByteArray {
         val dailyInt = (state.dailyTotalUnits * 750).toInt()
-        val lastBolusInt = (state.lastBolusAmount * 100).toInt()
-        val iobInt = (state.iob * 100).toInt()
+        val lastBolusInt = (state.lastBolusAmount * 100).roundToInt()
+        val iobInt = (state.iob * 100).roundToInt()
 
         val result = ByteArray(17)
         // 0-2: daily total (3 bytes LE)
@@ -282,9 +282,9 @@ class DanaRPumpEmulator(
 
     private fun handleStatusBasic(): ByteArray {
         val dailyInt = (state.dailyTotalUnits * 750).toInt()
-        val maxDailyInt = (state.maxDailyTotalUnits * 100).toInt()
+        val maxDailyInt = (state.maxDailyTotalUnits * 100).roundToInt()
         val reservoirInt = (state.reservoirRemainingUnits * 750).toInt()
-        val currentBasalInt = (state.currentBasal * 100).toInt()
+        val currentBasalInt = (state.currentBasal * 100).roundToInt()
 
         return when (state.variant) {
             DanaRVariant.DANA_R_KOREAN -> {
@@ -361,7 +361,7 @@ class DanaRPumpEmulator(
      * bolus than the one AAPS had and stored it again.
      */
     private fun handleStatusBolusExtended(): ByteArray {
-        val amountInt = (state.extendedBolusAmount * 100).toInt()
+        val amountInt = (state.extendedBolusAmount * 100).roundToInt()
         val elapsed = if (state.isExtendedBolusRunning) ((state.pumpTimeMillis - state.extendedBolusStartTime) / 1000).toInt() else 0
 
         return byteArrayOf(
@@ -383,7 +383,7 @@ class DanaRPumpEmulator(
         val profile = state.basalProfiles[state.activeProfile]
         val result = ByteArray(48) // 24 * 2 bytes
         for (i in 0 until 24) {
-            val rateInt = (profile[i] * 100).toInt()
+            val rateInt = (profile[i] * 100).roundToInt()
             result[i * 2] = (rateInt shr 8).toByte()
             result[i * 2 + 1] = rateInt.toByte()
         }
@@ -392,8 +392,8 @@ class DanaRPumpEmulator(
 
     private fun handleSettingMeal(): ByteArray {
         val data = ByteArray(12)
-        data[0] = (state.basalStep * 100).toInt().toByte()  // basalStep (1 = 0.01 U/h)
-        data[1] = (state.bolusStep * 100).toInt().toByte()  // bolusStep (10 = 0.10 U)
+        data[0] = (state.basalStep * 100).roundToInt().toByte()  // basalStep (1 = 0.01 U/h)
+        data[1] = (state.bolusStep * 100).roundToInt().toByte()  // bolusStep (10 = 0.10 U)
         data[2] = 0x01                                       // bolus enabled
         // data[5] = isConfigUD (0 = U/h mode)
         return data
@@ -407,7 +407,7 @@ class DanaRPumpEmulator(
         val result = ByteArray(48 * 4) // 4 profiles * 24 hours * 2 bytes
         for (p in 0 until 4) {
             for (h in 0 until 24) {
-                val rateInt = (state.basalProfiles[p][h] * 100).toInt()
+                val rateInt = (state.basalProfiles[p][h] * 100).roundToInt()
                 val offset = p * 48 + h * 2
                 result[offset] = (rateInt shr 8).toByte()
                 result[offset + 1] = rateInt.toByte()
@@ -417,9 +417,9 @@ class DanaRPumpEmulator(
     }
 
     private fun handleSettingMaxValues(): ByteArray {
-        val maxBolusInt = (state.maxBolus * 100).toInt()
-        val maxBasalInt = (state.maxBasal * 100).toInt()
-        val maxDailyInt = (state.maxDailyTotalUnits * 100).toInt()
+        val maxBolusInt = (state.maxBolus * 100).roundToInt()
+        val maxBasalInt = (state.maxBasal * 100).roundToInt()
+        val maxDailyInt = (state.maxDailyTotalUnits * 100).roundToInt()
         return byteArrayOf(
             (maxBolusInt shr 8).toByte(), maxBolusInt.toByte(),
             (maxBasalInt shr 8).toByte(), maxBasalInt.toByte(),
