@@ -160,6 +160,7 @@ class EmulatorBleTransport(
 
         // Wire up spontaneous message callback for notifications and multi-response history
         emulator.onSpontaneousMessage = { link, type, opCode, data ->
+            awaitAnswersSent()
             val generation = link ?: connectionGeneration
             // Dropped before it is built: building advances the RSv3 encryption of the link that is up now.
             if (generation == connectionGeneration) {
@@ -397,6 +398,7 @@ class EmulatorBleTransport(
             }
 
             // Process the packet through pump-side encryption and emulator
+            synchronized(answering) { answersPending++ }
             try {
                 val response = processPumpSide(packet)
                 if (response != null) {
@@ -407,6 +409,11 @@ class EmulatorBleTransport(
                 }
             } catch (e: Exception) {
                 aapsLogger?.error(LTag.PUMPEMULATOR, "exception in processPumpSide", e)
+            } finally {
+                synchronized(answering) {
+                    answersPending--
+                    answering.notifyAll()
+                }
             }
         }
     }
@@ -761,6 +768,25 @@ class EmulatorBleTransport(
      * on the generation rather than on `connected`, so a test that drives `writeCharacteristic`
      * directly without connecting still gets its responses.
      */
+    /**
+     * Commands being answered now. A real pump sends its answer to a command before anything it sends after it. The
+     * emulator sends a history read's first event as the answer, and the rest and the "done" from its own thread, so
+     * under load the "done" could come first: the driver ended the read with nothing, and a bolus got no record
+     * (CircleCI 42448, RSv1). What the pump sends by itself therefore waits until the answers are out.
+     */
+    private val answering = Object()
+    private var answersPending = 0
+
+    /** Waits, holding no lock of the link, until no command is being answered; at most [ANSWER_WAIT_MS]. */
+    private fun awaitAnswersSent() = synchronized(answering) {
+        val end = System.currentTimeMillis() + ANSWER_WAIT_MS
+        while (answersPending > 0) {
+            val left = end - System.currentTimeMillis()
+            if (left <= 0) break
+            answering.wait(left)
+        }
+    }
+
     private fun sendResponse(responseBytes: ByteArray, generation: Int = connectionGeneration) {
         // Checked and delivered under the lock: a disconnect landing between the two would put the
         // packet into a BLEComm that has already torn down, and it would throw
@@ -772,5 +798,11 @@ class EmulatorBleTransport(
             }
             listener?.onCharacteristicChanged(responseBytes)
         }
+    }
+
+    private companion object {
+
+        /** An answer is out in milliseconds. Longer means it was lost, and the message goes anyway. */
+        const val ANSWER_WAIT_MS = 2_000L
     }
 }

@@ -41,6 +41,10 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
   never fired passes and tests nothing. The Equil emulator once named no message under 10 bytes, and its reads are 6.
 - The emulator reports as its base rate the rate of its active profile. Dana RS takes a temp basal at the base rate as
   no temp basal; while its emulator said 1.0 U/h always, every Dana temp basal scenario passed without a temp basal.
+- An answer goes out before anything the pump sends after it. The Dana RS emulator answered a history read with its
+  first event and sent the rest and the "done" from its own thread; under CI load the "done" came first, the driver
+  ended the read with nothing, and a bolus had no record now and then (CircleCI 42425, 42438, 42448). Its transport now holds
+  back what the pump sends by itself until the answers are out.
 - A status that says how long something runs must count it from its start. The DanaR emulator said 0 s for every
   extended bolus, so each status read moved its start to "now", and 10 s later the driver took it for another one,
   warned "unsupported action in pump" and stored it again. The scenarios checked within 10 s and passed.
