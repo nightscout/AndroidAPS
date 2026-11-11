@@ -105,16 +105,48 @@
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth ist nicht aktiviert. Bitte prüfen.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Kein Patch verbunden.</string>
     <string name="carelevo_toast_msg_not_connected_waiting_retry">Der Patch ist noch nicht verbunden. Bitte versuchen Sie es in Kürze erneut.</string>
+    <string name="carelevo_toast_msg_scan_failed">Scan fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Es wurde kein Patch gefunden. Bitte versuchen Sie es erneut.</string>
+    <string name="carelevo_toast_msg_connect_failed">Patch-Verbindung fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil ist nicht eingestellt.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Nadelprüfung fehlgeschlagen.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Verwerfen des Patches fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
     <!-- Basal Delivery -->
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Fortsetzen der Abgabe fehlgeschlagen. Bitte versuche es erneut.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Anhalten der Abgabe fehlgeschlagen. Bitte versuche es erneut.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Sicherheitsprüfung fehlgeschlagen.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Wenig Insulin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch abgelaufen</string>
+    <string name="alarm_feat_title_warning_low_battery">Niedriger Akkustand</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Hohe/Niedrige Temperatur</string>
+    <string name="alarm_feat_title_warning_not_used_app">Auto-Off</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE nicht verbunden</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Zeit zum Anbringen des Patches ist verstrichen</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Selbstdiagnose fehlgeschlagen</string>
+    <string name="alarm_feat_title_warning_patch_error">Patch-Fehler</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Verschluss</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Fehler beim Einführen der Nadel</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Wenig Insulin</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Patch-Nutzungsdauer abgelaufen</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patch läuft in Kürze ab</string>
+    <string name="alarm_feat_title_alert_low_battery">Niedriger Akkustand</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Hohe/Niedrige Temperatur</string>
+    <string name="alarm_feat_title_alert_not_used_app">Auto-Off</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE nicht verbunden</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Patch-Aktivierung unvollständig</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Insulin starten</string>
     <string name="alarm_feat_title_alert_off_bluetooth">Bluetooth einschalten</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Wenig Insulin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Patch-Nutzungszeitbenachrichtigung</string>
+    <string name="alarm_feat_title_notice_check_patch">Patchprüfbenachrichtigung</string>
     <string name="alarm_feat_title_notice_change_time_zone">Zeitzonenänderung</string>
     <string name="alarm_feat_title_notice_check_bg">Blutzucker prüfen</string>
     <string name="alarm_feat_title_notice_lgs_started">LGS gestartet</string>
@@ -124,6 +156,8 @@
     <string name="alarm_feat_desc_unknown">Unerwarteter Patch-Fehler.</string>
     <!-- Action Buttons -->
     <string name="alarm_feat_btn_patch_discard">Patch deaktivieren</string>
+    <string name="alarm_feat_btn_patch_force_discard">Patch verwerfen</string>
+    <string name="alarm_feat_btn_resume_infusion">Insulin starten</string>
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">Bitte prüfe die Patch-Verbindung.</string>
     <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus kann nicht abgegeben werden. Verfügbarer Bolus: %1$s</string>
