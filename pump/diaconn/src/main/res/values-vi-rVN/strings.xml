@@ -27,7 +27,6 @@
     <string name="commanderror">Lỗi lệnh</string>
     <string name="speederror">Lỗi tốc độ</string>
     <string name="insulinlimitviolation">Vi phạm giới hạn insulin</string>
-    <string name="boluserrorcode">Lượng insulin yêu cầu: %1$.2f U · Đã phân phối: %2$.2f U · Mã lỗi: %3$s</string>
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
