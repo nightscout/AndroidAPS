@@ -27,7 +27,6 @@
     <string name="commanderror">Fehler bei Befehlsausführung</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>
     <string name="insulinlimitviolation">Insulin-Beschränkung verletzt</string>
-    <string name="boluserrorcode">Angefordert: %1$.2f IE abgegeben: %2$.2f IE Fehlercode: %3$s</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="bolus_step">Bolus-Schritt</string>
     <string name="basal_step">Basal-Schritt</string>
