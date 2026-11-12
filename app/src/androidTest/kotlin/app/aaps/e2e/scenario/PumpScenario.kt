@@ -433,6 +433,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
     /** The pump takes a temp basal in percent, see [tempBasalPercent]. */
     val canSetPercentTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.PERCENT != 0
 
+    /** The pump takes a temp basal in U/h. */
+    val canSetAbsoluteTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.ABSOLUTE != 0
+
     /** The pump gives a bolus of [units] as it is: [units] is on its bolus step. */
     fun takesBolus(units: Double): Boolean = onStep(units, pumpDescription.bolusStep)
 

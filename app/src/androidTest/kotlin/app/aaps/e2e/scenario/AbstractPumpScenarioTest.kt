@@ -133,6 +133,22 @@ abstract class AbstractPumpScenarioTest {
             assertWithMessage("the rate the pump runs").that(rate).isWithin(AMOUNT_TOLERANCE).of(ODD_RATE)
             scenario.checkTempBasal()
         }
+
+        // A pump that takes only a percent: the driver turns the rate of the loop into a percent of the base rate. On a base
+        // of 0.4 U/h, 0.6 / 0.4 * 100 is 149.99999..., so a cut gave 149, which the step down to 10 % made 140 % in place
+        // of 150 %. Found in the Dana drivers.
+        if (scenario.canSetPercentTempBasal && !scenario.canSetAbsoluteTempBasal) {
+            scenario.switchProfile(PERCENT_TRAP_PROFILE)
+            assertWithMessage("temp basal").that(scenario.loopTempBasal(PERCENT_TRAP_RATE, PERCENT_TRAP_MINUTES).success).isTrue()
+            val state = scenario.control.state()
+            // A DanaR set to "use extended boluses" gives every high temp as an extended bolus: then no percent is sent.
+            if (state.extendedBolus == null) {
+                val percent = checkNotNull(state.tempBasal?.percent) { "the pump runs no percent temp basal" }
+                assertWithMessage("the percent the pump runs for $PERCENT_TRAP_RATE U/h").that(percent).isEqualTo(PERCENT_TRAP_PERCENT)
+            }
+            scenario.checkTempBasal()
+            if (scenario.canGiveExtendedBolus) scenario.checkExtendedBolus()
+        }
     }
 
     /**
@@ -580,6 +596,12 @@ abstract class AbstractPumpScenarioTest {
          */
         const val ODD_BOLUS = 1.15
         const val ODD_RATE = 0.57
+
+        /** 80 % of the test profile is a base of 0.4 U/h, on which 0.6 U/h is 150 %: under the limits of 1 U/h and 200 %. */
+        const val PERCENT_TRAP_PROFILE = 80
+        const val PERCENT_TRAP_RATE = 0.6
+        const val PERCENT_TRAP_PERCENT = 150
+        const val PERCENT_TRAP_MINUTES = 60
         const val AMOUNT_TOLERANCE = 0.001
         const val KILLED_BOLUS = 2.0
         const val KILL_AFTER = 0.3
