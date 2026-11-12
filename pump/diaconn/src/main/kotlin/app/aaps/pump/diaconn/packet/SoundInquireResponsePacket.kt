@@ -32,8 +32,10 @@ class SoundInquireResponsePacket(injector: MetroMemberInjector) : DiaconnG8Packe
             return
         }
 
-        diaconnG8Pump.beepAndAlarm = getByteToInt(bufferData) - 1
-        diaconnG8Pump.alarmIntensity = getByteToInt(bufferData) - 1
+        // As the pump sends them, 1..3, as the setting takes them. They were made 0..2 here: a real G8 set to silent and
+        // low (2026-11-12, `03 01`) showed as vibrate and no intensity, and a save of the alarm sent intensity 0.
+        diaconnG8Pump.beepAndAlarm = getByteToInt(bufferData)
+        diaconnG8Pump.alarmIntensity = getByteToInt(bufferData)
 
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${diaconnG8Pump.result}")
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm --> ${diaconnG8Pump.beepAndAlarm}")

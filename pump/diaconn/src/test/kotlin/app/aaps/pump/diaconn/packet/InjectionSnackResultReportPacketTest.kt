@@ -76,6 +76,35 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isEqualTo(4.5)
     }
 
+    // A bolus given in full is no stop by the pump.
+    @Test
+    fun aBolusGivenInFullIsNotStoppedByThePump() {
+        InjectionSnackResultReportPacket(packetInjector).handleMessage(createValidPacket(result = 0, bolusAmount = 29, deliveredAmount = 29))
+
+        assertThat(diaconnG8Pump.bolusGivenInFull).isTrue()
+        assertThat(diaconnG8Pump.bolusStoppedByPump).isFalse()
+    }
+
+    // The pump gave less and the user did not stop it: the pump stopped it, as at an occlusion. Whatever the result says,
+    // as the result of such a stop was never seen on a real pump.
+    @Test
+    fun aBolusThePumpGaveLessOfIsStoppedByThePump() {
+        InjectionSnackResultReportPacket(packetInjector).handleMessage(createValidPacket(result = 2, bolusAmount = 100, deliveredAmount = 30))
+
+        assertThat(diaconnG8Pump.bolusGivenInFull).isFalse()
+        assertThat(diaconnG8Pump.bolusStoppedByPump).isTrue()
+    }
+
+    // A stop by the user is no stop by the pump.
+    @Test
+    fun aBolusTheUserStoppedIsNotStoppedByThePump() {
+        diaconnG8Pump.bolusStopForced = true
+
+        InjectionSnackResultReportPacket(packetInjector).handleMessage(createValidPacket(result = 1, bolusAmount = 100, deliveredAmount = 30))
+
+        assertThat(diaconnG8Pump.bolusStoppedByPump).isFalse()
+    }
+
     @Test
     fun handleMessageShouldHandleSmallBolus() {
         // Given - Small bolus of 0.5 U

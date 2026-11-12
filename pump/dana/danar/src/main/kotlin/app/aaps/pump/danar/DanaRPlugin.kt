@@ -174,18 +174,15 @@ class DanaRPlugin(
         if (detailedBolusInfo.insulin > 0) resultOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider()
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
-        result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped))
+        val givenInFull = abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep
+        // The pump's own end of a bolus sets bolusStopped too, so a stop counts as done. One the pump stopped itself (an
+        // occlusion, a shutdown, a battery error) was counted as given in the same way, and the user was not told.
+        result.success(resultOK && (givenInFull || danaPump.bolusStopped && !danaPump.bolusStoppedByPump))
             .bolusDelivered(delivered.cU)
         // Enacted = the pump really gave insulin. A stopped bolus can be a success with nothing given.
         result.enacted(result.success && delivered.cU > 0)
-        if (!result.success) result.comment(
-            rh.gs(
-                app.aaps.pump.dana.R.string.boluserrorcode,
-                detailedBolusInfo.insulin,
-                delivered.cU,
-                danaPump.bolusStartErrorCode
-            )
-        ) else result.comment(app.aaps.core.ui.R.string.ok)
+        if (!result.success) result.comment(danaPump.bolusFailure(rh, detailedBolusInfo.insulin, delivered.cU))
+        else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         detailedBolusInfo.insulin = delivered.cU
         detailedBolusInfo.timestamp = System.currentTimeMillis()
@@ -218,7 +215,7 @@ class DanaRPlugin(
         val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
         val doHighTemp = absoluteRate > baseBasalRate.cU && !preferences.get(DanaBooleanKey.UseExtended)
         val doExtendedTemp = absoluteRate > baseBasalRate.cU && preferences.get(DanaBooleanKey.UseExtended)
-        var percentRate = (absoluteRate / baseBasalRate.cU * 100).toInt()
+        var percentRate = DanaPump.tempBasalPercent(absoluteRate, baseBasalRate.cU)
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10) percentRate = 0
         percentRate =

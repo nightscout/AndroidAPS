@@ -191,11 +191,22 @@ jobs:
             # install on 5554 or 5556 was swallowed whole. The symptom appeared 15 minutes later as a
             # shard reporting "Unable to find instrumentation info", which points nowhere near the cause.
             # So check the output text, and then assert the postcondition the shards actually depend on.
+            # A booted emulator (sys.boot_completed) can still refuse an install while the box is loaded: build
+            # 42449 failed here in 5 s with no output, as set -e ended the step on adb's exit code before the echo.
+            # So adb's answer is always printed, and an install is tried again once the package manager answers.
+            install_on() {
+              for try in 1 2 3; do
+                out=$(adb -s "$1" install -r -d "$2" 2>&1) || true
+                echo "$1: $out"
+                case "$out" in *Success*) return 0 ;; esac
+                echo "$1: install try $try failed, waiting for its package manager"
+                for i in $(seq 1 30); do adb -s "$1" shell pm path android > /dev/null 2>&1 && break; sleep 2; done
+              done
+              return 1
+            }
             for s in emulator-5554 emulator-5556 emulator-5558 emulator-5560 emulator-5562 emulator-5564; do
               for a in "$APK" "$TST"; do
-                out=$(adb -s $s install -r -d "$a" 2>&1)
-                echo "$s: $out"
-                case "$out" in *Success*) ;; *) echo "INSTALL FAILED on $s: $a"; exit 1 ;; esac
+                install_on $s "$a" || { echo "INSTALL FAILED on $s: $a"; exit 1; }
               done
               adb -s $s shell pm list instrumentation | grep -q "$PKG.test/app.aaps.runners.AapsTestRunner" \
                 || { echo "INSTRUMENTATION MISSING on $s after a reported-successful install"; exit 1; }

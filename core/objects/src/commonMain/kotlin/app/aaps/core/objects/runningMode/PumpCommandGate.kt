@@ -1,5 +1,6 @@
 package app.aaps.core.objects.runningMode
 
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.RM
 
 /**
@@ -32,6 +33,13 @@ object PumpCommandGate {
         TEMP_BASAL_ZERO,
         CANCEL_TEMP_BASAL,
         BOLUS,
+
+        /**
+         * A prime or fill ([BS.Type.PRIMING]). The insulin goes into the air, not into the body, and it is not
+         * counted in IOB. So it is allowed while the pump is disconnected: that is exactly when the user primes.
+         * Making them reconnect first would start the loop, and basal and SMBs would go into the air (#5469).
+         */
+        PRIME,
         EXTENDED_BOLUS
     }
 
@@ -47,6 +55,9 @@ object PumpCommandGate {
         SUPER_BOLUS_ACTIVE
     }
 
+    /** The kind of a bolus command: a prime goes into the air, every other bolus into the body. */
+    fun bolusKind(type: BS.Type): CommandKind = if (type == BS.Type.PRIMING) CommandKind.PRIME else CommandKind.BOLUS
+
     fun check(mode: RM.Mode, kind: CommandKind): Decision =
         when (mode) {
             RM.Mode.OPEN_LOOP,
@@ -58,7 +69,8 @@ object PumpCommandGate {
 
             RM.Mode.DISCONNECTED_PUMP -> when (kind) {
                 CommandKind.CANCEL_TEMP_BASAL,
-                CommandKind.TEMP_BASAL_ZERO -> Decision.Allow
+                CommandKind.TEMP_BASAL_ZERO,
+                CommandKind.PRIME           -> Decision.Allow
 
                 CommandKind.TEMP_BASAL_NONZERO,
                 CommandKind.BOLUS,
@@ -68,7 +80,8 @@ object PumpCommandGate {
             RM.Mode.SUPER_BOLUS       -> when (kind) {
                 CommandKind.CANCEL_TEMP_BASAL,
                 CommandKind.TEMP_BASAL_ZERO,
-                CommandKind.BOLUS          -> Decision.Allow
+                CommandKind.BOLUS,
+                CommandKind.PRIME          -> Decision.Allow
 
                 CommandKind.TEMP_BASAL_NONZERO,
                 CommandKind.EXTENDED_BOLUS -> Decision.Reject(Reason.SUPER_BOLUS_ACTIVE)

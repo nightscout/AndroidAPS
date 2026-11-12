@@ -39,34 +39,23 @@ class AppConfirmSettingResponsePacketTest : TestBaseWithProfile() {
         assertThat(packet.result).isEqualTo(0)
     }
 
+    // The service waits on this: a confirm the pump took.
     @Test
-    fun handleMessageShouldSetReadyToBolusOnBolusConfirm() {
-        // Given
-        val packet = AppConfirmSettingResponsePacket(packetInjector)
-        diaconnG8Pump.bolusConfirmMessage = 0x07.toByte()
-        val data = createValidPacket(result = 0)
+    fun aTakenConfirmIsKeptForTheService() {
+        AppConfirmSettingResponsePacket(packetInjector).handleMessage(createValidPacket(result = 0))
 
-        // When
-        packet.handleMessage(data)
-
-        // Then
-        assertThat(packet.failed).isFalse()
-        assertThat(diaconnG8Pump.isReadyToBolus).isTrue()
+        assertThat(diaconnG8Pump.confirmResult).isEqualTo(0)
     }
 
+    // A refused confirm is kept too: the setting did not take effect, so the command failed.
     @Test
-    fun handleMessageShouldNotSetReadyToBolusOnNonBolusConfirm() {
-        // Given
+    fun aRefusedConfirmIsKeptForTheService() {
         val packet = AppConfirmSettingResponsePacket(packetInjector)
-        diaconnG8Pump.bolusConfirmMessage = 0x05.toByte()
-        val data = createValidPacket(result = 0)
 
-        // When
-        packet.handleMessage(data)
+        packet.handleMessage(createValidPacket(result = 10))
 
-        // Then
-        assertThat(packet.failed).isFalse()
-        assertThat(diaconnG8Pump.isReadyToBolus).isFalse()
+        assertThat(packet.failed).isTrue()
+        assertThat(diaconnG8Pump.confirmResult).isEqualTo(10)
     }
 
     @Test

@@ -4,6 +4,8 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -29,8 +31,7 @@ class TimeSettingPacketTest : TestBaseWithProfile() {
     fun encodeShouldGenerateValidPacketForTimeSync() {
         // Given - March 15, 2024, 14:30:45 UTC
         val time = 1710511845000L // 2024-03-15 14:30:45 UTC
-        val offset = 0
-        val packet = TimeSettingPacket(packetInjector, time, offset)
+        val packet = TimeSettingPacket(packetInjector, time)
 
         // When
         val encoded = packet.encode(10)
@@ -44,34 +45,40 @@ class TimeSettingPacketTest : TestBaseWithProfile() {
         assertThat(DiaconnG8Packet.defect(encoded)).isEqualTo(0)
     }
 
+    // 00:30 in Prague is 23:30 UTC the day before. The UTC hour plus one gave hour 24 of the day before.
     @Test
-    fun encodeShouldHandleTimeZoneOffset() {
-        // Given - Time with +9 hour offset (e.g., Korea)
-        val time = 1710511845000L
-        val offset = 9
-        val packet = TimeSettingPacket(packetInjector, time, offset)
+    fun aTimeJustAfterMidnightIsSentAsTheLocalDateAndHour() {
+        val local = encodedIn("Europe/Prague", DateTime(2026, 11, 11, 0, 30, 15, DateTimeZone.forID("Europe/Prague")).millis)
 
-        // When
-        val encoded = packet.encode(1)
-
-        // Then
-        assertThat(encoded.size).isEqualTo(20)
-        assertThat(DiaconnG8Packet.defect(encoded)).isEqualTo(0)
+        assertThat(local).containsExactly(26, 11, 11, 0, 30, 15).inOrder()
     }
 
+    // Half an hour off UTC: the whole hours of the zone were added, so the pump was set 30 minutes off.
     @Test
-    fun encodeShouldHandleNegativeTimeZoneOffset() {
-        // Given - Time with -5 hour offset (e.g., EST)
-        val time = 1710511845000L
-        val offset = -5
-        val packet = TimeSettingPacket(packetInjector, time, offset)
+    fun aZoneWithHalfHoursIsSentAsTheLocalTime() {
+        val local = encodedIn("Asia/Kolkata", DateTime(2026, 11, 11, 18, 45, 0, DateTimeZone.forID("Asia/Kolkata")).millis)
 
-        // When
-        val encoded = packet.encode(1)
+        assertThat(local).containsExactly(26, 11, 11, 18, 45, 0).inOrder()
+    }
 
-        // Then
-        assertThat(encoded.size).isEqualTo(20)
-        assertThat(DiaconnG8Packet.defect(encoded)).isEqualTo(0)
+    // West of UTC early in the UTC day the hour was negative.
+    @Test
+    fun aZoneWestOfUtcIsSentAsTheLocalTime() {
+        val local = encodedIn("America/New_York", DateTime(2026, 11, 10, 21, 5, 0, DateTimeZone.forID("America/New_York")).millis)
+
+        assertThat(local).containsExactly(26, 11, 10, 21, 5, 0).inOrder()
+    }
+
+    /** Year (from 2000), month, day, hour, minute and second the packet sends for [time], with the phone in [zone]. */
+    private fun encodedIn(zone: String, time: Long): List<Int> {
+        val phoneZone = DateTimeZone.getDefault()
+        DateTimeZone.setDefault(DateTimeZone.forID(zone))
+        try {
+            val encoded = TimeSettingPacket(packetInjector, time).encode(1)
+            return (4..9).map { encoded[it].toInt() and 0xff }
+        } finally {
+            DateTimeZone.setDefault(phoneZone)
+        }
     }
 
     @Test
@@ -84,7 +91,7 @@ class TimeSettingPacketTest : TestBaseWithProfile() {
         )
 
         timestamps.forEach { time ->
-            val packet = TimeSettingPacket(packetInjector, time, 0)
+            val packet = TimeSettingPacket(packetInjector, time)
             val encoded = packet.encode(1)
             assertThat(DiaconnG8Packet.defect(encoded)).isEqualTo(0)
         }
@@ -93,7 +100,7 @@ class TimeSettingPacketTest : TestBaseWithProfile() {
     @Test
     fun msgTypeShouldBeCorrect() {
         // Given
-        val packet = TimeSettingPacket(packetInjector, System.currentTimeMillis(), 0)
+        val packet = TimeSettingPacket(packetInjector, System.currentTimeMillis())
 
         // Then
         assertThat(packet.msgType).isEqualTo(0x0F.toByte())
@@ -102,7 +109,7 @@ class TimeSettingPacketTest : TestBaseWithProfile() {
     @Test
     fun friendlyNameShouldBeCorrect() {
         // Given
-        val packet = TimeSettingPacket(packetInjector, System.currentTimeMillis(), 0)
+        val packet = TimeSettingPacket(packetInjector, System.currentTimeMillis())
 
         // Then
         assertThat(packet.friendlyName).isEqualTo("PUMP_TIME_SETTING_REQUEST")

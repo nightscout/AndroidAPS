@@ -37,7 +37,7 @@ import java.util.Base64
  * below `BLEComm`, so the rest of the assertions here run on BLE5 alone rather than three times
  * over. The seeded values mirror the JVM `BLEComm*IntegrationTest`s, which pin both sides the same.
  * The DanaR family (`EMULATE_DANA_R`/`_KOREAN`/`_V2`) is not here: those are different plugins over
- * `RfcommTransport`, not this one — see `DanaREmulatorPumpTest`.
+ * `RfcommTransport`, not this one — see the DanaR scenario classes (`AbstractDanaRScenarioTest`).
  * The emulator is selected purely by the `EMULATE_*` option — see [EmulatedOptions] for why a test
  * has to report that rather than drop the production marker file.
  */

@@ -140,6 +140,19 @@ internal class DanaOverviewViewModelTest {
         assertThat(state.statusBanner).isNull()
         assertThat(state.primaryActions.map { it.label }).containsExactly("Refresh", "History")
         assertThat(state.managementActions.map { it.label }).containsExactly("Pair")
+        assertThat(state.primaryActions.filter { it.visible }).isEmpty()
+    }
+
+    // A paired pump whose first status read failed: Refresh is the way to try again. History needs a pump that is ready.
+    @Test
+    fun pairedButNotReady_offersRefresh() {
+        whenever(activePump.isConfigured()).thenReturn(true)
+        whenever(activePump.isInitialized()).thenReturn(false)
+        whenever(danaPump.serialNumber).thenReturn("")
+
+        val state = createViewModel().uiState.value
+
+        assertThat(state.primaryActions.filter { it.visible }.map { it.label }).containsExactly("Refresh")
     }
 
     @Test
