@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.ui.CoreUiStrings
@@ -53,6 +54,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
+import app.aaps.core.ui.compose.icons.IcTbrCancel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.stringResource
@@ -480,9 +482,11 @@ fun MainScreen(
                                     with(density) { bottomBarHeightPx.toDp() } + 8.dp
                             )
                     ) {
-                        QuickLaunchToolbar(
+                        QuickLaunchToolbarWithTempBasal(
                             items = quickLaunchItems,
                             onActionClick = onQuickLaunchActionClick,
+                            manageViewModel = manageViewModel,
+                            tbrState = uiState.tbrState,
                         )
                     }
 
@@ -608,3 +612,45 @@ private const val AUTO_HIDE_DELAY_MS = 3000L
  * this centers the 12 dp label between the two.
  */
 private val VERSION_LABEL_LIFT: Dp = 6.dp
+
+/**
+ * [QuickLaunchToolbar] with support for temp basal like in Manage tile:
+ * it opens the dialog, or cancels the running temp basal,
+ * or is hidden when the Manage sheet would hide the tile.
+ */
+@Composable
+private fun QuickLaunchToolbarWithTempBasal(
+    items: List<ResolvedQuickLaunchItem>,
+    onActionClick: (QuickLaunchAction) -> Unit,
+    manageViewModel: ManageViewModel,
+    tbrState: TbrState
+) {
+    // Without a temp basal item this is the plain toolbar.
+    val index = items.indexOfFirst { it.action == QuickLaunchAction.TempBasal }
+    if (index < 0) {
+        QuickLaunchToolbar(items = items, onActionClick = onActionClick)
+        return
+    }
+
+    val manageState by manageViewModel.uiState.collectAsStateWithLifecycle()
+    // A temp basal that ends by itself is not a database change,
+    // so the Manage state would still offer to cancel it.
+    // Refresh it only when the overview sees the running temp basal end.
+    LaunchedEffect(tbrState) {
+        if (tbrState == TbrState.NONE && manageState.showCancelTempBasal) manageViewModel.refreshState()
+    }
+    val tempBasalItem = items[index].let { item ->
+        when {
+            manageState.showCancelTempBasal -> item.copy(icon = IcTbrCancel, label = manageState.cancelTempBasalText, description = null)
+            manageState.showTempBasal       -> item
+            else                            -> null // hidden, same as the Manage tile
+        }
+    }
+    QuickLaunchToolbar(
+        items = items.toMutableList().apply { if (tempBasalItem != null) set(index, tempBasalItem) else removeAt(index) },
+        onActionClick = { action ->
+            if (action == QuickLaunchAction.TempBasal && manageState.showCancelTempBasal) manageViewModel.cancelTempBasal()
+            else onActionClick(action)
+        }
+    )
+}
