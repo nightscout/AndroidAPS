@@ -1,10 +1,14 @@
 package app.aaps.pump.carelevo.command
 
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.AlarmClearCommand
@@ -71,7 +75,8 @@ class CarelevoActivationExecutor @Inject constructor(
     private val alarmClearPatchDiscardUseCase: AlarmClearPatchDiscardUseCase,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val bleSession: CarelevoBleSession,
-    private val pumpSync: PumpSync
+    private val pumpSync: PumpSync,
+    private val dateUtil: DateUtil
 ) {
 
     private companion object {
@@ -145,6 +150,7 @@ class CarelevoActivationExecutor @Inject constructor(
         val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
+        val extendedBolusRan = carelevoPatch.infusionInfo.value?.getOrNull()?.extendBolusInfusionInfo != null
         return try {
             val response = runBlocking {
                 bleSession.runSingle(address, PumpStopCommand(durationMinutes = durationMin, subId = STOP_RESUME_SUB_ID))
@@ -153,6 +159,7 @@ class CarelevoActivationExecutor @Inject constructor(
                 aapsLogger.error(LTag.PUMPCOMM, "newBle.pumpStop rejected result=${response.resultCode}")
                 return result.success(false).enacted(false).comment("stop result ${response.resultCode}")
             }
+            recordStop(durationMin, extendedBolusRan)
             val persisted = pumpStopUseCase.persistStopped(durationMin)
             aapsLogger.info(LTag.PUMPCOMM, "newBle.pumpStop OK durationMin=$durationMin persisted=$persisted")
             result.success(persisted).enacted(persisted)
@@ -174,6 +181,7 @@ class CarelevoActivationExecutor @Inject constructor(
                 aapsLogger.error(LTag.PUMPCOMM, "newBle.pumpResume rejected result=${response.resultCode}")
                 return result.success(false).enacted(false).comment("resume result ${response.resultCode}")
             }
+            recordResume()
             val persisted = pumpResumeUseCase.persistResumed()
             aapsLogger.info(LTag.PUMPCOMM, "newBle.pumpResume OK persisted=$persisted")
             result.success(persisted).enacted(persisted)
@@ -182,6 +190,40 @@ class CarelevoActivationExecutor @Inject constructor(
             result.success(false).enacted(false).comment(e.message ?: "error")
         }
     }
+
+    /**
+     * The record of a stop the patch confirmed: a 0 U/h temp basal of type PUMP_SUSPEND, and the end of an extended bolus
+     * that ran. Written here, with the command, so it does not depend on the screen that asked for it: the screen wrote
+     * it after the queue returned, and when the screen was gone by then, AAPS counted basal the patch did not give.
+     */
+    private fun recordStop(durationMin: Int, extendedBolusRan: Boolean) = runBlocking {
+        val now = dateUtil.now()
+        val serial = patchSerial()
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = now,
+            rate = PumpRate(0.0),
+            duration = T.mins(durationMin.toLong()).msecs(),
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            pumpId = now,
+            pumpType = PumpType.CAREMEDI_CARELEVO,
+            pumpSerial = serial
+        )
+        // Only an extended bolus that really ran: the end of the record ends whatever it finds.
+        if (extendedBolusRan) pumpSync.syncStopExtendedBolusWithPumpId(now, now, PumpType.CAREMEDI_CARELEVO, serial)
+    }
+
+    /**
+     * The end of the stop record when the patch confirmed a resume, here for the same reason as [recordStop]. Only when
+     * AAPS has a temp basal: an end with none would write a record of its own.
+     */
+    private fun recordResume() = runBlocking {
+        if (pumpSync.expectedPumpState().temporaryBasal == null) return@runBlocking
+        val now = dateUtil.now()
+        pumpSync.syncStopTemporaryBasalWithPumpId(now, now, PumpType.CAREMEDI_CARELEVO, patchSerial())
+    }
+
+    private fun patchSerial(): String = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
 
     /**
      * Buzzer setting via [BuzzModeCommand] (0x18 → 0x78). Pure write, no persistence (the preference is
