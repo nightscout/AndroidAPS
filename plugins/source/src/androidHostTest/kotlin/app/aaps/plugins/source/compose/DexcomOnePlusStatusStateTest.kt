@@ -210,10 +210,20 @@ class DexcomOnePlusStatusStateTest {
         assertEquals(StatusLevel.WARNING, view.overview.statusBanner?.level)
     }
 
+    /** A 10-day sensor can be a G7 or a ONE+, and nothing says which: it keeps the neutral name. */
+    @Test
+    fun aTenDaySensorIsNotCalledG7() {
+        val tenDays = 10 * DAY + 12 * HOUR
+        val shown = rows(input(newestGlucose = reading(SourceSensor.DEXCOM_ONEPLUS_NATIVE), sensor = facts(sessionLengthMs = tenDays)))
+            .associate { it.label to it.value }
+        assertEquals("dexcom_oneplus_sensor_name_days(DXCM1A|10)", shown["dexcom_oneplus_row_sensor"])
+    }
+
     @Test
     fun sensorRowsShowNameDatesSerialAndCode() {
         val shown = rows(input(newestGlucose = reading(SourceSensor.DEXCOM_ONEPLUS_NATIVE), sensor = facts())).associate { it.label to it.value }
-        assertEquals("dexcom_oneplus_sensor_name_days(DXCM1A|15)", shown["dexcom_oneplus_row_sensor"])
+        // 15 days: only a G7 runs that long, so the name says G7.
+        assertEquals("dexcom_oneplus_sensor_name_g7_days(DXCM1A|15)", shown["dexcom_oneplus_row_sensor"])
         assertEquals("t${NOW - DAY}", shown["dexcom_oneplus_row_started"])
         assertEquals("dexcom_oneplus_ends_in(t${NOW + 14 * DAY}|${14 * 24} h)", shown["dexcom_oneplus_row_ends"])
         assertEquals("t${NOW + 14 * DAY + 12 * HOUR}", shown["dexcom_oneplus_row_grace_ends"])

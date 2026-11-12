@@ -180,6 +180,12 @@ object DexcomOnePlusStatusState {
 
     private const val DAY_MS = 24L * 60L * 60_000L
 
+    /**
+     * Only a G7 runs this many days. A 10-day sensor can be a G7 or a ONE+: neither the sensor nor
+     * its Bluetooth name says which, so that one keeps the neutral name.
+     */
+    private const val G7_ONLY_DAYS = 15
+
     /** This driver's own newest reading. The newest value in the database can come from another source. */
     private fun ownReading(input: DexcomOnePlusStatusInput): GV? =
         input.newestGlucose?.takeIf { it.sourceSensor == SourceSensor.DEXCOM_ONEPLUS_NATIVE }
@@ -354,7 +360,11 @@ object DexcomOnePlusStatusState {
             val days = sensor.sessionLengthMs?.let { ((it - DexcomOnePlusStaging.SENSOR_GRACE_MS + DAY_MS / 2) / DAY_MS).toInt() }
             rows += PumpInfoRow(
                 label = rh.gs(SourceStrings.dexcom_oneplus_row_sensor),
-                value = if (days != null) rh.gs(SourceStrings.dexcom_oneplus_sensor_name_days, name, days) else name,
+                value = when {
+                    days == null          -> name
+                    days >= G7_ONLY_DAYS  -> rh.gs(SourceStrings.dexcom_oneplus_sensor_name_g7_days, name, days)
+                    else                  -> rh.gs(SourceStrings.dexcom_oneplus_sensor_name_days, name, days)
+                },
             )
         }
         sensor.startedAtMs?.let { start ->

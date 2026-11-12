@@ -161,7 +161,7 @@
     <string name="dexcom_oneplus_repair_missing_sensor_change">Repair a missing sensor change</string>
     <string name="dexcom_oneplus_repair_missing_sensor_change_summary">On by default. When "Create sensor change" is also on, a missing sensor change for the running sensor is written once, so the sensor age is right. An event you delete after that write is not written again.</string>
     <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change">Use a sensor change you logged as the start</string>
-    <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change_summary">On by default. When off, a new ONE+ session keeps the time of the start or of the first reading, and a sensor change logged earlier is not used to move that time back. When on, a sensor change from the last 24 hours that is earlier than that automatic time becomes the session start.</string>
+    <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change_summary">On by default. When off, a new ONE+ / G7 session keeps the time of the start or of the first reading, and a sensor change logged earlier is not used to move that time back. When on, a sensor change from the last 24 hours that is earlier than that automatic time becomes the session start.</string>
     <string name="dexcom_oneplus_correct_sensor_start">Allow correcting the insertion date</string>
     <string name="dexcom_oneplus_correct_sensor_start_summary">On by default. When on, the Status screen can move the insertion time of the sensor in use. Sensor change events between the old and the new time are invalidated. Calibration entries are not deleted.</string>
     <string name="dexcom_oneplus_correct_insertion_date">Correct insertion date</string>
@@ -184,6 +184,7 @@
     <string name="dexcom_oneplus_just_now">Just now</string>
     <string name="dexcom_oneplus_row_last_connection">Last connection</string>
     <string name="dexcom_oneplus_row_sensor">Sensor</string>
+    <string name="dexcom_oneplus_sensor_name_g7_days" comment="%1$s=Bluetooth name of the sensor, %2$d=number of days, always 15 or more. Only a Dexcom G7 runs that long, so the name says G7. Example: DXCM1A, G7 15-day sensor">%1$s, G7 %2$d-day sensor</string>
     <string name="dexcom_oneplus_sensor_name_days" comment="%1$s=Bluetooth name of the sensor, %2$d=number of days. Example: DXCM1A, 15-day sensor">%1$s, %2$d-day sensor</string>
     <string name="dexcom_oneplus_row_started">Started</string>
     <string name="dexcom_oneplus_row_warmup_ends">Warm-up ends</string>
@@ -261,8 +262,8 @@
     <string name="dexcom_oneplus_staging_promote_dismiss">Cancel</string>
     <string name="dexcom_oneplus_staging_promote_ok">Staging sensor promoted — it now feeds the loop.</string>
     <string name="dexcom_oneplus_staging_promote_bound_failed">Sensor promoted, but older calibration entries could not be ignored. Remove fingerstick calibrations taken before this switch, then calibrate again if needed.</string>
-    <string name="dexcom_oneplus_staging_promote_follow_up_failed">Sensor promoted, but reconnecting it failed. The production sensor is the one just promoted. Open the ONE+ status screen and bring the sensor back in range. This is not a complete success.</string>
-    <string name="dexcom_oneplus_staging_promote_follow_up_failed_no_identity">A step after the exchange failed, and the production sensor identity is missing. This is not a complete success. Open the ONE+ status screen and check which sensor is in use.</string>
+    <string name="dexcom_oneplus_staging_promote_follow_up_failed">Sensor promoted, but reconnecting it failed. The production sensor is the one just promoted. Open the ONE+ / G7 status screen and bring the sensor back in range. This is not a complete success.</string>
+    <string name="dexcom_oneplus_staging_promote_follow_up_failed_no_identity">A step after the exchange failed, and the production sensor identity is missing. This is not a complete success. Open the ONE+ / G7 status screen and check which sensor is in use.</string>
     <string name="dexcom_oneplus_staging_promote_rejected_absent">No staging sensor to promote.</string>
     <string name="dexcom_oneplus_staging_promote_rejected_not_settled">Staging sensor has not settled long enough to promote yet.</string>
     <string name="dexcom_oneplus_staging_promote_rejected_no_glucose">Staging sensor has not produced enough valid glucose yet.</string>
