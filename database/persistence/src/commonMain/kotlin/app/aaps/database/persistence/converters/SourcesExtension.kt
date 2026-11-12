@@ -73,6 +73,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.EOPatch2            -> Sources.EOPatch2
         UserEntry.Sources.Equil               -> Sources.Equil
         UserEntry.Sources.Medtrum             -> Sources.Medtrum
+        UserEntry.Sources.AP550S              -> Sources.AP550S
         UserEntry.Sources.MDI                 -> Sources.MDI
         UserEntry.Sources.VirtualPump         -> Sources.VirtualPump
         UserEntry.Sources.Random              -> Sources.Random
@@ -161,6 +162,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.EOPatch2            -> UserEntry.Sources.EOPatch2
         Sources.Equil               -> UserEntry.Sources.Equil
         Sources.Medtrum             -> UserEntry.Sources.Medtrum
+        Sources.AP550S              -> UserEntry.Sources.AP550S
         Sources.MDI                 -> UserEntry.Sources.MDI
         Sources.VirtualPump         -> UserEntry.Sources.VirtualPump
         Sources.Random              -> UserEntry.Sources.Random

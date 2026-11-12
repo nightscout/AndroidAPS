@@ -55,7 +55,8 @@ data class InterfaceIDs @Ignore constructor(
         USER,
         CACHE,
         CARELEVO,
-        EQUIL;
+        EQUIL,
+        AP550S;
 
         companion object {
 

@@ -162,6 +162,22 @@ enum class PumpType(
         pumpCapability = PumpCapability.VirtualPumpCapabilities
     ),
     ANIMAS_PING(description = "Animas Ping", model = "Ping", parent = ANIMAS_VIBE),
+    AP550S(
+        description = "AP550s",
+        manufacturer = ManufacturerType.ST,
+        model = "AP550s",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
+        pumpTempBasalType = PumpTempBasalType.Percent,
+        tbrSettings = DoseSettings(10.0, 30, 24 * 60, 0.0, 300.0),
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
+        baseBasalMinValue = 0.0,
+        baseBasalStep = 0.01,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.AP550sCapabilities,
+        source = Source.AP550S
+    ),
     DANA_R(
         description = "DanaR",
         manufacturer = ManufacturerType.Sooil,
@@ -520,6 +536,7 @@ enum class PumpType(
     fun maxReservoirReading() = parent?.maxReservoirReading ?: maxReservoirReading
 
     enum class Source {
+        AP550S,
         Dana,
         DanaR,
         DanaRC,
