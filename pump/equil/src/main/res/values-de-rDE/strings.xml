@@ -4,14 +4,31 @@
     <string name="equil_pump_description">Equil 5.3 oder neuere Patch-Pumpe</string>
     <!--  start  -->
     <string name="equil_dressing">Reservoir wechseln</string>
+    <string name="equil_dressing_onkey_msg">Kolben wird automatisch zum Reservoir-Boden bewegt. Er stoppt automatisch beim Erreichen des Bodens. Zum Unterbrechen bei Bedarf auf \'Stop\' klicken.</string>
+    <string name="equil_hint_dressing">Dieser Vorgang stoppt die Insulininfusion und sorgt dafür, dass sich der Pumpenkolben nach unten zurückzieht!</string>
     <string name="equil_insulin_reservoir">Insulinreservoir</string>
+    <string name="equil_mode">Laufender Modus</string>
+    <string name="equil_mode_running">Läuft</string>
     <string name="equil_mode_stopped">Gestoppt</string>
     <string name="equil_mode_suspended">Angehalten</string>
     <string name="equil_serialnumber">Gerätenummer</string>
     <string name="equil_stop">Stopp</string>
     <string name="equil_success">Erfolgreich</string>
     <string name="equil_title_dressing">Ampulle wechseln</string>
+    <string name="equil_title_assemble">Pumpe zusammenbauen</string>
     <string name="equil_title_serial">Gerät verbinden</string>
+    <string name="equil_title_fill">Befüllen/Füllen</string>
+    <string name="equil_title_attach">Pumpe anbringen</string>
+    <string name="equil_title_air">Kanüle befüllen</string>
+    <string name="equil_title_unpair_detach">Pumpe abnehmen</string>
+    <string name="equil_title_history_events">Verlaufsereignisse</string>
+    <string name="equil_tone">Warnton</string>
+    <string name="equil_bolus_speed">Bolus-Geschwindigkeit</string>
+    <string name="equil_bolus_speed_summary">Ein schnellerer Bolus kann zu mehr Verschlussalarmen führen.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 IE/min (Standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 IE/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 IE/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 IE/min</string>
     <string name="equil_tone_mode_mute">Stummschalten</string>
     <string name="equil_tone_mode_shake">Nur vibrieren</string>
     <string name="equil_tone_mode_tone">Nur Töne</string>
