@@ -210,7 +210,11 @@ class PumpScenario(private val pump: PumpUnderTest) {
         pump.pair(this)
         testGraphs.rxBus.send(EventProfileChangeRequested())
         // A profile write can take longer than the default wait: a Diaconn G8 waits 30 s after it, as a Carelevo does.
-        awaitTrue("the profile runs", PROFILE_TIMEOUT) { runBlocking { testGraphs.profileFunction.getProfile() } != null }
+        // AAPS can run the profile before the pump has it: the write is queued a moment later. A fault a test sets after
+        // the pairing then hit that write in place of the test's own.
+        awaitTrue("AAPS runs the profile and the pump gives its basal of $BASAL_RATE U/h", PROFILE_TIMEOUT) {
+            aapsRunsBasal(BASAL_RATE) && pumpGivesBasal(BASAL_RATE)
+        }
         awaitQueueIdle()
         // No wait here: a pump writes its records by its own clock, which can be a second or two behind the phone, so a
         // record of the first command can have a time just before the first profile. AAPS must keep it.
@@ -229,11 +233,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
         val basal = BASAL_RATE * percentage / PERCENT
         awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
-            val aapsRuns = aapsRunsBasal(basal)
-            // Every hour: a pump that takes a profile in parts can hold a part of it.
-            val onPump = control.state().basal
-            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
-            if (aapsRuns && pumpGives) true
+            if (aapsRunsBasal(basal) && pumpGivesBasal(basal)) true
             else {
                 awaitQueueIdle()
                 testGraphs.rxBus.send(EventProfileChangeRequested())
@@ -288,6 +288,10 @@ class PumpScenario(private val pump: PumpUnderTest) {
      */
     private fun aapsRunsBasal(basal: Double): Boolean =
         runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
+
+    /** Every hour: a pump that takes a profile in parts can hold a part of it. A pump that does not tell counts as giving it. */
+    private fun pumpGivesBasal(basal: Double): Boolean =
+        control.state().basal?.all { abs(it - basal) <= BASAL_TOLERANCE } ?: true
 
     /**
      * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
