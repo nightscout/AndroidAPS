@@ -571,11 +571,13 @@ class DanaRSPlugin(
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
         if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
-            aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: Failed")
+            // It said "Failed" and gave the text of a failed cancel also when the pump had stopped it.
+            val stopped = !danaPump.isExtendedInProgress
+            aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: ${if (stopped) "OK" else "Failed"}")
             return pumpEnactResultProvider()
-                .success(!danaPump.isExtendedInProgress)
+                .success(stopped)
                 .enacted(true)
-                .comment(app.aaps.core.ui.R.string.canceling_eb_failed)
+                .comment(if (stopped) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
             return pumpEnactResultProvider()

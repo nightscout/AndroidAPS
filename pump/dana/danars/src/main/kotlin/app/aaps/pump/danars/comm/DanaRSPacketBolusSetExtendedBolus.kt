@@ -16,12 +16,12 @@ class DanaRSPacketBolusSetExtendedBolus(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus start : $extendedAmount U half-hours: $extendedBolusDurationInHalfHours")
     }
 
     fun with(extendedAmount: Double, extendedBolusDurationInHalfHours: Int) = this.also {
         this.extendedAmount = extendedAmount
         this.extendedBolusDurationInHalfHours = extendedBolusDurationInHalfHours
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus start : $extendedAmount U half-hours: $extendedBolusDurationInHalfHours")
     }
 
     override fun getRequestParams(): ByteArray {
