@@ -81,11 +81,14 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal-Piep aktiviert</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-Piep aktiviert</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR-Piep aktiviert</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Schaltfläche „Insulinabgabe unterbrechen“ in der Pumpenansicht anzeigen</string>
     <string name="omnipod_common_preferences_time_change_enabled">Sommerzeit/Zeitzonen-Erkennung aktiviert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Ablauferinnerung aktiviert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Wenn aktiviert, piepst der Pod wenn die angegebene Zeit erreicht ist</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Erinnerung bei Stunden vor Ablauf (72 Stunden)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Ablaufbenachrichtigung aktiviert</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Wenn aktiviert, piepst der Pod wenn die angegebene Zeit erreicht ist und 1 Stunde vor dem Herunterfahren</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Warnung vor dem Herunterfahren (80 Stunden)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Warnung niedriger Reservoirstand aktiviert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Anzahl der Einheiten</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod-Alarme automatisch stummschalten</string>
@@ -117,6 +120,7 @@
     <string name="omnipod_common_pdm_notification_header_reservoir_empty">Leeres Reservoir</string>
     <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulinabgabe gestoppt! Tausche jetzt den Pod.</string>
     <string name="omnipod_common_pdm_notification_header_auto_off">Auto-Aus</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulinabgabe gestoppt. Dein PDM und Dein Pod hatten in den letzten 4 Stunden keine Verbindung. Tausche den Pod jetzt, um die Insulinabgabe wieder aufzunehmen.</string>
     <string name="omnipod_common_pdm_notification_header_pod_expired">Pod ist abgelaufen</string>
     <string name="omnipod_common_pdm_notification_text_pod_expired">Insulin Abgabe gestoppt. Tausche den Pod jetzt.</string>
     <string name="omnipod_common_pdm_notification_header_occluded">Verstopfung erkannt</string>
@@ -148,9 +152,12 @@
     <string name="omnipod_common_cmd_resume_delivery">Abgabe fortsetzen</string>
     <string name="omnipod_common_cmd_cancel_tbr">lösche TBR (durch Anwender)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod-Info abrufen</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Vorgetäuschten TBR-Abbruch setzen</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Vorgetäuschten TBR-Abbruch löschen</string>
     <string name="omnipod_common_cmd_split_tbr">TBR aufteilen</string>
     <string name="omnipod_common_cmd_play_test_beep">Testton abspielen</string>
     <string name="omnipod_common_cmd_unknown_entry">Unbekannte Eingabe</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Alarme zum Anhalten deaktivieren</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Erinnerung zum Abschließen des Koppelns</string>
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Erinnerung zum Abschließen des Setups</string>
@@ -176,6 +183,7 @@
         <item quantity="one">Pod-Alarm: %1$s</item>
         <item quantity="other">Pod-Alarm: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Enddatum des Pods</string>
     <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (\%2$s)</string>
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f IE/h, %2$d Minuten</string>
