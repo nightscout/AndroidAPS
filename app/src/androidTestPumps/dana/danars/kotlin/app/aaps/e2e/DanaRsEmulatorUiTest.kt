@@ -7,11 +7,14 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
 import app.aaps.e2e.DanaRsEmulatorUiTest.Companion.MAX_DAILY_UNITS
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -20,12 +23,14 @@ import app.aaps.pump.danars.di.DanaRSAccessors
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardA
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.Base64
+import kotlin.math.abs
 
 /**
  * Drives the **Dana-i UI** against the in-tree pump emulator, with no Bluetooth hardware and no
@@ -39,15 +44,14 @@ import java.util.Base64
  *
  * The variant (which `EMULATE_DANA_*` handshake) is chosen per test in [bringUp], not `@Before`,
  * because `BleTransport` is a `@Singleton` the graph binds once — so the option has to be set before
- * the graph is built. The BLE5 test walks every screen; [danaInsulinDelivery_overV1Handshake] and
- * [danaInsulinDelivery_overV3Handshake] run only the insulin-delivery flow, which is pump-agnostic
- * (Manage → `CommandQueue` → active pump), so the *same* body proves each handshake — the reuse that
- * makes an E2E worth more than a per-plugin unit test. `DanaRsEmulatorPumpTest` covers the same
- * stack headlessly; this one adds the screens on top.
+ * the graph is built. The BLE5 test walks every screen, and is the one pass of the shared treatment
+ * dialogs (bolus, temp basal, extended bolus) in the whole suite. [danaInsulinDelivery_overV1Handshake]
+ * and [danaInsulinDelivery_overV3Handshake] give the same three commands through the queue with no
+ * screen: what differs on those pumps is the link encryption.
  *
- * The pump-agnostic machinery (seeding the configured app, the insulin-delivery flow, navigation and
- * uiautomator helpers) lives in [AbstractDanaEmulatorUiTest]; this class supplies only the Dana-i
- * (RS) wiring — the pairing seed, the emulator-state reads, and the RS-only screen legs.
+ * The shared machinery (seeding the configured app, navigation and uiautomator helpers) lives in
+ * [AbstractDanaEmulatorUiTest]; this class supplies the Dana-i (RS) wiring, the screen legs and the
+ * insulin delivery.
  *
  * ## Why this is seeded rather than wizard-driven
  * `SetupWizardE2ETest` walks the whole setup wizard because that is what it tests; it costs
@@ -113,12 +117,12 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         assertThat(pump.hasComposeContent()).isTrue()
     }
 
-    override fun lastBolusAmount(): Double = emulator.pumpState.lastBolusAmount
-    override fun isTempBasalRunning(): Boolean = emulator.pumpState.isTempBasalRunning
-    override fun tempBasalPercent(): Int = emulator.pumpState.tempBasalPercent
-    override fun isExtendedBolusRunning(): Boolean = emulator.pumpState.isExtendedBolusRunning
-    override fun extendedBolusAmount(): Double = emulator.pumpState.extendedBolusAmount
-    override fun deliveredHistoryCodes(): List<Int> = emulator.pumpState.historyStore.getEventsAfter(0).map { it.code }
+    private fun lastBolusAmount(): Double = emulator.pumpState.lastBolusAmount
+    private fun isTempBasalRunning(): Boolean = emulator.pumpState.isTempBasalRunning
+    private fun tempBasalPercent(): Int = emulator.pumpState.tempBasalPercent
+    private fun isExtendedBolusRunning(): Boolean = emulator.pumpState.isExtendedBolusRunning
+    private fun extendedBolusAmount(): Double = emulator.pumpState.extendedBolusAmount
+    private fun deliveredHistoryCodes(): List<Int> = emulator.pumpState.historyStore.getEventsAfter(0).map { it.code }
 
     // ---- RS pairing seed ------------------------------------------------------------------------
 
@@ -230,19 +234,16 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
     }
 
     /**
-     * The same insulin-delivery flow over the RSv1 (ENCRYPTION_DEFAULT) handshake.
-     *
-     * The flow is pump-agnostic — Manage → command queue → active pump — so only the handshake and
-     * pairing seed differ from the BLE5 test above. That is exactly what makes these E2E flows worth
-     * more than a unit test: the driver code they exercise is shared across every Dana variant, so
-     * the *same* body proves each one for free (see [deliverInsulinFromUi]).
+     * A bolus, a temp basal and an extended bolus over the RSv1 (ENCRYPTION_DEFAULT) handshake, through the
+     * queue. What differs from BLE5 is the link encryption, so that is what this tests; the dialogs get their
+     * one pass in the BLE5 test above.
      */
     @Test
-    fun danaInsulinDelivery_overV1Handshake() = runInsulinDeliveryOnly(ExternalOptions.EMULATE_DANA_RS_V1)
+    fun danaInsulinDelivery_overV1Handshake() = deliverOverHandshake(ExternalOptions.EMULATE_DANA_RS_V1)
 
-    /** The same insulin-delivery flow over the RSv3 (stateful randomSyncKey) handshake. */
+    /** The same over the RSv3 (stateful randomSyncKey) handshake. */
     @Test
-    fun danaInsulinDelivery_overV3Handshake() = runInsulinDeliveryOnly(ExternalOptions.EMULATE_DANA_RS_V3)
+    fun danaInsulinDelivery_overV3Handshake() = deliverOverHandshake(ExternalOptions.EMULATE_DANA_RS_V3)
 
     /**
      * "Which insulin is in use" is derived from the running profile — proven here end to end, against a real
@@ -294,27 +295,160 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         return supplier()
     }
 
-    /**
-     * Brings [variant] up, initializes it through the UI, then runs the pump-agnostic
-     * insulin-delivery flow — no RS-specific screens (those are covered once, on BLE5, above).
-     */
-    private fun runInsulinDeliveryOnly(variant: ExternalOptions) {
+    /** Brings [variant] up with no screen, reads its status until it is ready, then delivers through the queue. */
+    private fun deliverOverHandshake(variant: ExternalOptions) {
         bringUp(variant)
         assertActivePumpIsThisDana()
-        val scenario = ActivityScenario.launch(ComposeMainActivity::class.java)
         try {
-            waitForOverview()
-            openDanaPlugin()          // Manage → Pump → DanaRSOverviewScreen
-            initializePumpFromUi()    // status read against the emulator → the rest of the actions
-            device.pressBack()        // Dana screen → the main overview
-            deliverInsulinFromUi()
+            initializePumpThroughQueue()
+            deliverInsulinThroughQueue()
         } catch (t: Throwable) {
-            logScreen("E2E_DANA_SCREEN")
             logPumpState("E2E_DANA_STATE")
             throw t
-        } finally {
-            scenario.close()
         }
+    }
+
+    // ---- insulin delivery -----------------------------------------------------------------------
+
+    /** Bolus, temp basal, extended bolus through the UI, each checked on the pump and in AAPS. */
+    private fun deliverInsulinFromUi() {
+        bolusFromUi()                      // Treatments → Insulin → bolus → the emulator
+        applyTempBasalFromUi()             // Manage → Temp basal → the emulator (TEMP_START)
+        applyExtendedBolusFromUi()         // Manage → Extended bolus → the emulator (EXTENDED_START)
+        readBackDeliveredHistory()         // the same deliveries, read back off the pump as history
+    }
+
+    /** The same three through the queue, with the same checks. */
+    private fun deliverInsulinThroughQueue() {
+        waitForQueueIdle()
+        assertThat(lastBolusAmount()).isEqualTo(0.0)
+        val startedAt = System.currentTimeMillis() - CLOCK_MARGIN_MS
+        runBlocking { commandQueue.bolus(DetailedBolusInfo().also { it.insulin = BOLUS_UNITS }) }
+        checkBolusGivenAndRecorded(startedAt)
+
+        assertThat(isTempBasalRunning()).isFalse()
+        waitForQueueIdle()
+        val profile = checkNotNull(runBlocking { profileFunction.getProfile() }) { "No profile runs" }
+        runBlocking { commandQueue.tempBasalPercent(QUEUE_TEMP_BASAL_PERCENT, QUEUE_TEMP_BASAL_MINUTES, true, profile, PumpSync.TemporaryBasalType.NORMAL) }
+        checkTempBasalRunsAndRecorded()
+
+        assertThat(isExtendedBolusRunning()).isFalse()
+        waitForQueueIdle()
+        runBlocking { commandQueue.extendedBolus(QUEUE_EXTENDED_UNITS, QUEUE_EXTENDED_MINUTES) }
+        checkExtendedBolusRunsAndRecorded()
+
+        readBackDeliveredHistory()
+    }
+
+    /**
+     * The reverse direction: every treatment just delivered is recorded on the emulated pump's APS event
+     * history, so it can be read back as history — and the driver already does, on the status read each
+     * following command runs (`DanaRSService.loadEvents` → `DanaRSPacketAPSHistoryEvents`). Asserted on the
+     * pump's own store, the true far side. These are events the test *generated*, not seeded ones: a
+     * hand-planted past bolus would carry an encoded time in the current minute that the live bolus then
+     * reads as a duplicate and drops.
+     */
+    private fun readBackDeliveredHistory() {
+        val codes = deliveredHistoryCodes()
+        assertThat(codes).contains(DanaPump.HistoryEntry.BOLUS.value)
+        assertThat(codes).contains(DanaPump.HistoryEntry.TEMP_START.value)
+        assertThat(codes).contains(DanaPump.HistoryEntry.EXTENDED_START.value)
+    }
+
+    /**
+     * The main overview → Treatments → Insulin → a `BOLUS_UNITS` bolus, confirmed and delivered to the
+     * emulated pump. The path a user actually boluses through, and the most safety-critical one in the
+     * app: InsulinDialog → `CommandQueue.bolus` → QueueWorker → `DanaRSPlugin.deliverTreatment` →
+     * `DanaRSService` → `BLEComm` → emulator. The dialog refuses to bolus without a profile, so the
+     * profile has to be real (see `activateSeededProfile`).
+     */
+    private fun bolusFromUi() {
+        waitForQueueIdle()
+        assertThat(lastBolusAmount()).isEqualTo(0.0)
+        val startedAt = System.currentTimeMillis() - CLOCK_MARGIN_MS
+
+        openVia("Treatments", expect = "Insulin")
+        // The quick-add chip is formatted to the pump's bolus step (Dana-i 0.05 → "+1.00").
+        openVia("Insulin", expect = BOLUS_CHIP)
+        click(BOLUS_CHIP)
+        // The confirm button is labelled "OK" only while no dose is set; picking one relabels it to
+        // the dose itself (InsulinDialogScreen), which doubles as proof the chip registered.
+        click(BOLUS_CONFIRM)
+        click("OK")               // confirmation dialog → deliver
+        checkBolusGivenAndRecorded(startedAt)
+    }
+
+    /**
+     * Overview → Manage → Temp basal: raise the rate above 100% and commit it to the pump —
+     * `setTempBasalPercent` end to end. Only reachable once the pump is initialized (Manage gates the
+     * action on it), which the earlier legs establish.
+     */
+    private fun applyTempBasalFromUi() {
+        assertThat(isTempBasalRunning()).isFalse()
+        waitForQueueIdle()
+        openManageAction("Temp basal")
+        openViaDescContains("Temp basal", expect = DECREMENT)   // the TBR dialog (its steppers)
+        // Raise the percent above 100 so the confirm button enables; the duration is pre-set to the
+        // pump's step. The first plus stepper is the percent (duration is the second).
+        repeat(TBR_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDescContains(INCREMENT)).first().click() } }
+        clickRegex("""\d+\s*%""")   // confirm button, labelled with the chosen percent
+        click("OK")                 // ElementConfirmationDialog → commit
+        checkTempBasalRunsAndRecorded()
+    }
+
+    /** Overview → Manage → Extended bolus: set an amount and commit it to the pump. */
+    private fun applyExtendedBolusFromUi() {
+        assertThat(isExtendedBolusRunning()).isFalse()
+        waitForQueueIdle()
+        openManageAction("Extended bolus")
+        openViaDescContains("Extended bolus", expect = DECREMENT)
+        // First plus stepper is the insulin amount; raise it above 0 to enable the confirm.
+        repeat(EXTENDED_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDescContains(INCREMENT)).first().click() } }
+        clickRegex("""\d+\.\d+\s*U""")   // confirm button, labelled with the chosen amount
+        click("OK")
+        checkExtendedBolusRunsAndRecorded()
+    }
+
+    /** The pump gave the bolus, and AAPS stored it: a dose the pump gave but AAPS lost is IOB the loop does not see. */
+    private fun checkBolusGivenAndRecorded(startedAt: Long) {
+        assertThat(awaitTrue(BOLUS_TIMEOUT) { lastBolusAmount() == BOLUS_UNITS }).isTrue()
+        val stored = awaitTrue(RECORD_TIMEOUT) {
+            runBlocking { testGraphs.persistenceLayer.getBolusesFromTime(startedAt, ascending = true) }
+                .any { abs(it.amount - BOLUS_UNITS) < UNITS_TOLERANCE }
+        }
+        // CI reads the log of a shard only at its end, and the tests after this one can push these lines out of it.
+        // So the failure carries what the queue, the driver and the database did (CI run 42425 had nothing to read),
+        // and what the emulated pump has in its history: in CI run 42438 no history read found any event, and the log
+        // could not tell whether the pump had the bolus in its history or the driver lost it.
+        if (!stored) {
+            val pumpHistory = emulator.pumpState.historyStore.getEventsAfter(0).joinToString { "${it.code}@${it.timestamp}:${it.param1}" }
+            assertWithMessage(
+                "AAPS has a bolus record of $BOLUS_UNITS U. The pump history (code@time:value): [$pumpHistory], " +
+                    "UTC ${emulator.pumpState.usingUTC}. The app's log:\n" + appLog(BOLUS_RECORD_EVIDENCE)
+            ).fail()
+        }
+    }
+
+    /** The pump runs a temp basal above 100 %, and AAPS has the same. */
+    private fun checkTempBasalRunsAndRecorded() {
+        assertThat(awaitTrue(COMMAND_TIMEOUT) { isTempBasalRunning() && tempBasalPercent() > 100 }).isTrue()
+        waitForQueueIdle()
+        val stored = awaitTrue(RECORD_TIMEOUT) {
+            val tb = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(System.currentTimeMillis()) }
+            tb != null && !tb.isAbsolute && tb.rate.toInt() == tempBasalPercent()
+        }
+        assertWithMessage("AAPS has the temp basal of ${tempBasalPercent()} %").that(stored).isTrue()
+    }
+
+    /** The pump runs an extended bolus, and AAPS has the same. */
+    private fun checkExtendedBolusRunsAndRecorded() {
+        assertThat(awaitTrue(COMMAND_TIMEOUT) { isExtendedBolusRunning() && extendedBolusAmount() > 0.0 }).isTrue()
+        waitForQueueIdle()
+        val stored = awaitTrue(RECORD_TIMEOUT) {
+            val eb = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(System.currentTimeMillis()) }
+            eb != null && abs(eb.amount - extendedBolusAmount()) < UNITS_TOLERANCE
+        }
+        assertWithMessage("AAPS has the extended bolus of ${extendedBolusAmount()} U").that(stored).isTrue()
     }
 
     // ---- RS-only screen legs --------------------------------------------------------------------
@@ -462,5 +596,29 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         private const val REFRESH_TIMEOUT = 30_000L
         private const val REFRESH_ATTEMPTS = 3
         private const val SAVE_TIMEOUT = 30_000L
+
+        private const val BOLUS_UNITS = 1.0
+        /** The insulin dialog's quick-add chip and confirm button for `BOLUS_UNITS` at the Dana-i bolus step. */
+        private const val BOLUS_CHIP = "+1.00"
+        private const val BOLUS_CONFIRM = "1.00 U"
+        private const val BOLUS_TIMEOUT = 60_000L
+        private const val COMMAND_TIMEOUT = 60_000L
+        private const val TBR_INCREASE_TAPS = 3
+        private const val EXTENDED_INCREASE_TAPS = 3
+        private const val QUEUE_TEMP_BASAL_PERCENT = 150
+        private const val QUEUE_TEMP_BASAL_MINUTES = 60
+        private const val QUEUE_EXTENDED_UNITS = 1.0
+        private const val QUEUE_EXTENDED_MINUTES = 30
+
+        // A Dana driver stores a bolus only after it has read the pump history, which follows the end of the
+        // bolus. So the record can come well after the pump is done.
+        private const val RECORD_TIMEOUT = 60_000L
+        private const val UNITS_TOLERANCE = 0.001
+        /** The pump writes whole seconds, so a record can start a little before the test asked. */
+        private const val CLOCK_MARGIN_MS = 60_000L
+
+        /** How a bolus gets its record: the queue, the bolus end, the history read and its BOLUS event, a refused record. */
+        private val BOLUS_RECORD_EVIDENCE =
+            Regex("PUMPQUEUE|DELIVERY_COMPLETE|Delivery complete|Loading event history|Last record|Events loaded|Timeout waiting for history|EVENT |Inserted Bolus|Ignoring|WRONG_PUMP|Reply not received|Disconnect")
     }
 }

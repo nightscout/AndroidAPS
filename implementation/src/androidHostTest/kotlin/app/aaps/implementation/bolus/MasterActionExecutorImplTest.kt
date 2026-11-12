@@ -46,6 +46,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
@@ -1871,6 +1872,29 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         assertThat(dbiCaptor.firstValue.bolusType).isEqualTo(BS.Type.PRIMING)
         assertThat(dbiCaptor.firstValue.insulin).isEqualTo(0.5)
         assertThat(succeeded).isTrue()
+    }
+
+    /**
+     * The user primes while the pump is disconnected: the insulin goes into the air. The prime used to be refused
+     * there like a bolus, so the user had to reconnect first, and the loop then sent basal and SMBs into the air (#5469).
+     */
+    @Test
+    fun deliverFillBolus_whilePumpDisconnected_isDeliveredAsAPrime() = runTest {
+        whenever(runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)).thenReturn("pump disconnected")
+        whenever(runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.PRIME)).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        var failure: MasterActionExecutor.Failure? = null
+        var succeeded = false
+
+        create().deliverFillBolus(0.5, null, Sources.FillDialog, onError = { failure = it }, onSuccess = { succeeded = true })
+
+        assertThat(failure).isNull()
+        assertThat(succeeded).isTrue()
+        verify(runningModeGuard).rejectionMessage(PumpCommandGate.CommandKind.PRIME)
+        verify(runningModeGuard, never()).rejectionMessage(PumpCommandGate.CommandKind.BOLUS)
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.bolusType).isEqualTo(BS.Type.PRIMING)
     }
 
     /**

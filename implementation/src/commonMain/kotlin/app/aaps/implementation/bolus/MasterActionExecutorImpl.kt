@@ -1569,7 +1569,8 @@ class MasterActionExecutorImpl(
             return
         }
         if (detailedBolusInfo.insulin > 0) {
-            runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
+            // A prime is allowed while the pump is disconnected, a bolus is not (#5469)
+            runningModeGuard.rejectionMessage(PumpCommandGate.bolusKind(detailedBolusInfo.bolusType))?.let {
                 onError(MasterActionExecutor.Failure(it))
                 return
             }

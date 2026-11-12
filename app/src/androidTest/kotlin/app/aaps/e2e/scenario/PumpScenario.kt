@@ -80,7 +80,8 @@ class PumpScenario(private val pump: PumpUnderTest) {
         if (InstrumentationRegistry.getArguments().getString(SPEED_ARGUMENT) == SPEED_REAL) EmulatorSpeed.REAL else EmulatorSpeed.FAST
 
     /** Records from before this are not part of the scenario. */
-    private var startedAt = 0L
+    var startedAt = 0L
+        private set
 
     /** For a bolus that runs while the test does something else, as stopping it. */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -208,7 +209,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
     fun pair() {
         pump.pair(this)
         testGraphs.rxBus.send(EventProfileChangeRequested())
-        awaitTrue("the profile runs") { runBlocking { testGraphs.profileFunction.getProfile() } != null }
+        // A profile write can take longer than the default wait: a Diaconn G8 waits 30 s after it, as a Carelevo does.
+        // AAPS can run the profile before the pump has it: the write is queued a moment later. A fault a test sets after
+        // the pairing then hit that write in place of the test's own.
+        awaitTrue("AAPS runs the profile and the pump gives its basal of $BASAL_RATE U/h", PROFILE_TIMEOUT) {
+            aapsRunsBasal(BASAL_RATE) && pumpGivesBasal(BASAL_RATE)
+        }
         awaitQueueIdle()
         // No wait here: a pump writes its records by its own clock, which can be a second or two behind the phone, so a
         // record of the first command can have a time just before the first profile. AAPS must keep it.
@@ -221,6 +227,43 @@ class PumpScenario(private val pump: PumpUnderTest) {
      * keep alive worker does when the pump lacks it. [checkStatusShown] then finds whether the pump holds it.
      */
     fun switchProfile(percentage: Int) {
+        storeProfileSwitch(percentage)
+        testGraphs.rxBus.send(EventProfileChangeRequested())
+        // A driver may take a new profile only some time after the one before (Carelevo: 30 s), or the answer of the
+        // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
+        val basal = BASAL_RATE * percentage / PERCENT
+        awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
+            if (aapsRunsBasal(basal) && pumpGivesBasal(basal)) true
+            else {
+                awaitQueueIdle()
+                testGraphs.rxBus.send(EventProfileChangeRequested())
+                SystemClock.sleep(PROFILE_RETRY_MS)
+                false
+            }
+        }
+        awaitQueueIdle()
+    }
+
+    /**
+     * A profile switch to [percentage] % that AAPS sends to the pump once: when it stores the switch, with no second try.
+     *
+     * @return true when AAPS took the write as done and runs the switch, false when it reported a failed write. AAPS runs
+     * the switch with the basal the pump reports, so after a write taken as done by mistake it runs the old basal.
+     */
+    fun profileWrittenOnce(percentage: Int): Boolean {
+        storeProfileSwitch(percentage)
+        var done = false
+        awaitTrue("the write of the profile at $percentage % ends", PROFILE_TIMEOUT) {
+            val running = runBlocking { testGraphs.persistenceLayer.getEffectiveProfileSwitchActiveAt(testGraphs.dateUtil.now()) }
+            done = running?.originalPercentage == percentage
+            done || NotificationId.FAILED_UPDATE_PROFILE in shownNotifications()
+        }
+        awaitQueueIdle()
+        return done
+    }
+
+    /** A profile switch to [percentage] % of the profile, as the user makes one. Storing it makes AAPS send it to the pump. */
+    private fun storeProfileSwitch(percentage: Int) {
         val store = checkNotNull(testGraphs.profileRepository.profile.value) { "No profile store" }
         val switch = runBlocking {
             testGraphs.profileFunction.createProfileSwitch(
@@ -237,28 +280,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
             )
         }
         checkNotNull(switch) { "The profile switch to $percentage % was refused" }
-        testGraphs.rxBus.send(EventProfileChangeRequested())
-        // Once the pump has it, AAPS runs it: the running profile has the basal at that percentage. Its `percentage` is
-        // not the sign, the switch AAPS runs then has the values with the percentage already in them.
-        // A driver may take a new profile only some time after the one before (Carelevo: 30 s), or the answer of the
-        // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
-        val basal = BASAL_RATE * percentage / PERCENT
-        awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
-            val aapsRuns = runBlocking { testGraphs.profileFunction.getProfile() }
-                ?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
-            // Every hour: a pump that takes a profile in parts can hold a part of it.
-            val onPump = control.state().basal
-            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
-            if (aapsRuns && pumpGives) true
-            else {
-                awaitQueueIdle()
-                testGraphs.rxBus.send(EventProfileChangeRequested())
-                SystemClock.sleep(PROFILE_RETRY_MS)
-                false
-            }
-        }
-        awaitQueueIdle()
     }
+
+    /**
+     * Once the pump has a profile, AAPS runs it: the running profile has the basal at that percentage. Its `percentage`
+     * is not the sign, the switch AAPS runs then has the values with the percentage already in them.
+     */
+    private fun aapsRunsBasal(basal: Double): Boolean =
+        runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
+
+    /** Every hour: a pump that takes a profile in parts can hold a part of it. A pump that does not tell counts as giving it. */
+    private fun pumpGivesBasal(basal: Double): Boolean =
+        control.state().basal?.all { abs(it - basal) <= BASAL_TOLERANCE } ?: true
 
     /**
      * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
@@ -358,6 +391,18 @@ class PumpScenario(private val pump: PumpUnderTest) {
     fun cancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = true) }
 
     /**
+     * A temp basal as the loop asks for one (`LoopPlugin.applyTBRRequest`): with `enforceNew = false`, so the driver may
+     * keep a temp basal that already runs. [tempBasal] is the one of the dialog, which must always set it.
+     */
+    fun loopTempBasal(rate: Double, minutes: Int): PumpEnactResult {
+        val profile = checkNotNull(runBlocking { testGraphs.profileFunction.getProfile() }) { "No profile runs" }
+        return queued { commandQueue.tempBasalAbsolute(rate, minutes, false, profile, PumpSync.TemporaryBasalType.NORMAL) }
+    }
+
+    /** The end of a temp basal as the loop asks for it, back at the base rate: `enforceNew = false`. */
+    fun loopCancelTempBasal(): PumpEnactResult = queued { commandQueue.cancelTempBasal(enforceNew = false) }
+
+    /**
      * A status read on a new connection, as AAPS makes one after the link was closed for a while. Some drivers learn what
      * happened on the pump only then: Equil reads the pump's advertisement (battery, newest log entry) at a connect, and
      * Carelevo the patch's alarm snapshot. A status read can queue more reads of its own (Equil reads its log after it),
@@ -387,6 +432,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /** The pump takes a temp basal in percent, see [tempBasalPercent]. */
     val canSetPercentTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.PERCENT != 0
+
+    /** The pump takes a temp basal in U/h. */
+    val canSetAbsoluteTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.ABSOLUTE != 0
+
+    /** The pump gives a bolus of [units] as it is: [units] is on its bolus step. */
+    fun takesBolus(units: Double): Boolean = onStep(units, pumpDescription.bolusStep)
+
+    /** The pump gives an extended bolus of [units] as it is. */
+    fun takesExtendedBolus(units: Double): Boolean = canGiveExtendedBolus && onStep(units, pumpDescription.extendedBolusStep)
+
+    /** The pump runs an absolute temp basal of [rate] U/h as it is. */
+    fun takesTempBasalRate(rate: Double): Boolean =
+        pumpDescription.tempBasalStyle and PumpDescription.ABSOLUTE != 0 && onStep(rate, pumpDescription.tempAbsoluteStep)
+
+    private fun onStep(value: Double, step: Double): Boolean = step > 0.0 && abs(value / step - (value / step).roundToLong()) < STEP_TOLERANCE
 
     fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
 
@@ -701,6 +761,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
          * try, skip, and the next try takes it.
          */
         private const val PROFILE_TIMEOUT = 180_000L
+
+        /** An amount is on a step when it is this close to a whole number of steps. */
+        private const val STEP_TOLERANCE = 1e-6
         private const val PROFILE_RETRY_MS = 5_000L
         private const val MS_PER_MINUTE = 60_000L
     }

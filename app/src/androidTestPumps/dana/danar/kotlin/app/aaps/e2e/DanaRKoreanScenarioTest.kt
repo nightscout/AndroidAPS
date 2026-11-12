@@ -8,11 +8,19 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** The Korean DanaR driver against its emulator, through the real command queue. See [AbstractPumpScenarioTest]. */
+/**
+ * The Korean DanaR driver against its emulator, through the real command queue. See [AbstractPumpScenarioTest] and
+ * [AbstractDanaRScenarioTest].
+ */
 @RunWith(AndroidJUnit4::class)
-class DanaRKoreanScenarioTest : AbstractPumpScenarioTest() {
+class DanaRKoreanScenarioTest : AbstractDanaRScenarioTest() {
 
     override fun pumpUnderTest(): PumpUnderTest = DanaRPumpUnderTest(ExternalOptions.EMULATE_DANA_R_KOREAN, "DanaRKoreanPlugin")
+
+    /** The DanaR v2 driver finds a Korean pump at the start of the link and switches to the Korean driver. */
+    override val wrongDriver = "DanaRv2Plugin"
+    override val driverAfterTheSwitch = "DanaRKoreanPlugin"
+    override val writesUserOptions = false
 
     @Ignore("How a real DanaR goes on when it stops a bolus by itself, as at an occlusion, was never seen")
     @Test

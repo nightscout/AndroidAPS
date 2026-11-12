@@ -33,10 +33,14 @@ class MsgStatusTempBasal(
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60
         val tempBasalStart = if (isTempBasalInProgress) getDateFromSecAgo(tempBasalRunningSeconds) else 0
-        if (isTempBasalInProgress && !isWithin3Sec(tempBasalStart)) {
+        val tempBasalDuration = T.mins(tempBasalTotalMin.toLong()).msecs()
+        // Another percent or duration is another temp basal, also when it started within 3 s of the one before: the loop
+        // can set a zero temp 2 s after a high one. Only the same values with a close start are the one already known.
+        val isNew = !isWithin3Sec(tempBasalStart) || tempBasalPercent != danaPump.tempBasalPercent || tempBasalDuration != danaPump.tempBasalDuration
+        if (isTempBasalInProgress && isNew) {
             danaPump.tempBasalStart = tempBasalStart
             danaPump.tempBasalPercent = tempBasalPercent
-            danaPump.tempBasalDuration = T.mins(tempBasalTotalMin.toLong()).msecs()
+            danaPump.tempBasalDuration = tempBasalDuration
             aapsLogger.debug(LTag.PUMPCOMM, "New temp basal detected")
         } else if (!isTempBasalInProgress) {
             aapsLogger.debug(LTag.PUMPCOMM, "Temp basal stopped. Previous state: ${danaPump.isTempBasalInProgress}")

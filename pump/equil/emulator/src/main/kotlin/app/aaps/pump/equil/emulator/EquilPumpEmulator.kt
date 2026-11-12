@@ -423,6 +423,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     private fun processTempBasalSet(data: ByteArray): ByteArray {
         if (data.size >= 14) synchronized(state) {
             val step = getInt(data, 6)
+            val seconds = getInt(data, 10)
             if (step > 0 && refusesTempBasal(step)) return refusedResponse()
             settle()
             // Seen on a real pump (2026-11-08): a start logs (4,10,0) and an end (4,11,0), each with the rate before it,
@@ -430,19 +431,24 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             // the driver ends the old one first.
             // Seen too: step 47 (0.5875 U/h) ran at 0.6 U/h, step 40 at 0.5 U/h. The pump rounds a temp basal to a grid
             // that is not known; the emulator runs the step as sent.
+            // Seen on a real pump (2026-11-10): step 0 for 1800 s runs a zero temp (the temp basal read then gave 0 and
+            // 1800), and step 0 for 0 s ends it. So only a time of 0 ends a temp basal. Neither logged an entry. Taken
+            // for a cancel before, AAPS had a zero temp the emulated pump did not run.
             val before = basalSpeed()
+            val zeroEnds = state.isTempBasalRunning && state.tempBasalStep == 0
+            val zeroStarts = seconds > 0 && step == 0
             if (state.isTempBasalRunning) {
-                log(TYPE_TEMP_BASAL_END)
+                if (!zeroEnds) log(TYPE_TEMP_BASAL_END)
                 clearTempBasal()
             }
-            if (step > 0) {
-                log(TYPE_TEMP_BASAL_START)
+            if (seconds > 0) {
+                if (!zeroStarts) log(TYPE_TEMP_BASAL_START)
                 state.tempBasalStep = step
-                state.tempBasalDuration = getInt(data, 10)
+                state.tempBasalDuration = seconds
                 state.isTempBasalRunning = true
                 state.tempBasalStartTime = System.currentTimeMillis()
             }
-            logRateChange(before)
+            if (!zeroEnds && !zeroStarts) logRateChange(before)
         }
         return indexedResponse()
     }
@@ -763,12 +769,14 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             if (elapsed >= bolus.durationMs) finishBolus(at = bolus.startedAt + bolus.durationMs)
         }
         if (state.isTempBasalRunning && now >= tempBasalEnd()) {
-            // UNVERIFIED: that a temp basal whose time is over logs as a cancel does, see processTempBasalSet.
+            // UNVERIFIED: that a temp basal whose time is over logs as a cancel does, see processTempBasalSet, and so a
+            // zero temp logs nothing.
             val end = tempBasalEnd()
             val before = basalSpeed(end - 1)
-            log(TYPE_TEMP_BASAL_END, at = end, rate = before)
+            val zero = state.tempBasalStep == 0
+            if (!zero) log(TYPE_TEMP_BASAL_END, at = end, rate = before)
             clearTempBasal()
-            logRateChange(before, at = end)
+            if (!zero) logRateChange(before, at = end)
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -1539,6 +1540,19 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val info = DetailedBolusInfo().also { it.insulin = 1.0 }
         val result = commandQueue.bolus(info)
         assertThat(result.success).isFalse()
+    }
+
+    /** A prime goes into the air, and the user primes exactly while the pump is disconnected (#5469). */
+    @Test
+    fun `prime is queued during DISCONNECTED_PUMP`() = runTest {
+        stubActiveMode(RM.Mode.DISCONNECTED_PUMP)
+        whenever(constraintChecker.applyPrimingConstraints(anyOrNull())).thenReturn(PumpInsulin(0.5))
+        val prime = DetailedBolusInfo().apply { insulin = 0.5; bolusType = BS.Type.PRIMING }
+
+        backgroundScope.launch { commandQueue.bolus(prime) }
+        yield()
+
+        assertThat(commandQueue.bolusInQueue()).isTrue()
     }
 
     @Test

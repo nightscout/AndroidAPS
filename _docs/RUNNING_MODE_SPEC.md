@@ -51,8 +51,8 @@ fix it.
 | `CLOSED_LOOP`       | yes        | no         | no              | Working        | all                         | NoOp                                     |
 | `CLOSED_LOOP_LGS`   | yes        | no         | no              | Working        | all                         | NoOp                                     |
 | `DISABLED_LOOP`     | no         | no         | no              | Stopped        | all                         | CancelTbr                                |
-| `SUPER_BOLUS`       | no         | yes (¹)    | no              | ZeroDelivery   | CANCEL_TBR, TBR_ZERO, BOLUS | IssueZeroTbr + cancelExtendedBolus       |
-| `DISCONNECTED_PUMP` | no         | yes        | yes             | ZeroDelivery   | CANCEL_TBR, TBR_ZERO        | IssueZeroTbr + cancelExtendedBolus       |
+| `SUPER_BOLUS`       | no         | yes (¹)    | no              | ZeroDelivery   | CANCEL_TBR, TBR_ZERO, BOLUS, PRIME | IssueZeroTbr + cancelExtendedBolus |
+| `DISCONNECTED_PUMP` | no         | yes        | yes             | ZeroDelivery   | CANCEL_TBR, TBR_ZERO, PRIME (²) | IssueZeroTbr + cancelExtendedBolus  |
 | `SUSPENDED_BY_PUMP` | no         | yes        | yes             | PumpReported   | CANCEL_TBR                  | NoOp (handled by `runningModePreCheck`)  |
 | `SUSPENDED_BY_USER` | no         | yes        | no              | Stopped        | all                         | CancelTbr                                |
 | `SUSPENDED_BY_DST`  | no         | yes        | no              | SuspendedNoTbr | CANCEL_TBR                  | CancelTbr                                |
@@ -62,6 +62,12 @@ fix it.
 "loop algorithm paused" while the wizard delivers the bolus and runs basal at 0.
 Not the same as "manual bolus blocked": `PumpCommandGate` allows BOLUS during
 SUPER_BOLUS.
+
+² PRIME is a bolus of type `BS.Type.PRIMING` (`PumpCommandGate.bolusKind`). Its insulin goes into
+the air and is not counted in IOB, so it is allowed while the pump is disconnected: that is when the
+user primes a new set. Refusing it made the user reconnect first, and the loop then sent basal and
+SMBs into the air (#5469). It is still refused in `SUSPENDED_BY_PUMP` and `SUSPENDED_BY_DST`, like
+every command except CANCEL_TBR. In every other mode it is allowed like BOLUS.
 
 `RESUME` is a synthetic mode: `handleRunningModeChange` cancels the current temporary
 RM row and restores the underlying mode. Never persisted as `RESUME`.
@@ -189,10 +195,15 @@ the running-mode dimension. Sites:
 - `handleWizardPreCheck`
 - `handleQuickWizardPreCheck`
 - `handleBolusPreCheck`
+
+The two prime handlers consult `rejectionMessage(PRIME)` instead, so a prime works while the
+pump is disconnected (see ² above):
+
 - `handleFillPresetPreCheck`
 - `handleFillPreCheck`
 
-Plus `doFillBolus` (post-confirm path) which already used the guard.
+The confirmed prime then goes through `MasterActionExecutor.deliverFillBolus`, whose
+`executeBolus` checks the same kind via `PumpCommandGate.bolusKind`.
 
 `SmsCommunicatorPlugin` does not need the AAPSCLIENT block — SMS is not
 available in client mode. Its dispatcher previously short-circuited BOLUS with

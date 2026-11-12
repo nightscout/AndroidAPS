@@ -106,19 +106,21 @@ class DanaUserOptionsViewModel(
     fun save() {
         val state = _uiState.value
 
-        danaPump.timeDisplayType24 = state.timeFormat24h
-        danaPump.buttonScrollOnOff = state.buttonScroll
-
         var beepAlarm = state.alarmMode
         if (state.beepOnPress) beepAlarm += 4
-        danaPump.beepAndAlarm = beepAlarm
 
-        danaPump.lcdOnTimeSec = min(max(state.screenTimeout / 5 * 5, 5), 240)
-        danaPump.backlightOnTimeSec = min(max(state.backlight, state.minBacklight), 60)
-        danaPump.units = if (state.glucoseUnitMmol) 1 else 0
-        danaPump.shutdownHour = min(state.shutdownHour, 24)
-        danaPump.lowReservoirRate = min(max(state.lowReservoir / 10 * 10, 10), 50)
-        danaPump.autoLock = state.autoLock
+        // Apart from the values a settings read fills, see DanaPump.userOptionsToWrite.
+        danaPump.userOptionsToWrite = DanaPump.UserOptions(
+            timeDisplayType24 = state.timeFormat24h,
+            buttonScrollOnOff = state.buttonScroll,
+            beepAndAlarm = beepAlarm,
+            lcdOnTimeSec = min(max(state.screenTimeout / 5 * 5, 5), 240),
+            backlightOnTimeSec = min(max(state.backlight, state.minBacklight), 60),
+            units = if (state.glucoseUnitMmol) 1 else 0,
+            shutdownHour = min(state.shutdownHour, 24),
+            lowReservoirRate = min(max(state.lowReservoir / 10 * 10, 10), 50),
+            autoLock = state.autoLock
+        )
 
         viewModelScope.launch {
             val result = commandQueue.setUserOptions()

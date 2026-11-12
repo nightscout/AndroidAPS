@@ -12,6 +12,9 @@
 #
 # Each item writes its result to $Q/rc/<item> (0 passed, 1 failed) and one line to $Q/summary. The Collect step
 # waits until there is a result for every item. A new pump scenario class needs no change here.
+#
+# An emulator whose system dies takes no more items, and the item it ran goes back to the list for another one.
+# So an emulator with an empty list waits while items still run elsewhere.
 set -u
 
 Q=/tmp/scenarios
@@ -19,6 +22,22 @@ PKG=info.nightscout.androidaps
 RUNNER=$PKG.test/app.aaps.runners.AapsTestRunner
 # Parts per scenario class. More parts, more emulators can share one class.
 PARTS=${SCENARIO_PARTS:-2}
+
+# About how long one part of a class takes, in seconds, measured on CircleCI 42440 (2026-11-11), to put the long parts
+# first. A class not listed counts as the longest, so a new one never comes last; add it here once it has run.
+part_seconds() {
+  case "${1##*.}" in
+    # Measured on CircleCI 42463 (2026-11-12): 709 and 584 s.
+    DiaconnScenarioTest) echo 650 ;;
+    EquilScenarioTest) echo 470 ;;
+    DanaRv2ScenarioTest) echo 445 ;;
+    DanaRScenarioTest) echo 410 ;;
+    CarelevoScenarioTest) echo 360 ;;
+    DanaRKoreanScenarioTest) echo 295 ;;
+    DanaRSScenarioTest) echo 240 ;;
+    *) echo 999 ;;
+  esac
+}
 
 if [ "${1:-}" = "--make-list" ]; then
   DEV=$2
@@ -28,10 +47,11 @@ if [ "${1:-}" = "--make-list" ]; then
     | tr -d '\r' | sed -n 's/^INSTRUMENTATION_STATUS: class=//p' | sort -u)
   [ -n "$CLASSES" ] || { echo "no scenario classes listed"; exit 1; }
   : > "$Q/list"
-  # The long items first, so the short ones fill the gaps at the end.
+  # The long items first, so the short ones fill the gaps at the end. The classes come sorted by name, and the slowest
+  # (Equil) was taken last: one emulator ran 4 minutes after the others were done (CircleCI 42428).
   for c in $CLASSES; do
-    for p in $(seq 0 $((PARTS - 1))); do echo "run $c $p" >> "$Q/list"; done
-  done
+    for p in $(seq 0 $((PARTS - 1))); do echo "$(part_seconds "$c") run $c $p"; done
+  done | sort -s -k1,1nr | cut -d' ' -f2- >> "$Q/list"
   for c in $CLASSES; do echo "restart $c" >> "$Q/list"; done
   wc -l < "$Q/list" | tr -d ' ' > "$Q/count"
   echo "scenario work list, $(cat "$Q/count") items:"
@@ -50,6 +70,23 @@ take() {
     head -n 1 "$Q/list"
     sed -i '1d' "$Q/list"
   ) 9> "$Q/lock"
+}
+
+# Puts [item] back at the head of the list, for another emulator.
+give_back() {
+  (
+    flock 9
+    { echo "$1"; cat "$Q/list"; } > "$Q/list.new"
+    mv "$Q/list.new" "$Q/list"
+  ) 9> "$Q/lock"
+}
+
+# The emulator answers: its system is booted and its package manager runs. An emulator whose system has died answers
+# "Can't connect to activity manager" to every command. In CircleCI 42439 one died in a test, then took the 11 items
+# left and failed each in 1 s, while the other emulators had nothing to do.
+alive() {
+  [ "$(timeout 20 adb -s "$DEV" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 ] &&
+    timeout 20 adb -s "$DEV" shell pm path android > /dev/null 2>&1
 }
 
 # Waits until the box is calm before a retry, as the app shards do: a retry into the same load spike crashed again.
@@ -80,7 +117,7 @@ dump_failed_tests() {
   done
 }
 
-# One part of a scenario class, with the retry and coverage rules of the app shards.
+# One part of a scenario class, with the retry and coverage rules of the app shards. 2 when the emulator is lost.
 run_part() {
   local cls=$1 part=$2 id=$3 rc=1
   for attempt in 1 2 3; do
@@ -90,6 +127,7 @@ run_part() {
       -e coverage true -e coverageFile /data/data/$PKG/cov-$id.ec \
       $RUNNER > "$Q/out-$id-$attempt.txt" 2>&1 || true
     tail -n 120 "$Q/out-$id-$attempt.txt"
+    alive || return 2
     echo "--- $id attempt $attempt on $DEV: retries and failure dumps from logcat ---"
     adb -s "$DEV" logcat -d -v time | grep -E "RetryRule: |E2E_" || true
     adb -s "$DEV" exec-out run-as $PKG cat cov-$id.ec > "$COVDIR/cov-$id.ec" 2>/dev/null || true
@@ -113,7 +151,7 @@ run_part() {
 }
 
 # The app restart of a class: run 1 ends with its process, run 2 is a new one on the same emulator.
-# See .claude/skills/pump-emulator-scenarios/SKILL.md. The restart runs collect no coverage.
+# See .claude/skills/pump-emulator-scenarios/SKILL.md. The restart runs collect no coverage. 2 when the emulator is lost.
 run_restart() {
   local cls=$1 id=$2
   for part in 1 2; do
@@ -122,6 +160,7 @@ run_restart() {
       $RUNNER > "$Q/out-$id-$part.txt" 2>&1 || true
     echo "--- $cls app restart, run $part on $DEV ---"
     tail -n 40 "$Q/out-$id-$part.txt"
+    alive || return 2
     if ! grep -q "^OK (1 test)" "$Q/out-$id-$part.txt"; then
       echo "app restart run $part of $cls FAILED"
       adb -s "$DEV" logcat -d -v time | grep -E "RetryRule: |E2E_|PUMPCOMM|PUMPQUEUE" | tail -n 120 || true
@@ -131,9 +170,21 @@ run_restart() {
   return 0
 }
 
+# The items that run now, one file per emulator: an item a lost emulator gives back must still find one to run it.
+mkdir -p "$Q/busy"
 while :; do
+  if ! alive; then
+    echo "$DEV: the emulator does not answer, it takes no more items"
+    break
+  fi
   item=$(take)
-  [ -n "$item" ] || break
+  if [ -z "$item" ]; then
+    [ -n "$(ls "$Q/busy" 2>/dev/null)" ] || break
+    echo "$DEV: the list is empty, waiting while items run on other emulators (one could come back)"
+    sleep 15
+    continue
+  fi
+  echo "$item" > "$Q/busy/$DEV"
   set -- $item
   kind=$1; cls=$2; part=${3:-}
   id=$(echo "${cls##*.}-$kind${part:+-$part}" | tr -c 'A-Za-z0-9\n-' '_')
@@ -141,6 +192,14 @@ while :; do
   start=$(date +%s)
   if [ "$kind" = run ]; then run_part "$cls" "$part" "$id"; else run_restart "$cls" "$id"; fi
   rc=$?
+  if [ $rc = 2 ]; then
+    # Back on the list before this emulator stops counting as busy, so the others still wait for it.
+    give_back "$item"
+    rm -f "$Q/busy/$DEV"
+    echo "$id on $DEV: the emulator is lost after $(( $(date +%s) - start )) s, the item goes back to the list" | tee -a "$Q/summary"
+    break
+  fi
+  rm -f "$Q/busy/$DEV"
   echo $rc > "$Q/rc/$id"
   echo "$id on $DEV: rc=$rc in $(( $(date +%s) - start )) s" | tee -a "$Q/summary"
 done

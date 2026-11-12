@@ -22,9 +22,11 @@ enum class PumpCapability {
     MedtrumCapabilities(arrayOf(Capability.Bolus, Capability.TempBasal, Capability.BasalProfileSet, Capability.BasalRate30min, Capability.TDD)), // Technically the pump supports ExtendedBolus, but not implemented (yet)
     CarelevoCapabilities(arrayOf(Capability.Bolus, Capability.ExtendedBolus, Capability.TempBasal, Capability.BasalProfileSet, Capability.BasalRate30min)),
 
-    // Diaconn set without Refill and ReplaceBattery: the Equil wizard fills the reservoir and fits the charged battery
+    // Diaconn set without ReplaceBattery: the Equil wizard fits the charged battery.
+    // Refill: users asked for Prime/Fill. The pump can be detached from the base plate, so the prime can go into the air.
+    // It is a PRIMING bolus and adds no IOB, so a prime while the pump is attached is insulin the loop does not see.
     // No TDD: the driver cannot read daily totals from the pump (loadTDDs always failed), so AAPS counts them itself.
-    EquilCapabilities(arrayOf(Capability.Bolus, Capability.ExtendedBolus, Capability.TempBasal, Capability.BasalProfileSet));
+    EquilCapabilities(arrayOf(Capability.Bolus, Capability.ExtendedBolus, Capability.TempBasal, Capability.BasalProfileSet, Capability.Refill));
 
     var children: ArrayList<Capability> = ArrayList()
 

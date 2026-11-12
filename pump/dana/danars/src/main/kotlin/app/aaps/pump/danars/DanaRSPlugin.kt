@@ -378,7 +378,7 @@ class DanaRSPlugin(
         var percentRate = 0
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate >= 0.10) {
-            percentRate = java.lang.Double.valueOf(absoluteRate / baseBasalRate.cU * 100).toInt()
+            percentRate = DanaPump.tempBasalPercent(absoluteRate, baseBasalRate.cU)
         } else {
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
         }
@@ -571,11 +571,13 @@ class DanaRSPlugin(
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
         if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
-            aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: Failed")
+            // It said "Failed" and gave the text of a failed cancel also when the pump had stopped it.
+            val stopped = !danaPump.isExtendedInProgress
+            aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: ${if (stopped) "OK" else "Failed"}")
             return pumpEnactResultProvider()
-                .success(!danaPump.isExtendedInProgress)
+                .success(stopped)
                 .enacted(true)
-                .comment(app.aaps.core.ui.R.string.canceling_eb_failed)
+                .comment(if (stopped) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
             return pumpEnactResultProvider()

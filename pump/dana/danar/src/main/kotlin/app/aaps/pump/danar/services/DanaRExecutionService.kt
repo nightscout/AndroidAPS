@@ -51,6 +51,7 @@ import app.aaps.pump.danar.comm.MsgStatusBasic
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -77,43 +78,43 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
             val exStatusMsg = MsgStatusBolusExtended(injector)
             val checkValue = MsgCheckValue(injector)
             if (danaPump.isNewPump) {
-                mSerialIOThread?.sendMessage(checkValue)
+                sendToPump(checkValue)
                 if (!checkValue.isReceived) {
                     return
                 }
             }
-            mSerialIOThread?.sendMessage(statusMsg)
-            mSerialIOThread?.sendMessage(statusBasicMsg)
+            sendToPump(statusMsg)
+            sendToPump(statusBasicMsg)
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingtempbasalstatus)))
-            mSerialIOThread?.sendMessage(tempStatusMsg)
+            sendToPump(tempStatusMsg)
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingextendedbolusstatus)))
-            mSerialIOThread?.sendMessage(exStatusMsg)
+            sendToPump(exStatusMsg)
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
             val now = System.currentTimeMillis()
             danaPump.lastConnection = now
             val profile = pumpSync.expectedPumpState().profile
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= danaRPlugin.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
-                mSerialIOThread?.sendMessage(MsgSettingBasal(injector))
+                sendToPump(MsgSettingBasal(injector))
                 if (!danaRPlugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(EventProfileChangeRequested())
                 }
             }
             if (danaPump.lastSettingsRead + 60 * 60 * 1000L < now || !danaRPlugin.isInitialized()) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
-                mSerialIOThread?.sendMessage(MsgSettingShippingInfo(injector))
-                mSerialIOThread?.sendMessage(MsgSettingActiveProfile(injector))
-                mSerialIOThread?.sendMessage(MsgSettingMeal(injector))
-                mSerialIOThread?.sendMessage(MsgSettingBasal(injector))
+                sendToPump(MsgSettingShippingInfo(injector))
+                sendToPump(MsgSettingActiveProfile(injector))
+                sendToPump(MsgSettingMeal(injector))
+                sendToPump(MsgSettingBasal(injector))
                 //0x3201
-                mSerialIOThread?.sendMessage(MsgSettingMaxValues(injector))
-                mSerialIOThread?.sendMessage(MsgSettingGlucose(injector))
-                mSerialIOThread?.sendMessage(MsgSettingActiveProfile(injector))
-                mSerialIOThread?.sendMessage(MsgSettingProfileRatios(injector))
-                mSerialIOThread?.sendMessage(MsgSettingProfileRatiosAll(injector))
-                mSerialIOThread?.sendMessage(MsgSettingUserOptions(injector))
+                sendToPump(MsgSettingMaxValues(injector))
+                sendToPump(MsgSettingGlucose(injector))
+                sendToPump(MsgSettingActiveProfile(injector))
+                sendToPump(MsgSettingProfileRatios(injector))
+                sendToPump(MsgSettingProfileRatiosAll(injector))
+                sendToPump(MsgSettingUserOptions(injector))
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumptime)))
-                mSerialIOThread?.sendMessage(MsgSettingPumpTime(injector))
+                sendToPump(MsgSettingPumpTime(injector))
                 if (danaPump.pumpTime == 0L) {
                     // initial handshake was not successful
                     // de-initialize pump
@@ -125,8 +126,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 var timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
                 aapsLogger.debug(LTag.PUMP, "Pump time difference: $timeDiff seconds")
                 if (abs(timeDiff) > 10) {
-                    mSerialIOThread?.sendMessage(MsgSetTime(injector, dateUtil.now()))
-                    mSerialIOThread?.sendMessage(MsgSettingPumpTime(injector))
+                    sendToPump(MsgSetTime(injector, dateUtil.now()))
+                    sendToPump(MsgSettingPumpTime(injector))
                     timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: $timeDiff seconds")
                 }
@@ -159,12 +160,12 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
         if (!isConnected) return false
         if (danaPump.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
-            mSerialIOThread?.sendMessage(MsgSetTempBasalStop(injector))
+            sendToPump(MsgSetTempBasalStop(injector))
             SystemClock.sleep(500)
         }
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
-        mSerialIOThread?.sendMessage(MsgSetTempBasalStart(injector, percent, durationInHours))
-        mSerialIOThread?.sendMessage(MsgStatusTempBasal(injector))
+        sendToPump(MsgSetTempBasalStart(injector, percent, durationInHours))
+        sendToPump(MsgStatusTempBasal(injector))
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true
     }
@@ -172,8 +173,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
     override fun tempBasalStop(): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
-        mSerialIOThread?.sendMessage(MsgSetTempBasalStop(injector))
-        mSerialIOThread?.sendMessage(MsgStatusTempBasal(injector))
+        sendToPump(MsgSetTempBasalStop(injector))
+        sendToPump(MsgStatusTempBasal(injector))
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true
     }
@@ -181,8 +182,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
     override fun extendedBolus(insulin: Double, durationInHalfHours: Int): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingextendedbolus)))
-        mSerialIOThread?.sendMessage(MsgSetExtendedBolusStart(injector, insulin, (durationInHalfHours and 0xFF).toByte()))
-        mSerialIOThread?.sendMessage(MsgStatusBolusExtended(injector))
+        sendToPump(MsgSetExtendedBolusStart(injector, insulin, (durationInHalfHours and 0xFF).toByte()))
+        sendToPump(MsgStatusBolusExtended(injector))
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true
     }
@@ -190,8 +191,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
     override fun extendedBolusStop(): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingextendedbolus)))
-        mSerialIOThread?.sendMessage(MsgSetExtendedBolusStop(injector))
-        mSerialIOThread?.sendMessage(MsgStatusBolusExtended(injector))
+        sendToPump(MsgSetExtendedBolusStop(injector))
+        sendToPump(MsgStatusBolusExtended(injector))
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true
     }
@@ -209,10 +210,11 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
             else MsgBolusStartWithSpeed(injector, detailedBolusInfo.insulin, preferencesSpeed)
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
+        danaPump.bolusStoppedByPump = false
         if (detailedBolusInfo.insulin > 0) {
             val bolusStart = System.currentTimeMillis()
             if (!danaPump.bolusStopped) {
-                mSerialIOThread?.sendMessage(start)
+                sendToPump(start)
             } else {
                 return false
             }
@@ -276,7 +278,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                         return false
                     }
                 }
-                mSerialIOThread?.sendMessage(MsgStatus(injector))
+                sendToPump(MsgStatus(injector))
                 val lastBolusTime = danaPump.lastBolusTime
                 if (lastBolusTime != null && lastBolusTime >= bolusStart - LAST_BOLUS_BEFORE_START) {
                     val lastAmount = danaPump.lastBolusAmount ?: 0.0
@@ -289,7 +291,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 }
             } else {
                 // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-                appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
+                appScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
             }
         }
         return !start.failed
@@ -303,27 +305,25 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.updatingbasalrates)))
         val basal = danaPump.buildDanaRProfileRecord(profile)
-        val msgSet = MsgSetBasalProfile(injector, 0.toByte(), basal)
-        mSerialIOThread?.sendMessage(msgSet)
-        val msgActivate = MsgSetActivateBasalProfile(injector, 0.toByte())
-        mSerialIOThread?.sendMessage(msgActivate)
+        val set = sendToPump(MsgSetBasalProfile(injector, 0.toByte(), basal))
+        // Also after a write with no answer: the pump may have taken it.
+        val activated = sendToPump(MsgSetActivateBasalProfile(injector, 0.toByte()))
         danaPump.lastSettingsRead = 0 // force read full settings
         getPumpStatus()
+        // Notifications are handled centrally from this Boolean via AbstractDanaRPlugin + CommandQueueImplementation.onProfileChanged.
+        val given = pumpGivesBasal(set && activated, MsgSettingBasal(injector), basal)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        // Report the actual write outcome. sendMessage is blocking, so msgSet/msgActivate.failed are populated by
-        // now. Previously this returned true unconditionally, masking a genuine pump rejection as success (the
-        // caller then reported "profile updated" while the wrong basal ran). Notifications are handled centrally
-        // from this Boolean via AbstractDanaRPlugin + CommandQueueImplementation.onProfileChanged.
-        return !msgSet.failed && !msgActivate.failed
+        return given
     }
 
     override fun setUserOptions(): PumpEnactResult {
         if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
-        val msg = MsgSetUserOptions(injector)
-        mSerialIOThread?.sendMessage(msg)
+        val message = MsgSetUserOptions(injector)
+        val done = sendToPump(message)
+        if (done) message.written?.let { danaPump.userOptionsWritten(it) }
         SystemClock.sleep(200)
-        return pumpEnactResultProvider().success(!msg.failed)
+        return pumpEnactResultProvider().success(done)
     }
 
     inner class LocalBinder : Binder() {

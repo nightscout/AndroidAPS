@@ -1,6 +1,8 @@
 package app.aaps.e2e.scenario
 
 import androidx.test.platform.app.InstrumentationRegistry
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
@@ -73,12 +75,15 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("cancel temp basal").that(scenario.cancelTempBasal().success).isTrue()
         scenario.checkTempBasal()
 
-        // The temp basal dialog sets one in percent on such a pump, for an hour: another path in some drivers.
+        // The temp basal dialog sets one in percent on such a pump, for an hour: another path in some drivers. For half an
+        // hour a Dana takes the short command the loop uses.
         if (scenario.canSetPercentTempBasal) {
-            assertWithMessage("temp basal in percent").that(scenario.tempBasalPercent(TEMP_BASAL_PERCENT, TEMP_BASAL_PERCENT_MINUTES).success).isTrue()
-            scenario.checkTempBasal()
-            assertWithMessage("cancel temp basal in percent").that(scenario.cancelTempBasal().success).isTrue()
-            scenario.checkTempBasal()
+            for (minutes in listOf(TEMP_BASAL_PERCENT_MINUTES, LOOP_MINUTES)) {
+                assertWithMessage("temp basal in percent for $minutes min").that(scenario.tempBasalPercent(TEMP_BASAL_PERCENT, minutes).success).isTrue()
+                scenario.checkTempBasal()
+                assertWithMessage("cancel temp basal in percent").that(scenario.cancelTempBasal().success).isTrue()
+                scenario.checkTempBasal()
+            }
         }
 
         if (scenario.canGiveExtendedBolus) {
@@ -95,6 +100,92 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkStatusShown()
 
         scenario.unpair()
+    }
+
+    /**
+     * What reaches the pump is what was asked: a bolus, an extended bolus and a temp basal of amounts that a cut to the
+     * pump's units changes. 1.15 * 100 is 114.99999..., so a driver that cuts gives 1.14 U. The record checks do not see
+     * it, as AAPS stores what the pump gave. Found in the Diaconn and Dana drivers. An amount that is not on the pump's
+     * step is left out, as AAPS rounds it before the driver.
+     */
+    @Test
+    fun theAmountsReachThePumpAsAsked() {
+        scenario.bringUp()
+        scenario.pair()
+
+        if (scenario.takesBolus(ODD_BOLUS)) {
+            assertWithMessage("bolus").that(scenario.bolus(ODD_BOLUS).success).isTrue()
+            assertWithMessage("the bolus the pump gave").that(scenario.control.state().boluses.last()).isWithin(AMOUNT_TOLERANCE).of(ODD_BOLUS)
+            scenario.checkBolusRecords()
+        }
+
+        if (scenario.takesExtendedBolus(ODD_BOLUS)) {
+            assertWithMessage("extended bolus").that(scenario.extendedBolus(ODD_BOLUS, EXTENDED_MINUTES).success).isTrue()
+            val extended = checkNotNull(scenario.control.state().extendedBolus) { "the pump runs no extended bolus" }
+            assertWithMessage("the extended bolus the pump runs").that(extended.units).isWithin(AMOUNT_TOLERANCE).of(ODD_BOLUS)
+            assertWithMessage("cancel extended bolus").that(scenario.cancelExtendedBolus().success).isTrue()
+            scenario.checkExtendedBolus()
+        }
+
+        if (scenario.takesTempBasalRate(ODD_RATE)) {
+            assertWithMessage("temp basal").that(scenario.tempBasal(ODD_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+            val rate = checkNotNull(scenario.control.state().tempBasal?.absolute) { "the pump runs no absolute temp basal" }
+            assertWithMessage("the rate the pump runs").that(rate).isWithin(AMOUNT_TOLERANCE).of(ODD_RATE)
+            scenario.checkTempBasal()
+        }
+
+        // A pump that takes only a percent: the driver turns the rate of the loop into a percent of the base rate. On a base
+        // of 0.4 U/h, 0.6 / 0.4 * 100 is 149.99999..., so a cut gave 149, which the step down to 10 % made 140 % in place
+        // of 150 %. Found in the Dana drivers.
+        if (scenario.canSetPercentTempBasal && !scenario.canSetAbsoluteTempBasal) {
+            scenario.switchProfile(PERCENT_TRAP_PROFILE)
+            assertWithMessage("temp basal").that(scenario.loopTempBasal(PERCENT_TRAP_RATE, PERCENT_TRAP_MINUTES).success).isTrue()
+            val state = scenario.control.state()
+            // A DanaR set to "use extended boluses" gives every high temp as an extended bolus: then no percent is sent.
+            if (state.extendedBolus == null) {
+                val percent = checkNotNull(state.tempBasal?.percent) { "the pump runs no percent temp basal" }
+                assertWithMessage("the percent the pump runs for $PERCENT_TRAP_RATE U/h").that(percent).isEqualTo(PERCENT_TRAP_PERCENT)
+            }
+            scenario.checkTempBasal()
+            if (scenario.canGiveExtendedBolus) scenario.checkExtendedBolus()
+        }
+    }
+
+    /**
+     * The temp basals the loop asks for, one after the other, as it does every 5 minutes: with `enforceNew = false`, so a
+     * driver may keep what already runs. A high temp, the same again, a zero temp, the same again, a high temp again, and
+     * back to the base rate. In between, the dialog's temp basal at the base rate, which is no temp basal. After each step
+     * AAPS and the pump must agree, and no command of AAPS may come back as "done on the pump".
+     *
+     * A pump that gives a high temp basal as an extended bolus (the DanaR) must end the one to start the other.
+     */
+    @Test
+    fun theLoopsTempBasalsReachThePump() {
+        scenario.bringUp()
+        scenario.pair()
+        val steps = listOf<Pair<String, () -> PumpEnactResult>>(
+            "a high temp" to { scenario.loopTempBasal(HIGH_TEMP, LOOP_MINUTES) },
+            "the same high temp again" to { scenario.loopTempBasal(HIGH_TEMP, LOOP_MINUTES) },
+            "a zero temp while the high temp runs" to { scenario.loopTempBasal(ZERO_TEMP, LOOP_MINUTES) },
+            "the same zero temp again" to { scenario.loopTempBasal(ZERO_TEMP, LOOP_MINUTES) },
+            "the dialog at the base rate while the zero temp runs" to { scenario.tempBasal(PumpScenario.BASAL_RATE, LOOP_MINUTES) },
+            "the dialog at the base rate with no temp" to { scenario.tempBasal(PumpScenario.BASAL_RATE, LOOP_MINUTES) },
+            "a zero temp" to { scenario.loopTempBasal(ZERO_TEMP, LOOP_MINUTES) },
+            "a high temp while the zero temp runs" to { scenario.loopTempBasal(HIGH_TEMP, LOOP_MINUTES) },
+            "the dialog at the base rate while the high temp runs" to { scenario.tempBasal(PumpScenario.BASAL_RATE, LOOP_MINUTES) },
+            "a high temp" to { scenario.loopTempBasal(HIGH_TEMP, LOOP_MINUTES) },
+            "back to the base rate" to { scenario.loopCancelTempBasal() },
+            "back to the base rate with no temp" to { scenario.loopCancelTempBasal() }
+        )
+        for ((step, run) in steps) {
+            assertWithMessage(step).that(run().success).isTrue()
+            scenario.checkTempBasal()
+            if (scenario.canGiveExtendedBolus) scenario.checkExtendedBolus()
+        }
+        // A status read compares what the pump runs with what AAPS has.
+        assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
+        scenario.checkTempBasal()
+        scenario.checkNoAlarm(NotificationId.UNSUPPORTED_ACTION_IN_PUMP)
     }
 
     /** The pump runs the bolus and its answer is lost. AAPS must count the insulin, at the latest after a status read. */
@@ -305,14 +396,20 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkTempBasal()
     }
 
-    /** The temp basal command never reaches the pump. AAPS must not keep a temp basal the pump does not run. */
+    /**
+     * The temp basal command never reaches the pump. AAPS must not keep a temp basal the pump does not run. A driver may
+     * find out that the command was lost and send it again, as Aaruy does when the pump's count shows it: then the pump
+     * runs it, and the result must say so. A low temp: a DanaR gives a high one as an extended bolus, and the lost temp
+     * basal command never fired there.
+     */
     @Test
-    fun aTempBasalThatIsLostIsNotKept() {
+    fun aLostTempBasalIsKnownAsThePumpRunsIt() {
         scenario.bringUp()
         scenario.pair()
         assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.TEMP_BASAL_START)).isTrue()
-        scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
-        assertWithMessage("the pump runs no temp basal").that(scenario.control.state().tempBasal).isNull()
+        val result = scenario.tempBasal(LOW_TEMP_BASAL_RATE, TEMP_BASAL_MINUTES)
+        assertWithMessage("success when the pump runs it, it runs ${scenario.control.state().tempBasal}")
+            .that(result.success).isEqualTo(scenario.control.state().tempBasal != null)
         scenario.readStatus()
         scenario.checkTempBasal()
     }
@@ -478,14 +575,34 @@ abstract class AbstractPumpScenarioTest {
         const val STOP_AFTER = 0.2
         const val PUMP_STOPS_AT = 0.5
         const val TEMP_BASAL_RATE = 1.0
+        /** 50 % of the basal: a temp basal on every pump, also on one that gives a high one as an extended bolus. */
+        const val LOW_TEMP_BASAL_RATE = 0.25
         const val TEMP_BASAL_MINUTES = 30
         const val TEMP_BASAL_PERCENT = 150
         const val TEMP_BASAL_PERCENT_MINUTES = 60
+        /** What the loop asks for: half an hour, 200 % of [PumpScenario.BASAL_RATE], and 0 U/h. */
+        const val LOOP_MINUTES = 30
+        const val HIGH_TEMP = 1.0
+        const val ZERO_TEMP = 0.0
         const val PROFILE_PERCENT = 150
         /** Ten minutes: more than any record could be off by its own timing. */
         const val PUMP_CLOCK_OFFSET_MS = 600_000L
         const val EXTENDED_BOLUS = 1.0
         const val EXTENDED_MINUTES = 30
+
+        /**
+         * Amounts that a cut to hundredths changes: 1.15 * 100 and 0.57 * 100 are a little less than 115 and 57. The bolus
+         * is on a 0.01 and a 0.05 step. The rate is above the base rate of the test profile and below its temp basal limit.
+         */
+        const val ODD_BOLUS = 1.15
+        const val ODD_RATE = 0.57
+
+        /** 80 % of the test profile is a base of 0.4 U/h, on which 0.6 U/h is 150 %: under the limits of 1 U/h and 200 %. */
+        const val PERCENT_TRAP_PROFILE = 80
+        const val PERCENT_TRAP_RATE = 0.6
+        const val PERCENT_TRAP_PERCENT = 150
+        const val PERCENT_TRAP_MINUTES = 60
+        const val AMOUNT_TOLERANCE = 0.001
         const val KILLED_BOLUS = 2.0
         const val KILL_AFTER = 0.3
 

@@ -396,10 +396,11 @@ open class DanaOverviewViewModel(
 
         // Actions
         val primaryActions = listOf(
+            // As soon as a pump is paired: after a first status read that failed, it is the way to try again.
             ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
-                visible = isInitialized,
+                visible = isConfigured,
                 onClick = { onRefreshClick() }
             ),
             ScreenAction(

@@ -1,21 +1,20 @@
-package app.aaps.pump.dana
+package app.aaps.core.interfaces.pump
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.PumpRate
-import app.aaps.core.interfaces.pump.PumpSync
 
 /**
- * AAPS records a stop of the insulin on a Dana pump (the user suspends it on the pump) as a 0 U/h temp basal of type
- * PUMP_SUSPEND, as other drivers do. Without it AAPS counted the basal the pump did not give, so IOB was too high.
+ * AAPS records a stop of the insulin on the pump itself (the user suspends it on the pump) as a 0 U/h temp basal of type
+ * PUMP_SUSPEND. Without it AAPS counts the basal the pump does not give, so IOB is too high. Used by the Dana and Diaconn
+ * drivers.
  *
- * The pump history gives the exact start and end (Dana RS, DanaR v2). The status read only tells whether the pump is
- * stopped now: it is the only source on the DanaR and the Korean DanaR, which read no history, and it ends a record
- * whose end the history did not give.
+ * A pump history gives the exact start and end (Dana RS, DanaR v2, Diaconn G8). The status read only tells whether the
+ * pump is stopped now: it is the only source on the DanaR and the Korean DanaR, which read no history, and it ends a
+ * record whose end the history did not give.
  */
-object DanaSuspendSync {
+object PumpSuspendSync {
 
     /** Longer than any stop: the pump gives the end. The same as Equil. */
     private val MAX_DURATION = T.mins(4800).msecs()

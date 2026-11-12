@@ -9,6 +9,9 @@ Instrumented tests that run a real pump driver against its in-tree emulator, thr
 PumpSync and database, with no screen. After each step they compare what AAPS stored with what the emulated pump did.
 They test the core of AAPS and the driver; the screens have their own tests.
 
+What a driver must pass to count as done (driver rules, emulator, scenarios, screens, real pump, CI) is in
+`_docs/PUMP_DRIVER_ACCEPTANCE.md`. This skill is how to build and run it.
+
 Code: `app/src/androidTest/kotlin/app/aaps/e2e/scenario/` (engine `PumpScenario`, shared scenarios
 `AbstractPumpScenarioTest`) and one adapter per pump in `app/src/androidTestPumps/<pump>/`. The test hooks of an
 emulator are `PumpEmulatorControl` in `:core:interfaces`.
@@ -41,6 +44,13 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
   never fired passes and tests nothing. The Equil emulator once named no message under 10 bytes, and its reads are 6.
 - The emulator reports as its base rate the rate of its active profile. Dana RS takes a temp basal at the base rate as
   no temp basal; while its emulator said 1.0 U/h always, every Dana temp basal scenario passed without a temp basal.
+- An answer goes out before anything the pump sends after it. The Dana RS emulator answered a history read with its
+  first event and sent the rest and the "done" from its own thread; under CI load the "done" came first, the driver
+  ended the read with nothing, and a bolus had no record now and then (CircleCI 42425, 42438, 42448). Its transport now holds
+  back what the pump sends by itself until the answers are out.
+- A status that says how long something runs must count it from its start. The DanaR emulator said 0 s for every
+  extended bolus, so each status read moved its start to "now", and 10 s later the driver took it for another one,
+  warned "unsupported action in pump" and stored it again. The scenarios checked within 10 s and passed.
 - A scanner hands out only what the pump advertises now, as the real one does. A `SharedFlow` with `replay` kept an old
   advertisement for new listeners: Equil's wizard paired with a serial the pump no longer had, and the driver read an
   old log index. Advertise again and again while a scan runs instead, until `stopScan`.
@@ -53,7 +63,9 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
 3. An adapter `<Pump>PumpUnderTest`: how to pair (through the wizard's own ViewModels from
    `testGraphs.viewModelFactory`, or through its queue commands), how to unpair, how to restore a saved emulator.
 4. A test class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` that returns the adapter. Add the source dir to
-   `pumpTestSources` in `app/build.gradle.kts`.
+   `pumpTestSources` in `app/build.gradle.kts`. What only a family of drivers does goes in an abstract class between
+   the two, as `AbstractDanaRScenarioTest` for the three DanaR drivers (a wrong driver picked, a temp basal set on the
+   pump, the history of every record type, the pump clock, the daily limit, the user options).
 5. The real radio code: the emulator replaces the transport, so the scenarios never run it. A unit test
    `<Pump>BleTransportContractTest : BleTransportContract()` (`:shared:tests`, package `app.aaps.shared.tests.ble`)
    runs it on Robolectric's Bluetooth: say how to build the transport and give the pump's service and characteristics.
@@ -95,7 +107,13 @@ says how it works: each class is split in parts (the runner's `numShards`/`shard
 restart runs, and every emulator with nothing else to do takes the next item. `@ShardD` is `@Inherited` and set on
 `AbstractPumpScenarioTest`, so a new `<Pump>ScenarioTest` lands there with no CI change. Shard C leaves ShardD out.
 The Collect step prints one line per item (emulator, result, seconds); a failed item's output has the driver log of
-the failed test.
+the failed test. The longest parts go first, by the seconds in `part_seconds` of the script. A class not in it counts
+as the longest; once it has run on CI, add its seconds from the Collect lines, or it keeps going first. An emulator
+whose system dies ("Can't connect to activity manager") takes no more items and gives its item back; a summary line
+"the emulator is lost" says so, and the item's result comes from another emulator.
+
+Shared UI gets one pass. The treatment dialogs run once, in `DanaRsEmulatorUiTest` on BLE5; a driver's commands are
+tested through the queue by its scenario class, not again through the dialogs.
 
 The pump UI tests (`AbstractPumpUiTest`, one `PumpScreens` per pump) have no shard annotation, so they run in shard C.
 CI makes its AVDs without a device, which gives the emulator default screen: **320 x 640 at 160 dpi**, on API 31. A
@@ -112,6 +130,8 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 ## Traps
 
 - `activePlugin.activePump` is the concentration wrapper. Compare the driver with `activePumpInternal`.
+- The loop sends its temp basals with `enforceNew = false` (`loopTempBasal`, `loopCancelTempBasal`), the dialog with
+  `true` (`tempBasal`). Only the first reaches the branches where a driver keeps what already runs.
 - Only `MasterActionExecutor` raises the BOLUS_DELIVERY_FAILED alarm, when the queue reports a bolus as not given. A
   bolus straight through the queue (`bolus`, `startBolus`) never alarms, so a check of that alarm needs `userBolus`,
   the insulin dialog's path. A bolus the pump cut short must come back as not given, or the user hears nothing.
@@ -143,7 +163,8 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 - After a real-pump test, copy what the pump did into the emulator (mark the source and the date). The DanaR emulator
   gives progress in 0.05 U steps, one more step after a stop, writes the bolus to its history 2 s after the end, and
   refuses two connects after a broken link, all as a real DanaRv2 did. Its Korean variant steps 0.1 U and stops at its
-  last progress, and starts a link with 0x0301, 0x0302, 0x0303, as a real Korean DanaR did.
+  last progress, starts a link with 0x0301, 0x0302, 0x0303, and ends a history read with no "done", as a real Korean
+  DanaR did (the driver ends the read after 10 s with nothing from the pump).
 - A stop of the insulin on the pump is a 0 U/h temp basal of type PUMP_SUSPEND in AAPS. `checkSuspend` checks it, and a
   temp basal check while the pump is stopped would compare the wrong things.
 - A driver may send a command again after no answer (the DanaR sends a temp basal cancel again). Check the end state
@@ -155,3 +176,33 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   thread as the alarm screen. `checkUrgentAlarmSince` accepts either.
 - A driver's own database, as the stored pump log of Aaruy, is a file. It outlives the test graph, so a test finds the
   rows of the tests before it. A driver must not take an old row for a new event; Aaruy tells them apart by the row id.
+- After a profile write AAPS stores the switch with the basal the pump reports (`deliveredBasal`), not the asked one. A
+  write the driver took as done by mistake therefore does not show as the new basal: AAPS runs the switch with the old
+  basal. Check whether AAPS stored the switch (`profileWrittenOnce`), not its basal. A report further than
+  max(0.1 U/h, 2 basal steps) from the asked basal is refused with its own FAILED_UPDATE_PROFILE alarm, which hides
+  the driver's own result: keep the new basal close to the old one in such a test.
+- Both a stored profile switch and `EventProfileChangeRequested` make AAPS write the profile. `switchProfile` sends
+  both and tries again until the pump has it; to see the result of one write, only store the switch.
+- A temp basal at the base rate of the test profile (`PumpScenario.BASAL_RATE`) is no temp basal: a driver cancels
+  instead and AAPS stores none. A pump-specific test that wants a temp basal asks a rate above it.
+- A driver may wait a fixed time after a write: the Diaconn G8 waits 30 s after a basal write. The pairing writes the
+  profile, so give such a pump a longer pairing limit, and expect each profile step to take that long.
+- A pump with a vendor cloud (the Diaconn G8 sends its log there): an emulated pump must never reach it. The driver skips
+  the cloud while it is emulated, the emulated serial is random and not a real pump's, and the adapter turns the cloud
+  setting off. One run with a copied real serial once asked the real cloud for that pump's log.
+- A real pump may carry out a setting a moment after it answered the confirm: a Diaconn G8 starts a temp basal 1.8 s
+  later and stops one 1.2 s later. It holds a request that comes in between and answers it when the setting is done. An
+  emulator that answers at once with the old state makes failures no real pump gives (a start after a stop refused, a
+  history read with no record yet). Copy the hold, not only the delay.
+- A driver may take the time of a pump record, in whole seconds, as its id (the Diaconn G8 does). A real pump's own
+  timing keeps two records of one kind out of one second; an emulator at FAST speed does not, and AAPS then takes two
+  records for one. Keep the FAST time of such an action at 1 s or more.
+- The queue's idle check passes in the gap when a driver queues a follow-up (a history read) from a launched coroutine
+  after its command ends. The check then misses the record the read stores, now and then, in CI only. The driver queues
+  it before the command ends: `launch(start = CoroutineStart.UNDISPATCHED)` adds it at once.
+- AAPS can run the profile before the pump has it: the write is queued a moment later. `pair()` waits until the pump
+  gives the profile's basal, or a fault a test sets right after the pairing hits the pairing's write.
+- A report of the pump is not always "ready". The Diaconn G8 reports a basal write at about 23.5 s, then still refuses
+  the start of that basal; it took it at 30.5 s. Test a shorter wait on the real pump before the emulator copies it.
+- A percent pump turns the loop's rate into a percent of the base rate. A trap needs a base on which the rate is a
+  float error away from a step and still under the limits (1 U/h, 200 %): the amount scenario switches to 80 %.

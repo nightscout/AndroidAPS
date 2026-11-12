@@ -28,8 +28,12 @@ class MsgStatusBolusExtended(
         val extendedBolusAbsoluteRate = if (isExtendedInProgress) extendedBolusAmount / extendedBolusMinutes * 60 else 0.0
         val extendedBolusStart = if (isExtendedInProgress) getDateFromSecAgo(extendedBolusSoFarInSecs) else 0
         val extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes
-        if (isExtendedInProgress && !isWithin3Sec(extendedBolusStart)) {
-            danaPump.extendedBolusDuration = T.mins(extendedBolusMinutes).msecs()
+        val extendedBolusDuration = T.mins(extendedBolusMinutes).msecs()
+        // Another amount or duration is another extended bolus, also when it started within 3 s of the one before.
+        val isNew = !isWithin3Sec(extendedBolusStart) || abs(extendedBolusAmount - danaPump.extendedBolusAmount) >= AMOUNT_TOLERANCE ||
+            extendedBolusDuration != danaPump.extendedBolusDuration
+        if (isExtendedInProgress && isNew) {
+            danaPump.extendedBolusDuration = extendedBolusDuration
             danaPump.extendedBolusAmount = extendedBolusAmount
             danaPump.extendedBolusStart = extendedBolusStart
             aapsLogger.debug(LTag.PUMPCOMM, "New extended bolus detected")
@@ -54,4 +58,10 @@ class MsgStatusBolusExtended(
 
     // because there is no fixed timestamp of start allow update of eb only if tbr start differs more
     private fun isWithin3Sec(newStart: Long) = abs(newStart - danaPump.extendedBolusStart) < 3000
+
+    private companion object {
+
+        /** Amounts come in hundredths of a unit. */
+        const val AMOUNT_TOLERANCE = 0.005
+    }
 }

@@ -8,11 +8,18 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** The DanaR driver (the first DanaR) against its emulator, through the real command queue. See [AbstractPumpScenarioTest]. */
+/**
+ * The DanaR driver (the first DanaR) against its emulator, through the real command queue. See [AbstractPumpScenarioTest]
+ * and [AbstractDanaRScenarioTest].
+ */
 @RunWith(AndroidJUnit4::class)
-class DanaRScenarioTest : AbstractPumpScenarioTest() {
+class DanaRScenarioTest : AbstractDanaRScenarioTest() {
 
     override fun pumpUnderTest(): PumpUnderTest = DanaRPumpUnderTest(ExternalOptions.EMULATE_DANA_R, "DanaRPlugin")
+
+    /** The DanaR v2 driver finds a pump with the old protocol and switches to the DanaR driver. */
+    override val wrongDriver = "DanaRv2Plugin"
+    override val driverAfterTheSwitch = "DanaRPlugin"
 
     @Ignore("How a real DanaR goes on when it stops a bolus by itself, as at an occlusion, was never seen")
     @Test

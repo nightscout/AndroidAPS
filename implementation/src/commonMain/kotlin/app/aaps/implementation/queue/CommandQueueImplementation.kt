@@ -670,8 +670,9 @@ class CommandQueueImplementation(
             detailedBolusInfo.eCarbs = null
         }
 
-        // Running-mode gate: reject bolus if current mode forbids new delivery.
-        rejectedByRunningModeGate(PumpCommandGate.CommandKind.BOLUS)?.let { return it }
+        // Running-mode gate: reject bolus if current mode forbids new delivery. A prime is allowed while
+        // the pump is disconnected (#5469).
+        rejectedByRunningModeGate(PumpCommandGate.bolusKind(detailedBolusInfo.bolusType))?.let { return it }
 
         val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         // Suspend DB read must stay outside enqueueLock; CommandSMBBolus.execute() re-checks freshness at execution time.

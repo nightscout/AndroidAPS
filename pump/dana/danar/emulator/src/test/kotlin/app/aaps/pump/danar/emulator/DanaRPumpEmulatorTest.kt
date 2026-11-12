@@ -2,6 +2,7 @@ package app.aaps.pump.danar.emulator
 
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.comm.RecordTypes
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import java.util.Collections
@@ -12,8 +13,7 @@ import java.util.concurrent.TimeUnit
  * Command-level tests for the DanaR RFCOMM emulator, the JVM counterpart to the Dana RS
  * emulator's `PumpEmulatorTest`.
  *
- * `DanaRPumpEmulator` was exercised only through `DanaREmulatorPumpTest`, which connects each variant
- * on a device but issues no commands, so its handlers sat near zero. These call `processCommand`
+ * On a device the DanaR scenario classes drive `DanaRPumpEmulator` through the drivers. These call `processCommand`
  * directly — no device, no execution service — and assert on the mutable [DanaRPumpState] or the
  * response bytes. Command values mirror the wire format the DanaR `Msg*` packets produce (amounts in
  * hundredths, big-endian).
@@ -129,6 +129,52 @@ class DanaRPumpEmulatorTest {
         assertThat(state.extendedBolusAmount).isEqualTo(0.0)
     }
 
+    @Test
+    fun extendedBolusStatusGivesTheSecondsItRuns() {
+        val state = DanaRPumpState(DanaRVariant.DANA_R_V2)
+        val emulator = DanaRPumpEmulator(state)
+        emulator.processCommand(0x0407, byteArrayOf(0x00, 0x64, 2))
+        // As if it had started 90 s ago, by the pump clock.
+        state.extendedBolusStartTime -= 90_000
+
+        // 0x0207: [running][half hours][amount, 2 bytes][seconds it runs, 3 bytes, low byte first]
+        val response = emulator.processCommand(0x0207, ByteArray(0))
+
+        val seconds = (response[4].toInt() and 0xFF) or (response[5].toInt() and 0xFF shl 8) or (response[6].toInt() and 0xFF shl 16)
+        assertThat(seconds).isIn(90..91)
+    }
+
+    @Test
+    fun dualBolusOnThePumpLogsBothPartsAndItsEnd() {
+        val state = DanaRPumpState(DanaRVariant.DANA_R_V2).apply { reservoirRemainingUnits = 100.0 }
+        val emulator = DanaRPumpEmulator(state)
+
+        assertThat(emulator.dualBolusOnPump(now = 0.5, extended = 1.0, halfHours = 1)).isTrue()
+        assertThat(emulator.dualBolusOnPump(now = 0.5, extended = 1.0, halfHours = 1)).isFalse()
+        emulator.stopExtendedBolusOnPump()
+
+        val codes = state.historyStore.getEventsAfter(0).map { it.code }
+        assertThat(codes).containsExactly(
+            DanaPump.HistoryEntry.DUAL_BOLUS.value, DanaPump.HistoryEntry.DUAL_EXTENDED_START.value, DanaPump.HistoryEntry.DUAL_EXTENDED_STOP.value
+        ).inOrder()
+        assertThat(state.givenBoluses).containsExactly(0.5)
+        assertThat(state.reservoirRemainingUnits).isWithin(0.001).of(99.5)
+        assertThat(state.isExtendedBolusRunning).isFalse()
+    }
+
+    @Test
+    fun aDailyTotalHasItsOwnLayout() {
+        val state = DanaRPumpState(DanaRVariant.DANA_R_V2)
+        val emulator = DanaRPumpEmulator(state)
+        state.reviewHistoryStore.addEvent(RecordTypes.RECORD_TYPE_DAILY.toInt(), System.currentTimeMillis(), 1234, 567)
+
+        // 0x3102 daily totals: [code][year][month][day][basal, 2 bytes][bolus, 2 bytes], in hundredths.
+        val response = emulator.processCommand(0x3102, ByteArray(0))
+
+        assertThat((response[4].toInt() and 0xFF shl 8) or (response[5].toInt() and 0xFF)).isEqualTo(1234)
+        assertThat((response[6].toInt() and 0xFF shl 8) or (response[7].toInt() and 0xFF)).isEqualTo(567)
+    }
+
     // --- settings: write then read back ---
 
     @Test
@@ -136,19 +182,23 @@ class DanaRPumpEmulatorTest {
         val state = DanaRPumpState(DanaRVariant.DANA_R_V2)
         val emulator = DanaRPumpEmulator(state)
 
-        // 0x330B: [timeDisplay(0=24h), buttonScroll, beepAndAlarm, lcdOnTime, backlight, _, unit, shutdown, lowReservoir]
-        val params = ByteArray(9)
+        // 0x330B: the 33 bytes of the 0x320B answer with the changes, at the same places, but the low reservoir in
+        // byte 27 (a real DanaRv2 reports it in byte 32 and takes it from byte 27).
+        val params = ByteArray(33)
         params[0] = 1     // 12h
         params[2] = 2     // beep+alarm
         params[3] = 30    // lcd on time
-        params[6] = 1     // mmol/L
-        params[8] = 15    // low reservoir rate
+        params[8] = 1     // mmol/L
+        params[9] = 22    // shutdown hour
+        params[27] = 15   // low reservoir rate
+        params[32] = 20   // the old value, as read
         emulator.processCommand(0x330B, params)
 
         assertThat(state.timeDisplayType24).isFalse()
         assertThat(state.beepAndAlarm).isEqualTo(2)
         assertThat(state.lcdOnTimeSec).isEqualTo(30)
         assertThat(state.glucoseUnit).isEqualTo(1)
+        assertThat(state.shutdownHour).isEqualTo(22)
         assertThat(state.lowReservoirRate).isEqualTo(15)
     }
 
