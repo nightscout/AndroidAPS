@@ -127,12 +127,20 @@ class FoodManagementViewModel(
         return results.mapNotNull { (mealId, result) -> given[result.id]?.let { mealId to it.amount } }.toMap()
     }
 
-    /** Saves all the data of the food POC (foods, dishes, meals, history) in one JSON file. */
+    /**
+     * Saves all the data of the food POC (foods, dishes, meals, history) and the food photos in one
+     * archive. A restore on a new phone then needs no download.
+     */
     fun exportBackup() {
         viewModelScope.launch {
             val result = runCatching {
-                val text = FoodBackupMath.encode(persistenceLayer.getFoods(), foodBook.book.value, dateUtil.now())
-                withContext(aapsIoDispatcher) { exportFiles.save(FoodBackupMath.FILE_NAME, BACKUP_MIME_TYPE, text) }
+                val foods = persistenceLayer.getFoods()
+                foodBook.load()
+                val text = FoodBackupMath.encode(foods, foodBook.book.value, dateUtil.now())
+                val images = foodImages.filesFor(foods.map { it.id })
+                val entries = mapOf(FoodBackupMath.FILE_NAME to text.encodeToByteArray()) +
+                    images.mapKeys { (key, _) -> FoodBackupMath.imageEntry(key) }
+                withContext(aapsIoDispatcher) { exportFiles.saveArchive(FoodBackupMath.ARCHIVE_NAME, FoodBackupMath.ARCHIVE_MIME_TYPE, entries) }
             }
                 .onFailure { aapsLogger.error(LTag.UI, "Food backup failed", it) }
                 .getOrDefault(FileResult.FAILED)
@@ -143,7 +151,10 @@ class FoodManagementViewModel(
     /** Opens the list of the backups found in the exports folder. */
     fun openRestore() {
         viewModelScope.launch {
-            val files = withContext(aapsIoDispatcher) { exportFiles.list(FoodBackupMath.FILE_NAME) }
+            // The archives, and the JSON files of format 1 made before.
+            val files = withContext(aapsIoDispatcher) {
+                (exportFiles.list(FoodBackupMath.ARCHIVE_NAME) + exportFiles.list(FoodBackupMath.FILE_NAME)).sortedByDescending { it.name }
+            }
             _uiState.update { it.copy(restoreFiles = files) }
         }
     }
@@ -151,14 +162,18 @@ class FoodManagementViewModel(
     fun closeRestore() = _uiState.update { it.copy(restoreFiles = null) }
 
     /**
-     * Adds what [file] has and this phone does not: foods (in the database), dishes, standard meals
-     * and eaten meals. Nothing already here is deleted or changed.
+     * Adds what [file] has and this phone does not: foods (in the database), dishes, standard meals,
+     * eaten meals and photos. Nothing already here is deleted or changed: a photo file already on the
+     * phone is kept, and a food that has a photo of the user keeps it.
      */
     fun restore(file: ExportFile) {
         closeRestore()
         viewModelScope.launch {
             try {
-                val backup = withContext(aapsIoDispatcher) { exportFiles.read(file) }?.let { FoodBackupMath.decode(it) }
+                val archive = if (file.name.endsWith(FoodBackupMath.ARCHIVE_NAME)) withContext(aapsIoDispatcher) { exportFiles.readArchive(file) } else null
+                val text = if (archive != null) archive[FoodBackupMath.FILE_NAME]?.decodeToString()
+                else withContext(aapsIoDispatcher) { exportFiles.read(file) }
+                val backup = text?.let { FoodBackupMath.decode(it) }
                 if (backup == null) {
                     showMessage(UiStrings.food_restore_invalid)
                     return@launch
@@ -170,6 +185,14 @@ class FoodManagementViewModel(
                 val merge = FoodBackupMath.merge(backup, persistenceLayer.getFoods(), foodBook.book.value)
                 val meals = merge.meals.map { checkedTreatment(it) }
                 foodBook.addRestored(merge.copy(meals = meals))
+                // OFF photos are named by barcode and shared: all are kept. A photo of the user only
+                // when its food took it, so a food that kept its own photo leaves no unused file.
+                val userKeys = merge.photos.map { it.key }.toSet()
+                archive?.forEach { (entry, bytes) ->
+                    val key = FoodBackupMath.keyOfEntry(entry) ?: return@forEach
+                    if (!key.startsWith(FoodImages.USER_KEY_PREFIX) || key in userKeys) foodImages.restoreFile(key, bytes)
+                }
+                loadData()
                 showMessage(UiStrings.food_restore_done, missing.size, merge.recipes.size, meals.size)
                 loadTreatmentLinks()
             } catch (e: Exception) {
@@ -300,11 +323,14 @@ class FoodManagementViewModel(
                     editorEnergy = food.energy?.toString() ?: "",
                     editorSaveAttempted = false,
                     editorOffProduct = null,
-                    editorImage = it.foodImages[food.id],
+                    editorImage = null,
+                    editorUserPhoto = null,
+                    editorPhotoChanged = false,
+                    showPhotoCamera = false,
                     showEditor = true
                 )
             }
-            if (uiState.value.editorImage == null) reloadImage(food.id)
+            loadEditorPhotos(food.id)
         } else {
             _uiState.update {
                 it.copy(
@@ -321,6 +347,9 @@ class FoodManagementViewModel(
                     editorSaveAttempted = false,
                     editorOffProduct = null,
                     editorImage = null,
+                    editorUserPhoto = null,
+                    editorPhotoChanged = false,
+                    showPhotoCamera = false,
                     showEditor = true
                 )
             }
@@ -328,21 +357,40 @@ class FoodManagementViewModel(
     }
 
     /**
+     * The photos of the food opened in the editor: the photo of the user, and the OFF photo kept
+     * under it.
+     *
      * A food imported from OFF whose photo file is missing (new phone, restored backup) gets it
-     * again when it is opened. Nothing happens for a food typed by hand or a product without a photo.
+     * again when it is opened. Nothing is downloaded for a food typed by hand or a product without
+     * a photo.
      */
-    private fun reloadImage(foodId: Long) {
+    private fun loadEditorPhotos(foodId: Long) {
         if (!foodImages.available) return
         viewModelScope.launch {
-            val bytes = foodImages.forFood(foodId) ?: return@launch
+            val user = foodImages.userPhoto(foodId)
+            val off = foodImages.forFood(foodId)
             _uiState.update {
-                it.copy(
-                    foodImages = it.foodImages + (foodId to bytes),
-                    editorImage = if (it.editorFood?.id == foodId) bytes else it.editorImage,
-                )
+                // The user may have taken or removed a photo while the files were read: that wins.
+                if (it.editorFood?.id != foodId) it
+                else if (it.editorPhotoChanged) it.copy(editorImage = off)
+                else it.copy(editorUserPhoto = user, editorImage = off)
             }
+            // A downloaded OFF photo is shown on the list too, unless the food shows a photo of the user there.
+            if (off != null) _uiState.update { if (foodId in it.foodImages) it else it.copy(foodImages = it.foodImages + (foodId to off)) }
         }
     }
+
+    // ---- Photo of the user (proof of concept) ----
+
+    fun openPhotoCamera() = _uiState.update { it.copy(showPhotoCamera = true) }
+
+    fun closePhotoCamera() = _uiState.update { it.copy(showPhotoCamera = false) }
+
+    /** The photo just taken. It is saved with the food, when the user presses Save. */
+    fun takePhoto(bytes: ByteArray) = _uiState.update { it.copy(editorUserPhoto = bytes, editorPhotoChanged = true, showPhotoCamera = false) }
+
+    /** The photo of the user is removed when the food is saved. The OFF photo, if any, is shown again. */
+    fun removePhoto() = _uiState.update { it.copy(editorUserPhoto = null, editorPhotoChanged = true) }
 
     // ---- Open Food Facts import (proof of concept) ----
 
@@ -893,12 +941,20 @@ class FoodManagementViewModel(
 
         val product = state.editorOffProduct
         val photo = state.editorImage
+        val userPhoto = state.editorUserPhoto
+        val photoChanged = state.editorPhotoChanged
         val lastId = state.foods.maxOfOrNull { it.id } ?: 0L
         viewModelScope.launch {
             try {
                 persistenceLayer.insertOrUpdateFood(food)
-                _uiState.update { it.copy(showEditor = false) }
-                if (product != null) linkOffProduct(food, lastId, product, photo)
+                _uiState.update { it.copy(showEditor = false, showPhotoCamera = false) }
+                if (product == null && !photoChanged) return@launch
+                val foodId = savedFoodId(food, lastId) ?: return@launch
+                // The OFF product with its photo, then the photo of the user, which is shown instead.
+                if (product != null) foodImages.link(foodId, product, photo)
+                if (photoChanged) foodImages.setUserPhoto(foodId, userPhoto)
+                val shown = foodImages.saved(listOf(foodId))[foodId]
+                _uiState.update { it.copy(foodImages = if (shown != null) it.foodImages + (foodId to shown) else it.foodImages - foodId) }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to save food", e)
             }
@@ -906,16 +962,12 @@ class FoodManagementViewModel(
     }
 
     /**
-     * Remembers the OFF product of a food just saved, with its photo. The database does not give
-     * back the id of a new food, so it is the new food with this name, read after the save.
+     * The id of a food just saved. The database does not give back the id of a new food, so it is
+     * the new food with this name, read after the save.
      */
-    private suspend fun linkOffProduct(food: FD, lastId: Long, product: OffProduct, photo: ByteArray?) {
-        val foodId = if (food.id != 0L) food.id
-        else persistenceLayer.getFoods().filter { it.id > lastId && it.name == food.name }.maxOfOrNull { it.id } ?: return
-        foodImages.link(foodId, product, photo)
-        val saved = photo ?: foodImages.saved(listOf(foodId))[foodId] ?: return
-        _uiState.update { it.copy(foodImages = it.foodImages + (foodId to saved)) }
-    }
+    private suspend fun savedFoodId(food: FD, lastId: Long): Long? =
+        if (food.id != 0L) food.id
+        else persistenceLayer.getFoods().filter { it.id > lastId && it.name == food.name }.maxOfOrNull { it.id }
 
     // ---- Category and subcategory suggestions ----
 
@@ -1053,9 +1105,14 @@ data class FoodManagementUiState(
     val editorOffGramsPerUnit: Double = 1.0,
     /** The portion the editor values were last computed for from OFF. */
     val editorOffComputedPortion: Double = 0.0,
-    /** The product photo shown in the editor, or null when there is none (yet). */
+    /** The OFF product photo of the editor food, or null when there is none (yet). */
     val editorImage: ByteArray? = null,
-    /** The saved product photos, by food id. Only foods imported from OFF have one. */
+    /** The photo taken by the user, shown instead of [editorImage]. Null when there is none. */
+    val editorUserPhoto: ByteArray? = null,
+    /** True when the user took or removed a photo in the editor: it is saved with the food. */
+    val editorPhotoChanged: Boolean = false,
+    val showPhotoCamera: Boolean = false,
+    /** The photo shown for each food on the list, by food id: the photo of the user, or else the OFF photo. */
     val foodImages: Map<Long, ByteArray> = emptyMap(),
     // Open Food Facts import (proof of concept)
     val showImport: Boolean = false,
@@ -1124,7 +1181,6 @@ private const val DAY_MS = 24 * 60 * 60 * 1000L
 /** A bolus without the note of the calculation belongs to it only when given this soon after it. */
 private const val BOLUS_TIME_WINDOW_MS = 5 * 60 * 1000L
 
-private const val BACKUP_MIME_TYPE = "application/json"
 
 /** The periods offered for the CSV export of the meals, in days. Null is "all". */
 val CSV_EXPORT_DAYS: List<Int?> = listOf(7, 14, 30, null)

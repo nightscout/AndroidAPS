@@ -36,9 +36,13 @@ internal class FoodImagesTest {
 
         val files = mutableMapOf<String, ByteArray>()
         override val available: Boolean = true
-        override fun read(barcode: String): ByteArray? = files[barcode]
-        override fun write(barcode: String, bytes: ByteArray) {
-            files[barcode] = bytes
+        override fun read(key: String): ByteArray? = files[key]
+        override fun write(key: String, bytes: ByteArray) {
+            files[key] = bytes
+        }
+
+        override fun delete(key: String) {
+            files.remove(key)
         }
     }
 
@@ -140,8 +144,93 @@ internal class FoodImagesTest {
         verifyNoInteractions(openFoodFacts)
     }
 
+    // ---- Photo of the user ----
+
+    @Test
+    fun `a photo of the user is shown instead of the OFF photo, which is kept`() = runTest {
+        book.saveOffLink(link())
+        store.files[BARCODE] = photo
+
+        sut.setUserPhoto(FOOD_ID, newPhoto)
+
+        assertThat(sut.userPhoto(FOOD_ID)).isEqualTo(newPhoto)
+        assertThat(sut.saved(listOf(FOOD_ID))[FOOD_ID]).isEqualTo(newPhoto)
+        assertThat(sut.forFood(FOOD_ID)).isEqualTo(photo)
+        assertThat(store.files[BARCODE]).isEqualTo(photo)
+    }
+
+    @Test
+    fun `removing the photo of the user shows the OFF photo again, without a download`() = runTest {
+        book.saveOffLink(link())
+        store.files[BARCODE] = photo
+        sut.setUserPhoto(FOOD_ID, newPhoto)
+
+        sut.setUserPhoto(FOOD_ID, null)
+
+        assertThat(sut.userPhoto(FOOD_ID)).isNull()
+        assertThat(sut.saved(listOf(FOOD_ID))[FOOD_ID]).isEqualTo(photo)
+        // Only the OFF file is left: the file of the user photo is deleted.
+        assertThat(store.files.keys).containsExactly(BARCODE)
+        verifyNoInteractions(openFoodFacts)
+    }
+
+    @Test
+    fun `a new photo replaces the old one and deletes its file`() = runTest {
+        sut.setUserPhoto(FOOD_ID, photo)
+        val oldKey = book.book.value.photos.single().key
+
+        sut.setUserPhoto(FOOD_ID, newPhoto)
+
+        val newKey = book.book.value.photos.single().key
+        assertThat(newKey).isNotEqualTo(oldKey)
+        assertThat(newKey).startsWith(FoodImages.USER_KEY_PREFIX)
+        assertThat(store.files.keys).containsExactly(newKey)
+        assertThat(sut.userPhoto(FOOD_ID)).isEqualTo(newPhoto)
+    }
+
+    @Test
+    fun `a food typed by hand can have a photo of the user`() = runTest {
+        sut.setUserPhoto(FOOD_ID, photo)
+
+        assertThat(sut.saved(listOf(FOOD_ID))[FOOD_ID]).isEqualTo(photo)
+        assertThat(sut.forFood(FOOD_ID)).isNull()
+    }
+
+    // ---- Backup ----
+
+    @Test
+    fun `a backup has the OFF photo and the photo of the user`() = runTest {
+        book.saveOffLink(link())
+        store.files[BARCODE] = photo
+        sut.setUserPhoto(FOOD_ID, newPhoto)
+        val userKey = book.book.value.photos.single().key
+
+        val files = sut.filesFor(listOf(FOOD_ID))
+
+        assertThat(files.keys).containsExactly(BARCODE, userKey)
+        assertThat(sut.filesFor(listOf(OTHER_FOOD_ID))).isEmpty()
+    }
+
+    @Test
+    fun `a restore never replaces a photo already on the phone`() = runTest {
+        store.files[BARCODE] = photo
+
+        assertThat(sut.restoreFile(BARCODE, newPhoto)).isFalse()
+        assertThat(store.files[BARCODE]).isEqualTo(photo)
+        assertThat(sut.restoreFile("user_1", newPhoto)).isTrue()
+        assertThat(store.files["user_1"]).isEqualTo(newPhoto)
+    }
+
+    @Test
+    fun `a restore refuses a name that could leave the photo folder`() = runTest {
+        assertThat(sut.restoreFile("../settings", photo)).isFalse()
+        assertThat(sut.restoreFile("", photo)).isFalse()
+        assertThat(store.files).isEmpty()
+    }
+
     private companion object {
 
+        const val OTHER_FOOD_ID = 8L
         const val FOOD_ID = 7L
         const val BARCODE = "3017620422003"
         const val OLD_URL = "https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.1.200.jpg"

@@ -12,6 +12,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.ui.compose.foodManagement.book.EatenMeal
 import app.aaps.ui.compose.foodManagement.book.ExportFile
+import app.aaps.ui.compose.foodManagement.book.OffLink
+import app.aaps.ui.compose.foodManagement.book.FoodPhoto
+import app.aaps.ui.compose.foodManagement.book.FoodImageStore
 import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
 import app.aaps.ui.compose.foodManagement.book.FoodBook
 import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
@@ -663,6 +666,101 @@ internal class FoodManagementViewModelTest {
         assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
         assertThat(meals.getValue("other").treatmentId).isNull()
         assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
+    }
+
+    /** Photo files in memory, for the photo tests. */
+    private class MemoryImageStore : FoodImageStore {
+
+        val files = mutableMapOf<String, ByteArray>()
+        override val available: Boolean = true
+        override fun read(key: String): ByteArray? = files[key]
+        override fun write(key: String, bytes: ByteArray) {
+            files[key] = bytes
+        }
+
+        override fun delete(key: String) {
+            files.remove(key)
+        }
+    }
+
+    @Test
+    fun `restore of an archive adds the photos, and keeps a photo already on the phone`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        val text = FoodBackupMath.encode(
+            listOf(yogurt),
+            FoodBook(
+                offLinks = listOf(OffLink(foodId = 30, barcode = "3017620422003", hasImage = true)),
+                photos = listOf(FoodPhoto(foodId = 30, key = "user_aaa")),
+            ),
+            now = 0
+        )
+        val offInBackup = byteArrayOf(1)
+        val offOnPhone = byteArrayOf(2)
+        val userInBackup = byteArrayOf(3)
+        val files = object : NoFoodExportFiles() {
+            override val available = true
+            override fun readArchive(file: ExportFile): Map<String, ByteArray> = mapOf(
+                FoodBackupMath.FILE_NAME to text.encodeToByteArray(),
+                "images/3017620422003.jpg" to offInBackup,
+                "images/user_aaa.jpg" to userInBackup,
+                "images/../evil.jpg" to byteArrayOf(9),
+            )
+        }
+        val inDb = mutableListOf<FD>()
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
+                inDb += (it.arguments[0] as FD).copy(id = 100)
+                PersistenceLayer.TransactionResult<FD>()
+            }
+        }
+        val store = MemoryImageStore().also { it.files["3017620422003"] = offOnPhone }
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(store, openFoodFacts, book, aapsLogger))
+        dispatcher.scheduler.runCurrent()
+
+        vm.restore(ExportFile("2026-11-12_100000_" + FoodBackupMath.ARCHIVE_NAME, "ref"))
+        runUntil { "user_aaa" in store.files }
+
+        assertThat(book.book.value.photos).containsExactly(FoodPhoto(foodId = 100, key = "user_aaa"))
+        assertThat(store.files["user_aaa"]).isEqualTo(userInBackup)
+        // The OFF photo already on the phone is not replaced, and a bad name is not written.
+        assertThat(store.files["3017620422003"]).isEqualTo(offOnPhone)
+        assertThat(store.files.keys).containsExactly("3017620422003", "user_aaa")
+    }
+
+    @Test
+    fun `a photo taken in the editor is saved with the food, and can be removed`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenReturn(listOf(yogurt))
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenReturn(PersistenceLayer.TransactionResult())
+        }
+        val store = MemoryImageStore()
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger))
+        dispatcher.scheduler.runCurrent()
+        val photo = byteArrayOf(1, 2, 3)
+
+        vm.openEditor(yogurt)
+        vm.openPhotoCamera()
+        vm.takePhoto(photo)
+        assertThat(vm.uiState.value.showPhotoCamera).isFalse()
+        assertThat(vm.uiState.value.editorUserPhoto).isEqualTo(photo)
+        vm.saveFood()
+        runUntil { vm.uiState.value.foodImages[30L] != null }
+
+        assertThat(book.book.value.photos.single().foodId).isEqualTo(30L)
+        assertThat(vm.uiState.value.foodImages[30L]).isEqualTo(photo)
+
+        vm.openEditor(yogurt)
+        runUntil { vm.uiState.value.editorUserPhoto != null }
+        vm.removePhoto()
+        vm.saveFood()
+        runUntil { 30L !in vm.uiState.value.foodImages }
+
+        assertThat(book.book.value.photos).isEmpty()
+        assertThat(store.files).isEmpty()
     }
 
     @Test

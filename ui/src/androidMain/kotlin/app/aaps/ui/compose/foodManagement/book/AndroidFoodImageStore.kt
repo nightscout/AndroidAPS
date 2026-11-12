@@ -22,11 +22,11 @@ class AndroidFoodImageStore(private val context: Context) : FoodImageStore {
 
     override val available: Boolean = true
 
-    override fun read(barcode: String): ByteArray? = fileOf(barcode)?.takeIf { it.exists() }?.readBytes()
+    override fun read(key: String): ByteArray? = fileOf(key)?.takeIf { it.exists() }?.readBytes()
 
     /** Written to a second file first, then renamed, so a crash never leaves half a photo. */
-    override fun write(barcode: String, bytes: ByteArray) {
-        val file = fileOf(barcode) ?: return
+    override fun write(key: String, bytes: ByteArray) {
+        val file = fileOf(key) ?: return
         folder.mkdirs()
         val temp = File(folder, "${file.name}.tmp")
         temp.writeBytes(bytes)
@@ -36,9 +36,12 @@ class AndroidFoodImageStore(private val context: Context) : FoodImageStore {
         }
     }
 
-    /** Digits only, so a barcode can never point outside the folder. */
-    private fun fileOf(barcode: String): File? =
-        if (barcode.isNotEmpty() && barcode.all { it in '0'..'9' }) File(folder, "$barcode.jpg") else null
+    override fun delete(key: String) {
+        fileOf(key)?.delete()
+    }
+
+    /** The existing OFF photos keep their name: "<barcode>.jpg". */
+    private fun fileOf(key: String): File? = if (FoodImageStore.isValidKey(key)) File(folder, "$key.jpg") else null
 
     private companion object {
 

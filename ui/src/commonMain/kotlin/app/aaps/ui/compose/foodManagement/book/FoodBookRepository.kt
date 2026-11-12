@@ -74,6 +74,13 @@ class FoodBookRepository(
         book.copy(offLinks = book.offLinks.filterNot { it.foodId == link.foodId } + link)
     }
 
+    /** Sets the photo of [photo]'s food, or replaces the one it has. */
+    suspend fun savePhoto(photo: FoodPhoto) = change { book ->
+        book.copy(photos = book.photos.filterNot { it.foodId == photo.foodId } + photo)
+    }
+
+    suspend fun removePhoto(foodId: Long) = change { book -> book.copy(photos = book.photos.filterNot { it.foodId == foodId }) }
+
     suspend fun addEatenMeal(meal: EatenMeal) = change { book -> book.copy(eaten = listOf(meal) + book.eaten) }
 
     /** Adds what a restore found missing. Nothing already there is changed. */
@@ -82,6 +89,7 @@ class FoodBookRepository(
             recipes = (book.recipes + merge.recipes).sortedBy { it.name.lowercase() },
             eaten = (book.eaten + merge.meals).sortedByDescending { it.timestamp },
             offLinks = book.offLinks + merge.offLinks,
+            photos = book.photos + merge.photos,
         )
     }
 

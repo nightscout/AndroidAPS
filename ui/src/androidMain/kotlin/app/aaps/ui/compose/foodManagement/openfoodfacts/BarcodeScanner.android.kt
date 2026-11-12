@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -55,6 +56,17 @@ internal actual val barcodeScannerAvailable: Boolean = true
 // real PR, both should share one camera composable in :core:ui instead of being duplicated.
 @Composable
 internal actual fun BarcodeScanner(onScanned: (String) -> Unit, modifier: Modifier) {
+    WithCameraPermission(refusedText = UiStrings.food_off_camera_refused, modifier = modifier) {
+        CameraPreview(onScanned = onScanned, modifier = modifier)
+    }
+}
+
+/**
+ * Shows [content] when the app may use the camera. Asks once; when the user refuses, says why the
+ * camera is needed ([refusedText]) with a button to ask again.
+ */
+@Composable
+internal fun WithCameraPermission(refusedText: TextRef, modifier: Modifier, content: @Composable () -> Unit) {
     val context = LocalContext.current
     var granted by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
@@ -66,11 +78,11 @@ internal actual fun BarcodeScanner(onScanned: (String) -> Unit, modifier: Modifi
     }
     LaunchedEffect(Unit) { if (!granted) launcher.launch(Manifest.permission.CAMERA) }
 
-    if (granted) CameraPreview(onScanned = onScanned, modifier = modifier)
+    if (granted) content()
     else Box(modifier = modifier.padding(AapsSpacing.xxLarge), contentAlignment = Alignment.Center) {
         if (refused) Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
             Text(
-                text = stringResource(UiStrings.food_off_camera_refused),
+                text = stringResource(refusedText),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )

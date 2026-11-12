@@ -13,9 +13,13 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
- * The product photos of the foods imported from Open Food Facts.
+ * The food photos: the product photos of the foods imported from Open Food Facts, and the photos
+ * taken by the user ([FoodPhoto]). A photo of the user is shown instead of the OFF photo; the OFF
+ * file is kept, so removing the photo of the user shows it again without a download.
  *
  * Nothing is added to the database: the food book keeps which product a food came from
  * ([OffLink]), and [FoodImageStore] keeps the photo file. When the file is missing (new phone,
@@ -56,19 +60,69 @@ class FoodImages(
         write(product.barcode, photo)
     }
 
-    /** The saved photos of the foods in [foodIds] that have one. Nothing is downloaded. */
+    /**
+     * The photo to show for each food of [foodIds] that has one: the photo of the user, or else the
+     * saved OFF photo. Nothing is downloaded.
+     */
     suspend fun saved(foodIds: Collection<Long>): Map<Long, ByteArray> {
         if (!store.available) return emptyMap()
         foodBook.load()
-        val links = foodBook.book.value.offLinks.filter { it.foodId in foodIds && it.hasImage }
+        val book = foodBook.book.value
+        val links = book.offLinks.filter { it.foodId in foodIds && it.hasImage }
+        val photos = book.photos.filter { it.foodId in foodIds }
         return withContext(aapsIoDispatcher) {
-            val byBarcode = links.map { it.barcode }.distinct().associateWith { runCatching { store.read(it) }.getOrNull() }
-            links.mapNotNull { link -> byBarcode[link.barcode]?.let { link.foodId to it } }.toMap()
+            val byBarcode = links.map { it.barcode }.distinct().associateWith { read(it) }
+            val off = links.mapNotNull { link -> byBarcode[link.barcode]?.let { link.foodId to it } }.toMap()
+            off + photos.mapNotNull { photo -> read(photo.key)?.let { photo.foodId to it } }
         }
     }
 
+    /** The photo the user took for [foodId], or null when there is none. */
+    suspend fun userPhoto(foodId: Long): ByteArray? {
+        if (!store.available) return null
+        foodBook.load()
+        val photo = foodBook.book.value.photos.firstOrNull { it.foodId == foodId } ?: return null
+        return withContext(aapsIoDispatcher) { read(photo.key) }
+    }
+
     /**
-     * The photo of [foodId]. When OFF has one but the file is missing, it is downloaded again. When
+     * Sets [bytes] as the photo of the user for [foodId], or removes it when [bytes] is null. The file
+     * of the old photo is deleted. The OFF photo is never touched.
+     */
+    suspend fun setUserPhoto(foodId: Long, bytes: ByteArray?) {
+        if (!store.available) return
+        foodBook.load()
+        val old = foodBook.book.value.photos.firstOrNull { it.foodId == foodId }
+        if (bytes != null) {
+            val key = newUserKey()
+            if (!write(key, bytes)) return
+            foodBook.savePhoto(FoodPhoto(foodId, key))
+        } else foodBook.removePhoto(foodId)
+        old?.let { withContext(aapsIoDispatcher) { runCatching { store.delete(it.key) } } }
+    }
+
+    /** The photo files used by the foods of [foodIds], by key, for a backup: OFF photos and photos of the user. */
+    suspend fun filesFor(foodIds: Collection<Long>): Map<String, ByteArray> {
+        if (!store.available) return emptyMap()
+        foodBook.load()
+        val book = foodBook.book.value
+        val keys = book.offLinks.filter { it.foodId in foodIds && it.hasImage }.map { it.barcode } +
+            book.photos.filter { it.foodId in foodIds }.map { it.key }
+        return withContext(aapsIoDispatcher) { keys.distinct().mapNotNull { key -> read(key)?.let { key to it } }.toMap() }
+    }
+
+    /**
+     * Saves a photo file of a backup. A file already on the phone is never replaced. Returns false
+     * when the file was not written (already there, a key that is not valid, or an error).
+     */
+    suspend fun restoreFile(key: String, bytes: ByteArray): Boolean {
+        if (!store.available || !FoodImageStore.isValidKey(key)) return false
+        if (withContext(aapsIoDispatcher) { read(key) } != null) return false
+        return write(key, bytes)
+    }
+
+    /**
+     * The OFF photo of [foodId]. When OFF has one but the file is missing, it is downloaded again. When
      * the address has changed, the product is read again to find the new one. Null when the food was
      * not imported, OFF has no photo, or OFF cannot be reached now (it is tried again next time).
      */
@@ -76,7 +130,7 @@ class FoodImages(
         if (!store.available) return@withLock null
         foodBook.load()
         val link = foodBook.book.value.offLinks.firstOrNull { it.foodId == foodId } ?: return@withLock null
-        withContext(aapsIoDispatcher) { runCatching { store.read(link.barcode) }.getOrNull() }?.let { return@withLock it }
+        withContext(aapsIoDispatcher) { read(link.barcode) }?.let { return@withLock it }
         if (!link.hasImage) return@withLock null
 
         val atOldAddress = link.imageUrl?.let { openFoodFacts.image(it) }
@@ -101,8 +155,20 @@ class FoodImages(
         }
     }
 
-    private suspend fun write(barcode: String, bytes: ByteArray) = withContext(aapsIoDispatcher) {
-        runCatching { store.write(barcode, bytes) }
-            .onFailure { e -> aapsLogger.error(LTag.UI, "Food POC: cannot save a product photo", e) }
+    private fun read(key: String): ByteArray? = runCatching { store.read(key) }.getOrNull()
+
+    private suspend fun write(key: String, bytes: ByteArray): Boolean = withContext(aapsIoDispatcher) {
+        runCatching { store.write(key, bytes) }
+            .onFailure { e -> aapsLogger.error(LTag.UI, "Food POC: cannot save a food photo", e) }
+            .isSuccess
+    }
+
+    /** A new key for each photo, so an old backup never brings back a photo under the name of a newer one. */
+    @OptIn(ExperimentalUuidApi::class)
+    private fun newUserKey(): String = USER_KEY_PREFIX + Uuid.random().toHexString().take(16)
+
+    companion object {
+
+        const val USER_KEY_PREFIX = "user_"
     }
 }

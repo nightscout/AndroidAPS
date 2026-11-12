@@ -34,7 +34,8 @@ class FoodBackupMathTest {
 
     @Test
     fun `a newer format or another file is refused`() {
-        val newer = FoodBackupMath.encode(emptyList(), FoodBook(), 0).replace("\"format\": 1", "\"format\": 2")
+        val newer = FoodBackupMath.encode(emptyList(), FoodBook(), 0).replace("\"format\": 2", "\"format\": 3")
+        assertTrue(newer.contains("\"format\": 3"))
         assertNull(FoodBackupMath.decode(newer))
         assertNull(FoodBackupMath.decode("{\"name\":\"not a backup\"}"))
         assertNull(FoodBackupMath.decode("not json"))
@@ -63,6 +64,42 @@ class FoodBackupMathTest {
         val merge = FoodBackupMath.merge(backup, here, FoodBook(offLinks = listOf(breadLink)))
 
         assertEquals(listOf(yogurtLink.copy(foodId = 51)), merge.offLinks)
+    }
+
+    @Test
+    fun `the photo of the user follows the food found on this phone, and a food keeps its own`() {
+        val yogurtPhoto = FoodPhoto(foodId = 4, key = "user_aaa")
+        val breadPhoto = FoodPhoto(foodId = 3, key = "user_bbb")
+        val text = FoodBackupMath.encode(listOf(bread, yogurt), FoodBook(photos = listOf(yogurtPhoto, breadPhoto)), now = 5000)
+        val backup = assertNotNull(FoodBackupMath.decode(text))
+        // Here yogurt is food 51; bread is food 50 and already has a photo taken on this phone.
+        val here = listOf(FD(id = 50, name = "Bread", portion = 100.0, unit = "g", carbs = 50), FD(id = 51, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6))
+        val herePhoto = FoodPhoto(foodId = 50, key = "user_ccc")
+
+        val merge = FoodBackupMath.merge(backup, here, FoodBook(photos = listOf(herePhoto)))
+
+        assertEquals(listOf(yogurtPhoto.copy(foodId = 51)), merge.photos)
+    }
+
+    @Test
+    fun `a backup of format 1, without photos, is still read`() {
+        val old = FoodBackupMath.encode(listOf(bread), FoodBook(), now = 1)
+            .replace("\"format\": 2", "\"format\": 1")
+            .replace(Regex(",\\s*\"photos\": \\[\\s*]"), "")
+        assertTrue(!old.contains("photos"))
+        val backup = assertNotNull(FoodBackupMath.decode(old))
+        assertEquals(1, backup.format)
+        assertEquals(emptyList(), backup.photos)
+    }
+
+    @Test
+    fun `photo entries of the archive are found by their key`() {
+        assertEquals("images/user_aaa.jpg", FoodBackupMath.imageEntry("user_aaa"))
+        assertEquals("user_aaa", FoodBackupMath.keyOfEntry("images/user_aaa.jpg"))
+        assertEquals("3017620422003", FoodBackupMath.keyOfEntry("images/3017620422003.jpg"))
+        assertNull(FoodBackupMath.keyOfEntry(FoodBackupMath.FILE_NAME))
+        assertNull(FoodBackupMath.keyOfEntry("images/../settings.jpg"))
+        assertNull(FoodBackupMath.keyOfEntry("images/sub/a.jpg"))
     }
 
     @Test

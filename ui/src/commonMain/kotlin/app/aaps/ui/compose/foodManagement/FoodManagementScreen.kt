@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.foodManagement
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -324,6 +326,10 @@ fun FoodManagementScreen(
                     onProteinChange = viewModel::updateEditorProtein,
                     onEnergyChange = viewModel::updateEditorEnergy,
                     onOffPerServingChange = viewModel::setOffPerServing,
+                    onOpenPhotoCamera = { focusManager.clearFocus(); viewModel.openPhotoCamera() },
+                    onClosePhotoCamera = viewModel::closePhotoCamera,
+                    onPhoto = viewModel::takePhoto,
+                    onRemovePhoto = viewModel::removePhoto,
                     onSave = { focusManager.clearFocus(); viewModel.saveFood() },
                     onCancel = { focusManager.clearFocus(); viewModel.closeEditor() },
                     isEditing = state.editorFood != null
@@ -517,6 +523,10 @@ internal fun FoodEditorContent(
     onCancel: () -> Unit,
     isEditing: Boolean,
     onOffPerServingChange: (Boolean) -> Unit = {},
+    onOpenPhotoCamera: () -> Unit = {},
+    onClosePhotoCamera: () -> Unit = {},
+    onPhoto: (ByteArray) -> Unit = {},
+    onRemovePhoto: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -534,8 +544,33 @@ internal fun FoodEditorContent(
             style = MaterialTheme.typography.titleLarge
         )
 
-        // The package, to check the values against it. Downloaded again when the file is missing.
-        state.editorImage?.let { FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize, modifier = Modifier.align(Alignment.CenterHorizontally)) }
+        // The photo of the user, or else the package from OFF, to check the values against it.
+        // The OFF photo is downloaded again when the file is missing.
+        (state.editorUserPhoto ?: state.editorImage)?.let {
+            FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize, modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
+        if (foodPhotoCameraAvailable) {
+            if (state.showPhotoCamera) {
+                FoodPhotoCamera(
+                    onPhoto = onPhoto,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(4f / 3f)
+                )
+                TextButton(onClick = onClosePhotoCamera, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    Text(stringResource(CoreUiStrings.cancel))
+                }
+            } else Row(modifier = Modifier.align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                TextButton(onClick = onOpenPhotoCamera) {
+                    Icon(Icons.Filled.PhotoCamera, contentDescription = null)
+                    Spacer(Modifier.width(AapsSpacing.small))
+                    Text(stringResource(UiStrings.food_photo_take))
+                }
+                if (state.editorUserPhoto != null) TextButton(onClick = onRemovePhoto) {
+                    Text(stringResource(UiStrings.food_photo_remove))
+                }
+            }
+        }
 
         state.editorOffProduct?.let {
             OffEditorBanner(product = it, perServing = state.editorOffPerServing, onPerServingChange = onOffPerServingChange)

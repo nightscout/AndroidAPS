@@ -17,6 +17,20 @@ data class FoodBook(
     val recipes: List<Recipe> = emptyList(),
     val eaten: List<EatenMeal> = emptyList(),
     val offLinks: List<OffLink> = emptyList(),
+    /** Added later: an older file reads as "no photo taken". */
+    val photos: List<FoodPhoto> = emptyList(),
+)
+
+/**
+ * A photo taken by the user for a food. It is shown instead of the Open Food Facts photo, which is
+ * kept: removing the photo of the user shows the OFF photo again, without downloading it.
+ *
+ * @param key name of the photo file in [FoodImageStore], for example "user_3f9a0c1e"
+ */
+@Serializable
+data class FoodPhoto(
+    val foodId: Long,
+    val key: String,
 )
 
 /**

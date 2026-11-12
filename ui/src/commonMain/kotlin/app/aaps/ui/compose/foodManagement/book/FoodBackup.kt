@@ -23,6 +23,8 @@ data class FoodBackup(
     val eaten: List<EatenMeal>,
     /** Added later in format 1: an older file reads as "no imported product". */
     val offLinks: List<OffLink> = emptyList(),
+    /** Format 2: the photos taken by the user. Their files are in the archive, see [FoodBackupMath.IMAGE_FOLDER]. */
+    val photos: List<FoodPhoto> = emptyList(),
 )
 
 /** A food as saved in the backup. [id] is its database id on the phone that made the backup. */
@@ -42,7 +44,7 @@ data class BackupFood(
 )
 
 /** What a restore adds to the food book: only what is not there yet. */
-data class BackupMerge(val recipes: List<Recipe>, val meals: List<EatenMeal>, val offLinks: List<OffLink> = emptyList())
+data class BackupMerge(val recipes: List<Recipe>, val meals: List<EatenMeal>, val offLinks: List<OffLink> = emptyList(), val photos: List<FoodPhoto> = emptyList())
 
 /**
  * Writes and reads backups, and decides what a restore adds.
@@ -53,8 +55,32 @@ data class BackupMerge(val recipes: List<Recipe>, val meals: List<EatenMeal>, va
  */
 internal object FoodBackupMath {
 
-    const val FORMAT = 1
+    /**
+     * 1: one JSON file ([FILE_NAME]), without photos.
+     * 2: an archive ([ARCHIVE_NAME]) with the JSON file and the photo files ([IMAGE_FOLDER]).
+     */
+    const val FORMAT = 2
     const val FILE_NAME = "FoodBackup.json"
+
+    /**
+     * A zip file with an extension of its own: Android does not know it, so it does not offer to
+     * open it as a zip, and only AAPS lists it for a restore.
+     */
+    const val ARCHIVE_NAME = "FoodBackup.aapsfood"
+    const val ARCHIVE_MIME_TYPE = "application/octet-stream"
+
+    /** The folder of the photo files in the archive: "images/<key>.jpg". */
+    const val IMAGE_FOLDER = "images/"
+    const val IMAGE_EXTENSION = ".jpg"
+
+    /** The archive entry name of the photo [key]. */
+    fun imageEntry(key: String): String = IMAGE_FOLDER + key + IMAGE_EXTENSION
+
+    /** The photo key of an archive entry, or null when the entry is not a photo with a valid key. */
+    fun keyOfEntry(entry: String): String? =
+        entry.takeIf { it.startsWith(IMAGE_FOLDER) && it.endsWith(IMAGE_EXTENSION) }
+            ?.removePrefix(IMAGE_FOLDER)?.removeSuffix(IMAGE_EXTENSION)
+            ?.takeIf { FoodImageStore.isValidKey(it) }
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -71,6 +97,7 @@ internal object FoodBackupMath {
                 recipes = book.recipes,
                 eaten = book.eaten,
                 offLinks = book.offLinks,
+                photos = book.photos,
             )
         )
 
@@ -118,7 +145,13 @@ internal object FoodBackupMath {
             .mapNotNull { link -> foodIds[link.foodId]?.let { link.copy(foodId = it) } }
             .filter { it.foodId !in linkedIds }
             .distinctBy { it.foodId }
-        return BackupMerge(recipes, meals, offLinks)
+        // The same for the photo of the user: a food that already has one keeps it.
+        val photoIds = book.photos.map { it.foodId }.toSet()
+        val photos = backup.photos
+            .mapNotNull { photo -> foodIds[photo.foodId]?.let { photo.copy(foodId = it) } }
+            .filter { it.foodId !in photoIds }
+            .distinctBy { it.foodId }
+        return BackupMerge(recipes, meals, offLinks, photos)
     }
 
     private fun keyOf(name: String, portion: Double, unit: String, carbs: Int) = listOf(name.trim().lowercase(), portion.toString(), unit.trim().lowercase(), carbs.toString())

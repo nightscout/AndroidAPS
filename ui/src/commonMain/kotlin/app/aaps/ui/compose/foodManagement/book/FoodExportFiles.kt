@@ -20,6 +20,15 @@ interface FoodExportFiles {
 
     /** The text of [file], or null when it cannot be read. */
     fun read(file: ExportFile): String?
+
+    /**
+     * Saves [entries] (entry name to content) as one new zip file, named like [save] does. The file
+     * keeps the extension of [name], whatever the content is.
+     */
+    fun saveArchive(name: String, mimeType: String, entries: Map<String, ByteArray>): FileResult
+
+    /** The entries of the zip [file], or null when it cannot be read or is too large. */
+    fun readArchive(file: ExportFile): Map<String, ByteArray>?
 }
 
 /**
@@ -50,4 +59,8 @@ open class NoFoodExportFiles : FoodExportFiles {
     override fun list(suffix: String): List<ExportFile> = emptyList()
 
     override fun read(file: ExportFile): String? = null
+
+    override fun saveArchive(name: String, mimeType: String, entries: Map<String, ByteArray>): FileResult = FileResult.FAILED
+
+    override fun readArchive(file: ExportFile): Map<String, ByteArray>? = null
 }
