@@ -27,6 +27,7 @@
     <string name="commanderror">Errore comando</string>
     <string name="speederror">Errore velocità</string>
     <string name="insulinlimitviolation">Violazione limite insulina</string>
+    <string name="diaconn_g8_bolus_stopped_by_pump" comment="%1$s=insulin given, with unit. Example: 0.30 U">La pompa ha fermato il bolo dopo %1$s. Controllare la pompa prima del bolo successivo.</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="bolus_step">Incremento bolo</string>
     <string name="basal_step">Incremento basale</string>
