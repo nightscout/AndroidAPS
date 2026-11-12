@@ -27,6 +27,7 @@
     <string name="commanderror">Opdracht fout</string>
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
+    <string name="diaconn_g8_bolus_stopped_by_pump" comment="%1$s=insulin given, with unit. Example: 0.30 U">De pomp heeft de bolustoediening na %1$s gestopt. Controleer de pomp voordat een volgende bolus wordt toegediend.</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
@@ -134,4 +135,5 @@
     <string name="bolus_speed_8">8 E/min</string>
     <string name="diaconn_pairing_successful">Succesvol gekoppeld!</string>
     <string name="diaconn_pairing_successful_message">De pomp is nu verbonden en klaar voor gebruik.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Cloud synchronisatie: %1$d / %2$d</string>
 </resources>
