@@ -10,7 +10,6 @@ import app.aaps.di.testGraphs
 import app.aaps.e2e.scenario.PumpScenario
 import app.aaps.e2e.scenario.PumpUnderTest
 import app.aaps.pump.carelevo.CarelevoPumpPlugin
-import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.di.CarelevoAccessors
 import app.aaps.pump.carelevo.emulator.CarelevoEmulatorBleTransport
@@ -18,6 +17,8 @@ import app.aaps.pump.carelevo.emulator.CarelevoPumpEmulator
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
+import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
+import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
@@ -27,7 +28,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.Collections
 import kotlin.jvm.optionals.getOrNull
 
@@ -94,12 +94,30 @@ class CarelevoPumpUnderTest : PumpUnderTest {
         }
     }
 
-    /** As the wizard's discard: a stop through the queue, and the patch is released. */
+    /**
+     * As the user discards the patch on the overview screen: a stop through the queue, and when the patch cannot be
+     * reached, the patch is removed from AAPS anyway.
+     */
     override fun unpair(scenario: PumpScenario) {
-        val result = runBlocking { scenario.commandQueue.customCommand(CmdDiscard()) }
-        check(result.success) { "Discard failed: ${result.comment}" }
+        val viewModels = ViewModelStore()
+        val events = Collections.synchronizedList(mutableListOf<Any>())
+        val listening = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        try {
+            lateinit var overview: CarelevoOverviewViewModel
+            scenario.onMain { overview = ViewModelProvider(viewModels, testGraphs.viewModelFactory).get(CarelevoOverviewViewModel::class.java) }
+            listening.collectInto(events, overview.event)
+            scenario.onMain { overview.startDiscardProcess() }
+            val end = SystemClock.uptimeMillis() + DISCARD_TIMEOUT
+            while (accessors.carelevoPatch.patchState.value?.getOrNull() != PatchState.NotConnectedNotBooting) {
+                check(CarelevoOverviewEvent.DiscardFailed !in events) { "The discard failed. Events: $events" }
+                check(SystemClock.uptimeMillis() < end) { "The patch is still there. Events: $events" }
+                SystemClock.sleep(PumpScenario.POLL_MS)
+            }
+        } finally {
+            listening.cancel()
+            scenario.onMain { viewModels.clear() }
+        }
         scenario.awaitQueueIdle()
-        scenario.awaitTrue("no patch any more") { accessors.carelevoPatch.patchState.value?.getOrNull() == PatchState.NotConnectedNotBooting }
     }
 
     override fun restoreEmulator(saved: ByteArray, emulators: PumpEmulators) {
@@ -128,5 +146,8 @@ class CarelevoPumpUnderTest : PumpUnderTest {
 
         /** Pairing includes a 5 s scan, and a step can retry once. */
         const val STEP_TIMEOUT = 60_000L
+
+        /** A patch that cannot be reached: the queue gives up on the link, then the patch is removed anyway. */
+        const val DISCARD_TIMEOUT = 90_000L
     }
 }

@@ -80,6 +80,18 @@ class DiaconnEmulatorBleTransport(
         return true
     }
 
+    /**
+     * A Diaconn is kept: the same pump, back after a new battery and in range. UNVERIFIED: that a temp basal and an
+     * extended bolus do not run on after a battery change, and that the pump logs no more than its reset then.
+     */
+    override fun replaceWithNewPump(): Boolean {
+        synchronized(emulator.state) {
+            emulator.state.tempBasalRunning = false
+            emulator.state.extendedBolus = null
+        }
+        return setOutOfRange(false)
+    }
+
     override fun setOutOfRange(outOfRange: Boolean): Boolean {
         this.outOfRange = outOfRange
         if (outOfRange) breakLink()

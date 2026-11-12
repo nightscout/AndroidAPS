@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -87,6 +90,7 @@ import java.time.Instant as JavaInstant
 @ViewModelKey
 class CarelevoOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
+    private val notificationManager: NotificationManager,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
     private val aapsLogger: AAPSLogger,
@@ -522,12 +526,9 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun handlePatchDiscardResponse(response: ResponseResult<*>, address: String?) {
+    private fun handlePatchDiscardResponse(response: ResponseResult<*>) {
         when (response) {
-            is ResponseResult.Success -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] success")
-                carelevoPatch.discardTeardown(address)
-            }
+            is ResponseResult.Success -> aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] success")
 
             else                      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] failed or error")
@@ -543,15 +544,37 @@ class CarelevoOverviewViewModel @Inject constructor(
         triggerEvent(CarelevoOverviewEvent.DiscardFailed)
     }
 
-    /** Only reached from [startDiscardProcess], which already holds the operation lock. */
+    /**
+     * Removes a patch that could not be reached from AAPS. Only reached from [startDiscardProcess], which already holds
+     * the operation lock.
+     *
+     * The removal runs to its end also when the screen goes away (D9). Cut by the screen, it deleted the patch between
+     * the end of its temp basal and the end of its extended bolus, and AAPS went on counting the extended bolus. So only
+     * the result shown on the screen ends with the screen, and the removal holds no reference to this ViewModel.
+     */
+    @Suppress("CheckResult")
     private fun startPatchForceDiscard() {
         val address = carelevoPatch.getPatchInfoAddress()
-        compositeDisposable += patchForceDiscardUseCase.execute()
+        val patch = carelevoPatch
+        val notifications = notificationManager
+        val logger = aapsLogger
+        val notReached = rh.gs(R.string.carelevo_discarded_not_reached)
+        val removal = patchForceDiscardUseCase.execute()
             .timeout(10, TimeUnit.SECONDS)
             .subscribeOn(aapsSchedulers.io)
+            .doOnSuccess { response ->
+                if (response is ResponseResult.Success) {
+                    patch.discardTeardown(address)
+                    // The patch was not told to stop, so the user must take it off.
+                    notifications.post(NotificationId.PUMP_WARNING, notReached, level = NotificationLevel.IMPORTANT)
+                }
+            }
+            .cache()
+        removal.subscribe({}, { error -> logger.error(LTag.PUMPCOMM, "[startPatchDiscard] removal failed", error) })
+        compositeDisposable += removal
             .observeOn(aapsSchedulers.main)
             .subscribe(
-                { response -> handlePatchDiscardResponse(response, address) },
+                { response -> handlePatchDiscardResponse(response) },
                 { error -> handlePatchDiscardError(error) }
             )
     }

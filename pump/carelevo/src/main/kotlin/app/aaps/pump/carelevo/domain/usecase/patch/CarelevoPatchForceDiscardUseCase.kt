@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.domain.usecase.patch
 
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
@@ -20,7 +21,8 @@ import kotlin.time.Clock
 class CarelevoPatchForceDiscardUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,
     private val infusionInfoRepository: CarelevoInfusionInfoRepository,
-    private val userSettingInfoRepository: CarelevoUserSettingInfoRepository
+    private val userSettingInfoRepository: CarelevoUserSettingInfoRepository,
+    private val pumpSync: PumpSync
 ) {
 
     fun execute(): Single<ResponseResult<CarelevoUseCaseResponse>> {
@@ -47,6 +49,10 @@ class CarelevoPatchForceDiscardUseCase @Inject constructor(
                 if (!deleteInfusionInfoResult) {
                     throw IllegalStateException("delete infusion info is failed")
                 }
+                // A discarded patch gives nothing more, so AAPS counts nothing more from it: its temp basal and extended
+                // bolus end now. Both discards come here, the one the patch confirmed and the one of a patch that could
+                // not be reached (D9). Before, they ran on until the next patch was activated.
+                pumpSync.connectNewPump()
                 ResultSuccess
             }.fold(
                 onSuccess = {

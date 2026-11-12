@@ -84,6 +84,14 @@ class EquilEmulatorBleTransport(
     override fun loseCommand(command: EmulatedCommand): Boolean = emulator.loseCommand(command)
     override fun loseAnswer(command: EmulatedCommand): Boolean = emulator.loseAnswer(command)
 
+    /** A new pod, in range. Only between connections: the old pod is out of range or its link is closed. */
+    override fun replaceWithNewPump(): Boolean {
+        if (connected) breakLink()
+        emulator.replaceWithNewPod()
+        outOfRange = false
+        return true
+    }
+
     /** The pump logs the alarm: the driver reads it from the pump log at its next connection. */
     override fun raise(alarm: EmulatedAlarm): Boolean = emulator.raise(alarm)
 

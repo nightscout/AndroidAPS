@@ -38,7 +38,10 @@ interface PumpUnderTest {
     /** Pairs the pump, or activates a patch, until it can deliver. */
     fun pair(scenario: PumpScenario)
 
-    /** The pump is forgotten, and AAPS has no pump paired any more. */
+    /**
+     * The user removes the pump as the app offers it, and AAPS has no pump paired any more. It must work also when the
+     * pump does not answer (`aDeadPumpCanBeRemoved`), so it goes the user's way, with the screen's own ViewModel.
+     */
     fun unpair(scenario: PumpScenario)
 
     /** Puts the emulator that [PumpEmulatorControl.saveState] saved in place, for the app start after a kill. */

@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.database.DanaHistoryDatabase
@@ -75,7 +76,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 decimalFormatter,
                 pumpEnactResultProvider,
                 blePreCheck,
-                bolusProgressData, org.mockito.kotlin.mock<NotificationManager>()
+                bolusProgressData, org.mockito.kotlin.mock<PumpSync>(), org.mockito.kotlin.mock<NotificationManager>()
             )
         danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
     }

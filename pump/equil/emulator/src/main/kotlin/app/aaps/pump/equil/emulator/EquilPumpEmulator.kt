@@ -47,7 +47,22 @@ import kotlin.math.roundToInt
  * - Time set (0x01,0x00 — shares type with model set, distinguished by port)
  * - Pair (0x0D,0x0D port — special key exchange)
  */
-class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private val aapsLogger: AAPSLogger? = null) {
+class EquilPumpEmulator(state: EquilPumpState = EquilPumpState(), private val aapsLogger: AAPSLogger? = null) {
+
+    /** All the pod holds. A new pod takes its place in [replaceWithNewPod]. */
+    var state: EquilPumpState = state
+        private set
+
+    /**
+     * A new pod takes the place of this one, as after the user removed a pod: not paired, nothing running, a full
+     * reservoir. Its serial comes with the next discovery scan, as on the real pump.
+     */
+    fun replaceWithNewPod() {
+        state = EquilPumpState()
+        lostCommands.clear()
+        lostAnswers.clear()
+        reset()
+    }
 
     private var phase = Phase.AWAITING_INITIAL
     private var reqIndex = 10

@@ -254,10 +254,12 @@ class PluginLifetimeWorkScanTest {
                 "before anything is queued. The only site here where cancelling really does prevent the command."
         ),
         "DanaRSPlugin.kt#changePump" to Site(
-            1,
+            2,
             "readStatus(device_changed). Status read, no dosing. The command is queued before the await, so a " +
                 "cancel only abandons the answer - but CommandExecutor drops the whole queue when the new " +
-                "driver reports !isConfigured(), so nothing reaches a pump. SAFE to abandon."
+                "driver reports !isConfigured(), so nothing reaches a pump. SAFE to abandon. " +
+                "connectNewPump() after an unpair (D9): ends the temp basal and extended bolus of the removed pump, no " +
+                "pump talk. Cancelled, they end at the next pairing as before. SAFE to abandon."
         ),
         "DiaconnG8Plugin.kt#changePump" to Site(
             1,
