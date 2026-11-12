@@ -56,6 +56,7 @@ import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -266,6 +267,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             else MsgBolusStartWithSpeed(injector, detailedBolusInfo.insulin, preferencesSpeed)
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
+        danaPump.bolusStoppedByPump = false
         val bolusStart = System.currentTimeMillis()
         var connectionBroken = false
         if (detailedBolusInfo.insulin > 0) {
@@ -306,7 +308,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
-        appScope.launch {
+        appScope.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             // load last bolus status
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
@@ -352,7 +354,9 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
     override fun setUserOptions(): PumpEnactResult {
         if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
-        val done = sendToPump(MsgSetUserOptions(injector))
+        val message = MsgSetUserOptions(injector)
+        val done = sendToPump(message)
+        if (done) message.written?.let { danaPump.userOptionsWritten(it) }
         SystemClock.sleep(200)
         return pumpEnactResultProvider().success(done)
     }

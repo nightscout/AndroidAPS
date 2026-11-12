@@ -338,7 +338,9 @@ class DanaRSService : MetroService() {
     fun setUserSettings(): PumpEnactResult {
         val message = danaRSPacketOptionSetUserOption()
         sendMessage(message)
-        return pumpEnactResultProvider().success(message.success())
+        val done = message.success()
+        if (done) message.written?.let { danaPump.userOptionsWritten(it) }
+        return pumpEnactResultProvider().success(done)
     }
 
     fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
@@ -397,7 +399,7 @@ class DanaRSService : MetroService() {
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
-        appScope.launch {
+        appScope.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             // reread bolus status
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))

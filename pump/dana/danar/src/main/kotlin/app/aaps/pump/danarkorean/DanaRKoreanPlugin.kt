@@ -183,14 +183,8 @@ class DanaRKoreanPlugin(
             .bolusDelivered(delivered.cU)
         // Enacted = the pump really gave insulin.
         result.enacted(result.success && delivered.cU > 0)
-        if (!result.success) result.comment(
-            rh.gs(
-                app.aaps.pump.dana.R.string.boluserrorcode,
-                detailedBolusInfo.insulin,
-                delivered.cU,
-                danaPump.bolusStartErrorCode
-            )
-        ) else result.comment(app.aaps.core.ui.R.string.ok)
+        if (!result.success) result.comment(danaPump.bolusFailure(rh, detailedBolusInfo.insulin, delivered.cU))
+        else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         // Only what the pump gave. A bolus it never gave was stored as a 0 U record, as the plain DanaR does not.
         if (delivered.cU > 0)

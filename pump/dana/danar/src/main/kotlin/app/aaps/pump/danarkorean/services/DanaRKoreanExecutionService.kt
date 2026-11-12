@@ -44,6 +44,7 @@ import app.aaps.pump.danarkorean.comm.MsgCheckValueK
 import app.aaps.pump.danarkorean.comm.MsgSettingBasal_k
 import app.aaps.pump.danarkorean.comm.MsgStatusBasic_k
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -201,6 +202,7 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
         val start = MsgBolusStart(injector, detailedBolusInfo.insulin)
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
+        danaPump.bolusStoppedByPump = false
         var connectionBroken = false
         if (detailedBolusInfo.insulin > 0) {
             danaPump.bolusingDetailedBolusInfo = detailedBolusInfo
@@ -238,7 +240,7 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
                 bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(counted))
             }
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-            appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
+            appScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok)) }
         }
         return !start.failed && !connectionBroken
     }
