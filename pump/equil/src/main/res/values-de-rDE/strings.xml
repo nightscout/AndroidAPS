@@ -3,6 +3,7 @@
     <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Equil 5.3 oder neuere Patch-Pumpe</string>
     <!--  start  -->
+    <string name="equil_basal_speed">Basisbasal</string>
     <string name="equil_dressing">Reservoir wechseln</string>
     <string name="equil_dressing_onkey_msg">Kolben wird automatisch zum Reservoir-Boden bewegt. Er stoppt automatisch beim Erreichen des Bodens. Zum Unterbrechen bei Bedarf auf \'Stop\' klicken.</string>
     <string name="equil_hint_dressing">Dieser Vorgang stoppt die Insulininfusion und sorgt dafür, dass sich der Pumpenkolben nach unten zurückzieht!</string>
@@ -47,6 +48,7 @@
     <string name="equil_record_basal_temp">Temporäre Basalrate%1$sIE/h</string>
     <string name="equil_record_bolus">Bolus %1$s IE</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
+    <string name="equil_basal_exceeds_max">Die Profil-Basalrate %1$s IE/h überschreitet die max. basale Pumpenrate %2$s IE/h. Erhöhen Sie die max. Basaleinstellung und verbinden Sie die Pumpe erneut.</string>
     <string name="equil_not_enough_insulin">Nicht mehr genügend Insulin im Reservoir übrig</string>
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Niedriger Batteriestand: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Nicht genügend Insulin im Reservoir übrig: %1$s</string>
@@ -68,6 +70,7 @@
     <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f IE/h, Dauer: %2$d min</string>
     <string name="equil_common_history_bolus_value">%1$.2f IE</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Bolus einstellen</string>
     <string name="equil_common_cmd_cancel_bolus">Bolus abbrechen</string>
     <string name="equil_common_cmd_set_tbr">Temporäre Basalrate einstellen</string>
     <string name="equil_common_cmd_cancel_tbr">Temporäre Basalrate abbrechen</string>
