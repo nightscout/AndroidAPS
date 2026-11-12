@@ -28,13 +28,15 @@ volunteers and can be wrong: the user must always check them.
 | 1.6 | User-Agent: OFF asks for `AppName/Version (contact)`. The contact must be a project address chosen by the maintainers, never the e-mail of a user. | to do (final) |
 | 1.7 | Show the OFF attribution: data under ODbL, photos under CC BY-SA. | done in POC |
 | 1.8 | Nutrition values are typed as written on the package (14.8, 1,7). Comma and dot are both accepted. | done in POC (rounded to whole numbers, see 1.9) |
-| 1.9 | Keep decimal values. Today `FD`, the database and Nightscout keep whole numbers, so 0.4 g becomes 0. Decimals matter for small portions that are multiplied (a food counted per piece or per gram). The total of a meal sent to the wizard or the carbs dialog **stays a whole number**: it is rounded once, from the exact sum. With the precision of carbs counting, a total with decimals means nothing. | to do (final: values as `Double`, one database migration) |
+| 1.9 | Keep decimal values. Today `FD`, the database and Nightscout keep whole numbers, so 0.4 g becomes 0. Decimals matter for small portions that are multiplied (a food counted per piece or per gram). The total of a meal sent to the wizard or the carbs dialog **stays a whole number**: it is rounded once, from the exact sum. With the precision of carbs counting, a total with decimals means nothing. | final, in progress on `Food/off-import-room37`: Room 37 (values as `Double`, commit 1), Nightscout in decimals (commit 2, see 6.2) |
 | 1.10 | The category list shows every category, also when the field was filled by an import ("OFF"). | done in POC |
-| 1.11 | A button at import time to correct the values or the portion when the OFF data is wrong. The corrected food is saved in AAPS; see 5.2 for sending the fix to OFF. | to do |
+| 1.11 | A way at import time to correct the values or the portion when the OFF data is wrong. The corrected food is saved in AAPS; see 5.2 for sending the fix to OFF. | done in POC: the "Change the values" mode of 1.16 |
 | 1.12 | Carbs with or without fiber. A European label gives carbs without fiber; a US label gives total carbs, fiber included. OFF keeps what the label says, so "carbs" does not mean the same thing for every product. Keep the fiber value (one optional column) so it can be shown later, or a warning given on a product with a US label. Nothing is computed again. See the sizes below. | idea, low priority |
 | 1.13 | "As sold" or "prepared" values. For a powder (mashed potatoes, cocoa, soup) OFF can have values for the dry product and for the prepared one. The import must show which ones it uses. The POC always uses "as sold" and does not say it. | to do |
 | 1.14 | OFF quality warnings (for example "energy does not match the other values"): shown at import time, not stored. | idea |
 | 1.15 | Ingredients, allergens and traces: not stored. Shown on demand from the barcode (a "see on Open Food Facts" button, or read when the food is opened). Useful for families who also manage coeliac disease, which is common with type 1 diabetes. | idea |
+| 1.16 | Two modes in the food editor. **Change the portion**: only the portion is typed, and carbs, fat, protein and energy follow it in proportion; the unit cannot be changed. **Change the values**: every field is typed, as on the package, for example to fix an OFF value, or to count a food in units eaten (1 biscuit, 1 baba) instead of grams. An import starts in the portion mode, a food changed starts in the values mode; the user can switch at any time. | done in POC (2026-11-12) |
+| 1.17 | The unit of a food used in dishes or standard meals changes (100 g becomes 1 biscuit). A line of a dish keeps its quantity in the unit it was saved with, so "50 g" would be read as "50 biscuits" and the carbs would be wrong without any sign. So: no new food is made; the dishes and meals that use the food show "Unit changed: check" instead of their total, cannot be sent to the wizard or the carbs dialog, and their line is marked in red in the pencil, with the old quantity. The user sets the quantity again and saves. After the change, a message says how many dishes and meals use the food. A portion changed in the same unit changes nothing for them (carbs per gram stay the same). "g" and " G " are the same unit. | done in POC (2026-11-12) |
 
 **History**
 
@@ -56,7 +58,7 @@ volunteers and can be wrong: the user must always check them.
 |---|---|---|---|
 | Name, brand | `name` | Brand added to the name | As today. A `brand` column only if we want to filter by brand. |
 | Barcode | no | In the POC file | Column |
-| Has a photo | no | Flag in the POC file | Column `hasImage` |
+| Has a photo | no | Flag in the POC file | Column `image`: the file name of the photo (OFF or taken by the user), see 2.10 |
 | Carbs | `Int` | Read as `Double`, rounded | `Double` |
 | Sugars, fiber | no | Read and shown at import, not saved | To decide (see 1.12) |
 | Polyols, starch, added sugars | no | no | Polyols to decide, not the others |
@@ -110,10 +112,11 @@ to pick the right one.
 | 2.4 | OFF changes the photo address when a photo is replaced. When the old address is gone, the product is read again to get the new address. If OFF has no photo any more, the flag is set to false. If OFF does not answer, nothing changes and it is tried again next time. | done in POC |
 | 2.5 | Photos are shown in the import results, on the food cards and at the top of the editor. | done in POC (Android only; desktop and iOS show foods without photos) |
 | 2.6 | Only https addresses on `openfoodfacts.org` are downloaded, and only small files. | done in POC |
-| 2.7 | Photos are not in the backup: the barcode and the flag are enough to download them again. | done in POC |
+| 2.7 | Photos are in the backup (see 4.3): a photo taken by the user cannot be downloaded again, and a restore on a new phone then needs no download. | done in POC (2026-11-12). Before: not in the backup. |
 | 2.8 | Delete the photo file when no food uses its barcode any more. | to do (final). The POC keeps the files, so that "undo delete" keeps working. |
 | 2.9 | Foods imported before 2.1 have no barcode, so they get no photo. They must be imported again. | known limit of the POC |
-| 2.10 | A photo taken by the user, for a home-made dish without a barcode. Same file mechanism, named after the food id. | idea |
+| 2.10 | A photo taken by the user, for any food (a home-made dish without a barcode, or to replace the OFF photo). It is shown instead of the OFF photo, which is kept: removing the photo of the user shows the OFF photo again, without a download. Small JPEG (512 px at most). Final: the `image` column holds the file name (Room 37); the file name is a random key, not the food id, which changes with a restore. | done in POC (2026-11-12, Android only) |
+| 2.11 | Photos also in the meal sheet, in the pencil of a dish or a meal, and in the detail of a meal of the history. | done in POC (2026-11-12) |
 
 ## 3. Dishes, standard meals and meal history
 
@@ -124,7 +127,11 @@ to pick the right one.
 | 3.3 | A meal is kept only when its treatment is really saved. It follows the treatment: when the treatment is deleted, the meal is removed too. A record that is only "not found" never removes a meal. | done in POC |
 | 3.4 | Final: pass a meal id to the wizard and carbs dialogs, instead of finding the treatment again by note and time. | to do (final) |
 | 3.5 | A line typed by hand in a meal: a name and the carbs the user estimated, for something that is not in the list (a home-made quiche next to a grated carrot and a dessert that are). It counts in the total sent to the wizard or the carbs dialog. It is marked "estimated" in the meal, the dishes, the history and the CSV. Its fat, protein and energy are not known, so the meal shows them as not known. It can be part of a saved dish or meal, with a fixed value. Something eaten often is simply added to the food list, with the estimate as its carbs: no "save as a food" button is needed. The food screen only makes sense when at least one food exists (otherwise the user types the carbs in the carbs dialog or the wizard), so the line typed by hand is added from the meal sheet, after a food. Foods are listed, not eaten in that order. | done in POC |
-| 3.6 | A free text comment on each food, dish and standard meal. For the final version: a `note` column on the food (same migration as 1.9), and a field in the new tables. To decide: is the comment of a standard meal copied into the meal history? | to do (final) |
+| 3.6 | A free text comment on each food, dish and standard meal. For the final version: a `note` column on the food (same migration as 1.9), and a field in the new tables. To decide: is the comment of a standard meal copied into the meal history? | final: `note` on the food done (Room 37, commit 1). Dishes and meals: to do |
+| 3.7 | A dish or a meal whose food was deleted can always be opened with its pencil. The line of the deleted food is shown in red, without carbs. It must be removed or replaced before the dish is saved. Before, the pencil only showed a message, and the dish could not be repaired. | done in POC (2026-11-12, bug found in use) |
+| 3.8 | A dish or a meal with a line that cannot be computed (3.7, 1.17) is never saved or sent with this line counted as 0 g: that would give too few carbs to the wizard. | done in POC |
+| 3.9 | History: a saved dish or meal sent as it is shows its name, with a button to show its lines. A meal put together on the spot, or a saved meal changed before it was sent ("croissant instead of bread"), always shows its lines, so what was really eaten is not hidden. The total stays visible. | done in POC, to try in use |
+| 3.10 | History: a tap on a meal shows its detail, with the photo of each food. The wizard button keeps its own action (the detail of the bolus calculation). | done in POC (photos only for meals sent after 2026-11-12: older meals do not know their foods) |
 
 UI rules agreed on 2026-11-05: a tap on a card adds it to the meal, the pencil changes it,
 orange/green buttons send to Carbs/Wizard (theme colours). Delete only with a long press and the
@@ -137,8 +144,9 @@ shows a warning but is not blocked.
 |---|---|---|
 | 4.1 | CSV export for a doctor's appointment: one file for the meal history, one for the catalogue. Period: 7, 14, 30 days or all. | done in POC |
 | 4.2 | In the CSV, the insulin column is the insulin **really given**, not the calculated one: the user can change or stop a bolus, and the doctor compares meals with glucose results. | done in POC |
-| 4.3 | JSON backup and restore of the POC data, to try the POC on a real phone and to move the data later into the final storage. A restore only adds what is missing. | done in POC (personal use) |
+| 4.3 | Backup and restore of the POC data, to try the POC on a real phone and to move the data later into the final storage. A restore only adds what is missing, and never replaces a photo already on the phone. Format 2 (2026-11-12): one zip file with its own extension (`.aapsfood`, so Android does not offer to open it as a zip) holding the JSON and the photos. Format 1 (JSON only) is still read. | done in POC (personal use) |
 | 4.4 | Final: check first how backup and sync can go through Nightscout (today AAPS only downloads foods from Nightscout), then the settings export as a second way. | to do (final) |
+| 4.5 | Final: the same archive can fill the final version from the POC (barcode of the OFF link to `Food.barcode`, photo to `Food.image`), so the photos are not lost. For the final version itself, the user wants a restore that brings back the whole library, photos included. | to do (final) |
 
 ## 5. Sending data to Open Food Facts (upload)
 
@@ -172,7 +180,7 @@ must be studied first. Kept here so it is not lost.
 | # | Requirement | Status |
 |---|---|---|
 | 6.1 | A food in Nightscout with a decimal value ("carbs": 10.5) must not make the whole food list fail. | done: separate fix branch `Fix/ns-food-decimal-values` (values rounded when read, upload format unchanged). Not yet proposed. |
-| 6.2 | Final: keep decimals end to end (see 1.9). | to do (final) |
+| 6.2 | Final: keep decimals end to end (see 1.9). A whole value is still sent as a whole number (12, not 12.0), so a follower on an older version keeps reading every food without decimals. | final, commit 2 on `Food/off-import-room37`, tested, not committed yet |
 | 6.3 | Older AAPS versions. A Nightscout site belongs to one person, and when that person moves to AAPS 4 their followers (AAPSClient) move too. So there is no long mix of versions. There is a short time during the update: a follower still on 3.x loses its whole food list when the main phone uploads a decimal (the bug of 6.1). Accepted, or decimals are only sent when the value has some. | decision: no long-term support of whole numbers only |
 | 6.4 | The Nightscout food editor (web page, `lib/food/food.js`) saves with `parseInt`: a food created by AAPS with 14.8 g becomes **14** when someone saves it in the web page (cut, not rounded). Today this already happens to `portion` (1.5 becomes 1). One line to change (`parseFloat`): propose a pull request to cgm-remote-monitor with the AAPS change. | to do |
 | 6.5 | Other programs that use the Nightscout food list (checked on 2026-11-09): the Nightscout server stores the values as sent and its bolus calculator works with decimals. Nocturne (the .NET rewrite of Nightscout) already has portion, carbs, fat, protein and energy as `double` and `gi` as `int`, and has connectors that write foods. A community tool imports a Brazilian carbs table into Nightscout (writes only). No program was found that reads foods and needs whole numbers. The search was a web search and a read of these projects, not a code search of all GitHub: private tools and forks are not covered. | checked |
@@ -182,7 +190,9 @@ must be studied first. Kept here so it is not lost.
 - Database: values as `Double`, a `barcode` column on the food, tables for dishes, meals and the
   meal history. One migration, designed once from what the POC taught.
 - What to keep from OFF (proposal, see the comparison in section 1): on the food, `barcode`,
-  `hasImage` and `note`, maybe `fiber` and `sugars` (1.12). The photo address stays a local cache:
+  `image` and `note`, and `fiber` (1.12); `sugars` not kept. Done in Room 37 (commit 1).
+  `hasImage` (a flag) was replaced by `image` (a file name) before the commit, so the photo of
+  the user (2.10) needs no other migration. The photo address stays a local cache:
   it changes when OFF replaces a photo, and the product is read again to find it. Ingredients,
   allergens and scores are read from OFF when needed, never stored.
 - Proposed as small pull requests: (A) values and barcode, (B) OFF import, (C) dishes, meals,

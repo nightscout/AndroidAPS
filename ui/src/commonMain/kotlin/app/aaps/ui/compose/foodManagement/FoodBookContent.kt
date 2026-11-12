@@ -22,6 +22,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -39,6 +41,11 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -115,6 +122,7 @@ internal fun RecipeList(
     selecting: Boolean,
     selectedIds: Set<String>,
     nutritionOf: (Recipe) -> Nutrition?,
+    problemOf: (Recipe) -> LineProblem? = { null },
     onAdd: (Recipe) -> Unit,
     onSelect: (Recipe) -> Unit,
     onToggle: (Recipe) -> Unit,
@@ -155,7 +163,8 @@ internal fun RecipeList(
                 )
                 CardValues(
                     portion = null,
-                    carbs = nutrition?.let { stringResource(InterfacesStrings.format_carbs, it.carbs.roundToInt()) } ?: stringResource(UiStrings.food_book_unknown_total),
+                    carbs = nutrition?.let { stringResource(InterfacesStrings.format_carbs, it.carbs.roundToInt()) }
+                        ?: stringResource(if (problemOf(recipe) == LineProblem.UNIT_CHANGED) UiStrings.food_book_unit_changed_total else UiStrings.food_book_unknown_total),
                     carbsKnown = nutrition != null,
                 )
             }
@@ -285,7 +294,10 @@ internal fun EatenMealList(
     links: Map<String, TreatmentLink>,
     timeText: (Long) -> String,
     onShowCalculation: (BCR) -> Unit,
+    images: Map<Long, ByteArray> = emptyMap(),
 ) {
+    var detail by remember { mutableStateOf<EatenMeal?>(null) }
+    detail?.let { meal -> EatenMealDetail(meal, images, timeText, onDismiss = { detail = null }) }
     if (meals.isEmpty()) {
         EmptyText(stringResource(UiStrings.food_book_no_history))
         return
@@ -304,17 +316,22 @@ internal fun EatenMealList(
             )
         }
         items(meals, key = { it.id }) { meal ->
-            EatenMealCard(meal, links[meal.id], timeText, onShowCalculation = onShowCalculation)
+            EatenMealCard(meal, links[meal.id], timeText, onShowCalculation = onShowCalculation, onShowDetail = { detail = meal })
         }
     }
 }
 
 @Composable
-private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long) -> String, onShowCalculation: (BCR) -> Unit) {
+private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long) -> String, onShowCalculation: (BCR) -> Unit, onShowDetail: () -> Unit) {
+    // A saved dish or meal sent as it is shows its name only, the lines are folded. A meal put
+    // together on the spot, or a saved meal changed before it was sent, shows its lines.
+    val foldable = meal.name != null && !meal.changed
+    var expanded by rememberSaveable(meal.id) { mutableStateOf(!foldable) }
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = AapsSpacing.extraLarge),
+            .padding(horizontal = AapsSpacing.extraLarge)
+            .clickable(onClick = onShowDetail),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
         Column(
@@ -326,6 +343,12 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = timeText(meal.timestamp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     meal.name?.let { Text(text = it, style = MaterialTheme.typography.titleSmall) }
+                }
+                if (foldable) IconButton(onClick = { expanded = !expanded }, modifier = Modifier.size(AapsSpacing.compactIconButtonSize)) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = stringResource(if (expanded) UiStrings.food_book_fold else UiStrings.food_book_unfold)
+                    )
                 }
                 Text(
                     text = stringResource(InterfacesStrings.format_carbs, meal.wizardCarbs),
@@ -343,7 +366,7 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long
                         Icon(type.icon(), contentDescription = null, modifier = Modifier.size(AapsSpacing.chipIconSize), tint = type.color())
                     }
             }
-            meal.items.forEach { item ->
+            if (expanded) meal.items.forEach { item ->
                 Text(
                     text = stringResource(
                         UiStrings.food_meal_note_item,
@@ -385,6 +408,49 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long
     }
 }
 
+/** The lines of an eaten meal with the photo of each food, and the total. */
+@Composable
+private fun EatenMealDetail(meal: EatenMeal, images: Map<Long, ByteArray>, timeText: (Long) -> String, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(meal.name ?: timeText(meal.timestamp)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+            ) {
+                if (meal.name != null) Text(timeText(meal.timestamp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                meal.items.forEach { item ->
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                        FoodPhoto(bytes = item.foodId?.let { images[it] }, size = AapsSpacing.foodThumbnailSize)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(item.name, style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                text = if (item.estimated) stringResource(UiStrings.food_meal_estimated)
+                                else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Text(
+                            text = stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.carbs), stringResource(CoreUiStrings.units_grams)),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                HorizontalDivider()
+                Text(
+                    text = stringResource(UiStrings.food_meal_total, stringResource(InterfacesStrings.format_carbs, meal.wizardCarbs)),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.close)) } }
+    )
+}
+
 @Composable
 private fun EmptyText(text: String) {
     Box(modifier = Modifier.fillMaxSize().padding(AapsSpacing.xxLarge), contentAlignment = Alignment.Center) {
@@ -402,23 +468,40 @@ private fun EmptyText(text: String) {
  * by hand its name and carbs.
  */
 @Composable
-internal fun MealLine(item: MealItem, onEdit: () -> Unit, onRemove: () -> Unit) {
+internal fun MealLine(item: MealItem, image: ByteArray? = null, onEdit: () -> Unit, onRemove: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onEdit),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
+        // The photo of the food helps to tell close products apart.
+        FoodPhoto(bytes = image, size = AapsSpacing.foodThumbnailSize)
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = item.name, style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = if (item.estimated) stringResource(UiStrings.food_meal_estimated)
-                else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
+                text = item.name,
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (item.problem != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+            )
+            val amount = stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit)
+            Text(
+                text = when {
+                    item.problem == LineProblem.DELETED      -> stringResource(UiStrings.food_book_line_deleted)
+                    item.problem == LineProblem.UNIT_CHANGED -> stringResource(UiStrings.food_book_line_unit_changed, amount)
+                    item.estimated                           -> stringResource(UiStrings.food_meal_estimated)
+                    else                                     -> amount
+                },
                 style = MaterialTheme.typography.bodySmall,
-                color = if (item.estimated) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+                color = when {
+                    item.problem != null -> MaterialTheme.colorScheme.error
+                    item.estimated       -> MaterialTheme.colorScheme.tertiary
+                    else                 -> MaterialTheme.colorScheme.primary
+                }
             )
         }
-        Text(
+        // Carbs not known: nothing is shown rather than a wrong 0 g.
+        if (item.problem == null) Text(
             text = stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.carbs), stringResource(CoreUiStrings.units_grams)),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary
@@ -438,6 +521,7 @@ internal fun RecipeEditContent(
     recipe: Recipe,
     name: String,
     items: List<MealItem>,
+    images: Map<Long, ByteArray> = emptyMap(),
     onNameChange: (String) -> Unit,
     onEditLine: (Long) -> Unit,
     onRemove: (Long) -> Unit,
@@ -471,7 +555,7 @@ internal fun RecipeEditContent(
             modifier = Modifier.fillMaxWidth()
         )
         Text(text = stringResource(UiStrings.food_book_edit_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        items.forEach { item -> MealLine(item, onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
+        items.forEach { item -> MealLine(item, image = item.foodId?.let { images[it] }, onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
         HorizontalDivider()
         Text(
             text = stringResource(

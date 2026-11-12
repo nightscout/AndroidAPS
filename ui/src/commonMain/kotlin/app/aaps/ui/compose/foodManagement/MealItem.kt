@@ -17,6 +17,10 @@ import kotlin.math.roundToInt
  * @param recipeId the dish this line comes from (quantity is then in servings)
  * @param estimated true for a line typed by hand: a name and the carbs the user estimated, without
  *   a food or a dish behind it. Its quantity and unit mean nothing and are not shown.
+ * @param problem set when the line cannot be computed any more: its food or dish was deleted, or
+ *   the unit of its food changed. Only found while a dish or a meal is changed, so the user can
+ *   remove or correct the line. Its carbs are not known (0 here), so a dish or meal with such a line
+ *   cannot be saved.
  */
 data class MealItem(
     val key: Long,
@@ -30,7 +34,27 @@ data class MealItem(
     val foodId: Long? = null,
     val recipeId: String? = null,
     val estimated: Boolean = false,
+    val problem: LineProblem? = null,
 )
+
+/** Why a line of a saved dish or meal cannot be computed any more. */
+enum class LineProblem {
+
+    /** Its food or dish was deleted. */
+    DELETED,
+
+    /**
+     * The unit of its food changed (100 g became 1 biscuit). The quantity of the line is in the old
+     * unit, so "50 g" would be read as "50 biscuits": the user must set the quantity again.
+     */
+    UNIT_CHANGED
+}
+
+/**
+ * The values of a food when the editor started to follow the portion: a new portion changes every
+ * value in proportion.
+ */
+data class ScaleBase(val portion: Double, val carbs: Double?, val fat: Double?, val protein: Double?, val energy: Double?)
 
 internal object MealMath {
 

@@ -4,6 +4,7 @@ import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.FD
+import app.aaps.ui.compose.foodManagement.LineProblem
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
 
@@ -128,6 +129,8 @@ data class EatenMeal(
     val target: MealTarget = MealTarget.WIZARD,
     val validatedAt: Long? = null,
     val treatmentId: Long? = null,
+    /** True when a saved meal was changed before it was sent: the history then shows its lines. */
+    val changed: Boolean = false,
 )
 
 /** @param estimated true for a line typed by hand: its carbs are the estimate of the user. */
@@ -141,6 +144,8 @@ data class EatenItem(
     val protein: Double?,
     val energyKj: Double?,
     val estimated: Boolean = false,
+    /** The food of the line, to show its photo. Null for older meals, dishes and lines typed by hand. */
+    val foodId: Long? = null,
 )
 
 /**
@@ -206,6 +211,47 @@ internal object FoodBookMath {
 
     fun nutritionOf(item: RecipeItem, foods: Map<Long, FD>, recipes: Map<String, Recipe>): Nutrition? =
         nutritionOf(item, foods, recipes, visiting = emptyList())
+
+    /**
+     * True when the unit of [food] is not the unit [item] was saved with: "50 g" of a food now counted
+     * in biscuits. A food without a portion size is counted in portions, its unit is not used.
+     */
+    fun unitChanged(item: RecipeItem, food: FD): Boolean = food.portion > 0 && unitDiffers(item.unit, food.unit)
+
+    /** "g" and " G " are the same unit. */
+    fun unitDiffers(a: String, b: String): Boolean = a.trim().lowercase() != b.trim().lowercase()
+
+    /**
+     * Why the total of [recipe] is not known, looking into the dishes it uses: a deleted food or dish
+     * first, then a changed unit. Null when nothing is wrong.
+     */
+    fun problemOf(recipe: Recipe, foods: Map<Long, FD>, recipes: Map<String, Recipe>, depth: Int = 0): LineProblem? {
+        if (depth > MAX_DEPTH) return null
+        var found: LineProblem? = null
+        for (item in recipe.items) {
+            val problem = when {
+                item.estimatedCarbs != null -> null
+                item.foodId != null         -> {
+                    val food = foods[item.foodId]
+                    when {
+                        food == null              -> LineProblem.DELETED
+                        unitChanged(item, food) -> LineProblem.UNIT_CHANGED
+                        else                      -> null
+                    }
+                }
+
+                item.recipeId != null       -> {
+                    val child = recipes[item.recipeId]
+                    if (child == null) LineProblem.DELETED else problemOf(child, foods, recipes, depth + 1)
+                }
+
+                else                        -> LineProblem.DELETED
+            }
+            if (problem == LineProblem.DELETED) return problem
+            if (problem != null) found = problem
+        }
+        return found
+    }
 
     /** True when [items], saved as recipe [id], would hold that recipe again somewhere below. */
     fun makesLoop(id: String, items: List<RecipeItem>, recipes: Map<String, Recipe>): Boolean {
@@ -293,7 +339,7 @@ internal object FoodBookMath {
 
     private fun nutritionOf(item: RecipeItem, foods: Map<Long, FD>, recipes: Map<String, Recipe>, visiting: List<String>): Nutrition? {
         item.estimatedCarbs?.let { return Nutrition(carbs = it, fat = null, protein = null, energyKj = null) }
-        item.foodId?.let { id -> return foods[id]?.let { nutritionOf(it, item.quantity) } }
+        item.foodId?.let { id -> return foods[id]?.takeUnless { unitChanged(item, it) }?.let { nutritionOf(it, item.quantity) } }
         item.recipeId?.let { id -> return recipes[id]?.let { recipe -> nutritionOf(recipe, foods, recipes, visiting)?.times(item.quantity) } }
         return null
     }

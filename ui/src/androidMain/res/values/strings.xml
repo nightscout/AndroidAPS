@@ -425,7 +425,19 @@
     <string name="food_book_tab_meals" comment="Tab of the food screen that lists standard meals, for example a usual breakfast">Meals</string>
     <string name="food_book_item" comment="One line of a dish or a meal. %1$s = food name, %2$s = quantity with unit. Example: Bread 80 g">%1$s %2$s</string>
     <string name="food_book_servings" comment="Unit of a dish in a meal: 1 serving is the whole dish. Example: 2 servings">servings</string>
-    <string name="food_book_missing">A food or a dish in it does not exist any more. Open it and change it.</string>
+    <string name="food_book_missing">A food or a dish in it was deleted, or the unit of a food changed. Use its pencil to check it.</string>
+    <string name="food_book_unit_changed_total" comment="Shown instead of the total carbs of a dish or a meal when the unit of one of its foods changed (for example from g to biscuit)">Unit changed: check</string>
+    <string name="food_book_line_unit_changed" comment="Under a line of a dish or a meal whose food is now counted in another unit. %1$s = the old quantity with its unit. Example: Was 50 g: the unit changed, tap to set the quantity">Was %1$s: the unit changed, tap to set the quantity</string>
+    <string name="food_unit_changed_check" comment="After the unit of a food was changed. %1$d = number of dishes and standard meals that use this food">The unit changed: %1$d dishes and meals use this food. Open them to set the quantities again.</string>
+    <string name="food_editor_mode_portion" comment="Choice in the food editor: the values follow the portion">Change the portion</string>
+    <string name="food_editor_mode_values" comment="Choice in the food editor: every value is typed as on the package">Change the values</string>
+    <string name="food_editor_mode_portion_hint">The values follow the portion.</string>
+    <string name="food_editor_mode_values_hint">Every value is typed as on the package. A new unit (1 biscuit instead of 100 g) is set here.</string>
+    <string name="food_book_fold" comment="Button of a meal in the history: hide its lines">Hide the lines</string>
+    <string name="food_book_unfold" comment="Button of a meal in the history: show its lines">Show the lines</string>
+    <string name="food_book_line_deleted" comment="Shown under a line of a dish or a meal whose food was deleted">Deleted: remove or replace this line</string>
+    <string name="food_book_line_missing">This food or dish does not exist any more. Remove the line, and add another food if needed.</string>
+    <string name="food_book_remove_missing">Remove or correct the lines in red first.</string>
     <string name="food_book_saved" comment="%1$s = name of the dish or meal">%1$s saved</string>
     <string name="food_book_loop">A dish cannot contain itself.</string>
     <string name="food_book_save_title">Save as a dish or a meal</string>

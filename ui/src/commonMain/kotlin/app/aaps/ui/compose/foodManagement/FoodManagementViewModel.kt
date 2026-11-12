@@ -323,6 +323,8 @@ class FoodManagementViewModel(
                     editorEnergy = food.energy?.toString() ?: "",
                     editorSaveAttempted = false,
                     editorOffProduct = null,
+                    editorScaleMode = false,
+                    editorScaleBase = null,
                     editorImage = null,
                     editorUserPhoto = null,
                     editorPhotoChanged = false,
@@ -346,6 +348,8 @@ class FoodManagementViewModel(
                     editorEnergy = "",
                     editorSaveAttempted = false,
                     editorOffProduct = null,
+                    editorScaleMode = false,
+                    editorScaleBase = null,
                     editorImage = null,
                     editorUserPhoto = null,
                     editorPhotoChanged = false,
@@ -458,6 +462,8 @@ class FoodManagementViewModel(
                 editorName = MealMath.foodValuesFrom(product).name,
                 editorCategory = OFF_CATEGORY,
                 editorOffProduct = product,
+                // An OFF product starts in the portion mode: the values follow the portion.
+                editorScaleMode = true,
                 editorImage = it.importImages[product.barcode],
             )
         }
@@ -522,8 +528,10 @@ class FoodManagementViewModel(
         }
         val food = item.foodId?.let { foodsById()[it] }
         val recipe = item.recipeId?.let { recipesById()[it] }
-        if (food == null && recipe == null) return showMessage(UiStrings.food_book_missing)
-        _uiState.update { it.copy(quantityFood = food, quantityRecipe = recipe, quantityLineKey = key, quantityText = MealMath.formatAmount(item.quantity)) }
+        if (food == null && recipe == null) return showMessage(UiStrings.food_book_line_missing)
+        // After a unit change the old number means something else: the user types the quantity again.
+        val text = if (item.problem == LineProblem.UNIT_CHANGED) "" else MealMath.formatAmount(item.quantity)
+        _uiState.update { it.copy(quantityFood = food, quantityRecipe = recipe, quantityLineKey = key, quantityText = text) }
     }
 
     /** Carbs of [quantity] in the open quantity dialog, or null when they cannot be computed. */
@@ -614,6 +622,9 @@ class FoodManagementViewModel(
     /** Nutrition of a whole dish or meal, or null when a food or a dish in it is missing. */
     fun nutritionOf(recipe: Recipe): Nutrition? = FoodBookMath.nutritionOf(recipe, foodsById(), recipesById())
 
+    /** Why the total of [recipe] is not known, or null. See [FoodBookMath.problemOf]. */
+    fun problemOf(recipe: Recipe): LineProblem? = FoodBookMath.problemOf(recipe, foodsById(), recipesById())
+
     /** Nutrition of one line of a dish or meal, or null when its food or dish is missing. */
     fun nutritionOf(item: RecipeItem): Nutrition? = FoodBookMath.nutritionOf(item, foodsById(), recipesById())
 
@@ -636,11 +647,28 @@ class FoodManagementViewModel(
     }
 
     /** The lines of a dish or meal as meal lines, or null when one of them cannot be computed. */
-    private fun linesOf(recipe: Recipe): List<MealItem>? = recipe.items.map { item ->
-        val line = item.estimatedCarbs?.let { handLine(item.name, it) }
-            ?: item.foodId?.let { id -> foodsById()[id]?.let { foodLine(it, item.quantity) } }
+    private fun linesOf(recipe: Recipe): List<MealItem>? = recipe.items.map { item -> lineOf(item) ?: return null }
+
+    private fun lineOf(item: RecipeItem): MealItem? =
+        item.estimatedCarbs?.let { handLine(item.name, it) }
+            ?: item.foodId?.let { id -> foodsById()[id]?.takeUnless { FoodBookMath.unitChanged(item, it) }?.let { foodLine(it, item.quantity) } }
             ?: item.recipeId?.let { id -> recipesById()[id]?.let { recipeLine(it, item.quantity) } }
-        line ?: return null
+
+    /**
+     * The lines of a dish or meal to change it. A line that cannot be computed any more is kept,
+     * marked with its [LineProblem], so the user sees it and can remove or correct it.
+     */
+    private fun editLinesOf(recipe: Recipe): List<MealItem> = recipe.items.map { item ->
+        lineOf(item) ?: MealItem(
+            key = nextMealKey++,
+            name = item.name,
+            quantity = item.quantity,
+            unit = item.unit,
+            carbs = 0.0,
+            foodId = item.foodId,
+            recipeId = item.recipeId,
+            problem = if (item.foodId?.let { foodsById()[it] } != null) LineProblem.UNIT_CHANGED else LineProblem.DELETED,
+        )
     }
 
     /**
@@ -660,7 +688,8 @@ class FoodManagementViewModel(
      */
     fun startEdit(recipe: Recipe) {
         if (uiState.value.editing != null || uiState.value.selecting) return
-        val lines = linesOf(recipe) ?: return showMessage(UiStrings.food_book_missing)
+        // Always opens, also when a food in it was deleted: this is where it is repaired.
+        val lines = editLinesOf(recipe)
         _uiState.update {
             it.copy(
                 parkedItems = it.mealItems,
@@ -684,6 +713,8 @@ class FoodManagementViewModel(
         val recipe = state.editing ?: return
         val name = state.editName.trim()
         if (name.isEmpty() || state.mealItems.isEmpty()) return
+        // A deleted food counts as 0 g: saved like this, the dish would give too few carbs.
+        if (state.mealItems.any { it.problem != null }) return showMessage(UiStrings.food_book_remove_missing)
         if (nameUsed(name, recipe.kind, except = recipe.id)) return showMessage(UiStrings.food_book_name_used, name)
         val items = recipeItemsOf(state.mealItems)
         if (FoodBookMath.makesLoop(recipe.id, items, recipesById())) return showMessage(UiStrings.food_book_loop)
@@ -727,6 +758,7 @@ class FoodManagementViewModel(
         val state = uiState.value
         val name = state.saveName.trim()
         if (name.isEmpty() || state.mealItems.isEmpty()) return
+        if (state.mealItems.any { it.problem != null }) return showMessage(UiStrings.food_book_remove_missing)
         if (nameUsed(name, state.saveKind)) return showMessage(UiStrings.food_book_name_used, name)
         val recipe = Recipe(id = Uuid.random().toString(), name = name, kind = state.saveKind, items = recipeItemsOf(state.mealItems))
         viewModelScope.launch { foodBook.saveRecipe(recipe) }
@@ -745,7 +777,9 @@ class FoodManagementViewModel(
      */
     fun send(target: MealTarget): Pair<Int, String> {
         val state = uiState.value
-        val (id, result) = record(state.mealItems, state.mealSource?.name, target)
+        // A standard meal whose lines were changed before sending ("croissant instead of bread").
+        val changed = state.mealSource?.let { source -> linesOf(source)?.map { lineKey(it) } != state.mealItems.map { lineKey(it) } } ?: false
+        val (id, result) = record(state.mealItems, state.mealSource?.name, target, changed)
         _uiState.update { it.copy(pendingMealId = id, showMeal = false) }
         return result
     }
@@ -766,7 +800,9 @@ class FoodManagementViewModel(
 
     /** Returns the id of the saved copy, and the carbs and note for the dialog. */
     @OptIn(ExperimentalUuidApi::class)
-    private fun record(items: List<MealItem>, name: String?, target: MealTarget): Pair<String, Pair<Int, String>> {
+    private fun lineKey(item: MealItem) = Triple(item.name, item.quantity, item.unit)
+
+    private fun record(items: List<MealItem>, name: String?, target: MealTarget, changed: Boolean = false): Pair<String, Pair<Int, String>> {
         val carbs = MealMath.wizardCarbs(items)
         val note = noteFor(items)
         val meal = EatenMeal(
@@ -775,8 +811,9 @@ class FoodManagementViewModel(
             name = name,
             note = note,
             wizardCarbs = carbs,
-            items = items.map { EatenItem(it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated) },
+            items = items.map { EatenItem(it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated, foodId = it.foodId) },
             target = target,
+            changed = changed,
         )
         viewModelScope.launch { foodBook.addEatenMeal(meal) }
         return meal.id to (carbs to note)
@@ -887,6 +924,21 @@ class FoodManagementViewModel(
     fun updateEditorPortion(v: String) = _uiState.update { s ->
         val product = s.editorOffProduct
         val newPortion = MealMath.parseAmount(v)
+        // The values mode: every field is free, a new portion changes nothing else.
+        if (!s.editorScaleMode) return@update s.copy(editorPortion = v)
+        if (product == null) {
+            val base = s.editorScaleBase
+            if (base == null || newPortion == null) return@update s.copy(editorPortion = v)
+            val factor = newPortion / base.portion
+            fun scaled(value: Double?) = value?.let { MealMath.formatAmount(it * factor) } ?: ""
+            return@update s.copy(
+                editorPortion = v,
+                editorCarbs = scaled(base.carbs),
+                editorFat = scaled(base.fat),
+                editorProtein = scaled(base.protein),
+                editorEnergy = scaled(base.energy),
+            )
+        }
         // Compared with the portion the values were last computed for, so clearing the field and
         // typing a new number still works.
         if (product == null || newPortion == null) return@update s.copy(editorPortion = v)
@@ -902,6 +954,23 @@ class FoodManagementViewModel(
             editorOffComputedPortion = newPortion,
         )
     }
+    /**
+     * Portion mode ([on]): only the portion is typed, and the values follow it in proportion, from
+     * the values of now. Values mode: every field is typed, as on the package. A food imported from
+     * OFF starts in the portion mode, a food changed starts in the values mode.
+     */
+    fun setScaleMode(on: Boolean) = _uiState.update { s ->
+        if (!on) return@update s.copy(editorScaleMode = false, editorScaleBase = null)
+        val portion = MealMath.parseAmount(s.editorPortion)
+        // Without a portion there is nothing to follow: the values stay free.
+        if (portion == null && s.editorOffProduct == null) return@update s
+        fun value(text: String) = text.trim().replace(',', '.').toDoubleOrNull()
+        s.copy(
+            editorScaleMode = true,
+            editorScaleBase = portion?.let { ScaleBase(it, value(s.editorCarbs), value(s.editorFat), value(s.editorProtein), value(s.editorEnergy)) },
+        )
+    }
+
     /** The unit is shown next to the portion on every card: it is kept short. */
     fun updateEditorUnit(v: String) = _uiState.update { it.copy(editorUnit = v.take(MAX_UNIT_LENGTH)) }
     fun updateEditorCarbs(v: String) = _uiState.update { it.copy(editorCarbs = v) }
@@ -948,6 +1017,7 @@ class FoodManagementViewModel(
             try {
                 persistenceLayer.insertOrUpdateFood(food)
                 _uiState.update { it.copy(showEditor = false, showPhotoCamera = false) }
+                warnUnitChanged(state.editorFood, food)
                 if (product == null && !photoChanged) return@launch
                 val foodId = savedFoodId(food, lastId) ?: return@launch
                 // The OFF product with its photo, then the photo of the user, which is shown instead.
@@ -959,6 +1029,16 @@ class FoodManagementViewModel(
                 aapsLogger.error(LTag.UI, "Failed to save food", e)
             }
         }
+    }
+
+    /**
+     * The unit of a food used in dishes or meals changed: their lines are in the old unit. They show
+     * that their total is not known until each one is opened and its quantity set again.
+     */
+    private fun warnUnitChanged(before: FD?, after: FD) {
+        if (before == null || !FoodBookMath.unitDiffers(before.unit, after.unit)) return
+        val users = uiState.value.recipes.count { recipe -> recipe.items.any { it.foodId == before.id } }
+        if (users > 0) showMessage(UiStrings.food_unit_changed_check, users)
     }
 
     /**
@@ -1105,6 +1185,10 @@ data class FoodManagementUiState(
     val editorOffGramsPerUnit: Double = 1.0,
     /** The portion the editor values were last computed for from OFF. */
     val editorOffComputedPortion: Double = 0.0,
+    /** True in the portion mode: only the portion is typed, the values follow it. See [FoodManagementViewModel.setScaleMode]. */
+    val editorScaleMode: Boolean = false,
+    /** The values the portion mode follows, for a food not filled from OFF. */
+    val editorScaleBase: ScaleBase? = null,
     /** The OFF product photo of the editor food, or null when there is none (yet). */
     val editorImage: ByteArray? = null,
     /** The photo taken by the user, shown instead of [editorImage]. Null when there is none. */

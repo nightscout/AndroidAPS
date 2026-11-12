@@ -42,6 +42,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -208,6 +211,7 @@ fun FoodManagementScreen(
                         selecting = selecting,
                         selectedIds = state.selectedRecipeIds,
                         nutritionOf = viewModel::nutritionOf,
+                        problemOf = viewModel::problemOf,
                         onAdd = { if (kind == RecipeKind.DISH) viewModel.askQuantity(it) else viewModel.addRecipeLines(it) },
                         onSelect = viewModel::startSelection,
                         onToggle = viewModel::toggleSelection,
@@ -224,6 +228,7 @@ fun FoodManagementScreen(
                         links = state.treatmentLinks,
                         timeText = viewModel::timeText,
                         onShowCalculation = { shownCalculation = it },
+                        images = state.foodImages,
                     )
                     return@Column
                 }
@@ -330,6 +335,7 @@ fun FoodManagementScreen(
                     onClosePhotoCamera = viewModel::closePhotoCamera,
                     onPhoto = viewModel::takePhoto,
                     onRemovePhoto = viewModel::removePhoto,
+                    onScaleModeChange = viewModel::setScaleMode,
                     onSave = { focusManager.clearFocus(); viewModel.saveFood() },
                     onCancel = { focusManager.clearFocus(); viewModel.closeEditor() },
                     isEditing = state.editorFood != null
@@ -370,6 +376,7 @@ fun FoodManagementScreen(
                         recipe = recipe,
                         name = state.editName,
                         items = state.mealItems,
+                        images = state.foodImages,
                         onNameChange = viewModel::updateEditName,
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
@@ -382,6 +389,7 @@ fun FoodManagementScreen(
                     MealContent(
                         items = state.mealItems,
                         sourceName = state.mealSource?.name,
+                        images = state.foodImages,
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
                         onClear = viewModel::clearMeal,
@@ -505,6 +513,7 @@ private fun SuggestionField(value: String, onValueChange: (String) -> Unit, labe
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FoodEditorContent(
     state: FoodManagementUiState,
@@ -527,6 +536,7 @@ internal fun FoodEditorContent(
     onClosePhotoCamera: () -> Unit = {},
     onPhoto: (ByteArray) -> Unit = {},
     onRemovePhoto: () -> Unit = {},
+    onScaleModeChange: (Boolean) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -602,6 +612,25 @@ internal fun FoodEditorContent(
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Portion mode: the values follow the portion. Values mode: every field is typed, for example
+        // to fix an OFF value or to count a food in biscuits instead of grams.
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            val modes = listOf(true to UiStrings.food_editor_mode_portion, false to UiStrings.food_editor_mode_values)
+            modes.forEachIndexed { index, (scale, label) ->
+                SegmentedButton(
+                    selected = state.editorScaleMode == scale,
+                    onClick = { onScaleModeChange(scale) },
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = modes.size)
+                ) { Text(stringResource(label)) }
+            }
+        }
+        Text(
+            text = stringResource(if (state.editorScaleMode) UiStrings.food_editor_mode_portion_hint else UiStrings.food_editor_mode_values_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        val valuesEditable = !state.editorScaleMode
+
         Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
             OutlinedTextField(
                 value = state.editorPortion,
@@ -616,7 +645,9 @@ internal fun FoodEditorContent(
                 onValueChange = onUnitChange,
                 label = { Text(stringResource(CoreUiStrings.unit_label)) },
                 modifier = Modifier.weight(1f),
-                singleLine = true
+                singleLine = true,
+                readOnly = !valuesEditable,
+                enabled = valuesEditable
             )
         }
 
@@ -626,6 +657,7 @@ internal fun FoodEditorContent(
             label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            enabled = valuesEditable,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
 
@@ -636,6 +668,7 @@ internal fun FoodEditorContent(
                 label = { Text(stringResource(CoreUiStrings.label_fat_g)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
+                enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             OutlinedTextField(
@@ -644,6 +677,7 @@ internal fun FoodEditorContent(
                 label = { Text(stringResource(CoreUiStrings.label_protein_g)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
+                enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             OutlinedTextField(
@@ -652,6 +686,7 @@ internal fun FoodEditorContent(
                 label = { Text(stringResource(CoreUiStrings.label_energy_kj)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
+                enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
         }

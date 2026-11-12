@@ -320,6 +320,31 @@ internal class FoodManagementViewModelTest {
     }
 
     @Test
+    fun `a dish with a deleted food still opens, and is saved only once the line is removed`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+        // Bread (food 1) was deleted: only milk is left.
+        loadFoods(milk)
+        val breakfast = Recipe(
+            id = "bf", name = "Breakfast", kind = RecipeKind.MEAL,
+            items = listOf(RecipeItem("Bread", 30.0, "g", foodId = 1), RecipeItem("Milk", 250.0, "ml", foodId = 2))
+        )
+
+        sut.startEdit(breakfast)
+        val lines = sut.uiState.value.mealItems
+        assertThat(sut.uiState.value.editing).isEqualTo(breakfast)
+        assertThat(lines.map { it.problem }).containsExactly(LineProblem.DELETED, null).inOrder()
+        assertThat(lines.first().name).isEqualTo("Bread")
+
+        // A deleted food has no known carbs: the dish cannot be saved with it.
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isEqualTo(breakfast)
+
+        sut.removeMealItem(lines.first().key)
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isNull()
+    }
+
+    @Test
     fun `saving a changed dish keeps its id and kind and brings the meal back`() {
         loadFoods(bread)
         sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
@@ -421,6 +446,91 @@ internal class FoodManagementViewModelTest {
         val line = sut.uiState.value.mealItems.single()
         assertThat(line.estimated).isTrue()
         assertThat(line.carbs).isEqualTo(30.0)
+    }
+
+    @Test
+    fun `a food now counted in biscuits marks the dish, until its quantity is set again`() {
+        // Toast was saved with 30 g of bread; bread is now counted per biscuit.
+        val biscuit = FD(id = 1, name = "Bread", portion = 1.0, unit = "biscuit", carbs = 7)
+        loadFoods(biscuit)
+
+        assertThat(sut.nutritionOf(toast)).isNull()
+        assertThat(sut.problemOf(toast)).isEqualTo(LineProblem.UNIT_CHANGED)
+
+        sut.startEdit(toast)
+        val line = sut.uiState.value.mealItems.single()
+        assertThat(line.problem).isEqualTo(LineProblem.UNIT_CHANGED)
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isEqualTo(toast) // not saved with a wrong quantity
+
+        // The old "30" means nothing now: the dialog starts empty.
+        sut.editLine(line.key)
+        assertThat(sut.uiState.value.quantityText).isEmpty()
+        sut.updateQuantity("2"); sut.confirmQuantity()
+        val fixed = sut.uiState.value.mealItems.single()
+        assertThat(fixed.problem).isNull()
+        assertThat(fixed.unit).isEqualTo("biscuit")
+        assertThat(fixed.carbs).isEqualTo(14.0)
+
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isNull()
+    }
+
+    @Test
+    fun `the same unit written another way is not a change`() {
+        loadFoods(FD(id = 1, name = "Bread", portion = 100.0, unit = " G ", carbs = 50))
+        runUntil { sut.uiState.value.foods.isNotEmpty() }
+        assertThat(sut.uiState.value.foods).hasSize(1)
+
+        assertThat(sut.problemOf(toast)).isNull()
+        assertThat(sut.nutritionOf(toast)!!.carbs).isEqualTo(15.0)
+    }
+
+    @Test
+    fun `in the portion mode the values follow the portion, in the values mode they do not`() {
+        val yogurt = FD(id = 3, name = "Yogurt", portion = 100.0, unit = "g", carbs = 12, fat = 3, protein = 4, energy = 300)
+        sut.openEditor(yogurt)
+        assertThat(sut.uiState.value.editorScaleMode).isFalse() // a food changed starts in the values mode
+
+        sut.updateEditorPortion("50")
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("12")
+
+        sut.updateEditorPortion("100")
+        sut.setScaleMode(true)
+        sut.updateEditorPortion("125")
+        val state = sut.uiState.value
+        assertThat(state.editorCarbs).isEqualTo("15")
+        assertThat(state.editorFat).isEqualTo("3.8")
+        assertThat(state.editorProtein).isEqualTo("5")
+        assertThat(state.editorEnergy).isEqualTo("375")
+
+        sut.setScaleMode(false)
+        sut.updateEditorPortion("1")
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("15")
+    }
+
+    @Test
+    fun `a saved meal sent as it is can be folded in the history, a changed one cannot`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+        loadFoods(bread, milk)
+        val breakfast = Recipe(
+            id = "bf", name = "Breakfast", kind = RecipeKind.MEAL,
+            items = listOf(RecipeItem("Bread", 30.0, "g", foodId = 1), RecipeItem("Milk", 250.0, "ml", foodId = 2))
+        )
+        whenever(dateUtil.now()).thenReturn(1_000_000)
+
+        sut.addRecipeLines(breakfast)
+        sut.send(MealTarget.CARBS)
+        runUntil { sut.uiState.value.eatenMeals.isNotEmpty() }
+        assertThat(sut.uiState.value.eatenMeals.first().changed).isFalse()
+        assertThat(sut.uiState.value.eatenMeals.first().items.map { it.foodId }).containsExactly(1L, 2L).inOrder()
+
+        sut.clearMeal()
+        sut.addRecipeLines(breakfast)
+        sut.removeMealItem(sut.uiState.value.mealItems.last().key)
+        sut.send(MealTarget.CARBS)
+        runUntil { sut.uiState.value.eatenMeals.size == 2 }
+        assertThat(sut.uiState.value.eatenMeals.first().changed).isTrue()
     }
 
     // ---- Delete with a long press, categories, unit ----
