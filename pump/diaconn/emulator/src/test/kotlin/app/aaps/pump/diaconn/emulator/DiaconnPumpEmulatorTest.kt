@@ -204,6 +204,30 @@ class DiaconnPumpEmulatorTest {
         assertThat(emulator.snapshot(linkUp = false).basal).isEqualTo(List(24) { (51 + it / 6) / 100.0 })
     }
 
+    /**
+     * Real G8 fw 2.50: a basal setting report about 23.5 s after the confirm of a basal write, and the start of the basal
+     * refused with 15 right after it; it was taken 30.5 s after the confirm. All shorter at FAST.
+     */
+    @Test
+    fun theStartOfAWrittenBasalWaitsUntilThePumpIsReady() {
+        var otp = 0
+        for (group in 1..4) otp = ask(BASAL_SETTING) { u8(1).u8(group).u16(70).u16(70).u16(70).u16(70).u16(70).u16(70) }.i32(5)
+        val confirmedAt = System.currentTimeMillis()
+        assertThat(send(APP_CONFIRM) { u8(BASAL_SETTING).u32(otp.toLong()) }.answer?.u8(4)).isEqualTo(0)
+        assertThat(reports.none { it.u8(1) == BASAL_SETTING_REPORT }).isTrue()
+        // The new rates run from the confirm on, also before the start is taken.
+        assertThat(emulator.snapshot(linkUp = false).basal).isEqualTo(List(24) { 0.7 })
+
+        val report = awaitReport(BASAL_SETTING_REPORT)
+        assertThat(System.currentTimeMillis() - confirmedAt).isAtLeast(DiaconnPumpEmulator.FAST_BASAL_REPORT_MS)
+        assertThat(report.u8(4)).isEqualTo(0)
+        assertThat(ask(INJECTION_BASAL) { u8(1) }.u8(4)).isEqualTo(DiaconnPumpEmulator.BASAL_NOT_SAVED)
+
+        Thread.sleep(confirmedAt + DiaconnPumpEmulator.FAST_BASAL_READY_MS + 50 - System.currentTimeMillis())
+        assertThat(ask(INJECTION_BASAL) { u8(1) }.u8(4)).isEqualTo(0)
+        assertThat(reports.count { it.u8(1) == BASAL_SETTING_REPORT }).isEqualTo(1)
+    }
+
     @Test
     fun aBasalProfileWithAGroupMissingIsRefused() {
         var otp = 0
@@ -637,6 +661,7 @@ class DiaconnPumpEmulatorTest {
         const val EXTENDED_BOLUS = 0x08
         const val TEMP_BASAL_SETTING = 0x0A
         const val BASAL_SETTING = 0x0B
+        const val INJECTION_BASAL = 0x0C
         const val TIME_SETTING = 0x0F
         const val INJECTION_CANCEL = 0x2B
         const val APP_CONFIRM = 0x37
@@ -650,6 +675,7 @@ class DiaconnPumpEmulatorTest {
         const val LOG_STATUS = 0x56
         const val BIG_LOG = 0x72
         const val BIG_MAIN_INFO = 0x73
+        const val BASAL_SETTING_REPORT = 0xCB
 
         /** The TB_DTTM the driver always sends. */
         const val TB_DTTM = 946652400

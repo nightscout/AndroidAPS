@@ -101,7 +101,22 @@ class DiaconnScenarioTest : AbstractPumpScenarioTest() {
         assertWithMessage("history read").that(scenario.readTdds().success).isTrue()
     }
 
+    /**
+     * A profile write is taken at the first try. A real G8 refuses the start of a written basal for a while after the
+     * write, also right after its basal setting report (2026-11-12): a driver that started it on that report had every
+     * write fail, and the pump ran the new rates while AAPS kept the old profile.
+     */
+    @Test
+    fun aProfileWriteIsTakenAtTheFirstTry() {
+        scenario.bringUp()
+        scenario.pair()
+
+        assertWithMessage("the write of the profile").that(scenario.profileWrittenOnce(PROFILE_PERCENT)).isTrue()
+    }
+
     private companion object {
+
+        const val PROFILE_PERCENT = 110
 
         /** Five records before the end of the log, so a few boluses wrap it. */
         const val LOG_NEAR_ITS_END = 9995

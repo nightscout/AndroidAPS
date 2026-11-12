@@ -81,6 +81,9 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
 
     /** The 4 groups of a basal write (6 hours each, in 0.01 U/h) until its confirm. */
     private val basalGroups = arrayOfNulls<IntArray>(4)
+
+    /** Before this time the pump refuses the start of the basal it was written, see `basalWritten`. */
+    private var basalReadyAt = 0L
     private val outbox = ArrayList<ByteArray>()
 
     /**
@@ -381,12 +384,27 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
         } else {
             setting.apply(now)
         }
+        if (setting.command == EmulatedCommand.BASAL_PROFILE) basalWritten(now)
         // A lost answer of a setting is the lost answer of its confirm: the setting is done then.
         if (take(lostAnswers, setting.command)) {
             log("${setting.command} done, its answer is lost")
             return null
         }
         return result(APP_CONFIRM_SETTING, seq, OK)
+    }
+
+    /**
+     * After the confirm of a basal write. Real G8 fw 2.50 (2026-11-11/12): a basal setting report with result 0 came 23.2
+     * to 23.7 s after the confirm (5 times). The start of the basal sent right after the report was refused with 15, one
+     * sent 30.5 s after the confirm was taken. The new rates run from the confirm on, also when the start is refused.
+     * UNVERIFIED: what the pump does with other requests before the report; the driver sends none.
+     */
+    private fun basalWritten(now: Long) {
+        val fast = speed == EmulatorSpeed.FAST
+        basalReadyAt = now + if (fast) FAST_BASAL_READY_MS else REAL_BASAL_READY_MS
+        val delay = if (fast) FAST_BASAL_REPORT_MS else REAL_BASAL_REPORT_MS
+        delayed += DelayedSetting(now + delay, now, holdsRequests = false) { outbox += report(BASAL_SETTING_REPORT) { u8(OK) } }
+        timer.schedule({ atNow {} }, delay, TimeUnit.MILLISECONDS)
     }
 
     private fun pendingOf(command: EmulatedCommand?, refusal: () -> Int, confirmRefusal: () -> Int = { OK }, apply: (Long) -> Unit) =
@@ -424,7 +442,12 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
         INJECTION_BASAL_SETTING  -> {
             val pattern = request.u8(4)
             // Only the basic pattern is kept; the driver sends only it.
-            pendingOf(null, { if (pattern == BASIC_PATTERN) OK else PARAMETER_ERROR }) { state.basalPattern = pattern }
+            val refusal = when {
+                pattern != BASIC_PATTERN -> PARAMETER_ERROR
+                now < basalReadyAt       -> BASAL_NOT_SAVED
+                else                     -> OK
+            }
+            pendingOf(null, { refusal }) { state.basalPattern = pattern }
         }
 
         SOUND_SETTING            -> {
@@ -1055,6 +1078,7 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
          */
         internal const val CONFIRM_REPORT = 0xE8
         internal const val TEMP_BASAL_REPORT = 0xCA
+        internal const val BASAL_SETTING_REPORT = 0xCB
         internal const val EXTENDED_RESULT_REPORT = 0xE5
         private const val EXTENDED_STOPPED = 1
         internal const val INJECTION_PROGRESS_REPORT = 0xEA
@@ -1073,6 +1097,9 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
         internal const val LOW_INSULIN = 12
         internal const val ONE_TIME_LIMIT = 13
         internal const val DAILY_LIMIT = 14
+
+        /** "After base setting is completed, base injection can be made": see `basalWritten`. */
+        internal const val BASAL_NOT_SAVED = 15
         internal const val TEMP_BASAL_RUNNING = 35
         internal const val NO_TEMP_BASAL = 36
 
@@ -1150,6 +1177,18 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), priv
          * in the second it started could not be ended in AAPS.
          */
         internal const val FAST_CARRY_OUT_MS = 1_000L
+
+        /** How long after the confirm of a basal write the pump sends its basal setting report, see `basalWritten`. */
+        private const val REAL_BASAL_REPORT_MS = 23_400L
+        internal const val FAST_BASAL_REPORT_MS = 1_000L
+
+        /**
+         * How long after the confirm of a basal write the pump takes the start of the basal, see `basalWritten`.
+         * UNVERIFIED: the real G8 refused it 23.6 s after the confirm and took it 30.5 s after; this is in between. At FAST
+         * it comes after the report, so a driver that starts the basal on the report is refused, as on the real pump.
+         */
+        private const val REAL_BASAL_READY_MS = 27_000L
+        internal const val FAST_BASAL_READY_MS = 2_000L
 
         /** Longer gaps are not counted, so a pump that slept for weeks does not write thousands of hourly records. */
         private const val MAX_SETTLE_MS = 7 * 24 * 3_600_000L
