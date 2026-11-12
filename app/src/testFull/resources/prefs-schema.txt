@@ -457,6 +457,7 @@ snooze_loop_disabled|DstHelperLongKey|true
 snoozedTo%s|LongComposedKey|true
 startupwizard_processed|BooleanNonKey|true
 stats_tab|StringNonKey|false
+status_bar_bg_icon|BooleanKey|true
 statuslights_bage_critical|IntKey|true
 statuslights_bage_warning|IntKey|true
 statuslights_bat_critical|IntKey|true
