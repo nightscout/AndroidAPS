@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Das Insulin wurde nicht gewechselt: %1$s Dein bisheriges Insulin ist weiterhin aktiv.</string>
     <string name="insulin_activation_unconfirmed">Der Insulin-Wechsel konnte nicht bestätigt werden. Prüfe vor der Insulinabgabe, welches Insulin in deinem Profil aktiv ist.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">​Das Insulin wurde nicht gewechselt. Dein vorheriges Insulin ist immer noch in Verwendung.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nDas Insulin wurde ebenfalls nicht gewechselt. Wenn das neue Insulin bereits in der Pumpe ist, verbinde die Pumpe nicht und führe den Insulinwechsel noch einmal aus.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="insulin_nickname_label">Insulin-Kurzbezeichnung</string>
@@ -1206,5 +1207,6 @@
     <string name="units_sec">s</string>
     <string name="units_years">J.</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Die Pumpe hat den Bolus nach %1$s gestoppt. Überprüfe die Pumpe vor dem nächsten Bolus.</string>
     <string name="secrets_not_protected">Auf diesem Computer wurde kein System-Schlüsselspeicher gefunden. Die Schlüssel zum Schutz deiner Einstellungen und der Kopplung mit dem Master werden in Dateien zusammen mit den Daten gespeichert. Wer eine Kopie deiner Dateien erhält, hat daher auch Zugriff auf diese Schlüssel. Installiere und starte unter Linux einen Schlüsselbunddienst (z. B. GNOME Keyring oder KWallet) und starte anschließend AAPS neu.</string>
 </resources>
