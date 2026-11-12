@@ -202,17 +202,22 @@ class BuiltInSearchables(
             BooleanKey.AlertCarbsRequired,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
-            BooleanKey.AlertOverrideDoNotDisturb,
-            cgmAlarms
+            BooleanKey.AlertOverrideDoNotDisturb
         ),
         icon = Icons.Default.Notifications
     )
 
     /**
-     * The CGM alarms (`CgmAlarmType`): one sub screen per alarm, with its switch, level, delay, repeat
-     * and sound, and a screen to mute and test them.
+     * The CGM alarms (`CgmAlarmType`): the mute and test screen, then one section per alarm with its
+     * switch, level, delay, repeat and sound. The low, high and fall rate alarms keep their old keys,
+     * so a user who had them on keeps them.
+     *
+     * A card of its own, not a part of [alerts]. The settings screen draws two levels only: a card
+     * and the sections inside it. Inside [alerts] the alarms were a third level, which is drawn as
+     * nothing, so no alarm could be switched on or set (only the mute and test row was there).
+     * `SettingsScreenDepthTest` keeps every built in card at two levels.
      */
-    private val cgmAlarms: PreferenceSubScreenDef
+    val cgmAlarms: PreferenceSubScreenDef
         get() = PreferenceSubScreenDef(
             key = "cgm_alarms",
             title = CoreUiStrings.cgm_alarms_title,
@@ -259,7 +264,8 @@ class BuiltInSearchables(
                 ),
                 cgmAlarm(CgmAlarmType.SECOND_SENSOR_READY, BooleanKey.AlertCgmSecondSensorReady),
                 cgmAlarm(CgmAlarmType.WARMUP_DONE, BooleanKey.AlertCgmWarmupDone)
-            )
+            ),
+            icon = IcCgmInsert
         )
 
     private fun cgmAlarm(type: CgmAlarmType, vararg keys: PreferenceItem) =
@@ -417,6 +423,7 @@ class BuiltInSearchables(
         add(SearchableItem.Category(protection))
         add(SearchableItem.Category(pump))
         add(SearchableItem.Category(alerts))
+        add(SearchableItem.Category(cgmAlarms))
         add(SearchableItem.Category(maintenance))
         // Registered for both roles: the location-provider mode is a Bidirectional synced setting, so a
         // client can view/set the master's value. Also makes the standalone automation cog resolve its
