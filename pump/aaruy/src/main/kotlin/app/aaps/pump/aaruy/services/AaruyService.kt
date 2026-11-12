@@ -226,8 +226,9 @@ class AaruyService : MetroService() {
         val start = sendBolusCommand(insulin, isSmb)
         if (start != AaruyBolusStart.STARTED) {
             aapsLogger.error(LTag.PUMPCOMM, "Bolus not reported by the pump: $start")
-            // The status and the history tell what the pump did. Not waited for: this bolus runs in the queue.
-            scope.launch { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
+            // The status and the history tell what the pump did. Not waited for: this bolus runs in the queue. Queued at once
+            // (UNDISPATCHED), before this command ends, so the queue is never empty in between.
+            scope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
             // A status 3 that comes later sets this back, so no second bolus can start while the pump delivers.
             aaruyPump.bolusDone = true
             aaruyPump.bolusDelivered = 0.0
@@ -378,7 +379,7 @@ class AaruyService : MetroService() {
 
     /** Not waited for: it runs after the command that asks for it. The pump has no screen, so its Stop must come back soon. */
     private fun readStatusAfterLostBolus() {
-        scope.launch { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
+        scope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus(rh.gs(R.string.alarm_bolus_error)) }
     }
 
     fun stopBolus() {
