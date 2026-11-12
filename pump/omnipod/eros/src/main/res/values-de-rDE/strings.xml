@@ -12,6 +12,7 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f IE</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f IE, KH=%2$.1fg</string>
+    <string name="omnipod_eros_history_tbr_value">Rate: %1$.2f IE/h, Dauer: %2$d min</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Kommunikation fehlgeschlagen: Die Überprüfung der Nachrichtenintegrität ist fehlgeschlagen</string>
     <string name="omnipod_eros_error_invalid_packet_type">Kommunikation fehlgeschlagen: Es wurde ein ungültiges Paket vom Pod empfangen.</string>
@@ -28,7 +29,16 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Keine Antwort vom RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink unterbrochen</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Keine Rückmeldung vom Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Das Einstellen des Basalprofils ist fehlgeschlagen. Die Abgabe ist möglicherweise angehalten! Bitte aktualisiere den Pod-Status manuell auf dem Bildschirm der Pumpe und setze die Abgabe bei Bedarf fort.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Das Einstellen des Basalprofils ist möglicherweise fehlgeschlagen. Die Abgabe könnte angehalten sein! Bitte aktualisiere manuell den Pod-Status auf dem Bildschirm der Pumpe und setze bei Bedarf die Abgabe fort.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Das Einstellen des Basalprofils ist fehlgeschlagen. Die Abgabe ist angehalten! Bitte setze die Abgabe manuell über den Bildschirm der Pumpe fort.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Das Abbrechen der temporären Basalrate ist möglicherweise fehlgeschlagen. Bitte aktualisiere den Pod-Status manuell auf dem Bildschirm der Pumpe.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Das Einstellen einer temporären Basalrate ist fehlgeschlagen. Falls zuvor eine temporäre Basalrate aktiv war, wurde diese möglicherweise abgebrochen. Bitte aktualisiere den Pod-Status manuell auf dem Bildschirm der Pumpe.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Das Einstellen einer temporären Basalrate ist möglicherweise fehlgeschlagen. Falls zuvor eine temporäre Basalrate aktiv war, wurde diese abgebrochen. Bitte aktualisiere den Pod-Status manuell auf dem Bildschirm der Pumpe.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Das Einstellen der Zeit ist möglicherweise fehlgeschlagen. Die Abgabe könnte angehalten sein! Bitte aktualisiere den Pod-Status manuell auf dem Bildschirm der Pumpe und setze die Abgabe bei Bedarf fort.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Einstellen der Uhrzeit fehlgeschlagen. Die Abgabe ist angehalten! Bitte setze die Abgabe manuell über den Bildschirm der Pumpe fort.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Die automatische Zeitumstellung auf dem Pod ist fehlgeschlagen. Synchronisiere die Uhrzeit manuell auf dem Bildschirm der Pumpe.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Bolusabgabe kann nicht verifiziert werden. Prüfe manuell, ob der Pod Insulin abgibt, indem Du auf Klickgeräusche achtest. <b>Wenn Du sicher bist, dass der Bolus nicht abgegeben wurde, musst Du ihn manuell aus den Behandlungen löschen. Dies gilt auch, wenn Du jetzt \'Bolus abbrechen\' klickst!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">SMB-Abgabe (%1$.2f IE) kann nicht verifiziert werden. <b>Wenn Du sicher bist, dass der SMB nicht abgegeben wurde, musst Du ihn manuell aus den Behandlungen löschen.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Auf dem Pod läuft eine temp. Basalrate, aber AAPS kennt diese nicht. Brich die TBR bitte manuell ab.</string>
