@@ -27,7 +27,6 @@
     <string name="commanderror">Fehler bei Befehlsausführung</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>
     <string name="insulinlimitviolation">Insulin-Beschränkung verletzt</string>
-    <string name="diaconn_g8_bolus_stopped_by_pump" comment="%1$s=insulin given, with unit. Example: 0.30 U">Der Bolus wurde nach %1$s abgebrochen. Prüfe die Pumpe bevor du den nächsten Bolus abgibst.</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="bolus_step">Bolus-Schritt</string>
     <string name="basal_step">Basal-Schritt</string>
