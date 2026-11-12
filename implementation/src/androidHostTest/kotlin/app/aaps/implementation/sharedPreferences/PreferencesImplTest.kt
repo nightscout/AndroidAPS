@@ -57,6 +57,19 @@ class PreferencesImplTest {
             forcedKeys.forEach { (key, forced) -> prefs.put(key, !forced) }
         }
 
+    /** An observer of a removed key sees what get() returns, the default. The DanaR driver missed every unpair. */
+    @Test
+    fun `an observer sees a removed key as its default`() {
+        val prefs = preferences(client = false)
+        prefs.put(StringNonKey.ActivePumpSerialNumber, "DAN64243EM")
+        val observed = prefs.observe(StringNonKey.ActivePumpSerialNumber)
+        assertThat(observed.value).isEqualTo("DAN64243EM")
+
+        prefs.remove(StringNonKey.ActivePumpSerialNumber)
+
+        assertThat(observed.value).isEqualTo(StringNonKey.ActivePumpSerialNumber.defaultValue)
+    }
+
     @Test
     fun `exactly the agreed keys are forced by hardened mode, and their default is the hardened value`() {
         val flagged = BooleanKey.entries.filter { it.defaultedByHardenedMode }
