@@ -4,8 +4,10 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import org.joda.time.DateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.whenever
 
 class TimeInquireResponsePacketTest : TestBaseWithProfile() {
 
@@ -159,6 +161,33 @@ class TimeInquireResponsePacketTest : TestBaseWithProfile() {
         data[19] = DiaconnG8Packet.getCRC(data, 19)
         return data
     }
+
+    // A real G8 (fw 2.50) after its clock was set on the pump: 2026-11-11 18:20:38. It answered 47 s before the phone.
+    @Test
+    fun theClockOfARealPumpIsReadWithItsOffset() {
+        whenever(dateUtil.now()).thenReturn(DateTime(2026, 11, 11, 18, 21, 25).millis)
+
+        TimeInquireResponsePacket(packetInjector).handleMessage(hex("ef 8f 27 00 10 1a 0b 0b 12 14 26 ff ff ff ff ff ff ff ff 92"))
+
+        assertThat(diaconnG8Pump.pumpClockImpossible).isFalse()
+        assertThat(diaconnG8Pump.getPumpTime()).isEqualTo(DateTime(2026, 11, 11, 18, 20, 38).millis)
+        assertThat(diaconnG8Pump.pumpClockOffsetSeconds()).isEqualTo(-47L)
+    }
+
+    // The same pump before, its clock never set: 2025-03-19 00:65:41. Its own screen showed 00:70 a little later.
+    @Test
+    fun aClockThatIsNoRealTimeIsKnownAsSuch() {
+        val packet = TimeInquireResponsePacket(packetInjector)
+
+        packet.handleMessage(hex("ef 8f 17 00 10 19 03 13 00 41 29 ff ff ff ff ff ff ff ff ed"))
+
+        assertThat(packet.failed).isFalse()
+        assertThat(diaconnG8Pump.pumpClockImpossible).isTrue()
+        assertThat(diaconnG8Pump.getPumpTime()).isEqualTo(0L)
+        assertThat(diaconnG8Pump.pumpClockOffsetSeconds()).isNull()
+    }
+
+    private fun hex(bytes: String): ByteArray = bytes.split(" ").map { it.toInt(16).toByte() }.toByteArray()
 
     private fun createPacketWithResult(result: Int): ByteArray {
         val data = ByteArray(20)

@@ -5,6 +5,8 @@ import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -22,7 +24,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -40,6 +46,7 @@ class PumpSyncConcentrationTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var activePump: PumpWithConcentration
     @Mock lateinit var effectiveProfile: EffectiveProfile
+    @Mock lateinit var config: Config
 
     private lateinit var sut: PumpSyncImplementation
 
@@ -70,10 +77,11 @@ class PumpSyncConcentrationTest : TestBase() {
         whenever(preferences.get(StringNonKey.ActivePumpType)).thenReturn(pumpType.description)
         whenever(preferences.get(StringNonKey.ActivePumpSerialNumber)).thenReturn(pumpSerial)
         whenever(preferences.get(LongNonKey.ActivePumpChangeTimestamp)).thenReturn(now - 10000)
+        whenever(config.appInitialized).thenReturn(true)
 
         sut = PumpSyncImplementation(
             aapsLogger, dateUtil, preferences, notificationManager,
-            profileFunction, persistenceLayer, activePlugin
+            profileFunction, persistenceLayer, activePlugin, config
         )
     }
 
@@ -307,6 +315,54 @@ class PumpSyncConcentrationTest : TestBase() {
         val result = runBlocking { sut.syncExtendedBolusWithPumpId(now, PumpRate(2.0), 3600000L, false, 500L, pumpType, pumpSerial) }
 
         assertThat(result).isFalse()
+    }
+
+    // --- During the app start ---
+
+    /** As the real ones do: no profile until the app has finished starting. */
+    private fun appStarting(): MutableStateFlow<InitProgress> {
+        val progress = MutableStateFlow(InitProgress())
+        whenever(config.initProgressFlow).thenReturn(progress)
+        whenever(config.appInitialized).thenAnswer { progress.value.done && !progress.value.reconfiguring }
+        runBlocking {
+            whenever(profileFunction.getProfile(now)).thenAnswer { if (progress.value.done) effectiveProfile else null }
+            whenever(effectiveProfile.insulinConcentration()).thenReturn(1.0)
+            whenever(effectiveProfile.iCfg).thenReturn(iCfg100)
+        }
+        return progress
+    }
+
+    /**
+     * Seen on a real pump: its history read at app start stored a bolus before the app had finished starting. There
+     * was no profile yet, so the bolus was dropped, and for good: `false` also means "already stored", so the driver
+     * went on. Now the store waits for the start.
+     */
+    @Test
+    fun `a bolus stored during the app start waits for the start and is stored`() = runTest {
+        val progress = appStarting()
+        stubSyncPumpBolus()
+
+        val result = async { sut.syncBolusWithPumpId(now, PumpInsulin(1.3), BS.Type.NORMAL, 600L, pumpType, pumpSerial) }
+        advanceTimeBy(10_000)
+        assertThat(capturedBolus).isNull()
+
+        progress.value = InitProgress(done = true)
+        assertThat(result.await()).isTrue()
+        assertThat(capturedBolus!!.amount).isEqualTo(1.3)
+    }
+
+    /** It does not wait for ever: an app that does not finish starting in 30 s drops the record, as before. */
+    @Test
+    fun `a record stored when the app does not finish starting is dropped after 30 s`() = runTest {
+        appStarting()
+
+        val result = async { sut.addTemporaryBasalWithTempId(now, PumpRate(0.0), 1800000L, true, 700L, PumpSync.TemporaryBasalType.PUMP_SUSPEND, pumpType, pumpSerial) }
+        advanceTimeBy(29_000)
+        assertThat(result.isCompleted).isFalse()
+        advanceTimeBy(2_000)
+
+        assertThat(result.await()).isFalse()
+        assertThat(capturedTB).isNull()
     }
 
     // --- VirtualPump bypass ---

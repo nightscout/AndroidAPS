@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
@@ -29,6 +30,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -321,6 +323,46 @@ class DanaPump(
     var target = 0 // mgdl 40~400 mmol 2.2~22 => 220~2200
     var autoLock = false // Dana-i2 only
     var userOptionsFromPump: ByteArray? = null
+
+    /**
+     * The user options the screen saved, written by the next user options write. Kept apart from the fields above, which
+     * a settings read fills: the screen put its values there, a read queued before the write put the pump's old values
+     * back, and the old values were written and shown as saved.
+     */
+    @Volatile var userOptionsToWrite: UserOptions? = null
+
+    /** The user options the screen can change, as the pump takes them. */
+    data class UserOptions(
+        val timeDisplayType24: Boolean,
+        val buttonScrollOnOff: Boolean,
+        val beepAndAlarm: Int,
+        val lcdOnTimeSec: Int,
+        val backlightOnTimeSec: Int,
+        val units: Int,
+        val shutdownHour: Int,
+        val lowReservoirRate: Int,
+        val autoLock: Boolean
+    )
+
+    /** The user options a write sends: those the screen saved, or the ones last read from the pump. */
+    fun userOptionsForWrite(): UserOptions = userOptionsToWrite ?: UserOptions(
+        timeDisplayType24, buttonScrollOnOff, beepAndAlarm, lcdOnTimeSec, backlightOnTimeSec, units, shutdownHour, lowReservoirRate, autoLock
+    )
+
+    /** The pump took [written]: they are the pump's options now, before the next read reads them. */
+    fun userOptionsWritten(written: UserOptions) {
+        timeDisplayType24 = written.timeDisplayType24
+        buttonScrollOnOff = written.buttonScrollOnOff
+        beepAndAlarm = written.beepAndAlarm
+        lcdOnTimeSec = written.lcdOnTimeSec
+        backlightOnTimeSec = written.backlightOnTimeSec
+        units = written.units
+        shutdownHour = written.shutdownHour
+        lowReservoirRate = written.lowReservoirRate
+        autoLock = written.autoLock
+        if (userOptionsToWrite == written) userOptionsToWrite = null
+    }
+
     var initialBolusAmount = 0.0
 
     // Bolus settings
@@ -340,6 +382,17 @@ class DanaPump(
     // (bolus progress/stop messages) and the user's stop action set these - @Volatile for visibility.
     @Volatile var bolusStopped = false // bolus finished
     @Volatile var bolusStopForced = false // bolus forced to stop by user
+
+    /**
+     * The pump stopped the bolus itself: an occlusion, a shutdown or a battery error (DanaR `MsgError`). Set apart from
+     * [bolusStopped], which the pump's own end of each bolus sets too: a bolus it stopped was counted as given.
+     */
+    @Volatile var bolusStoppedByPump = false
+
+    /** What the user is told about a bolus not given in full: [given] of [asked] U. */
+    fun bolusFailure(rh: ResourceHelper, asked: Double, given: Double): String =
+        if (bolusStoppedByPump) rh.gs(app.aaps.core.ui.R.string.pump_stopped_bolus, rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, given))
+        else rh.gs(R.string.boluserrorcode, asked, given, bolusStartErrorCode)
     @Volatile var bolusDone = false // success end
     var lastEventTimeLoaded: Long = 0 // timestamp of last received event
 
@@ -463,6 +516,18 @@ class DanaPump(
             preferences.get(DanaStringNonKey.Password),
             ignoreCase = true
         ) || ignoreUserPassword
+
+    /**
+     * The next status read reads all settings and the whole history again, as after [reset]. Unlike [reset] it keeps
+     * what identifies the pump and what was read: a command that runs now still writes its records for this pump. The
+     * Refresh button used [reset], and the records of a read that ran at that time were refused as coming from another
+     * pump (empty serial number).
+     */
+    fun readAllAgain() {
+        aapsLogger.debug(LTag.PUMP, "DanaRPump: read all again")
+        lastSettingsRead = 0
+        readHistoryFrom = 0
+    }
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
@@ -592,11 +657,27 @@ class DanaPump(
         const val DELIVERY_EXT_BOLUS = 0x08
         const val PROFILE_PREFIX = "DanaR-"
 
+        /**
+         * How long after the end of a bolus the pump has it in its history and in its status. A real DanaRv2 wrote the
+         * BOLUS record about 2 s after it sent the end (2026-11-10).
+         */
+        const val BOLUS_LOGGED_AFTER_END = 3000L
+
         // Dana R btModel
         const val DOMESTIC_MODEL = 0x01
         const val EXPORT_MODEL = 0x03
 
         /** The bolus and basal step before the pump reported its own. */
         private const val STARTING_STEP = 0.1
+
+        /** Above the error of a double, far below a percent. */
+        private const val PERCENT_EPSILON = 1e-6
+
+        /**
+         * The whole percent of [base] that [rate] is, cut as the temp basal of the pump takes it. The cut is on the exact
+         * value: 1.2 / 0.8 * 100 is 149.99999..., which a plain cut made 149, and the step down to 10 % then set 140 % for a
+         * temp basal of 150 %. 0.88 / 0.8 gave 100 %, so no temp basal at all in place of 110 %.
+         */
+        fun tempBasalPercent(rate: Double, base: Double): Int = floor(rate / base * 100 + PERCENT_EPSILON).toInt()
     }
 }

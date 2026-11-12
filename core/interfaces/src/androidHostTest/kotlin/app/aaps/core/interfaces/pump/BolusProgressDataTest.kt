@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.pump
 
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -33,6 +34,44 @@ class BolusProgressDataTest {
         val first = sut.start(insulin = 0.25, isSMB = true)
         val second = sut.start(insulin = 1.1, isSMB = false)
         assertThat(second).isGreaterThan(first)
+    }
+
+    /** A driver found a bolus running after an app restart: progress and Stop, as for a bolus the queue started. */
+    @Test
+    fun `startIfIdle shows a bolus the pump runs when nothing is shown`() {
+        val generation = sut.startIfIdle(insulin = 2.0, isSMB = false)
+        assertThat(generation).isNotNull()
+        assertThat(sut.state.value?.insulin).isEqualTo(2.0)
+        assertThat(sut.state.value?.stopDeliveryEnabled).isTrue()
+    }
+
+    /** The bolus the command queue is starting keeps its progress, and its generation still clears it. */
+    @Test
+    fun `startIfIdle leaves a bolus that is shown already`() {
+        val queueGeneration = sut.start(insulin = 1.1, isSMB = false)
+        assertThat(sut.startIfIdle(insulin = 2.0, isSMB = false)).isNull()
+        assertThat(sut.state.value?.insulin).isEqualTo(1.1)
+        sut.clear(queueGeneration)
+        assertThat(sut.state.value).isNull()
+    }
+
+    /** The queue starts a new bolus from another thread at the same time: one of them shows, and its generation is the last one. */
+    @Test
+    fun `startIfIdle and start from two threads never mix their state and generation`() {
+        repeat(200) {
+            val data = BolusProgressData(ch, TestScope())
+            var idleGeneration: Long? = null
+            var queueGeneration = 0L
+            val idle = Thread { idleGeneration = data.startIfIdle(insulin = 2.0, isSMB = false) }
+            val queue = Thread { queueGeneration = data.start(insulin = 1.1, isSMB = false) }
+            idle.start(); queue.start(); idle.join(); queue.join()
+            // The queue always shows its bolus last or alone. If the driver's one came first, it is replaced and its
+            // generation is older, so its clear cannot wipe the queue's bolus.
+            assertThat(data.state.value?.insulin).isEqualTo(1.1)
+            idleGeneration?.let { assertThat(it).isLessThan(queueGeneration) }
+            idleGeneration?.let { data.clear(it) }
+            assertThat(data.state.value?.insulin).isEqualTo(1.1)
+        }
     }
 
     @Test
@@ -81,6 +120,17 @@ class BolusProgressDataTest {
         sut.clear()              // abort-everything — must wipe regardless of generation
 
         assertThat(sut.state.value).isNull()
+    }
+
+    @Test
+    fun `a new status text keeps the amount given`() {
+        sut.start(insulin = 2.0, isSMB = false)
+        sut.updateProgress(PumpInsulin(0.7))
+
+        sut.updateProgress(35, TextRef.Literal("Stopped"))
+
+        assertThat(sut.state.value?.delivered?.cU).isEqualTo(0.7)
+        assertThat(sut.state.value?.status).isEqualTo(TextRef.Literal("Stopped"))
     }
 
     @Test

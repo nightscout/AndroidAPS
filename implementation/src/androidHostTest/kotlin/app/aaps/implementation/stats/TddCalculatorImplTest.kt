@@ -7,6 +7,7 @@ import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -47,7 +48,7 @@ class TddCalculatorImplTest : TestBase() {
     private lateinit var tddCalculator: TddCalculatorImpl
 
     private val now = 1000000000L
-    private val midnight = MidnightTime.calc(now)
+    private val midnight = MidnightTime.before(now, TimeZone.currentSystemDefault())
 
     @BeforeEach
     fun setup() {
@@ -626,10 +627,12 @@ class TddCalculatorImplTest : TestBase() {
     private inline fun <R> inZone(zoneId: String, block: () -> R): R {
         val previous = JavaTimeZone.getDefault()
         JavaTimeZone.setDefault(JavaTimeZone.getTimeZone(zoneId))
+        SystemTimeZone.invalidate() // it keeps the zone for 10 s, and the next test must not get this one
         try {
             return block()
         } finally {
             JavaTimeZone.setDefault(previous)
+            SystemTimeZone.invalidate()
         }
     }
 
@@ -695,8 +698,8 @@ class TddCalculatorImplTest : TestBase() {
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
         givenTemporaryBasals { absolute(1.0) }
 
-        val windowStart = MidnightTime.calcDaysBack(now, 7)
-        val profileFrom = MidnightTime.calc(windowStart + T.days(profileAvailableFromDay.toLong()).msecs())
+        val windowStart = MidnightTime.daysBack(now, 7, TimeZone.currentSystemDefault())
+        val profileFrom = MidnightTime.before(windowStart + T.days(profileAvailableFromDay.toLong()).msecs(), TimeZone.currentSystemDefault())
         whenever(profileFunction.getProfile(any())).thenAnswer { invocation ->
             if (invocation.getArgument<Long>(0) >= profileFrom) profile else null
         }

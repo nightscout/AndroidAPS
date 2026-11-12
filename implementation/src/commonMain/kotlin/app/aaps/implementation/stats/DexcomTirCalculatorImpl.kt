@@ -1,5 +1,6 @@
 package app.aaps.implementation.stats
 
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
@@ -58,8 +59,8 @@ class DexcomTirCalculatorImpl(
      *         mean glucose, standard deviation, and estimated HbA1c
      */
     override suspend fun calculate(): DexcomTIR {
-        val startTime = MidnightTime.calcDaysBack(days)
-        val endTime = MidnightTime.calc(dateUtil.now())
+        val startTime = MidnightTime.daysBack(days, SystemTimeZone.current())
+        val endTime = MidnightTime.before(dateUtil.now(), SystemTimeZone.current())
 
         val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true)
         val result = DexcomTirImpl()

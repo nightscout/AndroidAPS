@@ -2,6 +2,7 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
+import kotlin.math.roundToInt
 
 class MsgSetExtendedBolusStart(
     injector: MetroMemberInjector,
@@ -16,10 +17,12 @@ class MsgSetExtendedBolusStart(
         // HARDCODED LIMITS
         if (halfHours < 1) halfHours = 1
         if (halfHours > 16) halfHours = 16
-        // Amount already constrained in IU (queue) and cU (PumpWithConcentration boundary).
-        addParamInt((amount * 100).toInt())
+        // Amount already constrained in IU (queue) and cU (PumpWithConcentration boundary). Rounded: a cut gave less,
+        // 1.15 * 100 is 114.99999..., so 1.15 U went to the pump as 1.14 U.
+        val hundredths = (amount * 100).roundToInt()
+        addParamInt(hundredths)
         addParamByte(halfHours)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start: " + (amount * 100).toInt() / 100.0 + "U halfHours: " + halfHours.toInt())
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start: " + hundredths / 100.0 + "U halfHours: " + halfHours.toInt())
     }
 
     override fun handleMessage(bytes: ByteArray) {

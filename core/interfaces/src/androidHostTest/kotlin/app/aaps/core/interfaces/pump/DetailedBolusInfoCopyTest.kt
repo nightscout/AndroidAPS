@@ -32,6 +32,7 @@ class DetailedBolusInfoCopyTest {
         glucoseType = TE.MeterType.FINGER
         bolusType = BS.Type.SMB
         carbsDuration = 3_600_000L
+        eCarbs = ECarbs(grams = 35, timestamp = 1_700_003_600_000L, durationHours = 3, delayMinutes = 60)
         pumpType = PumpType.ACCU_CHEK_COMBO
         pumpSerial = "serial-1"
         bolusPumpId = 42L
@@ -57,6 +58,7 @@ class DetailedBolusInfoCopyTest {
         assertThat(copy.glucoseType).isEqualTo(original.glucoseType)
         assertThat(copy.bolusType).isEqualTo(original.bolusType)
         assertThat(copy.carbsDuration).isEqualTo(original.carbsDuration)
+        assertThat(copy.eCarbs).isEqualTo(original.eCarbs)
         assertThat(copy.pumpType).isEqualTo(original.pumpType)
         assertThat(copy.pumpSerial).isEqualTo(original.pumpSerial)
         assertThat(copy.bolusPumpId).isEqualTo(original.bolusPumpId)
@@ -88,5 +90,15 @@ class DetailedBolusInfoCopyTest {
 
         assertThat(copy.createBolus(iCfg = app.aaps.core.data.model.ICfg("", 0, 0)).timestamp)
             .isEqualTo(1_700_000_005_000L)
+    }
+
+    @Test
+    fun createECarbs_isTheExtendedPartWithItsOwnTimeAndDuration() {
+        val eCarbs = populated().createECarbs()
+
+        assertThat(eCarbs.amount).isEqualTo(35.0)
+        assertThat(eCarbs.timestamp).isEqualTo(1_700_003_600_000L)
+        assertThat(eCarbs.duration).isEqualTo(3 * 3_600_000L)
+        assertThat(eCarbs.notes).isEqualTo("note")
     }
 }

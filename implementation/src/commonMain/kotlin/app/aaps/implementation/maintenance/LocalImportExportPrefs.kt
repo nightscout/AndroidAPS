@@ -1,5 +1,6 @@
 package app.aaps.implementation.maintenance
 
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -243,7 +244,7 @@ class LocalImportExportPrefs(
      * treatment log, and its value is being readable in a spreadsheet.
      */
     override suspend fun executeCsvExport(): ExportResult {
-        val since = MidnightTime.calc() - T.days(CSV_DAYS).msecs()
+        val since = MidnightTime.last(SystemTimeZone.current()) - T.days(CSV_DAYS).msecs()
         val entries = persistenceLayer.getUserEntryFilteredDataFromTime(since)
         val name = files.newCsvName()
         return try {

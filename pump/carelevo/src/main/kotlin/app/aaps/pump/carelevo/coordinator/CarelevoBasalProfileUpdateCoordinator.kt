@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.coordinator
 
+import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
@@ -39,9 +40,16 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
         // Fresh-session worst case: 1 s settle + ≤20 s connect handshake + ≤30 s for the three program
         // writes — the session's own withTimeouts fire first, this is only the outer backstop.
         private const val BASAL_PROGRAM_TIMEOUT_SEC = 60L
+
+        /** The least time between two profile updates of the patch. */
+        private const val PROFILE_UPDATE_SPACING_MS = 30_000L
     }
 
     private var lastProfileUpdateAttemptMs: Long = 0
+
+    /** The clock and the wait of the spacing between updates, replaced in unit tests. */
+    internal var clock: () -> Long = { System.currentTimeMillis() }
+    internal var sleep: (Long) -> Unit = { SystemClock.sleep(it) }
 
     /** The hourly segments of the program the patch accepted, see [CarelevoSetBasalProgramUseCase.acceptedBasalSegments]. */
     fun acceptedBasalSegments(): List<CarelevoBasalSegmentInfusionInfoDomainModel>? = setBasalProgramUseCase.acceptedBasalSegments()
@@ -58,16 +66,21 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "execute.start profile=$profile")
 
         val result = pumpEnactResultProvider()
-        val now = System.currentTimeMillis()
-        if (now - lastProfileUpdateAttemptMs < 30_000) {
-            // Benign debounce: a repeated profile-set within 30s is skipped, not a real failure.
-            // Do not post FAILED_UPDATE_PROFILE here — dev reclassified it to URGENT, so posting it
-            // for this non-event would ring the alarm. Log only; the real failure branches below post.
-            aapsLogger.debug(LTag.PUMPCOMM, "execute.skip tooSoon=true")
-            return result
-                .success(true)
-                .enacted(false)
-                .comment(rh.gs(R.string.carelevo_profile_update_skip_comment))
+        val sinceLast = clock() - lastProfileUpdateAttemptMs
+        if (sinceLast < PROFILE_UPDATE_SPACING_MS) {
+            if (setBasalProgramUseCase.isAccepted(profile) == true) {
+                // A repeated profile-set of what the patch already runs: nothing to do, and not a failure.
+                aapsLogger.debug(LTag.PUMPCOMM, "execute.skip sameProfile=true")
+                return result
+                    .success(true)
+                    .enacted(false)
+                    .comment(rh.gs(R.string.carelevo_profile_update_skip_comment))
+            }
+            // Another profile, or a try again after a failure, waits for its turn. It was skipped and reported as set,
+            // so AAPS recorded a profile the patch did not run.
+            val wait = PROFILE_UPDATE_SPACING_MS - sinceLast
+            aapsLogger.debug(LTag.PUMPCOMM, "execute.wait ${wait}ms")
+            sleep(wait)
         }
 
         val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
@@ -98,19 +111,19 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
             is ResponseResult.Success -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "execute.success")
                 onProfileUpdated(profile)
-                lastProfileUpdateAttemptMs = System.currentTimeMillis()
+                lastProfileUpdateAttemptMs = clock()
                 result.success(true).enacted(true)
             }
 
             is ResponseResult.Error   -> {
                 aapsLogger.error(LTag.PUMPCOMM, "execute.error error=${response.e}", response.e)
-                lastProfileUpdateAttemptMs = System.currentTimeMillis()
+                lastProfileUpdateAttemptMs = clock()
                 result.success(false).enacted(false)
             }
 
             is ResponseResult.Failure -> {
                 aapsLogger.error(LTag.PUMPCOMM, "execute.failure unknownResponse=$response")
-                lastProfileUpdateAttemptMs = System.currentTimeMillis()
+                lastProfileUpdateAttemptMs = clock()
                 result.success(false).enacted(false)
             }
         }

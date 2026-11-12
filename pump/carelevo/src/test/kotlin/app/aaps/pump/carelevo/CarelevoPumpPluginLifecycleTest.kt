@@ -482,17 +482,18 @@ class CarelevoPumpPluginLifecycleTest {
 
         start()
 
-        assertThat(plugin.reservoirLevel.value.cU).isWithin(0.001).of(42.5)
+        assertThat(plugin.reservoirLevel.value?.cU).isWithin(0.001).of(42.5)
         assertThat(plugin.batteryLevel.value).isEqualTo(0)
     }
 
+    /** No patch, no reservoir to tell. A 0 went to Nightscout and to automation rules as an empty reservoir. */
     @Test
-    fun `onStart reports a zero reservoir when no patch record exists`() {
+    fun `onStart reports no reservoir when no patch record exists`() {
         patchInfoSubject.onNext(Optional.empty())
 
         start()
 
-        assertThat(plugin.reservoirLevel.value.cU).isWithin(0.001).of(0.0)
+        assertThat(plugin.reservoirLevel.value).isNull()
     }
 
     @Test
@@ -501,7 +502,7 @@ class CarelevoPumpPluginLifecycleTest {
 
         patchInfoSubject.onNext(Optional.of(samplePatchInfo(insulinRemain = 12.25)))
 
-        assertThat(plugin.reservoirLevel.value.cU).isWithin(0.001).of(12.25)
+        assertThat(plugin.reservoirLevel.value?.cU).isWithin(0.001).of(12.25)
     }
 
     // ---- onStart: Bluetooth adapter seed + receiver ---------------------------------------------

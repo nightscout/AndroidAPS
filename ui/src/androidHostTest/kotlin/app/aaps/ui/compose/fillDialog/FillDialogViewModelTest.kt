@@ -270,7 +270,7 @@ internal class FillDialogViewModelTest {
         val seen = runFailingPrime(changeInsulin = true)
 
         // One combined message, not two dialogs stacked on the user.
-        assertThat(seen).contains("pump error\n\nThe insulin was also not switched.")
+        assertThat(seen).contains("pump error\n\nThe insulin was also not switched. If the new insulin is already in the pump, do not connect the pump, and run the insulin change again.")
         assertThat(seen).doesNotContain("pump error")
     }
 

@@ -1,6 +1,7 @@
 package app.aaps.core.objects.profile
 
 import android.content.Context
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -9,9 +10,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
-import app.aaps.core.utils.MidnightUtils
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.HardLimitsMock
 import app.aaps.shared.tests.TestBase
@@ -90,9 +91,9 @@ class ProfileSealedTest : TestBase() {
         c[Calendar.MINUTE] = 0
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
-        assertThat(p.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(c.timeInMillis))).isWithin(0.01).of(108.0935)
+        assertThat(p.getIsfMgdlTimeFromMidnight(MidnightTime.secondsFromMidnight(c.timeInMillis, SystemTimeZone.current()))).isWithin(0.01).of(108.0935)
         c[Calendar.HOUR_OF_DAY] = 2
-        assertThat(p.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(c.timeInMillis))).isWithin(0.01).of(111.6967)
+        assertThat(p.getIsfMgdlTimeFromMidnight(MidnightTime.secondsFromMidnight(c.timeInMillis, SystemTimeZone.current()))).isWithin(0.01).of(111.6967)
 //        assertThat(p.getIsfTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(110.0)
         assertThat(p.getIsfList(text, dateUtil).replace(".", ",")).isEqualTo(
             """
@@ -139,7 +140,7 @@ class ProfileSealedTest : TestBase() {
         assertThat(p.getBasal(c.timeInMillis)).isWithin(0.01).of(0.05)
         assertThat(p.percentageBasalSum()).isWithin(0.01).of(1.2)
         assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(60.0)
-        assertThat(p.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(c.timeInMillis))).isWithin(0.01).of(223.3933)
+        assertThat(p.getIsfMgdlTimeFromMidnight(MidnightTime.secondsFromMidnight(c.timeInMillis, SystemTimeZone.current()))).isWithin(0.01).of(223.3933)
 
         // Test timeshift functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)

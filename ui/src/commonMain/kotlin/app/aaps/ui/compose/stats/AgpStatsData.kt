@@ -3,13 +3,14 @@ package app.aaps.ui.compose.stats
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.MidnightTime
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import kotlin.time.Instant
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 enum class AgpStatsRange {
@@ -20,7 +21,7 @@ enum class AgpStatsRange {
     DAYS_90;
 
     fun startTime(now: Long): Long = when (this) {
-        TODAY    -> MidnightTime.calc(now)
+        TODAY    -> MidnightTime.before(now, SystemTimeZone.current())
         HOURS_24 -> now - T.hours(24).msecs()
         DAYS_7   -> now - T.days(7).msecs()
         DAYS_30  -> now - T.days(30).msecs()
@@ -113,7 +114,7 @@ internal fun calculateAgpStatsData(
     val cadence = gaps.getOrNull(gaps.size / 2) ?: DEFAULT_CADENCE_MS
     val sampleDays = valid.size * cadence.toDouble() / DAY_MS
     val spanDays = (valid.last().timestamp - valid.first().timestamp + cadence).toDouble() / DAY_MS
-    val zone = TimeZone.currentSystemDefault()
+    val zone = SystemTimeZone.current()
 
     return AgpStatsData(
         lowMgdl = lowMgdl,
@@ -161,6 +162,13 @@ private fun percentile(sorted: List<Double>, fraction: Double): Double {
 }
 
 private fun percentage(count: Int, total: Int): Double = count * 100.0 / total
+
+/**
+ * An HbA1c in percent (DCCT/NGSP) as a whole number in mmol/mol (IFCC). Doctors use one or the other, by
+ * country and not by the glucose units, so the statistics show both (#5475). The eA1c and GMI of the AGP card
+ * and the HbA1c of the Dexcom TIR card use this one conversion.
+ */
+internal fun hba1cMmolMol(percent: Double): Int = ((percent - 2.15) * 10.929).roundToInt()
 
 private const val MIN_VALID_BG = 39.0
 private const val VERY_LOW_MGDL = 54.0

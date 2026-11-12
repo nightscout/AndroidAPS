@@ -118,6 +118,7 @@ class GraphScopeStabilityTest {
             "clientPairingRepository",
             "cloudDirectoryManager",
             "cloudStorageManager",
+            "commandExecutor",
             "commandQueue",
             "concentrationHelper",
             "config",

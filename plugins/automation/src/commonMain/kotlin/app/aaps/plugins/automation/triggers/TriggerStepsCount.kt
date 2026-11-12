@@ -34,7 +34,12 @@ class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
         // so we must get some entries from the last 5 minutes.
         val start = dateUtil.now() - 5 * 60 * 1000L
         val measurements = persistenceLayer.getStepsCountFromTime(start)
-        val lastSC = measurements.lastOrNull { it.duration == measurementDuration.value.toInt() * 60 * 1000L }
+        // Use the newest reading. The watch writes several rows with the same time, one per duration, and an
+        // older watch app fills only the windows up to that duration (the 5 min row has 0 for 10 min). The
+        // longest duration has all windows filled. A source that writes one row with all windows (a phone
+        // step counter) has just that one row. Row order for the same time is not defined by the database.
+        val newest = measurements.maxOfOrNull { it.timestamp }
+        val lastSC = measurements.filter { it.timestamp == newest }.maxByOrNull { it.duration }
         if (lastSC == null) {
             aapsLogger.info(LTag.AUTOMATION, "No steps count measurements available - ${friendlyDescription()}")
             return false

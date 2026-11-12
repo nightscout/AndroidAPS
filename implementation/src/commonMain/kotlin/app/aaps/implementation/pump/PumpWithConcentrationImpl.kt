@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.implementation.ImplementationStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -74,7 +75,7 @@ class PumpWithConcentrationImpl(
     override val lastDataTime: StateFlow<Long> get() = activePumpInternal.lastDataTime
     override val lastBolusTime: StateFlow<Long?> get() = activePumpInternal.lastBolusTime
     override val lastBolusAmount: StateFlow<PumpInsulin?> get() = activePumpInternal.lastBolusAmount
-    override val reservoirLevel: StateFlow<PumpInsulin> get() = activePumpInternal.reservoirLevel
+    override val reservoirLevel: StateFlow<PumpInsulin?> get() = activePumpInternal.reservoirLevel
     override val batteryLevel: StateFlow<Int?> get() = activePumpInternal.batteryLevel
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = activePumpInternal.cancelTempBasal(enforceNew)
     override suspend fun cancelExtendedBolus(): PumpEnactResult = activePumpInternal.cancelExtendedBolus()
@@ -131,9 +132,19 @@ class PumpWithConcentrationImpl(
 
     override val baseBasalRate: PumpRate get() = activePumpInternal.baseBasalRate
 
+    /**
+     * The answer to a dose while the pump has not written the profile of a new insulin concentration
+     * ([ProfileFunction.isConcentrationChangePending]). Stopping a running TBR or extended bolus stays possible.
+     */
+    private fun refusedConcentrationChangePending(): PumpEnactResult {
+        aapsLogger.error(LTag.PUMP, "Dose refused: the profile with the new insulin concentration is not written to the pump yet")
+        return pumpEnactResultProvider().success(false).enacted(false).comment(ImplementationStrings.concentration_change_pending)
+    }
+
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Priming is in pump units already: it goes to the pump as it is, and its result comes back as it is.
         if (detailedBolusInfo.bolusType == BS.Type.PRIMING) return activePumpInternal.deliverTreatment(detailedBolusInfo)
+        if (detailedBolusInfo.insulin > 0.0 && profileFunction.isConcentrationChangePending()) return refusedConcentrationChangePending()
         // Read once, so the way back uses the same factor as the way in.
         val concentration = concentration
         // IU -> cU. The max limit is applied in IU by ConstraintsChecker (it folds the pump's own cU cap
@@ -162,7 +173,8 @@ class PumpWithConcentrationImpl(
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        profileFunction.getProfile()?.let { profile ->
+        if (profileFunction.isConcentrationChangePending()) refusedConcentrationChangePending()
+        else profileFunction.getProfile()?.let { profile ->
             // applyBasalConstraints folds the pump's own cU rate cap (ConstraintsChecker, in IU). Then convert
             // IU/h -> cU/h and floor to the pump's native absolute-temp-basal step. Reasons are logged.
             constraintsChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value().let { absoluteAfterConstrains ->
@@ -181,13 +193,16 @@ class PumpWithConcentrationImpl(
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult =
-        profileFunction.getProfile()?.let { profile ->
+        // A percent of the old basal program in the pump is just as wrong as an absolute rate.
+        if (profileFunction.isConcentrationChangePending()) refusedConcentrationChangePending()
+        else profileFunction.getProfile()?.let { profile ->
             constraintsChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value().let { percentAfterConstraint ->
                 activePumpInternal.setTempBasalPercent(percentAfterConstraint, durationInMinutes, enforceNew, tbrType)
             }
         } ?: error("No profile running")
 
     override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+        if (profileFunction.isConcentrationChangePending()) return refusedConcentrationChangePending()
         // Same boundary as deliverTreatment: last-resort guard against the overall cU max, then floor to the
         // pump's native extended-bolus step.
         val concentration = concentration

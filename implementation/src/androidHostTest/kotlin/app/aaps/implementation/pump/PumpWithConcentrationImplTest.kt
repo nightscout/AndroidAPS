@@ -22,7 +22,9 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.implementation.ImplementationStrings
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlin.math.abs
@@ -54,6 +56,8 @@ class PumpWithConcentrationImplTest : TestBase() {
     @BeforeEach
     fun setup() {
         whenever(activePlugin.activePumpInternal).thenReturn(pump)
+        // A suspend function on a mock answers null, even for Boolean. Tests of a pending change stub true.
+        runBlocking { whenever(profileFunction.isConcentrationChangePending()).thenReturn(false) }
         // The concentration boundary floors the converted cU to the pump's native step, so the driver needs a
         // pumpDescription. The pumpDescription-scaling tests below re-stub this with their own description.
         whenever(pump.pumpDescription).thenReturn(PumpDescription().fillFor(PumpType.DANA_RS))
@@ -86,6 +90,85 @@ class PumpWithConcentrationImplTest : TestBase() {
         sut.deliverTreatment(dbi)
 
         verify(pump).deliverTreatment(argThat { insulin == 5.0 })
+    }
+
+    // --- a concentration change the pump has not written yet (#5486) ---
+
+    /** U100 to U200, the write has failed: the new insulin is in the pump, and the factor is still the old one. */
+    private suspend fun setupConcentrationChangePending() {
+        setupConcentration(1.0)
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(true)
+        whenever(pumpEnactResult.success(any())).thenReturn(pumpEnactResult)
+        whenever(pumpEnactResult.enacted(any())).thenReturn(pumpEnactResult)
+        whenever(pumpEnactResult.comment(any<TextRef>())).thenReturn(pumpEnactResult)
+    }
+
+    private fun verifyRefused() {
+        verify(pumpEnactResult).success(false)
+        verify(pumpEnactResult).enacted(false)
+        verify(pumpEnactResult).comment(ImplementationStrings.concentration_change_pending)
+    }
+
+    @Test
+    fun `a bolus is refused while a concentration change is pending`() = runBlocking<Unit> {
+        setupConcentrationChangePending()
+
+        sut.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0; bolusType = BS.Type.NORMAL })
+
+        verify(pump, never()).deliverTreatment(any())
+        verifyRefused()
+    }
+
+    /** A prime is in pump units: the factor does not touch it, and it is part of changing the insulin. */
+    @Test
+    fun `a prime still goes to the pump while a concentration change is pending`() = runBlocking<Unit> {
+        setupConcentrationChangePending()
+        whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
+
+        sut.deliverTreatment(DetailedBolusInfo().apply { insulin = 5.0; bolusType = BS.Type.PRIMING })
+
+        verify(pump).deliverTreatment(argThat { insulin == 5.0 })
+    }
+
+    @Test
+    fun `an absolute TBR is refused while a concentration change is pending`() = runBlocking<Unit> {
+        setupConcentrationChangePending()
+
+        sut.setTempBasalAbsolute(1.0, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        verify(pump, never()).setTempBasalAbsolute(any(), any(), any(), any())
+        verifyRefused()
+    }
+
+    @Test
+    fun `a percent TBR is refused while a concentration change is pending`() = runBlocking<Unit> {
+        setupConcentrationChangePending()
+
+        sut.setTempBasalPercent(150, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        verify(pump, never()).setTempBasalPercent(any(), any(), any(), any())
+        verifyRefused()
+    }
+
+    @Test
+    fun `an extended bolus is refused while a concentration change is pending`() = runBlocking<Unit> {
+        setupConcentrationChangePending()
+
+        sut.setExtendedBolus(1.0, 30)
+
+        verify(pump, never()).setExtendedBolus(any(), any())
+        verifyRefused()
+    }
+
+    /** Stopping insulin is always allowed. */
+    @Test
+    fun `cancelling a TBR still works while a concentration change is pending`() = runBlocking<Unit> {
+        setupConcentrationChangePending()
+        whenever(pump.cancelTempBasal(any())).thenReturn(pumpEnactResult)
+
+        sut.cancelTempBasal(true)
+
+        verify(pump).cancelTempBasal(true)
     }
 
     // --- the bolus step (#946) ---

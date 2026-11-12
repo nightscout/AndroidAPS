@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalProfileUtil
@@ -348,36 +347,41 @@ private fun AgpOverviewValue(label: String, value: String, color: Color) {
     }
 }
 
+/** One value of the metrics row. [detail] is a second, smaller line under [value]. */
+private data class AgpMetric(val label: String, val value: String, val detail: String? = null)
+
 @Composable
 private fun AgpMetrics(data: AgpStatsData) {
     val profileUtil = LocalProfileUtil.current
     val metrics = listOf(
-        stringResource(UiStrings.agp_ea1c) to formatGlycemicMetric(data.eA1cPercent, profileUtil.units),
-        stringResource(UiStrings.agp_gmi) to formatGlycemicMetric(data.gmiPercent, profileUtil.units),
-        stringResource(UiStrings.agp_standard_deviation) to profileUtil.fromMgdlToStringInUnits(data.standardDeviationMgdl),
-        stringResource(UiStrings.agp_cv) to stringResource(UiStrings.agp_percent, data.coefficientOfVariation),
-        stringResource(UiStrings.agp_available_days) to stringResource(UiStrings.agp_decimal, data.availableDays)
+        hba1cMetric(stringResource(UiStrings.agp_ea1c), data.eA1cPercent),
+        hba1cMetric(stringResource(UiStrings.agp_gmi), data.gmiPercent),
+        AgpMetric(stringResource(UiStrings.agp_standard_deviation), profileUtil.fromMgdlToStringInUnits(data.standardDeviationMgdl)),
+        AgpMetric(stringResource(UiStrings.agp_cv), stringResource(UiStrings.agp_percent, data.coefficientOfVariation)),
+        AgpMetric(stringResource(UiStrings.agp_available_days), stringResource(UiStrings.agp_decimal, data.availableDays))
     )
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
         verticalAlignment = Alignment.Top
     ) {
-        metrics.forEach { (label, value) ->
+        metrics.forEach { metric ->
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
             ) {
-                Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(value, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                Text(metric.label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(metric.value, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                metric.detail?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
         }
     }
 }
 
+/**
+ * An HbA1c-like value (eA1c, GMI) in percent, with mmol/mol under it. Both for every user: which one a doctor
+ * uses depends on the country, not on the glucose units (#5475).
+ */
 @Composable
-private fun formatGlycemicMetric(valuePercent: Double, glucoseUnit: GlucoseUnit): String =
-    stringResource(
-        UiStrings.agp_decimal,
-        if (glucoseUnit == GlucoseUnit.MMOL) valuePercent * 10.929 - 23.5 else valuePercent
-    )
+private fun hba1cMetric(label: String, percent: Double): AgpMetric =
+    AgpMetric(label, stringResource(UiStrings.agp_percent, percent), stringResource(UiStrings.hba1c_mmol_mol, hba1cMmolMol(percent)))

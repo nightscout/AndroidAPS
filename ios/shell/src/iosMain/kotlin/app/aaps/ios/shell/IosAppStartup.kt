@@ -1,9 +1,12 @@
 package app.aaps.ios.shell
 
+import app.aaps.core.interfaces.configuration.announceReadyWhenStarted
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.ios.shell.di.GeneratedStringOwners
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * What has to happen before the first screen is composed - the iOS counterpart of `MainApp`.
@@ -20,17 +23,31 @@ import app.aaps.ios.shell.di.GeneratedStringOwners
  * ## What Android also does here, and this does not yet
  *
  * `MainApp` migrates preferences, re-reads the profile repository, vacuums the database, starts the
- * running-mode reconciler and expiry schedulers, starts the automation runtime and runs data
- * migrations - all in the background, behind the splash screen that `AapsAppRoot` shows until
- * `config.initCompleted()`. None of that is wired up here yet. `IosClientConfig` reports
- * initialization done from the start, so the splash does not appear at all.
+ * running-mode reconciler and expiry schedulers, and runs data migrations - all in the background,
+ * behind the splash screen that `AapsAppRoot` shows until `config.initCompleted()`. None of that is
+ * wired up here yet. `IosClientConfig` reports initialization done from the start, so the splash
+ * does not appear at all.
  */
 internal class IosAppStartup(
     private val aapsLogger: AAPSLogger,
     private val registry: PluginRegistry,
     private val contributedPlugins: Map<Int, PluginBase>,
+    /** Carries [app.aaps.core.interfaces.rx.events.EventAppInitialized] once the plugins have started. */
+    private val rxBus: RxBus,
+    /** Where the wait for the start jobs runs, so the main thread is not blocked by it. */
+    private val scope: CoroutineScope,
     /** Starts the shared periodic housekeeping. A lambda so a test can run this without building it. */
-    private val startPeriodicWork: () -> Unit
+    private val startPeriodicWork: () -> Unit,
+    /**
+     * Starts the automation runtime. A lambda for the same reason as [startPeriodicWork].
+     *
+     * Needed on a client as much as on a master, because this is what loads the rules: the runtime
+     * reads them in `AutomationRuntime.start`, and nothing else does. Without this call the list was
+     * empty on every start, a rule pushed by the master was never picked up, and a rule edited here
+     * was never written back - the whole screen was dead. See the call site for why starting it does
+     * not let this phone run anything.
+     */
+    private val startAutomation: () -> Unit
 ) {
 
     fun run() {
@@ -52,19 +69,33 @@ internal class IosAppStartup(
         // `ConfigBuilderImpl` is shared, so this is the same `initialize()` Android's `MainApp` and
         // the desktop `Main` call, rather than a copy of part of what it does. Calling only the
         // category check - which is what this did before - left every enabled plugin unstarted.
-        // The jobs are deliberately not waited for here, and that is a gap rather than a decision made
-        // in comfort. Android waits for them (`MainApp`, bounded by 30 s) because everything it does
-        // next reads plugin state. `run()` is called on the iOS main thread, so the same wait would be
-        // a `runBlocking` that can freeze the UI for as long as the slowest driver's `onStart` - worse
-        // than the race it closes. Whoever wires up the splash screen described above should move this
-        // off the main thread and then wait, like Android does.
-        registry.initializeConfig()
+        //
+        // The start jobs are waited for, and the app says it is ready once they are done.
+        // `IobCobCalculatorPlugin` runs the first IOB/COB calculation on that event and subscribes
+        // to it in its own `onStart`, so announcing any earlier would announce to nobody: the graph
+        // then stayed empty until the next glucose reading, up to five minutes after every start
+        // (nightscout/AndroidAPS#5485). Only `MainApp` sent it, so the desktop shell had the same
+        // gap and is fixed the same way, through the same shared call.
+        //
+        // The waiting happens in a coroutine rather than here, because `run()` is on the iOS main
+        // thread and waiting on it would be a `runBlocking` freezing the UI for as long as the
+        // slowest driver's `onStart`. Android waits on its own thread for the same reason.
+        announceReadyWhenStarted(registry.initializeConfig(), scope, rxBus, aapsLogger)
 
         // The periodic housekeeping Android gets from KeepAliveWorker: the missed-reading alarm,
         // snooze shortening, and log and database trimming. The work is shared; only the trigger is
         // not, because there is no WorkManager here. Without this the AlertMissedBgReading
         // preference was drawn on this platform and did nothing, and the database never shrank.
         startPeriodicWork()
+
+        // Loads the automation rules and keeps them in step with the master. Execution is a separate
+        // thing and stays on the master: `AutomationRuntime.start` returns before it starts the
+        // processing loop when `config.APS` is false, which it always is here, and `runEvent` - the
+        // one place that runs an action - refuses on the same flag. So this reads, writes and
+        // re-reads definitions, and fires nothing.
+        //
+        // After the plugins, like Android: an action's description can name the active pump.
+        startAutomation()
 
         aapsLogger.debug(LTag.CORE, "Plugins started and selection verified, starting the UI")
     }

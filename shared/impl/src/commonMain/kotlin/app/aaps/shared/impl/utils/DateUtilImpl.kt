@@ -2,6 +2,7 @@ package app.aaps.shared.impl.utils
 
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.format.NumberFormatPlatform
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
@@ -36,15 +37,17 @@ import kotlin.time.Instant
  * user's language, and the standard time zone offset - which arrive through [DateFormatPlatform].
  * See that interface for why they are injected rather than declared `expect`/`actual`.
  *
- * The time zone is read on every call rather than stored, because a phone can cross a zone
- * without restarting. The same is true of the language.
+ * The time zone is asked for on every call rather than stored in a field, because a phone can cross
+ * a zone without restarting. The same is true of the language. Asking goes to
+ * [app.aaps.core.data.time.SystemTimeZone], which answers from its last read: reading it per call is
+ * a file read per call on Apple targets.
  */
 class DateUtilImpl(
     private val platform: DateFormatPlatform,
     private val clock: Clock = Clock.System
 ) : DateUtil {
 
-    private val systemZone: TimeZone get() = TimeZone.currentSystemDefault()
+    private val systemZone: TimeZone get() = SystemTimeZone.current()
 
     private fun Long.at(zone: TimeZone = systemZone): LocalDateTime =
         Instant.fromEpochMilliseconds(this).toLocalDateTime(zone)
@@ -318,33 +321,6 @@ class DateUtilImpl(
                 nanoseconds = nanoseconds.toLong() % 1000
             )
         }
-    }
-
-    override fun niceTimeScalar(time: Long, rh: TextResolver): String {
-        val duration = time.milliseconds
-        val (value, unit) = when {
-            duration.inWholeDays > 6     -> {
-                val weeks = duration.inWholeDays / 7
-                weeks to if (weeks == 1L) InterfacesStrings.unit_week else InterfacesStrings.unit_weeks
-            }
-            duration.inWholeHours > 23   -> {
-                val days = duration.inWholeDays
-                days to if (days == 1L) InterfacesStrings.unit_day else InterfacesStrings.unit_days
-            }
-            duration.inWholeMinutes > 59 -> {
-                val hours = duration.inWholeHours
-                hours to if (hours == 1L) InterfacesStrings.unit_hour else InterfacesStrings.unit_hours
-            }
-            duration.inWholeSeconds > 59 -> {
-                val minutes = duration.inWholeMinutes
-                minutes to if (minutes == 1L) InterfacesStrings.unit_minute else InterfacesStrings.unit_minutes
-            }
-            else                         -> {
-                val seconds = duration.inWholeSeconds
-                seconds to if (seconds == 1L) InterfacesStrings.unit_second else InterfacesStrings.unit_seconds
-            }
-        }
-        return rh.gs(InterfacesStrings.time_value_with_unit, qs(value.toDouble(), 0), rh.gs(unit))
     }
 
     override fun qs(x: Double, numDigits: Int): String {
