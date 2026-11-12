@@ -27,7 +27,6 @@
     <string name="commanderror">Błąd polecenia</string>
     <string name="speederror">Błąd prędkości</string>
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
-    <string name="boluserrorcode">Zadano: %1$.2f U Dostarczono: %2$.2f U Kod błędu: %3$s</string>
     <string name="selectedpump">Wybrana pompa</string>
     <string name="bolus_step">Krok bolusa</string>
     <string name="basal_step">Krok bazy</string>
