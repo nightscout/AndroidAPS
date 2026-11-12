@@ -88,7 +88,8 @@ class AndroidSystemNotificationPlatform(
                 notificationKey = notification.instanceKey,
                 title = title,
                 body = notification.text,
-                urgent = true
+                urgent = true,
+                alarmAction = notification.id.alarmAction
             )
         } else if (preferences.get(BooleanKey.AlertUrgentAsAndroidNotification) && notification.actions.isEmpty()) {
             raiseSystemNotification(notification, title)

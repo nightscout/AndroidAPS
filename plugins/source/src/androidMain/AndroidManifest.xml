@@ -2,11 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+
+    <!-- The Dexcom ONE+ / G7 start screen reads the applicator barcode. Typing the code still works without it. -->
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
 
         <activity
             android:name=".activities.RequestDexcomPermissionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.CgmDriverLogActivity"
             android:exported="false" />
 
         <service
@@ -17,6 +28,24 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".activities.DexcomOnePlusStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DexcomOnePlusStartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DexcomOnePlusWarmupActivity"
+            android:exported="false" />
+
+        <!-- Keeps the Dexcom ONE+ / G7 Bluetooth session alive with the screen off. The type is what
+             grants the privilege on Android 14+; "dataSync" (the persistent-notification service)
+             grants nothing for Bluetooth. -->
+        <service
+            android:name=".DexcomOnePlusSessionService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
 
     </application>
 

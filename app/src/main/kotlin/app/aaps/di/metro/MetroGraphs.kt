@@ -58,6 +58,7 @@ import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.PluginSource
 import app.aaps.di.mergePlugins
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.ProfileSwitchScheduler
@@ -279,6 +280,7 @@ class MetroGraphs(
     val widgetUpdater: WidgetUpdater get() = root.widgetUpdater
     val commandQueue: CommandQueue get() = root.commandQueue
     val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
+    val periodicMaintenance: PeriodicMaintenance get() = root.periodicMaintenance
     val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
     val appRepository: AppRepository get() = root.appRepository
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker

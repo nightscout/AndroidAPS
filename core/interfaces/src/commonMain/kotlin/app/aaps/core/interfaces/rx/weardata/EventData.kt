@@ -337,7 +337,11 @@ sealed class EventData : Event() {
         val color: Int = 0,
         val deltaMgdl: Double? = null,
         val avgDeltaMgdl: Double? = null,
-        val id: Int = 0
+        val id: Int = 0,
+        // True when the watch read this value from the sensor itself (direct-to-watch), not from the phone.
+        // Such a value is for the watch faces only. Keep new fields at the END of this class: the ProtoBuf
+        // wire format numbers fields by declaration order.
+        val fromSensor: Boolean = false
     ) : EventDataSet, EventData(), Comparable<SingleBg> {
 
         override fun equals(other: Any?): Boolean =
@@ -672,4 +676,89 @@ sealed class EventData : Event() {
         val durations: List<Int>,
         val title: String = ""
     ) : EventData()
+
+    // CGM alarms. Appended at the END of the class on purpose, so nothing above them moves.
+
+    /**
+     * Mobile -> Wear: a CGM alarm is going off on the phone (sent again for each reminder). The watch
+     * shows it with an Acknowledge button and vibrates through its silent mode, for [vibrationSeconds]
+     * (0 = no vibration), stronger when [urgent]. [id] is the `CgmAlarmType.id`, so a later
+     * [CgmAlarmCancel] or [CgmAlarmAcknowledge] can name it.
+     */
+    @Serializable
+    data class CgmAlarm(
+        val id: String,
+        val title: String,
+        val message: String,
+        val vibrationSeconds: Int,
+        val urgent: Boolean
+    ) : EventData()
+
+    /** Mobile -> Wear: the CGM alarm [id] is over (acknowledged somewhere, or its cause is gone). Stop and remove it. */
+    @Serializable
+    data class CgmAlarmCancel(val id: String) : EventData()
+
+    /** Wear -> Mobile: the wearer acknowledged the CGM alarm [id] on the watch. */
+    @Serializable
+    data class CgmAlarmAcknowledge(val id: String) : EventData()
+
+    /**
+     * Mobile -> Wear: direct-to-watch for the Dexcom ONE+ / G7 the phone reads. With [active] the watch
+     * connects to the sensor itself, in the sensor's watch slot, next to the phone. It makes its own key
+     * from [pairingCode]; the phone's key never leaves the phone. Without [active] the watch lets the
+     * sensor go and forgets it.
+     *
+     * The watch's readings go to its faces only. They are never sent back to the phone and never reach
+     * the loop.
+     */
+    @Serializable
+    data class CgmWatchDirect(
+        val active: Boolean,
+        val pairingCode: String? = null,
+        val address: String? = null,
+        val serial: String? = null,
+        val sensorName: String? = null
+    ) : EventData() {
+
+        // Never print the pairing code in a log line.
+        override fun toString(): String =
+            "CgmWatchDirect(active=$active, address=$address, serial=$serial, sensorName=$sensorName, pairingCode=${if (pairingCode == null) "null" else "***"})"
+    }
+
+    /** Wear -> Mobile: how the watch's own connection to the sensor is doing (direct-to-watch). */
+    @Serializable
+    data class CgmWatchStatus(
+        val state: CgmWatchState,
+        /** The sensor the watch is set up for, so the phone can see when the watch holds an old one. */
+        val address: String? = null,
+        val latestReadingAt: Long? = null,
+        /** The last problem, in plain words, for the phone's status line. */
+        val detail: String? = null,
+        /** True when the watch may put the app to sleep in the background and miss readings. */
+        val batteryRestricted: Boolean = false
+    ) : EventData()
+
+    @Serializable
+    enum class CgmWatchState {
+
+        /** Direct-to-watch is off. */
+        OFF,
+
+        /** The watch runs Android 11 or older; the sensor code needs Android 12. */
+        NOT_SUPPORTED,
+
+        /** The wearer has to allow Bluetooth on the watch. */
+        NEEDS_PERMISSION,
+        BLUETOOTH_OFF,
+
+        /** No key yet: the next connection runs the key exchange and the pairing prompt. */
+        PAIRING,
+
+        /** Paired, waiting for the sensor's next reading. The normal state between readings. */
+        WAITING,
+        CONNECTED,
+
+        /** The sensor refused the watch. [CgmWatchStatus.detail] says why. */
+        REFUSED
+    }
 }

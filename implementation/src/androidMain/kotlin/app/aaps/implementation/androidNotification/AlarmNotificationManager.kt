@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmAction
 import app.aaps.core.interfaces.notifications.AlarmIntent
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
@@ -101,6 +102,9 @@ class AlarmNotificationManager(
 
         /** Request code for the PendingIntent sent when the user swipes the notification away. */
         private const val SWIPE_REQUEST_CODE = 4715
+
+        /** Request code for the extra action button of an alarm (see [AlarmAction]). */
+        private const val ALARM_ACTION_REQUEST_CODE = 4716
 
         /**
          * Delay before the screen-wake / activity-launch alarms fire. Small buffer so both
@@ -258,7 +262,9 @@ class AlarmNotificationManager(
     }
 
     private fun channelIdForSound(sound: AlarmSound, overrideDnd: Boolean): String {
-        val name = SOUND_NAMES[sound] ?: "error"
+        // A Trio sound has no channel of its own (the looping player plays it). When the channel must
+        // ring, the standard alarm channel is the closest one.
+        val name = SOUND_NAMES[sound] ?: if (sound.isTrio) "alarm" else "error"
         val suffix = if (overrideDnd) "alarm" else "notify"
         return "aaps_alarm_v2_${name}_$suffix"
     }
@@ -450,7 +456,8 @@ class AlarmNotificationManager(
         notificationKey: Int,
         title: String,
         body: String,
-        urgent: Boolean
+        urgent: Boolean,
+        alarmAction: AlarmAction? = null
     ) {
         channels // created on first post, see the field
         val builder = NotificationCompat.Builder(context, if (urgent) CHANNEL_SILENT_URGENT else CHANNEL_SILENT)
@@ -464,6 +471,7 @@ class AlarmNotificationManager(
             .setOngoing(true)
             .setAutoCancel(false)
             .setContentIntent(notificationHolderProvider().openAppIntent())
+        addAlarmAction(builder, alarmAction)
 
         val systemId = SOUND_ID_OFFSET + notificationKey
         try {
@@ -481,6 +489,28 @@ class AlarmNotificationManager(
                 ex
             )
         }
+    }
+
+    /**
+     * Adds the extra action button of an alarm ("Hypo treated", "Acknowledge") to [builder], when the
+     * alarm declares one.
+     *
+     * The button goes to a `BroadcastReceiver` and not to the in-app `NotificationAction` lambda,
+     * because during the moment that matters, a real hypo at night, the phone is locked and the app
+     * is not open.
+     */
+    private fun addAlarmAction(builder: NotificationCompat.Builder, action: AlarmAction?) {
+        if (action == null) return
+        val (label, receiver) = when (action) {
+            AlarmAction.HYPO_TREATED    -> CoreUiStrings.alert_hypo_treated to HypoTreatedReceiver::class.java
+            AlarmAction.CGM_ACKNOWLEDGE -> CoreUiStrings.cgm_alarm_acknowledge to CgmAlarmAcknowledgeReceiver::class.java
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context, ALARM_ACTION_REQUEST_CODE,
+            Intent(context, receiver),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        builder.addAction(0, rh.gs(label), pendingIntent)
     }
 
     /**

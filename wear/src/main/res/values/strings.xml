@@ -387,6 +387,8 @@
     <string name="eat_reminder_channel_silent">Time to eat during Do Not Disturb</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="phone_alarm_channel">Alarms from the phone</string>
+    <string name="cgm_alarm_channel">CGM alarms from the phone</string>
+    <string name="cgm_alarm_acknowledge" comment="Short button label on a CGM alarm: the user has seen the alarm, it stops and comes back later if the cause is still there">Acknowledge</string>
     <string name="phone_alarm_channel_silent">Alarms from the phone during Do Not Disturb</string>
     <string name="phone_alarm_silence">Silence</string>
     <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Mute %1$d min</string>
@@ -463,4 +465,21 @@
     <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
     <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
+    <!-- Direct-to-watch: the watch reads the Dexcom ONE+ / G7 itself, next to the phone -->
+    <string name="watch_direct_title">Direct to watch</string>
+    <string name="watch_direct_channel">Direct to watch</string>
+    <string name="watch_direct_service_channel">Direct to watch link</string>
+    <string name="watch_direct_state_off">Off. Turn it on in AAPS on the phone, on the Dexcom ONE+ status screen.</string>
+    <string name="watch_direct_state_not_supported">Not possible on this watch. It needs Wear OS 3 or newer.</string>
+    <string name="watch_direct_state_bluetooth_off">Bluetooth is off on the watch.</string>
+    <string name="watch_direct_state_running">The watch reads the sensor itself.</string>
+    <string name="watch_direct_notification_permission">Allow Bluetooth for AAPS on the watch, so it can read the sensor.</string>
+    <string name="watch_direct_notification_battery">The watch may put AAPS to sleep in the background and miss readings. Allow unrestricted battery use.</string>
+    <string name="watch_direct_notification_pairing">Pairing with the sensor. Accept the pairing request on the watch when it comes.</string>
+    <string name="watch_direct_notification_refused">The sensor refused the watch. Check the sensor on the phone.</string>
+    <string name="watch_direct_allow">Allow</string>
+    <string name="watch_direct_allow_battery">Allow unrestricted battery use</string>
+    <string name="watch_direct_low">Low glucose</string>
+    <string name="watch_direct_urgent_low">Urgent low glucose</string>
+    <string name="watch_direct_low_message" comment="%1$s=glucose value with its number format, %2$s=trend arrow. Example: 62 ↘ - no reading from the phone for 15 minutes">%1$s %2$s - no reading from the phone for 15 minutes</string>
 </resources>

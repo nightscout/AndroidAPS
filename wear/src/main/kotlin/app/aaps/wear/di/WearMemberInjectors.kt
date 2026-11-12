@@ -3,6 +3,7 @@ package app.aaps.wear.di
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.wear.WearApp
 import app.aaps.wear.comm.DataLayerListenerServiceWear
+import app.aaps.wear.alarm.CgmAlarmReceiver
 import app.aaps.wear.alarm.PhoneAlarmReceiver
 import app.aaps.wear.eatreminder.EatReminderReceiver
 import app.aaps.wear.complications.BgGraphComplication
@@ -52,6 +53,7 @@ import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.CwfRenderPreviewActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
+import app.aaps.wear.watchdirect.WatchDirectActivity
 import app.aaps.wear.interaction.menus.FillMenuActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.PreferenceMenuActivity
@@ -305,6 +307,12 @@ object WearMemberInjectors {
     @Provides
     @FeatureMemberInjectors
     @IntoMap
+    @ClassKey(CgmAlarmReceiver::class)
+    fun bindCgmAlarmReceiver(injector: MembersInjector<CgmAlarmReceiver>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
     @ClassKey(FillActivity::class)
     fun bindFillActivity(injector: MembersInjector<FillActivity>): MembersInjector<*> = injector
 
@@ -343,6 +351,12 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(LoopStatusActivity::class)
     fun bindLoopStatusActivity(injector: MembersInjector<LoopStatusActivity>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(WatchDirectActivity::class)
+    fun bindWatchDirectActivity(injector: MembersInjector<WatchDirectActivity>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

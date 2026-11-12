@@ -52,6 +52,7 @@ import app.aaps.wear.complications.SgvLargeComplication
 import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.alarm.CgmAlarmWatch
 import app.aaps.wear.alarm.PhoneAlarmWatch
 import app.aaps.wear.eatreminder.EatReminderWatch
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
@@ -90,7 +91,8 @@ class DataHandlerWear(
     private val complicationDataRepository: ComplicationDataRepository,
     private val watchFacePushHelper: WatchFacePushHelper,
     private val eatReminderWatch: EatReminderWatch,
-    private val phoneAlarmWatch: PhoneAlarmWatch
+    private val phoneAlarmWatch: PhoneAlarmWatch,
+    private val cgmAlarmWatch: CgmAlarmWatch
 ) {
 
     // Coroutine scope for DataStore operations
@@ -121,6 +123,19 @@ class DataHandlerWear(
                 aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}${detail(event)}")
                 handler(event)
             }
+    }
+
+    /**
+     * A reading the watch took from the sensor itself (direct-to-watch). It takes the same way to the
+     * faces, complications and tiles as a reading from the phone, and goes nowhere else.
+     */
+    fun showSensorReadings(reading: EventData.SingleBg) {
+        dataStoreScope.launch {
+            complicationDataRepository.addSensorReading(reading)
+            triggerComplicationUpdates()
+            TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        }
     }
 
     private fun setupBus() {
@@ -175,6 +190,8 @@ class DataHandlerWear(
         }
         onEvent<EventData.AlarmRinging>(detail = { " ${it.title}: ${it.status}" }) { phoneAlarmWatch.show(it) }
         onEvent<EventData.AlarmStopped> { phoneAlarmWatch.clear() }
+        onEvent<EventData.CgmAlarm>(detail = { " ${it.id}" }) { cgmAlarmWatch.show(it) }
+        onEvent<EventData.CgmAlarmCancel>(detail = { " ${it.id}" }) { cgmAlarmWatch.remove(it.id) }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
             // The Display screen holds the settings of the code-based faces. With the complications

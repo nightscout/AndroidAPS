@@ -228,6 +228,10 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
     implementation(project(":core:data"))
+    // Direct-to-watch: the watch reads the Dexcom ONE+ / G7 itself, in the sensor's watch slot. Used only
+    // through app.aaps.wear.watchdirect.WatchSensorLink.
+    implementation(project(":plugins:dexcom_oneplus"))
+    implementation(project(":plugins:libkeks"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)

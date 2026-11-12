@@ -211,6 +211,9 @@ fun AllPreferencesScreen(
                     // Built-in: Alerts settings
                     addPreferenceContent(alertsPreferences, onShowMessage, sectionState)
 
+                    // Built-in: CGM alarms, its own card (see BuiltInSearchables.cgmAlarms)
+                    addPreferenceContent(builtInSearchables.cgmAlarms, onShowMessage, sectionState)
+
                     // Built-in: Maintenance settings (always last)
                     addPreferenceContent(maintenancePreferences, onShowMessage, sectionState)
                 }

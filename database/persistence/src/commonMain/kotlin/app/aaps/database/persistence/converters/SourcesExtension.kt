@@ -33,6 +33,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.BG                  -> Sources.BG
         UserEntry.Sources.Aidex               -> Sources.Aidex
         UserEntry.Sources.Dexcom              -> Sources.Dexcom
+        UserEntry.Sources.DexcomOnePlus       -> Sources.DexcomOnePlus
         UserEntry.Sources.Eversense           -> Sources.Eversense
         UserEntry.Sources.Glimp               -> Sources.Glimp
         UserEntry.Sources.MM640g              -> Sources.MM640g
@@ -122,6 +123,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.BG                  -> UserEntry.Sources.BG
         Sources.Aidex               -> UserEntry.Sources.Aidex
         Sources.Dexcom              -> UserEntry.Sources.Dexcom
+        Sources.DexcomOnePlus       -> UserEntry.Sources.DexcomOnePlus
         Sources.Eversense           -> UserEntry.Sources.Eversense
         Sources.Glimp               -> UserEntry.Sources.Glimp
         Sources.MM640g              -> UserEntry.Sources.MM640g
