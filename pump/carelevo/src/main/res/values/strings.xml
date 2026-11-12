@@ -155,6 +155,7 @@
 
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Patch discard failed. Please try again.</string>
+    <string name="carelevo_discarded_not_reached">The patch could not be reached. It was removed from AAPS but not stopped, and it may still give insulin. Take it off.</string>
 
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Basal delivery request failed. Please try again.</string>
