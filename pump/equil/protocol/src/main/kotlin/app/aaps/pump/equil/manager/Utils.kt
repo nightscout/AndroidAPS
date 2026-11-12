@@ -31,12 +31,12 @@ object Utils {
     fun internalDecodeSpeedToUH2(i: Int): BigDecimal = BigDecimal(i).multiply(BigDecimal("0.00625"))
     fun decodeSpeedToUH(i: Int): Float = BigDecimal(i).multiply(BigDecimal("0.00625")).toFloat()
     fun decodeSpeedToUS(i: Int): Double = internalDecodeSpeedToUH2(i).divide(BigDecimal("3600"), 10, RoundingMode.DOWN).toDouble()
-    fun decodeSpeedToUH(i: Double): Int {
-        val a = BigDecimal(i.toString())
-        val b = BigDecimal("0.00625")
-        val c = a.divide(b)
-        return c.toInt()
-    }
+    /**
+     * A rate in pump steps of 0.00625 U, as [unitsToSteps]. It was cut: 0.6 U/h at 150 % is 0.8999999999999999 in Double,
+     * half of it for a half hour gave 71 steps in place of 72, so the pump ran 0.8875 U/h. The pump limits of
+     * `CmdSettingSet` came out a step low in the same way.
+     */
+    fun decodeSpeedToUH(i: Double): Int = unitsToSteps(i)
 
     /**
      * Units to pump steps of 0.00625 U, cut down to a whole step, so the pump never gets more than was asked.
