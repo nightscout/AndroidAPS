@@ -466,6 +466,21 @@ class DiaconnPumpEmulatorTest {
         assertThat(ask(BIG_LOG) { u16(1).u16(2).u8(100) }.u8(5)).isEqualTo(0)
     }
 
+    /**
+     * A new pump has a record in its log, as every real one: at the first pairing the driver reads only the newest
+     * record and then goes on after it. The tests here start with an empty log, so they can count the records.
+     */
+    @Test
+    fun aNewPumpHasARecordInItsLog() {
+        emulator = DiaconnPumpEmulator()
+
+        assertThat(ask(LOG_STATUS).u16(5)).isEqualTo(1)
+        val answer = ask(BIG_LOG) { u16(0).u16(1).u8(100) }
+        assertThat(answer.u8(5)).isEqualTo(1)
+        assertThat(answer.u8(9 + 4) and 0x3F).isEqualTo(RESET_SYS)
+        assertThat(answer.u8(9 + 6)).isEqualTo(RESET_BEFORE_SHIPMENT)
+    }
+
     // Real G8 (2026-11-11): request 54 got 0x27, request 55 got 0x29. A driver cannot match it by number.
     @Test
     fun aBigLogAnswerHasANumberOfThePumpsOwn() {
@@ -674,6 +689,8 @@ class DiaconnPumpEmulatorTest {
         const val BIG_APS_MAIN_INFO = 0x54
         const val LOG_STATUS = 0x56
         const val BIG_LOG = 0x72
+        const val RESET_SYS = 0x01
+        const val RESET_BEFORE_SHIPMENT = 5
         const val BIG_MAIN_INFO = 0x73
         const val BASAL_SETTING_REPORT = 0xCB
 

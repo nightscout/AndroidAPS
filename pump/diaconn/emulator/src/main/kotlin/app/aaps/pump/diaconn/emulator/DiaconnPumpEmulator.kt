@@ -39,7 +39,7 @@ import kotlin.math.roundToInt
  *
  * Each behaviour copies a real G8 where it says so; `UNVERIFIED` marks a guess.
  */
-class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState(), private val aapsLogger: AAPSLogger? = null) {
+class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState.newPump(), private val aapsLogger: AAPSLogger? = null) {
 
     /** How long a bolus takes, see `PumpEmulatorControl.speed`. Only the bolus gets shorter, never the clock. */
     @Volatile var speed: EmulatorSpeed = EmulatorSpeed.REAL
