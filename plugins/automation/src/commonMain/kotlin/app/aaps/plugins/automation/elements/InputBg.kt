@@ -20,6 +20,9 @@ class InputBg(profileFunction: ProfileFunction) {
 
     init {
         setUnits(profileFunction.getUnits())
+        // Start inside the editor's range. 0.0 shows as an empty field, and a condition saved untouched
+        // then compared against 0: "below" never fired and "above" always did.
+        value = minValue
     }
 
     fun setValue(value: Double): InputBg {
