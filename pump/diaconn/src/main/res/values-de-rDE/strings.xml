@@ -92,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Verstopfung (%s)</string>
     <string name="diaconn_g8_lgorelease">Basalabgabe (%s)</string>
     <string name="diaconn_g8_lgosuspend">Basal unterbrechen (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Dual Bolus abgegeben</string>
     <string name="diaconn_g8_logdualsquarestart">Multiwave Bolus gestartet</string>
     <string name="diaconn_g8_logdualsquaresuccess">Multiwave Bolus abgegeben</string>
     <string name="diaconn_g8_logsquarestart">Verzögerter Bolus gestartet</string>
