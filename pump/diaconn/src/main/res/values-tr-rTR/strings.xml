@@ -27,7 +27,6 @@
     <string name="commanderror">Komut hatası</string>
     <string name="speederror">Hız hatası</string>
     <string name="insulinlimitviolation">İnsülin limit ihlali</string>
-    <string name="boluserrorcode">İstenen: %1$.2f Ü İletilen: %2$.2f Ü Hata kodu: %3$s</string>
     <string name="selectedpump">Seçilen pompa</string>
     <string name="bolus_step">Bolus Adımı</string>
     <string name="basal_step">Bazal Adımı</string>
