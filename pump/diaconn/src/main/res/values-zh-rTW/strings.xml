@@ -27,7 +27,6 @@
     <string name="commanderror">指令錯誤</string>
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
-    <string name="diaconn_g8_bolus_stopped_by_pump" comment="%1$s=insulin given, with unit. Example: 0.30 U">幫浦在注射 %1$s 後停止注射。下次注射前請檢查幫浦。</string>
     <string name="selectedpump">選擇的幫浦</string>
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
