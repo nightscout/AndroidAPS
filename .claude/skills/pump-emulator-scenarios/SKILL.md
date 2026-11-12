@@ -9,6 +9,9 @@ Instrumented tests that run a real pump driver against its in-tree emulator, thr
 PumpSync and database, with no screen. After each step they compare what AAPS stored with what the emulated pump did.
 They test the core of AAPS and the driver; the screens have their own tests.
 
+What a driver must pass to count as done (driver rules, emulator, scenarios, screens, real pump, CI) is in
+`_docs/PUMP_DRIVER_ACCEPTANCE.md`. This skill is how to build and run it.
+
 Code: `app/src/androidTest/kotlin/app/aaps/e2e/scenario/` (engine `PumpScenario`, shared scenarios
 `AbstractPumpScenarioTest`) and one adapter per pump in `app/src/androidTestPumps/<pump>/`. The test hooks of an
 emulator are `PumpEmulatorControl` in `:core:interfaces`.
