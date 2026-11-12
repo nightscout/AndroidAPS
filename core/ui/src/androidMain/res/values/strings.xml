@@ -110,7 +110,7 @@
     <string name="cgm_alert_sensor_issue" comment="%1$s = time since when the sensor sends no usable value, e.g. 14:05">The CGM sensor sends no usable glucose value since %1$s. This often passes by itself. Check your glucose with a meter if you need to.</string>
     <string name="cgm_alert_warmup_done" comment="%1$s = time of the first usable reading, e.g. 14:05">Warm-up finished. The CGM sensor is active, first usable reading at %1$s.</string>
     <string name="cgm_alert_second_sensor_ready" comment="%1$s = time when the pre-soak sensor became ready, e.g. 14:05">The pre-soak CGM sensor has been ready to promote since %1$s. You can switch to it now.</string>
-    <string name="cgm_alarm_acknowledge" comment="Short button label on a CGM alarm: the user has seen the alarm, it stops and comes back later if the cause is still there">Acknowledge</string>
+    <string name="cgm_alarm_acknowledge" comment="Short button label on a CGM alarm: the alarm stops for its repeat time set in the CGM alarm settings, and comes back after that if the cause is still there">Snooze</string>
     <string name="cgm_alarm_test_message" comment="%1$s = name of the alarm, e.g. Urgent low">Test of the alarm: %1$s. Dismiss it to stop.</string>
     <string name="cgm_alarm_urgent_low">Urgent low</string>
     <string name="cgm_alarm_urgent_low_soon">Urgent low soon</string>
