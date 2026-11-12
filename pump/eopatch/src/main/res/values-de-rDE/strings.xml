@@ -71,6 +71,7 @@
     <string name="patch_cancel_pairing">Kopplung abbrechen</string>
     <string name="insulin_suspend_msg1">Bei der Unterbrechung wird der laufende Bolus &amp; sowie Temp Basal abgebrochen.\n\nRate: %1$s U/h\nVerbleibende Zeit: %2$s\nNoch abzugebende Insulinmenge: %3$.2f IE</string>
     <string name="insulin_suspend_msg2">Bei der Unterbrechung wird der laufende Bolus abgebrochen.\n\nNoch abzugebende Insulinmenge: %1$.2f IE</string>
+    <string name="insulin_suspend_msg3">Bei der Unterbrechung wird Temp Basal abgebrochen.\n\nRate: %1$s U/h\nVerbleibende Zeit:%2$s</string>
     <string name="insulin_suspend_msg4">Die Insulinlieferung wird ausgesetzt.</string>
     <string name="string_activate_patch">Patch aktivieren</string>
     <string name="string_discard_patch">Pod verwerfen</string>
@@ -87,5 +88,8 @@
     <string name="string_temp_basal_remained_hhmm">verbleibende Zeit: %1$s:%2$s</string>
     <string name="string_pause_failed">Anhalten fehlgeschlagen.</string>
     <string name="string_resume_failed">Fortsetzen fehlgeschlagen.</string>
+    <string name="wizard_exit_activation_warning">Aktivierungsassistent beenden? Der Patch kann dadurch in einem unvollständigen Zustand bleiben und einen neuen Patch erfordern.</string>
+    <string name="wizard_exit_deactivation_warning">Deaktivierungsassistent beenden? Der Patch kann dadurch aktiv bleiben und weiterhin Insulin abgeben.</string>
     <string name="patch_force_reset">Zurücksetzen erzwingen</string>
+    <string name="patch_force_reset_confirm">Dies wird den Patch-Status lokal löschen, ohne Befehle an den Patch zu senden. Nur verwenden, wenn die normale Deaktivierung fehlschlägt. Der Patch wird so lange Insulin abgeben, bis sein Akku leer ist oder bis er manuell ausgeschaltet wird.</string>
 </resources>
