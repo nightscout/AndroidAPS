@@ -11,6 +11,7 @@ import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrateRx
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrateTx
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrationBoundsRx
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrationMapper
+import app.aaps.plugins.dexcomoneplus.parse.OnePlusSensorStart
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrationState
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusEGlucoseTx
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusExtendedVersionRx
@@ -574,12 +575,13 @@ class OnePlusEgvSession(
             lastDexTimeAtMs = Clock.System.now().toEpochMilliseconds()
         }
 
+        val egvNowMs = Clock.System.now().toEpochMilliseconds()
         val warmup = OnePlusCalibrationMapper.toWarmupState(
             state = parsed.calibration,
-            nowMs = Clock.System.now().toEpochMilliseconds(),
+            nowMs = egvNowMs,
             sessionAgeSeconds = parsed.sessionAgeSeconds,
             warmupMs = warmupMs(),
-        )
+        ).copy(sensorStartEpochMs = OnePlusSensorStart.fromEgv(parsed.opcode, parsed.sessionAgeSeconds, egvNowMs))
         onWarmup(warmup)
 
         val sample = parsed.sample

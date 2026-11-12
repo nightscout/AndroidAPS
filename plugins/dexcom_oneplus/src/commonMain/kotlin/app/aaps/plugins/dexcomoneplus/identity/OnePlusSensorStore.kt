@@ -183,6 +183,19 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
     }
 
     /**
+     * True once the start of the sensor stored now came from the sensor itself or from the user.
+     * After that the start the sensor reports does not move it again: it is taken once per sensor,
+     * and a correction by hand is kept.
+     */
+    fun isSessionStartSettled(): Boolean = ownedByCurrentSensor(KEY_SESSION_START_SETTLED_MAC)
+
+    /** See [isSessionStartSettled]. Ignored while no sensor MAC is stored. */
+    fun markSessionStartSettled() {
+        val mac = prefs.getString(KEY_MAC)?.takeIf { it.isNotBlank() } ?: return
+        prefs.edit { putString(KEY_SESSION_START_SETTLED_MAC, mac) }
+    }
+
+    /**
      * The sensor's own session and warm-up length (its 0x52 answer), or null when not known for the
      * sensor stored now.
      *
@@ -382,6 +395,9 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
 
         /** MAC that owns [KEY_SESSION_START] — tells "same sensor re-connected" from "new sensor". */
         private const val KEY_SESSION_START_MAC = "session_start_mac"
+
+        /** MAC of the sensor whose start is settled, see [isSessionStartSettled]. */
+        private const val KEY_SESSION_START_SETTLED_MAC = "session_start_settled_mac"
         private const val KEY_SLOT_PRESENT = "slot_present"
         private const val KEY_SLOT_EGV_COUNT = "slot_valid_egv_count"
         private const val KEY_SLOT_WARMUP_DONE = "slot_warmup_done"

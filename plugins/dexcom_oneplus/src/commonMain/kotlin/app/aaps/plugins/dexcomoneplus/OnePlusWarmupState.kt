@@ -22,6 +22,12 @@ data class OnePlusWarmupState(
      * sensor start instead of waiting forever on a MAC that will never answer.
      */
     val staleMacSuspected: Boolean = false,
+    /**
+     * When the sensor says its session started: the time of the reading minus the session age that a
+     * G7 / ONE+ glucose message carries. Null when the message does not say. AAPS takes it as the
+     * insertion time, so a sensor that was already running keeps its real age.
+     */
+    val sensorStartEpochMs: Long? = null,
 ) {
     enum class Phase {
         IDLE,

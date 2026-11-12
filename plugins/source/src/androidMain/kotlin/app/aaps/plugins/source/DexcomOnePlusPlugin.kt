@@ -568,6 +568,81 @@ class DexcomOnePlusPlugin @Inject constructor(
             LTag.BGSOURCE,
             "DEXCOM_ONEPLUS_WARMUP: phase=${state.phase} remainingMs=${state.remainingMs} msg=${state.message}",
         )
+        state.sensorStartEpochMs?.let(::adoptSensorReportedStart)
+    }
+
+    /** One sensor start check at a time: a reading arrives every 5 minutes, two must not both write. */
+    private val reportedStartGate = Mutex()
+
+    /**
+     * Take the insertion time the sensor reports, once per sensor.
+     *
+     * A sensor that was already running when AAPS connected to it (started in xDrip+, in the Dexcom
+     * app, or before AAPS was installed again) got the time of that connection as its start, so its
+     * age and its end alarms were wrong until the user corrected it by hand. Every G7 / ONE+ glucose
+     * message carries the time since activation, so the real start is known.
+     *
+     * Only the `SENSOR_CHANGE` at the old start goes (the one this plugin wrote for it). An event of
+     * an earlier sensor stays, and a start the user corrected by hand is kept.
+     */
+    private fun adoptSensorReportedStart(reportedStartMs: Long) {
+        ioScope()?.launch {
+            reportedStartGate.withLock {
+                val currentStartMs = sensorStore.loadSessionStart()
+                val now = nowMs()
+                val decision = DexcomOnePlusSensorReportedStart.decide(
+                    settled = sensorStore.isSessionStartSettled(),
+                    currentStartMs = currentStartMs,
+                    reportedStartMs = reportedStartMs,
+                    nowMs = now,
+                    maxAgeMs = DexcomOnePlusStaging.sessionLengthMs(sensorSessionLengthMs(sensorStore)),
+                )
+                when (decision) {
+                    DexcomOnePlusSensorReportedStart.Decision.IGNORE -> Unit
+                    DexcomOnePlusSensorReportedStart.Decision.SAME   -> sensorStore.markSessionStartSettled()
+                    DexcomOnePlusSensorReportedStart.Decision.MOVE   -> moveToReportedStart(currentStartMs, reportedStartMs)
+                }
+            }
+        }
+    }
+
+    private suspend fun moveToReportedStart(currentStartMs: Long, reportedStartMs: Long) {
+        val removed = if (currentStartMs > 0L) {
+            persistenceLayer.getTherapyEventDataFromToTime(
+                currentStartMs - SENSOR_CHANGE_MATCH_TOLERANCE_MS,
+                currentStartMs + SENSOR_CHANGE_MATCH_TOLERANCE_MS,
+            ).filter { it.type == TE.Type.SENSOR_CHANGE }
+        } else {
+            emptyList()
+        }
+        removed.forEach { event ->
+            persistenceLayer.invalidateTherapyEvent(
+                id = event.id,
+                action = Action.CAREPORTAL_REMOVED,
+                source = Sources.DexcomOnePlus,
+                note = event.note,
+                listValues = listOf(
+                    ValueWithUnit.Timestamp(event.timestamp),
+                    ValueWithUnit.TEType(event.type),
+                ),
+            )
+        }
+        val taken = persistenceLayer.getTherapyEventDataIncludingInvalidFromTime(reportedStartMs, true)
+            .filter { it.type == TE.Type.SENSOR_CHANGE }
+            .map { it.timestamp }
+            .toSet()
+        val stampMs = DexcomOnePlusSensorStartCorrection.freeTimestamp(reportedStartMs, taken)
+        sensorStore.overwriteSessionStart(stampMs)
+        sensorStore.markSessionStartSettled()
+        val written = preferences.get(BooleanKey.BgSourceCreateSensorChange) && writeSensorChange(stampMs)
+        healedSensorChangeStartMs = stampMs
+        refreshProductionLifecycle()
+        rxBus.send(EventRefreshOverview(from = "DexcomOnePlus sensor start"))
+        aapsLogger.info(
+            LTag.BGSOURCE,
+            "DEXCOM_ONEPLUS_SESSION: start taken from the sensor from=$currentStartMs to=$stampMs " +
+                "removedSensorChanges=${removed.size} written=$written",
+        )
     }
 
     /**
@@ -764,6 +839,8 @@ class DexcomOnePlusPlugin @Inject constructor(
             )
         }
         sensorStore.overwriteSessionStart(stampMs)
+        // Set by hand: the start the sensor reports must not move it back.
+        sensorStore.markSessionStartSettled()
         val written = writeSensorChange(stampMs)
         healedSensorChangeStartMs = stampMs
         refreshProductionLifecycle()
