@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Controllo dell’ago non riuscito.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Scarto della patch non riuscito. Riprova.</string>
+    <string name="carelevo_discarded_not_reached">Non è stato possibile raggiungere il cerotto. È stato rimosso dall’AAPS ma non è stato fermato e può comunque somministrare insulina. Toglilo.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Richiesta di erogazione basale non riuscita. Per favore riprova.</string>
     <!-- Delivery Resume/Suspend -->
