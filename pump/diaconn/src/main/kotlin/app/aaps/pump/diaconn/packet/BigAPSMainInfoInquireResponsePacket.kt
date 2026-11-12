@@ -175,8 +175,8 @@ class BigAPSMainInfoInquireResponsePacket(
         diaconnG8Pump.maxBolusePerDay = getShortToInt(bufferData).toDouble() / 100
 
         // 18. pump sound
-        diaconnG8Pump.beepAndAlarm = getByteToInt(bufferData) - 1
-        diaconnG8Pump.alarmIntensity = getByteToInt(bufferData) - 1
+        diaconnG8Pump.beepAndAlarm = getByteToInt(bufferData)
+        diaconnG8Pump.alarmIntensity = getByteToInt(bufferData)
 
         // 19. pump light time
         diaconnG8Pump.lcdOnTimeSec = getByteToInt(bufferData) // kind (1=30 sec, 2=40 sec, 3=50 sec)

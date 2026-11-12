@@ -473,18 +473,32 @@ class DiaconnG8Service : MetroService() {
     fun setUserSettings(): PumpEnactResult {
         val result = pumpEnactResultProvider()
 
-        val msg: DiaconnG8Packet = when (diaconnG8Pump.setUserOptionType) {
-            DiaconnG8Pump.ALARM       -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntensity)
-            DiaconnG8Pump.LCD         -> DisplayTimeoutSettingPacket(injector, diaconnG8Pump.lcdOnTimeSec)
-            DiaconnG8Pump.LANG        -> LanguageSettingPacket(injector, diaconnG8Pump.selectedLanguage)
-            DiaconnG8Pump.BOLUS_SPEED -> BolusSpeedSettingPacket(injector, diaconnG8Pump.bolusSpeed)
-            else                      -> null
+        val option = diaconnG8Pump.userOptionToSet ?: return result.success(false)
+        val msg: DiaconnG8Packet = when (option.kind) {
+            DiaconnG8Pump.ALARM -> SoundSettingPacket(injector, option.value, option.second)
+            DiaconnG8Pump.LCD   -> DisplayTimeoutSettingPacket(injector, option.value)
+            DiaconnG8Pump.LANG  -> LanguageSettingPacket(injector, option.value)
+            else                -> null
         } ?: return result.success(false)
 
         sendMessage(msg)
         // It looked at the confirmation code at once, before the pump could send it, and reported a setting done whatever
         // the pump answered to its confirm.
-        return result.success(processConfirm(msg.msgType) == Confirm.DONE)
+        val done = processConfirm(msg.msgType) == Confirm.DONE
+        if (done) {
+            diaconnG8Pump.userOptionToSet = null
+            // The pump has it now: the screen shows it before the next status read reads it.
+            when (option.kind) {
+                DiaconnG8Pump.ALARM -> {
+                    diaconnG8Pump.beepAndAlarm = option.value
+                    diaconnG8Pump.alarmIntensity = option.second
+                }
+
+                DiaconnG8Pump.LCD   -> diaconnG8Pump.lcdOnTimeSec = option.value
+                DiaconnG8Pump.LANG  -> diaconnG8Pump.selectedLanguage = option.value
+            }
+        }
+        return result.success(done)
     }
 
     fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {

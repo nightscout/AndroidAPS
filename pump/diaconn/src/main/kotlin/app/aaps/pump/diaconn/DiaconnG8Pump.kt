@@ -267,9 +267,14 @@ class DiaconnG8Pump(
     var maxBasal = 0.0
 
     // User settings
-    var setUserOptionType = 0 // ALARM:0, LCD:1, LANG:2, BOLUS_SPEED:3
-    var beepAndAlarm = 0
-    var alarmIntensity = 0
+    /**
+     * The user setting `DiaconnG8Service.setUserSettings` writes next, kept apart from the values a status read stores.
+     * The screen put the new value into those: a status read queued before the write put the pump's old value over it,
+     * and the old value was written and reported as saved.
+     */
+    @Volatile var userOptionToSet: UserOption? = null
+    var beepAndAlarm = 0 // 1 sound, 2 vibrate, 3 silent, as the pump sends and takes it; 0 before the first read
+    var alarmIntensity = 0 // 1 low, 2 middle, 3 high
     var lcdOnTimeSec = 0
     var selectedLanguage = 0
     var bolusSpeed = 0
@@ -509,13 +514,15 @@ class DiaconnG8Pump(
     var bolusingSpeed = 0
     var bolusingInjProgress = 0
 
+    /** A user setting to write: its kind ([ALARM], [LCD] or [LANG]) and its values as the pump takes them. */
+    data class UserOption(val kind: Int, val value: Int, val second: Int = 0)
+
     companion object {
 
         // User settings
         const val ALARM = 0
         const val LCD = 1
         const val LANG = 2
-        const val BOLUS_SPEED = 3
     }
 
 }
