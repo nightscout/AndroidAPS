@@ -27,7 +27,6 @@
     <string name="commanderror">שגיאה בפקודה</string>
     <string name="speederror">שגיאת מהירות</string>
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
-    <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
     <string name="selectedpump">משאבה נבחרת</string>
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="basal_step">צעד במינון בזאלי</string>
