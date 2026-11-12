@@ -27,7 +27,6 @@
     <string name="commanderror">Error del comando</string>
     <string name="speederror">Error de velocidad</string>
     <string name="insulinlimitviolation">Violación del límite de insulina</string>
-    <string name="boluserrorcode">Solicitado: %1$.2f U Administrado: %2$.2f U Código de error: %3$s</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="bolus_step">Incremento de bolo</string>
     <string name="basal_step">Paso Basal</string>
