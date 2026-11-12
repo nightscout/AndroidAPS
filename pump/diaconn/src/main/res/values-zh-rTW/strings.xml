@@ -27,7 +27,6 @@
     <string name="commanderror">指令錯誤</string>
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
-    <string name="boluserrorcode">要求量：%1$.2f U；已輸送量：%2$.2f U；錯誤代碼：%3$s</string>
     <string name="selectedpump">選擇的幫浦</string>
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
