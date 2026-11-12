@@ -1207,5 +1207,6 @@
     <string name="units_sec">sec</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">La pompa ha fermato il bolo dopo %1$s. Controllare la pompa prima del bolo successivo.</string>
     <string name="secrets_not_protected">Nessun archivio di chiavi di sistema è stato trovato su questo computer. Le chiavi che proteggono le impostazioni e l\'associazione con il master sono conservate in file accanto ai dati, quindi chi ottiene una copia dei tuoi file ottiene anche le chiavi. Su Linux, installa e avvia un portachiavi (ad esempio GNOME Keyring o KWallet), poi riavvia AAPS.</string>
 </resources>
