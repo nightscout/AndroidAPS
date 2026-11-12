@@ -49,13 +49,19 @@
     <string name="pump_time_update_failed">Fehler beim Aktualisieren der Pumpen-Zeitzone, stelle Benachrichtigung ab und aktualisiere manuell.</string>
     <string name="bolus_error">Bolusfehler</string>
     <!-- Status strings -->
+    <string name="status_idle">nicht aktiv</string>
     <string name="status_filled">Gefüllt</string>
+    <string name="status_priming">Füllen</string>
+    <string name="status_primed">Gefüllt</string>
+    <string name="status_ejecting">Auswerfen</string>
+    <string name="status_ejected">Ausgeworfen</string>
     <string name="status_active">Aktiv</string>
     <string name="status_stopped">Gestoppt</string>
     <!-- wizard-->
     <string name="retry">Erneut versuchen</string>
     <string name="step_prepare_patch">Pod aktivieren</string>
     <string name="step_prepare_patch_connect">Verbinden und füllen</string>
+    <string name="step_select_insulin">Wähle Insulin</string>
     <string name="step_prime">Füllen</string>
     <string name="step_priming">Befüllen</string>
     <string name="step_priming_complete">Befüllung abgeschlossen</string>
@@ -68,6 +74,7 @@
     <string name="unpair_confirm_message">Dies löscht die gespeicherte Pumpennummer und trennt die Verbindung. Aktiviere einen neuen Patch, um nach einer Pumpe zu suchen.</string>
     <string name="step_retry_activation">Aktivierung wird ausgeführt</string>
     <string name="unexpected_state">Unerwarteter Zustand: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Verbinde die Pumpenbasis mit einem neuen Patch, um ihn zu aktivieren. Dann wähle ihn von der Liste unten.</string>
     <string name="patch_begin_activation">Kein aktiver Patch. Drücken Sie <b>Weiter</b> um den Aktivierungsprozess zu starten.</string>
     <string name="connect_pump_base">Stelle sicher, dass die Pumpenbasis mit dem Patch verbunden ist, entferne die Restluft und fülle den Patch mit Insulin, dann drücke <b> danach </b>.</string>
     <string name="note_min_70_units">Hinweis: Für die Aktivierung ist mindestens 70 Einheiten erforderlich.</string>
@@ -107,12 +114,16 @@
     <string name="alarm_setting_silent">Lautlos</string>
     <string name="pump_warning_notification_title">Benachrichtigung bei Pumpenwarnung</string>
     <string name="pump_warning_notification_summary">Zeige eine Benachrichtigung bei nicht kritischen Pumpenwarnungen an: niedriger Batteriestand, niedriger Füllstand des Reservoirs (20 Einheiten) sowie bald ablaufend. Es wird empfohlen, diese Option aktiviert zu lassen, wenn die Pumpenalarme auf lautlos gestellt sind.</string>
+    <string name="pump_warning_expiry_hour_title">Warnung Ablauf der Pumpenzeit [Stunden]</string>
+    <string name="pump_warning_expiry_hour_summary">Benachrichtigung zu einer festgelegten Uhrzeit nach der Aktivierung anzeigen.</string>
     <string name="patch_expiration_title">Patch Ablaufdatum</string>
     <string name="patch_expiration_summary">Wenn aktiviert, läuft der Patch nach 3 Tagen ab, mit einer Nachfrist von 8 Stunden danach.</string>
     <string name="hourly_max_insulin_title">Stündliches Maximum an Insulin [IE]</string>
     <string name="hourly_max_insulin_summary">Lege die maximale Anzahl an Insulineinheiten pro Stunde fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
     <string name="daily_max_insulin_title">Tägliches Maximum an Insulin [IE]</string>
     <string name="daily_max_insulin_summary">Legen Sie die maximale Anzahl an Insulineinheiten pro Tag fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
+    <string name="scan_on_connection_error_title">Scan bei Verbindungsfehler</string>
+    <string name="scan_on_connection_error_summary">WARNUNG: Nur aktivieren, falls Verbindungsprobleme auftreten. Bei aktivierter Option sucht der Treiber erneut nach der Pumpe, bevor er versucht, die Verbindung wiederherzustellen. Stellen Sie sicher, dass die Standortberechtigung auf „Immer zulassen“ eingestellt ist </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pumpenstatus wird abgerufen</string>
     <string name="syncing_records">Datensätze synchronisieren, %1$d verbleibend</string>
@@ -124,5 +135,6 @@
     <string name="bolus_error_reason_not_connected">Pumpe nicht verbunden</string>
     <string name="bolus_error_reason_already_in_progress">Bolus wird bereits ausgeführt</string>
     <string name="bolus_error_reason_unable_to_send_command">Bolus Befehl kann nicht gesendet werden</string>
+    <string name="bolus_error_reason_communication_lost">Zeitüberschreitung beim Abrufen des Bolus-Status</string>
     <string name="bolus_error_reason_pump_error">Pumpenfehler</string>
 </resources>
