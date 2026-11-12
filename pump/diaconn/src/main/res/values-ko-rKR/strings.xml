@@ -27,7 +27,6 @@
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 오류</string>
     <string name="insulinlimitviolation">인슐린 제한 초과</string>
-    <string name="boluserrorcode">요청: %1$.2f U 주입: %2$.2f U 오류 코드: %3$s</string>
     <string name="selectedpump">선택된 펌프</string>
     <string name="bolus_step">볼러스 단위</string>
     <string name="basal_step">기저 단위</string>
