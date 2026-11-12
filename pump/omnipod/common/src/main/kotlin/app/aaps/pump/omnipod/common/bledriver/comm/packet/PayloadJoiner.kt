@@ -5,7 +5,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.message.IncorrectPacketExcept
 import java.nio.ByteBuffer
 import java.util.LinkedList
 
-class PayloadJoiner(firstPacket: ByteArray) {
+class PayloadJoiner(firstPacket: ByteArray, private val layout: BlePacketLayout = BlePacketLayout.DASH) {
 
     var oneExtraPacket: Boolean
     val fullFragments: Int
@@ -14,7 +14,7 @@ class PayloadJoiner(firstPacket: ByteArray) {
     private val fragments: MutableList<BlePacket> = LinkedList<BlePacket>()
 
     init {
-        val firstPacket = FirstBlePacket.parse(firstPacket)
+        val firstPacket = FirstBlePacket.parse(firstPacket, layout)
         fragments.add(firstPacket)
         fullFragments = firstPacket.fullFragments
         crc = firstPacket.crc32 ?: 0
@@ -25,25 +25,25 @@ class PayloadJoiner(firstPacket: ByteArray) {
         if (packet.size < 3) { // idx, size, at least 1 byte of payload
             throw IncorrectPacketException(packet, (expectedIndex + 1).toByte())
         }
-        val idx = packet[0].toInt()
+        val idx = packet[0].toUnsignedInt()
         if (idx != expectedIndex + 1) {
             throw IncorrectPacketException(packet, (expectedIndex + 1).toByte())
         }
         expectedIndex++
         when {
             idx < fullFragments                        -> {
-                fragments.add(MiddleBlePacket.parse(packet))
+                fragments.add(MiddleBlePacket.parse(packet, layout))
             }
 
             idx == fullFragments                       -> {
-                val lastPacket = LastBlePacket.parse(packet)
+                val lastPacket = LastBlePacket.parse(packet, layout)
                 fragments.add(lastPacket)
                 crc = lastPacket.crc32
                 oneExtraPacket = lastPacket.oneExtraPacket
             }
 
             idx == fullFragments + 1 && oneExtraPacket -> {
-                fragments.add(LastOptionalPlusOneBlePacket.parse(packet))
+                fragments.add(LastOptionalPlusOneBlePacket.parse(packet, layout))
             }
 
             idx > fullFragments                        -> {

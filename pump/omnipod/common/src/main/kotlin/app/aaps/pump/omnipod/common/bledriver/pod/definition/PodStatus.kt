@@ -23,4 +23,6 @@ enum class PodStatus(override val value: Byte) : HasValue {
     UNKNOWN(0xff.toByte());
 
     fun isRunning(): Boolean = this == RUNNING_ABOVE_MIN_VOLUME || this == RUNNING_BELOW_MIN_VOLUME
+
+    fun isActivationTimeExceeded(): Boolean = this == LUMP_OF_COAL
 }

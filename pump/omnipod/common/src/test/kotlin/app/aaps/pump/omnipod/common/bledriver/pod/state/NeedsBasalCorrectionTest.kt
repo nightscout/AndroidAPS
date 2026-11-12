@@ -2,14 +2,19 @@ package app.aaps.pump.omnipod.common.bledriver.pod.state
 
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import com.google.gson.Gson
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import java.util.EnumSet
 
 /**
  * Tests for [OmnipodDashPodStateManagerImpl.needsBasalCorrection].
@@ -176,6 +181,91 @@ class NeedsBasalCorrectionTest : TestBase() {
     }
 
     // ---- cooldown expiry ----------------------------------------------------------------------
+
+    @Test
+    fun `reported zero counts the old rate first and resume does not count the pause twice`() {
+        val hour = 3_600_000L
+        val start = 1_700_000_000_000L
+        sut.confirmTimeZone(PodTimeZone("UTC", 0, start))
+        sut.basalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+        sut.podState.lastUpdatedSystem = start
+        sut.podState.basalExpected = 2.0
+        sut.tempBasal = OmnipodDashPodStateManager.TempBasal(start, 2.0, 600)
+
+        sut.updateBasalExpected(start + hour)
+        sut.tempBasal = OmnipodDashPodStateManager.TempBasal(start + hour, 0.0, 4800)
+        assertThat(sut.podState.basalExpected).isEqualTo(4.0)
+        sut.podState.deliveryStatus = DeliveryStatus.SUSPENDED
+        sut.updateBasalExpected(start + 2 * hour)
+        assertThat(sut.podState.basalExpected).isEqualTo(4.0)
+        sut.updateBasalExpected(start + 2 * hour)
+        assertThat(sut.podState.basalExpected).isEqualTo(4.0)
+
+        sut.tempBasal = null
+        sut.updateBasalExpected(start + 3 * hour)
+        assertThat(sut.podState.basalExpected).isEqualTo(5.0)
+        assertThat(sut.lastUpdatedSystem).isEqualTo(start)
+        assertThat(sut.podState.basalExpectedUpdatedAt).isEqualTo(start + 3 * hour)
+    }
+
+    @Test
+    fun `an older reported time does not rewind or reset expected basal`() {
+        val hour = 3_600_000L
+        val start = 1_700_000_000_000L
+        sut.confirmTimeZone(PodTimeZone("UTC", 0, start))
+        sut.basalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+        sut.podState.lastUpdatedSystem = start
+        sut.podState.basalExpected = 2.0
+        sut.updateBasalExpected(start + hour)
+
+        sut.updateBasalExpected(start + hour / 2)
+
+        assertThat(sut.podState.basalExpected).isEqualTo(3.0)
+        assertThat(sut.podState.basalExpectedUpdatedAt).isEqualTo(start + hour)
+        assertThat(sut.lastUpdatedSystem).isEqualTo(start)
+    }
+
+    @Test
+    fun `status counts from the basal timestamp and then updates the status timestamp`() {
+        val hour = 3_600_000L
+        val start = System.currentTimeMillis() - 2 * hour
+        sut.confirmTimeZone(PodTimeZone("UTC", 0, start))
+        sut.basalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+        sut.podState.lastUpdatedSystem = start
+        sut.podState.basalExpected = 2.0
+        sut.updateBasalExpected(start + hour)
+        sut.tempBasal = OmnipodDashPodStateManager.TempBasal(start + hour, 0.0, 4800)
+
+        sut.updatePodState(
+            DeliveryStatus.SUSPENDED, PodStatus.RUNNING_ABOVE_MIN_VOLUME,
+            40, 1000, 0, 60, EnumSet.noneOf(AlertType::class.java), 0
+        )
+
+        assertThat(sut.podState.basalExpected).isEqualTo(3.0)
+        assertThat(sut.podState.basalExpectedUpdatedAt).isEqualTo(sut.lastUpdatedSystem)
+        assertThat(sut.lastUpdatedSystem).isAtLeast(start + 2 * hour)
+    }
+
+    @Test
+    fun `old saved state uses the status timestamp and new state preserves the basal timestamp`() {
+        val gson = Gson()
+        val hour = 3_600_000L
+        val start = 1_700_000_000_000L
+        sut.podState = gson.fromJson(
+            """{"lastUpdatedSystem":$start,"basalExpected":2.0}""",
+            OmnipodDashPodStateManagerImpl.PodState::class.java
+        )
+        assertThat(sut.podState.basalExpectedUpdatedAt).isNull()
+        sut.confirmTimeZone(PodTimeZone("UTC", 0, start))
+        sut.basalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+        sut.updateBasalExpected(start + hour)
+
+        sut.podState = gson.fromJson(gson.toJson(sut.podState), OmnipodDashPodStateManagerImpl.PodState::class.java)
+        assertThat(sut.podState.basalExpectedUpdatedAt).isEqualTo(start + hour)
+        assertThat(sut.lastUpdatedSystem).isEqualTo(start)
+        sut.updateBasalExpected(start + 2 * hour)
+        assertThat(sut.podState.basalExpected).isEqualTo(4.0)
+    }
 
     @Test fun `past cooldown window — does not block correction`() {
         sut.lastBasalCorrectionTime = System.currentTimeMillis() - 3 * 60_000L  // 3 min ago, > 2 min

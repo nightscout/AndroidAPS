@@ -28,7 +28,7 @@ class StringLengthPrefixEncoding private constructor() {
                 remaining.assertSizeAtLeast(key.length + LENGTH_BYTES)
 
                 remaining = remaining.copyOfRange(key.length, remaining.size)
-                val length = (remaining[0].toUnsignedInt() shl 1) or remaining[1].toUnsignedInt()
+                val length = (remaining[0].toUnsignedInt() shl 8) or remaining[1].toUnsignedInt()
                 remaining.assertSizeAtLeast(length)
                 ret[index] = remaining.copyOfRange(LENGTH_BYTES, LENGTH_BYTES + length)
                 remaining = remaining.copyOfRange(LENGTH_BYTES + length, remaining.size)

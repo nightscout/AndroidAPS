@@ -1,29 +1,33 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.definition
 
-import java.util.Calendar
+import com.google.gson.annotations.SerializedName
 import java.util.Collections
+import java.util.TimeZone
 
 class BasalProgram(
     segments: List<Segment>
 ) {
 
-    val segments: MutableList<Segment> = segments.toMutableList()
-        get() = Collections.unmodifiableList(field)
+    // Keeps the JSON key "segments" so saved Pod state keeps deserializing across this field's rename.
+    // Alternate can be removed once all users have upgraded from the O5 beta builds.
+    @SerializedName(value = "segments", alternate = ["mutableSegmentsOrNull"])
+    private var mutableSegmentsOrNull: MutableList<Segment>? = segments.toMutableList()
+    private val mutableSegments: MutableList<Segment>
+        get() = mutableSegmentsOrNull ?: mutableListOf<Segment>().also { mutableSegmentsOrNull = it }
+
+    val segments: MutableList<Segment> get() = Collections.unmodifiableList(mutableSegments)
 
     fun addSegment(segment: Segment) {
-        segments.add(segment)
+        mutableSegments.add(segment)
     }
 
     fun hasZeroUnitSegments() = segments.any { it.basalRateInHundredthUnitsPerHour == 0 }
 
-    fun rateAt(date: Long): Double {
-        val instance = Calendar.getInstance()
-        instance.timeInMillis = date
-        val hourOfDay = instance[Calendar.HOUR_OF_DAY]
-        val minuteOfHour = instance[Calendar.MINUTE]
-        val slotIndex = hourOfDay * 2 + minuteOfHour.div(30)
-        val slot = segments.find { it.startSlotIndex <= slotIndex && slotIndex < it.endSlotIndex }
-        return (slot?.basalRateInHundredthUnitsPerHour ?: 0).toDouble() / 100
+    /** [podOffset] in milliseconds; falls back to the device's current time zone offset if unknown. */
+    fun rateAt(date: Long, podOffset: Int?): Double {
+        val offset = podOffset ?: TimeZone.getDefault().getOffset(date)
+        val localMillis = Math.floorMod(date + offset, 86400000L)
+        return rateInHundredthsAtSlot((localMillis / 1800000L).toInt()) / 100.0
     }
 
     /**

@@ -110,13 +110,19 @@ open class BleIO(
             throw ConnectException("Expecting one descriptor, found: ${descriptors.size}")
         }
         val descriptor = descriptors[0]
-        descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+        val usesIndicate = usesIndicate(characteristic)
+        val enableValue = if (usesIndicate) BluetoothGattDescriptor.ENABLE_INDICATION_VALUE else BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "$type characteristic properties: ${characteristic.properties} (using ${if (usesIndicate) "INDICATE" else "NOTIFY"})"
+        )
+        descriptor.value = enableValue
         gatt.writeDescriptor(descriptor)
-            .assertTrue("enable indications on descriptor")
+            .assertTrue("enable ${if (usesIndicate) "indications" else "notifications"} on descriptor")
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Enabling indications for $type")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Enabling ${if (usesIndicate) "indications" else "notifications"} for $type")
         val confirmation = bleCommCallbacks.confirmWrite(
-            BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
+            enableValue,
             descriptor.uuid.toString(),
             DEFAULT_IO_TIMEOUT_MS
         )
@@ -131,6 +137,17 @@ open class BleIO(
 
     companion object {
         const val DEFAULT_IO_TIMEOUT_MS = BleCharacteristicIO.DEFAULT_IO_TIMEOUT_MS
+
+        /**
+         * Isolated from [readyToRead]'s GATT calls so this decision is directly unit
+         * testable, without needing the full connect()/readyToRead() mock chain - and
+         * the real Android framework's null ENABLE_INDICATION_VALUE/
+         * ENABLE_NOTIFICATION_VALUE static-field environment boundary that chain hits in
+         * pure-JVM tests (see O5ConnectionTest's documented stopping point) - just to
+         * verify which branch gets picked.
+         */
+        internal fun usesIndicate(characteristic: BluetoothGattCharacteristic): Boolean =
+            characteristic.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE != 0
     }
 }
 

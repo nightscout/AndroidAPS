@@ -13,6 +13,8 @@ object BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
 
 object BleCommandFail : BleCommand(BleCommandType.FAIL)
 
+object BleCommandPairStatus : BleCommand(BleCommandType.PAIR_STATUS)
+
 data class BleCommandNack(val idx: Byte) : BleCommand(BleCommandType.NACK, byteArrayOf(idx)) {
     companion object {
 
@@ -92,6 +94,9 @@ sealed class BleCommand(val data: ByteArray) {
 
                     BleCommandType.FAIL      ->
                         BleCommandFail
+
+                    BleCommandType.PAIR_STATUS ->
+                        BleCommandPairStatus
 
                     BleCommandType.HELLO     ->
                         BleCommandIncorrect("Incorrect hello command received", payload)
