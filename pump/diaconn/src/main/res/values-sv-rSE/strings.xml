@@ -27,7 +27,6 @@
     <string name="commanderror">Kommandofel</string>
     <string name="speederror">Felaktig hastighet</string>
     <string name="insulinlimitviolation">Insulingräns nådd</string>
-    <string name="boluserrorcode">Begärt: %1$.2f U Levererat: %2$.2f U Felkod: %3$s</string>
     <string name="selectedpump">Vald pump</string>
     <string name="bolus_step">Bolussteg</string>
     <string name="basal_step">Basalsteg</string>
