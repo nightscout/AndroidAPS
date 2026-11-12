@@ -27,7 +27,6 @@
     <string name="commanderror">Chyba příkazu</string>
     <string name="speederror">Chyba rychlosti</string>
     <string name="insulinlimitviolation">Překročen limit inzulínu</string>
-    <string name="boluserrorcode">Požadováno: %1$.2f U Podáno: %2$.2f U Kód chyby: %3$s</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
