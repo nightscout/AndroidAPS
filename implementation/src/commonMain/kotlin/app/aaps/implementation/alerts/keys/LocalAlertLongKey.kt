@@ -12,6 +12,9 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
  *
  * They were missed by the 2026-09-22 sweep that made pump identity and the sync cursors
  * non-exportable; same category, found later by review.
+ *
+ * [CgmAlarmsMutedUntil] is the same kind of deadline: the end of the mute of the CGM alarms, 0 when
+ * they are not muted. Another phone's mute must not silence this one.
  */
 enum class LocalAlertLongKey(
     override val key: String,
@@ -20,5 +23,6 @@ enum class LocalAlertLongKey(
 ) : LongNonPreferenceKey {
 
     NextPumpDisconnectedAlarm("nextPumpDisconnectedAlarm", 0L),
-    NextMissedReadingsAlarm("nextMissedReadingsAlarm", 0L)
+    NextMissedReadingsAlarm("nextMissedReadingsAlarm", 0L),
+    CgmAlarmsMutedUntil("cgmAlarmsMutedUntil", 0L)
 }
