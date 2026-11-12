@@ -1,16 +1,6 @@
 package app.aaps.pump.diaconn.service
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
-import android.bluetooth.BluetoothGattService
-import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.SystemClock
@@ -19,17 +9,21 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
+import app.aaps.core.interfaces.pump.ble.BondState
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
+import app.aaps.pump.diaconn.di.DiaconnBle
 import app.aaps.pump.diaconn.packet.BatteryWarningReportPacket
+import app.aaps.pump.diaconn.packet.BigLogInquirePacket
 import app.aaps.pump.diaconn.packet.BigLogInquireResponsePacket
 import app.aaps.pump.diaconn.packet.DiaconnG8Packet
 import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
@@ -39,9 +33,11 @@ import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.util.UUID
-import java.util.concurrent.ScheduledFuture
 
+/**
+ * Bluetooth link to the Diaconn G8 pump. It sends request packets and passes each answer from the pump to the packet
+ * that reads it. The radio is [bleTransport]: the real Bluetooth one, or the in-tree emulator.
+ */
 @Suppress("SpellCheckingInspection")
 @SingleIn(AppScope::class)
 @Inject
@@ -54,29 +50,20 @@ class BLECommonService internal constructor(
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
     private val diaconnG8SettingResponseMessageHashTable: DiaconnG8SettingResponseMessageHashTable,
     private val diaconnG8Pump: DiaconnG8Pump,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    @param:DiaconnBle private val bleTransport: BleTransport
 ) {
 
-    companion object {
-
-        private const val WRITE_DELAY_MILLIS: Long = 50
-        private const val INDICATION_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
-        private const val WRITE_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
-        private const val CHARACTERISTIC_CONFIG_UUID = "00002902-0000-1000-8000-00805f9b34fb"
-    }
-
-    private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DiaconnG8Packet? = null
     private var processedMessageByte: ByteArray? = null
     private val mSendQueue = ArrayList<ByteArray>()
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
-    private var bluetoothGatt: BluetoothGatt? = null
+
+    // A link was opened and not closed yet: requests can be written.
+    private var linkOpen = false
 
     var isConnected = false
     var isConnecting = false
-    private var uartIndicate: BluetoothGattCharacteristic? = null
-    private var uartWrite: BluetoothGattCharacteristic? = null
 
     private var mSequence: Int = 0
 
@@ -89,6 +76,30 @@ class BLECommonService internal constructor(
         return seq
     }
 
+    private val transportListener = object : BleTransportListener {
+        override fun onConnectionStateChanged(connected: Boolean) = onConnectionStateChangeSynchronized(connected)
+
+        override fun onServicesDiscovered(success: Boolean) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered")
+            if (success) {
+                if (bleTransport.gatt.findCharacteristics()) bleTransport.gatt.enableNotifications()
+                SystemClock.sleep(1600)
+                isConnected = true
+                isConnecting = false
+            }
+        }
+
+        override fun onDescriptorWritten() {}
+
+        override fun onCharacteristicChanged(data: ByteArray) = onAnswer(data)
+
+        override fun onCharacteristicWritten() {}
+    }
+
+    init {
+        bleTransport.setListener(transportListener)
+    }
+
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -97,41 +108,24 @@ class BLECommonService internal constructor(
             return false
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
-        if (bluetoothAdapter == null) {
-            aapsLogger.error("Unable to obtain a BluetoothAdapter.")
-            return false
-        }
-
         if (address == null) {
             aapsLogger.error("unspecified address.")
             return false
         }
 
-        bluetoothGatt?.let {
-            it.disconnect()
-            SystemClock.sleep(200)
-            it.close()
-            SystemClock.sleep(200)
-            bluetoothGatt = null
-        }
-
-        val device = bluetoothAdapter?.getRemoteDevice(address)
-        if (device == null) {
-            aapsLogger.error("Device not found.  Unable to connect from: $from")
-            return false
-        }
-
-        if (device.bondState == BluetoothDevice.BOND_NONE) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                device.createBond()
-                SystemClock.sleep(10000)
-            }
+        if (bleTransport.adapter.bondState(address) == BondState.NONE) {
+            bleTransport.adapter.createBond(address)
+            SystemClock.sleep(10000)
             return false
         }
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
-        connectDeviceName = device.name
-        bluetoothGatt = device.connectGattCompat(context, false, mGattCallback)
+        connectDeviceName = bleTransport.adapter.getDeviceName(address)
+        if (!bleTransport.gatt.connect(address)) {
+            aapsLogger.error("Device not found.  Unable to connect from: $from")
+            return false
+        }
+        linkOpen = true
 
         isConnected = false
         isConnecting = true
@@ -150,182 +144,101 @@ class BLECommonService internal constructor(
             return
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
-
-        // cancel previous scheduled disconnection to prevent closing upcoming connection
-        scheduledDisconnection?.cancel(false)
-        scheduledDisconnection = null
-
-        if (bluetoothAdapter == null || bluetoothGatt == null || uartIndicate == null) {
-            aapsLogger.error("disconnect is not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
-            aapsLogger.error("disconnect is not possible: (mBluetoothGatt == null) " + (bluetoothGatt == null))
-            aapsLogger.error("disconnect is not possible: (uartIndicate == null) " + (uartIndicate == null))
+        if (!linkOpen) {
+            aapsLogger.error("disconnect is not possible: no link")
             isConnected = false
             return
         }
-        bluetoothGatt?.setCharacteristicNotification(uartIndicate, false)
-        bluetoothGatt?.disconnect()
+        bleTransport.gatt.disconnect()
         isConnected = false
         SystemClock.sleep(2000)
     }
 
-    @SuppressLint("MissingPermission")
     @Synchronized
     fun close() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
-        bluetoothGatt?.close()
-        bluetoothGatt = null
+        bleTransport.gatt.close()
+        linkOpen = false
     }
 
-    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
-    private val mGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
-        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-            onConnectionStateChangeSynchronized(gatt, newState) // call it synchronized
-        }
-
-        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered")
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                findCharacteristic()
-                SystemClock.sleep(1600)
-                isConnected = true
-                isConnecting = false
-            }
-        }
-
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "(응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
-            // 대량로그응답 처리.
-            if (characteristic.value[1] == 0xb2.toByte()) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "(대량 로그 처리 응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
+    // An answer or a report from the pump.
+    private fun onAnswer(data: ByteArray) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "(answer) onCharacteristicChanged: " + DiaconnG8Packet.toHex(data))
+        // Android drops an exception thrown here and logs it only as a warning of its own, so it is logged here.
+        try {
+            // handle the big log answer.
+            if (data[1] == 0xb2.toByte()) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "(big log answer) onCharacteristicChanged: " + DiaconnG8Packet.toHex(data))
+                // The page request that waits for it. The answer has a number of the pump's own, not the request's (real
+                // G8: request 54 got 0x27, request 55 got 0x29), so it cannot be matched by number. It woke nothing: each
+                // page waited its whole time, and the history read could not tell a read page from a lost one.
+                val request = processedMessage as? BigLogInquirePacket
+                // Answered now, also when storing its records takes longer than the request waits (the first record of
+                // a new pump took 1.8 s on an emulator).
+                request?.setReceived()
                 val message = BigLogInquireResponsePacket(injector)
-                message.handleMessage(characteristic.value)
+                message.handleMessage(data)
 
-                // 초기화
+                // reset
                 mSendQueue.clear()
+                request?.let { synchronized(it) { it.notifyAll() } }
             } else {
-                processResponseMessage(characteristic.value)
+                processResponseMessage(data)
             }
-        }
-
-        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "(요청) onCharacteristicWrite: " + DiaconnG8Packet.toHex(characteristic.value))
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "A pump message could not be read: " + DiaconnG8Packet.toHex(data), e)
         }
     }
 
-    @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission")
     @Synchronized
-    private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
-        Thread(Runnable {
-            synchronized(this) {
-                SystemClock.sleep(WRITE_DELAY_MILLIS)
-                if (bluetoothAdapter == null || bluetoothGatt == null) {
-                    aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                    isConnecting = false
-                    isConnected = false
-                    return@Runnable
-                }
-                characteristic.value = data
-                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-                bluetoothGatt?.writeCharacteristic(characteristic)
-            }
-        }).start()
-        SystemClock.sleep(50)
-    }
-
-    // private val uartIndicateBTGattChar: BluetoothGattCharacteristic
-    //     get() = uartIndicate
-    //         ?: BluetoothGattCharacteristic(UUID.fromString(INDICATION_UUID), BluetoothGattCharacteristic.PROPERTY_NOTIFY, 0).also { uartIndicate = it }
-
-    private val uartWriteBTGattChar: BluetoothGattCharacteristic
-        get() = uartWrite
-            ?: BluetoothGattCharacteristic(UUID.fromString(WRITE_UUID), BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE, 0).also { uartWrite = it }
-
-    private fun getSupportedGattServices(): List<BluetoothGattService>? {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "getSupportedGattServices")
-        if (bluetoothAdapter == null || bluetoothGatt == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-            isConnecting = false
-            isConnected = false
-            return null
-        }
-        return bluetoothGatt?.services
-    }
-
-    @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission")
-    @Synchronized
-    private fun findCharacteristic() {
-        val gattServices = getSupportedGattServices() ?: return
-        var uuid: String
-        for (gattService in gattServices) {
-            val gattCharacteristics = gattService.characteristics
-            for (gattCharacteristic in gattCharacteristics) {
-                uuid = gattCharacteristic.uuid.toString()
-                if (INDICATION_UUID == uuid) {
-                    uartIndicate = gattCharacteristic
-                    //setCharacteristicNotification(uartIndicate, true)
-                    bluetoothGatt?.setCharacteristicNotification(uartIndicate, true)
-
-                    // nRF Connect 참고하여 추가함
-                    val descriptor: BluetoothGattDescriptor = uartIndicate!!.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
-                    descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                    bluetoothGatt?.writeDescriptor(descriptor)
-                }
-                if (WRITE_UUID == uuid) {
-                    uartWrite = gattCharacteristic
-                }
-            }
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    @Synchronized
-    private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, newState: Int) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState : $newState")
-        if (newState == BluetoothProfile.STATE_CONNECTED) {
-            gatt.discoverServices()
+    private fun onConnectionStateChangeSynchronized(connected: Boolean) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange connected : $connected")
+        if (connected) {
+            bleTransport.gatt.discoverServices()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
-        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+        } else {
             close()
             isConnected = false
             isConnecting = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected $connectDeviceName") //Device was disconnected
         }
     }
 
     // the rest of packets
+    /** Sends [message] to the pump and waits for its answer, at most [waitMillis]. */
     fun sendMessage(message: DiaconnG8Packet, waitMillis: Long) {
-        // 펌프로 요청하기전 변수에 담기. 마지막 요청정보 확인용.
+        // keep the request before it goes to the pump, to check the last request later.
         processedMessage = message
         val sequence = getMsgSequence()
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.friendlyName + "  Sequence >>" + sequence)
-        // 요청
+        // request
         val bytes = message.encode(sequence)
         processedMessageByte = bytes
 
-        if (bluetoothGatt == null) {
+        if (!linkOpen) {
             aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> IGNORING (NOT CONNECTED) " + message.friendlyName)
             return
         }
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() before mSendQueue.size :: ${mSendQueue.size}")
-        // 펌프에 요청 보내기.
-        writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
-        // 요청 큐에 요청할 바이트 정보 담기.
+        // The request is in the send queue before it is written: an answer is matched to it there, and one that came
+        // before the add was dropped as an unknown message.
         synchronized(mSendQueue) {
             if (mSendQueue.size > 10) mSendQueue.clear()
             mSendQueue.add(bytes)
         }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() after mSendQueue.size :: ${mSendQueue.size}")
+        bleTransport.gatt.writeCharacteristic(bytes)
 
-        // 메시지동기화
+        // Waits until the answer is in, at most waitMillis. The answer wakes this request in processResponseMessage. It woke
+        // only the answer packet, so each request waited its whole time: 5 s a message, a status read 41 s on a real G8
+        // that answered each one in 0.1 s.
         synchronized(message) {
-            try {
-                message.waitMillis(waitMillis) //0.5초 대기.
-            } catch (e: InterruptedException) {
-                aapsLogger.error("sendMessage InterruptedException", e)
+            if (!message.isReceived) {
+                try {
+                    message.waitMillis(waitMillis)
+                } catch (e: InterruptedException) {
+                    aapsLogger.error("sendMessage InterruptedException", e)
+                }
             }
         }
     }
@@ -335,10 +248,10 @@ class BLECommonService internal constructor(
         isConnected = true
         isConnecting = false
 
-        //요청정보
+        // request info
         val originalMessageSeq = processedMessage?.getSeq(processedMessageByte ?: throw IllegalStateException())
 
-        // 응답정보
+        // answer info
         val receivedCommand = DiaconnG8Packet(injector).getCmd(data)
         val receivedSeq = DiaconnG8Packet(injector).getSeq(data)
         val receivedType = DiaconnG8Packet(injector).getType(data)
@@ -346,10 +259,10 @@ class BLECommonService internal constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "originalMessageSeq :: $originalMessageSeq, receivedSeq :: $receivedSeq")
         aapsLogger.debug(LTag.PUMPBTCOMM, "receivedCommand :: $receivedCommand")
 
-        // 응답메시지가 조회응답인지. 설정응답인지 구분해야됨.
+        // must find out if the answer is to an inquiry or to a setting.
         var message: DiaconnG8Packet? = null
-        // 요청시퀀스와 응답의 시퀀스가 동일한 경우에만 처리.
-        // 펌프로부터 받은 보고응답의 경우 처리
+        // handled only when the sequence of the request and of the answer are the same.
+        // handle a report that the pump sent
         if (receivedType == 3) {
             message = diaconnG8ResponseMessageHashTable.findMessage(receivedCommand)
             // injection Blocked Report
@@ -374,7 +287,7 @@ class BLECommonService internal constructor(
             }
 
         } else {
-            // 큐에 담긴 명령 대기중에 있는 것 조회 처리.
+            // find the waiting request in the send queue.
             synchronized(mSendQueue) {
                 val sendQueueSize = mSendQueue.size
                 if (sendQueueSize > 0) {
@@ -382,15 +295,15 @@ class BLECommonService internal constructor(
                         val sendQueueSeq = DiaconnG8Packet(injector).getSeq(mSendQueue[i])
                         val sendQueueType = DiaconnG8Packet(injector).getType(mSendQueue[i])
                         if (sendQueueSeq == receivedSeq) {
-                            // 설정명령에 대한 응답
+                            // answer to a setting command
                             if (sendQueueType == 0) {
                                 message = diaconnG8SettingResponseMessageHashTable.findMessage(receivedCommand)
 
-                                // 조회명령에 대한 응답
+                                // answer to an inquiry command
                             } else if (sendQueueType == 1) {
                                 message = diaconnG8ResponseMessageHashTable.findMessage(receivedCommand)
                             }
-                            // 처리 후 큐에서 삭제.
+                            // remove it from the queue after it is handled.
                             mSendQueue.removeAt(i)
                             break
                         }
@@ -402,11 +315,26 @@ class BLECommonService internal constructor(
         message?.let {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + it.friendlyName + " " + DiaconnG8Packet.toHex(data))
             // process received data
-            it.handleMessage(data)
+            try {
+                it.handleMessage(data)
+            } catch (e: Exception) {
+                // A pump clock at 00:70 threw here on the Bluetooth thread: Android dropped the rest of the answer, with
+                // nothing in the AAPS log.
+                it.failed = true
+                aapsLogger.error(LTag.PUMPBTCOMM, "The answer " + it.friendlyName + " could not be read", e)
+            }
             it.setReceived()
             synchronized(it) {
                 // notify to sendMessage
                 it.notifyAll()
+            }
+            // The answer is another packet than the request that sendMessage waits on: wake the request it answers.
+            val request = processedMessage
+            if (receivedType != 3 && request != null && originalMessageSeq == receivedSeq) {
+                synchronized(request) {
+                    request.setReceived()
+                    request.notifyAll()
+                }
             }
         } ?: aapsLogger.error("Unknown message received " + DiaconnG8Packet.toHex(data))
     }

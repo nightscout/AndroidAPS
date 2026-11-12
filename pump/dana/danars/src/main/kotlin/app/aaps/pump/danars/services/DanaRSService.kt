@@ -37,7 +37,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.dana.DanaSuspendSync
+import app.aaps.core.interfaces.pump.PumpSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.events.EventDanaRNewStatus
@@ -281,7 +281,7 @@ class DanaRSService : MetroService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.reading_pump_history)))
             // The history has the exact times of a stop of the pump; the status only ends what the history did not
             if (loadEvents().success)
-                DanaSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), danaPump.pumpType(), danaPump.serialNumber)
+                PumpSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), danaPump.pumpType(), danaPump.serialNumber)
             // RS doesn't provide exact timestamp = rely on history
             val expectedState = pumpSync.expectedPumpState()
             val eb = expectedState.extendedBolus

@@ -29,6 +29,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -616,5 +617,15 @@ class DanaPump(
 
         /** The bolus and basal step before the pump reported its own. */
         private const val STARTING_STEP = 0.1
+
+        /** Above the error of a double, far below a percent. */
+        private const val PERCENT_EPSILON = 1e-6
+
+        /**
+         * The whole percent of [base] that [rate] is, cut as the temp basal of the pump takes it. The cut is on the exact
+         * value: 1.2 / 0.8 * 100 is 149.99999..., which a plain cut made 149, and the step down to 10 % then set 140 % for a
+         * temp basal of 150 %. 0.88 / 0.8 gave 100 %, so no temp basal at all in place of 110 %.
+         */
+        fun tempBasalPercent(rate: Double, base: Double): Int = floor(rate / base * 100 + PERCENT_EPSILON).toInt()
     }
 }

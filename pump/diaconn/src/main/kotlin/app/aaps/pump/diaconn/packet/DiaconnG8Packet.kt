@@ -9,6 +9,10 @@ import dev.zacsweers.metro.Inject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
+/**
+ * Base class of all Diaconn G8 packets, requests and answers. A normal packet is 20 bytes long, a big one 182 bytes.
+ * The data is little-endian and the last byte is a CRC.
+ */
 @Suppress("SpellCheckingInspection")
 // Metro reads this class now that interop is on for the module. It is subclassable, so it has to
 // say its injected fields are meant to be filled - Metro will not infer that for an open type.
@@ -18,7 +22,9 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
 
-    private var received = false
+    // Set on the Bluetooth thread when the answer is in, read by the thread that sent the request.
+    @Volatile var isReceived = false
+        private set
     var failed: Boolean = false
     var msgType: Byte = 0
     open val friendlyName = "UNKNOWN_PACKET"
@@ -29,10 +35,10 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
 
     fun success(): Boolean = !failed
     fun setReceived() {
-        received = true
+        isReceived = true
     }
 
-    // 패킷 인코딩 앞부분
+    /** Start of the packet encoding: the start byte, [msgType], [msgSeq] and [msgConEnd]. The data comes after them. */
     fun prefixEncode(msgType: Byte, msgSeq: Int, msgConEnd: Byte): ByteBuffer {
         val buffer = ByteBuffer.allocate(MSG_LEN)
         buffer.order(ByteOrder.LITTLE_ENDIAN)
@@ -43,7 +49,7 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
         return buffer
     }
 
-    // 패킷 인코딩 뒷부분
+    /** End of the packet encoding: fills the free space with [MSG_PAD] and adds the CRC as the last byte. */
     fun suffixEncode(buffer: ByteBuffer): ByteArray {
         val remainSize = MSG_LEN - buffer.position() - 1
         (0 until remainSize).forEach { buffer.put(MSG_PAD) }
@@ -54,7 +60,7 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
 
     fun getType(bytes: ByteArray): Int {
         return (bytes[MSG_TYPE_LOC].toInt() and 0xC0) shr 6
-    } //상위 2비트 획득
+    } // takes the upper 2 bits
 
     fun getCmd(bytes: ByteArray): Int {
         return bytes[MSG_TYPE_LOC].toInt()
@@ -113,19 +119,19 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
 
     companion object {
 
-        const val MSG_LEN: Int = 20 // 메시지 길이(20바이트 패킷)
-        const val MSG_LEN_BIG: Int = 182 // 메시지 길이(182바이트 대량패킷)
-        const val SOP: Byte = 0xef.toByte() // 패킷 시작 바이트(20바이트 패킷)
-        const val SOP_BIG: Byte = 0xed.toByte() // 대량 패킷 시작 바이트(182바이트 대량패킷)
-        const val MSG_TYPE_LOC: Int = 1 // 메시지 종류 위치
-        const val MSG_SEQ_LOC: Int = 2 // 메시지 시퀀스번호 위치
-        const val BT_MSG_DATA_LOC: Byte = 4 // 데이터 위치
-        const val MSG_PAD: Byte = 0xff.toByte() // 메시지 뒷부분 빈공간을 채우는 값
-        const val MSG_CON_END: Byte = 0x00.toByte() // 패킷 내용 끝
-        const val MSG_CON_CONTINUE: Byte = 0x01.toByte() // 패킷 내용 계속
+        const val MSG_LEN: Int = 20 // message length (20-byte packet)
+        const val MSG_LEN_BIG: Int = 182 // message length (182-byte big packet)
+        const val SOP: Byte = 0xef.toByte() // start byte of a packet (20-byte packet)
+        const val SOP_BIG: Byte = 0xed.toByte() // start byte of a big packet (182-byte big packet)
+        const val MSG_TYPE_LOC: Int = 1 // position of the message type
+        const val MSG_SEQ_LOC: Int = 2 // position of the message sequence number
+        const val BT_MSG_DATA_LOC: Byte = 4 // position of the data
+        const val MSG_PAD: Byte = 0xff.toByte() // value that fills the free space at the end of a message
+        const val MSG_CON_END: Byte = 0x00.toByte() // end of the packet content
+        const val MSG_CON_CONTINUE: Byte = 0x01.toByte() // the packet content goes on
 
         /**
-         * CRC 정보
+         * CRC table
          */
         private val crc_table = byteArrayOf(
             0x00.toByte(), 0x25.toByte(), 0x4A.toByte(), 0x6F.toByte(), 0x94.toByte(), 0xB1.toByte(), 0xDE.toByte(), 0xFB.toByte(),
@@ -162,7 +168,7 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
             0x9B.toByte(), 0xBE.toByte(), 0xD1.toByte(), 0xF4.toByte(), 0x0F.toByte(), 0x2A.toByte(), 0x45.toByte(), 0x60.toByte()
         )
 
-        // 패킷 디코딩 앞부분
+        /** Start of the packet decoding: a little-endian buffer, placed at the start of the data. */
         fun prefixDecode(bytes: ByteArray): ByteBuffer {
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
@@ -182,7 +188,7 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
             return buffer.getInt()
         }
 
-        // CRC 체크
+        /** CRC of the first [length] bytes of [data]. */
         fun getCRC(data: ByteArray, length: Int): Byte {
             var length = length
             var i = 0
@@ -194,7 +200,7 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
             return crc
         }
 
-        // 패킷 결함 체크
+        /** Packet defect check. 0 = no defect, 98 = wrong start byte, 97 = wrong length, 99 = wrong CRC. */
         fun defect(bytes: ByteArray): Int {
             var result = 0
             if (bytes[0] != SOP && bytes[0] != SOP_BIG) {
@@ -203,10 +209,10 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
             } else if ((bytes[0] == SOP && bytes.size != MSG_LEN) ||
                 (bytes[0] == SOP_BIG && bytes.size != MSG_LEN_BIG)
             ) {
-                // 패킷 길이 체크
+                // packet length check
                 result = 97
             } else if (bytes[bytes.size - 1] != getCRC(bytes, bytes.size - 1)) {
-                // CRC 체크
+                // CRC check
                 result = 99
             }
             return result

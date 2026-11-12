@@ -20,7 +20,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.dana.DanaSuspendSync
+import app.aaps.core.interfaces.pump.PumpSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntKey
@@ -154,7 +154,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             }
             // The history has the exact times of a stop of the pump; the status only ends what the history did not
             if (loadEvents().success)
-                DanaSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), danaRv2Plugin.model(), danaRv2Plugin.serialNumber())
+                PumpSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), danaRv2Plugin.model(), danaRv2Plugin.serialNumber())
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
             if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {

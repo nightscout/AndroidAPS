@@ -32,7 +32,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.dana.DanaSuspendSync
+import app.aaps.core.interfaces.pump.PumpSuspendSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -322,7 +322,7 @@ abstract class AbstractDanaRExecutionService : MetroService() {
     }
 
     suspend fun doSanityCheck() {
-        DanaSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), activePlugin.activePump.model(), activePlugin.activePump.serialNumber())
+        PumpSuspendSync.followStatus(pumpSync, aapsLogger, danaPump.pumpSuspended, dateUtil.now(), activePlugin.activePump.model(), activePlugin.activePump.serialNumber())
         val (temporaryBasal, extendedBolus) = pumpSync.expectedPumpState()
 
         // Temporary basal. A stop of the pump is the record of the line above, not a temp basal of the pump.

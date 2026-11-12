@@ -103,6 +103,55 @@ abstract class AbstractPumpScenarioTest {
     }
 
     /**
+     * What reaches the pump is what was asked: a bolus, an extended bolus and a temp basal of amounts that a cut to the
+     * pump's units changes. 1.15 * 100 is 114.99999..., so a driver that cuts gives 1.14 U. The record checks do not see
+     * it, as AAPS stores what the pump gave. Found in the Diaconn and Dana drivers. An amount that is not on the pump's
+     * step is left out, as AAPS rounds it before the driver.
+     */
+    @Test
+    fun theAmountsReachThePumpAsAsked() {
+        scenario.bringUp()
+        scenario.pair()
+
+        if (scenario.takesBolus(ODD_BOLUS)) {
+            assertWithMessage("bolus").that(scenario.bolus(ODD_BOLUS).success).isTrue()
+            assertWithMessage("the bolus the pump gave").that(scenario.control.state().boluses.last()).isWithin(AMOUNT_TOLERANCE).of(ODD_BOLUS)
+            scenario.checkBolusRecords()
+        }
+
+        if (scenario.takesExtendedBolus(ODD_BOLUS)) {
+            assertWithMessage("extended bolus").that(scenario.extendedBolus(ODD_BOLUS, EXTENDED_MINUTES).success).isTrue()
+            val extended = checkNotNull(scenario.control.state().extendedBolus) { "the pump runs no extended bolus" }
+            assertWithMessage("the extended bolus the pump runs").that(extended.units).isWithin(AMOUNT_TOLERANCE).of(ODD_BOLUS)
+            assertWithMessage("cancel extended bolus").that(scenario.cancelExtendedBolus().success).isTrue()
+            scenario.checkExtendedBolus()
+        }
+
+        if (scenario.takesTempBasalRate(ODD_RATE)) {
+            assertWithMessage("temp basal").that(scenario.tempBasal(ODD_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+            val rate = checkNotNull(scenario.control.state().tempBasal?.absolute) { "the pump runs no absolute temp basal" }
+            assertWithMessage("the rate the pump runs").that(rate).isWithin(AMOUNT_TOLERANCE).of(ODD_RATE)
+            scenario.checkTempBasal()
+        }
+
+        // A pump that takes only a percent: the driver turns the rate of the loop into a percent of the base rate. On a base
+        // of 0.4 U/h, 0.6 / 0.4 * 100 is 149.99999..., so a cut gave 149, which the step down to 10 % made 140 % in place
+        // of 150 %. Found in the Dana drivers.
+        if (scenario.canSetPercentTempBasal && !scenario.canSetAbsoluteTempBasal) {
+            scenario.switchProfile(PERCENT_TRAP_PROFILE)
+            assertWithMessage("temp basal").that(scenario.loopTempBasal(PERCENT_TRAP_RATE, PERCENT_TRAP_MINUTES).success).isTrue()
+            val state = scenario.control.state()
+            // A DanaR set to "use extended boluses" gives every high temp as an extended bolus: then no percent is sent.
+            if (state.extendedBolus == null) {
+                val percent = checkNotNull(state.tempBasal?.percent) { "the pump runs no percent temp basal" }
+                assertWithMessage("the percent the pump runs for $PERCENT_TRAP_RATE U/h").that(percent).isEqualTo(PERCENT_TRAP_PERCENT)
+            }
+            scenario.checkTempBasal()
+            if (scenario.canGiveExtendedBolus) scenario.checkExtendedBolus()
+        }
+    }
+
+    /**
      * The temp basals the loop asks for, one after the other, as it does every 5 minutes: with `enforceNew = false`, so a
      * driver may keep what already runs. A high temp, the same again, a zero temp, the same again, a high temp again, and
      * back to the base rate. In between, the dialog's temp basal at the base rate, which is no temp basal. After each step
@@ -545,6 +594,20 @@ abstract class AbstractPumpScenarioTest {
         const val PUMP_CLOCK_OFFSET_MS = 600_000L
         const val EXTENDED_BOLUS = 1.0
         const val EXTENDED_MINUTES = 30
+
+        /**
+         * Amounts that a cut to hundredths changes: 1.15 * 100 and 0.57 * 100 are a little less than 115 and 57. The bolus
+         * is on a 0.01 and a 0.05 step. The rate is above the base rate of the test profile and below its temp basal limit.
+         */
+        const val ODD_BOLUS = 1.15
+        const val ODD_RATE = 0.57
+
+        /** 80 % of the test profile is a base of 0.4 U/h, on which 0.6 U/h is 150 %: under the limits of 1 U/h and 200 %. */
+        const val PERCENT_TRAP_PROFILE = 80
+        const val PERCENT_TRAP_RATE = 0.6
+        const val PERCENT_TRAP_PERCENT = 150
+        const val PERCENT_TRAP_MINUTES = 60
+        const val AMOUNT_TOLERANCE = 0.001
         const val KILLED_BOLUS = 2.0
         const val KILL_AFTER = 0.3
 

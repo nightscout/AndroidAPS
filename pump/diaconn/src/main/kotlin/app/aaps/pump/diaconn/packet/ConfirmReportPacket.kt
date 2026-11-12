@@ -6,7 +6,8 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import dev.zacsweers.metro.Inject
 
 /**
- * ConfirmReportPacket
+ * The pump has carried out a setting it confirmed. Real G8 fw 2.50 (2026-11-11): 1.2 to 1.9 s after the answer to the
+ * confirm of a temp basal or an extended bolus, mostly with 0x37 (once 0x16).
  */
 class ConfirmReportPacket(
     injector: MetroMemberInjector
@@ -30,6 +31,7 @@ class ConfirmReportPacket(
 
         val bufferData = prefixDecode(data)
         reqMsgType = getByteToInt(bufferData)
+        diaconnG8Pump.confirmReports++
         aapsLogger.debug(LTag.PUMPCOMM, "Pump Report Confirm reqMsgType --> $reqMsgType")
     }
 

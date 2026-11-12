@@ -209,7 +209,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
     fun pair() {
         pump.pair(this)
         testGraphs.rxBus.send(EventProfileChangeRequested())
-        awaitTrue("the profile runs") { runBlocking { testGraphs.profileFunction.getProfile() } != null }
+        // A profile write can take longer than the default wait: a Diaconn G8 waits 30 s after it, as a Carelevo does.
+        // AAPS can run the profile before the pump has it: the write is queued a moment later. A fault a test sets after
+        // the pairing then hit that write in place of the test's own.
+        awaitTrue("AAPS runs the profile and the pump gives its basal of $BASAL_RATE U/h", PROFILE_TIMEOUT) {
+            aapsRunsBasal(BASAL_RATE) && pumpGivesBasal(BASAL_RATE)
+        }
         awaitQueueIdle()
         // No wait here: a pump writes its records by its own clock, which can be a second or two behind the phone, so a
         // record of the first command can have a time just before the first profile. AAPS must keep it.
@@ -228,11 +233,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         // pump may be lost: the keep alive worker then asks again, as here, until AAPS and the pump give the new basal.
         val basal = BASAL_RATE * percentage / PERCENT
         awaitTrue("AAPS runs the profile at $percentage % and the pump gives its basal of $basal U/h", PROFILE_TIMEOUT) {
-            val aapsRuns = aapsRunsBasal(basal)
-            // Every hour: a pump that takes a profile in parts can hold a part of it.
-            val onPump = control.state().basal
-            val pumpGives = onPump == null || onPump.all { abs(it - basal) <= BASAL_TOLERANCE }
-            if (aapsRuns && pumpGives) true
+            if (aapsRunsBasal(basal) && pumpGivesBasal(basal)) true
             else {
                 awaitQueueIdle()
                 testGraphs.rxBus.send(EventProfileChangeRequested())
@@ -287,6 +288,10 @@ class PumpScenario(private val pump: PumpUnderTest) {
      */
     private fun aapsRunsBasal(basal: Double): Boolean =
         runBlocking { testGraphs.profileFunction.getProfile() }?.let { abs(it.getBasalTimeFromMidnight(0) - basal) < RATE_TOLERANCE } == true
+
+    /** Every hour: a pump that takes a profile in parts can hold a part of it. A pump that does not tell counts as giving it. */
+    private fun pumpGivesBasal(basal: Double): Boolean =
+        control.state().basal?.all { abs(it - basal) <= BASAL_TOLERANCE } ?: true
 
     /**
      * The queue drops a status read while another one waits or runs, and reports it as failed. A driver start sends one,
@@ -427,6 +432,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /** The pump takes a temp basal in percent, see [tempBasalPercent]. */
     val canSetPercentTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.PERCENT != 0
+
+    /** The pump takes a temp basal in U/h. */
+    val canSetAbsoluteTempBasal: Boolean get() = pumpDescription.tempBasalStyle and PumpDescription.ABSOLUTE != 0
+
+    /** The pump gives a bolus of [units] as it is: [units] is on its bolus step. */
+    fun takesBolus(units: Double): Boolean = onStep(units, pumpDescription.bolusStep)
+
+    /** The pump gives an extended bolus of [units] as it is. */
+    fun takesExtendedBolus(units: Double): Boolean = canGiveExtendedBolus && onStep(units, pumpDescription.extendedBolusStep)
+
+    /** The pump runs an absolute temp basal of [rate] U/h as it is. */
+    fun takesTempBasalRate(rate: Double): Boolean =
+        pumpDescription.tempBasalStyle and PumpDescription.ABSOLUTE != 0 && onStep(rate, pumpDescription.tempAbsoluteStep)
+
+    private fun onStep(value: Double, step: Double): Boolean = step > 0.0 && abs(value / step - (value / step).roundToLong()) < STEP_TOLERANCE
 
     fun extendedBolus(units: Double, minutes: Int): PumpEnactResult = queued { commandQueue.extendedBolus(units, minutes) }
 
@@ -741,6 +761,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
          * try, skip, and the next try takes it.
          */
         private const val PROFILE_TIMEOUT = 180_000L
+
+        /** An amount is on a step when it is this close to a whole number of steps. */
+        private const val STEP_TOLERANCE = 1e-6
         private const val PROFILE_RETRY_MS = 5_000L
         private const val MS_PER_MINUTE = 60_000L
     }

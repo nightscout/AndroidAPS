@@ -27,6 +27,8 @@ PARTS=${SCENARIO_PARTS:-2}
 # first. A class not listed counts as the longest, so a new one never comes last; add it here once it has run.
 part_seconds() {
   case "${1##*.}" in
+    # Measured on CircleCI 42463 (2026-11-12): 709 and 584 s.
+    DiaconnScenarioTest) echo 650 ;;
     EquilScenarioTest) echo 470 ;;
     DanaRv2ScenarioTest) echo 445 ;;
     DanaRScenarioTest) echo 410 ;;
