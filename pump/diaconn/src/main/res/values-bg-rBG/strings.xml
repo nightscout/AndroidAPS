@@ -27,7 +27,6 @@
     <string name="commanderror">Грешка при команда</string>
     <string name="speederror">Скорост грешка</string>
     <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
-    <string name="boluserrorcode">Заявено: %1$.2f Е Доставено: %2$.2f Е Код на грешка: %3$s</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="bolus_step">Стъпка при болус</string>
     <string name="basal_step">Стъпка при базал</string>
