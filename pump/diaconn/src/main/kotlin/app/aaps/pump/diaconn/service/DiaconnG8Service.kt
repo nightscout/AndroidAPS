@@ -562,8 +562,9 @@ class DiaconnG8Service : MetroService() {
             }
         }
 
-        // do not call loadHistory() directly, reconnection may be needed
-        scope?.launch {
+        // do not call loadHistory() directly, reconnection may be needed. Queued before this command ends (UNDISPATCHED),
+        // so the queue is never empty between the two.
+        scope?.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             // reread bolus status
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
@@ -646,8 +647,9 @@ class DiaconnG8Service : MetroService() {
             aapsLogger.debug(LTag.PUMPCOMM, "TBR set directly: start=${diaconnG8Pump.tempBasalStart}, duration=${durationInMinutes}min, rate=${absoluteRate}U/h")
         }
 
-        // do not call loadHistory() directly, reconnection may be needed
-        scope?.launch {
+        // do not call loadHistory() directly, reconnection may be needed. Queued before this command ends (UNDISPATCHED),
+        // so the queue is never empty between the two.
+        scope?.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             rxBus.send(EventDiaconnG8NewStatus())
         }
@@ -684,8 +686,9 @@ class DiaconnG8Service : MetroService() {
             aapsLogger.debug(LTag.PUMPCOMM, "TBR stopped and state cleared directly")
         }
 
-        // do not call loadHistory() directly, reconnection may be needed
-        scope?.launch {
+        // do not call loadHistory() directly, reconnection may be needed. Queued before this command ends (UNDISPATCHED),
+        // so the queue is never empty between the two.
+        scope?.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             rxBus.send(EventDiaconnG8NewStatus())
         }
@@ -717,8 +720,9 @@ class DiaconnG8Service : MetroService() {
             aapsLogger.debug(LTag.PUMPCOMM, "EB set directly: start=${diaconnG8Pump.extendedBolusStart}, duration=${durationInMinutes}min, amount=${insulin}U")
         }
 
-        // do not call loadHistory() directly, reconnection may be needed
-        scope?.launch {
+        // do not call loadHistory() directly, reconnection may be needed. Queued before this command ends (UNDISPATCHED),
+        // so the queue is never empty between the two.
+        scope?.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             rxBus.send(EventDiaconnG8NewStatus())
         }
@@ -747,8 +751,9 @@ class DiaconnG8Service : MetroService() {
         diaconnG8Pump.extendedBolusAmount = 0.0
         aapsLogger.debug(LTag.PUMPCOMM, "EB stopped and state cleared directly")
 
-        // do not call loadHistory() directly, reconnection may be needed
-        scope?.launch {
+        // do not call loadHistory() directly, reconnection may be needed. Queued before this command ends (UNDISPATCHED),
+        // so the queue is never empty between the two.
+        scope?.launch(start = CoroutineStart.UNDISPATCHED) {
             commandQueue.loadEvents()
             rxBus.send(EventDiaconnG8NewStatus())
         }
