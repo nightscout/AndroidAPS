@@ -27,6 +27,7 @@
     <string name="commanderror">指令錯誤</string>
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
+    <string name="diaconn_g8_bolus_stopped_by_pump" comment="%1$s=insulin given, with unit. Example: 0.30 U">幫浦在注射 %1$s 後停止注射。下次注射前請檢查幫浦。</string>
     <string name="selectedpump">選擇的幫浦</string>
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
@@ -134,4 +135,5 @@
     <string name="bolus_speed_8">8 U/分鐘</string>
     <string name="diaconn_pairing_successful">配對成功！</string>
     <string name="diaconn_pairing_successful_message">您的幫浦已連線並可使用。</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">雲端同步：%1$d / %2$d</string>
 </resources>
