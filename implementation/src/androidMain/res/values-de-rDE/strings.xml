@@ -3,6 +3,9 @@
     <string name="executing_right_now">Befehl wird zurzeit ausgeführt</string>
     <string name="smb_being_delivered">Ein SMB wird gerade abgegeben. Versuche es erneut, sobald die Abgabe abgeschlossen ist.</string>
     <string name="basal_value_below_minimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
+    <string name="concentration_change_failed_title">Insulin-Änderung fehlgeschlagen</string>
+    <string name="concentration_change_failed">Das neue Insulin befindet sich in der Pumpe, aber AAPS konnte das Profil nicht darauf übertragen. Die Pumpe gibt die falsche Insulinmenge ab. Trennen Sie die Pumpe sofort oder legen Sie sie ab, überprüfen Sie Ihren Blutzuckerwert und führen Sie bei Bedarf Insulin auf andere Weise zu. Schließen Sie die Pumpe erst wieder an, nachdem das Profil erfolgreich übertragen wurde.</string>
+    <string name="concentration_change_pending">Das Profil mit dem neuen Insulin wurde noch nicht auf die Pumpe übertragen. Insulin kann erst abgegeben werden, nachdem die Übertragung erfolgt ist.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalratenprofil in der Pumpe aktualisiert. Die Pumpe rundet die Basalraten entsprechend ihrer Schrittweite. Dadurch gibt sie %1$s statt %2$s pro Tag ab.</string>
     <string name="basal_reported_far_from_profile">Die von der Pumpe angegebene Basalrate weicht deutlich vom Basalratenprofil ab. AAPS behält die Basalrate aus dem Profil. Überprüfe die Basalraten in der Pumpe.</string>
     <!--       Stats -->
