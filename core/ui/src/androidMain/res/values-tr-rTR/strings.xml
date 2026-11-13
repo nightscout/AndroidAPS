@@ -1207,5 +1207,6 @@
     <string name="units_sec">sn</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pompa %1$s sonrasında bolusu durdurdu. Bir sonraki bolustan önce pompayı kontrol edin.</string>
     <string name="secrets_not_protected">Bu bilgisayarda herhangi bir sistem anahtar deposu bulunamadı. Ayarlarınızı ve ana birimle eşleşmenizi koruyan anahtarlar, verilerinizin bulunduğu yerdeki dosyalarda saklanır; dolayısıyla dosyalarınızın bir kopyasını ele geçiren herkes bu anahtarlara da sahip olur. Linux üzerinde bir anahtar zinciri (örneğin GNOME Keyring veya KWallet) kurup çalıştırın, ardından AAPS\'i yeniden başlatın.</string>
 </resources>
