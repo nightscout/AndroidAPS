@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">İğne kontrolü başarısız oldu.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Patch çıkarılamadı. Lütfen tekrar deneyin.</string>
+    <string name="carelevo_discarded_not_reached">Patch\'a ulaşılamıyor. Patch AAPS sisteminden kaldırılmış ancak durdurulmamış. Halen insülin veriyor olabilir. Pompayı vücudunuzdan çıkarın.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Bazal iletim isteği başarısız oldu. Lütfen tekrar deneyin.</string>
     <!-- Delivery Resume/Suspend -->
