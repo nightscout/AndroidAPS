@@ -555,12 +555,16 @@ class EversensePlugin(
             EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}") }
 
             if (cloudUploadEnabled()) {
+                val lastUploadedTs = securePrefs.getLong("last_uploaded_ts", 0L)
+                val newReadings = readings.filter { it.datetime > lastUploadedTs }
+                if (newReadings.isEmpty()) return@launch
+
                 val prefs = eversense.preferences
                 if (type == EversenseType.EVERSENSE_365) {
                     val outcome = try {
                         app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
                             preferences = prefs,
-                            readings = readings,
+                            readings = newReadings,
                             transmitterSerialNumber = state.transmitterName.ifEmpty { state.transmitterSerialNumber },
                             firmwareVersion = state.firmwareVersion
                         )
@@ -571,7 +575,7 @@ class EversensePlugin(
                     aapsLogger.info(LTag.BGSOURCE, "Eversense cloud upload: success=${outcome.success} sent=${outcome.sentCount} status=${outcome.httpStatus}")
                     EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense cloud upload details: ${outcome.describe()}") }
 
-                    val latest = readings.firstOrNull { it.rawResponseHex.isNotEmpty() } ?: readings.firstOrNull()
+                    val latest = newReadings.maxByOrNull { it.datetime }
                     if (latest != null) {
                         val portalOutcome = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
                             preferences = prefs,
@@ -586,13 +590,13 @@ class EversensePlugin(
                         }
                     }
 
-                    val uploadableReadings = readings.filter { it.rawResponseHex.isNotEmpty() }
-                    if (uploadableReadings.isNotEmpty()) {
+                    val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
+                    if (calibrations.isNotEmpty() || state.activeAlarms.isNotEmpty()) {
                         val eventsOutcome = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
                             preferences = prefs,
-                            readings = uploadableReadings,
+                            readings = emptyList(),
                             transmitterSerialNumber = state.transmitterSerialNumber,
-                            calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate },
+                            calibrations = calibrations,
                             alerts = state.activeAlarms
                         )
                         EversenseLogger.diagnostic {
@@ -600,7 +604,7 @@ class EversensePlugin(
                         }
                     }
                 } else {
-                    val latest = readings.firstOrNull()
+                    val latest = newReadings.maxByOrNull { it.datetime }
                     if (latest != null) {
                         app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
                             preferences = prefs,
@@ -613,12 +617,15 @@ class EversensePlugin(
                     }
                     app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
                         preferences = prefs,
-                        readings = readings,
+                        readings = newReadings,
                         transmitterSerialNumber = state.transmitterSerialNumber,
                         calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate },
                         alerts = state.activeAlarms
                     )
                 }
+
+                val maxTs = newReadings.maxOf { it.datetime }
+                securePrefs.edit(commit = true) { putLong("last_uploaded_ts", maxTs) }
             }
         }
     }
