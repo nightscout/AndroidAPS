@@ -8,7 +8,9 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.ClientRole
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.plugin.HardwarePumpConfirmation
 import app.aaps.ui.plugin.PluginSwitchConfirmation
 import app.aaps.ui.plugin.PluginSwitchDialogs
@@ -30,11 +32,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 
 /**
  * ViewModel for the global search feature.
  * Handles search state, debounced queries, and results.
  * Runs local search and wiki search in parallel.
+ * Keeps a short list of recent searches ([SearchUiState.history]) for the empty search field.
  */
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -48,10 +54,11 @@ class SearchViewModel(
     private val nsClient: NsClient,
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,
-    private val config: Config
+    private val config: Config,
+    private val preferences: Preferences
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchUiState())
+    private val _uiState = MutableStateFlow(SearchUiState(history = loadHistory()))
     val uiState: StateFlow<SearchUiState> = _uiState
 
     private val _searchQuery = MutableStateFlow("")
@@ -209,6 +216,44 @@ class SearchViewModel(
     }
 
     /**
+     * Remembers the current query as a recent search. Called when the user opens a result, so only
+     * searches that led somewhere are kept: not every half-typed word. The newest search goes first,
+     * a repeated search moves to the top, and the list is cut at [MAX_HISTORY].
+     */
+    fun recordCurrentQuery() {
+        val query = _uiState.value.query.trim()
+        if (query.isBlank()) return
+        val history = listOf(query) + _uiState.value.history.filter { !it.equals(query, ignoreCase = true) }
+        saveHistory(history.take(MAX_HISTORY))
+    }
+
+    /** Removes one entry from the recent searches, for a search the user does not want to see again. */
+    fun removeFromHistory(query: String) {
+        saveHistory(_uiState.value.history.filter { it != query })
+    }
+
+    private fun saveHistory(history: List<String>) {
+        preferences.put(StringNonKey.SearchHistory, Json.encodeToString(ListSerializer(String.serializer()), history))
+        _uiState.update { it.copy(history = history) }
+    }
+
+    private fun loadHistory(): List<String> =
+        try {
+            Json.decodeFromString(ListSerializer(String.serializer()), preferences.get(StringNonKey.SearchHistory))
+                .filter { it.isNotBlank() }
+                .take(MAX_HISTORY)
+        } catch (_: Exception) {
+            // A damaged value is not worth an error: start with an empty list.
+            emptyList()
+        }
+
+    companion object {
+
+        /** How many recent searches are kept and shown. Ten fit on a phone screen without scrolling. */
+        const val MAX_HISTORY = 10
+    }
+
+    /**
      * Invalidates the search index, forcing rebuild on next search.
      */
     fun invalidateIndex() {
@@ -224,6 +269,8 @@ data class SearchUiState(
     val query: String = "",
     val results: List<SearchIndexEntry> = emptyList(),
     val wikiResults: List<SearchIndexEntry> = emptyList(),
+    /** Recent searches, newest first. Shown while the search field is empty. */
+    val history: List<String> = emptyList(),
     val isSearching: Boolean = false,
     val isSearchingWiki: Boolean = false,
     val wikiOffline: Boolean = false,
