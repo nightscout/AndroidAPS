@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="units">Eenheden</string>
-    <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
+    <string name="setupwizard_units_prompt">Selecteer de eenheden voor de weergave van waarden</string>
     <string name="next_button">Volgende</string>
     <string name="previous_button">Vorige</string>
     <string name="setupwizard_finish">VOLTOOIEN</string>
     <string name="welcome">Welkom</string>
     <string name="welcometosetupwizard">Welkom bij de installatiewizard. Deze begeleidt het installatieproces stap voor stap.</string>
-    <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
+    <string name="end_user_license_agreement">Licentieovereenkomst voor eindgebruikers</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">Begrepen en goedgekeurd</string>
-    <string name="display_settings">Scherm instellingen</string>
+    <string name="display_settings">Scherminstellingen</string>
     <string name="low_mark">LAAG grens</string>
     <string name="high_mark">HOOG grens</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
@@ -18,31 +18,31 @@
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt om back-ups te versleutelen en om risicovolle handelingen in de app te bevestigen. Onthoud het wachtwoord goed of bewaar het op een veilige plek.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
-    <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
+    <string name="common_values">Gebruik de waarden van de grootste gebruikelijke maaltijd\n</string>
     <string name="syncinfotext">Gegevens synchroniseren met de cloud. Dit onderdeel kan nu worden overgeslagen, maar de leerdoelen kunnen pas worden afgerond als Nightscout of Tidepool is ingesteld.</string>
     <string name="status_label">Status:</string>
-    <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
+    <string name="diawarning">Onthoud: nieuwe insulineprofielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op een nieuw profiel is gelijk aan DIA 3h op oude insulineprofielen.</string>
     <string name="profile">Profiel</string>
     <string name="doprofileswitch">Profielwissel uitvoeren</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
-    <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
+    <string name="setupwizard_sensitivity_description">De gevoeligheidsplug-in wordt gebruikt voor gevoeligheidsdetectie en de COB-berekening. Ga voor meer informatie naar:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Kies een algoritme. De algoritmes zijn gerangschikt van oud naar nieuw. Een nieuwer algoritme is doorgaans krachtiger. Lees vóór gebruik de OpenAPS-documentatie en configureer het algoritme volgens de instructies.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer de RileyLink hieronder. Na het selecteren van een RileyLink kan de installatie worden voortgezet zodra de RileyLink-status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Het installatieproces kan worden voortgezet zodra de pomp is ingesteld.\n</string>
-    <string name="startobjective">Start je eerste Doel</string>
+    <string name="startobjective">Start het eerste doel</string>
     <string name="open_objectives">Open Doelen</string>
     <string name="setupwizard_permissions">Machtigingen</string>
     <string name="setupwizard_profile_info">Maak een profiel aan met de basaalstanden, koolhydraatratio\'s, ISF en streefdoelen. Er kunnen later meerdere profielen worden toegevoegd.</string>
     <string name="setupwizard_permissions_info">AAPS heeft toegang nodig tot de opslag en permissies om goed te werken. Verleen de vereiste machtigingen hieronder.</string>
-    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
-    <string name="setupwizard_client_control_title">Client besturing</string>
-    <string name="setupwizard_client_control_info">Koppel client apparaten zodat ze ondertekende commando\'s via Nightscout naar deze master kunnen sturen. Dit is de nieuwe aanbevolen manier om AAPS op afstand te beheren.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink-status:</string>
+    <string name="setupwizard_client_control_title">Clientbesturing</string>
+    <string name="setupwizard_client_control_info">Koppel clientapparaten zodat ze ondertekende commando\'s via Nightscout naar deze master kunnen sturen. Dit is de nieuwe aanbevolen manier om AAPS op afstand te beheren.</string>
     <string name="setupwizard_ns_receive_info">Het rechtstreeks accepteren van behandelingen en gegevens van Nightscout (een minder veilige methode) is nu standaard uitgeschakeld. Open de onderstaande instellingen alleen als u dit nog steeds nodig hebt. Dit is noodzakelijk als u gegevens via NS of apps van derden moet invoeren.</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout-gegevensacceptatie</string>
-    <string name="setupwizard_pair_with_master_info">Koppel deze client aan jouw master AAPS, zodat deze via een beveiligde verbinding opdrachten kan versturen. Na het koppelen is de installatie voltooid.</string>
+    <string name="setupwizard_pair_with_master_info">Koppel deze client aan de AAPS-master, zodat deze via een beveiligde verbinding opdrachten kan versturen. Na het koppelen is de installatie voltooid.</string>
     <string name="setupwizard_setup_from_master_title">Instellen vanaf de master</string>
-    <string name="setupwizard_setup_from_master_info">Open Geautoriseerde clients op de master en voeg deze telefoon toe met een QR-code. Door de QR-code te scannen, wordt Nightscout ingesteld met een eigen token. Ook kan de telefoon hiermee worden gekoppeld. Na het scannen is de installatie voltooid. Heb je geen QR-code? Sla deze stap dan over en stel Nightscout zelf in.</string>
+    <string name="setupwizard_setup_from_master_info">Open Geautoriseerde clients op de master en voeg deze telefoon toe met een QR-code. Door de QR-code te scannen, wordt Nightscout ingesteld met een eigen token. Ook kan de telefoon hiermee worden gekoppeld. Na het scannen is de installatie voltooid. Geen QR-code beschikbaar? Sla deze stap dan over en stel Nightscout zelf in.</string>
     <string name="setupwizard_scan_master_qr">Scan de QR-code</string>
     <string name="setupwizard_pairing_ws_warning">Voor het koppelen is de Nightscout WebSocket-verbinding vereist. Ga terug naar de vorige stap en schakel deze eerst in.</string>
     <string name="setupwizard_pairing_status_master">Gekoppelde apparaten: %1$d</string>
@@ -52,13 +52,13 @@
     <string name="setupwizard_instance_name_title">Wie gebruikt deze telefoon?</string>
     <string name="readstatus">Lees status</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - dit kan prestatieproblemen veroorzaken.</string>
     <!--    ConfigBuilder-->
-    <string name="configbuilder_pump_description">Welke pomp wilt u gebruiken met AAPS?</string>
-    <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
-    <string name="configbuilder_sync_description">Data upload, synchroniseren en communicatie plugins.</string>
+    <string name="configbuilder_pump_description">Welke pomp wordt met AAPS gebruikt?</string>
+    <string name="configbuilder_aps_description">Welk APS-algoritme moet therapieaanpassingen uitvoeren?</string>
+    <string name="configbuilder_sync_description">Plug-ins voor gegevensupload, synchronisatie en communicatie.</string>
     <string name="configbuilder_bgsource_description">Waar moet AAPS de gegevens vandaan halen?</string>
-    <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
+    <string name="configbuilder_sensitivity_description">Welk gevoeligheidsalgoritme moet worden gebruikt?</string>
     <string name="allow_hardware_pump_text">Let op: Bij het activeren en verbinden van een hardwarepomp kopieert AAPS de basaalinstellingen uit het profiel naar de pomp. De bestaande basaalstanden in de pomp worden daarbij overschreven. Controleer of de juiste basaalinstellingen in AAPS zijn ingesteld. Bij twijfel, of als de bestaande basaalinstellingen in de pomp niet mogen worden overschreven, druk op Annuleren en schakel op een later moment over naar de pomp.</string>
     <string name="nsclient_version_does_not_match">De versie van AAPSClient komt niet overeen met de versie van AAPS. Werk AAPSClient bij.</string>
     <!--ImportExport-->
