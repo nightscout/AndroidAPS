@@ -1207,5 +1207,6 @@
     <string name="units_sec">seg</string>
     <string name="units_years">a</string>
     <string name="prefs_range_title">Rango de visualización</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">La bomba detuvo el bolo después de %1$s. Compruebe la bomba antes del próximo bolo</string>
     <string name="secrets_not_protected">No se ha encontrado ningún almacén de claves del sistema en este equipo. Las claves que protegen tu configuración y el emparejamiento con el máster se guardan en archivos junto a los datos, por lo que cualquiera que obtenga una copia de tus archivos también las obtendrá. En Linux, instala e inicia un depósito de claves (por ejemplo, GNOME Keyring o KWallet) y vuelve a iniciar AAPS</string>
 </resources>
