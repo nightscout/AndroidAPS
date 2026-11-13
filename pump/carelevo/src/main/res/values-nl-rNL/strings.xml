@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Naaldcontrole mislukt.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Verwijderen van de patch mislukt. Probeer het opnieuw.</string>
+    <string name="carelevo_discarded_not_reached">De Pod is onbereikbaar en uit AAPS verwijderd, maar niet gedeactiveerd en kan daardoor nog steeds insuline toedienen. Verwijder de Pod van het lichaam.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Opdracht voor basale toediening mislukt. Probeer het opnieuw.</string>
     <!-- Delivery Resume/Suspend -->
