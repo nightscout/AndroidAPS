@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Nadelprüfung fehlgeschlagen.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Verwerfen des Patches fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="carelevo_discarded_not_reached">Der Patch konnte nicht erreicht werden. Er wurde aus AAPS entfernt, aber nicht gestoppt. Möglicherweise gibt er weiterhin Insulin ab. Entferne ihn.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Anforderung der Basalrate fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
     <!-- Delivery Resume/Suspend -->
