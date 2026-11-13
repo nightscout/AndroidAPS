@@ -1206,5 +1206,6 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可視化範圍</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">幫浦在注射了 %1$s 後停止注射。下次注射前請先檢查幫浦。</string>
     <string name="secrets_not_protected">這台電腦上找不到系統金鑰儲存區。用來保護設定和與主控裝置配對的金鑰，會儲存在資料旁的檔案中，因此任何取得您檔案副本的人，也會取得這些金鑰。在 Linux 上，請安裝並啟動金鑰環（例如 GNOME Keyring 或 KWallet），然後重新啟動 AAPS。</string>
 </resources>
