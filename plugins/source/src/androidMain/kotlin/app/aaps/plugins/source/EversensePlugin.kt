@@ -555,57 +555,76 @@ class EversensePlugin(
             EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}") }
 
             if (cloudUploadEnabled()) {
-                try {
-                    cloudUploader.enqueue(type, readings, state)
-                } catch (e: kotlinx.coroutines.CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    logCloudError("Eversense cloud queue failed; local readings are stored", e)
+                val prefs = eversense.preferences
+                if (type == EversenseType.EVERSENSE_365) {
+                    val outcome = try {
+                        app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
+                            preferences = prefs,
+                            readings = readings,
+                            transmitterSerialNumber = state.transmitterName.ifEmpty { state.transmitterSerialNumber },
+                            firmwareVersion = state.firmwareVersion
+                        )
+                    } catch (e: Exception) {
+                        logCloudError("Eversense uploadGlucoseReadings EXCEPTION", e)
+                        app.aaps.plugins.eversense.util.EversenseHttp365Util.UploadOutcome(success = false, error = e.toString())
+                    }
+                    aapsLogger.info(LTag.BGSOURCE, "Eversense cloud upload: success=${outcome.success} sent=${outcome.sentCount} status=${outcome.httpStatus}")
+                    EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense cloud upload details: ${outcome.describe()}") }
+
+                    val latest = readings.firstOrNull { it.rawResponseHex.isNotEmpty() } ?: readings.firstOrNull()
+                    if (latest != null) {
+                        val portalOutcome = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
+                            preferences = prefs,
+                            glucose = latest.glucoseInMgDl,
+                            timestamp = latest.datetime,
+                            trend = latest.trend,
+                            signalStrength = state.sensorSignalStrength,
+                            batteryPercentage = state.batteryPercentage
+                        )
+                        EversenseLogger.diagnostic {
+                            aapsLogger.info(LTag.BGSOURCE, "Eversense portal sync: ${portalOutcome.describe()}")
+                        }
+                    }
+
+                    val uploadableReadings = readings.filter { it.rawResponseHex.isNotEmpty() }
+                    if (uploadableReadings.isNotEmpty()) {
+                        val eventsOutcome = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
+                            preferences = prefs,
+                            readings = uploadableReadings,
+                            transmitterSerialNumber = state.transmitterSerialNumber,
+                            calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate },
+                            alerts = state.activeAlarms
+                        )
+                        EversenseLogger.diagnostic {
+                            aapsLogger.info(LTag.BGSOURCE, "Eversense device events: ${eventsOutcome.describe()}")
+                        }
+                    }
+                } else {
+                    val latest = readings.firstOrNull()
+                    if (latest != null) {
+                        app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
+                            preferences = prefs,
+                            glucose = latest.glucoseInMgDl,
+                            timestamp = latest.datetime,
+                            trend = latest.trend,
+                            signalStrength = state.sensorSignalStrength,
+                            batteryPercentage = state.batteryPercentage
+                        )
+                    }
+                    app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
+                        preferences = prefs,
+                        readings = readings,
+                        transmitterSerialNumber = state.transmitterSerialNumber,
+                        calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate },
+                        alerts = state.activeAlarms
+                    )
                 }
             }
         }
     }
 
-    private val cloudUploader by lazy {
-        app.aaps.plugins.source.eversense.EversenseCloudUploader(
-            scope = { ioScope },
-            store = { eversense.cloudStore() },
-            enabled = ::cloudUploadEnabled,
-            online = { eversense.hasInternet() },
-            now = System::currentTimeMillis,
-            elapsed = android.os.SystemClock::elapsedRealtime,
-            upload = ::uploadCloudBatch,
-            onError = { logCloudError("Eversense cloud upload failed; local readings are stored", it) }
-        )
-    }
-
     private fun logCloudError(message: String, error: Exception) {
         aapsLogger.error(LTag.BGSOURCE, "$message (${error.javaClass.simpleName})")
         EversenseLogger.diagnostic { aapsLogger.error(LTag.BGSOURCE, message, error) }
-    }
-
-    private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: app.aaps.plugins.source.eversense.EversenseCloudUploader.PendingUpload): Boolean {
-        val state = batch.state
-        val readings = batch.readings
-        val latest = readings.maxByOrNull { it.datetime } ?: return true
-        val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
-        return if (batch.type == EversenseType.EVERSENSE_365) {
-            val glucose = app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
-                prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
-            aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload: success=${glucose.success} sent=${glucose.sentCount} status=${glucose.httpStatus}")
-            EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload details: ${glucose.describe()}") }
-            if (!glucose.success) return false
-            val portal = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
-                prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
-            if (!portal.success) return false
-            app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
-                prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms).success
-        } else {
-            val portal = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
-                prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
-            if (!portal) return false
-            app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
-                prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
-        }
     }
 }
