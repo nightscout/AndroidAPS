@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Kiểm tra kim không thành công.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Không thể hủy bỏ miếng dán. Vui lòng thử lại.</string>
+    <string name="carelevo_discarded_not_reached">Không thể kết nối với miếng dán. Miếng dán đã bị xóa khỏi AAPS nhưng chưa được dừng hoạt động và vẫn có thể tiếp tục phân phối insulin. Hãy tháo miếng dán ra ngay.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Yêu cầu phân phối liều nền không thành công. Vui lòng thử lại.</string>
     <!-- Delivery Resume/Suspend -->
