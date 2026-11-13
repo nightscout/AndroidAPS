@@ -2,20 +2,20 @@
 <resources>
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Eenvoudige modus</string>
-    <string name="pref_title_insulin_concentration">Insuline concentratie ondersteuning</string>
-    <string name="pref_summary_insulin_concentration">Schakel ondersteuning in voor verschillende insuline concentraties (U50, U200, enz.)</string>
+    <string name="pref_title_insulin_concentration">Ondersteuning voor insulineconcentraties</string>
+    <string name="pref_summary_insulin_concentration">Schakel ondersteuning in voor verschillende insulineconcentraties (U50, U200, enz.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Scherm aan houden</string>
     <string name="pref_summary_keep_screen_on">Voorkomt dat Android het scherm uitschakelt. Dit verbruikt veel batterij wanneer het apparaat niet op een stopcontact is aangesloten.</string>
     <string name="pref_title_show_treatment_button">Toon behandelingsknop</string>
-    <string name="pref_title_show_wizard_button">Toon wizard knop</string>
-    <string name="pref_title_show_insulin_button">Toon insuline knop</string>
-    <string name="pref_title_show_carbs_button">Toon koolhydraten knop</string>
-    <string name="pref_title_show_cgm_button">Toon CGM knop</string>
+    <string name="pref_title_show_wizard_button">Toon wizardknop</string>
+    <string name="pref_title_show_insulin_button">Toon insulineknop</string>
+    <string name="pref_title_show_carbs_button">Toon koolhydratenknop</string>
+    <string name="pref_title_show_cgm_button">Toon CGM-knop</string>
     <string name="pref_summary_show_cgm_button">Opent xDrip+ of de Dexcom-app (met de terugknop kan worden teruggekeerd naar AAPS).</string>
     <string name="pref_title_show_calibration_button">Toon kalibratieknop</string>
     <string name="pref_summary_show_calibration_button">Verzend een kalibratie naar xDrip+ (zorg ervoor dat ‘Accepteer kalibraties’ is ingeschakeld onder ‘Instellingen Interapp’ in xDrip+).</string>
-    <string name="pref_title_show_notes_in_dialogs">Notities weergeven in dialogen</string>
+    <string name="pref_title_show_notes_in_dialogs">Toon notities in dialoogvensters</string>
     <string name="pref_title_use_bolus_advisor">Gebruik de bolusadviseur</string>
     <string name="pref_summary_use_bolus_advisor">Activeert de bolusadviseur, die helpt bij het berekenen van bolussen bij hogere bloedglucosewaarden.</string>
     <string name="pref_title_use_bolus_reminder">Gebruik bolusherinnering</string>
@@ -29,9 +29,9 @@
     <string name="pref_title_alert_missed_bg_reading">Waarschuw als er geen BG-gegevens worden ontvangen</string>
     <string name="pref_title_alert_pump_unreachable">Waarschuw als de pomp niet bereikbaar is</string>
     <string name="pref_title_alert_carbs_required">Waarschuw als koolhydraten nodig zijn</string>
-    <string name="pref_title_alert_urgent_as_android_notification">Geef dringende alarmen als Android meldingen</string>
-    <string name="pref_title_alert_increase_volume">Volume van meldingen geleidelijk verhogen</string>
-    <string name="pref_title_alert_override_dnd">Niet storen-stand negeren</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Geef dringende alarmen als Android-meldingen</string>
+    <string name="pref_title_alert_increase_volume">Verhoog het meldingsvolume geleidelijk</string>
+    <string name="pref_title_alert_override_dnd">Negeer de modus Niet storen</string>
     <string name="pref_summary_alert_override_dnd">Aan: Alarmen klinken ook wanneer de telefoon op stil staat of de modus Niet storen is ingeschakeld. Uit: Alarmen klinken dan niet. Wanneer de modus Niet storen is ingeschakeld, trillen ze alleen.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG-gegevens naar NS</string>
@@ -41,17 +41,17 @@
     <string name="pref_title_aps_use_dynamic_sensitivity">Gebruik dynamische gevoeligheid</string>
     <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik Dynamische ISF voor het aanpassen van de insulinegevoeligheid in plaats van Autosens.</string>
     <string name="pref_title_aps_use_autosens">Gebruik Autosens</string>
-    <string name="pref_title_aps_use_smb">SMB toestaan</string>
+    <string name="pref_title_aps_use_smb">Sta SMB toe</string>
     <string name="pref_summary_aps_use_smb">Schakel Super Micro Bolus in. SMB levert onmiddellijk insuline om te reageren op stijgende bloedglucose.</string>
-    <string name="pref_title_aps_use_smb_with_high_tt">SMB toestaan bij hoog tijdelijk streefdoel</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Sta SMB toe bij een hoog tijdelijk streefdoel</string>
     <string name="pref_summary_aps_use_smb_with_high_tt">SMB\'s zijn toegestaan wanneer een hoog tijdelijk streefdoel actief is.</string>
-    <string name="pref_title_aps_use_smb_always">SMB altijd toestaan</string>
+    <string name="pref_title_aps_use_smb_always">Sta SMB altijd toe</string>
     <string name="pref_summary_aps_use_smb_always">SMB\'s zijn altijd toegestaan, ongeacht bolus of COB.</string>
-    <string name="pref_title_aps_use_smb_with_cob">SMB toestaan bij COB</string>
+    <string name="pref_title_aps_use_smb_with_cob">Sta SMB toe bij COB</string>
     <string name="pref_summary_aps_use_smb_with_cob">Staat SMB’s toe wanneer er nog koolhydraten actief zijn.</string>
-    <string name="pref_title_aps_use_smb_with_low_tt">SMB toestaan bij laag tijdelijk streefdoel</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Sta SMB toe bij een laag tijdelijk streefdoel</string>
     <string name="pref_summary_aps_use_smb_with_low_tt">SMB\'s zijn toegestaan wanneer een laag tijdelijk streefdoel actief is.</string>
-    <string name="pref_title_aps_use_smb_after_carbs">Activeren SMB na invoer van koolhydraten</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Activeer SMB na invoer van koolhydraten</string>
     <string name="pref_summary_aps_use_smb_after_carbs">Sta SMB\'s gedurende een bepaalde periode toe nadat koolhydraten zijn ingevoerd.</string>
     <string name="pref_title_aps_use_uam">Activeer UAM</string>
     <string name="pref_summary_aps_use_uam">Schakel detectie en behandeling van onaangekondigde maaltijden (UnAnnounced Meals) in.</string>
@@ -60,7 +60,7 @@
     <string name="pref_title_aps_resistance_lowers_target">Resistentie verlaagt streefdoel</string>
     <string name="pref_summary_aps_resistance_lowers_target">Verlaag het streefdoel voor de bloedglucose wanneer insulineresistentie wordt vastgesteld.</string>
     <string name="pref_title_aps_always_use_short_deltas">Gebruik altijd korte gemiddelde delta</string>
-    <string name="pref_summary_aps_always_use_short_deltas">Gebruik altijd korte gemiddelde delta in plaats van eenvoudige delta voor BG berekeningen.</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Gebruik altijd de korte gemiddelde delta in plaats van de eenvoudige delta voor BG-berekeningen.</string>
     <string name="pref_title_aps_dynisf_adjust_sensitivity">Dynamische ISF past gevoeligheid aan</string>
     <string name="pref_summary_aps_dynisf_adjust_sensitivity">Pas de gevoeligheidsberekeningen aan bij gebruik van Dynamische ISF.</string>
     <string name="pref_title_aps_autosens_adjust_targets">Autosens past doelen aan</string>
@@ -69,96 +69,96 @@
     <string name="pref_summary_aps_high_tt_raises_sensitivity">Hoge tijdelijke streefdoelen zullen de insulinegevoeligheid verhogen.</string>
     <string name="pref_title_aps_low_tt_lowers_sensitivity">Laag tijdelijk streefdoel verlaagt gevoeligheid</string>
     <string name="pref_summary_aps_low_tt_lowers_sensitivity">Lage tijdelijke streefdoelen zullen de insulinegevoeligheid verlagen.</string>
-    <string name="pref_title_aps_use_autoisf_weights">AutoISF Inschakelen</string>
-    <string name="pref_summary_aps_use_autoisf_weights">ISF-aanpassingen op basis van AutoISF-gewichten inschakelen.</string>
-    <string name="pref_title_aps_smb_on_even_target">SMB inschakelen bij een even streefdoel</string>
-    <string name="pref_summary_aps_smb_on_even_target">Alternatieve manier om SMB altijd in te schakelen op basis van de glucose-streefdoel.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Schakel AutoISF in</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Schakel ISF-aanpassingen op basis van AutoISF-gewichten in.</string>
+    <string name="pref_title_aps_smb_on_even_target">Schakel SMB in bij een even streefdoel</string>
+    <string name="pref_summary_aps_smb_on_even_target">Alternatieve manier om SMB altijd in te schakelen op basis van het glucosestreefdoel.</string>
     <!-- Maintenance preferences -->
-    <string name="pref_title_maintenance_enable_fabric">Inschakelen van interne crash rapportage</string>
-    <string name="pref_title_maintenance_enable_export_automation">Schakel automatische instellingen export in</string>
+    <string name="pref_title_maintenance_enable_fabric">Schakel interne crashrapportage in</string>
+    <string name="pref_title_maintenance_enable_export_automation">Schakel automatische export van instellingen in</string>
     <!-- Autotune preferences -->
-    <string name="pref_title_autotune_auto_switch_profile">Automatisch wisselen van profiel</string>
+    <string name="pref_title_autotune_auto_switch_profile">Wissel automatisch van profiel</string>
     <string name="pref_summary_autotune_auto_switch_profile">Schakel na het berekenen automatisch over naar het door Autotune gegenereerde profiel.</string>
-    <string name="pref_title_autotune_categorize_uam_as_basal">UAM als basaal aanmerken</string>
-    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandel niet aangekondigde maaltijden als basale insuline behoefte binnen Autotune berekeningen.</string>
-    <string name="pref_title_autotune_tune_insulin_curve">Insuline curve aanpassen</string>
-    <string name="pref_title_autotune_circadian_ic_isf">Circadiane koolhydraatratio en ISF gebruiken</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Merk UAM aan als basaal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandel onaangekondigde maaltijden als basale insulinebehoefte binnen Autotune-berekeningen.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Pas de insulinecurve aan</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Gebruik circadiane koolhydraatratio en ISF</string>
     <string name="pref_summary_autotune_circadian_ic_isf">Pas dagritmevariatie toe op koolhydraatratio (IC) en ISF in de Autotune-berekeningen.</string>
     <string name="pref_title_autotune_additional_log">Additionele logging</string>
     <!-- SMS preferences -->
     <string name="pref_title_sms_allow_remote_commands">Sta opdrachten via SMS toe</string>
-    <string name="pref_title_sms_report_pump_unreachable">Meld onbereikbare pomp onbereikbaar via SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Meld een onbereikbare pomp via SMS</string>
     <string name="pref_summary_sms_report_pump_unreachable">Stuur een SMS-notificatie wanneer de pomp onbereikbaar wordt.</string>
     <!-- Virtual pump preferences -->
     <string name="pref_title_virtual_pump_status_upload">Upload pompstatus naar NS</string>
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Upload data naar NS</string>
     <string name="pref_summary_ns_upload_data">Upload behandelingen, tijdelijke basaalstanden en andere gegevens naar Nightscout.</string>
-    <string name="pref_title_ns_receive_cgm">Ontvang CGM gegevens van NS</string>
-    <string name="pref_summary_ns_receive_cgm">CGM-metingen van Nightscout accepteren.</string>
+    <string name="pref_title_ns_receive_cgm">Ontvang CGM-gegevens van NS</string>
+    <string name="pref_summary_ns_receive_cgm">Accepteer CGM-metingen van Nightscout.</string>
     <string name="pref_title_ns_receive_profile_store">Ontvang profielgegevens van NS</string>
-    <string name="pref_summary_ns_receive_profile_store">Wijzigingen van profielen accepteren van Nightscout.</string>
+    <string name="pref_summary_ns_receive_profile_store">Accepteer profielwijzigingen van Nightscout.</string>
     <string name="pref_title_ns_receive_temp_target">Ontvang tijdelijke streefdoelen van NS</string>
-    <string name="pref_summary_ns_receive_temp_target">Wijzigingen in tijdelijke streefdoelen van Nightscout accepteren.</string>
+    <string name="pref_summary_ns_receive_temp_target">Accepteer wijzigingen in tijdelijke streefdoelen van Nightscout.</string>
     <string name="pref_title_ns_receive_profile_switch">Ontvang profielwisselingen van NS</string>
-    <string name="pref_summary_ns_receive_profile_switch">Profielwisselingen van Nightscout accepteren.</string>
+    <string name="pref_summary_ns_receive_profile_switch">Accepteer profielwisselingen van Nightscout.</string>
     <string name="pref_title_ns_receive_insulin">Ontvang insuline van NS</string>
-    <string name="pref_summary_ns_receive_insulin">Insulineregistraties van Nightscout accepteren.</string>
+    <string name="pref_summary_ns_receive_insulin">Accepteer insulineregistraties van Nightscout.</string>
     <string name="pref_title_ns_receive_carbs">Ontvang koolhydraten van NS</string>
-    <string name="pref_summary_ns_receive_carbs">Koolhydraatregistraties van Nightscout accepteren.</string>
-    <string name="pref_title_ns_receive_therapy_event">Behandelgebeurtenissen ontvangen van NS</string>
-    <string name="pref_summary_ns_receive_therapy_event">Registraties van het plaatsen van een nieuwe sensor, canule of pomp vanuit Nightscout accepteren.</string>
+    <string name="pref_summary_ns_receive_carbs">Accepteer koolhydraatregistraties van Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Ontvang behandelgebeurtenissen van NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Accepteer behandelgebeurtenissen van Nightscout.</string>
     <string name="pref_title_ns_receive_running_mode">Ontvang loopmodus van NS</string>
-    <string name="pref_summary_ns_receive_running_mode">Wijzigingen in de loopmodus vanuit Nightscout accepteren.</string>
+    <string name="pref_summary_ns_receive_running_mode">Accepteer wijzigingen in de loopmodus van Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">Ontvang TBR/VB van NS</string>
-    <string name="pref_summary_ns_receive_tbr_eb">Tijdelijke basalen en verlengde bolussen van Nightscout accepteren.</string>
-    <string name="pref_title_ns_notifications_from_alarms">NS alarmen</string>
-    <string name="pref_title_ns_notifications_from_announcements">NS meldingen</string>
-    <string name="pref_title_ns_use_cellular">Mobiele data gebruiken</string>
-    <string name="pref_title_ns_use_roaming">Roaming toestaan</string>
-    <string name="pref_title_ns_use_wifi">Wifi gebruiken</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Accepteer tijdelijke basaalstanden en verlengde bolussen van Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS-alarmen</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS-meldingen</string>
+    <string name="pref_title_ns_use_cellular">Gebruik mobiele data</string>
+    <string name="pref_title_ns_use_roaming">Sta roaming toe</string>
+    <string name="pref_title_ns_use_wifi">Gebruik wifi</string>
     <string name="pref_title_ns_use_on_battery">Synchroniseer op batterij</string>
     <string name="pref_title_ns_use_on_charging">Synchroniseer tijdens opladen</string>
     <string name="pref_title_ns_log_app_start">Registreer het starten van de app</string>
-    <string name="pref_title_ns_create_announcements_from_errors">Meldingen aanmaken bij fouten</string>
-    <string name="pref_title_ns_create_announcements_from_carbs_req">Meldingen aanmaken voor benodigde koolhydraten</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Maak meldingen aan bij fouten</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Maak meldingen aan voor benodigde koolhydraten</string>
     <string name="pref_title_ns_slow_sync">Langzaam synchroniseren</string>
-    <string name="pref_title_ns_use_ws">Websockets gebruiken</string>
+    <string name="pref_title_ns_use_ws">Gebruik websockets</string>
     <string name="pref_summary_ns_use_ws">Gebruik websockets voor real-time communicatie met Nightscout.</string>
-    <string name="pref_title_ns_allow_client_control">Client controle toestaan</string>
-    <string name="pref_summary_ns_allow_client_control">Laat gekoppelde clientapparaten ondertekende commando\'s (b.v. start/stop scènes) verzenden via Nightscout. Dit schakelt ook de beveiligde modus in: veranderingen die direct in Nightscout zijn gemaakt worden niet meer gebruikt.</string>
+    <string name="pref_title_ns_allow_client_control">Sta bediening door clients toe</string>
+    <string name="pref_summary_ns_allow_client_control">Laat gekoppelde clientapparaten ondertekende opdrachten (bijvoorbeeld scènes starten of stoppen) verzenden via Nightscout. Dit schakelt ook de beveiligde modus in: wijzigingen die rechtstreeks in Nightscout zijn gemaakt, worden niet meer gebruikt.</string>
     <!-- OpenHumans preferences -->
-    <string name="pref_title_openhumans_wifi_only">Alleen Wifi</string>
+    <string name="pref_title_openhumans_wifi_only">Alleen wifi</string>
     <string name="pref_title_openhumans_charging_only">Alleen tijdens opladen</string>
     <!-- xDrip preferences -->
-    <string name="pref_title_xdrip_send_status">Status naar xDrip+ verzenden</string>
+    <string name="pref_title_xdrip_send_status">Verstuur status naar xDrip+</string>
     <string name="pref_title_xdrip_send_detailed_iob">Verstuur gedetailleerde IOB</string>
-    <string name="pref_summary_xdrip_send_detailed_iob">Gedetailleerde IOB-gegevens naar xDrip+ verzenden voor weergave op de smartwatch.</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Verstuur gedetailleerde IOB-gegevens naar xDrip+ voor weergave op de smartwatch.</string>
     <string name="pref_title_xdrip_send_bgi">Toon BGI</string>
-    <string name="pref_summary_xdrip_send_bgi">Toon Bloed Glucose Impact op de xDrip+ statusregel.</string>
+    <string name="pref_summary_xdrip_send_bgi">Toon de bloedglucose-impact op de xDrip+-statusregel.</string>
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Bediening via smartwatch</string>
-    <string name="pref_summary_wear_control">Bedien AAPS vanaf je Android Wear horloge.</string>
+    <string name="pref_summary_wear_control">Bedien AAPS vanaf het Android Wear-horloge.</string>
     <string name="pref_title_wear_wizard_bg">Gebruik BG in wizard</string>
     <string name="pref_title_wear_wizard_tt">Gebruik tijdelijk streefdoel in wizard</string>
     <string name="pref_title_wear_wizard_trend">Gebruik trend in wizard</string>
     <string name="pref_title_wear_wizard_cob">Gebruik COB in wizard</string>
     <string name="pref_title_wear_wizard_iob">Gebruik IOB in wizard</string>
-    <string name="pref_title_wear_custom_watchface_authorization">Aangepaste wijzerplaten toestaan</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Sta aangepaste wijzerplaten toe</string>
     <string name="pref_title_wear_pushed_watchface">Wijzerplaat is geïnstalleerd op horloge</string>
-    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Wijzerplaat complicaties</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Wijzerplaat met complicaties</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Aangepaste wijzerplaat</string>
     <string name="pref_title_wear_notify_on_smb">Melding bij SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Stuur melding naar het horloge bij een SMB.</string>
     <string name="pref_title_wear_broadcast_data">Gegevens delen met smartwatch</string>
-    <string name="pref_summary_wear_broadcast_data">Gegevens via een Intent delen met smartwatch-apps van derden.</string>
+    <string name="pref_summary_wear_broadcast_data">Deel gegevens via een Intent met smartwatch-apps van derden.</string>
     <!-- Site rotation preferences -->
-    <string name="pref_title_site_rotation_manage_pump">Plaatsingslocatie pomp beheren</string>
-    <string name="pref_title_site_rotation_manage_cgm">Plaatsingslocatie sensor beheren</string>
+    <string name="pref_title_site_rotation_manage_pump">Beheer de plaatsingslocatie van de pomp</string>
+    <string name="pref_title_site_rotation_manage_cgm">Beheer de plaatsingslocatie van de sensor</string>
     <!-- IntKey: Overview preferences -->
-    <string name="pref_title_carbs_button_increment_1">Stapgrootte koolhydraten knop 1</string>
-    <string name="pref_title_carbs_button_increment_2">Stapgrootte koolhydraten knop 2</string>
-    <string name="pref_title_carbs_button_increment_3">Stapgrootte koolhydraten knop 3</string>
+    <string name="pref_title_carbs_button_increment_1">Stapgrootte koolhydratenknop 1</string>
+    <string name="pref_title_carbs_button_increment_2">Stapgrootte koolhydratenknop 2</string>
+    <string name="pref_title_carbs_button_increment_3">Stapgrootte koolhydratenknop 3</string>
     <string name="carb_increment_button_message">Aantal koolhydraten toevoegen wanneer de knop wordt ingedrukt</string>
     <string name="pref_title_cage_warning">Waarschuwing leeftijd canule</string>
     <string name="pref_title_cage_critical">Kritieke leeftijd canule</string>
@@ -177,7 +177,7 @@
     <string name="pref_title_bolus_percentage">Boluspercentage</string>
     <string name="deliverpartofboluswizard">Pas deze waarde toe op de bloedglucose- en koolhydraatcorrectie van de boluswizard.</string>
     <string name="pref_title_reset_bolus_percentage_time">Resetduur boluspercentage</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Dien de volledige bolus (100%) toe als de BG waarde ouder is dan</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Dien de volledige bolus (100%) toe als de BG-waarde ouder is dan</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Time-out</string>
     <string name="pref_title_protection_type_application">Niveau 0: App-beveiliging</string>
@@ -201,16 +201,16 @@
     <string name="pref_title_smb_frequency">SMB-interval</string>
     <string name="pref_title_smb_max_minutes">Aantal minuten basale insuline waarop een SMB wordt begrensd</string>
     <string name="pref_title_uam_smb_max_minutes">Aantal minuten basale insuline waarop een SMB wordt begrensd als er sprake is van UAM</string>
-    <string name="uam_smb_max_minutes">UAM SMB max minuten</string>
+    <string name="uam_smb_max_minutes">UAM SMB max. minuten</string>
     <string name="pref_title_carbs_request_threshold">Minimum benodigde koolhydraten</string>
     <string name="carbs_req_threshold_summary">Minimum gram benodigde koolhydraten waarbij een waarschuwing wordt gegeven. Wanneer er minder koolhydraten nodig zijn dan dit getal, wordt er geen waarschuwing gegeven.</string>
     <string name="pref_title_half_basal_exercise_target">Beweging/sportdoel met halve basaal</string>
     <string name="half_basal_exercise_target_summary">Stel een getal in, bijvoorbeeld 160. Dit betekent dat wanneer het tijdelijke streefdoel is ingesteld op 160 mg/dL en ‘Hoog tijdelijk streefdoel verhoogt de insulinegevoeligheid’ is ingeschakeld, op dit niveau 50%% van de basale insulinetoediening wordt gebruikt (120 = 75%%; 140 = 60%%).</string>
-    <string name="pref_title_iob_threshold_percent">IOB drempelpercentage</string>
+    <string name="pref_title_iob_threshold_percent">IOB-drempelpercentage</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage van maxIOB waarbij SMB\'s worden uitgeschakeld.\nStandaardwaarde: 100%\nMet 100% wordt deze functie effectief uitgeschakeld.</string>
     <string name="pref_title_dynisf_adjustment_factor">Aanpassingsfactor Dynamische ISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Aanpassingsfactor voor dynamische insulinegevoeligheid. Stel de waarde in op meer dan 100% voor agressievere correcties en op minder dan 100% voor minder agressieve correcties.</string>
-    <string name="pref_title_autosens_period">Autosens periode</string>
+    <string name="pref_title_autosens_period">Autosens-periode</string>
     <string name="openapsama_autosens_period_summary">Aantal uren in het verleden waarover de insulinegevoeligheid wordt bepaald (exclusief koolhydraatabsorptietijd)</string>
     <!-- IntKey: Maintenance preferences -->
     <string name="pref_title_logs_amount">Aantal logbestanden te verzenden</string>
@@ -224,8 +224,8 @@
     <!-- IntKey: SMS preferences -->
     <string name="pref_title_sms_remote_bolus_distance">Minimale tijd tussen opdrachten</string>
     <!-- IntKey: BG Source preferences -->
-    <string name="pref_title_random_bg_interval">Interval willekeurige BG waarden</string>
-    <string name="pref_title_random_bg_randomize">Genereer willekeurige BG waarden</string>
+    <string name="pref_title_random_bg_interval">Interval willekeurige BG-waarden</string>
+    <string name="pref_title_random_bg_randomize">Genereer willekeurige BG-waarden</string>
     <string name="pref_summary_random_bg_randomize">Voeg ruis toe, laat tijdstempels variëren, maak trendpijlen willekeurig en voeg zo nu en dan willekeurige koolhydraten toe. Schakel deze optie uit voor een zuivere, deterministische sinusgolf waarbij de trendpijl wordt bepaald door de helling van de golf.</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Waarschuwing ouderdom glucosegegevens</string>
@@ -242,9 +242,9 @@
     <!-- Formatted unit strings with value and range -->
     <string name="lang_default">Systeemtaal</string>
     <string name="pref_title_patient_name">Naam van dit exemplaar</string>
-    <string name="pref_summary_patient_name">Naam van de persoon die deze telefoon gebruikt, voor herkenbaarheid van de AAPS instantie in rapporten en synchronisatie.</string>
+    <string name="pref_summary_patient_name">Naam van de persoon die deze telefoon gebruikt, voor herkenbaarheid van de AAPS-instantie in rapporten en synchronisatie.</string>
     <!-- StringKey: Directory preferences -->
-    <string name="pref_title_aaps_directory">AAPS map</string>
+    <string name="pref_title_aaps_directory">AAPS-map</string>
     <!-- StringKey: Protection preferences -->
     <string name="pref_title_master_password">Hoofdwachtwoord</string>
     <string name="pref_title_settings_password">Wachtwoord instellingen</string>
@@ -258,7 +258,7 @@
     <string name="pref_title_app_color_scheme">Kleurenschema</string>
     <string name="pref_dark_theme">Donker thema</string>
     <string name="pref_light_theme">Licht thema</string>
-    <string name="pref_follow_system_theme">Gebruik systeem thema</string>
+    <string name="pref_follow_system_theme">Gebruik systeemthema</string>
     <!-- StringKey: Safety preferences -->
     <string name="pref_title_patient_age">Leeftijd patiënt</string>
     <!-- StringKey: Maintenance preferences -->
@@ -272,24 +272,24 @@
     <!-- StringKey: SMS preferences -->
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoonnummers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_otp_pin">Extra verplichte PIN-code aan het einde van het token</string>
+    <string name="smscommunicator_otp_pin">Extra verplichte pincode aan het einde van het token</string>
     <string name="smscommunicator_otp_pin_summary">Extra cijfers die aan het einde van elk gegenereerd eenmalig wachtwoord moeten worden toegevoegd</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Soort pomp</string>
     <!-- StringKey: NS Client preferences -->
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_summary">Nightscout URL (bijvoorbeeld https://yoursitename.yourplatform.dom)</string>
-    <string name="ns_client_secret_title">Nightscout API secret</string>
-    <string name="ns_client_secret_summary">Nightscout API-secret (min. 12 tekens)</string>
-    <string name="nsclient_token_title">Nightscout toegangstoken</string>
-    <string name="nsclient_token_summary">Nightscout toegangstoken (min. 17 tekens)</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_wifi_ssids_summary">Toegestane SSIDs (gescheiden door puntkomma)</string>
+    <string name="ns_client_url_title">Nightscout-URL</string>
+    <string name="ns_client_url_summary">Nightscout-URL (bijvoorbeeld https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout-API-secret</string>
+    <string name="ns_client_secret_summary">Nightscout-API-secret (min. 12 tekens)</string>
+    <string name="nsclient_token_title">Nightscout-toegangstoken</string>
+    <string name="nsclient_token_summary">Nightscout-toegangstoken (min. 17 tekens)</string>
+    <string name="ns_wifi_ssids">Wifi-SSID</string>
+    <string name="ns_wifi_ssids_summary">Toegestane SSID\'s (gescheiden door puntkomma\'s)</string>
     <!-- DoubleKey: Overview preferences -->
-    <string name="pref_title_insulin_button_increment_1">Stapgrootte insuline knop 1</string>
-    <string name="pref_title_insulin_button_increment_2">Stapgrootte insuline knop 2</string>
-    <string name="pref_title_insulin_button_increment_3">Stapgrootte insuline knop 3</string>
-    <string name="insulin_increment_button_message">Hoeveelheid insuline dat wordt toegevoegd wanneer er op de knop gedrukt wordt</string>
+    <string name="pref_title_insulin_button_increment_1">Stapgrootte insulineknop 1</string>
+    <string name="pref_title_insulin_button_increment_2">Stapgrootte insulineknop 2</string>
+    <string name="pref_title_insulin_button_increment_3">Stapgrootte insulineknop 3</string>
+    <string name="insulin_increment_button_message">Hoeveelheid insuline die wordt toegevoegd wanneer op de knop wordt gedrukt</string>
     <!-- DoubleKey: Actions preferences -->
     <string name="pref_title_fill_button_1">Vulknop 1</string>
     <string name="pref_title_fill_button_2">Vulknop 2</string>
@@ -309,21 +309,21 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaardwaarde: 4.\nDit is de tweede belangrijke veiligheidslimiet van OpenAPS. Hiermee wordt de basaalstand beperkt tot maximaal dit getal vermenigvuldigd met de huidige basaalstand. Zo wordt voorkomen dat gebruikers de maximale basaalstand veel te hoog instellen en daardoor in een gevaarlijke situatie terechtkomen voordat ze begrijpen hoe het algoritme werkt. Waarschijnlijk hoeft deze instelling nooit te worden gewijzigd. Het is wel goed om te weten dat hiermee wordt verwezen naar de veiligheidsbegrenzingen die worden aangeduid als ‘3x max daily; 4x current’.</string>
     <string name="pref_title_bolus_snooze_divisor">DIA-deler voor bolus-snooze</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Standaardwaarde: 2.\nDe bolus-snooze wordt geactiveerd nadat een maaltijdbolus is toegediend. Dit voorkomt dat de loop kort na het eten reageert met een verlaagde tijdelijke basaal. Bij de standaardwaarde van 2 en een DIA van 3 uur wordt de bolus-snooze geleidelijk afgebouwd gedurende 1,5 uur (3 uur DIA / 2).</string>
-    <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5 m koolhydraten impact</string>
-    <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5 m koolhydraten impact</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA minimale koolhydraatimpact per 5 min</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB minimale koolhydraatimpact per 5 min</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB).\nDeze instelling bepaalt de minimale koolhydraatabsorptie per 5 minuten. De standaardwaarde komt overeen met een verwachte glucoseverandering van 3 mg/dl (0,17 mmol/L) per 5 minuten. Dit beïnvloedt hoe snel de hoeveelheid actieve koolhydraten (COB) afneemt en hoeveel koolhydraatabsorptie wordt aangenomen bij het berekenen van toekomstige bloedglucosewaarden. Dit speelt een rol wanneer de bloedglucose sterker daalt dan verwacht of minder sterk stijgt dan verwacht.</string>
     <string name="pref_title_absorption_cutoff">Afkapmoment koolhydraatabsorptie</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen een maaltijd als volledig opgenomen wordt beschouwd. Eventueel resterende koolhydraten vervallen vanaf dat moment.</string>
     <string name="pref_title_absorption_maxtime">Maximale absorptietijd koolhydraten</string>
     <string name="absorption_max_time_summary">Tijd in uren waarbinnen naar verwachting alle koolhydraten uit een maaltijd zijn opgenomen</string>
-    <string name="pref_title_autosens_min">Autosens minimum</string>
+    <string name="pref_title_autosens_min">Autosens-minimum</string>
     <string name="openapsama_autosens_min_summary">Standaardwaarde: 0,7.\nDit is de ondergrens van de veiligheidsmarges van Autosens. Deze instelling begrenst hoe sterk Autosens de basaalstanden kan verlagen en de ISF en het glucose-streefdoel kan verhogen.</string>
-    <string name="pref_title_autosens_max">Autosens maximum</string>
+    <string name="pref_title_autosens_max">Autosens-maximum</string>
     <string name="openapsama_autosens_max_summary">Standaardwaarde: 1,2.\nDit is een bovengrens voor de vermenigvuldigingsfactor van Autosens (en binnenkort ook Autotune). De Autosens-ratio kan hierdoor maximaal 20%% boven de standaardwaarde uitkomen. Deze ratio bepaalt hoe sterk Autosens de basaalstanden kan verhogen, de ISF kan verlagen en het glucose-streefdoel kan verlagen.</string>
-    <string name="pref_title_autoisf_min">AutoISF minimum</string>
-    <string name="openapsama_autoISF_min_summary">Vergelijkbaar met autosens_min definieert dit hoe zwak ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.</string>
-    <string name="pref_title_autoisf_max">AutoISF maximum</string>
-    <string name="openapsama_autoISF_max_summary">Vergelijkbaar met autosens_max definieert dit hoe sterk ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.\n\nWAARSCHUWING: Wees extreem voorzichtig bij het gebruik van waarden boven de 2,5</string>
+    <string name="pref_title_autoisf_min">AutoISF-minimum</string>
+    <string name="openapsama_autoISF_min_summary">Vergelijkbaar met autosens_min definieert dit hoe zwak ISF kan worden.\n\nDe standaardwaarde 1,0 schakelt dit effect uit.</string>
+    <string name="pref_title_autoisf_max">AutoISF-maximum</string>
+    <string name="openapsama_autoISF_max_summary">Vergelijkbaar met autosens_max definieert dit hoe sterk ISF kan worden.\n\nDe standaardwaarde 1,0 schakelt dit effect uit.\n\nWAARSCHUWING: Wees extreem voorzichtig bij het gebruik van waarden boven de 2,5</string>
     <string name="pref_title_bg_accel_weight">ISF-aanpassingsfactor bij versnellende BG</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose sneller begint te stijgen of dalen. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_bg_brake_weight">ISF-aanpassingsfactor bij vertragende BG</string>
@@ -333,7 +333,7 @@
     <string name="pref_title_high_bg_weight">ISF-aanpassingsfactor bij hoge BG</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose boven het streefdoel ligt. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">BG-bereik voor SMB-toedieningsratio</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standaardwaarde: 0.\nDe SMB-toedieningsratio neemt lineair toe binnen het glucosebereik [target_bg, target_bg + bg_range].\nBij target_bg is de SMB-ratio gelijk aan smb_delivery_ratio_min. Bij target_bg + bg_range is deze gelijk aan smb_delivery_ratio_max. Bij de waarde 0 is deze lineaire toename van de SMB-ratio uitgeschakeld en wordt de vaste smb_delivery_ratio gebruikt. smb_delivery_ratio gebruikt.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standaardwaarde: 0.\nDe SMB-toedieningsratio neemt lineair toe binnen het glucosebereik [target_bg, target_bg + bg_range].\nBij target_bg is de SMB-ratio gelijk aan smb_delivery_ratio_min. Bij target_bg + bg_range is deze gelijk aan smb_delivery_ratio_max. Bij de waarde 0 is deze lineaire toename van de SMB-ratio uitgeschakeld en wordt de vaste smb_delivery_ratio gebruikt.</string>
     <string name="pref_title_pp_weight">ISF-aanpassingsfactor na de maaltijd</string>
     <string name="openapsama_pp_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose stijgt na een maaltijd. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_dura_weight">ISF-aanpassingsfactor langdurig verhoogde BG</string>
@@ -341,16 +341,16 @@
     <string name="pref_title_smb_delivery_ratio">SMB-toedieningsratio</string>
     <string name="openapsama_smb_delivery_ratio_summary">Standaardwaarde: 0,5\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt welk deel van de totale benodigde hoeveelheid insuline als SMB mag worden toegediend. Dit voorkomt dat een onveilige situatie ontstaat doordat tegelijkertijd SMB-opdrachten worden gegeven vanaf de telefoon van de zorgverlener. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
     <string name="pref_title_smb_delivery_ratio_min">Minimale SMB-toedieningsratio</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Standaardwaarde: 0,5\nDit is de ondergrens van een lineair oplopende Smb-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standaardwaarde: 0,5\nDit is de ondergrens van een lineair oplopende SMB-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
     <string name="pref_title_smb_delivery_ratio_max">Maximale SMB-toedieningsratio</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Standaard waarde: 0.5\nDit is het bovengrens van een lineair oplopende Smb-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standaardwaarde: 0,5\nDit is de bovengrens van een lineair oplopende SMB-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
     <string name="pref_title_smb_max_range_extension">Overschrijdingsfactor maximaal SMB-bereik</string>
-    <string name="openapsama_smb_max_range_extension_summary">Standaardwaarde: 1.\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt met welke factor je de gebruikelijke limiet van 120 minuten voor maxSMB/maxUAM mag overschrijden. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Standaardwaarde: 1.\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt met welke factor de gebruikelijke limiet van 120 minuten voor maxSMB/maxUAM mag worden overschreden. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <string name="pref_title_low_mark">Markering lage BG</string>
     <string name="pref_title_high_mark">Markering hoge BG</string>
     <!-- UnitDoubleKey: APS preferences -->
-    <string name="pref_title_lgs_threshold">LGS drempelwaarde</string>
+    <string name="pref_title_lgs_threshold">LGS-drempelwaarde</string>
     <string name="lgs_threshold_summary">Bloedglucosewaarde waaronder de insulinetoediening wordt onderbroken. De standaardwaarde maakt gebruik van het standaarddoelmodel. Er kan een waarde worden ingesteld tussen 60 mg/dL (3,3 mmol/L) en 100 mg/dL (5,5 mmol/L). Bij waarden lager dan 65 mg/dL (3,6 mmol/L) wordt het standaardmodel gebruikt.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
