@@ -1207,5 +1207,6 @@
     <string name="units_sec">sec</string>
     <string name="units_years">j</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">De pomp heeft de bolustoediening na %1$s gestopt. Controleer de pomp voordat een volgende bolus wordt toegediend.</string>
     <string name="secrets_not_protected">Op deze computer is geen sleutelarchief gevonden. De sleutels waarmee de instellingen en de koppeling met het hoofdapparaat worden beveiligd, worden opgeslagen in bestanden, naast de gegevens. Dit betekent dat iedereen die een kopie van deze bestanden verkrijgt, ook toegang krijgt tot deze sleutels. Installeer en start op Linux een sleutelarchief (bijvoorbeeld GNOME Keyring of KWallet) en start AAPS opnieuw.</string>
 </resources>
