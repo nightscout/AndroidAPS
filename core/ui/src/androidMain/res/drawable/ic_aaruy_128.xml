@@ -1,0 +1,76 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+    <!-- column under the reservoir -->
+    <path
+        android:pathData="M40,56H62V117.5H45C42.2,117.5 40,115.3 40,112.5Z"
+        android:fillColor="#E6E6E6"
+        android:strokeWidth="0.6"
+        android:strokeColor="#B0B0B0" />
+    <!-- main body -->
+    <path
+        android:pathData="M61,55C61,52.2 63.2,50 66,50H89C91.8,50 94,52.2 94,55V112.5C94,115.3 91.8,117.5 89,117.5H61Z"
+        android:fillColor="#F7F7F7"
+        android:strokeWidth="0.6"
+        android:strokeColor="#B0B0B0" />
+    <!-- tubing from the reservoir to the connector, in front of the body -->
+    <path
+        android:pathData="M59,11.5C64,11.5 68,13.5 68,19V80"
+        android:strokeWidth="1.2"
+        android:strokeColor="#B0BEC5"
+        android:fillColor="#00000000" />
+    <!-- side button -->
+    <path
+        android:pathData="M94,94H95C95.6,94 96,94.4 96,95V101C96,101.6 95.6,102 95,102H94Z"
+        android:fillColor="#D0D0D0" />
+    <!-- reservoir holder -->
+    <path
+        android:pathData="M36,49H62V55C62,59.4 58.4,63 54,63H44C39.6,63 36,59.4 36,55Z"
+        android:fillColor="#EDEDED"
+        android:strokeWidth="0.6"
+        android:strokeColor="#B0B0B0" />
+    <!-- black locking ring -->
+    <path
+        android:pathData="M38,42H61V49H38Z"
+        android:fillColor="#212121" />
+    <path
+        android:pathData="M38,44.6H61V46H38Z"
+        android:fillColor="#9E9E9E" />
+    <!-- reservoir -->
+    <path
+        android:pathData="M40,16C40,14.9 40.9,14 42,14H57C58.1,14 59,14.9 59,16V42H40Z"
+        android:fillColor="#DDE7EC"
+        android:strokeWidth="0.6"
+        android:strokeColor="#90A4AE" />
+    <!-- plunger -->
+    <path
+        android:pathData="M40.6,37H58.4V42H40.6Z"
+        android:fillColor="#37474F" />
+    <!-- scale -->
+    <path
+        android:pathData="M52,18H58M54.5,21H58M52,24H58M54.5,27H58M52,30H58M54.5,33H58"
+        android:strokeWidth="0.5"
+        android:strokeColor="#607D8B" />
+    <!-- reservoir top and outlet -->
+    <path
+        android:pathData="M47,11C47,10.4 47.4,10 48,10H58C58.6,10 59,10.4 59,11V14H47Z"
+        android:fillColor="#ECEFF1"
+        android:strokeWidth="0.6"
+        android:strokeColor="#90A4AE" />
+    <!-- tubing connector -->
+    <path
+        android:pathData="M67,85m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+        android:fillColor="#E0E0E0"
+        android:strokeWidth="0.6"
+        android:strokeColor="#9E9E9E" />
+    <path
+        android:pathData="M67,85m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
+        android:fillColor="#ECEFF1"
+        android:strokeWidth="0.6"
+        android:strokeColor="#90A4AE" />
+    <path
+        android:pathData="M66.4,78H67.6V85H66.4Z"
+        android:fillColor="#CFD8DC" />
+</vector>

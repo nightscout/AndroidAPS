@@ -11,12 +11,14 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.implementation.ImplementationStrings
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.stubTextRefResolution
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import app.aaps.core.ui.CoreUiStrings
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
@@ -128,13 +130,45 @@ class ConcentrationHelperImplTest : TestBase() {
 
     @Test
     fun basalRateString_percentAndAbsoluteBranches() {
+        useTempStep(0.05)
         assertThat(sut(1.0).basalRateString(PumpRate(1.5), isAbsolute = false)).isEqualTo("s") // percent branch
         assertThat(sut(1.0).basalRateString(PumpRate(1.5), isAbsolute = true)).isEqualTo("s")  // U100 absolute
         assertThat(sut(2.0).basalRateString(PumpRate(1.5), isAbsolute = true)).isEqualTo("s")  // non-U100 absolute
     }
 
+    /** @param wrapperStep the step of the concentration wrapper, in insulin units. With U100 it is the step of the driver. */
+    private fun useTempStep(step: Double, wrapperStep: Double = step) {
+        val wrapper = mock<PumpWithConcentration>()
+        whenever(wrapper.pumpDescription).thenReturn(PumpDescription().apply { tempAbsoluteStep = wrapperStep })
+        whenever(activePlugin.activePump).thenReturn(wrapper)
+        val driver = mock<Pump>()
+        whenever(driver.pumpDescription).thenReturn(PumpDescription().apply { tempAbsoluteStep = step })
+        whenever(activePlugin.activePumpInternal).thenReturn(driver)
+    }
+
+    /** A pump step of 0.025: 0.275 U/h must not be shown as 0.28 U/h. */
+    @Test
+    fun basalRateString_showsEveryRateThePumpCanRun() {
+        useTempStep(0.025)
+        sut(1.0).basalRateString(PumpRate(0.275), isAbsolute = true)
+        verify(rh).gs(CoreUiStrings.pump_base_basal_rate_dynamic, "0.275")
+    }
+
+    /**
+     * Review #79: with U200 the wrapper's step is 0.05 U, the driver's 0.025 cU. The pump unit part took the wrapper's two
+     * digits, so a pump rate of 0.275 cU/h showed as 0.28 cU/h.
+     */
+    @Test
+    fun basalRateString_thePumpUnitPartHasTheDigitsOfTheDriver() {
+        useTempStep(0.025, wrapperStep = 0.05)
+        sut(2.0).basalRateString(PumpRate(0.275), isAbsolute = true)
+        verify(rh).gs(ImplementationStrings.pump_base_basal_rate_cu_dynamic, "0.275")
+        verify(rh).gs(CoreUiStrings.pump_base_basal_rate_dynamic, "0.55")
+    }
+
     @Test
     fun basalTbrString_buildsString() {
+        useTempStep(0.05)
         assertThat(sut(1.0).basalTbrString(PumpRate(1.5), startTime = 0L, durationInMin = 30, isAbsolute = true, isExtended = false))
             .isEqualTo("s")
     }

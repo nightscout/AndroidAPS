@@ -145,7 +145,7 @@ internal fun TempBasalDialogContent(
             val confirmValue = if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
                 stringResource(CoreUiStrings.units_format_percent_value, NumberFormat.INTEGER.format(uiState.basalPercent))
             } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                stringResource(CoreUiStrings.pump_base_basal_rate, uiState.basalAbsolute)
+                stringResource(CoreUiStrings.pump_base_basal_rate_dynamic, uiState.tempAbsoluteFormat.format(uiState.basalAbsolute))
             } else {
                 stringResource(CoreUiStrings.ok)
             }
@@ -212,7 +212,7 @@ internal fun TempBasalDialogContent(
                             onValueChange = onBasalAbsoluteChange,
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
-                            valueFormat = NumberFormat.DECIMAL_2,
+                            valueFormat = uiState.tempAbsoluteFormat,
                             unitLabel = InterfacesStrings.profile_ins_units_per_hour,
                             modifier = itemModifier
                         )

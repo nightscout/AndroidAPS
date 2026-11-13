@@ -49,6 +49,7 @@ import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
+import app.aaps.core.ui.compose.icons.IcPluginAaruy
 import app.aaps.core.ui.compose.icons.IcPluginCarelevo
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
@@ -116,6 +117,8 @@ class UserEntryPresentationHelperImpl(
         Sources.BgFragment          -> IcAaps
         Sources.CalibrationDialog   -> IcCalibration
         Sources.CarbDialog          -> IcCarbs
+        Sources.AaruyBase           -> IcPluginAaruy
+        Sources.AaruyFull           -> IcPluginAaruy
         Sources.Carelevo            -> IcPluginCarelevo
         Sources.Combo               -> IcPluginCombo
         Sources.ConcentrationDialog -> IcPluginInsulin
@@ -277,6 +280,8 @@ class UserEntryPresentationHelperImpl(
         Sources.Wear                -> ElementType.AAPS.color()
         Sources.WizardDialog        -> ElementType.BOLUS_WIZARD.color()
         Sources.Xdrip               -> ElementType.CGM_XDRIP.color()
+        Sources.AaruyBase           -> ElementType.PUMP.color()
+        Sources.AaruyFull           -> ElementType.PUMP.color()
         Sources.Carelevo            -> ElementType.PUMP.color()
     }
 
