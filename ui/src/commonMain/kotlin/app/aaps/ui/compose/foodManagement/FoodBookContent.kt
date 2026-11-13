@@ -6,6 +6,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +28,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -70,6 +75,7 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.foodManagement.book.EatenMeal
 import app.aaps.ui.compose.foodManagement.book.ExportFile
 import app.aaps.ui.compose.foodManagement.book.MealTarget
+import app.aaps.ui.compose.foodManagement.book.Nutrient
 import app.aaps.ui.compose.foodManagement.book.Nutrition
 import app.aaps.ui.compose.foodManagement.book.Recipe
 import app.aaps.ui.compose.foodManagement.book.RecipeKind
@@ -123,6 +129,7 @@ internal fun RecipeList(
     selectedIds: Set<String>,
     nutritionOf: (Recipe) -> Nutrition?,
     problemOf: (Recipe) -> LineProblem? = { null },
+    photos: Map<String, ByteArray> = emptyMap(),
     onAdd: (Recipe) -> Unit,
     onSelect: (Recipe) -> Unit,
     onToggle: (Recipe) -> Unit,
@@ -150,6 +157,10 @@ internal fun RecipeList(
                 onLongClick = { if (selecting) onToggle(recipe) else if (!editing) onSelect(recipe) },
                 actions = { if (!editing) CardActions(name = recipe.name, onEdit = { onEdit(recipe) }, onCarbs = { onCarbs(recipe) }, onCalculate = { onCalculate(recipe) }) },
             ) {
+                recipe.photo?.let { photos[it] }?.let {
+                    FoodPhoto(bytes = it, size = AapsSpacing.foodThumbnailSize)
+                    Spacer(modifier = Modifier.width(AapsSpacing.medium))
+                }
                 CardTexts(
                     name = recipe.name,
                     detail = joinLines(recipe.items.map { item ->
@@ -160,6 +171,7 @@ internal fun RecipeList(
                         stringResource(UiStrings.food_book_item, item.name, amount)
                     }),
                     detailLines = 2,
+                    extra = nutrition?.let { nutritionText(it) }.orEmpty(),
                 )
                 CardValues(
                     portion = null,
@@ -219,17 +231,83 @@ internal fun SelectableCard(
 
 /** First column of a card: the name on up to 2 lines, and a detail line below. It takes all the free width. */
 @Composable
-internal fun RowScope.CardTexts(name: String, detail: String, detailLines: Int = 1) {
+internal fun RowScope.CardTexts(name: String, detail: String, detailLines: Int = 1, extra: String = "") {
     Column(modifier = Modifier.weight(1f)) {
         Text(text = name, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
-        if (detail.isNotEmpty()) {
-            Text(
-                text = detail,
+        listOf(detail to detailLines, extra to 1).forEach { (text, lines) ->
+            if (text.isNotEmpty()) Text(
+                text = text,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = detailLines,
+                maxLines = lines,
                 overflow = TextOverflow.Ellipsis
             )
+        }
+    }
+}
+
+/**
+ * "F: 12 g, P: >8 g, 1500 kJ": fat, protein and energy. A value known for only part of the foods is
+ * shown with ">": the real value is at least this one. A value not known, or 0, is not shown.
+ */
+@Composable
+internal fun nutritionText(nutrition: Nutrition): String {
+    val grams = stringResource(CoreUiStrings.units_grams)
+    val parts = buildList {
+        Nutrient.entries.forEach { nutrient ->
+            val value = nutrition.valueOf(nutrient)?.takeIf { it > 0 } ?: return@forEach
+            val number = if (nutrient == Nutrient.ENERGY) value.roundToInt().toString() else MealMath.formatAmount(value)
+            val shown = if (nutrient in nutrition.partial) stringResource(UiStrings.food_value_at_least, number) else number
+            // F and P were never translated; only the separator and the unit are.
+            add(
+                when (nutrient) {
+                    Nutrient.FAT     -> stringResource(InterfacesStrings.confirmation_line, "F", stringResource(CoreUiStrings.value_with_unit, shown, grams))
+                    Nutrient.PROTEIN -> stringResource(InterfacesStrings.confirmation_line, "P", stringResource(CoreUiStrings.value_with_unit, shown, grams))
+                    Nutrient.ENERGY  -> stringResource(CoreUiStrings.value_with_unit, shown, "kJ")
+                }
+            )
+        }
+    }
+    return joinLines(parts)
+}
+
+/**
+ * The photo of a food, a dish or a meal, with the buttons to take one with the camera or to remove
+ * it. The camera opens in place.
+ *
+ * @param shown the photo shown, or null
+ * @param canRemove true when [shown] is a photo of the user (an OFF photo cannot be removed)
+ */
+@Composable
+internal fun ColumnScope.UserPhotoSection(
+    shown: ByteArray?,
+    canRemove: Boolean,
+    showCamera: Boolean,
+    onOpenCamera: () -> Unit,
+    onCloseCamera: () -> Unit,
+    onPhoto: (ByteArray) -> Unit,
+    onRemove: () -> Unit,
+) {
+    shown?.let { FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize, modifier = Modifier.align(Alignment.CenterHorizontally)) }
+    if (!foodPhotoCameraAvailable) return
+    if (showCamera) {
+        FoodPhotoCamera(
+            onPhoto = onPhoto,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(4f / 3f)
+        )
+        TextButton(onClick = onCloseCamera, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Text(stringResource(CoreUiStrings.cancel))
+        }
+    } else Row(modifier = Modifier.align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+        TextButton(onClick = onOpenCamera) {
+            Icon(Icons.Filled.PhotoCamera, contentDescription = null)
+            Spacer(Modifier.width(AapsSpacing.small))
+            Text(stringResource(UiStrings.food_photo_take))
+        }
+        if (canRemove) TextButton(onClick = onRemove) {
+            Text(stringResource(UiStrings.food_photo_remove))
         }
     }
 }
@@ -295,9 +373,10 @@ internal fun EatenMealList(
     timeText: (Long) -> String,
     onShowCalculation: (BCR) -> Unit,
     images: Map<Long, ByteArray> = emptyMap(),
+    photos: Map<String, ByteArray> = emptyMap(),
 ) {
     var detail by remember { mutableStateOf<EatenMeal?>(null) }
-    detail?.let { meal -> EatenMealDetail(meal, images, timeText, onDismiss = { detail = null }) }
+    detail?.let { meal -> EatenMealDetail(meal, images, photos, timeText, onDismiss = { detail = null }) }
     if (meals.isEmpty()) {
         EmptyText(stringResource(UiStrings.food_book_no_history))
         return
@@ -316,13 +395,13 @@ internal fun EatenMealList(
             )
         }
         items(meals, key = { it.id }) { meal ->
-            EatenMealCard(meal, links[meal.id], timeText, onShowCalculation = onShowCalculation, onShowDetail = { detail = meal })
+            EatenMealCard(meal, links[meal.id], meal.photo?.let { photos[it] }, timeText, onShowCalculation = onShowCalculation, onShowDetail = { detail = meal })
         }
     }
 }
 
 @Composable
-private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long) -> String, onShowCalculation: (BCR) -> Unit, onShowDetail: () -> Unit) {
+private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, photo: ByteArray?, timeText: (Long) -> String, onShowCalculation: (BCR) -> Unit, onShowDetail: () -> Unit) {
     // A saved dish or meal sent as it is shows its name only, the lines are folded. A meal put
     // together on the spot, or a saved meal changed before it was sent, shows its lines.
     val foldable = meal.name != null && !meal.changed
@@ -340,6 +419,11 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long
         ) {
             val type = if (meal.target == MealTarget.WIZARD) ElementType.BOLUS_WIZARD else ElementType.CARBS
             Row(verticalAlignment = Alignment.CenterVertically) {
+                // The photo of the dish or meal sent, as on the other tabs. The photos of the foods are in the detail.
+                if (photo != null) {
+                    FoodPhoto(bytes = photo, size = AapsSpacing.foodThumbnailSize)
+                    Spacer(modifier = Modifier.width(AapsSpacing.medium))
+                }
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = timeText(meal.timestamp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     meal.name?.let { Text(text = it, style = MaterialTheme.typography.titleSmall) }
@@ -410,7 +494,7 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, timeText: (Long
 
 /** The lines of an eaten meal with the photo of each food, and the total. */
 @Composable
-private fun EatenMealDetail(meal: EatenMeal, images: Map<Long, ByteArray>, timeText: (Long) -> String, onDismiss: () -> Unit) {
+private fun EatenMealDetail(meal: EatenMeal, images: Map<Long, ByteArray>, photos: Map<String, ByteArray>, timeText: (Long) -> String, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(meal.name ?: timeText(meal.timestamp)) },
@@ -422,7 +506,7 @@ private fun EatenMealDetail(meal: EatenMeal, images: Map<Long, ByteArray>, timeT
                 if (meal.name != null) Text(timeText(meal.timestamp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 meal.items.forEach { item ->
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                        FoodPhoto(bytes = item.foodId?.let { images[it] }, size = AapsSpacing.foodThumbnailSize)
+                        FoodPhoto(bytes = item.foodId?.let { images[it] } ?: item.photo?.let { photos[it] }, size = AapsSpacing.foodThumbnailSize)
                         Column(modifier = Modifier.weight(1f)) {
                             Text(item.name, style = MaterialTheme.typography.bodyLarge)
                             Text(
@@ -445,10 +529,18 @@ private fun EatenMealDetail(meal: EatenMeal, images: Map<Long, ByteArray>, timeT
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
+                NutritionLine(Nutrition.sum(meal.items.map { it.nutrition }))
             }
         },
         confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.close)) } }
     )
+}
+
+/** Fat, protein and energy under a total, when one of them is known. */
+@Composable
+internal fun NutritionLine(nutrition: Nutrition) {
+    val text = nutritionText(nutrition)
+    if (text.isNotEmpty()) Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
 @Composable
@@ -521,7 +613,13 @@ internal fun RecipeEditContent(
     recipe: Recipe,
     name: String,
     items: List<MealItem>,
-    images: Map<Long, ByteArray> = emptyMap(),
+    imageOf: (MealItem) -> ByteArray? = { null },
+    photo: ByteArray? = null,
+    showCamera: Boolean = false,
+    onOpenCamera: () -> Unit = {},
+    onCloseCamera: () -> Unit = {},
+    onPhoto: (ByteArray) -> Unit = {},
+    onRemovePhoto: () -> Unit = {},
     onNameChange: (String) -> Unit,
     onEditLine: (Long) -> Unit,
     onRemove: (Long) -> Unit,
@@ -554,8 +652,18 @@ internal fun RecipeEditContent(
             isError = name.isBlank(),
             modifier = Modifier.fillMaxWidth()
         )
+        // A photo of the whole dish or plate: shown on its card and in the history. Optional.
+        UserPhotoSection(
+            shown = photo,
+            canRemove = photo != null,
+            showCamera = showCamera,
+            onOpenCamera = onOpenCamera,
+            onCloseCamera = onCloseCamera,
+            onPhoto = onPhoto,
+            onRemove = onRemovePhoto,
+        )
         Text(text = stringResource(UiStrings.food_book_edit_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        items.forEach { item -> MealLine(item, image = item.foodId?.let { images[it] }, onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
+        items.forEach { item -> MealLine(item, image = imageOf(item), onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
         HorizontalDivider()
         Text(
             text = stringResource(
@@ -565,6 +673,7 @@ internal fun RecipeEditContent(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
+        NutritionLine(MealMath.total(items))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
             TextButton(onClick = onAddFood) { Text(stringResource(UiStrings.food_book_add_food)) }
             TextButton(onClick = onAddByHand) { Text(stringResource(UiStrings.food_meal_add_by_hand)) }

@@ -28,6 +28,7 @@ import app.aaps.ui.compose.foodManagement.book.EatenMeal
 import app.aaps.ui.compose.foodManagement.book.ExportFile
 import app.aaps.ui.compose.foodManagement.book.FileResult
 import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
+import app.aaps.ui.compose.foodManagement.book.FoodBook
 import app.aaps.ui.compose.foodManagement.book.FoodBookMath
 import app.aaps.ui.compose.foodManagement.book.FoodCsv
 import app.aaps.ui.compose.foodManagement.book.FoodExportFiles
@@ -187,7 +188,9 @@ class FoodManagementViewModel(
                 foodBook.addRestored(merge.copy(meals = meals))
                 // OFF photos are named by barcode and shared: all are kept. A photo of the user only
                 // when its food took it, so a food that kept its own photo leaves no unused file.
-                val userKeys = merge.photos.map { it.key }.toSet()
+                val userKeys = merge.photos.map { it.key }.toSet() +
+                    merge.recipes.mapNotNull { it.photo } +
+                    meals.flatMap { meal -> listOfNotNull(meal.photo) + meal.items.mapNotNull { it.photo } }
                 archive?.forEach { (entry, bytes) ->
                     val key = FoodBackupMath.keyOfEntry(entry) ?: return@forEach
                     if (!key.startsWith(FoodImages.USER_KEY_PREFIX) || key in userKeys) foodImages.restoreFile(key, bytes)
@@ -255,7 +258,10 @@ class FoodManagementViewModel(
         viewModelScope.launch {
             foodBook.load()
             refreshTreatmentLinks()
-            foodBook.book.collect { book -> _uiState.update { it.copy(recipes = book.recipes, eatenMeals = book.eaten) } }
+            foodBook.book.collect { book ->
+                _uiState.update { it.copy(recipes = book.recipes, eatenMeals = book.eaten) }
+                loadRecipePhotos(book)
+            }
         }
     }
 
@@ -280,11 +286,21 @@ class FoodManagementViewModel(
                 val categories = foods.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct().sorted()
                 val subCategories = foods.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
                 _uiState.update {
+                    // A filter on a group that no longer has any food (its last food was moved to
+                    // another group, or deleted) would hide every food, with no filter chip shown to
+                    // clear it. It is removed, so the whole list comes back.
+                    val category = it.filterCategory?.takeIf { c -> foods.any { f -> f.category == c } }
+                    // A subcategory belongs to its category: it goes with it.
+                    val subCategory = it.filterSubCategory
+                        ?.takeIf { _ -> it.filterCategory == null || category != null }
+                        ?.takeIf { s -> foods.any { f -> f.subCategory == s && (category == null || f.category == category) } }
                     it.copy(
                         foods = foods,
                         foodImages = images,
                         allCategories = categories,
                         allSubCategories = subCategories,
+                        filterCategory = category,
+                        filterSubCategory = subCategory,
                         isLoading = false
                     )
                 }
@@ -293,6 +309,16 @@ class FoodManagementViewModel(
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
+    }
+
+    /** Reads the photos of the dishes, meals and history that are not read yet. */
+    private suspend fun loadRecipePhotos(book: FoodBook) {
+        val keys = book.recipes.mapNotNull { it.photo } + book.eaten.flatMap { meal -> listOfNotNull(meal.photo) + meal.items.mapNotNull { it.photo } }
+        val known = uiState.value.recipePhotos
+        val missing = keys.filter { it !in known }
+        if (missing.isEmpty()) return
+        val read = foodImages.read(missing)
+        if (read.isNotEmpty()) _uiState.update { it.copy(recipePhotos = it.recipePhotos + read) }
     }
 
     fun setSearchQuery(query: String) {
@@ -643,6 +669,7 @@ class FoodManagementViewModel(
             protein = nutrition.protein,
             energyKj = nutrition.energyKj,
             recipeId = recipe.id,
+            partial = nutrition.partial,
         )
     }
 
@@ -698,10 +725,22 @@ class FoodManagementViewModel(
                 mealSource = null,
                 editing = recipe,
                 editName = recipe.name,
+                editPhoto = recipe.photo?.let { key -> it.recipePhotos[key] },
+                editPhotoChanged = false,
+                showEditCamera = false,
                 showMeal = true,
             )
         }
     }
+
+    fun openEditCamera() = _uiState.update { it.copy(showEditCamera = true) }
+
+    fun closeEditCamera() = _uiState.update { it.copy(showEditCamera = false) }
+
+    /** The photo of the dish or meal being changed. It is saved with the dish. */
+    fun takeEditPhoto(bytes: ByteArray) = _uiState.update { it.copy(editPhoto = bytes, editPhotoChanged = true, showEditCamera = false) }
+
+    fun removeEditPhoto() = _uiState.update { it.copy(editPhoto = null, editPhotoChanged = true) }
 
     fun updateEditName(v: String) = _uiState.update { it.copy(editName = v) }
 
@@ -718,7 +757,16 @@ class FoodManagementViewModel(
         if (nameUsed(name, recipe.kind, except = recipe.id)) return showMessage(UiStrings.food_book_name_used, name)
         val items = recipeItemsOf(state.mealItems)
         if (FoodBookMath.makesLoop(recipe.id, items, recipesById())) return showMessage(UiStrings.food_book_loop)
-        viewModelScope.launch { foodBook.saveRecipe(recipe.copy(name = name, items = items)) }
+        val photoChanged = state.editPhotoChanged
+        val newPhoto = state.editPhoto
+        viewModelScope.launch {
+            val photo = if (!photoChanged) recipe.photo else newPhoto?.let { bytes ->
+                foodImages.savePhoto(bytes)?.also { key -> _uiState.update { it.copy(recipePhotos = it.recipePhotos + (key to bytes)) } }
+            }
+            foodBook.saveRecipe(recipe.copy(name = name, items = items, photo = photo))
+            // The old file stays while a meal of the history shows it.
+            if (photoChanged) recipe.photo?.let { foodImages.deleteUnused(listOf(it)) }
+        }
         endEdit()
         showMessage(UiStrings.food_book_saved, name)
     }
@@ -731,6 +779,9 @@ class FoodManagementViewModel(
             parkedSource = null,
             editing = null,
             editName = "",
+            editPhoto = null,
+            editPhotoChanged = false,
+            showEditCamera = false,
             showMeal = false,
         )
     }
@@ -779,7 +830,8 @@ class FoodManagementViewModel(
         val state = uiState.value
         // A standard meal whose lines were changed before sending ("croissant instead of bread").
         val changed = state.mealSource?.let { source -> linesOf(source)?.map { lineKey(it) } != state.mealItems.map { lineKey(it) } } ?: false
-        val (id, result) = record(state.mealItems, state.mealSource?.name, target, changed)
+        val photo = state.mealSource?.let { source -> recipesById()[source.id]?.photo }
+        val (id, result) = record(state.mealItems, state.mealSource?.name, target, changed, photo)
         _uiState.update { it.copy(pendingMealId = id, showMeal = false) }
         return result
     }
@@ -795,14 +847,15 @@ class FoodManagementViewModel(
             showMessage(UiStrings.food_book_missing)
             return null
         }
-        return record(lines, recipe.name, target).second
+        return record(lines, recipe.name, target, photo = recipe.photo).second
     }
 
     /** Returns the id of the saved copy, and the carbs and note for the dialog. */
     @OptIn(ExperimentalUuidApi::class)
     private fun lineKey(item: MealItem) = Triple(item.name, item.quantity, item.unit)
 
-    private fun record(items: List<MealItem>, name: String?, target: MealTarget, changed: Boolean = false): Pair<String, Pair<Int, String>> {
+    private fun record(items: List<MealItem>, name: String?, target: MealTarget, changed: Boolean = false, photo: String? = null): Pair<String, Pair<Int, String>> {
+        val recipes = recipesById()
         val carbs = MealMath.wizardCarbs(items)
         val note = noteFor(items)
         val meal = EatenMeal(
@@ -811,9 +864,15 @@ class FoodManagementViewModel(
             name = name,
             note = note,
             wizardCarbs = carbs,
-            items = items.map { EatenItem(it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated, foodId = it.foodId) },
+            items = items.map {
+                EatenItem(
+                    it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated, foodId = it.foodId,
+                    photo = it.recipeId?.let { id -> recipes[id]?.photo }, partial = it.partial
+                )
+            },
             target = target,
             changed = changed,
+            photo = photo,
         )
         viewModelScope.launch { foodBook.addEatenMeal(meal) }
         return meal.id to (carbs to note)
@@ -1140,7 +1199,11 @@ class FoodManagementViewModel(
                     aapsLogger.error(LTag.UI, "Failed to delete food", e)
                 }
             }
-            if (recipeIds.isNotEmpty()) foodBook.deleteRecipes(recipeIds)
+            if (recipeIds.isNotEmpty()) {
+                val photos = state.recipes.filter { it.id in recipeIds }.mapNotNull { it.photo }
+                foodBook.deleteRecipes(recipeIds)
+                foodImages.deleteUnused(photos)
+            }
         }
         _uiState.update { s -> s.copy(foods = s.foods.filterNot { it.id in s.selectedFoodIds }) }
         exitSelection()
@@ -1198,6 +1261,8 @@ data class FoodManagementUiState(
     val showPhotoCamera: Boolean = false,
     /** The photo shown for each food on the list, by food id: the photo of the user, or else the OFF photo. */
     val foodImages: Map<Long, ByteArray> = emptyMap(),
+    /** The photos of the dishes, meals and history, by key. */
+    val recipePhotos: Map<String, ByteArray> = emptyMap(),
     // Open Food Facts import (proof of concept)
     val showImport: Boolean = false,
     val importQuery: String = "",
@@ -1236,6 +1301,10 @@ data class FoodManagementUiState(
     /** The dish or meal being changed (pencil). While set, the meal lines are its lines. */
     val editing: Recipe? = null,
     val editName: String = "",
+    /** The photo of the dish or meal being changed, and whether the user changed it. */
+    val editPhoto: ByteArray? = null,
+    val editPhotoChanged: Boolean = false,
+    val showEditCamera: Boolean = false,
     /** The meal being put together, kept aside while a dish or meal is changed. */
     val parkedItems: List<MealItem> = emptyList(),
     val parkedSource: Recipe? = null,
@@ -1256,6 +1325,11 @@ data class FoodManagementUiState(
 
     /** The meals shown in the history: only those whose treatment was found. */
     val confirmedMeals: List<EatenMeal> get() = eatenMeals.filter { it.validatedAt != null || it.id in treatmentLinks }
+
+    /** The photo of a line of a meal or a dish: the photo of its food, or of its dish. */
+    fun imageOf(item: MealItem): ByteArray? =
+        item.foodId?.let { foodImages[it] }
+            ?: item.recipeId?.let { id -> recipes.firstOrNull { it.id == id }?.photo }?.let { recipePhotos[it] }
 }
 
 enum class FoodTab { FOODS, DISHES, MEALS, HISTORY }

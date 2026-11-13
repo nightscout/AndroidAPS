@@ -63,13 +63,19 @@ enum class RecipeKind {
     MEAL
 }
 
-/** A saved dish or meal. Its values are always computed from the foods it uses, never stored. */
+/**
+ * A saved dish or meal. Its values are always computed from the foods it uses, never stored.
+ *
+ * @param photo key of a photo taken by the user in [FoodImageStore] (a home-made dish, or the whole
+ *   plate), or null. Added later: an older file reads as "no photo".
+ */
 @Serializable
 data class Recipe(
     val id: String,
     val name: String,
     val kind: RecipeKind,
     val items: List<RecipeItem>,
+    val photo: String? = null,
 )
 
 /**
@@ -131,6 +137,11 @@ data class EatenMeal(
     val treatmentId: Long? = null,
     /** True when a saved meal was changed before it was sent: the history then shows its lines. */
     val changed: Boolean = false,
+    /**
+     * Key of the photo of the dish or meal sent, as it was then. The file is kept while a meal of the
+     * history uses it, also when the dish is deleted or gets another photo.
+     */
+    val photo: String? = null,
 )
 
 /** @param estimated true for a line typed by hand: its carbs are the estimate of the user. */
@@ -146,7 +157,14 @@ data class EatenItem(
     val estimated: Boolean = false,
     /** The food of the line, to show its photo. Null for older meals, dishes and lines typed by hand. */
     val foodId: Long? = null,
-)
+    /** For a dish line: key of the photo of the dish, as it was then. */
+    val photo: String? = null,
+    /** The values of [fat], [protein] and [energyKj] that are only the part known, see [Nutrition]. */
+    val partial: Set<Nutrient> = emptySet(),
+) {
+
+    val nutrition: Nutrition get() = Nutrition(carbs, fat, protein, energyKj, partial)
+}
 
 /**
  * The treatment found for an eaten meal.
@@ -159,28 +177,63 @@ data class EatenItem(
  */
 data class TreatmentLink(val id: Long, val timestamp: Long, val insulin: Double?, val carbs: Double, val sameNote: Boolean, val bcr: BCR? = null)
 
-/** Nutrition of a quantity. A value is null when one of the foods does not have it. */
+/** The values of a food that can be missing: a food does not always have them. */
+@Serializable
+enum class Nutrient { FAT, PROTEIN, ENERGY }
+
+/**
+ * Nutrition of a quantity.
+ *
+ * Carbs are always known. Fat, protein and energy are not known for every food. A value is the sum of
+ * the foods that have it, and null when none has it. When some foods have it and others do not, the
+ * value is only the part known: it is in [partial], and the real value is at least this one. It is
+ * shown as such (">12 g"). These values are only shown: they are never sent to a dialog.
+ */
 data class Nutrition(
     val carbs: Double,
     val fat: Double?,
     val protein: Double?,
     val energyKj: Double?,
+    val partial: Set<Nutrient> = emptySet(),
 ) {
 
-    operator fun plus(other: Nutrition) = Nutrition(
-        carbs = carbs + other.carbs,
-        fat = sum(fat, other.fat),
-        protein = sum(protein, other.protein),
-        energyKj = sum(energyKj, other.energyKj),
-    )
+    operator fun plus(other: Nutrition): Nutrition {
+        val missing = mutableSetOf<Nutrient>()
+        missing += partial
+        missing += other.partial
+        fun add(nutrient: Nutrient, a: Double?, b: Double?): Double? {
+            if (a == null || b == null) {
+                if (a != null || b != null) missing += nutrient
+                return a ?: b
+            }
+            return a + b
+        }
+        return Nutrition(
+            carbs = carbs + other.carbs,
+            fat = add(Nutrient.FAT, fat, other.fat),
+            protein = add(Nutrient.PROTEIN, protein, other.protein),
+            energyKj = add(Nutrient.ENERGY, energyKj, other.energyKj),
+            partial = missing,
+        )
+    }
 
-    operator fun times(factor: Double) = Nutrition(carbs * factor, fat?.times(factor), protein?.times(factor), energyKj?.times(factor))
+    operator fun times(factor: Double) = Nutrition(carbs * factor, fat?.times(factor), protein?.times(factor), energyKj?.times(factor), partial)
 
-    private fun sum(a: Double?, b: Double?): Double? = if (a == null || b == null) null else a + b
+    /** The value of [nutrient] only when it is complete, for a file that must hold exact values. */
+    fun exact(nutrient: Nutrient): Double? = if (nutrient in partial) null else valueOf(nutrient)
+
+    fun valueOf(nutrient: Nutrient): Double? = when (nutrient) {
+        Nutrient.FAT     -> fat
+        Nutrient.PROTEIN -> protein
+        Nutrient.ENERGY  -> energyKj
+    }
 
     companion object {
 
         val ZERO = Nutrition(0.0, 0.0, 0.0, 0.0)
+
+        /** The total of the lines. Empty lines give [ZERO]. */
+        fun sum(lines: List<Nutrition>): Nutrition = lines.reduceOrNull { a, b -> a + b } ?: ZERO
     }
 }
 
@@ -332,9 +385,9 @@ internal object FoodBookMath {
 
     private fun nutritionOf(recipe: Recipe, foods: Map<Long, FD>, recipes: Map<String, Recipe>, visiting: List<String>): Nutrition? {
         if (recipe.id in visiting || visiting.size >= MAX_DEPTH) return null
-        var total = Nutrition.ZERO
-        for (item in recipe.items) total += nutritionOf(item, foods, recipes, visiting + recipe.id) ?: return null
-        return total
+        val lines = recipe.items.map { item -> nutritionOf(item, foods, recipes, visiting + recipe.id) ?: return null }
+        // Not started from ZERO: a 0 there would make "no line has fat" look like "fat known, 0 g".
+        return Nutrition.sum(lines)
     }
 
     private fun nutritionOf(item: RecipeItem, foods: Map<Long, FD>, recipes: Map<String, Recipe>, visiting: List<String>): Nutrition? {

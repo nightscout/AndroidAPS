@@ -391,6 +391,7 @@
     <string name="food_off_allow_camera">Allow the camera</string>
     <string name="food_photo_take">Take a photo</string>
     <string name="food_photo_remove">Remove the photo</string>
+    <string name="food_value_at_least" comment="A total of fat, protein or energy known for only part of the foods of a meal: the real value is at least this one. %1$s=the number. Example: >12 (shown as F: >12 g)">&gt;%1$s</string>
     <string name="food_photo_camera_refused">The camera is needed to take a photo.</string>
     <string name="food_off_not_found">No product found.</string>
     <string name="food_off_offline">No internet connection. You need internet to import a food.</string>

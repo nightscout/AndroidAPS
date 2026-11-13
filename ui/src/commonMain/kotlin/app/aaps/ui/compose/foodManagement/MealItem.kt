@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.foodManagement
 
 import app.aaps.core.data.model.FD
+import app.aaps.ui.compose.foodManagement.book.Nutrient
+import app.aaps.ui.compose.foodManagement.book.Nutrition
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OffProduct
 import kotlin.math.roundToInt
 
@@ -21,6 +23,7 @@ import kotlin.math.roundToInt
  *   the unit of its food changed. Only found while a dish or a meal is changed, so the user can
  *   remove or correct the line. Its carbs are not known (0 here), so a dish or meal with such a line
  *   cannot be saved.
+ * @param partial for a dish line: the values that are only the part known, see [Nutrition]
  */
 data class MealItem(
     val key: Long,
@@ -35,7 +38,11 @@ data class MealItem(
     val recipeId: String? = null,
     val estimated: Boolean = false,
     val problem: LineProblem? = null,
-)
+    val partial: Set<Nutrient> = emptySet(),
+) {
+
+    val nutrition: Nutrition get() = Nutrition(carbs, fat, protein, energyKj, partial)
+}
 
 /** Why a line of a saved dish or meal cannot be computed any more. */
 enum class LineProblem {
@@ -67,6 +74,9 @@ internal object MealMath {
         else food.carbs * quantity
 
     fun totalCarbs(items: List<MealItem>): Double = items.sumOf { it.carbs }
+
+    /** Carbs, fat, protein and energy of the lines. A line with a problem is not counted. */
+    fun total(items: List<MealItem>): Nutrition = Nutrition.sum(items.filter { it.problem == null }.map { it.nutrition })
 
     /** The wizard takes whole grams. */
     fun wizardCarbs(items: List<MealItem>): Int = totalCarbs(items).roundToInt()

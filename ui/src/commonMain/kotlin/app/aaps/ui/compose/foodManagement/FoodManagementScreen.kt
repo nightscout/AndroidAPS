@@ -1,8 +1,6 @@
 package app.aaps.ui.compose.foodManagement
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -74,6 +72,7 @@ import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.foodManagement.book.MealTarget
+import app.aaps.ui.compose.foodManagement.book.Nutrition
 import app.aaps.ui.compose.foodManagement.book.RecipeKind
 import app.aaps.ui.compose.treatments.WizardInfoDialog
 
@@ -212,6 +211,7 @@ fun FoodManagementScreen(
                         selectedIds = state.selectedRecipeIds,
                         nutritionOf = viewModel::nutritionOf,
                         problemOf = viewModel::problemOf,
+                        photos = state.recipePhotos,
                         onAdd = { if (kind == RecipeKind.DISH) viewModel.askQuantity(it) else viewModel.addRecipeLines(it) },
                         onSelect = viewModel::startSelection,
                         onToggle = viewModel::toggleSelection,
@@ -229,6 +229,7 @@ fun FoodManagementScreen(
                         timeText = viewModel::timeText,
                         onShowCalculation = { shownCalculation = it },
                         images = state.foodImages,
+                        photos = state.recipePhotos,
                     )
                     return@Column
                 }
@@ -376,7 +377,13 @@ fun FoodManagementScreen(
                         recipe = recipe,
                         name = state.editName,
                         items = state.mealItems,
-                        images = state.foodImages,
+                        imageOf = state::imageOf,
+                        photo = state.editPhoto,
+                        showCamera = state.showEditCamera,
+                        onOpenCamera = viewModel::openEditCamera,
+                        onCloseCamera = viewModel::closeEditCamera,
+                        onPhoto = viewModel::takeEditPhoto,
+                        onRemovePhoto = viewModel::removeEditPhoto,
                         onNameChange = viewModel::updateEditName,
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
@@ -389,7 +396,7 @@ fun FoodManagementScreen(
                     MealContent(
                         items = state.mealItems,
                         sourceName = state.mealSource?.name,
-                        images = state.foodImages,
+                        imageOf = state::imageOf,
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
                         onClear = viewModel::clearMeal,
@@ -452,19 +459,13 @@ private fun FoodItem(
         onLongClick = { if (selecting) onToggle() else if (!editing) onSelect() },
         actions = { if (!editing) CardActions(name = food.name, onEdit = onEdit, onCarbs = onCarbs, onCalculate = onCalculate) },
     ) {
-        val extras = buildList {
-            // F and P were never translated; only the separator and the unit are.
-            val grams = stringResource(CoreUiStrings.units_grams)
-            food.fat?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "F", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
-            food.protein?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "P", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
-            food.energy?.let { if (it > 0) add(stringResource(CoreUiStrings.value_with_unit, it.toString(), "kJ")) }
-        }
+        val extras = nutritionText(Nutrition(food.carbs.toDouble(), food.fat?.toDouble(), food.protein?.toDouble(), food.energy?.toDouble()))
         // Only foods imported from Open Food Facts have a photo. It tells close products apart.
         if (image != null) {
             FoodPhoto(bytes = image, size = AapsSpacing.foodThumbnailSize)
             Spacer(modifier = Modifier.width(AapsSpacing.medium))
         }
-        CardTexts(name = food.name, detail = joinLines(extras))
+        CardTexts(name = food.name, detail = extras)
         CardValues(
             portion = if (food.portion > 0) stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(food.portion), food.unit) else null,
             carbs = stringResource(InterfacesStrings.format_carbs, food.carbs),
@@ -496,7 +497,16 @@ private fun SuggestionField(value: String, onValueChange: (String) -> Unit, labe
             label = { Text(label) },
             singleLine = true,
             // No arrow when there is nothing to propose: the label keeps the whole width.
-            trailingIcon = if (suggestions.isEmpty()) null else { { ExposedDropdownMenuDefaults.TrailingIcon(expanded = open) } },
+            // The arrow is its own anchor: it opens the list without the focus, so the keyboard does
+            // not come up and hide the list. A tap on the text gives the focus, to type a new value.
+            trailingIcon = if (suggestions.isEmpty()) null else {
+                {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = open,
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable)
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable)
@@ -556,31 +566,15 @@ internal fun FoodEditorContent(
 
         // The photo of the user, or else the package from OFF, to check the values against it.
         // The OFF photo is downloaded again when the file is missing.
-        (state.editorUserPhoto ?: state.editorImage)?.let {
-            FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize, modifier = Modifier.align(Alignment.CenterHorizontally))
-        }
-        if (foodPhotoCameraAvailable) {
-            if (state.showPhotoCamera) {
-                FoodPhotoCamera(
-                    onPhoto = onPhoto,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(4f / 3f)
-                )
-                TextButton(onClick = onClosePhotoCamera, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    Text(stringResource(CoreUiStrings.cancel))
-                }
-            } else Row(modifier = Modifier.align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                TextButton(onClick = onOpenPhotoCamera) {
-                    Icon(Icons.Filled.PhotoCamera, contentDescription = null)
-                    Spacer(Modifier.width(AapsSpacing.small))
-                    Text(stringResource(UiStrings.food_photo_take))
-                }
-                if (state.editorUserPhoto != null) TextButton(onClick = onRemovePhoto) {
-                    Text(stringResource(UiStrings.food_photo_remove))
-                }
-            }
-        }
+        UserPhotoSection(
+            shown = state.editorUserPhoto ?: state.editorImage,
+            canRemove = state.editorUserPhoto != null,
+            showCamera = state.showPhotoCamera,
+            onOpenCamera = onOpenPhotoCamera,
+            onCloseCamera = onClosePhotoCamera,
+            onPhoto = onPhoto,
+            onRemove = onRemovePhoto,
+        )
 
         state.editorOffProduct?.let {
             OffEditorBanner(product = it, perServing = state.editorOffPerServing, onPerServingChange = onOffPerServingChange)

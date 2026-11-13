@@ -304,7 +304,7 @@ internal fun MealBar(items: List<MealItem>, editingName: String?, onClick: () ->
 internal fun MealContent(
     items: List<MealItem>,
     sourceName: String?,
-    images: Map<Long, ByteArray> = emptyMap(),
+    imageOf: (MealItem) -> ByteArray? = { null },
     onEditLine: (Long) -> Unit,
     onRemove: (Long) -> Unit,
     onClear: () -> Unit,
@@ -325,13 +325,14 @@ internal fun MealContent(
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
         Text(text = sourceName ?: stringResource(UiStrings.food_meal_title), style = MaterialTheme.typography.titleLarge)
-        items.forEach { item -> MealLine(item, image = item.foodId?.let { images[it] }, onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
+        items.forEach { item -> MealLine(item, image = imageOf(item), onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
         HorizontalDivider()
         Text(
             text = stringResource(UiStrings.food_meal_total, grams(MealMath.totalCarbs(items))),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
+        NutritionLine(MealMath.total(items))
         OffNotice(text = stringResource(UiStrings.food_meal_check))
         // Wraps to two lines on a narrow screen instead of squeezing the buttons.
         FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

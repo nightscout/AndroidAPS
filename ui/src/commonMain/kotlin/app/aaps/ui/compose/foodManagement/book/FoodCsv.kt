@@ -66,8 +66,9 @@ class FoodCsv(
                         dateUtil.dateString(time), dateUtil.timeString(time), text(meal.name.orEmpty()), text(enteredWith(meal.target)),
                         // A line typed by hand has no quantity: its unit column says the carbs are an estimate.
                         text(item.name), if (item.estimated) "" else number(item.quantity),
-                        text(if (item.estimated) rh.gs(UiStrings.food_meal_estimated) else item.unit), number(item.carbs), number(item.fat),
-                        number(item.protein), number(item.energyKj),
+                        text(if (item.estimated) rh.gs(UiStrings.food_meal_estimated) else item.unit), number(item.carbs),
+                        // Only exact values: a dish line with a value known for part of its foods is left empty.
+                        number(item.nutrition.exact(Nutrient.FAT)), number(item.nutrition.exact(Nutrient.PROTEIN)), number(item.nutrition.exact(Nutrient.ENERGY)),
                         if (first) number(link?.carbs) else "",
                         if (first) given[meal.id]?.let { decimalFormatter.to2Decimal(it) }.orEmpty() else ""
                     )
@@ -100,7 +101,7 @@ class FoodCsv(
             listOf(
                 text(rh.gs(if (recipe.kind == RecipeKind.DISH) UiStrings.food_book_kind_dish else UiStrings.food_book_kind_meal)),
                 text(recipe.name), "", "", number(1.0), text(rh.gs(UiStrings.food_book_servings)), number(nutrition?.carbs),
-                number(nutrition?.fat), number(nutrition?.protein), number(nutrition?.energyKj), text(contentsOf(recipe))
+                number(nutrition?.exact(Nutrient.FAT)), number(nutrition?.exact(Nutrient.PROTEIN)), number(nutrition?.exact(Nutrient.ENERGY)), text(contentsOf(recipe))
             )
         }
         return table(header, foodRows + recipeRows)

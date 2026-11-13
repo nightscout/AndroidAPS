@@ -101,15 +101,51 @@ class FoodImages(
         old?.let { withContext(aapsIoDispatcher) { runCatching { store.delete(it.key) } } }
     }
 
-    /** The photo files used by the foods of [foodIds], by key, for a backup: OFF photos and photos of the user. */
+    /**
+     * The photo files of a backup, by key: the OFF photos and the photos of the user of the foods of
+     * [foodIds], and the photos of the dishes, meals and history.
+     */
     suspend fun filesFor(foodIds: Collection<Long>): Map<String, ByteArray> {
         if (!store.available) return emptyMap()
         foodBook.load()
         val book = foodBook.book.value
         val keys = book.offLinks.filter { it.foodId in foodIds && it.hasImage }.map { it.barcode } +
-            book.photos.filter { it.foodId in foodIds }.map { it.key }
+            book.photos.filter { it.foodId in foodIds }.map { it.key } +
+            recipeKeysOf(book)
         return withContext(aapsIoDispatcher) { keys.distinct().mapNotNull { key -> read(key)?.let { key to it } }.toMap() }
     }
+
+    /** The photos of [keys] found on the phone, by key. */
+    suspend fun read(keys: Collection<String>): Map<String, ByteArray> {
+        if (!store.available || keys.isEmpty()) return emptyMap()
+        return withContext(aapsIoDispatcher) { keys.distinct().mapNotNull { key -> read(key)?.let { key to it } }.toMap() }
+    }
+
+    /**
+     * Saves [bytes] as a new photo file for a dish or a meal and returns its key, or null when it was
+     * not saved. The old photo is not deleted here: the history may still use it, see [deleteUnused].
+     */
+    suspend fun savePhoto(bytes: ByteArray): String? {
+        if (!store.available) return null
+        val key = newUserKey()
+        return if (write(key, bytes)) key else null
+    }
+
+    /**
+     * Deletes the photo files of [keys] that no dish, meal or meal of the history uses any more. A meal
+     * of the history keeps the photo of its dish as it was when it was eaten.
+     */
+    suspend fun deleteUnused(keys: Collection<String>) {
+        if (!store.available || keys.isEmpty()) return
+        foodBook.load()
+        val book = foodBook.book.value
+        val used = recipeKeysOf(book).toSet() + book.photos.map { it.key }
+        val unused = keys.filter { it.startsWith(USER_KEY_PREFIX) && it !in used }
+        withContext(aapsIoDispatcher) { unused.forEach { key -> runCatching { store.delete(key) } } }
+    }
+
+    private fun recipeKeysOf(book: FoodBook): List<String> =
+        book.recipes.mapNotNull { it.photo } + book.eaten.flatMap { meal -> listOfNotNull(meal.photo) + meal.items.mapNotNull { it.photo } }
 
     /**
      * Saves a photo file of a backup. A file already on the phone is never replaced. Returns false

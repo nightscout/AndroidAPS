@@ -50,10 +50,34 @@ class FoodBookMathTest {
     }
 
     @Test
-    fun `a missing value stays unknown instead of counting as zero`() {
-        // Bread has no fat value, so the fat of the breakfast is not known. The carbs still are.
+    fun `a value missing on one food gives the part known, marked as partial`() {
+        // Bread has no fat value: the fat of the breakfast is at least the fat of the yogurt.
+        // The carbs are always complete.
         val n = FoodBookMath.nutritionOf(breakfast, foods, recipes)!!
+        assertEquals(56.0, n.carbs, 0.0001) // 40 + 16
+        assertEquals(4.0, n.fat!!, 0.0001)
+        assertEquals(setOf(Nutrient.FAT, Nutrient.PROTEIN, Nutrient.ENERGY), n.partial)
+        // A file that must hold exact values gets nothing.
+        assertNull(n.exact(Nutrient.FAT))
+    }
+
+    @Test
+    fun `a value no food has stays unknown, not 0 and not partial`() {
+        val n = Nutrition.sum(listOf(FoodBookMath.nutritionOf(bread, 80.0), FoodBookMath.nutritionOf(bread, 20.0)))
         assertNull(n.fat)
+        assertTrue(n.partial.isEmpty())
+        assertEquals(Nutrition.ZERO, Nutrition.sum(emptyList()))
+    }
+
+    @Test
+    fun `a partial value stays partial when it is added to complete ones or multiplied`() {
+        val dish = Nutrition(10.0, fat = 2.0, protein = null, energyKj = null, partial = setOf(Nutrient.FAT))
+        val food = FoodBookMath.nutritionOf(yogurt, 1.0)
+        val n = (dish * 2.0) + food
+        assertEquals(8.0, n.fat!!, 0.0001) // 2 x 2 + 4
+        assertEquals(4.0, n.protein!!, 0.0001)
+        assertEquals(setOf(Nutrient.FAT, Nutrient.PROTEIN, Nutrient.ENERGY), n.partial)
+        assertEquals(food.fat, food.exact(Nutrient.FAT))
     }
 
     @Test
