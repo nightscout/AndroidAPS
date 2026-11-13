@@ -386,6 +386,75 @@ class CommonNotificationManagerTest {
         assertTrue(toWear().isEmpty())
     }
 
+    /**
+     * A Nightscout alarm comes back a minute after a plain Silence, because only its snooze buttons answer Nightscout.
+     * So the watch gets the button texts in the phone's order, and the key to press them with.
+     */
+    @Test
+    fun `the watch is given the buttons of the alarm that sounds`() = runTest {
+        val sut = createSut()
+        val snoozes = listOf("Snooze 15m", "Snooze 30m", "Snooze 60m").map { NotificationAction(TextRef.Literal(it)) {} }
+
+        val handle = sut.post(NotificationId.NS_ALARM, "Sensor age", sound = AlarmSound.ALARM, actions = snoozes)
+
+        val ringing = toWear().single() as EventData.AlarmRinging
+        assertEquals(listOf("Snooze 15m", "Snooze 30m", "Snooze 60m"), ringing.actions)
+        assertEquals(handle.instanceKey, ringing.alarmKey)
+    }
+
+    @Test
+    fun `an alarm without buttons sends none to the watch`() = runTest {
+        val sut = createSut()
+
+        sut.post(NotificationId.PUMP_UNREACHABLE, "Pump unreachable", sound = AlarmSound.ALARM)
+
+        assertTrue((toWear().single() as EventData.AlarmRinging).actions.isEmpty())
+    }
+
+    /** The watch presses a button: it runs as a tap on the phone does - the button and then the notification is gone. */
+    @Test
+    fun `runAction runs that button only and dismisses the alarm`() = runTest {
+        val sut = createSut()
+        val pressed = mutableListOf<Int>()
+        val buttons = (0..2).map { i -> NotificationAction(TextRef.Literal("b$i")) { pressed += i } }
+        val handle = sut.post(NotificationId.NS_ALARM, "Sensor age", sound = AlarmSound.ALARM, actions = buttons)
+
+        val done = sut.runAction(handle.instanceKey, 2)
+
+        assertTrue(done)
+        assertEquals(listOf(2), pressed)
+        assertTrue(sut.notifications.value.isEmpty())
+        assertTrue(toWear().last() is EventData.AlarmStopped)
+    }
+
+    /** A late tap on the watch, after the alarm was answered on the phone, must not run anything. */
+    @Test
+    fun `runAction on a gone alarm or button does nothing`() = runTest {
+        val sut = createSut()
+        var pressed = false
+        val handle = sut.post(NotificationId.NS_ALARM, "Sensor age", sound = AlarmSound.ALARM, actions = listOf(NotificationAction(TextRef.Literal("b")) { pressed = true }))
+
+        assertEquals(false, sut.runAction(handle.instanceKey, 5))
+        assertEquals(false, sut.runAction(handle.instanceKey + 1, 0))
+        sut.dismiss(handle)
+        assertEquals(false, sut.runAction(handle.instanceKey, 0))
+
+        assertEquals(false, pressed)
+    }
+
+    /** A button may post or dismiss notifications itself, so it must not run inside the manager's lock. */
+    @Test
+    fun `a button that dismisses its own alarm does not deadlock`() = runTest {
+        val sut = createSut()
+        val handle = sut.post(
+            NotificationId.NS_ALARM, "Sensor age", sound = AlarmSound.ALARM,
+            actions = listOf(NotificationAction(TextRef.Literal("b")) { sut.dismiss(NotificationId.NS_ALARM) })
+        )
+
+        assertTrue(sut.runAction(handle.instanceKey, 0))
+        assertTrue(sut.notifications.value.isEmpty())
+    }
+
     // ---------------------------------------------------------------------------------------------
     // Text
     // ---------------------------------------------------------------------------------------------
