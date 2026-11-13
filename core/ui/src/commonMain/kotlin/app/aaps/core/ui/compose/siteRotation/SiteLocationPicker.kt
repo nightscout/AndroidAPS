@@ -67,8 +67,7 @@ fun SiteLocationPicker(
     onArrowSelected: (TE.Arrow) -> Unit,
     modifier: Modifier = Modifier,
     compactView: Boolean = false, // compact view makes siteSelection visible with button and location table limited (so that body is better visible)
-    compactViewModifierForTable: Modifier = Modifier.height(80.dp), // location table smaller (shows 3 lines)
-    selectedLocationString: String? = null
+    compactViewModifierForTable: Modifier = Modifier.height(80.dp) // location table smaller (shows 3 lines)
 ) {
     var showPumpSites by rememberSaveable { mutableStateOf(siteType == TE.Type.CANNULA_CHANGE) }
     var showCgmSites by rememberSaveable { mutableStateOf(siteType == TE.Type.SENSOR_CHANGE) }
@@ -105,7 +104,7 @@ fun SiteLocationPicker(
         ) {
             Text(
                 text = if (selectedLocation != TE.Location.NONE)
-                    stringResource(CoreUiStrings.selected_location, selectedLocationString ?: selectedLocation.text)
+                    stringResource(CoreUiStrings.selected_location, stringResource(selectedLocation.textRef()))
                 else
                     stringResource(CoreUiStrings.select_location),
                 style = MaterialTheme.typography.bodyMedium,
@@ -259,18 +258,18 @@ fun SiteLocationPicker(
                 filteredEntries.filter { it.location == selectedLocation }
             else
                 filteredEntries
-            val displayEntries = remember(locationFiltered, dateUtil) {
-                locationFiltered.map { te ->
-                    SiteEntryDisplayData(
-                        typeIcon = if (te.type == TE.Type.CANNULA_CHANGE) IcCannulaChange else IcCgmInsert,
-                        dateString = dateUtil.dateStringShort(te.timestamp),
-                        locationString = (te.location ?: TE.Location.NONE).text,
-                        arrowIcon = (te.arrow ?: TE.Arrow.NONE).directionToComposeIcon(),
-                        note = te.note,
-                        timestamp = te.timestamp,
-                        location = te.location ?: TE.Location.NONE
-                    )
-                }
+            // Not remembered: the location name is a string resource, read in composition so it follows the language
+            val displayEntries = locationFiltered.map { te ->
+                val location = te.location ?: TE.Location.NONE
+                SiteEntryDisplayData(
+                    typeIcon = if (te.type == TE.Type.CANNULA_CHANGE) IcCannulaChange else IcCgmInsert,
+                    dateString = dateUtil.dateStringShort(te.timestamp),
+                    locationString = stringResource(location.textRef()),
+                    arrowIcon = (te.arrow ?: TE.Arrow.NONE).directionToComposeIcon(),
+                    note = te.note,
+                    timestamp = te.timestamp,
+                    location = location
+                )
             }
             SiteEntryList(
                 entries = displayEntries,
