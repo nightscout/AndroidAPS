@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="authorizationfailed">Autorisatie mislukt</string>
-    <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
+    <string name="identification_not_set">Identificatie niet ingesteld in ontwikkelaarsmodus</string>
     <string name="select">Selecteer</string>
     <string name="set">Instellen</string>
     <string name="migrating_preferences">Instellingen migreren…</string>
     <string name="optimizing_database">Database optimaliseren…</string>
-    <string name="initializing_plugins">Initialiseren plug-ins…</string>
+    <string name="initializing_plugins">Plug-ins initialiseren…</string>
     <string name="initializing">Initialiseren…</string>
     <string name="migrating_profile_switches">Profielwisselingen migreren…</string>
     <string name="migrating_effective_profile_switches">Effectieve profielwisselingen migreren…</string>
     <string name="migrating_boluses">Bolussen migreren…</string>
-    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Bij oudere registraties ontbraken de insuline-instellingen en was er geen actief profiel. Daarom is %1$s verondersteld. Controleer de insuline-instellingen — reeds gemigreerde records worden niet bijgewerkt.</string>
-    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Oudere records hadden geen insuline duur, dus %1$.1f uur is verondersteld voor %2$s. Controleer de insuline-instellingen — reeds gemigreerde records worden niet bijgewerkt.</string>
-    <string name="settings_unreadable_title">AAPS instellingen kunnen niet gelezen worden</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Bij oudere registraties ontbraken de insuline-instellingen en was er geen actief profiel. Daarom is %1$s gebruikt. Controleer de insuline-instellingen — reeds gemigreerde registraties worden niet bijgewerkt.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Bij oudere registraties ontbrak de insulinewerkingsduur. Daarom is %1$.1f uur gebruikt voor %2$s. Controleer de insuline-instellingen — reeds gemigreerde registraties worden niet bijgewerkt.</string>
+    <string name="settings_unreadable_title">AAPS-instellingen kunnen niet worden gelezen</string>
     <string name="settings_unreadable_key_explanation">De instellingen op deze telefoon zijn versleuteld met een sleutel die Android voor AAPS bewaart. Deze sleutel kan de instellingen echter niet meer ontsleutelen. Dit kan gebeuren nadat het sleutelarchief van de telefoon is gereset.</string>
     <string name="settings_unreadable_keystore_explanation">Het sleutelarchief van de telefoon reageerde niet. Daarom kon AAPS de instellingen niet openen.</string>
     <string name="settings_unreadable_not_running">AAPS is niet actief en heeft geen controle over de pomp. Een actieve tijdelijke basaalstand loopt af op het ingestelde tijdstip, daarna geeft de pomp weer de eigen basaalstand.</string>
