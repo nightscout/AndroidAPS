@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Error en la comprobación de la aguja</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Error al descartar el parche. Por favor, inténtalo de nuevo</string>
+    <string name="carelevo_discarded_not_reached">El parche no está accesible. Se ha eliminado de AAPS pero no se ha detenido, y es posible que todavía administre insulina. Retírelo</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Error en la solicitud de administración basal. Por favor, inténtalo de nuevo</string>
     <!-- Delivery Resume/Suspend -->
