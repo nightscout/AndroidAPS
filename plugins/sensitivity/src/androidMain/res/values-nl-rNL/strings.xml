@@ -2,10 +2,10 @@
 <resources>
     <string name="sensitivity_oref1">Gevoeligheid Oref1</string>
     <string name="sensitivity_aaps">Gevoeligheid AAPS</string>
-    <string name="sensitivity_weighted_average">Gemiddelde gevoeligheid</string>
+    <string name="sensitivity_weighted_average">Gevoeligheid: gewogen gemiddelde</string>
     <string name="description_sensitivity_aaps">De gevoeligheid wordt op dezelfde manier berekend als bij Oref0, maar het aantal uren dat AAPS terugkijkt kan worden ingesteld. De minimale koolhydraatabsorptie wordt berekend op basis van de maximale koolhydraatabsorptietijd die in de instellingen is opgegeven.</string>
-    <string name="description_sensitivity_oref1">Gevoeligheid wordt berekend met gegevens van de afgelopen 8 of 24 uur (de meest gevoelige van die twee) en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de instellingen. Berekent ook UAM.</string>
-    <string name="description_sensitivity_weighted_average">Gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. Minimale koolhydraat absorptie is berekend op basis van de max koolhydraat absorptie tijd uit jouw instellingen. Dit algoritme is de snelste in het volgen van wijzigingen van de gevoeligheid.</string>
-    <string name="uam_disabled_oref1_not_selected">UAM is uitgeschakeld omdat het afhankelijk is van de Oref1-gevoeligheidsplugin</string>
-    <string name="absorption_settings_title">Opname instellingen</string>
+    <string name="description_sensitivity_oref1">De gevoeligheid wordt berekend op basis van gegevens van de afgelopen 8 of 24 uur, waarbij het resultaat met de hoogste gevoeligheid wordt gebruikt. Niet-geabsorbeerde koolhydraten worden niet meer meegerekend na de tijd die in de instellingen is opgegeven. De plug-in berekent ook UAM.</string>
+    <string name="description_sensitivity_weighted_average">De gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. De minimale koolhydraatabsorptie wordt berekend op basis van de maximale koolhydraatabsorptietijd uit de instellingen. Dit algoritme volgt veranderingen in gevoeligheid het snelst.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM is uitgeschakeld omdat het afhankelijk is van de Oref1-gevoeligheidsplug-in</string>
+    <string name="absorption_settings_title">Opname-instellingen</string>
 </resources>
