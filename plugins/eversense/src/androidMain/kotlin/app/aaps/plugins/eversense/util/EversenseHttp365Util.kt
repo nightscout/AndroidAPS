@@ -216,8 +216,10 @@ class EversenseHttp365Util {
                 // EssentialLog: base64-encoded bytes — the .NET server model uses System.Byte[] which
                 // JSON-serializes as base64 (despite the Android app sending "0x"+hex, the server rejects it).
                 // Body must be a bare JSON array — server deserializes directly to List<GlucoseEssentialLogsVM>
+                val fallbackSensorId = getEversenseState(preferences).sensorId
                 val jsonBody = uploadable.joinToString(prefix = "[", postfix = "]") { r ->
-                    val portalSensorId = r.sensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
+                    val rawSensorId = r.sensorId.ifEmpty { fallbackSensorId }
+                    val portalSensorId = rawSensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
                     val essentialLog = Base64.getEncoder().encodeToString(
                         r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     )
@@ -322,7 +324,7 @@ class EversenseHttp365Util {
                 return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
-                val sensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: ""
+                val sensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: getEversenseState(preferences).sensorId
                 val tzOffsetSec = TimeZone.getDefault().getOffset(Date().time) / 1000
                 val offsetBytes = Base64.getEncoder().encodeToString(EversenseDmsBinaryCodec.int32LE(tzOffsetSec))
                 val sgBytes = EversenseDmsBinaryCodec.buildSgBytes(readings)
@@ -362,6 +364,11 @@ class EversenseHttp365Util {
         private fun getState(preference: EversenseStore): EversenseSecureState {
             val stateJson = preference.getString(StorageKeys.SECURE_STATE, null) ?: "{}"
             return JSON.decodeFromString<EversenseSecureState>(stateJson)
+        }
+
+        private fun getEversenseState(preference: EversenseStore): app.aaps.plugins.eversense.models.EversenseState {
+            val stateJson = preference.getString(StorageKeys.STATE, null) ?: "{}"
+            return try { JSON.decodeFromString<app.aaps.plugins.eversense.models.EversenseState>(stateJson) } catch (_: Exception) { app.aaps.plugins.eversense.models.EversenseState() }
         }
     }
 

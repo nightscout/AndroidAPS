@@ -120,7 +120,7 @@ class EversenseHttpE3Util {
                 return false
             }
             return try {
-                val sensorId    = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: ""
+                val sensorId    = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: getEversenseState(preferences).sensorId
                 val tzOffsetSec = TimeZone.getDefault().getOffset(Date().time) / 1000
                 val offsetBytes = Base64.getEncoder().encodeToString(EversenseDmsBinaryCodec.int32LE(tzOffsetSec))
                 val sgBytes     = EversenseDmsBinaryCodec.buildSgBytes(readings)
@@ -151,6 +151,11 @@ class EversenseHttpE3Util {
         private fun getState(preferences: EversenseStore): EversenseSecureState {
             val json = preferences.getString(StorageKeys.SECURE_STATE, null) ?: "{}"
             return JSON.decodeFromString<EversenseSecureState>(json)
+        }
+
+        private fun getEversenseState(preferences: EversenseStore): app.aaps.plugins.eversense.models.EversenseState {
+            val json = preferences.getString(StorageKeys.STATE, null) ?: "{}"
+            return try { JSON.decodeFromString<app.aaps.plugins.eversense.models.EversenseState>(json) } catch (_: Exception) { app.aaps.plugins.eversense.models.EversenseState() }
         }
     }
 

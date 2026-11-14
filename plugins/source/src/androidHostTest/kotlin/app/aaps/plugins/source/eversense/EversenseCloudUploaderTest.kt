@@ -130,11 +130,12 @@ class EversenseCloudUploaderTest {
         assertEquals(1, pending().single().readings.size)
         assertTrue(uploads.isEmpty())
     }
-    @Test fun historyWithoutRaw365PayloadDoesNotBlockUploadQueue() = runTest {
+    @Test fun historyWithoutRaw365PayloadIsQueuedAndUploadedForPortalEvents() = runTest {
         val uploader = uploader()
         uploader.enqueue(EversenseType.EVERSENSE_365, listOf(reading(0).copy(rawResponseHex = "")), state)
         runCurrent()
-        assertTrue(uploads.isEmpty())
+        assertEquals(1, uploads.size)
+        assertEquals(1, uploads.single().readings.size)
         assertTrue(pending().isEmpty())
     }
     @Test fun wallClockJumpCannotCauseAnotherUploadInSameElapsedHour() = runTest {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
@@ -111,6 +111,8 @@
 <string name="eversense_status_title">Status &amp; Connection</string>
 
 <string name="eversense_cloud_upload_enabled">Enable cloud upload</string>
+<string name="eversense_force_cloud_upload_title" tools:ignore="MissingTranslation">Upload data now</string>
+<string name="eversense_force_cloud_upload_summary" tools:ignore="MissingTranslation">Force immediate cloud upload to Eversense DMS</string>
 
 <string name="eversense_cloud_upload_toast">Show cloud upload result</string>
 
