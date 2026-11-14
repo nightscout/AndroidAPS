@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">针头检查失败。</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">丢弃贴片失败。请重试。</string>
+    <string name="carelevo_discarded_not_reached">无法联系到贴片。它已从 AAPS 中移除，但并未被停止，可能仍在输注胰岛素。请将其取下。</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">基础率输注请求失败。请重试。</string>
     <!-- Delivery Resume/Suspend -->
