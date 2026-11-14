@@ -38,10 +38,11 @@ internal class EversenseCloudUploader(
         if (!enabled()) return
         mutex.withLock {
             val prefs = store() ?: return
+            val eligible = readings.filter { type != EversenseType.EVERSENSE_365 || it.rawResponseHex.isNotEmpty() }
             val batches = read(prefs).toMutableList()
             val index = batches.indexOfFirst { it.type == type && it.state.transmitterSerialNumber == state.transmitterSerialNumber }
             val old = batches.getOrNull(index)?.readings.orEmpty()
-            val merged = (old + readings).groupBy { it.datetime to it.sensorId }
+            val merged = (old + eligible).groupBy { it.datetime to it.sensorId }
                 .values.map { duplicates -> duplicates.maxBy { it.rawResponseHex.length } }
             if (index >= 0) batches.removeAt(index)
             if (merged.isNotEmpty()) batches.add(PendingUpload(type, state, merged))

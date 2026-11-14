@@ -39,6 +39,7 @@ import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
+import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
 import app.aaps.plugins.eversense.util.EversenseLogger
@@ -286,13 +287,77 @@ class EversensePlugin(
         }
     }
 
+    private fun triggerManualCloudUpload() {
+        if (!cloudUploadEnabled()) {
+            notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_enabled) + " is disabled", level = NotificationLevel.URGENT)
+            return
+        }
+        ioScope.launch {
+            if (!eversense.hasInternet()) {
+                notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_failed), level = NotificationLevel.URGENT)
+                return@launch
+            }
+            val prefs = eversense.cloudStore()
+            if (prefs == null) {
+                notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, "Eversense cloud store unavailable", level = NotificationLevel.URGENT)
+                return@launch
+            }
+            val state = eversense.getCurrentState()
+            val type = if (eversense.is365()) EversenseType.EVERSENSE_365 else EversenseType.EVERSENSE_E3
+            val readings = listOfNotNull(
+                if (state.recentGlucoseDatetime > 0 && state.recentGlucoseValue > 0)
+                    EversenseCGMResult(state.recentGlucoseValue, state.recentGlucoseDatetime, EversenseTrendArrow.FLAT, state.sensorId, "")
+                else null
+            )
+            if (readings.isEmpty()) {
+                notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, "Eversense: no recent readings to upload", level = NotificationLevel.INFO)
+                return@launch
+            }
+
+            val latest = readings.maxByOrNull { it.datetime } ?: return@launch
+            val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
+
+            val outcomeMsg = if (type == EversenseType.EVERSENSE_365) {
+                app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
+                    prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
+                val portal = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
+                    prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
+                val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
+                    prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
+
+                if (portal.success && deviceEvents.success) {
+                    "Upload eDMS riuscito (HTTP ${portal.httpStatus ?: 200}) - ${deviceEvents.sentCount} letture caricate"
+                } else {
+                    "Upload eDMS fallito: HTTP ${deviceEvents.httpStatus ?: portal.httpStatus ?: 500} - ${deviceEvents.responseBody.take(100)}"
+                }
+            } else {
+                val portal = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
+                    prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
+                val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
+                    prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
+
+                if (portal && deviceEvents) {
+                    "Upload E3 eDMS riuscito"
+                } else {
+                    "Upload E3 eDMS fallito"
+                }
+            }
+
+            notificationManager.post(
+                NotificationId.EVERSENSE_CREDENTIALS,
+                outcomeMsg,
+                level = if (outcomeMsg.contains("riuscito")) NotificationLevel.INFO else NotificationLevel.URGENT
+            )
+        }
+    }
+
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "eversense_settings",
         title = TextRef.AndroidRes(R.string.source_eversense),
         items = listOf(
             EversenseIntentKey.EversenseStatus.withClick { openActivity(EversenseStatusActivity::class.java) },
             EversenseBooleanKey.EversenseCloudUploadEnabled,
-            EversenseIntentKey.EversenseForceCloudUpload.withClick { cloudUploader.flush(force = true) },
+            EversenseIntentKey.EversenseForceCloudUpload.withClick { triggerManualCloudUpload() },
             EversenseBooleanKey.EversenseDiagnosticLogging,
             PreferenceSubScreenDef(
                 key = "eversense_credentials_screen",
@@ -590,7 +655,6 @@ class EversensePlugin(
         val rawReadings = batch.readings
         if (rawReadings.isEmpty()) return true
 
-        // Ensure sensorId is populated from state if missing on individual readings
         val readings = rawReadings.map { r ->
             if (r.sensorId.isEmpty() && state.sensorId.isNotEmpty()) r.copy(sensorId = state.sensorId) else r
         }
@@ -612,8 +676,6 @@ class EversensePlugin(
                 prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
             aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (365 device events): success=${deviceEvents.success} sent=${deviceEvents.sentCount} status=${deviceEvents.httpStatus}")
 
-            // Batch is successful if the portal endpoints (PutCurrentValues & PutDeviceEvents) succeeded,
-            // and essential log upload didn't fail due to a server error (HTTP >= 400).
             deviceEvents.success && (glucose.success || (glucose.httpStatus ?: 0) < 400)
         } else {
             val portal = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(

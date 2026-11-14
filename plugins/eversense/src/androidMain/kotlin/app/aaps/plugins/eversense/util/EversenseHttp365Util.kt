@@ -216,10 +216,8 @@ class EversenseHttp365Util {
                 // EssentialLog: base64-encoded bytes — the .NET server model uses System.Byte[] which
                 // JSON-serializes as base64 (despite the Android app sending "0x"+hex, the server rejects it).
                 // Body must be a bare JSON array — server deserializes directly to List<GlucoseEssentialLogsVM>
-                val fallbackSensorId = getEversenseState(preferences).sensorId
                 val jsonBody = uploadable.joinToString(prefix = "[", postfix = "]") { r ->
-                    val rawSensorId = r.sensorId.ifEmpty { fallbackSensorId }
-                    val portalSensorId = rawSensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
+                    val portalSensorId = r.sensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
                     val essentialLog = Base64.getEncoder().encodeToString(
                         r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     )
