@@ -64,6 +64,7 @@ import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.manageSheet.ManageSheetState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.overview.BolusProgressBanner
 import app.aaps.ui.compose.overview.EatReminderBanner
 import app.aaps.ui.compose.overview.OverviewScreen
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
@@ -152,6 +153,7 @@ fun MainScreen(
     queueStatusText: AnnotatedString? = null,
     isPumpCommunicating: Boolean = false,
     onStopBolus: () -> Unit = {},
+    onDismissBolus: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LocalDateUtil.current
@@ -300,6 +302,15 @@ fun MainScreen(
                         commandsAllowed = masterOrPairedClient,
                         formatDuration = mainViewModel::formatDuration,
                         eatReminderBanner = {
+                            // A running bolus is shown here instead of in a modal dialog, so the rest of the
+                            // overview stays usable while it is delivered.
+                            BolusProgressBanner(
+                                state = bolusState,
+                                onStop = onStopBolus,
+                                onDismiss = onDismissBolus,
+                                pumpStatus = pumpStatusText,
+                                queueStatus = queueStatusText
+                            )
                             EatReminderBanner(
                                 state = eatReminderState,
                                 onStop = mainViewModel::stopEatReminder,

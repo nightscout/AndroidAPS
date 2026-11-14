@@ -243,6 +243,9 @@ fun OverviewScreen(
             } else {
                 commandQueue.cancelAllBoluses(null)
             }
-        }
+        },
+        // Only reachable from the stalled-state Dismiss button on a client: hides the local mirror.
+        // Delivery belongs to the master, so this touches no pump.
+        onDismissBolus = { bolusProgressData.clear() }
     )
 }
