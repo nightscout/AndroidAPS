@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_description">Met Open Humans kunnen diabetesgegevens worden geüpload en gedoneerd aan wetenschappelijke projecten.</string>
+    <string name="open_humans_description">Via Open Humans kunnen diabetesgegevens beschikbaar worden gesteld voor wetenschappelijk onderzoek.</string>
     <string name="logout">Uitloggen</string>
     <string name="setup">Instellen</string>
     <string name="setup_completed_info">Open Humans is ingesteld. Klik op ‘Uitloggen’ om het uploaden te stoppen.</string>
@@ -18,7 +18,7 @@
     <string name="consent">Toestemming</string>
     <string name="terms_of_use">Gebruiksvoorwaarden</string>
     <string name="please_read__information">Lees zorgvuldig de volgende informatie en accepteer de gebruiksvoorwaarden om verder te gaan.</string>
-    <string name="info_openhumans">Dit is een opensourcetool die de gegevens naar Open Humans kopieert. We behouden geen rechten om de gegevens met derden te delen zonder uitdrukkelijke toestemming van de gebruiker. De gegevens die het project en de app ontvangen, worden geïdentificeerd via een willekeurige gebruikers-ID en worden alleen veilig naar een Open Humans-account verzonden met toestemming van de gebruiker voor dat proces. Stop op elk gewenst moment met uploaden en verwijder de geüploade gegevens via www.openhumans.org.</string>
+    <string name="info_openhumans">Dit is een opensourcetool waarmee diabetesgegevens naar Open Humans worden verstuurd. Zonder uitdrukkelijke toestemming worden deze gegevens niet met derden gedeeld. De gegevens die het project en de app ontvangen, zijn gekoppeld aan een willekeurige gebruikers-ID. Ze worden uitsluitend met toestemming van de gebruiker en via een beveiligde verbinding naar een Open Humans-account verstuurd. Het versturen van gegevens kan op elk moment worden stopgezet. Ook kunnen de reeds verstuurde gegevens op elk moment worden verwijderd via www.openhumans.org.</string>
     <string name="data_uploaded">Geüploade gegevens</string>
     <string name="glucose_values">Glucosewaarden</string>
     <string name="boluses">Bolussen</string>
