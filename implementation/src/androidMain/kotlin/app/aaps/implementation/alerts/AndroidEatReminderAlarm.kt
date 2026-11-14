@@ -93,7 +93,13 @@ class AndroidEatReminderAlarm(
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setContentTitle(rh.gs(CoreUiStrings.eat_reminder_title))
-            .setContentText(rh.gs(CoreUiStrings.eat_reminder_total_wait, rh.gs(CoreUiStrings.format_mins, totalMinutes)))
+            // A minimized notifications collapses to "title text" on one line, and the
+            // countdown the system draws next to the title is cut off there.
+            // +5 min posts the notification again with the new time.
+            .setContentText(
+                rh.gs(CoreUiStrings.eat_reminder_rings_at, dateUtil.timeString(endsAt)) + " • " +
+                    rh.gs(CoreUiStrings.eat_reminder_total_wait, rh.gs(CoreUiStrings.format_mins, totalMinutes))
+            )
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setWhen(endsAt)
             .setShowWhen(true)
