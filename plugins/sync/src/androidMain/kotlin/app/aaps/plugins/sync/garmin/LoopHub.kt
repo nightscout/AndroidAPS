@@ -5,6 +5,12 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
 import java.time.Instant
 
+/**
+ * The device name that is stored when the watch sends none. Code that looks up stored records by device must use the
+ * same name, or it never finds them.
+ */
+const val DEFAULT_DEVICE_NAME = "Garmin"
+
 /** Abstraction from all the functionality we need from the AAPS app. */
 interface LoopHub {
 

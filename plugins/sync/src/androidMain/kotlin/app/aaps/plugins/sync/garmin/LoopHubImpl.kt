@@ -232,7 +232,7 @@ class LoopHubImpl(
             duration = samplingEnd.toEpochMilli() - samplingStart.toEpochMilli(),
             dateCreated = clock.millis(),
             beatsPerMinute = avgHeartRate.toDouble(),
-            device = device ?: "Garmin",
+            device = device ?: DEFAULT_DEVICE_NAME,
         )
         appScope.launch {
             persistenceLayer.insertOrUpdateHeartRates(listOf(hr))
@@ -263,7 +263,7 @@ class LoopHubImpl(
             steps30min = steps30min,
             steps60min = steps60min,
             steps180min = steps180min,
-            device = device ?: "Garmin",
+            device = device ?: DEFAULT_DEVICE_NAME,
             dateCreated = clock.millis(),
         )
         appScope.launch {

@@ -56,6 +56,18 @@ import kotlin.concurrent.withLock
 import kotlin.math.roundToInt
 import kotlinx.coroutines.runBlocking
 
+/**
+ * The most steps that one request window (a few minutes) can hold. A very fast runner makes about 2000 steps in this
+ * time. A larger number from a total of the day is not a count of the window.
+ */
+private const val MAX_STEPS_IN_ONE_WINDOW = 2000
+
+/**
+ * The longest time between two requests with a total of steps that still counts as continuous. The watch sends about
+ * every 5 minutes. After a longer time the next value is the first one after a gap.
+ */
+private const val MAX_MS_BETWEEN_STEP_REQUESTS = 15 * 60_000L
+
 /** Support communication with Garmin devices.
  *
  * This plugin supports sending glucose values to Garmin devices and receiving
@@ -128,6 +140,10 @@ class GarminPlugin(
     @VisibleForTesting
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
+
+    /** Time of the last request with a total of steps, in ms. 0 until the first one after the start of the app. */
+    @Volatile
+    private var lastTotalRequestTime = 0L
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
     private val garminAapsKey get() = preferences.get(GarminStringKey.RequestKey)
 
@@ -581,26 +597,77 @@ class GarminPlugin(
     }
 
     /**
+     * Stores a total of the day as the steps of one request window, for the first value of a day. This is only right
+     * when the total is small, because the window is a few minutes long. After a long time without contact the total
+     * is the whole day (for example 14000), and storing it would tell the algorithm that these steps were made in the
+     * last minutes. A total above [MAX_STEPS_IN_ONE_WINDOW] is not stored. It stays the baseline for the next request.
+     */
+    private fun storeInitialTotal(totalSteps: Int, samplingStart: Long, samplingEnd: Long, device: String) {
+        if (totalSteps > MAX_STEPS_IN_ONE_WINDOW) {
+            aapsLogger.warn(
+                LTag.GARMIN,
+                "[GarminHTTP] total=$totalSteps is more than $MAX_STEPS_IN_ONE_WINDOW steps in one window, not stored (baseline only)"
+            )
+            return
+        }
+        val none = 0
+        loopHub.storeStepsCount(
+            Instant.ofEpochSecond(samplingStart),
+            Instant.ofEpochSecond(samplingEnd),
+            totalSteps,
+            none,
+            none,
+            none,
+            none,
+            none,
+            device
+        )
+    }
+
+    /**
      * Stores the steps since the last request, calculated from a total step count of the day.
      *
      * The last total is kept in the preference `GarminIntNonKey.LastTotalSteps`.
      * - First value ever: it is only saved as the baseline, nothing is stored.
+     * - First value after a gap (more than 15 minutes since the last request, or the first one after the app started):
+     *   it is only saved as the new baseline, nothing is stored. The steps of the gap are lost on purpose.
      * - Total is higher than the last one: the difference is stored as steps5min.
      * - Total is not higher (for example after midnight, when the watch starts at 0 again): the total is
      *   stored as the new baseline. It is also stored as steps, except when the same total was already
      *   seen and there is a record from today for this device.
      */
     private fun ingestHttpTotalSteps(uri: URI, totalSteps: Int, samplingStart: Long, samplingEnd: Long) {
-        val device = getQueryParameter(uri, "device")
+        // The records are stored with this name, so the look-up for "records today" below must use it too. A request
+        // without a device would otherwise never find its own records and store the day total again and again.
+        val device = getQueryParameter(uri, "device") ?: DEFAULT_DEVICE_NAME
         val none = 0
 
         val now = System.currentTimeMillis()
         val lastTotal = preferences.get(GarminIntNonKey.LastTotalSteps)
 
+        // The time of the request before this one. It is only kept in memory: after a restart of the app it is 0, which
+        // counts as a gap, and that is right because nothing was received while the app was off.
+        val requestTime = clock.millis()
+        val previousRequestTime = lastTotalRequestTime
+        lastTotalRequestTime = requestTime
+
         // First ever value → store baseline only
         if (lastTotal < 0) {
             preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
             aapsLogger.info(LTag.GARMIN, "[GarminHTTP] baseline steps=$totalSteps")
+            return
+        }
+
+        // The first value after a gap. Requests were missing before it, so the difference to the last total (or the
+        // whole total of a new day) is the steps of the whole gap, and they would be stored as the steps of one window.
+        // The value only becomes the new baseline, and the difference is stored from the next request on. Missing steps
+        // are the safe side: the algorithm then sees less activity, not a burst of steps that never happened.
+        if (previousRequestTime == 0L || requestTime - previousRequestTime > MAX_MS_BETWEEN_STEP_REQUESTS) {
+            preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
+            aapsLogger.info(
+                LTag.GARMIN,
+                "[GarminHTTP] first value after a gap, steps=$totalSteps is only the new baseline (last=$lastTotal), nothing stored"
+            )
             return
         }
 
@@ -629,17 +696,7 @@ class GarminPlugin(
                 }
                 if (todayCount == 0) {
                     aapsLogger.info(LTag.GARMIN, "[GarminHTTP] no records today, storing initial total=$totalSteps")
-                    loopHub.storeStepsCount(
-                        Instant.ofEpochSecond(samplingStart),
-                        Instant.ofEpochSecond(samplingEnd),
-                        totalSteps,
-                        none,
-                        none,
-                        none,
-                        none,
-                        none,
-                        device
-                    )
+                    storeInitialTotal(totalSteps, samplingStart, samplingEnd, device)
                 } else {
                     aapsLogger.info(LTag.GARMIN, "[GarminHTTP] delta=0 but $todayCount records already today, skipping")
                 }
@@ -652,17 +709,7 @@ class GarminPlugin(
                     "[GarminHTTP] takeover initial total=$totalSteps "
                 )
                 preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
-                loopHub.storeStepsCount(
-                    Instant.ofEpochSecond(samplingStart),
-                    Instant.ofEpochSecond(samplingEnd),
-                    totalSteps,
-                    none,
-                    none,
-                    none,
-                    none,
-                    none,
-                    device
-                )
+                storeInitialTotal(totalSteps, samplingStart, samplingEnd, device)
             }
             return
         }

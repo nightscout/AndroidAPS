@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.garmin
 
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -12,6 +13,7 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
+import app.aaps.plugins.sync.garmin.keys.GarminIntNonKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
@@ -429,6 +431,118 @@ class GarminPluginTest : TestBaseWithProfile() {
         assertEquals("{\"connected\":true}", gp.onConnectPump(uri))
         verify(loopHub).connectPump()
         verify(loopHub).isConnected
+    }
+
+    // ---- Steps from a total of the day ("steps=...") ----
+
+    private fun stepRecord(device: String) = SC(
+        duration = 300_000L, timestamp = 5_000L, steps5min = 14481, steps10min = 0, steps15min = 0, steps30min = 0,
+        steps60min = 0, steps180min = 0, device = device, dateCreated = 5_000L
+    )
+
+    private fun recordsToday(vararg records: SC) = runBlocking {
+        whenever(persistenceLayer.getStepsCountFromTimeToTime(anyLong(), anyLong())).thenReturn(records.toList())
+    }
+
+    private fun verifyNoStepsStored() = verify(loopHub, never()).storeStepsCount(
+        any(), any(), any<Int>(), any<Int>(), any<Int>(), any<Int>(), any<Int>(), any<Int>(), anyOrNull()
+    )
+
+    private fun verifyStepsStored(steps: Int, device: String) = verify(loopHub).storeStepsCount(
+        any(), any(), eq(steps), eq(0), eq(0), eq(0), eq(0), eq(0), eq(device)
+    )
+
+    private val firstRequestAt = Instant.ofEpochMilli(1_000_000)
+
+    /**
+     * Sends two requests with a total, 5 minutes apart. The first one only sets the baseline (it is the first value after
+     * the start), so the second one is a request in a continuous row. [first] is also what the stored last total is.
+     */
+    private fun sendTotals(first: Int, second: Int, device: String? = null) {
+        val extra: Map<String, Any> = if (device == null) emptyMap() else mapOf("device" to device)
+        whenever(preferences.get(GarminIntNonKey.LastTotalSteps)).thenReturn(first)
+        gp.clock = Clock.fixed(firstRequestAt, ZoneId.of("UTC"))
+        gp.receiveSteps(createUri(mapOf<String, Any>("steps" to first) + extra))
+        gp.clock = Clock.fixed(firstRequestAt.plus(5, ChronoUnit.MINUTES), ZoneId.of("UTC"))
+        gp.receiveSteps(createUri(mapOf<String, Any>("steps" to second) + extra))
+    }
+
+    @Test
+    fun `the same total without a device is not stored again when the record exists`() {
+        // The record was stored as "Garmin", because the watch sent no device. The look-up must find it.
+        recordsToday(stepRecord("Garmin"))
+
+        sendTotals(14481, 14481)
+
+        verifyNoStepsStored()
+    }
+
+    @Test
+    fun `a small first total of the day is stored as the steps of the window`() {
+        recordsToday()
+
+        sendTotals(165, 165)
+
+        verifyStepsStored(165, "Garmin")
+    }
+
+    @Test
+    fun `a first total that is a whole day is not stored as the steps of the window`() {
+        recordsToday()
+
+        sendTotals(14481, 14481)
+
+        verifyNoStepsStored()
+    }
+
+    @Test
+    fun `a new day in a continuous row keeps the baseline but stores no steps when the total is a whole day`() {
+        // The watch starts at 0 at midnight. A total of 8000 after 17506 is not the steps of one window.
+        sendTotals(17506, 8000)
+
+        verify(preferences).put(GarminIntNonKey.LastTotalSteps, 8000)
+        verifyNoStepsStored()
+    }
+
+    @Test
+    fun `a new day in a continuous row with a small total is stored`() {
+        sendTotals(17506, 165, device = "Test_Device")
+
+        verifyStepsStored(165, "Test_Device")
+    }
+
+    @Test
+    fun `a rising total is stored as the difference`() {
+        sendTotals(14481, 14526)
+
+        verifyStepsStored(45, "Garmin")
+    }
+
+    @Test
+    fun `the first value after the start of the app is only the baseline`() {
+        whenever(preferences.get(GarminIntNonKey.LastTotalSteps)).thenReturn(14000)
+
+        gp.receiveSteps(createUri(mapOf("steps" to 14526)))
+
+        verify(preferences).put(GarminIntNonKey.LastTotalSteps, 14526)
+        verifyNoStepsStored()
+    }
+
+    @Test
+    fun `the first value after a gap is only the baseline and the next difference is stored again`() {
+        fun request(minutes: Long, lastTotal: Int, total: Int) {
+            whenever(preferences.get(GarminIntNonKey.LastTotalSteps)).thenReturn(lastTotal)
+            gp.clock = Clock.fixed(firstRequestAt.plus(minutes, ChronoUnit.MINUTES), ZoneId.of("UTC"))
+            gp.receiveSteps(createUri(mapOf("steps" to total)))
+        }
+        request(0, 14481, 14481) // first value after the start: baseline
+        request(5, 14481, 14526) // continuous: 45 steps
+        request(25, 14526, 15500) // 20 minutes later: a gap, so only the baseline (974 steps are lost on purpose)
+        request(30, 15500, 15530) // continuous again: 30 steps
+
+        verifyStepsStored(45, "Garmin")
+        verifyStepsStored(30, "Garmin")
+        verify(loopHub, never()).storeStepsCount(any(), any(), eq(974), any<Int>(), any<Int>(), any<Int>(), any<Int>(), any<Int>(), anyOrNull())
     }
 
     // A client only shows values. Carbs or a pump disconnect stored there would never reach the master, and the watch
