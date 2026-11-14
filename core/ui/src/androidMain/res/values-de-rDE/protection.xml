@@ -5,12 +5,6 @@
     <string name="settings_protection">Schutz der Einstellungen</string>
     <string name="application_protection">Schutz der App</string>
     <string name="bolus_protection">Bolus-Schutz</string>
-    <string name="settings_password">Passwort für Einstellungen</string>
-    <string name="settings_pin">Einstellungs-PIN</string>
-    <string name="application_password">Anwendungspasswort</string>
-    <string name="application_pin">Anwendungs-PIN</string>
-    <string name="bolus_password">Passwort für Bolus</string>
-    <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Passwort und PIN Sperrung [s]</string>
     <string name="protection_timeout_summary">Zeit bis das Passwort oder die PIN eingegeben werden sollen</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
@@ -33,5 +27,5 @@
     <string name="current_master_password">Aktuelles Master-Passwort</string>
     <string name="master_password_not_set">Master-Passwort nicht festgelegt</string>
     <string name="aaps_directory_not_selected">AAPS Verzeichnis nicht ausgewählt</string>
-    <string name="aaps_directory_access_lost">Der Zugriff auf das AAPS-Verzeichnis ist verloren, so dass die Einstellungen nicht mehr auf dem Telefon gespeichert werden. Wählen Sie das Verzeichnis erneut aus.</string>
+    <string name="aaps_directory_access_lost">Der Zugriff auf das AAPS-Verzeichnis ist verloren, so dass die Einstellungen nicht mehr auf dem Telefon gespeichert werden. Wähle das Verzeichnis erneut aus.</string>
 </resources>

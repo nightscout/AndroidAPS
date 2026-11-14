@@ -20,7 +20,6 @@
     <string name="commanderror">Ordre errònia</string>
     <string name="speederror">Error de velocitat</string>
     <string name="insulinlimitviolation">Superat el límit d\'insulina</string>
-    <string name="boluserrorcode">Demanat: %1$.2fU Lliurat: %2$.2fU Codi error: %3$s</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="bolus_step">Increment bolus</string>
     <string name="basal_step">Increment basal</string>

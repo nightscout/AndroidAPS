@@ -8,16 +8,7 @@
     <string name="shorthour">h</string>
     <string name="days">dies</string>
     <string name="hours">hores</string>
-    <string name="unit_second">segon</string>
-    <string name="unit_minute">minut</string>
-    <string name="unit_hour">hora</string>
-    <string name="unit_day">dia</string>
-    <string name="unit_week">setmana</string>
-    <string name="unit_seconds">segons</string>
     <string name="unit_minutes">minuts</string>
-    <string name="unit_hours">hores</string>
-    <string name="unit_days">dies</string>
-    <string name="unit_weeks">setmanes</string>
     <string name="shortminute">m</string>
     <!-- Rx -->
     <string name="connecting_for">Connectant %1$d s</string>
@@ -62,5 +53,4 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
     <string name="basal_value">Valor basal</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
 </resources>

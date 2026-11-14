@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">펌프가 임시 기저를 지원하지 않습니다</string>
     <string name="closed_loop_disabled_on_dev_branch">개발 버전을 실행하고 있습니다. 폐쇄 루프가 비활성화되었습니다.</string>
     <string name="closed_loop_disabled_with_eb">확장 볼러스가 실행 중이므로 폐쇄 루프가 비활성화됨</string>
-    <string name="smbalwaysdisabled">현재 혈당 소스가 고급 필터링을 지원하지 않으므로 SMB 항상 사용과 탄수화물 후 SMB가 비활성화됩니다</string>
+    <string name="smbalwaysdisabled">현재 혈당 출처가 고급 필터링을 지원하지 않으므로 \'항상 SMB 활성화\'와 \'탄수화물 후 SMB 활성화\'가 비활성화됩니다</string>
     <string name="smbnotallowedinopenloopmode">개방 루프 모드에서는 SMB가 허용되지 않습니다</string>
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드 한계</string>

@@ -6,7 +6,7 @@
     <string name="pref_summary_insulin_concentration">启用对不同的胰岛素浓度支持（U50、U200等）</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">保持屏幕常亮</string>
-    <string name="pref_summary_keep_screen_on">阻止 Android 系统关闭手机屏幕。这将非常耗电。</string>
+    <string name="pref_summary_keep_screen_on">防止 Android 关闭屏幕。未连接电源插座时，这会消耗大量电量。</string>
     <string name="pref_title_show_treatment_button">显示治疗按钮</string>
     <string name="pref_title_show_wizard_button">显示向导按钮</string>
     <string name="pref_title_show_insulin_button">显示胰岛素按钮</string>
@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">紧急警报以安卓通知形式提醒</string>
     <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
     <string name="pref_title_alert_override_dnd">覆盖勿扰模式</string>
+    <string name="pref_summary_alert_override_dnd">开启：即使手机处于静音或勿扰模式，警报仍会响铃。关闭：此时警报不会响铃。在勿扰模式下，警报仅振动。</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">上传血糖数据到 NS</string>
     <string name="pref_title_bg_source_create_sensor_change">记录传感器更换</string>
@@ -176,7 +177,7 @@
     <string name="pref_title_bolus_percentage">大剂量百分比</string>
     <string name="deliverpartofboluswizard">将此数值应用于大剂量向导计算结果中的血糖及碳水化合物校正</string>
     <string name="pref_title_reset_bolus_percentage_time">重置大剂量百分比时间</string>
-    <string name="deliver_part_of_boluswizard_reset_time">如果血糖数据超时（早于）该时间，则输注全额大剂量（100%）</string>
+    <string name="deliver_part_of_boluswizard_reset_time">如果血糖读数早于以下时间，则输注完整大剂量（100%）</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">保护超时</string>
     <string name="pref_title_protection_type_application">0 级：应用保护</string>
@@ -239,33 +240,7 @@
     <string name="pref_title_units">单位</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">语言</string>
     <string name="lang_default">系统默认</string>
-    <string name="lang_en">英语</string>
-    <string name="lang_af">南非语</string>
-    <string name="lang_bg">保加利亚语</string>
-    <string name="lang_cs">捷克语</string>
-    <string name="lang_de">德语</string>
-    <string name="lang_dk">丹麦语</string>
-    <string name="lang_fr">法语</string>
-    <string name="lang_nl">荷兰语</string>
-    <string name="lang_es">西班牙语</string>
-    <string name="lang_el">希腊语</string>
-    <string name="lang_ga">爱尔兰语</string>
-    <string name="lang_it">意大利语</string>
-    <string name="lang_ko">韩语</string>
-    <string name="lang_lt">立陶宛语</string>
-    <string name="lang_nb">挪威语</string>
-    <string name="lang_pl">波兰语</string>
-    <string name="lang_pt">葡萄牙语</string>
-    <string name="lang_pt_br">葡萄牙语 (巴西)</string>
-    <string name="lang_ro">罗马尼亚语</string>
-    <string name="lang_ru">俄语</string>
-    <string name="lang_sk">斯洛伐克语</string>
-    <string name="lang_sv">瑞典语</string>
-    <string name="lang_tr">土耳其语</string>
-    <string name="lang_zh_tw">繁体中文</string>
-    <string name="lang_zh_cn">简体中文</string>
     <string name="pref_title_patient_name">实例名称</string>
     <string name="pref_summary_patient_name">使用此手机的人员姓名。它用于在报告和同步中区分此 AAPS 实例。</string>
     <!-- StringKey: Directory preferences -->
@@ -298,7 +273,7 @@
     <string name="smscommunicator_allowednumbers">允许的手机号码</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">验证码末尾强制附加的PIN码</string>
-    <string name="smscommunicator_otp_pin_summary">在每次生成的一次性随机密码末尾，需要记住并强制附加的数字</string>
+    <string name="smscommunicator_otp_pin_summary">需要记住的额外数字，应在每个生成的一次性密码末尾追加输入。</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">泵类型</string>
     <!-- StringKey: NS Client preferences -->
@@ -329,7 +304,7 @@
     <string name="pref_title_ama_max_iob">AMA 最大 IOB 上限</string>
     <string name="openapsma_max_iob_summary">该数值在 OpenAPS 中称为最大活性胰岛素（Max IOB）。\n这是 APS 单次可以输注的胰岛素的最大值[U]。该数值同时受患者类型影响。</string>
     <string name="pref_title_max_daily_multiplier">最大日基础率安全倍数</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3 这是 OpenAPS 中一项关键的安全上限设置。作用是将你的基础率限制为最高基础率的 3 倍（当前示例为 3 倍）。你通常无需修改此值，但需要了解：这就是相关说明中提到的 “最大每日 3 倍、当前 4 倍” 安全上限机制。</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3。这是 OpenAPS 的一项关键安全上限。其作用是将您的基础率限制为最大基础率的 3 倍。您很可能无需更改此项，但应了解这就是关于安全上限‘每日最大 3 倍；当前 4 倍’所讨论的内容。</string>
     <string name="pref_title_current_basal_multiplier">当前基础率安全倍数</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值：4 这是 OpenAPS 另一项关键安全上限，也就是 “最大每日 3 倍、当前 4 倍” 中的后半部分。该设置表示：无论你在泵中设置了多高的基础率上限，实际基础率都不会超过当前基础率的该倍数。此设计用于防止用户在尚未完全理解算法逻辑前，因设置过高的基础率上限而陷入危险。同样，默认值为 4 倍；大多数人完全不需要调整此项。如果感觉触发了该安全限制，通常应优先调整其他参数，而非修改本项。</string>
     <string name="pref_title_bolus_snooze_divisor">大剂量延迟胰岛素作用时长除数</string>
@@ -340,7 +315,7 @@
     <string name="pref_title_absorption_cutoff">吸收截止时间</string>
     <string name="absorption_cutoff_summary">任何膳食被认为完全吸收的时间。 剩余的碳水化合物将被忽略。</string>
     <string name="pref_title_absorption_maxtime">吸收最长时间</string>
-    <string name="absorption_max_time_summary">预计膳食中所有的碳水化合物被吸收的时间，以小时为单位</string>
+    <string name="absorption_max_time_summary">一餐中所有碳水化合物预计被吸收完毕所需的小时数</string>
     <string name="pref_title_autosens_min">自动敏感系数优化(Autosens)最小值</string>
     <string name="openapsama_autosens_min_summary">默认值：0.7\n这是 自动灵敏度（Autosens）安全限制的下限，用于约束 autosens 对基础率的下调幅度，以及对 ISF（胰岛素敏感系数）和血糖目标值的上调幅度。</string>
     <string name="pref_title_autosens_max">自动敏感系数优化(Autosens)最大值</string>

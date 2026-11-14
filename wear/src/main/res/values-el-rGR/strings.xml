@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Διάταξη επιπλοκών</string>
     <string name="cwf_complication_layout_description">Θέση και μέγεθος των επιπλοκών, όπως λαμβάνονται από το φορτωμένο προσαρμοσμένο καντράν.</string>
     <string name="pref_include_external">Συμπερίληψη εξωτερικών προβολών στο πρότυπο</string>
-    <string name="pref_switch_external">Εναλλαγή εξωτερικών δεδομένων στο καντράν</string>
     <string name="custom_pref_show_seconds">Εμφάνιση δευτερολέπτων</string>
     <string name="digitalstyle_pref_your_style">Το στυλ σας</string>
     <string name="digitalstyle_style_none">κανένα στυλ</string>

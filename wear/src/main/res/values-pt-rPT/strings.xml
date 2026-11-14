@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Disposição das complicações</string>
     <string name="cwf_complication_layout_description">Posição e tamanho das complicações, obtidos da watchface personalizada carregada.</string>
     <string name="pref_include_external">Incluir vistas externas no modelo</string>
-    <string name="pref_switch_external">Trocar dados externos na watchface</string>
     <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">O seu estilo</string>
     <string name="digitalstyle_style_none">sem estilo</string>

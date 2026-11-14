@@ -26,7 +26,6 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Error en verificar el progrés del procés d\'activació. Torneu a intentar-ho si us plau.</string>
     <string name="omnipod_common_error_pod_suspended">Pod en pausa</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Error en fer sonar bip de prova</string>
-    <string name="omnipod_common_error_time_out_of_sync">La hora al pod no està sincronitzada. Si us plau actualitzeu l\'hora a la pestanya Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Error inesperat. Si us plau, informeu! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">La configuració d\'alertes al pod ha estat actualitzada.</string>
@@ -79,7 +78,6 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Bips de basal activats</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Bips d\'SMS activats</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Bips de basals temporals activats</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar botó \"Suspendre lliurament\" a la pestanya Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecció d\'horari d\'estiu/hivern activada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Recordatori d\'expiració activat</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservori baix activada</string>

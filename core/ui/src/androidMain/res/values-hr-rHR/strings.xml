@@ -82,9 +82,7 @@
     <string name="a11y_inrange">u rasponu</string>
     <string name="a11y_low">nisko</string>
     <string name="activate_profile">Aktiviraj profil</string>
-    <string name="profileswitch_ismissing">ProfileSwitch nedostaje. Promijenite profil ili pritisnite \"Aktiviraj profil\" u lokalnom profilu.</string>
     <string name="profile">Profil</string>
-    <string name="confirm_remove_multiple_items">Jeste li sigurni da želite ukloniti %1$d stavke</string>
     <string name="overview_treatment_label">Tretman</string>
     <string name="copytolocalprofile">Napraviti novi profil iz ovog profila?</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -150,7 +148,6 @@
     <string name="uel_ns_queue_cleared">NS RED ČEKANJA OBRISAN</string>
     <string name="uel_ns_settings_copied">NS POSTAVKE KOPIRANE</string>
     <string name="uel_error_dialog_ok">DIJALOG POGREŠKE OK</string>
-    <string name="uel_error_dialog_mute">ISKLJUČIVANJE DIJALOGA POGREŠKE </string>
     <string name="uel_error_dialog_mute_5min">DIJALOG POGREŠKE ISKLJUČEN 5MIN</string>
     <string name="uel_objective_started">CILJ POČEO</string>
     <string name="uel_objective_unstarted">CILJ NIJE STARTAN</string>

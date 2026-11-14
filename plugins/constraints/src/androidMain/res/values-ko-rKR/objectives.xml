@@ -16,8 +16,8 @@
     <string name="objectives_maxbasal">권장 사항을 충족하는 동작을 수행하십시오</string>
     <string name="objectives_maxbasal_learned">안전 기능에 주의하고 필요하면 안전 매개 변수를 조정하십시오.</string>
     <string name="objectives_maxiobzero_objective">저혈당 주입 정지(LGS)로 폐쇄 루프 시작</string>
-    <string name="objectives_maxiobzero_gate">저혈당 주입정지 모드(LGS, 즉 최대 IOB = 0이 자동으로 설정됨)에서 폐쇄 루프로 며칠 동안 실행하십시오. LGS 이벤트가 너무 많지 않아야 합니다.</string>
-    <string name="objectives_maxiobzero_learned">MaxIOB를 0으로 설정하면 저혈당이 방지되며, 기저 주입량 이상으로 인슐린을 더 추가하지 않습니다 (음수 IOB인 경우 제외)</string>
+    <string name="objectives_maxiobzero_gate">저혈당 주입 정지 모드(LGS, 즉 최대 IOB = 0이 자동으로 설정됨)에서 폐쇄 루프로 며칠 동안 실행하십시오. LGS 이벤트가 너무 많지 않아야 합니다.</string>
+    <string name="objectives_maxiobzero_learned">MaxIOB를 0으로 설정하면 저혈당을 막는 데 도움이 되며, 기저 주입량 이상으로 인슐린을 더 추가하지 않습니다 (음수 IOB인 경우 제외)</string>
     <string name="objectives_maxiob_objective">폐쇄 루프 조정: 최대 IOB를 0보다 높이고 혈당 목표를 서서히 낮추기</string>
     <string name="objectives_maxiob_gate">혈당 목표를 낮추기 전에 며칠 동안 실행하고, 최소 하룻밤은 저혈당 알람 없이 지내십시오</string>
     <string name="objectives_maxiob_learned">아이가 자라면 최대 IOB를 업데이트하십시오. 음식으로 감당할 수 있는 것보다 많은 인슐린을 시스템이 주지 않게 하십시오. 너무 높은 값은 좋지 않습니다. 간단 모드에서는 최대 IOB가 자동으로 계산됩니다</string>
@@ -65,7 +65,7 @@
     <string name="objectives_exam_learned_objectives">목표 진행 상황은 다른 설정과 함께 저장되므로 백업해야 합니다.</string>
     <string name="objectives_exam_learned_objectives2">내보낸 설정과 생성된 APK는 항상 휴대폰 밖에도 보관하십시오. 휴대폰은 분실되거나 손상될 수 있습니다. 휴대폰에서 접근할 수 있는 클라우드가 좋은 보관 장소입니다. 그러면 몇 분 안에 다른 기기에서 AAPS를 복원할 수 있습니다. 사용한 마스터 암호도 안전한 곳에 보관하는 것이 좋습니다. 마스터 암호가 없으면 백업은 쓸모가 없습니다. AAPS 빌드에 사용한 서명 키(.jks 파일)와 암호도 마찬가지입니다. 나머지는 중요하지 않습니다. 언제든지 인터넷에서 다시 다운로드할 수 있습니다.</string>
     <string name="objectives_exam_learned_wrongcarbs">AAPS에 잘못 입력했거나 입력이 실제와 맞지 않으면 가능한 한 빨리 바로잡으십시오. 과다 투여로 이어질 수 있습니다. AAPS에는 항상 탄수화물, 인슐린 등에 대한 정보를 가능한 한 정확하게 알려야 합니다.</string>
-    <string name="objectives_exam_learned_iob">AAPS가 잘 작동하는지 분석할 때 IOB 그래프를 보면 유용한 정보를 많이 얻을 수 있습니다.</string>
+    <string name="objectives_exam_learned_iob">AAPS가 잘 작동하는지 확인하려면 IOB 그래프를 보십시오. 유용한 정보를 많이 얻을 수 있습니다.</string>
     <string name="objectives_exam_learned_cob">COB 계산은 ISF와 IC의 관계에 따라 달라집니다. ISF를 높이거나 IC를 낮추면 흡수 시간이 길어집니다. 하지만 퍼센트로 프로파일을 전환하면 두 값이 동시에 바뀌므로 흡수 시간에는 영향이 없습니다.</string>
     <string name="objectives_exam_learned_breadgrams">탄수화물 입력에는 그램 단위만 사용할 수 있습니다.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs는 펌프의 확장 볼러스를 대신하는 기능입니다.</string>

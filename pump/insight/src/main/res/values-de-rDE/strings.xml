@@ -4,6 +4,7 @@
     <string name="disable_tbr_over_notification">TBR-Vorrüber-Benachrichtigung deaktivieren\n(Pumpeneinstellung)</string>
     <string name="not_paired">Nicht gekoppelt</string>
     <string name="recovering">Erholen</string>
+    <string name="insight_status">Status</string>
     <string name="recovery_duration">Erholungsdauer</string>
     <string name="last_connected">Zuletzt verbunden</string>
     <string name="start_pump">Pumpe starten</string>
@@ -13,11 +14,15 @@
     <string name="operating_mode">Betriebsmodus</string>
     <string name="description_pump_insight_local">Pumpen-Integration für Accu-Chek Insight Pumpen</string>
     <string name="not_inserted">Nicht eingesetzt</string>
+    <string name="tdd_bolus">TDD Bolus</string>
+    <string name="tdd_basal">TDD Basal</string>
     <string name="multiwave_bolus">Multiwave-Bolus</string>
     <string name="searching_for_devices">Geräte werden gesucht…</string>
     <string name="pairing_completed">Kopplung abgeschlossen</string>
     <string name="code_compare">Stimmen die Codes auf diesem Gerät und auf deiner Pumpe überein?</string>
     <string name="insight_pairing">Insight Kopplung</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Schlauch gewechselt</string>
     <string name="insight_alert_notification_channel">Insight Pumpenalarme</string>
     <string name="disable_vibration">Vibrationen bei manueller Bolus-Abgabe deaktivieren</string>
@@ -42,4 +47,8 @@
     <string name="max_recovery_duration">Max. Erholungsdauer [h]</string>
     <string name="min_recovery_duration">Min. Erholungsdauer [h]</string>
     <string name="pump_alert">Pumpenalarm</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Entkoppeln</string>
+    <string name="reset_pairing">Kopplungsinformationen zurücksetzen?</string>
+    <string name="reservoir_level">Reservoirstand</string>
 </resources>

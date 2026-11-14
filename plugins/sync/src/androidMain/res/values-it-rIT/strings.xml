@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Impostazioni connessione</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Sincronizza i tuoi dati con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
@@ -38,7 +37,7 @@
     <string name="authorized_clients_method_qr_pair">Codice QR: Nightscout e associazione</string>
     <string name="authorized_clients_method_qr_pair_summary">Scansiona una volta sul nuovo telefono. Otterrà il suo token Nightscout e sarà associato.</string>
     <string name="authorized_clients_method_qr_ns">Codice QR: Solo Nightscout</string>
-    <string name="authorized_clients_method_qr_ns_summary">Il telefono ottiene il proprio token Nightscout e può leggere i dati. Non è accoppiato e non può inviare comandi.</string>
+    <string name="authorized_clients_method_qr_ns_summary">Il telefono ottiene il proprio token Nightscout e può leggere i dati. Non è associato e non può inviare comandi.</string>
     <string name="authorized_clients_method_pin">PIN</string>
     <string name="authorized_clients_method_pin_summary">Per un telefono senza fotocamera. Deve essere già collegato a Nightscout.</string>
     <string name="authorized_clients_qr_working">Creazione del token Nightscout…</string>
@@ -228,7 +227,7 @@
     <string name="description_sms_communicator">Controlla AAPS in remoto usando i comandi SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">dall\'app autenticatore per: %1$s seguito dal PIN</string>
     <string name="smscommunicator_tab_otp_label">Configurazione autenticatore</string>
-    <string name="smscommunicator_code_verify_label">Codice controllo:</string>
+    <string name="smscommunicator_code_verify_label">Codice da controllare:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Il codice di verifica è composto da 6 cifre visualizzate dall\'app autenticatore (note come OTP) seguite da 3 o più cifre del PIN obbligatorio.</string>
     <string name="smscommunicator_otp_reset_btn">Resetta autenticatori</string>

@@ -39,16 +39,7 @@
     <string name="shorthour">ч</string>
     <string name="days">дн</string>
     <string name="hours">час</string>
-    <string name="unit_second">сек</string>
-    <string name="unit_minute">мин</string>
-    <string name="unit_hour">час</string>
-    <string name="unit_day">дн</string>
-    <string name="unit_week">нед</string>
-    <string name="unit_seconds">сек</string>
     <string name="unit_minutes">мин</string>
-    <string name="unit_hours">час</string>
-    <string name="unit_days">дн</string>
-    <string name="unit_weeks">нед</string>
     <string name="shortminute">м</string>
     <string name="time_remaining_h_m">%1$d ч %2$d мин осталось</string>
     <string name="time_remaining_m">%1$d мин осталось</string>
@@ -141,6 +132,5 @@
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
-    <string name="advisoralarm">Напомнить о еде</string>
     <string name="format_insulin_units">%1$.2f ед</string>
 </resources>

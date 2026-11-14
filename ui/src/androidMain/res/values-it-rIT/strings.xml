@@ -41,7 +41,8 @@
     <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">Giorni</string>
-    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="hba1c_mmol_mol" comment="%1$d=HbA1c (or eA1c, GMI) in the IFCC unit mmol/mol, a whole number. Shown under the same value in percent. Example: 48 mmol/mol">%1$d mmol/mol</string>
     <string name="cgp_title">Pentagono del glucosio (CGP) — 14 giorni</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -153,7 +154,7 @@
     <string name="missing_insulin_name">Nome Insulina Mancante</string>
     <string name="insulin_name_exists">Il nome dell\'insulina %1$s esiste già, seleziona un nuovo nome</string>
     <string name="insulin_external_update_title">Configurazione dell\'insulina modificata</string>
-    <string name="insulin_external_update_message">Un client accoppiato ha cambiato la configurazione dell\'insulina. Tocca OK per caricare le modifiche e scartare le modifiche non salvate, o Annulla per continuare a modificare (il prossimo salvataggio le sovrascriverà).</string>
+    <string name="insulin_external_update_message">Un client associato ha cambiato la configurazione dell\'insulina. Tocca OK per caricare le modifiche e scartare le modifiche non salvate, o Annulla per continuare a modificare (il prossimo salvataggio le sovrascriverà).</string>
     <string name="insulin_edit_target_gone">Questa insulina è stata rimossa altrove, quindi la modifica non può essere salvata. L\'elenco è stato ricaricato.</string>
     <string name="insulin_activation_applied">Attivazione insulina applicata</string>
     <!-- Client→master round-trip pending dialog -->
@@ -286,7 +287,7 @@
     <string name="show_on_watch">Mostra sull\'orologio</string>
     <string name="ecarbs_additional">Carboidrati Aggiuntivi</string>
     <string name="valid_from_to">Intervallo Di Tempo Valido</string>
-    <string name="carb_time">Tempo Carbo</string>
+    <string name="carb_time">Tempo carboidrati</string>
     <string name="save_changes_question">Salvare le modifiche a questa voce?</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="carbs_constraint_violation">Carboidrati limitati da vincoli</string>

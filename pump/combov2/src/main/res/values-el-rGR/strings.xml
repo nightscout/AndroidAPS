@@ -19,7 +19,6 @@
     <string name="combov2_error_10">Σφάλμα δεξαμενής</string>
     <string name="combov2_error_11">Μη προετοιμασμένο σετ έγχυσης</string>
     <string name="combov2_extended_bolus_not_supported">Το εκτεταμένο bolus δεν υποστηρίζεται</string>
-    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Σύζευξη με αντλία</string>
     <string name="combov2_unpair_pump_title">Αποσύζευξη αντλίας</string>
     <string name="combov2_driver_state_label">Κατάσταση οδηγού</string>
@@ -31,13 +30,6 @@
 2. Ελέγξτε αν μια συσκευή εμφανίζεται ως συζευγμένη. αν ναι, μεταβείτε στην οθόνη της αντλίας \"Διαγραφή συσκευής\" για να διαγράψετε/αποσυνδέσετε τη συσκευή\n
 3. Μεταβείτε στην οθόνη \"Προσθήκη συσκευής\" της αντλίας και αρχίστε την σύζευξη με την αντλία\n
 4. Κάντε κλικ στο κουμπί \"Έναρξη σύζευξης\" παρακάτω για να ξεκινήσει η σύζευξη στο AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Μετά από λίγο, το όνομα του τηλεφώνου θα εμφανιστεί στην οθόνη της αντλίας. Πατήστε CHECK για επιβεβαίωση.\n\n
-Όταν η σύζευξη ολοκληρωθεί με επιτυχία, επιβεβαιώστε την ολοκληρωμένη σύζευξη στην αντλία σας και επιστρέψτε στην κύρια οθόνη της αντλίας πατώντας το κουμπί CHECK δύο φορές.\n\n
-Εάν δεν έχει δημιουργηθεί σύνδεση μετά από περισσότερο από ~5 λεπτά:\n\n
-1. Πατήστε Πίσω ή το κουμπί \"Ακύρωση σύζευξης\"\n
-2. Ακυρώστε τη σύζευξη στο Combo (πατήστε ταυτόχρονα τα πλήκτρα UP και MENU
-για να ακυρώσετε τη σύζευξη)\n
-3. Προσπαθήστε να κάνετε σύζευξη ξανά</string>
     <string name="combov2_enter_pin">Εισαγωγή PIN</string>
     <string name="combov2_cancel_pairing">Ακύρωση σύζευξης</string>
     <string name="combov2_confirm_cancel_pairing_message">Θέλετε πραγματικά να ακυρώσετε τη σύζευξη;</string>
@@ -107,7 +99,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Αγνόηση περιττού αιτήματος 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">Παρουσιάστηκε απρόσμενο όριο κατά τη ρύθμιση του TBR, το ποσοστό στόχος που ήταν %1$d%%, έφτασε το όριο %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Αδυναμία ορισμού απόλυτου TBR αν ο βασικός ρυθμός είναι μηδέν</string>
-    <string name="combov2_unpair_pump_summary">Αποσύζευξη του AndroidAPS και του Android από την τρέχουσα συζευγμένη αντλία Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Άγνωστο TBR ανιχνεύθηκε και διακόπηκε: ποσοστό: %1$d%%; εναπομένουσα διάρκεια: %2$s</string>
     <string name="combov2_connection_error">Σφάλμα σύνδεσης: %1$s</string>
     <string name="combov2_short_status_alert">Ειδοποίηση: %s</string>

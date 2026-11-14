@@ -35,13 +35,14 @@
     <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
     <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
     <string name="agp_average">Durchschnitt</string>
-    <string name="agp_median">Mittelwert</string>
+    <string name="agp_median">Median</string>
     <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
     <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
     <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
     <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
     <string name="agp_available_days">Tage</string>
-    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="hba1c_mmol_mol" comment="%1$d=HbA1c (or eA1c, GMI) in the IFCC unit mmol/mol, a whole number. Shown under the same value in percent. Example: 48 mmol/mol">%1$d mmol/mol</string>
     <string name="cgp_title">Glukose Pentagon (CGP) — 14 Tage</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -234,7 +235,7 @@
     <string name="remove_label">Entfernen</string>
     <string name="active_profile_indicator">AKTIV</string>
     <string name="confirm_remove_profile">Profil „%1$s“ entfernen?</string>
-    <string name="confirm_clone_profile">Profil \"%1$s \"klonen?</string>
+    <string name="confirm_clone_profile">Profil „%1$s“ klonen?</string>
     <string name="profile_no_longer_exists">Profilliste wurde zwischenzeitig geändert — Bitte versuche es erneut</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>

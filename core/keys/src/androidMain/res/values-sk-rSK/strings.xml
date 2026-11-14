@@ -6,7 +6,7 @@
     <string name="pref_summary_insulin_concentration">Povoliť podporu pre rôzne koncentrácie inzulínu (U50, U200, atď.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Nechať obrazovku zapnutú</string>
-    <string name="pref_summary_keep_screen_on">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky bude batéria veľmi rýchlo vybitá.</string>
+    <string name="pref_summary_keep_screen_on">Zabrániť Androidu, aby vypínal obrazovku. Bez pripojenia k nabíjačke to spotrebuje veľa energie.</string>
     <string name="pref_title_show_treatment_button">Zobraziť tlačidlo Ošetrenie</string>
     <string name="pref_title_show_wizard_button">Zobraziť tlačidlo Kalkulačka</string>
     <string name="pref_title_show_insulin_button">Zobraziť tlačidlo Inzulín</string>
@@ -240,33 +240,7 @@
     <string name="pref_title_units">Jednotky</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Jazyk</string>
     <string name="lang_default">Predvolený systémom</string>
-    <string name="lang_en">Angličtina</string>
-    <string name="lang_af">Afrikánčina</string>
-    <string name="lang_bg">Bulharčina</string>
-    <string name="lang_cs">Čeština</string>
-    <string name="lang_de">Nemčina</string>
-    <string name="lang_dk">Dánčina</string>
-    <string name="lang_fr">Francúzština</string>
-    <string name="lang_nl">Holandčina</string>
-    <string name="lang_es">Španielčina</string>
-    <string name="lang_el">Gréčtina</string>
-    <string name="lang_ga">Írčina</string>
-    <string name="lang_it">Taliančina</string>
-    <string name="lang_ko">Kórejčina</string>
-    <string name="lang_lt">Litovčina</string>
-    <string name="lang_nb">Nórčina</string>
-    <string name="lang_pl">Poľština</string>
-    <string name="lang_pt">Portugalčina</string>
-    <string name="lang_pt_br">Portugalčina (Brazília)</string>
-    <string name="lang_ro">Rumunčina</string>
-    <string name="lang_ru">Ruština</string>
-    <string name="lang_sk">Slovenčina</string>
-    <string name="lang_sv">Švédčina</string>
-    <string name="lang_tr">Turečtina</string>
-    <string name="lang_zh_tw">Čínština (tradičná)</string>
-    <string name="lang_zh_cn">Čínština (zjednodušená)</string>
     <string name="pref_title_patient_name">Názov inštancie</string>
     <string name="pref_summary_patient_name">Meno osoby používajúcej tento telefón. Slúži na odlíšenie tejto inštancie AAPS v prehľadoch a pri synchronizácii.</string>
     <!-- StringKey: Directory preferences -->
@@ -299,7 +273,7 @@
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+421XXXXXXXXX;+421YYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Ďalší povinný kód PIN na konci tokenu</string>
-    <string name="smscommunicator_otp_pin_summary">Ďalšie číslice, ktoré by mali byť zapamätané a pridané na koniec každého vygenerovaného jednorázového hesla</string>
+    <string name="smscommunicator_otp_pin_summary">Ďalšie číslice, ktoré si musíte zapamätať a pridať na koniec každého vygenerovaného jednorázového hesla</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Typ pumpy</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +304,7 @@
     <string name="pref_title_ama_max_iob">Max IOB pre AMA</string>
     <string name="openapsma_max_iob_summary">Táto hodnota sa v kontexte OpenAPS nazýva Max IOB.\nToto je maximálne množstvo inzulínu v [U], ktoré dokáže APS podať naraz. Hodnotu ovplyvňuje aj typ pacienta.</string>
     <string name="pref_title_max_daily_multiplier">Maximálny bezpečnostný násobiteľ najvyššieho denného bazálu</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčový bezpečnostný limit OpenAPS. Obmedzuje vaše bazály na 3-násobok (v tomto prípade) vašej najvyššej bazálnej dávky. Pravdepodobne to nebudete musieť meniť, ale mali by ste vedieť, že práve o tom hovorí pravidlo bezpečnostných limitov „3x max denný; 4x aktuálny“.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3. Toto je kľúčový bezpečnostný limit OpenAPS. Obmedzuje vaše bazály na 3-násobok vašej najvyššej bazálnej dávky. Pravdepodobne to nebudete musieť meniť, ale mali by ste vedieť, že práve o tom hovorí pravidlo bezpečnostných limitov „3x max denný; 4x aktuálny“.</string>
     <string name="pref_title_current_basal_multiplier">Bezpečnostný násobiteľ aktuálneho bazálu</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4. Ide o druhú polovicu kľúčových bezpečnostných limitov OpenAPS a druhú polovicu limitov „3× max denný; 4× aktuálny“. Znamená to, že váš bazál bez ohľadu na max. bazál nastavený v pumpe nemôže byť vyšší ako tento násobok aktuálnej úrovne vášho bazálu. Cieľom je zabrániť tomu, aby sa ľudia dostali do nebezpečnej oblasti nastavením príliš vysokých max. bazálov bez pochopenia, ako algoritmus funguje. Štandardná hodnota je znova 4×; väčšina používateľov ju nikdy nebude potrebovať meniť. Ak majú pocit, že do tohto bezpečnostného limitu „narážajú“, pravdepodobnejšie budú musieť upraviť iné nastavenia.</string>
     <string name="pref_title_bolus_snooze_divisor">Deliteľ bolus snooze DIA</string>
@@ -341,7 +315,7 @@
     <string name="pref_title_absorption_cutoff">Hraničný čas absorpcie (vstrebávania)</string>
     <string name="absorption_cutoff_summary">Čas, po ktorom je akékoľvek jedlo považované za absorbované (vstrebané). Zvyšné sacharidy budú vynulované.</string>
     <string name="pref_title_absorption_maxtime">Maximálna doba absorpcie (vstrebávania)</string>
-    <string name="absorption_max_time_summary">Čas v hodinách, počas ktorého sa predpokladá, že všetky sacharidy budú absorbované (vstrebané).</string>
+    <string name="absorption_max_time_summary">Čas v hodinách, za ktorý sa očakáva vstrebanie všetkých sacharidov z jedla</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nDruhá strana bezpečnostných limitov Autosens. Obmedzuje, ako nízko môže Autosens upraviť bazály a ako vysoko môže upraviť ISF a cieľové glykémie.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
@@ -365,11 +339,11 @@
     <string name="pref_title_dura_weight">Váha ISF podľa trvania</string>
     <string name="openapsama_dura_ISF_weight_summary">Toto je váha, ktorá je aplikovaná pri dlhotrvajúcej hyperglykémii a parameter, ktorý znižuje ISF, čím potenciálne zvyšuje množstvo dodaného inzulínu.\n\nPredvolená hodnota 0.0 túto funkciu vypne.</string>
     <string name="pref_title_smb_delivery_ratio">Pomer podávania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Štandardná hodnota: 0.5 Toto je ďalšie dôležité bezpečnostné nastavenie OpenAPS, ktoré určuje, aký podiel z celkového potrebného inzulínu je možné podať prostredníctvom SMB. Jeho zmyslom je zabrániť tomu, aby sa používatelia vystavili riziku, keby v tej istej chvíli zadali požiadavku na SMB aj z telefónu opatrovateľa. Zvyšujte túto experimentálnu hodnotu pomaly a opatrne.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Štandardná hodnota: 0.5. Toto je ďalší kľúčový bezpečnostný limit OpenAPS, ktorý určuje, aký podiel z celkového potrebného inzulínu je možné podať ako SMB. Jeho zmyslom je zabrániť tomu, aby sa používatelia dostali do nebezpečnej situácie, keď v tej istej chvíli zadajú požiadavku na SMB z telefónu opatrovateľa. Zvyšujte túto experimentálnu hodnotu pomaly a opatrne.</string>
     <string name="pref_title_smb_delivery_ratio_min">Min pomer podávania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Štandardná hodnota: 0.5 Toto je spodný koniec lineárne rastúceho pomeru namiesto pevnej hodnoty uvedenej vyššie.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Štandardná hodnota: 0.5. Toto je spodný koniec lineárne rastúceho pomeru namiesto pevnej hodnoty uvedenej vyššie.</string>
     <string name="pref_title_smb_delivery_ratio_max">Max pomer podávania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Štandardná hodnota: 0.5 Toto je horný koniec lineárne rastúceho pomeru namiesto pevnej hodnoty uvedenej vyššie.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Štandardná hodnota: 0.5. Toto je horný koniec lineárne rastúceho pomeru namiesto pevnej hodnoty uvedenej vyššie.</string>
     <string name="pref_title_smb_max_range_extension">SMB max rozšírenie rozsahu</string>
     <string name="openapsama_smb_max_range_extension_summary">Štandardná hodnota: 1. Toto je ďalší dôležitý bezpečnostný limit OpenAPS a špecifikuje, nakoľko môžete prekročiť štandardný limit 120 minút pre maxSMB/maxUAM. Zvyšujte túto experimentálnu hodnotu pomaly a opatrne.</string>
     <!-- UnitDoubleKey: Overview preferences -->

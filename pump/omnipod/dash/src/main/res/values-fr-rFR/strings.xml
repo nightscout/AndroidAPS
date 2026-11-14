@@ -21,17 +21,13 @@
     <string name="omnipod_dash_not_enough_insulin">Pas assez d\'insuline restante dans le réservoir</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Commande non confirmée</string>
     <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
-    <string name="suspend_delivery_is_unconfirmed">Arrêt de la livraison n\'est pas confirmé! Veuillez actualiser manuellement le statut du Pod depuis l\'onglet Omnipod et reprendre la livraison si nécessaire.</string>
     <string name="insulin_delivery_suspended">Injection d\'insuline suspendue</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">L\'heure du pod est différente de l\'heure du téléphone. Changez de profil pour corriger le débit de basal.</string>
     <string name="failed_to_set_the_new_basal_profile">Échec de définition du nouveau profil de basal. Livraison suspendue</string>
-    <string name="setting_basal_profile_might_have_failed">Le paramétrage du profil de basal a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="bolus_delivery_status_uncertain">État de l\'injection du bolus incertain. Actualisez l\'état du pod pour confirmer ou refuser.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Impossible de vérifier si le SMB (%1$s) a été injecté. Actualisez l\'état du pod pour confirmer ou refuser cette commande.</string>
     <string name="temp_basal_out_of_sync">Le statut de basal temporaire n\'est pas comme attendu ! Si un basal temporaire était déjà en cours d\'exécution, il a été annulé. Veuillez vérifier l\'historique de l\'insuline et du pod</string>
     <string name="checking_delivery_status">Vérification du statut de l\'injection</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Le paramétrage du basal temporaire a peut-être échoué. Si un basal temporaire était en cours d\'exécution, il a été annulé. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">L\'annulation du basal temporaire est incertaine</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Commande reprise injection non confirmée. Veuillez actualiser le statut du pod</string>
-    <string name="cancelling_temp_basal_might_have_failed">L\'annulation du basal temporaire pourrait avoir échoué. Si un basal temporaire était déjà en cours d\'exécution, il pourrait avoir été annulé. Veuillez actualiser manuellement le statut du Pod depuis l\'onglet Omnipod.</string>
 </resources>

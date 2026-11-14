@@ -6,7 +6,7 @@
     <string name="previous_button">上一个</string>
     <string name="setupwizard_finish">完成</string>
     <string name="welcome">欢迎</string>
-    <string name="welcometosetupwizard">欢迎使用设置向导。它将指导您完成设置过程 \n</string>
+    <string name="welcometosetupwizard">欢迎使用设置向导。它将指导您完成设置过程 </string>
     <string name="end_user_license_agreement">最终用户许可协议</string>
     <string name="end_user_license_agreement_text">不得用于制定医疗决定。在适用法律允许的范围内，对该程序不作任何保证。除非另有书面授权的版权所有者和/或其他方均按原样提供程序，不附带明示或暗示的任何形式的担保，包括但不限于对适销性和适用于特定用途的默示担保。对您的程序的质量和性能的完整风险。如果程序存在缺陷，您应承担所有必要维修，修理或更正的代价.</string>
     <string name="end_user_license_agreement_i_understand">我理解并同意</string>

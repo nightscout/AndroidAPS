@@ -180,7 +180,7 @@
     <string name="alarm_notification_desc_warning_low_insulin">Zbývá méně než 10 U inzulínu, výdej inzulínu byl zastaven. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Platnost patche vypršela, výdej inzulínu byl zastaven. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
     <string name="alarm_notification_desc_warning_low_battery">Slabá baterie, výdej inzulínu byl zastaven. Klepněte na tlačítko [Zahodit patch] a patch hned vyměňte.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Výdej inzulínu byl zastaven. Hned se přesuňte na místo s vhodnou teplotou (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Výdej inzulínu byl zastaven. Hned se přesuňte na místo s vhodnou teplotou (40℉–99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Výdej inzulínu byl zastaven. Klepněte na tlačítko [Spustit inzulín] a znovu spusťte výdej bazálu.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Vypršel čas na aplikaci patche. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnostika selhala. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>

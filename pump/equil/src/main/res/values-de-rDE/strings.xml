@@ -1,26 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
+    <string name="equil_pump_description">Equil 5.3 oder neuere Patch-Pumpe</string>
     <!--  start  -->
+    <string name="equil_basal_speed">Basisbasal</string>
+    <string name="equil_dressing">Reservoir wechseln</string>
+    <string name="equil_dressing_onkey_msg">Kolben wird automatisch zum Reservoir-Boden bewegt. Er stoppt automatisch beim Erreichen des Bodens. Zum Unterbrechen bei Bedarf auf \'Stop\' klicken.</string>
+    <string name="equil_hint_dressing">Dieser Vorgang stoppt die Insulininfusion und sorgt dafür, dass sich der Pumpenkolben nach unten zurückzieht!</string>
+    <string name="equil_insulin_reservoir">Insulinreservoir</string>
+    <string name="equil_mode">Laufender Modus</string>
+    <string name="equil_mode_running">Läuft</string>
+    <string name="equil_mode_stopped">Gestoppt</string>
+    <string name="equil_mode_suspended">Angehalten</string>
+    <string name="equil_serialnumber">Gerätenummer</string>
+    <string name="equil_stop">Stopp</string>
+    <string name="equil_success">Erfolgreich</string>
+    <string name="equil_title_dressing">Ampulle wechseln</string>
+    <string name="equil_title_assemble">Pumpe zusammenbauen</string>
+    <string name="equil_title_serial">Gerät verbinden</string>
+    <string name="equil_title_fill">Befüllen/Füllen</string>
+    <string name="equil_title_attach">Pumpe anbringen</string>
+    <string name="equil_title_air">Kanüle befüllen</string>
+    <string name="equil_title_unpair_detach">Pumpe abnehmen</string>
+    <string name="equil_title_history_events">Verlaufsereignisse</string>
+    <string name="equil_tone">Warnton</string>
+    <string name="equil_bolus_speed">Bolus-Geschwindigkeit</string>
+    <string name="equil_bolus_speed_summary">Ein schnellerer Bolus kann zu mehr Verschlussalarmen führen.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 IE/min (Standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 IE/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 IE/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 IE/min</string>
     <string name="equil_tone_mode_mute">Stummschalten</string>
     <string name="equil_tone_mode_shake">Nur vibrieren</string>
     <string name="equil_tone_mode_tone">Nur Töne</string>
     <string name="equil_tone_mode_tone_and_shake">Vibration und Ton</string>
     <string name="equil_unbind_content">Dieser Vorgang stoppt die Insulininfusion und zieht den Pumpenkolben nach unten zurück! Außerdem wird der Bindungsstatus gelöscht!</string>
+    <string name="equil_ble_config_confirmation_title">Equil Patch-Pumpe verbinden</string>
     <string name="equil_error">Verbindungsfehler</string>
     <string name="equil_change">Pumpe wechseln</string>
+    <string name="equil_change_content">Bitte nehmen Sie die Pumpe von der Basisplatte ab.</string>
+    <string name="equil_new_infusion_set_question">Legen Sie auch ein neues Infusionsset (Basisplatte und Kanüle) an?</string>
+    <string name="equil_new_infusion_set_yes">Ja, neues Infusionsset</string>
+    <string name="equil_new_infusion_set_no">Nein, nur Reservoir oder Batterie</string>
+    <string name="equil_same_infusion_set_hint">Die Kanüle wird nicht gefüllt und es wird kein Kanülenwechsel aufgezeichnet.</string>
+    <string name="equil_unpair_alert">Sind Sie sicher, dass Sie die Kontrolle über %1$s abgeben möchten? </string>
+    <string name="equil_record_basal">Basalrate %1$sIE/h</string>
+    <string name="equil_record_basal_temp">Temporäre Basalrate%1$sIE/h</string>
+    <string name="equil_record_bolus">Bolus %1$s IE</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
+    <string name="equil_basal_exceeds_max">Die Profil-Basalrate %1$s IE/h überschreitet die max. basale Pumpenrate %2$s IE/h. Erhöhen Sie die max. Basaleinstellung und verbinden Sie die Pumpe erneut.</string>
+    <string name="equil_not_enough_insulin">Nicht mehr genügend Insulin im Reservoir übrig</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Niedriger Batteriestand: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Nicht genügend Insulin im Reservoir übrig: %1$s</string>
+    <string name="equil_reservoir_empty">Das Reservoir ist leer. Die Pumpe liefert kein Insulin mehr.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Der Bolus-Befehl hat die Pumpe erreicht, aber die Pumpe hat nicht geantwortet. Möglicherweise wird die Dosis von %1$s dennoch abgegeben. Geben Sie keinen weiteren Bolus ab. AAPS berücksichtigt die gesamte Menge.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Der Stop-Befehl erreichte die Pumpe nicht, oder die Rückmeldung ging verloren. AAPS rechnet den gesamten Bolus von %1$s an, bis im Pumpenprotokoll ersichtlich ist, welche Menge tatsächlich abgegeben wurde.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Das Pumpenprotokoll zeigt, dass der Bolus von %1$s nicht abgegeben wurde. AAPS berücksichtigt ihn daher nicht.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Die Pumpe wurde während des Bolus gestoppt. Abgegeben: %1$s von \%2$s</string>
+    <string name="equil_pump_not_run">Pumpe läuft nicht</string>
+    <string name="equil_pair">Verbinden</string>
+    <string name="equil_pair_error">Kopplungsfehler</string>
+    <string name="equil_fill">Füllen/Befüllen</string>
+    <string name="equil_air">Luft entfernen</string>
+    <string name="equil_temp_basal_rate">Temporäre Basalrate</string>
+    <string name="equil_total_delivered">Insgesamt abgegeben</string>
+    <string name="equil_firmware_version">Firmware-Version</string>
+    <string name="equil_shutdown_be">Equil schaltet sich automatisch aus</string>
+    <string name="equil_shutdown">Equil automatisch aus</string>
     <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f IE/h, Dauer: %2$d min</string>
+    <string name="equil_common_history_bolus_value">%1$.2f IE</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Bolus einstellen</string>
+    <string name="equil_common_cmd_cancel_bolus">Bolus abbrechen</string>
+    <string name="equil_common_cmd_set_tbr">Temporäre Basalrate einstellen</string>
+    <string name="equil_common_cmd_cancel_tbr">Temporäre Basalrate abbrechen</string>
+    <string name="equil_common_cmd_set_basal_schedule">Basalrate einstellen</string>
+    <string name="equil_common_cmd_set_time">Uhrzeit einstellen</string>
+    <string name="equil_common_cmd_suspend_delivery">Abgabe anhalten</string>
+    <string name="equil_common_cmd_resume_delivery">Abgabe fortsetzen</string>
+    <string name="equil_common_cmd_pair">Equil koppeln</string>
+    <string name="equil_common_cmd_insert_cannula">Kanüle einsetzen</string>
+    <string name="equil_common_cmd_unpair">Equil entkoppeln</string>
+    <string name="equil_common_cmd_set_extended_bolus">Verlängerten Bolus einstellen</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Verlängerten Bolus abbrechen</string>
     <!--    推杆回退-->
+    <string name="equil_common_change_insulin">Kolbenstangen-Rückzug</string>
+    <string name="equil_common_set_alarm_tone">Nur auf Benachrichtigungston konfigurieren</string>
+    <string name="equil_common_set_alarm_shake">Nur auf Vibration konfigurieren</string>
+    <string name="equil_common_set_alarm_mute">Für lautlos konfigurieren</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Für Benachrichtigungston und Vibration konfigurieren</string>
+    <string name="equil_common_read_devices">Geräteinformationen lesen</string>
+    <string name="equil_common_cmd_fill">Füllen</string>
+    <string name="history_manual_confirm">Manuell bestätigen</string>
+    <string name="equil_command_not_found">Geräte nicht gefunden</string>
     <string name="equil_command_connect_error">Pumpenverbindungsfehler</string>
     <string name="equil_command_connect_no_response">Keine Antwort von der Pumpe</string>
     <string name="equil_command__unknown">Unbekannter Status des Befehls</string>
+    <string name="equil_install">Befestige die Pumpe an deinem Körper</string>
     <string name="equil_settings_alarm_battery">Alarm bei niedrigem Batteriestand</string>
-    <string name="equil_settings_alarm_insulin">Alarm bei niedrigem Medikamentenvorrat</string>
+    <string name="equil_settings_alarm_insulin">Insulin-Reservoir fast leer</string>
     <string name="equil_init_insulin_error">Initialisierung des Reservoirs ist nicht abgeschlossen</string>
     <string name="equil_history_group_all">Alle</string>
     <string name="equil_history_group_pair">Koppeln</string>
     <string name="equil_history_group_bolus">Boli</string>
     <string name="equil_history_group_basal">Basalraten</string>
     <string name="equil_history_group_configuration">Konfigurationen</string>
+    <string name="equil_tab_action">Verlaufsaktion</string>
+    <string name="equil_tab_equil">Equil-Verlauf</string>
+    <string name="equil_password_error">Equil-Kopplungspasswort ist falsch</string>
+    <string name="equil_none">keine</string>
+    <string name="equil_history_item1">Geringe Insulinmenge im Reservoir</string>
+    <string name="equil_history_item2">Insulin-Reservoir leer</string>
+    <string name="equil_history_item3">Infusionsblockade erkannt</string>
+    <string name="equil_history_item4">Motorumkehr erkannt</string>
+    <string name="equil_history_item5">Motor Fehlfunktion erkannt</string>
+    <string name="equil_history_item6">Injektionspause gestartet</string>
+    <string name="equil_history_item7">Injektion bereits pausiert</string>
+    <string name="equil_history_item8">Automatisches Herunterfahren unmittelbar</string>
+    <string name="equil_history_item9">Automatisch aus!</string>
+    <string name="equil_history_item10">Reservoir füllen</string>
+    <string name="equil_history_item11">Kolben zurückspulen</string>
+    <string name="equil_history_item12">Sofortbolus gestartet</string>
+    <string name="equil_history_item13">Temporäre Basalrate gestartet</string>
+    <string name="equil_history_item14">​Temporäre Basalrate beendet</string>
+    <string name="equil_history_item15">Batteriestand niedrig</string>
+    <string name="equil_history_item16">Batterie leer!</string>
+    <string name="equil_history_item17">Einschalt-Reset</string>
+    <string name="equil_history_item18">Abnormale Infusion gestoppt</string>
+    <string name="equil_common_overview_button_suspend_delivery">Anhalten</string>
+    <string name="equil_common_overview_button_resume_delivery">Abgabe fortsetzen</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Du hast noch nicht alle Schritte abgeschlossen. Willst Du wirklich beenden?</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Beenden</string>
+    <string name="equil_support_error">Firmware-Version zu niedrig. Nicht unterstützt</string>
+    <string name="equil_password_tips">Optional ein Passwort für die Kopplung mit der Equil v5.3 Pumpe festlegen. Dieses Passwort wird in Zukunft auch für das Entkoppeln verwendet, bitte merken Sie es sich daher gut. Passwortregel: Es muss 4 Zeichen lang sein und aus ABCDEF0123456789 gewählt werden.</string>
+    <string name="equil_set_pair_password">Kopplungspasswort festlegen</string>
+    <string name="equil_hint1">Wählen Sie nach dem Aufsetzen der Pumpe auf die Grundplatte aus, ob Luft aus der innenliegenden Nadel entfernt werden soll.</string>
+    <string name="equil_unbind">Gerät entkoppeln</string>
+    <string name="equil_device_unpaired">​Gerät entkoppelt</string>
+    <string name="equil_assemble">Bitte bauen Sie die Pumpe, das gefüllte Reservoir und die geladene Batterie zusammen</string>
+    <string name="equil_pair_password_title">Passwort für %1$s eingeben</string>
+    <string name="equil_insert">Bitte entlüften Sie das Reservoir, bis ein Tropfen Insulin an der Nadelspitze zu sehen ist</string>
+    <string name="equil_insert2">Die Pumpe darf sich nicht auf der Pumpenbasis befinden.</string>
+    <string name="equil_attach">Bitte befestigen Sie die Pumpe an der Basis</string>
+    <string name="equil_hint2">Kanüle befüllen</string>
+    <string name="equil_pump_updated">Pumpe aktualisiert</string>
+    <string name="equil_replace_reservoir">Das Reservoir ist leer. Bitte ersetzen Sie das Reservoir</string>
+    <string name="equil_removed_anyway">Entkopplungsbefehl fehlgeschlagen. Pumpe wird trotzdem entfernt. Das während der Kopplung festgelegte Passwort wird nicht von der Pumpe gelöscht.</string>
 </resources>

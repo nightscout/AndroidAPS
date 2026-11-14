@@ -12,7 +12,6 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, Carboidratos=%2$.1f g</string>
-    <string name="omnipod_eros_history_tbr_value">Taxa: %1$.2f U, duração: %2$d minutos</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Comunicação falhou: falha na verificação de integridade das mensagens</string>
     <string name="omnipod_eros_error_invalid_packet_type">Comunicação falhou: recebido um pacote inválido do Pod</string>
@@ -29,16 +28,7 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Nenhuma resposta do RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interrompido</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nenhuma resposta do Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Configuração do perfil basal falhou. A entrega pode ser suspensa! Por favor atualize manualmente o status do Pod da aba Omnipod e retome a entrega, se necessário.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Configuração do perfil basal pode ter falhado. A administração pode estar suspensa! Por favor atualize manualmente o status do Pod da aba Omnipod e retome a administração se necessário.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Configuração do perfil basal falhou. A administração foi suspensa! Por favor retome manualmente a administração na aba Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">O cancelamento do basal temporário pode ter falhado. Por favor, atualize manualmente o status do Pod na aba Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Falha ao configurar basal temporário. Se um basal temporário estava sendo executado, pode ter sido cancelado. Por favor, atualize manualmente o status do Pod na aba Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Configuração de basal temporário pode ter falhado. Se um basal temporário estava sendo executado, ele foi cancelado. Por favor, atualize manualmente o status do Pod na aba Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">A duração da TBR precisa ser maior que zero e múltipla de %1$s minutos.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Configuração do perfil basal pode ter falhado. A administração pode estar suspensa! Por favor atualize manualmente o status do Pod da aba Omnipod e retome a administração se necessário.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Falha ao configurar a hora. A administração está suspensa! Retome a administração manualmente na aba Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Falha ao trocar automaticamente o horário no Pod. Você deve sincronizar manualmente o horário na aba Omnipod.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Não foi possível verificar se o bólus foi bem sucedido. Por favor, verifique manualmente se o seu Pod está administrando bólus ouvindo cliques. <b>Se você tem certeza de que o bólus não conseguiu, você deve apagar manualmente a entrada de bólus dos tratamentos, mesmo se você clicar em \'Cancelar bólus\' agora!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Não foi possível verificar se o bólus SMB (%1$.2f U) foi bem sucedido. <b>Se você tem certeza de que o Bólus não foi bem sucedido, você deve excluir manualmente a entrada SMB de Tratamentos.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Uma basal temporária está sendo executada no Pod, mas o AAPS não está ciente desta basal temporária. Por favor cancele sua basal temporária manualmente.</string>

@@ -4,7 +4,6 @@
     <string name="open_humans_description">Open Humans permite que você envie os dados do seu tratamento para doação a projetos científicos.</string>
     <string name="logout">Sair da sua conta</string>
     <string name="setup">Configuração</string>
-    <string name="setup_completed_info">Open Humans foi configurado. Caso queira interromper o envio de seus dados, clique em \'Sair da sua conta\'</string>
     <string name="not_setup_info">Open Humans está inativo. Para iniciar o envio de seus dados, clique em \'Configuração\'</string>
     <string name="project_member_id">ID de Membro do Projeto: %1$s</string>
     <string name="open_humans_uploading">Enviando para Open Humans…</string>

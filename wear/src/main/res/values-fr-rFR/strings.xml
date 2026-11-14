@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Mise en page des complications</string>
     <string name="cwf_complication_layout_description">Position et taille des complications, prises à partir du cadran de montre chargé.</string>
     <string name="pref_include_external">Inclure les vues externes dans le modèle</string>
-    <string name="pref_switch_external">Intervertir les données externes sur le cadran</string>
     <string name="custom_pref_show_seconds">Afficher les secondes</string>
     <string name="digitalstyle_pref_your_style">Votre style</string>
     <string name="digitalstyle_style_none">aucun</string>

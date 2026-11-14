@@ -6,7 +6,7 @@
     <string name="pref_summary_insulin_concentration">Włącz obsługę dla różnych stężeń insuliny (U50, U200 itp.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Utrzymuj ekran włączony</string>
-    <string name="pref_summary_keep_screen_on">Nie pozwól, aby Android wyłączał ekran. Zwiększy to zużycie energii, gdy telefon nie jest podłaczony do zasilania.</string>
+    <string name="pref_summary_keep_screen_on">Nie pozwala Androidowi wyłączać ekranu. Zużywa dużo energii, gdy telefon nie jest podłączony do zasilania.</string>
     <string name="pref_title_show_treatment_button">Pokaż przycisk bolus i węglowodany</string>
     <string name="pref_title_show_wizard_button">Pokaż przycisk kalkulatora</string>
     <string name="pref_title_show_insulin_button">Pokaż przycisk insuliny</string>
@@ -31,7 +31,7 @@
     <string name="pref_title_alert_carbs_required">Alarm gdy wymagane jest podanie węglowodanów</string>
     <string name="pref_title_alert_urgent_as_android_notification">Do pilnych alarmów użyj powiadomień Androida</string>
     <string name="pref_title_alert_increase_volume">Stopniowo zwiększaj głośność powiadomień</string>
-    <string name="pref_title_alert_override_dnd">Powiadamiaj pomimo tryby Nie przeszkadzać</string>
+    <string name="pref_title_alert_override_dnd">Powiadamiaj pomimo trybu Nie przeszkadzać</string>
     <string name="pref_summary_alert_override_dnd">Włączone: alarmy dzwonią nawet wtedy, gdy telefon jest wyciszony lub w trybie \"Nie przeszkadzać\". Wyłączone: alarmy nie dzwonią. W trybie \"Nie przeszkadzać\" tylko wibracja.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Przekaż glikemię do NS</string>
@@ -177,7 +177,7 @@
     <string name="pref_title_bolus_percentage">Procent bolusa</string>
     <string name="deliverpartofboluswizard">Zastosuj tę wartość do korekty glikemii i węglowodanów w obliczeniach kalkulatora bolusa.</string>
     <string name="pref_title_reset_bolus_percentage_time">Czas resetu procentu bolusa</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Dostarcz pełen bolus (100%), jeśli glikemia jest starsza niż</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Dostarcz pełny bolus (100%), jeśli odczyt glikemii jest starszy niż</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Czas do ponownego zablokowania</string>
     <string name="pref_title_protection_type_application">Poziom 0: Ochrona aplikacji</string>
@@ -240,33 +240,7 @@
     <string name="pref_title_units">Jednostki</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Język</string>
     <string name="lang_default">Domyślny (systemowy)</string>
-    <string name="lang_en">Angielski</string>
-    <string name="lang_af">Afrikaans</string>
-    <string name="lang_bg">Bułgarski</string>
-    <string name="lang_cs">Czeski</string>
-    <string name="lang_de">Niemiecki</string>
-    <string name="lang_dk">Duński</string>
-    <string name="lang_fr">Francuski</string>
-    <string name="lang_nl">Niderlandzki</string>
-    <string name="lang_es">Hiszpański</string>
-    <string name="lang_el">Grecki</string>
-    <string name="lang_ga">Irlandzki</string>
-    <string name="lang_it">Włoski</string>
-    <string name="lang_ko">Koreański</string>
-    <string name="lang_lt">Litewski</string>
-    <string name="lang_nb">Norweski</string>
-    <string name="lang_pl">Polski</string>
-    <string name="lang_pt">Portugalski</string>
-    <string name="lang_pt_br">Portugalski (brazylijski)</string>
-    <string name="lang_ro">Rumuński</string>
-    <string name="lang_ru">Rosyjski</string>
-    <string name="lang_sk">Słowacki</string>
-    <string name="lang_sv">Szwedzki</string>
-    <string name="lang_tr">Turecki</string>
-    <string name="lang_zh_tw">Chiński (tradycyjny)</string>
-    <string name="lang_zh_cn">Chiński (uproszczony)</string>
     <string name="pref_title_patient_name">Nazwa pacjenta</string>
     <string name="pref_summary_patient_name">Imię osoby korzystającej z tego telefonu. Pozwala odróżnić tę instancję AAPS w raportach i synchronizacji.</string>
     <!-- StringKey: Directory preferences -->
@@ -299,7 +273,7 @@
     <string name="smscommunicator_allowednumbers">Dozwolone numery telefonów</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Dodatkowy obowiązkowy PIN na końcu tokenu</string>
-    <string name="smscommunicator_otp_pin_summary">Dodatkowe cyfry, które powinny być zapamiętywane i przyklejone na końcu każdego wygenerowanego hasła jednorazowego</string>
+    <string name="smscommunicator_otp_pin_summary">Dodatkowe cyfry, które trzeba zapamiętać i dodać na końcu każdego wygenerowanego hasła jednorazowego</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Typ pompy</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +304,7 @@
     <string name="pref_title_ama_max_iob">Maks. IOB dla AMA</string>
     <string name="openapsma_max_iob_summary">Ta wartość w kontekście OpenAPS nazywa się Max IOB\nJest to maksymalna ilość insuliny w [U], jaką APS może podać naraz. Na wartość wpływa także typ pacjenta.</string>
     <string name="pref_title_max_daily_multiplier">Maks. dzienny mnożnik bezpieczeństwa</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Wartość domyślna: 3 To jest kluczowy współczynnik bezpieczeństwa OpenAPS. Ogranicza dawki bazowe do 3x twojej największej dawki bazowej. Prawdopodobnie nie będziesz musiał tego zmieniać, ale powinieneś być świadomy tego, co się rozumie przez “3x max dzienna; 4x aktualna” dla współczynników bezpieczeństwa.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Wartość domyślna: 3. To jest kluczowy limit bezpieczeństwa OpenAPS. Ogranicza dawki bazowe do 3x Twojej największej dawki bazowej. Prawdopodobnie nie będziesz musiał tego zmieniać, ale powinieneś wiedzieć, że o tym mówi zasada „3x max dzienna; 4x aktualna” dla limitów bezpieczeństwa.</string>
     <string name="pref_title_current_basal_multiplier">Aktualny współczynnik bezpieczeństwa bazy</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Wartość domyślna: 4 To jest drugi kluczowy współczynnik bezpieczeństwa OpenAPS, i druga wartość z “3x max dzienna; 4x aktualna”. To oznacza, że Twoja dawka bazowa niezależnie od maksymalnej bazy ustawionej na pompie nie może być większa niż ta ustawiona wartość razy twoja aktualna dawka bazowa. To ma na celu przestrzec ludzi przed ustawieniem zbyt wysokiej dawki maksymalnej przed zrozumieniem jak działa algorytm. Ponownie, wartość domyślna to 4x; większość ludzi nie będzie potrzebowała tego zmienić i raczej będą potrzebować dostosować inne ustawienia, jeśli czują, że zbliżają się do współczynnika bezpieczeństwa.</string>
     <string name="pref_title_bolus_snooze_divisor">Dzielnik DIA dla uśpienia bolusa</string>
@@ -341,7 +315,7 @@
     <string name="pref_title_absorption_cutoff">Czas odcięcia wchłaniania</string>
     <string name="absorption_cutoff_summary">Czas, w którym każdy posiłek jest uznany za wchłonięty. Pozostałe węglowodany zostaną wyzerowane.</string>
     <string name="pref_title_absorption_maxtime">Maks. czas wchłaniania</string>
-    <string name="absorption_max_time_summary">Oczekiwany czas w godzinach, w którym wszystkie węglowodany zostają wchłonięte</string>
+    <string name="absorption_max_time_summary">Czas w godzinach, w którym wszystkie węglowodany z posiłku powinny zostać wchłonięte</string>
     <string name="pref_title_autosens_min">Autosens min</string>
     <string name="openapsama_autosens_min_summary">Wartość domyślna: 0.7\nDruga strona limitu bezpieczeństwa dla autosens, ustawia mnożnik minimalny dla wartości, do jakiej autosens może obniżyć bazę, i jak wysoko może ustawić ISF i wartość docelową BG.</string>
     <string name="pref_title_autosens_max">Autosens maks.</string>
@@ -365,11 +339,11 @@
     <string name="pref_title_dura_weight">Waga ISF dla czasu trwania</string>
     <string name="openapsama_dura_ISF_weight_summary">Jest to waga stosowana podczas długotrwałych okresów podwyższonej i utrzymującej się wysoko i płasko glikemii, co wzmacnia ISF i może potencjalnie zwiększyć podaż insuliny.\n\nDomyślna wartość 0.0 wyłącza ten efekt.</string>
     <string name="pref_title_smb_delivery_ratio">Współczynnik dostarczania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Domyślna wartość: 0,5. To jest kolejny kluczowy limit bezpieczeństwa OpenAPS i określa, jaki udział całej wymaganej insuliny może być dostarczony jako SMB. Ma to na celu uniemożliwienie ludziom wchodzenia na niebezpieczny obszar poprzez jednoczesne realizowanie wielu zleceń SMB wydanych zdalnie z telefonów opiekunów. Zwiększaj tę wartość eksperymentalną powoli i ostrożnie.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Wartość domyślna: 0,5. To jest kolejny kluczowy limit bezpieczeństwa OpenAPS. Określa, jaka część całej wymaganej insuliny może być dostarczona jako SMB. Ma to zapobiec niebezpiecznym sytuacjom, gdy w tym samym czasie zlecenia SMB są wysyłane z telefonu opiekuna. Zwiększaj tę eksperymentalną wartość powoli i ostrożnie.</string>
     <string name="pref_title_smb_delivery_ratio_min">Minimalny współczynnik dostarczania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Wartość domyślna: 0,5. Jest to dolna granica liniowo rosnącego współczynnika, a nie ustalona powyżej wartość.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Wartość domyślna: 0,5. Jest to dolna granica liniowo rosnącego współczynnika zamiast stałej wartości powyżej.</string>
     <string name="pref_title_smb_delivery_ratio_max">Maks. współczynnik dostarczania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Wartość domyślna: 0,5. Jest to górna granica liniowo rosnącego współczynnika, a nie ustalona powyżej wartość.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Wartość domyślna: 0,5. Jest to górna granica liniowo rosnącego współczynnika zamiast stałej wartości powyżej.</string>
     <string name="pref_title_smb_max_range_extension">Rozszerzenie maks. zakresu SMB</string>
     <string name="openapsama_smb_max_range_extension_summary">Domyślna wartość: 1. Jest to kolejny kluczowy limit bezpieczeństwa OpenAPS i określa, o ile (jaki mnożnik) możesz przekroczyć standardowe 120 minut [maxSMB/maxUAM]. Zwiększaj tę wartość eksperymentalną powoli i ostrożnie.</string>
     <!-- UnitDoubleKey: Overview preferences -->

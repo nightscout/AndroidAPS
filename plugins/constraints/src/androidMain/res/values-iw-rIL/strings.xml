@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
     <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. הלולאה הסגורה מושבתת.</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
-    <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
+    <string name="smbalwaysdisabled">\"SMB תמיד\" ו-\"SMB אחרי פחמימות\" מושבתים כי מקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
     <string name="smbnotallowedinopenloopmode">SMB אינו מותר במצב לולאה פתוחה</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
@@ -38,7 +38,7 @@
     <string name="apsselected">נבחר APS</string>
     <string name="closedmodeenabled">מצב סגור מופעל</string>
     <string name="description_objectives">תוכנית הלימוד</string>
-    <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
+    <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את ההתקדמות שלכם.</string>
     <string name="objectives_button_unfinish">ביטול השלמה</string>
     <string name="objectives_button_unstart">ביטול התחלה</string>
     <string name="bg_doubled_lgs">מצב LGS עקב ערכים כפולים במקור נתוני הסוכר</string>

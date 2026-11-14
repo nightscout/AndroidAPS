@@ -5,12 +5,6 @@
     <string name="settings_protection">Protecție setări</string>
     <string name="application_protection">Protecție aplicație</string>
     <string name="bolus_protection">Protecție bolus</string>
-    <string name="settings_password">Parolă setări</string>
-    <string name="settings_pin">PIN setări</string>
-    <string name="application_password">Parolă aplicație</string>
-    <string name="application_pin">PIN Aplicație</string>
-    <string name="bolus_password">Parolă bolus</string>
-    <string name="bolus_pin">PIN Bolus</string>
     <string name="protection_timeout_title">Reținerea parolei și a PIN-ului [s]</string>
     <string name="protection_timeout_summary">Timpul până la introducerea parolei sau a PIN-ului</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

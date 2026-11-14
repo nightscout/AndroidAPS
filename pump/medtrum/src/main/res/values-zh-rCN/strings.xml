@@ -5,7 +5,7 @@
     <string name="medtrum_pump_description">Medtrum Nano 和 Medtrum 300U 的泵集成</string>
     <string name="medtrum_pump_setting">Medtrum 泵设置</string>
     <string name="pump_error">泵错误: %1$s !! </string>
-    <string name="pump_warning">泵警告: %1$s </string>
+    <string name="pump_warning">泵警告: %1$s</string>
     <string name="pump_is_suspended">泵暂停了</string>
     <string name="pump_is_suspended_hour_max">由于超过每小时最大输注量，泵被暂停</string>
     <string name="pump_is_suspended_day_max">由于超出每日最大胰岛素量，泵暂停</string>

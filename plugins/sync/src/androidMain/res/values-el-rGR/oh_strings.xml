@@ -4,7 +4,6 @@
     <string name="open_humans_description">Το Open Humans σας επιτρέπει να ανεβάσετε τα δεδομένα σας για το διαβήτη και να τα δωρίσετε σε επιστημονικά προγράμματα.</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="setup">Ρύθμιση</string>
-    <string name="setup_completed_info">Το Open Humans έχει ρυθμιστεί. Σε περίπτωση που θέλετε να σταματήσετε να ανεβάζετε δεδομένα, κάντε κλικ στο κουμπί \'Αποσύνδεση\'.</string>
     <string name="not_setup_info">Το Open Humans είναι προς το παρόν ανενεργό. Για να ξεκινήσετε το ανέβασμα δεδομένων, κάντε κλικ στο κουμπί \'Ρύθμιση\'.</string>
     <string name="project_member_id">ID Μέλους Έργου: %1$s</string>
     <string name="open_humans_uploading">Μεταφόρτωση στο Open Humans…</string>

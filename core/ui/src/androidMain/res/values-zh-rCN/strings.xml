@@ -11,6 +11,7 @@
     <string name="treatments_history">治疗历史</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
+    <string name="nav_configuration_desc">设置您的配置（CGM、泵等）并启用功能</string>
     <string name="count_selected">已选中 %1$d 项</string>
     <string name="delete">删除</string>
     <string name="show_invalidated">显示无效项</string>
@@ -135,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">胰岛素未切换：%1$s 您之前的胰岛素仍在使用中。</string>
     <string name="insulin_activation_unconfirmed">胰岛素切换无法确认。请在输注前检查配置文件中哪种胰岛素处于活动状态。</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">胰岛素未切换。您之前的胰岛素仍在使用中。\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。如果新胰岛素已装入泵中，请勿连接泵，并重新执行胰岛素切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
     <string name="insulin_nickname_label">胰岛素昵称</string>
@@ -229,7 +230,7 @@
     <string name="profile">配置文件</string>
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">时间偏移</string>
-    <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
+    <string name="confirm_remove_multiple_items">您确定要移除 %1$d 个项目吗？</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主机上没有这些条目中的 %1$d 条。它们未被移除。</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
@@ -660,7 +661,7 @@
     <string name="uel_ns_queue_cleared">清除NS队列</string>
     <string name="uel_ns_settings_copied">复制NS设置</string>
     <string name="uel_error_dialog_ok">确认</string>
-    <string name="uel_error_dialog_mute">静音</string>
+    <string name="uel_error_dialog_mute">错误对话框静音</string>
     <string name="uel_error_dialog_mute_5min">静音5分钟</string>
     <string name="uel_objective_started">目标已开始</string>
     <string name="uel_objective_unstarted">目标未开始</string>
@@ -716,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">未选择配置文件</string>
     <string name="missing_profile_name">缺少配置文件名称</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s 副本</string>
     <string name="profile_not_saved_activate">配置文件未保存。请在激活前保存配置文件。</string>
     <string name="profile_basal_not_compatible_with_pump">基础率与当前泵不兼容，无法激活。请降低百分比或调整基础率。</string>
     <string name="profile_basal_below_pump_minimum">基础率低于当前泵的最低限值，无法激活。请提高百分比或调整基础率。</string>
@@ -889,7 +891,7 @@
     <string name="export_result_message_exported">已导出设置</string>
     <string name="export_result_message_failed">设置导出失败！</string>
     <string name="export_result_message_about_to_expire">设置已导出：密码即将过期。请手动导出并（重新）输入密码。</string>
-    <string name="export_result_message_expired">设置导出已取消：密码过期。手动导出并（重新）输入！</string>
+    <string name="export_result_message_expired">设置导出已取消：密码已过期。请手动导出并重新输入密码！</string>
     <string name="export_result_message_disabled">警告（自动化）：未启用设置导出！</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">云导出成功</string>
@@ -996,7 +998,7 @@
     <string name="cannula">输注导管</string>
     <string name="patch_pump">贴片泵</string>
     <!-- Site Rotation -->
-    <string name="select_location">点击下面选择部位</string>
+    <string name="select_location">点击下面选择站点</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">不要关闭我的应用？</string>
     <string name="fabric_upload_disabled">已禁用崩溃日志上传！</string>
@@ -1105,6 +1107,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">更改设置： %1$d。更改的插件将重新启动。</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">需更改的设置：%1$d。保留的泵设置：%2$d，因此您的泵可继续工作。</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">导入的设置未选择此手机上的任何泵。%1$s 现已激活——请检查您的泵设置。</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">已从备份添加至您的胰岛素列表：%1$s。尚未启用：请在激活配置文件时选择正确的胰岛素，并务必在 Nightscout 下载您较早的治疗记录之前完成此操作。</string>
     <string name="import_applying">正在应用设置…</string>
     <string name="import_replace_pump_settings">同时替换泵设置</string>
     <string name="import_replace_pump_settings_summary">保持关闭以保留此手机已配对的泵。在同一泵上恢复到新手机时，请将其开启。</string>
@@ -1201,5 +1204,6 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可视化范围</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">泵在输注 %1$s 后停止了大剂量。请在下次大剂量前检查泵。</string>
     <string name="secrets_not_protected">此计算机上未找到系统密钥库。用于保护您的设置以及与主机配对关系的密钥会保存在数据旁边的文件中，因此任何获取您文件副本的人也会同时获得这些密钥。在 Linux 上，请安装并启动密钥环服务（例如 GNOME Keyring 或 KWallet），然后重新启动 AAPS。</string>
 </resources>

@@ -8,7 +8,6 @@
     <string name="commanderror">Erreur de commande</string>
     <string name="speederror">Erreur de vitesse</string>
     <string name="insulinlimitviolation">Violation limite d\'insuline</string>
-    <string name="boluserrorcode">Demandé : %1$.2fU Injecté : %2$.2fU code d’erreur : %3$s</string>
     <string name="danai2_bolus_error_no_prime">La pompe n\'est pas amorcée</string>
     <string name="danai2_bolus_error_not_enough_insulin">Pas assez d\'insuline restante dans le réservoir</string>
     <string name="danai2_bolus_error_easy_sleep">Mode de sommeil facile est activé dans la pompe</string>
@@ -105,7 +104,6 @@
     <string name="selectedpump">Pompe sélectionnée</string>
     <string name="rs_loginsulinchange_title">Enreg. changement de réservoir</string>
     <string name="rs_loginsulinchange_summary">Ajouter un évènement \"Changement d\'Insuline\" dans careportal si détecté dans l\'historique</string>
-    <string name="rs_logcanulachange_title">Enreg. changement de site</string>
     <string name="rs_logcanulachange_summary">Ajouter l\'évènement \"Changement de Site\" dans careportal si détecté dans l\'historique</string>
     <string name="press_ok_on_the_pump">Appuyez sur OK sur la pompe\net entrez les 2 numéros affichés\nConserver l\'affichage ACTIF sur la pompe en appuyant sur le bouton &lt;b&gt;moins&lt;b&gt; jusqu\'à ce que le code soit entré.</string>
     <string name="num1pin">1: (12 chiffres)</string>

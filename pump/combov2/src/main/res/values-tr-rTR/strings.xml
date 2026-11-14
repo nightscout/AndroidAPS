@@ -19,7 +19,7 @@
     <string name="combov2_error_10">Rezervuar hatası</string>
     <string name="combov2_error_11">İnfüzyon seti kullanıma hazır değil</string>
     <string name="combov2_extended_bolus_not_supported">Yayma bolus desteklenmiyor</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Pompayla eşleştir</string>
     <string name="combov2_unpair_pump_title">Pompayla eşleşmeyi kaldır</string>
     <string name="combov2_driver_state_label">Sürücü durumu</string>
@@ -31,11 +31,11 @@
 2. Halihazırda eşleştirilmiş bir cihaz olup olmadığını kontrol edin; varsa, o cihazı silmek/eşleşmesini kaldırmak için pompada \"Cihazı sil\" ekranına gidin\n
 3. Pompada \"Cihaz ekle\" ekranına gidin ve pompada eşleştirmeyi başlatın\n
 4. AAPS\'de eşleştirmeyi başlatmak için aşağıdaki \"Eşleştirmeye başla\" düğmesine dokunun\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Bir süre sonra pompanın ekranında telefonun adı beliriyor; onaylamak için CHECK düğmesine basın.\n\n
-Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmeyi onaylayın ve CHECK düğmesine iki kez basarak ana pompa ekranına dönün.\n\n
-~5 dakikadan uzun bir süre bağlantı kurulmazsa:\n\n
-1. Geri\'ye veya \"Eşleştirmeyi İptal Et\" düğmesine basın\n
-2. Combo\'da eşleştirmeyi iptal edin (UP ve MENU düğmelerine aynı anda basarak eşleştirmeyi iptal edin)\n
+    <string name="combov2_steps_if_no_connection_during_pairing">Bir süre sonra pompanın ekranında telefonun adı görünür; onaylamak için CHECK düğmesine basın.\n\n
+Eşleştirme başarıyla tamamlandığında, pompanızda tamamlanan eşleştirmeyi onaylayın ve CHECK düğmesine iki kez basarak ana pompa ekranına dönün.\n\n
+~5 dakikadan uzun süre bağlantı kurulmazsa:\n\n
+1. Geri\'ye veya \"Eşleştirmeyi iptal et\" düğmesine basın\n
+2. Combo\'da eşleştirmeyi iptal edin (eşleştirmeyi iptal etmek için UP ve MENU düğmelerine aynı anda basın)\n
 3. Tekrar eşleştirmeyi deneyin</string>
     <string name="combov2_enter_pin">PIN\'i girin</string>
     <string name="combov2_cancel_pairing">Eşleştirmeyi iptal et</string>

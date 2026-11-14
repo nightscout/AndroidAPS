@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Tilkoblingsinnstillinger</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synkroniserer dataene dine med Nightscout via v3-API-et</string>
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
@@ -14,7 +13,7 @@
     <string name="authorized_clients_title">Autoriserte klienter</string>
     <string name="authorized_clients_add">Legg til klient</string>
     <string name="authorized_clients_comm_switch_title">Tillat klientstyring</string>
-    <string name="authorized_clients_comm_switch_summary">La tilkoblede klienter sende signerte kommandoer via Nightscout. Slå av for å stoppe kommunikasjonen uten å fjerne dem.</string>
+    <string name="authorized_clients_comm_switch_summary">La sammenkoblede klienter sende signerte kommandoer via Nightscout. Slå av for å stoppe kommunikasjonen uten å fjerne dem.</string>
     <string name="authorized_clients_state_active">Aktiv</string>
     <string name="authorized_clients_state_pending">Venter</string>
     <string name="authorized_clients_last_seen">Sist sett %1$s</string>
@@ -43,17 +42,17 @@
     <string name="authorized_clients_method_pin_summary">For en telefon uten kamera. Den må allerede være koblet til Nightscout.</string>
     <string name="authorized_clients_qr_working">Oppretter Nightscout-token…</string>
     <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Sett opp %1$s</string>
-    <string name="authorized_clients_qr_pair_instructions">Skann denne koden på den nye telefonen, enten i oppsettsveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout og sammenkobler telefonen.</string>
-    <string name="authorized_clients_qr_ns_instructions">Skann denne koden på den nye telefonen, enten i oppsettsveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout. Telefonen blir ikke sammenkoblet.</string>
+    <string name="authorized_clients_qr_pair_instructions">Skann denne koden på den nye telefonen, enten i oppsettveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout og sammenkobler telefonen.</string>
+    <string name="authorized_clients_qr_ns_instructions">Skann denne koden på den nye telefonen, enten i oppsettveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout. Telefonen blir ikke sammenkoblet.</string>
     <string name="authorized_clients_qr_keep_private">Alle som ser denne koden, kan lese dataene dine i Nightscout. Vis den bare til den nye telefonen.</string>
     <string name="authorized_clients_token_problem_title">Ingen QR-kode</string>
     <string name="authorized_clients_not_added_title">Klient ikke lagt til</string>
     <string name="authorized_clients_token_problem_not_connected">Denne telefonen er ikke koblet til Nightscout og kan derfor ikke opprette et token for klienten.</string>
-    <string name="authorized_clients_token_problem_not_allowed">Nightscout-tokenet på denne telefonen er ikke et administratortoken og kan derfor ikke opprette et token for klienten. Bruk et administratortoken her, eller legg til klienten med PIN-koden.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Nightscout-tokenet på denne telefonen er ikke et admin-token og kan derfor ikke opprette et token for klienten. Bruk et admin-token her, eller legg til klienten med PIN-koden.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout har allerede et token med dette navnet og andre rettigheter. Velg et annet navn.</string>
     <string name="authorized_clients_token_problem_name_in_use">En klient med dette navnet finnes allerede i listen. Velg et annet navn, eller fjern klienten først.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout viste ikke den nye tokenen i listen, så den ble fjernet igjen. Ingenting ble liggende igjen. Prøv på nytt.</string>
-    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout viste ikke den nye tokenen i listen, og den kunne ikke fjernes igjen. Slett tokenen %1$s i Nightscout, og prøv deretter på nytt.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout viste ikke det nye tokenet i listen, så det ble fjernet igjen. Ingenting ble liggende igjen. Prøv på nytt.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout viste ikke det nye tokenet i listen, og det kunne ikke fjernes igjen. Slett tokenet %1$s i Nightscout, og prøv deretter på nytt.</string>
     <string name="authorized_clients_tokens_header">Bare lesetilgang til Nightscout</string>
     <string name="authorized_clients_token_unpaired">Eget Nightscout-token, ikke sammenkoblet</string>
     <string name="authorized_clients_token_show_qr">Vis QR-kode</string>
@@ -79,7 +78,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Flere sammenkoblinger samsvarte med denne PIN-koden. Be hovedenheten generere en ny og prøv igjen.</string>
     <string name="pair_with_master_error_expired">Denne sammenkoblingen har utløpt. Generer en ny PIN-kode på hovedenheten.</string>
     <string name="pair_with_master_error_network">Kan ikke koble til Nightscout. Kontroller forbindelsen og prøv igjen.</string>
-    <string name="pair_with_master_error_secret_store">Paringshemmeligheten kunne ikke lagres, så paringen ble avbrutt. Ingenting ble endret. Prøv igjen, og hvis det fortsatt ikke fungerer, start appen på nytt.</string>
+    <string name="pair_with_master_error_secret_store">Sammenkoblingsnøkkelen kunne ikke lagres, så sammenkoblingen ble avbrutt. Ingenting ble endret. Prøv igjen, og hvis det fortsatt ikke fungerer, start appen på nytt.</string>
     <string name="pair_with_master_retry">Prøv igjen</string>
     <string name="pair_with_master_already_paired_title">Allerede sammenkoblet</string>
     <string name="pair_with_master_already_paired_master">Er allerede koblet til hovedenhet %1$s. Koble fra først for å angi en ny PIN-kode.</string>
@@ -121,8 +120,8 @@
     <string name="ns_alarm_options">Alarmvalg</string>
     <string name="ns_remote_control_options">Fjernkontroll</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for den vanlige</string>
-    <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
+    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for de vanlige</string>
+    <string name="title_tidepool_dev_servers">Bruk integrasjonsservere (test)</string>
     <string name="title_tidepool_use_ns_connection">Bruk tilkoblingsinnstillingene for Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Slå av for å angi egne tilkoblingsinnstillinger for Tidepool</string>
     <string name="tidepool">Tidepool</string>
@@ -162,35 +161,35 @@
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
     <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loopstatus</string>
-    <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
-    <string name="scene_not_available">Scene %1$s finnes ikke lenger</string>
-    <string name="wear_remote_insulin_not_allowed_in_client">Fjernkommandoer for insulin er deaktivert i AAPSClient-modus</string>
+    <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lenger tilgjengelig. Last inn flisen på nytt</string>
+    <string name="scene_not_available">Scenen %1$s finnes ikke lenger. Last inn flisen på nytt.</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Fjernkommandoer for insulin er deaktivert i klientmodus</string>
     <string name="wear_phone_not_ready">Telefonen starter fortsatt opp eller tar i bruk innstillinger. Prøv igjen om litt.</string>
-    <string name="wear_control_disabled">Kontroller fra klokke er deaktivert i Klokke-innstillingene på telefonen.</string>
+    <string name="wear_control_disabled">Styr fra klokke er slått av i Klokke-innstillingene på telefonen.</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
     <string name="wear_action_tempt_range_error">Ugyldig område: Lavt mål (%1$s) kan ikke være større enn Høyt mål (%2$s)</string>
-    <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra kalkulator:</string>
+    <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra kalkulatoren:</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="wear_custom_watchface_settings">Innstillinger for egendefinert urskive</string>
     <string name="wear_custom_watchface">Egendefinert urskive: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installerer…</string>
-    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Klokken viser komplikasjons-urskive. Velg Egendefinert urskive for å vise %1$s på klokken.</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Klokken viser komplikasjonsurskiven. Velg Egendefinert urskive for å vise %1$s på klokken.</string>
     <string name="wear_pushed_watchface_confirm_title">Endre urskive på klokken?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s erstatter %2$s på klokken.</string>
     <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s vil erstatte %2$s på klokken. Komplikasjoner du har endret i redigeringsverktøyet for urskiver, vil gå tilbake til standardinnstillingene.</string>
     <string name="wear_load_watchface">Last inn urskive</string>
-    <string name="wear_infos_watchface">Info urskive</string>
+    <string name="wear_infos_watchface">Urskiveinfo</string>
     <string name="wear_export_watchface">Eksporter mal</string>
-    <string name="wear_new_custom_watchface_exported">Egendefinert urskive-mal eksportert</string>
+    <string name="wear_new_custom_watchface_exported">Mal for egendefinert urskive eksportert</string>
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
     <string name="wear_import_custom_watchface_title">Velg egendefinert urskive</string>
-    <string name="cwf_infos_pref_locked">Liste over forhåndsvalg låst av urskive</string>
+    <string name="cwf_infos_pref_locked">Liste over innstillinger låst av urskiven</string>
     <string name="cwf_infos_pref_required">Liste over innstillinger som kreves av urskiven</string>
-    <string name="cwf_infos_view_title">Liste over felt som er inkludert i urskive</string>
+    <string name="cwf_infos_view_title">Liste over felt som er inkludert i urskiven</string>
     <string name="enabled">Aktivert</string>
     <string name="disabled">Deaktivert</string>
     <string name="pump_fetching_data">prøver å lese data fra pumpen.</string>
@@ -202,21 +201,21 @@
     <string name="no_history">Ingen historikkdata!</string>
     <string name="temp_target">Midlertidig mål</string>
     <string name="until">inntil</string>
-    <string name="default_range">STANDARD OMRÅDE</string>
+    <string name="default_range">STANDARDOMRÅDE</string>
     <string name="target">målverdi</string>
     <string name="rate_duration">Tilførsel: %1$.2fE/t (%2$.2f%%) \nVarighet %3$d min</string>
-    <string name="no_profile">Ingen profil valgt</string>
-    <string name="aps_only">Bare bruk i APS-modus!</string>
+    <string name="no_profile">Ingen profil lastet inn</string>
+    <string name="aps_only">Gjelder bare i APS-modus!</string>
     <string name="last_aps_result_na">Siste resultat ikke tilgjengelig!</string>
     <string name="loop_status_closed">LUKKET LOOP</string>
     <string name="loop_status_open">ÅPEN LOOP</string>
     <string name="loop_status_lgs">Stopp ved lavt BS</string>
     <string name="loop_status_disabled">LOOP DEAKTIVERT</string>
     <string name="aps">APS</string>
-    <string name="last_run">Siste beregning</string>
-    <string name="last_enact">Siste utført</string>
+    <string name="last_run">Sist kjørt</string>
+    <string name="last_enact">Sist utført</string>
     <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fE %2$.0f%%</string>
-    <string name="today">Idag</string>
+    <string name="today">I dag</string>
     <string name="weighted">vektlagt</string>
     <string name="full_xdrip_sync_comment">Full synkronisering? Det kan ta en stund og før den er ferdig vil du ikke se nye data i xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Vennligst prøv igjen.</string>
@@ -226,20 +225,20 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-kommunikasjon</string>
     <string name="description_sms_communicator">Fjernstyre AAPS ved å bruke SMS-kommandoer.</string>
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">fra Authenticator-appen for: %1$s etterfulgt av PIN-kode</string>
-    <string name="smscommunicator_tab_otp_label">Oppsett av autentisering</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">fra autentiseringsappen for: %1$s etterfulgt av PIN-kode</string>
+    <string name="smscommunicator_tab_otp_label">Oppsett av autentiseringsapp</string>
     <string name="smscommunicator_code_verify_label">Kode for å sjekke:</string>
     <string name="smscommunicator_code_verify_hint">Engangskode + PIN-kode</string>
-    <string name="smscommunicator_code_verify_info">Verifiseringskoden består av 6 sifre som vises av Authenticator-appen (kjent som Engangskode), etterfulgt av 3 eller flere sifre med den obligatoriske PIN-koden.</string>
-    <string name="smscommunicator_otp_reset_btn">Tilbakestill autentiseringsfunksjoner</string>
+    <string name="smscommunicator_code_verify_info">Verifiseringskoden består av 6 sifre som vises av autentiseringsappen (kalt engangskode, OTP), etterfulgt av 3 eller flere sifre med den obligatoriske PIN-koden.</string>
+    <string name="smscommunicator_otp_reset_btn">Tilbakestill autentiseringsapper</string>
     <string name="smscommunicator_otp_reset_title">Tilbakestill autentiseringsnøkkel</string>
-    <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil tilbakestille autentiseringsnøkkelen? Det vil gjøre alle autentiseringsverktøy som er konfigurert ugyldige, og du må konfigurere dem på nytt.</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Installer Autentisering</string>
+    <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil tilbakestille autentiseringsnøkkelen? Det vil gjøre alle autentiseringsapper som er konfigurert, ugyldige, og du må konfigurere dem på nytt.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installer en autentiseringsapp</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skann koden for å sette opp AAPS OTP-koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>
-    <string name="smscommunicator_otp_reset_header">Tilbakestill autentiseringsfunksjoner</string>
-    <string name="smscommunicator_otp_install_info">Installer Authenticator-appen som støtter RFC 6238 TOTP-tokener på hver følgers telefon. Populære gratisapper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille autentiseringsfunksjonen gjør du alle allerede konfigurerte autentiserings-apper ugyldige. Du må konfigurere dem på nytt!</string>
+    <string name="smscommunicator_otp_reset_header">Tilbakestill autentiseringsapper</string>
+    <string name="smscommunicator_otp_install_info">Installer en autentiseringsapp som støtter RFC 6238 TOTP-tokener, på telefonen til hver følger. Populære gratisapper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille autentiseringsnøkkelen gjør du alle allerede konfigurerte autentiseringsapper ugyldige. Du må konfigurere dem på nytt!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">UGYLDIG STØRRELSE!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">FEIL PIN</string>
@@ -250,15 +249,15 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">For å levere måltidsbolus %1$.2fE, svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_with_code">For å angi det midlertidige målet %1$s, svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_cancel">For å avbryte midlertidig mål, svar med koden %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">For å deaktivere SMS-svartjenesten svar med koden %1$s.\n\nHusk at du bare kan aktivere den på nytt direkte fra AAPS-hovedtelefonen.</string>
+    <string name="smscommunicator_stops_ns_with_code">For å deaktivere SMS-fjerntjenesten svar med koden %1$s.\n\nHusk at du bare kan aktivere den på nytt direkte fra AAPS-hovedtelefonen.</string>
     <string name="smscommunicator_stopped_sms">SMS-fjerntjenesten er stoppet. For å aktivere den på nytt, bruk AAPS på hovedtelefonen.</string>
     <string name="smscommunicator_calibration_reply_with_code">For å sende kalibrering %1$.2f svar med koden %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus mislyktes. Bekreft faktisk tilstand før du sender en ny kommando!</string>
+    <string name="smscommunicator_bolus_failed">Bolus mislyktes. Kontroller den faktiske tilstanden før du sender en ny kommando!</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f E levert</string>
     <string name="smscommunicator_meal_bolus_delivered">Måltidsbolus %1$.2f E levert</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Mål %1$s i %2$d minutter</string>
-    <string name="smscommunicator_tt_set">Mål %1$s for %2$d minutter er satt</string>
-    <string name="smscommunicator_tt_canceled">Midlertidig mål kansellert</string>
+    <string name="smscommunicator_tt_set">Mål %1$s i %2$d minutter er satt</string>
+    <string name="smscommunicator_tt_canceled">Midlertidig mål avbrutt</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop har blitt deaktivert</string>
     <string name="smscommunicator_loop_is_enabled">Loop er aktivert</string>
     <string name="smscommunicator_pump_connect_with_code">For å koble til pumpen, svar med koden %1$s</string>
@@ -269,10 +268,10 @@
     <string name="smscommunicator_remote_command_not_allowed">Fjernkommando er ikke tillatt</string>
     <string name="smscommunicator_remote_command_not_possible">Fjernkommando er ikke mulig</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Fjernbolus ikke tilgjengelig. Prøv igjen senere.</string>
-    <string name="smscommunicator_basal_reply_with_code">For å starte basal %1$.2f E/t for %2$d min, svar med koden %3$s</string>
+    <string name="smscommunicator_basal_reply_with_code">For å starte basal %1$.2f E/t i %2$d min, svar med koden %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">For å bytte profil til %1$s %2$d%% svar med koden %3$s</string>
     <string name="smscommunicator_extended_reply_with_code">For å starte forlenget bolus %1$.2f E i %2$d min, svar med koden %3$s</string>
-    <string name="smscommunicator_carbs_reply_with_code">For å legge inn %1$dg ved %2$s, svar med koden %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">For å legge inn %1$dg kl. %2$s, svar med koden %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">For å starte basal %1$d%% i %2$d min, svar med koden %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">For å pause loop i %1$d minutter, svar med koden %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">For å gjenoppta loop, svar med koden %1$s</string>
@@ -316,9 +315,9 @@
     <string name="sms_read_status_failed">Lesing av status mislyktes</string>
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Varigheten av midlertidig basal må være et multiplum av %1$d minutter og større enn 0.</string>
-    <string name="sms_tbr_percent_only">Denne pumpen støtter midlertidig basaldose kun i prosent, ikke i E/t.</string>
-    <string name="sms_tbr_absolute_only">Denne pumpen støtter midlertidig basaldose kun i E/t, ikke i prosent.</string>
+    <string name="sms_tbr_percent_only">Denne pumpen støtter midlertidig basal kun i prosent, ikke i E/t.</string>
+    <string name="sms_tbr_absolute_only">Denne pumpen støtter midlertidig basal kun i E/t, ikke i prosent.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
     <string name="permission_sms_title">SMS</string>
-    <string name="permission_sms_description">Appen trenger SMS-tillatelse for fjernkontroll via tekstmeldinger</string>
+    <string name="permission_sms_description">Appen trenger SMS-tillatelse for fjernstyring via tekstmeldinger</string>
 </resources>

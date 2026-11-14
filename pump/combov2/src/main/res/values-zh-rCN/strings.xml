@@ -19,7 +19,7 @@
     <string name="combov2_error_10">储液器错误。</string>
     <string name="combov2_error_11">输液器未预充</string>
     <string name="combov2_extended_bolus_not_supported">不支持扩展大剂量</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">与泵配对</string>
     <string name="combov2_unpair_pump_title">与泵取消配对</string>
     <string name="combov2_driver_state_label">驱动状态</string>
@@ -106,7 +106,7 @@
     <string name="combov2_ignoring_redundant_100_tbr">忽略冗余的 100% TBR 请求</string>
     <string name="combov2_hit_unexpected_tbr_limit">调整 TBR 时遇到意外限制：目标百分比为 %1$d%%，达到 %2$d%% 的限制</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基础胰岛素输注率为零，则无法设置绝对 TBR</string>
-    <string name="combov2_unpair_pump_summary">将 AndroidAPS 和 Android 从当前配对的 Accu-Chek Combo 泵中解除配对</string>
+    <string name="combov2_unpair_pump_summary">将 AAPS 和 Android 从当前配对的 Accu-Chek Combo 泵中解除配对</string>
     <string name="combov2_unknown_tbr_detected">检测到未知的 TBR 并停止；百分比：%1$d%%；剩余时长：%2$s</string>
     <string name="combov2_connection_error">连接错误:%1$s</string>
     <string name="combov2_short_status_alert">警告: %s</string>

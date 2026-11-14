@@ -19,8 +19,6 @@
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>
     <string name="sendsmsactiontext">Send SMS med tekst</string>
     <string name="starttemptarget">Start midlertidig mål</string>
-    <string name="islesser">er mindre end</string>
-    <string name="isequalorlesser">er lig med eller mindre end</string>
     <string name="isequal">er lig med</string>
     <string name="isequalorgreater">er lig med eller større end</string>
     <string name="isgreater">er større end</string>
@@ -51,7 +49,6 @@
     <string name="add_short">TILFØJ</string>
     <string name="temptargetcompared">Midlertidig mål %1$s</string>
     <string name="btdevicecompared">Bluetooth-forbindelse til enheden %1$s %2$s</string>
-    <string name="btdevice">Forbindelse til Bluetooth-enhed </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

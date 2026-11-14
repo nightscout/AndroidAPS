@@ -88,7 +88,7 @@
     <string name="add_short">ДОБ</string>
     <string name="temptargetcompared">Временна цел %1$s</string>
     <string name="btdevicecompared">Bluetooth връзка към устройство %1$s %2$s</string>
-    <string name="btdevice">Връзка с Bluetooth устройство </string>
+    <string name="btdevice">Връзка с Bluetooth устройство</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Аутосенс %1$s %2$s %%</string>
     <string name="autosenslabel">Аутосенс %</string>

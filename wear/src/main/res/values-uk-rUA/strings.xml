@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Розташування віджетів</string>
     <string name="cwf_complication_layout_description">Положення і розмір віджетів, взяті з завантаженого власного циферблата.</string>
     <string name="pref_include_external">Додати зовнішні дані до шаблону</string>
-    <string name="pref_switch_external">Перемикати зовнішні дані на циферблаті</string>
     <string name="custom_pref_show_seconds">Показувати секунди</string>
     <string name="digitalstyle_pref_your_style">Ваш стиль</string>
     <string name="digitalstyle_style_none">без стилю</string>

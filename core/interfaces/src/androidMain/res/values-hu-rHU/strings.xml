@@ -12,16 +12,7 @@
     <string name="shorthour">ó</string>
     <string name="days">nap</string>
     <string name="hours">óra</string>
-    <string name="unit_second">másodperc</string>
-    <string name="unit_minute">perc</string>
-    <string name="unit_hour">óra</string>
-    <string name="unit_day">nap</string>
-    <string name="unit_week">hét</string>
-    <string name="unit_seconds">másodperc</string>
     <string name="unit_minutes">perc</string>
-    <string name="unit_hours">óra</string>
-    <string name="unit_days">nap</string>
-    <string name="unit_weeks">hét</string>
     <string name="shortminute">p</string>
     <string name="later_today">Később még ma</string>
     <string name="tomorrow">Holnap</string>

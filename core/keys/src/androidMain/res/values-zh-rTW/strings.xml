@@ -6,7 +6,7 @@
     <string name="pref_summary_insulin_concentration">啟用對不同胰島素濃度（U50、U200 等）的支援</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">保持螢幕常亮</string>
-    <string name="pref_summary_keep_screen_on">防止 Android 關閉螢幕。未插上電源時會大量耗電。</string>
+    <string name="pref_summary_keep_screen_on">避免 Android 關閉螢幕。未連接電源插座時，這會消耗大量電力。</string>
     <string name="pref_title_show_treatment_button">顯示治療按鈕</string>
     <string name="pref_title_show_wizard_button">顯示嚮導按鈕</string>
     <string name="pref_title_show_insulin_button">顯示胰島素按鈕</string>
@@ -177,7 +177,7 @@
     <string name="pref_title_bolus_percentage">注射百分比</string>
     <string name="deliverpartofboluswizard">將此數值套用到注射嚮導結果中的血糖與碳水修正</string>
     <string name="pref_title_reset_bolus_percentage_time">重設注射百分比時間</string>
-    <string name="deliver_part_of_boluswizard_reset_time">若血糖讀取值時間超過此值，則給予完整注射 (100%)</string>
+    <string name="deliver_part_of_boluswizard_reset_time">如果血糖讀取值的時間早於以下時間，則注射完整劑量（100%）</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">保護逾時</string>
     <string name="pref_title_protection_type_application">等級 0：應用程式保護</string>
@@ -240,33 +240,7 @@
     <string name="pref_title_units">單位</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">語系</string>
     <string name="lang_default">系統預設</string>
-    <string name="lang_en">英文</string>
-    <string name="lang_af">南非語</string>
-    <string name="lang_bg">保加利亞語</string>
-    <string name="lang_cs">捷克語</string>
-    <string name="lang_de">德文</string>
-    <string name="lang_dk">丹麥語</string>
-    <string name="lang_fr">法文</string>
-    <string name="lang_nl">荷蘭語</string>
-    <string name="lang_es">西班牙文</string>
-    <string name="lang_el">希臘語</string>
-    <string name="lang_ga">愛爾蘭語</string>
-    <string name="lang_it">義大利文</string>
-    <string name="lang_ko">韓文</string>
-    <string name="lang_lt">立陶宛語</string>
-    <string name="lang_nb">挪威語</string>
-    <string name="lang_pl">波蘭語</string>
-    <string name="lang_pt">葡萄牙語</string>
-    <string name="lang_pt_br">巴西葡萄牙語</string>
-    <string name="lang_ro">羅馬尼亞語</string>
-    <string name="lang_ru">俄語</string>
-    <string name="lang_sk">斯洛伐克語</string>
-    <string name="lang_sv">瑞典語</string>
-    <string name="lang_tr">土耳其語</string>
-    <string name="lang_zh_tw">繁體中文</string>
-    <string name="lang_zh_cn">簡體中文</string>
     <string name="pref_title_patient_name">執行個體名稱</string>
     <string name="pref_summary_patient_name">使用此手機者的名稱。用於在報表與同步中區分此 AAPS 執行個體。</string>
     <!-- StringKey: Directory preferences -->
@@ -299,7 +273,7 @@
     <string name="smscommunicator_allowednumbers">允許的電話號碼</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">權杖末尾的額外必填 PIN 碼</string>
-    <string name="smscommunicator_otp_pin_summary">需記住並在每次產生的一次性密碼末尾接上的額外數字</string>
+    <string name="smscommunicator_otp_pin_summary">要記住並加到每組產生的一次性密碼末尾的額外數字</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">幫浦類型</string>
     <!-- StringKey: NS Client preferences -->
@@ -330,7 +304,7 @@
     <string name="pref_title_ama_max_iob">AMA 的最大 IOB</string>
     <string name="openapsma_max_iob_summary">此數值在 OpenAPS 的語境中稱為 Max IOB\n這是 APS 可一次輸送的最大胰島素量（單位 [U]）。此數值也會受病患類型影響。</string>
     <string name="pref_title_max_daily_multiplier">每日安全倍數上限</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">預設值：3。這是 OpenAPS 的關鍵安全上限之一。其作用是將你的基礎率限制為你最大基礎率的 3 倍（對多數人而言）。你多半不需要更改，但你應該了解所謂「每日最大 3 倍；目前 4 倍」的安全上限談的就是這個。</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">預設值：3。這是 OpenAPS 的重要安全上限，可將基礎率限制在您最高基礎率的 3 倍。您可能不需要更改此設定，但請留意安全上限所提到的「每日最高值的 3 倍；目前值的 4 倍」。</string>
     <string name="pref_title_current_basal_multiplier">目前基礎率安全倍數</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">預設值：4。這是 OpenAPS 另一個關鍵安全上限，也是「每日最大 3 倍；目前 4 倍」中的後半段。這表示無論你在幫浦上設定的最大基礎率為何，你的基礎率都不能高於目前基礎率的這個倍數。這是為了避免在尚未了解演算法如何運作之前，將最大基礎率設得過高而進入危險範圍。預設為 4 倍；大多數人不需要調整，如果覺得「碰到」這個安全上限，更可能是需要調整其他設定。</string>
     <string name="pref_title_bolus_snooze_divisor">注射緩衝 DIA 除數</string>
@@ -341,7 +315,7 @@
     <string name="pref_title_absorption_cutoff">吸收截止時間</string>
     <string name="absorption_cutoff_summary">超過此時間後，任何餐點都視為已被吸收。剩餘的碳水將被截斷。</string>
     <string name="pref_title_absorption_maxtime">最大吸收時間</string>
-    <string name="absorption_max_time_summary">以小時為單位，預期餐點中的所有碳水會在此時間內完全吸收</string>
+    <string name="absorption_max_time_summary">預期一餐中的所有碳水化合物完全吸收所需的時間（小時）</string>
     <string name="pref_title_autosens_min">自動敏感度調整最小值</string>
     <string name="openapsama_autosens_min_summary">預設值：0.7\n這是自動敏感度調整安全限制的另一面，用來限制自動敏感度調整把基礎率降到多低，以及把 ISF 與血糖目標調高到多高。</string>
     <string name="pref_title_autosens_max">自動敏感度調整最大值</string>
@@ -365,11 +339,11 @@
     <string name="pref_title_dura_weight">持續時間 ISF 權重</string>
     <string name="openapsama_dura_ISF_weight_summary">在持續較久的高血糖平台期所套用的權重，會強化 ISF，因而可能增加胰島素輸注。\n\n預設值 0.0 會實際關閉此效果。</string>
     <string name="pref_title_smb_delivery_ratio">SMB 投藥比例</string>
-    <string name="openapsama_smb_delivery_ratio_summary">預設值：0.5 這是另一個關鍵的 OpenAPS 安全上限，用來指定所需總胰島素中可由 SMB 送達的比例。此設計是為了避免在同一時間，照護者的手機同時送出 SMB 請求而造成危險。此為實驗性數值，請謹慎且逐步調高。</string>
+    <string name="openapsama_smb_delivery_ratio_summary">預設值：0.5。這是 OpenAPS 的另一項重要安全上限，用來指定總所需胰島素量中可透過微量注射給予的比例。這是為了避免照護者同時透過手機發出微量注射要求，讓使用者陷入危險情況。請謹慎且緩慢地調高這項實驗性設定。</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB 投藥比例下限</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">預設值：0.5 這是線性遞增比例的下限，取代上方的固定值。</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">預設值：0.5。這是線性遞增比例的下限，而不是上方設定中的固定值。</string>
     <string name="pref_title_smb_delivery_ratio_max">SMB 投藥比例上限</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">預設值：0.5 這是線性遞增比例的上限，取代上方的固定值。</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">預設值：0.5。這是線性遞增比例的上限，而非上述的固定值。</string>
     <string name="pref_title_smb_max_range_extension">SMB 最大範圍延伸</string>
     <string name="openapsama_smb_max_range_extension_summary">預設值：1 這是另一個關鍵的 OpenAPS 安全上限，用來指定你可以超過一般 120 maxSMB/maxUAM 分鐘的倍數。此為實驗性數值，請謹慎且逐步調高。</string>
     <!-- UnitDoubleKey: Overview preferences -->

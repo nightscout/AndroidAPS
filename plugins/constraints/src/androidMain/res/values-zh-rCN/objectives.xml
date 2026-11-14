@@ -17,9 +17,9 @@
     <string name="objectives_maxbasal_learned">注意安全功能并在必要时调整安全参数。</string>
     <string name="objectives_maxiobzero_objective">从低血糖维持模式(用于测算基础率) 开始闭环功能</string>
     <string name="objectives_maxiobzero_gate">以低血糖暂停模式运行闭环（即max IOB 最大活性胰岛素 = 0 自动设置），持续数日，且期间不出现过多 LGS 事件。</string>
-    <string name="objectives_maxiobzero_learned">将MaxIOB 设置为零，以防止低血糖的发生，并限制基础率为胰岛素输注的速率上限(IOB为负值的情况除外)</string>
+    <string name="objectives_maxiobzero_learned">将 MaxIOB 设为零有助于预防低血糖，并且不会在基础率之上追加更多胰岛素（负 IOB 情况除外）。</string>
     <string name="objectives_maxiob_objective">优化闭环，逐渐增加活性胰岛素IOB的最大值，并逐渐降低血糖的目标值</string>
-    <string name="objectives_maxiob_gate">运行几天，至少一个晚上没有低血糖报警，然后才可以继续调低血糖的目标值</string>
+    <string name="objectives_maxiob_gate">在降低血糖目标之前，请先运行几天，且至少有一晚没有出现低血糖警报。</string>
     <string name="objectives_maxiob_learned">随着孩子的成长，请更新MaxIOB 最大活性胰岛素。请勿让系统提供超过食物能覆盖的胰岛素剂量，设定过高的数值可能会带来风险。在简单模式下最大活性胰岛素会自动计算</string>
     <string name="maxiobset">最大活性胰岛素（IOB）设置正确（简易模式下无需设置）</string>
     <string name="objectives_autosens_objective">必要时调整胰岛素基础率和比率，然后再启用auto-sens胰岛素敏感系数自动调整功能</string>
@@ -66,8 +66,8 @@
     <string name="objectives_exam_learned_sensitivity">灵敏度检测是算法的一部分，允许胰岛素剂量适应不同的情况。</string>
     <string name="objectives_exam_learned_objectives">您的目标进度与其他设置一起保存，您应该对其进行备份。</string>
     <string name="objectives_exam_learned_objectives2">始终将导出的配置和生成的APK存储在手机之外的地方。手机可能遗失、损坏等。好的存放地点可以是任何手机可查看的云端。在这种情况下，您可以在另一个设备上几分钟内恢复AAPS。好的做法是将使用的主密码存放在安全的地方。没有它，您的备份无用。这同样适用于签名密钥(.jsk 文件)和构建AAPS所用的密码。其余的并不重要，它们可以随时互联网上下载。</string>
-    <string name="objectives_exam_learned_wrongcarbs">如果你向AAPS输入了错误的信息或与现实不符，尽快解决。这可能导致注射过量。应该尽可能告知AAPS碳水化合物、胰岛素等的最佳方式。</string>
-    <string name="objectives_exam_learned_iob">如果您想分析 AAPS 是否对您运作良好，查看 IOB 图表可以提供很多有用的信息。</string>
+    <string name="objectives_exam_learned_wrongcarbs">如果您向 AAPS 输入了错误信息，或输入内容与现实不符，请尽快更正。这可能导致过量输注。应始终尽可能准确地将碳水化合物、胰岛素等信息告知 AAPS。</string>
+    <string name="objectives_exam_learned_iob">如果您想检查 AAPS 是否对您运作良好，查看 IOB 图表可以提供很多有用的信息。</string>
     <string name="objectives_exam_learned_cob">COB 计算取决于 ISF 与 IC 之间的关系。增加 ISF 或降低 IC 会导致吸收时间延长。但使用百分比进行配置文件切换会同时改变这两个值，因此吸收时间不受影响。</string>
     <string name="objectives_exam_learned_breadgrams">碳水化合物仅允许以克为单位输入。</string>
     <string name="objectives_exam_learned_ecarbs">扩展碳水化合物是胰岛素泵领域中方波大剂量功能的替代方案。</string>

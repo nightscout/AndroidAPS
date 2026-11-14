@@ -83,7 +83,6 @@
     <string name="carelevo_patch_connect_step_1_title">Αφαίρεση καπακιού βελόνας</string>
     <string name="carelevo_patch_connect_step_1_desc">Βγάλτε το Patch από τη συσκευασία και αφαιρέστε το καπάκι της βελόνας.</string>
     <string name="carelevo_patch_connect_step_2_title">Ενεργοποίηση και σύνδεση</string>
-    <string name="carelevo_patch_connect_step_2_desc">Πατήστε το κουμπί λειτουργίας για περισσότερο από 1 δευτερόλεπτο. Μετά το μπιπ, πατήστε το κουμπί [Αναζήτηση Patch] παρακάτω.</string>
     <string name="carelevo_patch_safety_check_start_title">Έλεγχος ασφαλείας</string>
     <string name="carelevo_patch_safety_check_end_title">Ο έλεγχος ασφαλείας ολοκληρώθηκε</string>
     <string name="carelevo_patch_safety_check_start_desc">Το Patch συνδέθηκε με επιτυχία.\nΠατήστε το κουμπί [Έλεγχος ασφαλείας].</string>
@@ -113,7 +112,6 @@
     <string name="carelevo_dialog_patch_connect_message_title">Αν το Patch που εντοπίστηκε παρακάτω είναι το σωστό, πατήστε το κουμπί Επιβεβαίωση.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Η εισαγωγή της βελόνας και η αφαίρεση του εφαρμογέα ολοκληρώθηκαν</string>
     <string name="carelevo_dialog_connect_detached">Ο εφαρμογέας αφαιρέθηκε</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">Πιέστε τις λαβές και στις δύο πλευρές του εφαρμογέα για να τον αποσπάσετε από το Patch,\nκαι μετά πατήστε το κουμπί `Ο εφαρμογέας αφαιρέθηκε`. Θα ξεκινήσει η χορήγηση ινσουλίνης.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Το Bluetooth δεν είναι ενεργό. Ελέγξτε το.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Δεν υπάρχει συνδεδεμένο Patch.</string>
@@ -180,7 +178,6 @@
     <string name="alarm_notification_desc_warning_low_insulin">Απομένουν λιγότερες από 10 U ινσουλίνης· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Το Patch έληξε· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
     <string name="alarm_notification_desc_warning_low_battery">Χαμηλή μπαταρία· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απόρριψη Patch] και αλλάξτε το Patch τώρα.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Η χορήγηση ινσουλίνης σταμάτησε. Μετακινηθείτε τώρα σε κατάλληλη θερμοκρασία (40℉ ~ 99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Έναρξη ινσουλίνης] και ξεκινήστε ξανά τη χορήγηση βασικού ρυθμού.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Ο χρόνος εφαρμογής του Patch τελείωσε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Ο αυτοέλεγχος απέτυχε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>

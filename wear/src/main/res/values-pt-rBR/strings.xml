@@ -179,7 +179,6 @@
     <string name="cwf_complication_layout">Layout da complicação</string>
     <string name="cwf_complication_layout_description">Posição e tamanho das complicações, obtidos do mostrador personalizado carregado.</string>
     <string name="pref_include_external">Incluir visualizações externas no modelo</string>
-    <string name="pref_switch_external">Inverter a ordem dos dados externos no mostrador</string>
     <string name="custom_pref_show_seconds">Exibir segundos</string>
     <string name="digitalstyle_pref_your_style">Seu estilo</string>
     <string name="digitalstyle_style_none">sem estilo</string>
