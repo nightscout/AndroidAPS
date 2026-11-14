@@ -1204,5 +1204,6 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可视化范围</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">泵在输注 %1$s 后停止了大剂量。请在下次大剂量前检查泵。</string>
     <string name="secrets_not_protected">此计算机上未找到系统密钥库。用于保护您的设置以及与主机配对关系的密钥会保存在数据旁边的文件中，因此任何获取您文件副本的人也会同时获得这些密钥。在 Linux 上，请安装并启动密钥环服务（例如 GNOME Keyring 或 KWallet），然后重新启动 AAPS。</string>
 </resources>
