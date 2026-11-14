@@ -8,6 +8,8 @@ enum class LongNonKey(
     override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
+    EversenseLastCalibrationSubmittedAt("eversense_last_calibration_submitted_at", 0L, exportable = false),
+
     LocalProfileLastChange("local_profile_last_change", 0L),
 
     BtWatchdogLastBark("bt_watchdog_last", 0L),

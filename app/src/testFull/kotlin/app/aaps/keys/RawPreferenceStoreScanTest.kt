@@ -53,6 +53,9 @@ class RawPreferenceStoreScanTest {
         "implementation/src/commonMain/kotlin/app/aaps/implementation/sharedPreferences/PreferencesImpl.kt" to "Preferences itself, which is what everything else is supposed to use",
         "shared/tests/src/androidMain/kotlin/app/aaps/shared/tests/SharedPreferencesMock.kt" to "the test double for the store; it lives in a main source set so tests in other modules can use it",
 
+        "plugins/source/src/androidMain/kotlin/app/aaps/plugins/source/eversense/EversenseStateStore.kt" to
+            "imports the whole legacy Eversense device store once; new state is a registered, non-exported preference",
+
         // --- Moves the whole store, not a setting ---
         // These are the import, the export and the cloud copies of them. They are SUPPOSED to see every
         // key, including ones they have never heard of, so going through `Preferences` would defeat
@@ -145,6 +148,8 @@ class RawPreferenceStoreScanTest {
         val skip = listOf("/build/", "/src/test", "/src/androidTest", "/src/androidHostTest", "/src/commonTest", "/src/iosTest", "/wear/")
         val root = repoRoot()
         val files = root.walkTopDown()
+            // Apply the same exclusions before entering directories, so build output is not walked.
+            .onEnter { dir -> skip.none { (dir.invariantSeparatorsPath + "/").contains(it) } }
             .filter { it.isFile && it.extension == "kt" }
             .map { it to it.invariantSeparatorsPath }
             .filterNot { (_, path) -> skip.any { path.contains(it) } }

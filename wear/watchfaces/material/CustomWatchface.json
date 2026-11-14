@@ -1,0 +1,200 @@
+{
+    "metadata": {
+        "name": "AAPS Material",
+        "author": "OpenCode",
+        "created_at": "14/10/2026",
+        "author_version": "1.11",
+        "cwf_version": "1.0",
+        "comment": "Material 3 Expressive-inspired layout. Same data fields as AAPS V2 (1.0), by Andrew Warrington, adapted to CWF by Philoul. No changes to data, alerts or treatment logic."
+    },
+    "dynPrefColor": "palette",
+    "pointSize": 2,
+    "enableSecond": false,
+    "background": {
+        "width": 400, "height": 400, "topmargin": 0, "leftmargin": 0,
+        "visibility": "visible", "dynPref": "surface"
+    },
+    "chart": {
+        "width": 216, "height": 86, "topmargin": 266, "leftmargin": 92,
+        "visibility": "visible"
+    },
+    "time": {
+        "width": 174, "height": 80, "topmargin": 83, "leftmargin": 113,
+        "visibility": "visible", "textsize": 64, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontStyle": "normal", "dynPref": "primary"
+    },
+    "timePeriod": {
+        "width": 34, "height": 22, "topmargin": 144, "leftmargin": 250,
+        "visibility": "visible", "textsize": 14, "gravity": "center",
+        "font": "roboto_condensed_regular", "dynPref": "secondary"
+    },
+    "day": {
+        "width": 44, "height": 26, "topmargin": 106, "leftmargin": 292,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "dynPref": "secondary"
+    },
+    "month": {
+        "width": 44, "height": 26, "topmargin": 132, "leftmargin": 292,
+        "visibility": "visible", "textsize": 18, "gravity": "center", "allCaps": true,
+        "font": "roboto_condensed_regular", "dynPref": "secondary"
+    },
+    "sgv": {
+        "width": 160, "height": 74, "topmargin": 18, "leftmargin": 114,
+        "visibility": "visible", "textsize": 54, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontStyle": "normal"
+    },
+    "loop": {
+        "width": 44, "height": 44, "topmargin": 116, "leftmargin": 60,
+        "visibility": "visible", "textsize": 22, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#FFFFFF", "dynPref": "primary"
+    },
+    "direction": {
+        "width": 400, "height": 400, "topmargin": 0, "leftmargin": 0,
+        "visibility": "visible"
+    },
+    "timestamp": {
+        "width": 44, "height": 24, "topmargin": 50, "leftmargin": 278,
+        "visibility": "visible", "textsize": 20, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontColor": "#757575"
+    },
+    "uploader_battery": {
+        "width": 70, "height": 24, "topmargin": 81, "leftmargin": 48,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "fontColor": "#757575", "background": "Phone"
+    },
+    "rig_battery": {
+        "width": 70, "height": 24, "topmargin": 81, "leftmargin": 282,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "dynPref": "secondary", "background": "Rig"
+    },
+    "freetext1": {
+        "width": 30, "height": 32, "topmargin": 166, "leftmargin": 40,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "textvalue": "Δ", "dynPref": "deltaLabel"
+    },
+    "delta": {
+        "width": 118, "height": 32, "topmargin": 166, "leftmargin": 72,
+        "visibility": "visible", "textsize": 23, "gravity": "center",
+        "font": "roboto_condensed_bold", "dynPref": "primary"
+    },
+    "freetext2": {
+        "width": 38, "height": 32, "topmargin": 166, "leftmargin": 210,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "textvalue": "ØΔ", "dynPref": "avgDeltaLabel"
+    },
+    "avg_delta": {
+        "width": 110, "height": 32, "topmargin": 166, "leftmargin": 250,
+        "visibility": "visible", "textsize": 23, "gravity": "center",
+        "font": "roboto_condensed_bold", "dynPref": "primary"
+    },
+    "cob1": {
+        "width": 94, "height": 20, "topmargin": 205, "leftmargin": 37,
+        "visibility": "visible", "textsize": 16, "gravity": "center",
+        "font": "roboto_condensed_regular", "dynPref": "secondary"
+    },
+    "cob2": {
+        "width": 96, "height": 34, "topmargin": 225, "leftmargin": 36,
+        "visibility": "visible", "textsize": 25, "gravity": "center",
+        "font": "roboto_condensed_bold", "dynPref": "primary"
+    },
+    "freetext3": {
+        "width": 106, "height": 18, "topmargin": 204, "leftmargin": 147,
+        "visibility": "visible", "textsize": 14, "gravity": "center",
+        "font": "roboto_condensed_regular", "textvalue": "BASAL", "dynPref": "basalLabel"
+    },
+    "basalRate": {
+        "width": 110, "height": 24, "topmargin": 220, "leftmargin": 145,
+        "visibility": "visible", "textsize": 22, "gravity": "center",
+        "font": "roboto_condensed_bold", "dynPref": "primary"
+    },
+    "freetext4": {
+        "width": 28, "height": 18, "topmargin": 243, "leftmargin": 151,
+        "visibility": "visible", "textsize": 12, "gravity": "center",
+        "font": "roboto_condensed_regular", "textvalue": "BGI", "dynPref": "bgiLabel"
+    },
+    "bgi": {
+        "width": 74, "height": 20, "topmargin": 241, "leftmargin": 180,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "dynPref": "secondary"
+    },
+    "iob1": {
+        "width": 94, "height": 20, "topmargin": 205, "leftmargin": 269,
+        "visibility": "visible", "textsize": 16, "gravity": "center",
+        "font": "roboto_condensed_regular", "dynPref": "iobHeading"
+    },
+    "iob2": {
+        "width": 96, "height": 34, "topmargin": 225, "leftmargin": 268,
+        "visibility": "visible", "textsize": 25, "gravity": "center",
+        "font": "roboto_condensed_bold", "dynPref": "iobValue"
+    },
+    "dynPref": {
+        "surface": {
+            "prefKey": "key_match_divider",
+            "true": { "dynPref": "plainSurface" },
+            "false": { "dynPref": "tonalSurface" }
+        },
+        "tonalSurface": {
+            "prefKey": "key_dark",
+            "true": { "valueKey": "day", "image1": "MaterialDark" },
+            "false": { "valueKey": "day", "image1": "MaterialLight" }
+        },
+        "plainSurface": {
+            "prefKey": "key_dark",
+            "true": { "valueKey": "day", "image1": "MaterialDarkPlain" },
+            "false": { "valueKey": "day", "image1": "MaterialLightPlain" }
+        },
+        "primary": {
+            "prefKey": "key_dark",
+            "true": { "valueKey": "day", "fontColor1": "#F0F5F1" },
+            "false": { "valueKey": "day", "fontColor1": "#18231D" }
+        },
+        "secondary": {
+            "prefKey": "key_dark",
+            "true": { "valueKey": "day", "fontColor1": "#BAC8BF" },
+            "false": { "valueKey": "day", "fontColor1": "#46584C" }
+        },
+        "deltaLabel": {
+            "prefKey": "key_show_delta",
+            "true": { "dynPref": "secondary" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "avgDeltaLabel": {
+            "prefKey": "key_show_avg_delta",
+            "true": { "dynPref": "secondary" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "basalLabel": {
+            "prefKey": "key_show_temp_basal",
+            "true": { "dynPref": "secondary" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "bgiLabel": {
+            "prefKey": "key_show_bgi",
+            "true": { "dynPref": "secondary" },
+            "false": { "valueKey": "day", "textvalue1": "" }
+        },
+        "iobHeading": {
+            "prefKey": "key_show_detailed_iob",
+            "true": { "textsize1": 20, "dynPref": "primary" },
+            "false": { "dynPref": "secondary" }
+        },
+        "iobValue": {
+            "prefKey": "key_show_detailed_iob",
+            "true": { "textsize1": 16, "dynPref": "secondary" },
+            "false": { "dynPref": "primary" }
+        },
+        "palette": {
+            "prefKey": "key_dark",
+            "true": {
+                "highColor": "#FFCF72", "midColor": "#9EE7C4", "lowColor": "#FF8C96",
+                "lowBatColor": "#FF8C96", "carbColor": "#FFBD82",
+                "basalBackgroundColor": "#22483D", "basalCenterColor": "#88C9ED", "gridColor": "#61766A"
+            },
+            "false": {
+                "highColor": "#795400", "midColor": "#146C48", "lowColor": "#BA1A32",
+                "lowBatColor": "#BA1A32", "carbColor": "#874600",
+                "basalBackgroundColor": "#B3DCCD", "basalCenterColor": "#246588", "gridColor": "#65796D"
+            }
+        }
+    }
+}

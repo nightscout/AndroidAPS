@@ -1,0 +1,22 @@
+{
+    "size": 400,
+    "background": "#000000",
+    "edge": { "radius": 195, "stroke": 1, "color": "#1D282F" },
+    "ticks": {
+        "radius": 175, "length": 5, "stroke": 1, "color": "#45535D",
+        "angles": [35, 45, 55, 65, 75]
+    },
+    "reservoir": {
+        "radius": 184, "stroke": 8, "start": 90, "sweep": -90,
+        "color": "#65DEED", "track": "#173238", "maximum": 200, "increment": 4,
+        "crop": [192, 192, 400, 400]
+    },
+    "trend": { "size": 146, "radius": 61, "stroke": 6, "arrowHeight": 8, "arrowHalfBase": 11, "arrowInset": 1, "sweep": 40, "trackAlpha": 60 },
+    "icons": {
+        "size": 24,
+        "sources": {
+            "CobIcon": { "file": "core/ui/src/commonMain/kotlin/app/aaps/core/ui/compose/icons/IcCarbs.kt", "color": "#FFAB5C" },
+            "IobIcon": { "file": "core/ui/src/commonMain/kotlin/app/aaps/core/ui/compose/icons/IcBolus.kt", "color": "#65DEED" }
+        }
+    }
+}

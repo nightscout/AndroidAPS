@@ -262,7 +262,14 @@ enum class NotificationId(
     // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
     // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
     // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
-    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP);
+    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
+
+    // Appended to keep the stored ordinals of existing notifications stable.
+    EVERSENSE_RELEASE(NORMAL, CGM),
+    EVERSENSE_PLACEMENT(NORMAL, CGM),
+    EVERSENSE_CREDENTIALS(NORMAL, CGM),
+    EVERSENSE_FIRMWARE(INFO, CGM),
+    EVERSENSE_ALARM(NORMAL, CGM);
 
     companion object {
 
