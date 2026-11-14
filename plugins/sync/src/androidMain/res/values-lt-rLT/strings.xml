@@ -33,7 +33,7 @@
     <string name="authorized_clients_pin_published">Susiejimo pasiūlymas paruoštas Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Nepavyko įkelti susiejimo pasiūlymo į Nightscout.</string>
     <string name="authorized_clients_pin_retry">Bandyti dar kartą</string>
-    <string name="authorized_clients_method_title">Kaip nustatytas šis telefonas?</string>
+    <string name="authorized_clients_method_title">Kaip bus nustatytas šis telefonas?</string>
     <string name="authorized_clients_method_qr_pair">QR kodas: Nightscout ir susiejimas</string>
     <string name="authorized_clients_method_qr_pair_summary">Vieną kartą nuskaitykite kodą naujame telefone. Jis gaus savo Nightscout prieigos raktą ir bus susietas.</string>
     <string name="authorized_clients_method_qr_ns">QR kodas: tik Nightscout</string>
