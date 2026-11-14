@@ -134,4 +134,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">配对成功！</string>
     <string name="diaconn_pairing_successful_message">您的泵已连接并准备使用。</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">云同步：%1$d / %2$d</string>
 </resources>
