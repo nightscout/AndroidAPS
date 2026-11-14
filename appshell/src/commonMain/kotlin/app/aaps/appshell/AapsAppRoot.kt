@@ -140,9 +140,6 @@ fun AapsAppRoot(
     val masterReachable by nsClient.masterReachable.collectAsStateWithLifecycle()
     val masterControlAllowed by nsClient.masterControlAllowed.collectAsStateWithLifecycle()
     val clientRole by nsClient.clientRole.collectAsStateWithLifecycle()
-    val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
-    val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
-    val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
 
     // Global self-heal — event-driven, NOT a poll (a timer would keep the CPU awake). Probe once when
     // we go offline, and again on each navigation while offline, so any screen/dialog the user opens
@@ -221,25 +218,6 @@ fun AapsAppRoot(
                     ) {
                         content(navController)
                     }
-
-                    BolusProgressOverlay(
-                        bolusState = bolusState,
-                        pumpStatus = pumpStatusBanner?.text ?: "",
-                        queueStatus = pumpQueueStatus,
-                        onStop = {
-                            // A client does not own the pump: ask the master to abort and show the press
-                            // locally. Only a master talks to its own queue.
-                            if (config.AAPSCLIENT) {
-                                clientControlActionDispatcher.stopBolus()
-                                bolusProgressData.stopPressed()
-                            } else {
-                                commandQueue.cancelAllBoluses(null)
-                            }
-                        },
-                        // Only reachable from the stalled-state Dismiss button on a client: hides the
-                        // local mirror. Delivery belongs to the master, so this touches no pump.
-                        onDismiss = { bolusProgressData.clear() }
-                    )
 
                     // Root-level snackbar host — subscribes to EventShowSnackbar
                     // and is the single visible SnackbarHost across every screen.

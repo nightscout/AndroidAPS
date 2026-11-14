@@ -25,6 +25,7 @@ import app.aaps.core.ui.compose.AapsSpacing
  *
  * @param lines smaller text under the title, one line each
  * @param progress 0..1 for the bar under the header, or null for no bar
+ * @param indeterminate a bar with a moving filled part for "working, no progress yet"; wins over [progress]
  * @param trailing at the end of the header row: a button, or a value to see at a glance
  * @param actions buttons in a row under everything, at the end; null for none
  */
@@ -36,6 +37,7 @@ fun OverviewBannerCard(
     lines: List<String>,
     modifier: Modifier = Modifier,
     progress: Float? = null,
+    indeterminate: Boolean = false,
     trailing: @Composable () -> Unit = {},
     actions: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -72,7 +74,13 @@ fun OverviewBannerCard(
                 }
                 trailing()
             }
-            if (progress != null) {
+            if (indeterminate) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = AapsSpacing.medium)
+                )
+            } else if (progress != null) {
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier
