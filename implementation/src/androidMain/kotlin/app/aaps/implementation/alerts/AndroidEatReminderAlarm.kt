@@ -107,6 +107,10 @@ class AndroidEatReminderAlarm(
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setSilent(true)
+            // The watch app posts its own countdown from the status it gets, with its own Stop and
+            // +5 min, so a copy of this one on the watch would say the same thing twice. The alarm
+            // at the end is a different notification and still reaches the watch.
+            .setLocalOnly(true)
             .setTimeoutAfter(left)
             .setContentIntent(notificationHolder().openAppIntent())
             .addAction(0, rh.gs(CoreUiStrings.stop), actionIntent(EatReminderReceiver.ACTION_STOP))
