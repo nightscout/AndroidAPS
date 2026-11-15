@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">Maximal bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximal basalhastighet</string>
-    <string name="openapsma_max_basal_summary">Detta värde kallas max basal i OpenAPS-sammanhang</string>
     <string name="pref_title_smb_max_iob">Max IOB för SMB</string>
-    <string name="openapssmb_max_iob_summary">Detta värde kallas Max IOB i OpenAPS-sammanhang\nOpenAPS kommer inte att lägga till mer insulin om nuvarande IOB är större än detta värde. Värdet påverkas även av vald patienttyp.</string>
     <string name="pref_title_ama_max_iob">Max IOB för AMA</string>
-    <string name="openapsma_max_iob_summary">Detta värde kallas Max IOB i OpenAPS-sammanhang\nDetta är maximal mängd insulin i [U] som APS kan leverera på en gång. Värdet påverkas även av vald patienttyp.</string>
     <string name="pref_title_max_daily_multiplier">Säkerhetsmultiplikator för max daglig basal</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardvärde: 3. Detta är en viktig säkerhetsgräns i OpenAPS. Den begränsar dina basaler till högst 3x ditt största basalvärde. Du behöver troligen inte ändra detta, men du bör känna till att det är detta som menas med ”3x max daglig; 4x nuvarande” för säkerhetsgränser.</string>
     <string name="pref_title_current_basal_multiplier">Nuvarande basal säkerhetsmultiplikator</string>
