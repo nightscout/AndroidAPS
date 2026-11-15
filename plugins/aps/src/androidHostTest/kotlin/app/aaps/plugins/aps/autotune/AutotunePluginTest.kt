@@ -188,6 +188,21 @@ class AutotunePluginTest : TestBaseWithProfile() {
         assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(AutotunePlugin.UPDATE_BUTTON_SHOWN)
     }
 
+    // A day with no glucose values gives no prepared data. The run must end with an error, as for a day with no
+    // treatments, and not go on as if the day was tuned.
+    @Test fun `a day with no prepared data ends the run with an error`() = runBlocking {
+        whenever(autotuneIob.boluses).thenReturn(arrayListOf(BS(timestamp = 0, amount = 1.0, type = BS.Type.NORMAL, iCfg = someICfg)))
+        whenever(autotunePrep.categorize(any())).thenReturn(null)
+        whenever(rh.gs(R.string.autotune_error)).thenReturn("Autotune error")
+
+        autotunePlugin.aapsAutotune(daysBack = 1, autoSwitch = false, profileToTune = "", weekDays = BooleanArray(7) { true })
+
+        assertThat(autotunePlugin.result).isEqualTo("Autotune error")
+        assertThat(autotunePlugin.calculationRunning).isFalse()
+        verify(autotuneCore, never()).tuneAllTheThings(any(), any(), any())
+        verify(autotuneFS, never()).zipAutotune(any())
+    }
+
     // The settings file is for running oref0 autotune on a computer with the same data, so its text is pinned:
     // the dates, the zone and the commands must stay what they are.
     @Test fun `the oref0 settings file`() {

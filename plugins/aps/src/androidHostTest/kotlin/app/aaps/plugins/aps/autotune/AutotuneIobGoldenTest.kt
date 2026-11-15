@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -87,9 +88,34 @@ class AutotuneIobGoldenTest : TestBaseWithProfile() {
         activePlugin
     )
 
-    private fun runDay(golden: String, dayTime: Long) = runBlocking {
-        // The same day bounds the plugin uses: 4 AM to 4 AM.
-        val from = MidnightTime.before(dayTime, SystemTimeZone.current()) + T.hours(4).msecs()
+    // An extended bolus is given over its own duration, so the parts counted for insulin on board must lie
+    // inside it and add up to the whole amount.
+    @Test
+    fun `an extended bolus is spread over its own time`() {
+        inZone("Europe/Prague") {
+            runBlocking {
+                val dayTime = Instant.parse("2022-05-21T10:00:00Z").toEpochMilliseconds()
+                val from = dayStart(dayTime)
+                val autotuneIob = initialize(from)
+                val start = from + T.hours(14).msecs()
+                val end = start + T.mins(60).msecs()
+
+                val parts = autotuneIob.boluses.filter { it.ids.nightscoutId?.startsWith("ns_eb1_eb_") == true }
+
+                assertThat(parts).isNotEmpty()
+                parts.forEach {
+                    assertThat(it.timestamp).isAtLeast(start)
+                    assertThat(it.timestamp).isAtMost(end)
+                }
+                assertThat(parts.sumOf { it.amount }).isWithin(1e-9).of(2.0)
+            }
+        }
+    }
+
+    /** The same day bounds the plugin uses: 4 AM to 4 AM. */
+    private fun dayStart(dayTime: Long): Long = MidnightTime.before(dayTime, SystemTimeZone.current()) + T.hours(4).msecs()
+
+    private suspend fun initialize(from: Long): AutotuneIob {
         val to = from + T.hours(24).msecs()
         val profile = profile()
         whenever(profileFunction.getProfile(any())).thenReturn(profile)
@@ -98,6 +124,13 @@ class AutotuneIobGoldenTest : TestBaseWithProfile() {
         val tuned = ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider() }, aapsLogger).with(profile, iCfg)
         val autotuneIob = AutotuneIob(aapsLogger, persistenceLayer, profileFunction, preferences, dateUtil, autotuneFS)
         autotuneIob.initializeData(from, to, tuned)
+        return autotuneIob
+    }
+
+    private fun runDay(golden: String, dayTime: Long) = runBlocking {
+        val from = dayStart(dayTime)
+        val to = from + T.hours(24).msecs()
+        val autotuneIob = initialize(from)
 
         val report = StringBuilder()
         report.append("from ${AutotuneGolden.utc(from)} to ${AutotuneGolden.utc(to)}\n")

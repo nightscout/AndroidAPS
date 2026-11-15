@@ -284,10 +284,11 @@ open class AutotuneIob(
     private fun convertToBoluses(eb: EB): MutableList<BS> {
         val result: MutableList<BS> = ArrayList()
         val aboutFiveMinIntervals = eb.duration / T.mins(5).msecs() + 1
+        // In milliseconds, as eb.duration. (The temporary basal version below works in minutes.)
         val spacing = eb.duration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
-            val calcDate = (eb.timestamp + j * spacing * 60 * 1000 + 0.5 * spacing * 60 * 1000).toLong()
+            val calcDate = (eb.timestamp + j * spacing + 0.5 * spacing).toLong()
             val tempBolusSize: Double = eb.amount / aboutFiveMinIntervals
             val bolusInterfaceIDs = IDs().also { it.nightscoutId = eb.ids.nightscoutId + "_eb_$j" }
             val tempBolusPart = BS(

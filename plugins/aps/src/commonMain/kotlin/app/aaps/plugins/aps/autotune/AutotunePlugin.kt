@@ -254,7 +254,8 @@ class AutotunePlugin(
                     autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                     autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                     preppedGlucose = autotunePrep.categorize(it) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-                    preppedGlucose?.let { preppedGlucose ->         //preppedGlucose and tunedProfile should never be null here
+                    // No prepared data (no glucose values that day): the run ends with an error below, as for a day with no treatments.
+                    preppedGlucose?.let { preppedGlucose ->
                         autotuneFS.exportPreppedGlucose(preppedGlucose)
                         tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, it, pumpProfile).also { tunedProfile ->
                             autotuneFS.exportTunedProfile(tunedProfile)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
@@ -268,7 +269,7 @@ class AutotunePlugin(
                                 autotuneFS.exportLog(lastRun, i + 1)
                         }
                     }
-                        ?: {
+                        ?: run {
                             log("preppedGlucose is null on day ${i + 1}")
                             tunedProfile = null
                         }

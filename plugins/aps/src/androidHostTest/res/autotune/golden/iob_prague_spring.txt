@@ -4,19 +4,6 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
 2022-03-27T08:00:00Z 12.0
 2022-03-27T12:00:00Z 8.0
 == boluses used for insulin on board (389)
-2028-10-25T13:18:27.692Z 0.15384615384615385 NORMAL ns_eb1_eb_12
-2028-04-16T05:55:23.076Z 0.15384615384615385 NORMAL ns_eb1_eb_11
-2027-10-06T22:32:18.461Z 0.15384615384615385 NORMAL ns_eb1_eb_10
-2027-03-28T15:09:13.846Z 0.15384615384615385 NORMAL ns_eb1_eb_9
-2026-09-17T07:46:09.230Z 0.15384615384615385 NORMAL ns_eb1_eb_8
-2026-03-09T00:23:04.615Z 0.15384615384615385 NORMAL ns_eb1_eb_7
-2025-08-28T17:00:00Z 0.15384615384615385 NORMAL ns_eb1_eb_6
-2025-02-17T09:36:55.384Z 0.15384615384615385 NORMAL ns_eb1_eb_5
-2024-08-09T02:13:50.769Z 0.15384615384615385 NORMAL ns_eb1_eb_4
-2024-01-29T18:50:46.153Z 0.15384615384615385 NORMAL ns_eb1_eb_3
-2023-07-21T11:27:41.538Z 0.15384615384615385 NORMAL ns_eb1_eb_2
-2023-01-10T04:04:36.923Z 0.15384615384615385 NORMAL ns_eb1_eb_1
-2022-07-01T20:41:32.307Z 0.15384615384615385 NORMAL ns_eb1_eb_0
 2022-03-28T02:57:30Z 0.0 NORMAL neutral_1648413000000_tbr_11
 2022-03-28T02:52:30Z 0.0 NORMAL neutral_1648413000000_tbr_10
 2022-03-28T02:47:30Z 0.0 NORMAL neutral_1648413000000_tbr_9
@@ -125,18 +112,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
 2022-03-27T18:12:30Z 0.0 NORMAL neutral_1648388700000_tbr_2
 2022-03-27T18:07:30Z 0.0 NORMAL neutral_1648388700000_tbr_1
 2022-03-27T18:02:30Z 0.0 NORMAL neutral_1648388700000_tbr_0
+2022-03-27T17:57:41.538Z 0.15384615384615385 NORMAL ns_eb1_eb_12
 2022-03-27T17:57:30Z 0.0 NORMAL neutral_1648388700000_tbr_11
+2022-03-27T17:53:04.615Z 0.15384615384615385 NORMAL ns_eb1_eb_11
 2022-03-27T17:52:30Z 0.0 NORMAL neutral_1648388700000_tbr_10
+2022-03-27T17:48:27.692Z 0.15384615384615385 NORMAL ns_eb1_eb_10
 2022-03-27T17:47:30Z 0.0 NORMAL neutral_1648388700000_tbr_9
+2022-03-27T17:43:50.769Z 0.15384615384615385 NORMAL ns_eb1_eb_9
 2022-03-27T17:42:30Z 0.0 NORMAL neutral_1648388700000_tbr_8
+2022-03-27T17:39:13.846Z 0.15384615384615385 NORMAL ns_eb1_eb_8
 2022-03-27T17:37:30Z 0.0 NORMAL neutral_1648388700000_tbr_7
+2022-03-27T17:34:36.923Z 0.15384615384615385 NORMAL ns_eb1_eb_7
 2022-03-27T17:32:30Z 0.0 NORMAL neutral_1648388700000_tbr_6
+2022-03-27T17:30:00Z 0.15384615384615385 NORMAL ns_eb1_eb_6
 2022-03-27T17:27:30Z 0.0 NORMAL neutral_1648388700000_tbr_5
+2022-03-27T17:25:23.076Z 0.15384615384615385 NORMAL ns_eb1_eb_5
 2022-03-27T17:22:30Z 0.0 NORMAL neutral_1648388700000_tbr_4
+2022-03-27T17:20:46.153Z 0.15384615384615385 NORMAL ns_eb1_eb_4
 2022-03-27T17:17:30Z 0.0 NORMAL neutral_1648388700000_tbr_3
+2022-03-27T17:16:09.230Z 0.15384615384615385 NORMAL ns_eb1_eb_3
 2022-03-27T17:12:30Z 0.0 NORMAL neutral_1648388700000_tbr_2
+2022-03-27T17:11:32.307Z 0.15384615384615385 NORMAL ns_eb1_eb_2
 2022-03-27T17:07:30Z 0.0 NORMAL neutral_1648388700000_tbr_1
+2022-03-27T17:06:55.384Z 0.15384615384615385 NORMAL ns_eb1_eb_1
 2022-03-27T17:02:30Z 0.0 NORMAL neutral_1648388700000_tbr_0
+2022-03-27T17:02:18.461Z 0.15384615384615385 NORMAL ns_eb1_eb_0
 2022-03-27T16:57:30Z 0.0 NORMAL neutral_1648388700000_tbr_11
 2022-03-27T16:52:30Z 0.0 NORMAL neutral_1648388700000_tbr_10
 2022-03-27T16:47:30Z 0.0 NORMAL neutral_1648388700000_tbr_9
@@ -423,17 +423,17 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
 2022-03-27T16:00:00Z iob=-0.061 activity=-9.0E-4
 2022-03-27T16:30:00Z iob=-0.036 activity=-7.0E-4
 2022-03-27T17:00:00Z iob=-0.019 activity=-5.0E-4
-2022-03-27T17:30:00Z iob=-0.008 activity=-3.0E-4
-2022-03-27T18:00:00Z iob=-0.002 activity=-1.0E-4
-2022-03-27T18:30:00Z iob=0.0 activity=0.0
-2022-03-27T19:00:00Z iob=0.0 activity=0.0
-2022-03-27T19:30:00Z iob=0.487 activity=0.0013
-2022-03-27T20:00:00Z iob=0.911 activity=0.0039
-2022-03-27T20:30:00Z iob=1.247 activity=0.007
-2022-03-27T21:00:00Z iob=1.008 activity=0.0086
-2022-03-27T21:30:00Z iob=0.752 activity=0.0083
-2022-03-27T22:00:00Z iob=0.521 activity=0.007
-2022-03-27T22:30:00Z iob=0.332 activity=0.0055
+2022-03-27T17:30:00Z iob=1.043 activity=0.0022
+2022-03-27T18:00:00Z iob=1.82 activity=0.0078
+2022-03-27T18:30:00Z iob=1.521 activity=0.0115
+2022-03-27T19:00:00Z iob=1.167 activity=0.0118
+2022-03-27T19:30:00Z iob=1.317 activity=0.0117
+2022-03-27T20:00:00Z iob=1.458 activity=0.0123
+2022-03-27T20:30:00Z iob=1.576 activity=0.0132
+2022-03-27T21:00:00Z iob=1.18 activity=0.0128
+2022-03-27T21:30:00Z iob=0.825 activity=0.0107
+2022-03-27T22:00:00Z iob=0.541 activity=0.0081
+2022-03-27T22:30:00Z iob=0.335 activity=0.0057
 2022-03-27T23:00:00Z iob=0.192 activity=0.0039
 2022-03-27T23:30:00Z iob=0.096 activity=0.0025
 2022-03-28T00:00:00Z iob=0.038 activity=0.0014
@@ -1685,136 +1685,6 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
 == bolusesToJSON
 [
   {
-    "_id": "ns_eb1_eb_12",
-    "created_at": "2028-10-25T13:18:27.692Z",
-    "date": 1856092707692,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_11",
-    "created_at": "2028-04-16T05:55:23.076Z",
-    "date": 1839477323076,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_10",
-    "created_at": "2027-10-06T22:32:18.461Z",
-    "date": 1822861938461,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_9",
-    "created_at": "2027-03-28T15:09:13.846Z",
-    "date": 1806246553846,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_8",
-    "created_at": "2026-09-17T07:46:09.230Z",
-    "date": 1789631169230,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_7",
-    "created_at": "2026-03-09T00:23:04.615Z",
-    "date": 1773015784615,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_6",
-    "created_at": "2025-08-28T17:00:00.000Z",
-    "date": 1756400400000,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_5",
-    "created_at": "2025-02-17T09:36:55.384Z",
-    "date": 1739785015384,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_4",
-    "created_at": "2024-08-09T02:13:50.769Z",
-    "date": 1723169630769,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_3",
-    "created_at": "2024-01-29T18:50:46.153Z",
-    "date": 1706554246153,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_2",
-    "created_at": "2023-07-21T11:27:41.538Z",
-    "date": 1689938861538,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_1",
-    "created_at": "2023-01-10T04:04:36.923Z",
-    "date": 1673323476923,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
-    "_id": "ns_eb1_eb_0",
-    "created_at": "2022-07-01T20:41:32.307Z",
-    "date": 1656708092307,
-    "eventType": "Meal Bolus",
-    "insulin": 0.15384615384615385,
-    "isSMB": false,
-    "isValid": true,
-    "type": "NORMAL"
-  },
-  {
     "_id": "neutral_1648413000000_tbr_11",
     "created_at": "2022-03-28T02:57:30.000Z",
     "date": 1648436250000,
@@ -2895,11 +2765,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_12",
+    "created_at": "2022-03-27T17:57:41.538Z",
+    "date": 1648403861538,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_11",
     "created_at": "2022-03-27T17:57:30.000Z",
     "date": 1648403850000,
     "eventType": "Meal Bolus",
     "insulin": 0,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
+    "_id": "ns_eb1_eb_11",
+    "created_at": "2022-03-27T17:53:04.615Z",
+    "date": 1648403584615,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
     "isSMB": false,
     "isValid": true,
     "type": "NORMAL"
@@ -2915,11 +2805,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_10",
+    "created_at": "2022-03-27T17:48:27.692Z",
+    "date": 1648403307692,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_9",
     "created_at": "2022-03-27T17:47:30.000Z",
     "date": 1648403250000,
     "eventType": "Meal Bolus",
     "insulin": 0,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
+    "_id": "ns_eb1_eb_9",
+    "created_at": "2022-03-27T17:43:50.769Z",
+    "date": 1648403030769,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
     "isSMB": false,
     "isValid": true,
     "type": "NORMAL"
@@ -2935,11 +2845,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_8",
+    "created_at": "2022-03-27T17:39:13.846Z",
+    "date": 1648402753846,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_7",
     "created_at": "2022-03-27T17:37:30.000Z",
     "date": 1648402650000,
     "eventType": "Meal Bolus",
     "insulin": 0,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
+    "_id": "ns_eb1_eb_7",
+    "created_at": "2022-03-27T17:34:36.923Z",
+    "date": 1648402476923,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
     "isSMB": false,
     "isValid": true,
     "type": "NORMAL"
@@ -2955,11 +2885,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_6",
+    "created_at": "2022-03-27T17:30:00.000Z",
+    "date": 1648402200000,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_5",
     "created_at": "2022-03-27T17:27:30.000Z",
     "date": 1648402050000,
     "eventType": "Meal Bolus",
     "insulin": 0,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
+    "_id": "ns_eb1_eb_5",
+    "created_at": "2022-03-27T17:25:23.076Z",
+    "date": 1648401923076,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
     "isSMB": false,
     "isValid": true,
     "type": "NORMAL"
@@ -2975,11 +2925,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_4",
+    "created_at": "2022-03-27T17:20:46.153Z",
+    "date": 1648401646153,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_3",
     "created_at": "2022-03-27T17:17:30.000Z",
     "date": 1648401450000,
     "eventType": "Meal Bolus",
     "insulin": 0,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
+    "_id": "ns_eb1_eb_3",
+    "created_at": "2022-03-27T17:16:09.230Z",
+    "date": 1648401369230,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
     "isSMB": false,
     "isValid": true,
     "type": "NORMAL"
@@ -2995,6 +2965,16 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_2",
+    "created_at": "2022-03-27T17:11:32.307Z",
+    "date": 1648401092307,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_1",
     "created_at": "2022-03-27T17:07:30.000Z",
     "date": 1648400850000,
@@ -3005,11 +2985,31 @@ from 2022-03-27T03:00:00Z to 2022-03-28T03:00:00Z
     "type": "NORMAL"
   },
   {
+    "_id": "ns_eb1_eb_1",
+    "created_at": "2022-03-27T17:06:55.384Z",
+    "date": 1648400815384,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
     "_id": "neutral_1648388700000_tbr_0",
     "created_at": "2022-03-27T17:02:30.000Z",
     "date": 1648400550000,
     "eventType": "Meal Bolus",
     "insulin": 0,
+    "isSMB": false,
+    "isValid": true,
+    "type": "NORMAL"
+  },
+  {
+    "_id": "ns_eb1_eb_0",
+    "created_at": "2022-03-27T17:02:18.461Z",
+    "date": 1648400538461,
+    "eventType": "Meal Bolus",
+    "insulin": 0.15384615384615385,
     "isSMB": false,
     "isValid": true,
     "type": "NORMAL"
