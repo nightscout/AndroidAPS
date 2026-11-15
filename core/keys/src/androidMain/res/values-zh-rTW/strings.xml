@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">最大注射量</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">最大基礎率</string>
-    <string name="openapsma_max_basal_summary">在 OpenAPS 環境中，此數值稱為 max basal</string>
     <string name="pref_title_smb_max_iob">微量注射的最大 IOB</string>
-    <string name="openapssmb_max_iob_summary">此數值在 OpenAPS 的語境中稱為 Max IOB\n若目前 IOB 大於此數值，OpenAPS 將不會再增加胰島素。此數值也會受病患類型影響。</string>
     <string name="pref_title_ama_max_iob">AMA 的最大 IOB</string>
-    <string name="openapsma_max_iob_summary">此數值在 OpenAPS 的語境中稱為 Max IOB\n這是 APS 可一次輸送的最大胰島素量（單位 [U]）。此數值也會受病患類型影響。</string>
     <string name="pref_title_max_daily_multiplier">每日安全倍數上限</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">預設值：3。這是 OpenAPS 的重要安全上限，可將基礎率限制在您最高基礎率的 3 倍。您可能不需要更改此設定，但請留意安全上限所提到的「每日最高值的 3 倍；目前值的 4 倍」。</string>
     <string name="pref_title_current_basal_multiplier">目前基礎率安全倍數</string>
