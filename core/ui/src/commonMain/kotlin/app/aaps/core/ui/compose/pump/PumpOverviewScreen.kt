@@ -208,11 +208,7 @@ private fun InfoRowItem(row: PumpInfoRow) {
             text = row.value,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
-            color = when (row.level) {
-                StatusLevel.NORMAL,
-                StatusLevel.UNSPECIFIED -> MaterialTheme.colorScheme.onSurface
-                else                    -> statusLevelToColor(row.level)
-            },
+            color = statusLevelToColor(row.level),
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1.2f)
         )
