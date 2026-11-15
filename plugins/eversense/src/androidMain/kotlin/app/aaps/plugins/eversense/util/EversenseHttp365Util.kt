@@ -322,7 +322,8 @@ class EversenseHttp365Util {
                 return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
-                val sensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: getEversenseState(preferences).sensorId
+                val rawSensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: getEversenseState(preferences).sensorId
+                val sensorId = if (rawSensorId.length >= 16) rawSensorId.chunked(2).take(8).reversed().joinToString("").uppercase() else rawSensorId
                 val tzOffsetSec = TimeZone.getDefault().getOffset(Date().time) / 1000
                 val offsetBytes = Base64.getEncoder().encodeToString(EversenseDmsBinaryCodec.int32LE(tzOffsetSec))
                 val sgBytes = EversenseDmsBinaryCodec.buildSgBytes(readings)

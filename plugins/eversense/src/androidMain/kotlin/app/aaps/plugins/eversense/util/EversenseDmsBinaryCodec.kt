@@ -18,18 +18,8 @@ internal object EversenseDmsBinaryCodec {
         fun timestamp(value: Long) { raw(BinaryFields.date(value)); raw(BinaryFields.time(value)) }
         fun zeros(count: Int) { raw(ByteArray(count)) }
         fun sensorId(value: String, emptySize: Int = 0) {
-            if (value.isEmpty()) {
-                zeros(emptySize)
-            } else {
-                val hexPairs = value.chunked(2)
-                val reversed8 = hexPairs.take(8).reversed()
-                val tail = hexPairs.drop(8)
-                val allPairs = reversed8 + tail
-                allPairs.forEach { output.write(it.toInt(16)) }
-                if (emptySize > allPairs.size) {
-                    zeros(emptySize - allPairs.size)
-                }
-            }
+            if (value.isEmpty()) zeros(emptySize)
+            else value.chunked(2).forEach { output.write(it.toInt(16)) }
         }
         fun encoded(): String = Base64.getEncoder().encodeToString(output.toByteArray())
     }

@@ -632,8 +632,14 @@ class EversensePlugin(
             if (!portal.success) return false
 
             val txId = state.transmitterName.ifEmpty { state.transmitterSerialNumber }
+            val dmsReadings = readings.map { r ->
+                if (r.sensorId.length >= 16) {
+                    val rev = r.sensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
+                    r.copy(sensorId = rev)
+                } else r
+            }
             val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
-                prefs, readings, txId, calibrations, state.activeAlarms)
+                prefs, dmsReadings, txId, calibrations, state.activeAlarms)
             aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (365 device events): success=${deviceEvents.success} sent=${deviceEvents.sentCount} status=${deviceEvents.httpStatus}")
 
             deviceEvents.success && (glucose.success || (glucose.httpStatus ?: 0) < 400)
@@ -643,8 +649,14 @@ class EversensePlugin(
                 prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal) return false
 
+            val dmsReadings = readings.map { r ->
+                if (r.sensorId.length >= 16) {
+                    val rev = r.sensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
+                    r.copy(sensorId = rev)
+                } else r
+            }
             val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
-                prefs, readings, txId, calibrations, state.activeAlarms)
+                prefs, dmsReadings, txId, calibrations, state.activeAlarms)
             aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (E3 device events): success=$deviceEvents")
             deviceEvents
         }
