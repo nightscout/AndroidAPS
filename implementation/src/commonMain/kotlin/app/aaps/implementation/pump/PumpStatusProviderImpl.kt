@@ -1,5 +1,6 @@
 package app.aaps.implementation.pump
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -100,7 +101,14 @@ class PumpStatusProviderImpl(
         val profileName = profileFunction.getProfileName()
 
         return buildJsonObject {
-            put("reservoir", pump.reservoirLevel.value.iU(profile.insulinConcentration()).toInt())
+            val reservoir = pump.reservoirLevel.value
+            val pumpType = pump.pumpDescription.pumpType
+            // These pods use 75 cU as a placeholder when the reservoir is above their measuring range.
+            if ((pumpType == PumpType.OMNIPOD_5 || pumpType == PumpType.OMNIPOD_DASH) && reservoir.cU == 75.0) {
+                put("reservoir_display_override", "> 50U")
+            } else {
+                put("reservoir", reservoir.iU(profile.insulinConcentration()).toInt())
+            }
             put("clock", dateUtil.toISOString(now))
             putJsonObject("battery") {
                 putIfThereIsValue("percent", pump.batteryLevel.value)
