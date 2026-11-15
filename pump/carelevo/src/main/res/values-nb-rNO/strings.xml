@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Kontroll av nålen mislyktes.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Forkasting av patch mislyktes. Prøv igjen.</string>
+    <string name="carelevo_discarded_not_reached">Fikk ikke kontakt med patchen. Den ble fjernet fra AAPS, men ikke stoppet, og den kan fortsatt gi insulin. Ta den av.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Forespørsel om basaltilførsel mislyktes. Prøv igjen.</string>
     <!-- Delivery Resume/Suspend -->
