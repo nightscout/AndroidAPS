@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">Максимален болус</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Максимален базал</string>
-    <string name="openapsma_max_basal_summary">Използва се като max basal в OpenAPS context</string>
     <string name="pref_title_smb_max_iob">Макс IOB за SMB</string>
-    <string name="openapssmb_max_iob_summary">Нарича се Max IOB в OpenAPS context\nOpenAPS няма да добавя повече инсулин ако IOB е повече от тази стойност. Определя се и от възрастта на пациента.</string>
     <string name="pref_title_ama_max_iob">Макс IOB за AMA</string>
-    <string name="openapsma_max_iob_summary">Нарича се Max IOB в OpenAPS context\nТова е максимален инсулин (в единици) APS ще доставя при една намеса. Стойността се влияе и от възрастта на пациента.</string>
     <string name="pref_title_max_daily_multiplier">Макс дневен множител</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3. Това е ключово ограничение за безопасност в OpenAPS. То ограничава базала до 3 пъти най-голямата ви базална доза. Вероятно няма да е нужно да го променяте, но трябва да знаете, че това е ограничението „3x максимален дневен; 4x текущ“ за безопасност.</string>
     <string name="pref_title_current_basal_multiplier">Множител за текущия базал</string>
