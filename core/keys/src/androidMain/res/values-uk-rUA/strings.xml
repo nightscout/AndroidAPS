@@ -295,11 +295,8 @@
     <string name="pref_title_max_bolus">Максимальний болюс</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Максимальна швидкість базалу</string>
-    <string name="openapsma_max_basal_summary">Це значення називається max basal у контексті OpenAPS</string>
     <string name="pref_title_smb_max_iob">Макс. IOB для SMB</string>
-    <string name="openapssmb_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nOpenAPS не додаватиме інсулін, якщо поточний IOB більший за це значення. Значення також залежить від типу пацієнта.</string>
     <string name="pref_title_ama_max_iob">Макс. IOB для AMA</string>
-    <string name="openapsma_max_iob_summary">У контексті OpenAPS це значення називається Max IOB\nЦе максимальна кількість інсуліну в [Од], яку APS може ввести за один раз. Значення також залежить від типу пацієнта.</string>
     <string name="pref_title_max_daily_multiplier">Безпечний множник макс. добового базалу</string>
     <string name="pref_title_current_basal_multiplier">Безпечний множник поточного базалу</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Значення за замовчуванням: 4. Це друга половина ключових обмежень безпеки OpenAPS, друга частина правила «3x максимальний добовий; 4x поточний». Ваш базал, незалежно від максимального базалу, встановленого на помпі, не може бути вищим за це число, помножене на поточний рівень базалу. Це захищає людей від небезпечних значень, якщо вони встановлять надто високий максимальний базал, ще не розуміючи, як працює алгоритм. За замовчуванням 4x; більшості людей ніколи не потрібно це змінювати. Якщо вам здається, що ви «впираєтеся» в це обмеження, скоріше потрібно змінити інші налаштування.</string>
