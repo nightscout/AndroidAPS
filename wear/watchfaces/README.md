@@ -1,6 +1,6 @@
 # Material and Sport custom watchfaces for AndroidAPS 4
 
-Material 1.11 and Sport 1.14 are maintained in [BernhardRo/AndroidAPS, branch `dev`](https://github.com/BernhardRo/AndroidAPS/tree/dev). Integrated from `AAPS-Material-Sport-Watchface-Patch-2026-11-07.zip` on 2026-11-08.
+Material 1.18 and Sport 1.18 are maintained in [BernhardRo/AndroidAPS, branch `dev`](https://github.com/BernhardRo/AndroidAPS/tree/dev). Integrated from `AAPS-Material-Sport-Watchface-Patch-2026-11-07.zip` on 2026-11-08; later local revisions add the glucose delta and reading-age placements, plus three Sport complication slots.
 
 - [Material source and usage](material/README.md)
 - [Sport source and usage](sport/README.md)

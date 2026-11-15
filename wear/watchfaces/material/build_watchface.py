@@ -32,9 +32,9 @@ TREND_ARROWS = {
     "ArrowSingleDown": ("SINGLE_DOWN", 90, 1),
     "ArrowDoubleDown": ("DOUBLE_DOWN", 90, 2),
 }
-RING_RADIUS = 192
-RING_STROKE = 5
-RING_ARROW_HEIGHT = 4  # Shorter tips keep their outer radius at 197 on the larger ring.
+RING_RADIUS = 190
+RING_STROKE = 7
+RING_ARROW_HEIGHT = 8  # Tips reach radius 198, leaving room inside the display edge.
 RING_SWEEP = 40
 RING_TRACK_ALPHA = round(255 * 0.3)
 RESOURCES = (*STATIC_RESOURCES, *(f"{name}.png" for name in TREND_ARROWS))
@@ -42,7 +42,7 @@ VIEW_PREFS = {
     "day": "key_show_date", "month": "key_show_date",
     "sgv": "key_show_bg", "direction": "key_show_direction",
     "timestamp": "key_show_ago", "loop": "key_show_loop_status",
-    "delta": "key_show_delta", "avg_delta": "key_show_avg_delta",
+    "delta": "key_show_delta", "reservoir": "key_show_reservoir_level",
     "uploader_battery": "key_show_uploader_battery", "rig_battery": "key_show_rig_battery",
     "cob1": "key_show_cob", "cob2": "key_show_cob",
     "iob1": "key_show_iob", "iob2": "key_show_iob",
@@ -50,8 +50,8 @@ VIEW_PREFS = {
 }
 SAMPLES = {
     "time": "10:08", "day": "14", "month": "OCT", "sgv": "106",
-    "loop": "3'", "timestamp": "2'", "uploader_battery": "82%", "rig_battery": "67%",
-    "delta": "+3", "avg_delta": "+1.8", "cob1": "COB", "cob2": "18g",
+    "loop": "", "timestamp": "2'", "uploader_battery": "82%", "rig_battery": "67%",
+    "delta": "+3", "reservoir": "120 U", "cob1": "COB", "cob2": "18g",
     "basalRate": "0.85U/h", "bgi": "-1.2", "iob1": "IOB", "iob2": "2.40",
     "timePeriod": "AM",
 }
@@ -85,9 +85,9 @@ def trend_triangles(name: str):
     """Adapt AAPS 4's outward triangles to leave space at the display edge."""
     _, angle, count = TREND_ARROWS[name]
     triangles = []
-    half_base = RING_STROKE * 1.6
+    half_base = RING_STROKE * 2
     height = RING_ARROW_HEIGHT
-    base_distance = RING_RADIUS + RING_STROKE * 0.2
+    base_distance = RING_RADIUS
     spacing = math.degrees(half_base * 1.6 / RING_RADIUS)
     for index in range(count):
         radians = math.radians(angle + (index - (count - 1) / 2) * spacing)
@@ -155,6 +155,8 @@ def draw_text(image, face: dict, key: str, text: str, prefs: dict, scale: int, c
     if not text:
         return
     size = int(style.get("textsize1", view.get("textsize", 22))) * scale
+    if size <= 0:
+        return
     font = font_for(view, size)
     color = color or style.get("fontColor1", view.get("fontColor", "#757575"))
     x, y = view["leftmargin"] * scale, view["topmargin"] * scale
@@ -186,9 +188,9 @@ def render(face: dict, *, dark=True, state="normal", detailed=False, hour12=Fals
     elif state == "low":
         values.update(sgv="58", delta="-4", avg_delta="-3.1")
     elif state == "stale":
-        values.update(timestamp="18'", loop="19'", uploader_battery="12%")
+        values.update(timestamp="18'", loop="", uploader_battery="12%")
     elif state == "missing":
-        values.update(sgv="---", timestamp="--", loop="-")
+        values.update(sgv="---", timestamp="--", loop="")
         trend = "ArrowNone"
     palette = resolve_pref(face, face["dynPrefColor"], settings)
     bg_color = palette[{"high": "highColor", "low": "lowColor"}.get(state, "midColor")]

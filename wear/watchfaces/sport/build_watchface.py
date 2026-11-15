@@ -37,14 +37,14 @@ RESOURCE_NAMES = ("Background", "Empty", *GAUGE_NAMES, *TREND_ARROWS, *ICON_NAME
 # below Google's general 100 kB message guidance; delivery still needs a watch test.
 MAX_PACKAGE_BYTES = 95_000
 VIEW_PREFS = {
-    "sgv": "key_show_bg", "direction": "key_show_direction", "timestamp": "key_show_ago",
+    "sgv": "key_show_bg", "direction": "key_show_direction", "timestamp": "key_show_ago", "delta": "key_show_delta",
     "cob1": "key_show_cob", "cob2": "key_show_cob", "iob1": "key_show_iob", "iob2": "key_show_iob",
     "day": "key_show_date", "month": "key_show_date", "loop": "key_show_loop_status",
     "reservoir": "key_show_reservoir_level", "basalRate": "key_show_temp_basal",
 }
 PREF_DEFAULTS = {key: True for key in VIEW_PREFS.values()} | {"key_show_date": False, "key_show_detailed_iob": False, "key_units": True}
-SAMPLES = {"time": "10:08", "timePeriod": "AM", "sgv": "106", "timestamp": "2'", "day": "16", "month": "OCT",
-           "cob2": "18g", "iob1": "IOB", "iob2": "2.40", "loop": "3'", "basalRate": "0.85U/h"}
+SAMPLES = {"time": "10:08", "timePeriod": "AM", "sgv": "106", "delta": "+5", "timestamp": "2'", "day": "16", "month": "OCT",
+           "cob2": "18g", "iob1": "IOB", "iob2": "2.40", "loop": "", "basalRate": "0.85U/h"}
 BASELINE_TEXT_VIEWS = frozenset(("cob1", "cob2", "freetext4", "iob1", "iob2"))
 
 
@@ -265,7 +265,10 @@ def draw_text(image, face, key, value, prefs, scale, color=None):
         text = text.upper()
     if not text:
         return
-    font = font_for(view, style.get("textsize1", view["textsize"]) * scale)
+    text_size = style.get("textsize1", view["textsize"])
+    if text_size <= 0:
+        return
+    font = font_for(view, text_size * scale)
     layer = Image.new("RGBA", (view["width"] * scale, view["height"] * scale))
     draw = ImageDraw.Draw(layer)
     bounds = font.getbbox(text)
@@ -294,9 +297,9 @@ def render(face, *, state="normal", trend="ArrowFlat", detailed=False, hour12=Fa
     elif state == "low":
         samples["sgv"] = "58"
     elif state == "stale":
-        samples.update(timestamp="18'", loop="19'")
+        samples.update(timestamp="18'", loop="")
     elif state == "missing":
-        samples.update(sgv="---", timestamp="--", loop="-")
+        samples.update(sgv="---", timestamp="--", loop="")
         trend = "ArrowNone"
     samples.update(values or {})
     color = face[{"high": "highColor", "low": "lowColor"}.get(state, "midColor")]

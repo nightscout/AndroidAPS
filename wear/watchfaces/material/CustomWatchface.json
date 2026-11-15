@@ -3,7 +3,7 @@
         "name": "AAPS Material",
         "author": "OpenCode",
         "created_at": "14/10/2026",
-        "author_version": "1.11",
+        "author_version": "1.18",
         "cwf_version": "1.0",
         "comment": "Material 3 Expressive-inspired layout. Same data fields as AAPS V2 (1.0), by Andrew Warrington, adapted to CWF by Philoul. No changes to data, alerts or treatment logic."
     },
@@ -45,7 +45,7 @@
     },
     "loop": {
         "width": 44, "height": 44, "topmargin": 116, "leftmargin": 60,
-        "visibility": "visible", "textsize": 22, "gravity": "center",
+        "visibility": "visible", "textsize": 0, "gravity": "center",
         "font": "roboto_condensed_bold", "fontColor": "#FFFFFF", "dynPref": "primary"
     },
     "direction": {
@@ -53,9 +53,9 @@
         "visibility": "visible"
     },
     "timestamp": {
-        "width": 44, "height": 24, "topmargin": 50, "leftmargin": 278,
-        "visibility": "visible", "textsize": 20, "gravity": "center",
-        "font": "roboto_condensed_regular", "fontColor": "#757575"
+        "width": 44, "height": 44, "topmargin": 116, "leftmargin": 60,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#FFFFFF"
     },
     "uploader_battery": {
         "width": 70, "height": 24, "topmargin": 81, "leftmargin": 48,
@@ -77,15 +77,15 @@
         "visibility": "visible", "textsize": 23, "gravity": "center",
         "font": "roboto_condensed_bold", "dynPref": "primary"
     },
-    "freetext2": {
-        "width": 38, "height": 32, "topmargin": 166, "leftmargin": 210,
-        "visibility": "visible", "textsize": 18, "gravity": "center",
-        "font": "roboto_condensed_regular", "textvalue": "ØΔ", "dynPref": "avgDeltaLabel"
-    },
-    "avg_delta": {
+    "reservoir": {
         "width": 110, "height": 32, "topmargin": 166, "leftmargin": 250,
         "visibility": "visible", "textsize": 23, "gravity": "center",
         "font": "roboto_condensed_bold", "dynPref": "primary"
+    },
+    "freetext2": {
+        "width": 38, "height": 32, "topmargin": 166, "leftmargin": 210,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_regular", "textvalue": "RES", "dynPref": "reservoirLabel"
     },
     "cob1": {
         "width": 94, "height": 20, "topmargin": 205, "leftmargin": 37,
@@ -158,8 +158,8 @@
             "true": { "dynPref": "secondary" },
             "false": { "valueKey": "day", "textvalue1": "" }
         },
-        "avgDeltaLabel": {
-            "prefKey": "key_show_avg_delta",
+        "reservoirLabel": {
+            "prefKey": "key_show_reservoir_level",
             "true": { "dynPref": "secondary" },
             "false": { "valueKey": "day", "textvalue1": "" }
         },

@@ -3,9 +3,9 @@
         "name": "AAPS Sport",
         "author": "OpenCode",
         "created_at": "16/10/2026",
-        "author_version": "1.14",
+        "author_version": "1.18",
         "cwf_version": "1.0",
-        "comment": "Digital sport dashboard. Lower-right light-blue reservoir gauge: 0-200 U, 4 U steps. Native basal text, COB, IOB, trend and warning hooks. No chart, battery display or app changes."
+        "comment": "Digital sport dashboard. Lower-right light-blue reservoir gauge: 0-200 U, 4 U steps. Native basal text, COB, IOB, trend and warning hooks. Three configurable system complication slots. No chart or app changes."
     },
     "enableSecond": false,
     "pointSize": 2,
@@ -15,6 +15,18 @@
     "reservoirColor": "#65DEED",
     "background": {
         "width": 400, "height": 400, "leftmargin": 0, "topmargin": 0,
+        "visibility": "visible"
+    },
+    "complication1": {
+        "width": 76, "height": 32, "leftmargin": 162, "topmargin": 4,
+        "visibility": "visible"
+    },
+    "complication2": {
+        "width": 40, "height": 40, "leftmargin": 20, "topmargin": 120,
+        "visibility": "visible"
+    },
+    "complication3": {
+        "width": 40, "height": 40, "leftmargin": 340, "topmargin": 120,
         "visibility": "visible"
     },
     "chart": {
@@ -40,9 +52,14 @@
         "font": "roboto_condensed_bold", "fontStyle": "normal"
     },
     "timestamp": {
+        "width": 44, "height": 44, "leftmargin": 246, "topmargin": 104,
+        "visibility": "visible", "textsize": 18, "gravity": "center",
+        "font": "roboto_condensed_bold", "fontColor": "#FFFFFF"
+    },
+    "delta": {
         "width": 60, "height": 28, "leftmargin": 102, "topmargin": 116,
         "visibility": "visible", "textsize": 18, "gravity": "center",
-        "font": "roboto_condensed_regular", "fontColor": "#ABB8C2"
+        "font": "roboto_condensed_bold", "fontColor": "#ABB8C2"
     },
     "freetext2": {
         "width": 140, "height": 22, "leftmargin": 198, "topmargin": 40,
@@ -106,7 +123,7 @@
     },
     "loop": {
         "width": 44, "height": 44, "leftmargin": 246, "topmargin": 104,
-        "visibility": "visible", "textsize": 20, "gravity": "center",
+        "visibility": "visible", "textsize": 0, "gravity": "center",
         "font": "roboto_condensed_bold", "fontColor": "#F3F7FA"
     },
     "freetext4": {

@@ -39,7 +39,7 @@ class SportWatchfaceTest(unittest.TestCase):
 
     def test_metadata_and_version_are_accepted_by_the_checkout(self):
         self.assertEqual(self.face["metadata"]["name"], "AAPS Sport")
-        self.assertEqual(self.face["metadata"]["author_version"], "1.14")
+        self.assertEqual(self.face["metadata"]["author_version"], "1.18")
         supported = (build.ROOT / "core/interfaces/src/commonMain/kotlin/app/aaps/core/interfaces/rx/weardata/ResFormat.kt").read_text(encoding="utf-8")
         app_version = re.search(r'CUSTOM_VERSION = "([^"]+)"', supported).group(1)
         self.assertLessEqual(int(self.face["metadata"]["cwf_version"].split(".")[0]), int(app_version.split(".")[0]))
@@ -67,7 +67,8 @@ class SportWatchfaceTest(unittest.TestCase):
 
     def test_no_chart_no_battery_no_extra_live_fields(self):
         live = {key for key, view in self.face.items() if isinstance(view, dict) and view.get("visibility") == "visible"}
-        self.assertEqual(live, {"background", "cover_chart", "direction", "sgv", "timestamp", "time", "timePeriod",
+        self.assertEqual(live, {"background", "cover_chart", "complication1", "complication2", "complication3",
+                                "direction", "sgv", "timestamp", "delta", "time", "timePeriod",
                                 "day", "month", "cob1", "cob2", "iob1", "iob2", "loop", "reservoir", "basalRate",
                                 "freetext1", "freetext2", "freetext3", "freetext4"})
         self.assertEqual(self.face["chart"]["visibility"], "gone")
@@ -464,9 +465,12 @@ class SportWatchfaceTest(unittest.TestCase):
         ring = self.face["direction"]
         glucose_axis = ring["leftmargin"] + ring["width"] / 2
         self.assertEqual(glucose_axis, 132)
-        for key in ("sgv", "timestamp", "freetext1"):
+        for key in ("sgv", "delta", "freetext1"):
             view = self.face[key]
             self.assertEqual(view["leftmargin"] + view["width"] / 2, glucose_axis)
+        self.assertEqual((self.face["timestamp"]["leftmargin"], self.face["timestamp"]["topmargin"], self.face["timestamp"]["width"], self.face["timestamp"]["height"]),
+                         (self.face["loop"]["leftmargin"], self.face["loop"]["topmargin"], self.face["loop"]["width"], self.face["loop"]["height"]))
+        self.assertEqual(self.face["loop"]["textsize"], 0)
         for key in ("freetext2", "basalRate", "loop"):
             view = self.face[key]
             self.assertEqual(view["leftmargin"] + view["width"] / 2, 400 - glucose_axis)
@@ -540,10 +544,10 @@ class SportWatchfaceTest(unittest.TestCase):
 
     def test_text_samples_fit_fields_and_the_round_screen(self):
         cases = {"time": ("23:59", "10:08", "12:59"), "timePeriod": ("AM", "PM"),
-                 "sgv": ("106", "400", "22.2", "22,2", "---"), "timestamp": ("18'", "60'", "--"),
+                 "sgv": ("106", "400", "22.2", "22,2", "---"), "delta": ("+12", "-12", "+5"), "timestamp": ("18'", "60'", "--"),
                  "day": ("1", "16", "31"), "month": ("JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEPT", "OKT", "OCT", "NOV", "DEZ"),
                  "cob2": ("18g", "120g", "120(40)g", "---"), "iob1": ("-12.34", "12,34"),
-                 "iob2": ("-12.34", "12,34"), "loop": ("3'", "19'", "60'", "-"),
+                 "iob2": ("-12.34", "12,34"),
                  "reservoir": ("40 U", "200 U", "250 U", "500U", ""),
                  "basalRate": ("0.85U/h", "0,85U/h", "12.34U/h", "120%", "1000%", "")}
         ring = self.face["direction"]
@@ -562,14 +566,14 @@ class SportWatchfaceTest(unittest.TestCase):
                              # Actual right-side glyph/gauge clearance is tested separately.
                             limit = 178 if x < 200 and y > 200 else 189
                             self.assertLess(math.hypot(x - 200, y - 200), limit)
-                            if key in ("sgv", "timestamp"):
+                            if key in ("sgv", "delta"):
                                 self.assertLess(math.hypot(x - center[0], y - center[1]), build.ART["trend"]["radius"] - 5)
 
     def test_key_text_groups_leave_visible_space(self):
         for detailed in (False, True):
             prefs = {"key_show_detailed_iob": detailed}
             values = build.SAMPLES | ({"iob1": "-12.34", "iob2": "(-10.00|10.00)"} if detailed else {})
-            for first, second in (("sgv", "timestamp"), ("freetext1", "sgv"), ("basalRate", "time"),
+            for first, second in (("sgv", "delta"), ("freetext1", "sgv"), ("basalRate", "time"),
                                    ("time", "timePeriod"), ("time", "cob2"), ("day", "month"),
                                    ("cob2", "freetext3"), ("freetext3", "reservoir"),
                                    ("freetext2", "basalRate"), ("basalRate", "loop"), ("loop", "time"),

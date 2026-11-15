@@ -45,7 +45,7 @@ class MaterialWatchfaceTest(unittest.TestCase):
                     and k not in {"background", "freetext1", "freetext2", "freetext3", "freetext4", "timePeriod"}}
         self.assertEqual(self.reference["metadata"]["name"], "AAPS V2")
         self.assertEqual(self.reference["metadata"]["author_version"], "1.0")
-        self.assertEqual(visible(self.reference), visible(self.face))
+        self.assertEqual((visible(self.reference) - {"avg_delta"}) | {"reservoir"}, visible(self.face))
         self.assertEqual(self.reference["pointSize"], self.face["pointSize"])
         self.assertEqual(self.reference["enableSecond"], self.face["enableSecond"])
 
@@ -126,7 +126,7 @@ class MaterialWatchfaceTest(unittest.TestCase):
                     self.assertEqual(style.get("valueKey"), "day", key)
 
     def test_free_labels_follow_visibility_preferences(self):
-        for label, pref in (("freetext1", "key_show_delta"), ("freetext2", "key_show_avg_delta"),
+        for label, pref in (("freetext1", "key_show_delta"), ("freetext2", "key_show_reservoir_level"),
                             ("freetext3", "key_show_temp_basal"), ("freetext4", "key_show_bgi")):
             for dark in (True, False):
                 rule = self.face[label]["dynPref"]
@@ -169,9 +169,11 @@ class MaterialWatchfaceTest(unittest.TestCase):
         self.assertEqual(time["textsize"], 64)
         self.assertEqual(sgv["textsize"], 54)
         age = self.face["timestamp"]
-        self.assertGreaterEqual(age["topmargin"], sgv["topmargin"])
-        self.assertLessEqual(age["topmargin"] + age["height"], sgv["topmargin"] + sgv["height"])
-        self.assertGreaterEqual(age["leftmargin"], sgv["leftmargin"] + sgv["width"])
+        loop = self.face["loop"]
+        self.assertEqual((age["leftmargin"], age["topmargin"], age["width"], age["height"]),
+                         (loop["leftmargin"], loop["topmargin"], loop["width"], loop["height"]))
+        self.assertEqual(loop["textsize"], 0)
+        self.assertEqual(self.face["delta"]["topmargin"], self.face["reservoir"]["topmargin"])
         period = self.face["timePeriod"]
         # AM/PM uses free space below the clock glyphs, left of the taller date.
         self.assertLessEqual(period["leftmargin"] + period["width"], day["leftmargin"])
@@ -180,7 +182,7 @@ class MaterialWatchfaceTest(unittest.TestCase):
         time_bottom = time["topmargin"] + time["height"] / 2 + (time_bounds[3] - time_bounds[1]) / 2
         period_top = period["topmargin"] + period["height"] / 2 - (period_bounds[3] - period_bounds[1]) / 2
         self.assertGreater(period_top, time_bottom)
-        self.assertLessEqual(period["topmargin"] + period["height"], self.face["delta"]["topmargin"])
+        self.assertLessEqual(period["topmargin"] + period["height"], self.face["reservoir"]["topmargin"])
 
     def test_date_helpers_allow_full_font_line_height_and_extra_space(self):
         # Glyph bounds alone missed the 1.10 clipping. Reserve a full font line
@@ -202,7 +204,7 @@ class MaterialWatchfaceTest(unittest.TestCase):
         cases = {"time": ("23:59", "10:08", "12:59"), "day": ("1", "14", "31"),
                  "month": ("JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "SEPT", "OKT", "OCT", "NOV", "DEZ"),
                  "timePeriod": ("AM", "PM"), "sgv": ("106", "400", "22.2", "---"),
-                 "delta": ("+12.3", "-12.3"), "avg_delta": ("+12.3", "-12.3"),
+                 "delta": ("+12.3", "-12.3"), "reservoir": ("120 U", "200 U", "300 U"),
                  "timestamp": ("18'", "60'"), "uploader_battery": ("100%",),
                  "cob2": ("120g",), "basalRate": ("0.85U/h", "120%"),
                  "bgi": ("-12.3",), "iob1": ("IOB", "12.34"), "iob2": ("12.34", "(1.60|0.80)", "(-10.00|10.00)")}
@@ -332,17 +334,17 @@ class MaterialWatchfaceTest(unittest.TestCase):
         for name in build.TREND_ARROWS:
             for triangle in build.trend_triangles(name):
                 for x, y in triangle:
-                    self.assertLessEqual(math.hypot(x - 200, y - 200), 197 + 1e-9)
+                    self.assertLessEqual(math.hypot(x - 200, y - 200), 198.4 + 1e-9)
 
-    def test_larger_ring_keeps_arrow_tip_radius_unchanged(self):
-        self.assertEqual(build.RING_RADIUS * 2, 384)
-        self.assertEqual(build.RING_STROKE, 5)
-        self.assertEqual(build.RING_RADIUS + build.RING_STROKE * 0.2 + build.RING_ARROW_HEIGHT, 197)
+    def test_thicker_ring_and_arrowheads_fit_the_display(self):
+        self.assertEqual(build.RING_RADIUS * 2, 380)
+        self.assertEqual(build.RING_STROKE, 7)
+        self.assertAlmostEqual(build.RING_RADIUS + build.RING_ARROW_HEIGHT, 198)
         for name, (_, _, count) in build.TREND_ARROWS.items():
             tips = [triangle[0] for triangle in build.trend_triangles(name)]
             self.assertEqual(len(tips), count)
             for x, y in tips:
-                self.assertAlmostEqual(math.hypot(x - 200, y - 200), 197)
+                self.assertAlmostEqual(math.hypot(x - 200, y - 200), 198)
 
     def test_ring_matches_aaps4_arc_positions_and_counts(self):
         source = (build.ROOT / "ui/src/commonMain/kotlin/app/aaps/ui/compose/overview/BgInfoSection.kt").read_text(encoding="utf-8")

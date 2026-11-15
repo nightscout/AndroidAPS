@@ -1,4 +1,4 @@
-# AAPS Material (1.11)
+# AAPS Material (1.18)
 
 Integrated into this AndroidAPS 4 checkout; see [integration and current verification](../README.md). The source-checkout notes below document the original design and its history.
 
@@ -10,10 +10,10 @@ The layout takes its information set from the bundled **AAPS V2 (1.0)** by Andre
 
 Material 3 Expressive-inspired styling: a black OLED background, mint accent, rounded tonal surfaces, a large central clock, and clear type hierarchy. A light variant follows the existing dark-mode setting. The existing Wear fonts are reused; no font download or new Android dependency is required.
 
-- Top: glucose with reading age to its right, and phone/rig batteries with distinct icons.
+- Top: glucose and phone/rig batteries with distinct icons.
 - Outer edge: live glucose trend as an AAPS-4-style full circle, bright arc and outward arrowheads.
-- Center: time, optional day/month stacked to its right, optional AM/PM below the clock, and the separate existing colored loop icon with loop age.
-- Chips: delta and average delta.
+- Center: time, optional day/month stacked to its right, optional AM/PM below the clock, and the separate existing colored loop icon with glucose-reading age inside it.
+- Chips: delta and remaining pump insulin (RES) in their original two fields below the clock.
 - Cards: COB, basal rate/BGI, and IOB, including the detailed IOB option.
 - Bottom: the existing live chart, including its configured history, target lines, treatments and basal overlay.
 
@@ -21,13 +21,15 @@ The chart is smaller than in AAPS V2; its complete rectangle stays inside a roun
 
 Version 1.11 gives day and month taller text fields: 26 instead of 18 template pixels, while keeping their 18-pixel font. The day/month spacing is adjusted, and optional AM/PM has a 22-pixel-tall field below the clock, to the left of the date. This addresses the user's report of a clipped month on the Galaxy Watch 4. The new test reserves a full font line plus extra space instead of checking visible glyphs alone; actual Android rendering still needs verification.
 
-Glucose remains at the top with 54-pixel text and time in the center with 64-pixel text. The version 1.9 ring (diameter 384, stroke 5, tips at radius 197), all other fields, warning colors and the version 1.10 matching-divider support are unchanged.
+Version 1.18 moves glucose age into the loop-status ring and restores native delta and remaining pump insulin (RES) to their original two pills below the clock. Native loop-state colors and glucose-age warning colors remain active.
+
+Glucose remains at the top with 54-pixel text and time in the center with 64-pixel text. The version 1.9 ring (diameter 380, stroke 7, tips at radius 198), all other fields, warning colors and the version 1.10 matching-divider support are unchanged.
 
 ### Matching divider / Querbalken farbgleich
 
 In the watch's **AAPS(Custom)** settings:
 
-- **Off:** keep the existing colored Material surfaces behind time, delta/average delta, COB/basal/IOB and the chart.
+- **Off:** keep the existing colored Material surfaces behind time, delta/reservoir, COB/basal/IOB and the chart.
 - **On:** match those surfaces to the overall background: black in dark mode, white in light mode.
 
 This changes only the decorative background image. Text, live values, warning colors, trend ring, loop icons and chart data remain unchanged. Chart curves, grid, treatments and basal overlays keep their existing colors. Your saved setting is used; the ZIP does not turn the setting on or off. With the native default of off, the earlier Material look is preserved.
@@ -44,11 +46,11 @@ The eight generated `Arrow*.png` files use white pixels and transparency. The ex
 
 ### If the ring is missing on the watch
 
-In the 400-pixel template, the version 1.9 circle is 384 pixels across, the stroke outer radius is 194.5, and the arrowhead vertices stay inside radius 197. The PNGs are recognized by this checkout's importer. Static checks are not a substitute for checking the installed phone/Wear version and the watch display.
+In the 400-pixel template, the version 1.9 circle is 380 pixels across, the stroke outer radius is 193.5, and the arrowhead vertices stay inside radius 198. The PNGs are recognized by this checkout's importer. Static checks are not a substitute for checking the installed phone/Wear version and the watch display.
 
 1. In the watch's AAPS display settings, enable **Show Direction Arrow** (**Trendpfeil anzeigen**). The ring is the native direction view; this setting hides or shows the whole ring. This face does not override your setting.
 2. Check with the watch awake, not charging, and with simplified UI off for the test. `SimpleUi` draws its own glucose/time display instead of the custom layout and does not use the ring PNGs.
-3. Replace the ZIP in `exports` and explicitly load **AAPS Material (1.11)** again; select **AAPS(Custom)** on the watch. The selection image is synthetic and is not proof that its resources rendered on the watch. The user also reported that the ring is visible on the watch even when absent from the Samsung phone overview image; that image alone does not establish a missing ring.
+3. Replace the ZIP in `exports` and explicitly load **AAPS Material (1.18)** again; select **AAPS(Custom)** on the watch. The selection image is synthetic and is not proof that its resources rendered on the watch. The user also reported that the ring is visible on the watch even when absent from the Samsung phone overview image; that image alone does not establish a missing ring.
 4. If still absent, provide the watch model, phone/Wear AAPS versions, a photo of the active face, and whether any small trend arrow appears. A small arrow would suggest the native fallback icon rather than the custom ring resource. No native renderer change is included in this package.
 
 **Existing Wear limitation:** this branch transmits both triple-up and triple-down with the same `X` symbol. The existing CWF renderer maps that symbol to its double-up resource. An asset-only face cannot distinguish those triple directions or match the phone's three-triangle display; this existing ambiguity is not fixed here. Use the phone display to check triple trends. The ring matches the seven distinct ordinary directions supported by the renderer, not all phone trend states.
@@ -79,7 +81,7 @@ The builder creates a deterministic ZIP with the importer-required root entries 
 ## Use on the watch
 
 1. Keep `AAPS Material.zip` zipped and copy it into the `exports` folder of the AAPS directory selected on the phone.
-2. In the phone's AAPS Wear screen, tap **Load Watchface** (**Watchface laden** in German) and select **AAPS Material (1.11)**. The selection sends it to the watch. To update an earlier copy, replace its ZIP in `exports` and import this version again. The button is shown only while AAPS reports a connected watch.
+2. In the phone's AAPS Wear screen, tap **Load Watchface** (**Watchface laden** in German) and select **AAPS Material (1.18)**. The selection sends it to the watch. To update an earlier copy, replace its ZIP in `exports` and import this version again. The button is shown only while AAPS reports a connected watch.
 3. Select the existing **AAPS(Custom)** watchface on the watch if needed, and adjust its display settings.
 
 No APK rebuild is needed for this import path when the installed version supports the same CWF format. The ZIP is also included as a phone-app asset for future builds. Note: `FileListProviderImpl` loads bundled ZIPs only when no valid ZIPs exist in `exports`; adding an asset alone does not add it to an already populated import list. Copy the new ZIP to `exports` explicitly.
@@ -104,3 +106,5 @@ On the actual watch, verify:
 No device installation, instrumented test or treatment-logic change is part of this work. See `TESTRESULTS.md` for the local verification record.
 
 Design reference: [Wear OS Material 3 Expressive color guidance](https://developer.android.com/design/ui/wear/guides/styles/color).
+
+Enable Show Reservoir Level in the watch settings to display the remaining pump insulin in the right pill. The value and warning colors come from AAPS.
