@@ -612,8 +612,10 @@ class EversensePlugin(
         val rawReadings = batch.readings
         if (rawReadings.isEmpty()) return true
 
+        val liveState = eversense.getCurrentState()
+        val activeSensorId = liveState.sensorId.ifEmpty { state.sensorId }
         val readings = rawReadings.map { r ->
-            if (r.sensorId.isEmpty() && state.sensorId.isNotEmpty()) r.copy(sensorId = state.sensorId) else r
+            if (r.sensorId.isEmpty() && activeSensorId.isNotEmpty()) r.copy(sensorId = activeSensorId) else r
         }
 
         val latest = readings.maxByOrNull { it.datetime } ?: return true
