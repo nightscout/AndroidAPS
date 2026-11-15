@@ -214,6 +214,16 @@ class CarelevoEmulatorBleTransport(
 
     override fun loseAnswer(command: EmulatedCommand): Boolean = addFault(lostAnswers, command)
 
+    /** A new patch, in range. Only between connections: the old patch is out of range or its link is closed. */
+    override fun replaceWithNewPump(): Boolean {
+        gatt.disconnect()
+        emulator.replaceWithNewPatch()
+        synchronized(lostCommands) { lostCommands.clear() }
+        synchronized(lostAnswers) { lostAnswers.clear() }
+        reportConnected = true
+        return true
+    }
+
     /**
      * UNVERIFIED which tier a real patch uses for each. The driver reads them from the 0x43 active-alarm snapshot. A low
      * reservoir and a long stop are no snapshot flags: the driver works them out from the reported values.

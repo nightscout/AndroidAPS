@@ -27,6 +27,11 @@ says what has to pass, not how.
   lost is checked on the pump before it is reported as done or failed.
 - **D8 What the user is told.** A bolus the pump stopped or did not give in full is reported as not given, with an
   alarm. A refused setting is reported as failed, a done one as done.
+- **D9 A pump that does not answer can be removed.** Unpairing or discarding tries the pump first. When the queue gives
+  up on the link, the pump is removed from AAPS anyway, and the user is told that the pump was not reached, so they take
+  it off: a pump that is only out of range still gives its basal. AAPS then counts nothing more from that pump: its
+  temp basal and extended bolus end with the removal (`PumpSync.connectNewPump`), or a 0 U/h stop starts. The removal
+  does not depend on the screen that started it.
 
 ## E. Emulator (in the tree, next to the driver)
 
@@ -58,7 +63,7 @@ A class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` runs all of these. A s
   `aTempBasalCancelThatIsLostKeepsTheTempBasal`.
 - **S6** Other lost answers: `aProfileWhoseAnswerIsLostIsKnown`, `anExtendedBolusWhoseAnswerIsLostIsKnown`,
   `anExtendedBolusCancelWhoseAnswerIsLostIsKnown`.
-- **S7** The driver itself: `aDriverReloadKeepsThePump`, `aPumpOutOfRangeFailsCleanly`.
+- **S7** The driver itself: `aDriverReloadKeepsThePump`, `aPumpOutOfRangeFailsCleanly`, `aDeadPumpCanBeRemoved` (D9).
 - **S8** What happens on the pump: `aSuspendOnThePumpIsRecorded`, `aBolusGivenOnThePumpIsImported`,
   `aBolusWithThePumpClockOffIsStoredAtItsTime`.
 - **S9** Alarms: `anOcclusionRaisesAnAlarm`, `anEmptyReservoirRaisesAnAlarm`.
@@ -104,6 +109,8 @@ again for what a change touches. The result goes in the PR, with the date and th
 - **R10** The link lost and back: the next command works.
 - **R11** One pump setting saved from the screens.
 - **R12** The app restarted during a bolus: AAPS counts it once.
+- **R13** The pump switched off (or out of range) and removed in AAPS: AAPS says it was not reached, and counts no
+  temp basal of it.
 
 ## C. CI and coverage
 

@@ -542,6 +542,26 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     /**
+     * A removed pump gives nothing, so AAPS counts nothing more from it: the temp basal and the extended bolus it ran end
+     * with the removal, or a 0 U/h stop starts. Kept, they count insulin that no pump gives until the next pump is
+     * paired, and the loop doses for it.
+     */
+    fun checkNothingCountedFromRemovedPump() {
+        val end = SystemClock.uptimeMillis() + RECORD_TIMEOUT
+        while (true) {
+            val now = System.currentTimeMillis()
+            val tempBasal = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(now) }
+            val extendedBolus = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(now) }
+            if ((tempBasal == null || tempBasal.rate == 0.0) && extendedBolus == null) return
+            // An AssertionError: a wrong result, which RetryRule must not retry.
+            if (SystemClock.uptimeMillis() > end) {
+                throw AssertionError("AAPS still counts delivery of the removed pump: temp basal $tempBasal, extended bolus $extendedBolus")
+            }
+            SystemClock.sleep(POLL_MS)
+        }
+    }
+
+    /**
      * The extended bolus AAPS has is the one the pump runs, or neither has one. A pump that gives high temp basals as
      * extended boluses (the DanaR with its "Use extended boluses for >200%" setting) stores every extended bolus as one
      * that stands for a temp basal.

@@ -376,6 +376,20 @@ class PreferencesImpl(
 
     override fun remove(key: NonPreferenceKey) {
         sp.remove(key.key)
+        reloadFlows(key.key)
+    }
+
+    /**
+     * An observer of a removed key sees what [get] returns after the remove, the default. Without this it kept the old
+     * value: the DanaR driver watches its pump name to close the records of the old pump, and an unpair never reached it.
+     */
+    private fun reloadFlows(key: String) {
+        booleanFlows.reload(key)
+        stringFlows.reload(key)
+        doubleFlows.reload(key)
+        unitDoubleFlows.reload(key)
+        intFlows.reload(key)
+        longFlows.reload(key)
     }
 
     override fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long =
@@ -397,7 +411,9 @@ class PreferencesImpl(
     }
 
     override fun remove(key: ComposedKey, vararg arguments: Any) {
-        sp.remove(key.composeKey(*arguments))
+        val composedKey = key.composeKey(*arguments)
+        sp.remove(composedKey)
+        reloadFlows(composedKey)
     }
 
     override fun isUnitDependent(key: String): Boolean =
@@ -606,5 +622,15 @@ class PreferencesImpl(
             snapshot.forEach { it.flow.value = it.read() }
         }
 
+        /** Re-reads the flow of [key] from the store, if the key is observed. */
+        fun reload(key: String) {
+            lock.lock()
+            val entry = try {
+                values[key]
+            } finally {
+                lock.unlock()
+            }
+            entry?.let { it.flow.value = it.read() }
+        }
     }
 }
