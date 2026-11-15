@@ -507,6 +507,12 @@ class O5PumpPlugin @Inject constructor(
                 try {
                     fetchStatus().blockingAwait()
                     reconcilePendingDoseLocked()
+                } catch (e: Exception) {
+                    // A pod in alarm answers with its alarm page: the pod state is updated, and the command reports
+                    // an error. That page is the last word on a pending dose, so it is settled here. Without this a
+                    // bolus the pod stopped stays counted in full.
+                    if (podStateManager.isPodKaput) reconcilePendingDoseLocked()
+                    throw e
                 } finally {
                     // Alarm responses update pod state before the command reports an error.
                     checkPodKaput()
@@ -1104,7 +1110,11 @@ class O5PumpPlugin @Inject constructor(
                 val accepted = podStateManager.pendingDoseCommand?.confirmedByStatus == true
                 if (deliveredUnits != null && accepted) {
                     finalizeBolus(podStateManager.pendingDoseCommand ?: pendingDose, deliveredUnits)
-                    pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(deliveredUnits)
+                    // A pod in alarm stopped the bolus on its own. What it gave is counted, but the bolus is not a success.
+                    val podStoppedBolus = podStateManager.isPodKaput
+                    pumpEnactResultProvider.get().success(!podStoppedBolus).enacted(true).bolusDelivered(deliveredUnits).also {
+                        if (podStoppedBolus) it.comment(podFaultDescription() ?: "")
+                    }
                 } else {
                     pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(requestedUnits)
                         .comment(rh.gs(R.string.omnipod_5_error_bolus_delivery_status_uncertain))
@@ -1183,6 +1193,18 @@ class O5PumpPlugin @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$e")
                 reportPodFault()
+                // A pod in alarm answers every status read with its alarm page, which says how much of the bolus is
+                // left. No later read says more, so the bolus is settled from it now.
+                if (podStateManager.isPodKaput) {
+                    val deliveredPulses = podStateManager.pendingDoseCommand?.deliveredBolusPulses(
+                        podStateManager.sequenceNumberOfLastProgrammingCommand,
+                        podStateManager.deliveryStatus,
+                        podStateManager.bolusPulsesRemaining
+                    )
+                    if (deliveredPulses != null) {
+                        return@defer Single.just(BolusCompletion(deliveredPulses * PodConstants.POD_PULSE_BOLUS_UNITS))
+                    }
+                }
                 bolusSleep(BOLUS_RETRY_INTERVAL_MS)
                 return@repeat
             }
