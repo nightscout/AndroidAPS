@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">בולוס מרבי</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">קצב בזאלי מרבי</string>
-    <string name="openapsma_max_basal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
     <string name="pref_title_smb_max_iob">IOB מרבי עבור SMB</string>
-    <string name="openapssmb_max_iob_summary">ערך זה נקרא Max IOB בהקשר של OpenAPS.\nOpenAPS לא יוסיף אינסולין נוסף אם ה־IOB הנוכחי גבוה מערך זה. הערך מושפע גם מסוג המטופל.</string>
     <string name="pref_title_ama_max_iob">IOB מרבי עבור AMA</string>
-    <string name="openapsma_max_iob_summary">ערך זה נקרא Max IOB בהקשר של OpenAPS.\nזוהי כמות האינסולין המרבית ביחידות [U] ש־APS יכול לתת בבת אחת. הערך מושפע גם מסוג המטופל.</string>
     <string name="pref_title_max_daily_multiplier">מכפיל בטיחות יומי מרבי</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3. זהו מנגנון הגנה עיקרי של OpenAPS. הוא מגביל את הבזאלי לעד פי 3 מהקצב הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="pref_title_current_basal_multiplier">מכפיל בטיחות לבזאלי הנוכחי</string>
