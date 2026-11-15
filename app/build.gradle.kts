@@ -211,7 +211,9 @@ android {
             ":pump:dana:danar" to "src/androidTestPumps/dana/danar/kotlin",
             ":pump:dana:danars" to "src/androidTestPumps/dana/danars/kotlin",
             ":pump:diaconn" to "src/androidTestPumps/diaconn/kotlin",
-            ":pump:equil" to "src/androidTestPumps/equil/kotlin"
+            ":pump:equil" to "src/androidTestPumps/equil/kotlin",
+            ":pump:omnipod:common" to "src/androidTestPumps/omnipod/common/kotlin",
+            ":pump:omnipod:dash" to "src/androidTestPumps/omnipod/dash/kotlin"
         )
         listOf("androidTestFull", "androidTestPumpcontrol").forEach { name ->
             findByName(name)?.let { set ->
