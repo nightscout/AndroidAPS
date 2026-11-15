@@ -974,13 +974,25 @@ class OmnipodDashPumpPlugin(
                 rh.gs(R.string.setting_temp_basal_might_have_basal_failed),
                 AlarmSound.BOLUS_ERROR,
             )
-        }.toPumpEnactResultImpl()
+        }.andThen(failTempBasalWhenUnconfirmed()).toPumpEnactResultImpl()
 
         if (ret.success && ret.enacted) {
             ret.isPercent(false).absolute(absoluteRate).duration(durationInMinutes)
         }
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: result=$ret")
         return ret
+    }
+
+    /**
+     * The pod did not confirm the temp basal, so the driver does not know if it runs. That is not a success: the next
+     * status read finds out, and the caller may try again. The same rule as for a basal profile, see [failWhenUnconfirmed].
+     */
+    private fun failTempBasalWhenUnconfirmed(): Completable = Completable.defer {
+        if (podStateManager.activeCommand != null) {
+            Completable.error(IllegalStateException(rh.gs(R.string.setting_temp_basal_might_have_basal_failed)))
+        } else {
+            Completable.complete()
+        }
     }
 
     private suspend fun pumpSyncTempBasal(
