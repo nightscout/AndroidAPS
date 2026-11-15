@@ -297,12 +297,12 @@ class EversensePlugin(
                 notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_failed), level = NotificationLevel.URGENT)
                 return@launch
             }
-            // Flush the entire accumulated pending queue immediately (uploading all accumulated measurements without gaps)
+            // Flush all pending readings accumulated in the queue since the last successful upload
             cloudUploader.flush(force = true)
 
             notificationManager.post(
                 NotificationId.EVERSENSE_CREDENTIALS,
-                "Upload eDMS avviato per tutte le letture in sospeso",
+                "Upload eDMS avviato per le letture in sospeso",
                 level = NotificationLevel.INFO
             )
         }
