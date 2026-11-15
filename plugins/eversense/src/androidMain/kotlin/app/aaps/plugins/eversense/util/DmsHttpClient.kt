@@ -53,15 +53,22 @@ internal object DmsHttpClient {
 /** Cache semantics are shared; the model-specific login still selects its own endpoint. */
 internal object DmsAccessTokens {
     data class Login(val token: String, val expiresInSeconds: Int)
-    fun resolve(preferences: EversenseStore, login: () -> Login?): String? {
+    fun resolve(preferences: EversenseStore, forceRefresh: Boolean = false, login: () -> Login?): String? {
         val expiry = preferences.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)
         val cached = preferences.getString(StorageKeys.ACCESS_TOKEN, null)
-        if (cached != null && PacketTime.nowMillis() < expiry - 300_000L) return cached
+        if (!forceRefresh && cached != null && PacketTime.nowMillis() < expiry - 300_000L) return cached
         val session = login() ?: return null
         preferences.edit(commit = true) {
             putString(StorageKeys.ACCESS_TOKEN, session.token)
             putLong(StorageKeys.ACCESS_TOKEN_EXPIRY, PacketTime.nowMillis() + session.expiresInSeconds * 1000L)
         }
         return session.token
+    }
+
+    fun clear(preferences: EversenseStore) {
+        preferences.edit(commit = true) {
+            remove(StorageKeys.ACCESS_TOKEN)
+            remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
+        }
     }
 }

@@ -336,13 +336,14 @@ class EversenseHttp365Util {
 
                 val reply = DmsHttpClient.post("${effectiveCareBaseUrl(getState(preferences))}api/care/PutDeviceEvents", jsonBody, token, tolerantBody = true)
                 val responseCode = reply.status
-                if (responseCode >= 400) {
-                    val error = reply.body
-                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $error" }
-                    UploadOutcome(success = false, httpStatus = responseCode, responseBody = error)
+                val responseBody = reply.body
+                val isRejected = responseBody.contains("[-1") || responseBody.contains("-1,")
+                if (responseCode >= 400 || isRejected) {
+                    if (responseCode == 401) DmsAccessTokens.clear(preferences)
+                    val error = if (isRejected) "eDMS rejected device events ($responseBody)" else responseBody
+                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode, error: $error")
+                    UploadOutcome(success = false, httpStatus = responseCode, responseBody = responseBody, error = error)
                 } else {
-                    val responseBody = reply.body
                     EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}")
                     EversenseLogger.debug(TAG) { "Cloud response body: $responseBody" }
                     UploadOutcome(
