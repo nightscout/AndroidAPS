@@ -297,56 +297,13 @@ class EversensePlugin(
                 notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_failed), level = NotificationLevel.URGENT)
                 return@launch
             }
-            val prefs = eversense.cloudStore()
-            if (prefs == null) {
-                notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, "Eversense cloud store unavailable", level = NotificationLevel.URGENT)
-                return@launch
-            }
-            val state = eversense.getCurrentState()
-            val type = if (eversense.is365()) EversenseType.EVERSENSE_365 else EversenseType.EVERSENSE_E3
-            val readings = listOfNotNull(
-                if (state.recentGlucoseDatetime > 0 && state.recentGlucoseValue > 0)
-                    EversenseCGMResult(state.recentGlucoseValue, state.recentGlucoseDatetime, EversenseTrendArrow.FLAT, state.sensorId, "")
-                else null
-            )
-            if (readings.isEmpty()) {
-                notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, "Eversense: no recent readings to upload", level = NotificationLevel.INFO)
-                return@launch
-            }
-
-            val latest = readings.maxByOrNull { it.datetime } ?: return@launch
-            val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
-
-            val outcomeMsg = if (type == EversenseType.EVERSENSE_365) {
-                app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
-                    prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
-                val portal = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
-                    prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
-                val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
-                    prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
-
-                if (portal.success && deviceEvents.success) {
-                    "Upload eDMS riuscito (HTTP ${portal.httpStatus ?: 200}) - ${deviceEvents.sentCount} letture caricate"
-                } else {
-                    "Upload eDMS fallito: HTTP ${deviceEvents.httpStatus ?: portal.httpStatus ?: 500} - ${deviceEvents.responseBody.take(100)}"
-                }
-            } else {
-                val portal = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
-                    prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
-                val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
-                    prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
-
-                if (portal && deviceEvents) {
-                    "Upload E3 eDMS riuscito"
-                } else {
-                    "Upload E3 eDMS fallito"
-                }
-            }
+            // Flush the entire accumulated pending queue immediately (uploading all accumulated measurements without gaps)
+            cloudUploader.flush(force = true)
 
             notificationManager.post(
                 NotificationId.EVERSENSE_CREDENTIALS,
-                outcomeMsg,
-                level = if (outcomeMsg.contains("riuscito")) NotificationLevel.INFO else NotificationLevel.URGENT
+                "Upload eDMS avviato per tutte le letture in sospeso",
+                level = NotificationLevel.INFO
             )
         }
     }
