@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
+import app.aaps.core.interfaces.source.EversenseCalibrationSource
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -180,6 +181,10 @@ class StatusViewModel(
         val bgSource = activePlugin.activeBgSource
         // Sensor battery: not shown in Overview (compact), shown in Actions (expanded) unless AAPSCLIENT
         val hasBattery = !config.AAPSCLIENT && bgSource.sensorBatteryLevel != -1
+        // Eversense's sensorBatteryLevel is the transmitter battery. Show it beside the sensor age
+        // on the compact Overview row only while Eversense is the active BG source.
+        val showEversenseTransmitterBattery = hasBattery &&
+            (bgSource as? EversenseCalibrationSource)?.isEnabled() == true
         val level = if (hasBattery) rh.gs(CoreUiStrings.units_format_percent, bgSource.sensorBatteryLevel) else null
         val levelPercent = if (hasBattery) bgSource.sensorBatteryLevel / 100f else -1f
 
@@ -192,7 +197,7 @@ class StatusViewModel(
             levelStatus = if (levelPercent >= 0) getLevelStatus((levelPercent * 100).toDouble(), IntKey.OverviewSbatWarning, IntKey.OverviewSbatCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = if (levelPercent >= 0) 1f - levelPercent else -1f,
             icon = IcCgmInsert,
-            compactLevel = false // Overview: sensor battery not shown
+            compactLevel = showEversenseTransmitterBattery
         )
     }
 
