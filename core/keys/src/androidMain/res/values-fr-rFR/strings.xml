@@ -295,11 +295,8 @@
     <string name="pref_title_max_bolus">Bolus maximum</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Débit de base maximum</string>
-    <string name="openapsma_max_basal_summary">Cette valeur est appelée Basal max dans le contexte OpenAPS</string>
     <string name="pref_title_smb_max_iob">IA max pour SMB</string>
-    <string name="openapssmb_max_iob_summary">Cette valeur est appelée Max IA (Insuline Active) dans OpenAPS\nOpenAPS n’ajoutera pas plus d’insuline si l\'IA (Insuline Active) actuelle est supérieure à cette valeur.</string>
     <string name="pref_title_ama_max_iob">IA max pour AMA</string>
-    <string name="openapsma_max_iob_summary">Cette valeur est appelée Max IA dans le contexte OpenAPS\nC\'est l\'insuline maximale en [U] que l\'APS peut délivrer en une fois. La valeur est également affectée par le type de patient.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicateur max quotidien de sécurité</string>
     <string name="pref_title_current_basal_multiplier">Multiplicateur de sécurité basale courante</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le débit de base maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le débit de base actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits de base maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
