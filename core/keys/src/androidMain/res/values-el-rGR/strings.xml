@@ -295,11 +295,8 @@
     <string name="pref_title_max_bolus">Μέγιστο bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Μέγιστος βασικός ρυθμός</string>
-    <string name="openapsma_max_basal_summary">Αυτή η τιμή ονομάζεται μέγιστο βασικού ρυθμού στο περιεχόμενο του OpenAPS</string>
     <string name="pref_title_smb_max_iob">Μέγιστο IOB για SMB</string>
-    <string name="openapssmb_max_iob_summary">Αυτή η τιμή ονομάζεται Max IOB στο OpenAPS\nΤο OpenAPS δεν θα προσθέσει άλλη ινσουλίνη αν το τρέχον IOB είναι μεγαλύτερο από αυτή την τιμή. Η τιμή εξαρτάται και από τον τύπο ασθενή.</string>
     <string name="pref_title_ama_max_iob">Μέγιστο IOB για AMA</string>
-    <string name="openapsma_max_iob_summary">Αυτή η τιμή ονομάζεται Max IOB στο OpenAPS\nΕίναι η μέγιστη ινσουλίνη σε [U] που μπορεί να χορηγήσει το APS με μία φορά. Η τιμή εξαρτάται και από τον τύπο ασθενή.</string>
     <string name="pref_title_max_daily_multiplier">Μέγιστος ημερήσιος πολλαπλασιαστής ασφαλείας</string>
     <string name="pref_title_current_basal_multiplier">Πολλαπλασιαστής ασφαλείας τρέχοντος βασικού ρυθμού</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Προεπιλεγμένη τιμή: 4 Αυτό είναι το μισό του θέματος ασφαλείας του OpenAPS, και το άλλο μισό του «3 x μέγιστο ημέρας: 4 x τρέχων» των θεμάτων ασφαλείας. Αυτό σημαίνει ότι ο βασικός ρυθμός, ανεξάρτητα από την μέγιστη τιμή βασικού ρυθμού στην αντλία σας, δεν μπορεί να είναι υψηλότερος από το πολλαπλάσιο αυτού του αριθμού. Αυτό γίνεται για να αποτρέψει τους ανθρώπους από το να μπουν σε επικίνδυνες καταστάσεις θέτωντας υψηλό βασικό πριν κατανοήσουν πλήρως πώς λειτουργεί ο αλγόριθμος. Και πάλι, η προεπιλεγμένη τιμή είναι 4x: οι περισσότεροι άνθρωποι ποτέ δεν θα χρειαστεί να το προσαρμόσουν και αντίθετα είναι πιο πιθανό να χρειαστεί να προσαρμόσουν άλλες ρυθμίσεις αν αισθάνονται ότι κινούνται με ασφάλεια.</string>
