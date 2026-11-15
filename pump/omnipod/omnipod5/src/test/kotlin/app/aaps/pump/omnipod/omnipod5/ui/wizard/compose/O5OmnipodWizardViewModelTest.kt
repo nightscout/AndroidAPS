@@ -22,6 +22,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
+import app.aaps.pump.omnipod.omnipod5.O5PumpPlugin
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.history.O5History
 import app.aaps.shared.tests.rx.TestAapsSchedulers
@@ -88,7 +89,7 @@ internal class O5OmnipodWizardViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
         sut = O5OmnipodWizardViewModel(
-            bleManager, podStateManager, preferences, rh, commandQueue,
+            bleManager, mock<O5PumpPlugin>(), podStateManager, preferences, rh, commandQueue,
             notificationManager, history, pumpSync, insulinManager, persistenceLayer,
             profileFunction, profileRepository, pumpEnactResultProvider, logger, aapsSchedulers, rxBus
         )

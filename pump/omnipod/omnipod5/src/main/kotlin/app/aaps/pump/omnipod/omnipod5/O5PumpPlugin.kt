@@ -319,6 +319,25 @@ class O5PumpPlugin @Inject constructor(
     }
 
     /**
+     * Drops a pod the user discards, as one that does not answer any more. A removed pod gives nothing, so the 0 U/h
+     * record starts now and not at the next check, up to a minute later. A deactivation does the same itself.
+     */
+    fun removeDiscardedPod() {
+        val podSerial = serialNumber()
+        podStateManager.reset()
+        notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
+        pluginScope.launch {
+            try {
+                recordNoDelivery(pumpSync.expectedPumpState(), podSerial)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.warn(LTag.PUMP, "O5 could not record zero delivery after discarding the pod: $e")
+            }
+        }
+    }
+
+    /**
      * Records a zero-rate [PumpSync.TemporaryBasalType.PUMP_SUSPEND] temp basal for the whole pod
      * lifetime, unless one is already running. A zero temp basal of another type (for example a
      * 30 minute one from the loop) is replaced, because it would end while the pod still delivers
@@ -1110,8 +1129,10 @@ class O5PumpPlugin @Inject constructor(
                 val accepted = podStateManager.pendingDoseCommand?.confirmedByStatus == true
                 if (deliveredUnits != null && accepted) {
                     finalizeBolus(podStateManager.pendingDoseCommand ?: pendingDose, deliveredUnits)
-                    // A pod in alarm stopped the bolus on its own. What it gave is counted, but the bolus is not a success.
-                    val podStoppedBolus = podStateManager.isPodKaput
+                    // A pod in alarm that gave less than asked stopped the bolus on its own. What it gave is counted,
+                    // but the bolus is not a success. A bolus given in full before the alarm still is.
+                    val podStoppedBolus = podStateManager.isPodKaput &&
+                        deliveredUnits < requestedUnits - PodConstants.POD_PULSE_BOLUS_UNITS / 2
                     pumpEnactResultProvider.get().success(!podStoppedBolus).enacted(true).bolusDelivered(deliveredUnits).also {
                         if (podStoppedBolus) it.comment(podFaultDescription() ?: "")
                     }

@@ -47,6 +47,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
+import app.aaps.pump.omnipod.omnipod5.O5PumpPlugin
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.util.buildO5ExpirationAlerts
 import app.aaps.pump.omnipod.omnipod5.util.I8n
@@ -92,6 +93,7 @@ import app.aaps.pump.omnipod.common.R as CommonR
 @ViewModelKey
 class O5OmnipodWizardViewModel @Inject constructor(
     private val bleManager: O5BleManager,
+    private val o5PumpPlugin: O5PumpPlugin,
     private val podStateManager: O5PodStateManager,
     private val preferences: Preferences,
     private val rh: ResourceHelper,
@@ -375,8 +377,7 @@ class O5OmnipodWizardViewModel @Inject constructor(
 
 
     override fun discardPod() {
-        podStateManager.reset()
-        notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
+        o5PumpPlugin.removeDiscardedPod()
     }
 
     override fun isPodInAlarm(): Boolean = podStateManager.alarmType != null

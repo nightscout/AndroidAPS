@@ -34,6 +34,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.ui.compose.podExpiryRows
+import app.aaps.pump.omnipod.omnipod5.O5PumpPlugin
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.expiry
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.time
@@ -83,6 +84,7 @@ import app.aaps.pump.omnipod.common.R as CommonR
 @ViewModelKey
 class O5OverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
+    private val o5PumpPlugin: O5PumpPlugin,
     private val podStateManager: O5PodStateManager,
     private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
@@ -357,7 +359,7 @@ class O5OverviewViewModel @Inject constructor(
     }
 
     fun confirmDiscardPod() {
-        podStateManager.reset()
+        o5PumpPlugin.removeDiscardedPod()
     }
 
 
