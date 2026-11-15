@@ -781,8 +781,10 @@ class OmnipodDashPumpPlugin(
                     }
                 }
             }.toSingle {
-                // A pod in alarm stopped the bolus on its own. What it gave is counted, but the bolus is not a success.
-                val podStoppedBolus = podStateManager.isPodKaput
+                // A pod in alarm that gave less than asked stopped the bolus on its own. What it gave is counted, but
+                // the bolus is not a success. A bolus given in full before the alarm still is.
+                val podStoppedBolus = podStateManager.isPodKaput &&
+                    deliveredBolusAmount < requestedBolusAmount - PodConstants.POD_PULSE_BOLUS_UNITS / 2
                 pumpEnactResultProvider().success(!podStoppedBolus).enacted(true).bolusDelivered(deliveredBolusAmount).also {
                     if (podStoppedBolus) it.comment(podFaultText() ?: "")
                 }
