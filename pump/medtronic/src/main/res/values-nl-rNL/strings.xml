@@ -46,7 +46,7 @@
     <string name="medtronic_error_pump_type_set_differs_from_detected">Het gedetecteerde pomptype komt niet overeen met het ingestelde pomptype.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">De instelling voor basaalprofielen/patronen is niet ingeschakeld op de pomp. Schakel deze in op de pomp.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basaalprofiel ingesteld op pomp is onjuist (moet STD zijn).</string>
-    <string name="medtronic_error_pump_wrong_tbr_type_set">Verkeerde Tijdelijk Basaal-type ingesteld op pomp (moet Insulinesnelh (E/H) zijn).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Verkeerde Tijdelijk Basaal-type ingesteld op pomp (moet Insulinesnelh (E/u) zijn).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Verkeerde Max Bolus ingesteld op pomp (moet %1$.2f zijn).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Verkeerde Max Basaal ingesteld op pomp (moet %1$.2f zijn).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Bewerking is niet mogelijk.\n\n Stel eerst de Medtronic-pomp in om deze bewerking te kunnen gebruiken.</string>
