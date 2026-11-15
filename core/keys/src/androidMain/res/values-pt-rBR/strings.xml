@@ -295,11 +295,8 @@
     <string name="pref_title_max_bolus">Bólus máximo</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Taxa basal máxima</string>
-    <string name="openapsma_max_basal_summary">Este valor é chamado de max basal no contexto do OpenAPS</string>
     <string name="pref_title_smb_max_iob">Max IOB para SMB</string>
-    <string name="openapssmb_max_iob_summary">Este valor é chamado de Max IOB no contexto do OpenAPS\nO OpenAPS não adicionará mais insulina se o IOB atual for maior que este valor. O valor também é afetado pelo tipo de paciente.</string>
     <string name="pref_title_ama_max_iob">Max IOB para AMA</string>
-    <string name="openapsma_max_iob_summary">Este valor é chamado de Max IOB no contexto do OpenAPS\nEsta é a quantidade máxima de insulina, em [U], que o APS pode administrar de uma vez. O valor também é afetado pelo tipo de paciente.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicador máximo de segurança diária</string>
     <string name="pref_title_current_basal_multiplier">Multiplicador de segurança da basal atual</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra metade da chave OpenAPS de segurança, e a outra metade de \"3x diário máximo; 4x atual\" das tampas de segurança. Isso significa que o seu basal, independentemente do nível máximo de basal definido na bomba, não pode ser maior do que este número vezes o nível atual do seu basal. Isso é para evitar que as pessoas entrem em território perigoso, definindo basais excessivamente altos antes de entender como funciona o algoritmo. Novamente, o padrão é 4x; a maioria das pessoas nunca precisará ajustar isso e, em vez disso, precisará ajustar outras configurações se sentirem que estão \"batendo\" nessa tampa de segurança.</string>
