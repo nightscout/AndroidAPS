@@ -117,6 +117,7 @@ class PreferenceMigrations(
         apsMode(sp)
         tempTargetPresets(sp)
         activityMonitorRetired(sp)
+        smsCommunicatorType(sp)
     }
 
     /**
@@ -444,6 +445,35 @@ class PreferenceMigrations(
             }
             .forEach(sp::remove)
         if (sp.contains("stats_activity_expanded")) sp.remove("stats_activity_expanded")
+    }
+
+    /**
+     * SMS Communicator moved from `PluginType.GENERAL` to `PluginType.SYNC`, so the row that says it
+     * is enabled sits under a name this build never reads.
+     *
+     * The flag is stored as `ConfigBuilder_Enabled_<TYPE>_<Class>`, and `ConfigBuilderImpl.savePref`
+     * only ever writes the type the plugin has now. An install coming from 3.x therefore carries
+     * `ConfigBuilder_Enabled_GENERAL_SmsCommunicatorPlugin`, 4.0 asks for the `SYNC_` name, finds
+     * nothing and falls back to the default - off. SMS commands stop working after the upgrade,
+     * without a word, which for a caregiver is the whole remote control gone.
+     *
+     * This runs after [configBuilder]. That one turns the 3.x name,
+     * `ConfigBuilder_GENERAL_SmsCommunicatorPlugin_Enabled`, into the composed name above, so by the
+     * time this looks the row is in the shape 4.0 writes.
+     *
+     * The value is carried over ONLY when the `SYNC_` name is absent. Once that name exists it is
+     * what this build stored for the user - `storeSettings` writes every plugin whenever one of them
+     * is switched - and a migration must not turn a remote control channel back on over it. The
+     * `GENERAL_` name is removed either way: with the `SYNC_` name present it can never be read again.
+     */
+    private fun smsCommunicatorType(sp: KeyValueStore) {
+        val legacyName = BooleanComposedKey.ConfigBuilderEnabled.composeKey("GENERAL_SmsCommunicatorPlugin")
+        val currentName = BooleanComposedKey.ConfigBuilderEnabled.composeKey("SYNC_SmsCommunicatorPlugin")
+        val stored = sp.getAll()[legacyName] ?: return
+        val enabled = LegacyPreferenceValue.asBoolean(stored)
+            ?: return skip(legacyName, "expected true or false, found ${LegacyPreferenceValue.describeType(stored)}")
+        if (!sp.contains(currentName)) sp.putBoolean(currentName, enabled)
+        sp.remove(legacyName)
     }
 
     /** Moves a legacy name holding a whole number to [destinationPrefix] + [argument]. */

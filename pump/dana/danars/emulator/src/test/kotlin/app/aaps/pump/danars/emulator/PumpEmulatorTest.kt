@@ -1,7 +1,10 @@
 package app.aaps.pump.danars.emulator
 
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.danars.encryption.BleEncryption
+import com.google.common.collect.Range
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Collections
+import kotlin.math.roundToInt
 import kotlin.time.Instant
 
 class PumpEmulatorTest {
@@ -28,7 +32,7 @@ class PumpEmulatorTest {
         emulator = PumpEmulator(state)
         // Recorded rather than asserted on directly, because they arrive on the emulator's own
         // threads — every test that reads them awaits those first.
-        emulator.onSpontaneousMessage = { type, opCode, data -> spontaneous += SpontaneousMessage(type, opCode, data) }
+        emulator.onSpontaneousMessage = { _, type, opCode, data -> spontaneous += SpontaneousMessage(type, opCode, data) }
         emulator.historyEventDelayMs = 0
     }
 
@@ -117,15 +121,110 @@ class PumpEmulatorTest {
     }
 
     @Test
-    fun setStepBolusStartUpdatesDailyTotals() {
+    fun aBolusUpdatesTheTotalsAtItsEnd() {
+        state.bolusDeliveryIntervalMs = 0
         state.dailyTotalUnits = 5.0
         state.reservoirRemainingUnits = 150.0
         // 2.5U = 250 = 0xFA, 0x00; speed = 0
         val params = byteArrayOf(0xFA.toByte(), 0x00, 0x00)
         emulator.processCommand(BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START, params)
+        emulator.awaitPendingCallbacks()
         assertThat(state.lastBolusAmount).isEqualTo(2.5)
         assertThat(state.dailyTotalUnits).isEqualTo(7.5)
-        assertThat(state.reservoirRemainingUnits).isEqualTo(147.5)
+        assertThat(state.reservoirRemainingUnits).isWithin(0.001).of(147.5)
+    }
+
+    /** As a real Dana-i: the command is logged at once, the bolus step by step, and it is logged only at its end. */
+    @Test
+    fun aBolusIsGivenStepByStepAndLoggedAtItsEnd() {
+        state.hwModel = 0x09
+        state.reservoirRemainingUnits = 150.0
+        emulator.speed = EmulatorSpeed.FAST
+        startBolus(hundredths = 25)
+
+        assertThat(state.historyStore.getEventsAfter(0).map { it.code }).containsExactly(DanaPump.HistoryEntry.STEP_BOLUS_COMMAND.value)
+        assertThat(state.runningBolus).isNotNull()
+        emulator.awaitPendingCallbacks()
+
+        assertThat(state.runningBolus).isNull()
+        assertThat(state.givenBoluses).containsExactly(0.25)
+        assertThat(state.reservoirRemainingUnits).isWithin(0.001).of(149.75)
+        val bolus = state.historyStore.getEventsAfter(0).last()
+        assertThat(bolus.code).isEqualTo(DanaPump.HistoryEntry.BOLUS.value)
+        assertThat(bolus.param1).isEqualTo(25)
+        assertThat(spontaneous.map { it.opCode }).containsExactly(
+            *Array(5) { BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY },
+            BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE
+        ).inOrder()
+    }
+
+    /** As a real Dana-i: stopped at 0.25 U, it gave one more step, sent no progress for it, and ended with 0.30 U. */
+    @Test
+    fun aStopGivesTheStepThatRunsAndEndsWithWhatWasGiven() {
+        emulator.speed = EmulatorSpeed.FAST
+        startBolus(hundredths = 200)
+        val end = System.currentTimeMillis() + 5_000
+        while ((state.runningBolus?.stepsGiven ?: 0) < 3 && System.currentTimeMillis() < end) Thread.sleep(10)
+        val progressAtStop = spontaneous.size
+
+        emulator.processCommand(BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_STOP, ByteArray(0))
+        emulator.awaitPendingCallbacks()
+
+        val given = state.givenBoluses.single()
+        assertThat(given).isLessThan(2.0)
+        assertThat(state.historyStore.getEventsAfter(0).single { it.code == DanaPump.HistoryEntry.BOLUS.value }.param1).isEqualTo((given * 100).roundToInt())
+        val complete = spontaneous.last()
+        assertThat(complete.opCode).isEqualTo(BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE)
+        assertThat((complete.data[0].toInt() and 0xFF) or ((complete.data[1].toInt() and 0xFF) shl 8)).isEqualTo((given * 100).roundToInt())
+        // At most the step that ran when the stop came, with no progress of its own.
+        assertThat(spontaneous.size - progressAtStop).isAtMost(2)
+    }
+
+    /** UNVERIFIED code, but a second bolus never runs over the first. */
+    @Test
+    fun aSecondStartWhileABolusRunsIsRefused() {
+        startBolus(hundredths = 200)
+        val answer = emulator.processCommand(BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START, byteArrayOf(50, 0, 0))
+        assertThat(answer[0].toInt()).isNotEqualTo(0)
+    }
+
+    /** A pump read back after an app kill goes on with the bolus it gave when it was saved. */
+    @Test
+    fun aSavedPumpGoesOnWithItsBolus() {
+        emulator.speed = EmulatorSpeed.FAST
+        state.reservoirRemainingUnits = 150.0
+        startBolus(hundredths = 25)
+        val saved = emulator.saveState()
+        emulator.cancelPendingWork()
+
+        val restored = PumpEmulator.restore(saved)
+        val links = Collections.synchronizedList(mutableListOf<Int?>())
+        restored.onSpontaneousMessage = { link, _, _, _ -> links += link }
+        restored.awaitPendingCallbacks()
+
+        // The link of the old process is gone: a link of the new one must never get its messages.
+        assertThat(links).isNotEmpty()
+        assertThat(links.toSet()).containsExactly(-1)
+
+        assertThat(restored.state.runningBolus).isNull()
+        assertThat(restored.state.givenBoluses).containsExactly(0.25)
+        assertThat(restored.state.reservoirRemainingUnits).isWithin(0.001).of(149.75)
+    }
+
+    @Test
+    fun thePumpClockRunsOnWithThePhone() {
+        state.pumpTimeMillis = System.currentTimeMillis() - 60_000
+        Thread.sleep(20)
+        assertThat(System.currentTimeMillis() - state.pumpTimeMillis).isIn(Range.closed(59_900L, 60_100L))
+    }
+
+    /** Amount in 0.01 U, at the fastest speed (index 0, 12 s/U). */
+    private fun startBolus(hundredths: Int) {
+        val answer = emulator.processCommand(
+            BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START,
+            byteArrayOf((hundredths and 0xFF).toByte(), ((hundredths shr 8) and 0xFF).toByte(), 0x00, 0x00)
+        )
+        assertThat(answer[0].toInt()).isEqualTo(0)
     }
 
     @Test

@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -22,7 +23,6 @@ import app.aaps.core.objects.workflow.WorkOutcome
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.ceil
@@ -125,7 +125,7 @@ class PostCalculationRunner(
         val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.AAPSCLIENT
         // Align to the next local hour boundary. Local, not UTC: zones like +05:30 do not line up
         // with UTC hours, and this is what the Calendar version did.
-        val zone = TimeZone.currentSystemDefault()
+        val zone = SystemTimeZone.current()
         val nowLocal = Clock.System.now().toLocalDateTime(zone)
         val nextHour = LocalDateTime(nowLocal.year, nowLocal.month, nowLocal.day, nowLocal.hour, 0)
             .toInstant(zone) + 1.hours

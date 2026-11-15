@@ -3,6 +3,8 @@ package app.aaps.pump.carelevo.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.BleCommand
@@ -80,6 +82,7 @@ internal class CarelevoActivationExecutorTest {
     @Mock lateinit var alarmClearPatchDiscardUseCase: AlarmClearPatchDiscardUseCase
     @Mock lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     @Mock lateinit var bleSession: CarelevoBleSession
+    @Mock lateinit var pumpSync: PumpSync
 
     private val pumpEnactResultProvider = Provider<PumpEnactResult> { FakePumpEnactResult() }
 
@@ -101,8 +104,11 @@ internal class CarelevoActivationExecutorTest {
             alarmClearRequestUseCase = alarmClearRequestUseCase,
             alarmClearPatchDiscardUseCase = alarmClearPatchDiscardUseCase,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
-            bleSession = bleSession
+            bleSession = bleSession,
+            pumpSync = pumpSync
         )
+        // No profile switch requested, unless a test asks for one.
+        whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = null))
         whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Success(ResultSuccess)))
         // Happy default: a patch address is stored. Individual "no address" tests re-stub to null.
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(ADDRESS)
@@ -114,6 +120,9 @@ internal class CarelevoActivationExecutorTest {
         val profile = mock<Profile>()
         whenever(carelevoPatch.profile).thenReturn(BehaviorSubject.createDefault(Optional.of(profile)))
     }
+
+    private fun pumpState(profile: PumpProfile?) =
+        PumpSync.PumpState(temporaryBasal = null, extendedBolus = null, bolus = null, profile = profile, serialNumber = "SN")
 
     private fun stubBasalPlan() {
         whenever(setBasalUseCase.buildBasalProgramPlan(any())).thenReturn(
@@ -182,6 +191,25 @@ internal class CarelevoActivationExecutorTest {
         assertThat(result?.success).isFalse()
         assertThat(result?.enacted).isFalse()
         assertThat(result?.comment).isEqualTo("profile not set")
+    }
+
+    /**
+     * A first patch: the queue drops the profile while no patch is paired, so the patch model has none. The basal is
+     * the requested profile, as the Equil wizard takes it. Found by the emulator scenario test.
+     */
+    @Test fun `setBasal takes the requested profile when the patch has none`() {
+        val requested = mock<PumpProfile>()
+        whenever(carelevoPatch.profile).thenReturn(BehaviorSubject.createDefault(Optional.empty<Profile>()))
+        whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = requested))
+        stubBasalPlan()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
+        whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(true)
+
+        val result = sut.execute(CmdSetBasal())
+
+        assertThat(result?.success).isTrue()
+        verify(setBasalUseCase).buildBasalProgramPlan(requested)
+        verify(carelevoPatch).setProfile(requested)
     }
 
     @Test fun `setBasal returns no-patch-address when profile present but address missing`() {

@@ -1,5 +1,6 @@
 package app.aaps.core.objects.runningMode
 
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.RM
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -44,7 +45,14 @@ class PumpCommandGateTest : TestBase() {
         }
     }
 
-    // --- DISCONNECTED_PUMP: only zero TBR + cancel ---
+    // --- DISCONNECTED_PUMP: only zero TBR, cancel and a prime ---
+
+    /** A prime goes into the air, and the user primes exactly while the pump is disconnected (#5469). */
+    @Test
+    fun `disconnected pump allows prime`() {
+        assertThat(PumpCommandGate.check(RM.Mode.DISCONNECTED_PUMP, PumpCommandGate.CommandKind.PRIME))
+            .isEqualTo(PumpCommandGate.Decision.Allow)
+    }
 
     @Test
     fun `disconnected pump allows zero TBR`() {
@@ -97,6 +105,12 @@ class PumpCommandGateTest : TestBase() {
     }
 
     @Test
+    fun `super bolus allows prime`() {
+        assertThat(PumpCommandGate.check(RM.Mode.SUPER_BOLUS, PumpCommandGate.CommandKind.PRIME))
+            .isEqualTo(PumpCommandGate.Decision.Allow)
+    }
+
+    @Test
     fun `super bolus rejects non-zero TBR`() {
         assertThat(PumpCommandGate.check(RM.Mode.SUPER_BOLUS, PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO))
             .isEqualTo(PumpCommandGate.Decision.Reject(PumpCommandGate.Reason.SUPER_BOLUS_ACTIVE))
@@ -131,6 +145,7 @@ class PumpCommandGateTest : TestBase() {
             PumpCommandGate.CommandKind.TEMP_BASAL_ZERO,
             PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO,
             PumpCommandGate.CommandKind.BOLUS,
+            PumpCommandGate.CommandKind.PRIME,
             PumpCommandGate.CommandKind.EXTENDED_BOLUS
         )
         rejected.forEach { kind ->
@@ -153,11 +168,22 @@ class PumpCommandGateTest : TestBase() {
             PumpCommandGate.CommandKind.TEMP_BASAL_ZERO,
             PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO,
             PumpCommandGate.CommandKind.BOLUS,
+            PumpCommandGate.CommandKind.PRIME,
             PumpCommandGate.CommandKind.EXTENDED_BOLUS
         )
         rejected.forEach { kind ->
             assertThat(PumpCommandGate.check(RM.Mode.SUSPENDED_BY_PUMP, kind))
                 .isEqualTo(PumpCommandGate.Decision.Reject(PumpCommandGate.Reason.PUMP_REPORTED_SUSPENDED))
+        }
+    }
+
+    // --- Kind of a bolus command ---
+
+    @Test
+    fun `only a priming bolus is a prime`() {
+        BS.Type.entries.forEach { type ->
+            val expected = if (type == BS.Type.PRIMING) PumpCommandGate.CommandKind.PRIME else PumpCommandGate.CommandKind.BOLUS
+            assertThat(PumpCommandGate.bolusKind(type)).isEqualTo(expected)
         }
     }
 

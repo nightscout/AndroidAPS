@@ -45,7 +45,14 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override fun isInitialized(): Boolean = true
     override fun isSuspended(): Boolean = pumpSuspended
     override fun isBusy(): Boolean = false
+    /** How often the queue asked to connect. */
+    var connectCalls = 0
+
+    /** How long the queue keeps the link after its last command, see [waitForDisconnectionInSeconds]. */
+    var lingerSeconds = 0
+
     override fun connect(reason: String) {
+        connectCalls++
         connected = true
     }
 
@@ -57,7 +64,7 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
         connected = false
     }
 
-    override fun waitForDisconnectionInSeconds(): Int = 0
+    override fun waitForDisconnectionInSeconds(): Int = lingerSeconds
     override suspend fun getPumpStatus(reason: String) { /* not needed */
     }
 
@@ -75,8 +82,15 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
     override val lastDataTime: StateFlow<Long> = _lastDataTime
     override val baseBasalRate: PumpRate get() = PumpRate(baseBasal)
-    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
-    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+    private val _reservoirLevel = MutableStateFlow<PumpInsulin?>(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin?> = _reservoirLevel
+
+    /** What the pump reports in its reservoir. null: not known yet. */
+    var reservoir: PumpInsulin?
+        get() = _reservoirLevel.value
+        set(value) {
+            _reservoirLevel.value = value
+        }
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevel
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)

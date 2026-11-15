@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.emulator
 
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
+import java.io.Serializable
 
 /**
  * Mutable state of the emulated CareLevo patch.
@@ -15,7 +16,7 @@ import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
  * - [modeRaw]: 1 BASAL, 2 TEMP_BASAL, 3 IMME_BOLUS, 4 EXTEND_IMME_BOLUS, 5 EXTEND_BOLUS.
  *   **0 decodes to ERROR**, so it is never a resting value.
  */
-class CarelevoPumpState {
+class CarelevoPumpState : Serializable {
 
     // ---- Identity ---------------------------------------------------------------------------
 
@@ -49,7 +50,11 @@ class CarelevoPumpState {
 
     // ---- Lifecycle --------------------------------------------------------------------------
 
-    var pumpStateRaw: Int = 2
+    /**
+     * A real patch reports 0 after the safety check and while it gives basal or a temp basal, and 1 during a bolus
+     * (seen 2026-11-09). 2 was never seen.
+     */
+    var pumpStateRaw: Int = 0
     var modeRaw: Int = 1
     var subId: Int = 0
     var runningMinutes: Int = 0
@@ -74,7 +79,15 @@ class CarelevoPumpState {
     // ---- Temp basal / bolus -----------------------------------------------------------------
 
     var tempBasalRunning: Boolean = false
+
+    /** What the running temp basal was set to: a rate in U/h or a percent. The other one is null. */
+    var tempBasalAbsolute: Double? = null
+    var tempBasalPercent: Int? = null
     var extendedBolusRunning: Boolean = false
+
+    /** What the running extended bolus was set to: its speed times its time, and its time. */
+    var extendedBolusUnits: Double = 0.0
+    var extendedBolusMinutes: Int = 0
 
     /** actionId of the in-flight immediate bolus; echoed back on 0x84 for correlation. */
     var activeBolusActionId: Int? = null
@@ -145,6 +158,9 @@ class CarelevoPumpState {
     companion object {
 
         const val RESULT_SUCCESS = 0
+
+        /** Saved for a test that kills the app, and read back in its second run with the same build. */
+        private const val serialVersionUID = 1L
     }
 }
 

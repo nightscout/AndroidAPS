@@ -222,8 +222,14 @@ class TizenPlugin(
         // Concentration comes from the running profile, which owns the authoritative iCfg. With no
         // profile there is no IU conversion to make, so the key is omitted rather than broadcast at a
         // guessed concentration — same shape as the optional battery key above.
-        runBlocking { profileFunction.getProfile() }?.let {
-            bundle.putDouble("pumpReservoir", pump.reservoirLevel.value.iU(it.insulinConcentration()))
+        // Also omitted when the pump has not told it yet. On AAPSClient the local pump is the VirtualPump with a fixed
+        // 50 U: the master's reservoir comes with its device status, in insulin units already.
+        if (config.AAPSCLIENT) processedDeviceStatusData.pumpData?.reservoir?.let { bundle.putDouble("pumpReservoir", it) }
+        else {
+            val reservoir = pump.reservoirLevel.value
+            if (reservoir != null) runBlocking { profileFunction.getProfile() }?.let {
+                bundle.putDouble("pumpReservoir", reservoir.iU(it.insulinConcentration()))
+            }
         }
         bundle.putString("pumpStatus", runBlocking { pumpStatusProvider.shortStatus(false) })
     }

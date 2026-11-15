@@ -4,6 +4,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.io.Serializable
 import kotlin.time.Instant
 
 /**
@@ -16,7 +17,7 @@ data class HistoryEvent(
     val param2: Int = 0,
     /** The pump's number for this record, fixed when it is stored. Only the UTC format (Dana-i) sends it. */
     val id: Int = 0
-)
+) : Serializable
 
 /**
  * Shared history event storage and formatting for Dana pump emulators.
@@ -28,8 +29,9 @@ data class HistoryEvent(
  * UTC layout (Dana-i / BLE5):
  *   [id_hi][id_lo][recordCode][epoch_4bytes_MSB][param1_hi][param1_lo][param2_hi][param2_lo]
  */
-class HistoryEventStore {
+class HistoryEventStore : Serializable {
 
+    /** Written by the bolus the pump gives and read by a command at the same time, so only under its own lock. */
     private val events = mutableListOf<HistoryEvent>()
     private var lastId = 0
 
@@ -39,8 +41,10 @@ class HistoryEventStore {
      * and AAPS stored the same event again as a new one.
      */
     fun addEvent(code: Int, timestamp: Long, param1: Int, param2: Int) {
-        lastId = lastId % MAX_RECORD_ID + 1
-        events.add(HistoryEvent(code, timestamp, param1, param2, lastId))
+        synchronized(events) {
+            lastId = lastId % MAX_RECORD_ID + 1
+            events.add(HistoryEvent(code, timestamp, param1, param2, lastId))
+        }
     }
 
     /**
@@ -80,8 +84,7 @@ class HistoryEventStore {
     /**
      * Get events after the given timestamp.
      */
-    fun getEventsAfter(fromMillis: Long): List<HistoryEvent> =
-        events.filter { it.timestamp > fromMillis }
+    fun getEventsAfter(fromMillis: Long): List<HistoryEvent> = synchronized(events) { events.filter { it.timestamp > fromMillis } }
 
     /**
      * Build a non-UTC history event data payload (11 bytes).

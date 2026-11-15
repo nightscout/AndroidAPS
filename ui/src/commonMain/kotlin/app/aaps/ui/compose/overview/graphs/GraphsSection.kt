@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -209,7 +211,7 @@ private val PREDICTION_SPOKEN_ORDER = listOf(
 private val BG_OVERLAY_SERIES = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS)
 
 /** Series types available for user-configurable secondary graphs (IOB + UI-only overlays excluded) */
-private val CONFIGURABLE_SERIES = SeriesType.entries.filter {
+internal val CONFIGURABLE_SERIES = SeriesType.entries.filter {
     it != SeriesType.IOB && it != SeriesType.PREDICTIONS
 }
 
@@ -949,7 +951,7 @@ private fun GraphEditButton(
 /** Bottom sheet with toggleable FilterChips for series selection + optional remove button */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-private fun GraphSeriesBottomSheet(
+internal fun GraphSeriesBottomSheet(
     title: String,
     selectedSeries: List<SeriesType>,
     availableSeries: List<SeriesType>,
@@ -964,9 +966,12 @@ private fun GraphSeriesBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState
     ) {
+        // Scrolls like the other sheets. Without it a window shorter than the content (large font, small
+        // screen, landscape, keyboard open) cut off the last row of chips, and the sheet could jump (#5478).
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Row(

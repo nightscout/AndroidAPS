@@ -25,47 +25,29 @@ class SoundInquireResponsePacketTest : TestBaseWithProfile() {
         diaconnG8Pump = DiaconnG8Pump(aapsLogger, dateUtil, decimalFormatter)
     }
 
+    /**
+     * A real G8 (fw 2.50, 2026-11-12) set to silent and low answered `03 01`. The values are those the setting and the
+     * pump settings screen use (1 sound, 2 vibrate, 3 silent; 1 low, 2 middle, 3 high). They were read as one less.
+     */
     @Test
-    fun handleMessageShouldParseSoundSettings() {
-        // Given - Beep on (2), alarm intensity level 3 (4)
+    fun theSettingsOfARealPumpAreReadAsTheSettingTakesThem() {
         val packet = SoundInquireResponsePacket(packetInjector)
-        val data = createValidPacket(beepAndAlarm = 2, alarmIntensity = 4)
 
-        // When
-        packet.handleMessage(data)
+        packet.handleMessage(createValidPacket(beepAndAlarm = 3, alarmIntensity = 1))
 
-        // Then
         assertThat(packet.failed).isFalse()
-        assertThat(diaconnG8Pump.beepAndAlarm).isEqualTo(1) // 2 - 1
-        assertThat(diaconnG8Pump.alarmIntensity).isEqualTo(3) // 4 - 1
+        assertThat(diaconnG8Pump.beepAndAlarm).isEqualTo(3)
+        assertThat(diaconnG8Pump.alarmIntensity).isEqualTo(1)
     }
 
     @Test
-    fun handleMessageShouldHandleBeepOff() {
-        // Given - Beep off (1), alarm intensity low (1)
+    fun soundAndHighAreRead() {
         val packet = SoundInquireResponsePacket(packetInjector)
-        val data = createValidPacket(beepAndAlarm = 1, alarmIntensity = 1)
 
-        // When
-        packet.handleMessage(data)
+        packet.handleMessage(createValidPacket(beepAndAlarm = 1, alarmIntensity = 3))
 
-        // Then
-        assertThat(diaconnG8Pump.beepAndAlarm).isEqualTo(0) // 1 - 1
-        assertThat(diaconnG8Pump.alarmIntensity).isEqualTo(0) // 1 - 1
-    }
-
-    @Test
-    fun handleMessageShouldHandleMaxVolume() {
-        // Given - Max settings
-        val packet = SoundInquireResponsePacket(packetInjector)
-        val data = createValidPacket(beepAndAlarm = 3, alarmIntensity = 5)
-
-        // When
-        packet.handleMessage(data)
-
-        // Then
-        assertThat(diaconnG8Pump.beepAndAlarm).isEqualTo(2) // 3 - 1
-        assertThat(diaconnG8Pump.alarmIntensity).isEqualTo(4) // 5 - 1
+        assertThat(diaconnG8Pump.beepAndAlarm).isEqualTo(1)
+        assertThat(diaconnG8Pump.alarmIntensity).isEqualTo(3)
     }
 
     @Test

@@ -2,12 +2,12 @@ package app.aaps.plugins.automation.triggers
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientInt
 import app.aaps.plugins.automation.AutomationStrings
@@ -90,8 +90,8 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
 
     override fun duplicate(): Trigger = TriggerRecurringTime(deps, this)
 
-    private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcMidnightPlusMinutes(minutesSinceMidnight)
+    private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.plusMinutes(minutesSinceMidnight, SystemTimeZone.current())
 
-    private fun getMinSinceMidnight(time: Long): Int = MidnightUtils.secondsFromMidnight(time) / 60
+    private fun getMinSinceMidnight(time: Long): Int = MidnightTime.secondsFromMidnight(time, SystemTimeZone.current()) / 60
 
 }

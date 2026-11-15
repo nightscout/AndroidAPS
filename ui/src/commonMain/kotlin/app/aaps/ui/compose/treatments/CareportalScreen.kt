@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TE
-import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
@@ -38,6 +38,7 @@ import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.RecordRemovalDialog
+import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -115,7 +116,6 @@ fun CareportalScreen(
                                     viewModel.enterSelectionMode(te)
                                 }
                             },
-                            rh = viewModel.rh,
                             translator = translator
                         )
                     }
@@ -133,7 +133,6 @@ private fun TherapyEventItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
-    rh: TextResolver,
     translator: Translator
 ) {
     val profileUtil = LocalProfileUtil.current
@@ -211,7 +210,8 @@ private fun TherapyEventItem(
                 // Duration. An event without an end (a scene without a duration) has none to show.
                 if (therapyEvent.duration != 0L && therapyEvent.hasEnd) {
                     Text(
-                        text = dateUtil.niceTimeScalar(therapyEvent.duration, rh),
+                        // Exact to the minute, as on the other treatment screens: 119 min is "1 h 59 min", not "1 hour" (#5517)
+                        text = formatMinutesAsDuration(T.msecs(therapyEvent.duration).mins().toInt()),
                         modifier = Modifier.padding(start = 16.dp),
                         fontSize = 12.sp
                     )

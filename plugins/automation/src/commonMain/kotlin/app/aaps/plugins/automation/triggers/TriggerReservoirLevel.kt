@@ -42,7 +42,11 @@ class TriggerReservoirLevel(deps: TriggerDeps) : Trigger(deps) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution, no insulin in use: " + friendlyDescription())
             return false
         }
-        val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value.iU(iCfg.concentration)
+        // Not known, as after an app start before the pump was read: that is no empty reservoir.
+        val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value?.iU(iCfg.concentration) ?: run {
+            aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution, reservoir not known: " + friendlyDescription())
+            return false
+        }
         if (comparator.value.check(actualReservoirLevel, reservoirLevel.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

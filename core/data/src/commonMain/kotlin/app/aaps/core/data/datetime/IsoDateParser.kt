@@ -1,8 +1,8 @@
 package app.aaps.core.data.datetime
 
+import app.aaps.core.data.time.SystemTimeZone
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toInstant
@@ -54,7 +54,8 @@ fun parseIsoToEpochMillisOrNull(isoDateString: String): Long? {
         }
     }
 
-    val zone = TimeZone.currentSystemDefault()
+    // Nightscout sync parses one of these per record, so the zone comes from the kept read.
+    val zone = SystemTimeZone.current()
 
     runCatching { LocalDateTime.parse(local) }.getOrNull()?.let { dateTime ->
         val instant = offset?.let { dateTime.toInstant(it) } ?: dateTime.toInstant(zone)

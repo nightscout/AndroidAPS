@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
@@ -84,6 +85,7 @@ internal class OverviewDataCacheRunningModeTest {
             translator = mock<Translator>(),
             rh = mock<TextResolver>(),
             uiRestart = UiRestartImpl(),
+            fabricPrivacy = mock<FabricPrivacy>(),
             signals = signals,
             // No database observers: the refresh below is the only reader under test.
             observeDatabase = false

@@ -5,6 +5,7 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -44,6 +45,7 @@ class PumpSyncNewPumpTest : TestBase() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var activePump: PumpWithConcentration
+    @Mock lateinit var config: Config
 
     private lateinit var sut: PumpSyncImplementation
 
@@ -76,7 +78,8 @@ class PumpSyncNewPumpTest : TestBase() {
             }
         }
 
-        sut = PumpSyncImplementation(aapsLogger, dateUtil, preferences, notificationManager, profileFunction, persistenceLayer, activePlugin)
+        whenever(config.appInitialized).thenReturn(true)
+        sut = PumpSyncImplementation(aapsLogger, dateUtil, preferences, notificationManager, profileFunction, persistenceLayer, activePlugin, config)
     }
 
     private suspend fun insert(timestamp: Long, type: TE.Type) =
@@ -200,6 +203,28 @@ class PumpSyncNewPumpTest : TestBase() {
         val stored = storedTemporaryBasals()
 
         assertThat(sut.syncTemporaryBasalWithPumpId(now - 90 * minute, PumpRate(0.0), 60 * minute, true, null, 7L, pumpType, pumpSerial)).isFalse()
+        assertThat(stored).isEmpty()
+    }
+
+    /** A pump clock some seconds behind the phone: the temp basal set right after the first profile was dropped. */
+    @Test
+    fun `a record just before the first profile takes that profile`() = runBlocking<Unit> {
+        registerPump()
+        val stored = storedTemporaryBasals()
+        whenever(profileFunction.getProfile(now - 2000)).thenReturn(null)
+
+        assertThat(sut.syncTemporaryBasalWithPumpId(now - 2000, PumpRate(0.0), 30 * minute, true, null, 7L, pumpType, pumpSerial)).isTrue()
+        assertThat(stored.single().timestamp).isEqualTo(now - 2000)
+    }
+
+    @Test
+    fun `a record with no profile in the minute after it is still dropped`() = runBlocking<Unit> {
+        registerPump()
+        val stored = storedTemporaryBasals()
+        whenever(profileFunction.getProfile(now - 30_000)).thenReturn(null)
+        whenever(profileFunction.getProfile(now + 30_000)).thenReturn(null)
+
+        assertThat(sut.syncTemporaryBasalWithPumpId(now - 30_000, PumpRate(0.0), 30 * minute, true, null, 7L, pumpType, pumpSerial)).isFalse()
         assertThat(stored).isEmpty()
     }
 

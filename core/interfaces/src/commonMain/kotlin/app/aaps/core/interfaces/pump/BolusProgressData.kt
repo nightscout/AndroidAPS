@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.incrementAndFetch
@@ -50,7 +51,36 @@ class BolusProgressData(
      * generation-scoped [clear] at the end of their command so a finished/cancelled bolus can never
      * wipe the progress state of a NEWER bolus that has already started (see [clear]).
      */
-    fun start(insulin: Double, isSMB: Boolean, isPriming: Boolean = false): Long {
+    fun start(insulin: Double, isSMB: Boolean, isPriming: Boolean = false): Long = startLocked { install(insulin, isSMB, isPriming) }
+
+    /**
+     * For a pump driver that finds a bolus running which no command of this app run started, as after an app restart
+     * during a bolus. Without it there is no progress and no Stop button for that bolus, and a pump with no screen of
+     * its own cannot be stopped at all. Stop then works as for any bolus: `cancelAllBoluses` calls `stopBolusDelivering`.
+     *
+     * Starts only when no bolus progress is shown, so a bolus the command queue is starting keeps its own. The check
+     * and the start are one step: the queue can call [start] from another thread at the same time.
+     *
+     * @return the generation to pass to [completeAndAutoClear] or [clear] when the pump ends the bolus,
+     * or null when another bolus is shown
+     */
+    fun startIfIdle(insulin: Double, isSMB: Boolean): Long? = startLocked {
+        if (_state.value != null) null else install(insulin, isSMB, isPriming = false)
+    }
+
+    /** Held only for one increment and one assignment, so a spin is enough. Shared code has no lock class. */
+    private val startLock = AtomicInt(0)
+
+    private inline fun <T> startLocked(block: () -> T): T {
+        while (!startLock.compareAndSet(0, 1)) Unit
+        try {
+            return block()
+        } finally {
+            startLock.store(0)
+        }
+    }
+
+    private fun install(insulin: Double, isSMB: Boolean, isPriming: Boolean): Long {
         val gen = generation.incrementAndFetch()
         _state.value = BolusProgressState(
             insulin = insulin,
@@ -69,10 +99,14 @@ class BolusProgressData(
     /**
      * Called by pump drivers to report delivery progress.
      * Purely informational — does not control dialog lifecycle.
+     *
+     * @param delivered what the pump gave until now, or null to keep the amount shown. Several drivers record the
+     * bolus from this amount, so a new status text must not set it to 0 (a stopped Korean DanaR bolus was once
+     * recorded as 0 U that way).
      */
-    fun updateProgress(percent: Int, status: TextRef, delivered: PumpInsulin = PumpInsulin(0.0)) {
+    fun updateProgress(percent: Int, status: TextRef, delivered: PumpInsulin? = null) {
         // A fresh frame proves liveness → clear any prior stall flag (lets the client dialog recover).
-        _state.update { it?.copy(percent = percent, status = status, wearStatus = status, delivered = delivered, stalled = false) }
+        _state.update { it?.copy(percent = percent, status = status, wearStatus = status, delivered = delivered ?: it.delivered, stalled = false) }
     }
 
     /**

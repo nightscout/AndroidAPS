@@ -17,21 +17,19 @@ class DanaRSPacketOptionSetUserOption(
         aapsLogger.debug(LTag.PUMPCOMM, "Setting user settings")
     }
 
+    /** The user options this write sends, for `DanaRSService.setUserSettings` to keep once the pump took them. */
+    var written: DanaPump.UserOptions? = null
+        private set
+
     override fun getRequestParams(): ByteArray {
+        val options = danaPump.userOptionsForWrite().also { written = it }
         aapsLogger.debug(
             LTag.PUMPCOMM,
             "UserOptions:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
-                + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
-                + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
-                + "\nbeepAndAlarm:" + danaPump.beepAndAlarm
-                + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
-                + "\nbacklight:" + danaPump.backlightOnTimeSec
-                + "\ndanaRPumpUnits:" + danaPump.units
-                + "\nlowReservoir:" + danaPump.lowReservoirRate
+                + "\n" + options
                 + "\ncannulaVolume:" + danaPump.cannulaVolume
                 + "\nrefillAmount:" + danaPump.refillAmount
                 + "\ntarget:" + danaPump.target
-                + "\nautoLock:" + danaPump.autoLock
         )
         val size = when {
             danaPump.isDanaI2     -> 16 // + AutoLock
@@ -39,15 +37,15 @@ class DanaRSPacketOptionSetUserOption(
             else                  -> 13
         }
         val request = ByteArray(size)
-        request[0] = if (danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
-        request[1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
-        request[2] = (danaPump.beepAndAlarm and 0xff).toByte()
-        request[3] = (danaPump.lcdOnTimeSec and 0xff).toByte()
-        request[4] = (danaPump.backlightOnTimeSec and 0xff).toByte()
+        request[0] = if (options.timeDisplayType24) 0.toByte() else 1.toByte()
+        request[1] = if (options.buttonScrollOnOff) 1.toByte() else 0.toByte()
+        request[2] = (options.beepAndAlarm and 0xff).toByte()
+        request[3] = (options.lcdOnTimeSec and 0xff).toByte()
+        request[4] = (options.backlightOnTimeSec and 0xff).toByte()
         request[5] = (danaPump.selectedLanguage and 0xff).toByte()
-        request[6] = (danaPump.units and 0xff).toByte()
-        request[7] = (danaPump.shutdownHour and 0xff).toByte()
-        request[8] = (danaPump.lowReservoirRate and 0xff).toByte()
+        request[6] = (options.units and 0xff).toByte()
+        request[7] = (options.shutdownHour and 0xff).toByte()
+        request[8] = (options.lowReservoirRate and 0xff).toByte()
         request[9] = (danaPump.cannulaVolume and 0xff).toByte()
         request[10] = (danaPump.cannulaVolume ushr 8 and 0xff).toByte()
         request[11] = (danaPump.refillAmount and 0xff).toByte()
@@ -57,7 +55,7 @@ class DanaRSPacketOptionSetUserOption(
             request[14] = (danaPump.target ushr 8 and 0xff).toByte()
         }
         if (danaPump.isDanaI2)
-            request[15] = if (danaPump.autoLock) 1.toByte() else 0.toByte()
+            request[15] = if (options.autoLock) 1.toByte() else 0.toByte()
         return request
     }
 

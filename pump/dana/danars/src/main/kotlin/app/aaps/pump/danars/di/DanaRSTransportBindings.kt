@@ -5,10 +5,12 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.pump.danars.emulator.NotificationPumpDisplay
+import app.aaps.pump.danars.emulator.PumpEmulator
 import app.aaps.pump.danars.encryption.EncryptionType
 import app.aaps.pump.danars.services.BleTransportImpl
 import dev.zacsweers.metro.AppScope
@@ -36,7 +38,8 @@ object DanaRSTransportBindings {
         bleTransportImpl: BleTransportImpl,
         notificationManager: NotificationManager,
         aapsLogger: AAPSLogger,
-        preferences: Preferences
+        preferences: Preferences,
+        pumpEmulators: PumpEmulators
     ): BleTransport {
         val encryptionType = when {
             config.isEnabled(ExternalOptions.EMULATE_DANA_RS_V1) -> EncryptionType.ENCRYPTION_DEFAULT
@@ -46,6 +49,8 @@ object DanaRSTransportBindings {
         }
         return if (encryptionType != null) {
             EmulatorBleTransport(
+                // The same pump after a test restarts the app: it runs on, as a real one would. The radio is new.
+                emulator = pumpEmulators.getOrCreate(PumpEmulator.KEY) { PumpEmulator() },
                 encryptionType = encryptionType,
                 pumpDisplay = NotificationPumpDisplay(notificationManager),
                 aapsLogger = aapsLogger,

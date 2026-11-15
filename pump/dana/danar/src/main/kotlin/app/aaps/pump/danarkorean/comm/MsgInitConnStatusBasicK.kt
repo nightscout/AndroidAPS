@@ -42,5 +42,8 @@ class MsgInitConnStatusBasicK(
         } else {
             notificationManager.dismiss(NotificationId.WRONG_PUMP_PASSWORD)
         }
+        // The last message of the start of a link: a real Korean DanaR sent 0x0301, 0x0302, 0x0303 (2026-11-10). The link
+        // was taken as ready at 0x0302, and a bolus start sent before this message got no answer and was not given.
+        activePlugin.activePump.finishHandshaking()
     }
 }

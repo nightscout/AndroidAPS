@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.configuration.AppExit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.configuration.PLUGIN_SETTLE_WAIT
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -46,7 +47,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlin.time.Duration.Companion.seconds
 
 // Scoped, so every caller shares one config builder.
 @ContributesBinding(AppScope::class)
@@ -361,9 +361,4 @@ class ConfigBuilderImpl(
     private fun composedKeyFor(p: PluginBase, type: PluginType): String =
         type.name + "_" + (p::class.simpleName ?: "")
 
-    private companion object {
-
-        /** How long [applyConfiguration] waits for plugins to start and stop before giving up on them. */
-        val PLUGIN_SETTLE_WAIT = 30.seconds
-    }
 }

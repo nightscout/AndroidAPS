@@ -105,32 +105,32 @@ class VirtualPumpViewModel(
         )
     }
 
+    // The database keeps absolute rates in IU (PumpSync converts them when it stores them), but the text
+    // helper takes pump units. A percent is not insulin, so it is passed as it is.
+    internal fun tempBasalText(tempBasal: TB): String = ch.basalTbrString(
+        rate = if (tempBasal.isAbsolute) ch.toPumpRate(tempBasal.rate) else PumpRate(tempBasal.rate),
+        startTime = tempBasal.timestamp,
+        durationInMin = T.msecs(tempBasal.duration).mins().toInt(),
+        isAbsolute = tempBasal.isAbsolute
+    )
+
+    internal fun extendedBolusText(extendedBolus: EB): String = ch.basalTbrString(
+        rate = ch.toPumpRate(extendedBolus.rate),
+        startTime = extendedBolus.timestamp,
+        durationInMin = T.msecs(extendedBolus.duration).mins().toInt(),
+        isExtended = true
+    )
+
     private suspend fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
         virtualPumpPlugin.refreshConfiguration()
         val profile = pumpSync.expectedPumpState().profile
         val now = dateUtil.now()
 
         val tempBasalText = profile?.let {
-            persistenceLayer.getTemporaryBasalActiveAt(now)
-                ?.let { tempBasal ->
-                    ch.basalTbrString(
-                        rate = PumpRate(tempBasal.rate),
-                        startTime = tempBasal.timestamp,
-                        durationInMin = T.msecs(tempBasal.duration).mins().toInt(),
-                        isAbsolute = tempBasal.isAbsolute
-                    )
-                }
+            persistenceLayer.getTemporaryBasalActiveAt(now)?.let { tempBasal -> tempBasalText(tempBasal) }
         } ?: ""
 
-        val extendedBolusText = persistenceLayer.getExtendedBolusActiveAt(now)
-            ?.let {
-                ch.basalTbrString(
-                    rate = PumpRate(it.rate),
-                    startTime = it.timestamp,
-                    durationInMin = T.msecs(it.duration).mins().toInt(),
-                    isExtended = true
-                )
-            } ?: ""
+        val extendedBolusText = persistenceLayer.getExtendedBolusActiveAt(now)?.let { extendedBolusText(it) } ?: ""
 
         // Format values for the shared builder
         val lastConnection = virtualPumpPlugin.lastDataTime.value.takeIf { it != 0L }

@@ -5,6 +5,7 @@ package app.aaps.plugins.aps.autotune
 import android.view.View
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -207,7 +208,7 @@ class AutotunePlugin(
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
         autotuneFS.deleteAutotuneFiles()                            //clean autotune folder before run
         // Today at 4 AM
-        var endTime = MidnightTime.calc(lastRun) + autotuneStartHour * 60 * 60 * 1000L
+        var endTime = MidnightTime.before(lastRun, SystemTimeZone.current()) + autotuneStartHour * 60 * 60 * 1000L
         if (endTime > lastRun) endTime -= 24 * 60 * 60 * 1000L      // Check if 4 AM is before now
         val startTime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, startTime, endTime, iCfg))
@@ -530,9 +531,9 @@ class AutotunePlugin(
     }
 
     fun calcDays(daysBack: Int): Int {
-        var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
-        if (endTime > dateUtil.now()) endTime = MidnightTime.calcDaysBack(1)      // Check if 4 AM is before now
-        val startTime = MidnightTime.calcDaysBack(endTime, daysBack.toLong())
+        var endTime = MidnightTime.before(dateUtil.now(), SystemTimeZone.current()) + autotuneStartHour * 60 * 60 * 1000L
+        if (endTime > dateUtil.now()) endTime = MidnightTime.daysBack(1, SystemTimeZone.current())      // Check if 4 AM is before now
+        val startTime = MidnightTime.daysBack(endTime, daysBack.toLong(), SystemTimeZone.current())
         var result = 0
         for (i in 0 until daysBack) {
             if (days.isSet(startTime + i * T.days(1).msecs()))

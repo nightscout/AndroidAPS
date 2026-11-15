@@ -5,9 +5,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
-import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -16,13 +14,10 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,7 +34,6 @@ class BolusWizardTest : TestBaseWithProfile() {
     private val pumpBolusStep = 0.1
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
-    @Mock lateinit var loop: Loop
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var uel: UserEntryLogger
@@ -48,8 +42,6 @@ class BolusWizardTest : TestBaseWithProfile() {
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var runningModeGuard: RunningModeGuard
-    @Mock lateinit var masterActionExecutor: MasterActionExecutor
 
     @BeforeEach
     fun prepare() {
@@ -95,9 +87,8 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     private fun createWizard() = BolusWizard(
-        aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, loop, iobCobCalculator, dateUtil, config, uel, automation, eatReminder,
-        glucoseStatusProvider, persistenceLayer, runningModeGuard,
-        ch, masterActionExecutor, CoroutineScope(Dispatchers.Unconfined)
+        aapsLogger, rh, preferences, profileFunction, profileUtil, constraintChecker, iobCobCalculator, dateUtil, config, uel, automation, eatReminder,
+        glucoseStatusProvider, persistenceLayer, ch
     )
 
     /**

@@ -2,6 +2,7 @@ package app.aaps.implementation.stats
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import kotlin.math.sqrt
 
 internal class DexcomTirImplTest {
 
@@ -45,6 +46,79 @@ internal class DexcomTirImplTest {
         assertThat(tir.veryLowPct()).isEqualTo(0.0)
         assertThat(tir.inRangePct()).isEqualTo(0.0)
         assertThat(tir.calculateSD()).isEqualTo(0.0)
+    }
+
+    @Test
+    fun `hyper intensity uses the area above 180 and the time`() {
+        val t = 1_600_000_000_000L
+        val tir = DexcomTirImpl().apply {
+            add(t, 200.0)
+            add(t + 300_000, 220.0)
+            add(t + 600_000, 100.0)
+        }
+
+        // (20 x 5 + 40 x 5) mg/dL x min and 10 min
+        assertThat(tir.cgpHyperIntensity()).isWithin(1e-6).of(sqrt(300.0 * 300.0 + 10.0 * 10.0))
+        assertThat(tir.cgpHypoIntensity()).isEqualTo(0.0)
+    }
+
+    @Test
+    fun `hypo intensity uses the area below 70 and the time`() {
+        val tir = DexcomTirImpl().apply { add(1_600_000_000_000L, 60.0) }
+
+        assertThat(tir.cgpHypoIntensity()).isWithin(1e-6).of(sqrt(50.0 * 50.0 + 5.0 * 5.0))
+        assertThat(tir.cgpHyperIntensity()).isEqualTo(0.0)
+    }
+
+    @Test
+    fun `intensity is the mean of the days`() {
+        val t = 1_600_000_000_000L
+        val tir = DexcomTirImpl().apply {
+            add(t, 280.0)
+            add(t + 86_400_000L, 100.0)
+        }
+
+        assertThat(tir.cgpHyperIntensity()).isWithin(1e-6).of(sqrt(500.0 * 500.0 + 5.0 * 5.0) / 2)
+    }
+
+    @Test
+    fun `a reading counts for the time since the last one and at most five minutes`() {
+        val t = 1_600_000_000_000L
+        val everyMinute = DexcomTirImpl().apply { for (i in 0L until 5L) add(t + i * 60_000, 200.0) }
+        val afterAGap = DexcomTirImpl().apply {
+            add(t, 200.0)
+            add(t + 1_800_000, 200.0)
+        }
+
+        // 5 + 4 x 1 minutes
+        assertThat(everyMinute.cgpHyperIntensity()).isWithin(1e-6).of(sqrt(180.0 * 180.0 + 9.0 * 9.0))
+        // 5 + 5 minutes, the gap is not glucose above the range
+        assertThat(afterAGap.cgpHyperIntensity()).isWithin(1e-6).of(sqrt(200.0 * 200.0 + 10.0 * 10.0))
+    }
+
+    @Test
+    fun `the pentagon range is the same at any hour and errors are not in it`() {
+        val tir = populated()
+
+        assertThat(tir.cgpBelowRangePct()).isWithin(1e-6).of(40.0)
+        assertThat(tir.cgpAboveRangePct()).isWithin(1e-6).of(40.0)
+    }
+
+    @Test
+    fun `a value at the limits is in range and has no intensity area`() {
+        val tir = DexcomTirImpl().apply { add(1_600_000_000_000L, 180.0) }
+
+        assertThat(tir.cgpAboveRangePct()).isEqualTo(0.0)
+        assertThat(tir.cgpHyperIntensity()).isWithin(1e-6).of(5.0)
+    }
+
+    @Test
+    fun `an empty accumulator has no intensity`() {
+        val tir = DexcomTirImpl()
+
+        assertThat(tir.cgpHypoIntensity()).isEqualTo(0.0)
+        assertThat(tir.cgpHyperIntensity()).isEqualTo(0.0)
+        assertThat(tir.cgpBelowRangePct()).isEqualTo(0.0)
     }
 
     @Test

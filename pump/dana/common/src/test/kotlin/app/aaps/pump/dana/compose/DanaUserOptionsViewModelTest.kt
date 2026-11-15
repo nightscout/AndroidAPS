@@ -17,7 +17,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -69,12 +72,30 @@ internal class DanaUserOptionsViewModelTest {
     }
 
     @Test
-    fun `save writes auto lock to the pump state`() {
+    fun `save writes auto lock to the options to write`() {
         sut.updateAutoLock(true)
 
         sut.save()
 
-        verify(danaPump).autoLock = true
+        val written = argumentCaptor<DanaPump.UserOptions>()
+        verify(danaPump).userOptionsToWrite = written.capture()
+        assertThat(written.firstValue.autoLock).isTrue()
+    }
+
+    /**
+     * A save puts the new options apart from the values a settings read fills. It put them into those: a read queued
+     * before the write put the pump's old values back, and the old values were written and shown as saved.
+     */
+    @Test
+    fun `save keeps the new options apart from the values a settings read fills`() {
+        sut.updateAutoLock(true)
+
+        sut.save()
+
+        verify(danaPump, never()).autoLock = any()
+        verify(danaPump, never()).beepAndAlarm = any()
+        verify(danaPump, never()).lcdOnTimeSec = any()
+        verify(danaPump, never()).lowReservoirRate = any()
     }
 
     @Test

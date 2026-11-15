@@ -11,6 +11,7 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.durationInMinutes
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -19,6 +20,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -26,7 +28,6 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.extensions.toTemporaryBasal
-import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -208,7 +209,7 @@ open class AutotuneIob(
         if (tb.isValid && tb.durationInMinutes > 0) {
             val endTimestamp = splittedTimestamp + splittedDuration
             while (splittedDuration > 0) {
-                if (MidnightUtils.milliSecFromMidnight(splittedTimestamp) / cutInMilliSec == MidnightUtils.milliSecFromMidnight(endTimestamp) / cutInMilliSec) {
+                if (MidnightTime.millisFromMidnight(splittedTimestamp, SystemTimeZone.current()) / cutInMilliSec == MidnightTime.millisFromMidnight(endTimestamp, SystemTimeZone.current()) / cutInMilliSec) {
                     val newTb = TB(
                         isValid = true,
                         isAbsolute = tb.isAbsolute,
@@ -225,7 +226,7 @@ open class AutotuneIob(
                     boluses.addAll(convertToBoluses(newTb, profile, tunedProfile.profile))           //
                     // required for correct iob calculation with oref0 algo
                 } else {
-                    val durationFilled = (cutInMilliSec - MidnightUtils.milliSecFromMidnight(splittedTimestamp) % cutInMilliSec)
+                    val durationFilled = (cutInMilliSec - MidnightTime.millisFromMidnight(splittedTimestamp, SystemTimeZone.current()) % cutInMilliSec)
                     val newTb = TB(
                         isValid = true,
                         isAbsolute = tb.isAbsolute,

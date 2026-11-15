@@ -103,9 +103,12 @@ class PumpStatusProviderImpl(
         return buildJsonObject {
             val reservoir = pump.reservoirLevel.value
             val pumpType = pump.pumpDescription.pumpType
-            // These pods use 75 cU as a placeholder when the reservoir is above their measuring range.
-            if ((pumpType != PumpType.OMNIPOD_5 && pumpType != PumpType.OMNIPOD_DASH) || reservoir.cU != 75.0) {
-                put("reservoir", reservoir.iU(profile.insulinConcentration()).toInt())
+            // Left out when not known: a 0 would read as an empty reservoir in Nightscout. A real 0 is sent.
+            reservoir?.let {
+                // These pods use 75 cU as a placeholder when the reservoir is above their measuring range.
+                if ((pumpType != PumpType.OMNIPOD_5 && pumpType != PumpType.OMNIPOD_DASH) || it.cU != 75.0) {
+                    put("reservoir", it.iU(profile.insulinConcentration()).toInt())
+                }
             }
             put("clock", dateUtil.toISOString(now))
             putJsonObject("battery") {

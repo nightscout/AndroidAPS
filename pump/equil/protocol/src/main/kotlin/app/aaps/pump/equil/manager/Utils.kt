@@ -4,6 +4,9 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.security.SecureRandom
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.roundToLong
 
 object Utils {
 
@@ -34,6 +37,21 @@ object Utils {
         val c = a.divide(b)
         return c.toInt()
     }
+
+    /**
+     * Units to pump steps of 0.00625 U, cut down to a whole step, so the pump never gets more than was asked.
+     * A value on the grid keeps all its steps: in Double, 0.6 / 0.05 * 8 is 95.99999999999999, and cutting that gave one
+     * step less. Seen on a real pump: a 0.6 U SMB went out as 95 steps, 0.594 U. A number this close to a whole number
+     * is that number, as in `Round.floorTo`.
+     */
+    fun unitsToSteps(units: Double): Int {
+        val steps = units * STEPS_PER_UNIT
+        val whole = steps.roundToLong()
+        return (if (abs(steps - whole) < ON_GRID) whole else floor(steps).toLong()).toInt()
+    }
+
+    private const val STEPS_PER_UNIT = 160.0
+    private const val ON_GRID = 1e-9
 
     fun decodeSpeedToUHT(i: Double): Double {
         val a = BigDecimal(i.toString())

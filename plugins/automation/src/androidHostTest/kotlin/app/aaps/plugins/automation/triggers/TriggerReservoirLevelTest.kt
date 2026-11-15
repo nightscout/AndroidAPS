@@ -48,6 +48,15 @@ class TriggerReservoirLevelTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
     }
 
+    /** Not known, as after an app start before the pump was read. As 0 U it fired every "below" rule. */
+    @Test fun shouldNotRunWhenTheReservoirIsNotKnown() = runTest {
+        whenever(pumpPluginWithConcentration.reservoirLevel).thenReturn(MutableStateFlow<PumpInsulin?>(null))
+        givenRunningInsulin()
+
+        val t = TriggerReservoirLevel(triggerDeps).setValue(20.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        assertThat(t.shouldRun()).isFalse()
+    }
+
     @Test fun copyConstructorTest() = runTest {
         val t: TriggerReservoirLevel = TriggerReservoirLevel(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.reservoirLevel.value).isWithin(0.01).of(213.0)

@@ -125,8 +125,7 @@ import kotlinx.coroutines.launch
 fun WizardDialogScreen(
     viewModel: WizardDialogViewModel = metroViewModel(),
     wizardSettingsDef: PreferenceSubScreenDef,
-    onNavigateBack: () -> Unit,
-    onShowDeliveryError: (String) -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -134,17 +133,7 @@ fun WizardDialogScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
             when (effect) {
-                is WizardDialogViewModel.SideEffect.ShowDeliveryError  -> {
-                    onShowDeliveryError(effect.comment)
-                }
-
-                is WizardDialogViewModel.SideEffect.ShowTempBasalError -> {
-                    onShowDeliveryError(effect.comment)
-                }
-
-                is WizardDialogViewModel.SideEffect.NavigateBack       -> {
-                    onNavigateBack()
-                }
+                is WizardDialogViewModel.SideEffect.NavigateBack -> onNavigateBack()
             }
         }
     }
