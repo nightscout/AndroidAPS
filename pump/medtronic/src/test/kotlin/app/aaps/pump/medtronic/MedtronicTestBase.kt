@@ -1,6 +1,5 @@
 package app.aaps.pump.medtronic
 
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.sync.PumpSyncStorage
@@ -9,9 +8,12 @@ import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntryType
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
-import org.mockito.Answers
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 
 open class MedtronicTestBase : TestBaseWithProfile() {
 
@@ -25,6 +27,16 @@ open class MedtronicTestBase : TestBaseWithProfile() {
     @BeforeEach
     fun mock() {
         rileyLinkUtil = RileyLinkUtil(aapsLogger, context)
+        // Default mock returns for suspend PumpSync methods to avoid NPE from runBlocking
+        runBlocking {
+            whenever(pumpSync.insertFingerBgIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(true)
+            whenever(pumpSync.syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), anyOrNull(), anyOrNull())).thenReturn(true)
+            whenever(pumpSync.syncBolusWithTempId(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(true)
+            whenever(pumpSync.syncBolusWithPumpId(any(), any(), anyOrNull(), any(), anyOrNull(), anyOrNull())).thenReturn(true)
+            whenever(pumpSync.insertTherapyEventIfNewWithTimestamp(any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(true)
+            whenever(pumpSync.syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(true)
+            whenever(pumpSync.createOrUpdateTotalDailyDose(any(), any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(true)
+        }
     }
 
     fun initializeCommonMocks() {

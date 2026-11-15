@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/aaps_theme_dark_secondary</item>
+        <item name="colorSecondary">@color/aaps_theme_dark_secondary</item>
+        <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
+        <item name="colorSurface">@color/aaps_theme_dark_surface</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnError">@color/black</item>
+        <!-- Cold-start flash prevention -->
+        <item name="android:windowBackground">@color/black</item>
+        <!-- Text defaults for any framework-internal TextView -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- BolusProgress, Error -->
+    <style name="Theme.MaterialComponents.Translucent" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar" />
+
+</resources>

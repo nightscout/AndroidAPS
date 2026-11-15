@@ -1,0 +1,475 @@
+package app.aaps.ui.compose.careDialog
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.DateTimeSection
+import app.aaps.core.ui.compose.ExpandableNumberInputRow
+import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.TimeOffsetRow
+import app.aaps.core.ui.compose.bottomBarSafeArea
+import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
+import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.EVENT_TIME_OFFSET_RANGE_MINUTES
+import app.aaps.ui.compose.EventDatePicker
+import app.aaps.ui.compose.EventTimePicker
+
+@Composable
+fun CareDialogScreen(
+    viewModel: CareDialogViewModel = metroViewModel(),
+    onNavigateBack: () -> Unit,
+    onPickSiteLocation: () -> Unit = {},
+    siteLocationResult: Pair<String?, String?>? = null
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Process site location result from picker screen
+    LaunchedEffect(siteLocationResult) {
+        siteLocationResult?.let { (locationName, arrowName) ->
+            if (locationName != null) {
+                val location = try {
+                    TE.Location.valueOf(locationName)
+                } catch (_: Exception) {
+                    TE.Location.NONE
+                }
+                viewModel.updateSiteLocation(location)
+            }
+            if (arrowName != null) {
+                val arrow = try {
+                    TE.Arrow.valueOf(arrowName)
+                } catch (_: Exception) {
+                    TE.Arrow.NONE
+                }
+                viewModel.updateSiteArrow(arrow)
+            }
+        }
+    }
+
+    // Dialog states (rememberSaveable to survive rotation)
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+
+    // Confirmation dialog
+    if (showConfirmation) {
+        ElementConfirmationDialog(
+            elementType = uiState.eventType.toElementType(),
+            lines = viewModel.buildConfirmationSummary(),
+            onConfirm = {
+                viewModel.confirmAndSave()
+                onNavigateBack()
+            },
+            onDismiss = { showConfirmation = false }
+        )
+    }
+
+    // Date picker
+    if (showDatePicker) {
+        EventDatePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showDatePicker = false }
+        )
+    }
+
+    // Time picker
+    if (showTimePicker) {
+        EventTimePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showTimePicker = false }
+        )
+    }
+
+    CareDialogContent(
+        uiState = uiState,
+        eventType = uiState.eventType,
+        dateString = viewModel.dateUtil.dateString(uiState.eventTime),
+        timeString = viewModel.dateUtil.timeString(uiState.eventTime),
+        onMeterTypeChange = viewModel::updateMeterType,
+        onBgValueChange = viewModel::updateBgValue,
+        onDurationChange = viewModel::updateDuration,
+        onNotesChange = viewModel::updateNotes,
+        onTimeOffsetChange = viewModel::updateTimeOffset,
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true },
+        onDateClick = { showDatePicker = true },
+        onTimeClick = { showTimePicker = true },
+        onPickSiteLocation = onPickSiteLocation
+    )
+}
+
+/**
+ * @see CareDialogScreenPreview
+ */
+@Composable
+internal fun CareDialogContent(
+    uiState: CareDialogUiState,
+    eventType: CareportalEventType,
+    dateString: String,
+    timeString: String,
+    onMeterTypeChange: (TE.MeterType) -> Unit,
+    onBgValueChange: (Double) -> Unit,
+    onDurationChange: (Double) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onTimeOffsetChange: (Int) -> Unit,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit,
+    onDateClick: () -> Unit,
+    onTimeClick: () -> Unit,
+    onPickSiteLocation: () -> Unit = {}
+) {
+    val focusManager = LocalFocusManager.current
+
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(eventType.titleResId())) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(CoreUiStrings.close)
+                        )
+                    }
+                },
+                actions = {}
+            )
+        },
+        bottomBar = {
+            // The button shows only a value, so a screen reader would say just the amount and never
+            // what pressing it does. The verb only: the Text below is still read, so repeating the
+            // amount here would have it announced twice. See ChipAnnouncementTest.
+            val confirmDescription = stringResource(CoreUiStrings.confirm)
+            Button(
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .bottomBarSafeArea()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .semantics { contentDescription = confirmDescription }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(CoreUiStrings.ok))
+            }
+        }
+    ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .clearFocusOnTap(focusManager)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Single card with all inputs
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Site rotation (for SENSOR_INSERT)
+                    if (uiState.showSiteRotationSection) {
+                        SiteLocationSummary(
+                            siteType = TE.Type.SENSOR_CHANGE,
+                            lastLocationString = uiState.lastSiteLocationString,
+                            selectedLocationString = uiState.selectedSiteLocationString,
+                            onPickSiteClick = onPickSiteLocation,
+                            modifier = itemModifier
+                        )
+                    }
+
+                    // BG Section
+                    if (uiState.showBgSection) {
+                        BgSection(
+                            meterType = uiState.meterType,
+                            bgValue = uiState.bgValue,
+                            glucoseUnits = uiState.glucoseUnits,
+                            onMeterTypeChange = onMeterTypeChange,
+                            onBgValueChange = onBgValueChange,
+                            folded = !uiState.bgIsPrimary,
+                            modifier = itemModifier
+                        )
+                    }
+
+                    // Duration Section
+                    if (uiState.showDurationSection) {
+                        DurationSection(
+                            duration = uiState.duration,
+                            onDurationChange = onDurationChange,
+                            modifier = itemModifier
+                        )
+                    }
+
+                    // Time: -/+ in 5 minute steps like the other treatment dialogs, the pickers when expanded
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.time,
+                        offsetMinutes = uiState.timeOffsetMinutes,
+                        onOffsetChange = onTimeOffsetChange,
+                        resolvedTimeText = if (uiState.timeOffsetMinutes != 0) stringResource(CoreUiStrings.value_with_unit, dateString, timeString) else null,
+                        offsetRange = EVENT_TIME_OFFSET_RANGE_MINUTES,
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        },
+                        modifier = itemModifier
+                    )
+
+                    // Notes Section
+                    if (uiState.showNotesSection) {
+                        TextField(
+                            value = uiState.notes,
+                            onValueChange = onNotesChange,
+                            label = { Text(stringResource(CoreUiStrings.notes_label)) },
+                            modifier = itemModifier,
+                            singleLine = false,
+                            maxLines = 3
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+/**
+ * The BG and how it was measured.
+ *
+ * @param folded true where the BG only comes along with the entry (a question, an announcement).
+ *   The row then shows the value and the meter type, and opens for typing. A BG check is about the
+ *   BG, so there it stays open.
+ */
+@Composable
+private fun BgSection(
+    meterType: TE.MeterType,
+    bgValue: Double,
+    glucoseUnits: GlucoseUnit,
+    onMeterTypeChange: (TE.MeterType) -> Unit,
+    onBgValueChange: (Double) -> Unit,
+    folded: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val (minBg, maxBg, step, format) = when (glucoseUnits) {
+        GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, NumberFormat.DECIMAL_1)
+        GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, NumberFormat.INTEGER)
+    }
+    val unitLabel = TextRef.Literal(glucoseUnits.displayLabel)
+
+    if (folded) {
+        var expanded by rememberSaveable { mutableStateOf(false) }
+        val expandRequester = rememberBringIntoViewOnExpand(expanded)
+        ExpandableNumberInputRow(
+            labelRef = CoreUiStrings.bg_label,
+            value = bgValue,
+            onValueChange = onBgValueChange,
+            valueRange = minBg..maxBg,
+            step = step,
+            valueFormat = format,
+            unitLabel = unitLabel,
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+            modifier = modifier.bringIntoViewRequester(expandRequester),
+            // The meter type is shown with the value: a change of the value turns Sensor into
+            // Finger, and that must not happen out of sight.
+            valueContent = {
+                Text(
+                    text = stringResource(CoreUiStrings.value_with_unit, format.format(bgValue), glucoseUnits.displayLabel),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = stringResource(CoreUiStrings.value_in_parentheses, meterTypeLabel(meterType)),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            expandedContent = {
+                MeterTypeSelector(meterType = meterType, onMeterTypeChange = onMeterTypeChange)
+            }
+        )
+    } else {
+        Column(modifier = modifier) {
+            MeterTypeSelector(meterType = meterType, onMeterTypeChange = onMeterTypeChange)
+            NumberInputRow(
+                labelRef = CoreUiStrings.bg_label,
+                value = bgValue,
+                onValueChange = onBgValueChange,
+                valueRange = minBg..maxBg,
+                step = step,
+                valueFormat = format,
+                unitLabel = unitLabel
+            )
+        }
+    }
+}
+
+@Composable
+private fun MeterTypeSelector(
+    meterType: TE.MeterType,
+    onMeterTypeChange: (TE.MeterType) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectableGroup(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        listOf(TE.MeterType.FINGER, TE.MeterType.SENSOR, TE.MeterType.MANUAL).forEach { type ->
+            Row(
+                modifier = Modifier
+                    .selectable(
+                        selected = meterType == type,
+                        onClick = { onMeterTypeChange(type) },
+                        role = Role.RadioButton
+                    )
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = meterType == type,
+                    onClick = null
+                )
+                Text(
+                    text = meterTypeLabel(type),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 2.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun meterTypeLabel(type: TE.MeterType): String = when (type) {
+    TE.MeterType.FINGER -> stringResource(UiStrings.bg_meter)
+    TE.MeterType.SENSOR -> stringResource(UiStrings.bg_sensor)
+    TE.MeterType.MANUAL -> stringResource(UiStrings.bg_other)
+}
+
+private data class BgParams(
+    val min: Double,
+    val max: Double,
+    val step: Double,
+    val format: NumberFormat
+)
+
+/** Folded: most notes have no duration, and an exercise is mostly only nudged. */
+@Composable
+private fun DurationSection(
+    duration: Double,
+    onDurationChange: (Double) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val expandRequester = rememberBringIntoViewOnExpand(expanded)
+    ExpandableNumberInputRow(
+        labelRef = CoreUiStrings.duration_label,
+        value = duration,
+        onValueChange = onDurationChange,
+        valueRange = Constants.ACTION_DURATION,
+        step = 10.0,
+        unitLabel = CoreUiStrings.units_min,
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.bringIntoViewRequester(expandRequester)
+    )
+}
+
+// Extension functions for EventType mapping
+
+fun CareportalEventType.titleResId(): TextRef = when (this) {
+    CareportalEventType.BGCHECK        -> CoreUiStrings.careportal_bgcheck
+    CareportalEventType.SENSOR_INSERT  -> CoreUiStrings.cgm_sensor_insert
+    CareportalEventType.BATTERY_CHANGE -> CoreUiStrings.pump_battery_change
+    CareportalEventType.NOTE           -> CoreUiStrings.careportal_note
+    CareportalEventType.EXERCISE       -> CoreUiStrings.careportal_exercise
+    CareportalEventType.QUESTION       -> CoreUiStrings.careportal_question
+    CareportalEventType.ANNOUNCEMENT   -> CoreUiStrings.careportal_announcement
+}
+
+fun CareportalEventType.toElementType(): ElementType = when (this) {
+    CareportalEventType.BGCHECK        -> ElementType.BG_CHECK
+    CareportalEventType.SENSOR_INSERT  -> ElementType.SENSOR_INSERT
+    CareportalEventType.BATTERY_CHANGE -> ElementType.BATTERY_CHANGE
+    CareportalEventType.NOTE           -> ElementType.NOTE
+    CareportalEventType.EXERCISE       -> ElementType.EXERCISE
+    CareportalEventType.QUESTION       -> ElementType.QUESTION
+    CareportalEventType.ANNOUNCEMENT   -> ElementType.ANNOUNCEMENT
+}

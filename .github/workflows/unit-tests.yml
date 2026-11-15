@@ -1,0 +1,218 @@
+name: Unit tests (JVM)
+
+# EXPERIMENT: moving the unit suite off the self-hosted CircleCI runner.
+#
+# Today `.circleci/config.yml` runs the whole unit suite on the same self-hosted machine as three
+# emulators, in a step named "pinned off the emulator cores ... overlaps the shards". That contention
+# is the documented cause of emulators dropping offline mid-instrumentation, and it shows up as
+# `comboctl` unit tests and emulator UI tests going red while passing locally.
+#
+# Nothing here needs a device, so it runs on a GitHub-hosted runner instead. Coverage is uploaded to
+# Codecov under the `unit` flag; CircleCI uploads the instrumented run under `instrumented`. Codecov
+# merges uploads that carry the same commit SHA, so the combined number is the union of the two - a
+# line covered by either source counts as covered.
+# The pull_request trigger is the point of this, not a detail. CircleCI refuses fork PRs outright -
+# build 41327 on #5123 died 0.03s after being queued with "Forked prs not allowed to run on OSS
+# projects", before starting - because its runner is self-hosted and running a contributor's code on
+# the Nightscout machine would be a real risk. That block is correct and should stay. A GitHub-hosted
+# runner is an ephemeral VM, so the same code is safe to run here, which is why ios-ci.yml passes on
+# the very PRs CircleCI rejects. Moving the unit suite here means fork PRs get tested at all.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+      - master
+  pull_request:
+    branches:
+      - dev
+      - master
+
+# A newer push to the same branch makes an in-flight run pointless.
+concurrency:
+  group: unit-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    # First line: do not run inside somebody's fork. A fork PR against nightscout/AndroidAPS runs in
+    # THIS repo, so github.repository is still nightscout/AndroidAPS and fork PRs keep their CI - which
+    # is the whole point of this file. The check only stops runs that happen in the fork itself, where
+    # every sync of the fork's own dev/master was starting the full suite on the contributor's account.
+    # A fork that wants its own CI can opt back in by setting the repository variable RUN_CI to true.
+    #
+    # Rest: skip the pull_request event ONLY where the push trigger already covers the same commit, which is
+    # exactly a same-repo PR opened FROM `dev` or `master` - the long-lived `dev` -> `master` one. Without
+    # that skip every push to dev ran the whole suite twice: once as push, once as pull_request, and the
+    # two do not cancel each other because the concurrency group keys on github.ref and those differ
+    # (refs/heads/dev vs refs/pull/N/merge).
+    #
+    # Everything else needs the pull_request event and must NOT be skipped:
+    # - a fork PR has no push trigger on this repo at all;
+    # - a same-repo PR from a FEATURE branch has none either, because `push` above lists only dev and
+    #   master. This guard used to be fork-only, which meant a long-lived branch like `carelevo` got no
+    #   unit run from either event - 83 commits with the suite never executed once.
+    if: >-
+      (github.repository == 'nightscout/AndroidAPS' || vars.RUN_CI == 'true') &&
+      (github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository ||
+      (github.event.pull_request.head.ref != 'dev' && github.event.pull_request.head.ref != 'master'))
+
+    # At job level so the coverage steps can ask whether a token exists at all. GitHub withholds
+    # secrets from pull_request runs on forks - deliberately, since a fork's workflow must not be able
+    # to read them - so on exactly the PRs this workflow exists to cover, this is the empty string. The
+    # tests still run and still gate the PR; only the upload is skipped. Without the guard the upload
+    # would fail and, with fail_ci_if_error on, fail the job on every fork PR.
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Load jdk version
+        run: |
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+
+      # The bit is 100755 in the index and `ios-ci.yml` runs ./gradlew without this, but four other
+      # workflows set it anyway. A checkout of a contributor's fork can arrive without it, and the
+      # failure is a bare "Permission denied" that looks nothing like its cause.
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # The repo's gradle.properties is tuned for the 64 GB self-hosted runner: 8g for Gradle and 12
+      # workers. A GitHub-hosted runner has 4 vCPU and 16 GB, so that plus the forked test JVMs
+      # oversubscribes it and the runner is killed outright - the job ends with "exit code 143" and
+      # "The runner has received a shutdown signal", which reads like an infrastructure blip rather
+      # than the memory setting it is. gradle.properties in GRADLE_USER_HOME takes precedence over the
+      # project one, so this leaves the self-hosted tuning untouched.
+      #
+      # The Kotlin daemon keeps its 4g. That number is measured, not guessed: gradle.properties records
+      # that a 3g ceiling sent the compile daemon into a GC spiral (66 full collections, 42 s in GC)
+      # and killed build 41233 with "GC overhead limit exceeded". Cutting it here would buy memory by
+      # reintroducing a known failure. The budget comes out of Gradle and the worker count instead:
+      # 3g daemon + 4g Kotlin + at most 3 test JVMs at 1536m each is about 11.5g of the 16g.
+      - name: Size the JVMs for a hosted runner
+        run: |
+          mkdir -p ~/.gradle
+          cat > ~/.gradle/gradle.properties <<'EOF'
+          org.gradle.jvmargs=-Xmx3g -XX:+UseParallelGC -Xss4m
+          org.gradle.workers.max=3
+          kotlin.daemon.jvm.options=-Xmx4g
+          EOF
+          echo "--- effective overrides ---"; cat ~/.gradle/gradle.properties
+          echo "--- runner ---"; nproc; free -g
+
+      # Four task names, because a module lands in exactly one of them and a missing name runs no
+      # tests instead of failing. Kept identical to the CircleCI step so this is a move, not a
+      # redefinition of what "the unit suite" means:
+      #  - testFullDebugUnitTest: the flavoured modules, which are only :app and the :wear ones.
+      #  - testDebugUnitTest: the Android libraries, which have no "Full" variant.
+      #  - jvmTest and testAndroidHostTest: the multiplatform modules, which have no build variants.
+      # `:desktop:shell:test` is named explicitly and must stay: it is a plain `kotlin("jvm")` module
+      # whose task is `test`, so it matches none of the four names, and an unqualified `test` would
+      # instead match the AGP lifecycle task in every Android module and run every variant of each.
+      # Drop this and its tests run on no machine at all.
+      - name: Run the unit suite
+        run: |
+          # Actions runs `bash -e` but NOT pipefail, so without this the exit code of the pipeline
+          # would be tee's and a failed Gradle build would report success.
+          set -o pipefail
+          ./gradlew --console=plain --no-daemon -Pcoverage -PfirebaseDisable \
+            testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test \
+            2>&1 | tee unit-tests.log
+
+      # A separate invocation on purpose: running a compile task and jacocoAllDebugReport together
+      # trips Gradle's implicit-dependency validation on `:core:data`'s jvm classes and fails the
+      # build before the report is written.
+      - name: Aggregate coverage
+        run: ./gradlew --console=plain --no-daemon jacocoAllDebugReport
+
+      # Skipped on fork PRs, which have no secrets. See the job-level env above.
+      - name: Upload coverage
+        if: env.CODECOV_TOKEN != ''
+        uses: codecov/codecov-action@v7
+        with:
+          files: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
+          flags: unit
+          # The merge commit Actions checks out for a pull_request is not the commit Codecov should
+          # attribute this to; without this the upload lands on a commit CircleCI never reports on and
+          # the two halves never merge.
+          override_commit: ${{ github.event.pull_request.head.sha || github.sha }}
+          # True, because an upload that is refused must not pass as success. It is safe to fail on now
+          # in a way it was not before: uploads used to be rejected on every run with "Repository not
+          # found" because the CODECOV_TOKEN secret held a different token from the repository's, and
+          # with that unfixed this flag only produced a permanently red build.
+          fail_ci_if_error: true
+
+      # The real check. The uploader's exit code describes the tool; this describes the outcome, which
+      # is the thing worth failing on: does Codecov actually have a report for this commit? It is loud
+      # when coverage genuinely fails to land and quiet about the create-commit noise above.
+      # No token needed to READ - the repo is public - but it is skipped with the upload, because there
+      # is nothing to verify when nothing was sent.
+      - name: Check the coverage actually landed
+        if: env.CODECOV_TOKEN != ''
+        run: |
+          SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          API="https://api.codecov.io/api/v2/github/nightscout/repos/AndroidAPS/commits/$SHA"
+          # Look for coverage of a file only THIS job can cover, not merely for "a report".
+          #
+          # Checking that a report exists is not enough, and quietly passed while this job's upload was
+          # being rejected outright: CircleCI uploads the instrumented half against the same commit, so
+          # its report answered the check on this job's behalf. `comboctl` has no instrumented tests at
+          # all - its coverage can only come from the unit suite here - so hits on this file prove that
+          # this upload is the one that landed.
+          PROBE="pump/combov2/comboctl/src/commonMain/kotlin/info/nightscout/comboctl/parser/Pattern.kt"
+          # Codecov processes uploads asynchronously, so a miss right after the upload means "not yet",
+          # not "never". Poll for up to 6 minutes before calling it a failure.
+          for i in $(seq 1 36); do
+            code=$(curl -sS -o /tmp/codecov-commit.json -w '%{http_code}' "$API" || echo 000)
+            if [ "$code" = "200" ]; then
+              # `.report.files // []`, because Codecov answers 200 with a null report while it is still
+              # processing the upload. Walking null made jq exit 5 and, under `bash -e`, killed the step
+              # on the first attempt - reported as "the upload did not land" when it simply had not been
+              # processed yet. The trailing `|| echo -1` covers any other jq failure the same way.
+              hits=$(jq -r --arg p "$PROBE" '[(.report.files // [])[] | select(.name == $p) | .totals.hits] | first // -1' /tmp/codecov-commit.json 2>/dev/null || echo -1)
+              if [ "$hits" != "-1" ] && [ "$hits" -gt 0 ] 2>/dev/null; then
+                echo "This job's coverage landed. $PROBE has $hits hits."
+                jq -r '"  state=\(.state)  coverage=\(.totals.coverage)  lines=\(.totals.lines)"' /tmp/codecov-commit.json
+                exit 0
+              fi
+              echo "attempt $i: report present but $PROBE has hits=$hits - not this job's upload yet"
+            else
+              echo "attempt $i: HTTP $code - no report yet"
+            fi
+            sleep 10
+          done
+          echo "::error::Codecov has no unit coverage for $SHA after 6 minutes ($PROBE never showed hits). This job's upload did not land."
+          exit 1
+
+      # The jacoco XML is kept alongside the test results so the two halves of the split can be compared
+      # file by file. They do not have the same denominator: this job reported 189985 lines where the
+      # single combined report on `dev` reports 195785, on identical code. That is not a bug in either -
+      # `jacoco-aggregation` builds classDirectories with a fileTree over the class files actually
+      # present in the workspace, and this job never assembles the androidTest APK, so fewer classes
+      # exist here. The union of the two file sets should restore the real total, and keeping both XMLs
+      # is what makes that checkable rather than assumed.
+      - name: Keep the test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: |
+            **/build/test-results/**/*.xml
+            unit-tests.log
+            build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
+          retention-days: 7

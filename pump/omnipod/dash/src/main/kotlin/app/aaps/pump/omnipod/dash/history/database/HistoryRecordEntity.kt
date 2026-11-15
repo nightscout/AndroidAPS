@@ -4,12 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusRecord
-import app.aaps.pump.omnipod.dash.history.data.InitialResult
-import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
-import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 
 @Entity(
     tableName = "historyrecords",
@@ -25,9 +26,22 @@ data class HistoryRecordEntity(
     val commandType: OmnipodCommandType,
     val initialResult: InitialResult,
     @Embedded(prefix = "tempBasalRecord_") val tempBasalRecord: TempBasalRecord?,
-    @Embedded(prefix = "bolusRecord_") val bolusRecord: BolusRecord?,
+    @Embedded(prefix = "bolusRecord_") val bolusRecord: DashBolusRecord?,
     @Embedded(prefix = "basalprofile_") val basalProfileRecord: BasalValuesRecord?,
     val totalAmountDelivered: Double?,
     val resolvedResult: ResolvedResult?,
     val resolvedAt: Long?
 )
+
+data class DashBolusRecord(
+    val amout: Double,
+    val bolusType: BolusType
+) {
+
+    fun toDomain() = BolusRecord(amout, bolusType)
+
+    companion object {
+
+        fun fromDomain(record: BolusRecord) = DashBolusRecord(record.amount, record.bolusType)
+    }
+}

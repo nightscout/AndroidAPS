@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--       Stats -->
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported">Postavke su izvezene</string>
+    <string name="filenotfound">Datoteka nije pronađena</string>
+    <string name="ue_exported">Korisnički unosi su izvezeni</string>
+</resources>

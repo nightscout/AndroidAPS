@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">DynamicISF 조정 계수 %</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">동적 ISF</string>
+    <string name="openaps_auto_isf">자동 ISF</string>
+    <string name="openapsma_disabled">플러그인이 비활성화되어 있습니다</string>
+    <string name="openapsma_no_glucose_data">혈당 데이터 없음</string>
+    <string name="openaps_no_as_data">사용할 수 있는 Autosens 데이터가 없습니다.</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
+    <string name="description_ama">2017년의 알고리즘</string>
+    <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
+    <string name="description_smb_dynamic_isf">동적/자동 ISF를 사용하는 고급 사용자를 위한 최신 알고리즘</string>
+    <string name="description_auto_isf">AutoISF 확장 기능이 있는 고급 사용자용 실험적 알고리즘</string>
+    <string name="openapsma_last_run_label">마지막 실행</string>
+    <string name="openapsma_input_parameters_label">입력 변수</string>
+    <string name="openapsma_glucose_status_label">혈당 상태</string>
+    <string name="openapsma_current_temp_label">현재 임시 기저</string>
+    <string name="openapsma_iob_data_label">IOB 데이터</string>
+    <string name="openapsma_profile_label">프로파일</string>
+    <string name="openapsma_meal_data_label">식사 데이터</string>
+    <string name="openapsma_request_label">요청</string>
+    <string name="constraints">제한</string>
+    <string name="openapsma_autosensdata_label">Autosens 정보</string>
+    <string name="openapsma_script_debug_data_label">스크립트 디버그</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">주의!\n보통은 아래 값을 바꿀 필요가 없습니다. 이 값을 바꾸기 전에 반드시 여기를 클릭하여 글을 읽고 이해하십시오.</string>
+    <string name="increasing_max_basal">설정값이 프로파일의 최대 기저보다 낮으므로 최대 기저 값을 높입니다</string>
+    <string name="max_basal_multiplier">최대 기저 승수</string>
+    <string name="max_daily_basal_multiplier">최대 일일 기저 승수</string>
+    <string name="smb_disabled_in_preferences">설정에서 SMB가 비활성화 되었습니다.</string>
+    <string name="uam_disabled_in_preferences">설정에서 UAM이 비활성화 되었습니다.</string>
+    <string name="autosens_disabled_in_preferences">설정에서 Autosens가 비활성화 되었습니다.</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
+    <string name="maxvalueinpreferences">설정에서의 최대값</string>
+    <string name="hardlimit">하드 한계</string>
+    <!--    Autotune   -->
+    <string name="autotune_peak">피크</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">최근 3분 이내에 볼러스가 주입되어 SMB를 건너뜁니다.</string>
+    <string name="pump_not_initialized">펌프가 초기화 되지 않았습니다!</string>
+    <string name="zero_basal_not_set">펌프가 0 임시 기저를 받아들이지 않았습니다. 아직 기저 인슐린을 주입하고 있을 수 있습니다. 펌프를 확인하십시오.</string>
+    <string name="description_loop">루프를 실행하는 구현을 활성화하거나 비활성화합니다.</string>
+    <string name="no_aps_selected">APS가 선택되지 않았거나 제공된 결과가 없습니다.</string>
+    <string name="ignore5m">5분간 무시하기</string>
+    <string name="ignore15m">15분간 무시하기</string>
+    <string name="ignore30m">30분간 무시하기</string>
+    <string name="carbs_suggestion">탄수화물 제안</string>
+    <string name="open_loop_new_suggestion">새로운 제안이 있습니다</string>
+    <string name="loop_notification_channel_name">루프 제안</string>
+    <string name="loop_notification_channel_silent_name">방해 금지 모드 중 루프 제안</string>
+    <string name="open_loop_suggestion_too_old">이 제안은 너무 오래되었습니다. 펌프로 아무것도 보내지 않았습니다. 다음 제안을 기다리십시오.</string>
+    <string name="basal_set_correctly">기저가 정상적으로 설정되었습니다.</string>
+    <string name="last_run_label">마지막 실행</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">요청</string>
+    <string name="loop_constraints_processed_label">제약 적용 후</string>
+    <string name="loop_tbr_request_time_label">임시 기저 요청 시간</string>
+    <string name="loop_tbr_execution_time_label">임시 기저 실행 시간</string>
+    <string name="loop_tbr_set_by_pump_label">펌프에 의한 임시 기저 설정</string>
+    <string name="loop_smb_request_time_label">SMB 요청 시간</string>
+    <string name="loop_smb_execution_time_label">SMB 실행 시간</string>
+    <string name="loop_smb_set_by_pump_label">펌프에 의한 SMB 설정</string>
+    <string name="fallback_smb_no_tdd">SMB로 폴백. TDD 데이터가 충분하지 않습니다.</string>
+    <string name="fallback_to_isf_no_tdd">프로파일 민감도를 대신 사용합니다. 데이터가 충분하지 않습니다. 이유: %1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">프로파일(ISF, 탄수화물 비율, 기저 주입량)을 조정할 때 도움을 줍니다</string>
+    <string name="autotune_default_tune_days_title">데이터 일수</string>
+    <string name="autotune_tunedprofile_name">조정된</string>
+    <string name="autotune_profile">프로파일 :</string>
+    <string name="autotune_last_run">마지막 실행 :</string>
+    <string name="autotune_warning">경고 :</string>
+    <string name="autotune_ic_warning">선택한 프로파일에 IC 값이 %1$d개 있습니다. Autotune은 %2$.2f g/U를 사용합니다.</string>
+    <string name="autotune_isf_warning">선택한 프로파일에 ISF 값이 %1$d개 있습니다. Autotune은 %2$.1f %3$s/U를 사용합니다.</string>
+    <string name="autotune_error">입력 데이터에서 오류가 발생했습니다. 다시 Autotune하거나, 일수를 줄이십시오</string>
+    <string name="autotune_error_more_days">입력 데이터에서 오류가 발생했습니다, 일수를 증가시키십시오</string>
+    <string name="autotune_warning_during_run">Autotune 계산이 시작되었습니다, 잠시 기다려 주십시오</string>
+    <string name="autotune_warning_after_run">사용하기 전에 결과를 주의 깊게 확인하십시오!</string>
+    <string name="autotune_partial_result">부분 결과 날짜 %1$d / %2$d 조정됨</string>
+    <string name="autotune_result">결과: %1$s</string>
+    <string name="autotune_param">매개변수</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">누락</string>
+    <string name="autotune_run">Autotune 실행하기</string>
+    <string name="autotune_check_input_profile_button">입력 프로파일 확인하기</string>
+    <string name="autotune_compare_profile">프로파일 비교하기</string>
+    <string name="autotune_copy_localprofile_button">로컬 프로파일로 복사하기</string>
+    <string name="autotune_update_input_profile_button">입력 프로파일 업데이트</string>
+    <string name="autotune_revert_input_profile_button">입력 프로파일 되돌리기</string>
+    <string name="autotune_copy_local_profile_message">Autotune 프로파일에서 새로운 로컬 프로파일을 생성하시겠습니까?</string>
+    <string name="autotune_update_local_profile_message">%1$s 프로파일을 Autotune 프로파일로 업데이트하시겠습니까?</string>
+    <string name="autotune_revert_local_profile_message">%1$s 프로파일을 입력 프로파일로 되돌리시겠습니까?</string>
+    <string name="autotune_profile_invalid">프로파일이 잘못되었습니다</string>
+    <string name="pump_disconnected">펌프 연결 해제됨</string>
+    <!--    autoISF -->
+    <string name="autoISF_settings_title">AutoISF 설정</string>
+    <string name="smb_delivery_settings_title">SMB 주입 설정</string>
+</resources>

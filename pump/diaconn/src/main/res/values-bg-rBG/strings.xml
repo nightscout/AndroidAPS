@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="resetpairing">Нулиране на сдвояването</string>
-    <string name="diaconn_no_device_available">Няма налично устройство</string>
+    <string name="resetpairing">Да нулирам ли информацията за сдвояване?</string>
     <string name="diaconn_pairing">Сдвояване на помпа Diaconn</string>
-    <string name="pumperror">Грешка в помпата</string>
     <string name="diaconn_g8_history_alarm">Аларми</string>
     <string name="diaconn_g8_history_basalhours">Базален по часове</string>
     <string name="diaconn_g8_history_bolus">Болуси</string>
     <string name="diaconn_g8_history_dailyinsulin">Инсулин за деня</string>
     <string name="diaconn_g8_history_refill">Презареждане</string>
     <string name="diaconn_g8_history_suspend">Спиране</string>
-    <string name="invalidpairing">Невалидна информация при сдвояване. Нов опит </string>
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
-    <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
-    <string name="largetimedifftitle">Голяма времева разлика</string>
+    <string name="largetimediff">Голяма времева разлика:\nВремето в помпата се различава с повече от 1,5 часа.\nМоля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение.\nАко е възможно, премахнете историята от помпата, преди да промените времето, или изключете затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
+    <string name="largetimedifftitle">Голяма разлика във времето</string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
     <string name="startingbolus">Стартира доставка на болус</string>
-    <string name="waitingforestimatedbolusend">Изчакване за очакван край на болус</string>
-    <string name="gettingbolusstatus">Получава болус статус</string>
+    <string name="waitingforbolusend">Изчакване за приключване на болус</string>
+    <string name="gettingbolusstatus">Взема болус статус</string>
     <string name="stoppingtempbasal">Спира временен базал</string>
     <string name="settingtempbasal">Настройва временен базал</string>
     <string name="settingextendedbolus">Настойва удължен болус</string>
@@ -26,21 +23,16 @@
     <string name="updatingbasalrates">Обновява базални стойности</string>
     <string name="description_pump_diaconn_g8">Интеграция на помпа за Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
     <string name="commanderror">Грешка при команда</string>
     <string name="speederror">Скорост грешка</string>
     <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
     <string name="boluserrorcode">Стартирано: %1$.2fЕ Доставено: %2$.2fЕ Код на грешка: %3$s</string>
-    <string name="bolusspeed">Скорост на болус</string>
     <string name="selectedpump">Избрана помпа</string>
-    <string name="diaconn_g8_bluetooth_status">Състояние на Bluetooth</string>
     <string name="bolus_step">Стъпка при болус</string>
     <string name="basal_step">Стъпка при базал</string>
-    <string name="pump_firmware_label">Фърмуер</string>
-    <string name="diaconn_g8_user_options">ОПЦИИ НА ПОТРЕБИТЕЛЯ</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
-    <string name="processinghistory">"Обработва се събитие "</string>
+    <string name="processinghistory">Обработва се събитие</string>
     <string name="diaconn_g8_history_tempbasal">Временен базал</string>
     <string name="diaconng8_pump_settings">Настройки на помпа Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Звукова</string>
@@ -71,7 +63,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Добави \"смяна на батерията\" в Найтскаут, когато е открито в историята</string>
     <string name="diaconn_g8_logbatterychange_title">Записвай смяната на батерия</string>
     <string name="diaconn_g8_logsyncinprogress">Извършва се синхронизация на логовете</string>
-    <string name="diaconn_g8_loginsulinshorage">Недостиг на инулин</string>
+    <string name="diaconn_g8_loginsulinshorage">Недостиг на инсулин</string>
     <string name="diaconn_g8_logbatteryshorage">Слаба батерия</string>
     <string name="diaconn_g8_logneedleprime">Пълнене на игла: %1$.2fЕ</string>
     <string name="diaconn_g8_loginjectorprime">Пълнене на инжектор: %1$.2fЕ</string>
@@ -85,7 +77,7 @@
     <string name="diaconn_g8_reasoncomplete">Завършена</string>
     <string name="diaconn_g8_reasoninjectonblock">Инжектирането е блокирано</string>
     <string name="diaconn_g8_reasonbatteryshortage">Слаба батерия</string>
-    <string name="diaconn_g8_reasoninsulinshortage">Недостиг на инулин</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Недостиг на инсулин</string>
     <string name="diaconn_g8_reasonuserstop">Спрян от потребител</string>
     <string name="diaconn_g8_reasonsystemreset">Системен рестарт</string>
     <string name="diaconn_g8_reasonother">Друго</string>
@@ -101,8 +93,8 @@
     <string name="diaconn_g8_logalarmblock">Инжектирането е блокирано (%s)</string>
     <string name="diaconn_g8_lgorelease">базална стойност (%s)</string>
     <string name="diaconn_g8_lgosuspend">базал изключен (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Dual Nomarl Success</string>
-    <string name="diaconn_g8_logdualsquarestart">Двоен нормален успешен</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Двоен нормален успешен</string>
+    <string name="diaconn_g8_logdualsquarestart">Двоен квадратен старт</string>
     <string name="diaconn_g8_logdualsquaresuccess">Двоен квадратен успешен</string>
     <string name="diaconn_g8_logsquarestart">Квадратен старт</string>
     <string name="diaconn_g8_logsquaresuccess">Квадратен успешен</string>
@@ -133,4 +125,14 @@
     <string name="diaconn_g8_errorcode_36">Спирането на временния базал се отхвърля, когато временният базал не е активиран</string>
     <string name="diaconn_g8_cloudsend_summary">Изпрати логовете на помпата до Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Синхронизиране</string>
+    <string name="bolus_speed_1">1 Е/мин</string>
+    <string name="bolus_speed_2">2 Е/мин</string>
+    <string name="bolus_speed_3">3 Е/мин</string>
+    <string name="bolus_speed_4">4 Е/мин</string>
+    <string name="bolus_speed_5">5 Е/мин</string>
+    <string name="bolus_speed_6">6 Е/мин</string>
+    <string name="bolus_speed_7">7 Е/мин</string>
+    <string name="bolus_speed_8">8 Е/мин</string>
+    <string name="diaconn_pairing_successful">Успешно свързване!</string>
+    <string name="diaconn_pairing_successful_message">Помпата е свързана и готова за употреба.</string>
 </resources>

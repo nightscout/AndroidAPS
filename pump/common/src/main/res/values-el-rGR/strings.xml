@@ -18,6 +18,17 @@
     <string name="pump_cmd_desc_get_tbr">Λήψη προσωρινού βασικού ρυθμού</string>
     <string name="pump_cmd_desc_cancel_tbr">Ακύρωση προσωρινού βασικού ρυθμού</string>
     <string name="pump_cmd_desc_set_tbr">Ρύθμιση προσωρινού βασικού ρυθμού</string>
+    <string name="pump_cmd_desc_set_bolus">Ορισμός bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Λήψη bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Ακύρωση bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Λήψη υπόλοιπης ινσουλίνης</string>
+    <string name="pump_cmd_desc_get_battery_status">Λήψη κατάστασης μπαταρίας</string>
+    <string name="pump_cmd_desc_get_time">Λήψη ώρας</string>
+    <string name="pump_cmd_desc_set_time">Ορισμός ώρας</string>
+    <string name="pump_cmd_desc_get_pump_status">Λήψη κατάστασης αντλίας</string>
+    <string name="pump_cmd_desc_get_history">Λήψη ιστορικού</string>
+    <string name="pump_cmd_desc_get_history_params">Λήψη ιστορικού %s</string>
+    <string name="pump_cmd_desc_custom">Προσαρμοσμένη εντολή</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Βασικοί</string>
     <string name="history_group_configuration">Ρύθμιση παραμέτρων</string>
@@ -39,28 +50,10 @@
     <string name="time_last_3_hours">Τελευταίες 3 ώρες</string>
     <string name="time_last_6_hours">Τελευταίες 6 ώρες</string>
     <string name="time_last_12_hours">Τελευταίες 12 ώρες</string>
+    <string name="time_last_24_hours">Τελευταίες 24 ώρες</string>
     <string name="time_last_2_days">Τελευταίες 2 μέρες</string>
     <string name="time_last_4_days">Τελευταίες 4 μέρες</string>
     <string name="time_last_week">Τελευταία εβδομάδα</string>
     <string name="time_last_month">Τελευταίος μήνας</string>
-    <!-- BLE Config -->
-    <string name="ble_config_scan_selected">Επιλεγμένο</string>
-    <string name="ble_config_scan_scanning">Σάρωση</string>
-    <string name="ble_config_scan_finished">Η σάρωση ολοκληρώθηκε</string>
-    <string name="ble_config_scan_error">Λάθος σάρωσης: %1$d</string>
-    <string name="ble_config_remove">Μετακίνηση</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Τύπος:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d ημέρες</item>
-        <item quantity="other">%1$d ημέρες</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d ώρα πριν</item>
-        <item quantity="other">%1$d ώρες πριν</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d ημέρα πριν</item>
-        <item quantity="other">%1$d ημέρες πριν</item>
-    </plurals>
 </resources>

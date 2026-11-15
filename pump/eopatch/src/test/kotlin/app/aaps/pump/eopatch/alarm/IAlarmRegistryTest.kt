@@ -4,8 +4,6 @@ import app.aaps.pump.eopatch.core.code.PatchAeCode
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Maybe
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.anyBoolean
-import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`

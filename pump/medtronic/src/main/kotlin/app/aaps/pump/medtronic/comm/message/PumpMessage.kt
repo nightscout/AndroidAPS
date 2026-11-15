@@ -34,7 +34,7 @@ class PumpMessage : RLMessage {
         this.aapsLogger = aapsLogger
     }
 
-    @Suppress("unused") val isErrorResponse: Boolean
+    val isErrorResponse: Boolean
         get() = error != null
 
     fun init(packetType: PacketType?, address: ByteArray?, commandType: MedtronicCommandType?, messageBody: MessageBody?) {

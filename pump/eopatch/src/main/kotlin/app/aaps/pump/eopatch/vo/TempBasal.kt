@@ -4,7 +4,7 @@ import app.aaps.pump.eopatch.CommonUtils
 import app.aaps.pump.eopatch.FloatFormatters
 import app.aaps.pump.eopatch.code.UnitOrPercent
 import java.util.Locale
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 class TempBasal {
 
@@ -17,10 +17,11 @@ class TempBasal {
     var running = false
 
     val endTimestamp: Long
-        get() = if (this.startTimestamp == 0L) 0 else this.startTimestamp + TimeUnit.MINUTES.toMillis(this.durationMinutes)
+        get() = if (this.startTimestamp == 0L) 0 else this.startTimestamp + this.durationMinutes.minutes.inWholeMilliseconds
 
-    val doseUnitText: String
-        get() = String.format("%s U/hr", FloatFormatters.insulin(doseUnitPerHour))
+    /** The rate without a unit: the messages that show it carry "U/hr" themselves, so "U/hr" was there twice. */
+    val doseText: String
+        get() = FloatFormatters.insulin(doseUnitPerHour)
 
     val remainTimeText: String
         get() {

@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nunca contactada</string>
+    <string name="pump_status_sleeping">Em repouso</string>
+    <string name="pump_status_waking_up">A acordar</string>
+    <string name="pump_status_active">Ativa</string>
+    <string name="pump_status_error_comm">Erro de comunicação</string>
+    <string name="pump_status_timeout_comm">Tempo de comunicação excedido</string>
+    <string name="pump_status_invalid_config">Configuração inválida</string>
+    <string name="medtronic_pump_encoding_title">Codificação Medtronic</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codificação 4b6b por software</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificação 4b6b por hardware</string>
+    <string name="medtronic_pump_frequency_us_ca">EUA e Canadá (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mundial (868 MHz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Procurar</string>
-    <string name="riley_link_ble_config_scan_stop">Parar</string>
-    <string name="riley_link_ble_config_scan_selected">Seleccionado</string>
-    <string name="riley_link_ble_config_scan_title">Procura RileyLink</string>
     <string name="riley_link_ble_config_scan_scanning">A procurar</string>
-    <string name="riley_link_ble_config_scan_finished">Procura terminada</string>
-    <string name="riley_link_ble_config_scan_error">Erro de Procura: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Nunca</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink Actualmente Seleccionado</string>
-    <string name="riley_link_ble_config_remove_riley_link">Remover</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Tem certeza que deseja remover o RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remover RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Nenhum RileyLink seleccionado</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Definições</string>
-    <string name="rileylink_settings_tab2">Histórico</string>
     <string name="rileylink_status">Estado do RileyLink</string>
     <string name="medtronic_pump_status">Estado da Bomba</string>
-    <string name="title_activity_rileylink_settings">Definições do RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Endereço:</string>
     <string name="rileylink_name">Nome:</string>
@@ -54,16 +52,15 @@
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Dispositivo não é RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink inacessível</string>
-    <string name="rileylink_error_bt_disabled">Bluetooth desactivado</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth desativado</string>
     <string name="rileylink_error_no_bt_adapter">Nenhum Adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">TuneUp Falhou</string>
-    <string name="rileylink_error_pump_unreachable">Bomba inacessível</string>
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Mostrar o nível de bateria reportada pelo OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Mostrar o nível de bateria reportado pelo OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NÃO trabalha com o RileyLink original. Pode não funcionar com outras alternativas ao RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
@@ -75,5 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Usar Pesquisa</string>
     <string name="orange_use_scanning_level_summary">Pesquise antes de se conectar ao OrangeLink, isso deve melhorar as ligações (também pode ser usado com outros RileyLink, se necessário)</string>
-    <string name="rileylink_configuration">Configuração RileyLink</string>
+    <string name="rileylink_pair">Emparelhar RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink emparelhado com sucesso</string>
+    <string name="rileylink_config_reset">Configuração do RileyLink reposta</string>
 </resources>

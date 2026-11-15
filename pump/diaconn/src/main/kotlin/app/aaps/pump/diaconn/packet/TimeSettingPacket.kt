@@ -1,17 +1,17 @@
 package app.aaps.pump.diaconn.packet
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import dev.zacsweers.metro.Inject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import javax.inject.Inject
 
 /**
  * TimeSettingPacket Request Packet
  */
 class TimeSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var time: Long = 0,
     private var offset: Int = 0
 ) : DiaconnG8Packet(injector) {

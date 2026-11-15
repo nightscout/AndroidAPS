@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Зміна літнього часу через 24 години або менше</string>
+    <string name="dst_loop_disabled_warning">Менше 3 годин тому змінився літній час — закриту петлю вимкнено</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Звільніть щонайменше %1$d МБ внутрішньої пам’яті! Петлю вимкнено!</string>
+    <!-- Version Checker -->
+    <string name="application_expired">Термін дії застосунку закінчився</string>
+    <string name="running_invalid_version">Виявлено, що ви використовуєте недійсну версію. Петлю вимкнено!</string>
+    <string name="versionavailable">Доступна версія %1$s</string>
+    <string name="version_expire">Термін дії версії %1$s закінчується %2$s, після цього вона перейде в режим LGS</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Використано перераховані дані</string>
+    <string name="bg_too_close">Значення ГК надто близькі:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">перераховано</string>
+    <string name="a11y_bg_quality_doubles">дубльовані записи</string>
+    <string name="a11y_bg_quality_flat">Плоскі дані, ймовірно некоректні</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Обмеження подовженого болюсу до %1$.1f Од через %2$s</string>
+    <string name="limitingcarbs">Обмеження вуглеводів до %1$d г через %2$s</string>
+    <string name="safety">Безпека</string>
+    <string name="pumpisnottempbasalcapable">Помпа не підтримує тимчасові базали</string>
+    <string name="closed_loop_disabled_on_dev_branch">Запущено версію для розробників. Закриту петлю вимкнено.</string>
+    <string name="closed_loop_disabled_with_eb">Закриту петлю вимкнено через активний подовжений болюс</string>
+    <string name="smbalwaysdisabled">SMB завжди і після вуглеводів вимкнено, бо активне джерело ГК не підтримує розширене фільтрування</string>
+    <string name="smbnotallowedinopenloopmode">SMB не дозволено в режимі відкритої петлі</string>
+    <string name="maxvalueinpreferences">максимальне значення в налаштуваннях</string>
+    <string name="hardlimit">жорстке обмеження</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Виконано, відмінна робота!</string>
+    <string name="not_completed_yet">Ще не виконано</string>
+    <string name="time_elapsed">Час, що минув</string>
+    <string name="hasbgdata">Дані ГК доступні з обраного джерела</string>
+    <string name="synchaswritepermission">Сервіс синхронізації має право запису</string>
+    <string name="loopenabled">Петлю увімкнено</string>
+    <string name="apsselected">APS вибрано</string>
+    <string name="closedmodeenabled">Закритий режим увімкнено</string>
+    <string name="description_objectives">Навчальна програма</string>
+    <string name="doyouwantresetstart">Бажаєте скинути початок завдання? Ви можете втратити свій прогрес.</string>
+    <string name="objectives_button_unfinish">Скинути стан «завершено»</string>
+    <string name="objectives_button_unstart">Скинути стан «розпочато»</string>
+    <string name="bg_doubled_lgs">Режим LGS через подвоєні значення в джерелі ГК</string>
+</resources>

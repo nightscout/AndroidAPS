@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_calibration_name">Nessuna calibrazione</string>
+    <string name="description_no_calibration">"Nessuna correzione di calibrazione applicata. I valori del sensore sono usati così come sono. Usala quando il sensore è già calibrato in fabbrica e preciso."</string>
+    <string name="linear_calibration_name">Calibrazione lineare</string>
+    <string name="description_linear_calibration">"Correzione di calibrazione lineare per ogni sensore (pendenza e offset), calcolata dalle tue misure capillari. Le misure recenti hanno un peso maggiore. La correzione viene applicata dopo l'inizio della sessione del sensore attuale; le prime 2 ore vengono saltate come riscaldamento."</string>
+    <string name="sensor_change_detected_text">Possibile cambiamento del sensore rilevato in %1$s. Segnare come nuovo sensore?</string>
+    <string name="sensor_change_detected_action">Registra cambio sensore</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registra un cambio sensore per abilitare la calibrazione.</string>
+    <string name="cal_status_warmup">Riscaldamento del sensore — calibrazione attiva dopo %1$s.</string>
+    <string name="cal_status_need_more_entries">Servono almeno 2 voci di capillare (ora %1$d).</string>
+    <string name="cal_status_unsafe_fit">Adattamento fuori dall\'intervallo sicuro — calibrazione non applicata.</string>
+    <string name="cal_status_applied">Calibrazione applicata.</string>
+    <string name="cal_status_applied_offset_only">Calibrazione solo offset applicata — intervallo del sensore troppo stretto per la pendenza.</string>
+    <string name="cal_status_applied_slope_clamped">Calibrazione applicata — pendenza limitata all\'intervallo sicuro. Aggiungi altre voci per allentare il limite.</string>
+    <string name="cal_slope_offset">Pendenza %1$.2f, correzione a metà intervallo %2$s</string>
+    <string name="cal_session_started">Sessione iniziata: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registra cambio sensore</string>
+    <string name="cal_add_calibration">Aggiungi calibrazione</string>
+    <string name="cal_entries_header">Voci di capillare (%1$d)</string>
+    <string name="cal_no_entries">Ancora nessuna voce di capillare.</string>
+    <string name="cal_entry_pair">Capillare %1$s → sensore %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Voce %1$d/%2$d · %3$s · sensore %4$s → BG %5$s</string>
+</resources>

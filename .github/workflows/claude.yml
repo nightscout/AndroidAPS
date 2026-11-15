@@ -12,11 +12,15 @@ on:
 
 jobs:
   claude:
+    # The first line keeps this out of forks. A fork has no CLAUDE_CODE_OAUTH_TOKEN, so an @claude
+    # comment in somebody's own copy of the repo could only ever produce a failed run and a failure
+    # mail. A fork owner who has their own token can opt in with the repository variable RUN_CI=true.
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.repository == 'nightscout/AndroidAPS' || vars.RUN_CI == 'true') &&
+      ((github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude'))))
     runs-on: ubuntu-latest
     permissions:
       contents: read

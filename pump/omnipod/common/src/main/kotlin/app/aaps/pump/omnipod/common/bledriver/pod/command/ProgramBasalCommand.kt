@@ -9,7 +9,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.insulin.program.util.P
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ProgramReminder
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.Date
 
 // Always preceded by 0x1a ProgramInsulinCommand
 class ProgramBasalCommand private constructor(

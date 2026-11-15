@@ -1,39 +1,76 @@
 import kotlin.math.min
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
-    id("kotlin-android")
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
+    id("kmp-android-library")
 }
 
-android {
-    namespace = "app.aaps.shared.impl"
-    defaultConfig {
-        minSdk = min(Versions.minSdk, Versions.wearMinSdk)
+kotlin {
+    android {
+        namespace = "app.aaps.shared.impl"
+        minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // shared with :wear
+        // Off by default for a multiplatform library. This module owns the watchface view key strings
+        // and a manifest <queries> block, so it must be on.
+        androidResources { enable = true }
+        // Restated from test-module-dependencies: without isReturnDefaultValues the android.text stubs
+        // throw instead of returning defaults, and without isIncludeAndroidResources the R jars never
+        // reach the test classpath.
+        withHostTest {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
     }
-}
 
-dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:utils"))
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+                // EncryptedKeyValueStore. The multiplatform core only, not datastore-preferences: the
+                // store has its own encrypted file format instead of the preferences protobuf.
+                api(libs.androidx.datastore.core)
+                // The file storage. DataStore has no other one on iOS, so all platforms use this one.
+                implementation(libs.androidx.datastore.core.okio)
+            }
+        }
 
-    //Logger
-    api(libs.org.slf4j.api)
-    api(libs.com.github.tony19.logback.android)
+        // Runs on Android and on the iOS simulator from one source. The values checked there are
+        // timestamps and wire format strings, so a platform difference would be a data bug.
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
 
-    api(libs.com.caverock.androidsvg)
+        androidMain {
+            dependencies {
+                implementation(project(":core:utils"))
 
-    api(libs.kotlinx.datetime)
+                //Logger
+                implementation(libs.org.slf4j.api)
+                runtimeOnly(libs.com.github.tony19.logback.android)
 
-    api(libs.io.reactivex.rxjava3.rxandroid)
-    api(libs.net.danlew.android.joda)
+                implementation(libs.com.caverock.androidsvg)
 
-    api(libs.com.google.dagger.android.support)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.android.processor)
+                implementation(libs.io.reactivex.rxjava3.rxandroid)
+                runtimeOnly(libs.net.danlew.android.joda)
+            }
+        }
+
+        // Hand written rather than taken from test-module-dependencies, which applies
+        // com.android.library and so cannot be used by a multiplatform module.
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.junit.jupiter)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.com.google.truth)
+                implementation(libs.joda.time)
+                implementation(libs.org.apache.commons.lang3)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+    }
 }

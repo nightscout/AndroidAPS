@@ -9,7 +9,6 @@ import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import androidx.wear.watchface.complications.data.TimeDifferenceComplicationText
 import androidx.wear.watchface.complications.data.TimeDifferenceStyle
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.AndroidInjection
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
@@ -22,11 +21,6 @@ import java.util.concurrent.TimeUnit
  */
 class SgvComplicationExt1 : ModernBaseComplicationProviderService() {
 
-    // Not derived from DaggerService, do injection here
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun buildComplicationData(
         type: ComplicationType,

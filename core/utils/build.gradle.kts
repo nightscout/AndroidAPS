@@ -1,42 +1,87 @@
 import kotlin.math.min
 
 plugins {
-    alias(libs.plugins.android.library)
-    id("kotlin-android")
-    kotlin("plugin.allopen")
-    id("android-module-dependencies")
-    id("all-open-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
+    id("kmp-android-library")
 }
 
-android {
-    namespace = "app.aaps.core.utils"
-    defaultConfig {
-        minSdk = min(Versions.minSdk, Versions.wearMinSdk)
+kotlin {
+    android {
+        namespace = "app.aaps.core.utils"
+        minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // Compatible with wear module
+        // Creates the androidHostTest compilation, which also pulls in commonTest.
+        withHostTest { }
     }
-}
 
-dependencies {
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(libs.kotlinx.datetime)
+                // JsonLenientRead reads kotlinx documents from common code. The androidMain block
+                // below keeps its own `api` on the same artifact for the consumers that resolve it
+                // transitively from there.
+                api(project.dependencies.platform(libs.kotlinx.serialization.bom))
+                api(libs.kotlinx.serialization.json)
+            }
+        }
 
-    api(libs.net.danlew.android.joda)
+        // CryptoUtil is plain javax.crypto and is shared with desktop, so its Base64 has to be on
+        // the JVM classpath too. A Java jar, so the same artifact serves both.
+        jvmMain {
+            dependencies {
+                api(libs.com.madgag.spongycastle)
+            }
+        }
 
-    //Firebase
-    api(platform(libs.com.google.firebase.bom))
-    api(libs.com.google.firebase.analytics)
-    api(libs.com.google.firebase.crashlytics)
-    // StatsActivity not in use now
-    // api(libs.com.google.firebase.messaging)
-    // api(libs.com.google.firebase.auth)
-    // api(libs.com.google.firebase.database)
+        androidMain {
+            dependencies {
+                // Everything below was `api` on the old android library and several of the 24
+                // consumer modules resolve these transitively, so they must stay exported. They are
+                // JVM/Android only, which is exactly why they belong to this source set.
+                api(libs.net.danlew.android.joda)
+                api(project.dependencies.platform(libs.kotlinx.serialization.bom))
+                api(libs.kotlinx.serialization.json)
 
-    //CryptoUtil
-    api(libs.com.madgag.spongycastle)
-    api(libs.com.google.crypto.tink)
+                //Firebase
+                api(project.dependencies.platform(libs.com.google.firebase.bom))
+                api(libs.com.google.firebase.analytics)
+                api(libs.com.google.firebase.crashlytics)
 
-    //WorkManager
-    api(libs.androidx.work.runtime) // DataWorkerStorage
+                //CryptoUtil
+                api(libs.com.madgag.spongycastle)
+                api(libs.com.google.crypto.tink)
 
-    api(libs.com.google.dagger.android)
-    api(libs.com.google.dagger.android.support)
+                //WorkManager
+                api(libs.androidx.work.runtime) // Inbox, WorkerDataBuilder
+
+                // ProcessLifecycleOwner for DeferredForegroundStart
+                implementation(libs.androidx.lifecycle.process)
+
+            }
+        }
+
+        // Hand written rather than taken from test-module-dependencies, which applies
+        // com.android.library and so cannot be used here. Same approach as :core:keys.
+        // Tests of commonMain classes belong here: androidHostTest runs on the JVM only.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+
+            }
+        }
+
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.com.google.truth)
+                implementation(libs.org.mockito.kotlin)
+                // JsonHelperTest needs a REAL org.json. On the Android unit-test classpath the
+                // platform one is a stub that throws "not mocked"; test-module-dependencies used to
+                // supply the real thing transitively through jsonassert, and this module can no
+                // longer apply that plugin. This is AOSP's own implementation, repackaged.
+                implementation(libs.org.json.android)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+    }
 }

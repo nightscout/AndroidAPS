@@ -7,32 +7,18 @@
     <string name="pump_status_active">Aktiv</string>
     <string name="pump_status_error_comm">Feil med kommunikasjon</string>
     <string name="pump_status_timeout_comm">Tidsavbrudd ved kommunikasjon</string>
-    <string name="pump_status_pump_unreachable">Pumpe er utilgjengelig</string>
     <string name="pump_status_invalid_config">Ugyldig konfigurasjon</string>
+    <string name="medtronic_pump_encoding_title">Medtronic-koding</string>
     <string name="medtronic_pump_encoding_4b6b_local">Programvare 4b6b-koding</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Maskinvare 4b6b-koding</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Globalt (868 Mhz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Søk</string>
-    <string name="riley_link_ble_config_scan_stop">Stopp</string>
-    <string name="riley_link_ble_config_scan_selected">Valgt</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink søk</string>
     <string name="riley_link_ble_config_scan_scanning">Søker</string>
-    <string name="riley_link_ble_config_scan_finished">Søk fullført</string>
-    <string name="riley_link_ble_config_scan_error">Søk feilet: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Aldri</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Valgt RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Fjern</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Er du sikker på at du vil fjerne din RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Fjern RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Ingen RileyLink er valgt</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Innstillinger</string>
-    <string name="rileylink_settings_tab2">Historikk</string>
     <string name="rileylink_status">RileyLink Status</string>
     <string name="medtronic_pump_status">Pumpe Status</string>
-    <string name="title_activity_rileylink_settings">RileyLink Innstillinger</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresse:</string>
     <string name="rileylink_name">Navn:</string>
@@ -69,7 +55,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth deaktivert</string>
     <string name="rileylink_error_no_bt_adapter">Ingen Bluetooth adapter</string>
     <string name="rileylink_error_tuneup_failed">TuneUp mislyktes</string>
-    <string name="rileylink_error_pump_unreachable">Pumpe utilgjengelig</string>
     <string name="rileylink_error_pod_unreachable">Pod utilgjengelig</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic pumpe</string>
@@ -87,5 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Bruk Skanning</string>
     <string name="orange_use_scanning_level_summary">Skann før du kobler til OrangeLink, det bør forbedre tilkoblingene (kan også brukes med andre RileyLink enheter, hvis nødvendig)</string>
-    <string name="rileylink_configuration">RileyLink konfigurasjon</string>
+    <string name="rileylink_pair">Par RileyLink</string>
+    <string name="rileylink_pair_success">RilyLink er koblet sammen</string>
+    <string name="rileylink_config_reset">Tilbakestilling av RileyLink-konfigurasjon</string>
 </resources>

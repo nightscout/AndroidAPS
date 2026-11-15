@@ -6,25 +6,18 @@ import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.wear.interaction.utils.DisplayFormat
-import app.aaps.wear.interaction.utils.SmallestDoubleString
-import dagger.android.AndroidInjection
+import app.aaps.wear.R
 
 /**
  * COB+IOB Complication
  *
  * Shows both carbs on board (COB) and insulin on board (IOB)
- * Text: COB value
- * Title: IOB value (minimized to fit)
+ * Text: IOB value
+ * Title: COB value
  *
  */
 class CobIobComplication : ModernBaseComplicationProviderService() {
 
-    // Not derived from DaggerService, do injection here
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun buildComplicationData(
         type: ComplicationType,
@@ -36,13 +29,13 @@ class CobIobComplication : ModernBaseComplicationProviderService() {
         return when (type) {
             ComplicationType.SHORT_TEXT      -> {
                 val cob = statusData.cob
-                val iob = SmallestDoubleString(statusData.iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MAX_FIELD_LEN_SHORT)
+                val iob = statusData.iobSum + getString(R.string.insulin_unit_short)
 
                 ShortTextComplicationData.Builder(
-                    text = PlainComplicationText.Builder(text = cob).build(),
-                    contentDescription = PlainComplicationText.Builder(text = "COB $cob IOB $iob").build()
+                    text = PlainComplicationText.Builder(text = iob).build(),
+                    contentDescription = PlainComplicationText.Builder(text = "IOB $iob COB $cob").build()
                 )
-                    .setTitle(PlainComplicationText.Builder(text = iob).build())
+                    .setTitle(PlainComplicationText.Builder(text = cob).build())
                     .setTapAction(complicationPendingIntent)
                     .build()
             }
@@ -55,4 +48,5 @@ class CobIobComplication : ModernBaseComplicationProviderService() {
     }
 
     override fun getProviderCanonicalName(): String = CobIobComplication::class.java.canonicalName!!
+    override fun getComplicationAction(): ComplicationAction = ComplicationAction.WIZARD
 }

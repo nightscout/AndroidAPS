@@ -96,8 +96,10 @@ enum class PumpHistoryEntryType(
     /* TODO */ Sensor_0x51(0x51, "Unknown Event 0x51", PumpHistoryEntryGroup.Unknown),  //
     /* TODO */ Sensor_0x52(0x52, "Unknown Event 0x52", PumpHistoryEntryGroup.Unknown),  //
     ChangeSensorAlarmSilenceConfig(0x53, "Sensor Alarm Silence Config", PumpHistoryEntryGroup.Configuration, 2, 5, 1),  // 8
-    /* TODO */ Sensor_0x54(0x54, "Unknown Event 0x54", PumpHistoryEntryGroup.Unknown),  // Ian54
-    /* TODO */ Sensor_0x55(0x55, "Unknown Event 0x55", PumpHistoryEntryGroup.Unknown),  //
+    // 0x54 is 64 bytes and 0x55 is 55 bytes, as in MinimedKit and on a 723 (#1398). With the 7 bytes they had
+    // before, the rest of the record was read as more records, one of them a suspend dated 30.00.2060.
+    Sensor_0x54(0x54, "Unknown Event 0x54", PumpHistoryEntryGroup.Unknown, 2, 5, 57),  // Ian54
+    Sensor_0x55(0x55, "Unknown Event 0x55", PumpHistoryEntryGroup.Unknown, 2, 5, 48),  //
     ChangeSensorRateOfChangeAlertSetup(0x56, "Sensor Rate Of Change Alert Setup", PumpHistoryEntryGroup.Configuration, 2, 5, 5),  // 12
     ChangeBolusScrollStepSize(0x57, "Change Bolus Scroll Step Size", PumpHistoryEntryGroup.Configuration),  //
     BolusWizardSetup(0x5a, "Bolus Wizard Setup (522)", PumpHistoryEntryGroup.Configuration, 2, 5, 117),  // V2: 522+[B=143]; V6: 124, v6: 137, v7: 117/137 [523]
@@ -153,7 +155,8 @@ enum class PumpHistoryEntryType(
             BolusWizardSetup.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137))
             BolusWizard.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15))
             BolusReminder.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 2))
-            ChangeSensorSetup2.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 34))
+            // 41 bytes only on pumps with low suspend (x54), as in MinimedKit. A 723 writes 37 (#1398).
+            ChangeSensorSetup2.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_554andHigher, 34))
         }
 
         fun getByCode(opCode: Byte): PumpHistoryEntryType =

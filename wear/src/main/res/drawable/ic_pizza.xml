@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same drawing as IcPizza in core/ui, which the watch cannot use (Compose ImageVector in a module the watch does not depend on). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,3.2 L3.6,19.2 Q8,21.6 12,22 Q16,21.6 20.4,19.2 Z M4.4,18.8 Q8,20.8 12,21.2 Q16,20.8 19.6,18.8 M11.6,12 A1.2,1.2 0 1 1 8.8,12 A1.2,1.2 0 1 1 11.6,12 M15.6,13.6 A1.2,1.2 0 1 1 13.2,13.6 A1.2,1.2 0 1 1 15.6,13.6 M12.4,16.8 A1.2,1.2 0 1 1 10,16.8 A1.2,1.2 0 1 1 12.4,16.8 M9.1,15.2 A0.7,0.7 0 1 1 7.7,15.2 A0.7,0.7 0 1 1 9.1,15.2 M8.7,15.2 A0.3,0.3 0 1 1 8.1,15.2 A0.3,0.3 0 1 1 8.7,15.2 M13.9,9.6 A0.7,0.7 0 1 1 12.5,9.6 A0.7,0.7 0 1 1 13.9,9.6 M13.5,9.6 A0.3,0.3 0 1 1 12.9,9.6 A0.3,0.3 0 1 1 13.5,9.6 M15.6,17.2 Q16.4,16.4 17.2,17.2 Q16.4,18 15.6,17.2"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

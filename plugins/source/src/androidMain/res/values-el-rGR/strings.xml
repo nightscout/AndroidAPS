@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Λήψη τιμών γλυκόζης από το xDrip+ και συμβατές εφαρμογές (Juggluco κ.λπ.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="description_source_dexcom">Λάβετε τις τιμές BG από την εφαρμογή \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Λάβετε τιμές από την εφαρμογή Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Λάβετε τιμές από την εφαρμογή Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
+    <string name="random_bg">Τυχαίες τιμές BG</string>
+    <string name="description_source_random_bg">Δημιουργία τυχαίων δεδομένων BG (λειτουργία επίδειξης μόνο)</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Λήψη δεδομένων γλυκόζης από την εφαρμογή Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Λήψη δεδομένων γλυκόζης από την τροποποιημένη εφαρμογή Sibionic SI ή από την εφαρμογή Sibionics.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Λήψη δεδομένων γλυκόζης από την τροποποιημένη εφαρμογή Sino.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Λήψη τιμών γλυκόζης από την εφαρμογή Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Αίτημα ιστορικών δεδομένων Instara</string>
+    <string name="pref_summary_instara_history_request">Αίτημα για πιθανά ιστορικά δεδομένα που λείπουν, στο παρασκήνιο</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Ανάγνωση ειδοποιήσεων</string>
+    <string name="description_source_notification_reader">Ανάγνωση τιμών γλυκόζης από τις ειδοποιήσεις των επίσημων εφαρμογών CGM (Dexcom, Medtronic, Eversense κ.λπ.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Η εφαρμογή χρειάζεται άδεια για να λαμβάνει δεδομένα CGM από την εφαρμογή Dexcom</string>
+    <string name="permission_notification_listener_title">Πρόσβαση στις ειδοποιήσεις</string>
+    <string name="permission_notification_listener_description">Απαιτείται για την ανάγνωση τιμών γλυκόζης από τις ειδοποιήσεις της εφαρμογής CGM</string>
+    <string name="aidex">Εφαρμογή MicroTech CGM</string>
+    <string name="description_source_aidex">Λήψη τιμών CGM από LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 κ.λπ.</string>
+    <string name="aidex_sensor_expired">Ο αισθητήρας έληξε, αντικαταστήστε τον με νέο αισθητήρα</string>
+    <string name="aidex_sensor_error">Σφάλμα αισθητήρα, ελέγξτε την κατάσταση του αισθητήρα</string>
+    <string name="aidex_sensor_stabilizing">Ο αισθητήρας σταθεροποιείται, περιμένετε…</string>
+    <string name="aidex_sensor_replace">Απαιτείται αντικατάσταση αισθητήρα, αντικαταστήστε τον με νέο αισθητήρα το συντομότερο δυνατό</string>
+    <string name="aidex_signal_lost">Χάθηκε το σήμα του αισθητήρα, ελέγξτε τη σύνδεση</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">διπλή μέτρηση</string>
+</resources>

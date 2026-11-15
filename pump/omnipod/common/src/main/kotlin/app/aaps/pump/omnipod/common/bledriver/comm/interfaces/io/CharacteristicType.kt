@@ -1,7 +1,7 @@
 package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io
 
 import java.math.BigInteger
-import java.util.*
+import java.util.UUID
 
 enum class CharacteristicType(val value: String) {
     CMD("1a7e2441-e3ed-4464-8b7e-751e03d0dc5f"), DATA("1a7e2442-e3ed-4464-8b7e-751e03d0dc5f");

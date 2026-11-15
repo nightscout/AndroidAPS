@@ -2,7 +2,6 @@ package app.aaps.pump.omnipod.eros.data
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
-import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem.RLHistoryItemSource
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import org.joda.time.LocalDateTime

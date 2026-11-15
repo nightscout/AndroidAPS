@@ -1,0 +1,10 @@
+package app.aaps.core.keys
+
+import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
+
+enum class DoubleNonKey(
+    override val key: String,
+    override val defaultValue: Double,
+) : DoubleNonPreferenceKey {
+
+}

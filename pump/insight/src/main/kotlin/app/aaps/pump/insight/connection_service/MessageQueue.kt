@@ -44,7 +44,13 @@ class MessageQueue {
 
     fun enqueueRequest(messageRequest: MessageRequest<*>) {
         messageRequests.add(messageRequest)
-        messageRequests.sort()
+        // Highest priority first. MessagePriority is declared NORMAL, HIGHER, HIGHEST, so the
+        // natural order is lowest first - and nextRequest() takes index 0. Sorting ascending
+        // therefore sent the most urgent message LAST: a CancelBolusMessage (HIGHEST) waited behind
+        // every routine status read that was already queued. The sort is stable, so messages of
+        // equal priority keep the order they were added in, which the open/write/close
+        // configuration batch depends on.
+        messageRequests.sortDescending()
     }
 
     fun nextRequest() {

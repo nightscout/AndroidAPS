@@ -6,12 +6,12 @@ import app.aaps.pump.eopatch.CommonUtils
 import app.aaps.pump.eopatch.FloatFormatters
 import app.aaps.pump.eopatch.GsonHelper
 import app.aaps.pump.eopatch.code.PatchLifecycle
-import app.aaps.pump.eopatch.core.define.IPatchConstant.WARRANTY_OPERATING_LIFE_MILLI
+import app.aaps.pump.eopatch.core.define.IPatchConstant.Companion.WARRANTY_OPERATING_LIFE_MILLI
 import app.aaps.pump.eopatch.keys.EopatchStringNonKey
-import com.google.android.gms.common.internal.Preconditions
+import com.google.common.base.Preconditions
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 // @Singleton
 class PatchConfig : IPreference<PatchConfig> {
@@ -230,7 +230,7 @@ class PatchConfig : IPreference<PatchConfig> {
 
     fun updateNormalBasalPaused(pauseDurationHour: Float) {
         Preconditions.checkArgument(pauseDurationHour == 0.5f || pauseDurationHour == 1.0f || pauseDurationHour == 1.5f || pauseDurationHour == 2.0f)
-        this.basalPauseFinishTimestamp = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis((pauseDurationHour * 60).toLong())
+        this.basalPauseFinishTimestamp = System.currentTimeMillis() + (pauseDurationHour * 60).toLong().minutes.inWholeMilliseconds
     }
 
     fun updateNormalBasalPausedSilently() {

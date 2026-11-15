@@ -1,0 +1,453 @@
+# AndroidAPS Client-Control & Master-Authored Two-Step Execution
+
+> Consolidated reference for the signed NS `settings` round-trip channel and the role-transparent **prepare → commit** execution path that lets a paired **client** (an `AAPSCLIENT` phone with no pump) or a **watch** trigger therapy that the **master** (the `full` phone owning the pump) authors, confirms, and executes. Describes the current shipped, device-verified end state. Audience: developers extending the system.
+
+---
+
+## 1. The core idea
+
+The **master is the single source of truth for both the confirmation *and* the execution.** A client or watch never computes a dose, never builds a confirmation string, and never delivers anything. It relays an *intent*; the master:
+
+1. computes/caps the action against **its own** live state (profile, COB, IOB, temp-target, pump),
+2. authors the exact `ConfirmationLine` list (role + color-coded text) the user will see,
+3. parks the result by an id, and
+4. delivers it once — exactly once — when the client confirms.
+
+Two structural consequences:
+
+- **One confirmation surface everywhere.** The phone dialog, every paired client, and every watch render the *master's* `ConfirmationLine` list verbatim. There is no client-built confirmation to drift out of sync.
+- **One role-transparent code path.** The same executor call runs on a master (locally) and on a client (over the signed round-trip). The role fork lives in exactly one place — `RoleBranch` — so handlers, dialogs, and the wear adapter are role-agnostic.
+
+The channel splits cleanly into two paradigms:
+
+| Paradigm | Direction | Carries | Mechanism |
+|---|---|---|---|
+| **Command** | client → master (only mutation channel) | *intent* (bolus, scene, pref edit, …) | signed `ClientControlMessage` envelope + two-step ACK |
+| **State mirroring** | master → all clients | authoritative config + active scene | `RunningConfiguration` cold/hot `settings` docs |
+
+A client never pushes state directly. It sends a command; the master processes it, applies it locally, and re-publishes the result as state.
+
+---
+
+## 2. Transport — the signed NS `settings` round-trip
+
+Everything travels as documents in the Nightscout APIv3 `settings` collection, keyed by deterministic identifiers. Commands carry only HMAC signatures. The secret itself goes through NS at most once: wrapped with the PIN in the offer doc, or not at all when the master shows it in a QR code.
+
+### 2.1 Pairing: PIN or QR code
+
+The master generates a `clientId` (UUID) and a **32-byte** secret and stores a Pending entry (`AuthorizedClientsRepository.addPending`, 2 min, `PAIR_TTL_MS`). The secret reaches the client as a `PairingPayload` (`masterInstallId`, `clientId`, `secretHex`, `expiresAt`) in one of two ways, chosen in the "Add client" dialog:
+
+- **PIN**, for a phone without a camera that is connected to Nightscout already. The payload is wrapped with an 8-digit PIN (PBKDF2-HMAC-SHA256, 200 000 rounds, then AES-256-GCM, `ClientControlPairingCrypto`) and published as `aaps_clientcontrol_offer_<clientId>`. The client finds it with `searchSettings` and the typed PIN. The offer doc is deleted permanently when the dialog closes and when the client says hello.
+- **QR code**, which also sets up Nightscout: see 2.11. The payload is inside the code; nothing is published.
+
+Then:
+
+1. The client stores the secret wrapped via `SecureEncrypt` (`ClientPairingRepository.pair()`, all keys or none).
+2. It sends **`Hello`** under `aaps_clientcontrol_hello_<clientId>`, promoting the master's entry **Pending → Active**. The hello carries a key exchange that replaces the secret at once (2.12). After a PIN it is sent right away. After a QR code the phone had no working Nightscout connection yet, so it goes out when the websocket connects: `ClientControlRoundTrip.sendHelloIfDue`, before the ping, because the master takes counters in order.
+3. **Revocation:** delete on the master removes the entry; later envelopes from that `clientId` get an "unknown clientId" log. The docs are not deleted (a soft delete would block the identifier with HTTP 410). The client's own Nightscout token is deleted too (2.11), so the phone loses Nightscout as well.
+4. **Orphan detection:** the master publishes an `authorizedClients.clientIds` roster (Active entries only) in the cold config doc; a client checks itself in, guarded by a race window (`docSrvModified ≥ pairedAt + 60s`, so a doc in flight from before `Hello` isn't mistaken for an orphan signal).
+
+### 2.2 Signed envelope, counter, validity
+
+The wire doc carries a `SignedEnvelope` + the NSv3 required fields (`date = 946684800001` constant, `utcOffset`, `app = "AAPS"`, `schemaVersion = 1`).
+
+**Canonical signature input** (HMAC-SHA256, hex-encoded, UTF-8 — `SignedEnvelope.kt`):
+
+```
+$clientId|$counter|$timestamp|$validUntil|$wantsAck|$type|$payload
+```
+
+`payload` is the already-serialized JSON of the `ClientControlMessage` (including its `@SerialName` discriminator), so the signature protects the exact bytes that travelled. Verification uses constant-time comparison (`MessageDigest.isEqual`).
+
+Independent gates on the master (`ClientControlReceiver`), in order:
+
+| Gate | Rule | On fail |
+|---|---|---|
+| **Signature** | `verifyEnvelope` against the stored secret | drop (forged `Ok` impossible) |
+| **Counter** | `envelope.counter > counterReceived` (**strictly** greater) | reject as replay (doc left for diagnostics) |
+| **Skew** | `\|timestamp − now\| ≤ ±5 min` (`MAX_TIMESTAMP_SKEW_MS`) | reject |
+| **Validity** | `now ≤ validUntil` | **consume the counter** + write terminal `Done/Expired` ack |
+
+> **The counter is the real replay defence.** Skew alone only rejects far-future/far-past forgeries; NS delivery latency (minutes when a client was offline) means in-window replays are possible, and `counter ≤ counterReceived` rejects them. The client increments the counter atomically under a process-local lock (`ClientPairingRepository.nextSignedEnvelope`); the master bumps `counterReceived` via `bumpLastSeen` **before** dispatch, so a failed execution is not retried and a duplicate delivery is skipped. A backup-restore that regresses the client's counter makes the next message fail the counter gate — **the client must re-pair** (no silent recovery; this is what keeps the replay window shut).
+
+### 2.3 Command document identifiers
+
+| Identifier prefix | Direction | Semantics |
+|---|---|---|
+| `aaps_clientcontrol_` | — | shared prefix; gates WS routing |
+| `aaps_clientcontrol_hello_<…>` | client→master | first message, Pending → Active |
+| `aaps_clientcontrol_cmd_<type>_<clientId>` | client→master | **per-type** command slot, **latest-wins** overwrite |
+| `aaps_clientcontrol_ack_<clientId>` | master→client | one ACK doc per client, overwritten in place |
+| `aaps_clientcontrol_progress_<clientId>` | master→client | live bolus-progress mirror, overwritten in place |
+| `aaps_clientcontrol_offer_<…>` | master-published | PIN-wrapped pairing offer (receiver skips it) |
+
+Per-type slots prevent cross-type collision; **same-type overwrites are intentional** (latest-wins matches "user changed their mind": tap *Sleep* then *Exercise* → *Exercise* wins). Docs are never hard-deleted on the success path — NS soft-deletes (tombstones), and the next same-type command PUTs over the slot; the counter gate still prevents re-execution. Only error-path deletes (malformed/unverifiable garbage) purge a doc.
+
+### 2.4 Two-step ACK lifecycle (Executing → Done)
+
+A command with `wantsAck = true` gets **two** signed `AckEnvelope`s written to `aaps_clientcontrol_ack_<clientId>` (correlated by `commandCounter`):
+
+1. **`Executing` / `Pending`** — written *before* dispatch ("received, applying now").
+2. **`Done` / `Ok` | `Failed` | `Expired`** — written *after* dispatch (terminal result, optional `reason` = `FailureReason` enum name, optional `payload` = signed `BolusPreview` for prepares).
+
+The client filters acks by `commandCounter`; a stale ack from a prior command is ignored. Because only **one command is in flight per client** (`AtomicBoolean inFlight`; a second concurrent dispatch returns `Rejected(Busy)`), a single ACK identifier per client suffices — no per-command id is needed. The modal blocks the UI during the wait anyway.
+
+| Phase | Status | Meaning |
+|---|---|---|
+| `Executing` | `Pending` | received, dispatching |
+| `Done` | `Ok` / `Failed` / `Expired` | terminal result |
+| `Delivery` | `Failed` | **out-of-band** late async delivery failure (§2.7) |
+
+**Fire-and-forget** commands set `wantsAck = false` (signed, so a client can't be tricked) → the master writes **no** ACK doc (saves write amplification). Used for `SceneStop`, `DismissAlarm`, `StopBolus`. The canonical ack signature input is `"$clientId|$commandCounter|$phase|$status|$reason|$payload|$timestamp"`.
+
+### 2.5 ACK reception, wait window & TTLs
+
+The client receives acks via WS push (`NSClientV3Service` matches `aaps_clientcontrol_ack_<clientId>`, parses, verifies signature, filters by counter, emits to an `ackEvents` SharedFlow with `replay = 16` so an ack landing between publish and collect isn't lost). A single `pollAck` GET is the last-chance fallback before declaring `Unconfirmed`.
+
+```
+wait deadline = validUntil + PROPAGATION_MARGIN_MS
+```
+
+The master enforces the **matching** `validUntil`, so it never applies a command *after* the client has stopped waiting; the margin (and `pollAck`) catch a last-moment ack.
+
+| Constant | Value | Use |
+|---|---|---|
+| `ROUND_TRIP_TTL_MS` | `8_000` | fast commands (default wait window) |
+| `PUMP_ROUND_TRIP_TTL_MS` | `60_000` | **pump-direct** commits (TBR / extended-bolus SET or CANCEL) |
+| `PROPAGATION_MARGIN_MS` | `2_000` | grace for the `Done` ack to travel back |
+| `PING_TTL_MS` | `10_000` | liveness probe validity |
+| `FIRE_AND_FORGET_TTL_MS` | `300_000` (5 min) | fire-and-forget validity |
+| `MAX_TIMESTAMP_SKEW_MS` | `300_000` (±5 min) | skew tolerance |
+| `MIN_MODAL_VISIBLE_MS` | `1_500` | min modal display so a sub-second round-trip doesn't flash |
+
+> **Why a 60s pump-direct window?** A bolus *delivery* can take minutes — it gets the queue-ack + progress mirror (§2.7) rather than a long wait. But a TBR/cancel is bounded by the master↔pump *connection* time (a BLE reconnect is ≤ ~1 min) and its real enacted `Ok`/`Failed` is worth waiting for. The flag lives on the dispatcher-level `Command.BolusCommit(bolusId, asAdvisor, pumpDirect)`; when set, the client waits `PUMP_ROUND_TRIP_TTL_MS`. (The *wire* `ClientControlMessage.BolusCommit` carries only `bolusId` + `asAdvisor`; the longer wait is a client-side concern derived from the in-flight `BatchAction`.)
+
+### 2.6 Liveness — `masterReachable` & the PING-PONG
+
+`masterReachable` (interface on `NsClient`, impl in `NSClientV3Plugin`) gates every two-step action and every bidirectional-pref row on a client. It is true when:
+
+```
+masterReachable = AAPSCLIENT
+               && wsConnected (5s falling-edge grace)
+               && fresh liveness signal (≤ 9 min)
+               && paired
+               && authorized (in roster, not orphan)
+               && master's client-control switch on (read with the master's rule, see §2.9)
+```
+
+Freshness is fed by **any** authenticated master signal (`_lastMasterSignalAt` bumped by): (1) a devicestatus heartbeat, (2) a **PING pong**, or (3) a live config republish. The `freshness(thresholdMs = 9 min, tickMs = 60s, pristine = false)` term re-evaluates ~every minute so a stale timestamp flips `fresh → false` within ~1 min of crossing the threshold. `pristine = false` means it **fails closed at boot** (offline until a signal arrives). The flow is shared via `stateIn(WhileSubscribed(5000))`.
+
+**PING-PONG:** the client sends `ClientControlMessage.Ping` (signed, `wantsAck = true`); the master does nothing but increment the counter and reply `AckOutcome(Ok, null)` — **the ack itself is the pong**. Any authenticated pong proves the master is alive *now*, faster than waiting for the next ~minutes-apart devicestatus heartbeat. It is sendable while `masterReachable = false` (that's the point) and fires on client start and when entering an offline-gated screen while WS is up (debounced).
+
+### 2.7 Bolus progress mirror & the late Delivery/Failed ack
+
+A bolus delivery outlives the round-trip (`Done/Ok` only means "queued"), so two async mechanisms relay the real outcome:
+
+- **Progress mirror.** On `onVerifiedBolusCommit` the master arms `progressClientId` (TTL 60s). `BolusProgressData` state changes → `writeProgress(clientId, phase, state)` throttled ~1/s to `aaps_clientcontrol_progress_<clientId>` (signed, overwritten). Phases: `Active` (start the client's progress dialog), `Complete` (100%), `Cleared` (failure/cancel). The client's own `BolusProgressData` observer drives its un-gated progress dialog. `StopBolus` (fire-and-forget) lets the client's Stop button reach `cancelAllBoluses()` on the master. The progress signature input is `"$clientId|$phase|$insulin|$percent|$status|$delivered|$stopDeliveryEnabled|$timestamp"`.
+- **Late `Delivery/Failed` ack.** If the pump fails *after* the `Done` ack already reported "queued", the master relays an out-of-band `AckPhase.Delivery / AckStatus.Failed` ack. This is handled in `onAckDoc` **before** the round-trip stream (it is *not* emitted into `ackEvents` — the `Done` ack already terminated the wait) and the client turns it into an **URGENT** alarm. A one-directional `DismissAlarm` lets the client clear the master's copy when it mutes its own (the reverse is deliberately *not* done — the master silencing its alarm must not rob the remote initiator of its failed-bolus notice).
+
+### 2.8 Applied / Rejected / Unconfirmed
+
+The client maps the round-trip to exactly three outcomes:
+
+| Outcome | When | Meaning for the user |
+|---|---|---|
+| **Applied** | `Done/Ok` before deadline (or immediate local execute on a master) | it happened |
+| **Rejected** | signature/counter/skew fail, `Done/Failed`/`Expired`, send failed, not paired, or timeout while `masterReachable = false` | definitely *did not* happen |
+| **Unconfirmed** | sent but no `Done` ack before the deadline, or connection lost mid-wait | **state unknown** — the client flips `masterReachable` offline (`forceOfflineProbe`), pings/re-pulls, and reconciles real state via sync-back |
+
+> `masterReachable` is observed as `.drop(1).filter { !it }` during a round-trip — the wait **early-aborts** to `Unconfirmed` only on a *transition* to false (connection loss), not on an initial-false (the timeout/poll path covers that).
+
+### 2.9 Hardened mode
+
+The master's client-control switch (`BooleanKey.HardenedMode`, still stored as `ns_allow_client_control`) is also **hardened mode**: while it is on, the master takes changes only through this signed channel, never directly from Nightscout.
+
+- **One rule, `Preferences.hardenedMode`.** On the master it is the switch, read with `get()`, so simple mode turns it on (`defaultedBySM`). On a client it is the master's synced value of the switch, read with the same rule (simple mode is synced too), and only while the client is paired. An unpaired client is a viewer and keeps its own settings. Both phones get the same answer because they apply the same rule to the same values.
+- **Forced keys (`defaultedByHardenedMode`).** While hardened mode is on, `PreferencesImpl.get()` returns the key's default and `PreferenceState` hides its row: the nine `NsClientAccept*` keys (off), `NsClientUploadData` and `BgSourceUploadToNs` (on), and `NsClient3UseWs` (on). The code that reads these keys does not change. The Synchronization screen disappears with them (`hideParentScreenIfHidden`).
+- **What still comes from Nightscout:** BG when Nightscout is the BG source (`NsIncomingDataProcessor.acceptsGlucose`), Full sync (the way to load the history, profiles included, on a new master), and food. SMS commands are not affected.
+- **WebSocket.** Simple mode keeps `NsClient3UseWs` on for every phone; hardened mode keeps it on for the master and for paired clients. So "switch on" always means the master can serve commands. That is why the published switch is no longer rewritten (it travels like every other cold key) and why there is no poll fallback for commands.
+- **Listeners.** `observe(key)` emits only the stored value, so it misses a change forced by simple mode or hardened mode. Code that must follow the value in use takes `Preferences.observeEffective(key)` or `observeHardenedMode()`: the WebSocket restart, `masterReachable`, `masterControlAllowed`, the Authorized clients switch.
+- **Stored at pairing.** Unset, the switch is on only in simple mode. On Pending → Active the master stores the value in use, so leaving simple mode later does not silently turn client control off. At master start the same is done once for clients paired before this existed (`storeClientControlSwitchIfUnset`).
+- **A WebSocket that does not work.** Data still arrives: the 5-minute tick polls whenever the socket is not connected (`NSClientV3Plugin.needsPolling`), not only when the setting is off. Client control itself needs a working WebSocket (a command is valid for seconds, a poll comes minutes later). The way out for such a host: leave simple mode, turn the switch off, then turn the WebSocket off.
+- **UI.** "Hardened mode on" with an (i) explanation on the Authorized clients screen (master, every mode; the switch row itself is hidden in simple mode) and on the client's pairing screen. The setup wizard shows the explanation instead of the button to the "accept from Nightscout" settings.
+
+### 2.10 Client roles
+
+Each paired client has a role, set on the master. The roles are a ladder (`ClientRole`, `core/keys`); each one can do everything the one below it can.
+
+| Role | Label | May do |
+|---|---|---|
+| `ReadOnly` | Read-only | nothing; it sees everything, and `Hello`/`Ping` still work, so it stays paired and shows online |
+| `MealAssistant` | Meals | bolus, wizard, QuickWizard, carbs and eCarbs, stop a bolus, dismiss the bolus-failed alarm |
+| `Caregiver` | Caregiver | every command except setting preferences: temp targets, profile switch, running mode, TBR and extended bolus, careportal and device events, scenes, deletes, calibration |
+| `Admin` | Admin | also defines presets and changes synced settings (`PreferencesUpdate`) |
+
+This is a simpler form of the per-permission idea in issue #5348. One thing that issue asks for is not possible: carbs plus temp target without bolus (a meal assistant cannot set a temp target).
+
+- **Stored on the master** in `AuthorizedClient.role` (a `String`, so a role a later build adds never fails decoding, which would empty the whole list). The user picks it in the "Add client" dialog (nothing preselected, OK stays off until one is chosen) and can change it any time with the segmented row under the client's name. A client stored before roles existed has no role and reads as `Admin`, so an update changes nothing for it. An unknown name reads as `ReadOnly`.
+- **The master is the gate.** `ClientControlReceiver.verifyAndAck` checks the role after the signature, counter and control-disabled checks. A refusal is a signed `Done/Failed` ACK with `FailureReason.NotAllowedForRole`, and the counter is used up like for any other answer. For `BatchPrepare` the needed role is the highest one of its actions (`List<BatchAction>.requiredRole`: a bolus needs Meals, anything else Caregiver).
+- **Parked actions belong to their caller.** A prepare parks under an id the client could guess, so the park keeps who made it (`RemoteCaller`, or the owner id for scenes). `PendingSlots.takeFor` and `ParkedScenes.takeFor` hand it out only to that caller and leave it in place for anyone else (`NoPending`). A client cannot commit a dose the master parked for itself, and the master cannot commit one a client parked. At commit the role is checked again against what the park needs, so a role lowered between prepare and commit refuses it (`ConfirmResult.NotAllowed` → `NotAllowedForRole`).
+- **The client learns its role** first from the pairing (`PairingPayload.role`, in the QR code and in the PIN offer), so it shows the right controls at once, then from the cold doc: `authorizedClients.roles` maps each active clientId to its role. `OrphanDetector.storeOwnRole` stores it in `StringNonKey.NsClientControlRole`; `NsClient.clientRole` is the flow the UI reads. A master is always `Admin`. No `roles` map at all (an older master) means `Admin`, since such a master does not check roles. A paired client missing from the map, and an unpaired client (unpair clears the key), is `ReadOnly`, except in a doc from before the pairing (the same 60 s race window as the orphan check): that one cannot list the new pairing yet, so the role from the pairing stays. A pairing without a role (older master) starts as `ReadOnly`. The role in the pairing is only for the UI; the master checks its own on every command.
+- **The client hides what the master would refuse.** `ElementType.role` is the lowest role for each element and `ElementType.isAvailable(ctx)` checks both its visibility and the role (`VisibilityContext.clientRole`). Compose code reads `LocalClientRole` (provided in `AapsAppRoot`) or `masterEditingEnabled(role)`. Screens that both use and define presets (temp targets, insulins, QuickWizard, profiles, scenes, automation) open in use mode below `Admin`, and synced settings rows are locked below `Admin`. A read-only client shows a banner in the Manage sheet. The Insulin and Carbs dialogs leave out their temp target switches below `Caregiver`, and the Carbs dialog then does not tick the hypo target by itself on a low: the master would refuse the carbs together with the target.
+- **A refusal is shown once.** `NotAllowedForRole` always comes back from the master, so the round-trip modal shows it. It is not in `isNotDeliveryError()`, the list of reasons the screens show again because nothing was sent.
+
+Not covered yet:
+
+- Food is written to the local database, not through the master.
+- Three watch paths still write locally on the client, and the watch does not know the role (the master still refuses, so the user sees the refusal, not a hidden button).
+- Going back to a build without roles makes the master stop checking them (fail open). A role only exists in builds that check it.
+
+### 2.11 A Nightscout token for each client, and the QR code
+
+A client needs much less from Nightscout than an admin token gives: it uploads nothing (`DataSyncSelectorV3.doUpload` does not run on a client) and sends everything to the master through `settings`. So the master makes each client its own token (`ClientTokens`) through the same API the Nightscout admin tools page uses (`/api/v2/authorization/roles` and `/subjects`, `NSAndroidClient.getAuthRoles` and the others). The master's own token must be an admin token for this; without one the QR code options say so and the PIN still works.
+
+- **The role `aaps-client`**: `*:*:read`, `api:settings:admin`, `api:settings:create`, `api:settings:update`, `notifications:*:ack`. `api:settings:admin` is not more rights: Nightscout asks for it to list `settings` (`searchSettings`, the PIN lookup) and to follow it over the websocket. The last one lets a client snooze a Nightscout alarm. The name is lowercase because the admin tools page lowercases role names when it saves a subject.
+- **The master keeps the role as it is.** `ClientTokens.ensureRole` puts the permissions back if somebody changed them, every time a token is made and every time the Authorized clients screen opens. It stores the role only when it first makes a token.
+- **A client token** is a subject named `aaps-<client name>` with this one role and nothing else. The same name again gets the same token back (the same phone set up again). A subject of that name with other roles is the user's own token: it is never given out, changed or deleted (`NameTaken`). Names are not unique in Nightscout, so the master looks a subject up by `_id` and never trusts a name alone.
+- **The token a client really uses** is in the `subject` field Nightscout writes on every document (the subject's name, not the token; a client cannot choose it). The receiver keeps it in `AuthorizedClient.nsSubject` for each verified message, and the card shows "Own Nightscout token" or, in red, a token with more rights than a client needs.
+- **A client keeps its own token** (`AuthorizedClient.ownToken`): the first verified message written with the token the master made for it (`ClientTokens.subjectName`, `aaps-<client name>`) binds the client to it. That is the hello for a QR client, the first message after the key exchange for a PIN client, and the next message for a client paired before this. From then on the receiver refuses a command written with another token (another client's, or one with more rights) with `FailureReason.OtherToken`, even with a valid signature, so a pairing secret alone is not enough. Hello and ping still pass, so the pairing, the key exchange and the liveness keep working, and the phone can show why its commands are refused. The card says so in red (`TokenKind.NotItsOwn`). A client that never used its own token (the master could not make one, or the phone's login with it failed) is served as before.
+- **Removing a client** also deletes the client tokens named `nsSubject` and `ownToken`. Tokens of other roles stay. If Nightscout cannot be reached then, the token stays and shows under "Read Nightscout only", to delete later.
+- **The permission check** (`Sync.hasWritePermission`) is `ApiPermissions.isClient()` on a client (read everything, create and update in `settings`) and `isFull()` on a master. With the client role a client now shows "authorized", not "read only".
+- **`v3/status` is wrong for one collection** (Nightscout 15, `lib/api3/specific/status.js`: `for (let col in cols)` hands the collection's name to `permsForCol`, which reads `col.colName`, so it checks `api:undefined:create` and so on). Only wildcard rights show, and the client role is reported as read-only in `settings`, measured on a live server, while its writes there work. So `NSAndroidClientImpl.getStatus` asks `/api/v2/authorization/debug/check/api:settings:create` and `…:update` when status does not show full rights. Measured with a client token: entries read 200, settings list 200, settings write 201, settings delete 403, treatment delete 403, token list 401.
+
+The "Add client" dialog has three ways:
+
+| Way | What the client gets | Pairs |
+|---|---|---|
+| QR code: Nightscout and pairing | address + own token + `PairingPayload` | yes, the code works 2 min |
+| QR code: Nightscout only | address + own token | no: a phone that only reads Nightscout. Listed under "Read Nightscout only", where the code can be shown again or the token deleted |
+| PIN | nothing new: it keeps the token it has | yes (2.1) |
+
+- **The code** is `ClientSetupCode` as JSON (`type = "aaps-client-setup"`, `v`, `url`, `token`, optional `pairing`). A code of another `v` is refused: master and client must run the same version. Its `toString` hides the token and the secret. The dialog blocks screenshots.
+- **Drawing it** is shared code (`QrCodeImage`, black on white also in the dark theme), the squares come from ZXing in `jvmSharedMain`, so Android and the desktop. iOS has none yet: it runs only as a client, and the options are hidden where `qrModules` returns null.
+- **Reading it** is `ScanMasterQrScreen`, opened from the client wizard's first Nightscout step ("Set up from the master") and from Pair with master. Android uses CameraX and ZXing, no Play services; the camera permission is asked only when scanning. Applying a code stores the pairing and its waiting hello first, then switches NSClient on and writes the address, the token and the websocket switch. **From the setup wizard, a used code finishes the wizard**, and so does a PIN pairing from the wizard's Pair with master step (`AppRoute.ScanMasterQr` / `PairWithMaster` with `wizard=true`, `finishSetupWizard` in `AppNavGraph`): the steps after it would only show what was done. The instance name step is last, so only a client set up by hand sees it: the QR code (`ClientSetupCode.name`) and the PIN offer (`PairingPayload.name`) carry the name the phone was added with, and the client takes it when it has no instance name yet (`takeInstanceNameFromMaster`), as ASCII (`asciiInstanceName`: "Miloš" is "Milos"; the instance name check allows ASCII letters, digits, spaces, `'` and `-`). **iOS still needs its own scanner** (AVFoundation reads QR codes without a library); until then the scan buttons are hidden there, and on the desktop, which has no camera.
+
+A PIN-paired client gets its own token through the key exchange (2.12).
+
+The master signs the cold and hot docs (2.13), since a client token can write to `settings` too, and refuses a client's commands written with another token than its own (above).
+
+### 2.12 The key exchange: a new secret, and the client's own token
+
+The pairing secret has been where others could see it: wrapped with an 8-digit PIN in a Nightscout document (crackable offline with enough time) or in a QR code on a screen. So the hello replaces it (`ClientControlKeyExchangeCrypto`):
+
+1. **Client:** `ClientPairingRepository.startKeyExchange` makes a one-time P-256 key pair and keeps the private key wrapped with `SecureEncrypt`. The hello carries the public key (`Hello.publicKey`), signed with the old secret.
+2. **Master** (`ClientControlReceiver.answerKeyExchange`): makes its own key pair. ECDH gives both sides the same value, and HKDF-SHA256 turns it into the new secret and a key for the token. The old secret is the HKDF salt and the info names the client and both keys. The new secret waits in `AuthorizedClient.pendingSecret`; the old one still works. If the client wrote the hello with a token that is not a client token, and the master can make tokens, the master makes or reuses the client's own token (2.11) and puts it in the answer, AES-256-GCM encrypted with the token key. The answer (`KeyExchangeEnvelope`, signed with the old secret) goes to `aaps_clientcontrol_key_<clientId>`.
+3. **Client** (`ClientKeyExchange.onKeyDoc`): takes only the answer to its own last key, checks the master's signature, derives the same keys and signs with the new secret from now on. It keeps the old one only to check answers the master signed before it switched (`verificationSecrets`, dropped at the first answer signed with the new one). A token in the answer is used only after a login with it shows the rights a client needs; otherwise the phone keeps its token. Then it pings.
+4. **Master:** the first message that verifies with the pending secret makes it the only one (`promotePendingSecret`), and the answer is deleted permanently, so the encrypted token stays in Nightscout for seconds. Without the client's private key it could not be read anyway.
+
+- **Who sends the hello:** every pairing whose secret was not replaced yet (`BooleanNonKey.NsClientControlSecretReplaced`) sends it on each websocket connect, which is also how a client paired before this existed gets a new secret and its own token after the update. While an exchange waits for its answer (10 min, `KEY_EXCHANGE_WAIT_MS`) no second one starts: otherwise the master could end on the second key while the phone took the first, and the two would not reach each other again. That wait is only for a hello that was sent: one that was not (`publishHello` got no 2xx) gives its exchange up (`abandonKeyExchange`), and the next probe sends it again (`requestMasterProbe` runs `sendHelloIfDue` before its ping, under one lock with the connect path). Before this, a failed hello waited the 10 minutes, and the pairing offer on the master (2 min) was gone by then.
+- **NSClient is switched on after its settings.** Applying a QR code writes the address, the token and the websocket switch first and switches NSClientV3 on last. The plugin also compares the address and token with the ones its client was made with, not `drop(1)`: on a fresh client the plugin started with no address, the new address was written before its watcher subscribed, `drop(1)` threw that first value away, and every HTTP call went to `https://` + "" + `/api/v3/…`, which is the host "api", until the next start. The websocket worked meanwhile, since it reads the address on each connect.
+- **What it does not stop:** someone who has the old secret and sends a hello of their own before the real client. That is no worse than what the old secret already allowed. Someone who only reads Nightscout learns nothing: the private keys never leave the phones.
+- **Platforms:** P-256 ECDH and HKDF are in the JDK provider (Android, desktop) and CryptoKit (iOS). `ClientControlKeyExchangeCryptoTest` is in commonTest, so the simulator run checks that CryptoKit comes to the same keys.
+
+### 2.13 The master signs its settings docs
+
+A client token may write to `settings` (2.11), so without a signature anybody with one could overwrite the cold and the hot doc for every client: settings, plugin selection, definitions, the active scene, the client list with the roles, and the "master is alive" sign (a cold or hot doc feeds `bumpMasterSignal`). The master signs both docs with a key of its own (`MasterDocSigning`, ECDSA P-256 with SHA-256), so one signature serves every reader, also a phone that only reads Nightscout.
+
+- **The master's key** (`MasterSigningKey`): made on first use, the private key wrapped with `SecureEncrypt` like the pairing secrets, not exported. A key that cannot be read any more is replaced; paired clients take the new one with their next pong.
+- **The doc** (`schemaVersion` 2): `signed` is the text `{ signedAt, runningConfig }` and `signature` is the signature of `aaps-settings-v1|<identifier>|<text>`. Text, not an object: Nightscout keeps a string as it is, a JSON object may come back with numbers or key order changed. The identifier is in what is signed, so a hot doc cannot pass for a cold one. `signedAt` is always later than the last one (`LongNonKey.NsClientControlSignedAt`), also when the clock went back.
+- **How a client gets the public key:** in every pong (`PongPayload.signingKey` in the ACK payload, which the pairing secret signs), so a client paired before the docs were signed gets it on its next connect; and in the QR code (`ClientSetupCode.signingKey`), the only way for a phone that only reads Nightscout. `MasterDocVerifier.keepKey` keeps it with the Nightscout address it belongs to: with another address it is not used (another Nightscout, another master). A new key resets the replay order.
+- **What a client takes** (`MasterDocVerifier.open`, used by `NsFrameHandler` and `LoadSettingsRunner`): with a key, only a doc whose signature fits and whose `signedAt` is not older than the last one taken for that doc (`NsClientControlColdSignedAt` / `HotSignedAt`; the same doc again is fine, the catch-up load re-reads it). A refused doc is ignored and written to the NSClient log ("✕ SETTINGS … refused"). Without a key (a phone set up by hand that only reads Nightscout, or before the first pong) a doc is taken as before, the old unsigned shape too.
+- **Liveness** comes from `signedAt`, not from Nightscout's `srvModified`: a genuine doc put back later gets a new `srvModified`, so with that it would make a master that is gone look alive.
+- **Platforms:** the iOS client only checks signatures, through CryptoKit. `MasterDocSigningTest` is in commonTest.
+
+---
+
+## 3. The two-step execution path (prepare → commit)
+
+### 3.1 `RoleBranch` — the single role fork
+
+`RoleBranch` (`implementation/.../bolus/RoleBranch.kt`) is the one place the client/master split lives. It is shared by `BatchExecutorImpl`, `WizardExecutorImpl`, and `SceneActionsImpl`.
+
+```kotlin
+suspend fun prepare(label, clientCommand, masterPrepare): ActionProgress {
+    if (config.AAPSCLIENT) {
+        if (!nsClient.masterReachable.value) return Rejected(NotReachable)   // offline-block
+        return dispatcher.run(clientCommand, label)                          // signed round-trip
+    }
+    return when (val r = masterPrepare()) {                                  // local, no modal
+        is Preview -> Prepared(r.bolusId, r.lines, r.advisorApplies, r.advisorLines)
+        is Error   -> Rejected(ExecutionFailed, r.message)
+    }
+}
+// commit() mirrors this: client → dispatcher.run; master → masterConfirm { onError }.
+```
+
+- **Master:** prepares locally and returns the lines as the confirmation (no app-level modal — the caller renders them).
+- **Client:** gates on `masterReachable` (offline → `Rejected(NotReachable)`, no round-trip attempted), else dispatches the signed command and surfaces the master's `ActionProgress`.
+
+### 3.2 Three prepare families
+
+| Family | Command | Master behaviour |
+|---|---|---|
+| **WizardPrepare** | `WizardPrepare(inputs)` | **recomputes** the dose on live profile/COB/IOB/temp-target from raw wizard inputs, constraint-caps |
+| **BolusPrepare** | `BolusPrepare(guid)` | computes a QuickWizard (WIZARD-mode) dose from the **synced entry** identified by `guid`, caps |
+| **BatchPrepare** | `BatchPrepare(actions)` | **no recompute** — caps + validates **fixed** amounts, builds the merged confirmation for the whole bundle |
+| **ScenePrepare** | `ScenePrepare(sceneId, durationMinutes?)` | resolves the scene against its own state, gates (`validateActivation`), authors lines from the scene's actions |
+
+### 3.3 Consume-once, parked-by-id
+
+`MasterActionExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate. The slot is taken only by the caller that parked it (`takeFor(id, owner)`, see 2.10); anyone else gets `NoPending` and the slot stays.
+
+The **scene executor uses a separate `pendingScenes` map** (own id-space, shorter `PARK_TTL_MS` = 2 min — no long round-trip window needed), so a `SceneCommit` and a `BolusCommit` can never drain each other's parked state. This is exactly why `SceneCommit` is a distinct wire type from `BolusCommit`.
+
+### 3.4 The master authors the confirmation
+
+All confirmation builders live on the master in `MasterActionExecutorImpl`: `buildConfirmationLines` (manual wizard) and, for batches, `buildFixedLines` + `buildTtLine` + `buildPsLine` + `buildRmLine` + `buildTempBasalLine` + `buildExtendedBolusLine` + `buildCancelLine` + `buildInsulinActivateLine`. Removing records, removing start events and adding a calibration get their lines from `MasterRecordWriter`, which also applies them. Each line carries a `ConfirmationRole` (`BOLUS`, `CARBS`, `PRIMARY`, `NORMAL`, `WARNING`) → mapped to a theme color in the UI layer. The client/watch render the list verbatim.
+
+**Decision-B bundle order at commit** (`MasterActionExecutorImpl` confirm path) — the safety net survives an async pump failure:
+
+1. **TempTarget** if target-**raising** (hypo/activity) — unconditional, first;
+2. **Bolus / Carbs** delivery;
+3. **TempTarget** if target-**lowering** — only if the bolus was accepted;
+4. **ProfileSwitch / RunningMode / InsulinActivate**.
+
+---
+
+## 4. Entity coverage
+
+`BatchAction` (`core/interfaces/.../bolus/BatchAction.kt`) is the domain union: `Bolus`, `TempTarget`, `ProfileSwitch`, `RunningMode`, `TempBasal`, `ExtendedBolus`, `CancelTempBasal`, `CancelExtendedBolus`, `InsulinActivate`, `RemoveStartEvents` and `Calibration` (at most one of each per batch), plus `TherapyEvent`, `TherapyEventEdit` and `Remove` (any number). `BatchActionDto` (`plugins/sync/.../clientcontrol/BatchActionMapping.kt`) is the flat type-tagged wire form (`TYPE_*` constants).
+
+| User action | Command / route | Pattern | Note |
+|---|---|---|---|
+| Manual wizard bolus | `WizardPrepare` → `BolusCommit` | two-step | master recomputes on its own COB/IOB; advisor (high-BG correct-now) → `asAdvisor`, delivered as `CORRECTION_BOLUS` |
+| QuickWizard bolus | `BolusPrepare(guid)` → `BolusCommit` | two-step | master computes from the synced entry; super-bolus only here (gated on the entry) |
+| Fixed bolus (Insulin/Treatment dialog) | `BatchPrepare[Bolus]` → `BolusCommit` | two-step | `recordOnly` (pen bolus) is **not** capped; regular delivery is capped |
+| Carbs / eCarbs | `BatchPrepare[Bolus(insulin=0,…)]` → `BolusCommit` | two-step | carbs-only funnels through `deliverECarbs`; negative carbs clamped to current COB, back-dated removal zeroed |
+| TempTarget | `BatchAction.TempTarget` (standalone or in batch) | two-step | duration 0 → CANCEL_TT; reason localized on the showing device |
+| ProfileSwitch | `BatchAction.ProfileSwitch` (dialog / QuickLaunch / batch) | two-step | `profileName = null` → master's **current** active profile; non-null re-validated at prepare (TOCTOU) |
+| RunningMode (loop state) | `BatchAction.RunningMode` | two-step | master re-validates the transition (`Loop.allowedNextModes`) |
+| TempBasal set | `BatchAction.TempBasal` | two-step | `pumpDirect` (60s TTL); master re-validates percent/absolute vs **its** pump → rejects on mismatch |
+| TempBasal cancel | `BatchAction.CancelTempBasal` | two-step | `pumpDirect`; cancels the master's *current* TBR |
+| ExtendedBolus set | `BatchAction.ExtendedBolus` | two-step | `pumpDirect`; caps, then rejects if net ≤ 0 |
+| ExtendedBolus cancel | `BatchAction.CancelExtendedBolus` | two-step | `pumpDirect`; cancels the master's *current* extended bolus |
+| InsulinActivate | `BatchAction.InsulinActivate(iCfg)` | two-step | master re-applies its **current** active profile with the new insulin (Fill dialog) |
+| Scene activate | `ScenePrepare` → `SceneCommit` | two-step | **separate id-space** from bolus; master re-resolves the scene |
+| **Scene stop** | `SceneStop(triggerChain)` | single-step | `dispatcher.execute`, no preview (already master-authoritative); chain target re-resolved from master state |
+| **Preference edit** (bidirectional key) | `PreferenceEdit(prefs)` | single-step | pessimistic round-trip + republish (§5.2); locally-built modal copy |
+| **Fill / prime** | — | off-relay | local-only; `rejectIfAapsClient()`; PRIMING bolus + profile-switch chaining, no relay command |
+| **SMS** | — | off-relay | not on the client-control channel |
+| CarePortal / sensor change | `BatchAction.TherapyEvent` | two-step | the master stores it (insert-if-new by timestamp); the calibration dialog's "sensor change" button too |
+| Site location edit | `BatchAction.TherapyEventEdit` | two-step | the master finds the event by timestamp + type; a missing one is an error |
+| Calibration | `BatchAction.Calibration(glucoseMgdl)` | two-step | the master checks the conditions and pairs the value with **its** latest sensor reading, so the loop's BG is calibrated; refusal texts are built on the master |
+| **Remove records** (every list screen: treatments tabs, BG, calibration) | `BatchAction.Remove(kind, refs)` | two-step | only **Nightscout ids** travel; the master finds, describes and removes its own copies and the change comes back through NS. The client never removes anything itself. A record the master does not have is not removed and the confirmation says so (all missing → refused). Known limit: when xDrip uploads BG and AAPS on the master does not, the master's BG has no NS id, so a client cannot remove BG |
+| Remove "AndroidAPS started" events | `BatchAction.RemoveStartEvents` | two-step | matched by the master's own text (the events carry it in the master's language) |
+| Food | — | off-relay | not uploaded by NSCv3 on any role |
+| "Sensor change detected" notice (calibration) | — | master only | its button writes a sensor change, so a client does not post the notice; the master sees the same BG gap |
+| Autotune profile switch | — | master only | the button is hidden on a client; copying the tuned profile into the (synced) profile store still works |
+| **Garmin** carbs, pump connect / disconnect | — | master only | a client only shows values on the watch; it refuses these and says so in a phone notification (the watch cannot show why). Heart rate is still stored locally, like Wear |
+
+---
+
+## 5. Config / state mirroring
+
+The master publishes its running configuration across **two** `settings` docs, split by write frequency. Both are shaped `{date, utcOffset, app, schemaVersion, signed, signature}`, with `runningConfig` inside the signed text (§2.13); both use the constant `DOC_DATE = 946684800001L` (configuration snapshots, not timestamped events — a fixed date satisfies NS's immutable-`date` rule on re-PUT).
+
+### 5.1 Cold & hot docs
+
+| | COLD (`SettingsIdentifiers.COLD`) | HOT (`SettingsIdentifiers.STATE`) |
+|---|---|---|
+| Debounce | 5 s (`COLD_DEBOUNCE_MS`) | 1 s (`HOT_DEBOUNCE_MS`) |
+| Carries | `syncedPrefs` (flat `Map<String,String>`), pump type, `isFakingTempsByExtendedBoluses`, `usedAutosensOnMainPhone`, version, plugin selection (`ActivePlugin*` keys), scene/quickwizard/automation/insulin defs, `authorizedClients` roster | active scene snapshot (or null) only |
+| Triggers | WS-connect rising edge, any synced-key change, `EventConfigBuilderChange`, roster changes, `forceColdRepublish` | WS-connect rising edge, scene lifecycle (`hotKeys()`) |
+
+Kept separate so a cold-doc apply (which has no `activeScene` block) **never clears a running scene**.
+
+**A value goes in the doc whose triggers fire when it changes.** The master sends a doc when a key it watches changes, not when the content changes. `usedAutosensOnMainPhone` is computed from cold settings (`ApsUseAutosens`, the dynamic ISF switches, the APS plugin), so it is in the cold doc. In the hot doc, switching autosens off on the master did not reach the client until the next scene change. One input is master-only state and sends no doc: starting the autosens objective. The next cold publish carries it.
+
+**Client apply (read-only mirror):**
+- **Cold** → adopt version (notify on mismatch), switch `VirtualPump` to the master's pump type, apply each synced pref via `putRemote` (does **not** echo, §5.2), mirror `isFakingTempsByExtendedBoluses` verbatim to `VirtualPump.fakeDataDetected` (null = older master → leave unchanged), and put `usedAutosensOnMainPhone`. This is a **read-only mirror** — the client must not derive these itself.
+- **Hot** → pass the active-scene snapshot (or null) to `ActiveSceneSync.applyActiveScene()`.
+
+Notable invariants:
+- **Raw value, not mode-adjusted.** `syncedPrefs` serializes the **raw** persisted value (or the computed default when unset), not `preferences.get()`'s mode-adjusted effective value. Each device re-applies the mode rules on read. Simple mode itself is synced, so both phones apply the same rules. The client-control switch is no exception (see §2.9).
+- **Flat map.** A new bidirectional setting needs **zero** publisher changes — it auto-appears as another map entry.
+- **Roster appended at publish time.** `AuthorizedClientsRepository` is in `:plugins:sync` but `RunningConfigurationImpl` is in `:plugins:configuration`; to avoid an inter-module dep, the roster is appended to the JSON in `RunningConfigurationPublisher.publishCold` *after* `configuration()`. Block absence is a backward-compat marker — clients must **not** infer orphan from `null`, only from "block present + clientId missing". Pending entries are deliberately omitted (a pairing client would otherwise wrongly think it isn't paired yet).
+- **Self-healing republish.** On WS reconnect (debounced 3 s, `WS_RECONNECT_DEBOUNCE_MS`) the master republishes its **entire** config (not just changes), recovering: an offline edit that failed to publish, an auto-pruned doc, or a `start()`-before-NS-ready initial publish. `LoadSettingsWorker` unconditionally GETs both docs on every loop, pulling any missed WS push. Republishing unchanged config is idempotent (per-key LWW no-ops → no echo storm).
+- **A cold doc that was not published is tried again** (`publishColdOrRetry`): after 30 s, then each time twice as long, up to 10 min, until one goes through. Not published means the pump is not initialized (`configuration()` is empty: a Dana is not initialized after a failed connection until its next good status read), no Nightscout client yet, or the upload failed. Before this, the skip was silent and nothing repeated it until the next change: a new client waited 8 minutes for the roster with its role (2026-10-21). The hot doc has no retry yet.
+
+### 5.2 Bidirectional preference sync — LWW + echo-break (pessimistic)
+
+Distinct from the command round-trip in *semantics*, though it rides the same signed channel:
+
+1. A client user edits a `SyncSpec(direction = Bidirectional)` key → `put()` emits on `Preferences.syncedLocalChanges`.
+2. `PreferencesClientPublisher` (AAPSCLIENT-only) batches changed keys over a **500 ms** settle window, then runs `ClientControlRoundTrip.run(PreferenceEdit(prefs), modal)`. **The client does not store the value locally** — it sends the current value + per-key `lastModified` and shows a modal with a *tentative* copy.
+3. Master `onVerifiedPreferencesUpdate` applies **LWW per key** (skips if `incoming.lastModified ≤ stored SyncedPrefModified`) via `putRemote` (which does **not** emit on `syncedLocalChanges` — the **echo-break**), then **always** calls `requestColdRepublish()` *even if LWW dropped the push as a no-op*.
+4. The republished cold doc is the confirmation: the client's `applyCold` writes the authoritative value via `putRemote` and the modal resolves **Applied**. The republish **is** the ack — no ACK payload needed.
+
+> **Why always-republish?** A client that *loses* a concurrent LWW race would otherwise be stuck on its optimistic value forever (the key didn't change on the master, so nothing would propagate). Always-republishing lets the loser adopt the winner — honest, no per-key applied/superseded flags. Two clients edit concurrently → master picks the LWW winner → both see it via sync-back.
+
+> **Echo-break correctness.** `PreferencesClientPublisher` listens *only* to `syncedLocalChanges` (local `put()`), never to `putRemote` (applied-from-sync writes). So the master's republish doesn't loop back out. If the user edits again while the modal is up, the publisher is suspended in the round-trip await, so edits queue and ship in the next round-trip (pref edits are fully serialized — one in flight at a time).
+
+This contrasts with the command round-trip: **commands** carry an ACK *payload* (the bolus preview) with an `Ok/Failed/Expired` result; **prefs** deliver "here's the authoritative value" via forced republish (sync-back) with no new payload.
+
+> The **plugin active-selection + settings** are *designed* to move onto this same generic key-sync (flat per-single-select-type `ActivePlugin` keys behind one exhaustive `when(PluginType)`), but that migration is **not yet implemented**. See `PLUGIN_SELECTION_KEY_SYNC.md`.
+
+---
+
+## 6. The watch / wear path
+
+The wear phone adapter (`DataHandlerMobile`) funnels **all** watch therapy into the *same* `BatchExecutor` / `WizardExecutor` prepare/commit — the role fork lives once in `RoleBranch`, so the handlers are role-agnostic.
+
+```
+ActionBolusPreCheck(insulin,carbs)
+  → handleBolusPreCheck → contacting() + shipPrepared(batchExecutor.prepare([Bolus]), …)
+  → master authors Prepared(bolusId, lines)
+  → EventData.ConfirmAction(returnCommand=ActionBolusConfirmed(bolusId), lines=[ConfirmActionLine], deferConfirm=AAPSCLIENT)
+  → user taps ✓ on watch → ActionBolusConfirmed(bolusId)   (id only — NEVER an amount)
+  → batchExecutor.commit(bolusId, Sources.Wear) → deliver
+```
+
+| Watch action | Prepare route | Confirm command |
+|---|---|---|
+| Fixed bolus | `batchExecutor.prepare([Bolus])` | `ActionBolusConfirmed(bolusId)` |
+| QuickWizard | `wizardExecutor.prepare(QuickWizard(guid))` | `ActionWizardConfirmed(bolusId)` |
+| Full wizard | `wizardExecutor.prepare(Manual(inputs))` (needs non-null `actualBg()`) | `ActionWizardConfirmed(bolusId)` |
+| eCarbs | `batchExecutor.prepare([Bolus(insulin=0,…)])` | `ActionECarbsConfirmed(bolusId)` |
+| TempTarget | `batchExecutor.prepare([TempTarget])` | `ActionTempTargetConfirmed(bolusId)` |
+| ProfileSwitch | `batchExecutor.prepare([ProfileSwitch])` | `ActionProfileSwitchConfirmed(bolusId)` |
+| RunningMode | `batchExecutor.prepare([RunningMode])` | `RunningModeConfirmed(bolusId)` |
+
+Key wear mechanics:
+- **`EventData.ConfirmActionLine{role, text}`** — the watch's `AcceptActivity` color-codes by the role→color map, rendering the *exact* master-authored confirmation the phone dialog shows.
+- **`deferConfirm = config.AAPSCLIENT`** — on a client the watch does **not** show instant success on ✓; it waits for the master's real terminal. `EventData.RemoteDelivered` (sent only on a client after the master commit succeeds) triggers the deferred success animation; the master's own progress mirror then takes over as the durable terminal.
+- **`EventData.ContactingMaster`** — a transient spinner (single `data object`, no phase) emitted on a client before every prepare and commit, dismissed when the resolving terminal arrives.
+- **No amount ever returns from the watch.** The confirm command carries only the master-assigned `bolusId` (consume-once token). The watch-derived timestamp is replaced by the master's id, so a stale prepare can't leak into an unrelated bolus.
+- **Fill is excluded** — `handleFillPreCheck`/`handleFillPresetPreCheck` still call `rejectIfAapsClient()`; no relay command exists.
+- **Still bespoke (not yet on the unified line-rendering):** the QuickWizard *message* (capping is shared, but the message text is concatenated) and the full-Wizard `ActionWizardResult` breakdown.
+
+**Watch-on-a-client** is the natural extension: a watch paired to an `AAPSCLIENT` phone uses these same handlers, but `RoleBranch` routes *every* prepare and commit through `dispatcher.run()` (a three-device relay: watch → client phone → master). The watch always renders the master's lines and final state.
+
+---
+
+## 7. Key invariants & gotchas
+
+- **Consume-once / no double-apply.** Atomic `pending.remove(bolusId)` is the only drain point; a re-sent commit finds an empty slot → `NoPendingBolus`. Reinforced by the receiver `commandMutex` and the strictly-`>` counter gate.
+- **`activePumpInternal`, not `activePump`.** When mirroring `fakeDataDetected`, the master/client must cast `activePlugin.activePumpInternal as? VirtualPump` — `activePump` is a `PumpWithConcentration` wrapper (`isVP == false`), so an `as? VirtualPump` on it silently no-ops.
+- **Prepare never mutates state.** `ScenePrepare` does **not** touch `ActiveSceneManager`; `WizardPrepare`/`BatchPrepare` only park. Nothing leaves the slot until commit. The watch's instant-✓ → deferred-success contract depends on this.
+- **TOCTOU re-validation at commit/prepare.** A client may relay something the master no longer has or that conflicts with the master's current state. The master re-validates at prepare time: profile name lookup (null → current active), TempBasal pump-style (percent vs absolute, rejects on mismatch — `clientcontrol_pump_out_of_sync`), RunningMode transition legality, scene chain target (re-resolved from master config, **never** from the wire).
+- **Offline-block.** `RoleBranch` returns `Rejected(NotReachable)` immediately when a client is offline — no round-trip attempted. Enforces single-authority (master online) for all two-step actions.
+- **Pump-direct TTL.** TBR/extended-bolus commits set `pumpDirect = true` so the client waits 60 s; a bolus does **not** (queue-ack + progress mirror cover the minutes-long delivery).
+- **Separate id-spaces.** Bolus and scene pending maps never collide → distinct `BolusCommit` vs `SceneCommit` wire types.
+- **Record-only is not capped.** A pen bolus given outside AAPS is logged as-is; regular delivery is `capFixed()`-capped.
+- **Extended bolus net-zero rejected** (a 0-percent TBR — suspend basal — is allowed); negative carbs never remove more than current COB.
+- **Executor is the single bolus-failure catch point.** `!result.success` (SMB excluded) raises the URGENT `BOLUS_DELIVERY_FAILED` alarm in the executor; SMB/loop boluses bypass the executor structurally, so they are not double-alarmed. There is no per-dialog failure handler.
+- **ACK write must never abort execution.** It is exception-safe; the command is already applied locally before the `Done` ack is mapped. A failed ACK write just degrades the client to sync-back fallback.
+- **`wantsAck` is signed** — a client cannot be tricked into wanting/not-wanting an ack.
+- **Late `Delivery/Failed` ack is never emitted into `ackEvents`** — it's out-of-band in `onAckDoc` and raises an URGENT notification (the `Done` ack already ended the round-trip).
+- **Backup-restore counter regression ⇒ re-pair.** No silent recovery — that's what keeps the replay window shut.
+
+---
+
+## 8. Extending it — adding a new two-step action
+
+To add a new master-authored two-step action (e.g. a new therapy command):
+
+1. **Domain type.** Add a `BatchAction` subtype (if it fits the batch bundle) *or* a new `ClientControlMessage` variant + matching `ClientControlActionDispatcher.Command`. If a `ClientControlMessage`, give it a **stable `@SerialName`** (the wire contract — never rename later) and add it to the `when` in `ClientControlReceiver.onVerifiedEnvelope`.
+2. **Wire mapping.** If it's a `BatchAction`, add a `TYPE_*` constant + fields to `BatchActionDto` and the to/from mapping in `BatchActionMapping.kt`.
+3. **Master execution + confirmation.** Add the prepare logic (cap/validate against the master's live state, park by `bolusId`) and a `buildXxxLine` confirmation builder in `MasterActionExecutorImpl`. Re-validate anything that could be stale (TOCTOU). Return `PrepareResult.Preview(bolusId, lines, …)`.
+4. **Receiver handler.** Add `onVerifiedXxx` that calls the executor's prepare/confirm and returns an `AckOutcome`.
+5. **Route through `RoleBranch`.** Call `batchExecutor.prepare(...)` / `commit(bolusId, ...)` (or `wizardExecutor` for recompute) from the dialog/screen/wear handler. **Do not** add a role check in the caller — `RoleBranch` already handles client-vs-master, the offline gate, and the `ActionProgress` mapping.
+6. **Wear (optional).** Add a `handleXxxPreCheck` in `DataHandlerMobile` that calls `contacting()` + `shipPrepared(...)`, and an `onEvent<ActionXxxConfirmed>` that calls `commit(bolusId)`. The watch renders the master's lines automatically.
+
+Guidance: prefer the **batch** path (fixed amounts, no recompute) unless the action genuinely needs server-side recomputation (then mirror `WizardPrepare`). Keep all confirmation authoring on the master. Set `pumpDirect = true` only for slow pump commands. Never send an amount back on commit — only the `bolusId`.

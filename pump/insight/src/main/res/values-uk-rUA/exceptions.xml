@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="connection_failed">Не вдалося підключитися</string>
+    <string name="connection_lost">Підключення втрачено</string>
+    <string name="pairing_rejected">Спарювання відхилено</string>
+    <string name="socket_creation_failed">Не вдалося створити сокет</string>
+    <string name="timeout">Час очікування вичерпано</string>
+    <string name="maximum_number_of_bolus_type_already_running">Уже виконується максимальна кількість болюсів цього типу</string>
+    <string name="no_active_tbr_to_cancel">Немає активного TBR для скасування</string>
+    <string name="no_active_tbr_to_change">Немає активного TBR для зміни</string>
+    <string name="no_such_bolus_to_cancel">Немає такого болюсу для скасування</string>
+    <string name="pump_already_in_that_state_exception">Помпа вже в цьому стані</string>
+    <string name="run_mode_not_allowed">Робочий режим не дозволено</string>
+</resources>

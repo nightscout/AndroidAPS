@@ -1,0 +1,337 @@
+package app.aaps.plugins.sync.nsclientV3.data
+
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.RT
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
+import app.aaps.core.utils.safeGetString
+import app.aaps.core.utils.safeGetStringAllowNull
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlin.math.max
+import kotlin.math.min
+
+/*
+{
+    "_id": "594fdcec327b83c81b6b8c0f",
+    "device": "openaps://Sony D5803",
+    "pump": {
+        "battery": {
+            "percent": 100
+        },
+        "status": {
+            "status": "normal",
+            "timestamp": "2017-06-25T15:50:14Z"
+        },
+        "extended": {
+            "Version": "1.5-ac98852-2017.06.25",
+            "PumpIOB": 1.13,
+            "LastBolus": "25. 6. 2017 17:25:00",
+            "LastBolusAmount": 0.3,
+            "BaseBasalRate": 0.4,
+            "ActiveProfile": "2016 +30%"
+        },
+        "reservoir": 109,
+        "clock": "2017-06-25T15:55:10Z"
+    },
+    "openaps": {
+        "suggested": {
+            "temp": "absolute",
+            "bg": 115.9,
+            "tick": "+5",
+            "eventualBG": 105,
+            "snoozeBG": 105,
+            "predBGs": {
+                "IOB": [116, 114, 112, 110, 109, 107, 106, 105, 105, 104, 104, 104, 104, 104, 104, 104, 104, 105, 105, 105, 105, 105, 106, 106, 106, 106, 106, 107]
+            },
+            "sensitivityRatio": 0.81,
+            "variable_sens": 137.3,
+            "COB": 0,
+            "IOB": -0.035,
+            "reason": "COB: 0, Dev: -18, BGI: 0.43, ISF: 216, Target: 99; Eventual BG 105 > 99 but Min. Delta -2.60 < Exp. Delta 0.1; setting current basal of 0.4 as temp. Suggested rate is same as profile rate, no temp basal is active, doing nothing",
+            "timestamp": "2017-06-25T15:55:10Z"
+        },
+        "iob": {
+            "iob": -0.035,
+            "basaliob": -0.035,
+            "activity": -0.0004,
+            "time": "2017-06-25T15:55:10Z"
+        }
+    },
+    "uploaderBattery": 93,
+    "created_at": "2017-06-25T15:55:10Z",
+    "NSCLIENT_ID": 1498406118857
+}
+ */
+@Suppress("SpellCheckingInspection")
+@SingleIn(AppScope::class)
+@Inject
+class NSDeviceStatusHandler(
+    private val preferences: Preferences,
+    private val config: Config,
+    private val dateUtil: DateUtil,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val aapsLogger: AAPSLogger,
+    private val persistenceLayer: PersistenceLayer,
+    private val overviewData: OverviewData,
+    private val calculationWorkflow: CalculationWorkflow,
+    private val rxBus: RxBus,
+    // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
+    private val appScope: CoroutineScope,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
+    private val apsResultProvider: () -> APSResult,
+    // Deferred: the calculation reaches the plugins, and this handler belongs to one of them
+    private val iobCobCalculator: () -> IobCobCalculator
+) {
+
+    /** One batch is stored at a time, so the check for results already stored sees the batch before. */
+    private val storeLock = Mutex()
+
+    /**
+     * @param live true only for a real-time WS push (a devicestatus the master just created), false for the
+     *   REST catch-up/initial batch load. Only a live push bumps the master-alive heartbeat — see below.
+     */
+    fun handleNewData(deviceStatuses: Array<NSDeviceStatus>, live: Boolean = false) {
+        val apsResults = mutableListOf<ReceivedResult>()
+        val unreadable = Unreadable()
+        var newestTime = 0L
+        for (i in deviceStatuses.size - 1 downTo 0) {
+            val nsDeviceStatus = deviceStatuses[i]
+            // One document that cannot be read must not stop the others (#5414). A throw used to end the whole
+            // page of a load, so every later load asked for the same page and failed again, for up to 48 hours.
+            // On the websocket thread it ends the app.
+            try {
+                if (config.AAPSCLIENT) {
+                    val time = timeOf(nsDeviceStatus, unreadable)
+                    time?.let { newestTime = max(newestTime, it) }
+                    updatePumpData(nsDeviceStatus, unreadable)
+                    updateDeviceData(nsDeviceStatus, time)
+                    updateOpenApsData(nsDeviceStatus, apsResults, unreadable)
+                    updateUploaderData(nsDeviceStatus, time)
+                }
+                if (config.APS) {
+                    nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0
+                }
+            } catch (e: Exception) {
+                unreadable.add("${nsDeviceStatus.device}: ${e.message ?: e::class.simpleName}")
+            }
+        }
+        if (unreadable.count > 0)
+            aapsLogger.warn(LTag.NSCLIENT, "Device statuses, parts skipped because they could not be read: ${unreadable.count}. The first: ${unreadable.first}")
+        if (config.AAPSCLIENT && deviceStatuses.isNotEmpty()) {
+            // Master-alive heartbeat — gates scene/edit controls when master goes silent, even while the
+            // local WS to NS is still up. Bump ONLY for a live WS push: a brand-new devicestatus arriving in
+            // real time proves the master is online NOW. The catch-up/initial worker load must NOT bump — at
+            // app start it pulls the master's LAST historical devicestatus off NS, which can be only a few
+            // minutes old (inside the 9-min window) yet the master may already be offline. Per the agreed
+            // design the client fails closed after start and waits for the first live ping.
+            // (The time of the device status, not the receipt time, is still used as a second guard: a record
+            // without a time that can be read is skipped, and there is never a fallback to now().)
+            if (live && newestTime > 0L) nsClientV3Plugin().bumpDevicestatusHeartbeat(newestTime)
+            // Once per batch, not once per document: the predictions are read from the newest data only (#5247)
+            appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
+            if (apsResults.isNotEmpty()) appScope.launch { storeApsResults(apsResults) }
+            rxBus.send(EventNsClientStatusUpdated())
+        }
+    }
+
+    /**
+     * A loop result as it came with a device status. Older clients stored it with [deviceStatusTime], not
+     * with the master's own time, so a result stored by them is found by that time.
+     */
+    private class ReceivedResult(val apsResult: APSResult, val deviceStatusTime: Long)
+
+    /**
+     * Stores the master's loop results that are not stored yet, then tells the calculation about them.
+     *
+     * The ISF for carbs is worked out from these, on the master from its own (`IsfForCarbs`), so the client
+     * needs every one of them, older ones too: those that come with the 48 hours loaded after a start, and
+     * those the master sent while this phone was offline. A result already stored comes again with every
+     * load after a start and is skipped by its time.
+     */
+    private suspend fun storeApsResults(received: List<ReceivedResult>) = storeLock.withLock {
+        val from = received.minOf { min(it.apsResult.date, it.deviceStatusTime) }
+        val to = received.maxOf { max(it.apsResult.date, it.deviceStatusTime) }
+        val stored = persistenceLayer.getLoopSensitivities(from, to).map { it.timestamp }.toSet()
+        val newResults = received
+            .filter { it.apsResult.date !in stored && it.deviceStatusTime !in stored }
+            .map { it.apsResult }
+            .distinctBy { it.date }
+        newResults.forEach { persistenceLayer.insertOrUpdateApsResult(it) }
+        newResults.minOfOrNull { it.date }?.let { iobCobCalculator().apsResultsStored(it) }
+    }
+
+    /**
+     * What could not be read in one batch. Logged once at its end, not once for each document: a client loads
+     * the last 48 hours after every start, and one kind of bad data is then in hundreds of them (#5414).
+     */
+    private class Unreadable {
+
+        var count = 0
+            private set
+        var first: String? = null
+            private set
+
+        fun add(what: String) {
+            if (count++ == 0) first = what
+        }
+    }
+
+    /**
+     * When the device status was made: `date`, a number the master always sends, else the `created_at` text
+     * that Nightscout adds. Null when there is neither.
+     */
+    private fun timeOf(deviceStatus: NSDeviceStatus, unreadable: Unreadable): Long? =
+        deviceStatus.date ?: readTime(deviceStatus.createdAt, "created_at", deviceStatus, unreadable)
+
+    /** A time inside a device status, or null when there is none or it cannot be read. */
+    private fun readTime(text: String?, field: String, deviceStatus: NSDeviceStatus, unreadable: Unreadable): Long? =
+        text?.let {
+            runCatching { dateUtil.fromISODateString(it) }
+                .onFailure { unreadable.add("$field \"$text\" from ${deviceStatus.device}") }
+                .getOrNull()
+        }
+
+    private fun updateDeviceData(deviceStatus: NSDeviceStatus, time: Long?) {
+        val createdAt = time ?: return
+        processedDeviceStatusData.device?.let { if (createdAt < it.createdAt) return } // take only newer record
+        deviceStatus.device?.let {
+            if (it.startsWith("openaps://")) processedDeviceStatusData.device = ProcessedDeviceStatusData.Device(createdAt, it.substring(10))
+        }
+    }
+
+    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus, unreadable: Unreadable) {
+        val pump = nsDeviceStatus.pump ?: return
+        // The time the master last read the pump. It can be older than the device status, and the client
+        // shows how old it is, so the time of the device status cannot stand in for it.
+        val clock = readTime(pump.clock, "pump.clock", nsDeviceStatus, unreadable) ?: return
+        processedDeviceStatusData.pumpData?.let { if (clock < it.clock) return } // take only newer record
+
+        // create new status and process data
+        processedDeviceStatusData.pumpData = ProcessedDeviceStatusData.PumpData().also { deviceStatusPumpData ->
+            deviceStatusPumpData.clock = clock
+            pump.status?.status?.let { deviceStatusPumpData.status = it }
+            pump.reservoir?.let { deviceStatusPumpData.reservoir = it }
+            pump.reservoirDisplayOverride?.let { deviceStatusPumpData.reservoirDisplayOverride = it }
+            pump.battery?.percent?.let {
+                deviceStatusPumpData.isPercent = true
+                deviceStatusPumpData.percent = it
+            }
+            pump.battery?.voltage?.let {
+                deviceStatusPumpData.isPercent = false
+                deviceStatusPumpData.voltage = it
+            }
+            pump.extended?.let {
+                val extended = StringBuilder()
+                // Plain text, not HTML. This used to build "<b>key:</b> value<br>" and the overview
+                // stripped the markup straight back out before showing it.
+                //
+                // The values are whatever uploaded this device status - another AAPS, an older one,
+                // or a different app entirely - so anything they marked up is flattened here, at the
+                // point the foreign data arrives, rather than at every place that displays it.
+                it.keys.forEach { key -> extended.appendLine("$key: ${it[key].toPlainText()}") }
+                deviceStatusPumpData.extended = extended.toString()
+                deviceStatusPumpData.activeProfileName = it.safeGetStringAllowNull("ActiveProfile", null)
+            }
+        }
+    }
+
+    /** @param apsResults collects the loop result of this device status, to be stored with the batch */
+    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus, apsResults: MutableList<ReceivedResult>, unreadable: Unreadable) {
+        nsDeviceStatus.openaps?.suggested?.let {
+            // Read here, not taken from the decoded result: the time moves on also when this client cannot
+            // decode the result, for example from a master of another version. The master's loop still runs,
+            // and the client shows how long ago, and alarms when it gets old.
+            readTime(it.safeGetString("timestamp"), "suggested.timestamp", nsDeviceStatus, unreadable)?.let { clock ->
+                val suggested = try {
+                    RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                } catch (e: Exception) {
+                    unreadable.add("loop result from ${nsDeviceStatus.device}: ${e.message}")
+                    null
+                }
+                // check if this is new data
+                if (clock > processedDeviceStatusData.openAPSData.clockSuggested) {
+                    suggested?.let { rt -> processedDeviceStatusData.openAPSData.suggested = rt }
+                    processedDeviceStatusData.openAPSData.clockSuggested = clock
+                }
+                // Stored also when older than the newest one, see storeApsResults
+                suggested?.let { rt ->
+                    val apsResult = apsResultProvider().with(rt).apply {
+                        // The time the master stored it with. The device status carries the time the loop
+                        // finished, up to a few seconds later. The ISF for carbs puts every result into a
+                        // 5 minute slot and a 24 hour window, and only the same time puts it into the same one.
+                        rt.deliverAt?.let { date = it }
+                    }
+                    when {
+                        // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
+                        // and in this scope that would end the app. It is still shown from the data above.
+                        apsResult.algorithm == APSResult.Algorithm.UNKNOWN ->
+                            aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
+                        // Calculated nothing, and the master did not store it either. Also shown from the data above.
+                        apsResult.stoppedEarly -> Unit
+                        else -> apsResults.add(ReceivedResult(apsResult, clock))
+                    }
+                }
+            }
+        }
+        nsDeviceStatus.openaps?.enacted?.let {
+            readTime(it.safeGetString("timestamp"), "enacted.timestamp", nsDeviceStatus, unreadable)?.let { clock ->
+                // check if this is new data
+                if (clock > processedDeviceStatusData.openAPSData.clockEnacted) {
+                    try {
+                        processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    } catch (e: Exception) {
+                        unreadable.add("enacted from ${nsDeviceStatus.device}: ${e.message}")
+                    }
+                    processedDeviceStatusData.openAPSData.clockEnacted = clock
+                }
+            }
+        }
+    }
+
+    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus, time: Long?) {
+        val clock = time ?: return
+        val device = nsDeviceStatus.device ?: return
+        val battery = nsDeviceStatus.uploaderBattery ?: nsDeviceStatus.uploader?.battery ?: return
+        val isCharging = nsDeviceStatus.isCharging
+
+        var uploader = processedDeviceStatusData.uploaderMap[device]
+        // check if this is new data
+        if (uploader == null || clock > uploader.clock) {
+            if (uploader == null) uploader = ProcessedDeviceStatusData.Uploader()
+            uploader.battery = battery
+            uploader.clock = clock
+            uploader.isCharging = isCharging
+            processedDeviceStatusData.uploaderMap[device] = uploader
+        }
+    }
+}
+/**
+ * Flattens any markup a foreign uploader put in a device-status value.
+ *
+ * Kept identical to what the overview used to do before showing the text, so nothing that renders
+ * correctly today starts showing raw tags.
+ */
+private fun Any?.toPlainText(): String =
+    toString()
+        .replace("<br>", "\n")
+        .replace(Regex("<[^>]*>"), "")
+        .replace("&nbsp;", " ")

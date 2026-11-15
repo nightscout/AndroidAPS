@@ -15,7 +15,6 @@ import androidx.wear.watchface.complications.data.SmallImageComplicationData
 import androidx.wear.watchface.complications.data.SmallImageType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
-import dagger.android.AndroidInjection
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -28,11 +27,6 @@ import kotlin.math.min
  */
 class UploaderBatteryComplication : ModernBaseComplicationProviderService() {
 
-    // Not derived from DaggerService, do injection here
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun buildComplicationData(
         type: ComplicationType,
@@ -51,7 +45,7 @@ class UploaderBatteryComplication : ModernBaseComplicationProviderService() {
             try {
                 level = statusData.battery.toInt()
                 level = max(min(level, 100), 0)
-                levelStr = "$level%"
+                levelStr = getString(R.string.loop_status_profile_percentage_value, level)
                 var iconNo = floor(level / 10.0).toInt()
                 if (level > 95) {
                     iconNo = 10

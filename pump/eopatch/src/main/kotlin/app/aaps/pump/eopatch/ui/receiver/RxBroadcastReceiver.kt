@@ -34,7 +34,7 @@ class RxBroadcastReceiver private constructor() {
             context.registerReceiver(listener.receiver, intentFilter)
         }
 
-        internal inner class Listener(private val context: Context, private val observer: Observer<in Intent>) : MainThreadDisposable() {
+        internal class Listener(private val context: Context, private val observer: Observer<in Intent>) : MainThreadDisposable() {
 
             val receiver: BroadcastReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {

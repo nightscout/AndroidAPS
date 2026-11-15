@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_calibration_name">보정 없음</string>
+    <string name="description_no_calibration">"보정을 적용하지 않습니다. 센서 값을 그대로 사용합니다. 센서가 이미 공장 보정되어 있고 정확할 때 사용하십시오."</string>
+    <string name="linear_calibration_name">선형 보정</string>
+    <string name="description_linear_calibration">"채혈 입력으로 계산한 센서별 선형 보정(기울기와 오프셋)을 적용합니다. 최근 입력에 더 높은 가중치를 줍니다. 보정은 현재 센서 세션이 시작된 후에 적용되며, 처음 2시간은 준비 시간으로 건너뜁니다."</string>
+    <string name="sensor_change_detected_text">%1$s에 센서 교체가 감지되었을 수 있습니다. 새 센서로 표시하시겠습니까?</string>
+    <string name="sensor_change_detected_action">센서 교체 표시</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">보정을 사용하려면 센서 교체를 기록하십시오.</string>
+    <string name="cal_status_warmup">센서 준비 시간 — %1$s 후에 보정이 활성화됩니다.</string>
+    <string name="cal_status_need_more_entries">채혈 입력이 2개 이상 필요합니다 (현재 %1$d개).</string>
+    <string name="cal_status_unsafe_fit">계산 결과가 안전 범위를 벗어났습니다 — 보정을 적용하지 않았습니다.</string>
+    <string name="cal_status_applied">보정이 적용되었습니다.</string>
+    <string name="cal_status_applied_offset_only">오프셋만 보정했습니다 — 센서 값 범위가 너무 좁아 기울기를 계산할 수 없습니다.</string>
+    <string name="cal_status_applied_slope_clamped">보정이 적용되었습니다 — 기울기를 안전 범위로 제한했습니다. 제한을 줄이려면 입력을 더 추가하십시오.</string>
+    <string name="cal_slope_offset">기울기 %1$.2f, 중간 범위 교정 %2$s</string>
+    <string name="cal_session_started">세션 시작: %1$s</string>
+    <string name="cal_mark_sensor_change_now">센서 교체 기록</string>
+    <string name="cal_add_calibration">보정 추가</string>
+    <string name="cal_entries_header">채혈 입력 (%1$d)</string>
+    <string name="cal_no_entries">아직 채혈 입력이 없습니다.</string>
+    <string name="cal_entry_pair">채혈 %1$s → 센서 %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">입력 %1$d/%2$d · %3$s · 센서 %4$s → 혈당 %5$s</string>
+</resources>

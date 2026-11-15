@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensor_label">Szenzor</string>
+    <string name="insulin_label">Inzulin</string>
+    <string name="cannula">Kanül</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BÁZ</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="old_data">RÉGI ADAT</string>
+</resources>

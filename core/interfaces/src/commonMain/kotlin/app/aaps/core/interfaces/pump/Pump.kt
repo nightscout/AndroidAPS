@@ -1,0 +1,353 @@
+package app.aaps.core.interfaces.pump
+
+import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.queue.CustomCommand
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.JsonObject
+
+/**
+ * This interface defines the communication from AAPS-core to pump drivers.
+ * Pump drivers communicate data changes back to AAPS-core using [app.aaps.core.interfaces.pump.PumpSync].
+ *
+ * Created by mike on 04.06.2016.
+ */
+interface Pump {
+
+    /**
+     * Whether the pump has been set up by the user and is ready for connection attempts.
+     *
+     * Examples: device address stored after BLE pairing, pod activated, patch attached.
+     * The command queue will not attempt to connect to an unconfigured pump.
+     *
+     * This is distinct from [isInitialized] which requires a successful first communication.
+     * State hierarchy: isConfigured → isConnected → isInitialized
+     *
+     * Contract: any action that makes isConfigured() return false (e.g. unpair, deactivate)
+     * MUST also reset pump state so that isInitialized() returns false. This ensures
+     * !isConfigured() implies !isInitialized() at all times.
+     *
+     * @return true if user setup is complete. Default is true for backward compatibility.
+     */
+    fun isConfigured(): Boolean = true
+
+    /**
+     * @return true if pump status has been read and is ready to accept commands
+     */
+    fun isInitialized(): Boolean
+
+    /**
+     * @return true if suspended (not delivering insulin)
+     */
+    fun isSuspended(): Boolean
+
+    /**
+     * @return true if pump is not ready to accept commands right now
+     */
+    fun isBusy(): Boolean
+
+    /**
+     * @return true if BT connection is established
+     */
+    fun isConnected(): Boolean
+
+    /**
+     * @return true if BT connection is in progress
+     */
+    fun isConnecting(): Boolean
+
+    /**
+     * @return true if BT is connected but initial handshake is still in progress
+     */
+    fun isHandshakeInProgress(): Boolean
+
+    /**
+     * set initial handshake completed (moved to connected state)
+     */
+    fun finishHandshaking() {}
+
+    /**
+     * Perform BT connect, there is new command waiting in queue
+     * @param reason originator identification
+     */
+    fun connect(reason: String)
+
+    /**
+     * Perform BT disconnect, there is NO command waiting in queue
+     * @param reason originator identification
+     */
+    fun disconnect(reason: String)
+
+    /**
+     * @return # of second to wait before [disconnect] is send after last command
+     */
+    fun waitForDisconnectionInSeconds(): Int = 5
+
+    /**
+     * Stop connection process
+     */
+    fun stopConnecting()
+
+    /**
+     * Force reading of full pump status
+     * @param reason originator identification
+     */
+    suspend fun getPumpStatus(reason: String)
+
+    /**
+     *  Upload to pump new basal profile (and IC/ISF if supported by pump)
+     *
+     *  @param profile new profile
+     */
+    suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult
+
+    /**
+     * @param profile profile to check
+     *
+     * @return true if pump is running the same profile as in param
+     */
+    fun isThisProfileSet(profile: PumpProfile): Boolean
+
+    /**
+     * The basal the pump really gives now, read after [setNewBasalProfile] succeeded.
+     *
+     * A pump rounds each rate to its own step, so it can give a little more or less than the profile asks.
+     * AAPS keeps what the pump reports here as the running profile, so IOB, TDD and the screens show the
+     * insulin that is really given (#2454). Rounding must never turn a rate above zero into zero.
+     *
+     * @return the rates from midnight, in pump units like the [PumpProfile] the pump was given, with the first
+     * one at 0 seconds. Hour values only, like the running profile: each time on a full hour, and a rate is the
+     * insulin of that whole hour. null when the pump gives the profile exactly as it was sent.
+     */
+    fun deliveredBasal(): List<Profile.ProfileValue>? = null
+
+    /**
+     * timestamp of last connection to the pump in milliseconds
+     */
+    val lastDataTime: StateFlow<Long>
+
+    /**
+     * timestamp of last bolus delivered in milliseconds
+     */
+    val lastBolusTime: StateFlow<Long?>
+
+    /**
+     * amount of last bolus delivered in units of insulin
+     */
+    val lastBolusAmount: StateFlow<PumpInsulin?>
+
+    /**
+     * Currently running base basal rate [U/h]
+     *
+     * This _must not_ be affected by current pump states
+     * (TBRs, pump suspended/running etc.)
+     */
+    val baseBasalRate: PumpRate
+
+    /**
+     * Reservoir level at time of last connection [Units of insulin]
+     */
+    val reservoirLevel: StateFlow<PumpInsulin>
+
+    /**
+     * Battery level at time of last connection [%]
+     */
+    val batteryLevel: StateFlow<Int?>
+
+    /**
+     * Request a bolus to be delivered, carbs to be stored on pump or both.
+     *
+     * @param detailedBolusInfo it's the caller's responsibility to ensure the request can be satisfied by the pump,
+     *                          e.g. DBI will not contain carbs if the pump can't store carbs.
+     * @return PumpEnactResult
+     */
+    suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
+
+    /**
+     *  Stopping of performed bolus requested by user
+     */
+    fun stopBolusDelivering()
+
+    /**
+     * Request a TRB in absolute units [U/h]
+     *
+     * Driver is responsible for conversion to % if absolute rate is not supported by pump
+     *
+     * @param absoluteRate          rate in U/h
+     * @param durationInMinutes     duration
+     * @param enforceNew            if true drive should force new TBR (ie. stop current,
+     *                              and set new even if the same rate is requested
+     * @param tbrType               tbrType for storing to DB [NORMAL,EMULATED_PUMP_SUSPEND,PUMP_SUSPEND,SUPERBOLUS]
+     * @return                      PumpEnactResult.success if TBR set,
+     *                              PumpEnactResult.enacted if new TBR set
+     *                              (if the same TBR rate is requested && enforceNew == false driver can keep
+     *                              running TBR. In this case return will be success = true, enacted = false)
+     */
+    suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
+
+    /**
+     * Request a TRB in %
+     *
+     * Driver is responsible for conversion to u/h if % is not supported by pump
+     *
+     * @param percent               rate in % (100% is equal to not running TBR, 0% is zero temping)
+     * @param durationInMinutes     duration
+     * @param enforceNew            if true drive should force new TBR (ie. stop current,
+     *                              and set new even if the same rate is requested
+     * @param tbrType               tbrType for storing to DB [NORMAL,EMULATED_PUMP_SUSPEND,PUMP_SUSPEND,SUPERBOLUS]
+     * @return                      PumpEnactResult.success if TBR set,
+     *                              PumpEnactResult.enacted if new TBR set
+     *                              (if the same TBR rate is requested && enforceNew == false driver can keep
+     *                              running TBR. In this case return will be success = true, enacted = false)
+     */
+    suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult
+
+    /**
+     * Cancel current TBR if a TBR is running
+     *
+     * some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
+     * when the cancel request is requested by the user (forced), the pump should always do a real cancel
+     *
+     * @param enforceNew            if true disable workaround above
+     * @return                      PumpEnactResult.success if TBR is canceled
+     */
+    suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult
+
+    suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult
+    suspend fun cancelExtendedBolus(): PumpEnactResult
+
+    /**
+     * Driver specific entries for the "extended" section of the Nightscout pump status.
+     *
+     * This info is displayed when user hover over pump pill in NS.
+     * Except common information every driver can add own info here.
+     *
+     * The driver **returns** its entries and the caller merges them, rather than writing into a
+     * shared object: the status document is an immutable tree, and a return value also stops a driver
+     * accidentally removing or overwriting the common fields.
+     */
+    fun extendedStatus(): JsonObject = JsonObject(emptyMap())
+
+    /**
+     *  Manufacturer type. Usually defined by used plugin
+     *
+     *  @return ManufacturerType
+     */
+    fun manufacturer(): ManufacturerType
+
+    /**
+     * Pump model
+     *
+     * If new model is covered by driver, model and it's capabilities must be added to [app.aaps.core.data.pump.defs.PumpType]
+     *
+     * @return PumpType
+     */
+    fun model(): PumpType
+
+    /**
+     * Serial number
+     *
+     * Real serial number from device or "unique" generated for paired pump if not possible
+     */
+    fun serialNumber(): String
+
+    /**
+     * Pump capabilities
+     */
+    val pumpDescription: PumpDescription
+
+    /**
+     * The step a bolus of [amount] can be given in, in pump units.
+     *
+     * The one place to ask, because the driver knows its exceptions. By default it reads [pumpDescription],
+     * so a step the driver read from the pump wins over the constant [PumpType]: a Dana RS can be set to
+     * 0.1 U while its pump type says 0.05 U, and a 1.55 U bolus was then refused (#946). Only a pump type
+     * whose step depends on the amount (a specialBolusSize) answers from its own table. Today only
+     * ACCU_CHEK_INSIGHT_VIRTUAL has one, and no pump in use has that type: the Insight driver uses
+     * ACCU_CHEK_INSIGHT, and the virtual pump cannot select it. The branch stays so that such a pump type
+     * works without more code. A driver with other exceptions overrides this.
+     *
+     * Outside a driver, ask `ActivePlugin.activePump`: it takes and returns insulin units. Ask the driver
+     * itself (`ActivePlugin.activePumpInternal`) only for an amount in pump units.
+     */
+    fun bolusStepSize(amount: Double): Double =
+        pumpDescription.pumpType.specialBolusSize()?.getStepSizeForAmount(amount) ?: pumpDescription.bolusStep
+
+    /**
+     * Short info for SMS, Wear etc. specific to the pump driver.
+     * It will be added to the general part generated by AAPS.
+     * Expected format: "XXX: YYY\nZZZ: AAA"
+     */
+    fun pumpSpecificShortStatus(veryShort: Boolean): String = ""
+
+    /**
+     * @return true if pump is currently emulating temporary basals by extended boluses (usually to bypass 200% limit)
+     */
+    val isFakingTempsByExtendedBoluses: Boolean
+
+    /**
+     * Load TDDs and store them to the database
+     */
+    suspend fun loadTDDs(): PumpEnactResult
+
+    /**
+     * @return true if pump handles DST changes by it self. In this case it's not necessary stop the loop
+     *                  after DST change
+     */
+    fun canHandleDST(): Boolean
+
+    /**
+     * Provides a list of custom actions to be displayed in the Actions tab.
+     * Please note that these actions will not be queued upon execution
+     *
+     * @return list of custom actions
+     */
+    fun getCustomActions(): List<CustomAction>? = null
+
+    /**
+     * Executes a custom action. Please note that these actions will not be queued
+     *
+     * @param customActionType action to be executed
+     */
+    fun executeCustomAction(customActionType: CustomActionType) {}
+
+    /**
+     * Executes a custom queued command
+     * See [app.aaps.core.interfaces.queue.CustomCommand] for queuing a custom command.
+     *
+     * @param customCommand the custom command to be executed
+     * @return PumpEnactResult that represents the command execution result
+     */
+    fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? = null
+
+    /**
+     * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for
+     * example update clock on pump).
+     */
+    suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
+
+    /**
+     * Only used for pump types where hasCustomUnreachableAlertCheck=true
+     */
+    fun isUnreachableAlertTimeoutExceeded(unreachableTimeoutMilliseconds: Long): Boolean = false
+
+    /**
+     * if true APS set 100% basal before full hour to avoid pump beeping
+     */
+    fun setNeutralTempAtFullHour(): Boolean = false
+
+    /**
+     * Pumps with a hardware link can set via config "Battery Change Logging"
+     */
+    fun isBatteryChangeLoggingEnabled(): Boolean = false
+
+    /**
+     * Pump is connected via RileyLink
+     */
+    fun isUseRileyLinkBatteryLevel(): Boolean = false
+}

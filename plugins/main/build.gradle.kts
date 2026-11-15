@@ -1,52 +1,58 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
-    id("kotlin-android")
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
+    id("kmp-android-library")
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
 }
 
-android {
-    namespace = "app.aaps.plugins.main"
+registerKeyStrings("main")
+
+kotlin {
+    android {
+        namespace = "app.aaps.plugins.main"
+        androidResources { enable = true }
+        // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
+        withHostTest {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+                implementation(project(":core:objects"))
+                implementation(project(":core:ui"))
+                implementation(project(":core:utils"))
+
+                implementation(libs.androidx.collection)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.jetbrains.compose.runtime)
+            }
+        }
+
+        // Hand written rather than taken from test-module-dependencies, which applies
+        // com.android.library and so cannot be used here. Same approach as :plugins:sensitivity.
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(project(":shared:tests"))
+                implementation(project(":implementation"))
+                implementation(project(":plugins:aps"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.junit.jupiter)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.com.google.truth)
+                implementation(libs.kotlinx.coroutines.test)
+                // The real org.json: isReturnDefaultValues makes the platform stub answer null rather
+                // than throwing, which NPEs the shared profile fixtures. Same reason as :pump:virtual.
+                implementation(libs.org.json.android)
+                runtimeOnly(libs.org.junit.vintage.engine)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+    }
 }
 
-dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:graph"))
-    implementation(project(":core:graphview"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:nssdk"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
-    implementation(project(":shared:impl"))
-
-    testImplementation(project(":implementation"))
-    testImplementation(project(":plugins:aps"))
-    testImplementation(project(":plugins:insulin"))
-    testImplementation(project(":shared:tests"))
-
-    api(libs.androidx.appcompat)
-    api(libs.com.google.android.material)
-
-    // Actions
-    api(libs.androidx.gridlayout)
-
-    //SmsCommunicator
-    api(libs.com.eatthepath.java.otp)
-    api(libs.com.github.kenglxn.qrgen.android)
-
-    api(libs.kotlinx.datetime)
-
-    // Overview
-    api(libs.com.google.android.flexbox)
-
-    // Food
-    api(libs.androidx.work.runtime)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.android.processor)
-}

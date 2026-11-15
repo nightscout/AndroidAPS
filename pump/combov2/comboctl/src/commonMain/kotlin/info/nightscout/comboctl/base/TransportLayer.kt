@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.TransportLayer.MAX_VALID_PAYLOAD_SIZE
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -623,6 +624,12 @@ object TransportLayer {
         // for each reliable packet.
         private var currentSequenceFlag = false
 
+        // Sequence bit of the last reliable DATA packet that came from the Combo, or null at the
+        // start of a connection. The Combo sends a reliable packet again when our ACK_RESPONSE did
+        // not reach it in time, and the copy has the same sequence bit. It has to be acknowledged
+        // again, but must not be handled a second time (#4240).
+        private var lastIncomingReliableSequenceBit: Boolean? = null
+
         // Timestamp (in ms) of the last time a packet was sent.
         // Used for throttling the output.
         private var lastSentPacketTimestamp: Long? = null
@@ -810,15 +817,22 @@ object TransportLayer {
          *         for sending.
          */
         suspend fun send(packetInfo: OutgoingPacketInfo) {
+            // The recorded exception is checked FIRST, before liveness. The receiver records it, closes
+            // the channel and calls onPacketReceiverException while its coroutine is still running, and
+            // only then leaves the loop. Asking `receiverIsOK()` first therefore leaves a window - from
+            // the callback until the job actually ends - in which the link is already dead, the reason
+            // is already known, and this method would nonetheless go on and send. A caller that reacts
+            // to onPacketReceiverException by sending, which is the natural thing to do in a cleanup
+            // handler, would get a silent success on a dead link. Reading the recorded exception closes
+            // that window, because it is set before the callback rather than after the job ends.
+            lastPacketReceiverException?.let { throw it }
+
             check(isIORunning()) {
                 "Attempted to send packet even though IO is not running"
             }
 
-            if (!receiverIsOK()) {
-                lastPacketReceiverException?.let {
-                    throw it
-                } ?: throw Error("Packet receiver channel failed for unknown reason")
-            }
+            if (!receiverIsOK())
+                throw Error("Packet receiver channel failed for unknown reason")
 
             sendInternal(packetInfo)
         }
@@ -852,15 +866,15 @@ object TransportLayer {
             // The actual reception takes place there. startInternal()
             // contains that receiver's code.
 
+            // Recorded exception first, for the same reason as in send() - see the note there.
+            lastPacketReceiverException?.let { throw it }
+
             check(isIORunning()) {
                 "Attempted to receive packet even though IO is not running"
             }
 
-            if (!receiverIsOK()) {
-                lastPacketReceiverException?.let {
-                    throw it
-                } ?: throw Error("Packet receiver channel failed for unknown reason")
-            }
+            if (!receiverIsOK())
+                throw Error("Packet receiver channel failed for unknown reason")
 
             logger(LogLevel.VERBOSE) {
                 if (expectedCommand == null)
@@ -896,6 +910,7 @@ object TransportLayer {
                 InvariantPumpData.nullData()
 
             currentSequenceFlag = false
+            lastIncomingReliableSequenceBit = null
             lastSentPacketTimestamp = null
             lastPacketReceiverException = null
 
@@ -1076,14 +1091,33 @@ object TransportLayer {
             if (skipPacket)
                 return null
 
+            // A repeated reliable DATA packet: the Combo sent it again because our ACK_RESPONSE
+            // came too late. It was acknowledged again above, and must not be handled twice.
+            // Without this check the copy reached the waiting caller as the answer to the next
+            // request ("expected X, got" the previous answer). After a bolus this made the
+            // post-bolus status read fail, so a delivered bolus was reported as failed (#4240).
+            if ((packet.command == Command.DATA) && packet.reliabilityBit) {
+                if (packet.sequenceBit == lastIncomingReliableSequenceBit) {
+                    logger(LogLevel.INFO) {
+                        "Got a repeated reliable DATA packet (sequence bit ${packet.sequenceBit}); acknowledged it again, dropping it"
+                    }
+                    return null
+                }
+                lastIncomingReliableSequenceBit = packet.sequenceBit
+            }
+
             // Perform some command specific processing.
             when (packet.command) {
                 // When we get this command, we must reset the current
                 // sequence flag to make sure we start the regular
-                // connection with the correct flag.
+                // connection with the correct flag. The Combo starts its
+                // own sequence again too, so forget the last incoming bit.
                 // (Not doing this for pairing connections since this
                 // flag is never used during pairing.)
-                Command.REGULAR_CONNECTION_REQUEST_ACCEPTED -> currentSequenceFlag = false
+                Command.REGULAR_CONNECTION_REQUEST_ACCEPTED -> {
+                    currentSequenceFlag = false
+                    lastIncomingReliableSequenceBit = null
+                }
                 Command.ERROR_RESPONSE                      -> processErrorResponsePacket(packet)
                 else                                        -> Unit
             }
@@ -1142,8 +1176,6 @@ object TransportLayer {
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
                 Command.DATA               -> cachedInvariantPumpData.keyResponseAddress
-
-                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             val isCRCPacket = when (outgoingPacketInfo.command) {
@@ -1207,8 +1239,6 @@ object TransportLayer {
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
                 Command.DATA               -> cachedInvariantPumpData.clientPumpCipher
-
-                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             // Authenticate the packet if necessary.

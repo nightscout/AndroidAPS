@@ -10,5 +10,5 @@
     <string name="no_active_tbr_to_change">Žiadny aktívny dočasný bazál pre zmenu</string>
     <string name="no_such_bolus_to_cancel">Žiadny takýto bolus na zrušenie</string>
     <string name="pump_already_in_that_state_exception">Pumpa už je v tomto stave</string>
-    <string name="run_mode_not_allowed">Režim spustenia nieje povolený</string>
+    <string name="run_mode_not_allowed">Režim chodu nie je povolený</string>
 </resources>

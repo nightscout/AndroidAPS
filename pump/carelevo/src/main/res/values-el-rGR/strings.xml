@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Ενσωμάτωση αντλίας Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Συναγερμοί Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Ειδοποιήσεις για συναγερμούς του Patch Carelevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Κατάσταση Bluetooth</string>
+    <string name="carelevo_serial_number_key">Σειριακός αριθμός</string>
+    <string name="carelevo_boot_date_time_key">Ώρα ενεργοποίησης</string>
+    <string name="carelevo_expiration_key">Λήξη</string>
+    <string name="carelevo_basal_rate_key">Βασικός ρυθμός</string>
+    <string name="carelevo_temp_basal_rate_key">Προσωρινός βασικός ρυθμός</string>
+    <string name="carelevo_insulin_remain_key">Υπόλοιπο ινσουλίνης</string>
+    <string name="carelevo_running_remain_time">Υπόλοιπος χρόνος Patch</string>
+    <string name="carelevo_total_insulin_key">Συνολική ινσουλίνη που χορηγήθηκε</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d ώρ. %2$d λεπ.</string>
+    <string name="common_label_unit_value_minute">%d λεπ.</string>
+    <string name="common_label_unit_value_duration_hour">%d ώρ.</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/ώρα</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Θέλετε να συνεχίσετε την έγχυση;</string>
+    <string name="carelevo_pump_resume_description">Η έγχυση θα συνεχιστεί όταν πατήσετε Επιβεβαίωση.</string>
+    <string name="carelevo_pump_stop_duration_title">Ορίστε τη διάρκεια παύσης της έγχυσης.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 λεπτά</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 ώρα</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 ώρα 30 λεπτά</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 ώρες</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 ώρες 30 λεπτά</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 ώρες</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 ώρες 30 λεπτά</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 ώρες</string>
+    <string name="common_unit_value_day_hour_min">%1$d ημέρες %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Απομένουν %1$d λεπ. %2$02d δευτ.</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Οδηγός ινσουλίνης</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Απενεργοποίηση Patch</string>
+    <string name="carelevo_btn_input_search_patch">Αναζήτηση Patch</string>
+    <string name="carelevo_btn_retry">Επανάληψη</string>
+    <string name="carelevo_btn_next">Επόμενο</string>
+    <string name="carelevo_btn_safety_check">Έλεγχος ασφαλείας</string>
+    <string name="carelevo_btn_cancel">Ακύρωση</string>
+    <string name="carelevo_btn_confirm">Επιβεβαίωση</string>
+    <string name="carelevo_btn_research">Νέα σάρωση</string>
+    <string name="carelevo_btn_needle_insert_check">Επιβεβαίωση εισαγωγής</string>
+    <string name="carelevo_state_none_value">Χωρίς ενεργό Patch</string>
+    <string name="carelevo_state_disconnected_value">Αποσυνδεδεμένο</string>
+    <string name="carelevo_state_connected_value">Συνδεδεμένο</string>
+    <string name="carelevo_overview_connect_btn_label">Ενεργοποίηση Patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Απόρριψη Patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Αναστολή έγχυσης</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Συνέχιση έγχυσης</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Επιλέξτε την ποσότητα που γεμίσατε.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Εύρος: %1$d ~ %2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. Αφαιρέστε το προστατευτικό χαρτί από τη συσκευασία (blister) του Patch.</string>
+    <string name="carelevo_insulin_refill_step2">2. Απολυμάνετε το λαστιχένιο καπάκι του φιαλιδίου ινσουλίνης με μαντηλάκι οινοπνεύματος.</string>
+    <string name="carelevo_insulin_refill_step3">3. Αφαιρέστε το προστατευτικό καπάκι της βελόνας από τη σύριγγα ινσουλίνης, τραβώντας το ευθεία προς τα έξω.</string>
+    <string name="carelevo_insulin_refill_step4">4. Τραβήξτε προς τα πίσω το έμβολο της σύριγγας, για να τη γεμίσετε με περίπου 2 mL αέρα.</string>
+    <string name="carelevo_insulin_refill_step5">5. Βάλτε τη σύριγγα με τον αέρα στο φιαλίδιο ινσουλίνης και εγχύστε τον αέρα μέσα στο φιαλίδιο.</string>
+    <string name="carelevo_insulin_refill_step6">6. Με τη σύριγγα ακόμα μέσα, γυρίστε ανάποδα το φιαλίδιο και τη σύριγγα μαζί και, με τη βοήθεια της πίεσης, γεμίστε τη σύριγγα με περίπου 2 mL ινσουλίνης.</string>
+    <string name="carelevo_insulin_refill_step7">7. Βάλτε τη βελόνα της σύριγγας κάθετα στη θύρα πλήρωσης ινσουλίνης του Patch (①), μέχρι να φτάσει στον πάτο. Τραβήξτε το έμβολο τελείως προς τα πάνω και μετά αφήστε το. Βγάλτε τη σύριγγα από τη θύρα πλήρωσης.</string>
+    <string name="carelevo_insulin_refill_step8">8. Κρατήστε τη σύριγγα όρθια και χτυπήστε ελαφρά το πλάι της, ώστε όλες οι φυσαλίδες αέρα να μαζευτούν στην κορυφή.</string>
+    <string name="carelevo_insulin_refill_step9">9. Βάλτε ξανά τη βελόνα στο φιαλίδιο ινσουλίνης, σπρώξτε όλο τον αέρα μέσα στο φιαλίδιο και μετά τραβήξτε την ακριβή ποσότητα ινσουλίνης που θα χρησιμοποιήσετε για όλη τη διάρκεια χρήσης του Patch.</string>
+    <string name="carelevo_insulin_refill_step10">10. Βγάλτε τη σύριγγα από το φιαλίδιο. Αν υπάρχουν φυσαλίδες αέρα, κρατήστε τη σύριγγα όρθια, χτυπήστε ελαφρά το πλάι για να ανέβουν οι φυσαλίδες στην κορυφή και βγάλτε όλο τον αέρα από τη σύριγγα.</string>
+    <string name="carelevo_insulin_refill_step11">11. Ευθυγραμμίστε την κορυφή του εμβόλου με τη γραμμή της κλίμακας για να ρυθμίσετε με ακρίβεια τη δόση ινσουλίνης.</string>
+    <string name="carelevo_insulin_refill_step12">12. Εισαγάγετε τη βελόνα κάθετα στη θύρα πλήρωσης ινσουλίνης του Patch (①) μέχρι να φτάσει στον πάτο και πιέστε αργά το έμβολο για να εγχύσετε όλη την ινσουλίνη στο Patch.</string>
+    <string name="carelevo_connect_prepare_title">Το Patch ξεκίνησε</string>
+    <string name="carelevo_connect_patch_title">Σύνδεση Patch</string>
+    <string name="carelevo_connect_safety_check_title">Έλεγχος ασφαλείας</string>
+    <string name="carelevo_connect_patch_attach_title">Εφαρμογή Patch</string>
+    <string name="carelevo_connect_needle_check_title">Εισαγωγή βελόνας</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Συναγερμός πληροφοριών Patch</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Ρύθμιση ειδοποίησης χαμηλής ινσουλίνης</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Ρύθμιση ειδοποίησης χρήσης Patch</string>
+    <string name="carelevo_title_fill_insulin">Γέμισμα Patch με ινσουλίνη</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Γεμίστε το Patch με ινσουλίνη (%1$d–%2$d U), με βάση τη διάρκεια χρήσης (έως 168 ώρες). Πατήστε [Ποσότητα πλήρωσης] για την ινσουλίνη που γεμίσατε.</string>
+    <string name="carelevo_patch_step_1">ΒΗΜΑ 1.</string>
+    <string name="carelevo_patch_step_2">ΒΗΜΑ 2.</string>
+    <string name="carelevo_patch_step_3">ΒΗΜΑ 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Αφαίρεση καπακιού βελόνας</string>
+    <string name="carelevo_patch_connect_step_1_desc">Βγάλτε το Patch από τη συσκευασία και αφαιρέστε το καπάκι της βελόνας.</string>
+    <string name="carelevo_patch_connect_step_2_title">Ενεργοποίηση και σύνδεση</string>
+    <string name="carelevo_patch_connect_step_2_desc">Πατήστε το κουμπί λειτουργίας για περισσότερο από 1 δευτερόλεπτο. Μετά το μπιπ, πατήστε το κουμπί [Αναζήτηση Patch] παρακάτω.</string>
+    <string name="carelevo_patch_safety_check_start_title">Έλεγχος ασφαλείας</string>
+    <string name="carelevo_patch_safety_check_end_title">Ο έλεγχος ασφαλείας ολοκληρώθηκε</string>
+    <string name="carelevo_patch_safety_check_start_desc">Το Patch συνδέθηκε με επιτυχία.\nΠατήστε το κουμπί [Έλεγχος ασφαλείας].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Έλεγχος ασφαλείας σε εξέλιξη.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Ο έλεγχος ασφαλείας ολοκληρώθηκε.\nΠατήστε το κουμπί Επόμενο.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Ελέγξτε αν έχει σχηματιστεί μια σταγόνα ινσουλίνης στην άκρη της βελόνας.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Αν δεν φαίνεται σταγόνα ινσουλίνης, πατήστε το κουμπί [Επανάληψη].</string>
+    <string name="carelevo_patch_attach_step1_title">Απολύμανση σημείου Patch</string>
+    <string name="carelevo_patch_attach_step1_desc">Καθαρίστε καλά με ένα μαντηλάκι οινοπνεύματος.</string>
+    <string name="carelevo_patch_attach_step2_title">Αφαίρεση προστατευτικής ταινίας</string>
+    <string name="carelevo_patch_attach_step2_desc">Βγάλτε το Patch από τη συσκευασία και αφαιρέστε το καπάκι της βελόνας.</string>
+    <string name="carelevo_patch_attach_step3_title">Τοποθέτηση Patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Κολλήστε το Patch στο δέρμα σας με τη σημειωμένη κουκκίδα προς τα πάνω.</string>
+    <string name="carelevo_patch_attach_step4_desc">Μετά την τοποθέτηση του Patch, πατήστε Επόμενο.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Αφαίρεση καπακιού ασφαλείας</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Γυρίστε το καπάκι ασφαλείας προς την κατεύθυνση του βέλους και αφαιρέστε το.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Εισαγωγή βελόνας</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Πατήστε το κουμπί του εφαρμογέα τελείως προς τα κάτω. Όταν η εισαγωγή πετύχει, θα ακουστεί ένα μπιπ.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Πατήστε και κρατήστε για 10 δευτερόλεπτα.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Απομένουν %d προσπάθειες για την εισαγωγή της βελόνας.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Απενεργοποίηση του Patch και έναρξη νέου Patch;</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Πατώντας το κουμπί [OK] θα σταματήσει η ινσουλίνη.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Τέλος χωρίς έναρξη χορήγησης;</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Πατώντας το κουμπί [OK] αυτό το Patch δεν θα μπορεί πλέον να χρησιμοποιηθεί.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Ακύρωση ενεργοποίησης του Patch;</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Πατώντας το κουμπί [OK] θα απορριφθούν όσα εισαγάγατε.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Αν το Patch που εντοπίστηκε παρακάτω είναι το σωστό, πατήστε το κουμπί Επιβεβαίωση.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Η εισαγωγή της βελόνας και η αφαίρεση του εφαρμογέα ολοκληρώθηκαν</string>
+    <string name="carelevo_dialog_connect_detached">Ο εφαρμογέας αφαιρέθηκε</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Πιέστε τις λαβές και στις δύο πλευρές του εφαρμογέα για να τον αποσπάσετε από το Patch,\nκαι μετά πατήστε το κουμπί `Ο εφαρμογέας αφαιρέθηκε`. Θα ξεκινήσει η χορήγηση ινσουλίνης.</string>
+    <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Το Bluetooth δεν είναι ενεργό. Ελέγξτε το.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Δεν υπάρχει συνδεδεμένο Patch.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Το Patch δεν έχει συνδεθεί ακόμα. Προσπαθήστε ξανά σε λίγο.</string>
+    <string name="carelevo_toast_msg_scan_failed">Η αναζήτηση απέτυχε. Προσπαθήστε ξανά.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Δεν βρέθηκε Patch. Προσπαθήστε ξανά.</string>
+    <string name="carelevo_toast_msg_connect_failed">Η σύνδεση με το Patch απέτυχε. Προσπαθήστε ξανά.</string>
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Δεν έχει οριστεί προφίλ.</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Ο έλεγχος της βελόνας απέτυχε.</string>
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Η απόρριψη του Patch απέτυχε. Προσπαθήστε ξανά.</string>
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Το αίτημα χορήγησης βασικού ρυθμού απέτυχε. Προσπαθήστε ξανά.</string>
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Η συνέχιση της χορήγησης απέτυχε. Προσπαθήστε ξανά.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Η αναστολή της χορήγησης απέτυχε. Προσπαθήστε ξανά.</string>
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Ο έλεγχος ασφαλείας απέτυχε.</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Χαμηλή ινσουλίνη</string>
+    <string name="alarm_feat_title_warning_expired_patch">Το Patch έληξε</string>
+    <string name="alarm_feat_title_warning_low_battery">Χαμηλή μπαταρία</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Υψηλή/Χαμηλή θερμοκρασία</string>
+    <string name="alarm_feat_title_warning_not_used_app">Αυτόματη απενεργοποίηση</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">Το BLE δεν είναι συνδεδεμένο</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Λήξη χρόνου εφαρμογής Patch</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Ο αυτοέλεγχος απέτυχε</string>
+    <string name="alarm_feat_title_warning_patch_error">Σφάλμα Patch</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Απόφραξη</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Σφάλμα εισαγωγής βελόνας</string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Χαμηλή ινσουλίνη</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Η διάρκεια λειτουργίας του Patch έληξε</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Το Patch λήγει σύντομα</string>
+    <string name="alarm_feat_title_alert_low_battery">Χαμηλή μπαταρία</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Υψηλή/Χαμηλή θερμοκρασία</string>
+    <string name="alarm_feat_title_alert_not_used_app">Αυτόματη απενεργοποίηση</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">Το BLE δεν είναι συνδεδεμένο</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Η ενεργοποίηση του Patch δεν ολοκληρώθηκε</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Έναρξη ινσουλίνης</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Ενεργοποιήστε το Bluetooth</string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Χαμηλή ινσουλίνη</string>
+    <string name="alarm_feat_title_notice_expired_patch">Ειδοποίηση χρόνου χρήσης Patch</string>
+    <string name="alarm_feat_title_notice_check_patch">Ειδοποίηση ελέγχου Patch</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Αλλαγή ζώνης ώρας</string>
+    <string name="alarm_feat_title_notice_check_bg">Ελέγξτε τη γλυκόζη αίματος</string>
+    <string name="alarm_feat_title_notice_lgs_started">Το LGS ξεκίνησε</string>
+    <string name="alarm_feat_title_notice_lgs_ended">Το LGS τελείωσε</string>
+    <string name="alarm_feat_title_notice_lgs_error">Το LGS δεν είναι διαθέσιμο</string>
+    <string name="alarm_feat_title_notice_unknown">Σφάλμα Patch</string>
+    <string name="alarm_feat_desc_unknown">Απρόσμενο σφάλμα Patch.</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Απενεργοποίηση Patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Απόρριψη Patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Έναρξη ινσουλίνης</string>
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Ελέγξτε τη σύνδεση του Patch.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Το bolus δεν μπορεί να χορηγηθεί. Διαθέσιμο bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Το bolus δεν μπορεί να χορηγηθεί. Δεν έχει μείνει αρκετή ινσουλίνη.</string>
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Απομένουν λιγότερες από 10 U ινσουλίνης· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Το Patch έληξε· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Χαμηλή μπαταρία· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απόρριψη Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Η χορήγηση ινσουλίνης σταμάτησε. Μετακινηθείτε τώρα σε κατάλληλη θερμοκρασία (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Έναρξη ινσουλίνης] και ξεκινήστε ξανά τη χορήγηση βασικού ρυθμού.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Ο χρόνος εφαρμογής του Patch τελείωσε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Ο αυτοέλεγχος απέτυχε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Η χορήγηση ινσουλίνης σταμάτησε λόγω απρόσμενου σφάλματος. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Η χορήγηση ινσουλίνης σταμάτησε λόγω απόφραξης. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Η εισαγωγή της βελόνας απέτυχε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Απομένουν λιγότερες από %s U ινσουλίνης. Ετοιμαστείτε να αλλάξετε το Patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Το Patch έληξε. Αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Το Patch λήγει σύντομα. Αλλάξτε το Patch τώρα.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Η μπαταρία είναι χαμηλή. Ετοιμαστείτε να αλλάξετε το Patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Η χορήγηση ινσουλίνης σταμάτησε προσωρινά λόγω ακραίας θερμοκρασίας. Μετακινηθείτε σε 40℉–99℉ για να συνεχιστεί.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Πατήστε [OK]. Αν το αγνοήσετε, γίνεται κρίσιμος συναγερμός και η χορήγηση ινσουλίνης θα σταματήσει.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Πατήστε το κουμπί [OK] για να ολοκληρώσετε την ενεργοποίηση του Patch.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Η παύση ινσουλίνης τελείωσε. Πατήστε [Έναρξη ινσουλίνης] για να ξεκινήσει.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Το Bluetooth απαιτείται για τη χρήση του Patch. Πατήστε [OK] και ενεργοποιήστε το Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Απομένουν λιγότερες από %s U ινσουλίνης. Ετοιμαστείτε να αλλάξετε το Patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Ο χρόνος χρήσης του Patch είναι %1$s ημέρες %2$s ώρες. Λάβετε το υπόψη κατά τη χρήση.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Η ζώνη ώρας άλλαξε από %1$s(UTC %2$s) σε %3$s(UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Πέρασαν %s από το bolus σας. Ελέγξτε τη γλυκόζη αίματος.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">Το LGS ξεκίνησε.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">Το LGS τελείωσε λόγω αποσύνδεσης του Patch/CGM.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">Το LGS τελείωσε λόγω παύσης του LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">Το LGS τελείωσε επειδή πέρασε ο προγραμματισμένος χρόνος.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">Το LGS τελείωσε επειδή απενεργοποιήθηκε το LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">Το LGS τελείωσε επειδή η τιμή CGM ξεπέρασε το ορισμένο όριο.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">Το LGS τελείωσε για άγνωστο λόγο.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Ελέγξτε τη σύνδεση του Patch και του CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Παραλείφθηκε: πολύ σύντομα μετά την προηγούμενη ενημέρωση.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Το Patch δεν επιβεβαίωσε τη διακοπή. Αναμονή για το τέλος του bolus…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Ένα bolus που δεν είχε καταγραφεί προστέθηκε τώρα. Ελέγξτε το IOB και δοκιμάστε ξανά.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Το Patch δεν επιβεβαίωσε τη διακοπή. Καταγράφεται ολόκληρο το bolus των %1$s.</string>
+</resources>

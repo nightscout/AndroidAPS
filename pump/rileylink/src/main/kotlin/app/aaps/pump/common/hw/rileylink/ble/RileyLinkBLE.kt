@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.core.utils.pump.ThreadUtil
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
@@ -34,19 +35,21 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
 import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.Semaphore
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by geoff on 5/26/16.
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
-@Singleton
-class RileyLinkBLE @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RileyLinkBLE(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rileyLinkServiceData: RileyLinkServiceData,
@@ -69,11 +72,6 @@ class RileyLinkBLE @Inject constructor(
     private var radioResponseCountNotified: Runnable? = null
     var isConnected = false
         private set
-
-    @Inject fun onInit() {
-        //aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
-        orangeLink.rileyLinkBLE = this
-    }
 
     private fun isAnyRileyLinkServiceFound(service: BluetoothGattService): Boolean {
         val found = GattAttributes.isRileyLink(service.uuid)
@@ -174,7 +172,7 @@ class RileyLinkBLE @Inject constructor(
         if (config.PUMPDRIVERS && ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "no permission")
             return
-        } else bluetoothConnectionGatt = rileyLinkDevice?.connectGatt(context, true, bluetoothGattCallback)
+        } else bluetoothConnectionGatt = rileyLinkDevice?.connectGattCompat(context, true, bluetoothGattCallback)
         // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null)
             aapsLogger.error(LTag.PUMPBTCOMM, "Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter?.address)
@@ -217,38 +215,52 @@ class RileyLinkBLE @Inject constructor(
             return retValue
         }
         gattOperationSema.acquire()
-        SystemClock.sleep(1) // attempting to yield thread, to make sequence of events easier to follow
-        if (mCurrentOperation != null) retValue.resultCode = BLECommOperationResult.RESULT_BUSY
-        else {
-            if (bluetoothConnectionGatt?.getService(serviceUUID) == null) {
-                // Catch if the service is not supported by the BLE device
-                retValue.resultCode = BLECommOperationResult.RESULT_NONE
-                aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported")
-                // TODO: 11/07/2016 UI update for user
-                // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
-            } else {
-                bluetoothConnectionGatt?.let { bluetoothConnectionGatt ->
-                    val chara = bluetoothConnectionGatt.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
-                    // Tell Android that we want the notifications
-                    bluetoothConnectionGatt.setCharacteristicNotification(chara, true)
-                    val list = chara.descriptors
-                    if (list.isNotEmpty()) {
-                        if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
-                        // Tell the remote device to send the notifications
-                        mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-                        mCurrentOperation?.execute(this)
-                        when {
-                            mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                            mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
-                            else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
-                        }
-                    } else return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
+        try {
+            SystemClock.sleep(1) // attempting to yield thread, to make sequence of events easier to follow
+            if (mCurrentOperation != null) retValue.resultCode = BLECommOperationResult.RESULT_BUSY
+            else {
+                if (bluetoothConnectionGatt?.getService(serviceUUID) == null) {
+                    // Catch if the service is not supported by the BLE device
+                    retValue.resultCode = BLECommOperationResult.RESULT_NONE
+                    aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported")
+                    // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+                } else {
+                    bluetoothConnectionGatt?.let { bluetoothConnectionGatt ->
+                        val chara = bluetoothConnectionGatt.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
+                        // Tell Android that we want the notifications
+                        bluetoothConnectionGatt.setCharacteristicNotification(chara, true)
+                        val list = chara.descriptors
+                        if (list.isNotEmpty()) {
+                            if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
+                            // Tell the remote device to send the notifications
+                            mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+                            mCurrentOperation?.execute(this)
+                            when {
+                                mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                                mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+                                else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                            }
+                        } else return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
+                    }
                 }
             }
-            mCurrentOperation = null
-            gattOperationSema.release()
+        } finally {
+            releaseGattOperation()
         }
         return retValue
+    }
+
+    /**
+     * Ends a blocking GATT operation. Called from `finally`, so it runs on every way out: the busy
+     * path, the early returns and a throw. Before, those paths kept the only permit, and every later
+     * RileyLink operation waited for it forever (#5209). [mCurrentOperation] is cleared too, because
+     * only the permit holder ever sets it: if it is still set here, it is left over and would make
+     * every later call report busy.
+     */
+    private fun releaseGattOperation() {
+        mCurrentOperation = null
+        gattOperationSema.release()
     }
 
     // call from main
@@ -261,32 +273,34 @@ class RileyLinkBLE @Inject constructor(
         }
         retValue.value = value
         gattOperationSema.acquire()
-        SystemClock.sleep(1) // attempting to yield thread, to make sequence of events easier to follow
-        if (mCurrentOperation != null) retValue.resultCode = BLECommOperationResult.RESULT_BUSY
-        else {
-            if (bluetoothConnectionGatt?.getService(serviceUUID) == null) {
-                // Catch if the service is not supported by the BLE device
-                // GGW: Tue Jul 12 01:14:01 UTC 2016: This can also happen if the
-                // app that created the bluetoothConnectionGatt has been destroyed/created,
-                // e.g. when the user switches from portrait to landscape.
-                retValue.resultCode = BLECommOperationResult.RESULT_NONE
-                aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported")
-                // TODO: 11/07/2016 UI update for user
-                // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
-            } else {
-                bluetoothConnectionGatt?.let { bluetoothConnectionGatt ->
-                    val chara = bluetoothConnectionGatt.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NOT_CONFIGURED }
-                    mCurrentOperation = CharacteristicWriteOperation(aapsLogger, bluetoothConnectionGatt, chara, value)
-                    mCurrentOperation?.execute(this)
-                    when {
-                        mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                        mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
-                        else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+        try {
+            SystemClock.sleep(1) // attempting to yield thread, to make sequence of events easier to follow
+            if (mCurrentOperation != null) retValue.resultCode = BLECommOperationResult.RESULT_BUSY
+            else {
+                if (bluetoothConnectionGatt?.getService(serviceUUID) == null) {
+                    // Catch if the service is not supported by the BLE device
+                    // GGW: Tue Jul 12 01:14:01 UTC 2016: This can also happen if the
+                    // app that created the bluetoothConnectionGatt has been destroyed/created,
+                    // e.g. when the user switches from portrait to landscape.
+                    retValue.resultCode = BLECommOperationResult.RESULT_NONE
+                    aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported")
+                    // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+                } else {
+                    bluetoothConnectionGatt?.let { bluetoothConnectionGatt ->
+                        val chara = bluetoothConnectionGatt.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NOT_CONFIGURED }
+                        mCurrentOperation = CharacteristicWriteOperation(aapsLogger, bluetoothConnectionGatt, chara, value)
+                        mCurrentOperation?.execute(this)
+                        when {
+                            mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                            mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+                            else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                        }
                     }
                 }
             }
-            mCurrentOperation = null
-            gattOperationSema.release()
+        } finally {
+            releaseGattOperation()
         }
         return retValue
     }
@@ -300,32 +314,34 @@ class RileyLinkBLE @Inject constructor(
         }
 
         gattOperationSema.acquire()
-        SystemClock.sleep(1) // attempting to yield thread, to make sequence of events easier to follow
-        if (mCurrentOperation != null) retValue.resultCode = BLECommOperationResult.RESULT_BUSY
-        else {
-            if (bluetoothConnectionGatt?.getService(serviceUUID) == null) {
-                // Catch if the service is not supported by the BLE device
-                retValue.resultCode = BLECommOperationResult.RESULT_NONE
-                aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported")
-                // TODO: 11/07/2016 UI update for user
-                // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
-            } else {
-                val chara = bluetoothConnectionGatt?.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NOT_CONFIGURED }
-                mCurrentOperation = CharacteristicReadOperation(aapsLogger, bluetoothConnectionGatt!!, chara)
-                mCurrentOperation?.execute(this)
-                when {
-                    mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                    mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+        try {
+            SystemClock.sleep(1) // attempting to yield thread, to make sequence of events easier to follow
+            if (mCurrentOperation != null) retValue.resultCode = BLECommOperationResult.RESULT_BUSY
+            else {
+                if (bluetoothConnectionGatt?.getService(serviceUUID) == null) {
+                    // Catch if the service is not supported by the BLE device
+                    retValue.resultCode = BLECommOperationResult.RESULT_NONE
+                    aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported")
+                    // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+                } else {
+                    val chara = bluetoothConnectionGatt?.getService(serviceUUID)?.getCharacteristic(charaUUID) ?: return retValue.apply { resultCode = BLECommOperationResult.RESULT_NOT_CONFIGURED }
+                    mCurrentOperation = CharacteristicReadOperation(aapsLogger, bluetoothConnectionGatt!!, chara)
+                    mCurrentOperation?.execute(this)
+                    when {
+                        mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                        mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
 
-                    else                                   -> {
-                        retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
-                        retValue.value = mCurrentOperation?.value
+                        else                                   -> {
+                            retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                            retValue.value = mCurrentOperation?.value
+                        }
                     }
                 }
             }
+        } finally {
+            releaseGattOperation()
         }
-        mCurrentOperation = null
-        gattOperationSema.release()
 
         return retValue
     }
@@ -340,7 +356,6 @@ class RileyLinkBLE @Inject constructor(
         }
 
     init {
-        //orangeLink.rileyLinkBLE = this;
         bluetoothGattCallback = object : BluetoothGattCallback() {
             @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
