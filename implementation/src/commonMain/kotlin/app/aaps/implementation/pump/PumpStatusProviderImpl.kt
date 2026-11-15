@@ -104,9 +104,7 @@ class PumpStatusProviderImpl(
             val reservoir = pump.reservoirLevel.value
             val pumpType = pump.pumpDescription.pumpType
             // These pods use 75 cU as a placeholder when the reservoir is above their measuring range.
-            if ((pumpType == PumpType.OMNIPOD_5 || pumpType == PumpType.OMNIPOD_DASH) && reservoir.cU == 75.0) {
-                put("reservoir_display_override", "> 50U")
-            } else {
+            if ((pumpType != PumpType.OMNIPOD_5 && pumpType != PumpType.OMNIPOD_DASH) || reservoir.cU != 75.0) {
                 put("reservoir", reservoir.iU(profile.insulinConcentration()).toInt())
             }
             put("clock", dateUtil.toISOString(now))

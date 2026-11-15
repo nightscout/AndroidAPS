@@ -76,13 +76,13 @@ class PumpStatusProviderImplTest : TestBaseWithProfile() {
 
     @ParameterizedTest
     @EnumSource(value = PumpType::class, names = ["OMNIPOD_5", "OMNIPOD_DASH"])
-    fun `pod reservoir above the measuring range is sent as display text`(pumpType: PumpType) = runTest {
+    fun `pod reservoir above the measuring range is omitted`(pumpType: PumpType) = runTest {
         setReservoir(pumpType, 75.0)
 
         val json = status()
 
         assertThat(json.has("reservoir")).isFalse()
-        assertThat(json.getString("reservoir_display_override")).isEqualTo("> 50U")
+        assertThat(json.has("reservoir_display_override")).isFalse()
     }
 
     @ParameterizedTest

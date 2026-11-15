@@ -59,10 +59,10 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     }
 
     @Test
-    fun `reservoir display text survives Nightscout upload conversion`() {
+    fun `omitted reservoir stays absent through Nightscout upload conversion`() {
         val deviceStatus = DS(
             timestamp = 10000,
-            pump = """{"reservoir_display_override":"> 50U"}""",
+            pump = """{}""",
             uploaderBattery = 0,
             isCharging = false
         )
@@ -70,7 +70,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
         val status = deviceStatus.toNSDeviceStatus().convertToRemoteAndBack()
 
         assertThat(status.pump?.reservoir).isNull()
-        assertThat(status.pump?.reservoirDisplayOverride).isEqualTo("> 50U")
+        assertThat(status.pump?.reservoirDisplayOverride).isNull()
     }
 
     @Test
