@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">Maximaler Bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximale Basalrate</string>
-    <string name="openapsma_max_basal_summary">Dieser Wert wird \"max basal\" in OpenAPS genannt.</string>
     <string name="pref_title_smb_max_iob">Max. IOB für SMB</string>
-    <string name="openapssmb_max_iob_summary">Dieser Wert wird in OpenAPS als „Max IOB“ bezeichnet.\nOpenAPS gibt kein zusätzliches Insulin ab, wenn das aktuell aktive Insulin (IOB) diesen Wert überschreitet. Der Wert wird auch durch den Patiententyp beeinflusst.</string>
     <string name="pref_title_ama_max_iob">Max. IOB für AMA</string>
-    <string name="openapsma_max_iob_summary">Dieser Wert wird in OpenAPS als „Max IOB“ bezeichnet.\nEr gibt die maximale Insulinmenge in [U] an, die APS auf einmal abgeben kann. Der Wert wird auch durch den Patiententyp beeinflusst.</string>
     <string name="pref_title_max_daily_multiplier">Max. täglicher Sicherheitsmultiplikator</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige OpenAPS Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest du diesen Wert nicht ändern. Aber du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
     <string name="pref_title_current_basal_multiplier">Sicherheitsmultiplikator für die aktuelle Basalrate</string>
