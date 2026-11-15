@@ -428,7 +428,7 @@ class DashOverviewViewModel(
     }
 
     fun confirmDiscardPod() {
-        podStateManager.reset()
+        omnipodDashPumpPlugin.removePod()
     }
 
     // endregion

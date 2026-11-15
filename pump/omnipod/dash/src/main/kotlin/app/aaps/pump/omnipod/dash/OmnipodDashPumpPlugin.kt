@@ -220,6 +220,24 @@ class OmnipodDashPumpPlugin(
         }
     }
 
+    /**
+     * Drops the pod from AAPS: after a deactivation, and when the user discards a pod that does not answer. A removed
+     * pod gives nothing, so the 0 U/h record starts now and not at the next check, up to a minute later.
+     */
+    fun removePod() {
+        podStateManager.reset()
+        notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
+        pluginScope.launch {
+            try {
+                createFakeTBRWhenNoActivePod().await()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$e")
+            }
+        }
+    }
+
     private fun updatePodWarnings() {
         if (System.currentTimeMillis() > nextPodWarningCheck) {
             if (!podStateManager.isPodRunning) {
@@ -1235,8 +1253,7 @@ class OmnipodDashPumpPlugin(
             if (podStateManager.activeCommand != null) {
                 success = false
             } else {
-                podStateManager.reset()
-                notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
+                removePod()
             }
         }.toPumpEnactResultImpl()
         if (!success) {

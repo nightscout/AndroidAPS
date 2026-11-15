@@ -26,6 +26,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManag
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActionState
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardStep
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import com.google.common.truth.Truth.assertThat
@@ -61,6 +62,7 @@ import org.mockito.kotlin.whenever
 internal class DashOmnipodWizardViewModelTest {
 
     @Mock private lateinit var omnipodManager: OmnipodDashManager
+    @Mock private lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Mock private lateinit var podStateManager: OmnipodDashPodStateManager
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var rh: ResourceHelper
@@ -86,7 +88,7 @@ internal class DashOmnipodWizardViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(mainDispatcher)
         sut = DashOmnipodWizardViewModel(
-            omnipodManager, podStateManager, preferences, rh, history, commandQueue,
+            omnipodManager, omnipodDashPumpPlugin, podStateManager, preferences, rh, history, commandQueue,
             notificationManager, pumpSync, fabricPrivacy, insulinManager, profileFunction,
             profileRepository, persistenceLayer, pumpEnactResultProvider, logger, aapsSchedulers, rxBus
         )

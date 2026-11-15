@@ -35,6 +35,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardStep
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
@@ -65,6 +66,7 @@ import app.aaps.pump.omnipod.common.R as CommonR
 @Inject
 class DashOmnipodWizardViewModel(
     private val omnipodManager: OmnipodDashManager,
+    private val omnipodDashPumpPlugin: OmnipodDashPumpPlugin,
     private val podStateManager: OmnipodDashPodStateManager,
     private val preferences: Preferences,
     private val rh: ResourceHelper,
@@ -221,8 +223,7 @@ class DashOmnipodWizardViewModel(
     // region Pod state queries
 
     override fun discardPod() {
-        podStateManager.reset()
-        notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
+        omnipodDashPumpPlugin.removePod()
     }
 
     override fun isPodInAlarm(): Boolean = false // TODO: not yet implemented in Dash
