@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">Maksimum bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maksimum bazal oran</string>
-    <string name="openapsma_max_basal_summary">Bu değer OpenAPS\'te \"maksimum bazal\" olarak adlandırılır</string>
     <string name="pref_title_smb_max_iob">SMB için maks AİNS</string>
-    <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Maks AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez. Söz konusu değer, hasta tipine göre de değişiklik gösterebilir.</string>
     <string name="pref_title_ama_max_iob">AMA için maks AİNS</string>
-    <string name="openapsma_max_iob_summary">Bu değere OpenAPS bağlamında maks AİNS denir.\nAPS\'de bir kerede verilebilen maksimum insülin [Ü]. Değer, hasta tipinden etkilenir.</string>
     <string name="pref_title_max_daily_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'in önemli bir güvenlik sınırıdır. Bazal dozlarınızı en yüksek bazal oranınızın 3 katıyla sınırlar. Bunu büyük olasılıkla değiştirmeniz gerekmez, ancak güvenlik sınırlarında konuşulan “günlük maksimumun 3 katı; mevcut oranın 4 katı” kuralının bu olduğunu bilmelisiniz.</string>
     <string name="pref_title_current_basal_multiplier">Mevcut bazal güvenlik çarpanı</string>
