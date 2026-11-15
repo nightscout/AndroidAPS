@@ -414,9 +414,7 @@ class OmnipodDashPumpPlugin(
                 }
             }
             if (!podStateManager.alarmSynced) {
-                podStateManager.alarmType?.let {
-                    val faultText = rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.code, it.toString()) +
-                        (podStateManager.pdmRef?.let { ref -> "\n" + rh.gs(CommonR.string.omnipod_common_pdm_ref, ref) } ?: "")
+                podFaultText()?.let { faultText ->
                     if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class)) {
                         showNotification(
                             NotificationId.OMNIPOD_POD_FAULT,
@@ -434,6 +432,12 @@ class OmnipodDashPumpPlugin(
                 }
             }
         }
+    }
+
+    /** The text of the pod's alarm for the user, or null when the pod reported none. */
+    private fun podFaultText(): String? = podStateManager.alarmType?.let {
+        rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.code, it.toString()) +
+            (podStateManager.pdmRef?.let { ref -> "\n" + rh.gs(CommonR.string.omnipod_common_pdm_ref, ref) } ?: "")
     }
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
@@ -759,7 +763,11 @@ class OmnipodDashPumpPlugin(
                     }
                 }
             }.toSingle {
-                pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
+                // A pod in alarm stopped the bolus on its own. What it gave is counted, but the bolus is not a success.
+                val podStoppedBolus = podStateManager.isPodKaput
+                pumpEnactResultProvider().success(!podStoppedBolus).enacted(true).bolusDelivered(deliveredBolusAmount).also {
+                    if (podStoppedBolus) it.comment(podFaultText() ?: "")
+                }
             }.onErrorReturnItem(
                 // success if canceled
                 pumpEnactResultProvider().success(bolusCanceled).enacted(false)
