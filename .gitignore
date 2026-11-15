@@ -50,3 +50,4 @@ ios/app/Version.xcconfig
 # reach history - one was staged for commit alongside _docs/import.xlsx.
 ~$*
 *.pyc
+/.codex-attachments
