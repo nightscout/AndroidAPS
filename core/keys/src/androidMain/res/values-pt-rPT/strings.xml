@@ -295,11 +295,8 @@
     <string name="pref_title_max_bolus">Bólus máximo</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Taxa basal máxima</string>
-    <string name="openapsma_max_basal_summary">Este valor é chamado máx basal no contexto do OpenAPS</string>
     <string name="pref_title_smb_max_iob">IA máx. para SMB</string>
-    <string name="openapssmb_max_iob_summary">Este valor é chamado Max IOB no contexto do OpenAPS\nO OpenAPS não adiciona mais insulina se a IA atual for maior que este valor. O valor também depende do tipo de paciente.</string>
     <string name="pref_title_ama_max_iob">IA máx. para AMA</string>
-    <string name="openapsma_max_iob_summary">Este valor é chamado Max IOB no contexto do OpenAPS\nÉ a insulina máxima em [U] que o APS pode administrar de uma vez. O valor também depende do tipo de paciente.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicador de segurança diário máx.</string>
     <string name="pref_title_current_basal_multiplier">Multiplicador de segurança da basal atual</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor predefinido: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor atual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
