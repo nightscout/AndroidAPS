@@ -298,11 +298,8 @@
     <string name="pref_title_max_bolus">最大大剂量限制</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">最大基础率</string>
-    <string name="openapsma_max_basal_summary">这个值在 OpenAPS被称为最大基础率</string>
     <string name="pref_title_smb_max_iob">SMB 模式下的最大 IOB 上限</string>
-    <string name="openapssmb_max_iob_summary">该数值在 OpenAPS 中称为最大活性胰岛素（Max IOB）。\n若当前 IOB 超出此数值，OpenAPS 将不会输注更多胰岛素。该数值同时受患者类型影响。</string>
     <string name="pref_title_ama_max_iob">AMA 最大 IOB 上限</string>
-    <string name="openapsma_max_iob_summary">该数值在 OpenAPS 中称为最大活性胰岛素（Max IOB）。\n这是 APS 单次可以输注的胰岛素的最大值[U]。该数值同时受患者类型影响。</string>
     <string name="pref_title_max_daily_multiplier">最大日基础率安全倍数</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3。这是 OpenAPS 的一项关键安全上限。其作用是将您的基础率限制为最大基础率的 3 倍。您很可能无需更改此项，但应了解这就是关于安全上限‘每日最大 3 倍；当前 4 倍’所讨论的内容。</string>
     <string name="pref_title_current_basal_multiplier">当前基础率安全倍数</string>
