@@ -296,10 +296,16 @@
     <string name="pref_title_fill_button_3">Füllen-Button 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Maximaler Bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">Das gewählte Patientenalter begrenzt diesen Wert. Ein höherer Wert hat hier keine Auswirkung.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximale Basalrate</string>
+    <string name="openapsma_max_basal_summary">Im Kontext von OpenAPS wird dieser Wert als „Max Basal“ bezeichnet.\nDas gewählte Alter des Patienten begrenzt diesen Wert. Ein höherer Wert hat hier keine Auswirkung.</string>
     <string name="pref_title_smb_max_iob">Max. IOB für SMB</string>
+    <string name="openapssmb_max_iob_summary">Im Kontext von OpenAPS wird dieser Wert als „Max IOB“ bezeichnet. OpenAPS\n verabreicht kein weiteres Insulin, wenn der aktuelle IOB-Wert über diesem Wert liegt.\n Das gewählte Patientenalter begrenzt diesen Wert. Ein höherer Wert hat hier keine Auswirkung.</string>
     <string name="pref_title_ama_max_iob">Max. IOB für AMA</string>
+    <string name="openapsma_max_iob_summary">Im Kontext von OpenAPS wird dieser Wert als „Max IOB“ bezeichnet.\n
+Dies ist die maximale Insulinmenge in [IE], die das APS auf einmal abgeben kann.\n
+Das gewählte Patientenalter begrenzt diesen Wert. Ein höherer Wert hat hier keine Auswirkung.</string>
     <string name="pref_title_max_daily_multiplier">Max. täglicher Sicherheitsmultiplikator</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige OpenAPS Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest du diesen Wert nicht ändern. Aber du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
     <string name="pref_title_current_basal_multiplier">Sicherheitsmultiplikator für die aktuelle Basalrate</string>
