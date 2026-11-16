@@ -136,6 +136,20 @@ class EncryptedKeyValueStoreTest {
         assertEquals("5", store.getString("int", ""))
     }
 
+    /**
+     * A setting that was a decimal before arrives here as a Double: the move from the old file turns
+     * the Float it was into one. Read as a whole number it is rounded, so what the user set is kept.
+     */
+    @Test
+    fun `a decimal read as a whole number is rounded, not dropped`() = runTest {
+        val store = store(MemoryBackend(mapOf("whole" to 7.0, "up" to 7.6, "down" to 7.4, "float" to 7.0f)))
+
+        assertEquals(7, store.getInt("whole", 2))
+        assertEquals(8, store.getInt("up", 2))
+        assertEquals(7L, store.getLong("down", 2L))
+        assertEquals(7.0, store.getDouble("float", 2.0))
+    }
+
     @Test
     fun `getStringOrNull gives the default only for a missing key`() = runTest {
         val store = store(MemoryBackend(mapOf("units" to "mmol")))

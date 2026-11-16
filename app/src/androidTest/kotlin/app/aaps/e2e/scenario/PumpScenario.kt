@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -190,7 +191,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
      */
     private fun stopDriver() {
         val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
-        runCatching { runBlocking { plugin.setPluginEnabledAwaiting(PluginType.PUMP, false) } }
+        // The virtual pump takes over, as it does for a user who turns a driver off, and the queue is
+        // held while the two change places. With no pump elected at all the next wake of the queue -
+        // and the release of this hold sends one itself - reaches `activePlugin.activePump` in
+        // `CommandExecutor.drainOnce`, which resolves the pump BEFORE it looks at whether there is
+        // anything to do. That read is the "No pump selected" assertion, and the loop reported it to
+        // Crashlytics from every test run. The app is never in that state; the test must not be either.
+        val virtual = testGraphs.activePlugin.getSpecificPluginsListByInterface(VirtualPump::class).firstOrNull()
+        runCatching {
+            runBlocking {
+                commandQueue.withHold("scenario: test end", RELOAD_HOLD) {
+                    plugin.setPluginEnabledAwaiting(PluginType.PUMP, false)
+                    virtual?.setPluginEnabledAwaiting(PluginType.PUMP, true)
+                }
+            }
+        }
         val driverPackage = plugin.javaClass.packageName
         awaitTrue("the services of ${pump.pluginName} are stopped", SERVICE_STOP_TIMEOUT) { runningServices().none { it.startsWith(driverPackage) } }
     }

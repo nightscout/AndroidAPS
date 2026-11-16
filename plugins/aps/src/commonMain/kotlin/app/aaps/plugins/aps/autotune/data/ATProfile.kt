@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
@@ -23,18 +23,19 @@ import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.extensions.with
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.plugins.aps.R
+import app.aaps.plugins.aps.ApsStrings
+import app.aaps.plugins.aps.autotune.NonFiniteNumberException
+import app.aaps.plugins.aps.autotune.OrgJsonText
+import app.aaps.plugins.aps.autotune.finite
 import dev.zacsweers.metro.Inject
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.put
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.TimeZone
 import kotlin.math.min
 
 @Inject
@@ -42,7 +43,7 @@ class ATProfile(
     private val preferences: Preferences,
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val profileStoreProvider: () -> ProfileStore,
     private val aapsLogger: AAPSLogger
 ) {
@@ -129,59 +130,65 @@ class ATProfile(
         data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin = null) }
     }
 
-    //Export json string with oref0 format used for autotune
-    // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
+    /**
+     * The profile as an oref0 autotune profile file, with min_5m_carbimpact, the insulin curve and a
+     * single value for carb_ratio and isf.
+     *
+     * Written as `org.json` wrote it (see [OrgJsonText]), because the file is compared with oref0's
+     * own. A value JSON cannot hold gives an empty text and a logged error, as before.
+     */
     fun profileToOrefJSON(): String {
-        var jsonString = ""
-        val json = JSONObject()
         val insulinType = InsulinType.fromPeak(iCfg.peak * 60000L)
-        try {
-            json.put("name", profileName)
-            json.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
-            json.put("dia", dia)
-            if (insulinType == InsulinType.OREF_ULTRA_RAPID_ACTING)
-                json.put("curve", "ultra-rapid")
-            else if (insulinType == InsulinType.OREF_RAPID_ACTING)
-                json.put("curve", "rapid-acting")
-            else {
-                val peakTime: Int = iCfg.peak
-                json.put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")
-                json.put("useCustomPeakTime", true)
-                json.put("insulinPeakTime", peakTime)
+        return try {
+            val json = buildJsonObject {
+                put("name", profileName)
+                put("min_5m_carbimpact", finite(preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact)))
+                put("dia", finite(dia))
+                if (insulinType == InsulinType.OREF_ULTRA_RAPID_ACTING)
+                    put("curve", "ultra-rapid")
+                else if (insulinType == InsulinType.OREF_RAPID_ACTING)
+                    put("curve", "rapid-acting")
+                else {
+                    val peakTime: Int = iCfg.peak
+                    put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")
+                    put("useCustomPeakTime", true)
+                    put("insulinPeakTime", peakTime)
+                }
+                put("basalprofile", buildJsonArray {
+                    for (h in 0..23) {
+                        val secondFromMidnight = h * 60 * 60
+                        val time: String = NumberFormat.INTEGER_2_DIGITS.format(h) + ":00:00"
+                        add(buildJsonObject {
+                            put("start", time)
+                            put("minutes", h * 60)
+                            put("rate", finite(profile.getBasalTimeFromMidnight(secondFromMidnight)))
+                        })
+                    }
+                })
+                val isfValue = Round.roundTo(avgISF, 0.001)
+                put("isfProfile", buildJsonObject {
+                    put("sensitivities", buildJsonArray {
+                        add(buildJsonObject {
+                            put("i", 0)
+                            put("start", "00:00:00")
+                            put("sensitivity", finite(isfValue))
+                            put("offset", 0)
+                            put("x", 0)
+                            put("endoffset", 1440)
+                        })
+                    })
+                })
+                put("carb_ratio", finite(avgIC))
+                put("autosens_max", finite(preferences.get(DoubleKey.AutosensMax)))
+                put("autosens_min", finite(preferences.get(DoubleKey.AutosensMin)))
+                put("units", GlucoseUnit.MGDL.asText)
+                put("timezone", SystemTimeZone.current().id)
             }
-            val basals = JSONArray()
-            for (h in 0..23) {
-                val secondFromMidnight = h * 60 * 60
-                val time: String = NumberFormat.INTEGER_2_DIGITS.format(h) + ":00:00"
-                basals.put(
-                    JSONObject()
-                        .put("start", time)
-                        .put("minutes", h * 60)
-                        .put(
-                            "rate", profile.getBasalTimeFromMidnight(secondFromMidnight)
-                        )
-                )
-            }
-            json.put("basalprofile", basals)
-            val isfValue = Round.roundTo(avgISF, 0.001)
-            json.put(
-                "isfProfile",
-                JSONObject().put(
-                    "sensitivities",
-                    JSONArray().put(JSONObject().put("i", 0).put("start", "00:00:00").put("sensitivity", isfValue).put("offset", 0).put("x", 0).put("endoffset", 1440))
-                )
-            )
-            json.put("carb_ratio", avgIC)
-            json.put("autosens_max", preferences.get(DoubleKey.AutosensMax))
-            json.put("autosens_min", preferences.get(DoubleKey.AutosensMin))
-            json.put("units", GlucoseUnit.MGDL.asText)
-            json.put("timezone", TimeZone.getDefault().id)
-            jsonString = json.toString(2).replace("\\/", "/")
-        } catch (e: JSONException) {
+            OrgJsonText.render(json, 2).replace("\\/", "/")
+        } catch (e: NonFiniteNumberException) {
             aapsLogger.error(LTag.CORE, e.stackTraceToString())
+            ""
         }
-
-        return jsonString
     }
 
     /**
@@ -214,31 +221,36 @@ class ATProfile(
         return pureProfileFromJson(json, dateUtil, profile.units.asText)
     }
 
+    /**
+     * A profile store that holds only the tuned profile, for a profile switch to it.
+     *
+     * It used to pass through `org.json` text, which wrote a whole number without its fraction and
+     * then read it back. The store reads every schedule value as a double, so building it on kotlinx
+     * directly gives the same profile. A value JSON cannot hold gives no store and a logged error, as
+     * `org.json` refused it before.
+     */
     fun profileStore(circadian: Boolean = false): ProfileStore? {
-        var profileStore: ProfileStore? = null
-        val json = JSONObject()
-        val store = JSONObject()
         val tunedProfile = if (circadian) circadianProfile else profile
         if (profileName.isEmpty())
-            profileName = rh.gs(R.string.autotune_tunedprofile_name)
-        try {
-            store.put(profileName, JSONObject(tunedProfile.toPureNsJson(dateUtil).toString()))
-            json.put("defaultProfile", profileName)
-            json.put("store", store)
-            json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
-            profileStore = profileStoreProvider().with(Json.parseToJsonElement(json.toString()).jsonObject)
-        } catch (e: JSONException) {
-            aapsLogger.error(LTag.CORE, e.stackTraceToString())
+            profileName = rh.gs(ApsStrings.autotune_tunedprofile_name)
+        val pureJson = tunedProfile.toPureNsJson(dateUtil)
+        if (pureJson.hasNonFiniteNumber()) {
+            aapsLogger.error(LTag.CORE, "Autotune produced a non finite value, profile store rejected")
+            return null
         }
-        return profileStore
+        val json = buildJsonObject {
+            put("defaultProfile", profileName)
+            put("store", buildJsonObject { put(profileName, pureJson) })
+            put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
+        }
+        return profileStoreProvider().with(json)
     }
 
-    /*
-     * The schedules are built on kotlinx and converted to org.json only for the public accessors,
-     * which still hand a JSONArray to callers. Reparsing through the text is what keeps the emitted
-     * bytes identical: org.json renders a whole numbered Double as a bare integer and kotlinx renders
-     * it with the fraction, and autotune's output files are read by people and by oref0.
-     */
+    private fun JsonElement.hasNonFiniteNumber(): Boolean = when (this) {
+        is JsonObject    -> values.any { it.hasNonFiniteNumber() }
+        is JsonArray     -> any { it.hasNonFiniteNumber() }
+        is JsonPrimitive -> !isString && doubleOrNull?.isFinite() == false
+    }
 
     /**
      * The hourly basal as a profile schedule, rounded to 0.01 U/h. Autotune itself works with three

@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.autotune.compose
 
-import android.view.View
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
@@ -18,7 +17,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
@@ -32,13 +31,14 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcCompareProfiles
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.plugins.aps.R
+import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +47,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
-import java.util.Locale
 
 @Immutable
 data class ResultRow(
@@ -159,7 +158,7 @@ class AutotuneViewModel(
     private val profileRepository: ProfileRepository,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
     private val loop: Loop,
@@ -248,7 +247,7 @@ class AutotuneViewModel(
     // --- Dialog actions ---
 
     fun onCopyLocalClick() {
-        val localName = rh.gs(CoreUiStrings.value_with_unit, rh.gs(R.string.autotune_tunedprofile_name), dateUtil.dateAndTimeString(autotunePlugin.lastRun))
+        val localName = rh.gs(CoreUiStrings.value_with_unit, rh.gs(ApsStrings.autotune_tunedprofile_name), dateUtil.dateAndTimeString(autotunePlugin.lastRun))
         _uiState.value = _uiState.value.copy(dialogState = DialogState.CopyLocal(localName))
     }
 
@@ -271,7 +270,7 @@ class AutotuneViewModel(
     fun onUpdateProfileConfirm() {
         val localName = autotunePlugin.pumpProfile.profileName
         autotunePlugin.tunedProfile?.profileName = localName
-        autotunePlugin.updateButtonVisibility = View.GONE
+        autotunePlugin.updateButtonVisibility = AutotunePlugin.UPDATE_BUTTON_HIDDEN
         autotunePlugin.saveLastRun()
         uel.log(action = Action.STORE_PROFILE, source = Sources.Autotune, value = ValueWithUnit.SimpleString(localName))
         _uiState.value = _uiState.value.copy(dialogState = DialogState.None)
@@ -288,7 +287,7 @@ class AutotuneViewModel(
     fun onRevertProfileConfirm() {
         val localName = autotunePlugin.pumpProfile.profileName
         autotunePlugin.tunedProfile?.profileName = ""
-        autotunePlugin.updateButtonVisibility = View.VISIBLE
+        autotunePlugin.updateButtonVisibility = AutotunePlugin.UPDATE_BUTTON_SHOWN
         autotunePlugin.saveLastRun()
         uel.log(action = Action.STORE_PROFILE, source = Sources.Autotune, value = ValueWithUnit.SimpleString(localName))
         _uiState.value = _uiState.value.copy(dialogState = DialogState.None)
@@ -304,7 +303,7 @@ class AutotuneViewModel(
             autotunePlugin.updateProfile(tunedProfile)
             if (loop.runningMode() == RM.Mode.DISCONNECTED_PUMP) {
                 _uiState.value = _uiState.value.copy(
-                    dialogState = DialogState.PumpDisconnected(rh.gs(app.aaps.core.ui.R.string.not_available_full))
+                    dialogState = DialogState.PumpDisconnected(rh.gs(CoreUiStrings.not_available_full))
                 )
                 return@launch
             }
@@ -324,8 +323,8 @@ class AutotuneViewModel(
                     val iCfg = profileFunction.getRunningOrRequestedICfg() ?: run {
                         rxBus.send(
                             EventShowDialog.Ok(
-                                title = rh.gs(app.aaps.core.ui.R.string.autotune),
-                                message = rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)
+                                title = rh.gs(CoreUiStrings.autotune),
+                                message = rh.gs(CoreUiStrings.profile_switch_no_insulin)
                             )
                         )
                         return@launch
@@ -347,9 +346,9 @@ class AutotuneViewModel(
                     if (switched == null)
                         rxBus.send(
                             EventShowDialog.Ok(
-                                title = rh.gs(app.aaps.core.ui.R.string.autotune),
+                                title = rh.gs(CoreUiStrings.autotune),
                                 message = profileFunction.profileSwitchRefusal(profileStore, tunedP.profileName, 0, 100, 0, iCfg)
-                                    ?: rh.gs(app.aaps.core.ui.R.string.invalid_profile)
+                                    ?: rh.gs(CoreUiStrings.invalid_profile)
                             )
                         )
                 }
@@ -393,7 +392,7 @@ class AutotuneViewModel(
                     profile = pumpProfile.profile,
                     profile2 = tunedProfile,
                     profileName = pumpProfile.profileName,
-                    profileName2 = rh.gs(R.string.autotune_tunedprofile_name),
+                    profileName2 = rh.gs(ApsStrings.autotune_tunedprofile_name),
                     headerIcon = IcCompareProfiles,
                     isCompare = true
                 )
@@ -433,11 +432,11 @@ class AutotuneViewModel(
         autotunePlugin.result = ""
         autotunePlugin.tunedProfile = null
         autotunePlugin.lastRunSuccess = false
-        autotunePlugin.updateButtonVisibility = View.GONE
+        autotunePlugin.updateButtonVisibility = AutotunePlugin.UPDATE_BUTTON_HIDDEN
     }
 
     private suspend fun addWarnings(): String {
-        val currentProfile = profileFunction.getProfile() ?: return rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
+        val currentProfile = profileFunction.getProfile() ?: return rh.gs(CoreUiStrings.profileswitch_ismissing)
         val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
         val iCfg = currentProfile.iCfg
         val atProfile = atProfileProvider().with(
@@ -445,12 +444,12 @@ class AutotuneViewModel(
             iCfg
         )
         profile = atProfile
-        if (!atProfile.isValid) return rh.gs(R.string.autotune_profile_invalid)
+        if (!atProfile.isValid) return rh.gs(ApsStrings.autotune_profile_invalid)
         val warnings = mutableListOf<String>()
         if (atProfile.icSize > 1)
-            warnings += rh.gs(R.string.autotune_ic_warning, atProfile.icSize, atProfile.ic)
+            warnings += rh.gs(ApsStrings.autotune_ic_warning, atProfile.icSize, atProfile.ic)
         if (atProfile.isfSize > 1)
-            warnings += rh.gs(R.string.autotune_isf_warning, atProfile.isfSize, profileUtil.fromMgdlToUnits(atProfile.isf), profileFunction.getUnits().displayLabel)
+            warnings += rh.gs(ApsStrings.autotune_isf_warning, atProfile.isfSize, profileUtil.fromMgdlToUnits(atProfile.isf), profileFunction.getUnits().displayLabel)
         return warnings.joinToString("\n")
     }
 
@@ -460,16 +459,16 @@ class AutotuneViewModel(
 
         var toMgDl = 1.0
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
-        val isfFormat = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "%.2f" else "%.1f"
+        val isfDecimals = if (profileFunction.getUnits() == GlucoseUnit.MMOL) 2 else 1
 
         val params = mutableListOf<ResultRow>()
         val tuneInsulin = preferences.get(BooleanKey.AutotuneTuneInsulinCurve)
         if (tuneInsulin) {
-            params += formatRow(rh.gs(R.string.autotune_peak), pumpProfile.iCfg.peak.toDouble(), tunedProfile.iCfg.peak.toDouble(), "%.0f")
-            params += formatRow(rh.gs(app.aaps.core.ui.R.string.dia), Round.roundTo(pumpProfile.iCfg.dia, 0.1), Round.roundTo(tunedProfile.iCfg.dia, 0.1), "%.1f")
+            params += formatRow(rh.gs(ApsStrings.autotune_peak), pumpProfile.iCfg.peak.toDouble(), tunedProfile.iCfg.peak.toDouble(), 0)
+            params += formatRow(rh.gs(CoreUiStrings.dia), Round.roundTo(pumpProfile.iCfg.dia, 0.1), Round.roundTo(tunedProfile.iCfg.dia, 0.1), 1)
         }
-        params += formatRow(rh.gs(app.aaps.core.ui.R.string.isf_short), Round.roundTo(pumpProfile.isf / toMgDl, 0.001), Round.roundTo(tunedProfile.isf / toMgDl, 0.001), isfFormat)
-        params += formatRow(rh.gs(app.aaps.core.ui.R.string.ic_short), Round.roundTo(pumpProfile.ic, 0.001), Round.roundTo(tunedProfile.ic, 0.001), "%.2f")
+        params += formatRow(rh.gs(CoreUiStrings.isf_short), Round.roundTo(pumpProfile.isf / toMgDl, 0.001), Round.roundTo(tunedProfile.isf / toMgDl, 0.001), isfDecimals)
+        params += formatRow(rh.gs(CoreUiStrings.ic_short), Round.roundTo(pumpProfile.ic, 0.001), Round.roundTo(tunedProfile.ic, 0.001), 2)
 
         val basals = mutableListOf<ResultRow>()
         val df = NumberFormat.INTEGER_2_DIGITS
@@ -479,19 +478,20 @@ class AutotuneViewModel(
             val time = df.format(h.toLong()) + ":00"
             totalPump += pumpProfile.basal[h]
             totalTuned += tunedProfile.basal[h]
-            basals += formatRow(time, pumpProfile.basal[h], tunedProfile.basal[h], "%.3f", tunedProfile.basalUnTuned[h].toString())
+            basals += formatRow(time, pumpProfile.basal[h], tunedProfile.basal[h], 3, tunedProfile.basalUnTuned[h].toString())
         }
-        basals += formatRow("∑", totalPump, totalTuned, "%.3f", " ")
+        basals += formatRow("∑", totalPump, totalTuned, 3, " ")
 
         return Pair(params, basals)
     }
 
-    private fun formatRow(label: String, input: Double, tuned: Double, format: String, missing: String = ""): ResultRow {
+    private fun formatRow(label: String, input: Double, tuned: Double, decimals: Int, missing: String = ""): ResultRow {
         val percent = if (input != 0.0) rh.gs(CoreUiStrings.units_format_percent, Round.roundTo(tuned / input * 100 - 100, 1.0).toInt()) else ""
+        val format = NumberFormat.withDecimals(decimals)
         return ResultRow(
             label = label,
-            profileValue = String.format(Locale.getDefault(), format, input),
-            tunedValue = String.format(Locale.getDefault(), format, tuned),
+            profileValue = format.format(roundHalfUpAsText(input, decimals)),
+            tunedValue = format.format(roundHalfUpAsText(tuned, decimals)),
             percent = percent,
             missing = missing
         )
@@ -500,7 +500,7 @@ class AutotuneViewModel(
     private suspend fun refreshState() {
         val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
         val profileList = profileStore.getProfileList().toMutableList()
-        profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
+        profileList.add(0, rh.gs(CoreUiStrings.active))
         val profileNames = profileList.map { it.toString() }
 
         val selectedIndex = if (autotunePlugin.selectedProfile.isNotEmpty())
@@ -512,8 +512,8 @@ class AutotuneViewModel(
 
         val daysBack = autotunePlugin.lastNbDays.toDoubleOrNull() ?: preferences.get(IntKey.AutotuneDefaultTuneDays).toDouble()
         val calcDays = autotunePlugin.calcDays(daysBack.toInt())
-        val warning = if (autotunePlugin.calculationRunning) rh.gs(R.string.autotune_warning_during_run)
-        else if (autotunePlugin.lastRunSuccess) rh.gs(R.string.autotune_warning_after_run)
+        val warning = if (autotunePlugin.calculationRunning) rh.gs(ApsStrings.autotune_warning_during_run)
+        else if (autotunePlugin.lastRunSuccess) rh.gs(ApsStrings.autotune_warning_after_run)
         else addWarnings()
 
         val (paramRows, basalRows) = if (autotunePlugin.result.isNotBlank()) buildResultRows() else Pair(emptyList(), emptyList())
@@ -533,8 +533,8 @@ class AutotuneViewModel(
             showRun = !autotunePlugin.calculationRunning && !autotunePlugin.lastRunSuccess && profile?.isValid == true && calcDays > 0,
             showCheckInput = !autotunePlugin.calculationRunning && !autotunePlugin.lastRunSuccess,
             showCopyLocal = autotunePlugin.lastRunSuccess,
-            showUpdateProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility == View.VISIBLE,
-            showRevertProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility != View.VISIBLE,
+            showUpdateProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility == AutotunePlugin.UPDATE_BUTTON_SHOWN,
+            showRevertProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility != AutotunePlugin.UPDATE_BUTTON_SHOWN,
             // A switch made here would stay on a client and never reach the master. The tuned profile can still be
             // copied into the profile store, which is synced.
             showProfileSwitch = autotunePlugin.lastRunSuccess && !config.AAPSCLIENT,

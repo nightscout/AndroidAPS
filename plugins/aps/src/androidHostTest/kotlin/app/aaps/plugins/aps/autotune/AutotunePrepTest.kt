@@ -64,7 +64,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         val inputProfileJson = File("src/androidHostTest/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/androidHostTest/res/autotune/test1/autotune.2022-05-21.json").readText()
-        val oapsPreppedGlucose = PreppedGlucose(JSONObject(prepJson), dateUtil) //prep data calculated by OpenAPS autotune
+        val oapsPreppedGlucose = PreppedGlucose(parseJsonObject(prepJson), dateUtil) //prep data calculated by OpenAPS autotune
         val oapsEntriesJson = File("src/androidHostTest/res/autotune/test1/aaps-entries.2022-05-21.json").readText()
         autotuneIob.glucose = buildGlucose(JSONArray(oapsEntriesJson))
         val oapsTreatmentsJson = File("src/androidHostTest/res/autotune/test1/aaps-treatments.2022-05-21.json").readText()
@@ -97,7 +97,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         val inputProfileJson = File("src/androidHostTest/res/autotune/test2/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/androidHostTest/res/autotune/test2/autotune.2022-05-21.json").readText()
-        val oapsPreppedGlucose = PreppedGlucose(JSONObject(prepJson), dateUtil) //prep data calculated by OpenAPS autotune
+        val oapsPreppedGlucose = PreppedGlucose(parseJsonObject(prepJson), dateUtil) //prep data calculated by OpenAPS autotune
         val oapsEntriesJson = File("src/androidHostTest/res/autotune/test2/aaps-entries.2022-05-21.json").readText()
         autotuneIob.glucose = buildGlucose(JSONArray(oapsEntriesJson))
         val oapsTreatmentsJson = File("src/androidHostTest/res/autotune/test2/aaps-treatments.2022-05-21.json").readText()
@@ -130,7 +130,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         val inputProfileJson = File("src/androidHostTest/res/autotune/test3/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/androidHostTest/res/autotune/test3/autotune.2022-05-21.json").readText()
-        val oapsPreppedGlucose = PreppedGlucose(JSONObject(prepJson), dateUtil) //prep data calculated by OpenAPS autotune
+        val oapsPreppedGlucose = PreppedGlucose(parseJsonObject(prepJson), dateUtil) //prep data calculated by OpenAPS autotune
         val oapsEntriesJson = File("src/androidHostTest/res/autotune/test3/aaps-entries.2022-05-21.json").readText()
         autotuneIob.glucose = buildGlucose(JSONArray(oapsEntriesJson))
         val oapsTreatmentsJson = File("src/androidHostTest/res/autotune/test3/aaps-treatments.2022-05-21.json").readText()
