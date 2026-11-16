@@ -48,6 +48,9 @@ class PersistedO5PodStateManager @Inject constructor(
 
     private var _podState: PodState? = null
 
+    /** The stored text this manager last read or wrote. A different text in storage was written by something else. */
+    @Volatile private var lastStored: String? = null
+
     /** Internal (rather than private) to allow unit testing within this module.
      *  Lazily deserialized on first access, matching Dash's rationale: keep Gson
      *  reflection off the main thread during app startup (Dagger constructs this
@@ -518,16 +521,38 @@ class PersistedO5PodStateManager @Inject constructor(
             logger.debug(LTag.PUMPCOMM, "Storing O5 Pod state: ${gson.toJson(cleanPodState)}")
 
             val serialized = gson.toJson(podState)
-            preferences.put(O5StringNonPreferenceKey.PodState, serialized)
+            // In one step with the check in reloadIfChangedOutside, which must not see the new text in storage
+            // before it is known here as our own.
+            synchronized(this) {
+                lastStored = serialized
+                preferences.put(O5StringNonPreferenceKey.PodState, serialized)
+            }
         } catch (ex: Exception) {
             logger.error(LTag.PUMPCOMM, "Failed to store O5 Pod state", ex)
         }
     }
 
+    override fun onStop() {
+        synchronized(this) {
+            // Not when the stored state is somebody else's by now: that one is the state to keep.
+            if (_podState != null && preferences.getIfExists(O5StringNonPreferenceKey.PodState) == lastStored) store()
+            _podState = null
+        }
+    }
+
+    override fun reloadIfChangedOutside(): Boolean = synchronized(this) {
+        if (_podState == null || preferences.getIfExists(O5StringNonPreferenceKey.PodState) == lastStored) return false
+        logger.info(LTag.PUMPCOMM, "O5 Pod state was written from outside, loading it again")
+        _podState = null
+        true
+    }
+
     private fun load(): PodState {
-        if (preferences.getIfExists(O5StringNonPreferenceKey.PodState) != null) {
+        val stored = preferences.getIfExists(O5StringNonPreferenceKey.PodState)
+        lastStored = stored
+        if (stored != null) {
             try {
-                return gson.fromJson(preferences.get(O5StringNonPreferenceKey.PodState), PodState::class.java)
+                return gson.fromJson(stored, PodState::class.java)
             } catch (ex: Exception) {
                 logger.error(LTag.PUMPCOMM, "Failed to deserialize O5 Pod state", ex)
             }

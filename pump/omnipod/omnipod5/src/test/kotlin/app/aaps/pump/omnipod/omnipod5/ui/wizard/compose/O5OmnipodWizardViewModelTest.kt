@@ -9,25 +9,23 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
+import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
+import app.aaps.pump.omnipod.common.queue.command.CommandInitializePod
+import app.aaps.pump.omnipod.common.queue.command.CommandInsertCannula
 import app.aaps.pump.omnipod.omnipod5.O5PumpPlugin
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
-import app.aaps.pump.omnipod.omnipod5.history.O5History
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -42,18 +40,18 @@ import org.junit.jupiter.api.Test
 import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.doAnswer
-import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 /**
  * Mirrors [app.aaps.pump.omnipod.dash.ui.wizard.compose.DashOmnipodWizardViewModelTest]'s
  * pattern for O5's concrete [O5OmnipodWizardViewModel] - covers the synchronous,
  * pure wizard-navigation and selection logic inherited from
- * [OmnipodWizardViewModel] plus the O5-specific overrides. The BLE steps of
- * `doInitializePod()`/`doInsertCannula()` are not exercised here, only that they mark the
- * activation as running for the queue and clear it again on failure.
+ * [OmnipodWizardViewModel] plus the O5-specific overrides. The steps that talk to the pod are
+ * commands of the queue; what they do with the pod is tested in
+ * [app.aaps.pump.omnipod.omnipod5.O5PodActivationTest].
  *
  * The VM's `init{}` launches a coroutine via `viewModelScope`. A `StandardTestDispatcher`
  * as Main defers that coroutine (no `advanceUntilIdle()` here), so construction stays
@@ -62,14 +60,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class O5OmnipodWizardViewModelTest {
 
-    @Mock private lateinit var bleManager: O5BleManager
     @Mock private lateinit var podStateManager: O5PodStateManager
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var commandQueue: CommandQueue
-    @Mock private lateinit var notificationManager: NotificationManager
-    @Mock private lateinit var history: O5History
-    @Mock private lateinit var pumpSync: PumpSync
     @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var profileRepository: ProfileRepository
@@ -89,8 +83,8 @@ internal class O5OmnipodWizardViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
         sut = O5OmnipodWizardViewModel(
-            bleManager, mock<O5PumpPlugin>(), podStateManager, preferences, rh, commandQueue,
-            notificationManager, history, pumpSync, insulinManager, persistenceLayer,
+            mock<O5PumpPlugin>(), podStateManager, preferences, rh, commandQueue,
+            insulinManager, persistenceLayer,
             profileFunction, profileRepository, pumpEnactResultProvider, logger, aapsSchedulers, rxBus
         )
     }
@@ -221,49 +215,37 @@ internal class O5OmnipodWizardViewModelTest {
         assertThat(sut.getSelectedSiteArrow()).isEqualTo(TE.Arrow.UP)
     }
 
-    /**
-     * The wizard talks to the pod outside the command queue. [O5BleManager.isActivationRunning] is
-     * what keeps the queue away from the BLE link meanwhile (Dash #5219), so it must be set before
-     * pairing starts and cleared on every way out, or the queue stays blocked for ever.
-     */
-    @Test
-    fun initializePod_marksActivationRunningDuringPairing_andClearsItWhenPairingFails() {
-        whenever(podStateManager.ltk).thenReturn(null)
-        whenever(bleManager.pairNewPod()).thenReturn(Observable.error(IllegalStateException("pairing failed")))
+    // The wizard does not talk to the pod. Each step that does is one command of the queue.
 
+    @Test
+    fun `pairing and priming the pod is a command of the queue`() {
         runStep(OmnipodWizardStep.INITIALIZE_POD)
 
-        inOrder(bleManager) {
-            verify(bleManager).isActivationRunning = true
-            verify(bleManager).pairNewPod()
-            verify(bleManager).isActivationRunning = false
-        }
+        verifyBlocking(commandQueue) { customCommand(argThat { this is CommandInitializePod }) }
     }
 
     @Test
-    fun initializePod_clearsActivationRunningWhenPairingThrows() {
-        whenever(podStateManager.ltk).thenReturn(null)
-        whenever(bleManager.pairNewPod()).doAnswer { throw IllegalStateException("no adapter") }
-
-        runStep(OmnipodWizardStep.INITIALIZE_POD)
-
-        inOrder(bleManager) {
-            verify(bleManager).isActivationRunning = true
-            verify(bleManager).isActivationRunning = false
-        }
-    }
-
-    @Test
-    fun insertCannula_marksActivationRunning_andClearsItWhenItFails() {
-        // No profile, so part 2 fails at its first line.
-        runBlocking { whenever(pumpSync.expectedPumpState()).doAnswer { throw IllegalStateException("No profile set") } }
-
+    fun `inserting the cannula is a command of the queue`() {
         runStep(OmnipodWizardStep.INSERT_CANNULA)
 
-        inOrder(bleManager) {
-            verify(bleManager).isActivationRunning = true
-            verify(bleManager).isActivationRunning = false
-        }
+        verifyBlocking(commandQueue) { customCommand(argThat { this is CommandInsertCannula }) }
+    }
+
+    @Test
+    fun `deactivating the pod is a command of the queue`() {
+        runStep(OmnipodWizardStep.DEACTIVATE_POD)
+
+        verifyBlocking(commandQueue) { customCommand(argThat { this is CommandDeactivatePod }) }
+    }
+
+    @Test
+    fun `a step the queue could not run shows its reason`() {
+        runBlocking { whenever(commandQueue.customCommand(argThat { this is CommandInitializePod })).thenReturn(enactResult) }
+        whenever(enactResult.success).thenReturn(false)
+
+        runStep(OmnipodWizardStep.INITIALIZE_POD)
+
+        assertThat(sut.actionState.value).isEqualTo(ActionState.Error("error"))
     }
 
     /** Runs the wizard action of [step] the way the UI does, and waits until it has finished. */
@@ -273,6 +255,5 @@ internal class O5OmnipodWizardViewModelTest {
         runBlocking {
             withTimeout(5_000) { sut.actionState.first { it !is ActionState.Executing } }
         }
-        assertThat(sut.actionState.value).isInstanceOf(ActionState.Error::class.java)
     }
 }

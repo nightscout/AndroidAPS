@@ -133,24 +133,17 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     }
 
 
-    @Test
-    fun `isBusy is false when no activation is running or started`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
-        whenever(bleManager.isActivationRunning).thenReturn(false)
-
-        assertThat(plugin.isBusy()).isFalse()
-    }
-
     /**
-     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
-     * ran its commands and disconnected the pod in the middle of the pairing (Dash #5219).
+     * The activation runs as commands of the queue. A busy pump would keep the queue from running them, so the
+     * pump is never busy, also not part way through the activation.
      */
     @Test
-    fun `isBusy is true while an activation step is running, even before any progress`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+    fun `the pump is not busy at any point of the activation`() {
         whenever(bleManager.isActivationRunning).thenReturn(true)
-
-        assertThat(plugin.isBusy()).isTrue()
+        for (progress in listOf(ActivationProgress.NOT_STARTED, ActivationProgress.GOT_POD_VERSION, ActivationProgress.COMPLETED)) {
+            whenever(podStateManager.activationProgress).thenReturn(progress)
+            assertThat(plugin.isBusy()).isFalse()
+        }
     }
 
     @Test
@@ -162,27 +155,25 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         verify(bleManager, never()).disconnect(any<Boolean>())
     }
 
+    /** The queue is empty while the user puts the pod on. Closing the link there breaks the pairing (Dash #5219). */
+    @Test
+    fun `disconnect does not close the link between the two parts of the activation`() {
+        whenever(bleManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PHASE_1_COMPLETED)
+
+        plugin.disconnect("Queue empty")
+
+        verify(bleManager, never()).disconnect(any<Boolean>())
+    }
+
     @Test
     fun `disconnect closes the link when no activation is running`() {
         whenever(bleManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
 
         plugin.disconnect("Queue empty")
 
         verify(bleManager).disconnect(false)
-    }
-
-    @Test
-    fun `isBusy is true while activation is in progress`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.GOT_POD_VERSION)
-
-        assertThat(plugin.isBusy()).isTrue()
-    }
-
-    @Test
-    fun `isBusy is false once activation is completed`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
-
-        assertThat(plugin.isBusy()).isFalse()
     }
 
     @Test
@@ -659,8 +650,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isTrue()
-        // The correction is queued from pluginScope, so wait for it before checking the order
-        verify(commandQueue, timeout(2_000)).customCommand(argThat { this is CommandDeliverBasalCorrection })
+        // No wait: the correction is in the queue before the command returns.
+        verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
         val commands = inOrder(bleManager, commandQueue)
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(bleManager).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
@@ -705,8 +696,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.cancelTempBasal(false)
 
         assertThat(result.success).isTrue()
-        // The correction is queued from pluginScope, so wait for it before checking the order
-        verify(commandQueue, timeout(2_000)).customCommand(argThat { this is CommandDeliverBasalCorrection })
+        // No wait: the correction is in the queue before the command returns.
+        verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
         val commands = inOrder(bleManager, commandQueue)
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
@@ -1319,6 +1310,44 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
+    }
+
+    @Test
+    fun `a command that ends with an unresolved dose has the status read in the queue before it returns`() {
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 4))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BOLUS_AND_BASAL_ACTIVE)
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+        whenever(rh.gs(R.string.omnipod_5_unconfirmed_command)).thenReturn("Unconfirmed command")
+
+        runBlocking { plugin.setTempBasalAbsolute(1.0, 30, false, PumpSync.TemporaryBasalType.NORMAL) }
+
+        // No wait: the read is queued before the command returns.
+        runBlocking { verify(commandQueue).readStatus("Unconfirmed command") }
+    }
+
+    @Test
+    fun `a command that ends with nothing open queues no status read`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.0)
+        stubStopTempBasal()
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+
+        plugin.cancelTempBasal(false)
+
+        verify(commandQueue, after(300).never()).readStatus(any())
+    }
+
+    @Test
+    fun `a stop closes the link and drops the pod state in memory`() = runBlocking<Unit> {
+        plugin.onStop()
+
+        val order = inOrder(bleManager, podStateManager)
+        order.verify(bleManager).closeLink()
+        order.verify(podStateManager).bluetoothConnectionState = O5PodStateManager.BluetoothConnectionState.DISCONNECTED
+        order.verify(podStateManager).onStop()
     }
 
     @Test
