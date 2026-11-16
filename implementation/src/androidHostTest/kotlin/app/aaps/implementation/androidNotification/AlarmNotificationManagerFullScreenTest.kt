@@ -134,4 +134,18 @@ class AlarmNotificationManagerFullScreenTest {
 
         assertThat(sut.unansweredAlarmIntent()).isNull()
     }
+
+    @Test
+    fun swipingASilentAlarmNotificationAwayMutesTheAlarm() {
+        sut().postSilentAlarmNotification(notificationKey = 42, title = "AAPS", body = "No BG readings", urgent = true)
+
+        val notification = shadowOf(context.getSystemService(NotificationManager::class.java))
+            .getNotification(AlarmNotificationManager.SOUND_ID_OFFSET + 42)
+        val swipe = shadowOf(checkNotNull(notification.deleteIntent))
+
+        assertThat(swipe.isBroadcast).isTrue()
+        assertThat(swipe.savedIntent.component?.className).isEqualTo(AlarmMuteReceiver::class.java.name)
+        assertThat(swipe.savedIntent.getBooleanExtra(AlarmMuteReceiver.EXTRA_SWIPED, false)).isTrue()
+    }
+
 }
