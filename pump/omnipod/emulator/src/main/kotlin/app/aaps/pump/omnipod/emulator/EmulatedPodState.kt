@@ -58,8 +58,10 @@ class EmulatedPodState : Serializable {
 
     /**
      * Pulses of the last bolus that were not given, after a stop. It stays until the next bolus starts.
-     * UNVERIFIED: that a real pod keeps reporting it in later status answers. The driver counts on it: it takes the
-     * amount from every status answer.
+     * A real pod keeps reporting it in later status answers, also after a temp basal cancel in between, until the
+     * next bolus starts: seen on 2026-11-15 on a Dash pod (firmware 11.7.0) and an Omnipod 5 pod (firmware 9.0.4),
+     * each after a bolus of 2 U stopped at 14 pulses, with 26 reported for minutes. The driver counts on it: it takes
+     * the amount from every status answer.
      */
     var bolusPulsesNotDelivered: Int = 0
 

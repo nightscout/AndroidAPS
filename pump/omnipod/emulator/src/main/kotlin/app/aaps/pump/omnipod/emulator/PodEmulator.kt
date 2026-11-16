@@ -371,7 +371,10 @@ class PodEmulator(
         if (flags and STOP_BASAL != 0) s.suspended = true
     }
 
-    /** UNVERIFIED: that a deactivated pod answers the deactivate command with a status, as the driver expects. */
+    /**
+     * A deactivated pod answers the deactivate command with a default status that says "deactivated" and
+     * "suspended": seen on 2026-11-15 on a Dash pod (firmware 11.7.0) and an Omnipod 5 pod (firmware 9.0.4).
+     */
     private fun deactivate() {
         val s = state
         s.bolus?.let { endBolus(it) }
