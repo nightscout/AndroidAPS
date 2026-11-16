@@ -1118,7 +1118,7 @@
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Importuotuose nustatymuose pasirinkta pompa šiame telefone nepasiekiama. Dabar aktyvi %1$s – patikrinkite pompos nustatymus.</string>
     <string name="import_applying">Taikomi nustatymai…</string>
     <string name="import_replace_pump_settings">Taip pat pakeisti pompos nustatymus</string>
-    <string name="import_replace_pump_settings_summary">Palikite išjungta, jei norite išsaugoti šiame telefone susietos pompos nustatymus. Įjunkite, jei atkuriate nustatymus naujame telefone ir naudosite tą pačią pompą.</string>
+    <string name="import_replace_pump_settings_summary">Palikite išjungtą, jei norite išsaugoti šiame telefone susietos pompos nustatymus. Įjunkite, jei atkuriate nustatymus naujame telefone ir naudosite tą pačią pompą.</string>
     <string name="import_apply_waiting">Laukiama pompos…</string>
     <string name="import_apply_pump_busy">Pompa vis dar užimta, todėl nustatymai nepritaikyti.</string>
     <string name="import_apply_retry_question">Bandyti dar kartą dabar?</string>
