@@ -21,7 +21,16 @@ internal class FakeOnePlusGatt(
     private var backfillReads = 0
     val controlWrites = mutableListOf<ByteArray>()
 
+    /** What [lastLinkDownStatus] answers, as the platform would after the link went down. */
+    var linkDownStatus: Int? = null
+
+    override fun lastLinkDownStatus(): Int? = linkDownStatus
+
+    /** The `autoConnect` flag of every connect, in order. */
+    val autoConnects = mutableListOf<Boolean>()
+
     override fun connect(deviceAddress: String, autoConnect: Boolean) {
+        autoConnects += autoConnect
         connects++
         connected = true
     }

@@ -255,6 +255,47 @@ internal object OnePlusBleSessionCyclePolicy {
         )
     }
 
+    /** Android GATT status when the peer ended the link itself (HCI 0x13, remote user terminated). */
+    const val GATT_STATUS_PEER_TERMINATED = 19
+
+    /** What to do after a failed cycle in persistent-ADV mode (Android; the iPhone holds a connect). */
+    enum class FailureRetry {
+        /** Park an `autoConnect` at once, without waiting for an advertisement. */
+        IMMEDIATE_AUTO_CONNECT,
+
+        /** The sensor closed the link and went back to sleep: wait for its next cycle, with the guard. */
+        WAIT_AFTER_SENSOR_CLOSE,
+
+        /** Wait for the next advertisement. */
+        WAIT_FOR_ADV,
+    }
+
+    /**
+     * Picks the retry after a failed cycle.
+     *
+     * A link the sensor closed itself ([GATT_STATUS_PEER_TERMINATED]) after we reached it means the
+     * sensor is asleep until its next wake-up, about 4.5 min later. An `autoConnect` parked at once
+     * cannot succeed then (field log 2026-11-14 06:47: 60 s park, no connect). After a lost link
+     * (status 8, supervision timeout) the sensor is sometimes still awake, and the same immediate
+     * park saved the cycle 2 times in 5 in a snoop log, so that case keeps
+     * [skipAdvWaitAfterFailedConnect].
+     *
+     * @param sensorReached the connect of this cycle finished (link up, services found)
+     * @param linkDownStatus [app.aaps.plugins.dexcomoneplus.gatt.OnePlusGattClient.lastLinkDownStatus]
+     */
+    fun retryAfterFailure(
+        sensorReached: Boolean,
+        linkDownStatus: Int?,
+        lastConnectUsedAutoConnect: Boolean,
+        nextAttempt: Int,
+        autoConnectFromAttempt: Int,
+    ): FailureRetry = when {
+        sensorReached && linkDownStatus == GATT_STATUS_PEER_TERMINATED -> FailureRetry.WAIT_AFTER_SENSOR_CLOSE
+        skipAdvWaitAfterFailedConnect(lastConnectUsedAutoConnect, nextAttempt, autoConnectFromAttempt) ->
+            FailureRetry.IMMEDIATE_AUTO_CONNECT
+        else -> FailureRetry.WAIT_FOR_ADV
+    }
+
     /**
      * One blind connect after [BLIND_CONNECT_AFTER_ADV_SILENCE_MS] of silence, then not again until
      * another full silence window has passed **since that blind**. The silence clock itself must
@@ -320,6 +361,8 @@ class OnePlusBleSessionSkeleton(
     private val cpuLease: OnePlusCpuLease? = null,
     /** Sensor slot owning this session (`prod` / `staging`) — logged on every marker. */
     private val slot: String = OnePlusLogMarkers.SLOT_PRODUCTION,
+    /** [OnePlusBleSessionCyclePolicy.POST_CYCLE_ADV_GUARD_MS]; a test shortens it, the app never does. */
+    private val postCycleAdvGuardMs: Long = OnePlusBleSessionCyclePolicy.POST_CYCLE_ADV_GUARD_MS,
     /**
      * Fingersticks waiting to be handed to the sensor's own algorithm, or null when this session may
      * not calibrate.
@@ -407,6 +450,9 @@ class OnePlusBleSessionSkeleton(
      * (which already parked) does not GATT-storm after status 133.
      */
     private var lastConnectUsedAutoConnect = false
+
+    /** When the connect of the current cycle finished (link up, services found); 0 = not reached. */
+    private var cycleLinkReadyAtMs = 0L
 
     override fun startWithPairingCode(deviceAddress: String, pairingCode: String) {
         val codeError = OnePlusSessionStart.validationError(pairingCode)
@@ -525,7 +571,7 @@ class OnePlusBleSessionSkeleton(
                     preparedConnect = preparePostCollectionReconnect(
                         deviceAddress = deviceAddress,
                         reason = "egv_cycle_complete_waiting_for_adv",
-                        postCycleQuietMs = OnePlusBleSessionCyclePolicy.POST_CYCLE_ADV_GUARD_MS,
+                        postCycleQuietMs = postCycleAdvGuardMs,
                     )
                     if (!running || preparedConnect == null) return
                     // Attempt 1 suppresses SessionStart and reports a reconnect, while the prepared
@@ -690,6 +736,7 @@ class OnePlusBleSessionSkeleton(
             autoConnectFromAttempt = profile.autoConnectFromAttempt,
         )
         lastConnectUsedAutoConnect = useAutoConnect
+        cycleLinkReadyAtMs = 0L
         OnePlusLog.i(
             "${OnePlusLogMarkers.SESSION}: [$slot] connect decision advFresh=${prep.advFresh} " +
                 "autoConnect=$useAutoConnect attempt=$attempt profile=${profile.id}",
@@ -712,6 +759,7 @@ class OnePlusBleSessionSkeleton(
             }
 
             if (!running) return CycleOutcome.Stopped
+            cycleLinkReadyAtMs = Clock.System.now().toEpochMilliseconds()
 
             val authResult = auth.authenticate(pairingCode, savedSharedKeyProvider())
             if (!running) return CycleOutcome.Stopped
@@ -847,26 +895,55 @@ class OnePlusBleSessionSkeleton(
         reason: String,
     ): PersistentRetry {
         val nextAttempt = OnePlusBleSessionCyclePolicy.nextPersistentAttempt(currentAttempt)
-        if (OnePlusBleSessionCyclePolicy.skipAdvWaitAfterFailedConnect(
+        val sensorReachedAtMs = cycleLinkReadyAtMs
+        cycleLinkReadyAtMs = 0L
+        if (sensorReachedAtMs != 0L) {
+            // The sensor was there a moment ago, so its cycle is known again: count the silence from
+            // that moment, and the blind connect lands near its next wake-up instead of being placed
+            // from an older silence or blocked by an older blind.
+            advSilenceStartedMs = sensorReachedAtMs
+            lastBlindConnectAtMs = 0L
+            staleMacReportedThisSilence = false
+        }
+        val linkDownStatus = gatt.lastLinkDownStatus()
+        return when (
+            OnePlusBleSessionCyclePolicy.retryAfterFailure(
+                sensorReached = sensorReachedAtMs != 0L,
+                linkDownStatus = linkDownStatus,
                 lastConnectUsedAutoConnect = lastConnectUsedAutoConnect,
                 nextAttempt = nextAttempt,
                 autoConnectFromAttempt = profile.autoConnectFromAttempt,
             )
         ) {
-            OnePlusLog.i(
-                "${OnePlusLogMarkers.RECONNECT}: [$slot] skip ADV wait — previous was hard connect, " +
-                    "retry autoConnect attempt=$nextAttempt profile=${profile.id}",
-            )
-            lastBlindConnectAtMs = Clock.System.now().toEpochMilliseconds()
-            return PersistentRetry(
+            OnePlusBleSessionCyclePolicy.FailureRetry.IMMEDIATE_AUTO_CONNECT -> {
+                OnePlusLog.i(
+                    "${OnePlusLogMarkers.RECONNECT}: [$slot] skip ADV wait — previous was hard connect, " +
+                        "retry autoConnect attempt=$nextAttempt profile=${profile.id} linkDown=$linkDownStatus",
+                )
+                // Not counted as a blind connect: it would block the real blind escape for a whole
+                // silence window, and that escape is how the next cycle is caught.
+                PersistentRetry(
+                    attempt = nextAttempt,
+                    prep = OnePlusConnectPrep(advFresh = false, blindFallback = true),
+                )
+            }
+
+            OnePlusBleSessionCyclePolicy.FailureRetry.WAIT_AFTER_SENSOR_CLOSE -> {
+                OnePlusLog.i(
+                    "${OnePlusLogMarkers.RECONNECT}: [$slot] sensor closed the link (status $linkDownStatus) — " +
+                        "no immediate retry, wait for its next cycle attempt=$nextAttempt",
+                )
+                PersistentRetry(
+                    attempt = nextAttempt,
+                    prep = preparePostCollectionReconnect(deviceAddress, reason, postCycleQuietMs = postCycleAdvGuardMs),
+                )
+            }
+
+            OnePlusBleSessionCyclePolicy.FailureRetry.WAIT_FOR_ADV -> PersistentRetry(
                 attempt = nextAttempt,
-                prep = OnePlusConnectPrep(advFresh = false, blindFallback = true),
+                prep = preparePostCollectionReconnect(deviceAddress, reason),
             )
         }
-        return PersistentRetry(
-            attempt = nextAttempt,
-            prep = preparePostCollectionReconnect(deviceAddress, reason),
-        )
     }
 
     private fun resetAdvSilenceTracking() {

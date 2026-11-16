@@ -302,6 +302,71 @@ class OnePlusBleSessionCyclePolicyTest {
     }
 
     @Test
+    fun `a sensor that closed the link itself is not chased with an immediate autoConnect`() {
+        assertThat(
+            OnePlusBleSessionCyclePolicy.retryAfterFailure(
+                sensorReached = true,
+                linkDownStatus = OnePlusBleSessionCyclePolicy.GATT_STATUS_PEER_TERMINATED,
+                lastConnectUsedAutoConnect = false,
+                nextAttempt = 1,
+                autoConnectFromAttempt = 0,
+            ),
+        ).isEqualTo(OnePlusBleSessionCyclePolicy.FailureRetry.WAIT_AFTER_SENSOR_CLOSE)
+    }
+
+    @Test
+    fun `a lost link after a hard connect keeps the immediate autoConnect`() {
+        assertThat(
+            OnePlusBleSessionCyclePolicy.retryAfterFailure(
+                sensorReached = true,
+                linkDownStatus = 8,
+                lastConnectUsedAutoConnect = false,
+                nextAttempt = 1,
+                autoConnectFromAttempt = 0,
+            ),
+        ).isEqualTo(OnePlusBleSessionCyclePolicy.FailureRetry.IMMEDIATE_AUTO_CONNECT)
+    }
+
+    @Test
+    fun `status 19 before the sensor was reached is not a sensor close`() {
+        assertThat(
+            OnePlusBleSessionCyclePolicy.retryAfterFailure(
+                sensorReached = false,
+                linkDownStatus = OnePlusBleSessionCyclePolicy.GATT_STATUS_PEER_TERMINATED,
+                lastConnectUsedAutoConnect = false,
+                nextAttempt = 1,
+                autoConnectFromAttempt = 0,
+            ),
+        ).isEqualTo(OnePlusBleSessionCyclePolicy.FailureRetry.IMMEDIATE_AUTO_CONNECT)
+    }
+
+    @Test
+    fun `a sensor close after an autoConnect also waits with the guard`() {
+        assertThat(
+            OnePlusBleSessionCyclePolicy.retryAfterFailure(
+                sensorReached = true,
+                linkDownStatus = OnePlusBleSessionCyclePolicy.GATT_STATUS_PEER_TERMINATED,
+                lastConnectUsedAutoConnect = true,
+                nextAttempt = 2,
+                autoConnectFromAttempt = 0,
+            ),
+        ).isEqualTo(OnePlusBleSessionCyclePolicy.FailureRetry.WAIT_AFTER_SENSOR_CLOSE)
+    }
+
+    @Test
+    fun `a failed autoConnect still waits for the advertisement`() {
+        assertThat(
+            OnePlusBleSessionCyclePolicy.retryAfterFailure(
+                sensorReached = false,
+                linkDownStatus = null,
+                lastConnectUsedAutoConnect = true,
+                nextAttempt = 2,
+                autoConnectFromAttempt = 0,
+            ),
+        ).isEqualTo(OnePlusBleSessionCyclePolicy.FailureRetry.WAIT_FOR_ADV)
+    }
+
+    @Test
     fun `a second blind connect waits a full silence window after the last one`() {
         val silence = OnePlusBleSessionCyclePolicy.BLIND_CONNECT_AFTER_ADV_SILENCE_MS
 

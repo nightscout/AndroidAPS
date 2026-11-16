@@ -63,6 +63,12 @@ class OnePlusGattClientAndroid(
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val readyLatch = AtomicReferenceLatch()
+
+    /** BALANCED requests sent on the current link by [OnePlusLinkParameterPolicy]; reset in connect(). */
+    @Volatile private var normalRequestsThisLink = 0
+
+    /** GATT status of the last STATE_DISCONNECTED of the current link; null after connect() starts. */
+    @Volatile private var lastLinkDownStatus: Int? = null
     /** Tagged Auth/ExtraData frames for KEKS (Ob1 routes by UUID). */
     private val keksQueue = LinkedBlockingQueue<TaggedKeksNotify>(32)
     private val controlQueue = LinkedBlockingQueue<ByteArray>(32)
@@ -153,6 +159,7 @@ class OnePlusGattClientAndroid(
                         OnePlusAudioLinkState.describe(appContext, bluetoothManager.adapter),
                 )
                 connected = false
+                lastLinkDownStatus = status
                 readyLatch.fail("disconnected status=$status")
                 completePendingOp(BluetoothGatt.GATT_FAILURE)
                 poisonNotifyQueues()
@@ -167,6 +174,26 @@ class OnePlusGattClientAndroid(
                 return
             }
             g.discoverServices()
+        }
+
+        /**
+         * Android reports the parameters of the link after every change. Not in the public SDK (hidden
+         * since API 26), so it has no `override`; Android still calls it, because it is the same method
+         * of [BluetoothGattCallback].
+         *
+         * Always logged, so the parameters are visible without an HCI snoop log. When the sensor's own
+         * preferred parameters gave the link a peripheral latency, ask for Android's normal ones; a
+         * normal link is left alone. See [OnePlusLinkParameterPolicy].
+         */
+        @Suppress("unused")
+        fun onConnectionUpdated(g: BluetoothGatt, interval: Int, latency: Int, timeout: Int, status: Int) {
+            if (!isCurrentGatt(g)) return
+            OnePlusLog.i("${OnePlusLogMarkers.SESSION}: link params ${OnePlusLinkParameterPolicy.describe(interval, latency, timeout, status)}")
+            if (status != BluetoothGatt.GATT_SUCCESS) return
+            if (OnePlusLinkParameterPolicy.requestNormalAfterUpdate(latency, normalRequestsThisLink)) {
+                normalRequestsThisLink++
+                requestPriority(g, BluetoothGatt.CONNECTION_PRIORITY_BALANCED, "normal (latency $latency)")
+            }
         }
 
         override fun onServicesDiscovered(g: BluetoothGatt, status: Int) {
@@ -278,6 +305,8 @@ class OnePlusGattClientAndroid(
         controlQueue.clear()
         backfillQueue.clear()
         readyLatch.reset()
+        lastLinkDownStatus = null
+        normalRequestsThisLink = 0
         cccdPhase = CccdPhase.NONE
         pendingPostReadyMtu = false
         pendingOpLatch.reset()
@@ -313,7 +342,7 @@ class OnePlusGattClientAndroid(
             remote.connectGatt(appContext, autoConnect, callback)
         }
         val timeout = if (autoConnect) {
-            profile.connectTimeoutMs.coerceAtLeast(60_000L)
+            maxOf(profile.connectTimeoutMs, profile.autoConnectTimeoutMs)
         } else {
             profile.connectTimeoutMs
         }
@@ -338,10 +367,25 @@ class OnePlusGattClientAndroid(
     }
 
     override fun disconnect() {
+        // Ends a connect that is still waiting, so stop() does not hang for the whole autoConnect
+        // wait (up to [OemDeviceProfile.autoConnectTimeoutMs]). connect() resets the latch first,
+        // so this cannot fail a later connect.
+        readyLatch.fail("disconnect requested")
         disconnectInternal(poisonQueues = true)
     }
 
+    override fun lastLinkDownStatus(): Int? = lastLinkDownStatus
+
     override fun isConnected(): Boolean = connected && gatt != null
+
+    private fun requestPriority(g: BluetoothGatt, priority: Int, why: String) {
+        try {
+            val asked = g.requestConnectionPriority(priority)
+            OnePlusLog.i("${OnePlusLogMarkers.SESSION}: link priority $why asked=$asked")
+        } catch (e: Throwable) {
+            OnePlusLog.w("${OnePlusLogMarkers.SESSION}: link priority $why failed, ${e.javaClass.simpleName}")
+        }
+    }
 
     override fun writeAuthentication(payload: ByteArray?) {
         // Ob1: Authentication uses WRITE_TYPE_DEFAULT.

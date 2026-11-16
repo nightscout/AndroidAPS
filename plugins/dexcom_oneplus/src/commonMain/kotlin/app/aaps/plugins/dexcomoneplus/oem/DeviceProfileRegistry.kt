@@ -94,6 +94,8 @@ object DeviceProfileRegistry {
     val GenericFallback: OemDeviceProfile = OemDeviceProfile(
         id = OemProfileId.GENERIC_FALLBACK,
         connectTimeoutMs = 60_000L,
+        // Covers a sensor wake-up that comes late in the 5 min cycle. See the KDoc of the field.
+        autoConnectTimeoutMs = 150_000L,
         connectRetryCount = 5,
         connectRetryDelayMs = 8_000L,
         preferredMtu = 185,

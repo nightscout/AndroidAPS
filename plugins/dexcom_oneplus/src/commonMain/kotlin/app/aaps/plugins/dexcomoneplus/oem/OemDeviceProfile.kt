@@ -9,6 +9,16 @@ data class OemDeviceProfile(
     /** GATT connect attempt timeout. Values above ~30 s only bind when autoConnect=true;
      *  Android's hard connect (autoConnect=false) gives up around 30 s. */
     val connectTimeoutMs: Long,
+    /**
+     * How long an Android `autoConnect=true` connect may wait before the session gives up on it.
+     * The wait costs almost nothing: the radio keeps a background accept-list connect open.
+     *
+     * The real bound is `max(connectTimeoutMs, autoConnectTimeoutMs)`. 60 s was the fixed value for
+     * every profile. A field snoop log from a GENERIC_FALLBACK phone (2026-11-14) showed that there
+     * the blind autoConnect is the normal way each 5 min cycle connects, with only 7-25 s of margin
+     * inside 60 s; a wake-up at +76 s was missed and cost a whole cycle.
+     */
+    val autoConnectTimeoutMs: Long = 60_000L,
     /** Max connect attempts before surfacing failure. */
     val connectRetryCount: Int,
     /** Delay between connect retries. */
