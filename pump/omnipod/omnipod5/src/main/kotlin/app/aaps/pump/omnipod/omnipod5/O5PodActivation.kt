@@ -74,6 +74,14 @@ internal class O5PodActivation(
     suspend fun initializePod(): PumpEnactResult {
         bleManager.isActivationRunning = true
         return try {
+            // A pairing with nothing else sent to the pod yet is thrown away and made again. On a real pod
+            // (2026-11-16) a pairing ended as done, but its key never gave a session, not in this try and not in a
+            // later one. Only "Discard Pod" by hand and a new pairing helped, and the same pod then paired well.
+            if (podStateManager.ltk != null && podStateManager.activationProgress == ActivationProgress.NOT_STARTED) {
+                aapsLogger.info(LTag.PUMP, "O5 pod is paired but took no command yet - pairing it again")
+                bleManager.closeLink()
+                podStateManager.reset()
+            }
             if (podStateManager.ltk == null) {
                 bleManager.pairNewPod().ignoreElements().await()
             }

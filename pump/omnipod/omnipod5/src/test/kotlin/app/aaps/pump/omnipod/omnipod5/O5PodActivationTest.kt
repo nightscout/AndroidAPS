@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.history.O5History
@@ -57,6 +58,37 @@ internal class O5PodActivationTest {
         }
         verify(enactResult).success(false)
         verifyNoInteractions(history)
+    }
+
+    /**
+     * On a real pod a pairing ended as done, but its key never gave a session. Nothing else had been sent to the pod.
+     * A new try must not go on with that key: the pairing is thrown away and made again.
+     */
+    @Test
+    fun `a pod that is paired but took no command yet is paired again`() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16)).thenReturn(null)
+        whenever(bleManager.pairNewPod()).thenReturn(Observable.error(IllegalStateException("pairing failed")))
+
+        runBlocking { sut.initializePod() }
+
+        inOrder(bleManager, podStateManager) {
+            verify(bleManager).closeLink()
+            verify(podStateManager).reset()
+            verify(bleManager).pairNewPod()
+        }
+    }
+
+    /** Once the pod took a command, its pairing is in use: the activation goes on from where it stopped. */
+    @Test
+    fun `a pod that took a command keeps its pairing`() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.GOT_POD_VERSION)
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+
+        runBlocking { sut.initializePod() }
+
+        verify(podStateManager, never()).reset()
+        verify(bleManager, never()).pairNewPod()
     }
 
     @Test

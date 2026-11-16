@@ -130,6 +130,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(history.markSendingFailure(any())).thenReturn(Completable.complete())
         whenever(history.markFailure(any())).thenReturn(Completable.complete())
         whenever(history.setTotalAmountDelivered(any(), anyOrNull())).thenReturn(Completable.complete())
+        // A command that opens the link itself finds it open.
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
     }
 
 
@@ -197,13 +199,30 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `isConnected is true when unpaired - nothing to connect to yet`() {
         whenever(podStateManager.ltk).thenReturn(null)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
 
         assertThat(plugin.isConnected()).isTrue()
     }
 
+    /**
+     * On a real pod a pairing was stored and the first activation step then failed. The queue saw "paired and not
+     * connected", connected by itself before the retry, failed, and the retry never ran. The activation commands
+     * open the link themselves, so the queue is told the link is up until the activation is complete.
+     */
     @Test
-    fun `isConnected reflects bluetoothConnectionState once paired`() {
+    fun `isConnected is true for a pod that is paired but not yet activated`() {
         whenever(podStateManager.ltk).thenReturn(byteArrayOf(1))
+        whenever(podStateManager.bluetoothConnectionState).thenReturn(O5PodStateManager.BluetoothConnectionState.DISCONNECTED)
+        for (progress in listOf(ActivationProgress.NOT_STARTED, ActivationProgress.GOT_POD_VERSION, ActivationProgress.PHASE_1_COMPLETED)) {
+            whenever(podStateManager.activationProgress).thenReturn(progress)
+            assertThat(plugin.isConnected()).isTrue()
+        }
+    }
+
+    @Test
+    fun `isConnected reflects bluetoothConnectionState once the pod is activated`() {
+        whenever(podStateManager.ltk).thenReturn(byteArrayOf(1))
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
         whenever(podStateManager.bluetoothConnectionState).thenReturn(O5PodStateManager.BluetoothConnectionState.CONNECTED)
         assertThat(plugin.isConnected()).isTrue()
 
@@ -717,7 +736,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         assertThat(result!!.success).isFalse()
         assertThat(result.enacted).isFalse()
         verify(podStateManager, never()).basalExpected = any()
-        verify(bleManager, never()).sendCommand(any(), any())
+        // The open dose is checked on the pod with a status read. What must not go out is a dose.
+        verify(bleManager, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
         verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
     }
 

@@ -501,8 +501,14 @@ class O5PumpPlugin @Inject constructor(
         podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
             podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
 
+    /**
+     * Until a pod is fully activated the queue is told the link is up, as the Dash driver does. The activation
+     * commands open the link themselves. Otherwise the queue connects before it runs a command, and for a pod that
+     * is paired but not yet activated that connect can fail for the two minutes the queue allows: a retry of the
+     * first activation step then never ran (seen on a real pod, 2026-11-16).
+     */
     override fun isConnected(): Boolean =
-        podStateManager.ltk == null ||
+        podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED) ||
             podStateManager.bluetoothConnectionState == O5PodStateManager.BluetoothConnectionState.CONNECTED
 
     override fun isConnecting(): Boolean = stopConnecting != null
@@ -1664,6 +1670,8 @@ class O5PumpPlugin @Inject constructor(
                 .setSequenceNumber(podStateManager.msgSequenceNumber.toShort())
                 .setNonce(FIXED_NONCE)
                 .build()
+            // The queue opens the link only for a fully activated pod, so a pod that is not is connected here.
+            ensureConnected().blockingAwait()
             bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
             val podSerial = serialNumber()
             reportPodFault()
