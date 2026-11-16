@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -72,6 +73,8 @@ import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
 import app.aaps.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import app.aaps.pump.omnipod.common.queue.command.CommandInitializePod
+import app.aaps.pump.omnipod.common.queue.command.CommandInsertCannula
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
@@ -84,10 +87,13 @@ import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
 import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
 import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
+import app.aaps.pump.omnipod.dash.util.I8n
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -97,6 +103,7 @@ import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -284,14 +291,14 @@ class OmnipodDashPumpPlugin(
         return podStateManager.isSuspended
     }
 
-    override fun isBusy(): Boolean {
-        // prevents the queue from executing commands
-        // The progress alone does not cover pairing: it is still NOT_STARTED until the first step is done,
-        // and the queue then ran and disconnected in the middle of the pairing (#5219).
-        return omnipodManager.isActivationRunning ||
-            (podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
-                podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED))
-    }
+    // The activation runs as commands of the queue, so the queue needs no holding back for it: a busy pump here
+    // would keep the queue from ever running the activation.
+    override fun isBusy(): Boolean = false
+
+    /** Between the two parts of the activation, while the user puts the pod on. */
+    private fun isActivationBetweenParts(): Boolean =
+        podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
+            podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
 
     override fun isConnected(): Boolean {
 
@@ -344,8 +351,9 @@ class OmnipodDashPumpPlugin(
 
     override fun disconnect(reason: String) {
         aapsLogger.info(LTag.PUMP, "disconnect reason=$reason")
-        if (omnipodManager.isActivationRunning) {
-            // The activation uses the BLE link outside the queue. Closing it here broke the pairing (#5219).
+        if (omnipodManager.isActivationRunning || isActivationBetweenParts()) {
+            // The pod keeps its link until the activation is done: the queue is empty between the two parts, and
+            // closing the link there broke the pairing (#5219).
             aapsLogger.info(LTag.PUMP, "disconnect ignored, pod activation is running")
             return
         }
@@ -551,6 +559,10 @@ class OmnipodDashPumpPlugin(
             preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
         ).collectResilient(newScope, aapsLogger, LTag.PUMP) { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
+        // A settings import writes the stored pod without stopping a driver that stays enabled.
+        preferences.observe(DashStringNonPreferenceKey.PodState).drop(1)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP) { reloadPodWrittenFromOutside() }
+        syncPumpFlows()
     }
 
     override suspend fun onStop() {
@@ -560,6 +572,29 @@ class OmnipodDashPumpPlugin(
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()
         handler = null
+        // The next start trusts nothing of this run: not the link with its session, and not the pod state in memory.
+        // First the check for a state stored from outside, so that nothing below writes the old pod over it.
+        podStateManager.reloadIfChangedOutside()
+        forgetLink()
+        podStateManager.onStop()
+        nextPodWarningCheck = 0
+        bolusCanceled = false
+        timeChangeHandler.reset()
+    }
+
+    private fun forgetLink() {
+        stopConnecting?.countDown()
+        omnipodManager.closeLink()
+        podStateManager.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
+    }
+
+    private fun reloadPodWrittenFromOutside() {
+        if (!podStateManager.reloadIfChangedOutside()) return
+        // The link and its session belong to the pod that was stored before.
+        forgetLink()
+        podStateManager.onStart()
+        nextPodWarningCheck = 0
+        syncPumpFlows()
     }
 
     private fun deliverBasalCorrection(): PumpEnactResult {
@@ -1166,6 +1201,12 @@ class OmnipodDashPumpPlugin(
             is CommandDeactivatePod            ->
                 deactivatePod()
 
+            is CommandInitializePod            ->
+                initializePod()
+
+            is CommandInsertCannula            ->
+                insertCannula()
+
             is CommandHandleTimeChange         ->
                 runBlocking { handleTimeChange(customCommand.requestedByUser) }
 
@@ -1243,6 +1284,103 @@ class OmnipodDashPumpPlugin(
                 )
             }.toPumpEnactResultImpl()
         } ?: pumpEnactResultProvider().success(false).enacted(false).comment("No profile active") // TODO i18n
+    }
+
+    /** The first part of the activation: pair the pod and prime it. Run by the queue, for the wizard. */
+    private fun initializePod(): PumpEnactResult {
+        val lowReservoirAlertEnabled = preferences.get(OmnipodBooleanPreferenceKey.LowReservoirAlert)
+        val lowReservoirAlertUnits = preferences.get(OmnipodIntPreferenceKey.LowReservoirAlertUnits)
+        val lowReservoirAlertTrigger = if (lowReservoirAlertEnabled) {
+            AlertTrigger.ReservoirVolumeTrigger((lowReservoirAlertUnits * 10).toShort())
+        } else
+            null
+        return try {
+            omnipodManager.activatePodPart1(lowReservoirAlertTrigger)
+                .ignoreElements()
+                .andThen(podStateManager.updateLowReservoirAlertSettings(lowReservoirAlertEnabled, lowReservoirAlertUnits))
+                .andThen(
+                    history.createRecord(
+                        OmnipodCommandType.INITIALIZE_POD,
+                        initialResult = InitialResult.SENT,
+                        resolveResult = ResolvedResult.SUCCESS,
+                        resolvedAt = System.currentTimeMillis(),
+                    ).ignoreElement()
+                )
+                .blockingAwait()
+            aapsLogger.debug(LTag.PUMP, "Pod activation part 1 completed")
+            pumpEnactResultProvider().success(true).enacted(true)
+        } catch (throwable: Exception) {
+            aapsLogger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
+            pumpEnactResultProvider().success(false).enacted(false).comment(I8n.textFromException(throwable, rh))
+        }
+    }
+
+    /**
+     * The second part of the activation: set the basal program and insert the cannula. Run by the queue, for the
+     * wizard. When it is done the pod is the pump AAPS counts from.
+     */
+    private fun insertCannula(): PumpEnactResult {
+        val expirationReminderEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationReminder)
+        val expirationReminderHours = preferences.get(OmnipodIntPreferenceKey.ExpirationReminderHours)
+        val expirationReminderHoursBeforeShutdown = if (expirationReminderEnabled) expirationReminderHours.toLong() else null
+        val expirationAlarmEnabled = preferences.get(OmnipodBooleanPreferenceKey.ExpirationAlarm)
+        val expirationAlarmHours = preferences.get(OmnipodIntPreferenceKey.ExpirationAlarmHours)
+        val expirationAlarmHoursBeforeShutdown = if (expirationAlarmEnabled) expirationAlarmHours.toLong() else null
+
+        return try {
+            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+                ?: throw IllegalStateException("No profile set")
+            val basalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
+            aapsLogger.debug(LTag.PUMPCOMM, "Mapped profile to basal program. profile=$profile, basalProgram=$basalProgram")
+            omnipodManager.activatePodPart2(basalProgram, expirationReminderHoursBeforeShutdown, expirationAlarmHoursBeforeShutdown)
+                .ignoreElements()
+                .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationReminderHours, expirationAlarmEnabled, expirationAlarmHours))
+                .andThen(
+                    history.createRecord(
+                        OmnipodCommandType.INSERT_CANNULA,
+                        basalProfileRecord = BasalValuesRecord(profile.getBasalValues().toList()),
+                        initialResult = InitialResult.SENT,
+                        resolveResult = ResolvedResult.SUCCESS,
+                        resolvedAt = System.currentTimeMillis(),
+                    ).ignoreElement()
+                )
+                .blockingAwait()
+            aapsLogger.debug(LTag.PUMP, "Pod activation part 2 completed")
+            podStateManager.basalProgram = basalProgram
+            runBlocking {
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                    timestamp = System.currentTimeMillis(),
+                    endPumpId = System.currentTimeMillis(),
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR
+                )
+                pumpSync.connectNewPump()
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    timestamp = System.currentTimeMillis(),
+                    type = TE.Type.CANNULA_CHANGE,
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                )
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    timestamp = System.currentTimeMillis(),
+                    type = TE.Type.INSULIN_CHANGE,
+                    pumpType = PumpType.OMNIPOD_DASH,
+                    pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
+                )
+            }
+            notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
+            // The pod is active now. A status read takes the reservoir away from its 0.0 start value at once;
+            // without it the value stays wrong, also for the bolus and basal checks that read it, until the loop
+            // reads the pod. Queued here, before this command ends.
+            // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) {
+                commandQueue.readStatus(rh.gs(CommonR.string.omnipod_common_pod_activation_wizard_pod_activated_title))
+            }
+            pumpEnactResultProvider().success(true).enacted(true)
+        } catch (throwable: Exception) {
+            aapsLogger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
+            pumpEnactResultProvider().success(false).enacted(false).comment(I8n.textFromException(throwable, rh))
+        }
     }
 
     private fun deactivatePod(): PumpEnactResult {
@@ -1497,11 +1635,24 @@ class OmnipodDashPumpPlugin(
                 podStateManager.updateActiveCommand()
                     .flatMapCompletable { rxCompletable(Dispatchers.IO) { handleCommandConfirmation(it) } },
                 verifyPumpState(),
+                queueStatusReadWhenUnconfirmed(),
                 checkPodKaput(),
                 refreshOverview(),
                 post,
             )
         )
+    }
+
+    /**
+     * A command the pod did not confirm is checked by a status read. The read is queued here, before this command
+     * ends, so the queue is not empty in between. The check every minute stays for a pod that is out of reach longer.
+     */
+    private fun queueStatusReadWhenUnconfirmed(): Completable = Completable.defer {
+        if (podStateManager.isPodRunning && podStateManager.activeCommand != null) {
+            // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus(rh.gs(R.string.unconfirmed_command)) }
+        }
+        Completable.complete()
     }
 
     private fun refreshOverview(): Completable = Completable.defer {
@@ -1530,7 +1681,8 @@ class OmnipodDashPumpPlugin(
                     // Evaluate basal drift correction after confirmed temp basal cancel.
                     if (podStateManager.needsBasalCorrection()) {
                         // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-                        pluginScope.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
+                        // UNDISPATCHED: the command is in the queue before this one ends.
+                        pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
                     }
                 }
                 notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
@@ -1553,7 +1705,8 @@ class OmnipodDashPumpPlugin(
                     notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
                     notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
                     // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-                    pluginScope.launch { commandQueue.customCommand(CommandDisableSuspendAlerts(rh)) }
+                        // UNDISPATCHED: the command is in the queue before this one ends.
+                    pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CommandDisableSuspendAlerts(rh)) }
                 }
             }
 
@@ -1586,7 +1739,8 @@ class OmnipodDashPumpPlugin(
                     notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
                     notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
                     // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-                    pluginScope.launch { commandQueue.customCommand(CommandDisableSuspendAlerts(rh)) }
+                        // UNDISPATCHED: the command is in the queue before this one ends.
+                    pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CommandDisableSuspendAlerts(rh)) }
                 }
             }
 
@@ -1607,7 +1761,8 @@ class OmnipodDashPumpPlugin(
                         podStateManager.needsBasalCorrection()
                     ) {
                         // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-                        pluginScope.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
+                        // UNDISPATCHED: the command is in the queue before this one ends.
+                        pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
                     }
                 }
                 notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)

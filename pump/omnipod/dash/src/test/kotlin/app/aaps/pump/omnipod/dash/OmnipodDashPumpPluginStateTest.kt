@@ -28,11 +28,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.any
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.concurrent.CountDownLatch
 
 /**
  * The pump-state answers the command queue and the loop rely on.
@@ -200,26 +203,17 @@ class OmnipodDashPumpPluginStateTest {
         assertThat(sut.isSuspended()).isFalse()
     }
 
-    /** Busy blocks the command queue, and it must do so only part way through activation. */
-    @Test
-    fun `the pump is busy only part way through activation`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
-        assertThat(sut.isBusy()).isFalse()
-
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
-        assertThat(sut.isBusy()).isFalse()
-    }
-
     /**
-     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
-     * ran its commands and disconnected the pod in the middle of the pairing (#5219).
+     * The activation runs as commands of the queue. A busy pump would keep the queue from running them, so the
+     * pump is never busy, also not part way through the activation.
      */
     @Test
-    fun `the pump is busy while an activation step is running, even before any progress`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+    fun `the pump is not busy at any point of the activation`() {
         whenever(omnipodManager.isActivationRunning).thenReturn(true)
-
-        assertThat(sut.isBusy()).isTrue()
+        for (progress in listOf(ActivationProgress.NOT_STARTED, ActivationProgress.PHASE_1_COMPLETED, ActivationProgress.COMPLETED)) {
+            whenever(podStateManager.activationProgress).thenReturn(progress)
+            assertThat(sut.isBusy()).isFalse()
+        }
     }
 
     @Test
@@ -231,9 +225,21 @@ class OmnipodDashPumpPluginStateTest {
         verify(omnipodManager, never()).disconnect(any<Boolean>())
     }
 
+    /** The queue is empty while the user puts the pod on. Closing the link there broke the pairing (#5219). */
+    @Test
+    fun `disconnect does not close the link between the two parts of the activation`() {
+        whenever(omnipodManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PHASE_1_COMPLETED)
+
+        sut.disconnect("Queue empty")
+
+        verify(omnipodManager, never()).disconnect(any<Boolean>())
+    }
+
     @Test
     fun `disconnect closes the link when no activation is running`() {
         whenever(omnipodManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
 
         sut.disconnect("Queue empty")
 
@@ -302,6 +308,31 @@ class OmnipodDashPumpPluginStateTest {
         assertThat(sut.canHandleDST()).isFalse()
         whenever(podStateManager.timeZoneOffset).thenReturn(3600000)
         assertThat(sut.canHandleDST()).isTrue()
+    }
+
+    // endregion
+
+    // region onStop - what the next start must not trust
+
+    @Test
+    fun `a stop closes the link and drops the pod state in memory`() = runTest {
+        sut.onStop()
+
+        inOrder(omnipodManager, podStateManager) {
+            verify(omnipodManager).closeLink()
+            verify(podStateManager).bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
+            verify(podStateManager).onStop()
+        }
+    }
+
+    @Test
+    fun `a stop releases a connect that still waits`() = runTest {
+        val waiting = CountDownLatch(1)
+        sut.stopConnecting = waiting
+
+        sut.onStop()
+
+        assertThat(waiting.count).isEqualTo(0)
     }
 
     // endregion

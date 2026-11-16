@@ -35,7 +35,7 @@ abstract class SharedBleManager(
 ) : OmnipodBleManager {
 
     private val busy = AtomicBoolean(false)
-    protected var connection: BleConnection? = null
+    @Volatile protected var connection: BleConnection? = null
 
     protected abstract val bluetoothAddress: String?
     protected abstract val ltk: ByteArray?
@@ -209,6 +209,11 @@ abstract class SharedBleManager(
     final override fun disconnect(closeGatt: Boolean) {
         connection?.disconnect(closeGatt)
             ?: aapsLogger.info(LTag.PUMPBTCOMM, "Trying to disconnect a null $connectionName connection")
+    }
+
+    final override fun closeLink() {
+        connection?.disconnect(true)
+        connection = null
     }
 
     final override fun removeBond() {

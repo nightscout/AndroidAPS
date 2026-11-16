@@ -24,5 +24,11 @@ interface OmnipodBleManager {
     fun pairNewPod(): Observable<PodEvent>
 
     fun disconnect(closeGatt: Boolean = false)
+
+    /**
+     * Closes the link and forgets it, with its session. The next connect makes a new link, as the first connect after
+     * a start of the app does. For a driver that stops.
+     */
+    fun closeLink()
     fun removeBond()
 }

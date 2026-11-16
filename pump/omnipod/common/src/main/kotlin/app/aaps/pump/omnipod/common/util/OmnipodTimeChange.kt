@@ -61,6 +61,14 @@ class OmnipodTimeChange {
         failureAlerted = false
     }
 
+    /** Back to the state of a new start. For a driver that stops. */
+    @Synchronized
+    fun reset() {
+        inProgress = false
+        retryAt = Long.MIN_VALUE
+        failureAlerted = false
+    }
+
     companion object {
 
         fun needsCorrection(podOffset: Int?, phoneOffset: Int, recovering: Boolean): Boolean =
