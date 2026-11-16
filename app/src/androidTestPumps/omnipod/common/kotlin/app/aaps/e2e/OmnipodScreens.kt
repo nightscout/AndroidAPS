@@ -88,6 +88,29 @@ object OmnipodScreens : PumpScreens {
         screen.openVia("Finish", expect = unpairedMark, exact = true)   // back to the overview, with no pod
     }
 
+    /**
+     * From the overview of a pod that does not answer to the overview with no pod. The deactivation fails once the
+     * command queue has given up on the link, and only then does the wizard show "Discard Pod". Its confirm dialog has
+     * the same title, so the tap is done once and the dialog is known by its text.
+     */
+    fun discard(screen: ScreenDriver) {
+        screen.openVia("Deactivate Pod", expect = "Cancel", exact = true)
+        screen.openVia("Next", expect = "can not be used again")
+        screen.click("OK")
+        screen.waitForExactOrThrow("Deactivating Pod")
+
+        screen.waitForExactOrThrow("Discard Pod", DISCARD_OFFER_TIMEOUT)
+        screen.click("Discard Pod")
+        screen.assertVisibleContains("you will not be able to communicate with it")
+        screen.click("OK")
+        screen.waitForExactOrThrow("Pod Discarded")
+
+        screen.openVia("Finish", expect = unpairedMark, exact = true)
+    }
+
+    /** The command queue first gives up on the link, then the deactivation fails and the wizard offers the discard. */
+    private const val DISCARD_OFFER_TIMEOUT = 240_000L
+
     /** The first activation step scans, pairs and primes; at the real speed of the emulator that is over a minute. */
     private const val POD_COMMAND_TIMEOUT = 150_000L
 
