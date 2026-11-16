@@ -90,6 +90,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Database            -> Sources.Database
         UserEntry.Sources.Carelevo            -> Sources.Carelevo
         UserEntry.Sources.Unknown             -> Sources.Unknown
+        UserEntry.Sources.Aaruy               -> Sources.Aaruy
     }
 
 fun Sources.toDb(): UserEntry.Sources =
@@ -179,5 +180,6 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Insulin             -> UserEntry.Sources.Insulin
         Sources.Carelevo            -> UserEntry.Sources.Carelevo
         Sources.Unknown             -> UserEntry.Sources.Unknown
+        Sources.Aaruy               -> UserEntry.Sources.Aaruy
     }
 

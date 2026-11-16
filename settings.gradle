@@ -1,9 +1,13 @@
 pluginManagement {
     repositories {
+        // 使用阿里云镜像替代 gradlePluginPortal()
+//        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+//        maven { url = uri("https://maven.aliyun.com/repository/public") }
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
+//        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
+//        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
     }
 }
 
@@ -58,6 +62,7 @@ include ':pump:carelevo'
 include ':pump:carelevo:protocol'
 include ':pump:carelevo:emulator'
 include ':pump:virtual'
+include ':pump:aaruy'
 include ':shared:clientbindings'
 include ':shared:impl'
 include ':shared:tests'
@@ -66,3 +71,5 @@ include ':ui'
 include ':workflow'
 include ':desktop:shell'
 include ':ios:shell'
+include ':pump:aaruy'
+include ':pump:aaruy'

@@ -189,6 +189,7 @@ class UserEntryPresentationHelperImpl(
         Sources.Wear                -> Icons.Default.Watch
         Sources.WizardDialog        -> IcCalculator
         Sources.Xdrip               -> IcXDrip
+        Sources.Aaruy               -> IcPluginVirtualPump
     }
 
     @Composable
@@ -278,6 +279,7 @@ class UserEntryPresentationHelperImpl(
         Sources.WizardDialog        -> ElementType.BOLUS_WIZARD.color()
         Sources.Xdrip               -> ElementType.CGM_XDRIP.color()
         Sources.Carelevo            -> ElementType.PUMP.color()
+        Sources.Aaruy               -> ElementType.PUMP.color()
     }
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =
