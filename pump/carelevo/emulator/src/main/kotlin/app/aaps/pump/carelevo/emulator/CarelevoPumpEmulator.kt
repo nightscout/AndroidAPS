@@ -35,7 +35,7 @@ import kotlin.math.roundToInt
  * request itself names (byte 1 of the request, not a fixed opcode).
  */
 class CarelevoPumpEmulator(
-    val state: CarelevoPumpState = CarelevoPumpState(),
+    state: CarelevoPumpState = CarelevoPumpState(),
     private val aapsLogger: AAPSLogger? = null,
     /** The patch's clock. A test that moves time itself passes its own. */
     private val clock: () -> Long = System::currentTimeMillis
@@ -43,6 +43,21 @@ class CarelevoPumpEmulator(
 
     /** The driver writes on its own thread and a test looks from another. */
     private val lock = Any()
+
+    /** All the patch holds. A new patch takes its place in [replaceWithNewPatch]. */
+    var state: CarelevoPumpState = state
+        private set
+
+    /**
+     * A new patch takes the place of this one, as after the user removed a patch: a new serial, not activated, nothing
+     * running, a full reservoir. The boluses of the old patch stay in [boluses], as AAPS keeps them too.
+     */
+    fun replaceWithNewPatch() = synchronized(lock) {
+        val oldSerial = state.serialNumber
+        state = CarelevoPumpState().also { it.serialNumber = oldSerial.dropLast(1) + ((oldSerial.last().digitToInt() + 1) % 10) }
+        bolus = null
+        stopNextBolusAt = null
+    }
 
     /** How fast a bolus runs. The clock stays the phone's clock. */
     @Volatile var speed: EmulatorSpeed = EmulatorSpeed.REAL

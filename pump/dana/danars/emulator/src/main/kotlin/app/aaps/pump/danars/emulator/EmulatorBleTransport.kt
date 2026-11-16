@@ -197,6 +197,20 @@ class EmulatorBleTransport(
         listener?.onConnectionStateChanged(false)
     }
 
+    /**
+     * A replacement pump, in range: the next scan names it anew (see `deviceNameProvider`), so AAPS sees another pump, and
+     * it has no history and runs nothing. Keeping the old history under a new name gave a pump no real user has.
+     */
+    override fun replaceWithNewPump(): Boolean {
+        synchronized(pumpState) {
+            pumpState.isTempBasalRunning = false
+            pumpState.isExtendedBolusRunning = false
+            pumpState.historyStore.clear()
+            pumpState.reviewHistoryStore.clear()
+        }
+        return setOutOfRange(false)
+    }
+
     override fun setOutOfRange(outOfRange: Boolean): Boolean {
         this.outOfRange = outOfRange
         if (outOfRange) dropLink()

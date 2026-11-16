@@ -93,7 +93,12 @@ class AndroidEatReminderAlarm(
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setContentTitle(rh.gs(CoreUiStrings.eat_reminder_title))
-            .setContentText(rh.gs(CoreUiStrings.eat_reminder_total_wait, rh.gs(CoreUiStrings.format_mins, totalMinutes)))
+            // A minimized notification collapses to "title text" on one line, where the system does
+            // not draw its countdown. So the body says when the reminder rings, as a time of day.
+            // Each +5 min posts the notification again with the new time.
+            .setContentText(rh.gs(CoreUiStrings.eat_reminder_rings_at, dateUtil.timeString(endsAt)))
+            // The header carries the whole wait, so a short body line cannot push it out.
+            .setSubText(rh.gs(CoreUiStrings.eat_reminder_total_wait, rh.gs(CoreUiStrings.format_mins, totalMinutes)))
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setWhen(endsAt)
             .setShowWhen(true)
@@ -102,6 +107,10 @@ class AndroidEatReminderAlarm(
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setSilent(true)
+            // The watch app posts its own countdown from the status it gets, with its own Stop and
+            // +5 min, so a copy of this one on the watch would say the same thing twice. The alarm
+            // at the end is a different notification and still reaches the watch.
+            .setLocalOnly(true)
             .setTimeoutAfter(left)
             .setContentIntent(notificationHolder().openAppIntent())
             .addAction(0, rh.gs(CoreUiStrings.stop), actionIntent(EatReminderReceiver.ACTION_STOP))
