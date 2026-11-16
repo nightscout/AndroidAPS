@@ -88,7 +88,8 @@ class P256KeyGenerator @Inject constructor() {
                 return POINT_AT_INFINITY
             }
             val numerator = p1.affineX.pow(2).multiply(BigInteger.valueOf(3)).add(a).mod(p)
-            val denominator = p1.affineY.multiply(BigInteger.TWO).mod(p)
+            // Not BigInteger.TWO: Android has it only from API 33, and on Android 12 the pairing failed with NoSuchFieldError.
+            val denominator = p1.affineY.multiply(BigInteger.valueOf(2)).mod(p)
             lambda = numerator.multiply(denominator.modInverse(p)).mod(p)
         } else {
             val numerator = p2.affineY.subtract(p1.affineY).mod(p)
