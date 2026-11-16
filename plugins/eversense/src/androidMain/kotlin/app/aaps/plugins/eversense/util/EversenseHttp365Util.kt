@@ -331,7 +331,10 @@ class EversenseHttp365Util {
                 val patientBytes = EversenseDmsBinaryCodec.buildEmptyPatientBytes()
                 val alertBytes = EversenseDmsBinaryCodec.buildAlertBytes(sensorId, alerts, readings.lastOrNull()?.datetime ?: System.currentTimeMillis(), readings.lastOrNull()?.glucoseInMgDl ?: 0)
 
-                EversenseLogger.debug(TAG) { "PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber', sensorId='$sensorId'" }
+                EversenseLogger.debug(TAG) { "PutDeviceEvents: ${readings.size} reading(s), ${calibrations.size} calibration(s), txId='$transmitterSerialNumber', sensorId='$sensorId'" }
+                calibrations.forEach { c ->
+                    EversenseLogger.debug(TAG) { "   Calibration: glucose=${c.glucoseInMgDl} ts=${dateFormatter.get().format(Date(c.datetime))}" }
+                }
 
                 val jsonBody = """{"deviceType":"SMSIMeter","deviceName":"Smart Transmitter (Android)","deviceID":"$transmitterSerialNumber","offsetBytes":"$offsetBytes","sgBytes":"$sgBytes","mgBytes":"$mgBytes","patientBytes":"$patientBytes","alertBytes":"$alertBytes","algorithmVersion":"10"}"""
 

@@ -619,7 +619,14 @@ class EversensePlugin(
         }
 
         val latest = readings.maxByOrNull { it.datetime } ?: return true
-        val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
+        val rawCalibrations = liveState.calibrationHistory.ifEmpty { state.calibrationHistory }
+        val calibrations = rawCalibrations.sortedBy { it.datetime }
+            .fold(mutableListOf<app.aaps.plugins.eversense.packets.e365.CalibrationHistoryItem>()) { acc, item ->
+                if (acc.isEmpty() || (item.datetime - acc.last().datetime) >= 20 * 60_000L) {
+                    acc.add(item)
+                }
+                acc
+            }
 
         return if (batch.type == EversenseType.EVERSENSE_365) {
             val glucose = app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
