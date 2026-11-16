@@ -210,12 +210,31 @@ class PodEmulator(
                 s.activeAlerts = s.activeAlerts and mask.inv() and 0xff
             }
 
-            CMD_PROGRAM_ALERTS, CMD_PROGRAM_BEEPS -> Unit
+            CMD_PROGRAM_ALERTS -> programAlerts(first.body)
+            CMD_PROGRAM_BEEPS  -> s.beepCommands++
             CMD_DEACTIVATE     -> deactivate()
             else               -> return nak(NAK_ILLEGAL_PARAM)
         }
         s.lastProgrammingSequence = sequence
         return defaultStatus()
+    }
+
+    /**
+     * Keeps what the controller programs for each alert slot. After the nonce come 6 bytes for each alert, as
+     * `AlertConfiguration` in the driver writes them: the slot in the high 4 bits of the first byte, bit 3 for "on",
+     * and the trigger in bytes 2 and 3. The pod does not fire these alerts by itself here.
+     */
+    private fun programAlerts(body: ByteArray) {
+        var at = NONCE_SIZE
+        while (at + ALERT_SIZE <= body.size) {
+            val first = body[at].toInt() and 0xff
+            val slot = first shr 4
+            if (slot < state.alertEnabled.size) {
+                state.alertEnabled[slot] = first and 0x08 != 0
+                state.alertTrigger[slot] = ((body[at + 2].toInt() and 0xff) shl 8) or (body[at + 3].toInt() and 0xff)
+            }
+            at += ALERT_SIZE
+        }
     }
 
     /** The command by what it does, for the lost command and lost answer hooks. Only of a pod in use: not the priming. */
@@ -655,6 +674,7 @@ class PodEmulator(
         private const val CRC_SIZE = 2
         private const val ENVELOPE_SIZE = HEADER_SIZE + CRC_SIZE
         private const val NONCE_SIZE = 4
+        private const val ALERT_SIZE = 6
         private const val VERSION_ANSWER_SIZE = 23
         private const val SET_UNIQUE_ID_ANSWER_SIZE = 29
         private const val DEFAULT_STATUS_SIZE = 10

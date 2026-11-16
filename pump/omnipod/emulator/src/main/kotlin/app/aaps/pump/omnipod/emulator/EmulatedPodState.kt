@@ -43,6 +43,16 @@ class EmulatedPodState : Serializable {
     /** For each of the 8 alert slots, the pod minute at which it fired, or 0. */
     val alertMinutes: IntArray = IntArray(8)
 
+    /**
+     * For each of the 8 alert slots, what the controller programmed last: whether the alert is on, and its trigger,
+     * which is minutes for a timer and tenths of a unit for the reservoir. A test checks a saved setting with it.
+     */
+    val alertEnabled: BooleanArray = BooleanArray(8)
+    val alertTrigger: IntArray = IntArray(8)
+
+    /** How many beep commands the pod took, as the test beep of the screens. */
+    var beepCommands: Int = 0
+
     /** The bolus the pod gives now, or null. */
     var bolus: RunningPodBolus? = null
 

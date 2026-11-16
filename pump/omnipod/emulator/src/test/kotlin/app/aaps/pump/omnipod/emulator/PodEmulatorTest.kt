@@ -6,6 +6,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.session.ResponseUtil
 import app.aaps.pump.omnipod.common.bledriver.pod.command.DeactivateCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.GetVersionCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramAlertsCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBolusCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramTempBasalCommand
@@ -14,6 +15,10 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.StopDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.SuspendDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepRepetitionType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
@@ -169,6 +174,36 @@ class PodEmulatorTest {
         val resumed = send(basal(50)) as DefaultStatusResponse
         assertEquals(DeliveryStatus.BASAL_ACTIVE, resumed.deliveryStatus)
         assertFalse(emulator.snapshot(linkUp = false).suspended)
+    }
+
+    @Test
+    fun `the pod keeps the alerts the controller programs`() {
+        activate()
+        fun lowReservoir(enabled: Boolean, units: Int) = ProgramAlertsCommand.Builder().setUniqueId(ID).setSequenceNumber(next()).setNonce(NONCE)
+            .setAlertConfigurations(
+                listOf(
+                    AlertConfiguration(
+                        AlertType.LOW_RESERVOIR, enabled = enabled, durationInMinutes = 0, autoOff = false,
+                        AlertTrigger.ReservoirVolumeTrigger((units * 10).toShort()), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX
+                    ),
+                    AlertConfiguration(
+                        AlertType.EXPIRATION, enabled = true, durationInMinutes = 0, autoOff = false,
+                        AlertTrigger.TimerTrigger(4000), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX3
+                    )
+                )
+            ).build()
+        val lowReservoirSlot = AlertType.LOW_RESERVOIR.index.toInt()
+        val expirationSlot = AlertType.EXPIRATION.index.toInt()
+
+        assertNotNull(send(lowReservoir(enabled = true, units = 20)))
+        assertTrue(emulator.state.alertEnabled[lowReservoirSlot])
+        assertEquals(200, emulator.state.alertTrigger[lowReservoirSlot])
+        assertTrue(emulator.state.alertEnabled[expirationSlot])
+        assertEquals(4000, emulator.state.alertTrigger[expirationSlot])
+
+        assertNotNull(send(lowReservoir(enabled = false, units = 21)))
+        assertFalse(emulator.state.alertEnabled[lowReservoirSlot])
+        assertEquals(210, emulator.state.alertTrigger[lowReservoirSlot])
     }
 
     @Test
