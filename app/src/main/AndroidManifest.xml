@@ -214,6 +214,20 @@
                 tools:node="remove" />
         </provider>
 
+        <!-- Glance sends a tap through one of these activities when the click sits in a list, and
+             they throw "List adapter activity trampoline invoked without specifying target intent"
+             when the intent that reaches them carries no target. The throw is in the library's own
+             onCreate, so the app cannot catch it, and it killed AAPS for users who tapped a widget
+             (Crashlytics, 4.0.0). Our widgets have no list: a tap starts ComposeMainActivity
+             directly, checked on the emulator for every widget, so these activities only sit here
+             waiting to crash. -->
+        <activity
+            android:name="androidx.glance.appwidget.action.ActionTrampolineActivity"
+            tools:node="remove" />
+        <activity
+            android:name="androidx.glance.appwidget.action.InvisibleActionTrampolineActivity"
+            tools:node="remove" />
+
     </application>
 
 </manifest>

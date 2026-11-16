@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * The preferences file of the watch, and the phone's old settings file.
@@ -93,16 +95,20 @@ class SPImpl(
         sharedPreferences.edit().remove(key).apply()
 
     override fun getString(resourceID: Int, defaultValue: String): String =
-        sharedPreferences.getString(context.getString(resourceID), defaultValue) ?: defaultValue
+        getString(context.getString(resourceID), defaultValue)
 
     override fun getString(key: String, defaultValue: String): String =
-        sharedPreferences.getString(key, defaultValue) ?: defaultValue
+        getStringOrNull(key, defaultValue) ?: defaultValue
 
     override fun getStringOrNull(resourceID: Int, defaultValue: String?): String? =
-        sharedPreferences.getString(context.getString(resourceID), defaultValue) ?: defaultValue
+        getStringOrNull(context.getString(resourceID), defaultValue)
 
     override fun getStringOrNull(key: String, defaultValue: String?): String? =
-        sharedPreferences.getString(key, defaultValue)
+        try {
+            sharedPreferences.getString(key, defaultValue)
+        } catch (_: Exception) {
+            storedValue(key)?.toString() ?: defaultValue
+        }
 
     override fun getBoolean(resourceID: Int, defaultValue: Boolean): Boolean =
         sharedPreferences.getBoolean(context.getString(resourceID), defaultValue)
@@ -115,46 +121,76 @@ class SPImpl(
         }
 
     override fun getDouble(resourceID: Int, defaultValue: Double): Double =
-        try {
-            sharedPreferences.getFloat(context.getString(resourceID), defaultValue.toFloat()).toDouble()
-        } catch (_: Exception) {
-            SafeParse.stringToDouble(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
-        }
+        getDouble(context.getString(resourceID), defaultValue)
 
     override fun getDouble(key: String, defaultValue: Double): Double =
         try {
             sharedPreferences.getFloat(key, defaultValue.toFloat()).toDouble()
         } catch (_: Exception) {
-            SafeParse.stringToDouble(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+            doubleOf(storedValue(key), defaultValue)
         }
 
     override fun getInt(resourceID: Int, defaultValue: Int): Int =
-        try {
-            sharedPreferences.getInt(context.getString(resourceID), defaultValue)
-        } catch (_: Exception) {
-            SafeParse.stringToInt(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
-        }
+        getInt(context.getString(resourceID), defaultValue)
 
     override fun getInt(key: String, defaultValue: Int): Int =
         try {
             sharedPreferences.getInt(key, defaultValue)
         } catch (_: Exception) {
-            SafeParse.stringToInt(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+            intOf(storedValue(key), defaultValue)
         }
 
     override fun getLong(resourceID: Int, defaultValue: Long): Long =
-        try {
-            sharedPreferences.getLong(context.getString(resourceID), defaultValue)
-        } catch (_: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
-        }
+        getLong(context.getString(resourceID), defaultValue)
 
     override fun getLong(key: String, defaultValue: Long): Long =
         try {
             sharedPreferences.getLong(key, defaultValue)
         } catch (_: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+            longOf(storedValue(key), defaultValue)
         }
+
+    /**
+     * The value as it is stored, for a key whose type is not the one the getter asked for.
+     *
+     * Older builds wrote the same setting as text, as an Int or as a Float, so a getter cannot assume
+     * that "not my type" means text. Reading it as text threw a second ClassCastException, this time
+     * inside the catch, where nothing caught it: opening the settings killed the app for anyone whose
+     * file still held an Int under a decimal setting.
+     *
+     * Only the fallback reads the whole map, which SharedPreferences copies on every call, so the
+     * normal path stays as cheap as it was. The same conversion is in `EncryptedKeyValueStore`, which
+     * holds the phone's settings now.
+     */
+    private fun storedValue(key: String): Any? =
+        try {
+            sharedPreferences.all[key]
+        } catch (_: Exception) {
+            null
+        }
+
+    private fun doubleOf(value: Any?, defaultValue: Double): Double = when (value) {
+        is Number -> value.toDouble()
+        is String -> SafeParse.stringToDouble(value, defaultValue)
+        else      -> defaultValue
+    }
+
+    // A decimal is rounded, not cut, and the same way as in `EncryptedKeyValueStore`: the two stores
+    // must read the same file content as the same setting.
+    private fun intOf(value: Any?, defaultValue: Int): Int = when (value) {
+        is Long   -> if (value in Int.MIN_VALUE..Int.MAX_VALUE) value.toInt() else defaultValue
+        is Number -> value.toDouble().let { if (it.isFinite() && it >= Int.MIN_VALUE.toDouble() && it <= Int.MAX_VALUE.toDouble()) it.roundToInt() else defaultValue }
+        is String -> SafeParse.stringToInt(value, defaultValue)
+        else      -> defaultValue
+    }
+
+    private fun longOf(value: Any?, defaultValue: Long): Long = when (value) {
+        is Long   -> value
+        is Int    -> value.toLong()
+        is Number -> value.toDouble().let { if (it.isFinite()) it.roundToLong() else defaultValue }
+        is String -> SafeParse.stringToLong(value, defaultValue)
+        else      -> defaultValue
+    }
 
     override fun incLong(key: String) {
         val value = getLong(key, 0) + 1L

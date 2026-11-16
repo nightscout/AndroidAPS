@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.domain.usecase.patch
 
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
@@ -21,13 +22,16 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
     private val patchInfoRepository: CarelevoPatchInfoRepository = mock()
     private val infusionInfoRepository: CarelevoInfusionInfoRepository = mock()
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository = mock()
+    private val pumpSync: PumpSync = mock()
 
     private val sut = CarelevoPatchForceDiscardUseCase(
         patchInfoRepository = patchInfoRepository,
         infusionInfoRepository = infusionInfoRepository,
-        userSettingInfoRepository = userSettingInfoRepository
+        userSettingInfoRepository = userSettingInfoRepository,
+        pumpSync = pumpSync
     )
 
+    /** The records of the discarded patch end with the discard (D9). */
     @Test
     fun execute_returns_success_when_cleanup_succeeds() {
         whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
@@ -38,6 +42,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         val result = sut.execute().blockingGet()
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
+        verify(pumpSync).connectNewPump(true)
     }
 
     @Test

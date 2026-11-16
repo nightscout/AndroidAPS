@@ -96,6 +96,7 @@ class DanaRSPlugin(
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val blePreCheck: BlePreCheck,
     private val bolusProgressData: BolusProgressData,
+    private val pumpSync: PumpSync,
     notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
@@ -180,12 +181,17 @@ class DanaRSPlugin(
     }
 
     fun changePump() {
+        val wasPaired = mDeviceName.isNotEmpty()
         mDeviceAddress = preferences.get(DanaStringNonKey.MacAddress)
         mDeviceName = preferences.get(DanaStringNonKey.RsName)
         danaPump.serialNumber = preferences.get(DanaStringNonKey.RsName)
         danaPump.reset()
         if (isConfigured())
             pluginScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed)) }
+        // The pump was removed: AAPS counts nothing more from it, also when it could not be reached (D9). Off the main
+        // thread, as connectNewPump waits for the database.
+        else if (wasPaired)
+            pluginScope.launch { pumpSync.connectNewPump() }
     }
 
     override fun connect(reason: String) {

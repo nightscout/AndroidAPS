@@ -15,6 +15,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * Where [EncryptedKeyValueStore] keeps its values on disk: [DataStoreBackend] in the app.
@@ -149,16 +151,20 @@ class EncryptedKeyValueStore internal constructor(
     }
 
     override fun getDouble(key: String, defaultValue: Double): Double = when (val value = raw(key)) {
-        is Double -> value
-        is Int    -> value.toDouble()
-        is Long   -> value.toDouble()
+        is Number -> value.toDouble()
         is String -> SafeParse.stringToDouble(value, defaultValue)
         else      -> defaultValue
     }
 
+    /**
+     * A whole number is read as it is. A decimal one is rounded, not dropped: a setting that used to be
+     * a decimal and is a whole number now arrived here as a Double, because the move from the old file
+     * turns a Float into a Double. The default would lose what the user set, without saying so.
+     */
     override fun getInt(key: String, defaultValue: Int): Int = when (val value = raw(key)) {
         is Int    -> value
         is Long   -> if (value in Int.MIN_VALUE..Int.MAX_VALUE) value.toInt() else defaultValue
+        is Number -> value.toDouble().let { if (it.isFinite() && it >= Int.MIN_VALUE.toDouble() && it <= Int.MAX_VALUE.toDouble()) it.roundToInt() else defaultValue }
         is String -> SafeParse.stringToInt(value, defaultValue)
         else      -> defaultValue
     }
@@ -166,6 +172,7 @@ class EncryptedKeyValueStore internal constructor(
     override fun getLong(key: String, defaultValue: Long): Long = when (val value = raw(key)) {
         is Long   -> value
         is Int    -> value.toLong()
+        is Number -> value.toDouble().let { if (it.isFinite()) it.roundToLong() else defaultValue }
         is String -> SafeParse.stringToLong(value, defaultValue)
         else      -> defaultValue
     }

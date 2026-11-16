@@ -101,6 +101,22 @@ settle() {
   done
 }
 
+# Runs the command after [out] and [label] with its output in [out], and prints a line each minute while it runs.
+# CircleCI stops a step after 10 minutes with no output, and one part of a scenario class can take longer: a Diaconn
+# part took 709 s in CircleCI 42463, and in 42477 the step of emulator-5554 was stopped in the middle of one.
+run_with_heartbeat() {
+  local out=$1 label=$2 pid secs=0
+  shift 2
+  "$@" > "$out" 2>&1 &
+  pid=$!
+  while kill -0 "$pid" 2>/dev/null; do
+    sleep 5
+    secs=$((secs + 5))
+    [ $((secs % 60)) = 0 ] && echo "$DEV: $label still runs after $secs s"
+  done
+  wait "$pid" || true
+}
+
 # What the driver, the queue and the database did during each failed test of [out], from the logcat of this emulator.
 # A scenario failure names only the check that failed; these lines say why.
 dump_failed_tests() {
@@ -123,9 +139,9 @@ run_part() {
   for attempt in 1 2 3; do
     [ "$attempt" -gt 1 ] && settle
     adb -s "$DEV" logcat -c || true
-    adb -s "$DEV" shell am instrument -w -r -e class "$cls" -e numShards "$PARTS" -e shardIndex "$part" \
-      -e coverage true -e coverageFile /data/data/$PKG/cov-$id.ec \
-      $RUNNER > "$Q/out-$id-$attempt.txt" 2>&1 || true
+    run_with_heartbeat "$Q/out-$id-$attempt.txt" "$id attempt $attempt" \
+      adb -s "$DEV" shell am instrument -w -r -e class "$cls" -e numShards "$PARTS" -e shardIndex "$part" \
+      -e coverage true -e coverageFile /data/data/$PKG/cov-$id.ec $RUNNER
     tail -n 120 "$Q/out-$id-$attempt.txt"
     alive || return 2
     echo "--- $id attempt $attempt on $DEV: retries and failure dumps from logcat ---"
@@ -156,8 +172,8 @@ run_restart() {
   local cls=$1 id=$2
   for part in 1 2; do
     adb -s "$DEV" logcat -c || true
-    adb -s "$DEV" shell am instrument -w -r -e killRestart $part -e class "$cls#appKilledDuringABolus" \
-      $RUNNER > "$Q/out-$id-$part.txt" 2>&1 || true
+    run_with_heartbeat "$Q/out-$id-$part.txt" "$id run $part" \
+      adb -s "$DEV" shell am instrument -w -r -e killRestart $part -e class "$cls#appKilledDuringABolus" $RUNNER
     echo "--- $cls app restart, run $part on $DEV ---"
     tail -n 40 "$Q/out-$id-$part.txt"
     alive || return 2

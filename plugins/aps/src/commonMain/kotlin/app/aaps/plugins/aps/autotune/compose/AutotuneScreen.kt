@@ -45,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -62,7 +61,8 @@ import app.aaps.core.graph.profile.buildIsfRows
 import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
@@ -72,13 +72,13 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pickers.WeekDaySelector
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.plugins.aps.R
+import app.aaps.plugins.aps.ApsStrings
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AutotuneScreen(
     state: AutotuneUiState,
-    rh: ResourceHelper,
+    rh: TextResolver,
     dateUtil: DateUtil,
     profileFunction: ProfileFunction,
     profileUtil: ProfileUtil,
@@ -127,7 +127,7 @@ fun AutotuneScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     NumberInputRow(
-                        labelResId = R.string.autotune_default_tune_days_title,
+                        labelRef = ApsStrings.autotune_default_tune_days_title,
                         value = state.daysBack,
                         onValueChange = onDaysChanged,
                         valueRange = 1.0..30.0,
@@ -166,14 +166,14 @@ fun AutotuneScreen(
         AapsCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 InfoRow(
-                    label = stringResource(R.string.autotune_last_run),
+                    label = stringResource(ApsStrings.autotune_last_run),
                     value = state.lastRunText,
                     valueClickable = true,
                     onValueClick = onLoadLastRun
                 )
                 if (state.warningText.isNotEmpty()) {
                     InfoRow(
-                        label = stringResource(R.string.autotune_warning),
+                        label = stringResource(ApsStrings.autotune_warning),
                         value = state.warningText
                     )
                 }
@@ -204,7 +204,7 @@ fun AutotuneScreen(
                         if (state.basalRows.isNotEmpty()) {
                             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                             Text(
-                                text = stringResource(app.aaps.core.ui.R.string.basal),
+                                text = stringResource(CoreUiStrings.basal),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
@@ -223,25 +223,25 @@ fun AutotuneScreen(
                     ) {
                         val buttonModifier = Modifier.weight(1f)
                         if (state.showProfileSwitch) {
-                            AutotuneButton(stringResource(app.aaps.core.ui.R.string.activate_profile), Icons.Filled.SwapHoriz, buttonModifier, onClick = commit(onProfileSwitch))
+                            AutotuneButton(stringResource(CoreUiStrings.activate_profile), Icons.Filled.SwapHoriz, buttonModifier, onClick = commit(onProfileSwitch))
                         }
                         if (state.showCompare) {
-                            AutotuneButton(stringResource(R.string.autotune_compare_profile), Icons.AutoMirrored.Filled.CompareArrows, buttonModifier, onClick = commit(onCompareProfiles))
+                            AutotuneButton(stringResource(ApsStrings.autotune_compare_profile), Icons.AutoMirrored.Filled.CompareArrows, buttonModifier, onClick = commit(onCompareProfiles))
                         }
                         if (state.showCopyLocal) {
-                            AutotuneButton(stringResource(R.string.autotune_copy_localprofile_button), Icons.Filled.ContentCopy, buttonModifier, onClick = commit(onCopyLocal))
+                            AutotuneButton(stringResource(ApsStrings.autotune_copy_localprofile_button), Icons.Filled.ContentCopy, buttonModifier, onClick = commit(onCopyLocal))
                         }
                         if (state.showUpdateProfile) {
-                            AutotuneButton(stringResource(R.string.autotune_update_input_profile_button), Icons.Filled.Save, buttonModifier, onClick = commit(onUpdateProfile))
+                            AutotuneButton(stringResource(ApsStrings.autotune_update_input_profile_button), Icons.Filled.Save, buttonModifier, onClick = commit(onUpdateProfile))
                         }
                         if (state.showRevertProfile) {
-                            AutotuneButton(stringResource(R.string.autotune_revert_input_profile_button), Icons.Filled.Restore, buttonModifier, onClick = commit(onRevertProfile))
+                            AutotuneButton(stringResource(ApsStrings.autotune_revert_input_profile_button), Icons.Filled.Restore, buttonModifier, onClick = commit(onRevertProfile))
                         }
                         if (state.showRun) {
-                            AutotuneButton(stringResource(R.string.autotune_run), Icons.Filled.PlayArrow, buttonModifier, onClick = commit(onRunAutotune))
+                            AutotuneButton(stringResource(ApsStrings.autotune_run), Icons.Filled.PlayArrow, buttonModifier, onClick = commit(onRunAutotune))
                         }
                         if (state.showCheckInput) {
-                            AutotuneButton(stringResource(R.string.autotune_check_input_profile_button), Icons.Filled.PersonSearch, buttonModifier, onClick = commit(onCheckInputProfile))
+                            AutotuneButton(stringResource(ApsStrings.autotune_check_input_profile_button), Icons.Filled.PersonSearch, buttonModifier, onClick = commit(onCheckInputProfile))
                         }
                     }
                 }
@@ -253,8 +253,8 @@ fun AutotuneScreen(
     when (val dialog = state.dialogState) {
         is DialogState.CopyLocal         -> {
             OkCancelDialog(
-                title = stringResource(R.string.autotune_copy_localprofile_button),
-                message = stringResource(R.string.autotune_copy_local_profile_message) + "\n" + dialog.localName,
+                title = stringResource(ApsStrings.autotune_copy_localprofile_button),
+                message = stringResource(ApsStrings.autotune_copy_local_profile_message) + "\n" + dialog.localName,
                 onConfirm = { onCopyLocalConfirm(dialog.localName) },
                 onDismiss = onDialogDismiss
             )
@@ -262,8 +262,8 @@ fun AutotuneScreen(
 
         is DialogState.UpdateProfile     -> {
             OkCancelDialog(
-                title = stringResource(R.string.autotune_update_input_profile_button),
-                message = stringResource(R.string.autotune_update_local_profile_message, dialog.profileName),
+                title = stringResource(ApsStrings.autotune_update_input_profile_button),
+                message = stringResource(ApsStrings.autotune_update_local_profile_message, dialog.profileName),
                 onConfirm = onDialogConfirm,
                 onDismiss = onDialogDismiss
             )
@@ -271,8 +271,8 @@ fun AutotuneScreen(
 
         is DialogState.RevertProfile     -> {
             OkCancelDialog(
-                title = stringResource(R.string.autotune_revert_input_profile_button),
-                message = stringResource(R.string.autotune_revert_local_profile_message, dialog.profileName),
+                title = stringResource(ApsStrings.autotune_revert_input_profile_button),
+                message = stringResource(ApsStrings.autotune_revert_local_profile_message, dialog.profileName),
                 onConfirm = onDialogConfirm,
                 onDismiss = onDialogDismiss
             )
@@ -281,8 +281,8 @@ fun AutotuneScreen(
         is DialogState.ProfileSwitch     -> {
             OkCancelDialog(
                 message = stringResource(
-                    app.aaps.core.ui.R.string.value_question,
-                    stringResource(app.aaps.core.interfaces.R.string.confirmation_line, stringResource(app.aaps.core.ui.R.string.activate_profile), dialog.profileName)
+                    CoreUiStrings.value_question,
+                    stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.activate_profile), dialog.profileName)
                 ),
                 onConfirm = onDialogConfirm,
                 onDismiss = onDialogDismiss
@@ -292,7 +292,7 @@ fun AutotuneScreen(
         is DialogState.PumpDisconnected  -> {
             OkDialog(
                 title = dialog.title,
-                message = stringResource(R.string.pump_disconnected),
+                message = stringResource(ApsStrings.pump_disconnected),
                 onDismiss = onDialogDismiss
             )
         }
@@ -312,7 +312,7 @@ fun AutotuneScreen(
                             getIsfList = { it.getIsfList(rh, dateUtil) },
                             getBasalList = { it.getBasalList(rh, dateUtil) },
                             getTargetList = { it.getTargetList(rh, dateUtil) },
-                            formatBasalSum = { rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, it) }
+                            formatBasalSum = { rh.gs(InterfacesStrings.format_insulin_units, it) }
                         )
                     },
                     profileCompareContent = { profile1, profile2 ->
@@ -320,11 +320,11 @@ fun AutotuneScreen(
                             profile1 = profile1,
                             profile2 = profile2,
                             icsRows = buildIcRows(profile1, profile2, dateUtil),
-                            icUnits = stringResource(app.aaps.core.interfaces.R.string.profile_carbs_per_unit),
+                            icUnits = stringResource(InterfacesStrings.profile_carbs_per_unit),
                             isfsRows = buildIsfRows(profile1, profile2, profileUtil, dateUtil),
-                            isfUnits = stringResource(if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.interfaces.R.string.profile_isf_units_mgdl else app.aaps.core.interfaces.R.string.profile_isf_units_mmol),
+                            isfUnits = stringResource(if (profileFunction.getUnits() == GlucoseUnit.MGDL) InterfacesStrings.profile_isf_units_mgdl else InterfacesStrings.profile_isf_units_mmol),
                             basalsRows = buildBasalRows(profile1, profile2, dateUtil),
-                            basalUnits = stringResource(app.aaps.core.interfaces.R.string.profile_ins_units_per_hour),
+                            basalUnits = stringResource(InterfacesStrings.profile_ins_units_per_hour),
                             targetsRows = buildTargetRows(profile1, profile2, dateUtil, profileUtil),
                             targetUnits = profileFunction.getUnits().displayLabel,
                             profileName1 = dialog.data.profileName ?: "",
@@ -361,7 +361,7 @@ private fun ProfileDropdown(
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
-            label = { Text(stringResource(R.string.autotune_profile)) },
+            label = { Text(stringResource(ApsStrings.autotune_profile)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -431,12 +431,12 @@ internal fun ResultsTableHeader(isBasal: Boolean) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         val headerStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-        Text(text = if (isBasal) stringResource(app.aaps.core.ui.R.string.time) else stringResource(R.string.autotune_param), style = headerStyle, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
-        Text(text = stringResource(app.aaps.core.ui.R.string.profile), style = headerStyle, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
-        Text(text = stringResource(R.string.autotune_tunedprofile_name), style = headerStyle, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
-        Text(text = stringResource(R.string.autotune_percent), style = headerStyle, modifier = Modifier.weight(0.7f), textAlign = TextAlign.Center)
+        Text(text = if (isBasal) stringResource(CoreUiStrings.time) else stringResource(ApsStrings.autotune_param), style = headerStyle, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(text = stringResource(CoreUiStrings.profile), style = headerStyle, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(text = stringResource(ApsStrings.autotune_tunedprofile_name), style = headerStyle, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(text = stringResource(ApsStrings.autotune_percent), style = headerStyle, modifier = Modifier.weight(0.7f), textAlign = TextAlign.Center)
         if (isBasal) {
-            Text(text = stringResource(R.string.autotune_missing), style = headerStyle, modifier = Modifier.weight(0.7f), textAlign = TextAlign.Center)
+            Text(text = stringResource(ApsStrings.autotune_missing), style = headerStyle, modifier = Modifier.weight(0.7f), textAlign = TextAlign.Center)
         }
     }
 }

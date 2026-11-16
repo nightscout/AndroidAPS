@@ -129,6 +129,9 @@ object DesktopFolders {
     /** Everything else that is exported - the user-entry CSV, and watchfaces on a phone. */
     val exports: File get() = File(root, "exports")
 
+    /** The files of an Autotune run and their zips. A phone keeps them in its log folder. */
+    val autotune: File get() = File(root, "autotune")
+
     /**
      * Marker files that switch options on, read by `DesktopClientConfig.isEnabled`.
      *

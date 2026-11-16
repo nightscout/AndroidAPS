@@ -76,18 +76,13 @@ import java.io.File
  *
  * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
  * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
- * answer the platform half. Measured at **1**, down from 32:
- *
- * **`Autotune`** needs its plugin ported out of androidMain: about 2,700 lines of arithmetic whose
- * only Android parts are `Calendar`/`TimeZone` and a file dump, but it computes basal, ISF and ICR,
- * so the date maths wants golden vectors rather than a quick swap.
+ * answer the platform half. Measured at **0**, down from 32. The last one was `Autotune`: its plugin
+ * is common code now, checked against golden files made by the Android code before the move, and the
+ * desktop supplies only where its files go (`DesktopAutotuneFileStore`, `~/AAPS/autotune`).
  *
  * Nightscout sync is done, websocket included. `SocketNsConnection` in `:shared:clientbindings` is
  * shared with iOS and carries the remote-control channel, so a command reaches this client as fast
  * as it reaches a phone. `DesktopNsLoadExecutor` still runs the REST round the plugin asks for.
- *
- * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
- * over treatment history sitting in androidMain.
  *
  * Settings import and export is no longer on this list. `LocalImportExportPrefs` in `commonMain`
  * carries the whole flow, and desktop supplies only the file access - see `_docs/desktop_alignment.md`.

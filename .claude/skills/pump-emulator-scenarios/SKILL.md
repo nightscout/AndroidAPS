@@ -55,6 +55,36 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
   advertisement for new listeners: Equil's wizard paired with a serial the pump no longer had, and the driver read an
   old log index. Advertise again and again while a scan runs instead, until `stopScan`.
 
+## Order of work for a new pump
+
+The steps below are the order that worked for the Diaconn G8 (2026-11). The code pieces each step needs are in
+"Adding a pump" below.
+
+1. **Read the current driver against the protocol.** List each message, what the driver expects of it, and the bugs
+   you can see. Fix nothing yet: each bug gets a scenario first, so the fix is proven.
+2. **Hook points on Android.** The driver talks through the shared BLE transport, with its own binding, and the build
+   flag picks the emulator in place of the radio. `<Pump>Accessors` lets the tests reach the transport and the plugin.
+   A vendor cloud is off while the pump is emulated. No test code goes into the driver.
+3. **First capture on a real pump**, with the current driver and its logging on: a status read, a bolus, a stop by the
+   user, a temp basal and its cancel, an extended bolus, a profile write, a history read, a saved setting. For each,
+   keep the bytes and the times: how long the answer takes, when the pump carries a setting out, which requests it
+   holds and for how long, the order of its reports, its own sequence numbers, how it rounds minutes. Capture before
+   the emulator is written: the Diaconn emulator was written first and had to be changed three times (a setting carried
+   out 1.8 s after its confirm, requests held until then, the pump's own numbers on its reports).
+4. **Write the emulator** from that capture: its state, answers, history and reports. Every guess is marked
+   `UNVERIFIED`. Its unit tests use the real bytes.
+5. **Adapter and scenario class.** Run the shared scenarios at FAST speed, then once at real speed. For each failure,
+   decide: is the emulator guessing, or is the driver wrong? When not sure, check on the real pump.
+6. **Fix the driver, one bug at a time:** the scenario fails, the fix, a test on the real pump, a commit. A driver
+   change is never pushed before its real-pump test.
+7. **Second capture.** What the scenarios raised (a hold, a report that comes early, a refusal) is checked on the real
+   pump, then copied into the emulator with the date and the firmware. A wait that the real pump has not been seen to
+   allow is not shortened in the driver.
+8. **Screen test** `<Pump>UiTest`: pairing, the history with a record the pump made, a setting saved and seen on the
+   pump, System Back, unpairing. The shared treatment dialogs are not tested again.
+9. **Acceptance and CI.** Go through `_docs/PUMP_DRIVER_ACCEPTANCE.md`. Add the class to `part_seconds` once CI has
+   run it, run the full gate, push, and check CircleCI and the module's coverage on Codecov.
+
 ## Adding a pump
 
 1. The emulator transport implements `PumpEmulatorControl`. Start with what the pump already does, and return false

@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -83,6 +84,7 @@ import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ManagementCarousel
+import kotlinx.coroutines.flow.first
 
 /**
  * Main insulin management screen with carousel and editor.
@@ -300,9 +302,13 @@ fun InsulinManagementScreen(
                     // Snap pager back when pending navigation is dismissed (Cancel)
                     // pendingNavigation becoming null means dialog was dismissed without switching
                     LaunchedEffect(uiState.pendingNavigation) {
-                        if (uiState.pendingNavigation == null && pagerState.currentPage != uiState.currentCardIndex) {
-                            pagerState.animateScrollToPage(uiState.currentCardIndex)
-                        }
+                        if (uiState.pendingNavigation != null) return@LaunchedEffect
+                        if (pagerState.currentPage == uiState.currentCardIndex) return@LaunchedEffect
+                        // Wait for the first measure: this effect runs after the composition, the pager
+                        // is measured after that, and animateScrollToPage takes the last page the pager
+                        // has laid out. See the same wait in ProfileManagementScreen.
+                        snapshotFlow { pagerState.layoutInfo.visiblePagesInfo.isNotEmpty() }.first { it }
+                        pagerState.animateScrollToPage(uiState.currentCardIndex)
                     }
 
                     // Handle programmatic scroll

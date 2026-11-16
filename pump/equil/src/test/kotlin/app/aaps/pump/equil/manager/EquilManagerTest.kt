@@ -120,6 +120,33 @@ class EquilManagerTest : TestBaseWithProfile() {
         )
     }
 
+    private fun runningExtendedBolus() = runBlocking {
+        val extended = PumpSync.PumpState.ExtendedBolus(1000L, 30 * 60_000L, 1.0, 2.0, PumpType.EQUIL, "7000F3")
+        whenever(pumpSync.expectedPumpState()).thenReturn(PumpSync.PumpState(null, extended, null, null, "7000F3"))
+    }
+
+    /** A stop for a reservoir change or a removal ends the extended bolus too, also of a pod that was not reached (D9). */
+    @Test
+    fun `stop ends a running extended bolus`() = runTest {
+        prepareRunMode(RunMode.RUN)
+        runningExtendedBolus()
+
+        equilManager.setRunMode(RunMode.STOP)
+
+        verify(pumpSync).syncStopExtendedBolusWithPumpId(any(), any(), eq(PumpType.EQUIL), eq("7000F3"))
+    }
+
+    /** Whether a suspend on the pump ends its extended bolus was never seen on a real pump, so AAPS leaves it alone. */
+    @Test
+    fun `suspend leaves the extended bolus alone`() = runTest {
+        prepareRunMode(RunMode.RUN)
+        runningExtendedBolus()
+
+        equilManager.setRunMode(RunMode.SUSPEND)
+
+        verify(pumpSync, never()).syncStopExtendedBolusWithPumpId(any(), any(), any(), any())
+    }
+
     // --- a status read ends the temp basal the pump does not run (a lost cancel answer and a lost check) ---
 
     @Test

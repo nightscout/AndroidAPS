@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.plugins.aps.autotune.toKotlinx
+import app.aaps.plugins.aps.autotune.toOrgJson
+
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -39,7 +42,7 @@ class BGDatumTest : TestBaseWithProfile() {
             put("mealCarbs", 30)
         }
 
-        val bgDatum = BGDatum(json, dateUtil)
+        val bgDatum = BGDatum(json.toKotlinx(), dateUtil)
 
         assertThat(bgDatum.date).isEqualTo(1609459200000L)
         assertThat(bgDatum.value).isEqualTo(120.0)
@@ -58,7 +61,7 @@ class BGDatumTest : TestBaseWithProfile() {
             put("sgv", 120.0)
         }
 
-        val bgDatum = BGDatum(json, dateUtil)
+        val bgDatum = BGDatum(json.toKotlinx(), dateUtil)
 
         assertThat(bgDatum.date).isEqualTo(1609459200000L)
         assertThat(bgDatum.value).isEqualTo(120.0)
@@ -71,7 +74,7 @@ class BGDatumTest : TestBaseWithProfile() {
     fun `constructor from JSON handles empty JSON`() {
         val json = JSONObject()
 
-        val bgDatum = BGDatum(json, dateUtil)
+        val bgDatum = BGDatum(json.toKotlinx(), dateUtil)
 
         assertThat(bgDatum.date).isEqualTo(0L)
         assertThat(bgDatum.value).isEqualTo(0.0)
@@ -116,7 +119,7 @@ class BGDatumTest : TestBaseWithProfile() {
         whenever(dateUtil.now()).thenReturn(1609459200000L)
         whenever(dateUtil.toISOAsUTC(1609459200000L)).thenReturn("2021-01-01T00:00:00.000Z")
 
-        val json = bgDatum.toJSON(mealData = false)
+        val json = bgDatum.toJSON(mealData = false).toOrgJson()
 
         assertThat(json.getLong("_id")).isEqualTo(123L)
         assertThat(json.getLong("date")).isEqualTo(1609459200000L)
@@ -144,7 +147,7 @@ class BGDatumTest : TestBaseWithProfile() {
         whenever(dateUtil.now()).thenReturn(1609459200000L)
         whenever(dateUtil.toISOAsUTC(1609459200000L)).thenReturn("2021-01-01T00:00:00.000Z")
 
-        val json = bgDatum.toJSON(mealData = true)
+        val json = bgDatum.toJSON(mealData = true).toOrgJson()
 
         assertThat(json.getString("mealAbsorption")).isEqualTo("partial")
         assertThat(json.getInt("mealCarbs")).isEqualTo(20)
@@ -286,7 +289,7 @@ class BGDatumTest : TestBaseWithProfile() {
         whenever(dateUtil.now()).thenReturn(1609459200000L)
         whenever(dateUtil.toISOAsUTC(1609459200000L)).thenReturn("2021-01-01T00:00:00.000Z")
 
-        val json = bgDatum.toJSON(mealData = false)
+        val json = bgDatum.toJSON(mealData = false).toOrgJson()
 
         assertThat(json.getString("dateString")).isEqualTo("2021-01-01T00:00:00.000Z")
         assertThat(json.getString("sysTime")).isEqualTo("2021-01-01T00:00:00.000Z")
@@ -303,7 +306,7 @@ class BGDatumTest : TestBaseWithProfile() {
         whenever(dateUtil.now()).thenReturn(1609459200000L)
         whenever(dateUtil.toISOAsUTC(1609459200000L)).thenReturn("2021-01-01T00:00:00.000Z")
 
-        val json = bgDatum.toJSON(mealData = false)
+        val json = bgDatum.toJSON(mealData = false).toOrgJson()
 
         assertThat(json.getDouble("glucose")).isEqualTo(125.0)
         assertThat(json.getDouble("sgv")).isEqualTo(125.0)
@@ -322,7 +325,7 @@ class BGDatumTest : TestBaseWithProfile() {
                 put("direction", direction)
             }
 
-            val bgDatum = BGDatum(json, dateUtil)
+            val bgDatum = BGDatum(json.toKotlinx(), dateUtil)
 
             assertThat(bgDatum.direction).isEqualTo(expected[index])
         }
