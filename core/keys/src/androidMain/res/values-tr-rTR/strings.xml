@@ -296,10 +296,15 @@
     <string name="pref_title_fill_button_3">Doldur butonu 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Maksimum bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">Seçilen hasta yaşı bu değeri sınırlar. Buradaki yüksek değerin bir etkisi yoktur.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maksimum bazal oran</string>
+    <string name="openapsma_max_basal_summary">Bu değer OpenAPS bağlamında maks bazal olarak adlandırılır ve \nseçilen hasta yaşı bu değeri sınırlar. Buraya daha yüksek bir değer girilmesinin hiçbir etkisi olmaz.</string>
     <string name="pref_title_smb_max_iob">SMB için maks AİNS</string>
+    <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Maks AİNS olarak adlandırılır. \nMevcut AİNS değeri bu miktardan büyükse, OpenAPS sisteme daha fazla insülin iletmez.\n Seçilen hasta yaşı bu değer üzerinde bir limit oluşturur. Buraya daha yüksek bir değer girilmesinin hiçbir etkisi olmaz.</string>
     <string name="pref_title_ama_max_iob">AMA için maks AİNS</string>
+    <string name="openapsma_max_iob_summary">Bu değer OpenAPS bağlamında Maks AİNS olarak adlandırılır ve \nAPS\'nin tek seferde verebileceği maksimum insülin [Ü] miktarıdır.\n
+Seçilen hasta yaşı, bu değer için bir üst sınır belirler. Buraya daha yüksek bir değer girilmesinin hiçbir etkisi olmaz.</string>
     <string name="pref_title_max_daily_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'in önemli bir güvenlik sınırıdır. Bazal dozlarınızı en yüksek bazal oranınızın 3 katıyla sınırlar. Bunu büyük olasılıkla değiştirmeniz gerekmez, ancak güvenlik sınırlarında konuşulan “günlük maksimumun 3 katı; mevcut oranın 4 katı” kuralının bu olduğunu bilmelisiniz.</string>
     <string name="pref_title_current_basal_multiplier">Mevcut bazal güvenlik çarpanı</string>
