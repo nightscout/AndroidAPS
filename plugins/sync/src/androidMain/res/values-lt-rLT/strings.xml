@@ -13,7 +13,7 @@
     <string name="authorized_clients_title">Autorizuoti klientai</string>
     <string name="authorized_clients_add">Pridėti klientą</string>
     <string name="authorized_clients_comm_switch_title">Leisti valdyti iš kliento</string>
-    <string name="authorized_clients_comm_switch_summary">Leisti susietiems klientams siųsti pasirašytas komandas per Nightscout. Išjunkite, jei norite sustabdyti ryšį jų nepašalindami.</string>
+    <string name="authorized_clients_comm_switch_summary">Leisti susietiems klientams siųsti pasirašytas komandas per Nightscout. Išjungus parinktį ryšys bus sustabdytas, bet klientai nepašalinti.</string>
     <string name="authorized_clients_state_active">Aktyvus</string>
     <string name="authorized_clients_state_pending">Laukiama</string>
     <string name="authorized_clients_last_seen">Paskutinį kartą matytas %1$s</string>
