@@ -86,6 +86,7 @@ enum class Sources {
     Database,           // for PersistenceLayer
 
     Carelevo,
+    Aaruy,
     Unknown             //if necessary
     ;
 }
