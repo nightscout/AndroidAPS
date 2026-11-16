@@ -1448,75 +1448,14 @@ class OmnipodDashPumpPlugin(
             }
         }
 
-        val podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry)
-        val expiryReminderDelay = podLifeLeft.minus(Duration.ofHours(expirationReminderHours.toLong()))
-        if (expiryReminderDelay.isNegative) {
-            aapsLogger.warn(
-                LTag.PUMPBTCOMM,
-                "updateAlertConfiguration negative expiryAlertDuration=$expiryReminderDelay"
-            )
-            pumpEnactResultProvider().success(false).enacted(false)
-        }
-        // expiry Alarm Delay, add 8 hours (grace period)
-        val expiryAlarmDelay = podLifeLeft.minus(Duration.ofHours(expirationAlarmHours.toLong())).plus(Duration.ofHours(8))
-        if (expiryAlarmDelay.isNegative) {
-            aapsLogger.warn(
-                LTag.PUMPBTCOMM,
-                "updateAlertConfiguration negative expiryAlarmDuration=$expiryAlarmDelay"
-            )
-            pumpEnactResultProvider().success(false).enacted(false)
-        }
-        val expiryImminentDelay = podLifeLeft.minus(Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)).plus(Duration.ofHours(8))
-        if (expiryImminentDelay.isNegative) {
-            aapsLogger.warn(
-                LTag.PUMPBTCOMM,
-                "updateAlertConfiguration negative expiryImminentDuration=$expiryImminentDelay"
-            )
-            pumpEnactResultProvider().success(false).enacted(false)
-        }
-        val alerts = listOf(
-            AlertConfiguration(
-                AlertType.LOW_RESERVOIR,
-                enabled = lowReservoirAlertEnabled,
-                durationInMinutes = 0,
-                autoOff = false,
-                AlertTrigger.ReservoirVolumeTrigger((lowReservoirAlertUnits * 10).toShort()),
-                BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.XXX
-            ),
-            AlertConfiguration(
-                AlertType.USER_SET_EXPIRATION,
-                enabled = expirationReminderEnabled,
-                durationInMinutes = 0,
-                autoOff = false,
-                AlertTrigger.TimerTrigger(
-                    expiryReminderDelay.toMinutes().toShort()
-                ),
-                BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
-            ),
-            AlertConfiguration(
-                AlertType.EXPIRATION,
-                enabled = expirationAlarmEnabled,
-                durationInMinutes = (expirationAlarmHours - 1).toLong().hours.inWholeMinutes.toShort(),
-                autoOff = false,
-                AlertTrigger.TimerTrigger(
-                    expiryAlarmDelay.toMinutes().toShort()
-                ),
-                BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.XXX3
-            ),
-            AlertConfiguration(
-                AlertType.EXPIRATION_IMMINENT,
-                enabled = expirationAlarmEnabled,
-                durationInMinutes = 0,
-                autoOff = false,
-                AlertTrigger.TimerTrigger(
-                    expiryImminentDelay.toMinutes().toShort()
-                ),
-                BeepType.FOUR_TIMES_BIP_BEEP,
-                BeepRepetitionType.XXX3
-            )
+        val alerts = alertConfigurations(
+            podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry),
+            expirationReminderEnabled = expirationReminderEnabled,
+            expirationReminderHours = expirationReminderHours,
+            expirationAlarmEnabled = expirationAlarmEnabled,
+            expirationAlarmHours = expirationAlarmHours,
+            lowReservoirAlertEnabled = lowReservoirAlertEnabled,
+            lowReservoirAlertUnits = lowReservoirAlertUnits
         )
 
         return executeProgrammingCommand(
@@ -1534,6 +1473,75 @@ class OmnipodDashPumpPlugin(
                 )
             )
         ).toPumpEnactResultImpl()
+    }
+
+    /**
+     * The alerts of the pod as the settings ask for them, for a pod that has [podLifeLeft] to run.
+     *
+     * An alert whose time is over cannot be set: its timer would be a negative number. It goes to the pod as off,
+     * and the other alerts of the same command are still saved. The low reservoir alert does not depend on the time.
+     */
+    @VisibleForTesting
+    internal fun alertConfigurations(
+        podLifeLeft: Duration,
+        expirationReminderEnabled: Boolean,
+        expirationReminderHours: Int,
+        expirationAlarmEnabled: Boolean,
+        expirationAlarmHours: Int,
+        lowReservoirAlertEnabled: Boolean,
+        lowReservoirAlertUnits: Int
+    ): List<AlertConfiguration> {
+        val expiryReminderDelay = podLifeLeft.minus(Duration.ofHours(expirationReminderHours.toLong()))
+        // expiry Alarm Delay, add 8 hours (grace period)
+        val expiryAlarmDelay = podLifeLeft.minus(Duration.ofHours(expirationAlarmHours.toLong())).plus(Duration.ofHours(8))
+        val expiryImminentDelay = podLifeLeft.minus(Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)).plus(Duration.ofHours(8))
+        val reminderActive = expirationReminderEnabled && !expiryReminderDelay.isNegative
+        val alarmActive = expirationAlarmEnabled && !expiryAlarmDelay.isNegative
+        val imminentActive = expirationAlarmEnabled && !expiryImminentDelay.isNegative
+        if (expirationReminderEnabled != reminderActive || expirationAlarmEnabled != (alarmActive && imminentActive)) {
+            aapsLogger.warn(
+                LTag.PUMPBTCOMM,
+                "updateAlertConfiguration: the time is over for expiryAlertDuration=$expiryReminderDelay expiryAlarmDuration=$expiryAlarmDelay expiryImminentDuration=$expiryImminentDelay"
+            )
+        }
+        return listOf(
+            AlertConfiguration(
+                AlertType.LOW_RESERVOIR,
+                enabled = lowReservoirAlertEnabled,
+                durationInMinutes = 0,
+                autoOff = false,
+                AlertTrigger.ReservoirVolumeTrigger((lowReservoirAlertUnits * 10).toShort()),
+                BeepType.FOUR_TIMES_BIP_BEEP,
+                BeepRepetitionType.XXX
+            ),
+            AlertConfiguration(
+                AlertType.USER_SET_EXPIRATION,
+                enabled = reminderActive,
+                durationInMinutes = 0,
+                autoOff = false,
+                AlertTrigger.TimerTrigger(if (reminderActive) expiryReminderDelay.toMinutes().toShort() else 0),
+                BeepType.FOUR_TIMES_BIP_BEEP,
+                BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
+            ),
+            AlertConfiguration(
+                AlertType.EXPIRATION,
+                enabled = alarmActive,
+                durationInMinutes = (expirationAlarmHours - 1).toLong().hours.inWholeMinutes.toShort(),
+                autoOff = false,
+                AlertTrigger.TimerTrigger(if (alarmActive) expiryAlarmDelay.toMinutes().toShort() else 0),
+                BeepType.FOUR_TIMES_BIP_BEEP,
+                BeepRepetitionType.XXX3
+            ),
+            AlertConfiguration(
+                AlertType.EXPIRATION_IMMINENT,
+                enabled = imminentActive,
+                durationInMinutes = 0,
+                autoOff = false,
+                AlertTrigger.TimerTrigger(if (imminentActive) expiryImminentDelay.toMinutes().toShort() else 0),
+                BeepType.FOUR_TIMES_BIP_BEEP,
+                BeepRepetitionType.XXX3
+            )
+        )
     }
 
     private fun playTestBeep(): PumpEnactResult {

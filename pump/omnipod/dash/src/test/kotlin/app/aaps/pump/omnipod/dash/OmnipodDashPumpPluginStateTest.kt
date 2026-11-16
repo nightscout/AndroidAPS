@@ -18,6 +18,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
@@ -35,6 +37,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
 
 /**
@@ -308,6 +311,64 @@ class OmnipodDashPumpPluginStateTest {
         assertThat(sut.canHandleDST()).isFalse()
         whenever(podStateManager.timeZoneOffset).thenReturn(3600000)
         assertThat(sut.canHandleDST()).isTrue()
+    }
+
+    // endregion
+
+    // region alertConfigurations - an alert whose time is over
+
+    /** What the pod gets for one alert: its slot, whether it is on, and its trigger. */
+    private class SentAlert(val slot: Int, val on: Boolean, val trigger: Int)
+
+    private fun sent(alerts: List<AlertConfiguration>): Map<Int, SentAlert> = alerts.map { it.encoded }.associate { bytes ->
+        val first = bytes[0].toInt() and 0xff
+        val trigger = (((bytes[2].toInt() and 0xff) shl 8) or (bytes[3].toInt() and 0xff)).toShort().toInt()
+        (first shr 4) to SentAlert(first shr 4, first and 0x08 != 0, trigger)
+    }
+
+    private fun alertsOfAPodWith(hoursLeft: Long) = sent(
+        sut.alertConfigurations(
+            podLifeLeft = Duration.ofHours(hoursLeft),
+            expirationReminderEnabled = true, expirationReminderHours = 4,
+            expirationAlarmEnabled = true, expirationAlarmHours = 8,
+            lowReservoirAlertEnabled = true, lowReservoirAlertUnits = 20
+        )
+    )
+
+    @Test
+    fun `a new pod gets every alert with its own time`() {
+        val alerts = alertsOfAPodWith(hoursLeft = 70)
+
+        assertThat(alerts.getValue(AlertType.LOW_RESERVOIR.index.toInt()).trigger).isEqualTo(200)
+        assertThat(alerts.getValue(AlertType.USER_SET_EXPIRATION.index.toInt()).trigger).isEqualTo(66 * 60)
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).trigger).isEqualTo(70 * 60)
+        assertThat(alerts.values.all { it.on }).isTrue()
+    }
+
+    /** The reminder at 4 hours before the end cannot be set with 3 hours left. It was sent as a negative timer. */
+    @Test
+    fun `a reminder whose time is over goes to the pod as off and the others are still set`() {
+        val alerts = alertsOfAPodWith(hoursLeft = 3)
+
+        val reminder = alerts.getValue(AlertType.USER_SET_EXPIRATION.index.toInt())
+        assertThat(reminder.on).isFalse()
+        assertThat(reminder.trigger).isEqualTo(0)
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).on).isTrue()
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).trigger).isEqualTo(3 * 60)
+        assertThat(alerts.getValue(AlertType.LOW_RESERVOIR.index.toInt()).on).isTrue()
+    }
+
+    /** In the 8 hours a pod runs after its end, the low reservoir alert must still be saved, and no timer is negative. */
+    @Test
+    fun `a pod past its end gets no negative timer and still gets the low reservoir alert`() {
+        val alerts = alertsOfAPodWith(hoursLeft = -1)
+
+        assertThat(alerts.getValue(AlertType.USER_SET_EXPIRATION.index.toInt()).on).isFalse()
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).on).isFalse()
+        assertThat(alerts.getValue(AlertType.EXPIRATION_IMMINENT.index.toInt()).on).isTrue()
+        assertThat(alerts.getValue(AlertType.EXPIRATION_IMMINENT.index.toInt()).trigger).isEqualTo(6 * 60)
+        assertThat(alerts.getValue(AlertType.LOW_RESERVOIR.index.toInt()).on).isTrue()
+        assertThat(alerts.values.none { it.trigger < 0 }).isTrue()
     }
 
     // endregion

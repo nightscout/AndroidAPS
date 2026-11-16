@@ -52,22 +52,30 @@ fun buildO5ExpirationAlerts(podStateManager: O5PodStateManager, preferences: Pre
         Duration.ofHours(PodConstants.POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)
     ).plus(Duration.ofHours(8))
 
+    // An alert whose time is over cannot be set: its timer would be a negative number. It goes to the pod as off,
+    // as the reminder below, and the other alerts of the same command are still saved.
+    val alarmActive = expirationAlarmEnabled && !expirationAlarmDelay.isNegative
+    val imminentActive = expirationAlarmEnabled && !expirationImminentDelay.isNegative
+    if (expirationAlarmEnabled && !(alarmActive && imminentActive)) {
+        aapsLogger.warn(LTag.PUMPBTCOMM, "buildO5ExpirationAlerts negative expiryAlarmDuration=$expirationAlarmDelay expiryImminentDuration=$expirationImminentDelay")
+    }
+
     val alerts = mutableListOf(
         AlertConfiguration(
             AlertType.EXPIRATION,
-            enabled = expirationAlarmEnabled,
+            enabled = alarmActive,
             durationInMinutes = (TimeUnit.HOURS.toMinutes(userConfiguredExpirationAlarmHours ?: PodConstants.POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT) - 60).toShort(),
             autoOff = false,
-            AlertTrigger.TimerTrigger(expirationAlarmDelay.toMinutes().toShort()),
+            AlertTrigger.TimerTrigger(if (alarmActive) expirationAlarmDelay.toMinutes().toShort() else 0),
             BeepType.FOUR_TIMES_BIP_BEEP,
             BeepRepetitionType.XXX3
         ),
         AlertConfiguration(
             AlertType.EXPIRATION_IMMINENT,
-            enabled = expirationAlarmEnabled,
+            enabled = imminentActive,
             durationInMinutes = 0,
             autoOff = false,
-            AlertTrigger.TimerTrigger(expirationImminentDelay.toMinutes().toShort()),
+            AlertTrigger.TimerTrigger(if (imminentActive) expirationImminentDelay.toMinutes().toShort() else 0),
             BeepType.FOUR_TIMES_BIP_BEEP,
             BeepRepetitionType.XXX4
         )
