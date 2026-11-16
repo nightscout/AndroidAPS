@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">Pulsante di riempimento 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Bolo massimo</string>
+    <string name="treatmentssafety_maxbolus_summary">L\'età del Paziente selezionata limita questo valore. Un valore più alto qui non ha effetto.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Velocità basale massima</string>
+    <string name="openapsma_max_basal_summary">Questo valore è chiamato max basale nel contesto di OpenAPS\nL\'età del paziente selezionata limita questo valore. Un valore più alto qui non ha effetto.</string>
     <string name="pref_title_smb_max_iob">IOB massimo per SMB</string>
+    <string name="openapssmb_max_iob_summary">Questo valore si chiama Max IOB nel contesto di OpenAPS\nOpenAPS non aggiungerà più insulina se l\'attuale IOB è maggiore di questo valore.\nL\'età del paziente selezionata limita questo valore. Un valore più alto qui non ha effetto.</string>
     <string name="pref_title_ama_max_iob">IOB massimo per AMA</string>
+    <string name="openapsma_max_iob_summary">Questo valore si chiama Max IOB nel contesto di OpenAPS\nOpenAPS non aggiungerà più insulina se l\'attuale IOB è maggiore di questo valore.\nL\'età del paziente selezionata limita questo valore. Un valore più alto qui non ha effetto.</string>
     <string name="pref_title_max_daily_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valore predefinito: 3 Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare la tua basale ad un valore pari alla tua velocità basale massima moltiplicata per 3. Probabilmente non avrai bisogno di cambiare questo valore ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
     <string name="pref_title_current_basal_multiplier">Moltiplicatore di sicurezza della basale corrente</string>
