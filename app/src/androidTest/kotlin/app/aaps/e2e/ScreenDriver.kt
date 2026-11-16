@@ -122,6 +122,16 @@ class ScreenDriver(private val device: UiDevice) {
         if (!waitForExact(label, timeout)) error("Timed out after ${timeout}ms looking for exactly '$label'")
     }
 
+    /** No text and no description on the screen is exactly [label] any more, as a button that went away. */
+    fun waitForGoneOrThrow(label: String, timeout: Long = STEP_TIMEOUT) {
+        val end = SystemClock.uptimeMillis() + timeout
+        while (SystemClock.uptimeMillis() < end) {
+            if (device.findObject(byText(label)) == null && device.findObject(byDesc(label)) == null) return
+            device.waitForIdle(IDLE_MS)
+        }
+        error("'$label' is still on the screen after ${timeout}ms")
+    }
+
     fun assertVisibleContains(substring: String, timeout: Long = STEP_TIMEOUT) {
         val end = SystemClock.uptimeMillis() + timeout
         while (SystemClock.uptimeMillis() < end) {

@@ -66,6 +66,17 @@ class PodEmulatorTest {
     }
 
     @Test
+    fun `the pod keeps no key from a pairing whose key is lost and keeps the key of the next one`() {
+        assertTrue(emulator.loseNextPairingKey())
+
+        emulator.paired(ByteArray(16) { 1 })
+        assertFalse(emulator.state.paired)
+
+        emulator.paired(ByteArray(16) { 2 })
+        assertTrue(emulator.state.paired)
+    }
+
+    @Test
     fun `the activation goes through the pod states of a real pod`() {
         val unique = send(setUniqueId()) as SetUniqueIdResponse
         assertEquals(PodStatus.UID_SET, unique.podStatus)

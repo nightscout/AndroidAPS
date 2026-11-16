@@ -53,6 +53,9 @@ class PodEmulator(
     /** The next bolus for the user stops with a fault after this many pulses. */
     private var nextBolusFaultAtPulses: Int? = null
 
+    /** The pod keeps no key from the next pairing. */
+    private var nextPairingKeyLost = false
+
     // ---- Test hooks ----------------------------------------------------------------------------------------------
 
     @Synchronized fun loseCommand(command: EmulatedCommand): Boolean {
@@ -100,12 +103,26 @@ class PodEmulator(
         return true
     }
 
+    /**
+     * The next pairing ends as done for the controller, but its key never gives a session. Seen on 2026-11-16 on a real
+     * Omnipod 5 pod (firmware 9.0.4): the pairing ended as done, no session came up in that try or in a later one, and
+     * the same pod then took a new pairing and worked.
+     *
+     * UNVERIFIED: why. Here the pod keeps no key from that pairing, so it answers no session request and a scan still
+     * finds it as a new pod. What the real pod held is not known.
+     */
+    @Synchronized fun loseNextPairingKey(): Boolean {
+        nextPairingKeyLost = true
+        return true
+    }
+
     /** A new pod out of its box: a new address and serial, not paired, nothing running. */
     @Synchronized fun replaceWithNewPod() {
         state = newPod()
         lostCommands.clear()
         lostAnswers.clear()
         nextBolusFaultAtPulses = null
+        nextPairingKeyLost = false
     }
 
     @Synchronized fun snapshot(linkUp: Boolean): EmulatedPumpState {
@@ -130,8 +147,13 @@ class PodEmulator(
 
     // ---- Pairing, called by the transport ------------------------------------------------------------------------
 
-    /** The pairing ended: the pod keeps the long term key. */
+    /** The pairing ended: the pod keeps the long term key. Not after [loseNextPairingKey], once. */
     @Synchronized fun paired(ltk: ByteArray) {
+        if (nextPairingKeyLost) {
+            nextPairingKeyLost = false
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "Pod: the key of this pairing is lost")
+            return
+        }
         state.ltk = ltk
     }
 

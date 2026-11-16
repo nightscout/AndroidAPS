@@ -14,7 +14,8 @@ import com.google.common.truth.Truth.assertWithMessage
  * The two action steps of the activation and the one of the deactivation start their command by themselves when the
  * step opens, and show "Next" only when the command is done. So the tap that opens such a step is done once.
  *
- * Neither driver has a stop of the insulin on its screens, so there is no suspend and resume here.
+ * Neither driver has a stop of the insulin on its screens, so there is no suspend here. A pod that is stopped shows
+ * "Resume Delivery" on its overview: [resumeDelivery], which `AbstractOmnipodUiTest` tests on its own.
  */
 object OmnipodScreens : PumpScreens {
 
@@ -107,6 +108,18 @@ object OmnipodScreens : PumpScreens {
 
         screen.openVia("Finish", expect = unpairedMark, exact = true)
     }
+
+    /** On the overview of a stopped pod: one tap on "Resume Delivery". It starts a pod command, so it is done once. */
+    fun resumeDelivery(screen: ScreenDriver) {
+        screen.click(RESUME_DELIVERY)
+    }
+
+    /** The button goes away once the pod gives basal again. It must be on the screen before, or this proves nothing. */
+    fun awaitNoResumeDelivery(screen: ScreenDriver) {
+        screen.waitForGoneOrThrow(RESUME_DELIVERY, ScreenDriver.COMMAND_TIMEOUT)
+    }
+
+    private const val RESUME_DELIVERY = "Resume Delivery"
 
     /** The command queue first gives up on the link, then the deactivation fails and the wizard offers the discard. */
     private const val DISCARD_OFFER_TIMEOUT = 240_000L

@@ -20,6 +20,16 @@ abstract class AbstractOmnipodPumpUnderTest<W : OmnipodWizardViewModel>(private 
     /** A status read is one command. A first guess with room, to be set from what a run shows. */
     override val maxCommandsPerStatusRead = 4
 
+    /**
+     * How many times the first activation step may fail and be run again. 0 unless a test expects that step to fail,
+     * as after a pairing whose key gives no session.
+     */
+    var initializePodRetries = 0
+
+    /** How many times the first activation step failed and was run again. */
+    var initializePodFailures = 0
+        private set
+
     /** How far the driver's pod state says the activation is. NOT_STARTED when no pod is paired. */
     protected abstract fun activationProgress(): ActivationProgress
 
@@ -69,12 +79,20 @@ abstract class AbstractOmnipodPumpUnderTest<W : OmnipodWizardViewModel>(private 
         scenario.awaitQueueIdle()
     }
 
-    /** Runs the action of the wizard's step, as its screen does when it opens, and fails on the error it would show. */
+    /**
+     * Runs the action of the wizard's step, as its screen does when it opens, and fails on the error it would show.
+     * While [initializePodRetries] allows it, a failed first step is run again, as the user does with "Retry".
+     */
     private fun runAction(scenario: PumpScenario, wizard: W) {
         val step = wizard.currentStep.value
-        scenario.onMain { wizard.executeAction() }
-        scenario.awaitTrue("the step $step ended", ACTIVATION_STEP_TIMEOUT) { wizard.actionState.value.let { it is ActionState.Success || it is ActionState.Error } }
-        (wizard.actionState.value as? ActionState.Error)?.let { throw AssertionError("The wizard step $step failed: ${it.message}") }
+        while (true) {
+            scenario.onMain { wizard.executeAction() }
+            scenario.awaitTrue("the step $step ended", ACTIVATION_STEP_TIMEOUT) { wizard.actionState.value.let { it is ActionState.Success || it is ActionState.Error } }
+            val error = wizard.actionState.value as? ActionState.Error ?: return
+            if (step != OmnipodWizardStep.INITIALIZE_POD || initializePodFailures >= initializePodRetries)
+                throw AssertionError("The wizard step $step failed: ${error.message}")
+            initializePodFailures++
+        }
     }
 
     /** The wizard's ViewModel from the app's factory, cleared after [block]. */

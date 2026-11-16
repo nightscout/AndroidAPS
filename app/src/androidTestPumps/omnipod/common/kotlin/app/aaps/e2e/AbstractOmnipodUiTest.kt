@@ -2,6 +2,8 @@ package app.aaps.e2e
 
 import androidx.test.core.app.ActivityScenario
 import app.aaps.ComposeMainActivity
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.di.testGraphs
 import app.aaps.e2e.ScreenDriver.Companion.COMMAND_TIMEOUT
 import app.aaps.e2e.ui.AbstractPumpUiTest
 import app.aaps.e2e.ui.PumpScreens
@@ -46,5 +48,51 @@ abstract class AbstractOmnipodUiTest : AbstractPumpUiTest() {
             scenario.control.setOutOfRange(false)
             activity.close()
         }
+    }
+
+    /**
+     * A pod that is stopped, and "Resume Delivery" on its overview. Neither driver has a stop on its screens: a pod is
+     * stopped when a profile write fails half way. The driver stops the pod first and then sends the new basal, and
+     * here that second command is lost. The user then taps "Resume Delivery": the pod gives basal again, AAPS ends its
+     * record of the stop, and the button goes away.
+     *
+     * The pod is activated without the screens here: the shared test already goes through the activation wizard.
+     */
+    @Test
+    fun aStoppedPodIsResumedFromTheScreens() {
+        scenario.pair()
+        assertWithMessage("fault").that(scenario.control.loseCommand(EmulatedCommand.BASAL_PROFILE)).isTrue()
+        assertWithMessage("the profile write whose second command is lost is taken as done")
+            .that(scenario.profileWrittenOnce(PROFILE_PERCENT)).isFalse()
+        scenario.awaitTrue("the pod is stopped and the driver knows it", COMMAND_TIMEOUT) {
+            scenario.control.state().suspended && testGraphs.activePlugin.activePumpInternal.isSuspended()
+        }
+        scenario.awaitQueueIdle()
+        scenario.checkSuspend()
+
+        val activity = ActivityScenario.launch(ComposeMainActivity::class.java)
+        try {
+            screen.waitForOverview()
+            screen.openVia("Manage", expect = "Pump")
+            screen.openVia("Pump", expect = OmnipodScreens.pairedMark, exact = true)
+
+            OmnipodScreens.resumeDelivery(screen)
+            scenario.awaitTrue("the pod gives basal again", COMMAND_TIMEOUT) { !scenario.control.state().suspended }
+            scenario.awaitQueueIdle()
+            OmnipodScreens.awaitNoResumeDelivery(screen)
+            assertWithMessage("the driver says the pod is stopped").that(testGraphs.activePlugin.activePumpInternal.isSuspended()).isFalse()
+            scenario.checkSuspend()
+        } catch (t: Throwable) {
+            t.addSuppressed(IllegalStateException("On the screen: " + screen.logScreen("E2E_OmnipodResume")))
+            throw t
+        } finally {
+            activity.close()
+        }
+    }
+
+    private companion object {
+
+        /** Close to the profile that runs: the pod must take the basal of either one after the resume. */
+        const val PROFILE_PERCENT = 90
     }
 }
