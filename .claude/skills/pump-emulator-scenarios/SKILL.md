@@ -20,7 +20,8 @@ emulator are `PumpEmulatorControl` in `:core:interfaces`.
 
 - **The start loads everything, the stop drops everything.** `onStart` reads all the driver needs from storage and
   the pump, and `onStop` leaves nothing in memory that the next start would trust. Then a driver reload, as a settings
-  import does it, gives the same pump as before. `aDriverReloadKeepsThePump` checks it.
+  import does it, gives the same pump as before. `aDriverReloadKeepsThePump` checks it. A switch to another pump and
+  back is a stop and a start too, with a pump that went on alone: `aPumpSwitchedAwayAndBackKeepsItsTempBasal`.
 - **No test code in drivers.** Faults, events and speed live in the emulator and its transport only, so the driver
   cannot tell a test from a real pump.
 

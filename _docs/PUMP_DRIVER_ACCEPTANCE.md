@@ -63,7 +63,8 @@ A class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` runs all of these. A s
   `aTempBasalCancelThatIsLostKeepsTheTempBasal`.
 - **S6** Other lost answers: `aProfileWhoseAnswerIsLostIsKnown`, `anExtendedBolusWhoseAnswerIsLostIsKnown`,
   `anExtendedBolusCancelWhoseAnswerIsLostIsKnown`.
-- **S7** The driver itself: `aDriverReloadKeepsThePump`, `aPumpOutOfRangeFailsCleanly`, `aDeadPumpCanBeRemoved` (D9).
+- **S7** The driver itself: `aDriverReloadKeepsThePump`, `aPumpSwitchedAwayAndBackKeepsItsTempBasal`,
+  `aPumpOutOfRangeFailsCleanly`, `aDeadPumpCanBeRemoved` (D9).
 - **S8** What happens on the pump: `aSuspendOnThePumpIsRecorded`, `aBolusGivenOnThePumpIsImported`,
   `aBolusWithThePumpClockOffIsStoredAtItsTime`.
 - **S9** Alarms: `anOcclusionRaisesAnAlarm`, `anEmptyReservoirRaisesAnAlarm`.

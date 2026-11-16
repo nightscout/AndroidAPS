@@ -266,6 +266,30 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkNoBurst()
     }
 
+    /**
+     * The user selects another pump and then this one again while a temp basal runs. The pump goes on with the temp
+     * basal the whole time, so after the switch back and a status read AAPS must count it again, and only once. Found by
+     * hand on an Omnipod 5: after a switch away and back the pod ran a temp basal that AAPS no longer counted.
+     *
+     * A low temp: a DanaR gives a high one as an extended bolus, and the pump would run no temp basal at all.
+     */
+    @Test
+    fun aPumpSwitchedAwayAndBackKeepsItsTempBasal() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("temp basal").that(scenario.tempBasal(LOW_TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+        assertWithMessage("the pump runs the temp basal").that(scenario.control.state().tempBasal).isNotNull()
+        scenario.checkTempBasal()
+
+        scenario.switchPumpAwayAndBack()
+
+        assertWithMessage("the pump still runs the temp basal").that(scenario.control.state().tempBasal).isNotNull()
+        assertWithMessage("status read after the switch back").that(scenario.readStatus().success).isTrue()
+        scenario.checkTempBasal()
+        if (scenario.canGiveExtendedBolus) scenario.checkExtendedBolus()
+        scenario.checkNoBurst()
+    }
+
     // ---- Broken communication ------------------------------------------------------------------------------------
 
     /**
