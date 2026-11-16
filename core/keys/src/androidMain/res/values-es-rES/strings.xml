@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">Botón de llenado 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Bolo máximo</string>
+    <string name="treatmentssafety_maxbolus_summary">La edad del paciente seleccionada limita este valor. Un valor más alto aquí no tiene efecto</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Tasa basal máxima</string>
+    <string name="openapsma_max_basal_summary">Este valor se denomina tasa basal máxima en el contexto de OpenAPS\nLa edad del paciente seleccionada limita este valor. Un valor más alto aquí no tiene efecto</string>
     <string name="pref_title_smb_max_iob">IOB Máximo para SMB</string>
+    <string name="openapssmb_max_iob_summary">Este valor se denomina Max IOB en el contexto de OpenAPS\nOpenAPS no añadirá más insulina si la IOB actual es superior a este valor.\nLa edad del paciente seleccionada limita este valor. Un valor más alto aquí no tiene efecto</string>
     <string name="pref_title_ama_max_iob">Max IOB para AMA</string>
+    <string name="openapsma_max_iob_summary">Este valor se denomina Max IOB en el contexto de OpenAPS\nEsta es la insulina máxima en [U] que APS puede administrar de una vez.\nLa edad del paciente seleccionada limita este valor. Un valor más alto aquí no tiene efecto</string>
     <string name="pref_title_max_daily_multiplier">Multiplicador de seguridad diaria máxima</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3. Este es un límite de seguridad clave de OpenAPS. Lo que hace es limitar las tasas basales a 3 veces tu tasa basal más alta. Probablemente no necesites cambiar esto, pero debes saber que de esto se trata lo que se discute sobre «3x máximo diario; 4x actual» en cuanto a los límites de seguridad</string>
     <string name="pref_title_current_basal_multiplier">Multiplicador de seguridad basal actual</string>
