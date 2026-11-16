@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
@@ -564,6 +565,7 @@ class O5PumpPlugin @Inject constructor(
                 try {
                     fetchStatus().blockingAwait()
                     reconcilePendingDoseLocked()
+                    recordTempBasalThePodRuns()
                 } catch (e: Exception) {
                     // A pod in alarm answers with its alarm page: the pod state is updated, and the command reports
                     // an error. That page is the last word on a pending dose, so it is settled here. Without this a
@@ -799,6 +801,7 @@ class O5PumpPlugin @Inject constructor(
                 if (podStateManager.deliveryStatus?.tempBasalActive() != true) {
                     syncTempBasalCancelled(pending.startedAt, pending.historyId ?: pending.startedAt)
                     markDoseSuccess(pending)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
                     podStateManager.pendingDoseCommand = null
                 }
 
@@ -811,6 +814,34 @@ class O5PumpPlugin @Inject constructor(
                     podStateManager.pendingDoseCommand = null
                 }
         }
+    }
+
+    /**
+     * The pod runs a temp basal that AAPS has no record of. AAPS ends its record when another pump becomes the active
+     * one, and the pod knows nothing of that: back on this driver, the pod delivered at a rate nobody counted until
+     * the temp basal ran out. The rest of it is written again, from the rate and the times in the pod state.
+     */
+    private suspend fun recordTempBasalThePodRuns() {
+        if (podStateManager.pendingDoseCommand != null) return
+        if (podStateManager.deliveryStatus?.tempBasalActive() != true) return
+        val rate = podStateManager.activeTempBasalRate ?: return
+        val start = podStateManager.activeTempBasalStartTime ?: return
+        val minutes = podStateManager.activeTempBasalDurationMinutes ?: return
+        val now = System.currentTimeMillis()
+        val remaining = start + T.mins(minutes.toLong()).msecs() - now
+        if (remaining <= 0) return
+        if (pumpSync.expectedPumpState().temporaryBasal != null) return
+        aapsLogger.info(LTag.PUMP, "O5 pod runs a temp basal of $rate U/h that AAPS has no record of - recording the rest of it")
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = now,
+            rate = PumpRate(rate),
+            duration = remaining,
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.NORMAL,
+            pumpId = now,
+            pumpType = PumpType.OMNIPOD_5,
+            pumpSerial = serialNumber()
+        )
     }
 
     private fun markDoseSuccess(pending: O5PodStateManager.PendingDoseCommand) {
@@ -1353,7 +1384,8 @@ class O5PumpPlugin @Inject constructor(
     }
 
     private suspend fun finalizeBolus(pending: O5PodStateManager.PendingDoseCommand, deliveredUnits: Double) {
-        val finalUnits = deliveredUnits.coerceIn(0.0, pending.requestedUnits ?: deliveredUnits)
+        // Rounded to the pulse: 14 pulses of 0.05 U are 0.7000000000000001 as a plain product, and that was stored.
+        val finalUnits = Round.roundTo(deliveredUnits.coerceIn(0.0, pending.requestedUnits ?: deliveredUnits), PodConstants.POD_PULSE_BOLUS_UNITS)
         pending.historyId?.let {
             history.markSent(it)
                 .andThen(history.setTotalAmountDelivered(it, finalUnits))
@@ -1389,6 +1421,9 @@ class O5PumpPlugin @Inject constructor(
             deliveredUnits = finalUnits,
             deliveredPulses = deliveredPulses
         )
+        // The bolus is known now, so the "delivery status is uncertain" alarm has nothing to say any more. A pod in
+        // alarm shows its fault under the same id, and that one stays.
+        if (!podStateManager.isPodKaput) notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
     }
 
     private fun cancelBolus(): Completable = ensureConnected().andThen(Completable.defer {

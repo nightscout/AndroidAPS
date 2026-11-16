@@ -1175,6 +1175,104 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         verify(podStateManager).completeBolus(1_000L, 3.0, 3.0, 60)
     }
 
+    // On a real pod a bolus stopped after 14 pulses was stored as 0.7000000000000001 U.
+    @Test
+    fun `a bolus stopped after 14 pulses is stored as 0_7 U without a float tail`() {
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(46)
+        whenever(podStateManager.lastBolusDeliveredUnits).thenReturn(null)
+        whenever(podStateManager.podId).thenReturn(9999L)
+
+        runBlocking {
+            plugin.reconcilePendingDose()
+
+            verify(pumpSync).syncBolusWithPumpId(
+                eq(1_000L), argThat<PumpInsulin> { cU == 0.7 }, eq(BS.Type.NORMAL), eq(1_000L), eq(PumpType.OMNIPOD_5), eq("9999")
+            )
+        }
+        verify(podStateManager).completeBolus(1_000L, 3.0, 0.7, 14)
+    }
+
+    // On a real pod the "delivery status is uncertain" alarm stayed after the pod had answered.
+    @Test
+    fun `a bolus that is settled takes the uncertain alarm away`() {
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(0)
+        whenever(podStateManager.podId).thenReturn(9999L)
+
+        runBlocking { plugin.reconcilePendingDose() }
+
+        verify(notificationManager).dismiss(NotificationId.OMNIPOD_POD_FAULT)
+    }
+
+    // A pod in alarm shows its fault under the same notification id. That one must stay.
+    @Test
+    fun `a bolus settled on a pod in alarm keeps the fault notification`() {
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(0)
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(podStateManager.isPodKaput).thenReturn(true)
+
+        runBlocking { plugin.reconcilePendingDose() }
+
+        verify(notificationManager, never()).dismiss(NotificationId.OMNIPOD_POD_FAULT)
+    }
+
+    // A temp basal the pod still runs after another pump was the active one for a while. AAPS ended its record then.
+
+    private fun stubStatusReadOfAPodWithATempBasal(startedMinutesAgo: Long) {
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(podStateManager.pendingDoseCommand).thenReturn(null)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.TEMP_BASAL_ACTIVE)
+        whenever(podStateManager.activeTempBasalRate).thenReturn(0.5)
+        whenever(podStateManager.activeTempBasalStartTime).thenReturn(System.currentTimeMillis() - startedMinutesAgo * 60_000L)
+        whenever(podStateManager.activeTempBasalDurationMinutes).thenReturn(30)
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+    }
+
+    @Test
+    fun `a temp basal the pod runs and AAPS has no record of is recorded for the time it has left`() = runBlocking<Unit> {
+        stubStatusReadOfAPodWithATempBasal(startedMinutesAgo = 5)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+
+        plugin.getPumpStatus("Pump driver changed")
+
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            any(), argThat { this.cU == 0.5 }, argThat { this in (24 * 60_000L)..(25 * 60_000L) }, eq(true),
+            eq(PumpSync.TemporaryBasalType.NORMAL), any(), eq(PumpType.OMNIPOD_5), eq("9999")
+        )
+    }
+
+    @Test
+    fun `a temp basal AAPS knows is not recorded a second time`() = runBlocking<Unit> {
+        stubStatusReadOfAPodWithATempBasal(startedMinutesAgo = 5)
+        whenever(pumpSync.expectedPumpState()).thenReturn(
+            pumpState(PumpSync.PumpState.TemporaryBasal(timestamp = 1_000L, duration = 1_800_000L, rate = 0.5, isAbsolute = true, type = PumpSync.TemporaryBasalType.NORMAL, id = 1L, pumpId = 1L))
+        )
+
+        plugin.getPumpStatus("KeepAlive")
+
+        verifyNoTempBasalSynced()
+    }
+
+    @Test
+    fun `a temp basal whose time is over is not recorded again`() = runBlocking<Unit> {
+        stubStatusReadOfAPodWithATempBasal(startedMinutesAgo = 31)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+
+        plugin.getPumpStatus("KeepAlive")
+
+        verifyNoTempBasalSynced()
+    }
+
     @Test
     fun `a confirmed partial bolus updates accounting and cumulative pulses`() {
         whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
