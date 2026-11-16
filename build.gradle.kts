@@ -6,6 +6,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     repositories {
+        // 使用阿里云镜像替代 gradlePluginPortal()
+        // maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        // maven { url = uri("https://maven.aliyun.com/repository/public") }
         mavenCentral()
         google()
     }
@@ -32,6 +35,9 @@ plugins {
 
 allprojects {
     repositories {
+        // 使用阿里云镜像替代 gradlePluginPortal()
+        // maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        // maven { url = uri("https://maven.aliyun.com/repository/public") }
         mavenCentral()
         google()
         // JitPack builds artifacts from GitHub on request. Take from it only the groups that are nowhere else, and take
