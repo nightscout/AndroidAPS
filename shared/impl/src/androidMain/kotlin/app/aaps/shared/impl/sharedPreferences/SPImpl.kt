@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * The preferences file of the watch, and the phone's old settings file.
@@ -173,15 +175,19 @@ class SPImpl(
         else      -> defaultValue
     }
 
+    // A decimal is rounded, not cut, and the same way as in `EncryptedKeyValueStore`: the two stores
+    // must read the same file content as the same setting.
     private fun intOf(value: Any?, defaultValue: Int): Int = when (value) {
         is Long   -> if (value in Int.MIN_VALUE..Int.MAX_VALUE) value.toInt() else defaultValue
-        is Number -> value.toInt()
+        is Number -> value.toDouble().let { if (it.isFinite() && it >= Int.MIN_VALUE.toDouble() && it <= Int.MAX_VALUE.toDouble()) it.roundToInt() else defaultValue }
         is String -> SafeParse.stringToInt(value, defaultValue)
         else      -> defaultValue
     }
 
     private fun longOf(value: Any?, defaultValue: Long): Long = when (value) {
-        is Number -> value.toLong()
+        is Long   -> value
+        is Int    -> value.toLong()
+        is Number -> value.toDouble().let { if (it.isFinite()) it.roundToLong() else defaultValue }
         is String -> SafeParse.stringToLong(value, defaultValue)
         else      -> defaultValue
     }

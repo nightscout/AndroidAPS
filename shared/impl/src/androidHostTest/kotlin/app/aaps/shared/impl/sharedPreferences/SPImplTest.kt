@@ -151,6 +151,23 @@ class SPImplTest {
         assertThat(sut.getString("int_under_string", "x")).isEqualTo("7")
     }
 
+    /**
+     * The second crash of the same kind (Crashlytics `SPImpl.getInt`): a Float under a whole-number
+     * setting. `putDouble` writes a Float, so every setting that was a decimal before and is a whole
+     * number now looks like this.
+     */
+    @Test
+    fun aDecimalUnderAWholeNumberIsRounded() {
+        sut.putDouble("float_under_int", 7.0)
+        assertThat(sut.getInt("float_under_int", 2)).isEqualTo(7)
+
+        sut.putDouble("rounded_under_int", 7.6)
+        assertThat(sut.getInt("rounded_under_int", 2)).isEqualTo(8)
+
+        sut.putDouble("float_under_long", 7.4)
+        assertThat(sut.getLong("float_under_long", 2L)).isEqualTo(7L)
+    }
+
     @Test
     fun aValueThatIsNoNumberGivesTheDefault() {
         sut.putBoolean("flag", true)
