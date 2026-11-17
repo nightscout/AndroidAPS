@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.pump.carelevo.ble.UnsolicitedMessage
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
@@ -683,6 +684,63 @@ internal class CarelevoPatchMoreTest {
     }
 
     // ---------------------------------------------------------------------------------------------
+    // onUnsolicited — frames the patch sends by itself. The alarm frames are in CarelevoPatchTest.
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `an infusion report the patch sends by itself is stored like a status read`() {
+        sut.onUnsolicited(UnsolicitedMessage(INFUSION_INFO_REPORT[0], INFUSION_INFO_REPORT))
+
+        val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
+        verify(patchRptInfusionInfoProcessUseCase).execute(captor.capture())
+        val request = captor.firstValue
+        assertThat(request.runningMinute).isEqualTo(150)
+        assertThat(request.remains).isEqualTo(150.5)
+        assertThat(request.infusedTotalBasalAmount).isEqualTo(10.25)
+        assertThat(request.infusedTotalBolusAmount).isEqualTo(5.5)
+        assertThat(request.pumpState).isEqualTo(2)
+        assertThat(request.mode).isEqualTo(1)
+    }
+
+    /** 0x8A: the stop time ended and the patch delivers again. */
+    @Test
+    fun `a stop report resumes a stopped pump`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.onUnsolicited(UnsolicitedMessage(PUMP_STOP_REPORT, byteArrayOf(PUMP_STOP_REPORT)))
+
+        verify(pumpResumeUseCase).persistResumed()
+    }
+
+    /** 0x88: the patch started its basal again. */
+    @Test
+    fun `a basal restart report resumes a stopped pump`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.onUnsolicited(UnsolicitedMessage(BASAL_RESTART_REPORT, byteArrayOf(BASAL_RESTART_REPORT)))
+
+        verify(pumpResumeUseCase).persistResumed()
+    }
+
+    @Test
+    fun `a frame the driver does not know changes nothing`() {
+        sut.initPatch()
+
+        sut.onUnsolicited(UnsolicitedMessage(UNKNOWN_REPORT, byteArrayOf(UNKNOWN_REPORT, 0x01)))
+
+        verify(patchRptInfusionInfoProcessUseCase, never()).execute(any())
+        verify(pumpResumeUseCase, never()).persistResumed()
+    }
+
+    // ---------------------------------------------------------------------------------------------
     // releasePatch / discardTeardown
     // ---------------------------------------------------------------------------------------------
 
@@ -821,5 +879,26 @@ internal class CarelevoPatchMoreTest {
         assertThat(captor.firstValue.maxBasalSpeed).isEqualTo(15.0)
         assertThat(captor.firstValue.maxBolusDose).isEqualTo(7.5)
         assertThat(captor.firstValue.patchState).isNull()
+    }
+
+    private companion object {
+
+        const val PUMP_STOP_REPORT: Byte = 0x8A.toByte()
+        const val BASAL_RESTART_REPORT: Byte = 0x88.toByte()
+        const val UNKNOWN_REPORT: Byte = 0x55
+
+        /** A real-shape 0x91: running 150 min, 150.5 U left, basal 10.25 U, bolus 5.5 U, pump state 2, mode 1. */
+        val INFUSION_INFO_REPORT = byteArrayOf(
+            0x91.toByte(), 0x00,
+            0x02, 0x1E,
+            0x01, 0x32, 0x32,
+            0x0A, 0x19,
+            0x05, 0x32,
+            0x02,
+            0x01,
+            0x00, 0x00,
+            0x03, 0x00,
+            0x00, 0x01, 0x0A
+        )
     }
 }

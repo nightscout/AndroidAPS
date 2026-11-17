@@ -1,12 +1,14 @@
 package app.aaps.pump.carelevo.ble
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.ble.BleAdapter
 import app.aaps.core.interfaces.pump.ble.BleGatt
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.AlertAlarmSetCommand
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import com.google.common.truth.Truth.assertThat
@@ -22,7 +24,10 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import java.util.UUID
 import kotlin.experimental.xor
 import kotlin.test.assertFailsWith
@@ -457,6 +462,163 @@ internal class CarelevoBleSessionPairingTest {
         assertThat(session.connected.value).isFalse()
     }
 
+    // ===== Before Bluetooth v2: what the session does that no test checked yet =====
+
+    @Test
+    fun `readActiveAlarmSnapshots reads the three tiers in order on one session`() = runTest {
+        useTestDispatcher()
+        transport.answersAlarmSnapshots = true
+
+        val snapshots = session.readActiveAlarmSnapshots(ADDRESS)
+
+        assertThat(snapshots.map { it.tier })
+            .containsExactly(ActiveAlarmSnapshotTier.CRITICAL, ActiveAlarmSnapshotTier.ADVISORY, ActiveAlarmSnapshotTier.NOTIFICATION).inOrder()
+        assertThat(snapshots[0].flags.outOfInsulin).isTrue()
+        assertThat(snapshots.all { it.infusing }).isTrue()
+        assertThat(transport.writes.map { it.toList() }).containsExactly(
+            listOf(ALARM_SNAPSHOT_OPCODE, CRITICAL_TIER),
+            listOf(ALARM_SNAPSHOT_OPCODE, ADVISORY_TIER),
+            listOf(ALARM_SNAPSHOT_OPCODE, NOTIFICATION_TIER)
+        ).inOrder()
+        assertThat(transport.connectAddresses).hasSize(1)
+    }
+
+    @Test
+    fun `runAdditionalPriming sends the priming and returns the result of the patch`() = runTest {
+        useTestDispatcher()
+
+        val result = session.runAdditionalPriming(ADDRESS)
+
+        assertThat(result.resultCode).isEqualTo(0)
+        assertThat(transport.writes.map { it.toList() }).containsExactly(listOf(ADDITIONAL_PRIMING_OPCODE))
+    }
+
+    @Test
+    fun `runPairing fails when the patch refuses the app auth`() = runTest {
+        useTestDispatcher()
+        transport.appAuthResult = ALARM_REFUSED
+
+        assertFailsWith<IllegalStateException> { session.runPairing(ADDRESS, spec) }
+        assertThat(transport.writes.map { it[0] }).doesNotContain(SET_TIME_OPCODE)
+    }
+
+    @Test
+    fun `runPairing fails when the patch refuses the alert alarm mode`() = runTest {
+        useTestDispatcher()
+        transport.alertAlarmResult = ALARM_REFUSED
+
+        assertFailsWith<IllegalStateException> { session.runPairing(ADDRESS, spec) }
+        assertThat(transport.writes.map { it[0] }).doesNotContain(THRESHOLD_OPCODE)
+    }
+
+    @Test
+    fun `runPairing fails when the patch refuses the thresholds`() = runTest {
+        useTestDispatcher()
+        transport.thresholdResult = ALARM_REFUSED
+
+        assertFailsWith<IllegalStateException> { session.runPairing(ADDRESS, spec) }
+    }
+
+    /** Alarms and pulse-finish reports come by themselves; the pump plugin handles them. */
+    @Test
+    fun `a frame the patch sends by itself on the held link reaches the unsolicited handler`() = runTest {
+        useTestDispatcher()
+        val received = mutableListOf<UnsolicitedMessage>()
+        session.unsolicitedHandler = { received += it }
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+
+        transport.capturedListener?.onCharacteristicChanged(byteArrayOf(PULSE_FINISH_OPCODE, 0x00))
+        advanceUntilIdle()
+
+        assertThat(received.map { it.opcode }).containsExactly(PULSE_FINISH_OPCODE)
+        assertThat(received.single().payload.toList()).containsExactly(PULSE_FINISH_OPCODE, 0x00.toByte()).inOrder()
+    }
+
+    @Test
+    fun `an unsolicited handler that throws does not stop the next frames`() = runTest {
+        useTestDispatcher()
+        val received = mutableListOf<Byte>()
+        session.unsolicitedHandler = {
+            received += it.opcode
+            if (received.size == 1) error("handler failed")
+        }
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+
+        transport.capturedListener?.onCharacteristicChanged(byteArrayOf(PULSE_FINISH_OPCODE, 0x00))
+        advanceUntilIdle()
+        transport.capturedListener?.onCharacteristicChanged(byteArrayOf(PULSE_FINISH_OPCODE, 0x01))
+        advanceUntilIdle()
+
+        assertThat(received).hasSize(2)
+        assertThat(session.connected.value).isTrue()
+    }
+
+    @Test
+    fun `a held link connect that fails leaves the link down and the next one brings it up`() = runTest {
+        useTestDispatcher()
+        transport.reportConnected = false
+
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+
+        assertThat(session.connected.value).isFalse()
+        assertThat(session.isConnecting.value).isFalse()
+
+        transport.reportConnected = true
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+
+        assertThat(session.connected.value).isTrue()
+        assertThat(transport.connectAddresses).hasSize(2)
+    }
+
+    @Test
+    fun `a held link connect the stack refuses is logged and leaves the link down`() = runTest {
+        useTestDispatcher()
+        transport.connectRefused = true
+
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+
+        assertThat(session.connected.value).isFalse()
+        assertThat(session.isConnecting.value).isFalse()
+        verify(aapsLogger).error(eq(LTag.PUMPCOMM), any<String>(), any<Throwable>())
+    }
+
+    @Test
+    fun `a link drop during an op on the held link fails the op and takes the link down`() = runTest {
+        useTestDispatcher()
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        transport.dropOnOpcodes += INFUSION_INFO_OPCODE
+
+        assertFailsWith<BleDisconnectedException> { session.readInfusionInfo(ADDRESS) }
+        advanceUntilIdle()
+
+        assertThat(session.connected.value).isFalse()
+    }
+
+    /** A user stopping a bolus cancels the waiting op; the link itself is fine. */
+    @Test
+    fun `an op cancelled by its caller leaves the held link up`() = runTest {
+        useTestDispatcher()
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        transport.silentOpcodes += INFUSION_INFO_OPCODE
+
+        val op = launch { session.readInfusionInfo(ADDRESS) }
+        runCurrent()
+        op.cancel()
+        advanceUntilIdle()
+
+        assertThat(session.connected.value).isTrue()
+        transport.silentOpcodes.clear()
+        session.readInfusionInfo(ADDRESS)
+        assertThat(transport.connectAddresses).hasSize(1)
+    }
+
     // ===== Fixtures =====
 
     /**
@@ -501,6 +663,17 @@ internal class CarelevoBleSessionPairingTest {
 
         /** seqNo whose basal-program write is rejected (non-zero resultCode); null → all accepted. */
         var basalRejectAtSeq: Int? = null
+
+        /** Result codes of the pairing steps; non-zero → the patch refuses that step. */
+        var appAuthResult: Byte = RESULT_SUCCESS
+        var alertAlarmResult: Byte = RESULT_SUCCESS
+        var thresholdResult: Byte = RESULT_SUCCESS
+
+        /** Newer firmware answers the 0x43 alarm snapshot; older firmware (the default here) never does. */
+        var answersAlarmSnapshots = false
+
+        /** Opcodes on which the patch drops the link instead of answering. */
+        val dropOnOpcodes = mutableSetOf<Byte>()
 
         private var setTimeRounds = 0
 
@@ -558,9 +731,15 @@ internal class CarelevoBleSessionPairingTest {
             val listener = capturedListener ?: return
             val opcode = request[0]
             if (opcode in silentOpcodes) return
+            if (opcode in dropOnOpcodes) {
+                listener.onConnectionStateChanged(false)
+                return
+            }
             when (opcode) {
                 MAC_REQUEST_OPCODE   -> listener.onCharacteristicChanged(byteArrayOf(MAC_RESPONSE_OPCODE) + MAC_BYTES + CHECKSUM_BYTE)
-                APP_AUTH_OPCODE      -> listener.onCharacteristicChanged(byteArrayOf(APP_AUTH_ACK_OPCODE, RESULT_SUCCESS))
+                APP_AUTH_OPCODE      -> listener.onCharacteristicChanged(byteArrayOf(APP_AUTH_ACK_OPCODE, appAuthResult))
+                ALARM_SNAPSHOT_OPCODE -> if (answersAlarmSnapshots) listener.onCharacteristicChanged(snapshotFrame(request[1]))
+                ADDITIONAL_PRIMING_OPCODE -> listener.onCharacteristicChanged(byteArrayOf(ADDITIONAL_PRIMING_ACK_OPCODE, RESULT_SUCCESS))
                 SET_TIME_OPCODE      -> {
                     setTimeRounds++
                     val serial = if (setTimeRounds <= emptySerialRounds) BLANK_SERIAL else SERIAL
@@ -568,8 +747,8 @@ internal class CarelevoBleSessionPairingTest {
                     listener.onCharacteristicChanged(RPT2_FRAME)
                 }
 
-                ALERT_ALARM_OPCODE   -> listener.onCharacteristicChanged(byteArrayOf(ALERT_ALARM_ACK_OPCODE, RESULT_SUCCESS))
-                THRESHOLD_OPCODE     -> listener.onCharacteristicChanged(byteArrayOf(THRESHOLD_ACK_OPCODE, RESULT_SUCCESS))
+                ALERT_ALARM_OPCODE   -> listener.onCharacteristicChanged(byteArrayOf(ALERT_ALARM_ACK_OPCODE, alertAlarmResult))
+                THRESHOLD_OPCODE     -> listener.onCharacteristicChanged(byteArrayOf(THRESHOLD_ACK_OPCODE, thresholdResult))
                 INFUSION_INFO_OPCODE -> listener.onCharacteristicChanged(INFUSION_INFO_FRAME)
                 SAFETY_CHECK_OPCODE  -> {
                     // Streams progress reports, then the terminal SUCCESS — all on 0x72.
@@ -584,6 +763,14 @@ internal class CarelevoBleSessionPairingTest {
 
         /** `[0] 0x72, [1] result, [2..3] volume 210 U, [4..5] duration 210 s`. */
         private fun safetyFrame(result: Byte) = byteArrayOf(SAFETY_CHECK_ACK_OPCODE, result, 0x02, 0x0A, 0x03, 0x1E)
+
+        /** 15 bytes: the tier opcode, infusing, then the flags. The critical tier reports out of insulin. */
+        private fun snapshotFrame(tier: Byte): ByteArray =
+            ByteArray(SNAPSHOT_FRAME_LENGTH).also {
+                it[0] = tier
+                it[1] = 0x01
+                if (tier == CRITICAL_TIER) it[OUT_OF_INSULIN_INDEX] = 0x01
+            }
 
         private fun basalResultFor(seqNo: Byte): Byte =
             if (seqNo.toInt() == basalRejectAtSeq) BASAL_REJECTED else RESULT_SUCCESS
@@ -635,6 +822,19 @@ internal class CarelevoBleSessionPairingTest {
         const val BASAL_UPDATE_OPCODE: Byte = 0x21
         const val BASAL_UPDATE_ACK_OPCODE: Byte = 0x81.toByte()
         const val BASAL_REJECTED: Byte = 0x05
+        const val ALARM_REFUSED: Byte = 0x01
+
+        const val ALARM_SNAPSHOT_OPCODE: Byte = 0x43
+        const val CRITICAL_TIER: Byte = 0xA4.toByte()
+        const val ADVISORY_TIER: Byte = 0xA5.toByte()
+        const val NOTIFICATION_TIER: Byte = 0xA6.toByte()
+        const val SNAPSHOT_FRAME_LENGTH = 15
+        const val OUT_OF_INSULIN_INDEX = 2
+        const val ADDITIONAL_PRIMING_OPCODE: Byte = 0x1D
+        const val ADDITIONAL_PRIMING_ACK_OPCODE: Byte = 0x7D
+
+        /** Pulse finish: the patch sends it by itself when a priming is done. */
+        const val PULSE_FINISH_OPCODE: Byte = 0x98.toByte()
 
         // Real-shape 20-byte 0x91: running 2*60+30=150 min, remaining 1*100+50+50/100=150.5 U,
         // basal total 10+25/100=10.25 U, bolus total 5+50/100=5.5 U, pumpState 2, mode 1.

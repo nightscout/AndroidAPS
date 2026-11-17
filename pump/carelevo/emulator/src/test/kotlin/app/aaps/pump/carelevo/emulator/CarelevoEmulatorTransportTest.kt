@@ -3,13 +3,22 @@ package app.aaps.pump.carelevo.emulator
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.PairingStep
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
 import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
 import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.pump.carelevo.ble.commands.BasalProgramCommand
+import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
+import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
+import app.aaps.pump.carelevo.ble.commands.ExtendBolusCommand
+import app.aaps.pump.carelevo.ble.commands.ImmediateBolusCommand
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoCommand
 import app.aaps.pump.carelevo.ble.commands.PatchDiscardCommand
 import app.aaps.pump.carelevo.ble.commands.PatchInfoCommand
+import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -372,6 +381,136 @@ class CarelevoEmulatorTransportTest {
         // Not a copy: a test mutates `transport.pumpState` and the emulator must answer from it.
         assertThat(transport.pumpState).isSameInstanceAs(emulator.state)
         assertThat(transport.pumpState).isSameInstanceAs(state)
+    }
+
+    // ---- Test hooks --------------------------------------------------------------------------
+    // The scenario tests drive these on a device. Here they are checked on the JVM, so the transport can be
+    // rewritten (Bluetooth v2) against tests that run with every unit run.
+
+    @Test
+    fun `the speed is the speed of the emulator`() {
+        transport.speed = EmulatorSpeed.FAST
+        assertThat(emulator.speed).isEqualTo(EmulatorSpeed.FAST)
+
+        emulator.speed = EmulatorSpeed.REAL
+        assertThat(transport.speed).isEqualTo(EmulatorSpeed.REAL)
+    }
+
+    /** Each command the scenarios can lose maps to the opcodes the driver sends for it. */
+    @Test
+    fun `each command that can be lost is lost on its own opcodes`() {
+        val frames = mapOf(
+            EmulatedCommand.BOLUS_START to listOf(ImmediateBolusCommand(actionId = 1, volume = 1.0).encode()),
+            EmulatedCommand.BOLUS_STOP to listOf(BolusCancelCommand().encode()),
+            EmulatedCommand.TEMP_BASAL_START to listOf(TempBasalCommand.byUnit(1.5, 1, 0).encode()),
+            EmulatedCommand.TEMP_BASAL_STOP to listOf(TempBasalCancelCommand().encode()),
+            EmulatedCommand.EXTENDED_BOLUS_START to listOf(ExtendBolusCommand(immediateDose = 0.0, extendedSpeed = 1.0, hour = 1, min = 0).encode()),
+            EmulatedCommand.EXTENDED_BOLUS_STOP to listOf(ExtendBolusCancelCommand().encode()),
+            // The basal program has two opcodes: set at the activation, update later.
+            EmulatedCommand.BASAL_PROFILE to listOf(
+                BasalProgramCommand(isUpdate = false, seqNo = 0, segmentSpeeds = listOf(1.0)).encode(),
+                BasalProgramCommand(isUpdate = true, seqNo = 0, segmentSpeeds = listOf(1.0)).encode()
+            ),
+            EmulatedCommand.STATUS to listOf(InfusionInfoCommand().encode())
+        )
+        assertThat(frames.keys).containsExactlyElementsIn(EmulatedCommand.entries)
+        transport.gatt.connect(ADDRESS)
+
+        for ((command, commandFrames) in frames) for (frame in commandFrames) {
+            listener.clear()
+            val before = transport.state().commands
+            transport.loseCommand(command)
+
+            transport.gatt.writeCharacteristic(frame)
+
+            assertWithMessage("$command 0x%02X answered".format(frame[0])).that(listener.notifications).isEmpty()
+            assertWithMessage("$command 0x%02X reached the patch".format(frame[0])).that(transport.state().commands).isEqualTo(before)
+        }
+    }
+
+    @Test
+    fun `a lost command is lost once and only for its own opcode`() {
+        transport.gatt.connect(ADDRESS)
+        transport.loseCommand(EmulatedCommand.STATUS)
+
+        transport.gatt.writeCharacteristic(PatchDiscardCommand().encode())
+        assertThat(listener.notifications).hasSize(1)
+
+        transport.gatt.writeCharacteristic(InfusionInfoCommand().encode())
+        transport.gatt.writeCharacteristic(InfusionInfoCommand().encode())
+        assertThat(listener.notifications).hasSize(2)
+    }
+
+    @Test
+    fun `a new patch drops the link, forgets the faults and is in range`() {
+        transport.gatt.connect(ADDRESS)
+        transport.loseCommand(EmulatedCommand.STATUS)
+        transport.loseAnswer(EmulatedCommand.STATUS)
+        transport.setOutOfRange(true)
+        val oldSerial = state.serialNumber
+        listener.clear()
+
+        assertThat(transport.replaceWithNewPump()).isTrue()
+
+        assertThat(transport.pumpState.serialNumber).isNotEqualTo(oldSerial)
+        transport.gatt.connect(ADDRESS)
+        assertThat(listener.connectionStates).containsExactly(true)
+        transport.gatt.writeCharacteristic(InfusionInfoCommand().encode())
+        assertThat(listener.notifications).hasSize(1)
+    }
+
+    @Test
+    fun `a new patch drops a link that is up`() {
+        transport.gatt.connect(ADDRESS)
+        listener.clear()
+
+        transport.replaceWithNewPump()
+
+        assertThat(listener.connectionStates).containsExactly(false)
+        assertThat(transport.state().linkUp).isFalse()
+    }
+
+    @Test
+    fun `each alarm the patch reports sets its flag`() {
+        assertThat(transport.raise(EmulatedAlarm.EMPTY_RESERVOIR)).isTrue()
+        assertThat(transport.raise(EmulatedAlarm.OCCLUSION)).isTrue()
+        assertThat(transport.raise(EmulatedAlarm.LOW_BATTERY)).isTrue()
+
+        assertThat(transport.pumpState.criticalAlarmFlags.outOfInsulin).isTrue()
+        assertThat(transport.pumpState.criticalAlarmFlags.occlusionDetected).isTrue()
+        assertThat(transport.pumpState.advisoryAlarmFlags.lowBattery).isTrue()
+    }
+
+    /** No snapshot flag: the driver works these out from the values the patch reports. */
+    @Test
+    fun `an alarm the patch has no flag for is refused and changes nothing`() {
+        val critical = state.criticalAlarmFlags
+        val advisory = state.advisoryAlarmFlags
+
+        assertThat(transport.raise(EmulatedAlarm.LOW_RESERVOIR)).isFalse()
+        assertThat(transport.raise(EmulatedAlarm.STOPPED_TOO_LONG)).isFalse()
+
+        assertThat(state.criticalAlarmFlags).isEqualTo(critical)
+        assertThat(state.advisoryAlarmFlags).isEqualTo(advisory)
+    }
+
+    @Test
+    fun `stopping the next bolus is set on the emulator`() {
+        assertThat(transport.stopNextBolusAt(0.5)).isTrue()
+
+        assertThat(emulator.stopNextBolusAt).isEqualTo(0.5)
+    }
+
+    @Test
+    fun `the saved state is the patch and restores to the same patch`() {
+        transport.gatt.connect(ADDRESS)
+        transport.gatt.writeCharacteristic(InfusionInfoCommand().encode())
+        state.serialNumber = PROVIDED_SERIAL
+
+        val restored = CarelevoPumpEmulator.restore(transport.saveState())
+
+        assertThat(restored.state.serialNumber).isEqualTo(PROVIDED_SERIAL)
+        assertThat(restored.commands).isEqualTo(1)
     }
 
     // ---- Helpers -----------------------------------------------------------------------------
