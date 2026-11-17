@@ -271,6 +271,14 @@ while the app sleeps, so the iOS timer should run the job late rather than never
 while the app is awake, and at the next wake check whether the end has passed and run the job then.
 `MainApp` calls `runningModeExpiryScheduler.start()`; a master iOS app has to call it too.
 
+### `IosBgQualityCheck` is gone: iOS uses the real `BgQualityCheckPlugin`
+
+The plugin is in `plugins/constraints/src/commonMain` and registers itself on every platform, as a
+plugin and as `BgQualityCheck`, as it always did on Android, followers included. So the iOS follower
+now shows the doubled or flat readings badge like an Android follower does, and a master iOS app gets
+the LGS fall-back on doubled readings. `IosBgQualityCheck` and its test were deleted;
+`IosBgQualityCheckWiringTest` checks the new wiring and has not run yet.
+
 ## Ready for iOS: the encrypted settings store (2026-10, not yet run on Apple)
 
 Written by the Windows session. `IosSp` and `NSUserDefaults` are gone as the settings store. iOS now

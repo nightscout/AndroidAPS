@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
@@ -28,6 +29,7 @@ import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +39,15 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * Watches the glucose data for doubled or flat readings. On doubled data the loop falls back to LGS.
+ *
+ * In every build, followers too, as on Android: a follower shows the same warning about the data it gets.
+ */
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(860)
 @SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<BgQualityCheck>())
 @Inject
 class BgQualityCheckPlugin(
     aapsLogger: AAPSLogger,

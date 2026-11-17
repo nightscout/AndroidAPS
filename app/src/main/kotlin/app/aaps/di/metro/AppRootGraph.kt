@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
-import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
@@ -504,17 +503,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val dexcomPlugin: DexcomPlugin
 
     val sourceGraph: SourceMetroGraph
-    /**
-     * Interfaces backed by a plugin this graph already builds. A `@Provides` rather than a delegate,
-     * because the instance is the plugin.
- *
- * This used to claim that binding it any other way "would make a second one". That is not true of
- * Metro: `@ContributesBinding` on a `@SingleIn` class resolves to the same scoped instance, which is
- * why `DexcomPlugin` and `XdripSourcePlugin` carry their second binding on the class now. Only
- * `BgQualityCheckPlugin` still needs stating here - see below.
-     */
-    /** Metro already builds the plugin; the openAPS plugins ask for the interface. */
-    @Provides fun bgQualityCheck(plugin: BgQualityCheckPlugin): BgQualityCheck = plugin
 
     @DependencyGraph.Factory
     fun interface Factory {

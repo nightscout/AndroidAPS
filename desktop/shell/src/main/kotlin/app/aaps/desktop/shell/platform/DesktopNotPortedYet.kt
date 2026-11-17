@@ -1,6 +1,5 @@
 package app.aaps.desktop.shell.platform
 
-import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ExportResult
@@ -10,8 +9,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import java.io.File
 
 /**
@@ -21,32 +18,6 @@ import java.io.File
  * a JVM and has simply not been moved. They are grouped so the size of what is left is visible in
  * one place, and each says what it would take.
  */
-
-/**
- * Glucose data quality, which the overview shows as a chip and the loop reads.
- *
- * `UNKNOWN` is the one state that claims nothing. Answering `FIVE_MIN_DATA` would tell the loop the
- * data is clean when nothing checked it, and the whole point of this class is to notice doubled or
- * flat readings.
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-@Inject
-class DesktopBgQualityCheck(
-    private val aapsLogger: AAPSLogger
-) : BgQualityCheck {
-
-    override var state: BgQualityCheck.State = BgQualityCheck.State.UNKNOWN
-    override var message: String = ""
-
-    private val _stateFlow = MutableStateFlow(BgQualityCheck.State.UNKNOWN)
-    override val stateFlow: StateFlow<BgQualityCheck.State> = _stateFlow
-
-    override fun stateDescription(): String {
-        aapsLogger.notOnDesktopYet("BgQualityCheck.stateDescription")
-        return ""
-    }
-}
 
 /**
  * Sending and pruning logs. Pruning works; sending does not.
