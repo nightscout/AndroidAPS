@@ -57,16 +57,13 @@ import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoConnectionCoordinator
-import app.aaps.pump.carelevo.coordinator.CarelevoSettingsCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoTempBasalCoordinator
-import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
-import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusionUseCase
@@ -77,7 +74,6 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoCancelImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
-import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CompletableDeferred
@@ -131,7 +127,7 @@ import app.aaps.core.interfaces.configuration.Config as AapsConfig
  *    and the deferred settings-sync recovery combiner.
  *  - `handleAlarms` — the critical-alarm escalation to `UiInteraction.runAlarm` when the Compose
  *    host is NOT mounted, plus the `globallyAlarmedIds` dedup/prune.
- *  - `onStop`: alarm-observer teardown, user-settings clear and preference-scope cancellation.
+ *  - `onStop`: alarm-observer teardown and preference-scope cancellation.
  *
  * Robolectric is required because `startAlarmObserving`/`onStop` touch [ProcessLifecycleOwner]
  * (a real `Looper` + `ArchTaskExecutor` main-thread check) and `PumpPluginBase.onStart` builds a
@@ -174,7 +170,6 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var carelevoAlarmNotifier: CarelevoAlarmNotifier
     private lateinit var bleSession: CarelevoBleSession
     private lateinit var activationExecutor: CarelevoActivationExecutor
-    private lateinit var deleteUserSettingInfoUseCase: CarelevoDeleteUserSettingInfoUseCase
 
     private lateinit var plugin: CarelevoPumpPlugin
 
@@ -220,7 +215,6 @@ class CarelevoPumpPluginLifecycleTest {
         carelevoAlarmNotifier = mock()
         bleSession = mock()
         activationExecutor = mock()
-        deleteUserSettingInfoUseCase = mock()
 
         whenever(rh.gs(any<Int>())).thenReturn("Mocked")
         // onStart follows the link for the alarm snapshot read; a test about the link stubs its own flow.
@@ -232,7 +226,8 @@ class CarelevoPumpPluginLifecycleTest {
         patchInfoFlow = latestValueFlow<CarelevoPatchInfoDomainModel?>().apply { tryEmit(samplePatchInfo()) }
         infusionInfoFlow = latestValueFlow<CarelevoInfusionInfoDomainModel?>().apply { tryEmit(CarelevoInfusionInfoDomainModel()) }
         patchStateFlow = latestValueFlow<PatchState?>().apply { tryEmit(PatchState.ConnectedBooted) }
-        userSettingFlow = latestValueFlow<CarelevoUserSettingInfoDomainModel?>().apply { tryEmit(CarelevoUserSettingInfoDomainModel()) }
+        // Stored settings that match the preferences stubbed below, so the settings sync has nothing to push.
+        userSettingFlow = latestValueFlow<CarelevoUserSettingInfoDomainModel?>().apply { tryEmit(CarelevoUserSettingInfoDomainModel(maxBolusDose = 7.5)) }
         profileFlow = latestValueFlow<Profile?>().apply { tryEmit(testProfile) }
 
         whenever(carelevoPatch.patchInfo).thenReturn(patchInfoFlow)
@@ -245,9 +240,6 @@ class CarelevoPumpPluginLifecycleTest {
         // Deferred settings-sync + preference observers both enqueue through the queue.
         val enactResult: PumpEnactResult = mock()
         whenever { commandQueue.customCommand(any()) }.thenReturn(enactResult)
-
-        // onStop -> settingsCoordinator.clearUserSettings
-        whenever { deleteUserSettingInfoUseCase.execute() }.thenReturn(ResponseResult.Success(ResultSuccess))
 
         whenever(preferences.observe(DoubleKey.SafetyMaxBolus)).thenReturn(maxBolusFlow)
         whenever(preferences.observe(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(expiryFlow)
@@ -339,10 +331,6 @@ class CarelevoPumpPluginLifecycleTest {
                 aapsLogger = aapsLogger,
                 carelevoPatch = carelevoPatch,
                 bleSession = bleSession
-            ),
-            settingsCoordinator = CarelevoSettingsCoordinator(
-                aapsLogger = aapsLogger,
-                deleteUserSettingInfoUseCase = deleteUserSettingInfoUseCase
             ),
             activationExecutor = activationExecutor,
             notificationManager = mock()
@@ -670,6 +658,8 @@ class CarelevoPumpPluginLifecycleTest {
         whenever(preferences.get(key)).thenReturn(0)
         start()
         awaitCollector(lowInsulinFlow)
+        // The start's settings sync reads the preference too; count only the observer's read below.
+        clearInvocations(preferences)
 
         lowInsulinFlow.value = 0
         // Barrier: once the collector has read the preference for the 0-value emission, its skip
@@ -691,6 +681,7 @@ class CarelevoPumpPluginLifecycleTest {
 
     @Test
     fun `a pending max-bolus sync is pushed once the patch is booted and idle`() {
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(12.0)
         start()
 
         userSettingFlow.tryEmit(
@@ -702,7 +693,8 @@ class CarelevoPumpPluginLifecycleTest {
     }
 
     @Test
-    fun `a pending max-bolus sync with no stored dose falls back to zero`() {
+    fun `a pending max-bolus sync with no stored dose sends the preference`() {
+        // It sent 0 U before, which would make the patch refuse every bolus.
         start()
 
         userSettingFlow.tryEmit(
@@ -710,19 +702,69 @@ class CarelevoPumpPluginLifecycleTest {
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
-        assertThat(capturedCommands<CmdUpdateMaxBolus>().first().maxBolusDose).isWithin(0.001).of(0.0)
+        assertThat(capturedCommands<CmdUpdateMaxBolus>().first().maxBolusDose).isWithin(0.001).of(7.5)
+    }
+
+    @Test
+    fun `a max bolus changed while the driver did not run is pushed once the patch is booted`() {
+        // No flag: the change happened while another pump was active, or came with a settings import.
+        start()
+
+        userSettingFlow.tryEmit(CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0))
+
+        verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
+        assertThat(capturedCommands<CmdUpdateMaxBolus>().single().maxBolusDose).isWithin(0.001).of(7.5)
+    }
+
+    @Test
+    fun `nothing is pushed when the stored settings match the preferences`() {
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(22)
+        userSettingFlow.tryEmit(CarelevoUserSettingInfoDomainModel(maxBolusDose = 7.5, lowInsulinNoticeAmount = 22))
+        start()
+
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
+
+        // The plugin collects on an unconfined dispatcher, so a push would already have happened.
+        verifyBlocking(commandQueue, never()) { customCommand(any()) }
     }
 
     @Test
     fun `a pending low-insulin sync is pushed once the patch is booted`() {
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(22)
         start()
 
         userSettingFlow.tryEmit(
-            CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true)
+            CarelevoUserSettingInfoDomainModel(maxBolusDose = 7.5, lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true)
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateLowInsulinNotice>()) }
         assertThat(capturedCommands<CmdUpdateLowInsulinNotice>().first().amountUnits).isEqualTo(22)
+    }
+
+    @Test
+    fun `a low-insulin preference that differs from the stored one is pushed`() {
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(30)
+        start()
+
+        userSettingFlow.tryEmit(CarelevoUserSettingInfoDomainModel(maxBolusDose = 7.5, lowInsulinNoticeAmount = 22))
+
+        verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateLowInsulinNotice>()) }
+        assertThat(capturedCommands<CmdUpdateLowInsulinNotice>().single().amountUnits).isEqualTo(30)
+    }
+
+    @Test
+    fun `a low-insulin reminder that is off is never pushed by the settings sync`() {
+        // Zero = reminder off, which the preference observer never sends either.
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(0)
+        start()
+
+        // The max-bolus difference is the barrier: both settings are pushed from the same run, max bolus first.
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true)
+        )
+
+        verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
+        assertThat(capturedCommands<CmdUpdateLowInsulinNotice>()).isEmpty()
     }
 
     @Test
@@ -794,6 +836,7 @@ class CarelevoPumpPluginLifecycleTest {
 
     @Test
     fun `a low-insulin sync is pushed even mid-bolus - only max bolus is gated`() {
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(22)
         start()
         infusionInfoFlow.tryEmit(
             CarelevoInfusionInfoDomainModel(
@@ -959,14 +1002,13 @@ class CarelevoPumpPluginLifecycleTest {
     // ---- onStop ---------------------------------------------------------------------------------
 
     @Test
-    fun `onStop stops the alarm observer and clears the stored user settings`() {
+    fun `onStop stops the alarm observer`() {
         start()
 
         runBlocking { plugin.onStop() }
         started = false
 
         verify(carelevoAlarmNotifier).stopObserving()
-        verifyBlocking(deleteUserSettingInfoUseCase) { execute() }
     }
 
     @Test

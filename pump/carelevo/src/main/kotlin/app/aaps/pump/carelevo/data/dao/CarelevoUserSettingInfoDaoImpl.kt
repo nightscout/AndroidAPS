@@ -79,19 +79,4 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
             }
         )
     }
-
-    override fun deleteUserSetting(): Boolean {
-        return runCatching {
-            preferences.remove(CarelevoStringNonKey.UserSettingInfo)
-        }.fold(
-            onSuccess = {
-                _userSettingInfo.tryEmit(null)
-                true
-            },
-            onFailure = {
-                it.printStackTrace()
-                false
-            }
-        )
-    }
 }

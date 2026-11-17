@@ -105,12 +105,4 @@ internal class CarelevoUserSettingInfoRepositoryImplTest {
 
         assertThat(sut.updateUserSettingInfo(domain())).isFalse()
     }
-
-    @Test
-    fun `deleteUserSettingInfo delegates and returns data source result`() {
-        whenever(dataSource.deleteUserSettingInfo()).thenReturn(true)
-
-        assertThat(sut.deleteUserSettingInfo()).isTrue()
-        verify(dataSource).deleteUserSettingInfo()
-    }
 }

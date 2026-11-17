@@ -76,7 +76,6 @@ import app.aaps.pump.carelevo.compose.CarelevoComposeContent
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoConnectionCoordinator
-import app.aaps.pump.carelevo.coordinator.CarelevoSettingsCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoTempBasalCoordinator
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
@@ -141,7 +140,6 @@ class CarelevoPumpPlugin @Inject constructor(
     private val bolusCoordinator: CarelevoBolusCoordinator,
     private val tempBasalCoordinator: CarelevoTempBasalCoordinator,
     private val connectionCoordinator: CarelevoConnectionCoordinator,
-    private val settingsCoordinator: CarelevoSettingsCoordinator,
     private val activationExecutor: CarelevoActivationExecutor,
     notificationManager: NotificationManager
 ) : PumpPluginBase(
@@ -211,7 +209,6 @@ class CarelevoPumpPlugin @Inject constructor(
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "onStop called")
         bleSession.unsolicitedHandler = null
-        scope?.let { settingsCoordinator.clearUserSettings(it) }
         bleReceiver?.let { receiver ->
             bleReceiver = null
             context.unregisterReceiver(receiver)
@@ -273,10 +270,10 @@ class CarelevoPumpPlugin @Inject constructor(
             }
             .launchIn(newScope)
 
-        // Deferred settings-sync recovery: a max-bolus / low-insulin change that couldn't reach the patch
-        // (changed while offline, or during a bolus) leaves a needXSyncPatch flag on the stored user
-        // settings; when the patch is booted again, push it through the queue. The combiner is PURE and the
-        // enqueue runs on IO.
+        // Deferred settings sync: when the patch is booted, push a max-bolus / low-insulin setting that the patch may
+        // not have. That is a change that could not reach it (changed while offline, or during a bolus), which left a
+        // needXSyncPatch flag on the stored user settings, or a preference that differs from the stored value
+        // because it changed while this driver did not run or no patch was there (also a settings import).
         combine(carelevoPatch.patchState, carelevoPatch.infusionInfo, carelevoPatch.userSettingInfo) { state, infusion, setting ->
             computeSettingsSyncNeed(state, infusion, setting)
         }
@@ -340,7 +337,11 @@ class CarelevoPumpPlugin @Inject constructor(
 
     private data class SettingsSyncNeed(val maxBolusDose: Double?, val lowInsulinAmountUnits: Int?)
 
-    /** Pure: which deferred patch settings still need pushing (flag set AND the patch is booted). */
+    /**
+     * Which patch settings still need pushing, only when the patch is booted. A setting is pushed when its flag is set
+     * or when its preference differs from the stored value. The value pushed is always the preference: it is what
+     * the user set last. Reads the two preferences and changes nothing.
+     */
     private fun computeSettingsSyncNeed(
         state: PatchState?,
         infusion: CarelevoInfusionInfoDomainModel?,
@@ -351,8 +352,12 @@ class CarelevoPumpPlugin @Inject constructor(
         // "No bolus running" requires BOTH channels idle (the deleted observeSyncPatch had this as `||`,
         // which was true during a single-channel bolus and triggered a spurious mid-bolus reconnect).
         val noBolusRunning = infusion?.extendBolusInfusionInfo == null && infusion?.immeBolusInfusionInfo == null
-        val maxBolusDose = if (setting.needMaxBolusDoseSyncPatch && noBolusRunning) setting.maxBolusDose ?: 0.0 else null
-        val lowInsulinAmountUnits = if (setting.needLowInsulinNoticeAmountSyncPatch) setting.lowInsulinNoticeAmount ?: 0 else null
+        val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
+        val maxBolusDose = if (noBolusRunning && (setting.needMaxBolusDoseSyncPatch || setting.maxBolusDose != maxBolus)) maxBolus else null
+        // Zero = reminder off. It is never sent, as in the preference observer.
+        val lowInsulin = preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
+        val lowInsulinAmountUnits =
+            if (lowInsulin != 0 && (setting.needLowInsulinNoticeAmountSyncPatch || setting.lowInsulinNoticeAmount != lowInsulin)) lowInsulin else null
         return SettingsSyncNeed(maxBolusDose, lowInsulinAmountUnits)
     }
 

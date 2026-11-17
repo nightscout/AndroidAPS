@@ -82,12 +82,4 @@ internal class CarelevoUserSettingInfoDataSourceImplTest {
 
         assertThat(sut.updateUserSettingInfo(entity)).isFalse()
     }
-
-    @Test
-    fun `deleteUserSettingInfo delegates and returns dao result`() {
-        whenever(dao.deleteUserSetting()).thenReturn(true)
-
-        assertThat(sut.deleteUserSettingInfo()).isTrue()
-        verify(dao).deleteUserSetting()
-    }
 }

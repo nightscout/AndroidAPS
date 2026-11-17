@@ -1,5 +1,7 @@
 package app.aaps.pump.carelevo.data.dao
 
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
@@ -23,7 +25,13 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
     /** Null after a clear or a store that cannot be read; no value before the first load. */
     private val _alarms: MutableSharedFlow<List<CarelevoAlarmInfoEntity>?> = latestValueFlow()
 
-    override fun getAlarms(): Flow<List<CarelevoAlarmInfoEntity>?> {
+    /**
+     * Every read-change-write of the list holds this. Alarms come from the patch session, the snapshot read and the
+     * screens at the same time, and without it two writes that overlap keep only the last one.
+     */
+    private val lock = AapsLock()
+
+    override fun getAlarms(): Flow<List<CarelevoAlarmInfoEntity>?> = lock.withLock {
         // Cold-load through the SAME unfiltered loader every other method uses. The original
         // vendor code filtered this one path to `it.acknowledged` — which is never true, because
         // acknowledging DELETES the entity (see removeAlarm) — so every persisted active alarm
@@ -35,24 +43,40 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
                     _alarms.tryEmit(null)
                 }
         }
-        return _alarms
+        _alarms
     }
 
     // Everything in the store is an active (unacknowledged) alarm by construction — an
     // acknowledged alarm is removed, not flagged.
-    override fun getAlarmsOnce(): List<CarelevoAlarmInfoEntity> = ensureLoaded()
+    override fun getAlarmsOnce(): List<CarelevoAlarmInfoEntity> = lock.withLock { ensureLoaded() }
 
     override fun setAlarms(list: List<CarelevoAlarmInfoEntity>) {
-        saveList(list)
-        _alarms.tryEmit(list)
+        lock.withLock {
+            saveList(list)
+            _alarms.tryEmit(list)
+        }
     }
 
     override fun clearAlarms() {
-        preferences.remove(CarelevoStringNonKey.AlarmInfoList)
-        _alarms.tryEmit(null)
+        lock.withLock {
+            preferences.remove(CarelevoStringNonKey.AlarmInfoList)
+            _alarms.tryEmit(null)
+        }
     }
 
     override fun upsertAlarm(entity: CarelevoAlarmInfoEntity) {
+        lock.withLock { upsertLocked(entity) }
+    }
+
+    override fun removeAlarm(alarmId: String) {
+        lock.withLock {
+            val next = ensureLoaded().filterNot { it.alarmId == alarmId }
+            saveList(next)
+            _alarms.tryEmit(next)
+        }
+    }
+
+    private fun upsertLocked(entity: CarelevoAlarmInfoEntity) {
         val current = ensureLoaded()
 
         val idx = current.indexOfFirst {
@@ -79,14 +103,6 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
         } else {
             current + entity.copy(occurrenceCount = 1)
         }
-
-        saveList(next)
-        _alarms.tryEmit(next)
-    }
-
-    override fun removeAlarm(alarmId: String) {
-        val current = ensureLoaded()
-        val next = current.filterNot { it.alarmId == alarmId }
 
         saveList(next)
         _alarms.tryEmit(next)

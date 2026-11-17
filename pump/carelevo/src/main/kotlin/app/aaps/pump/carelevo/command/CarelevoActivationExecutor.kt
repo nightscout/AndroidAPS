@@ -79,7 +79,7 @@ class CarelevoActivationExecutor @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-    private companion object {
+    companion object {
 
         private const val RESULT_SUCCESS = 0 // pump result byte 0 = SUCCESS / BY_REQ
         private const val STOP_RESUME_SUB_ID = 0 // stop/resume use subId/causeId = 0
@@ -88,7 +88,8 @@ class CarelevoActivationExecutor @Inject constructor(
         private const val TIMEZONE_AID_MODE = 0 // set-time aidMode = 0
         private const val NEEDLE_CHECK_TIMEOUT_MS = 90_000L // physical cannula insertion may take a while
         private const val NEEDLE_ACK_TIMEOUT_MS = 5_000L // the patch answers at once; it must not hold up the wizard
-        private const val SAFETY_PROGRESS_HEADROOM_SEC = 30 // Progress timeout = firstFrame.durationSeconds + 30
+        /** Added to the check duration the patch sends: Progress timeout = firstFrame.durationSeconds + 30. */
+        internal const val SAFETY_PROGRESS_HEADROOM_SEC = 30
     }
 
     private val _safetyProgress = MutableSharedFlow<SafetyProgress>(extraBufferCapacity = 16)

@@ -500,6 +500,33 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
     }
 
     @Test
+    fun `a frame with no real duration counts down the whole time limit`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        var tickZero: Pair<Int?, Long?>? = null
+        var halfway: Pair<Int?, Long?>? = null
+        var finished: Pair<Int?, Long?>? = null
+        // Progress(30) = a duration of 0 from the patch + the 30 s headroom. Before, the countdown stood still at 30.
+        stubCustomCommandEmitting(listOf(SafetyProgress.Progress(30L)), enactResult(true)) {
+            testScheduler.runCurrent()
+            tickZero = sut.progress.value to sut.remainSec.value
+            testScheduler.advanceTimeBy(15.seconds)
+            testScheduler.runCurrent()
+            halfway = sut.progress.value to sut.remainSec.value
+            testScheduler.advanceTimeBy(15.seconds)
+            testScheduler.runCurrent()
+            finished = sut.progress.value to sut.remainSec.value
+        }
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+
+        assertThat(tickZero).isEqualTo(0 to 30L)
+        assertThat(halfway).isEqualTo(50 to 15L)
+        assertThat(finished).isEqualTo(100 to 0L)
+    }
+
+    @Test
     fun `the ticker stops at a full bar and never overshoots its window`() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)

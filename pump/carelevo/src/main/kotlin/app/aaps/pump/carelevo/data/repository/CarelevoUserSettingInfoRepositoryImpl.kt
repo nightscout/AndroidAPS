@@ -28,8 +28,4 @@ class CarelevoUserSettingInfoRepositoryImpl @Inject constructor(
     override fun updateUserSettingInfo(info: CarelevoUserSettingInfoDomainModel): Boolean {
         return userSettingInfoDataSource.updateUserSettingInfo(info.transformToCarelevoUserSettingInfoEntity())
     }
-
-    override fun deleteUserSettingInfo(): Boolean {
-        return userSettingInfoDataSource.deleteUserSettingInfo()
-    }
 }

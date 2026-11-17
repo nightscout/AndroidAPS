@@ -23,8 +23,4 @@ class CarelevoUserSettingInfoDataSourceImpl @Inject constructor(
     override fun updateUserSettingInfo(info: CarelevoUserSettingInfoEntity): Boolean {
         return userSettingInfoDao.updateUserSetting(info)
     }
-
-    override fun deleteUserSettingInfo(): Boolean {
-        return userSettingInfoDao.deleteUserSetting()
-    }
 }

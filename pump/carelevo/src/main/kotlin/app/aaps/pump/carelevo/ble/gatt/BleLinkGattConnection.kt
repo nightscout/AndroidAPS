@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.pump.ble.WriteType
 import app.aaps.pump.carelevo.ble.CarelevoGatt
 import app.aaps.pump.carelevo.ext.convertBytesToHex
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -74,9 +75,12 @@ class BleLinkGattConnection(
         if (result is BleResult.Failed) throw GattDiscoveryException("notifications not enabled: ${result.failure}")
     }
 
-    /** Ends the link. Safe to call more than once; an operation waiting on the link fails with it. */
+    /**
+     * Ends the link. Safe to call more than once; an operation waiting on the link fails with it.
+     * The close runs also when [scope] is already cancelled: it starts in any case and is not cut once started.
+     */
     override fun close() {
-        scope.launch(NonCancellable) { link.close() }
+        scope.launch(start = CoroutineStart.ATOMIC) { withContext(NonCancellable) { link.close() } }
     }
 
     /** Closes the link before the caller goes on, as a session ends: the next connect must find it closed. */

@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.carelevo.command.CarelevoActivationExecutor
+import app.aaps.pump.carelevo.command.CarelevoActivationExecutor.Companion.SAFETY_PROGRESS_HEADROOM_SEC
 import app.aaps.pump.carelevo.command.CmdAdditionalPriming
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdSafetyCheck
@@ -163,7 +164,9 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     }
 
     private fun startTicker(sec: Long) {
-        val timeoutSec = sec - 30
+        // The bar shows the check's own duration, without the headroom the executor added. A frame with no real
+        // duration counts down the whole time limit instead, so the countdown never stands still.
+        val timeoutSec = if (sec > SAFETY_PROGRESS_HEADROOM_SEC) sec - SAFETY_PROGRESS_HEADROOM_SEC else sec
         stopTicker()
 
         // Ticks 0..timeoutSec, the first at once and then one a second.

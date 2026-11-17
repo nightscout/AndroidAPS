@@ -9,5 +9,4 @@ interface CarelevoUserSettingInfoRepository {
     fun getUserSettingInfoBySync(): CarelevoUserSettingInfoDomainModel?
 
     fun updateUserSettingInfo(info: CarelevoUserSettingInfoDomainModel): Boolean
-    fun deleteUserSettingInfo(): Boolean
 }

@@ -16,11 +16,15 @@ import app.aaps.core.interfaces.pump.ble.PeripheralLink
 import app.aaps.core.interfaces.pump.ble.WriteType
 import app.aaps.pump.carelevo.ble.CarelevoGatt
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -133,6 +137,22 @@ internal class BleLinkGattConnectionTest {
         val gatt = BleLinkGattConnection(link, backgroundScope, aapsLogger)
 
         gatt.closeNow()
+
+        assertThat(link.state.value).isEqualTo(LinkState.Closed)
+        assertThat(patch.link).isNull()
+    }
+
+    /** A session that ends cancels its scope first and closes the link after; the link must still close. */
+    @Test
+    fun `close ends the link also when its scope is already cancelled`() = runTest {
+        val patch = Patch()
+        val link = (central(patch).connect(patch.device) as BleResult.Ok).value
+        val sessionScope = CoroutineScope(StandardTestDispatcher(testScheduler) + Job())
+        val gatt = BleLinkGattConnection(link, sessionScope, aapsLogger)
+        sessionScope.cancel()
+
+        gatt.close()
+        advanceUntilIdle()
 
         assertThat(link.state.value).isEqualTo(LinkState.Closed)
         assertThat(patch.link).isNull()

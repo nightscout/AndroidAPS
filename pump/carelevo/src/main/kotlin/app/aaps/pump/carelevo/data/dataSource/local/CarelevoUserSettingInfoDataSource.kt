@@ -9,5 +9,4 @@ interface CarelevoUserSettingInfoDataSource {
     fun getUserSettingInfoBySync(): CarelevoUserSettingInfoEntity?
 
     fun updateUserSettingInfo(info: CarelevoUserSettingInfoEntity): Boolean
-    fun deleteUserSettingInfo(): Boolean
 }

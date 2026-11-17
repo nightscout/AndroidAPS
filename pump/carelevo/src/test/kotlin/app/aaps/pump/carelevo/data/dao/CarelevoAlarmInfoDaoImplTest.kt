@@ -31,6 +31,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 /**
  * Unit coverage for [CarelevoAlarmInfoDaoImpl].
@@ -391,6 +394,29 @@ internal class CarelevoAlarmInfoDaoImplTest {
         val stored = sut.firstAlarms()!!
         assertThat(stored).hasSize(1)
         assertThat(stored.single().occurrenceCount).isEqualTo(3)
+    }
+
+    @Test
+    fun `two alarm writes that overlap are both kept`() {
+        sut.firstAlarms()
+        val firstWriteStarted = CountDownLatch(1)
+        doAnswer {
+            firstWriteStarted.countDown()
+            // Hold each write long enough for the other one to start.
+            Thread.sleep(200)
+            store[it.getArgument<StringNonPreferenceKey>(0)] = it.getArgument<String>(1)
+            null
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
+
+        val first = thread { sut.upsertAlarm(entity(alarmId = "a", cause = AlarmCause.ALARM_WARNING_LOW_BATTERY)) }
+        assertThat(firstWriteStarted.await(5, TimeUnit.SECONDS)).isTrue()
+        val second = thread { sut.upsertAlarm(entity(alarmId = "b", cause = AlarmCause.ALARM_WARNING_PUMP_CLOGGED)) }
+        first.join()
+        second.join()
+
+        assertThat(sut.getAlarmsOnce().map { it.alarmId }).containsExactly("a", "b")
+        // Stored too: a new store object reads both back.
+        assertThat(CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce().map { it.alarmId }).containsExactly("a", "b")
     }
 
     // ---------------------------------------------------------------------------------------------

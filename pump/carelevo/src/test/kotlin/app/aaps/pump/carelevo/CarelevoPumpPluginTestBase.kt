@@ -46,7 +46,6 @@ import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoConnectionCoordinator
-import app.aaps.pump.carelevo.coordinator.CarelevoSettingsCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoTempBasalCoordinator
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
@@ -60,7 +59,6 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoCancelImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
-import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
 import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -117,8 +115,6 @@ abstract class CarelevoPumpPluginTestBase {
     @Mock lateinit var cancelImmeBolusInfusionUseCase: CarelevoCancelImmeBolusInfusionUseCase
     @Mock lateinit var cancelExtendBolusInfusionUseCase: CarelevoCancelExtendBolusInfusionUseCase
     @Mock lateinit var finishImmeBolusInfusionUseCase: CarelevoFinishImmeBolusInfusionUseCase
-
-    @Mock lateinit var deleteUserSettingInfoUseCase: CarelevoDeleteUserSettingInfoUseCase
 
     @Mock lateinit var carelevoAlarmNotifier: CarelevoAlarmNotifier
     @Mock lateinit var uiInteraction: UiInteraction
@@ -224,11 +220,6 @@ abstract class CarelevoPumpPluginTestBase {
             carelevoPatch = carelevoPatch,
             bleSession = bleSession
         )
-        val settingsCoordinator = CarelevoSettingsCoordinator(
-            aapsLogger = aapsLogger,
-            deleteUserSettingInfoUseCase = deleteUserSettingInfoUseCase
-        )
-
         plugin = CarelevoPumpPlugin(
             aapsLogger = aapsLogger,
             rh = rh,
@@ -249,7 +240,6 @@ abstract class CarelevoPumpPluginTestBase {
             bolusCoordinator = bolusCoordinator,
             tempBasalCoordinator = tempBasalCoordinator,
             connectionCoordinator = connectionCoordinator,
-            settingsCoordinator = settingsCoordinator,
             activationExecutor = activationExecutor,
             notificationManager = mock()
         )

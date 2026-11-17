@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
@@ -29,7 +28,7 @@ import org.mockito.quality.Strictness
  *
  * The DAO persists a single JSON blob under [CarelevoStringNonKey.UserSettingInfo] via [Preferences]
  * and caches the parsed entity in an internal stream that keeps its last value. We back the mocked [Preferences]
- * with an in-memory map (the "fake preferences" approach) so save/load/update/delete really
+ * with an in-memory map (the "fake preferences" approach) so save/load/update really
  * round-trip through the real gson used by production code, and we can spawn a fresh DAO instance
  * sharing the same store to exercise the cold-read (cache-miss) branches.
  */
@@ -68,7 +67,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
     @BeforeEach
     fun setUp() {
         // Fake preferences backed by [store]: get reads the map (falling back to the key's own
-        // default), put writes it, remove deletes it.
+        // default), put writes it.
         whenever(preferences.get(any<StringNonPreferenceKey>())).thenAnswer { inv ->
             val key = inv.getArgument<StringNonPreferenceKey>(0)
             store[key.key] ?: key.defaultValue
@@ -77,10 +76,6 @@ internal class CarelevoUserSettingInfoDaoImplTest {
             store[inv.getArgument<StringNonPreferenceKey>(0).key] = inv.getArgument<String>(1)
             null
         }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
-        doAnswer { inv ->
-            store.remove(inv.getArgument<NonPreferenceKey>(0).key)
-            null
-        }.whenever(preferences).remove(any<NonPreferenceKey>())
 
         sut = CarelevoUserSettingInfoDaoImpl(preferences)
     }
@@ -191,37 +186,6 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
     // endregion
 
-    // region deleteUserSetting
-
-    @Test
-    fun `deleteUserSetting removes the preference and returns true`() {
-        sut.updateUserSetting(sampleSetting())
-
-        assertThat(sut.deleteUserSetting()).isTrue()
-
-        verify(preferences).remove(any<NonPreferenceKey>())
-        assertThat(store).doesNotContainKey(CarelevoStringNonKey.UserSettingInfo.key)
-    }
-
-    @Test
-    fun `deleteUserSetting clears the cache so later reads return null without touching preferences`() {
-        sut.updateUserSetting(sampleSetting())
-
-        assertThat(sut.deleteUserSetting()).isTrue()
-        assertThat(sut.getUserSettingBySync()).isNull()
-
-        verify(preferences, never()).get(any<StringNonPreferenceKey>())
-    }
-
-    @Test
-    fun `deleteUserSetting returns false when removal throws`() {
-        doThrow(RuntimeException("io error")).whenever(preferences).remove(any<NonPreferenceKey>())
-
-        assertThat(sut.deleteUserSetting()).isFalse()
-    }
-
-    // endregion
-
     // region round-trip across DAO instances (cold read / cache-miss branches)
 
     @Test
@@ -242,17 +206,6 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
 
         assertThat(runBlocking { fresh.getUserSetting().first() }).isEqualTo(setting)
-    }
-
-    @Test
-    fun `deleted setting reads back as null on a fresh DAO instance`() {
-        sut.updateUserSetting(sampleSetting())
-        sut.deleteUserSetting()
-
-        val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
-
-        assertThat(fresh.getUserSettingBySync()).isNull()
-        assertThat(runBlocking { fresh.getUserSetting().first() }).isNull()
     }
 
     // endregion
