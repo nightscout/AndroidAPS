@@ -154,4 +154,18 @@ internal class MedtronicOverviewViewModelTest {
         val reservoirRow = rows.first { it.label == "Reservoir" }
         assertThat(reservoirRow.level).isEqualTo(StatusLevel.CRITICAL)
     }
+
+    @Test
+    fun infoRows_showTheOrangeLinkBatteryVoltageOnlyWhenKnown() {
+        whenever(rh.gs(R.string.rl_battery_voltage_label)).thenReturn("Link voltage")
+        whenever(rh.gs(R.string.rl_battery_voltage_value, 2.93)).thenReturn("2.93 V")
+
+        whenever(rileyLinkServiceData.orangeBatteryMillivolts).thenReturn(null)
+        val without = createViewModel().uiState.value.infoRows.filterIsInstance<PumpInfoRow>()
+        assertThat(without.map { it.label }).doesNotContain("Link voltage")
+
+        whenever(rileyLinkServiceData.orangeBatteryMillivolts).thenReturn(2930)
+        val with = createViewModel().uiState.value.infoRows.filterIsInstance<PumpInfoRow>()
+        assertThat(with.first { it.label == "Link voltage" }.value).isEqualTo("2.93 V")
+    }
 }

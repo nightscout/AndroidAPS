@@ -43,6 +43,8 @@
 
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Battery</string>
+    <string name="rl_battery_voltage_label">RileyLink Battery Voltage</string>
+    <string name="rl_battery_voltage_value">%1$.2f V</string>
 
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_invalid">Serial # invalid.</string>
