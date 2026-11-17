@@ -108,8 +108,11 @@ class PodEmulator(
      * Omnipod 5 pod (firmware 9.0.4): the pairing ended as done, no session came up in that try or in a later one, and
      * the same pod then took a new pairing and worked.
      *
-     * UNVERIFIED: why. Here the pod keeps no key from that pairing, so it answers no session request and a scan still
-     * finds it as a new pod. What the real pod held is not known.
+     * As on that pod: no session request is answered, and a scan still finds the pod as a new one. The real pod also
+     * closed the link at each session request, at once the first time and after 4 s later on; here the link stays up
+     * and the driver's wait runs out, which ends the same for the driver.
+     *
+     * UNVERIFIED: why, and what the real pod held. Here the pod keeps no key from that pairing.
      */
     @Synchronized fun loseNextPairingKey(): Boolean {
         nextPairingKeyLost = true
