@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.storage
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -12,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mockingDetails
 
 class StorageConstraintPluginTest : TestBase() {
 
@@ -43,4 +45,25 @@ class StorageConstraintPluginTest : TestBase() {
         mocked.memSize = 300L
         assertThat(mocked.isClosedLoopAllowed(ConstraintObject(true, aapsLogger)).value()).isTrue()
     }
+
+    @Test fun `exactly the minimum free space still allows the closed loop`() = runTest {
+        val mocked = MockedStorageConstraintPlugin(aapsLogger, rh, notificationManager)
+        mocked.memSize = 200L
+
+        assertThat(mocked.isClosedLoopAllowed(ConstraintObject(true, aapsLogger)).value()).isTrue()
+        assertThat(postedNotifications()).isEmpty()
+    }
+
+    @Test fun `a full disk says why and tells the user`() = runTest {
+        val mocked = MockedStorageConstraintPlugin(aapsLogger, rh, notificationManager)
+        mocked.memSize = 150L
+
+        val allowed = mocked.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
+
+        assertThat(allowed.getReasons()).contains("Free at least 200 MB from internal storage! Loop disabled!")
+        assertThat(postedNotifications()).containsExactly(NotificationId.DISK_FULL)
+    }
+
+    private fun postedNotifications(): List<NotificationId> =
+        mockingDetails(notificationManager).invocations.filter { it.method.name == "post" }.map { it.arguments[0] as NotificationId }
 }
