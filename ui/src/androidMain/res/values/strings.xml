@@ -395,6 +395,7 @@
     <string name="food_value_at_least" comment="A total of fat, protein or energy known for only part of the foods of a meal: the real value is at least this one. %1$s=the number. Example: >12 (shown as F: >12 g)">&gt;%1$s</string>
     <string name="food_photo_camera_refused">The camera is needed to take a photo.</string>
     <string name="food_off_not_found">No product found.</string>
+    <string name="food_off_prepared_too" comment="In the food editor after an import. %1$s = carbs of the prepared product with unit, %2$s = g or ml. Example: These values are for the product as sold. Open Food Facts also has the prepared product: 8.5 g of carbs per 100 ml. Change the values if you weigh it prepared.">These values are for the product as sold. Open Food Facts also has the prepared product: %1$s of carbs per 100 %2$s. Change the values if you weigh it prepared.</string>
     <string name="food_barcode_make_food">Make the food with this barcode</string>
     <string name="food_barcode_known_title">Already in your list</string>
     <string name="food_barcode_known_text">This barcode is already in your list. Tap a food to open it, or make another food for the same product, for example for another portion.</string>

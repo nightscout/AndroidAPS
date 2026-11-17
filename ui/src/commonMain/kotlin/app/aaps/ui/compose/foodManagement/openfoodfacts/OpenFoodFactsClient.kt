@@ -42,6 +42,12 @@ data class OffProduct(
     val servingQuantity: Double? = null,
     /** The small (200 px) photo of the front of the package, or null when OFF has none. */
     val imageUrl: String? = null,
+    /**
+     * Carbs per 100 g (or ml) of the prepared product, when OFF has them: a powder (soup, cocoa,
+     * mashed potatoes) or dry pasta, whose values as sold are far from the values as eaten. The
+     * other values are always the values as sold.
+     */
+    val carbsPreparedPer100: Double? = null,
 )
 
 /** The answer to one OFF lookup. */
@@ -192,6 +198,7 @@ internal class OpenFoodFactsClient(
             servingSize = product.text("serving_size"),
             servingQuantity = product.number("serving_quantity")?.takeIf { it > 0 && it.isFinite() },
             imageUrl = product.text("image_front_small_url")?.takeIf { isOffImageUrl(it) },
+            carbsPreparedPer100 = nutriments?.number("carbohydrates_prepared_100g"),
         )
     }
 

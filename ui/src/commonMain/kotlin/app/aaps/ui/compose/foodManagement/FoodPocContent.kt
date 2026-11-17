@@ -303,6 +303,15 @@ internal fun OffEditorBanner(product: OffProduct, perServing: Boolean, onPerServ
         if (product.carbsPer100 == null) {
             Text(stringResource(UiStrings.food_off_no_carbs), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
         }
+        // The values are as sold. When OFF also has the prepared product (dry pasta, a soup powder),
+        // the user is told: counting cooked pasta with the values of dry pasta gives about twice the carbs.
+        product.carbsPreparedPer100?.let { prepared ->
+            Text(
+                text = stringResource(UiStrings.food_off_prepared_too, grams(prepared), baseUnit),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
         OffNotice(text = stringResource(UiStrings.food_off_warning_short), details = stringResource(UiStrings.food_off_warning))
     }
 }

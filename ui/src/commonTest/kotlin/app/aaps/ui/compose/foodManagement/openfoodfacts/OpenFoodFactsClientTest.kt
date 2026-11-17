@@ -48,6 +48,20 @@ class OpenFoodFactsClientTest {
     }
 
     @Test
+    fun `the carbs of the prepared product are read apart, the values stay as sold`() = runTest {
+        val body = """{"status":1,"product":{"code":"1","product_name":"Soupe","nutriments":{"carbohydrates_100g":62,"carbohydrates_prepared_100g":"5.1"}}}"""
+        val product = assertIs<OffResult.Found>(client(body = body).productByBarcode("12345678")).products.single()
+        assertEquals(62.0, product.carbsPer100)
+        assertEquals(5.1, product.carbsPreparedPer100)
+    }
+
+    @Test
+    fun `a product without prepared values has none`() = runTest {
+        val product = assertIs<OffResult.Found>(client(body = PRODUCT).productByBarcode("3017620422003")).products.single()
+        assertNull(product.carbsPreparedPer100)
+    }
+
+    @Test
     fun `energy in kcal only is turned into kJ`() = runTest {
         val body = """{"status":1,"product":{"code":"1","product_name":"X","nutriments":{"energy-kcal_100g":100}}}"""
         val product = assertIs<OffResult.Found>(client(body = body).productByBarcode("12345678")).products.single()
