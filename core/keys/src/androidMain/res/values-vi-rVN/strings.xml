@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">Nút làm đầy 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Liều Bolus tối đa</string>
+    <string name="treatmentssafety_maxbolus_summary">Độ tuổi bệnh nhân đã chọn giới hạn giá trị này. Việc thiết lập giá trị cao hơn tại đây sẽ không có tác dụng.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Tỷ lệ liều nền tối đa</string>
+    <string name="openapsma_max_basal_summary">Trong OpenAPS, giá trị này được gọi là liều nền tối đa\nĐộ tuổi bệnh nhân đã chọn giới hạn giá trị này. Việc thiết lập giá trị cao hơn tại đây sẽ không có tác dụng.</string>
     <string name="pref_title_smb_max_iob">IOB tối đa cho SMB</string>
+    <string name="openapssmb_max_iob_summary">Trong OpenAPS, giá trị này được gọi là IOB tối đa (Max IOB)\nOpenAPS sẽ không phân phối thêm insulin nếu IOB hiện tại lớn hơn giá trị này.\nĐộ tuổi bệnh nhân đã chọn giới hạn giá trị này. Việc thiết lập giá trị cao hơn tại đây sẽ không có tác dụng.</string>
     <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
+    <string name="openapsma_max_iob_summary">Trong OpenAPS, giá trị này được gọi là IOB tối đa (Max IOB)\nĐây là lượng insulin tối đa (đơn vị U) mà APS có thể phân phối trong một lần.\nĐộ tuổi bệnh nhân đã chọn giới hạn giá trị này. Việc thiết lập giá trị cao hơn tại đây sẽ không có tác dụng.</string>
     <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Giá trị mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Thiết lập này giới hạn liều nền ở mức tối đa gấp 3 lần tốc độ liều nền cao nhất của bạn. Có thể bạn sẽ không cần thay đổi giá trị này, nhưng cần hiểu rằng đây chính là nội dung được đề cập trong nguyên tắc giới hạn an toàn “gấp 3 lần mức tối đa trong ngày; gấp 4 lần mức hiện tại”.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
