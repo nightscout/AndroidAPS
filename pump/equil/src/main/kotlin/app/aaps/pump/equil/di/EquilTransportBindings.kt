@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.ble.EquilBleTransportImpl
@@ -35,10 +36,12 @@ object EquilTransportBindings {
         config: Config,
         equilBleTransportImpl: EquilBleTransportImpl,
         aapsLogger: AAPSLogger,
-        preferences: Preferences
+        preferences: Preferences,
+        pumpEmulators: PumpEmulators
     ): EquilBleTransport {
         return if (config.isEnabled(ExternalOptions.EMULATE_EQUIL)) {
-            val pumpEmulator = EquilPumpEmulator(aapsLogger = aapsLogger)
+            // The same pod after a test restarts the app: it runs on, as a real one would. The radio is new.
+            val pumpEmulator = pumpEmulators.getOrCreate(EquilPumpEmulator.KEY) { EquilPumpEmulator(aapsLogger = aapsLogger) }
             EquilEmulatorBleTransport(
                 emulator = pumpEmulator,
                 aapsLogger = aapsLogger,

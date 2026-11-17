@@ -1,16 +1,23 @@
 package app.aaps.plugins.aps.autotune
 
-import android.view.View
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
+import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,6 +25,8 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -122,6 +131,14 @@ class AutotunePluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.autotune_result)).thenReturn("Result %1\$s")
         whenever(rh.gs(R.string.autotune_log_separator)).thenReturn("-")
         whenever(rh.gs(R.string.autotune_log_title)).thenReturn("title")
+        // The result table. Asked as TextRef now, and the shared stubs refuse a string no test stubbed.
+        whenever(rh.gs(R.string.autotune_log_ic_isf)).thenReturn("ic_isf")
+        whenever(rh.gs(R.string.autotune_log_basal)).thenReturn("basal")
+        whenever(rh.gs(R.string.autotune_log_sum_basal)).thenReturn("sum")
+        whenever(rh.gs(app.aaps.core.ui.R.string.isf_short)).thenReturn("ISF")
+        whenever(rh.gs(app.aaps.core.ui.R.string.ic_short)).thenReturn("IC")
+        whenever(rh.gs(app.aaps.core.ui.R.string.autotune)).thenReturn("Autotune")
+        whenever(rh.gs(app.aaps.core.ui.R.string.invalid_profile)).thenReturn("Invalid profile")
         // A name absent from the store keeps updateProfile() on its "add a new profile" branch, which needs no
         // pre-populated profile list. The empty profileToTune then tunes the running EffectiveProfile.
         whenever(profileFunction.getProfileName()).thenReturn("NotInStore")
@@ -141,7 +158,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
             anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
         )
         assertThat(autotunePlugin.result).isEqualTo("No insulin in use")
-        assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(View.VISIBLE)
+        assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(AutotunePlugin.UPDATE_BUTTON_SHOWN)
     }
 
     // Counterpart to the skip above: autotune tunes basal/IC/ISF only, so the switch it writes carries the insulin
@@ -168,6 +185,87 @@ class AutotunePluginTest : TestBaseWithProfile() {
         runOneTunedDay(autoSwitch = true)
 
         assertThat(autotunePlugin.result).isEqualTo("The pump cannot take it")
-        assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(View.VISIBLE)
+        assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(AutotunePlugin.UPDATE_BUTTON_SHOWN)
+    }
+
+    // A day with no glucose values gives no prepared data. The run must end with an error, as for a day with no
+    // treatments, and not go on as if the day was tuned.
+    @Test fun `a day with no prepared data ends the run with an error`() = runBlocking {
+        whenever(autotuneIob.boluses).thenReturn(arrayListOf(BS(timestamp = 0, amount = 1.0, type = BS.Type.NORMAL, iCfg = someICfg)))
+        whenever(autotunePrep.categorize(any())).thenReturn(null)
+        whenever(rh.gs(R.string.autotune_error)).thenReturn("Autotune error")
+
+        autotunePlugin.aapsAutotune(daysBack = 1, autoSwitch = false, profileToTune = "", weekDays = BooleanArray(7) { true })
+
+        assertThat(autotunePlugin.result).isEqualTo("Autotune error")
+        assertThat(autotunePlugin.calculationRunning).isFalse()
+        verify(autotuneCore, never()).tuneAllTheThings(any(), any(), any())
+        verify(autotuneFS, never()).zipAutotune(any())
+    }
+
+    // The settings file is for running oref0 autotune on a computer with the same data, so its text is pinned:
+    // the dates, the zone and the commands must stay what they are.
+    @Test fun `the oref0 settings file`() {
+        inZone("Europe/Prague") {
+            runBlocking {
+                whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(inForceICfg)
+                whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("https://my.nightscout/site")
+                whenever(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(true)
+
+                autotunePlugin.aapsAutotune(daysBack = 3, autoSwitch = false, profileToTune = TESTPROFILENAME, weekDays = noDays)
+
+                val captor = argumentCaptor<String>()
+                verify(autotuneFS).exportSettings(captor.capture())
+                AutotuneGolden.assertMatches("settings.json", AutotuneGolden.json(captor.firstValue))
+            }
+        }
+    }
+
+    /** The last run as it was saved, read back as JSON. */
+    private fun savedLastRun(): JsonObject {
+        val captor = argumentCaptor<String>()
+        verify(preferences, atLeastOnce()).put(eq(AutotuneStringKey.AutotuneLastRun), captor.capture())
+        return Json.parseToJsonElement(captor.lastValue).jsonObject
+    }
+
+    // The saved last run keeps the button state as a number. Older builds wrote 0 for shown and 8 for hidden, and a
+    // saved run is read back after an update, so the numbers must not change.
+    @Test fun `a run without auto switch saves the update button as shown`() = runBlocking {
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(inForceICfg)
+
+        runOneTunedDay(autoSwitch = false)
+
+        assertThat(savedLastRun()["updateButtonVisibility"]?.jsonPrimitive?.int).isEqualTo(0)
+    }
+
+    @Test fun `a run with a done auto switch saves the update button as hidden`() = runBlocking {
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(inForceICfg)
+        whenever(
+            profileFunction.createProfileSwitch(
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+            )
+        ).thenReturn(profileSwitch)
+
+        runOneTunedDay(autoSwitch = true)
+
+        assertThat(savedLastRun()["updateButtonVisibility"]?.jsonPrimitive?.int).isEqualTo(8)
+    }
+
+    @Test fun `a saved run with a hidden button reads back hidden`() = runBlocking {
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(inForceICfg)
+        whenever(
+            profileFunction.createProfileSwitch(
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+            )
+        ).thenReturn(profileSwitch)
+        runOneTunedDay(autoSwitch = true)
+        val saved = savedLastRun().toString()
+        whenever(preferences.get(AutotuneStringKey.AutotuneLastRun)).thenReturn(saved)
+
+        autotunePlugin.updateButtonVisibility = AutotunePlugin.UPDATE_BUTTON_SHOWN
+        autotunePlugin.loadLastRun()
+
+        assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(AutotunePlugin.UPDATE_BUTTON_HIDDEN)
+        assertThat(autotunePlugin.lastRunSuccess).isTrue()
     }
 }

@@ -1,0 +1,1243 @@
+== file autotune/aaps-autotune.2022-05-22.json
+{
+  "CRData": [],
+  "CSFGlucoseData": [],
+  "ISFGlucoseData": [],
+  "basalGlucoseData": []
+}
+== file autotune/aaps-boluses.2022-05-22.json
+["boluses"]
+== file autotune/aaps-entries.2022-05-22.json
+["glucose"]
+== file autotune/aaps-treatments.2022-05-22.json
+["treatments"]
+== file autotune/autotune.2022-05-24.log
+[FS] Create autotune_recommendations.log file in autotune folder
+a line of my own
+[FS] Create autotune.2022-05-24.log file in autotune folder
+
+== file autotune/autotune.2022-05-24_1.log
+[FS] Create autotune subfolder in <logDirectory>
+[FS] Create settings subfolder in <logDirectory>
+[FS] Delete previous Autotune files
+[FS] Create settings.json file in settings folder
+[FS] Create pumpprofile.json file in settings folder
+[FS] Create pumpprofile.json file in autotune folder
+[FS] Create aaps-entries.2022-05-22.json file in autotune folder
+[FS] Create aaps-treatments.2022-05-22.json file in autotune folder
+[FS] Create aaps-boluses.2022-05-22.json file in autotune folder
+[FS] Create aaps-autotune.2022-05-22.json file in autotune folder
+[FS] Create newaapsprofile.2022-05-22.json file in autotune folder
+[FS] Create Tuned profile.json file in settings folder
+[FS] Create autotune.2022-05-24_1.log file in autotune folder
+
+== file autotune/autotune_recommendations.log
+result text
+== file autotune/newaapsprofile.2022-05-22.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+== file autotune/pumpprofile.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+== file autotune_2022-05-24_01-45-10.zip
+-- entry autotune/aaps-autotune.2022-05-22.json
+{
+  "CRData": [],
+  "CSFGlucoseData": [],
+  "ISFGlucoseData": [],
+  "basalGlucoseData": []
+}
+-- entry autotune/aaps-boluses.2022-05-22.json
+["boluses"]
+-- entry autotune/aaps-entries.2022-05-22.json
+["glucose"]
+-- entry autotune/aaps-treatments.2022-05-22.json
+["treatments"]
+-- entry autotune/autotune.2022-05-24.log
+[FS] Create autotune_recommendations.log file in autotune folder
+a line of my own
+[FS] Create autotune.2022-05-24.log file in autotune folder
+
+-- entry autotune/autotune.2022-05-24_1.log
+[FS] Create autotune subfolder in <logDirectory>
+[FS] Create settings subfolder in <logDirectory>
+[FS] Delete previous Autotune files
+[FS] Create settings.json file in settings folder
+[FS] Create pumpprofile.json file in settings folder
+[FS] Create pumpprofile.json file in autotune folder
+[FS] Create aaps-entries.2022-05-22.json file in autotune folder
+[FS] Create aaps-treatments.2022-05-22.json file in autotune folder
+[FS] Create aaps-boluses.2022-05-22.json file in autotune folder
+[FS] Create aaps-autotune.2022-05-22.json file in autotune folder
+[FS] Create newaapsprofile.2022-05-22.json file in autotune folder
+[FS] Create Tuned profile.json file in settings folder
+[FS] Create autotune.2022-05-24_1.log file in autotune folder
+
+-- entry autotune/autotune_recommendations.log
+result text
+-- entry autotune/newaapsprofile.2022-05-22.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+-- entry autotune/pumpprofile.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+-- entry settings/Tuned profile.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+-- entry settings/pumpprofile.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+-- entry settings/settings.json
+{"settings":1}
+== file settings/Tuned profile.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+== file settings/pumpprofile.json
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.8,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.8,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.8,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.8,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.8,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.8,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 0.8,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 0.8,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 0.8,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 0.8,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 0.8,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 0.8,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.8,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.8,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.8,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.8,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.8,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.8,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.8,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.8,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.8,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.8,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.8,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.8,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 10,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 50,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "Pump",
+  "timezone": "Pacific/Kiritimati",
+  "units": "mg/dl"
+}
+== file settings/settings.json
+{"settings":1}

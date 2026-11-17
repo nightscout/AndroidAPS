@@ -1,6 +1,7 @@
 package app.aaps.shared.impl.utils
 
 import android.content.Context
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterAll
@@ -27,12 +28,17 @@ class DateUtilImplOldTest() {
         fun setDefaultTimezoneUtc() {
             savedTimeZone = TimeZone.getDefault()
             TimeZone.setDefault(SimpleTimeZone(0, "UTC"))
+            // DateUtilImpl asks SystemTimeZone, which answers from its last read, so a default zone
+            // moved by a test has to be reported - as a device reports one through
+            // `TimeDateOrTZChangeReceiver`.
+            SystemTimeZone.invalidate()
         }
 
         @AfterAll
-        
+
         fun restoreDefaultTimezone() {
             TimeZone.setDefault(savedTimeZone)
+            SystemTimeZone.invalidate()
         }
     }
 

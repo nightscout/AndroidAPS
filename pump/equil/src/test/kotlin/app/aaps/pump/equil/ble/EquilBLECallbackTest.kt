@@ -211,6 +211,41 @@ class EquilBLECallbackTest : TestBase() {
         verify(gatt).close()
     }
 
+    // --- driver stop ---
+
+    @Test
+    fun `a driver stop fails the running command and closes the link`() {
+        initWithManager()
+        val cmd = waitingCommand()
+
+        equilBLE.stop()
+
+        assertTrue(cmd.failed)
+        assertFalse(equilBLE.isConnected)
+        verify(gatt).close()
+    }
+
+    /** A command still running at the stop connected again, and the stopped driver went on writing its pump state. */
+    @Test
+    fun `a stopped driver neither connects nor scans until it starts again`() {
+        initWithManager()
+        whenever(scanner.scannedDevices).thenReturn(MutableSharedFlow())
+        equilBLE.handler = mock<Handler>()
+        equilBLE.stop()
+
+        val cmd = CmdRunningModeGet(aapsLogger, mock(), equilManager)
+        equilBLE.writeCmd(cmd)
+        equilBLE.connect("test")
+
+        assertTrue(cmd.failed)
+        verify(scanner, never()).startScan()
+        verify(gatt, never()).connect(any())
+
+        equilBLE.start()
+        equilBLE.writeCmd(CmdRunningModeGet(aapsLogger, mock(), equilManager))
+        verify(scanner).startScan()
+    }
+
     // --- advertisement scan timeout (#5077) ---
 
     @Test

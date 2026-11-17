@@ -41,6 +41,8 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
 
@@ -138,6 +140,19 @@ internal class DanaOverviewViewModelTest {
         assertThat(state.statusBanner).isNull()
         assertThat(state.primaryActions.map { it.label }).containsExactly("Refresh", "History")
         assertThat(state.managementActions.map { it.label }).containsExactly("Pair")
+        assertThat(state.primaryActions.filter { it.visible }).isEmpty()
+    }
+
+    // A paired pump whose first status read failed: Refresh is the way to try again. History needs a pump that is ready.
+    @Test
+    fun pairedButNotReady_offersRefresh() {
+        whenever(activePump.isConfigured()).thenReturn(true)
+        whenever(activePump.isInitialized()).thenReturn(false)
+        whenever(danaPump.serialNumber).thenReturn("")
+
+        val state = createViewModel().uiState.value
+
+        assertThat(state.primaryActions.filter { it.visible }.map { it.label }).containsExactly("Refresh")
     }
 
     @Test
@@ -154,5 +169,14 @@ internal class DanaOverviewViewModelTest {
         assertThat(batteryRow.level).isEqualTo(StatusLevel.WARNING)
         // configured -> management offers Unpair, not Pair
         assertThat(state.managementActions.map { it.label }).contains("Unpair")
+    }
+
+    /** Refresh reads all again, but keeps the serial number: a read that runs at the tap still writes its records. */
+    @Test
+    fun refreshReadsAllAgainAndKeepsThePump() {
+        createViewModel().onRefreshClick()
+
+        verify(danaPump).readAllAgain()
+        verify(danaPump, never()).reset()
     }
 }

@@ -1,23 +1,15 @@
 package app.aaps.pump.diaconn.compose
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
-import android.bluetooth.le.ScanResult
-import android.bluetooth.le.ScanSettings
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.ParcelUuid
 import androidx.compose.runtime.Stable
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.diaconn.di.DiaconnBle
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import dev.zacsweers.metro.AppScope
@@ -30,7 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import java.util.UUID
+import kotlinx.coroutines.launch
 
 enum class DiaconnPairStep {
     BLE_SCAN,
@@ -56,7 +48,7 @@ class DiaconnPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,
-    private val context: Context
+    @param:DiaconnBle private val bleTransport: BleTransport
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DiaconnPairWizardUiState())
@@ -65,57 +57,28 @@ class DiaconnPairWizardViewModel(
     private val _events = MutableSharedFlow<DiaconnPairWizardEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DiaconnPairWizardEvent> = _events
 
-    private val serviceUUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
-    private val bluetoothAdapter get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    private val bluetoothLeScanner get() = bluetoothAdapter?.bluetoothLeScanner
-
-    private val scanCallback = object : ScanCallback() {
-        @SuppressLint("MissingPermission")
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val device = result.device ?: return
-            val name = device.name ?: return
-            if (name.isEmpty()) return
-
-            val scanned = ScannedDevice(name = name, address = device.address)
-            _uiState.update { current ->
-                if (current.devices.any { it.address == scanned.address }) current
-                else current.copy(devices = current.devices + scanned)
+    init {
+        // The transport finds only Diaconn pumps, or the emulated one.
+        viewModelScope.launch {
+            bleTransport.scanner.scannedDevices.collect { scanned ->
+                _uiState.update { current ->
+                    if (current.devices.any { it.address == scanned.address }) current
+                    else current.copy(devices = current.devices + scanned)
+                }
             }
         }
     }
 
-    @SuppressLint("MissingPermission")
     fun startScan() {
         aapsLogger.debug(LTag.PUMP, "DiaconnPairWizard: startScan")
-        // Without the permission Android throws a SecurityException, and the app ends
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            aapsLogger.error(LTag.PUMP, "DiaconnPairWizard: BLUETOOTH_SCAN permission missing, no scan")
-            return
-        }
-        try {
-            val filter = ScanFilter.Builder()
-                .setServiceUuid(ParcelUuid(serviceUUID))
-                .build()
-            val settings = ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build()
-            bluetoothLeScanner?.startScan(listOf(filter), settings, scanCallback)
-        } catch (_: IllegalStateException) {
-            // BT not on
-        }
+        bleTransport.scanner.startScan()
     }
 
-    @SuppressLint("MissingPermission")
     fun stopScan() {
         aapsLogger.debug(LTag.PUMP, "DiaconnPairWizard: stopScan")
-        try {
-            bluetoothLeScanner?.stopScan(scanCallback)
-        } catch (_: IllegalStateException) {
-            // BT not on
-        }
+        bleTransport.scanner.stopScan()
     }
 
-    @SuppressLint("MissingPermission")
     fun selectDevice(device: ScannedDevice) {
         aapsLogger.debug(LTag.PUMP, "DiaconnPairWizard: selected ${device.name} (${device.address})")
         stopScan()
@@ -124,7 +87,7 @@ class DiaconnPairWizardViewModel(
         preferences.put(DiaconnStringNonKey.Name, device.name)
 
         // Create bond
-        bluetoothAdapter?.getRemoteDevice(device.address)?.createBond()
+        bleTransport.adapter.createBond(device.address)
 
         rxBus.send(EventDiaconnG8DeviceChange())
         _uiState.update { it.copy(step = DiaconnPairStep.COMPLETE) }

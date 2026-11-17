@@ -166,6 +166,58 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         assertThat(createSut().isProfileChangePending()).isTrue()
     }
 
+    // #5486: compared with the mirror, because that is the factor every dose is converted with.
+    private suspend fun TestScope.sutRunning(running: Double?, requested: Double?): ProfileFunctionImpl {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(running?.let { effectiveProfileSwitch.copy(iCfg = someICfg.copy(concentration = it)) })
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong()))
+            .thenReturn(requested?.let { profileSwitch.copy(iCfg = someICfg.copy(concentration = it)) })
+        return createSut()
+    }
+
+    @Test
+    fun anotherConcentrationThanTheRunningOneIsPending() = runTest {
+        val sut = sutRunning(running = 1.0, requested = 2.0)
+        advanceUntilIdle()
+
+        assertThat(sut.isConcentrationChangePending()).isTrue()
+    }
+
+    @Test
+    fun theSameConcentrationIsNotPending() = runTest {
+        val sut = sutRunning(running = 2.0, requested = 2.0)
+        advanceUntilIdle()
+
+        assertThat(sut.isConcentrationChangePending()).isFalse()
+    }
+
+    /** With nothing running the conversions use 1.0, so a first profile with U200 is pending as well. */
+    @Test
+    fun aRequestedConcentrationWithNothingRunningIsPendingAgainstU100() = runTest {
+        val sut = sutRunning(running = null, requested = 2.0)
+        advanceUntilIdle()
+
+        assertThat(sut.isConcentrationChangePending()).isTrue()
+    }
+
+    @Test
+    fun nothingRequestedIsNotPending() = runTest {
+        val sut = sutRunning(running = 1.0, requested = null)
+        advanceUntilIdle()
+
+        assertThat(sut.isConcentrationChangePending()).isFalse()
+    }
+
+    @Test
+    fun theClientHasNoConcentrationChangePending() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val sut = sutRunning(running = 1.0, requested = 2.0)
+        advanceUntilIdle()
+
+        assertThat(sut.isConcentrationChangePending()).isFalse()
+    }
+
     /** On AAPSClient the EPS comes from the master: its originalPsId (999 here) is an id in the master's database. */
     private suspend fun clientRunsEpsWrittenAt(epsTimestamp: Long) {
         whenever(config.AAPSCLIENT).thenReturn(true)

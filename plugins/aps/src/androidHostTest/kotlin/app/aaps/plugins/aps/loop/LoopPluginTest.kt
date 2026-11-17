@@ -6,6 +6,7 @@ import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -27,10 +28,10 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -856,7 +857,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // …and the two entries this method adds arrived.
         assertThat(suggested.has("timestamp")).isTrue()
         assertThat(suggested.getDouble("isfMgdlForCarbs"))
-            .isWithin(0.001).of(effectiveProfile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(now)))
+            .isWithin(0.001).of(effectiveProfile.getIsfMgdlTimeFromMidnight(MidnightTime.secondsFromMidnight(now, SystemTimeZone.current())))
     }
 
     /** Older clients still read the finished value; it is the same average a newer client works out itself. */

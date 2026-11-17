@@ -2,9 +2,13 @@ package app.aaps.pump.danar.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.emulator.HistoryEvent
 import org.joda.time.DateTime
+import kotlin.math.roundToInt
 
 /**
  * Emulates DanaR pump command processing.
@@ -143,8 +147,8 @@ class DanaRPumpEmulator(
     }
 
     private fun handleInitConnStatusBolus(): ByteArray {
-        val bolusStepInt = (state.bolusStep * 100).toInt()
-        val maxBolusInt = (state.maxBolus * 100).toInt()
+        val bolusStepInt = (state.bolusStep * 100).roundToInt()
+        val maxBolusInt = (state.maxBolus * 100).roundToInt()
         return when (state.variant) {
             DanaRVariant.DANA_R_KOREAN -> {
                 // Korean: MsgInitConnStatusBolusK — 13+ bytes, byte[12] = deliveryStatus
@@ -191,9 +195,9 @@ class DanaRPumpEmulator(
             else                       -> {
                 // DanaR / v2: standard 22-byte layout
                 val dailyInt = (state.dailyTotalUnits * 750).toInt()
-                val maxDailyInt = (state.maxDailyTotalUnits * 100).toInt()
+                val maxDailyInt = (state.maxDailyTotalUnits * 100).roundToInt()
                 val reservoirInt = (state.reservoirRemainingUnits * 750).toInt()
-                val currentBasalInt = (state.currentBasal * 100).toInt()
+                val currentBasalInt = (state.currentBasal * 100).roundToInt()
 
                 byteArrayOf(
                     if (state.isSuspended) 0x01 else 0x00,           // 0: pumpSuspended
@@ -244,8 +248,8 @@ class DanaRPumpEmulator(
 
     private fun handleStatus(): ByteArray {
         val dailyInt = (state.dailyTotalUnits * 750).toInt()
-        val lastBolusInt = (state.lastBolusAmount * 100).toInt()
-        val iobInt = (state.iob * 100).toInt()
+        val lastBolusInt = (state.lastBolusAmount * 100).roundToInt()
+        val iobInt = (state.iob * 100).roundToInt()
 
         val result = ByteArray(17)
         // 0-2: daily total (3 bytes LE)
@@ -278,9 +282,9 @@ class DanaRPumpEmulator(
 
     private fun handleStatusBasic(): ByteArray {
         val dailyInt = (state.dailyTotalUnits * 750).toInt()
-        val maxDailyInt = (state.maxDailyTotalUnits * 100).toInt()
+        val maxDailyInt = (state.maxDailyTotalUnits * 100).roundToInt()
         val reservoirInt = (state.reservoirRemainingUnits * 750).toInt()
-        val currentBasalInt = (state.currentBasal * 100).toInt()
+        val currentBasalInt = (state.currentBasal * 100).roundToInt()
 
         return when (state.variant) {
             DanaRVariant.DANA_R_KOREAN -> {
@@ -326,13 +330,23 @@ class DanaRPumpEmulator(
         }
     }
 
+    /**
+     * MsgStatusTempBasal. An APS temp basal (15 or 30 minutes) has flag 0x02 and the duration code 150 or 160 instead of
+     * hours: UNVERIFIED on a DanaR, read from what the driver's parser looks for.
+     */
     private fun handleStatusTempBasal(): ByteArray {
         val running = state.isTempBasalRunning
-        val elapsed = if (running) ((System.currentTimeMillis() - state.tempBasalStartTime) / 1000).toInt() else 0
-        val durationCode = state.tempBasalDurationMinutes / 60
+        val elapsed = if (running) ((state.pumpTimeMillis - state.tempBasalStartTime) / 1000).toInt() else 0
+        val aps = running && state.tempBasalDurationMinutes < 60
+        val durationCode = when {
+            !aps                                -> state.tempBasalDurationMinutes / 60
+            state.tempBasalDurationMinutes == 15 -> APS_PARAM_15_MIN
+            else                                -> APS_PARAM_30_MIN
+        }
+        val flags = (if (running) 0x01 else 0x00) or (if (aps) 0x02 else 0x00)
 
         return byteArrayOf(
-            if (running) 0x01 else 0x00,                     // 0: status flags
+            flags.toByte(),                                   // 0: status flags
             state.tempBasalPercent.toByte(),                  // 1: percent
             durationCode.toByte(),                            // 2: duration code (hours)
             (elapsed and 0xFF).toByte(),                      // 3-5: running seconds (3 bytes LE)
@@ -341,9 +355,14 @@ class DanaRPumpEmulator(
         )
     }
 
+    /**
+     * MsgStatusBolusExtended. The seconds the extended bolus has run, from which the driver takes its start. Always 0
+     * before: each status read moved the start to "now", and 10 s later the DanaR driver took it for another extended
+     * bolus than the one AAPS had and stored it again.
+     */
     private fun handleStatusBolusExtended(): ByteArray {
-        val amountInt = (state.extendedBolusAmount * 100).toInt()
-        val elapsed = if (state.isExtendedBolusRunning) 0 else 0 // simplified
+        val amountInt = (state.extendedBolusAmount * 100).roundToInt()
+        val elapsed = if (state.isExtendedBolusRunning) ((state.pumpTimeMillis - state.extendedBolusStartTime) / 1000).toInt() else 0
 
         return byteArrayOf(
             if (state.isExtendedBolusRunning) 0x01 else 0x00, // 0: isExtendedInProgress
@@ -364,7 +383,7 @@ class DanaRPumpEmulator(
         val profile = state.basalProfiles[state.activeProfile]
         val result = ByteArray(48) // 24 * 2 bytes
         for (i in 0 until 24) {
-            val rateInt = (profile[i] * 100).toInt()
+            val rateInt = (profile[i] * 100).roundToInt()
             result[i * 2] = (rateInt shr 8).toByte()
             result[i * 2 + 1] = rateInt.toByte()
         }
@@ -373,8 +392,8 @@ class DanaRPumpEmulator(
 
     private fun handleSettingMeal(): ByteArray {
         val data = ByteArray(12)
-        data[0] = (state.basalStep * 100).toInt().toByte()  // basalStep (1 = 0.01 U/h)
-        data[1] = (state.bolusStep * 100).toInt().toByte()  // bolusStep (10 = 0.10 U)
+        data[0] = (state.basalStep * 100).roundToInt().toByte()  // basalStep (1 = 0.01 U/h)
+        data[1] = (state.bolusStep * 100).roundToInt().toByte()  // bolusStep (10 = 0.10 U)
         data[2] = 0x01                                       // bolus enabled
         // data[5] = isConfigUD (0 = U/h mode)
         return data
@@ -388,7 +407,7 @@ class DanaRPumpEmulator(
         val result = ByteArray(48 * 4) // 4 profiles * 24 hours * 2 bytes
         for (p in 0 until 4) {
             for (h in 0 until 24) {
-                val rateInt = (state.basalProfiles[p][h] * 100).toInt()
+                val rateInt = (state.basalProfiles[p][h] * 100).roundToInt()
                 val offset = p * 48 + h * 2
                 result[offset] = (rateInt shr 8).toByte()
                 result[offset + 1] = rateInt.toByte()
@@ -398,9 +417,9 @@ class DanaRPumpEmulator(
     }
 
     private fun handleSettingMaxValues(): ByteArray {
-        val maxBolusInt = (state.maxBolus * 100).toInt()
-        val maxBasalInt = (state.maxBasal * 100).toInt()
-        val maxDailyInt = (state.maxDailyTotalUnits * 100).toInt()
+        val maxBolusInt = (state.maxBolus * 100).roundToInt()
+        val maxBasalInt = (state.maxBasal * 100).roundToInt()
+        val maxDailyInt = (state.maxDailyTotalUnits * 100).roundToInt()
         return byteArrayOf(
             (maxBolusInt shr 8).toByte(), maxBolusInt.toByte(),
             (maxBasalInt shr 8).toByte(), maxBasalInt.toByte(),
@@ -431,7 +450,7 @@ class DanaRPumpEmulator(
 
     private fun handleSettingUserOptions(): ByteArray {
         // MsgSettingUserOptions reads data[32] for lowReservoirRate — must be at least 33 bytes
-        val data = ByteArray(33)
+        val data = ByteArray(USER_OPTIONS_SIZE)
         data[0] = if (state.timeDisplayType24) 0x00 else 0x01
         data[1] = if (state.buttonScroll) 0x01 else 0x00
         data[2] = state.beepAndAlarm.toByte()
@@ -440,7 +459,7 @@ class DanaRPumpEmulator(
         data[5] = 0 // selected language
         data[8] = state.glucoseUnit.toByte()
         data[9] = state.shutdownHour.toByte()
-        data[32] = state.lowReservoirRate.toByte()
+        data[USER_OPTIONS_SIZE - 1] = state.lowReservoirRate.toByte()
         return data
     }
 
@@ -448,38 +467,111 @@ class DanaRPumpEmulator(
 
     // --- Bolus ---
 
-    private fun handleBolusStart(params: ByteArray): ByteArray {
-        if (params.size >= 2) {
-            val amountInt = (params[0].toInt() and 0xFF shl 8) or (params[1].toInt() and 0xFF)
-            val amount = amountInt / 100.0
-            state.lastBolusAmount = amount
-            state.lastBolusTime = System.currentTimeMillis()
-            state.dailyTotalUnits += amount
-            state.reservoirRemainingUnits -= amount
-            state.historyStore.addEvent(DanaPump.HistoryEntry.BOLUS.value, state.lastBolusTime, amountInt, 0)
-            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ${amount}U")
+    /** How long a bolus takes, see [EmulatorSpeed]. */
+    @Volatile var speed: EmulatorSpeed = EmulatorSpeed.REAL
 
-            // Simulate bolus delivery progress (MsgBolusProgress 0x0202)
-            Thread {
-                @Suppress("SleepInsteadOfDelay")
-                val steps = 5
-                val stepAmount = amountInt / steps
-                for (i in 1..steps) {
-                    Thread.sleep(200)
-                    val remaining = amountInt - minOf(stepAmount * i, amountInt)
-                    // MsgBolusProgress response: 2 bytes remaining insulin (int16 big-endian)
-                    val progressData = byteArrayOf(
-                        (remaining shr 8 and 0xFF).toByte(),
-                        (remaining and 0xFF).toByte()
-                    )
-                    onAdditionalResponse?.invoke(0x0202, progressData)
-                }
-            }.start()
-        }
+    val bolusRunning: Boolean get() = state.runningBolus != null
+
+    /**
+     * Starts a bolus that the pump gives step by step, 0.05 U at 12 s/U, and reports what is left with MsgBolusProgress
+     * (0x0202): the whole amount at the start, then after each step. Seen on a real DanaRv2 (2026-11-10): a step every
+     * 0.59 s. A start while a bolus runs is refused, UNVERIFIED how.
+     */
+    private fun handleBolusStart(params: ByteArray): ByteArray {
+        if (params.size < 2 || state.runningBolus != null) return byteArrayOf(0x00)
+        val amountInt = (params[0].toInt() and 0xFF shl 8) or (params[1].toInt() and 0xFF)
+        val bolus = RunningBolus(amountInt)
+        state.runningBolus = bolus
+        aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ${amountInt / 100.0}U starts")
+        Thread { deliver(bolus) }.start()
         return byteArrayOf(0x02) // success code = 2
     }
 
-    private fun handleBolusStop(): ByteArray = byteArrayOf(0x00)
+    /**
+     * Gives [bolus] until it is all given or stopped, and sends MsgBolusStop (0x0101) at its end: the driver waits for
+     * that message to end a bolus (`MsgBolusStop.handleMessage` sets `bolusStopped`). Seen on a real DanaRv2
+     * (2026-11-10): a stop at 0.45 of 2 U gave 0.5, one more step than the last progress, and the pump had the bolus in
+     * its history and status about 2 s after the end.
+     */
+    private fun deliver(bolus: RunningBolus) {
+        val stepHundredths = if (state.variant == DanaRVariant.DANA_R_KOREAN) KOREAN_PROGRESS_STEP_HUNDREDTHS else PROGRESS_STEP_HUNDREDTHS
+        val msPerStep = SECONDS_PER_UNIT * 1000L * stepHundredths / 100 / (if (speed == EmulatorSpeed.FAST) FAST_DIVISOR else 1)
+        if (bolus.given == 0) {
+            // After the answer to the start, as on the real pump.
+            @Suppress("SleepInsteadOfDelay")
+            Thread.sleep(FIRST_PROGRESS_MS)
+            val all = bolus.hundredths
+            onAdditionalResponse?.invoke(0x0202, byteArrayOf((all shr 8 and 0xFF).toByte(), (all and 0xFF).toByte()))
+        }
+        while (bolus.given < bolus.hundredths && !bolus.stopped) {
+            @Suppress("SleepInsteadOfDelay")
+            Thread.sleep(msPerStep.coerceAtLeast(1L))
+            if (bolus.stopped) break
+            val step = minOf(stepHundredths, bolus.hundredths - bolus.given)
+            bolus.given += step
+            synchronized(state) { state.reservoirRemainingUnits -= step / 100.0 }
+            val remaining = bolus.hundredths - bolus.given
+            // MsgBolusProgress: 2 bytes remaining insulin (int16 big-endian)
+            onAdditionalResponse?.invoke(0x0202, byteArrayOf((remaining shr 8 and 0xFF).toByte(), (remaining and 0xFF).toByte()))
+        }
+        val given = synchronized(state) {
+            // A DanaRv2 gives the step that runs when the stop comes, with no progress for it. A Korean DanaR stops at
+            // its last progress.
+            if (bolus.stopped && bolus.given < bolus.hundredths && state.variant != DanaRVariant.DANA_R_KOREAN) {
+                val step = minOf(stepHundredths, bolus.hundredths - bolus.given)
+                bolus.given += step
+                state.reservoirRemainingUnits -= step / 100.0
+            }
+            val given = bolus.given / 100.0
+            state.dailyTotalUnits += given
+            state.givenBoluses += given
+            state.runningBolus = null
+            given
+        }
+        aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: bolus ends, ${given}U given")
+        onAdditionalResponse?.invoke(0x0101, byteArrayOf(0x00))
+        val end = state.pumpTimeMillis
+        Thread {
+            @Suppress("SleepInsteadOfDelay")
+            Thread.sleep(LOGGED_AFTER_END_MS)
+            synchronized(state) {
+                state.historyStore.addEvent(DanaPump.HistoryEntry.BOLUS.value, end, bolus.given, 0)
+                state.lastBolusAmount = given
+                state.lastBolusTime = end
+            }
+        }.start()
+    }
+
+    /** The user stops the bolus: it ends at once with what it has given. */
+    private fun handleBolusStop(): ByteArray {
+        state.runningBolus?.stopped = true
+        return byteArrayOf(0x00)
+    }
+
+    /** A bolus the user gives on the pump itself: given at once and logged as any bolus. False while a bolus runs. */
+    fun bolusOnPump(units: Double): Boolean = synchronized(state) {
+        if (state.runningBolus != null) return false
+        val given = (units * 100).roundToInt()
+        val time = state.pumpTimeMillis
+        state.reservoirRemainingUnits -= given / 100.0
+        state.historyStore.addEvent(DanaPump.HistoryEntry.BOLUS.value, time, given, 0)
+        state.lastBolusAmount = given / 100.0
+        state.lastBolusTime = time
+        state.dailyTotalUnits += given / 100.0
+        state.givenBoluses += given / 100.0
+        true
+    }
+
+    /**
+     * The user stops or starts again the insulin on the pump itself: the status says so, and the history logs SUSPEND_ON
+     * or SUSPEND_OFF. UNVERIFIED: what a real DanaR does with a temp basal that runs at that time; the emulator keeps it.
+     */
+    fun suspendOnPump(suspended: Boolean): Boolean = synchronized(state) {
+        state.isSuspended = suspended
+        val code = if (suspended) DanaPump.HistoryEntry.SUSPEND_ON else DanaPump.HistoryEntry.SUSPEND_OFF
+        state.historyStore.addEvent(code.value, state.pumpTimeMillis, 0, 0)
+        true
+    }
 
     // --- Temp basal ---
 
@@ -490,7 +582,7 @@ class DanaRPumpEmulator(
             state.isTempBasalRunning = true
             state.tempBasalPercent = percent
             state.tempBasalDurationMinutes = durationHours * 60
-            state.tempBasalStartTime = System.currentTimeMillis()
+            state.tempBasalStartTime = state.pumpTimeMillis
             state.historyStore.addEvent(DanaPump.HistoryEntry.TEMP_START.value, state.tempBasalStartTime, percent, durationHours * 60)
             aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: temp basal ${percent}% for ${state.tempBasalDurationMinutes}min")
         }
@@ -499,7 +591,7 @@ class DanaRPumpEmulator(
 
     private fun handleSetTempBasalStop(): ByteArray {
         if (state.isTempBasalRunning) {
-            state.historyStore.addEvent(DanaPump.HistoryEntry.TEMP_STOP.value, System.currentTimeMillis(), 0, 0)
+            state.historyStore.addEvent(DanaPump.HistoryEntry.TEMP_STOP.value, state.pumpTimeMillis, 0, 0)
         }
         state.isTempBasalRunning = false
         state.tempBasalPercent = 0
@@ -511,23 +603,105 @@ class DanaRPumpEmulator(
     private fun handleSetExtendedBolusStart(params: ByteArray): ByteArray {
         if (params.size >= 3) {
             val amountInt = (params[0].toInt() and 0xFF shl 8) or (params[1].toInt() and 0xFF)
-            val durationHalfHours = params[2].toInt() and 0xFF
-            state.isExtendedBolusRunning = true
-            state.extendedBolusAmount = amountInt / 100.0
-            state.extendedBolusDurationHalfHours = durationHalfHours
-            state.historyStore.addEvent(DanaPump.HistoryEntry.EXTENDED_START.value, System.currentTimeMillis(), amountInt, durationHalfHours * 30)
-            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: extended bolus ${amountInt / 100.0}U for ${durationHalfHours * 30}min")
+            startExtendedBolus(amountInt, params[2].toInt() and 0xFF, DanaPump.HistoryEntry.EXTENDED_START)
         }
         return byteArrayOf(0x01)
     }
 
     private fun handleSetExtendedBolusStop(): ByteArray {
+        stopExtendedBolus()
+        return byteArrayOf(0x01)
+    }
+
+    private fun startExtendedBolus(amountInt: Int, durationHalfHours: Int, code: DanaPump.HistoryEntry) = synchronized(state) {
+        state.isExtendedBolusRunning = true
+        state.extendedBolusAmount = amountInt / 100.0
+        state.extendedBolusDurationHalfHours = durationHalfHours
+        state.extendedBolusStartTime = state.pumpTimeMillis
+        state.historyStore.addEvent(code.value, state.extendedBolusStartTime, amountInt, durationHalfHours * 30)
+        aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: $code ${amountInt / 100.0}U for ${durationHalfHours * 30}min")
+    }
+
+    /** The end of the extended part of a dual bolus is logged as its own record. */
+    private fun stopExtendedBolus() = synchronized(state) {
         if (state.isExtendedBolusRunning) {
-            state.historyStore.addEvent(DanaPump.HistoryEntry.EXTENDED_STOP.value, System.currentTimeMillis(), 0, 0)
+            val code = if (state.isDualBolusRunning) DanaPump.HistoryEntry.DUAL_EXTENDED_STOP else DanaPump.HistoryEntry.EXTENDED_STOP
+            state.historyStore.addEvent(code.value, state.pumpTimeMillis, 0, 0)
         }
         state.isExtendedBolusRunning = false
+        state.isDualBolusRunning = false
         state.extendedBolusAmount = 0.0
-        return byteArrayOf(0x01)
+    }
+
+    // --- What the user does on the pump itself, without the app ---
+    // Each one logs the record the drivers read, with the code and the parameters MsgHistoryEventsV2 reads. UNVERIFIED:
+    // no real DanaR was looked at for these records.
+
+    /** A temp basal of [percent] for [hours], set on the pump. */
+    fun tempBasalOnPump(percent: Int, hours: Int): Boolean {
+        handleSetTempBasalStart(byteArrayOf(percent.toByte(), hours.toByte()))
+        return true
+    }
+
+    fun stopTempBasalOnPump(): Boolean {
+        handleSetTempBasalStop()
+        return true
+    }
+
+    /** An extended bolus of [units] over [halfHours] half hours, set on the pump. */
+    fun extendedBolusOnPump(units: Double, halfHours: Int): Boolean {
+        startExtendedBolus((units * 100).roundToInt(), halfHours, DanaPump.HistoryEntry.EXTENDED_START)
+        return true
+    }
+
+    /** Ends the extended bolus, also the extended part of a dual bolus. */
+    fun stopExtendedBolusOnPump(): Boolean {
+        stopExtendedBolus()
+        return true
+    }
+
+    /** A dual bolus: [now] units at once, then [extended] units over [halfHours] half hours. */
+    fun dualBolusOnPump(now: Double, extended: Double, halfHours: Int): Boolean = synchronized(state) {
+        if (state.runningBolus != null || state.isExtendedBolusRunning) return false
+        val given = (now * 100).roundToInt()
+        val time = state.pumpTimeMillis
+        state.reservoirRemainingUnits -= given / 100.0
+        state.historyStore.addEvent(DanaPump.HistoryEntry.DUAL_BOLUS.value, time, given, 0)
+        state.lastBolusAmount = given / 100.0
+        state.lastBolusTime = time
+        state.dailyTotalUnits += given / 100.0
+        state.givenBoluses += given / 100.0
+        startExtendedBolus((extended * 100).roundToInt(), halfHours, DanaPump.HistoryEntry.DUAL_EXTENDED_START)
+        state.isDualBolusRunning = true
+        true
+    }
+
+    /** Carbs the user enters on the pump, in [grams]. */
+    fun carbsOnPump(grams: Int): Boolean = synchronized(state) {
+        state.historyStore.addEvent(DanaPump.HistoryEntry.CARBS.value, state.pumpTimeMillis, grams, 0)
+        true
+    }
+
+    /** A new reservoir with [units] in it. */
+    fun refillOnPump(units: Double): Boolean = synchronized(state) {
+        state.reservoirRemainingUnits = units
+        state.historyStore.addEvent(DanaPump.HistoryEntry.REFILL.value, state.pumpTimeMillis, (units * 100).roundToInt(), 0)
+        true
+    }
+
+    /** A prime of [units], out of the reservoir. */
+    fun primeOnPump(units: Double): Boolean = synchronized(state) {
+        state.reservoirRemainingUnits -= units
+        state.historyStore.addEvent(DanaPump.HistoryEntry.PRIME.value, state.pumpTimeMillis, (units * 100).roundToInt(), 0)
+        true
+    }
+
+    /** The user picks basal profile [profile] on the pump. */
+    fun profileChangeOnPump(profile: Int): Boolean = synchronized(state) {
+        state.activeProfile = profile
+        updateCurrentBasal()
+        state.historyStore.addEvent(DanaPump.HistoryEntry.PROFILE_CHANGE.value, state.pumpTimeMillis, profile, (state.currentBasal * 100).roundToInt())
+        true
     }
 
     // --- Set commands ---
@@ -554,18 +728,34 @@ class DanaRPumpEmulator(
             val low = params[offset + i * 2 + 1].toInt() and 0xFF
             state.basalProfiles[profile][i] = ((high shl 8) or low) / 100.0
         }
+        updateCurrentBasal()
     }
 
+    /**
+     * The pump shows the rate of this hour in its active profile as its current basal, as a Dana RS does. It is set when
+     * the profile changes, not each hour: a test may set it by hand.
+     */
+    private fun updateCurrentBasal() {
+        val profile = state.basalProfiles.getOrNull(state.activeProfile) ?: return
+        state.currentBasal = profile[DateTime(state.pumpTimeMillis).hourOfDay]
+    }
+
+    /**
+     * MsgSetUserOptions sends back the bytes of [handleSettingUserOptions] with its changes, so the same places are
+     * read here. Read from other places before (the units from byte 6), a save changed what the pump then reported.
+     * Seen on a real DanaRv2 (2026-11-11): the low reservoir warning is taken from byte 27 of this command, and the
+     * pump reports it in byte 32 of its answer to 0x320B. 10 U sent in byte 27 (byte 32 still 20) was read back as 10.
+     */
     private fun handleSetUserOptions(params: ByteArray): ByteArray {
-        if (params.size >= 9) {
+        if (params.size >= USER_OPTIONS_SIZE) {
             state.timeDisplayType24 = params[0].toInt() == 0
             state.buttonScroll = params[1].toInt() == 1
             state.beepAndAlarm = params[2].toInt() and 0xFF
             state.lcdOnTimeSec = params[3].toInt() and 0xFF
             state.backlightOnTimeSec = params[4].toInt() and 0xFF
-            state.glucoseUnit = params[6].toInt() and 0xFF
-            state.shutdownHour = params[7].toInt() and 0xFF
-            state.lowReservoirRate = params[8].toInt() and 0xFF
+            state.glucoseUnit = params[8].toInt() and 0xFF
+            state.shutdownHour = params[9].toInt() and 0xFF
+            state.lowReservoirRate = params[SET_LOW_RESERVOIR].toInt() and 0xFF
         }
         return byteArrayOf(0x01)
     }
@@ -573,12 +763,19 @@ class DanaRPumpEmulator(
     private fun handleSetActivateBasalProfile(params: ByteArray): ByteArray {
         if (params.isNotEmpty()) {
             state.activeProfile = params[0].toInt() and 0xFF
+            updateCurrentBasal()
         }
         return byteArrayOf(0x01)
     }
 
+    /** MsgSetTime: second, minute, hour, day, month, year - 2000, as [handleSettingPumpTime] reports the time. */
     private fun handleSetTime(params: ByteArray): ByteArray {
-        // Time is set; just acknowledge
+        if (params.size >= 6) {
+            state.pumpTimeMillis = DateTime(
+                2000 + (params[5].toInt() and 0xFF), params[4].toInt() and 0xFF, params[3].toInt() and 0xFF,
+                params[2].toInt() and 0xFF, params[1].toInt() and 0xFF, params[0].toInt() and 0xFF
+            ).millis
+        }
         return byteArrayOf(0x01)
     }
 
@@ -613,13 +810,32 @@ class DanaRPumpEmulator(
             @Suppress("SleepInsteadOfDelay")
             for (i in 1 until records.size) {
                 Thread.sleep(10)
-                onAdditionalResponse?.invoke(command, state.reviewHistoryStore.buildReviewRecordData(records[i]))
+                onAdditionalResponse?.invoke(command, reviewRecord(records[i]))
             }
-            Thread.sleep(10)
-            onAdditionalResponse?.invoke(0x31F1, byteArrayOf(0x00)) // MsgHistoryDone → historyDoneReceived = true
+            // A real Korean DanaR sent its records and no "done" (2026-11-10): the driver ends the read when the link is quiet.
+            if (state.variant != DanaRVariant.DANA_R_KOREAN) {
+                Thread.sleep(10)
+                onAdditionalResponse?.invoke(0x31F1, byteArrayOf(0x00)) // MsgHistoryDone → historyDoneReceived = true
+            }
         }.start()
         return if (records.isEmpty()) byteArrayOf(0xFF.toByte())
-        else state.reviewHistoryStore.buildReviewRecordData(records[0])
+        else reviewRecord(records[0])
+    }
+
+    /**
+     * A daily total has no time, but its basal and its bolus: `[code][year-2000][month][day][basal, 2 bytes][bolus,
+     * 2 bytes]`, in hundredths, as `MsgHistoryAll` reads it. Seed it with the basal as param1 and the bolus as param2.
+     * The other records have the shared review layout.
+     */
+    private fun reviewRecord(event: HistoryEvent): ByteArray {
+        if (event.code != RecordTypes.RECORD_TYPE_DAILY.toInt()) return state.reviewHistoryStore.buildReviewRecordData(event)
+        val day = DateTime(event.timestamp)
+        return byteArrayOf(
+            event.code.toByte(), (day.year - 2000).toByte(), day.monthOfYear.toByte(), day.dayOfMonth.toByte(),
+            (event.param1 shr 8 and 0xFF).toByte(), (event.param1 and 0xFF).toByte(),
+            (event.param2 shr 8 and 0xFF).toByte(), (event.param2 and 0xFF).toByte(),
+            0, 0
+        )
     }
 
     /** Maps a per-type review opcode (0x3101-0x310A) to its RecordTypes code, or null for unserved history. */
@@ -642,13 +858,35 @@ class DanaRPumpEmulator(
 
     private fun handleApsStatus(): ByteArray = ByteArray(16) // simplified
 
-    private fun handleApsSetTempBasal(params: ByteArray): ByteArray = handleSetTempBasalStart(params)
+    /**
+     * MsgSetAPSTempBasalStartV2: the percent in 2 bytes (high first), then 160 for 30 minutes or 150 for 15. Read as the
+     * hour based start before, 200 % was 0 % for 200 hours.
+     */
+    private fun handleApsSetTempBasal(params: ByteArray): ByteArray {
+        if (params.size >= 3) {
+            val percent = ((params[0].toInt() and 0xFF) shl 8) or (params[1].toInt() and 0xFF)
+            val minutes = if ((params[2].toInt() and 0xFF) == APS_PARAM_30_MIN) 30 else 15
+            state.isTempBasalRunning = true
+            state.tempBasalPercent = percent
+            state.tempBasalDurationMinutes = minutes
+            state.tempBasalStartTime = state.pumpTimeMillis
+            state.historyStore.addEvent(DanaPump.HistoryEntry.TEMP_START.value, state.tempBasalStartTime, percent, minutes)
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: APS temp basal $percent% for ${minutes}min")
+        }
+        return byteArrayOf(0x01)
+    }
 
     /**
      * Callback for sending additional history events after the first response.
      * Set by [EmulatorRfcommTransport] to enqueue extra packets on the response stream.
      */
     var onAdditionalResponse: ((Int, ByteArray) -> Unit)? = null
+
+    init {
+        // A pump read back after an app kill goes on with its bolus, as a real one does. Here, after the fields
+        // the bolus thread reads.
+        state.runningBolus?.let { bolus -> Thread { deliver(bolus) }.start() }
+    }
 
     private fun handleApsHistoryEvents(params: ByteArray): ByteArray {
         // Local: MsgHistoryEventsV2 builds the request from a plain GregorianCalendar, and a DanaR
@@ -673,4 +911,32 @@ class DanaRPumpEmulator(
     }
 
     private fun handleApsSetHistoryEntry(): ByteArray = byteArrayOf(0x01)
+
+    companion object {
+
+        /** The key of this emulator in [PumpEmulators]. */
+        val KEY = PumpEmulators.Key<DanaRPumpEmulator>("danar")
+
+        /** Seconds per unit of a bolus at the speed the driver sets by default, as the Dana RS. */
+        private const val SECONDS_PER_UNIT = 12
+        /** [EmulatorSpeed.FAST]: a bolus this many times shorter. */
+        private const val FAST_DIVISOR = 20
+        /** The bolus step a real DanaRv2 reported progress in, also when its bolus step setting is larger. */
+        private const val PROGRESS_STEP_HUNDREDTHS = 5
+        /**
+         * A real Korean DanaR set to a bolus step of 0.1 U sent a progress every 0.1 U, 1.2 s apart (2026-11-10). After a
+         * stop it had given what its last progress showed, twice.
+         */
+        private const val KOREAN_PROGRESS_STEP_HUNDREDTHS = 10
+        /** How long after the end of a bolus a real DanaRv2 had it in its history: about 2 s. Not shortened in FAST. */
+        private const val LOGGED_AFTER_END_MS = 2000L
+        /** The first progress comes after the answer to the start. */
+        private const val FIRST_PROGRESS_MS = 50L
+        private const val APS_PARAM_30_MIN = 160
+        private const val APS_PARAM_15_MIN = 150
+        /** The user options the pump reports and takes back: 33 bytes, the last one the low reservoir warning. */
+        private const val USER_OPTIONS_SIZE = 33
+        /** Where the command that sets the user options has the low reservoir warning, see [handleSetUserOptions]. */
+        private const val SET_LOW_RESERVOIR = 27
+    }
 }

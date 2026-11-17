@@ -208,7 +208,8 @@ class StatusViewModel(
             // Concentration comes from the running profile, which owns the authoritative iCfg. With no
             // profile there is no IU conversion to make, so the reservoir reads as unavailable — 0.0
             // takes the existing "-" / UNSPECIFIED branch below rather than showing a mis-scaled figure.
-            profileFunction.getProfile()?.let { activePlugin.activePump.reservoirLevel.value.iU(it.insulinConcentration()) } ?: 0.0
+            // The same when the pump has not told it yet.
+            profileFunction.getProfile()?.let { activePlugin.activePump.reservoirLevel.value?.iU(it.insulinConcentration()) } ?: 0.0
         }
         val level: String? = if (reservoirLevel > 0) {
             if (!config.AAPSCLIENT && isPatchPump && reservoirLevel >= maxReading) {

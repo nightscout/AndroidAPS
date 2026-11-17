@@ -228,6 +228,13 @@ class ProfileFunctionImpl(
         return !ProfileSealed.PS(requested, activePlugin).isAppliedAs(running)
     }
 
+    // Against the mirror, with the same fallback to 1.0: this is the value the conversions really use.
+    override suspend fun isConcentrationChangePending(): Boolean {
+        if (config.AAPSCLIENT) return false
+        val requested = getRequestedProfile() ?: return false
+        return requested.iCfg.concentration != (runningICfg.value?.concentration ?: 1.0)
+    }
+
     override fun getUnits(): GlucoseUnit =
         if (preferences.get(StringKey.GeneralUnits) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL

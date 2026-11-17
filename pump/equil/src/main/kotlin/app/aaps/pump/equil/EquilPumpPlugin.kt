@@ -76,6 +76,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -135,6 +136,8 @@ class EquilPumpPlugin(
     private var scope: CoroutineScope? = null
 
     override suspend fun onStart() {
+        // Before super.onStart, which asks for the first status read.
+        equilManager.startLink()
         super.onStart()
         equilManager.init()
 
@@ -208,6 +211,8 @@ class EquilPumpPlugin(
         aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()")
         scope?.cancel()
         scope = null
+        // A command that still runs in the queue would connect again for a stopped driver.
+        equilManager.stopLink()
     }
 
     override fun isConfigured(): Boolean = true
@@ -239,9 +244,11 @@ class EquilPumpPlugin(
 
     override suspend fun getPumpStatus(reason: String) {
         if (equilManager.isActivationCompleted()) {
+            // Runs here, on the queue worker, as the commands of the driver do.
+            equilManager.endTempBasalThePumpDoesNotRun()
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-            pluginScope.launch { commandQueue.customCommand(CmdModeAndHistoryGet()) }
-            pluginScope.launch { commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager)) }
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CmdModeAndHistoryGet()) }
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager)) }
         }
     }
 
@@ -461,7 +468,26 @@ class EquilPumpPlugin(
     private suspend fun deliverBolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverBolus")
         bolusProfile.insulin = detailedBolusInfo.insulin
-        return equilManager.bolus(detailedBolusInfo, bolusProfile)
+        return equilManager.bolus(detailedBolusInfo, bolusProfile).also { readLogForUncertainBolus() }
+    }
+
+    /**
+     * A bolus whose start or stop got no answer is decided from the pump log, read on a connection made after the bolus
+     * was over (`EquilManager.decideUncertainBolus`). Ask for such reads now instead of waiting for the next loop run.
+     * The queue closes an idle link, so a read some time after the last command comes on a new connection.
+     * On the scope of this start: a stopped driver asks for nothing more.
+     */
+    private fun readLogForUncertainBolus() {
+        val bolus = equilManager.uncertainBolus ?: return
+        val startedScope = scope ?: return
+        startedScope.launch {
+            delay((bolus.readAfter - System.currentTimeMillis()).coerceAtLeast(0) + UNCERTAIN_BOLUS_READ_DELAY_MS)
+            repeat(UNCERTAIN_BOLUS_READS) {
+                if (equilManager.uncertainBolus !== bolus) return@launch
+                commandQueue.customCommand(CmdModeAndHistoryGet())
+                delay(UNCERTAIN_BOLUS_READ_DELAY_MS)
+            }
+        }
     }
 
     fun resetData() {
@@ -526,6 +552,10 @@ class EquilPumpPlugin(
 
         private val BASAL_STEP_DURATION: Duration = Duration.standardMinutes(30)
         private const val SECONDS_PER_HOUR = 3600
+
+        /** Longer than the queue keeps an idle link (5 s) plus the time the pump keeps it (about 9.5 s). */
+        private const val UNCERTAIN_BOLUS_READ_DELAY_MS = 20_000L
+        private const val UNCERTAIN_BOLUS_READS = 5
         fun toDuration(dateTime: DateTime): Duration = Duration(dateTime.toLocalTime().millisOfDay.toLong())
     }
 

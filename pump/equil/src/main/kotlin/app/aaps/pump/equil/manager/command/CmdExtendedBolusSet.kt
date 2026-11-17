@@ -21,7 +21,7 @@ class CmdExtendedBolusSet(
 
     init {
         if (insulin != 0.0) {
-            step = (insulin / 0.05 * 8).toInt()
+            step = Utils.unitsToSteps(insulin)
             pumpTime = durationInMinutes * 60
         }
     }

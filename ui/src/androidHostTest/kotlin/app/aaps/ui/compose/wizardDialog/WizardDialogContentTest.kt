@@ -1,23 +1,32 @@
 package app.aaps.ui.compose.wizardDialog
 
 import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsNode
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
@@ -47,6 +56,7 @@ class WizardDialogContentTest {
     val compose = createComposeRule()
 
     private val decimalFormatter: DecimalFormatter = mock()
+    private var onLayout: (() -> Unit)? = null
 
     private lateinit var closeLabel: String
     private lateinit var calculationTitle: String
@@ -156,6 +166,131 @@ class WizardDialogContentTest {
         compose.onNode(recordOnlyBanner).assertIsDisplayed()
     }
 
+    @Test
+    fun correctionButtonsStayInPlaceWhenTheCalculationArrivesAfterTheInputChange() {
+        checkCorrectionButtonPositions(expanded = false)
+    }
+
+    @Test
+    fun expandedCorrectionButtonsStayInPlaceWhenTheCalculationArrivesAfterTheInputChange() {
+        checkCorrectionButtonPositions(expanded = true)
+    }
+
+    private fun checkCorrectionButtonPositions(expanded: Boolean) {
+        var state by mutableStateOf(loaded().copy(hasResult = true, calculationExpanded = true, totalInsulin = 1.0, showNotes = true))
+        setWizard(
+            uiState = { state },
+            onDirectCorrectionChange = { state = state.copy(directCorrection = it) }
+        )
+        if (expanded) {
+            val ctx: Context = RuntimeEnvironment.getApplication()
+            compose.onNodeWithContentDescription(
+                ctx.getString(CoreUiR.string.a11y_expand_button_description, ctx.getString(CoreUiR.string.wizard_correction))
+            ).performScrollTo().performClick()
+        }
+        val plus = compose.onNodeWithContentDescription(stepDescription(CoreUiR.string.wizard_correction, true, "0.10", "U"))
+        val minus = compose.onNodeWithContentDescription(stepDescription(CoreUiR.string.wizard_correction, false, "0.10", "U"))
+        plus.performScrollTo().assertIsDisplayed()
+        val top = plus.fetchSemanticsNode().boundsInRoot.top
+        val plusPosition = plus.fetchSemanticsNode().boundsInRoot.center
+        val minusPosition = minus.fetchSemanticsNode().boundsInRoot.center
+        val placedPositions = recordPlacedPositions(plus.fetchSemanticsNode())
+
+        compose.onRoot().performTouchInput { click(plusPosition) }
+        assertThat(state.directCorrection).isWithin(0.001).of(0.1)
+        assertThat(plus.fetchSemanticsNode().boundsInRoot.top).isWithin(1f).of(top)
+        compose.runOnIdle { state = state.copy(insulinFromCorrection = state.directCorrection) }
+        plus.assertIsDisplayed()
+        assertThat(plus.fetchSemanticsNode().boundsInRoot.top).isWithin(1f).of(top)
+
+        compose.onRoot().performTouchInput { click(minusPosition) }
+        compose.runOnIdle { state = state.copy(insulinFromCorrection = state.directCorrection) }
+        assertThat(state.directCorrection).isEqualTo(0.0)
+        plus.assertIsDisplayed()
+        assertThat(plus.fetchSemanticsNode().boundsInRoot.top).isWithin(1f).of(top)
+        assertPlacedPositions(placedPositions, top)
+    }
+
+    @Test
+    fun percentageButtonsStayInPlaceWhenSubtotalRowsAppearAndDisappear() {
+        checkPercentageButtonPositions(expanded = false)
+    }
+
+    @Test
+    fun expandedPercentageButtonsStayInPlaceWhenSubtotalRowsAppearAndDisappear() {
+        checkPercentageButtonPositions(expanded = true)
+    }
+
+    @Test
+    fun percentageButtonsStayInPlaceAtTheBottomWhenTheScrollLimitShrinks() {
+        checkPercentageButtonPositions(expanded = false, atBottom = true)
+    }
+
+    private fun checkPercentageButtonPositions(expanded: Boolean, atBottom: Boolean = false) {
+        var state by mutableStateOf(
+            loaded().copy(hasResult = true, calculationExpanded = true, totalInsulin = 1.0, showNotes = !atBottom, simpleMode = atBottom)
+        )
+        setWizard(uiState = { state }, onPercentageChange = { state = state.copy(percentage = it.toInt()) })
+        if (expanded) {
+            val ctx: Context = RuntimeEnvironment.getApplication()
+            compose.onNodeWithContentDescription(
+                ctx.getString(CoreUiR.string.a11y_expand_button_description, ctx.getString(CoreUiR.string.wizard_use_percentage))
+            ).performScrollTo().performClick()
+        }
+        val plus = compose.onNodeWithContentDescription(stepDescription(CoreUiR.string.wizard_use_percentage, true, "5", "%"))
+        val minus = compose.onNodeWithContentDescription(stepDescription(CoreUiR.string.wizard_use_percentage, false, "5", "%"))
+        plus.performScrollTo().assertIsDisplayed()
+        if (atBottom) {
+            val scroll = compose.onNode(hasScrollAction())
+            val range = scroll.fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange]
+            scroll.performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, range.maxValue()) }
+            compose.runOnIdle { assertThat(range.value()).isEqualTo(range.maxValue()) }
+        }
+        val top = plus.fetchSemanticsNode().boundsInRoot.top
+        val plusPosition = plus.fetchSemanticsNode().boundsInRoot.center
+        val minusPosition = minus.fetchSemanticsNode().boundsInRoot.center
+        val placedPositions = recordPlacedPositions(plus.fetchSemanticsNode())
+
+        repeat(2) {
+            compose.onRoot().performTouchInput { click(plusPosition) }
+            assertThat(state.percentage).isEqualTo(105)
+            plus.assertIsDisplayed()
+            assertThat(plus.fetchSemanticsNode().boundsInRoot.top).isWithin(1f).of(top)
+            compose.onRoot().performTouchInput { click(minusPosition) }
+            assertThat(state.percentage).isEqualTo(100)
+            plus.assertIsDisplayed()
+            assertThat(plus.fetchSemanticsNode().boundsInRoot.top).isWithin(1f).of(top)
+        }
+        assertPlacedPositions(placedPositions, top)
+
+        compose.onNode(hasScrollAction()).performScrollToNode(hasText(calculationTitle))
+        val titleTop = compose.onNodeWithText(calculationTitle).fetchSemanticsNode().boundsInRoot.top
+        compose.runOnIdle { state = state.copy(percentage = 105) }
+        compose.onNodeWithText(calculationTitle).assertIsDisplayed()
+        assertThat(compose.onNodeWithText(calculationTitle).fetchSemanticsNode().boundsInRoot.top).isWithin(1f).of(titleTop)
+    }
+
+    private fun stepDescription(labelId: Int, increase: Boolean, step: String, unit: String): String {
+        val ctx: Context = RuntimeEnvironment.getApplication()
+        return ctx.getString(
+            if (increase) CoreUiR.string.a11y_plus_button_description else CoreUiR.string.a11y_min_button_description,
+            ctx.getString(labelId),
+            ctx.getString(CoreUiR.string.value_with_unit, step, unit)
+        )
+    }
+
+    /** Records the first placement of each state change, before any late scroll correction. */
+    private fun recordPlacedPositions(button: SemanticsNode): MutableList<Float> {
+        val positions = mutableListOf<Float>()
+        onLayout = { positions.add(button.boundsInRoot.top) }
+        return positions
+    }
+
+    private fun assertPlacedPositions(positions: List<Float>, expectedTop: Float) {
+        assertThat(positions).isNotEmpty()
+        positions.forEach { position -> assertThat(position).isWithin(1f).of(expectedTop) }
+    }
+
     private fun loaded(hasBgData: Boolean = true, bgAgeMinutes: Int = 0, forcedRecordOnly: Boolean = false) =
         WizardDialogUiState(
             initialized = true,
@@ -168,33 +303,42 @@ class WizardDialogContentTest {
         )
 
     /** [uiState] is read inside the composition, so a test can change the state after the first frame. */
-    private fun setWizard(uiState: () -> WizardDialogUiState, onNavigateBack: () -> Unit = {}, onProfileSelect: (Int) -> Unit = {}) {
+    private fun setWizard(
+        uiState: () -> WizardDialogUiState,
+        onNavigateBack: () -> Unit = {},
+        onProfileSelect: (Int) -> Unit = {},
+        onPercentageChange: (Double) -> Unit = {},
+        onDirectCorrectionChange: (Double) -> Unit = {}
+    ) {
         compose.setContent {
             MaterialTheme {
-                WizardDialogContent(
-                    uiState = uiState(),
-                    decimalFormatter = decimalFormatter,
-                    unitsLabel = UNITS,
-                    onBgChange = {},
-                    onCarbsChange = {},
-                    onAddCarbs = {},
-                    onCarbsTypeChange = {},
-                    onPercentageChange = {},
-                    onDirectCorrectionChange = {},
-                    onCarbTimeChange = {},
-                    onNotesChange = {},
-                    onProfileSelect = onProfileSelect,
-                    onBgToggle = {},
-                    onTTToggle = {},
-                    onTrendToggle = {},
-                    onIOBToggle = {},
-                    onCOBToggle = {},
-                    onAlarmToggle = {},
-                    onCalculationExpandToggle = {},
-                    onNavigateBack = onNavigateBack,
-                    onConfirmClick = {},
-                    onSettingsClick = {}
-                )
+                val state = uiState()
+                Box(Modifier.onGloballyPositioned(remember(state) { { onLayout?.invoke() } })) {
+                    WizardDialogContent(
+                        uiState = state,
+                        decimalFormatter = decimalFormatter,
+                        unitsLabel = UNITS,
+                        onBgChange = {},
+                        onCarbsChange = {},
+                        onAddCarbs = {},
+                        onCarbsTypeChange = {},
+                        onPercentageChange = onPercentageChange,
+                        onDirectCorrectionChange = onDirectCorrectionChange,
+                        onCarbTimeChange = {},
+                        onNotesChange = {},
+                        onProfileSelect = onProfileSelect,
+                        onBgToggle = {},
+                        onTTToggle = {},
+                        onTrendToggle = {},
+                        onIOBToggle = {},
+                        onCOBToggle = {},
+                        onAlarmToggle = {},
+                        onCalculationExpandToggle = {},
+                        onNavigateBack = onNavigateBack,
+                        onConfirmClick = {},
+                        onSettingsClick = {}
+                    )
+                }
             }
         }
     }

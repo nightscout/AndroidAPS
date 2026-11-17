@@ -17,7 +17,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -26,8 +29,8 @@ import org.mockito.kotlin.whenever
  * The `init` block calls `loadFromPump()` directly (not inside a `viewModelScope.launch`), so after
  * construction `uiState.value` reflects the stubbed pump getters plus `preferences.get(BolusSpeed)`.
  * The `update*` methods are pure synchronous `MutableStateFlow.update {}` transforms — the
- * deterministic surface this test covers. The save paths (which use `viewModelScope.launch` /
- * command-queue) are intentionally not exercised here.
+ * deterministic surface this test covers. Of the save paths only what they set before their `viewModelScope.launch`
+ * is checked; the command queue is not exercised here.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DiaconnUserOptionsViewModelTest {
@@ -111,6 +114,35 @@ internal class DiaconnUserOptionsViewModelTest {
         val state = sut.uiState.value
         assertThat(state.selectedLanguage).isEqualTo(1)
         assertThat(state.lcdOnTimeSec).isEqualTo(2)
+    }
+
+    /**
+     * A save puts the new setting apart from the values a status read stores. It was put into them: a status read queued
+     * before the write put the pump's old value over it, and the old value was written and reported as saved.
+     */
+    @Test
+    fun aSavedAlarmIsKeptApartFromThePumpValues() {
+        sut.updateBeepAndAlarm(3)
+        sut.updateAlarmIntensity(1)
+
+        sut.saveAlarm()
+
+        verify(diaconnG8Pump).userOptionToSet = DiaconnG8Pump.UserOption(DiaconnG8Pump.ALARM, 3, 1)
+        verify(diaconnG8Pump, never()).beepAndAlarm = any()
+        verify(diaconnG8Pump, never()).alarmIntensity = any()
+    }
+
+    @Test
+    fun aSavedScreenTimeAndLanguageAreKeptApartFromThePumpValues() {
+        sut.updateLcdOnTimeSec(3)
+        sut.saveLcdOnTime()
+        verify(diaconnG8Pump).userOptionToSet = DiaconnG8Pump.UserOption(DiaconnG8Pump.LCD, 3)
+
+        sut.updateSelectedLanguage(1)
+        sut.saveLanguage()
+        verify(diaconnG8Pump).userOptionToSet = DiaconnG8Pump.UserOption(DiaconnG8Pump.LANG, 1)
+        verify(diaconnG8Pump, never()).lcdOnTimeSec = any()
+        verify(diaconnG8Pump, never()).selectedLanguage = any()
     }
 
     @Test

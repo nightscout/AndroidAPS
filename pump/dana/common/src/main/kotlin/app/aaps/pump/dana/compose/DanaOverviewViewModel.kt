@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.TB
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -153,7 +152,7 @@ open class DanaOverviewViewModel(
 
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
-        danaPump.reset()
+        danaPump.readAllAgain()
         viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.clicked_connect_to_pump)) }
     }
 
@@ -397,10 +396,11 @@ open class DanaOverviewViewModel(
 
         // Actions
         val primaryActions = listOf(
+            // As soon as a pump is paired: after a first status read that failed, it is the way to try again.
             ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
-                visible = isInitialized,
+                visible = isConfigured,
                 onClick = { onRefreshClick() }
             ),
             ScreenAction(
@@ -419,18 +419,6 @@ open class DanaOverviewViewModel(
             infoRows = infoRows,
             primaryActions = primaryActions,
             managementActions = managementActions
-        )
-    }
-
-    fun temporaryBasalToString(): String {
-        val pump = danaPump
-        if (!pump.isTempBasalInProgress) return ""
-
-        return ch.basalTbrString(
-            rate = PumpRate(pump.tempBasalPercent.toDouble()),
-            startTime = pump.tempBasalStart,
-            durationInMin = T.msecs(pump.tempBasalDuration).mins().toInt(),
-            isAbsolute = true
         )
     }
 

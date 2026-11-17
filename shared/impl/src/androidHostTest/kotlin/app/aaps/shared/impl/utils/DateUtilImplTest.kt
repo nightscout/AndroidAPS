@@ -2,6 +2,7 @@ package app.aaps.shared.impl.utils
 
 import android.content.Context
 import android.text.format.DateFormat
+import app.aaps.core.data.time.SystemTimeZone
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.joda.time.DateTimeZone
@@ -44,6 +45,9 @@ class DateUtilImplTest {
     fun setUp() {
         TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"))
         DateTimeZone.setDefault(DateTimeZone.forID("America/New_York"))
+        // DateUtilImpl asks SystemTimeZone, which answers from its last read, so a default zone moved
+        // by a test has to be reported - as a device reports one through `TimeDateOrTZChangeReceiver`.
+        SystemTimeZone.invalidate()
         Locale.setDefault(Locale.US)
         fixedClock = Clock.fixed(fixedInstant, fixedZone)
         dateUtilImpl = DateUtilImpl(mockContext)
@@ -636,45 +640,6 @@ class DateUtilImplTest {
         val expected = "(1h 15')"
         val newResult = dateUtilImplDeter.untilString(futureTimestamp, rh)
         assertThat(newResult).isEqualTo(expected)
-    }
-
-    @Test
-    fun `niceTimeScalar works works correctly now`() {
-        // ARRANGE
-        val rh = FakeResourceHelper()
-
-        // ACT & ASSERT for seconds
-        val newSec = dateUtilImpl.niceTimeScalar(15 * 1000L, rh) // 15 seconds
-        val oldSec = dateUtilOldImpl.niceTimeScalar(15 * 1000L, rh)
-        assertThat(newSec).isEqualTo("15 seconds")
-        assertThat(newSec).isEqualTo(oldSec)
-
-        // ACT & ASSERT for minutes
-        val newMin = dateUtilImpl.niceTimeScalar(5 * 60 * 1000L, rh) // 5 minutes
-        val oldMin = dateUtilOldImpl.niceTimeScalar(5 * 60 * 1000L, rh)
-        assertThat(newMin).isEqualTo("5 minutes")
-        assertThat(newMin).isEqualTo(oldMin)
-
-        // ACT & ASSERT for hours
-        val newHour = dateUtilImpl.niceTimeScalar(2 * 3600 * 1000L, rh) // 2 hours
-        val oldHour = dateUtilOldImpl.niceTimeScalar(2 * 3600 * 1000L, rh)
-        assertThat(newHour).isEqualTo("2 hours")
-        assertThat(newHour).isEqualTo(oldHour)
-
-        // ACT & ASSERT for days
-        val newDay = dateUtilImpl.niceTimeScalar(4 * 86400 * 1000L, rh) // 4 days
-        val oldDay = dateUtilOldImpl.niceTimeScalar(4 * 86400 * 1000L, rh)
-        assertThat(newDay).isEqualTo("4 days")
-        assertThat(newDay).isEqualTo(oldDay)
-
-        // ACT & ASSERT for weeks
-        val newWeek = dateUtilImpl.niceTimeScalar(3 * 7 * 86400 * 1000L, rh) // 3 weeks
-        val oldWeek = dateUtilOldImpl.niceTimeScalar(3 * 7 * 86400 * 1000L, rh)
-        // 1. Assert the NEW implementation is as expected.
-        assertThat(newWeek).isEqualTo("3 weeks")
-        // 2. Assert the OLD implementation is different.
-//TODO: the old niceTimeScalar couldn't parse weeks.
-        assertThat(newWeek).isNotEqualTo(oldWeek)
     }
     //endregion
 
@@ -1319,6 +1284,7 @@ class DateUtilImplTest {
             // The redundant qualifiers have been removed as requested.
             TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"))
             DateTimeZone.setDefault(DateTimeZone.forID("Europe/Berlin"))
+            SystemTimeZone.invalidate()
 
             // 3. Re-instantiate the classes to make them pick up the new default zone
             val localDateUtil = DateUtilImpl(mockContext)
@@ -1346,6 +1312,7 @@ class DateUtilImplTest {
             // 4. CRITICAL: Always reset the global defaults to not affect other tests.
             TimeZone.setDefault(originalZone)
             DateTimeZone.setDefault(originalJodaZone)
+            SystemTimeZone.invalidate()
         }
     }
     //endregion
@@ -1437,7 +1404,6 @@ class DateUtilImplTest {
                 app.aaps.core.interfaces.R.string.time_frame_hours_minutes  -> String.format(Locale.US, "%1\$dh %2\$d'", *args)
                 app.aaps.core.interfaces.R.string.time_frame_minutes        -> String.format(Locale.US, "%1\$d'", *args)
                 app.aaps.core.interfaces.R.string.time_frame_in_parentheses -> String.format(Locale.US, "(%1\$s)", *args)
-                app.aaps.core.interfaces.R.string.time_value_with_unit      -> String.format(Locale.US, "%1\$s %2\$s", *args)
                 // Add more formatted strings here as needed by other tests
                 else                                          -> getStringForId(id)
             }
@@ -1447,11 +1413,6 @@ class DateUtilImplTest {
             return when (id) {
                 app.aaps.core.interfaces.R.string.shorthour    -> "h"
                 app.aaps.core.interfaces.R.string.shortminute  -> "m"
-                app.aaps.core.interfaces.R.string.unit_seconds -> "seconds"
-                app.aaps.core.interfaces.R.string.unit_minutes -> "minutes"
-                app.aaps.core.interfaces.R.string.unit_hours   -> "hours"
-                app.aaps.core.interfaces.R.string.unit_days    -> "days"
-                app.aaps.core.interfaces.R.string.unit_weeks   -> "weeks"
                 app.aaps.core.interfaces.R.string.today        -> "Today"
                 app.aaps.core.interfaces.R.string.yesterday    -> "Yesterday"
                 app.aaps.core.interfaces.R.string.tomorrow     -> "Tomorrow"

@@ -6,7 +6,7 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import dev.zacsweers.metro.Inject
 
 /**
- * TimeInquireResponsePacket
+ * Answer to [TimeInquirePacket]: the pump clock. It is passed to [DiaconnG8Pump.readPumpClock].
  */
 class TimeInquireResponsePacket(
     injector: MetroMemberInjector
@@ -33,12 +33,16 @@ class TimeInquireResponsePacket(
             failed = true
             return
         }
-        diaconnG8Pump.year = getByteToInt(bufferData) + 2000   // 년 (18~99)
-        diaconnG8Pump.month = getByteToInt(bufferData)  // 월 (1~12)
-        diaconnG8Pump.day = getByteToInt(bufferData)    // 일 (1~31)
-        diaconnG8Pump.hour = getByteToInt(bufferData)   // 시 (0~23)
-        diaconnG8Pump.minute = getByteToInt(bufferData) // 분 (0~59)
-        diaconnG8Pump.second = getByteToInt(bufferData) // 초 (0~59)
+        // year (18~99), month, day, hour, minute, second. It took only the fields, so the driver compared the phone with the
+        // pump time of the main info read earlier, moved on by every message since.
+        diaconnG8Pump.readPumpClock(
+            year = getByteToInt(bufferData) + 2000,
+            month = getByteToInt(bufferData),
+            day = getByteToInt(bufferData),
+            hour = getByteToInt(bufferData),
+            minute = getByteToInt(bufferData),
+            second = getByteToInt(bufferData)
+        )
     }
 
     override val friendlyName = "PUMP_TIME_INQUIRE_RESPONSE"

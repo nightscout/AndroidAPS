@@ -1,11 +1,13 @@
 package app.aaps.pump.carelevo.coordinator
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
@@ -15,6 +17,7 @@ import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusio
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,6 +26,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -362,6 +366,159 @@ internal class CarelevoTempBasalCoordinatorTest {
     }
 
     // endregion
+
+    // region An answer that does not come. Found by the pump scenario tests.
+
+    /** A real patch reports pump state 0 (READY) also while it gives basal. */
+    private fun infusionInfo(modeRaw: Int) = InfusionInfoResponse(
+        subId = 0,
+        runningMinutes = 100,
+        insulinRemaining = 60.0,
+        infusedTotalBasalAmount = 1.0,
+        infusedTotalBolusAmount = 0.0,
+        pumpStateRaw = 0,
+        modeRaw = modeRaw,
+        currentInfusedProgramVolume = 0.0,
+        realInfusedTime = 0
+    )
+
+    @Test
+    fun `a temp basal whose answer is lost is recorded when the patch runs it`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = TEMP_BASAL_MODE))
+
+        val result = sut.setTempBasalAbsolute(1.2, 30, PumpSync.TemporaryBasalType.NORMAL, serial) {}
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(pumpSync) { syncTemporaryBasalWithPumpId(any(), any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `a temp basal whose answer is lost is not recorded when the patch runs none`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = BASAL_MODE))
+
+        val result = sut.setTempBasalAbsolute(1.2, 30, PumpSync.TemporaryBasalType.NORMAL, serial) {}
+
+        assertThat(result.success).isFalse()
+        verifyBlocking(pumpSync, never()) { syncTemporaryBasalWithPumpId(any(), any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `a cancel whose answer is lost is recorded when the patch runs no temp basal`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCancelCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = BASAL_MODE))
+
+        val result = sut.cancelTempBasal(serial) {}
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `a cancel whose answer is lost is not recorded when the temp basal still runs`() {
+        whenever { bleSession.runSingle(any(), isA<TempBasalCancelCommand>(), any()) }.thenAnswer { throw IllegalStateException("timeout") }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(modeRaw = TEMP_BASAL_MODE))
+
+        val result = sut.cancelTempBasal(serial) {}
+
+        assertThat(result.success).isFalse()
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
+    }
+
+    // endregion
+
+    // region A status read corrects a temp basal the patch does not run
+
+    private fun aapsHasTempBasal(type: PumpSync.TemporaryBasalType = PumpSync.TemporaryBasalType.NORMAL) {
+        val tempBasal = PumpSync.PumpState.TemporaryBasal(
+            timestamp = 1_699_999_000_000L, duration = 30 * 60_000L, rate = 1.0, isAbsolute = true, type = type,
+            id = 1L, pumpId = 1_699_999_000_000L, pumpType = PumpType.CAREMEDI_CARELEVO, pumpSerial = serial
+        )
+        whenever { pumpSync.expectedPumpState() }
+            .thenReturn(PumpSync.PumpState(temporaryBasal = tempBasal, extendedBolus = null, bolus = null, profile = null, serialNumber = serial))
+        whenever { pumpSync.syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }.thenReturn(true)
+    }
+
+    @Test
+    fun `a status read ends the temp basal when the running patch gives plain basal`() = runTest {
+        aapsHasTempBasal()
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = BASAL_MODE), serial)
+
+        verify(pumpSync).syncStopTemporaryBasalWithPumpId(eq(1_700_000_000_000L), eq(1_700_000_000_000L), eq(PumpType.CAREMEDI_CARELEVO), eq(serial), eq(false))
+        verify(cancelTempBasalInfusionUseCase).persistTempBasalCancelled()
+    }
+
+    @Test
+    fun `a status read keeps the temp basal the patch runs`() = runTest {
+        aapsHasTempBasal()
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = TEMP_BASAL_MODE), serial)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read during a bolus keeps the temp basal`() = runTest {
+        // The mode shows the bolus, so it tells nothing about a temp basal.
+        aapsHasTempBasal()
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = BOLUS_MODE), serial)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read with a mode it does not know keeps the temp basal`() = runTest {
+        aapsHasTempBasal()
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = UNKNOWN_MODE), serial)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read keeps a suspend`() = runTest {
+        aapsHasTempBasal(PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = BASAL_MODE), serial)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read does nothing when AAPS has no temp basal`() = runTest {
+        whenever { pumpSync.expectedPumpState() }
+            .thenReturn(PumpSync.PumpState(temporaryBasal = null, extendedBolus = null, bolus = null, profile = null, serialNumber = serial))
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = BASAL_MODE), serial)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+        verify(cancelTempBasalInfusionUseCase, never()).persistTempBasalCancelled()
+    }
+
+    @Test
+    fun `a status read leaves the patch record alone when the temp basal belongs to another pump`() = runTest {
+        // PumpSync ends only a temp basal of this pump and serial, and then says no.
+        aapsHasTempBasal()
+        whenever { pumpSync.syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }.thenReturn(false)
+
+        sut.endTempBasalThePatchDoesNotRun(infusionInfo(modeRaw = BASAL_MODE), serial)
+
+        verify(cancelTempBasalInfusionUseCase, never()).persistTempBasalCancelled()
+    }
+
+    // endregion
+
+    private companion object {
+
+        /** `InfusionModeResult`: 0 error, 1 basal, 2 temp basal, 3 bolus. */
+        const val UNKNOWN_MODE = 0
+        const val BASAL_MODE = 1
+        const val TEMP_BASAL_MODE = 2
+        const val BOLUS_MODE = 3
+    }
 
     /** Concrete [PumpEnactResult] so the builder chain and field mutations are observable in assertions. */
     private class FakePumpEnactResult : PumpEnactResult {

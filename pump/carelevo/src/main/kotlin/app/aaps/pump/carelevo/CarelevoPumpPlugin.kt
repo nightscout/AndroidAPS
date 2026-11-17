@@ -94,6 +94,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -387,7 +388,8 @@ class CarelevoPumpPlugin @Inject constructor(
         pluginDisposable += carelevoPatch.patchInfo
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           _reservoirLevel.value = PumpInsulin(it.getOrNull()?.insulinRemain ?: 0.0)
+                           // No patch record: no reservoir to tell, which is not an empty one.
+                           _reservoirLevel.value = it.getOrNull()?.insulinRemain?.let(::PumpInsulin)
                            _batteryLevel.value = 0
                        }, fabricPrivacy::logException)
     }
@@ -640,6 +642,8 @@ class CarelevoPumpPlugin @Inject constructor(
             // A bolus the app did not record (it stopped during the bolus) is recorded here. The queue reads the status
             // when the app starts ("Pump driver changed"), so this runs seconds after a restart.
             bolusCoordinator.recoverLeftoverBolus(info, serialNumber())
+            tempBasalCoordinator.endTempBasalThePatchDoesNotRun(info, serialNumber())
+            bolusCoordinator.endExtendedBolusThePatchDoesNotRun(info, serialNumber())
         } catch (e: Throwable) {
             aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo FAILED", e)
         }
@@ -733,8 +737,8 @@ class CarelevoPumpPlugin @Inject constructor(
             return PumpRate(delivered ?: carelevoPatch.profile.value?.getOrNull()?.getBasal() ?: 0.0)
         }
 
-    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
-    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+    private val _reservoirLevel = MutableStateFlow<PumpInsulin?>(null)
+    override val reservoirLevel: StateFlow<PumpInsulin?> = _reservoirLevel
 
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevel
@@ -746,9 +750,10 @@ class CarelevoPumpPlugin @Inject constructor(
             serialNumber = serialNumber(),
             onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() },
             onStatusRefreshRequested = {
-                scope?.launch { commandQueue.readStatus("Carelevo bolus completion") }
+                scope?.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus("Carelevo bolus completion") }
             },
-            pluginDisposable = pluginDisposable
+            pluginDisposable = pluginDisposable,
+            onAlarmsRefreshRequested = ::refreshActiveAlarmSnapshots
         )
     }
 
@@ -758,7 +763,7 @@ class CarelevoPumpPlugin @Inject constructor(
             serialNumber = serialNumber(),
             onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() },
             onStatusRefreshRequested = {
-                scope?.launch { commandQueue.readStatus("Carelevo bolus cancel") }
+                scope?.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus("Carelevo bolus cancel") }
             }
         )
     }

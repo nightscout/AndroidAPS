@@ -2,6 +2,7 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -107,6 +108,22 @@ class PumpStatusProviderImplTest : TestBaseWithProfile() {
         assertThat(extended.has("ExtendedBolusAbsoluteRate")).isFalse()
         assertThat(extended.has("ExtendedBolusRemaining")).isFalse()
         assertThat(extended.has("LastBolusAmount")).isFalse()
+    }
+
+    /** Not known, as after an app start before the pump was read. As 0 Nightscout showed an empty reservoir. */
+    @Test
+    fun `a reservoir that is not known is omitted`() = runTest {
+        testPumpPlugin.reservoir = null
+
+        assertThat(status().has("reservoir")).isFalse()
+    }
+
+    /** An empty reservoir is real news and must reach Nightscout, unlike the zero-skipping of the other values. */
+    @Test
+    fun `an empty reservoir is sent as 0`() = runTest {
+        testPumpPlugin.reservoir = PumpInsulin(0.0)
+
+        assertThat(status().getInt("reservoir")).isEqualTo(0)
     }
 
     /** A battery level of null must not appear as 0%. */

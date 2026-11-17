@@ -9,6 +9,13 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedExtendedBolus
+import app.aaps.core.interfaces.pump.emulator.EmulatedPumpState
+import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
+import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
+import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,6 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Instant
 
 /**
@@ -50,7 +58,7 @@ class EmulatorBleTransport(
     private val aapsLogger: AAPSLogger? = null,
     /** Called during startScan to generate a new device name. If null, uses current name. */
     private val deviceNameProvider: (() -> String)? = null
-) : BleTransport {
+) : BleTransport, PumpEmulatorControl {
 
     /** Current emulated device name. Changes when [deviceNameProvider] returns a new value on scan. */
     var currentDeviceName: String = deviceName
@@ -138,7 +146,12 @@ class EmulatorBleTransport(
         when (encryptionType) {
             EncryptionType.ENCRYPTION_DEFAULT -> pumpState.hwModel = 0x05 // Dana RS
             EncryptionType.ENCRYPTION_RSv3    -> pumpState.hwModel = 0x05 // Dana RS (RSv3)
-            EncryptionType.ENCRYPTION_BLE5    -> pumpState.hwModel = 0x09 // Dana-i (BLE5)
+            EncryptionType.ENCRYPTION_BLE5    -> {
+                pumpState.hwModel = 0x09 // Dana-i (BLE5)
+                // Seen on a real Dana-i (2026-11-09): its history comes in the UTC format from the start. The driver
+                // reads it so for every model from 7. Before, only a time set in UTC switched the emulator over.
+                pumpState.usingUTC = true
+            }
         }
         // productCode >= 2 required to avoid UNSUPPORTED_FIRMWARE notification
         pumpState.productCode = 2
@@ -146,11 +159,120 @@ class EmulatorBleTransport(
         pumpState.serialNumber = currentDeviceName
 
         // Wire up spontaneous message callback for notifications and multi-response history
-        emulator.onSpontaneousMessage = { type, opCode, data ->
-            val packet = buildRawPacket(type, opCode, data, applyFullEncoding = pumpEncryption.connectionState == 2)
-            sendResponse(packet)
+        emulator.onSpontaneousMessage = { link, type, opCode, data ->
+            awaitAnswersSent()
+            val generation = link ?: connectionGeneration
+            // Dropped before it is built: building advances the RSv3 encryption of the link that is up now.
+            if (generation == connectionGeneration) {
+                val packet = buildRawPacket(type, opCode, data, applyFullEncoding = pumpEncryption.connectionState == 2)
+                sendResponse(packet, generation)
+            }
         }
     }
+
+    // --- PumpEmulatorControl ---
+
+    override var speed: EmulatorSpeed
+        get() = emulator.speed
+        set(value) {
+            emulator.speed = value
+        }
+
+    /** While true, a connect never comes up, as with a pump out of range. */
+    @Volatile private var outOfRange = false
+    private val lostCommands = mutableListOf<EmulatedCommand>()
+    private val lostAnswers = mutableListOf<EmulatedCommand>()
+    private val commands = AtomicInteger()
+
+    override fun breakLink(): Boolean {
+        dropLink()
+        return true
+    }
+
+    private fun dropLink() {
+        if (!connected) return
+        connected = false
+        characteristicsFound = false
+        synchronized(connectionLock) { connectionGeneration++ }
+        listener?.onConnectionStateChanged(false)
+    }
+
+    /**
+     * A replacement pump, in range: the next scan names it anew (see `deviceNameProvider`), so AAPS sees another pump, and
+     * it has no history and runs nothing. Keeping the old history under a new name gave a pump no real user has.
+     */
+    override fun replaceWithNewPump(): Boolean {
+        synchronized(pumpState) {
+            pumpState.isTempBasalRunning = false
+            pumpState.isExtendedBolusRunning = false
+            pumpState.historyStore.clear()
+            pumpState.reviewHistoryStore.clear()
+        }
+        return setOutOfRange(false)
+    }
+
+    override fun setOutOfRange(outOfRange: Boolean): Boolean {
+        this.outOfRange = outOfRange
+        if (outOfRange) dropLink()
+        return true
+    }
+
+    override fun loseCommand(command: EmulatedCommand): Boolean = synchronized(lostCommands) { lostCommands.add(command) }
+
+    override fun loseAnswer(command: EmulatedCommand): Boolean = synchronized(lostAnswers) { lostAnswers.add(command) }
+
+    /** No alarm of a real Dana pump has been seen with this emulator yet. */
+    override fun raise(alarm: EmulatedAlarm): Boolean = false
+
+    /** How a real Dana goes on when it stops a bolus by itself, as at an occlusion, has not been seen. */
+    override fun stopNextBolusAt(units: Double): Boolean = false
+
+    override fun shiftPumpClock(offsetMs: Long): Boolean {
+        pumpState.clockOffsetMs += offsetMs
+        return true
+    }
+
+    override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
+
+    override fun suspendOnPump(suspended: Boolean): Boolean = emulator.suspendOnPump(suspended)
+
+    override fun state(): EmulatedPumpState = synchronized(pumpState) {
+        EmulatedPumpState(
+            boluses = pumpState.givenBoluses.toList(),
+            bolusRunning = pumpState.runningBolus != null,
+            // A Dana sets a temp basal as a percent of the basal.
+            tempBasal = if (pumpState.isTempBasalRunning) EmulatedTempBasal(absolute = null, percent = pumpState.tempBasalPercent) else null,
+            suspended = pumpState.isSuspended,
+            reservoir = pumpState.reservoirRemainingUnits,
+            linkUp = connected,
+            commands = commands.get(),
+            extendedBolus = if (pumpState.isExtendedBolusRunning)
+                EmulatedExtendedBolus(units = pumpState.extendedBolusAmount, minutes = pumpState.extendedBolusDurationHalfHours * 30) else null,
+            battery = pumpState.batteryRemaining,
+            // The pump gives the profile it has as active, one rate an hour.
+            basal = pumpState.basalProfiles.getOrNull(pumpState.activeProfileNumber)?.toList()
+        )
+    }
+
+    override fun saveState(): ByteArray = emulator.saveState()
+
+    /** The command a test can name for [opCode], or null. */
+    private fun commandOf(opCode: Int): EmulatedCommand? = when (opCode) {
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START      -> EmulatedCommand.BOLUS_START
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_STOP       -> EmulatedCommand.BOLUS_STOP
+        BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL,
+        BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL   -> EmulatedCommand.TEMP_BASAL_START
+        BleEncryption.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL    -> EmulatedCommand.TEMP_BASAL_STOP
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS        -> EmulatedCommand.EXTENDED_BOLUS_START
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS_CANCEL -> EmulatedCommand.EXTENDED_BOLUS_STOP
+        BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_BASAL_RATE    -> EmulatedCommand.BASAL_PROFILE
+        BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION -> EmulatedCommand.STATUS
+        else                                                                -> null
+    }
+
+    /** Only the first fault can fire, so faults fire in the order the test set them. */
+    private fun takeFault(faults: MutableList<EmulatedCommand>, command: EmulatedCommand?): Boolean =
+        command != null && synchronized(faults) { faults.firstOrNull() == command && faults.removeAt(0) == command }
 
     // --- BleTransport ---
 
@@ -213,6 +335,8 @@ class EmulatorBleTransport(
             synchronized(connectionLock) { connectionGeneration++ }
             v3PairingRequested = false
             characteristicsFound = false
+            // The radio takes the connect, and the pump never answers it.
+            if (outOfRange) return true
             connected = true
             listener?.onConnectionStateChanged(true)
             return true
@@ -288,16 +412,22 @@ class EmulatorBleTransport(
             }
 
             // Process the packet through pump-side encryption and emulator
+            synchronized(answering) { answersPending++ }
             try {
                 val response = processPumpSide(packet)
                 if (response != null) {
                     aapsLogger?.debug(LTag.PUMPEMULATOR, "sending response ${response.size} bytes")
                     sendResponse(response)
                 } else {
-                    aapsLogger?.warn(LTag.PUMPEMULATOR, "processPumpSide returned null (CRC mismatch?)")
+                    aapsLogger?.debug(LTag.PUMPEMULATOR, "no response (CRC mismatch or a lost frame)")
                 }
             } catch (e: Exception) {
                 aapsLogger?.error(LTag.PUMPEMULATOR, "exception in processPumpSide", e)
+            } finally {
+                synchronized(answering) {
+                    answersPending--
+                    answering.notifyAll()
+                }
             }
         }
     }
@@ -559,9 +689,21 @@ class EmulatorBleTransport(
 
     // --- Command handling ---
 
-    private fun handleCommand(opCode: Int, decrypted: ByteArray): ByteArray {
+    /** @return the answer, or null when the command or its answer is lost */
+    private fun handleCommand(opCode: Int, decrypted: ByteArray): ByteArray? {
+        val command = commandOf(opCode)
+        if (takeFault(lostCommands, command)) {
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "fault: $command never reaches the pump")
+            return null
+        }
         val params = if (decrypted.size > 2) decrypted.copyOfRange(2, decrypted.size) else ByteArray(0)
+        commands.incrementAndGet()
+        emulator.currentLink = connectionGeneration
         val responseData = emulator.processCommand(opCode, params)
+        if (takeFault(lostAnswers, command)) {
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "fault: the pump did $command, its answer is lost")
+            return null
+        }
         return buildCommandResponse(opCode, responseData)
     }
 
@@ -640,6 +782,25 @@ class EmulatorBleTransport(
      * on the generation rather than on `connected`, so a test that drives `writeCharacteristic`
      * directly without connecting still gets its responses.
      */
+    /**
+     * Commands being answered now. A real pump sends its answer to a command before anything it sends after it. The
+     * emulator sends a history read's first event as the answer, and the rest and the "done" from its own thread, so
+     * under load the "done" could come first: the driver ended the read with nothing, and a bolus got no record
+     * (CircleCI 42448, RSv1). What the pump sends by itself therefore waits until the answers are out.
+     */
+    private val answering = Object()
+    private var answersPending = 0
+
+    /** Waits, holding no lock of the link, until no command is being answered; at most [ANSWER_WAIT_MS]. */
+    private fun awaitAnswersSent() = synchronized(answering) {
+        val end = System.currentTimeMillis() + ANSWER_WAIT_MS
+        while (answersPending > 0) {
+            val left = end - System.currentTimeMillis()
+            if (left <= 0) break
+            answering.wait(left)
+        }
+    }
+
     private fun sendResponse(responseBytes: ByteArray, generation: Int = connectionGeneration) {
         // Checked and delivered under the lock: a disconnect landing between the two would put the
         // packet into a BLEComm that has already torn down, and it would throw
@@ -651,5 +812,11 @@ class EmulatorBleTransport(
             }
             listener?.onCharacteristicChanged(responseBytes)
         }
+    }
+
+    private companion object {
+
+        /** An answer is out in milliseconds. Longer means it was lost, and the message goes anyway. */
+        const val ANSWER_WAIT_MS = 2_000L
     }
 }

@@ -134,12 +134,35 @@ class EquilBLE(
         }
     }
 
+    // --- Driver stop ---
+
+    /** Set while the driver is stopped: no scan and no new link, see [stop]. */
+    @Volatile var stopped = false
+        private set
+
+    /**
+     * The driver stops, so the link closes and no new one opens until [start]. A command that still runs fails at
+     * once. Before, it connected again for a driver that was gone, and that driver went on writing its pump state into
+     * the settings.
+     */
+    fun stop() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Driver stopped: link closed, no new one")
+        stopped = true
+        bleConnectErrorForResult()
+        disconnect()
+    }
+
+    fun start() {
+        stopped = false
+    }
+
     // --- Command sequencing ---
 
     private fun bleConnectErrorForResult() {
         baseCmd?.let { baseCmd ->
             synchronized(baseCmd) {
                 baseCmd.cmdSuccess = false
+                baseCmd.failed = true
                 baseCmd.notifyAll()
             }
         }
@@ -212,7 +235,7 @@ class EquilBLE(
         // Guard against the scan emitting the same device multiple times (and other re-entrant
         // calls): only one connect attempt per session, reset on disconnect(). Prevents stacking
         // overlapping GATT clients. See also the close-before-connect guard in EquilBleTransportImpl.
-        if (connectInitiated) return
+        if (connectInitiated || stopped) return
         connectInitiated = true
         val runnable = Runnable {
             aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
@@ -251,6 +274,11 @@ class EquilBLE(
     fun writeCmd(baseCmd: BaseCmd) {
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd $baseCmd")
         this.baseCmd = baseCmd
+        if (stopped) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Driver stopped: $baseCmd not sent")
+            bleConnectErrorForResult()
+            return
+        }
         val mac: String = when (baseCmd) {
             is CmdPair -> baseCmd.address
             is CmdDevicesOldGet -> baseCmd.address
@@ -356,7 +384,7 @@ class EquilBLE(
     private fun startScan() {
         macAddress = equilManager?.equilState?.address
         aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
-        if (macAddress.isNullOrEmpty()) return
+        if (macAddress.isNullOrEmpty() || stopped) return
         if (startTrue) return
         startTrue = true
         connecting = true
@@ -394,7 +422,7 @@ class EquilBLE(
 
     fun connect(from: String) {
         aapsLogger.debug(LTag.PUMPCOMM, "connect====connecting=$connecting====isConnected=$isConnected from $from")
-        if (connecting || isConnected) {
+        if (connecting || isConnected || stopped) {
             return
         }
         baseCmd = null

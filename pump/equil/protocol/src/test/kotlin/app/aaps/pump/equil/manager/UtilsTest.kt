@@ -4,11 +4,30 @@ import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 class UtilsTest : TestBase() {
+
+    /** The old (u / 0.05 * 8).toInt() lost a step for 134 of these 400 amounts, 0.6 U among them. */
+    @Test
+    fun `unitsToSteps keeps every step of an amount on the 0_05 grid`() {
+        for (i in 1..400) assertEquals(i * 8, Utils.unitsToSteps(i * 0.05), "${i * 0.05} U")
+        assertEquals(96, Utils.unitsToSteps(0.6))
+        assertEquals(192, Utils.unitsToSteps(1.2))
+    }
+
+    @Test
+    fun `unitsToSteps never gives more than was asked`() {
+        for (i in 0..3000) {
+            val units = i * 0.0013
+            assertTrue(Utils.unitsToSteps(units) * 0.00625 <= units + 1e-9, "$units U")
+        }
+        assertEquals(19, Utils.unitsToSteps(0.123))
+        assertEquals(0, Utils.unitsToSteps(0.0))
+    }
 
     @Test
     fun `generateRandomPassword should create password of correct length`() {
@@ -86,6 +105,15 @@ class UtilsTest : TestBase() {
         assertEquals(160, Utils.decodeSpeedToUH(1.0))
         assertEquals(320, Utils.decodeSpeedToUH(2.0))
         assertEquals(800, Utils.decodeSpeedToUH(5.0))
+    }
+
+    /** 0.6 U/h at 150 % is 0.8999999999999999: half of it for a half hour was cut to 71 steps, 0.8875 U/h. */
+    @Test
+    fun `decodeSpeedToUH double keeps a rate with float noise on its step`() {
+        assertEquals(72, Utils.decodeSpeedToUH(0.6 * 1.5 / 2))
+        for (i in 1..800) assertEquals(i, Utils.decodeSpeedToUH(i * 0.00625), "${i * 0.00625} U/h")
+        // Off the grid it still never gives more than was asked.
+        assertEquals(71, Utils.decodeSpeedToUH(0.445))
     }
 
     @Test

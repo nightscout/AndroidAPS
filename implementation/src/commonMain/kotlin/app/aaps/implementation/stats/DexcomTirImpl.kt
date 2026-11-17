@@ -1,8 +1,9 @@
 package app.aaps.implementation.stats
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.stats.DexcomTIR
-import kotlinx.datetime.TimeZone
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -130,7 +131,9 @@ class DexcomTirImpl : DexcomTIR {
     fun add(time: Long, valueMgdl: Double) {
         // Local hour of day, as Calendar.getInstance() gave: the hour picks the day or night high
         // threshold, so it has to follow the user`s zone rather than UTC.
-        val hour = Instant.fromEpochMilliseconds(time).toLocalDateTime(TimeZone.currentSystemDefault()).hour
+        val localTime = Instant.fromEpochMilliseconds(time).toLocalDateTime(SystemTimeZone.current())
+        val hour = localTime.hour
+        if (valueMgdl >= 39) addToCgp(time, localTime.date, valueMgdl)
         when {
             valueMgdl < 39                -> error()
             valueMgdl < veryLowTirMgdl    -> veryLow(valueMgdl)
@@ -140,6 +143,38 @@ class DexcomTirImpl : DexcomTIR {
             else                          -> inRange(valueMgdl)
         }
     }
+
+    /** The area and the time beyond the limits of the Glucose Pentagon in one day. */
+    private class CgpDay(var hypoArea: Double = 0.0, var hypoMinutes: Double = 0.0, var hyperArea: Double = 0.0, var hyperMinutes: Double = 0.0)
+
+    private val cgpDays = mutableMapOf<LocalDate, CgpDay>()
+    private var cgpBelow = 0
+    private var cgpAbove = 0
+    private var lastReadingTime: Long? = null
+
+    /** A reading counts for the time since the last one, so a sensor with a reading every minute does not count five times. */
+    private fun addToCgp(time: Long, date: LocalDate, valueMgdl: Double) {
+        val minutes = lastReadingTime?.let { ((time - it) / 60_000.0).coerceIn(0.0, CGP_MAX_MINUTES_PER_READING) } ?: CGP_MAX_MINUTES_PER_READING
+        lastReadingTime = time
+        val day = cgpDays.getOrPut(date) { CgpDay() }
+        if (valueMgdl < CGP_LOW_MGDL) cgpBelow++
+        if (valueMgdl > CGP_HIGH_MGDL) cgpAbove++
+        if (valueMgdl <= CGP_LOW_MGDL) {
+            day.hypoArea += (CGP_LOW_MGDL - valueMgdl) * minutes
+            day.hypoMinutes += minutes
+        }
+        if (valueMgdl >= CGP_HIGH_MGDL) {
+            day.hyperArea += (valueMgdl - CGP_HIGH_MGDL) * minutes
+            day.hyperMinutes += minutes
+        }
+    }
+
+    private fun meanOfDays(intensity: (CgpDay) -> Double) = if (cgpDays.isNotEmpty()) cgpDays.values.sumOf(intensity) / cgpDays.size else 0.0
+
+    override fun cgpBelowRangePct() = if (count > 0) cgpBelow.toDouble() / count * 100.0 else 0.0
+    override fun cgpAboveRangePct() = if (count > 0) cgpAbove.toDouble() / count * 100.0 else 0.0
+    override fun cgpHypoIntensity() = meanOfDays { sqrt(it.hypoArea.pow(2.0) + it.hypoMinutes.pow(2.0)) }
+    override fun cgpHyperIntensity() = meanOfDays { sqrt(it.hyperArea.pow(2.0) + it.hyperMinutes.pow(2.0)) }
 
     override fun veryLowPct() = if (count > 0) veryLow.toDouble() / count * 100.0 else 0.0
     override fun lowPct() = if (count > 0) low.toDouble() / count * 100.0 else 0.0
@@ -159,6 +194,13 @@ class DexcomTirImpl : DexcomTIR {
         var standardDeviation = 0.0
         for (num in values) standardDeviation += (num - mean()).pow(2.0)
         return sqrt(standardDeviation / count)
+    }
+
+    private companion object {
+
+        const val CGP_LOW_MGDL = 70.0
+        const val CGP_HIGH_MGDL = 180.0
+        const val CGP_MAX_MINUTES_PER_READING = 5.0
     }
 
 }

@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.history
 
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.utils.DateUtil
@@ -68,6 +69,17 @@ internal class HistoryViewModelTest {
     fun tearDown() {
         Dispatchers.resetMain()
         TimeZone.setDefault(originalZone)
+        SystemTimeZone.invalidate()
+    }
+
+    /**
+     * Pins the zone these tests need. The invalidation is what a device gets from
+     * `TimeDateOrTZChangeReceiver`: MidnightTime asks SystemTimeZone, which answers from its last
+     * read, so a default zone moved by a test has to be reported.
+     */
+    private fun pinPrague() {
+        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        SystemTimeZone.invalidate()
     }
 
     /** A real window rather than the mock above: these tests read back what the view model wrote. */
@@ -98,7 +110,7 @@ internal class HistoryViewModelTest {
      */
     @Test
     fun `stepping through days keeps every window just after midnight`() {
-        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        pinPrague()
         val today = LocalDate.of(2026, 10, 14)
         val window = FakeOverviewData()
         val vm = viewModelAt(noonIn(today), window)
@@ -114,7 +126,7 @@ internal class HistoryViewModelTest {
     /** 29 March 2026 has 23 hours. Going back 24 hours from the 30th landed on the 28th and skipped it. */
     @Test
     fun `stepping back over the spring clock change does not skip a day`() {
-        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        pinPrague()
         val window = FakeOverviewData()
         val vm = viewModelAt(noonIn(LocalDate.of(2026, 3, 30)), window)
 
@@ -127,7 +139,7 @@ internal class HistoryViewModelTest {
     /** 25 October 2026 has 25 hours. Going forward 24 hours from its midnight stayed on the 25th. */
     @Test
     fun `stepping forward over the autumn clock change does not stay on the same day`() {
-        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        pinPrague()
         val window = FakeOverviewData()
         val vm = viewModelAt(noonIn(LocalDate.of(2026, 10, 24)), window)
 

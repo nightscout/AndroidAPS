@@ -15,8 +15,6 @@ class InjectionExtendedBolusResultReportPacketTest : TestBaseWithProfile() {
         if (it is InjectionExtendedBolusResultReportPacket) {
                 it.aapsLogger = aapsLogger
                 it.diaconnG8Pump = diaconnG8Pump
-                it.rxBus = rxBus
-                it.rh = rh
         }
         true
     }
@@ -26,28 +24,43 @@ class InjectionExtendedBolusResultReportPacketTest : TestBaseWithProfile() {
         diaconnG8Pump = DiaconnG8Pump(aapsLogger, dateUtil, decimalFormatter)
     }
 
+    /** Result 0 is "given in full": the extended bolus has ended. It was read as "running". */
     @Test
-    fun handleMessageShouldProcessValidReport() {
-        // Given - Extended bolus in progress
+    fun anExtendedBolusGivenInFullHasEnded() {
         val packet = InjectionExtendedBolusResultReportPacket(packetInjector)
+        diaconnG8Pump.squareStatus = 1
         val data = createValidPacket(
-            result = 0, // In progress
+            result = 0,
             settingMinutes = 60,
-            elapsedTime = 30,
+            elapsedTime = 60,
             bolusAmount = 500, // 5.00 U
-            deliveredAmount = 250 // 2.50 U
+            deliveredAmount = 500
         )
 
-        // When
         packet.handleMessage(data)
 
-        // Then
         assertThat(packet.failed).isFalse()
-        assertThat(diaconnG8Pump.squareStatus).isEqualTo(1) // 1 = in progress
+        assertThat(diaconnG8Pump.squareStatus).isEqualTo(2)
         assertThat(diaconnG8Pump.squareTime).isEqualTo(60)
-        assertThat(diaconnG8Pump.squareInjTime).isEqualTo(30)
+        assertThat(diaconnG8Pump.squareInjTime).isEqualTo(60)
         assertThat(diaconnG8Pump.squareAmount).isEqualTo(5.0)
-        assertThat(diaconnG8Pump.squareInjAmount).isEqualTo(2.5)
+        assertThat(diaconnG8Pump.squareInjAmount).isEqualTo(5.0)
+    }
+
+    /** The bytes a real G8 (fw 2.50, 2026-11-11) sent after the stop of an extended bolus of 0.50 U over 30 min. */
+    @Test
+    fun theReportOfARealStopIsRead() {
+        val packet = InjectionExtendedBolusResultReportPacket(packetInjector)
+        diaconnG8Pump.squareStatus = 1
+
+        packet.handleMessage(createValidPacket(result = 1, settingMinutes = 0x1e, elapsedTime = 3, bolusAmount = 0x32, deliveredAmount = 5))
+
+        assertThat(packet.failed).isFalse()
+        assertThat(diaconnG8Pump.squareStatus).isEqualTo(2)
+        assertThat(diaconnG8Pump.squareTime).isEqualTo(30)
+        assertThat(diaconnG8Pump.squareInjTime).isEqualTo(3)
+        assertThat(diaconnG8Pump.squareAmount).isEqualTo(0.5)
+        assertThat(diaconnG8Pump.squareInjAmount).isEqualTo(0.05)
     }
 
     @Test
@@ -73,22 +86,21 @@ class InjectionExtendedBolusResultReportPacketTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun handleMessageShouldHandlePartialDelivery() {
-        // Given - Partial delivery
+    fun aFailedExtendedBolusHasEnded() {
         val packet = InjectionExtendedBolusResultReportPacket(packetInjector)
+        diaconnG8Pump.squareStatus = 1
         val data = createValidPacket(
-            result = 0,
+            result = 2,
             settingMinutes = 90,
             elapsedTime = 45,
             bolusAmount = 900, // 9.00 U
             deliveredAmount = 450 // 4.50 U (half delivered)
         )
 
-        // When
         packet.handleMessage(data)
 
-        // Then
         assertThat(packet.failed).isFalse()
+        assertThat(diaconnG8Pump.squareStatus).isEqualTo(2)
         assertThat(diaconnG8Pump.squareAmount).isEqualTo(9.0)
         assertThat(diaconnG8Pump.squareInjAmount).isEqualTo(4.5)
     }

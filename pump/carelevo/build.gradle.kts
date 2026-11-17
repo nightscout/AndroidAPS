@@ -29,4 +29,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.androidx.lifecycle.process)
+
+    // The shared Bluetooth transport contract. Robolectric comes with compose-test-module-dependencies.
+    testImplementation(project(":shared:tests"))
 }

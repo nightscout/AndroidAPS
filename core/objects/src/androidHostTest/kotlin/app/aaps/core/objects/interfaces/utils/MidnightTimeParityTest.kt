@@ -9,6 +9,7 @@ import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.TimeZone
+import kotlinx.datetime.TimeZone as KotlinxTimeZone
 
 /**
  * Pins [MidnightTime] against the `java.time` implementation it is being converted away from.
@@ -40,6 +41,12 @@ class MidnightTimeParityTest {
         TimeZone.setDefault(original)
     }
 
+    /**
+     * The zone every call below passes, read fresh so it follows the default pinned above. The alias
+     * is needed because this file also uses `java.util.TimeZone` to move that default.
+     */
+    private fun zone() = KotlinxTimeZone.currentSystemDefault()
+
     // ------------------------------------------------------------------ the reference
 
     private fun referenceCalc(time: Long): Long =
@@ -67,7 +74,7 @@ class MidnightTimeParityTest {
         for (i in 0 until hours) {
             val t = from + i * hour
             assertWithMessage("%s: calc(%s)", label, Instant.ofEpochMilli(t))
-                .that(MidnightTime.calc(t)).isEqualTo(referenceCalc(t))
+                .that(MidnightTime.before(t, zone())).isEqualTo(referenceCalc(t))
         }
     }
 
@@ -80,7 +87,7 @@ class MidnightTimeParityTest {
             val t = springForward + i * hour
             for (daysBack in 0L..7L)
                 assertWithMessage("spring: calcDaysBack(%s, %s)", Instant.ofEpochMilli(t), daysBack)
-                    .that(MidnightTime.calcDaysBack(t, daysBack))
+                    .that(MidnightTime.daysBack(t, daysBack, zone()))
                     .isEqualTo(referenceCalcDaysBack(t, daysBack))
         }
     }
@@ -90,7 +97,7 @@ class MidnightTimeParityTest {
             val t = fallBack + i * hour
             for (daysBack in 0L..7L)
                 assertWithMessage("fall: calcDaysBack(%s, %s)", Instant.ofEpochMilli(t), daysBack)
-                    .that(MidnightTime.calcDaysBack(t, daysBack))
+                    .that(MidnightTime.daysBack(t, daysBack, zone()))
                     .isEqualTo(referenceCalcDaysBack(t, daysBack))
         }
     }
@@ -107,7 +114,7 @@ class MidnightTimeParityTest {
     @Test fun `the sweep actually crosses an offset change`() {
         val offsets = (0 until 72)
             .map { springForward + it * hour }
-            .map { t -> Math.floorMod(MidnightTime.calc(t), 24 * hour) }
+            .map { t -> Math.floorMod(MidnightTime.before(t, zone()), 24 * hour) }
             .toSet()
         assertWithMessage("local midnight must sit at more than one UTC offset across a DST change")
             .that(offsets.size).isGreaterThan(1)
@@ -122,7 +129,7 @@ class MidnightTimeParityTest {
         for (day in 0 until 365) {
             val t = start + day * 24 * hour
             assertWithMessage("day %s (%s)", day, Instant.ofEpochMilli(t))
-                .that(MidnightTime.calc(t)).isEqualTo(referenceCalc(t))
+                .that(MidnightTime.before(t, zone())).isEqualTo(referenceCalc(t))
         }
     }
 }

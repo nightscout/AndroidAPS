@@ -1,11 +1,8 @@
 package app.aaps.pump.carelevo.coordinator
 
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.command.CmdAlarmClear
 import app.aaps.pump.carelevo.common.CarelevoPatch
@@ -27,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -43,8 +39,6 @@ internal class CarelevoAlarmClearCoordinatorTest {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var carelevoPatch: CarelevoPatch
     @Mock lateinit var transport: CarelevoBleTransport
-    @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var sut: CarelevoAlarmClearCoordinator
 
@@ -65,9 +59,8 @@ internal class CarelevoAlarmClearCoordinatorTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(dateUtil.now()).thenReturn(1_000_000L)
         whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
-        sut = CarelevoAlarmClearCoordinator(aapsLogger, commandQueue, carelevoPatch, transport, pumpSync, dateUtil)
+        sut = CarelevoAlarmClearCoordinator(aapsLogger, commandQueue, carelevoPatch, transport)
     }
 
     @Test
@@ -115,42 +108,17 @@ internal class CarelevoAlarmClearCoordinatorTest {
         assertThat(callCount.get()).isEqualTo(2)
     }
 
+    /** The resume command ends the stop record itself (see CarelevoActivationExecutorTest); this only passes its result on. */
     @Test
-    fun `resumeInfusion does not record a TBR stop when none is expected to be running`() = runBlocking {
+    fun `resumeInfusion returns the result of the resume command`() = runBlocking {
         val ok = enactResult(true)
-        whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
-        whenever { pumpSync.expectedPumpState() }.thenReturn(
-            PumpSync.PumpState(temporaryBasal = null, extendedBolus = null, bolus = null, profile = null, serialNumber = "SN")
-        )
-
-        assertThat(sut.resumeInfusion()).isTrue()
-        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `resumeInfusion records the TBR stop when one is running`() = runBlocking {
-        val ok = enactResult(true)
-        whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
-        val tbr = PumpSync.PumpState.TemporaryBasal(
-            timestamp = 0L, duration = 60_000L, rate = 0.0, isAbsolute = true,
-            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND, id = 1L, pumpId = 0L,
-            pumpType = PumpType.CAREMEDI_CARELEVO, pumpSerial = "SN"
-        )
-        whenever { pumpSync.expectedPumpState() }.thenReturn(
-            PumpSync.PumpState(temporaryBasal = tbr, extendedBolus = null, bolus = null, profile = null, serialNumber = "SN")
-        )
-
-        assertThat(sut.resumeInfusion()).isTrue()
-        verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `resumeInfusion does not touch pumpSync when the resume command fails`() = runBlocking {
         val fail = enactResult(false)
-        whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
 
+        whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
+        assertThat(sut.resumeInfusion()).isTrue()
+
+        whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
         assertThat(sut.resumeInfusion()).isFalse()
-        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
     }
 
     @Test

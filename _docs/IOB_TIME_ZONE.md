@@ -19,8 +19,9 @@ All timestamps are UTC milliseconds, so they do not change. The value calculated
    `profile.getBasal(calcDate)`:
    - absolute TBR: `netBasalRate = rate - basalRate`
    - percent TBR: `netBasalRate = (rate - 100) / 100 * basalRate`
-2. `ProfileSealed.getBasal(timestamp)` uses `MidnightUtils.secondsFromMidnight(timestamp)`, which
-   converts the timestamp to a time of day with `TimeZone.currentSystemDefault()`.
+2. `ProfileSealed.getBasal(timestamp)` uses `MidnightTime.secondsFromMidnight(timestamp, tz)`, which
+   converts the timestamp to a time of day in the zone it is given - and every caller passes the
+   **current** zone (`SystemTimeZone.current()`).
 3. After a zone change, the same past moment falls on another hour of the basal profile. Example:
    17:00 UTC was 19:00 in Prague (UTC+2) and is 18:00 in London (UTC+1).
 4. So the profile basal of the past moves by the zone difference. `basal`, `tempBasalAbsolute` of a
@@ -76,8 +77,9 @@ Neither of them fixes the bug: after a zone change the past is calculated in the
   zone. Most records already store it (`utcOffset` on `BS`, `TB`, `CA`, `EB`, ...). A time zone
   history (from the records, or from the `TIME_CHANGE`/time zone events the app sees) would give the
   offset for any past moment, including moments without a record.
-- `MidnightUtils.secondsFromMidnight(timestamp)` is the one place all profile lookups go through, so
-  an offset-aware variant there would cover the IOB, the basal data and autosens together.
+- `MidnightTime.secondsFromMidnight(timestamp, tz)` is the one place all profile lookups go through,
+  so an offset-aware variant there would cover the IOB, the basal data and autosens together. The
+  zone is already a parameter, so the change is in what the callers pass rather than in the signature.
 - With that fixed, the same timestamp always gives the same value, and the reset on a zone change is
   no longer needed.
 

@@ -27,11 +27,13 @@ internal data class RemoteFood(
     @SerialName("subcategory") val subcategory: String? = null,
     @SerialName("unit") val unit: String? = null,
     @SerialName("portion") val portion: Double = 0.0,
-    @SerialName("carbs") val carbs: Int = 0,
-    @SerialName("gi") val gi: Int? = null,
-    @SerialName("energy") val energy: Int? = null,
-    @SerialName("protein") val protein: Int? = null,
-    @SerialName("fat") val fat: Int? = null,
+    // Whole numbers in AAPS, but another client can write a decimal (10.5, 12.0): it is rounded
+    // instead of failing the whole page. See RoundedIntSerializer.
+    @SerialName("carbs") @Serializable(with = RoundedIntSerializer::class) val carbs: Int = 0,
+    @SerialName("gi") @Serializable(with = RoundedIntSerializer::class) val gi: Int? = null,
+    @SerialName("energy") @Serializable(with = RoundedIntSerializer::class) val energy: Int? = null,
+    @SerialName("protein") @Serializable(with = RoundedIntSerializer::class) val protein: Int? = null,
+    @SerialName("fat") @Serializable(with = RoundedIntSerializer::class) val fat: Int? = null,
     @SerialName("identifier")
     val identifier: String?,       // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
     @SerialName("isValid")

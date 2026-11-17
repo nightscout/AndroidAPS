@@ -137,7 +137,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit = {},
-        pluginDisposable: CompositeDisposable
+        pluginDisposable: CompositeDisposable,
+        onAlarmsRefreshRequested: suspend () -> Unit = {}
     ): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverTreatment.start bolusType=${detailedBolusInfo.bolusType}")
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
@@ -181,7 +182,8 @@ class CarelevoBolusCoordinator @Inject constructor(
             serialNumber = serialNumber,
             onLastDataUpdated = onLastDataUpdated,
             onStatusRefreshRequested = onStatusRefreshRequested,
-            pluginDisposable = pluginDisposable
+            pluginDisposable = pluginDisposable,
+            onAlarmsRefreshRequested = onAlarmsRefreshRequested
         )
     }
 
@@ -236,12 +238,15 @@ class CarelevoBolusCoordinator @Inject constructor(
         val min = durationInMinutes % 60
         val speed = insulin / (durationInMinutes.toDouble() / 60)
         return try {
-            val response = runBlocking { bleSession.runSingle(address, ExtendBolusCommand(immediateDose = 0.0, extendedSpeed = speed, hour = hour, min = min)) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = extendedSentOrAsked(address, "setExtendedBolus", doneWhenExtendedRuns = true) {
+                val response = bleSession.runSingle(address, ExtendBolusCommand(immediateDose = 0.0, extendedSpeed = speed, hour = hour, min = min))
+                aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin result=${response.resultCode}")
+                response.resultCode == RESULT_SUCCESS
+            }
             // Once the pump ACKs, the extended bolus IS running — pumpSync must record it even if the
             // local persist fails (otherwise IOB silently diverges from what the patch delivers).
             val persisted = success && startExtendBolusInfusionUseCase.persistExtendBolusStarted(volume = insulin, speed = speed, minutes = durationInMinutes)
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin result=${response.resultCode} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.setExtendedBolus persist failed — pump enacted, recording in pumpSync anyway")
             if (success) {
                 runBlocking {
@@ -272,6 +277,64 @@ class CarelevoBolusCoordinator @Inject constructor(
     }
 
     /**
+     * Sends an extended bolus command and tells whether it took effect, as `CarelevoTempBasalCoordinator` does for a
+     * temp basal. A patch that answers "no" did nothing. Without an answer the patch may still have done it, so then
+     * what it runs now decides. Found by the pump scenario tests: the patch ran an extended bolus that AAPS did not know
+     * of, or AAPS kept one the patch had ended.
+     * @param doneWhenExtendedRuns a start is done when an extended bolus runs, a cancel when none runs
+     * @throws Exception the one of the command, when the patch does not show that it was done
+     */
+    private fun extendedSentOrAsked(address: String, what: String, doneWhenExtendedRuns: Boolean, send: suspend () -> Boolean): Boolean =
+        try {
+            runBlocking { send() }
+        } catch (e: Exception) {
+            val runs = extendedBolusRunsOnPatch(address)
+            aapsLogger.warn(LTag.PUMPCOMM, "newBle.$what got no answer ($e). The patch runs an extended bolus: $runs")
+            if (runs == doneWhenExtendedRuns) true else throw e
+        }
+
+    /**
+     * Whether the patch runs an extended bolus now, or null when it does not answer or its mode does not tell (during an
+     * immediate bolus the mode shows the bolus).
+     */
+    private fun extendedBolusRunsOnPatch(address: String): Boolean? =
+        try {
+            when (runBlocking { bleSession.readInfusionInfo(address) }.modeRaw.codeToInfusionModeCommand()) {
+                InfusionModeResult.EXTEND_BOLUS, InfusionModeResult.EXTEND_IMME_BOLUS -> true
+                InfusionModeResult.BASAL, InfusionModeResult.TEMP_BASAL               -> false
+                InfusionModeResult.IMME_BOLUS, InfusionModeResult.ERROR               -> null
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo after an extended bolus command failed error=$e")
+            null
+        }
+
+    /**
+     * Ends the extended bolus that AAPS keeps when the patch runs none, as `CarelevoTempBasalCoordinator` does for a temp
+     * basal: a cancel whose answer is lost, and then a lost read of what the patch runs, leave AAPS with an extended bolus
+     * the patch has ended. Only plain basal mode surely means none. The patch gives no end time, so it ends at this read.
+     * @param info a status read of the patch
+     */
+    suspend fun endExtendedBolusThePatchDoesNotRun(info: InfusionInfoResponse, serialNumber: String) {
+        if (info.modeRaw.codeToInfusionModeCommand() != InfusionModeResult.BASAL) return
+        val extendedBolus = pumpSync.expectedPumpState().extendedBolus ?: return
+        val now = dateUtil.now()
+        val ended = pumpSync.syncStopExtendedBolusWithPumpId(
+            timestamp = now,
+            endPumpId = now,
+            pumpType = PumpType.CAREMEDI_CARELEVO,
+            pumpSerial = serialNumber
+        )
+        if (!ended) return
+        val persisted = cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()
+        aapsLogger.warn(
+            LTag.PUMPCOMM,
+            "newBle.status: the patch runs no extended bolus, but AAPS had one since ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}. " +
+                "Ended it now. persisted=$persisted"
+        )
+    }
+
+    /**
      * Cancel-extended-bolus core. Discrete `ExtendBolusCancelCommand` (0x29→0x89, response carries
      * `infusedAmount`) on the session → delete + recompute-mode persist →
      * `pumpSync.syncStopExtendedBolusWithPumpId`. `infusedAmount` is logged only (not reconciled into the DB).
@@ -284,12 +347,15 @@ class CarelevoBolusCoordinator @Inject constructor(
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
-            val response = runBlocking { bleSession.runSingle(address, ExtendBolusCancelCommand()) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = extendedSentOrAsked(address, "cancelExtendedBolus", doneWhenExtendedRuns = false) {
+                val response = bleSession.runSingle(address, ExtendBolusCancelCommand())
+                aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus result=${response.resultCode} infused=${response.infusedAmount}")
+                response.resultCode == RESULT_SUCCESS
+            }
             // Same pump-is-authoritative rule as the start path: on ACK the extended bolus IS stopped
             // on the patch, so the stop must reach pumpSync even if the local persist fails.
             val persisted = success && cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus result=${response.resultCode} infused=${response.infusedAmount} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.cancelExtendedBolus persist failed — pump stopped, recording stop in pumpSync anyway")
             if (success) {
                 onLastDataUpdated()
@@ -332,7 +398,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit,
-        pluginDisposable: CompositeDisposable
+        pluginDisposable: CompositeDisposable,
+        onAlarmsRefreshRequested: suspend () -> Unit
     ): PumpEnactResult {
         val address = carelevoPatch.getPatchInfoAddress()
         if (address == null) {
@@ -358,7 +425,11 @@ class CarelevoBolusCoordinator @Inject constructor(
             }
             immeBolusPumpId = dateUtil.now()
             immeBolusType = detailedBolusInfo.bolusType
-            val response = runBlocking { bleSession.runSingle(address, ImmediateBolusCommand(actionId, detailedBolusInfo.insulin)) }
+            val response = try {
+                runBlocking { bleSession.runSingle(address, ImmediateBolusCommand(actionId, detailedBolusInfo.insulin)) }
+            } catch (e: Exception) {
+                return startNotAnswered(e, detailedBolusInfo, actionId, bolusTotalBefore, address, result, serialNumber, onStatusRefreshRequested)
+            }
             val bolusStartMs = System.currentTimeMillis()
             if (response.resultCode != RESULT_SUCCESS) {
                 aapsLogger.error(LTag.PUMPCOMM, "newBle.deliverTreatment start failed result=${response.resultCode}")
@@ -399,12 +470,65 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result.bolusDelivered = immeBolusStopInfused
             } else if (!completed && bolusProgressData.isStopPressed) {
                 recordUnconfirmedStop(detailedBolusInfo, bolusTotalBefore, bolusStartMs, address, result, serialNumber, onStatusRefreshRequested)
+            } else if (completed) {
+                checkPatchGaveAll(detailedBolusInfo, bolusTotalBefore, address, result, serialNumber, onAlarmsRefreshRequested)
             }
             result
         } catch (e: Exception) {
             handleBolusError(e, result)
             result
         }
+    }
+
+    /**
+     * The start got no answer, or the link failed while it was sent. From the app's side a start the patch never got
+     * and an answer that was lost look the same, but the patch can tell: a running bolus, or a bolus total higher than
+     * before, means it started. Seen with the emulator: the patch gave the bolus, nothing was recorded, and IOB missed
+     * the insulin.
+     *
+     * When it started, or when the patch cannot be asked, the whole dose counts until the patch tells the real amount.
+     * Counting too much is the safer error, because the loop then gives less insulin, not more. The saved start lets
+     * [recoverLeftoverBolus] correct it from the totals at the next status read, and refuses a new bolus while it runs.
+     */
+    private fun startNotAnswered(
+        e: Exception,
+        detailedInfo: DetailedBolusInfo,
+        actionId: Int,
+        bolusTotalBefore: Double?,
+        address: String,
+        result: PumpEnactResult,
+        serialNumber: String,
+        onStatusRefreshRequested: () -> Unit
+    ): PumpEnactResult {
+        aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment start not answered error=$e, asking the patch")
+        val info = readInfusionInfoOrNull(address)
+        val started = when {
+            info == null              -> null
+            info.isImmeBolusRunning() -> true
+            bolusTotalBefore == null  -> null
+            else                      -> info.infusedTotalBolusAmount > bolusTotalBefore + BOLUS_TOTAL_STEP / 2
+        }
+        aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment start not answered started=$started")
+        if (started == false) {
+            handleBolusError(e, result)
+            return result
+        }
+        val insulin = detailedInfo.insulin
+        // The answer carried the expected time, so it is not known here. Nothing reads it back.
+        if (!startImmeBolusInfusionUseCase.persistImmeBolusStarted(actionId, insulin, 0, immeBolusPumpId, immeBolusType, bolusTotalBefore))
+            aapsLogger.error(LTag.PUMPCOMM, "newBle.deliverTreatment persist of the unanswered start failed")
+        runBlocking {
+            pumpSync.syncBolusWithPumpId(immeBolusPumpId, PumpInsulin(insulin), immeBolusType, immeBolusPumpId, PumpType.CAREMEDI_CARELEVO, serialNumber)
+        }
+        _lastBolusTime.value = immeBolusPumpId
+        _lastBolusAmount.value = PumpInsulin(insulin)
+        onStatusRefreshRequested()
+        result.enacted = true
+        result.bolusDelivered = insulin
+        // A start the patch confirmed is a bolus as any other. One that cannot be confirmed raises the alarm.
+        result.success = started == true
+        if (started == null) result.comment(rh.gs(R.string.carelevo_bolus_outcome_unknown))
+        return result
     }
 
     /**
@@ -500,6 +624,48 @@ class CarelevoBolusCoordinator @Inject constructor(
         }
     }
 
+    /**
+     * The progress loop follows the time only, so a bolus the patch stopped on its own, as at an occlusion, looked given
+     * in full. The patch's bolus total tells: its total now minus the total before is what it gave. When it gave less,
+     * that amount is recorded, the bolus is not reported as given, so the user gets the bolus alarm, and the patch's
+     * alarms are read at once, so its reason shows too. When the patch cannot tell, the whole dose stays: counting too
+     * much is the safer error.
+     */
+    private fun checkPatchGaveAll(
+        detailedInfo: DetailedBolusInfo,
+        bolusTotalBefore: Double?,
+        address: String,
+        result: PumpEnactResult,
+        serialNumber: String,
+        onAlarmsRefreshRequested: suspend () -> Unit
+    ) {
+        if (bolusTotalBefore == null) return
+        val bolusTotalAfter = readBolusTotalAfterEnd(address) ?: return
+        val requested = detailedInfo.insulin
+        val given = bolusTotalAfter - bolusTotalBefore
+        // A total lower than before means the patch counter started again; the amount is not known then. More than
+        // asked for can come from a running extended bolus.
+        if (given < 0.0 || given >= requested - BOLUS_TOTAL_STEP / 2) return
+        val delivered = Round.roundTo(given, BOLUS_TOTAL_STEP)
+        aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment the patch stopped the bolus before=$bolusTotalBefore after=$bolusTotalAfter delivered=$delivered of $requested")
+        // The same pump id as the record of the whole dose, so that record is corrected, also to 0 U.
+        runBlocking {
+            pumpSync.syncBolusWithPumpId(detailedInfo.timestamp, PumpInsulin(delivered), detailedInfo.bolusType, immeBolusPumpId, PumpType.CAREMEDI_CARELEVO, serialNumber)
+        }
+        _lastBolusAmount.value = PumpInsulin(delivered)
+        val text = rh.gs(
+            R.string.carelevo_bolus_stopped_by_patch,
+            rh.gs(InterfacesStrings.format_insulin_units, delivered),
+            rh.gs(InterfacesStrings.format_insulin_units, requested)
+        )
+        bolusProgressData.updateProgress((delivered / requested * 100).toInt(), TextRef.Literal(text), PumpInsulin(delivered))
+        result.success = false
+        result.enacted = delivered > 0.0
+        result.bolusDelivered = delivered
+        result.comment(text)
+        runBlocking { onAlarmsRefreshRequested() }
+    }
+
     /** What [recoverLeftoverBolus] found and did. */
     enum class LeftoverBolus {
 
@@ -542,7 +708,9 @@ class CarelevoBolusCoordinator @Inject constructor(
         val amount = fromPatch ?: volume
         val pumpId = leftover.pumpId ?: leftover.createdAt.toEpochMilliseconds()
         val type = BS.Type.entries.firstOrNull { it.name == leftover.bolusType } ?: BS.Type.NORMAL
-        val added = amount > 0.0 && runBlocking {
+        // 0 U only when the patch totals say so: then a record of the whole dose, made for a start that got no answer,
+        // is set to what was really given.
+        val added = (amount > 0.0 || fromPatch != null) && runBlocking {
             pumpSync.syncBolusWithPumpId(pumpId, PumpInsulin(amount), type, pumpId, PumpType.CAREMEDI_CARELEVO, serialNumber)
         }
         aapsLogger.warn(LTag.PUMPCOMM, "newBle.leftoverBolus volume=$volume amount=$amount fromPatch=${fromPatch != null} running=$running added=$added pumpId=$pumpId")
@@ -785,7 +953,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         result.success = false
         result.enacted = false
         result.bolusDelivered = 0.0
-        if (e is TimeoutException) {
+        // The session times out with the coroutine timeout, not the java one.
+        if (e is TimeoutException || e is TimeoutCancellationException) {
             result.comment(rh.gs(R.string.alarm_feat_msg_check_patch_connect))
         }
     }

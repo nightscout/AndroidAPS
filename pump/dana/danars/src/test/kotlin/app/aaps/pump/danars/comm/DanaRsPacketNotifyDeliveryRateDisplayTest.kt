@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.database.DanaHistoryDatabase
@@ -45,6 +46,18 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
         Assertions.assertEquals("NOTIFY__DELIVERY_RATE_DISPLAY", packet.friendlyName)
     }
 
+    /** The pump goes on with a bolus the driver no longer follows, for example after a stop with no answer. */
+    @Test
+    fun progressOfABolusTheDriverDoesNotFollowIsOnlyLogged() {
+        danaPump.bolusingDetailedBolusInfo = null
+        val lastProgress = danaPump.bolusProgressLastTimeStamp
+        val packet = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, ch, bolusProgressData, danaPump)
+
+        packet.handleMessage(createArray(17, 1.toByte()))
+
+        Assertions.assertEquals(lastProgress, danaPump.bolusProgressLastTimeStamp)
+    }
+
     @BeforeEach
     fun mock() {
         danaRSPlugin =
@@ -63,7 +76,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 decimalFormatter,
                 pumpEnactResultProvider,
                 blePreCheck,
-                bolusProgressData, org.mockito.kotlin.mock<NotificationManager>()
+                bolusProgressData, org.mockito.kotlin.mock<PumpSync>(), org.mockito.kotlin.mock<NotificationManager>()
             )
         danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
     }

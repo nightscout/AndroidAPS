@@ -96,6 +96,13 @@ class CommandExecutor(
     @Volatile private var loopJob: Job? = null
     @Volatile private var draining = false
 
+    /**
+     * How long the loop waits for a link before it gives up on the queue. Only tests lower it, so a scenario with a
+     * pump out of range takes the same path without the real two minutes. The app never changes it, and it is not
+     * stored: a new graph starts with the real limit.
+     */
+    @Volatile var maxConnectionSeconds: Long = Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS.toLong()
+
     /** True while a drain is actively processing the queue (used by e2e idle detection). */
     fun isProcessing(): Boolean = draining
 
@@ -136,8 +143,8 @@ class CommandExecutor(
         var connectLogged = false
         val wakeLock = platform.acquireWakeLock(rh.gs(config.appName) + ":CommandExecutor", T.mins(10).msecs())
         rxBus.send(EventQueueChanged())
+        // The end of the last command, or the start of this drain. The connection limit counts from here.
         var lastCommandTime = Clock.System.now().toEpochMilliseconds()
-        var connectionStartTime = lastCommandTime
         // When the current hold started, so its duration can be given back to the timers above.
         var heldSince: Long? = null
         try {
@@ -153,8 +160,13 @@ class CommandExecutor(
                 // Connecting is not a command in flight, so applying is safe, and treating it as busy
                 // would stall the apply behind a driver that cannot connect at all - the case that
                 // prompted this, where a pump was selected with no hardware to answer.
-                if (queue.isHeld()) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "queue held")
+                //
+                // An app that has not finished starting counts as held too. Until then there is no
+                // profile, so the pump records a command brings - a status read's history above all - were
+                // dropped by PumpSync for good. A driver can queue a command from `onStart`, and every one
+                // does through `PumpPluginBase.onStart`, before the app has finished starting.
+                if (queue.isHeld() || !config.appInitialized) {
+                    aapsLogger.debug(LTag.PUMPQUEUE, if (queue.isHeld()) "queue held" else "waiting for the app to start")
                     heldSince = heldSince ?: Clock.System.now().toEpochMilliseconds()
                     delay(500)
                     continue
@@ -165,11 +177,13 @@ class CommandExecutor(
                     // after release takes the "timed out" branch and clears the queue - cancelling
                     // commands that were only ever waiting for the apply to finish.
                     val holdDuration = Clock.System.now().toEpochMilliseconds() - it
-                    connectionStartTime += holdDuration
                     lastCommandTime += holdDuration
                     heldSince = null
                 }
-                val secondsElapsed = (Clock.System.now().toEpochMilliseconds() - connectionStartTime) / 1000
+                // From the end of the last command, not from the start of the drain. Counted from the start, the time
+                // of the commands already run was charged to the connection: after a long bolus with the pump out of
+                // range, the next command was dropped at once as "timed out", with no try to connect.
+                val secondsElapsed = (Clock.System.now().toEpochMilliseconds() - lastCommandTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - dropping the queue")
@@ -199,7 +213,23 @@ class CommandExecutor(
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return
                 }
-                if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
+                if (queue.size() == 0 && queue.performing() == null &&
+                    !pump.isConnected() && !pump.isConnecting() && !pump.isHandshakeInProgress()
+                ) {
+                    // Nothing to send and no link: it closed while the loop waited to disconnect after the last
+                    // command, or the command went before the link was up. Connecting now only leads to a disconnect.
+                    // With a pump that could not connect at the moment (a stopped driver) the loop went on trying
+                    // until the connection timeout, and the Bluetooth watchdog then switched the phone's Bluetooth
+                    // off and on for no command at all. A command that comes later sends a wake: the next drain.
+                    // No disconnect() either: there is no link to close, and a pump whose link someone else is opening
+                    // (its own driver, or in the instrumented tests a second app graph's queue on the same pump) would
+                    // lose it. In the Dana RS UI tests such a disconnect reached the live link of the next test.
+                    if (wake.tryReceive().isSuccess) continue
+                    aapsLogger.debug(LTag.PUMPQUEUE, "queue empty and no link: nothing to do")
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+                    return
+                }
+                if (!pump.isConnected() && secondsElapsed > maxConnectionSeconds) {
                     bolusProgressData.clear()
                     rxBus.send(EventPumpStatusChanged(rh.gs(CoreUiStrings.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
@@ -221,7 +251,6 @@ class CommandExecutor(
                         platform.restartBluetooth()
                         // start over again once after watchdog barked
                         lastCommandTime = Clock.System.now().toEpochMilliseconds()
-                        connectionStartTime = lastCommandTime
                         pump.connect("watchdog")
                     } else {
                         queue.clear()

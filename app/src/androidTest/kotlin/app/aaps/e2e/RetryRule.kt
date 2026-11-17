@@ -6,16 +6,18 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
 /**
- * Retries a failed test up to [attempts] total tries before giving up.
- * The Dana E2E instrumentation tests are timing-sensitive and flake **intermittently** under CI load:
- * uiautomator element look-ups (`find`, `openManageAction`, …) time out when the emulator is briefly
- * starved by the concurrent unit suite and the other shard. The flakes are single, uncorrelated
- * failures (a different one test of ~18 per run), so a later attempt — often after the unit step has
- * finished and freed the box — succeeds. A genuine, deterministic failure still fails every attempt and
- * stays red, so this hides flakiness without masking real breakage.
- * Assumption failures (skips) are never retried.
+ * Runs a failed test once more when the failure can come from a loaded emulator rather than from the code: a screen or
+ * a state that did not show in time, or a screen object that changed under the test. On CI the emulators share the
+ * machine, and a uiautomator look-up or a wait then times out now and then.
+ *
+ * A wrong result is never retried: an [AssertionError] (what Truth and JUnit checks throw) fails the test at once.
+ * Retried, a real bug only passed now and then and cost three runs of a slow test, and it stayed hidden.
+ * Assumption failures (skips) are never retried either.
+ *
+ * Every retry is logged ("RetryRule: ... FAILED attempt", "... PASSED on attempt") and CI prints these lines after
+ * each shard, so a test that passes only on its second try stays visible.
  */
-class RetryRule(private val attempts: Int = 3) : TestRule {
+class RetryRule(private val attempts: Int = 2) : TestRule {
 
     override fun apply(base: Statement, description: Description): Statement =
         object : Statement() {
@@ -28,6 +30,9 @@ class RetryRule(private val attempts: Int = 3) : TestRule {
                         return
                     } catch (ave: AssumptionViolatedException) {
                         throw ave // a skip, not a flake - never retry
+                    } catch (wrong: AssertionError) {
+                        println("RetryRule: ${description.displayName} FAILED, not retried (a wrong result): ${wrong.javaClass.simpleName}: ${wrong.message}")
+                        throw wrong
                     } catch (t: Throwable) {
                         lastError = t
                         println("RetryRule: ${description.displayName} FAILED attempt $attempt/$attempts: ${t.javaClass.simpleName}: ${t.message}")

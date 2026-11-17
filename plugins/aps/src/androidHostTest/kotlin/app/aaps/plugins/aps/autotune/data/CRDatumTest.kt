@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.plugins.aps.autotune.toKotlinx
+import app.aaps.plugins.aps.autotune.toOrgJson
+
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
@@ -39,7 +42,7 @@ class CRDatumTest : TestBaseWithProfile() {
             put("CRInsulin", 3.0)
         }
 
-        val crDatum = CRDatum(json, dateUtil)
+        val crDatum = CRDatum(json.toKotlinx(), dateUtil)
 
         assertThat(crDatum.crInitialIOB).isEqualTo(2.5)
         assertThat(crDatum.crInitialBG).isEqualTo(120.0)
@@ -58,7 +61,7 @@ class CRDatumTest : TestBaseWithProfile() {
             put("CRCarbs", 30.0)
         }
 
-        val crDatum = CRDatum(json, dateUtil)
+        val crDatum = CRDatum(json.toKotlinx(), dateUtil)
 
         assertThat(crDatum.crInitialBG).isEqualTo(120.0)
         assertThat(crDatum.crCarbs).isEqualTo(30.0)
@@ -70,7 +73,7 @@ class CRDatumTest : TestBaseWithProfile() {
     fun `constructor from JSON handles empty JSON`() {
         val json = JSONObject()
 
-        val crDatum = CRDatum(json, dateUtil)
+        val crDatum = CRDatum(json.toKotlinx(), dateUtil)
 
         assertThat(crDatum.crInitialIOB).isEqualTo(0.0)
         assertThat(crDatum.crInitialBG).isEqualTo(0.0)
@@ -93,7 +96,7 @@ class CRDatumTest : TestBaseWithProfile() {
         whenever(dateUtil.toISOString(1609459200000L)).thenReturn("2021-01-01T00:00:00.000Z")
         whenever(dateUtil.toISOString(1609473600000L)).thenReturn("2021-01-01T04:00:00.000Z")
 
-        val json = crDatum.toJSON()
+        val json = crDatum.toJSON().toOrgJson()
 
         assertThat(json.getDouble("CRInitialIOB")).isEqualTo(2.5)
         assertThat(json.getInt("CRInitialBG")).isEqualTo(120)
@@ -114,7 +117,7 @@ class CRDatumTest : TestBaseWithProfile() {
 
         whenever(dateUtil.toISOString(0L)).thenReturn("1970-01-01T00:00:00.000Z")
 
-        val json = crDatum.toJSON()
+        val json = crDatum.toJSON().toOrgJson()
 
         assertThat(json.getInt("CRInitialBG")).isEqualTo(120)
         assertThat(json.getInt("CREndBG")).isEqualTo(100)
@@ -128,7 +131,7 @@ class CRDatumTest : TestBaseWithProfile() {
 
         whenever(dateUtil.toISOString(0L)).thenReturn("1970-01-01T00:00:00.000Z")
 
-        val json = crDatum.toJSON()
+        val json = crDatum.toJSON().toOrgJson()
 
         assertThat(json.getInt("CRCarbs")).isEqualTo(30)
     }
@@ -293,7 +296,7 @@ class CRDatumTest : TestBaseWithProfile() {
 
         whenever(dateUtil.toISOString(0L)).thenReturn("1970-01-01T00:00:00.000Z")
 
-        val json = crDatum.toJSON()
+        val json = crDatum.toJSON().toOrgJson()
 
         assertThat(json.getDouble("CRInitialIOB")).isEqualTo(0.0)
         assertThat(json.getInt("CRInitialBG")).isEqualTo(0)
@@ -311,7 +314,7 @@ class CRDatumTest : TestBaseWithProfile() {
 
         whenever(dateUtil.toISOString(0L)).thenReturn("1970-01-01T00:00:00.000Z")
 
-        val json = crDatum.toJSON()
+        val json = crDatum.toJSON().toOrgJson()
 
         assertThat(json.getDouble("CRInitialIOB")).isEqualTo(100.0)
         assertThat(json.getInt("CRInitialBG")).isEqualTo(400)
@@ -329,7 +332,7 @@ class CRDatumTest : TestBaseWithProfile() {
 
         whenever(dateUtil.toISOString(0L)).thenReturn("1970-01-01T00:00:00.000Z")
 
-        val json = crDatum.toJSON()
+        val json = crDatum.toJSON().toOrgJson()
 
         assertThat(json.getDouble("CRInitialIOB")).isEqualTo(2.567)
         assertThat(json.getDouble("CREndIOB")).isEqualTo(1.234)

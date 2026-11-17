@@ -3,9 +3,12 @@ package app.aaps.pump.carelevo.emulator
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.PairingStep
+import app.aaps.core.interfaces.pump.emulator.EmulatedCommand
+import app.aaps.core.interfaces.pump.emulator.EmulatedTempBasal
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoCommand
 import app.aaps.pump.carelevo.ble.commands.PatchDiscardCommand
 import app.aaps.pump.carelevo.ble.commands.PatchInfoCommand
+import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -103,6 +106,57 @@ class CarelevoEmulatorTransportTest {
         assertThat(listener.notifications).isEmpty()
         // ...and the frame is still recorded, so a test can assert what was sent into the silence.
         assertThat(transport.writes).hasSize(1)
+    }
+
+    /** The patch never got it: it does nothing. For the app this is not the same as a lost answer. */
+    @Test
+    fun `a lost command does nothing on the patch and gets no answer`() {
+        transport.gatt.connect(ADDRESS)
+        listener.clear()
+        transport.loseCommand(EmulatedCommand.TEMP_BASAL_START)
+
+        transport.gatt.writeCharacteristic(TempBasalCommand.byUnit(1.5, 1, 0).encode())
+
+        assertThat(listener.notifications).isEmpty()
+        assertThat(state.tempBasalRunning).isFalse()
+        assertThat(transport.state().commands).isEqualTo(0)
+    }
+
+    /** The patch runs it and its answer is lost: the temp basal runs, and the app cannot know. */
+    @Test
+    fun `a lost answer still runs the command on the patch, once`() {
+        transport.gatt.connect(ADDRESS)
+        listener.clear()
+        transport.loseAnswer(EmulatedCommand.TEMP_BASAL_START)
+
+        transport.gatt.writeCharacteristic(TempBasalCommand.byUnit(1.5, 1, 0).encode())
+
+        assertThat(listener.notifications).isEmpty()
+        assertThat(transport.state().tempBasal).isEqualTo(EmulatedTempBasal(absolute = 1.5, percent = null))
+
+        transport.gatt.writeCharacteristic(TempBasalCommand.byUnit(1.5, 1, 0).encode())
+
+        assertThat(listener.notifications).hasSize(1)
+    }
+
+    @Test
+    fun `a broken link tells the driver it is disconnected`() {
+        transport.gatt.connect(ADDRESS)
+        listener.clear()
+
+        transport.breakLink()
+
+        assertThat(listener.events).containsExactly(DISCONNECTED)
+        assertThat(transport.state().linkUp).isFalse()
+    }
+
+    @Test
+    fun `out of range starts a connect that never comes up`() {
+        transport.setOutOfRange(true)
+
+        assertThat(transport.gatt.connect(ADDRESS)).isTrue()
+
+        assertThat(listener.events).isEmpty()
     }
 
     @Test

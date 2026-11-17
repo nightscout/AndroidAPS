@@ -5,6 +5,7 @@ import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.asJsonObject
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.TimeZone
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -17,7 +18,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     @BeforeEach
     fun mock() {
         now = 754 // in minutes from midnight
-        val nowMills = MidnightTime.calcMidnightPlusMinutes(now.toInt())
+        val nowMills = MidnightTime.plusMinutes(now.toInt(), TimeZone.currentSystemDefault())
         whenever(dateUtil.now()).thenReturn(nowMills)
     }
 

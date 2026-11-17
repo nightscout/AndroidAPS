@@ -429,10 +429,10 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `pumpDescription should not offer fill or battery change`() {
-        // The Equil wizard fills the reservoir and fits the charged battery itself, so the generic
-        // Prime/Fill and Pump battery change actions must stay hidden.
-        assertFalse(equilPumpPlugin.pumpDescription.isRefillingCapable)
+    fun `pumpDescription offers fill but not battery change`() {
+        // Users asked for Prime/Fill: the pump can be detached from the base plate and primed into the air.
+        // The Equil wizard fits the charged battery itself, so Pump battery change stays hidden.
+        assertTrue(equilPumpPlugin.pumpDescription.isRefillingCapable)
         assertFalse(equilPumpPlugin.pumpDescription.isBatteryReplaceable)
         assertTrue(equilPumpPlugin.pumpDescription.isPatchPump)
     }

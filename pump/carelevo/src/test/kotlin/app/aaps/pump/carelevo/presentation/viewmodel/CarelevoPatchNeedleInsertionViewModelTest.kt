@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -127,6 +128,8 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
         whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
         whenever(carelevoPatch.profile).thenReturn(profileSubject)
+        // No profile switch requested, unless a test asks for one.
+        whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = null))
         // Wizard default: site rotation step skipped -> no location/arrow to patch onto the event.
         whenever(carelevoPatch.sitePlacementLocation).thenReturn(TE.Location.NONE)
         whenever(carelevoPatch.sitePlacementArrow).thenReturn(TE.Arrow.NONE)
@@ -177,6 +180,9 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         checkNeedle = checkNeedle,
         needleFailedCount = needleFailedCount
     )
+
+    private fun pumpState(profile: PumpProfile?) =
+        PumpSync.PumpState(temporaryBasal = null, extendedBolus = null, bolus = null, profile = profile, serialNumber = "SN")
 
     private fun therapyEvent(type: TE.Type = TE.Type.CANNULA_CHANGE) =
         TE(timestamp = 1_000L, type = type, glucoseUnit = GlucoseUnit.MGDL)
@@ -484,6 +490,32 @@ class CarelevoPatchNeedleInsertionViewModelTest {
             assertThat(events).containsExactly(CarelevoConnectNeedleEvent.ShowMessageProfileNotSet)
             assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
             verifyBlocking(commandQueue, never()) { customCommand(any()) }
+        }
+
+    /**
+     * A first patch: the queue drops the profile while no patch is paired, so the patch model has none. The requested
+     * profile is used, as in the Equil wizard. Found by the emulator scenario test, where the wizard stopped here.
+     */
+    @Test
+    fun `startSetBasal takes the requested profile when the patch has none`() =
+        runTest(testDispatcher.scheduler) {
+            whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+            profileSubject.onNext(Optional.empty())
+            val requested = mock<PumpProfile>()
+            whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = requested))
+            val ok = enactResult(true)
+            whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
+            whenever {
+                pumpSync.insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())
+            }.thenReturn(true)
+            val events = collectEvents()
+
+            sut.startSetBasal()
+            advanceUntilIdle()
+
+            verify(carelevoPatch).setProfile(requested)
+            verifyBlocking(commandQueue) { customCommand(any<CmdSetBasal>()) }
+            assertThat(events).containsExactly(CarelevoConnectNeedleEvent.SetBasalComplete)
         }
 
     @Test

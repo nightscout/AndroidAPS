@@ -35,17 +35,24 @@ class InjectionSnackResultReportPacket(injector: MetroMemberInjector) : DiaconnG
 
         val bufferData = prefixDecode(data)
         val result = getByteToInt(bufferData)
-        val bolusAmountToBeDelivered = getShortToInt(bufferData) / 100.0
-        val deliveredBolusAmount = getShortToInt(bufferData) / 100.0
+        val setHundredths = getShortToInt(bufferData)
+        val givenHundredths = getShortToInt(bufferData)
+        val bolusAmountToBeDelivered = setHundredths / 100.0
+        val deliveredBolusAmount = givenHundredths / 100.0
 
         diaconnG8Pump.lastBolusAmount = deliveredBolusAmount
         diaconnG8Pump.lastBolusTime = dateUtil.now()
         bolusProgressData.updateProgress(delivered = PumpInsulin(deliveredBolusAmount))
 
+        // Result 1 is a stop during delivery.
         if (result == 1) {
-            diaconnG8Pump.bolusStopped = true // 주입 중 취소 처리!
+            diaconnG8Pump.bolusStopped = true
         }
-        diaconnG8Pump.bolusDone = true // 주입완료 처리!
+        // From the amounts, not from the result: the result of a bolus the pump stopped itself, as at an occlusion, was
+        // never seen on a real pump.
+        diaconnG8Pump.bolusGivenInFull = givenHundredths >= setHundredths
+        // Set last: the bolus waits for it, and then reads the fields above.
+        diaconnG8Pump.bolusDone = true
 
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
         aapsLogger.debug(LTag.PUMPCOMM, "bolusAmountToBeDelivered --> $bolusAmountToBeDelivered")
