@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdNeedleCheck
 import app.aaps.pump.carelevo.command.CmdSetBasal
@@ -18,6 +17,7 @@ import app.aaps.pump.carelevo.command.activationProfile
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
@@ -34,16 +34,17 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalDateTime
-import java.util.concurrent.TimeUnit
-import kotlin.jvm.optionals.getOrNull
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
@@ -51,7 +52,6 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val pumpSync: PumpSync,
     private val persistenceLayer: PersistenceLayer,
-    private val aapsSchedulers: AapsSchedulers,
     private val carelevoPatch: CarelevoPatch,
     private val commandQueue: CommandQueue,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
@@ -78,7 +78,6 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     private var needleInsertedAtMs: Long? = null
     private var delayedStartBasalJob: Job? = null
 
-    private val compositeDisposable = CompositeDisposable()
 
     fun setIsCreated(isCreated: Boolean) {
         _isCreated = isCreated
@@ -115,27 +114,24 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     }
 
     fun observePatchInfo() {
-        compositeDisposable += carelevoPatch.patchInfo
-            .observeOn(aapsSchedulers.main)
-            .subscribeOn(aapsSchedulers.io)
-            .subscribe {
-                val patchInfo = it?.getOrNull() ?: return@subscribe
-                aapsLogger.debug(LTag.PUMPCOMM, "observePatchInfo patchInfo=$patchInfo")
-                val isNeedleInserted = patchInfo.checkNeedle ?: false
-                _isNeedleInsert.tryEmit(isNeedleInserted)
-                if (isNeedleInserted) {
-                    if (needleInsertedAtMs == null) needleInsertedAtMs = System.currentTimeMillis()
-                } else {
-                    needleInsertedAtMs = null
-                    delayedStartBasalJob?.cancel()
-                }
-
-                val failedCount = patchInfo.needleFailedCount ?: 0
-                if (failedCount >= 3) {
-                    recordNeedleInsertFailAlarm()
-                    triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleFailed(failedCount))
-                }
+        carelevoPatch.patchInfo.onEach {
+            val patchInfo = it ?: return@onEach
+            aapsLogger.debug(LTag.PUMPCOMM, "observePatchInfo patchInfo=$patchInfo")
+            val isNeedleInserted = patchInfo.checkNeedle ?: false
+            _isNeedleInsert.tryEmit(isNeedleInserted)
+            if (isNeedleInserted) {
+                if (needleInsertedAtMs == null) needleInsertedAtMs = System.currentTimeMillis()
+            } else {
+                needleInsertedAtMs = null
+                delayedStartBasalJob?.cancel()
             }
+
+            val failedCount = patchInfo.needleFailedCount ?: 0
+            if (failedCount >= 3) {
+                recordNeedleInsertFailAlarm()
+                triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleFailed(failedCount))
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun startCheckNeedle() {
@@ -205,7 +201,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             val result = commandQueue.customCommand(CmdSetBasal())
             if (result.success) {
                 aapsLogger.debug(LTag.PUMPCOMM, "set basal success")
-                val serial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+                val serial = carelevoPatch.patchInfo.latest?.manufactureNumber ?: ""
                 pumpSync.connectNewPump(true)
                 delay(1000)
                 insertCannulaChangeWithSite(serial, System.currentTimeMillis())
@@ -286,7 +282,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     }
 
     fun startDiscardProcess() {
-        when (carelevoPatch.patchState.value?.getOrNull()) {
+        when (carelevoPatch.patchState.latest) {
             is PatchState.NotConnectedNotBooting, null -> {
                 triggerEvent(CarelevoConnectNeedleEvent.DiscardComplete)
             }
@@ -312,36 +308,39 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
 
     private fun startForceDiscard() {
         setUiState(UiState.Loading)
-        compositeDisposable += patchForceDiscardUseCase.execute()
-            .timeout(3000L, TimeUnit.MILLISECONDS)
-            .observeOn(aapsSchedulers.io)
-            .subscribeOn(aapsSchedulers.io)
-            .subscribe({ response ->
-                           when (response) {
-                               is ResponseResult.Success -> {
-                                   aapsLogger.debug(LTag.PUMPCOMM, "response success")
-                                   carelevoPatch.discardTeardown()
-                                   setUiState(UiState.Idle)
-                                   triggerEvent(CarelevoConnectNeedleEvent.DiscardComplete)
-                               }
+        viewModelScope.launch {
+            val response = try {
+                withTimeoutOrNull(FORCE_DISCARD_TIMEOUT) { patchForceDiscardUseCase.execute() }
+                    ?: throw IllegalStateException("force discard did not end in $FORCE_DISCARD_TIMEOUT")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.PUMPCOMM, "force discard failed : $e")
+                setUiState(UiState.Idle)
+                triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
+                return@launch
+            }
+            when (response) {
+                is ResponseResult.Success -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response success")
+                    carelevoPatch.discardTeardown()
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectNeedleEvent.DiscardComplete)
+                }
 
-                               is ResponseResult.Error   -> {
-                                   aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
-                                   setUiState(UiState.Idle)
-                                   triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
-                               }
+                is ResponseResult.Error   -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
+                }
 
-                               else                      -> {
-                                   aapsLogger.debug(LTag.PUMPCOMM, "response failed")
-                                   setUiState(UiState.Idle)
-                                   triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
-                               }
-                           }
-                       }, { e ->
-                           aapsLogger.debug(LTag.PUMPCOMM, "force discard failed : $e")
-                           setUiState(UiState.Idle)
-                           triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
-                       })
+                else                      -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response failed")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
+                }
+            }
+        }
     }
 
     private fun recordNeedleInsertFailAlarm() {
@@ -354,20 +353,24 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             isAcknowledged = false,
 
             )
-        compositeDisposable += carelevoAlarmInfoUseCase.upsertAlarm(info)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                { aapsLogger.debug(LTag.PUMPCOMM, "recordNeedleInsertFailAlarm.upsertComplete") },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "recordNeedleInsertFailAlarm.upsertError error=$e") }
-            )
+        viewModelScope.launch {
+            try {
+                carelevoAlarmInfoUseCase.upsertAlarm(info)
+                aapsLogger.debug(LTag.PUMPCOMM, "recordNeedleInsertFailAlarm.upsertComplete")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "recordNeedleInsertFailAlarm.upsertError error=$e")
+            }
+        }
     }
 
-    fun needleFailCount() = carelevoPatch.patchInfo.value?.getOrNull()?.needleFailedCount
+    fun needleFailCount() = carelevoPatch.patchInfo.latest?.needleFailedCount
 
     override fun onCleared() {
         delayedStartBasalJob?.cancel()
-        compositeDisposable.clear()
         super.onCleared()
     }
 }
+
+private val FORCE_DISCARD_TIMEOUT = 3.seconds

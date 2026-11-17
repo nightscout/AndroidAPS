@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.TextRef
@@ -25,7 +24,7 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfus
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
-import java.util.Locale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -45,6 +44,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -66,7 +66,6 @@ internal class CarelevoBolusCoordinatorTest {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var bolusProgressData: BolusProgressData
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var carelevoPatch: CarelevoPatch
     @Mock lateinit var bleSession: CarelevoBleSession
     @Mock lateinit var startImmeBolusInfusionUseCase: CarelevoStartImmeBolusInfusionUseCase
@@ -143,7 +142,6 @@ internal class CarelevoBolusCoordinatorTest {
             dateUtil = dateUtil,
             bolusProgressData = bolusProgressData,
             pumpSync = pumpSync,
-            aapsSchedulers = aapsSchedulers,
             pumpEnactResultProvider = provider,
             carelevoPatch = carelevoPatch,
             bleSession = bleSession,
@@ -154,6 +152,8 @@ internal class CarelevoBolusCoordinatorTest {
             cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
             decimalFormatter = decimalFormatter
         )
+        // The record of a bolus end is written on the test thread.
+        sut.dispatcher = Dispatchers.Unconfined
     }
 
     /** Reflectively seeds the private `bolusExpectMs` so the cancel-retry budget is > 0. */

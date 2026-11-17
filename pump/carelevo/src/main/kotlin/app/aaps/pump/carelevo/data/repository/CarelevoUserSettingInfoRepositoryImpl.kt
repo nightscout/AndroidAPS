@@ -8,18 +8,17 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepositor
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 class CarelevoUserSettingInfoRepositoryImpl @Inject constructor(
     private val userSettingInfoDataSource: CarelevoUserSettingInfoDataSource
 ) : CarelevoUserSettingInfoRepository {
 
-    override fun getUserSettingInfo(): Observable<Optional<CarelevoUserSettingInfoDomainModel>> {
+    override fun getUserSettingInfo(): Flow<CarelevoUserSettingInfoDomainModel?> {
         return userSettingInfoDataSource.getUserSettingInfo()
-            .map { Optional.ofNullable(it.getOrNull()?.transformToCarelevoUserSettingInfoDomainModel()) }
+            .map { it?.transformToCarelevoUserSettingInfoDomainModel() }
     }
 
     override fun getUserSettingInfoBySync(): CarelevoUserSettingInfoDomainModel? {

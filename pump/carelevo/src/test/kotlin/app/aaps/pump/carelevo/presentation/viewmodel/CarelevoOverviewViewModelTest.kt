@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
@@ -24,6 +23,7 @@ import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdPumpStop
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.UiState
@@ -35,9 +35,9 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainMo
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
+import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
-import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoDeleteInfusionInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
@@ -45,16 +45,16 @@ import app.aaps.pump.carelevo.presentation.model.CarelevoConnectEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
@@ -86,7 +86,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
-import java.util.Optional
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
@@ -115,11 +114,13 @@ import java.time.Instant as JavaInstant
  * members are Mockito stubs and never really suspend, so nothing needs virtual time to be advanced.
  * Deliberately **no `advanceUntilIdle()`**: `overviewUiState` combines an endless `tickerFlow(30 s)`
  * whose `delay` is virtual, so advancing to idle would never terminate. The ticker's first emission
- * is immediate, which is all the combine needs.
+ * is immediate, which is all the combine needs. The force discard of a patch that cannot be reached
+ * runs in its own scope, not in `viewModelScope`; [setUp] sets its `removalDispatcher` to
+ * [Dispatchers.Unconfined], so it also ends inside the call.
  *
- * Rx is pinned to [Schedulers.trampoline] through the mocked [AapsSchedulers], so `observePatchInfo`
- * / `observePatchState` / `observeInfusionInfo` / `observeProfile` deliver synchronously on the test
- * thread. Their sources are real [BehaviorSubject]s, which also serve the `.value` reads the VM does
+ * `observePatchInfo` / `observePatchState` / `observeInfusionInfo` / `observeProfile` collect in
+ * `viewModelScope` too, so a value sent to their source is handled before `tryEmit` returns. The
+ * sources are real replay-1 flows ([latestValueFlow]), which also serve the `latest` reads the VM does
  * on the same properties.
  *
  * [ResourceHelper.gs] is answered with a deterministic `S<id>(arg,arg)` encoding ([s]) so assembled
@@ -143,7 +144,6 @@ class CarelevoOverviewViewModelTest {
     private lateinit var commandQueue: CommandQueue
     private lateinit var aapsLogger: AAPSLogger
     private lateinit var carelevoPatch: CarelevoPatch
-    private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     private lateinit var deleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase
     private lateinit var patchInfoRepository: CarelevoPatchInfoRepository
@@ -154,11 +154,20 @@ class CarelevoOverviewViewModelTest {
 
     private lateinit var sut: CarelevoOverviewViewModel
 
-    // Real subjects: the VM both subscribes to these AND reads their `.value` synchronously.
-    private val patchInfoSubject: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>> = BehaviorSubject.create()
-    private val patchStateSubject: BehaviorSubject<Optional<PatchState>> = BehaviorSubject.create()
-    private val infusionSubject: BehaviorSubject<Optional<CarelevoInfusionInfoDomainModel>> = BehaviorSubject.create()
-    private val profileSubject: BehaviorSubject<Optional<Profile>> = BehaviorSubject.create()
+    // Real flows: the VM both collects these AND reads their `latest` value at once.
+    private val patchInfoFlow: MutableSharedFlow<CarelevoPatchInfoDomainModel?> = latestValueFlow()
+    private val patchStateFlow: MutableSharedFlow<PatchState?> = latestValueFlow()
+    private val infusionFlow: MutableSharedFlow<CarelevoInfusionInfoDomainModel?> = latestValueFlow()
+    private val profileFlow: MutableSharedFlow<Profile?> = latestValueFlow()
+
+    /**
+     * What `carelevoPatch.patchInfo` / `patchState` answer: the flows above, unless a test puts a
+     * [FailingSharedFlow] here to break the stream. Answered from a field for the same reason as
+     * [bluetoothEnabled]: no test has to stub `carelevoPatch` again.
+     */
+    @Volatile private var patchInfoSource: SharedFlow<CarelevoPatchInfoDomainModel?> = patchInfoFlow
+
+    @Volatile private var patchStateSource: SharedFlow<PatchState?> = patchStateFlow
 
     // Live connection flows the VM reads from CarelevoBleSession; mutate them in a test to drive the rows.
     private val connectedFlow = MutableStateFlow(false)
@@ -172,8 +181,8 @@ class CarelevoOverviewViewModelTest {
      * second-tick collector, and with `UnconfinedTestDispatcher` its body resumes on the
      * `flowOn(Dispatchers.Default)` emitter thread. So `clearExpiredInfusions()` reads `carelevoPatch`
      * from a background thread while the test thread stubs it, and Mockito's stubbing is not thread safe:
-     * the in-flight `infusionInfo` read came back with the Boolean meant for `isBluetoothEnabled`, as
-     * `ClassCastException: Boolean cannot be cast to BehaviorSubject`. It failed about one CI run in two.
+     * the in-flight `infusionInfo` read came back with the Boolean meant for `isBluetoothEnabled`, as a
+     * `ClassCastException` (Boolean cannot be cast to the stream type). It failed about one CI run in two.
      */
     @Volatile private var bluetoothEnabled: Boolean = false
 
@@ -288,7 +297,6 @@ class CarelevoOverviewViewModelTest {
         commandQueue = mock()
         aapsLogger = mock()
         carelevoPatch = mock()
-        aapsSchedulers = mock()
         patchForceDiscardUseCase = mock()
         deleteInfusionInfoUseCase = mock()
         patchInfoRepository = mock()
@@ -302,12 +310,7 @@ class CarelevoOverviewViewModelTest {
 
         // Main must be a test dispatcher BEFORE construction: viewModelScope resolves it on creation.
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        // `clearInfusionInfo` subscribes with both arms, but an errored patchInfo/profile stream ends
-        // in `subscribe { }` consumers without an onError arm → swallow the global Rx rethrow.
-        RxJavaPlugins.setErrorHandler { }
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(dateUtil.now()).thenReturn(nowMillis)
 
         // PumpCommunicationStatus subscribes to both in its init; empty flows keep banner/queue null.
@@ -319,10 +322,10 @@ class CarelevoOverviewViewModelTest {
         // whenever() running at the same time could hand the Boolean back to the infusionInfo read.
         whenever(carelevoPatch.isBluetoothEnabled()).thenAnswer { bluetoothEnabled }
         whenever(carelevoPatch.resolvePatchState()).thenAnswer { resolvedPatchState }
-        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
-        whenever(carelevoPatch.infusionInfo).thenReturn(infusionSubject)
-        whenever(carelevoPatch.profile).thenReturn(profileSubject)
+        whenever(carelevoPatch.patchInfo).thenAnswer { patchInfoSource }
+        whenever(carelevoPatch.patchState).thenAnswer { patchStateSource }
+        whenever(carelevoPatch.infusionInfo).thenReturn(infusionFlow)
+        whenever(carelevoPatch.profile).thenReturn(profileFlow)
 
         whenever(bleSession.connected).thenReturn(connectedFlow)
         whenever(bleSession.lastConnectedAt).thenReturn(lastConnectedFlow)
@@ -338,10 +341,10 @@ class CarelevoOverviewViewModelTest {
                 "S${inv.getArgument<Int>(0)}(${inv.getArgument<Any?>(1)},${inv.getArgument<Any?>(2)},${inv.getArgument<Any?>(3)})"
             }
 
-        // Default: the delete use case succeeds. The `init` second-tick may reach it at any moment,
-        // and an unstubbed (null) Single would NPE on a background thread.
-        whenever(deleteInfusionInfoUseCase.execute(any()))
-            .thenReturn(Single.just(ResponseResult.Success(ResultSuccess)))
+        // Default: the delete use case succeeds. Stubbed once here, because the `init` second-tick may
+        // reach it at any moment from a background thread.
+        whenever { deleteInfusionInfoUseCase.execute(any()) }
+            .thenReturn(ResponseResult.Success(ResultSuccess))
 
         sut = CarelevoOverviewViewModel(
             rh = rh,
@@ -352,13 +355,14 @@ class CarelevoOverviewViewModelTest {
             carelevoPatch = carelevoPatch,
             bleSession = bleSession,
             alarmClearCoordinator = alarmClearCoordinator,
-            aapsSchedulers = aapsSchedulers,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             carelevoDeleteInfusionInfoUseCase = deleteInfusionInfoUseCase,
             patchInfoRepository = patchInfoRepository,
             rxBus = rxBus,
             decimalFormatter = decimalFormatter
         )
+        // The force discard runs in its own scope; unconfined, it ends inside the call that starts it.
+        sut.removalDispatcher = Dispatchers.Unconfined
 
         collectorScope = CoroutineScope(Dispatchers.Unconfined)
         // `event` is a consume-once EventFlow → exactly one collector may own it.
@@ -375,7 +379,6 @@ class CarelevoOverviewViewModelTest {
         // than just cancel — cancel() only *requests* it, and an in-flight tick still resuming while
         // resetMain() swaps the dispatcher out trips "Main is used concurrently with setting it".
         runBlocking { sut.viewModelScope.coroutineContext.job.cancelAndJoin() }
-        RxJavaPlugins.reset()
         Dispatchers.resetMain()
     }
 
@@ -463,7 +466,7 @@ class CarelevoOverviewViewModelTest {
         val bootLdt = local(bootMillis)
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
 
         assertThat(sut.serialNumber.value).isEqualTo("SN-0001")
         assertThat(sut.bootDateTime.value).isEqualTo(uiFormat(bootLdt))
@@ -489,7 +492,7 @@ class CarelevoOverviewViewModelTest {
         val bootLdt = local(bootMillis)
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
 
         assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
         // One hour into the grace, so eleven of the twelve hours are left.
@@ -500,7 +503,7 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchInfo falls back to the yyMMddHHmm boot string when utc millis are missing`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = null, bootDateTime = "2601011230")))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = null, bootDateTime = "2601011230"))
 
         assertThat(sut.bootDateTime.value).isEqualTo("2026-01-01 12:30")
         assertThat(sut.expirationTime.value).isEqualTo("2026-01-08 12:30")
@@ -510,7 +513,7 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchInfo leaves boot fields empty when no boot time is known at all`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = null, bootDateTime = null)))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = null, bootDateTime = null))
 
         assertThat(sut.bootDateTime.value).isEqualTo("")
         assertThat(sut.expirationTime.value).isEqualTo("")
@@ -521,7 +524,7 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchInfo blanks the insulin remain text when either amount is unknown`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(insulinRemain = null)))
+        patchInfoFlow.tryEmit(patchInfo(insulinRemain = null))
 
         assertThat(sut.insulinRemains.value).isEqualTo("")
     }
@@ -530,12 +533,10 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchInfo defaults missing infused totals and stop flag`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(
-            Optional.of(
-                patchInfo(
-                    manufactureNumber = null, firmwareVersion = null,
-                    infusedTotalBasalAmount = null, infusedTotalBolusAmount = null, isStopped = null
-                )
+        patchInfoFlow.tryEmit(
+            patchInfo(
+                manufactureNumber = null, firmwareVersion = null,
+                infusedTotalBasalAmount = null, infusedTotalBolusAmount = null, isStopped = null
             )
         )
 
@@ -550,7 +551,7 @@ class CarelevoOverviewViewModelTest {
         val bootLdt = local(bootMillis)
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
 
         assertThat(sut.runningRemainMinutes.value).isEqualTo(0)
         assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
@@ -559,21 +560,22 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `observePatchInfo skips a null report and clears the check screen`() {
         sut.observePatchInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkSafety = null)))
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = null))
         assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.SAFETY_CHECK)
 
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         assertThat(sut.isCheckScreen.value).isNull()
-        // The empty report never reaches updateState — the last known values survive.
+        // The null report never reaches updateState — the last known values survive.
         assertThat(sut.serialNumber.value).isEqualTo("SN-0001")
     }
 
     @Test
     fun `observePatchInfo survives an errored stream`() {
-        sut.observePatchInfo()
+        // A SharedFlow cannot fail once it runs, so the stream fails as soon as it is collected.
+        patchInfoSource = FailingSharedFlow(RuntimeException("boom"))
 
-        patchInfoSubject.onError(RuntimeException("boom"))
+        sut.observePatchInfo()
 
         assertThat(sut.isCheckScreen.value).isNull()
         assertThat(sut.serialNumber.value).isNull()
@@ -585,7 +587,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen asks for needle insertion while retries remain`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 2)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 2))
 
         assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.NEEDLE_INSERTION)
     }
@@ -594,7 +596,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen clears once the needle retry budget is spent`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 3)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 3))
 
         assertThat(sut.isCheckScreen.value).isNull()
     }
@@ -603,7 +605,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen clears when the needle failure count is unknown`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = null)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = null))
 
         assertThat(sut.isCheckScreen.value).isNull()
     }
@@ -612,7 +614,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen asks for the safety check when it has not run yet`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkSafety = null, checkNeedle = null)))
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = null, checkNeedle = null))
 
         assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.SAFETY_CHECK)
     }
@@ -621,7 +623,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen asks for the safety check when it passed but the needle is unknown`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkSafety = true, checkNeedle = null)))
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = true, checkNeedle = null))
 
         assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.SAFETY_CHECK)
     }
@@ -630,7 +632,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen is clear for a fully activated patch`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkSafety = true, checkNeedle = true)))
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = true, checkNeedle = true))
 
         assertThat(sut.isCheckScreen.value).isNull()
     }
@@ -639,7 +641,7 @@ class CarelevoOverviewViewModelTest {
     fun `check screen is clear when the safety check failed but the needle is known`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkSafety = false, checkNeedle = true)))
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = false, checkNeedle = true))
 
         assertThat(sut.isCheckScreen.value).isNull()
     }
@@ -650,10 +652,10 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchState publishes a booted state and pulls the basal rate from the profile`() {
         val profile = mock<Profile>()
         whenever(profile.getBasal()).thenReturn(1.75)
-        profileSubject.onNext(Optional.of(profile))
+        profileFlow.tryEmit(profile)
         sut.observePatchState()
 
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         assertThat(sut.patchState.value).isEqualTo(PatchState.ConnectedBooted)
         assertThat(sut.basalRate.value).isEqualTo(1.75)
@@ -663,7 +665,7 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchState falls back to a zero basal rate when no profile is set`() {
         sut.observePatchState()
 
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.NotConnectedBooted)
 
         assertThat(sut.patchState.value).isEqualTo(PatchState.NotConnectedBooted)
         assertThat(sut.basalRate.value).isEqualTo(0.0)
@@ -673,17 +675,17 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchState wipes every overview field when the patch is gone`() {
         val profile = mock<Profile>()
         whenever(profile.getBasal()).thenReturn(1.75)
-        profileSubject.onNext(Optional.of(profile))
+        profileFlow.tryEmit(profile)
         sut.observePatchInfo()
         sut.observePatchState()
         sut.observeInfusionInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 2.5))))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = true))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 2.5)))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         assertThat(sut.basalRate.value).isEqualTo(1.75)
         assertThat(sut.tempBasalRate.value).isEqualTo(2.5)
 
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedNotBooting))
+        patchStateFlow.tryEmit(PatchState.NotConnectedNotBooting)
 
         assertThat(sut.patchState.value).isEqualTo(PatchState.NotConnectedNotBooting)
         assertThat(sut.serialNumber.value).isEqualTo("")
@@ -701,7 +703,7 @@ class CarelevoOverviewViewModelTest {
     fun `observePatchState ignores an empty state report`() {
         sut.observePatchState()
 
-        patchStateSubject.onNext(Optional.empty())
+        patchStateFlow.tryEmit(null)
 
         assertThat(sut.patchState.value).isEqualTo(PatchState.NotConnectedNotBooting)
         assertThat(sut.basalRate.value).isNull()
@@ -709,9 +711,10 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `observePatchState survives an errored stream`() {
-        sut.observePatchState()
+        // A SharedFlow cannot fail once it runs, so the stream fails as soon as it is collected.
+        patchStateSource = FailingSharedFlow(RuntimeException("boom"))
 
-        patchStateSubject.onError(RuntimeException("boom"))
+        sut.observePatchState()
 
         assertThat(sut.patchState.value).isEqualTo(PatchState.NotConnectedNotBooting)
     }
@@ -724,7 +727,7 @@ class CarelevoOverviewViewModelTest {
         whenever(profile.getBasal()).thenReturn(0.85)
         sut.observeProfile()
 
-        profileSubject.onNext(Optional.of(profile))
+        profileFlow.tryEmit(profile)
 
         assertThat(sut.basalRate.value).isEqualTo(0.85)
     }
@@ -733,7 +736,7 @@ class CarelevoOverviewViewModelTest {
     fun `observeProfile zeroes the basal rate when the profile is cleared`() {
         sut.observeProfile()
 
-        profileSubject.onNext(Optional.empty())
+        profileFlow.tryEmit(null)
 
         assertThat(sut.basalRate.value).isEqualTo(0.0)
     }
@@ -744,7 +747,7 @@ class CarelevoOverviewViewModelTest {
     fun `observeInfusionInfo publishes the running temp basal speed`() {
         sut.observeInfusionInfo()
 
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 3.5))))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 3.5)))
 
         assertThat(sut.tempBasalRate.value).isEqualTo(3.5)
     }
@@ -752,9 +755,9 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `observeInfusionInfo clears the temp basal speed when nothing is running`() {
         sut.observeInfusionInfo()
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 3.5))))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 3.5)))
 
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel()))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel())
 
         assertThat(sut.tempBasalRate.value).isNull()
     }
@@ -764,7 +767,7 @@ class CarelevoOverviewViewModelTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo(checkNeedle = true))
         sut.observeInfusionInfo()
 
-        infusionSubject.onNext(Optional.empty())
+        infusionFlow.tryEmit(null)
 
         assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.NEEDLE_INSERTION)
     }
@@ -775,11 +778,11 @@ class CarelevoOverviewViewModelTest {
      */
     @Test
     fun `observeInfusionInfo does not reopen the needle step for a discarded patch`() {
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true))
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
         sut.observeInfusionInfo()
 
-        infusionSubject.onNext(Optional.empty())
+        infusionFlow.tryEmit(null)
 
         assertThat(sut.isCheckScreen.value).isNull()
     }
@@ -788,7 +791,7 @@ class CarelevoOverviewViewModelTest {
     fun `observeInfusionInfo ignores a missing infusion record when no patch is known`() {
         sut.observeInfusionInfo()
 
-        infusionSubject.onNext(Optional.empty())
+        infusionFlow.tryEmit(null)
 
         assertThat(sut.isCheckScreen.value).isNull()
         assertThat(sut.tempBasalRate.value).isNull()
@@ -799,7 +802,7 @@ class CarelevoOverviewViewModelTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo(checkNeedle = false))
         sut.observeInfusionInfo()
 
-        infusionSubject.onNext(Optional.empty())
+        infusionFlow.tryEmit(null)
 
         assertThat(sut.isCheckScreen.value).isNull()
     }
@@ -812,14 +815,14 @@ class CarelevoOverviewViewModelTest {
 
         sut.clearInfusionInfo(CarelevoDeleteInfusionRequestModel(true, false, true))
 
-        verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(true, false, true))
+        verifyBlocking(deleteInfusionInfoUseCase) { execute(CarelevoDeleteInfusionRequestModel(true, false, true)) }
         verifyBlocking(commandQueue) { readStatus(any()) }
     }
 
     @Test
     fun `clearInfusionInfo does not refresh when the delete stream errors`() {
         bluetoothEnabled = true
-        whenever(deleteInfusionInfoUseCase.execute(any())).thenReturn(Single.error(RuntimeException("db down")))
+        whenever { deleteInfusionInfoUseCase.execute(any()) }.thenAnswer { throw RuntimeException("db down") }
 
         sut.clearInfusionInfo(CarelevoDeleteInfusionRequestModel(true, true, true))
 
@@ -849,38 +852,34 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `the second tick deletes every elapsed infusion except an immediate bolus`() {
         val past = Clock.System.now() - 2.hours
-        infusionSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    tempBasalInfusionInfo = tempBasal(durationMin = 30, createdAt = past),
-                    immeBolusInfusionInfo = immeBolus(durationSeconds = 60, createdAt = past),
-                    extendBolusInfusionInfo = extendBolus(durationMin = 30, createdAt = past)
-                )
+        infusionFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                tempBasalInfusionInfo = tempBasal(durationMin = 30, createdAt = past),
+                immeBolusInfusionInfo = immeBolus(durationSeconds = 60, createdAt = past),
+                extendBolusInfusionInfo = extendBolus(durationMin = 30, createdAt = past)
             )
         )
 
         // The tick runs on a real Dispatchers.Default clock (~1 s), so wait on the invocation.
         // atLeastOnce: the ticker keeps firing, so a strict times(1) could race a second tick.
         val captor = argumentCaptor<CarelevoUseCaseRequest>()
-        verify(deleteInfusionInfoUseCase, timeout(3_000).atLeastOnce()).execute(captor.capture())
+        verifyBlocking(deleteInfusionInfoUseCase, timeout(3_000).atLeastOnce()) { execute(captor.capture()) }
         // A left immediate bolus can be one the app never recorded; the bolus coordinator records it, then removes it.
         assertThat(captor.firstValue).isEqualTo(CarelevoDeleteInfusionRequestModel(true, false, true))
     }
 
     @Test
     fun `the second tick keeps infusions that are still running or have no end time`() {
-        infusionSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    // No duration → open-ended, never expires.
-                    tempBasalInfusionInfo = tempBasal(durationMin = null),
-                    // Ends in the future.
-                    extendBolusInfusionInfo = extendBolus(durationMin = 120, createdAt = Clock.System.now())
-                )
+        infusionFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                // No duration → open-ended, never expires.
+                tempBasalInfusionInfo = tempBasal(durationMin = null),
+                // Ends in the future.
+                extendBolusInfusionInfo = extendBolus(durationMin = 120, createdAt = Clock.System.now())
             )
         )
 
-        verify(deleteInfusionInfoUseCase, after(1_500).never()).execute(any())
+        verifyBlocking(deleteInfusionInfoUseCase, after(1_500).never()) { execute(any()) }
     }
 
     // ---- triggerEvent / generateEventType ------------------------------------------------------
@@ -933,7 +932,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `stop-resume click offers the resume dialog for a stopped pump`() {
         resolvedPatchState = PatchState.ConnectedBooted
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = true))
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
 
@@ -943,7 +942,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `stop-resume click offers the stop-duration dialog for a running pump`() {
         resolvedPatchState = PatchState.ConnectedBooted
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = false)))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = false))
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
 
@@ -953,7 +952,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `stop-resume click assumes running when the stop flag is unknown`() {
         resolvedPatchState = PatchState.NotConnectedBooted
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = null)))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = null))
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
 
@@ -962,7 +961,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `stop-resume click assumes running when no patch report has arrived`() {
-        // patchInfo never emitted → `.value` is null → the `?: false` default.
+        // patchInfo never emitted → `latest` is null → the `?: false` default.
         resolvedPatchState = PatchState.ConnectedBooted
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
@@ -977,23 +976,23 @@ class CarelevoOverviewViewModelTest {
         sut.startDiscardProcess()
 
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
     @Test
     fun `startDiscardProcess does nothing when there is no active patch`() {
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedNotBooting))
+        patchStateFlow.tryEmit(PatchState.NotConnectedNotBooting)
 
         sut.startDiscardProcess()
 
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
     }
 
     @Test
     fun `startDiscardProcess routes an active patch through the queue`() {
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         stubCustomCommand(success = true)
 
         sut.startDiscardProcess()
@@ -1001,21 +1000,21 @@ class CarelevoOverviewViewModelTest {
         verifyBlocking(commandQueue) { customCommand(any<CmdDiscard>()) }
         // The queue's CmdDiscard owns unBond + releasePatch; the VM must not double-tear-down.
         verify(carelevoPatch, never()).discardTeardown(anyOrNull())
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
     }
 
     @Test
     fun `startDiscardProcess falls back to force-discard when the queue cannot reach the patch`() {
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.NotConnectedBooted)
         stubCustomCommand(success = false)
-        whenever(patchForceDiscardUseCase.execute())
-            .thenReturn(Single.just(ResponseResult.Success(ResultSuccess as CarelevoUseCaseResponse)))
+        whenever { patchForceDiscardUseCase.execute() }
+            .thenReturn(ResponseResult.Success(ResultSuccess as CarelevoUseCaseResponse))
 
         sut.startDiscardProcess()
 
-        verify(patchForceDiscardUseCase).execute()
+        verifyBlocking(patchForceDiscardUseCase) { execute() }
         verify(carelevoPatch).discardTeardown(anyOrNull())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
@@ -1025,9 +1024,9 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startDiscardProcess reports failure when force-discard is rejected`() {
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         stubCustomCommand(success = false)
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Failure("rejected")))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Failure("rejected"))
 
         sut.startDiscardProcess()
 
@@ -1038,9 +1037,9 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startDiscardProcess reports failure when force-discard returns an error result`() {
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         stubCustomCommand(success = false)
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Error(RuntimeException("db"))))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Error(RuntimeException("db")))
 
         sut.startDiscardProcess()
 
@@ -1051,9 +1050,9 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startDiscardProcess reports failure when the force-discard stream throws`() {
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         stubCustomCommand(success = false)
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.error(RuntimeException("boom")))
+        whenever { patchForceDiscardUseCase.execute() }.thenAnswer { throw RuntimeException("boom") }
 
         sut.startDiscardProcess()
 
@@ -1079,7 +1078,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `startPumpStopProcess stops an idle pump`() {
         bluetoothEnabled = true
-        patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001")))
+        patchInfoFlow.tryEmit(patchInfo(manufactureNumber = "SN-0001"))
         stubCustomCommand(success = true)
 
         sut.startPumpStopProcess(45)
@@ -1090,7 +1089,7 @@ class CarelevoOverviewViewModelTest {
         // Nothing was running → no pre-cancel round-trips.
         verifyBlocking(commandQueue, never()) { cancelTempBasal(any(), any()) }
         verifyBlocking(commandQueue, never()) { cancelExtended() }
-        verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(false, false, false))
+        verifyBlocking(deleteInfusionInfoUseCase) { execute(CarelevoDeleteInfusionRequestModel(false, false, false)) }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
     }
@@ -1098,7 +1097,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `startPumpStopProcess cancels a running temp basal before stopping`() {
         bluetoothEnabled = true
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal())))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal()))
         stubCancelTempBasal(success = true)
         stubCustomCommand(success = true)
 
@@ -1108,14 +1107,14 @@ class CarelevoOverviewViewModelTest {
         verifyBlocking(commandQueue, never()) { cancelExtended() }
         verifyBlocking(commandQueue) { customCommand(any<CmdPumpStop>()) }
         // The cleanup must mirror what was actually running.
-        verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(true, false, false))
+        verifyBlocking(deleteInfusionInfoUseCase) { execute(CarelevoDeleteInfusionRequestModel(true, false, false)) }
         assertThat(events).isEmpty()
     }
 
     @Test
     fun `startPumpStopProcess cancels a running extended bolus before stopping`() {
         bluetoothEnabled = true
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus())))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus()))
         stubCancelExtended(success = true)
         stubCustomCommand(success = true)
 
@@ -1124,19 +1123,17 @@ class CarelevoOverviewViewModelTest {
         verifyBlocking(commandQueue) { cancelExtended() }
         verifyBlocking(commandQueue, never()) { cancelTempBasal(any(), any()) }
         verifyBlocking(commandQueue) { customCommand(any<CmdPumpStop>()) }
-        verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(false, false, true))
+        verifyBlocking(deleteInfusionInfoUseCase) { execute(CarelevoDeleteInfusionRequestModel(false, false, true)) }
         assertThat(events).isEmpty()
     }
 
     @Test
     fun `startPumpStopProcess cancels both running infusions before stopping`() {
         bluetoothEnabled = true
-        infusionSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    tempBasalInfusionInfo = tempBasal(),
-                    extendBolusInfusionInfo = extendBolus()
-                )
+        infusionFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                tempBasalInfusionInfo = tempBasal(),
+                extendBolusInfusionInfo = extendBolus()
             )
         )
         stubCancelTempBasal(success = true)
@@ -1147,14 +1144,14 @@ class CarelevoOverviewViewModelTest {
 
         verifyBlocking(commandQueue) { cancelTempBasal(any(), any()) }
         verifyBlocking(commandQueue) { cancelExtended() }
-        verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(true, false, true))
+        verifyBlocking(deleteInfusionInfoUseCase) { execute(CarelevoDeleteInfusionRequestModel(true, false, true)) }
         assertThat(events).isEmpty()
     }
 
     @Test
     fun `startPumpStopProcess aborts when the temp basal cannot be cancelled`() {
         bluetoothEnabled = true
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal())))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal()))
         stubCancelTempBasal(success = false)
 
         sut.startPumpStopProcess(30)
@@ -1167,7 +1164,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `startPumpStopProcess aborts when the extended bolus cannot be cancelled`() {
         bluetoothEnabled = true
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus())))
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus()))
         stubCancelExtended(success = false)
 
         sut.startPumpStopProcess(30)
@@ -1185,7 +1182,7 @@ class CarelevoOverviewViewModelTest {
         sut.startPumpStopProcess(30)
 
         assertThat(events).containsExactly(CarelevoOverviewEvent.StopPumpFailed)
-        verify(deleteInfusionInfoUseCase, never()).execute(any())
+        verifyBlocking(deleteInfusionInfoUseCase, never()) { execute(any()) }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
@@ -1218,7 +1215,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `startDiscardProcess is refused while a suspend is still in flight`() {
         bluetoothEnabled = true
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         val result = mock<PumpEnactResult>()
         whenever(result.success).thenReturn(true)
         whenever { commandQueue.customCommand(any()) }.thenAnswer {
@@ -1271,7 +1268,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `startPumpResume goes through the coordinator instead of queueing its own frame`() {
         bluetoothEnabled = true
-        patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001", isStopped = true)))
+        patchInfoFlow.tryEmit(patchInfo(manufactureNumber = "SN-0001", isStopped = true))
         stubResumeInfusion(success = true)
 
         sut.startPumpResume()
@@ -1316,13 +1313,13 @@ class CarelevoOverviewViewModelTest {
     fun `overview shows the full status for a connected patch`() {
         val profile = mock<Profile>()
         whenever(profile.getBasal()).thenReturn(1.75)
-        profileSubject.onNext(Optional.of(profile))
+        profileFlow.tryEmit(profile)
         sut.observePatchInfo()
         sut.observePatchState()
         sut.observeInfusionInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo()))
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 2.5))))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo())
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 2.5)))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         connectedFlow.value = true
         val state = sut.overviewUiState.value
@@ -1352,8 +1349,8 @@ class CarelevoOverviewViewModelTest {
     fun `overview keeps the last known status for an idle-disconnected patch`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo()))
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo())
+        patchStateFlow.tryEmit(PatchState.NotConnectedBooted)
 
         val state = sut.overviewUiState.value
 
@@ -1369,8 +1366,8 @@ class CarelevoOverviewViewModelTest {
     fun `overview offers resume instead of suspend for a stopped pump`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = true))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         assertThat(sut.overviewUiState.value.managementActions[1].label).isEqualTo(s(R.string.carelevo_overview_pump_resume_btn_label))
     }
@@ -1379,8 +1376,8 @@ class CarelevoOverviewViewModelTest {
     fun `a stopped pump shows the suspended banner as the top status`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = true))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         val banner = sut.overviewUiState.value.statusBanner
         assertThat(banner?.text).isEqualTo(s(InterfacesR.string.pumpsuspended))
@@ -1392,8 +1389,8 @@ class CarelevoOverviewViewModelTest {
         whenever(dateUtil.minAgo(any(), any())).thenReturn("5m ago")
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo()))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo())
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         lastConnectedFlow.value = nowMillis - 5 * 60_000L
 
         // Idle: Bluetooth row reads Disconnected even though the patch is activated.
@@ -1412,15 +1409,13 @@ class CarelevoOverviewViewModelTest {
     fun `overview dashes out unknown patch values`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(
-            Optional.of(
-                patchInfo(
-                    manufactureNumber = null, firmwareVersion = null, insulinRemain = null,
-                    bootDateTimeUtcMillis = null, bootDateTime = null
-                )
+        patchInfoFlow.tryEmit(
+            patchInfo(
+                manufactureNumber = null, firmwareVersion = null, insulinRemain = null,
+                bootDateTimeUtcMillis = null, bootDateTime = null
             )
         )
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         val rows = infoRows()
         assertThat(rows[2].value).isEqualTo("-")
@@ -1435,8 +1430,8 @@ class CarelevoOverviewViewModelTest {
     fun `overview formats a multi-day remaining time with the day-hour-minute template`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = nowMillis - 2 * dayMillis)))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = nowMillis - 2 * dayMillis))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         val total = sut.runningRemainMinutes.value!!
         val expected = s(R.string.common_unit_value_day_hour_min, total / 1440, (total % 1440) / 60, total % 60)
@@ -1450,8 +1445,8 @@ class CarelevoOverviewViewModelTest {
         val bootMillis = nowMillis - 7 * dayMillis + 100 * 60_000L
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         // Derived, not hardcoded: the VM measures the countdown in local-calendar minutes.
         val expected = ChronoUnit.MINUTES.between(local(nowMillis), local(bootMillis).plusDays(7)).toInt()
@@ -1470,9 +1465,9 @@ class CarelevoOverviewViewModelTest {
         sut.observePatchInfo()
         sut.observePatchState()
         sut.observeInfusionInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo()))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
-        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel()))
+        patchInfoFlow.tryEmit(patchInfo())
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel())
 
         assertThat(infoRows()[7].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 0.0))
     }
@@ -1480,10 +1475,10 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `overview drops back to the warning banner once the patch is discarded`() {
         sut.observePatchState()
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         assertThat(sut.overviewUiState.value.statusBanner).isNull()
 
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedNotBooting))
+        patchStateFlow.tryEmit(PatchState.NotConnectedNotBooting)
 
         val state = sut.overviewUiState.value
         assertThat(state.statusBanner?.level).isEqualTo(StatusLevel.WARNING)
@@ -1504,7 +1499,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `the discard action asks the screen for confirmation`() {
         sut.observePatchState()
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         sut.overviewUiState.value.managementActions[0].onClick()
 
@@ -1515,8 +1510,8 @@ class CarelevoOverviewViewModelTest {
     fun `the suspend action resolves to the stop-duration dialog`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = false)))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = false))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         resolvedPatchState = PatchState.ConnectedBooted
 
         sut.overviewUiState.value.managementActions[1].onClick()
@@ -1528,12 +1523,21 @@ class CarelevoOverviewViewModelTest {
     fun `the resume action resolves to the resume dialog`() {
         sut.observePatchInfo()
         sut.observePatchState()
-        patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchInfoFlow.tryEmit(patchInfo(isStopped = true))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         resolvedPatchState = PatchState.ConnectedBooted
 
         sut.overviewUiState.value.managementActions[1].onClick()
 
         assertThat(events).containsExactly(CarelevoOverviewEvent.ShowPumpResumeDialog)
     }
+}
+
+/** A stream that fails with [error] as soon as it is collected, to test that the VM catches a broken stream. */
+@OptIn(ExperimentalForInheritanceCoroutinesApi::class)
+private class FailingSharedFlow<T>(private val error: Throwable) : SharedFlow<T> {
+
+    override val replayCache: List<T> = emptyList()
+
+    override suspend fun collect(collector: FlowCollector<T>): Nothing = throw error
 }

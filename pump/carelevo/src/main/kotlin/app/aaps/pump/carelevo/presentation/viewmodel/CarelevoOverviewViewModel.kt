@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -35,6 +35,7 @@ import app.aaps.pump.carelevo.command.CmdPumpStop
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
@@ -55,32 +56,38 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.jvm.optionals.getOrNull
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
@@ -97,7 +104,6 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val carelevoPatch: CarelevoPatch,
     private val bleSession: CarelevoBleSession,
     private val alarmClearCoordinator: CarelevoAlarmClearCoordinator,
-    private val aapsSchedulers: AapsSchedulers,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val carelevoDeleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase,
     private val patchInfoRepository: CarelevoPatchInfoRepository,
@@ -205,7 +211,12 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val _hasUnacknowledgedAlarms = MutableStateFlow(false)
     val hasUnacknowledgedAlarms = _hasUnacknowledgedAlarms.asStateFlow()
 
-    private val compositeDisposable = CompositeDisposable()
+    /**
+     * Where a removal of a patch that could not be reached runs. Not the ViewModel's scope: the removal must end also
+     * when the screen goes away (D9). A test sets an unconfined dispatcher.
+     */
+    internal var removalDispatcher: CoroutineDispatcher = aapsIoDispatcher
+    private val removalScope: CoroutineScope by lazy { CoroutineScope(removalDispatcher + SupervisorJob()) }
 
     val secondTick: Flow<Instant> = flow {
         while (currentCoroutineContext().isActive) {
@@ -228,30 +239,24 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     fun observePatchInfo() {
-        compositeDisposable += carelevoPatch.patchInfo
-            .observeOn(aapsSchedulers.io)
-            .flatMap { info ->
-                val patchInfo = info?.getOrNull()
+        carelevoPatch.patchInfo
+            .mapNotNull { patchInfo ->
                 if (patchInfo == null) {
                     aapsLogger.debug(LTag.PUMPCOMM, "[observePatchInfo] skip null/failure")
                     _isCheckScreen.tryEmit(null)
-                    Observable.empty()
+                    null
                 } else {
                     aapsLogger.debug(LTag.PUMPCOMM, "[observePatchInfo] state: $patchInfo")
                     updateCheckScreen(patchInfo)
-                    Observable.just(buildUi(patchInfo))
+                    buildUi(patchInfo)
                 }
             }
-            .observeOn(aapsSchedulers.main)
-            .doOnNext { ui -> updateState(ui) }
-            .subscribe(
-                { ui ->
-                    aapsLogger.debug(LTag.PUMPCOMM, "state : $ui")
-                },
-                { e ->
-                    aapsLogger.debug(LTag.PUMPCOMM, "onError", e)
-                }
-            )
+            .onEach { ui ->
+                updateState(ui)
+                aapsLogger.debug(LTag.PUMPCOMM, "state : $ui")
+            }
+            .catch { e -> aapsLogger.debug(LTag.PUMPCOMM, "onError", e) }
+            .launchIn(viewModelScope)
     }
 
     private fun updateCheckScreen(patchInfo: CarelevoPatchInfoDomainModel) {
@@ -313,45 +318,40 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     fun observePatchState() {
-        compositeDisposable += carelevoPatch.patchState
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { response ->
-                    aapsLogger.debug(LTag.PUMPCOMM, "state : ${response.getOrNull()}")
-                    response?.getOrNull()?.let { patchState ->
-                        _patchState.value = patchState
-                        _patchStateFlow.value = patchState
-                        if (patchState == PatchState.NotConnectedNotBooting) {
-                            onDisconnectValue()
-                        } else {
-                            val basalRate = carelevoPatch.profile.value?.getOrNull()?.getBasal() ?: 0.0
-                            _basalRate.value = basalRate
-                            _basalRateFlow.value = basalRate
-                        }
+        carelevoPatch.patchState
+            .onEach { response ->
+                aapsLogger.debug(LTag.PUMPCOMM, "state : $response")
+                response?.let { patchState ->
+                    _patchState.value = patchState
+                    _patchStateFlow.value = patchState
+                    if (patchState == PatchState.NotConnectedNotBooting) {
+                        onDisconnectValue()
+                    } else {
+                        val basalRate = carelevoPatch.profile.latest?.getBasal() ?: 0.0
+                        _basalRate.value = basalRate
+                        _basalRateFlow.value = basalRate
                     }
-                },
-                {
-                    aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
                 }
-            )
+            }
+            .catch { aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it") }
+            .launchIn(viewModelScope)
     }
 
     fun observeInfusionInfo() {
-        compositeDisposable += carelevoPatch.infusionInfo
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
-                val infusionInfo = it.getOrNull() ?: run {
+        carelevoPatch.infusionInfo
+            .onEach {
+                val infusionInfo = it ?: run {
                     // The stored record, not carelevoPatch.patchInfo: that stream follows the store a moment later,
                     // so right after a discard it still held the old patch and the wizard reopened at the needle step.
-                    val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return@subscribe
+                    val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return@onEach
                     if (patchInfo.checkNeedle == true) {
                         _isCheckScreen.tryEmit(CarelevoScreenType.NEEDLE_INSERTION)
                     }
-                    return@subscribe
+                    return@onEach
                 }
                 handleInfusionProgram(infusionInfo)
             }
+            .launchIn(viewModelScope)
     }
 
     private fun handleInfusionProgram(info: CarelevoInfusionInfoDomainModel) {
@@ -366,7 +366,7 @@ class CarelevoOverviewViewModel @Inject constructor(
      * records that bolus from the patch and then removes the record.
      */
     private fun clearExpiredInfusions() {
-        val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull() ?: return
+        val infusionInfo = carelevoPatch.infusionInfo.latest ?: return
         val tempBasalInfusionInfo = infusionInfo.tempBasalInfusionInfo
         val extendBolusInfusionInfo = infusionInfo.extendBolusInfusionInfo
 
@@ -398,26 +398,29 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     fun clearInfusionInfo(requestModel: CarelevoDeleteInfusionRequestModel) {
-        compositeDisposable += carelevoDeleteInfusionInfoUseCase.execute(requestModel)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { optionalList ->
-                    aapsLogger.debug(LTag.PUMPCOMM, "success")
-                    refreshPatchInfusionInfo()
-                }, { e ->
-                    aapsLogger.debug(LTag.PUMPCOMM, "error : $e")
-                })
+        viewModelScope.launch {
+            try {
+                carelevoDeleteInfusionInfoUseCase.execute(requestModel)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.PUMPCOMM, "error : $e")
+                return@launch
+            }
+            // The result is not looked at: a refused delete refreshes too, as before.
+            aapsLogger.debug(LTag.PUMPCOMM, "success")
+            refreshPatchInfusionInfo()
+        }
     }
 
     fun observeProfile() {
-        compositeDisposable += carelevoPatch.profile
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
-                val basalRate = it?.getOrNull()?.getBasal() ?: 0.0
+        carelevoPatch.profile
+            .onEach {
+                val basalRate = it?.getBasal() ?: 0.0
                 _basalRate.value = basalRate
                 _basalRateFlow.value = basalRate
             }
+            .launchIn(viewModelScope)
     }
 
     fun initUnacknowledgedAlarms() {
@@ -457,7 +460,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             }
 
             else                                 -> {
-                val isStop = carelevoPatch.patchInfo.value?.getOrNull()?.isStopped ?: false
+                val isStop = carelevoPatch.patchInfo.latest?.isStopped ?: false
                 if (isStop) {
                     CarelevoOverviewEvent.ShowPumpResumeDialog
                 } else {
@@ -503,7 +506,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     fun startDiscardProcess() {
-        when (carelevoPatch.patchState.value?.getOrNull()) {
+        when (carelevoPatch.patchState.latest) {
             is PatchState.NotConnectedNotBooting, null -> Unit // no active patch → nothing to discard
 
             else                                       -> {
@@ -552,31 +555,37 @@ class CarelevoOverviewViewModel @Inject constructor(
      * the end of its temp basal and the end of its extended bolus, and AAPS went on counting the extended bolus. So only
      * the result shown on the screen ends with the screen, and the removal holds no reference to this ViewModel.
      */
-    @Suppress("CheckResult")
     private fun startPatchForceDiscard() {
         val address = carelevoPatch.getPatchInfoAddress()
         val patch = carelevoPatch
         val notifications = notificationManager
         val logger = aapsLogger
         val notReached = rh.gs(R.string.carelevo_discarded_not_reached)
-        val removal = patchForceDiscardUseCase.execute()
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(aapsSchedulers.io)
-            .doOnSuccess { response ->
-                if (response is ResponseResult.Success) {
-                    patch.discardTeardown(address)
-                    // The patch was not told to stop, so the user must take it off.
-                    notifications.post(NotificationId.PUMP_WARNING, notReached, level = NotificationLevel.IMPORTANT)
-                }
+        val useCase = patchForceDiscardUseCase
+        val removal = removalScope.async {
+            val response = withTimeoutOrNull(REMOVAL_TIMEOUT) { useCase.execute() }
+                ?: throw IllegalStateException("removal did not end in $REMOVAL_TIMEOUT")
+            if (response is ResponseResult.Success) {
+                patch.discardTeardown(address)
+                // The patch was not told to stop, so the user must take it off.
+                notifications.post(NotificationId.PUMP_WARNING, notReached, level = NotificationLevel.IMPORTANT)
             }
-            .cache()
-        removal.subscribe({}, { error -> logger.error(LTag.PUMPCOMM, "[startPatchDiscard] removal failed", error) })
-        compositeDisposable += removal
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { response -> handlePatchDiscardResponse(response) },
-                { error -> handlePatchDiscardError(error) }
-            )
+            response
+        }
+        removal.invokeOnCompletion { error ->
+            if (error != null && error !is CancellationException) logger.error(LTag.PUMPCOMM, "[startPatchDiscard] removal failed", error)
+        }
+        viewModelScope.launch {
+            val response = try {
+                removal.await()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                handlePatchDiscardError(e)
+                return@launch
+            }
+            handlePatchDiscardResponse(response)
+        }
     }
 
     fun startPumpStopProcess(stopMinute: Int) {
@@ -586,7 +595,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
         if (!startOperation("startPumpStopProcess")) return
 
-        val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
+        val infusionInfo = carelevoPatch.infusionInfo.latest
         val isExtendBolusRunning = infusionInfo?.extendBolusInfusionInfo != null
         val isTempBasalRunning = infusionInfo?.tempBasalInfusionInfo != null
 
@@ -624,7 +633,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             } finally {
                 // Held until the stop and its record (written by the command) are done; releasing right after
                 // the BLE round trip left a window for a re-entrant tap. The infusion-info delete in
-                // handlePumpStopResponse is a fire-and-forget Rx call and is NOT covered by this. In a `finally`
+                // handlePumpStopResponse runs in its own coroutine that nothing waits for, so it is NOT covered by this. In a `finally`
                 // because a call that throws would otherwise leave the screen behind the Loading scrim for
                 // good, and the lock would then refuse every later suspend, resume and discard.
                 endOperation()
@@ -937,8 +946,6 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
-    }
 }
+
+private val REMOVAL_TIMEOUT = 10.seconds

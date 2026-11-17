@@ -5,6 +5,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -14,7 +15,6 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
@@ -28,6 +28,7 @@ import app.aaps.pump.carelevo.ble.commands.ExtendBolusCommand
 import app.aaps.pump.carelevo.ble.commands.ImmediateBolusCommand
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator.Companion.CANCEL_WAIT_TIMEOUT_MS
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator.Companion.NEW_STACK_CANCEL_MAX_RETRY
 import app.aaps.pump.carelevo.domain.model.ResponseResult
@@ -45,17 +46,20 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeoutException
-import kotlin.jvm.optionals.getOrNull
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.seconds
 
 @SingleIn(AppScope::class)
 class CarelevoBolusCoordinator @Inject constructor(
@@ -64,7 +68,6 @@ class CarelevoBolusCoordinator @Inject constructor(
     private val dateUtil: DateUtil,
     private val bolusProgressData: BolusProgressData,
     private val pumpSync: PumpSync,
-    private val aapsSchedulers: AapsSchedulers,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val carelevoPatch: CarelevoPatch,
     private val bleSession: CarelevoBleSession,
@@ -79,6 +82,9 @@ class CarelevoBolusCoordinator @Inject constructor(
     companion object {
 
         private const val STOP_BOLUS_TIME_OUT = 15_000L
+
+        /** How long the record of a bolus end may take. */
+        private val FINISH_RECORD_TIMEOUT = 3.seconds
         private const val PROGRESS_POLL_MS = 100L
         private const val RESULT_SUCCESS = 0
 
@@ -126,6 +132,10 @@ class CarelevoBolusCoordinator @Inject constructor(
     // (calculateMaxRetry in cancelImmediateBolusInternal) — needs the same visibility guarantee
     // as its two sibling flags above.
     @Volatile private var bolusExpectMs: Long = 0
+
+    /** Where the record of a finished bolus is written, after the bolus result went back. A test sets an unconfined dispatcher. */
+    internal var dispatcher: CoroutineDispatcher = aapsIoDispatcher
+    private val scope: CoroutineScope by lazy { CoroutineScope(dispatcher + SupervisorJob()) }
     private val _lastBolusTime = MutableStateFlow<Long?>(null)
     val lastBolusTime: StateFlow<Long?> = _lastBolusTime
 
@@ -137,7 +147,6 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit = {},
-        pluginDisposable: CompositeDisposable,
         onAlarmsRefreshRequested: suspend () -> Unit = {}
     ): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverTreatment.start bolusType=${detailedBolusInfo.bolusType}")
@@ -149,7 +158,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             return result
         }
 
-        val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
+        val infusionInfo = carelevoPatch.infusionInfo.latest
         aapsLogger.warn(
             LTag.PUMPCOMM,
             "deliverTreatment.gate type=${detailedBolusInfo.bolusType}, " +
@@ -172,7 +181,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         isImmeBolusStop = false
         immeBolusCancelDone = false
         immeBolusStopInfused = 0.0
-        val actionId = (carelevoPatch.patchInfo.value?.getOrNull()?.bolusActionSeq ?: 0) + 1
+        val actionId = (carelevoPatch.patchInfo.latest?.bolusActionSeq ?: 0) + 1
         val normalizedActionId = if (actionId <= 0) 1 else ((actionId - 1) % 255) + 1
 
         return deliverTreatmentInternal(
@@ -182,7 +191,6 @@ class CarelevoBolusCoordinator @Inject constructor(
             serialNumber = serialNumber,
             onLastDataUpdated = onLastDataUpdated,
             onStatusRefreshRequested = onStatusRefreshRequested,
-            pluginDisposable = pluginDisposable,
             onAlarmsRefreshRequested = onAlarmsRefreshRequested
         )
     }
@@ -398,7 +406,6 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit,
-        pluginDisposable: CompositeDisposable,
         onAlarmsRefreshRequested: suspend () -> Unit
     ): PumpEnactResult {
         val address = carelevoPatch.getPatchInfoAddress()
@@ -457,8 +464,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result,
                 serialNumber,
                 onLastDataUpdated,
-                onStatusRefreshRequested,
-                pluginDisposable
+                onStatusRefreshRequested
             )
             awaitImmeBolusCancelIfStopped()
             if (isImmeBolusStop) {
@@ -694,7 +700,7 @@ class CarelevoBolusCoordinator @Inject constructor(
      * again at the next status read. Runs on the queue worker: from the status read and before a new bolus.
      */
     fun recoverLeftoverBolus(info: InfusionInfoResponse?, serialNumber: String): LeftoverBolus {
-        val leftover = carelevoPatch.infusionInfo.value?.getOrNull()?.immeBolusInfusionInfo ?: return LeftoverBolus.NONE
+        val leftover = carelevoPatch.infusionInfo.latest?.immeBolusInfusionInfo ?: return LeftoverBolus.NONE
         if (info == null) return LeftoverBolus.UNKNOWN
         val running = info.isImmeBolusRunning()
         val volume = leftover.volume ?: 0.0
@@ -831,8 +837,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         result: PumpEnactResult,
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
-        onStatusRefreshRequested: () -> Unit,
-        pluginDisposable: CompositeDisposable
+        onStatusRefreshRequested: () -> Unit
     ): Boolean {
         if (response !is ResponseResult.Success) {
             val message = when (response) {
@@ -888,8 +893,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 }
                 handleFinishImmeBolus(
                     onLastDataUpdated = onLastDataUpdated,
-                    onStatusRefreshRequested = onStatusRefreshRequested,
-                    pluginDisposable = pluginDisposable
+                    onStatusRefreshRequested = onStatusRefreshRequested
                 )
                 completed = true
             } else {
@@ -959,37 +963,36 @@ class CarelevoBolusCoordinator @Inject constructor(
         }
     }
 
+    /** Writes the record of the bolus end. Nothing waits for it, and a failure is only logged. */
     private fun handleFinishImmeBolus(
         onLastDataUpdated: () -> Unit,
-        onStatusRefreshRequested: () -> Unit,
-        pluginDisposable: CompositeDisposable
+        onStatusRefreshRequested: () -> Unit
     ) {
-        pluginDisposable += finishImmeBolusInfusionUseCase.execute()
-            .observeOn(aapsSchedulers.main)
-            .subscribeOn(aapsSchedulers.io)
-            .timeout(3000L, TimeUnit.MILLISECONDS)
-            .subscribe(
-                { response ->
-                    when (response) {
-                        is ResponseResult.Success -> {
-                            onLastDataUpdated()
-                            onStatusRefreshRequested()
-                            aapsLogger.debug(LTag.PUMPCOMM, "finishImmeBolus.success")
-                        }
-
-                        is ResponseResult.Error   -> {
-                            aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.responseError error=${response.e}")
-                        }
-
-                        else                      -> {
-                            aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.failure")
-                        }
+        scope.launch {
+            try {
+                val response = withTimeoutOrNull(FINISH_RECORD_TIMEOUT) { finishImmeBolusInfusionUseCase.execute() }
+                    ?: throw IllegalStateException("bolus end record did not end in $FINISH_RECORD_TIMEOUT")
+                when (response) {
+                    is ResponseResult.Success -> {
+                        onLastDataUpdated()
+                        onStatusRefreshRequested()
+                        aapsLogger.debug(LTag.PUMPCOMM, "finishImmeBolus.success")
                     }
-                },
-                { e ->
-                    aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.subscribeError error=$e")
+
+                    is ResponseResult.Error   -> {
+                        aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.responseError error=${response.e}")
+                    }
+
+                    else                      -> {
+                        aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.failure")
+                    }
                 }
-            )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.subscribeError error=$e")
+            }
+        }
     }
 
     private fun calculateMaxRetry(

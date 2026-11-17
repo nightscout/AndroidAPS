@@ -7,6 +7,7 @@ import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoDefaultRequestModel
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoRequestModel
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -37,7 +38,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
             realInfusedTime = 0
         )
 
-        val result = sut.execute(request).blockingGet()
+        val result = runBlocking { sut.execute(request) }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
@@ -48,7 +49,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
         val request = CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 199.0)
 
-        val result = sut.execute(request).blockingGet()
+        val result = runBlocking { sut.execute(request) }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
@@ -57,7 +58,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
     fun execute_returns_error_for_invalid_request_type() {
         val invalidRequest = object : CarelevoUseCaseRequest {}
 
-        val result = sut.execute(invalidRequest).blockingGet()
+        val result = runBlocking { sut.execute(invalidRequest) }
 
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
     }
@@ -66,7 +67,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
     fun execute_returns_error_when_patch_info_missing() {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
 
-        val result = sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 99.0)).blockingGet()
+        val result = runBlocking { sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 99.0)) }
 
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
     }
@@ -80,7 +81,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
             pumpState = 1, mode = 3, currentInfusedProgramVolume = 0.0, realInfusedTime = 0
         )
 
-        sut.execute(request).blockingGet()
+        runBlocking { sut.execute(request) }
 
         val stored = argumentCaptor<CarelevoPatchInfoDomainModel>().also { verify(patchInfoRepository).updatePatchInfo(it.capture()) }.firstValue
         assertThat(stored.address).isEqualTo("94:b2:16:1d:2f:6d")
@@ -98,7 +99,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(before)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 199.0)).blockingGet()
+        runBlocking { sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 199.0)) }
 
         val stored = argumentCaptor<CarelevoPatchInfoDomainModel>().also { verify(patchInfoRepository).updatePatchInfo(it.capture()) }.firstValue
         assertThat(stored).isEqualTo(before.copy(insulinRemain = 199.0))
@@ -109,7 +110,7 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(samplePatchInfo())
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(false)
 
-        val result = sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 99.0)).blockingGet()
+        val result = runBlocking { sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 99.0)) }
 
         assertThat((result as ResponseResult.Error).e.message).isEqualTo("update patch info is failed")
     }

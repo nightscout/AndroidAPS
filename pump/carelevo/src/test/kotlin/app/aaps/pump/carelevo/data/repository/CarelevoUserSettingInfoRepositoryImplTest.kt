@@ -4,7 +4,9 @@ import app.aaps.pump.carelevo.data.dataSource.local.CarelevoUserSettingInfoDataS
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -16,7 +18,6 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Tests for [CarelevoUserSettingInfoRepositoryImpl] — delegates to
@@ -50,23 +51,23 @@ internal class CarelevoUserSettingInfoRepositoryImplTest {
 
     @Test
     fun `getUserSettingInfo maps a present entity to a present domain model`() {
-        whenever(dataSource.getUserSettingInfo()).thenReturn(Observable.just(Optional.of(entity())))
+        whenever(dataSource.getUserSettingInfo()).thenReturn(flowOf(entity()))
 
-        val result = sut.getUserSettingInfo().blockingFirst()
+        val result = runBlocking { sut.getUserSettingInfo().first() }
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get().lowInsulinNoticeAmount).isEqualTo(10)
-        assertThat(result.get().maxBasalSpeed).isEqualTo(3.0)
-        assertThat(result.get().maxBolusDose).isEqualTo(15.0)
-        assertThat(result.get().needMaxBolusDoseSyncPatch).isTrue()
+        assertThat(result).isNotNull()
+        assertThat(result!!.lowInsulinNoticeAmount).isEqualTo(10)
+        assertThat(result.maxBasalSpeed).isEqualTo(3.0)
+        assertThat(result.maxBolusDose).isEqualTo(15.0)
+        assertThat(result.needMaxBolusDoseSyncPatch).isTrue()
         verify(dataSource).getUserSettingInfo()
     }
 
     @Test
-    fun `getUserSettingInfo maps an empty optional to an empty optional`() {
-        whenever(dataSource.getUserSettingInfo()).thenReturn(Observable.just(Optional.empty<CarelevoUserSettingInfoEntity>()))
+    fun `getUserSettingInfo maps a null entity to a null domain model`() {
+        whenever(dataSource.getUserSettingInfo()).thenReturn(flowOf(null))
 
-        assertThat(sut.getUserSettingInfo().blockingFirst().isPresent).isFalse()
+        assertThat(runBlocking { sut.getUserSettingInfo().first() }).isNull()
     }
 
     @Test

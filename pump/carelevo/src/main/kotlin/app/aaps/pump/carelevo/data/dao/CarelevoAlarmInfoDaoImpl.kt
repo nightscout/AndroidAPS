@@ -2,6 +2,8 @@ package app.aaps.pump.carelevo.data.dao
 
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
+import app.aaps.pump.carelevo.common.latest
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -9,11 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -21,94 +20,87 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
     private val preferences: Preferences
 ) : CarelevoAlarmInfoDao {
 
-    private val _alarms: BehaviorSubject<Optional<List<CarelevoAlarmInfoEntity>>> = BehaviorSubject.create()
+    /** Null after a clear or a store that cannot be read; no value before the first load. */
+    private val _alarms: MutableSharedFlow<List<CarelevoAlarmInfoEntity>?> = latestValueFlow()
 
-    override fun getAlarms(): Observable<Optional<List<CarelevoAlarmInfoEntity>>> {
+    override fun getAlarms(): Flow<List<CarelevoAlarmInfoEntity>?> {
         // Cold-load through the SAME unfiltered loader every other method uses. The original
         // vendor code filtered this one path to `it.acknowledged` — which is never true, because
         // acknowledging DELETES the entity (see removeAlarm) — so every persisted active alarm
         // (occlusion, out of insulin, …) silently vanished from the stream on process restart.
-        if (_alarms.value == null) {
+        if (_alarms.replayCache.isEmpty()) {
             runCatching { ensureLoaded() }
                 .onFailure { e ->
                     e.printStackTrace()
-                    _alarms.onNext(Optional.ofNullable(null))
+                    _alarms.tryEmit(null)
                 }
         }
         return _alarms
     }
 
-    override fun getAlarmsOnce(): Single<Optional<List<CarelevoAlarmInfoEntity>>> {
-        // Everything in the store is an active (unacknowledged) alarm by construction — an
-        // acknowledged alarm is removed, not flagged.
-        return Single.fromCallable { Optional.of(ensureLoaded()) }
+    // Everything in the store is an active (unacknowledged) alarm by construction — an
+    // acknowledged alarm is removed, not flagged.
+    override fun getAlarmsOnce(): List<CarelevoAlarmInfoEntity> = ensureLoaded()
+
+    override fun setAlarms(list: List<CarelevoAlarmInfoEntity>) {
+        saveList(list)
+        _alarms.tryEmit(list)
     }
 
-    override fun setAlarms(list: List<CarelevoAlarmInfoEntity>): Completable {
-        return Completable.fromAction {
-            saveList(list)
-            _alarms.onNext(Optional.of(list))
-        }
-    }
-
-    override fun clearAlarms(): Completable = Completable.fromAction {
+    override fun clearAlarms() {
         preferences.remove(CarelevoStringNonKey.AlarmInfoList)
-        _alarms.onNext(Optional.ofNullable(null))
+        _alarms.tryEmit(null)
     }
 
-    override fun upsertAlarm(entity: CarelevoAlarmInfoEntity): Completable {
-        return Completable.fromAction {
-            val current = ensureLoaded()
+    override fun upsertAlarm(entity: CarelevoAlarmInfoEntity) {
+        val current = ensureLoaded()
 
-            val idx = current.indexOfFirst {
-                !it.acknowledged && it.cause.canonicalKey() == entity.cause.canonicalKey()
-            }
-
-            val next = if (idx >= 0) {
-                current.toMutableList().apply {
-                    val existing = this[idx]
-                    val replacementCause =
-                        if (entity.cause.priority() > existing.cause.priority()) entity.cause else existing.cause
-                    val replacementAlarmType =
-                        if (entity.cause.priority() > existing.cause.priority()) entity.alarmType else existing.alarmType
-                    val replacementValue =
-                        if (entity.cause.priority() > existing.cause.priority()) entity.value else existing.value
-                    this[idx] = existing.copy(
-                        alarmType = replacementAlarmType,
-                        cause = replacementCause,
-                        value = replacementValue,
-                        updatedAt = entity.updatedAt,
-                        occurrenceCount = existing.occurrenceCount + 1
-                    )
-                }
-            } else {
-                current + entity.copy(occurrenceCount = 1)
-            }
-
-            saveList(next)
-            _alarms.onNext(Optional.of(next))
+        val idx = current.indexOfFirst {
+            !it.acknowledged && it.cause.canonicalKey() == entity.cause.canonicalKey()
         }
+
+        val next = if (idx >= 0) {
+            current.toMutableList().apply {
+                val existing = this[idx]
+                val replacementCause =
+                    if (entity.cause.priority() > existing.cause.priority()) entity.cause else existing.cause
+                val replacementAlarmType =
+                    if (entity.cause.priority() > existing.cause.priority()) entity.alarmType else existing.alarmType
+                val replacementValue =
+                    if (entity.cause.priority() > existing.cause.priority()) entity.value else existing.value
+                this[idx] = existing.copy(
+                    alarmType = replacementAlarmType,
+                    cause = replacementCause,
+                    value = replacementValue,
+                    updatedAt = entity.updatedAt,
+                    occurrenceCount = existing.occurrenceCount + 1
+                )
+            }
+        } else {
+            current + entity.copy(occurrenceCount = 1)
+        }
+
+        saveList(next)
+        _alarms.tryEmit(next)
     }
 
-    override fun removeAlarm(alarmId: String): Completable {
-        return Completable.fromAction {
-            val current = ensureLoaded()
-            val next = current.filterNot { it.alarmId == alarmId }
+    override fun removeAlarm(alarmId: String) {
+        val current = ensureLoaded()
+        val next = current.filterNot { it.alarmId == alarmId }
 
-            saveList(next)
-            _alarms.onNext(Optional.of(next))
-        }
+        saveList(next)
+        _alarms.tryEmit(next)
     }
 
     private fun ensureLoaded(): List<CarelevoAlarmInfoEntity> {
-        val cached = _alarms.value?.orElse(null)
+        val cached = _alarms.latest
         if (cached != null) return cached
 
         val json = preferences.get(CarelevoStringNonKey.AlarmInfoList)
         val list = if (json.isBlank()) emptyList() else CarelevoGsonHelper.sharedGson()
             .fromJson(json, Array<CarelevoAlarmInfoEntity>::class.java)
             .toList()
-        _alarms.onNext(Optional.of(list))
+        _alarms.tryEmit(list)
         return list
     }
 

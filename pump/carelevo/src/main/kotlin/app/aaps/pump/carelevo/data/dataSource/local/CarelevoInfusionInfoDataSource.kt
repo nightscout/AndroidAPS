@@ -5,12 +5,11 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInf
 import app.aaps.pump.carelevo.data.model.entities.CarelevoImmeBolusInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoTempBasalInfusionInfoEntity
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 interface CarelevoInfusionInfoDataSource {
 
-    fun getInfusionInfo(): Observable<Optional<CarelevoInfusionInfoEntity>>
+    fun getInfusionInfo(): Flow<CarelevoInfusionInfoEntity?>
     fun getInfusionInfoBySync(): CarelevoInfusionInfoEntity?
 
     fun updateBasalInfusionInfo(info: CarelevoBasalInfusionInfoEntity): Boolean

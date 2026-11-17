@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.domain.usecase.infusion
 
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoPatchMode
 import app.aaps.pump.carelevo.domain.model.infusion.derivePatchMode
@@ -12,8 +13,7 @@ import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusi
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 
 // App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
@@ -25,49 +25,46 @@ class CarelevoDeleteInfusionInfoUseCase @Inject constructor(
     private val infusionInfoRepository: CarelevoInfusionInfoRepository
 ) {
 
-    fun execute(request: CarelevoUseCaseRequest): Single<ResponseResult<CarelevoUseCaseResponse>> {
-        return Single.fromCallable {
-            runCatching {
-                require(request is CarelevoDeleteInfusionRequestModel) {
-                    "Request must be CarelevoDeleteInfusionRequestModel"
-                }
-                val req = request
+    suspend fun execute(request: CarelevoUseCaseRequest): ResponseResult<CarelevoUseCaseResponse> = withContext(aapsIoDispatcher) {
+        runCatching {
+            require(request is CarelevoDeleteInfusionRequestModel) {
+                "Request must be CarelevoDeleteInfusionRequestModel"
+            }
+            val req = request
 
-                if (req.isDeleteTempBasal) {
-                    val ok = infusionInfoRepository.deleteTempBasalInfusionInfo()
-                    if (!ok) error("Failed to delete temp basal infusion info")
-                }
-                if (req.isDeleteImmeBolus) {
-                    val ok = infusionInfoRepository.deleteImmeBolusInfusionInfo()
-                    if (!ok) error("Failed to delete immediate bolus infusion info")
-                }
-                if (req.isDeleteExtendBolus) {
-                    val ok = infusionInfoRepository.deleteExtendBolusInfusionInfo()
-                    if (!ok) error("Failed to delete extended bolus infusion info")
-                }
+            if (req.isDeleteTempBasal) {
+                val ok = infusionInfoRepository.deleteTempBasalInfusionInfo()
+                if (!ok) error("Failed to delete temp basal infusion info")
+            }
+            if (req.isDeleteImmeBolus) {
+                val ok = infusionInfoRepository.deleteImmeBolusInfusionInfo()
+                if (!ok) error("Failed to delete immediate bolus infusion info")
+            }
+            if (req.isDeleteExtendBolus) {
+                val ok = infusionInfoRepository.deleteExtendBolusInfusionInfo()
+                if (!ok) error("Failed to delete extended bolus infusion info")
+            }
 
-                val infusionInfo = infusionInfoRepository.getInfusionInfoBySync()
-                    ?: error("Infusion info must not be null after deletion step")
+            val infusionInfo = infusionInfoRepository.getInfusionInfoBySync()
+                ?: error("Infusion info must not be null after deletion step")
 
-                // Delete/discard path: nothing left running means the patch is stopped, so fall
-                // back to BASAL_STOPPED (the mid-therapy persists treat the same case as an error).
-                val mode = infusionInfo.derivePatchMode() ?: CarelevoPatchMode.BASAL_STOPPED
+            // Delete/discard path: nothing left running means the patch is stopped, so fall
+            // back to BASAL_STOPPED (the mid-therapy persists treat the same case as an error).
+            val mode = infusionInfo.derivePatchMode() ?: CarelevoPatchMode.BASAL_STOPPED
 
-                val now = Clock.System.now()
-                val patchInfo = patchInfoRepository.getPatchInfoBySync()
-                    ?: error("Patch info must not be null")
+            val now = Clock.System.now()
+            val patchInfo = patchInfoRepository.getPatchInfoBySync()
+                ?: error("Patch info must not be null")
 
-                val updated = patchInfoRepository.updatePatchInfo(
-                    patchInfo.copy(updatedAt = now, mode = mode)
-                )
-                if (!updated) error("Failed to update patch info (mode=$mode)")
-
-                ResultSuccess
-            }.fold(
-                onSuccess = { ResponseResult.Success(it as CarelevoUseCaseResponse) },
-                onFailure = { ResponseResult.Error(it) }
+            val updated = patchInfoRepository.updatePatchInfo(
+                patchInfo.copy(updatedAt = now, mode = mode)
             )
-            // subscribeOn, NOT observeOn — see CarelevoFinishImmeBolusInfusionUseCase.
-        }.subscribeOn(Schedulers.io())
+            if (!updated) error("Failed to update patch info (mode=$mode)")
+
+            ResultSuccess
+        }.fold(
+            onSuccess = { ResponseResult.Success(it as CarelevoUseCaseResponse) },
+            onFailure = { ResponseResult.Error(it) }
+        )
     }
 }

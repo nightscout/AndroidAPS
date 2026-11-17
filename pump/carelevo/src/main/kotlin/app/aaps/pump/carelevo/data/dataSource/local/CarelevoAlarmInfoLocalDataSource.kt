@@ -1,18 +1,15 @@
 package app.aaps.pump.carelevo.data.dataSource.local
 
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 interface CarelevoAlarmInfoLocalDataSource {
 
-    fun observeAlarms(): Observable<Optional<List<CarelevoAlarmInfoEntity>>>
+    fun observeAlarms(): Flow<List<CarelevoAlarmInfoEntity>?>
 
-    fun getAlarmsOnce(): Single<Optional<List<CarelevoAlarmInfoEntity>>>
-    fun setAlarms(list: List<CarelevoAlarmInfoEntity>): Completable
-    fun upsertAlarm(entity: CarelevoAlarmInfoEntity): Completable
-    fun removeAlarm(alarmId: String): Completable
-    fun clearAlarms(): Completable
+    fun getAlarmsOnce(): List<CarelevoAlarmInfoEntity>
+    fun setAlarms(list: List<CarelevoAlarmInfoEntity>)
+    fun upsertAlarm(entity: CarelevoAlarmInfoEntity)
+    fun removeAlarm(alarmId: String)
+    fun clearAlarms()
 }

@@ -20,7 +20,7 @@ class AlarmClearPatchDiscardUseCase @Inject constructor(
      * user-setting record or if any write fails. The patch record goes first, see `CarelevoPatchForceDiscardUseCase`.
      */
     fun persistAlarmDiscarded(alarmId: String): Boolean = runCatching {
-        alarmRepository.removeAlarm(alarmId).blockingAwait()
+        alarmRepository.removeAlarm(alarmId)
 
         val userSettingInfo = userSettingInfoRepository.getUserSettingInfoBySync()
             ?: throw NullPointerException("user setting info must be not null")

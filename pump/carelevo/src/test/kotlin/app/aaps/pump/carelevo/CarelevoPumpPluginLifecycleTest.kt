@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -53,6 +52,7 @@ import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator
@@ -80,13 +80,10 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusio
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Locale
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -114,7 +111,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
-import java.util.Optional
+import java.util.Locale
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -145,9 +142,10 @@ import app.aaps.core.interfaces.configuration.Config as AapsConfig
  * in `startAlarmObserving`/`onStop`: without it the real Android main dispatcher would post to the
  * paused Robolectric looper while `runBlocking` holds that very thread, and deadlock.
  *
- * The Rx schedulers are trampolined so `initPatchOnce`, the patchInfo mirror and the settings-sync
- * combiner all deliver synchronously. The preference observers are the exception — the plugin
- * collects them on a hard-coded `Dispatchers.IO` scope, so those are verified with `timeout(...)`.
+ * The plugin's scope runs on [Dispatchers.Unconfined] here (see `buildPlugin`), so `initPatchOnce`, the
+ * patchInfo mirror, the settings-sync combiner and the preference observers all run on the test thread
+ * before the call that feeds them returns. The preference observers are still verified with
+ * `timeout(...)`: it passes at once now and still holds if the work runs on another thread.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -165,7 +163,6 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var rh: ResourceHelper
     private lateinit var preferences: Preferences
     private lateinit var commandQueue: CommandQueue
-    private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var fabricPrivacy: FabricPrivacy
     private lateinit var profileFunction: ProfileFunction
     private lateinit var protectionCheck: ProtectionCheck
@@ -192,11 +189,11 @@ class CarelevoPumpPluginLifecycleTest {
     private val buzzerFlow = MutableStateFlow(false)
 
     // Patch streams the deferred settings-sync combiner reads.
-    private lateinit var patchInfoSubject: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>>
-    private lateinit var infusionInfoSubject: BehaviorSubject<Optional<CarelevoInfusionInfoDomainModel>>
-    private lateinit var patchStateSubject: BehaviorSubject<Optional<PatchState>>
-    private lateinit var userSettingSubject: BehaviorSubject<Optional<CarelevoUserSettingInfoDomainModel>>
-    private lateinit var profileSubject: BehaviorSubject<Optional<Profile>>
+    private lateinit var patchInfoFlow: MutableSharedFlow<CarelevoPatchInfoDomainModel?>
+    private lateinit var infusionInfoFlow: MutableSharedFlow<CarelevoInfusionInfoDomainModel?>
+    private lateinit var patchStateFlow: MutableSharedFlow<PatchState?>
+    private lateinit var userSettingFlow: MutableSharedFlow<CarelevoUserSettingInfoDomainModel?>
+    private lateinit var profileFlow: MutableSharedFlow<Profile?>
 
     private var started = false
 
@@ -212,7 +209,6 @@ class CarelevoPumpPluginLifecycleTest {
         rh = mock()
         preferences = mock()
         commandQueue = mock()
-        aapsSchedulers = mock()
         fabricPrivacy = mock()
         profileFunction = mock()
         protectionCheck = mock()
@@ -226,34 +222,32 @@ class CarelevoPumpPluginLifecycleTest {
         activationExecutor = mock()
         deleteUserSettingInfoUseCase = mock()
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.cpu).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.newThread).thenReturn(Schedulers.trampoline())
         whenever(rh.gs(any<Int>())).thenReturn("Mocked")
+        // onStart follows the link for the alarm snapshot read; a test about the link stubs its own flow.
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
 
         testProfile = mock()
         whenever(testProfile.getBasal()).thenReturn(1.0)
 
-        patchInfoSubject = BehaviorSubject.createDefault(Optional.of(samplePatchInfo()))
-        infusionInfoSubject = BehaviorSubject.createDefault(Optional.of(CarelevoInfusionInfoDomainModel()))
-        patchStateSubject = BehaviorSubject.createDefault(Optional.of(PatchState.ConnectedBooted))
-        userSettingSubject = BehaviorSubject.createDefault(Optional.of(CarelevoUserSettingInfoDomainModel()))
-        profileSubject = BehaviorSubject.createDefault(Optional.of<Profile>(testProfile))
+        patchInfoFlow = latestValueFlow<CarelevoPatchInfoDomainModel?>().apply { tryEmit(samplePatchInfo()) }
+        infusionInfoFlow = latestValueFlow<CarelevoInfusionInfoDomainModel?>().apply { tryEmit(CarelevoInfusionInfoDomainModel()) }
+        patchStateFlow = latestValueFlow<PatchState?>().apply { tryEmit(PatchState.ConnectedBooted) }
+        userSettingFlow = latestValueFlow<CarelevoUserSettingInfoDomainModel?>().apply { tryEmit(CarelevoUserSettingInfoDomainModel()) }
+        profileFlow = latestValueFlow<Profile?>().apply { tryEmit(testProfile) }
 
-        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
-        whenever(carelevoPatch.infusionInfo).thenReturn(infusionInfoSubject)
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject)
-        whenever(carelevoPatch.profile).thenReturn(profileSubject)
-        whenever(carelevoPatch.initPatchOnce()).thenReturn(Completable.complete())
+        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoFlow)
+        whenever(carelevoPatch.infusionInfo).thenReturn(infusionInfoFlow)
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow)
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow)
+        whenever(carelevoPatch.profile).thenReturn(profileFlow)
+        whenever(carelevoPatch.initPatchOnce()).thenReturn(CompletableDeferred(Unit))
 
         // Deferred settings-sync + preference observers both enqueue through the queue.
         val enactResult: PumpEnactResult = mock()
         whenever { commandQueue.customCommand(any()) }.thenReturn(enactResult)
 
         // onStop -> settingsCoordinator.clearUserSettings
-        whenever(deleteUserSettingInfoUseCase.execute()).thenReturn(Single.just(ResponseResult.Success(ResultSuccess)))
+        whenever { deleteUserSettingInfoUseCase.execute() }.thenReturn(ResponseResult.Success(ResultSuccess))
 
         whenever(preferences.observe(DoubleKey.SafetyMaxBolus)).thenReturn(maxBolusFlow)
         whenever(preferences.observe(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(expiryFlow)
@@ -296,7 +290,6 @@ class CarelevoPumpPluginLifecycleTest {
             rh = rh,
             preferences = preferences,
             commandQueue = commandQueue,
-            aapsSchedulers = aapsSchedulers,
             fabricPrivacy = fabricPrivacy,
             profileFunction = profileFunction,
             context = context,
@@ -322,7 +315,6 @@ class CarelevoPumpPluginLifecycleTest {
                 dateUtil = dateUtil,
                 bolusProgressData = bolusProgressData,
                 pumpSync = pumpSync,
-                aapsSchedulers = aapsSchedulers,
                 pumpEnactResultProvider = pumpEnactResultProvider,
                 carelevoPatch = carelevoPatch,
                 bleSession = bleSession,
@@ -350,12 +342,14 @@ class CarelevoPumpPluginLifecycleTest {
             ),
             settingsCoordinator = CarelevoSettingsCoordinator(
                 aapsLogger = aapsLogger,
-                aapsSchedulers = aapsSchedulers,
                 deleteUserSettingInfoUseCase = deleteUserSettingInfoUseCase
             ),
             activationExecutor = activationExecutor,
             notificationManager = mock()
-        )
+        ).also {
+            // Set before onStart creates the scope: everything the plugin collects runs on the test thread.
+            it.dispatcher = Dispatchers.Unconfined
+        }
     }
 
     // ---- helpers ------------------------------------------------------------------------------
@@ -402,11 +396,12 @@ class CarelevoPumpPluginLifecycleTest {
      * Block until the plugin's collector for [flow] is attached AND has consumed the initial value
      * that `drop(1)` swallows; only after that does a `value = …` change reach the `onEach` body.
      *
-     * The plugin collects on its own `CoroutineScope(Dispatchers.IO)`, so a change published too
-     * early would be conflated into the collector's first emission and dropped. `subscriptionCount`
-     * flips at slot allocation, an instant before the initial value is read — the short settle
-     * covers that window. Landing inside it can only ever fail a test (the `timeout(…)` verify never
-     * fires), never pass one falsely.
+     * Here the plugin collects on an unconfined dispatcher, so the collector is attached before
+     * `start()` returns and this wait ends at once. It stays as a stated precondition: if the
+     * collector ran on another thread, a change published too early would be conflated into its
+     * first emission and dropped. `subscriptionCount` flips at slot allocation, an instant before
+     * the initial value is read — the short settle covers that window. Landing inside it can only
+     * ever fail a test (the `timeout(…)` verify never fires), never pass one falsely.
      */
     private fun awaitCollector(flow: MutableStateFlow<*>) {
         val deadline = System.currentTimeMillis() + 2_000
@@ -482,9 +477,9 @@ class CarelevoPumpPluginLifecycleTest {
 
     @Test
     fun `onStart survives a failing patch init and still registers the alarm observer`() {
-        // initPatchOnce is onErrorComplete()d + timed out: a broken init must not abort onStart or the
+        // A failed or timed-out initPatchOnce is caught: a broken init must not abort onStart or the
         // alarm pipeline would never come up.
-        whenever(carelevoPatch.initPatchOnce()).thenReturn(Completable.error(IllegalStateException("boom")))
+        whenever(carelevoPatch.initPatchOnce()).thenReturn(CompletableDeferred<Unit>().apply { completeExceptionally(IllegalStateException("boom")) })
 
         start()
 
@@ -493,7 +488,7 @@ class CarelevoPumpPluginLifecycleTest {
 
     @Test
     fun `onStart mirrors the patch reservoir and battery level`() {
-        patchInfoSubject.onNext(Optional.of(samplePatchInfo(insulinRemain = 42.5)))
+        patchInfoFlow.tryEmit(samplePatchInfo(insulinRemain = 42.5))
 
         start()
 
@@ -504,7 +499,7 @@ class CarelevoPumpPluginLifecycleTest {
     /** No patch, no reservoir to tell. A 0 went to Nightscout and to automation rules as an empty reservoir. */
     @Test
     fun `onStart reports no reservoir when no patch record exists`() {
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         start()
 
@@ -515,7 +510,7 @@ class CarelevoPumpPluginLifecycleTest {
     fun `reservoir level keeps tracking the patch after onStart`() {
         start()
 
-        patchInfoSubject.onNext(Optional.of(samplePatchInfo(insulinRemain = 12.25)))
+        patchInfoFlow.tryEmit(samplePatchInfo(insulinRemain = 12.25))
 
         assertThat(plugin.reservoirLevel.value?.cU).isWithin(0.001).of(12.25)
     }
@@ -698,8 +693,8 @@ class CarelevoPumpPluginLifecycleTest {
     fun `a pending max-bolus sync is pushed once the patch is booted and idle`() {
         start()
 
-        userSettingSubject.onNext(
-            Optional.of(CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true))
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true)
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
@@ -710,8 +705,8 @@ class CarelevoPumpPluginLifecycleTest {
     fun `a pending max-bolus sync with no stored dose falls back to zero`() {
         start()
 
-        userSettingSubject.onNext(
-            Optional.of(CarelevoUserSettingInfoDomainModel(maxBolusDose = null, needMaxBolusDoseSyncPatch = true))
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(maxBolusDose = null, needMaxBolusDoseSyncPatch = true)
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
@@ -722,8 +717,8 @@ class CarelevoPumpPluginLifecycleTest {
     fun `a pending low-insulin sync is pushed once the patch is booted`() {
         start()
 
-        userSettingSubject.onNext(
-            Optional.of(CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true))
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true)
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateLowInsulinNotice>()) }
@@ -733,12 +728,12 @@ class CarelevoPumpPluginLifecycleTest {
     @Test
     fun `nothing is pushed while the patch is not booted and it flushes once it boots`() {
         start()
-        patchStateSubject.onNext(Optional.of(PatchState.NotConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.NotConnectedBooted)
 
         val pending = CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true)
-        userSettingSubject.onNext(Optional.of(pending))
+        userSettingFlow.tryEmit(pending)
         // Not booted -> the combiner yields the empty need, so no CmdUpdateMaxBolus can ever be produced.
-        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
         // Exactly one: the not-booted pass contributed nothing.
@@ -749,25 +744,23 @@ class CarelevoPumpPluginLifecycleTest {
     fun `a pending max-bolus sync is held back while an immediate bolus is running`() {
         // Max bolus is a device safety cap — re-pushing it mid-bolus would force a spurious reconnect.
         start()
-        infusionInfoSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
-                        infusionId = "imme-1",
-                        address = "AA:BB:CC:DD:EE:FF",
-                        mode = 3,
-                        volume = 1.0,
-                        infusionDurationSeconds = 30
-                    )
+        infusionInfoFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
+                    infusionId = "imme-1",
+                    address = "AA:BB:CC:DD:EE:FF",
+                    mode = 3,
+                    volume = 1.0,
+                    infusionDurationSeconds = 30
                 )
             )
         )
 
-        userSettingSubject.onNext(
-            Optional.of(CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true))
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true)
         )
         // Bolus finished -> the same pending flag must now flush.
-        infusionInfoSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel()))
+        infusionInfoFlow.tryEmit(CarelevoInfusionInfoDomainModel())
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
         assertThat(capturedCommands<CmdUpdateMaxBolus>()).hasSize(1)
@@ -778,24 +771,22 @@ class CarelevoPumpPluginLifecycleTest {
         // BOTH channels must be idle: an `||` here (the old bug) read as idle during a single-channel
         // bolus and triggered a mid-bolus reconnect.
         start()
-        infusionInfoSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    extendBolusInfusionInfo = CarelevoExtendBolusInfusionInfoDomainModel(
-                        infusionId = "ext-1",
-                        address = "AA:BB:CC:DD:EE:FF",
-                        mode = 4,
-                        volume = 1.0,
-                        infusionDurationMin = 30
-                    )
+        infusionInfoFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                extendBolusInfusionInfo = CarelevoExtendBolusInfusionInfoDomainModel(
+                    infusionId = "ext-1",
+                    address = "AA:BB:CC:DD:EE:FF",
+                    mode = 4,
+                    volume = 1.0,
+                    infusionDurationMin = 30
                 )
             )
         )
 
-        userSettingSubject.onNext(
-            Optional.of(CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true))
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(maxBolusDose = 12.0, needMaxBolusDoseSyncPatch = true)
         )
-        infusionInfoSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel()))
+        infusionInfoFlow.tryEmit(CarelevoInfusionInfoDomainModel())
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateMaxBolus>()) }
         assertThat(capturedCommands<CmdUpdateMaxBolus>()).hasSize(1)
@@ -804,22 +795,20 @@ class CarelevoPumpPluginLifecycleTest {
     @Test
     fun `a low-insulin sync is pushed even mid-bolus - only max bolus is gated`() {
         start()
-        infusionInfoSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
-                        infusionId = "imme-1",
-                        address = "AA:BB:CC:DD:EE:FF",
-                        mode = 3,
-                        volume = 1.0,
-                        infusionDurationSeconds = 30
-                    )
+        infusionInfoFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
+                    infusionId = "imme-1",
+                    address = "AA:BB:CC:DD:EE:FF",
+                    mode = 3,
+                    volume = 1.0,
+                    infusionDurationSeconds = 30
                 )
             )
         )
 
-        userSettingSubject.onNext(
-            Optional.of(CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true))
+        userSettingFlow.tryEmit(
+            CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 22, needLowInsulinNoticeAmountSyncPatch = true)
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateLowInsulinNotice>()) }
@@ -977,7 +966,7 @@ class CarelevoPumpPluginLifecycleTest {
         started = false
 
         verify(carelevoAlarmNotifier).stopObserving()
-        verify(deleteUserSettingInfoUseCase).execute()
+        verifyBlocking(deleteUserSettingInfoUseCase) { execute() }
     }
 
     @Test
@@ -1032,12 +1021,12 @@ class CarelevoPumpPluginLifecycleTest {
 
     /** A patch stopped for [stopMinutes], with the stop stored [stoppedFor] ago. */
     private fun stoppedPatch(stopMinutes: Int?, stoppedFor: Duration) {
-        patchInfoSubject.onNext(Optional.of(samplePatchInfo().copy(isStopped = true, stopMinutes = stopMinutes)))
+        patchInfoFlow.tryEmit(samplePatchInfo().copy(isStopped = true, stopMinutes = stopMinutes))
         val basal = CarelevoBasalInfusionInfoDomainModel(
             infusionId = "basal", address = "AA:BB:CC:DD:EE:FF", mode = 0, updatedAt = Clock.System.now() - stoppedFor,
             segments = emptyList(), isStop = true
         )
-        infusionInfoSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(basalInfusionInfo = basal)))
+        infusionInfoFlow.tryEmit(CarelevoInfusionInfoDomainModel(basalInfusionInfo = basal))
     }
 
     @Test
@@ -1070,8 +1059,8 @@ class CarelevoPumpPluginLifecycleTest {
 
     @Test
     fun `a stop is left alone until the infusion info with its start is loaded`() {
-        patchInfoSubject.onNext(Optional.of(samplePatchInfo().copy(isStopped = true, stopMinutes = 1)))
-        infusionInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(samplePatchInfo().copy(isStopped = true, stopMinutes = 1))
+        infusionInfoFlow.tryEmit(null)
 
         start()
 
@@ -1180,7 +1169,7 @@ class CarelevoPumpPluginLifecycleTest {
         val bolusCoordinator: CarelevoBolusCoordinator = mock()
         val tempBasalCoordinator: CarelevoTempBasalCoordinator = mock()
         val ended: PumpEnactResult = mock()
-        whenever(coordinator.updateBasalProfile(any(), any(), any(), any())).thenAnswer { invocation ->
+        whenever { coordinator.updateBasalProfile(any(), any(), any(), any()) }.thenAnswer { invocation ->
             invocation.getArgument<() -> PumpEnactResult>(1).invoke()
             invocation.getArgument<() -> PumpEnactResult>(2).invoke()
             ended

@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -42,6 +41,7 @@ import app.aaps.pump.carelevo.ble.data.ServiceDiscoverState
 import app.aaps.pump.carelevo.command.CarelevoActivationExecutor
 import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator
@@ -62,10 +62,8 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfus
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
 import dev.zacsweers.metro.Provider
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -78,7 +76,7 @@ import org.mockito.kotlin.isA
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
+import java.util.Locale
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 
@@ -94,7 +92,6 @@ abstract class CarelevoPumpPluginTestBase {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var pumpSync: PumpSync
 
@@ -129,39 +126,34 @@ abstract class CarelevoPumpPluginTestBase {
     protected lateinit var plugin: CarelevoPumpPlugin
     protected lateinit var testProfile: Profile
 
-    protected lateinit var patchInfoSubject: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>>
-    protected lateinit var infusionInfoSubject: BehaviorSubject<Optional<CarelevoInfusionInfoDomainModel>>
-    protected lateinit var profileSubject: BehaviorSubject<Optional<Profile>>
-    protected lateinit var patchStateSubject: BehaviorSubject<Optional<PatchState>>
-    protected lateinit var btStateSubject: BehaviorSubject<Optional<BleState>>
+    protected lateinit var patchInfoFlow: MutableSharedFlow<CarelevoPatchInfoDomainModel?>
+    protected lateinit var infusionInfoFlow: MutableSharedFlow<CarelevoInfusionInfoDomainModel?>
+    protected lateinit var profileFlow: MutableSharedFlow<Profile?>
+    protected lateinit var patchStateFlow: MutableSharedFlow<PatchState?>
+    protected lateinit var btStateFlow: MutableSharedFlow<BleState?>
 
     @BeforeEach
     fun setupCarelevoPlugin() {
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.cpu).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.newThread).thenReturn(Schedulers.trampoline())
-
         whenever(dateUtil.now()).thenReturn(System.currentTimeMillis())
         whenever(rh.gs(any<Int>())).thenReturn("Mocked")
 
         testProfile = mock()
         whenever(testProfile.getBasal()).thenReturn(1.0)
 
-        patchInfoSubject = BehaviorSubject.createDefault(Optional.of(samplePatchInfo()))
-        infusionInfoSubject = BehaviorSubject.createDefault(Optional.of(CarelevoInfusionInfoDomainModel()))
-        profileSubject = BehaviorSubject.createDefault(Optional.of(testProfile))
-        patchStateSubject = BehaviorSubject.createDefault(Optional.of(PatchState.ConnectedBooted))
-        btStateSubject = BehaviorSubject.createDefault(Optional.of(connectedBleState()))
-        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
-        whenever(carelevoPatch.infusionInfo).thenReturn(infusionInfoSubject)
-        whenever(carelevoPatch.profile).thenReturn(profileSubject)
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
-        whenever(carelevoPatch.btState).thenReturn(btStateSubject)
+        patchInfoFlow = latestValueFlow<CarelevoPatchInfoDomainModel?>().apply { tryEmit(samplePatchInfo()) }
+        infusionInfoFlow = latestValueFlow<CarelevoInfusionInfoDomainModel?>().apply { tryEmit(CarelevoInfusionInfoDomainModel()) }
+        profileFlow = latestValueFlow<Profile?>().apply { tryEmit(testProfile) }
+        patchStateFlow = latestValueFlow<PatchState?>().apply { tryEmit(PatchState.ConnectedBooted) }
+        btStateFlow = latestValueFlow<BleState?>().apply { tryEmit(connectedBleState()) }
+        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoFlow)
+        whenever(carelevoPatch.infusionInfo).thenReturn(infusionInfoFlow)
+        whenever(carelevoPatch.profile).thenReturn(profileFlow)
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow)
+        whenever(carelevoPatch.btState).thenReturn(btStateFlow)
         doReturn(PatchState.ConnectedBooted).whenever(carelevoPatch).resolvePatchState()
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
 
-        whenever(finishImmeBolusInfusionUseCase.execute()).thenReturn(Single.just(ResponseResult.Success(ResultSuccess)))
+        whenever { finishImmeBolusInfusionUseCase.execute() }.thenReturn(ResponseResult.Success(ResultSuccess))
 
         // The coordinators/plugin run everything over the gateway/session; stub the happy path so the
         // plugin tests exercise the success flows.
@@ -205,7 +197,6 @@ abstract class CarelevoPumpPluginTestBase {
             dateUtil = dateUtil,
             bolusProgressData = bolusProgressData,
             pumpSync = pumpSync,
-            aapsSchedulers = aapsSchedulers,
             pumpEnactResultProvider = pumpEnactResultProvider,
             carelevoPatch = carelevoPatch,
             bleSession = bleSession,
@@ -216,6 +207,8 @@ abstract class CarelevoPumpPluginTestBase {
             cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
             decimalFormatter = decimalFormatter
         )
+        // The record of a bolus end is written on the test thread, before deliverTreatment returns.
+        bolusCoordinator.dispatcher = Dispatchers.Unconfined
         val tempBasalCoordinator = CarelevoTempBasalCoordinator(
             aapsLogger = aapsLogger,
             dateUtil = dateUtil,
@@ -233,7 +226,6 @@ abstract class CarelevoPumpPluginTestBase {
         )
         val settingsCoordinator = CarelevoSettingsCoordinator(
             aapsLogger = aapsLogger,
-            aapsSchedulers = aapsSchedulers,
             deleteUserSettingInfoUseCase = deleteUserSettingInfoUseCase
         )
 
@@ -242,7 +234,6 @@ abstract class CarelevoPumpPluginTestBase {
             rh = rh,
             preferences = preferences,
             commandQueue = commandQueue,
-            aapsSchedulers = aapsSchedulers,
             fabricPrivacy = fabricPrivacy,
             profileFunction = profileFunction,
             context = context,
@@ -262,6 +253,8 @@ abstract class CarelevoPumpPluginTestBase {
             activationExecutor = activationExecutor,
             notificationManager = mock()
         )
+        // Set before any onStart: everything the plugin collects runs on the test thread.
+        plugin.dispatcher = Dispatchers.Unconfined
         plugin.bleSession = bleSession
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(
             InfusionInfoResponse(

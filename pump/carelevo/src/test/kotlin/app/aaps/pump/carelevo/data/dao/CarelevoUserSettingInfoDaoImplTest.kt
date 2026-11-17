@@ -7,6 +7,8 @@ import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -26,7 +28,7 @@ import org.mockito.quality.Strictness
  * Pure-JVM round-trip coverage for [CarelevoUserSettingInfoDaoImpl].
  *
  * The DAO persists a single JSON blob under [CarelevoStringNonKey.UserSettingInfo] via [Preferences]
- * and caches the parsed entity in an internal `BehaviorSubject`. We back the mocked [Preferences]
+ * and caches the parsed entity in an internal stream that keeps its last value. We back the mocked [Preferences]
  * with an in-memory map (the "fake preferences" approach) so save/load/update/delete really
  * round-trip through the real gson used by production code, and we can spawn a fresh DAO instance
  * sharing the same store to exercise the cold-read (cache-miss) branches.
@@ -83,40 +85,40 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         sut = CarelevoUserSettingInfoDaoImpl(preferences)
     }
 
-    // region getUserSetting (Observable)
+    // region getUserSetting (Flow)
 
     @Test
     fun `getUserSetting emits the stored entity when preferences hold valid JSON`() {
         storeJson(sampleSetting())
 
-        val emitted = sut.getUserSetting().blockingFirst()
+        val emitted = runBlocking { sut.getUserSetting().first() }
 
-        assertThat(emitted.isPresent).isTrue()
-        assertThat(emitted.get()).isEqualTo(sampleSetting())
+        assertThat(emitted).isNotNull()
+        assertThat(emitted).isEqualTo(sampleSetting())
     }
 
     @Test
-    fun `getUserSetting emits empty when the preference is absent`() {
-        val emitted = sut.getUserSetting().blockingFirst()
+    fun `getUserSetting emits null when the preference is absent`() {
+        val emitted = runBlocking { sut.getUserSetting().first() }
 
-        assertThat(emitted.isPresent).isFalse()
+        assertThat(emitted).isNull()
     }
 
     @Test
-    fun `getUserSetting emits empty when the stored JSON is malformed`() {
+    fun `getUserSetting emits null when the stored JSON is malformed`() {
         store[CarelevoStringNonKey.UserSettingInfo.key] = "{{{not-valid-json"
 
-        val emitted = sut.getUserSetting().blockingFirst()
+        val emitted = runBlocking { sut.getUserSetting().first() }
 
-        assertThat(emitted.isPresent).isFalse()
+        assertThat(emitted).isNull()
     }
 
     @Test
-    fun `getUserSetting reads preferences only once and serves the cached subject afterwards`() {
+    fun `getUserSetting reads preferences only once and serves the cached stream afterwards`() {
         storeJson(sampleSetting())
 
-        sut.getUserSetting().blockingFirst()
-        sut.getUserSetting().blockingFirst()
+        runBlocking { sut.getUserSetting().first() }
+        runBlocking { sut.getUserSetting().first() }
 
         verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
@@ -175,7 +177,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
         assertThat(sut.updateUserSetting(setting)).isTrue()
         assertThat(sut.getUserSettingBySync()).isEqualTo(setting)
-        assertThat(sut.getUserSetting().blockingFirst().get()).isEqualTo(setting)
+        assertThat(runBlocking { sut.getUserSetting().first() }).isEqualTo(setting)
 
         verify(preferences, never()).get(any<StringNonPreferenceKey>())
     }
@@ -233,13 +235,13 @@ internal class CarelevoUserSettingInfoDaoImplTest {
     }
 
     @Test
-    fun `saved setting is loadable by a fresh DAO instance via getUserSetting observable`() {
+    fun `saved setting is loadable by a fresh DAO instance via getUserSetting flow`() {
         val setting = sampleSetting(maxBolusDose = null)
         sut.updateUserSetting(setting)
 
         val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
 
-        assertThat(fresh.getUserSetting().blockingFirst().get()).isEqualTo(setting)
+        assertThat(runBlocking { fresh.getUserSetting().first() }).isEqualTo(setting)
     }
 
     @Test
@@ -250,7 +252,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
 
         assertThat(fresh.getUserSettingBySync()).isNull()
-        assertThat(fresh.getUserSetting().blockingFirst().isPresent).isFalse()
+        assertThat(runBlocking { fresh.getUserSetting().first() }).isNull()
     }
 
     // endregion

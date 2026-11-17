@@ -4,11 +4,12 @@ import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.util.Optional
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 
@@ -25,9 +26,9 @@ internal class CarelevoPatchInfoMonitorUseCaseTest {
             updatedAt = Clock.System.now()
         )
         whenever(patchInfoRepository.getPatchInfo())
-            .thenReturn(Observable.just(Optional.of(patchInfo)))
+            .thenReturn(flowOf(patchInfo))
 
-        val result = sut.execute().blockingFirst()
+        val result = runBlocking { sut.execute().first() }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
@@ -36,7 +37,7 @@ internal class CarelevoPatchInfoMonitorUseCaseTest {
     fun execute_returns_error_when_repository_throws() {
         whenever(patchInfoRepository.getPatchInfo()).thenThrow(IllegalStateException("db fail"))
 
-        val result = sut.execute().blockingFirst()
+        val result = runBlocking { sut.execute().first() }
 
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
     }

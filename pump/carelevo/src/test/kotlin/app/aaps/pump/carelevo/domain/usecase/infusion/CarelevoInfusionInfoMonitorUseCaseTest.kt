@@ -5,11 +5,13 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainMo
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.util.Optional
 
 internal class CarelevoInfusionInfoMonitorUseCaseTest {
 
@@ -19,19 +21,19 @@ internal class CarelevoInfusionInfoMonitorUseCaseTest {
     @Test
     fun execute_maps_repository_values_to_success() {
         whenever(infusionInfoRepository.getInfusionInfo()).thenReturn(
-            Observable.just(Optional.of(CarelevoInfusionInfoDomainModel()))
+            flowOf(CarelevoInfusionInfoDomainModel())
         )
 
-        val result = sut.execute().blockingFirst()
+        val result = runBlocking { sut.execute().first() }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
 
     @Test
     fun `no stored infusion is a success without data`() {
-        whenever(infusionInfoRepository.getInfusionInfo()).thenReturn(Observable.just(Optional.empty()))
+        whenever(infusionInfoRepository.getInfusionInfo()).thenReturn(flowOf(null))
 
-        val result = sut.execute().blockingFirst()
+        val result = runBlocking { sut.execute().first() }
 
         assertThat(result).isEqualTo(ResponseResult.Success(null))
     }
@@ -42,9 +44,9 @@ internal class CarelevoInfusionInfoMonitorUseCaseTest {
         val second = CarelevoInfusionInfoDomainModel(
             tempBasalInfusionInfo = CarelevoTempBasalInfusionInfoDomainModel(infusionId = "t", address = "AA:BB", mode = 2)
         )
-        whenever(infusionInfoRepository.getInfusionInfo()).thenReturn(Observable.just(Optional.of(first), Optional.of(second)))
+        whenever(infusionInfoRepository.getInfusionInfo()).thenReturn(flowOf(first, second))
 
-        val results = sut.execute().toList().blockingGet()
+        val results = runBlocking { sut.execute().toList() }
 
         assertThat(results).containsExactly(ResponseResult.Success(first), ResponseResult.Success(second)).inOrder()
     }
@@ -54,7 +56,7 @@ internal class CarelevoInfusionInfoMonitorUseCaseTest {
         val failure = IllegalStateException("no store")
         whenever(infusionInfoRepository.getInfusionInfo()).thenThrow(failure)
 
-        val results = sut.execute().toList().blockingGet()
+        val results = runBlocking { sut.execute().toList() }
 
         assertThat(results).containsExactly(ResponseResult.Error(failure))
     }

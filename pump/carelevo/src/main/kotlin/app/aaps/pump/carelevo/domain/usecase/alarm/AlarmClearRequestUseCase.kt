@@ -24,7 +24,7 @@ class AlarmClearRequestUseCase @Inject constructor(
      * alarm-clear write. Returns false if the write throws.
      */
     fun persistAlarmCleared(alarmId: String): Boolean = runCatching {
-        alarmRepository.removeAlarm(alarmId).blockingAwait()
+        alarmRepository.removeAlarm(alarmId)
     }.isSuccess
 
     companion object {

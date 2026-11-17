@@ -4,10 +4,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latest
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * The CommandQueue's connection border. Once a patch is activated the queue owns a real held link on
@@ -28,7 +28,7 @@ class CarelevoConnectionCoordinator @Inject constructor(
         // patch is paired and its operational status has been read at least once. Must stay true with
         // no link up, otherwise the loop's applyTBRRequest / applySMBRequest gate aborts with "pump
         // not initialized" during the normal resting state.
-        val patchInfo = carelevoPatch.patchInfo.value?.getOrNull() ?: return false
+        val patchInfo = carelevoPatch.patchInfo.latest ?: return false
         return patchInfo.mode != null ||
             patchInfo.runningMinutes != null ||
             patchInfo.pumpState != null

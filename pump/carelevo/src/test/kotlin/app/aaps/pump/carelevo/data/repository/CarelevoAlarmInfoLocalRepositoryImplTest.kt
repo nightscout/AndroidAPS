@@ -6,27 +6,25 @@ import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
-import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Tests for [CarelevoAlarmInfoLocalRepositoryImpl] — delegates to
  * [CarelevoAlarmInfoLocalDataSource] and applies the entity <-> domain mappers. Covers the
- * present/empty optional branches and the domain->entity mapping on the write paths.
+ * present/null list branches and the domain->entity mapping on the write paths.
  */
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -56,13 +54,13 @@ internal class CarelevoAlarmInfoLocalRepositoryImplTest {
 
     @Test
     fun `observeAlarms maps each entity to a domain model`() {
-        whenever(dataSource.observeAlarms()).thenReturn(Observable.just(Optional.of(listOf(entity()))))
+        whenever(dataSource.observeAlarms()).thenReturn(flowOf(listOf(entity())))
 
-        val result = sut.observeAlarms().blockingFirst()
+        val result = runBlocking { sut.observeAlarms().first() }
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get()).hasSize(1)
-        val alarm = result.get().first()
+        assertThat(result).isNotNull()
+        assertThat(result).hasSize(1)
+        val alarm = result.first()
         assertThat(alarm.alarmId).isEqualTo("a-1")
         assertThat(alarm.alarmType).isEqualTo(AlarmType.ALERT)
         assertThat(alarm.cause).isEqualTo(AlarmCause.ALARM_ALERT_LOW_BATTERY)
@@ -70,39 +68,37 @@ internal class CarelevoAlarmInfoLocalRepositoryImplTest {
     }
 
     @Test
-    fun `observeAlarms maps an empty optional to an empty list`() {
-        whenever(dataSource.observeAlarms()).thenReturn(Observable.just(Optional.empty<List<CarelevoAlarmInfoEntity>>()))
+    fun `observeAlarms maps a null list to an empty list`() {
+        whenever(dataSource.observeAlarms()).thenReturn(flowOf(null))
 
-        val result = sut.observeAlarms().blockingFirst()
+        val result = runBlocking { sut.observeAlarms().first() }
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get()).isEmpty()
+        assertThat(result).isNotNull()
+        assertThat(result).isEmpty()
     }
 
     @Test
     fun `getAlarmsOnce maps each entity to a domain model`() {
         whenever(dataSource.getAlarmsOnce())
-            .thenReturn(Single.just(Optional.of(listOf(entity("a-1"), entity("a-2")))))
+            .thenReturn(listOf(entity("a-1"), entity("a-2")))
 
-        val result = sut.getAlarmsOnce().blockingGet()
+        val result = sut.getAlarmsOnce()
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get().map { it.alarmId }).containsExactly("a-1", "a-2").inOrder()
+        assertThat(result).isNotNull()
+        assertThat(result.map { it.alarmId }).containsExactly("a-1", "a-2").inOrder()
         verify(dataSource).getAlarmsOnce()
     }
 
     @Test
-    fun `getAlarmsOnce maps an empty optional to an empty list`() {
-        whenever(dataSource.getAlarmsOnce()).thenReturn(Single.just(Optional.empty<List<CarelevoAlarmInfoEntity>>()))
+    fun `getAlarmsOnce maps an empty list to an empty list`() {
+        whenever(dataSource.getAlarmsOnce()).thenReturn(emptyList())
 
-        assertThat(sut.getAlarmsOnce().blockingGet().get()).isEmpty()
+        assertThat(sut.getAlarmsOnce()).isEmpty()
     }
 
     @Test
     fun `setAlarms maps the domain list to entities and forwards it`() {
-        whenever(dataSource.setAlarms(any())).thenReturn(Completable.complete())
-
-        sut.setAlarms(listOf(domain("a-1"), domain("a-2"))).blockingAwait()
+        sut.setAlarms(listOf(domain("a-1"), domain("a-2")))
 
         val captor = argumentCaptor<List<CarelevoAlarmInfoEntity>>()
         verify(dataSource).setAlarms(captor.capture())
@@ -112,9 +108,7 @@ internal class CarelevoAlarmInfoLocalRepositoryImplTest {
 
     @Test
     fun `upsertAlarm maps the domain to an entity and forwards it`() {
-        whenever(dataSource.upsertAlarm(any())).thenReturn(Completable.complete())
-
-        sut.upsertAlarm(domain("a-7")).blockingAwait()
+        sut.upsertAlarm(domain("a-7"))
 
         val captor = argumentCaptor<CarelevoAlarmInfoEntity>()
         verify(dataSource).upsertAlarm(captor.capture())
@@ -125,18 +119,14 @@ internal class CarelevoAlarmInfoLocalRepositoryImplTest {
 
     @Test
     fun `removeAlarm delegates the id to the data source`() {
-        whenever(dataSource.removeAlarm("a-3")).thenReturn(Completable.complete())
-
-        sut.removeAlarm("a-3").blockingAwait()
+        sut.removeAlarm("a-3")
 
         verify(dataSource).removeAlarm(eq("a-3"))
     }
 
     @Test
     fun `clearAlarms delegates to the data source`() {
-        whenever(dataSource.clearAlarms()).thenReturn(Completable.complete())
-
-        sut.clearAlarms().blockingAwait()
+        sut.clearAlarms()
 
         verify(dataSource).clearAlarms()
     }

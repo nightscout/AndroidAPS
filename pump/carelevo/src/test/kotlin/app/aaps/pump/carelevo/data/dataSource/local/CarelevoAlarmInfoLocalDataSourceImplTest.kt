@@ -4,9 +4,9 @@ import app.aaps.pump.carelevo.data.dao.CarelevoAlarmInfoDao
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,12 +17,11 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Delegation tests for [CarelevoAlarmInfoLocalDataSourceImpl] — a thin pass-through over
  * [CarelevoAlarmInfoDao]. Each public method must forward to the matching DAO method and return the
- * DAO's own stream unmodified.
+ * DAO's own stream or value unmodified.
  */
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -47,7 +46,7 @@ internal class CarelevoAlarmInfoLocalDataSourceImplTest {
 
     @Test
     fun `observeAlarms returns the dao stream unchanged`() {
-        val stream = Observable.just(Optional.of(listOf(sampleEntity())))
+        val stream = flowOf(listOf(sampleEntity()))
         whenever(dao.getAlarms()).thenReturn(stream)
 
         assertThat(sut.observeAlarms()).isSameInstanceAs(stream)
@@ -56,65 +55,59 @@ internal class CarelevoAlarmInfoLocalDataSourceImplTest {
 
     @Test
     fun `observeAlarms emits the dao value`() {
-        whenever(dao.getAlarms()).thenReturn(Observable.just(Optional.of(listOf(sampleEntity()))))
+        whenever(dao.getAlarms()).thenReturn(flowOf(listOf(sampleEntity())))
 
-        val emitted = sut.observeAlarms().blockingFirst()
+        val emitted = runBlocking { sut.observeAlarms().first() }
 
-        assertThat(emitted.get()).hasSize(1)
-        assertThat(emitted.get().first().alarmId).isEqualTo("a-1")
+        assertThat(emitted!!).hasSize(1)
+        assertThat(emitted.first().alarmId).isEqualTo("a-1")
     }
 
     @Test
-    fun `getAlarmsOnce returns the dao single unchanged`() {
-        val single = Single.just(Optional.of(listOf(sampleEntity())))
-        whenever(dao.getAlarmsOnce()).thenReturn(single)
+    fun `getAlarmsOnce returns the dao list unchanged`() {
+        val list = listOf(sampleEntity())
+        whenever(dao.getAlarmsOnce()).thenReturn(list)
 
-        assertThat(sut.getAlarmsOnce()).isSameInstanceAs(single)
+        assertThat(sut.getAlarmsOnce()).isSameInstanceAs(list)
         verify(dao).getAlarmsOnce()
     }
 
     @Test
-    fun `getAlarmsOnce carries an empty optional through`() {
-        whenever(dao.getAlarmsOnce()).thenReturn(Single.just(Optional.empty<List<CarelevoAlarmInfoEntity>>()))
+    fun `getAlarmsOnce carries an empty list through`() {
+        whenever(dao.getAlarmsOnce()).thenReturn(emptyList())
 
-        assertThat(sut.getAlarmsOnce().blockingGet().isPresent).isFalse()
+        assertThat(sut.getAlarmsOnce()).isEmpty()
     }
 
     @Test
     fun `setAlarms forwards the list to the dao`() {
         val list = listOf(sampleEntity("a-1"), sampleEntity("a-2"))
-        val completable = Completable.complete()
-        whenever(dao.setAlarms(list)).thenReturn(completable)
 
-        assertThat(sut.setAlarms(list)).isSameInstanceAs(completable)
+        sut.setAlarms(list)
+
         verify(dao).setAlarms(eq(list))
     }
 
     @Test
     fun `upsertAlarm forwards the entity to the dao`() {
         val entity = sampleEntity()
-        val completable = Completable.complete()
-        whenever(dao.upsertAlarm(entity)).thenReturn(completable)
 
-        assertThat(sut.upsertAlarm(entity)).isSameInstanceAs(completable)
+        sut.upsertAlarm(entity)
+
         verify(dao).upsertAlarm(eq(entity))
     }
 
     @Test
     fun `removeAlarm forwards the id to the dao`() {
-        val completable = Completable.complete()
-        whenever(dao.removeAlarm("a-9")).thenReturn(completable)
+        sut.removeAlarm("a-9")
 
-        assertThat(sut.removeAlarm("a-9")).isSameInstanceAs(completable)
         verify(dao).removeAlarm(eq("a-9"))
     }
 
     @Test
     fun `clearAlarms delegates to the dao`() {
-        val completable = Completable.complete()
-        whenever(dao.clearAlarms()).thenReturn(completable)
+        sut.clearAlarms()
 
-        assertThat(sut.clearAlarms()).isSameInstanceAs(completable)
         verify(dao).clearAlarms()
     }
 }

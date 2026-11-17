@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.command
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.carelevo.common.CarelevoPatch
-import kotlin.jvm.optionals.getOrNull
+import app.aaps.pump.carelevo.common.latest
 
 /**
  * The profile a new patch takes its basal from: the one the patch model holds, else the requested one, the profile
@@ -16,4 +16,4 @@ import kotlin.jvm.optionals.getOrNull
  * on the patch model, as `setNewBasalProfile` would have done.
  */
 internal suspend fun CarelevoPatch.activationProfile(pumpSync: PumpSync): Profile? =
-    profile.value?.getOrNull() ?: pumpSync.expectedPumpState().profile?.also { setProfile(it) }
+    profile.latest ?: pumpSync.expectedPumpState().profile?.also { setProfile(it) }

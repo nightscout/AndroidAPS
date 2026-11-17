@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -41,10 +40,9 @@ import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CarelevoActivationExecutor
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.PatchState
-import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
-import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoConnectNewPatchUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
@@ -59,12 +57,10 @@ import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -78,6 +74,7 @@ import org.junit.runner.RunWith
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -89,7 +86,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import java.util.Optional
 import kotlin.reflect.KClass
 import app.aaps.core.ui.R as CoreUiR
 
@@ -109,10 +105,11 @@ import app.aaps.core.ui.R as CoreUiR
  * it returns. Composition keeps the rule's own dispatcher; `compose.waitForIdle()` bridges the two
  * whenever an event has to travel from a ViewModel into the composition.
  *
- * **Rx.** [AapsSchedulers.io] / `main` are the trampoline so the force-discard chain runs inline. The
- * Loading tests exploit that chain: `startPatchDiscardProcess` on a connected patch sets Loading, the
- * queued `CmdDiscard` is stubbed to fail, and the force-discard fallback returns `Single.never()` — so
- * the ViewModel parks in [app.aaps.pump.carelevo.common.model.UiState.Loading] and the scrim stays up.
+ * **Force discard.** The Loading tests use the discard path: `startPatchDiscardProcess` on a connected
+ * patch sets Loading, the queued `CmdDiscard` is stubbed to fail, and the force-discard fallback is
+ * stubbed to suspend for ever. Its 3 s timeout runs on the test dispatcher's virtual clock, which
+ * nothing moves, so the ViewModel parks in [app.aaps.pump.carelevo.common.model.UiState.Loading] and the
+ * scrim stays up.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -126,7 +123,6 @@ class CarelevoPatchFlowScreenTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var aapsLogger: AAPSLogger
-    private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var carelevoPatch: CarelevoPatch
     private lateinit var commandQueue: CommandQueue
     private lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
@@ -142,8 +138,8 @@ class CarelevoPatchFlowScreenTest {
     private lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
     private lateinit var activationExecutor: CarelevoActivationExecutor
 
-    private lateinit var patchStateSubject: BehaviorSubject<Optional<PatchState>>
-    private lateinit var patchInfoSubject: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>>
+    private lateinit var patchStateFlow: MutableSharedFlow<PatchState?>
+    private lateinit var patchInfoFlow: MutableSharedFlow<CarelevoPatchInfoDomainModel?>
 
     private lateinit var flowViewModel: CarelevoPatchConnectionFlowViewModel
     private lateinit var connectViewModel: CarelevoPatchConnectViewModel
@@ -168,12 +164,8 @@ class CarelevoPatchFlowScreenTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        // The force-discard chain ends in subscribe(onSuccess) with no onError arm; swallow the
-        // undeliverable OnErrorNotImplementedException a late timeout would route to the plugin.
-        RxJavaPlugins.setErrorHandler { }
 
         aapsLogger = mock()
-        aapsSchedulers = mock()
         carelevoPatch = mock()
         commandQueue = mock()
         patchForceDiscardUseCase = mock()
@@ -189,13 +181,10 @@ class CarelevoPatchFlowScreenTest {
         carelevoAlarmInfoUseCase = mock()
         activationExecutor = mock()
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-
-        patchStateSubject = BehaviorSubject.create()
-        patchInfoSubject = BehaviorSubject.create()
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
-        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
+        patchStateFlow = latestValueFlow()
+        patchInfoFlow = latestValueFlow()
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow)
+        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoFlow)
 
         // AapsTheme resolves the dark-mode preference; pin it so the colour scheme is deterministic.
         whenever(preferences.observe(StringKey.GeneralDarkMode)).thenReturn(MutableStateFlow("light"))
@@ -206,7 +195,6 @@ class CarelevoPatchFlowScreenTest {
 
         flowViewModel = CarelevoPatchConnectionFlowViewModel(
             aapsLogger = aapsLogger,
-            aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
@@ -220,7 +208,6 @@ class CarelevoPatchFlowScreenTest {
         )
         connectViewModel = CarelevoPatchConnectViewModel(
             aapsLogger = aapsLogger,
-            aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             preferences = preferences,
@@ -233,14 +220,12 @@ class CarelevoPatchFlowScreenTest {
             aapsLogger = aapsLogger,
             pumpSync = pumpSync,
             persistenceLayer = persistenceLayer,
-            aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             carelevoAlarmInfoUseCase = carelevoAlarmInfoUseCase
         )
         safetyCheckViewModel = CarelevoPatchSafetyCheckViewModel(
-            aapsSchedulers = aapsSchedulers,
             aapsLogger = aapsLogger,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
@@ -261,7 +246,6 @@ class CarelevoPatchFlowScreenTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        RxJavaPlugins.reset()
     }
 
     // ---- harness ------------------------------------------------------------------------------
@@ -335,10 +319,10 @@ class CarelevoPatchFlowScreenTest {
      * fails, and the DB-only fallback it routes to never emits.
      */
     private fun armStuckDiscard() {
-        patchStateSubject.onNext(Optional.of<PatchState>(PatchState.ConnectedBooted))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         stubCustomCommand(success = false)
-        whenever(patchForceDiscardUseCase.execute())
-            .thenReturn(Single.never<ResponseResult<CarelevoUseCaseResponse>>())
+        // `execute` is `suspend`; this answer never returns, so the force discard never ends.
+        patchForceDiscardUseCase.stub { onBlocking { execute() }.doSuspendableAnswer { awaitCancellation() } }
     }
 
     private fun assertLoadingScrimShown() {
@@ -512,7 +496,7 @@ class CarelevoPatchFlowScreenTest {
         compose.onNodeWithText(string(R.string.carelevo_patch_needle_insertion_step1_title)).assertIsDisplayed()
         compose.onNodeWithText(string(R.string.carelevo_btn_needle_insert_check)).assertIsEnabled()
         assertThat(needleViewModel.isCreated).isTrue()
-        assertThat(patchInfoSubject.hasObservers()).isTrue()
+        assertThat(patchInfoFlow.subscriptionCount.value).isGreaterThan(0)
     }
 
     // ---- loading scrim ------------------------------------------------------------------------

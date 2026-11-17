@@ -24,6 +24,7 @@ import app.aaps.pump.carelevo.ble.commands.SafetyCheckCommand
 import app.aaps.pump.carelevo.ble.commands.SetTimeCommand
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResult
 import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResultModel
@@ -46,7 +47,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.runBlocking
-import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Clock
 
 /**
@@ -150,7 +150,7 @@ class CarelevoActivationExecutor @Inject constructor(
         val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
-        val extendedBolusRan = carelevoPatch.infusionInfo.value?.getOrNull()?.extendBolusInfusionInfo != null
+        val extendedBolusRan = carelevoPatch.infusionInfo.latest?.extendBolusInfusionInfo != null
         return try {
             val response = runBlocking {
                 bleSession.runSingle(address, PumpStopCommand(durationMinutes = durationMin, subId = STOP_RESUME_SUB_ID))
@@ -223,7 +223,7 @@ class CarelevoActivationExecutor @Inject constructor(
         pumpSync.syncStopTemporaryBasalWithPumpId(now, now, PumpType.CAREMEDI_CARELEVO, patchSerial())
     }
 
-    private fun patchSerial(): String = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+    private fun patchSerial(): String = carelevoPatch.patchInfo.latest?.manufactureNumber ?: ""
 
     /**
      * Buzzer setting via [BuzzModeCommand] (0x18 → 0x78). Pure write, no persistence (the preference is
@@ -386,7 +386,7 @@ class CarelevoActivationExecutor @Inject constructor(
             // Delete the stored patch and infusion info, as the discard did before it moved to the queue. The teardown
             // below clears only the copies in memory: without this, the discarded patch was loaded again at the next
             // start of AAPS, and AAPS kept connecting to it instead of offering a new activation.
-            val deleted = patchForceDiscardUseCase.execute().blockingGet()
+            val deleted = runBlocking { patchForceDiscardUseCase.execute() }
             if (deleted !is ResponseResult.Success) aapsLogger.error(LTag.PUMPCOMM, "newBle.discard could not delete the stored patch: $deleted")
             // Pass the address read before the delete: the copy in memory may already be empty, and the bond would stay.
             carelevoPatch.discardTeardown(address)

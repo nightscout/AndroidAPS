@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.data.dataSource.local
 import app.aaps.pump.carelevo.data.dao.CarelevoPatchInfoDao
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.flowOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,7 +14,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Delegation tests for [CarelevoPatchInfoDataSourceImpl] — a thin pass-through over
@@ -43,7 +42,7 @@ internal class CarelevoPatchInfoDataSourceImplTest {
 
     @Test
     fun `getPatchInfo returns the dao stream unchanged`() {
-        val stream = Observable.just(Optional.of(entity()))
+        val stream = flowOf(entity())
         whenever(dao.getPatchInfo()).thenReturn(stream)
 
         assertThat(sut.getPatchInfo()).isSameInstanceAs(stream)

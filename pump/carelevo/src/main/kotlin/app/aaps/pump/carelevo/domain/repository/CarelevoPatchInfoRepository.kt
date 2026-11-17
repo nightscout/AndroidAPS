@@ -1,12 +1,11 @@
 package app.aaps.pump.carelevo.domain.repository
 
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 interface CarelevoPatchInfoRepository {
 
-    fun getPatchInfo(): Observable<Optional<CarelevoPatchInfoDomainModel>>
+    fun getPatchInfo(): Flow<CarelevoPatchInfoDomainModel?>
     fun getPatchInfoBySync(): CarelevoPatchInfoDomainModel?
 
     fun updatePatchInfo(info: CarelevoPatchInfoDomainModel): Boolean

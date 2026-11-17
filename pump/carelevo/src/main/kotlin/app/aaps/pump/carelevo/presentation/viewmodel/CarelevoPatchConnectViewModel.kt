@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.pump.ble.BleException
 import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.pump.ble.ScanFilter
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.CarelevoGatt
@@ -20,6 +19,7 @@ import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
@@ -35,8 +35,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -45,15 +43,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.concurrent.TimeUnit
-import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 class CarelevoPatchConnectViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val carelevoPatch: CarelevoPatch,
     private val commandQueue: CommandQueue,
     private val preferences: Preferences,
@@ -77,7 +73,6 @@ class CarelevoPatchConnectViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(UiState.Idle)
     val uiState = _uiState.asStateFlow()
 
-    private val compositeDisposable = CompositeDisposable()
 
     private fun setUiState(state: State) {
         _uiState.tryEmit(state)
@@ -156,7 +151,7 @@ class CarelevoPatchConnectViewModel @Inject constructor(
     }
 
     fun startPatchDiscardProcess() {
-        when (carelevoPatch.patchState.value?.getOrNull()) {
+        when (carelevoPatch.patchState.latest) {
             is PatchState.NotConnectedNotBooting, null -> {
                 triggerEvent(CarelevoConnectPrepareEvent.DiscardComplete)
             }
@@ -182,36 +177,39 @@ class CarelevoPatchConnectViewModel @Inject constructor(
 
     private fun startPatchForceDiscard() {
         setUiState(UiState.Loading)
-        compositeDisposable += patchForceDiscardUseCase.execute()
-            .timeout(3000L, TimeUnit.MILLISECONDS)
-            .observeOn(aapsSchedulers.io)
-            .subscribeOn(aapsSchedulers.io)
-            .doOnError {
-                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
+        viewModelScope.launch {
+            val response = try {
+                withTimeoutOrNull(FORCE_DISCARD_TIMEOUT) { patchForceDiscardUseCase.execute() }
+                    ?: throw IllegalStateException("force discard did not end in $FORCE_DISCARD_TIMEOUT")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $e")
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoConnectPrepareEvent.DiscardFailed)
-            }.subscribe { response ->
-                when (response) {
-                    is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
-                        carelevoPatch.discardTeardown()
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectPrepareEvent.DiscardComplete)
-                    }
+                return@launch
+            }
+            when (response) {
+                is ResponseResult.Success -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response success")
+                    carelevoPatch.discardTeardown()
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectPrepareEvent.DiscardComplete)
+                }
 
-                    is ResponseResult.Error   -> {
-                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectPrepareEvent.DiscardFailed)
-                    }
+                is ResponseResult.Error   -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectPrepareEvent.DiscardFailed)
+                }
 
-                    else                      -> {
-                        aapsLogger.debug(LTag.PUMPCOMM, "[CarelevoConnectPrepareViewMode;::startPatchForceDiscard] response failed")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectPrepareEvent.DiscardFailed)
-                    }
+                else                      -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[CarelevoConnectPrepareViewMode;::startPatchForceDiscard] response failed")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectPrepareEvent.DiscardFailed)
                 }
             }
+        }
     }
 
     /**
@@ -232,7 +230,7 @@ class CarelevoPatchConnectViewModel @Inject constructor(
             triggerEvent(CarelevoConnectPrepareEvent.ShowMessageSelectedDeviceIseEmpty)
             return
         }
-        val userSettingInfo = carelevoPatch.userSettingInfo.value?.getOrNull()
+        val userSettingInfo = carelevoPatch.userSettingInfo.latest
         if (userSettingInfo == null) {
             triggerEvent(CarelevoConnectPrepareEvent.ShowMessageNotSetUserSettingInfo)
             return
@@ -291,7 +289,6 @@ class CarelevoPatchConnectViewModel @Inject constructor(
 
     override fun onCleared() {
         aapsLogger.debug(LTag.PUMPCOMM, "onCleared")
-        compositeDisposable.clear()
     }
 
     fun resetForEnterStep() {
@@ -309,3 +306,5 @@ class CarelevoPatchConnectViewModel @Inject constructor(
         private const val MIN_SCAN_RSSI = -45
     }
 }
+
+private val FORCE_DISCARD_TIMEOUT = 3.seconds

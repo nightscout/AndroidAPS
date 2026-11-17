@@ -1,10 +1,9 @@
 package app.aaps.pump.carelevo.common
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.pump.carelevo.ble.UnsolicitedMessage
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
@@ -26,9 +25,10 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoP
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,7 +39,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import kotlin.time.Clock
@@ -55,7 +55,6 @@ import kotlin.time.Duration.Companion.hours
 internal class CarelevoPatchTest {
 
     @Mock lateinit var central: BleCentral
-    @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -93,18 +92,15 @@ internal class CarelevoPatchTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(patchInfoMonitorUseCase.execute()).thenReturn(Observable.just(ResponseResult.Success(patchInfo())))
-        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(Observable.never())
-        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(Observable.never())
-        whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.complete())
+        whenever(patchInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(patchInfo())))
+        // These two never send anything.
+        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(flow { awaitCancellation() })
+        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(flow { awaitCancellation() })
         whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
         whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
 
         sut = CarelevoPatch(
             central = central,
-            aapsSchedulers = aapsSchedulers,
             rxBus = rxBus,
             preferences = preferences,
             aapsLogger = aapsLogger,
@@ -118,6 +114,8 @@ internal class CarelevoPatchTest {
             pumpStopUseCase = pumpStopUseCase,
             activeAlarmSnapshotAlarmMapper = activeAlarmSnapshotAlarmMapper
         )
+        // Collect the patch streams and write the alarms on the test thread, before each call returns.
+        sut.dispatcher = Dispatchers.Unconfined
     }
 
     @Test
@@ -160,19 +158,19 @@ internal class CarelevoPatchTest {
     fun `bluetooth-off alarm fires only on the ON to OFF edge`() {
         // Initial OFF observation (no previous state): no alarm — this is a startup seed, not an edge.
         sut.onBluetoothStateChanged(bleState(enabled = false))
-        verify(carelevoAlarmInfoUseCase, never()).upsertAlarm(any())
+        verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
 
         // ON → OFF: exactly one alarm.
         sut.onBluetoothStateChanged(bleState(enabled = true))
         sut.onBluetoothStateChanged(bleState(enabled = false))
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase, times(1)).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase, times(1)) { upsertAlarm(captor.capture()) }
         assertThat(captor.firstValue.cause).isEqualTo(AlarmCause.ALARM_ALERT_BLUETOOTH_OFF)
         assertThat(captor.firstValue.isAcknowledged).isFalse()
 
         // Repeated OFF broadcasts: no alarm spam.
         sut.onBluetoothStateChanged(bleState(enabled = false))
-        verify(carelevoAlarmInfoUseCase, times(1)).upsertAlarm(any())
+        verifyBlocking(carelevoAlarmInfoUseCase, times(1)) { upsertAlarm(any()) }
     }
 
     @Test
@@ -183,7 +181,7 @@ internal class CarelevoPatchTest {
         sut.onBluetoothStateChanged(bleState(enabled = false))
 
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase, times(2)).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase, times(2)) { upsertAlarm(captor.capture()) }
         assertThat(captor.firstValue.alarmId).isNotEqualTo(captor.secondValue.alarmId)
     }
 
@@ -216,7 +214,7 @@ internal class CarelevoPatchTest {
     private fun raisedAlarmFor(opcode: Int, cause: Int, value: Int): CarelevoAlarmInfo {
         sut.onUnsolicited(UnsolicitedMessage(opcode.toByte(), byteArrayOf(opcode.toByte(), cause.toByte(), value.toByte())))
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
         return captor.firstValue
     }
 

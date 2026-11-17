@@ -5,30 +5,27 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 @ContributesBinding(AppScope::class)
 class CarelevoAlarmInfoLocalDataSourceImpl @Inject constructor(
     private val dao: CarelevoAlarmInfoDao
 ) : CarelevoAlarmInfoLocalDataSource {
 
-    override fun observeAlarms(): Observable<Optional<List<CarelevoAlarmInfoEntity>>> =
+    override fun observeAlarms(): Flow<List<CarelevoAlarmInfoEntity>?> =
         dao.getAlarms()
 
-    override fun getAlarmsOnce(): Single<Optional<List<CarelevoAlarmInfoEntity>>> = dao.getAlarmsOnce()
+    override fun getAlarmsOnce(): List<CarelevoAlarmInfoEntity> = dao.getAlarmsOnce()
 
-    override fun setAlarms(list: List<CarelevoAlarmInfoEntity>): Completable =
+    override fun setAlarms(list: List<CarelevoAlarmInfoEntity>) =
         dao.setAlarms(list)
 
-    override fun upsertAlarm(entity: CarelevoAlarmInfoEntity): Completable =
+    override fun upsertAlarm(entity: CarelevoAlarmInfoEntity) =
         dao.upsertAlarm(entity)
 
-    override fun removeAlarm(alarmId: String): Completable =
+    override fun removeAlarm(alarmId: String) =
         dao.removeAlarm(alarmId)
 
-    override fun clearAlarms(): Completable =
+    override fun clearAlarms() =
         dao.clearAlarms()
 }

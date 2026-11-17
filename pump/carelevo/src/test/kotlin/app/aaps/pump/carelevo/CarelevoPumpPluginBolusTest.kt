@@ -23,7 +23,6 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInf
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -42,7 +41,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
-import java.util.Optional
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -104,16 +102,14 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     @Test
     fun `deliverTreatment should reject when immediate bolus is already running`() {
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = IMME_BOLUS_MODE))
-        infusionInfoSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
-                        infusionId = "imme-1",
-                        address = "AA:BB:CC:DD:EE:FF",
-                        mode = 3,
-                        volume = 1.0,
-                        infusionDurationSeconds = 30
-                    )
+        infusionInfoFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
+                    infusionId = "imme-1",
+                    address = "AA:BB:CC:DD:EE:FF",
+                    mode = 3,
+                    volume = 1.0,
+                    infusionDurationSeconds = 30
                 )
             )
         )
@@ -531,20 +527,18 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         pumpId: Long? = LEFTOVER_PUMP_ID,
         createdAt: Instant = Clock.System.now()
     ) {
-        infusionInfoSubject.onNext(
-            Optional.of(
-                CarelevoInfusionInfoDomainModel(
-                    immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
-                        infusionId = "imme-1",
-                        address = "AA:BB:CC:DD:EE:FF",
-                        mode = 3,
-                        createdAt = createdAt,
-                        volume = volume,
-                        infusionDurationSeconds = 44,
-                        pumpId = pumpId,
-                        bolusTotalBefore = bolusTotalBefore,
-                        bolusType = bolusType
-                    )
+        infusionInfoFlow.tryEmit(
+            CarelevoInfusionInfoDomainModel(
+                immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
+                    infusionId = "imme-1",
+                    address = "AA:BB:CC:DD:EE:FF",
+                    mode = 3,
+                    createdAt = createdAt,
+                    volume = volume,
+                    infusionDurationSeconds = 44,
+                    pumpId = pumpId,
+                    bolusTotalBefore = bolusTotalBefore,
+                    bolusType = bolusType
                 )
             )
         )
@@ -666,8 +660,9 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
     // ---- the record of the bolus end ---------------------------------------------------------------
 
-    private fun deliverWithFinish(finish: Single<ResponseResult<CarelevoUseCaseResponse>>): PumpEnactResult {
-        whenever(finishImmeBolusInfusionUseCase.execute()).thenReturn(finish)
+    /** [finish] answers the record of the bolus end: a result, or a throw. */
+    private fun deliverWithFinish(finish: () -> ResponseResult<CarelevoUseCaseResponse>): PumpEnactResult {
+        whenever { finishImmeBolusInfusionUseCase.execute() }.thenAnswer { finish() }
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.25))
         return runBlocking { plugin.deliverTreatment(bolus(0.25)) }
     }
@@ -677,7 +672,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     fun `a bolus whose end record fails still counts as given`() {
         val failure = IllegalStateException("store gone")
 
-        val result = deliverWithFinish(Single.just(ResponseResult.Error(failure)))
+        val result = deliverWithFinish { ResponseResult.Error(failure) }
 
         assertThat(result.success).isTrue()
         assertThat(result.bolusDelivered).isWithin(0.001).of(0.25)
@@ -687,7 +682,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     @Test
     @Timeout(10)
     fun `a bolus whose end record is refused still counts as given`() {
-        val result = deliverWithFinish(Single.just(ResponseResult.Failure("no")))
+        val result = deliverWithFinish { ResponseResult.Failure("no") }
 
         assertThat(result.success).isTrue()
         verify(aapsLogger).error(LTag.PUMPCOMM, "finishImmeBolus.failure")
@@ -698,7 +693,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     fun `a bolus whose end record throws still counts as given`() {
         val failure = IllegalStateException("thrown")
 
-        val result = deliverWithFinish(Single.error(failure))
+        val result = deliverWithFinish { throw failure }
 
         assertThat(result.success).isTrue()
         verify(aapsLogger).error(LTag.PUMPCOMM, "finishImmeBolus.subscribeError error=$failure")

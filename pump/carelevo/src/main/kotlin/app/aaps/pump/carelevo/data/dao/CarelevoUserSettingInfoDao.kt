@@ -1,12 +1,11 @@
 package app.aaps.pump.carelevo.data.dao
 
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 interface CarelevoUserSettingInfoDao {
 
-    fun getUserSetting(): Observable<Optional<CarelevoUserSettingInfoEntity>>
+    fun getUserSetting(): Flow<CarelevoUserSettingInfoEntity?>
     fun getUserSettingBySync(): CarelevoUserSettingInfoEntity?
 
     fun updateUserSetting(setting: CarelevoUserSettingInfoEntity): Boolean

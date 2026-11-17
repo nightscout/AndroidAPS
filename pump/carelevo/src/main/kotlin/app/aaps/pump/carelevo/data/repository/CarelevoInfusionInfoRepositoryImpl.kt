@@ -15,19 +15,18 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 class CarelevoInfusionInfoRepositoryImpl @Inject constructor(
     private val infusionInfoDataSource: CarelevoInfusionInfoDataSource
 ) : CarelevoInfusionInfoRepository {
 
-    override fun getInfusionInfo(): Observable<Optional<CarelevoInfusionInfoDomainModel>> {
+    override fun getInfusionInfo(): Flow<CarelevoInfusionInfoDomainModel?> {
         return infusionInfoDataSource.getInfusionInfo()
             .map {
-                Optional.ofNullable(it.getOrNull()?.transformToCarelevoInfusionInfoDomainModel())
+                it?.transformToCarelevoInfusionInfoDomainModel()
             }
     }
 

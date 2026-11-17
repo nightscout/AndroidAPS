@@ -8,18 +8,17 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 class CarelevoPatchInfoRepositoryImpl @Inject constructor(
     private val patchInfoDataSource: CarelevoPatchInfoDataSource
 ) : CarelevoPatchInfoRepository {
 
-    override fun getPatchInfo(): Observable<Optional<CarelevoPatchInfoDomainModel>> {
+    override fun getPatchInfo(): Flow<CarelevoPatchInfoDomainModel?> {
         return patchInfoDataSource.getPatchInfo()
-            .map { Optional.ofNullable(it.getOrNull()?.transformToCarelevoPatchInfoDomainModel()) }
+            .map { it?.transformToCarelevoPatchInfoDomainModel() }
     }
 
     override fun getPatchInfoBySync(): CarelevoPatchInfoDomainModel? {

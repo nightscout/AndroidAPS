@@ -3,9 +3,10 @@ package app.aaps.pump.carelevo.coordinator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,7 +19,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -42,8 +42,12 @@ internal class CarelevoConnectionCoordinatorTest {
             pumpState = pumpState
         )
 
-    private fun stubPatchInfo(subject: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>>) {
-        whenever(carelevoPatch.patchInfo).thenReturn(subject)
+    /** A patch info stream that holds [value]; null = it holds "no record". */
+    private fun patchInfoFlow(value: CarelevoPatchInfoDomainModel?): MutableSharedFlow<CarelevoPatchInfoDomainModel?> =
+        latestValueFlow<CarelevoPatchInfoDomainModel?>().apply { tryEmit(value) }
+
+    private fun stubPatchInfo(flow: MutableSharedFlow<CarelevoPatchInfoDomainModel?>) {
+        whenever(carelevoPatch.patchInfo).thenReturn(flow)
     }
 
     @BeforeEach
@@ -54,39 +58,39 @@ internal class CarelevoConnectionCoordinatorTest {
     // ---- isInitialized ----
 
     @Test
-    fun `isInitialized false when the patch subject has no value yet`() {
-        // BehaviorSubject with no default → patchInfo.value is null → early return false.
-        stubPatchInfo(BehaviorSubject.create<Optional<CarelevoPatchInfoDomainModel>>())
+    fun `isInitialized false when the patch stream has no value yet`() {
+        // A stream with no value yet → patchInfo.latest is null → early return false.
+        stubPatchInfo(latestValueFlow())
         assertThat(sut.isInitialized()).isFalse()
     }
 
     @Test
     fun `isInitialized false when the patch info is empty`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
+        stubPatchInfo(patchInfoFlow(null))
         assertThat(sut.isInitialized()).isFalse()
     }
 
     @Test
     fun `isInitialized false when mode, runningMinutes and pumpState are all null`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo())))
+        stubPatchInfo(patchInfoFlow(patchInfo()))
         assertThat(sut.isInitialized()).isFalse()
     }
 
     @Test
     fun `isInitialized true when mode is set`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(mode = 1))))
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1)))
         assertThat(sut.isInitialized()).isTrue()
     }
 
     @Test
     fun `isInitialized true when only runningMinutes is set`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(runningMinutes = 100))))
+        stubPatchInfo(patchInfoFlow(patchInfo(runningMinutes = 100)))
         assertThat(sut.isInitialized()).isTrue()
     }
 
     @Test
     fun `isInitialized true when only pumpState is set`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(pumpState = 0))))
+        stubPatchInfo(patchInfoFlow(patchInfo(pumpState = 0)))
         assertThat(sut.isInitialized()).isTrue()
     }
 
@@ -95,21 +99,21 @@ internal class CarelevoConnectionCoordinatorTest {
     @Test
     fun `isConnected is true pre-activation even when the link is down`() {
         // Not initialized (empty patch info) → forced true so the queue never dials a missing device.
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
+        stubPatchInfo(patchInfoFlow(null))
         whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
         assertThat(sut.isConnected()).isTrue()
     }
 
     @Test
     fun `isConnected reflects a down held link once activated`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(mode = 1))))
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1)))
         whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
         assertThat(sut.isConnected()).isFalse()
     }
 
     @Test
     fun `isConnected reflects an up held link once activated`() {
-        stubPatchInfo(BehaviorSubject.createDefault(Optional.of(patchInfo(mode = 1))))
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1)))
         whenever(bleSession.connected).thenReturn(MutableStateFlow(true))
         assertThat(sut.isConnected()).isTrue()
     }

@@ -2,16 +2,16 @@ package app.aaps.pump.carelevo.data.dao
 
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
+import app.aaps.pump.carelevo.common.latest
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -19,10 +19,10 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
     private val preferences: Preferences
 ) : CarelevoUserSettingInfoDao {
 
-    private val _userSettingInfo: BehaviorSubject<Optional<CarelevoUserSettingInfoEntity>> = BehaviorSubject.create()
+    private val _userSettingInfo: MutableSharedFlow<CarelevoUserSettingInfoEntity?> = latestValueFlow()
 
-    override fun getUserSetting(): Observable<Optional<CarelevoUserSettingInfoEntity>> {
-        if (_userSettingInfo.value == null) {
+    override fun getUserSetting(): Flow<CarelevoUserSettingInfoEntity?> {
+        if (_userSettingInfo.replayCache.isEmpty()) {
             runCatching {
                 val userSettingInfoString = preferences.get(CarelevoStringNonKey.UserSettingInfo)
                 if (userSettingInfoString == "") {
@@ -31,11 +31,11 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
                 CarelevoGsonHelper.sharedGson().fromJson(userSettingInfoString, CarelevoUserSettingInfoEntity::class.java)
             }.fold(
                 onSuccess = {
-                    _userSettingInfo.onNext(Optional.ofNullable(it))
+                    _userSettingInfo.tryEmit(it)
                 },
                 onFailure = {
                     it.printStackTrace()
-                    _userSettingInfo.onNext(Optional.ofNullable(null))
+                    _userSettingInfo.tryEmit(null)
                 }
             )
         }
@@ -44,7 +44,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
     }
 
     override fun getUserSettingBySync(): CarelevoUserSettingInfoEntity? {
-        if (_userSettingInfo.value == null) {
+        if (_userSettingInfo.replayCache.isEmpty()) {
             runCatching {
                 val userSettingInfoString = preferences.get(CarelevoStringNonKey.UserSettingInfo)
                 if (userSettingInfoString == "") {
@@ -53,15 +53,15 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
                 CarelevoGsonHelper.sharedGson().fromJson(userSettingInfoString, CarelevoUserSettingInfoEntity::class.java)
             }.fold(
                 onSuccess = {
-                    _userSettingInfo.onNext(Optional.ofNullable(it))
+                    _userSettingInfo.tryEmit(it)
                 },
                 onFailure = {
                     it.printStackTrace()
-                    _userSettingInfo.onNext(Optional.ofNullable(null))
+                    _userSettingInfo.tryEmit(null)
                 }
             )
         }
-        return _userSettingInfo.value?.getOrNull()
+        return _userSettingInfo.latest
     }
 
     override fun updateUserSetting(setting: CarelevoUserSettingInfoEntity): Boolean {
@@ -70,7 +70,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
             preferences.put(CarelevoStringNonKey.UserSettingInfo, userSettingInfoString)
         }.fold(
             onSuccess = {
-                _userSettingInfo.onNext(Optional.ofNullable(setting))
+                _userSettingInfo.tryEmit(setting)
                 true
             },
             onFailure = {
@@ -85,7 +85,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
             preferences.remove(CarelevoStringNonKey.UserSettingInfo)
         }.fold(
             onSuccess = {
-                _userSettingInfo.onNext(Optional.ofNullable(null))
+                _userSettingInfo.tryEmit(null)
                 true
             },
             onFailure = {

@@ -22,7 +22,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
-import java.util.Optional
 
 /**
  * Gap-closing companion to [CarelevoPumpPluginTest] / [CarelevoPumpPluginBolusTest] /
@@ -52,7 +51,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `isConfigured should be false when no patch record exists`() {
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         assertThat(plugin.isConfigured()).isFalse()
     }
@@ -61,7 +60,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
     fun `not configured should imply not initialized`() {
         // Contract invariant: isInitialized() gates on the same patchInfo signal first, so
         // !isConfigured() => !isInitialized() must hold by construction.
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         assertThat(plugin.isConfigured()).isFalse()
         assertThat(plugin.isInitialized()).isFalse()
@@ -228,7 +227,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `timezoneOrDSTChanged should skip the queue when no patch is active`() {
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         runBlocking { plugin.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged) }
 
@@ -237,7 +236,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `timezoneOrDSTChanged should carry the remaining insulin to the patch clock update`() {
-        patchInfoSubject.onNext(Optional.of(samplePatchInfo(insulinRemain = 42.7)))
+        patchInfoFlow.tryEmit(samplePatchInfo(insulinRemain = 42.7))
         whenever { commandQueue.customCommand(any()) }.thenReturn(fakePumpEnactResult())
 
         runBlocking { plugin.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged) }
@@ -251,7 +250,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
     fun `timezoneOrDSTChanged should still push with zero insulin when the remaining amount is unknown`() {
         // Patch present but its reservoir was not read yet (e.g. before the first status read after a
         // reconnect): the clock update must still go out rather than being dropped.
-        patchInfoSubject.onNext(Optional.of(samplePatchInfo().copy(insulinRemain = null)))
+        patchInfoFlow.tryEmit(samplePatchInfo().copy(insulinRemain = null))
         whenever { commandQueue.customCommand(any()) }.thenReturn(fakePumpEnactResult())
 
         runBlocking { plugin.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged) }
@@ -293,7 +292,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `serialNumber should be empty when no patch record exists`() {
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         assertThat(plugin.serialNumber()).isEmpty()
     }
@@ -319,7 +318,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `isSuspended should be false when no patch record exists`() {
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
 
         assertThat(plugin.isSuspended()).isFalse()
     }

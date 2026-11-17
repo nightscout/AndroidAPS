@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -29,10 +28,16 @@ import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via
@@ -54,14 +59,15 @@ import kotlinx.coroutines.flow.asStateFlow
 class CarelevoAlarmNotifier @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val dateUtil: DateUtil,
     private val notificationManager: app.aaps.core.interfaces.notifications.NotificationManager,
     private val preferences: Preferences,
     private val alarmActionHandler: CarelevoAlarmActionHandler
 ) {
 
-    private val disposables = CompositeDisposable()
+    /** Where alarms are handled: the main thread, so the handling never runs twice at once. A test sets an unconfined dispatcher. */
+    internal var dispatcher: CoroutineDispatcher = Dispatchers.Main
+    private val scope: CoroutineScope by lazy { CoroutineScope(dispatcher + SupervisorJob()) }
     private val _alarms = MutableStateFlow<List<CarelevoAlarmInfo>>(emptyList())
     val alarms = _alarms.asStateFlow()
     private var onAlarmsUpdated: ((List<CarelevoAlarmInfo>) -> Unit)? = null
@@ -73,23 +79,25 @@ class CarelevoAlarmNotifier @Inject constructor(
         this.onAlarmsUpdated = onAlarmsUpdated
         createNotificationChannel()
 
-        disposables += alarmActionHandler.observeAlarms()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { alarms -> handleAlarmsInternal(alarms) },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "observeAlarms.error error=$e") }
-            )
+        // Asked for here, as before: the store loads its alarms on the caller's thread, not on the main thread.
+        val stored = alarmActionHandler.observeAlarms()
+        scope.launch {
+            stored
+                .catch { e -> aapsLogger.error(LTag.PUMPCOMM, "observeAlarms.error error=$e") }
+                .collect { alarms -> handleAlarmsInternal(alarms) }
+        }
     }
 
     fun refreshAlarms() {
-        disposables += alarmActionHandler.getAlarmsOnce()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { alarms -> handleAlarmsInternal(alarms) },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "refreshAlarms.error error=$e") }
-            )
+        scope.launch {
+            try {
+                handleAlarmsInternal(alarmActionHandler.getAlarmsOnce())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "refreshAlarms.error error=$e")
+            }
+        }
     }
 
     private fun handleAlarmsInternal(alarms: List<CarelevoAlarmInfo>) {
@@ -141,7 +149,7 @@ class CarelevoAlarmNotifier @Inject constructor(
     }
 
     fun stopObserving() {
-        disposables.clear()
+        scope.coroutineContext.cancelChildren()
     }
 
     fun showNotification(alarm: CarelevoAlarmInfo) {

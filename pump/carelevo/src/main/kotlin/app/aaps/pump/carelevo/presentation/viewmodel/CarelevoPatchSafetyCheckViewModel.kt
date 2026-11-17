@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.pump.carelevo.command.CarelevoActivationExecutor
 import app.aaps.pump.carelevo.command.CmdAdditionalPriming
 import app.aaps.pump.carelevo.command.CmdDiscard
@@ -13,6 +12,7 @@ import app.aaps.pump.carelevo.command.CmdSafetyCheck
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
@@ -30,22 +30,21 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalDateTime
-import java.util.concurrent.TimeUnit
-import kotlin.jvm.optionals.getOrNull
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 class CarelevoPatchSafetyCheckViewModel @Inject constructor(
-    private val aapsSchedulers: AapsSchedulers,
     private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,
     private val commandQueue: CommandQueue,
@@ -71,11 +70,8 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     private val _remainSec = MutableStateFlow<Long?>(null)
     val remainSec = _remainSec.asStateFlow()
 
-    private val compositeDisposable = CompositeDisposable()
-
-    private var tickerDisposable: Disposable? = null
+    private var tickerJob: Job? = null
     private var currentTimeoutSec: Long = 0L
-    private val timeTickerDisposable = CompositeDisposable()
 
     fun setIsCreated(isCreated: Boolean) {
         _isCreated = isCreated
@@ -170,9 +166,9 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
         val timeoutSec = sec - 30
         stopTicker()
 
-        tickerDisposable = Observable.intervalRange(0, timeoutSec + 1, 0, 1, TimeUnit.SECONDS)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { tick ->
+        // Ticks 0..timeoutSec, the first at once and then one a second.
+        tickerJob = viewModelScope.launch {
+            for (tick in 0..timeoutSec) {
                 val percent = ((tick.toDouble() / timeoutSec) * 100.0)
                     .coerceIn(0.0, 100.0)
                     .toInt()
@@ -181,18 +177,18 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
                 _remainSec.value = (timeoutSec - tick).coerceAtLeast(0)
 
                 aapsLogger.debug(LTag.UI, "percent: $percent, remain: ${_remainSec.value}")
+                if (tick < timeoutSec) delay(1.seconds)
             }
-
-        tickerDisposable?.let(timeTickerDisposable::add)
+        }
     }
 
     private fun stopTicker() {
-        tickerDisposable?.dispose()
-        tickerDisposable = null
+        tickerJob?.cancel()
+        tickerJob = null
     }
 
     fun startDiscardProcess() {
-        when (carelevoPatch.patchState.value?.getOrNull()) {
+        when (carelevoPatch.patchState.latest) {
             is PatchState.NotConnectedNotBooting, null -> {
                 triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardComplete)
             }
@@ -218,36 +214,39 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
 
     private fun startForceDiscard() {
         setUiState(UiState.Loading)
-        compositeDisposable += patchForceDiscardUseCase.execute()
-            .timeout(3000L, TimeUnit.MILLISECONDS)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ response ->
-                           when (response) {
-                               is ResponseResult.Success -> {
-                                   aapsLogger.debug(LTag.PUMPCOMM, "response success")
-                                   carelevoPatch.discardTeardown()
-                                   setUiState(UiState.Idle)
-                                   triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardComplete)
-                               }
+        viewModelScope.launch {
+            val response = try {
+                withTimeoutOrNull(FORCE_DISCARD_TIMEOUT) { patchForceDiscardUseCase.execute() }
+                    ?: throw IllegalStateException("force discard did not end in $FORCE_DISCARD_TIMEOUT")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "force discard failed : $e")
+                setUiState(UiState.Idle)
+                triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
+                return@launch
+            }
+            when (response) {
+                is ResponseResult.Success -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response success")
+                    carelevoPatch.discardTeardown()
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardComplete)
+                }
 
-                               is ResponseResult.Error   -> {
-                                   aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
-                                   setUiState(UiState.Idle)
-                                   triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
-                               }
+                is ResponseResult.Error   -> {
+                    aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
+                }
 
-                               else                      -> {
-                                   aapsLogger.error(LTag.PUMPCOMM, "response failed")
-                                   setUiState(UiState.Idle)
-                                   triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
-                               }
-                           }
-                       }, { e ->
-                           aapsLogger.error(LTag.PUMPCOMM, "force discard failed : $e")
-                           setUiState(UiState.Idle)
-                           triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
-                       })
+                else                      -> {
+                    aapsLogger.error(LTag.PUMPCOMM, "response failed")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectSafetyCheckEvent.DiscardFailed)
+                }
+            }
+        }
     }
 
     // Only the user can see whether a droplet appeared, so one request fires a whole burst.
@@ -305,26 +304,25 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
             updatedAt = now,
             isAcknowledged = false
         )
-        compositeDisposable += carelevoAlarmInfoUseCase.upsertAlarm(info)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                { aapsLogger.debug(LTag.PUMPCOMM, "recordSafetyCheckFailAlarm.upsertComplete") },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "recordSafetyCheckFailAlarm.upsertError error=$e") }
-            )
+        viewModelScope.launch {
+            try {
+                carelevoAlarmInfoUseCase.upsertAlarm(info)
+                aapsLogger.debug(LTag.PUMPCOMM, "recordSafetyCheckFailAlarm.upsertComplete")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "recordSafetyCheckFailAlarm.upsertError error=$e")
+            }
+        }
     }
 
-    fun isSafetyCheckPassed() = carelevoPatch.patchInfo.value?.getOrNull()?.checkSafety == true
+    fun isSafetyCheckPassed() = carelevoPatch.patchInfo.latest?.checkSafety == true
 
     /** Identifies the patch on screen, so the step's state is rebuilt when a new one is activated. */
     fun patchAddress() = carelevoPatch.getPatchInfoAddress()
 
     // Per-op sessions leave no resting link: "connected" = a session can be attempted (patch paired + BT on).
     fun isConnected() = carelevoPatch.getPatchInfoAddress() != null && carelevoPatch.isBluetoothEnabled()
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-    }
 
     fun onSafetyCheckComplete() {
         _progress.value = 100
@@ -346,3 +344,5 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
         private const val SAFETY_CHECK_RETRY_DELAY_MS = 2_000L
     }
 }
+
+private val FORCE_DISCARD_TIMEOUT = 3.seconds

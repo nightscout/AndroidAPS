@@ -3,6 +3,8 @@ package app.aaps.pump.carelevo.data.dao
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
+import app.aaps.pump.carelevo.common.latest
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
@@ -13,15 +15,13 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
  * Preference-backed store of the four per-mode infusion records (basal / temp-basal / immediate
  * bolus / extended bolus), each persisted as Gson under its own [CarelevoStringNonKey] and mirrored
- * into one aggregate [CarelevoInfusionInfoEntity] on the [_infusionInfo] BehaviorSubject.
+ * into one aggregate [CarelevoInfusionInfoEntity] on the [_infusionInfo] stream.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -29,7 +29,7 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
     private val preferences: Preferences,
 ) : CarelevoInfusionInfoDao {
 
-    private val _infusionInfo: BehaviorSubject<Optional<CarelevoInfusionInfoEntity>> = BehaviorSubject.create()
+    private val _infusionInfo: MutableSharedFlow<CarelevoInfusionInfoEntity?> = latestValueFlow()
 
     /** Load one per-mode record from its preference key; null when absent or unparseable. */
     private inline fun <reified T> loadEntity(key: StringNonPreferenceKey): T? = runCatching {
@@ -46,24 +46,24 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
 
     /** Seed [_infusionInfo] from prefs if this is the first read of the process. */
     private fun ensureLoaded() {
-        if (_infusionInfo.value != null) return
+        if (_infusionInfo.replayCache.isNotEmpty()) return
         val infusionInfo = CarelevoInfusionInfoEntity(
             basalInfusionInfo = loadEntity<CarelevoBasalInfusionInfoEntity>(CarelevoStringNonKey.BasalInfusionInfo),
             tempBasalInfusionInfo = loadEntity<CarelevoTempBasalInfusionInfoEntity>(CarelevoStringNonKey.TempBasalInfusionInfo),
             immeBolusInfusionInfo = loadEntity<CarelevoImmeBolusInfusionInfoEntity>(CarelevoStringNonKey.ImmeBolusInfusionInfo),
             extendBolusInfusionInfo = loadEntity<CarelevoExtendBolusInfusionInfoEntity>(CarelevoStringNonKey.ExtendBolusInfusionInfo)
         ).takeUnless { it.basalInfusionInfo == null && it.tempBasalInfusionInfo == null && it.immeBolusInfusionInfo == null && it.extendBolusInfusionInfo == null }
-        _infusionInfo.onNext(Optional.ofNullable(infusionInfo))
+        _infusionInfo.tryEmit(infusionInfo)
     }
 
-    override fun getInfusionInfo(): Observable<Optional<CarelevoInfusionInfoEntity>> {
+    override fun getInfusionInfo(): Flow<CarelevoInfusionInfoEntity?> {
         ensureLoaded()
         return _infusionInfo
     }
 
     override fun getInfusionInfoBySync(): CarelevoInfusionInfoEntity? {
         ensureLoaded()
-        return _infusionInfo.value?.getOrNull()
+        return _infusionInfo.latest
     }
 
     /**
@@ -74,8 +74,8 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
         preferences.put(key, CarelevoGsonHelper.sharedGson().toJson(info))
     }.fold(
         onSuccess = {
-            val current = _infusionInfo.value?.getOrNull() ?: CarelevoInfusionInfoEntity()
-            _infusionInfo.onNext(Optional.of(mutate(current)))
+            val current = _infusionInfo.latest ?: CarelevoInfusionInfoEntity()
+            _infusionInfo.tryEmit(mutate(current))
             true
         },
         onFailure = {
@@ -104,9 +104,9 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
         preferences.remove(key)
     }.fold(
         onSuccess = {
-            val infusionInfo = _infusionInfo.value?.getOrNull()?.let(mutate)
+            val infusionInfo = _infusionInfo.latest?.let(mutate)
                 ?.takeUnless { it.basalInfusionInfo == null && it.tempBasalInfusionInfo == null && it.immeBolusInfusionInfo == null && it.extendBolusInfusionInfo == null }
-            _infusionInfo.onNext(Optional.ofNullable(infusionInfo))
+            _infusionInfo.tryEmit(infusionInfo)
             true
         },
         onFailure = {
@@ -135,7 +135,7 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
             preferences.remove(CarelevoStringNonKey.ExtendBolusInfusionInfo)
         }.fold(
             onSuccess = {
-                _infusionInfo.onNext(Optional.ofNullable(null))
+                _infusionInfo.tryEmit(null)
                 true
             },
             onFailure = {

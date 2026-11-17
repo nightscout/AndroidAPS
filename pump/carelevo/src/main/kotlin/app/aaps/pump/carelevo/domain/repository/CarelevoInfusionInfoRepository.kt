@@ -5,12 +5,11 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionI
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 interface CarelevoInfusionInfoRepository {
 
-    fun getInfusionInfo(): Observable<Optional<CarelevoInfusionInfoDomainModel>>
+    fun getInfusionInfo(): Flow<CarelevoInfusionInfoDomainModel?>
     fun getInfusionInfoBySync(): CarelevoInfusionInfoDomainModel?
 
     fun updateBasalInfusionInfo(info: CarelevoBasalInfusionInfoDomainModel): Boolean

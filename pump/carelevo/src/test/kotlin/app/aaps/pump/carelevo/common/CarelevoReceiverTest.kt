@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.disposables.Disposable
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,75 +15,85 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 
 /**
- * Robolectric tests for [CarelevoObserveReceiver] — the Rx wrapper the plugin uses to observe
- * Bluetooth adapter state changes.
+ * Robolectric tests for [registerCarelevoReceiver] — the helper the plugin uses to follow Bluetooth
+ * adapter state changes. It registers a receiver for a filter, gives every matching intent to a
+ * callback, and returns the receiver so the caller can unregister it when it stops.
  *
- * [CarelevoObserveReceiver] talks to the Android framework directly (`Context.registerReceiver` /
+ * The helper talks to the Android framework directly (`Context.registerReceiver` /
  * `unregisterReceiver`, [BroadcastReceiver], [IntentFilter.matchAction]), so a plain JVM Mockito
  * test could only observe that *some* mock method was called. Under [RobolectricTestRunner] with a
- * REAL application [Context], registration is asserted against Robolectric's [ShadowApplication]
- * receiver registry — i.e. against the same bookkeeping the OS would do.
+ * REAL application [Context], registration and unregistration are asserted against Robolectric's
+ * [ShadowApplication] receiver registry — i.e. against the same bookkeeping the OS would do. A mocked
+ * Context would only prove that a method was called, not that the receiver actually stopped being registered.
  *
  * The registered [BroadcastReceiver] is pulled back out of the registry and its `onReceive` invoked
  * directly, exactly as the system dispatcher would. That is deliberate rather than going through
  * `context.sendBroadcast`: it keeps the test off the main-looper dispatch queue (no `idle()`
- * ordering to reason about) AND it is the only way to reach the wrapper's two defensive branches —
+ * ordering to reason about) AND it is the only way to reach the helper's two defensive branches —
  * a null intent and a non-matching action — which a real broadcast could never deliver.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
-class CarelevoObserveReceiverTest {
+class CarelevoReceiverTest {
 
     private val context: Context = RuntimeEnvironment.getApplication()
 
     private val action = "app.aaps.pump.carelevo.test.ACTION_STATE_CHANGED"
     private val otherAction = "app.aaps.pump.carelevo.test.SOMETHING_ELSE"
 
-    private val openSubscriptions = mutableListOf<Disposable>()
+    private val registered = mutableListOf<BroadcastReceiver>()
 
     private val shadowApplication: ShadowApplication
         get() = Shadows.shadowOf(RuntimeEnvironment.getApplication())
 
-    /** Every receiver currently registered for [action] by the SUT. */
+    /** Every receiver currently registered for [action]. */
     private fun wrappersFor(action: String): List<ShadowApplication.Wrapper> =
         shadowApplication.registeredReceivers.filter { it.intentFilter.matchAction(action) }
 
-    private fun observe(vararg actions: String, onNext: (Intent) -> Unit): Disposable {
+    private fun isRegistered(receiver: BroadcastReceiver): Boolean =
+        shadowApplication.registeredReceivers.any { it.broadcastReceiver === receiver }
+
+    private fun register(vararg actions: String, onIntent: (Intent) -> Unit): BroadcastReceiver {
         val filter = IntentFilter()
         actions.forEach { filter.addAction(it) }
-        return CarelevoObserveReceiver(context, filter)
-            .subscribe { intent -> onNext(intent) }
-            .also { openSubscriptions += it }
+        return registerCarelevoReceiver(context, filter, onIntent).also { registered += it }
     }
 
     @After
     fun tearDown() {
         // Never leak a registered receiver into the next test's registry.
-        openSubscriptions.filterNot { it.isDisposed }.forEach { it.dispose() }
+        registered.filter { isRegistered(it) }.forEach { context.unregisterReceiver(it) }
     }
 
     @Test
-    fun `subscribing registers a receiver for the supplied filter`() {
-        observe(action) {}
+    fun `registering registers a receiver for the supplied filter`() {
+        val receiver = register(action) {}
 
         val wrappers = wrappersFor(action)
         assertThat(wrappers).hasSize(1)
-        assertThat(wrappers.single().broadcastReceiver).isNotNull()
+        assertThat(wrappers.single().broadcastReceiver).isSameInstanceAs(receiver)
         assertThat(wrappers.single().intentFilter.matchAction(otherAction)).isFalse()
+    }
+
+    @Test
+    fun `the receiver stays registered until it is unregistered`() {
+        val receiver = register(action) {}
+
+        assertThat(isRegistered(receiver)).isTrue()
     }
 
     @Test
     fun `the receiver is never registered as exported`() {
         // Only protected system broadcasts are consumed; nothing here may be targetable by other apps.
-        observe(action) {}
+        register(action) {}
 
         assertThat(wrappersFor(action).single().flags and Context.RECEIVER_EXPORTED).isEqualTo(0)
     }
 
     @Test
-    fun `a matching broadcast is emitted to the observer`() {
+    fun `a matching broadcast is given to the callback`() {
         val received = mutableListOf<Intent>()
-        observe(action) { received += it }
+        register(action) { received += it }
 
         val intent = Intent(action).putExtra("state", 12)
         wrappersFor(action).single().broadcastReceiver.onReceive(context, intent)
@@ -95,9 +104,9 @@ class CarelevoObserveReceiverTest {
     }
 
     @Test
-    fun `repeated broadcasts are all emitted on the same subscription`() {
+    fun `repeated broadcasts are all given to the callback of the same registration`() {
         val received = mutableListOf<Intent>()
-        observe(action) { received += it }
+        register(action) { received += it }
         val receiver = wrappersFor(action).single().broadcastReceiver
 
         receiver.onReceive(context, Intent(action).putExtra("state", 1))
@@ -108,9 +117,9 @@ class CarelevoObserveReceiverTest {
     }
 
     @Test
-    fun `an intent whose action is outside the filter is not emitted`() {
+    fun `an intent whose action is outside the filter is not given to the callback`() {
         val received = mutableListOf<Intent>()
-        observe(action) { received += it }
+        register(action) { received += it }
 
         wrappersFor(action).single().broadcastReceiver.onReceive(context, Intent(otherAction))
 
@@ -120,7 +129,7 @@ class CarelevoObserveReceiverTest {
     @Test
     fun `a null intent is ignored`() {
         val received = mutableListOf<Intent>()
-        observe(action) { received += it }
+        register(action) { received += it }
 
         wrappersFor(action).single().broadcastReceiver.onReceive(context, null)
 
@@ -128,9 +137,9 @@ class CarelevoObserveReceiverTest {
     }
 
     @Test
-    fun `every action of a multi-action filter is emitted`() {
+    fun `every action of a multi-action filter is given to the callback`() {
         val received = mutableListOf<Intent>()
-        observe(action, otherAction) { received += it }
+        register(action, otherAction) { received += it }
         val receiver = wrappersFor(action).single().broadcastReceiver
 
         receiver.onReceive(context, Intent(action))
@@ -140,26 +149,28 @@ class CarelevoObserveReceiverTest {
     }
 
     @Test
-    fun `disposing the subscription unregisters the receiver`() {
-        val disposable = observe(action) {}
+    fun `unregistering the returned receiver removes it, so nothing more is delivered`() {
+        val receiver = register(action) {}
         assertThat(wrappersFor(action)).hasSize(1)
 
-        disposable.dispose()
+        context.unregisterReceiver(receiver)
 
-        assertThat(disposable.isDisposed).isTrue()
+        assertThat(isRegistered(receiver)).isFalse()
         assertThat(wrappersFor(action)).isEmpty()
     }
 
     @Test
-    fun `each subscription owns its own receiver and disposal only unregisters that one`() {
+    fun `each registration owns its own receiver and unregistering only removes that one`() {
         val firstReceived = mutableListOf<Intent>()
         val secondReceived = mutableListOf<Intent>()
-        val first = observe(action) { firstReceived += it }
-        observe(action) { secondReceived += it }
+        val first = register(action) { firstReceived += it }
+        val second = register(action) { secondReceived += it }
         assertThat(wrappersFor(action)).hasSize(2)
 
-        first.dispose()
+        context.unregisterReceiver(first)
 
+        assertThat(isRegistered(first)).isFalse()
+        assertThat(isRegistered(second)).isTrue()
         val surviving = wrappersFor(action)
         assertThat(surviving).hasSize(1)
         surviving.single().broadcastReceiver.onReceive(context, Intent(action))

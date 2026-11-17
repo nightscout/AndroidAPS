@@ -12,6 +12,12 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoImmeBolusInfusionInfoE
 import app.aaps.pump.carelevo.data.model.entities.CarelevoInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoTempBasalInfusionInfoEntity
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -26,12 +32,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Unit tests for [CarelevoInfusionInfoDaoImpl] — exercises the preference-backed round-trip
  * (save / load / update-field / delete) using an in-memory [MutableMap] behind the mocked
- * [Preferences], plus the aggregate [CarelevoInfusionInfoEntity] BehaviorSubject folding,
+ * [Preferences], plus the aggregate [CarelevoInfusionInfoEntity] stream folding,
  * empty/absent-record collapse, malformed-JSON tolerance and persistence-failure branches.
  */
 @ExtendWith(MockitoExtension::class)
@@ -126,22 +131,22 @@ internal class CarelevoInfusionInfoDaoImplTest {
     // ---- getInfusionInfo / ensureLoaded ----------------------------------------------------
 
     @Test
-    fun `getInfusionInfo on empty store emits an absent optional`() {
-        val result = sut.getInfusionInfo().blockingFirst()
-        assertThat(result.isPresent).isFalse()
+    fun `getInfusionInfo on empty store emits null`() {
+        val result = runBlocking { sut.getInfusionInfo().first() }
+        assertThat(result).isNull()
     }
 
     @Test
     fun `getInfusionInfo seeds the aggregate from a stored basal record`() {
         seed(CarelevoStringNonKey.BasalInfusionInfo, basal())
 
-        val result = sut.getInfusionInfo().blockingFirst()
+        val result = runBlocking { sut.getInfusionInfo().first() }
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get().basalInfusionInfo).isEqualTo(basal())
-        assertThat(result.get().tempBasalInfusionInfo).isNull()
-        assertThat(result.get().immeBolusInfusionInfo).isNull()
-        assertThat(result.get().extendBolusInfusionInfo).isNull()
+        assertThat(result).isNotNull()
+        assertThat(result!!.basalInfusionInfo).isEqualTo(basal())
+        assertThat(result.tempBasalInfusionInfo).isNull()
+        assertThat(result.immeBolusInfusionInfo).isNull()
+        assertThat(result.extendBolusInfusionInfo).isNull()
     }
 
     @Test
@@ -166,10 +171,10 @@ internal class CarelevoInfusionInfoDaoImplTest {
     }
 
     @Test
-    fun `ensureLoaded reads prefs only once then serves the cached subject value`() {
+    fun `ensureLoaded reads prefs only once then serves the cached stream value`() {
         // First read seeds from an empty store (absent).
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        // Even though data appears in prefs afterwards, the cached subject is not reloaded.
+        // Even though data appears in prefs afterwards, the cached stream is not reloaded.
         seed(CarelevoStringNonKey.BasalInfusionInfo, basal())
         assertThat(sut.getInfusionInfoBySync()).isNull()
 
@@ -260,14 +265,16 @@ internal class CarelevoInfusionInfoDaoImplTest {
     }
 
     @Test
-    fun `updating emits the folded value on the observable`() {
-        val observer = sut.getInfusionInfo().test()
+    fun `updating emits the folded value on the flow`() {
+        val flow = sut.getInfusionInfo()
+        val values = mutableListOf<CarelevoInfusionInfoEntity?>()
+        val job = CoroutineScope(Dispatchers.Unconfined).launch { flow.toList(values) }
 
         assertThat(sut.updateBasalInfusionInfo(basal())).isTrue()
 
-        val last: Optional<CarelevoInfusionInfoEntity> = observer.values().last()
-        assertThat(last.orElse(null)?.basalInfusionInfo).isEqualTo(basal())
-        observer.dispose()
+        val last: CarelevoInfusionInfoEntity? = values.last()
+        assertThat(last?.basalInfusionInfo).isEqualTo(basal())
+        job.cancel()
     }
 
     // ---- deleteXxxInfusionInfo -------------------------------------------------------------
@@ -330,7 +337,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
     @Test
     fun `deleteBasalInfusionInfo on an absent aggregate stays absent and still succeeds`() {
-        // No prior state: the subject has never been populated (value == null branch).
+        // No prior state: the stream has never been populated (no last value).
         assertThat(sut.deleteBasalInfusionInfo()).isTrue()
 
         assertThat(sut.getInfusionInfoBySync()).isNull()
@@ -371,13 +378,15 @@ internal class CarelevoInfusionInfoDaoImplTest {
     }
 
     @Test
-    fun `deleteInfusionInfo emits an absent optional on the observable`() {
+    fun `deleteInfusionInfo emits null on the flow`() {
         assertThat(sut.updateBasalInfusionInfo(basal())).isTrue()
-        val observer = sut.getInfusionInfo().test()
+        val flow = sut.getInfusionInfo()
+        val values = mutableListOf<CarelevoInfusionInfoEntity?>()
+        val job = CoroutineScope(Dispatchers.Unconfined).launch { flow.toList(values) }
 
         assertThat(sut.deleteInfusionInfo()).isTrue()
 
-        assertThat(observer.values().last().isPresent).isFalse()
-        observer.dispose()
+        assertThat(values.last()).isNull()
+        job.cancel()
     }
 }

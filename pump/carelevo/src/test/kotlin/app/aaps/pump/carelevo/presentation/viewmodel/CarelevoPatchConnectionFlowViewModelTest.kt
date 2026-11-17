@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.keys.BooleanKey
@@ -25,6 +24,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.UiState
@@ -36,12 +36,9 @@ import app.aaps.pump.carelevo.presentation.model.CarelevoConnectEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -70,7 +67,6 @@ import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.Optional
 import app.aaps.core.interfaces.rx.events.Event as RxEvent
 
 /**
@@ -90,12 +86,8 @@ import app.aaps.core.interfaces.rx.events.Event as RxEvent
  * bodies eagerly and in-line (the mocked `suspend` collaborators never really suspend), so a state
  * transition has already settled by the time the call under test returns. Every test passes that same
  * dispatcher to `runTest`, which makes the TestScope, the Main dispatcher and the event collector
- * share one scheduler; `advanceUntilIdle()` is kept as a defensive flush.
- *
- * **Rx:** [AapsSchedulers.io] is stubbed to [Schedulers.trampoline] so the force-discard chain runs
- * synchronously on the test thread. That chain's terminal `subscribe { }` has no `onError` arm, so an
- * erroring source routes an `OnErrorNotImplementedException` to [RxJavaPlugins]; the global error
- * handler is neutralised in [setUp] so the `doOnError` branch can be asserted without polluting the run.
+ * share one scheduler; `advanceUntilIdle()` is kept as a defensive flush. The force discard launches in
+ * `viewModelScope` too, so it settles the same way.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -105,7 +97,6 @@ class CarelevoPatchConnectionFlowViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var aapsLogger: AAPSLogger
-    private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var carelevoPatch: CarelevoPatch
     private lateinit var commandQueue: CommandQueue
     private lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
@@ -117,7 +108,7 @@ class CarelevoPatchConnectionFlowViewModelTest {
     private lateinit var rh: ResourceHelper
     private lateinit var rxBus: RxBus
 
-    private lateinit var patchStateSubject: BehaviorSubject<Optional<PatchState>>
+    private lateinit var patchStateFlow: MutableSharedFlow<PatchState?>
 
     private lateinit var sut: CarelevoPatchConnectionFlowViewModel
 
@@ -136,12 +127,8 @@ class CarelevoPatchConnectionFlowViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        // The force-discard chain ends in subscribe(onSuccess) with no onError arm; swallow the
-        // resulting undeliverable OnErrorNotImplementedException so the doOnError test stays quiet.
-        RxJavaPlugins.setErrorHandler { }
 
         aapsLogger = mock()
-        aapsSchedulers = mock()
         carelevoPatch = mock()
         commandQueue = mock()
         patchForceDiscardUseCase = mock()
@@ -159,16 +146,12 @@ class CarelevoPatchConnectionFlowViewModelTest {
         // A mocked suspend Boolean answers null. The switch is refused unless a test says otherwise.
         runBlocking { whenever(profileFunction.createProfileSwitchWithNewInsulin(any(), any())).thenReturn(false) }
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-
-        patchStateSubject = BehaviorSubject.create()
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
+        patchStateFlow = latestValueFlow()
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow)
 
         // Construction reads no collaborator — every field is a plain initialiser.
         sut = CarelevoPatchConnectionFlowViewModel(
             aapsLogger = aapsLogger,
-            aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
@@ -185,7 +168,6 @@ class CarelevoPatchConnectionFlowViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        RxJavaPlugins.reset()
     }
 
     // ---- helpers ------------------------------------------------------------------------------
@@ -240,7 +222,9 @@ class CarelevoPatchConnectionFlowViewModelTest {
         return result
     }
 
-    private fun connectedPatch() = patchStateSubject.onNext(Optional.of<PatchState>(PatchState.ConnectedBooted))
+    private fun connectedPatch() {
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
+    }
 
     /** All-matcher stub for the 11-arg `createProfileSwitch` overload the profile gate uses. */
     private suspend fun stubCreateProfileSwitch(result: PS?) {
@@ -841,12 +825,12 @@ class CarelevoPatchConnectionFlowViewModelTest {
         assertThat(events).containsExactly(CarelevoConnectEvent.DiscardComplete)
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
     }
 
     @Test
     fun `startPatchDiscardProcess completes immediately for a patch that was never booting`() = runTest(testDispatcher) {
-        patchStateSubject.onNext(Optional.of<PatchState>(PatchState.NotConnectedNotBooting))
+        patchStateFlow.tryEmit(PatchState.NotConnectedNotBooting)
         val events = collectEvents()
 
         sut.startPatchDiscardProcess()
@@ -870,7 +854,7 @@ class CarelevoPatchConnectionFlowViewModelTest {
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         verifyBlocking(commandQueue) { customCommand(any()) }
         // The queued CmdDiscard owns unBond + releasePatch; no DB-only fallback on the happy path.
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
     }
 
     @Test
@@ -879,14 +863,14 @@ class CarelevoPatchConnectionFlowViewModelTest {
         val enact = enactResult(success = false)
         whenever(commandQueue.customCommand(any())).thenReturn(enact)
         val success: ResponseResult<CarelevoUseCaseResponse> = ResponseResult.Success(ResultSuccess)
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(success))
+        whenever(patchForceDiscardUseCase.execute()).thenReturn(success)
         val events = collectEvents()
 
         sut.startPatchDiscardProcess()
         advanceUntilIdle()
 
         verify(aapsLogger).error(eq(LTag.PUMPCOMM), any<String>())
-        verify(patchForceDiscardUseCase).execute()
+        verifyBlocking(patchForceDiscardUseCase) { execute() }
         verify(carelevoPatch).discardTeardown()
         assertThat(events).containsExactly(CarelevoConnectEvent.DiscardComplete)
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
@@ -898,7 +882,7 @@ class CarelevoPatchConnectionFlowViewModelTest {
         val enact = enactResult(success = false)
         whenever(commandQueue.customCommand(any())).thenReturn(enact)
         val error: ResponseResult<CarelevoUseCaseResponse> = ResponseResult.Error(RuntimeException("boom"))
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(error))
+        whenever(patchForceDiscardUseCase.execute()).thenReturn(error)
         val events = collectEvents()
 
         sut.startPatchDiscardProcess()
@@ -915,7 +899,7 @@ class CarelevoPatchConnectionFlowViewModelTest {
         val enact = enactResult(success = false)
         whenever(commandQueue.customCommand(any())).thenReturn(enact)
         val failure: ResponseResult<CarelevoUseCaseResponse> = ResponseResult.Failure("rejected")
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(failure))
+        whenever(patchForceDiscardUseCase.execute()).thenReturn(failure)
         val events = collectEvents()
 
         sut.startPatchDiscardProcess()
@@ -931,13 +915,13 @@ class CarelevoPatchConnectionFlowViewModelTest {
         val enact = enactResult(success = false)
         whenever(commandQueue.customCommand(any())).thenReturn(enact)
         whenever(patchForceDiscardUseCase.execute())
-            .thenReturn(Single.error<ResponseResult<CarelevoUseCaseResponse>>(RuntimeException("stream down")))
+            .thenAnswer { throw RuntimeException("stream down") }
         val events = collectEvents()
 
         sut.startPatchDiscardProcess()
         advanceUntilIdle()
 
-        // doOnError arm: the UI is released and the failure surfaces to the wizard.
+        // The catch arm: the UI is released and the failure surfaces to the wizard.
         assertThat(events).containsExactly(CarelevoConnectEvent.DiscardFailed)
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         verify(carelevoPatch, never()).discardTeardown()
@@ -985,8 +969,8 @@ class CarelevoPatchConnectionFlowViewModelTest {
 
     @Test
     fun `startPatchDiscardProcess completes immediately when the patch state optional is empty`() = runTest(testDispatcher) {
-        // Distinct from "no state yet": the subject has a value, but it carries no PatchState.
-        patchStateSubject.onNext(Optional.empty<PatchState>())
+        // Distinct from "no state yet": the flow has a value, but that value is null, not a PatchState.
+        patchStateFlow.tryEmit(null)
         val events = collectEvents()
 
         sut.startPatchDiscardProcess()
@@ -995,6 +979,6 @@ class CarelevoPatchConnectionFlowViewModelTest {
         assertThat(events).containsExactly(CarelevoConnectEvent.DiscardComplete)
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
     }
 }

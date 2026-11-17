@@ -6,6 +6,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepositor
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -23,13 +24,15 @@ internal class CarelevoCreateUserSettingInfoUseCaseTest {
     fun execute_returns_success_when_create_succeeds() {
         whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
 
-        val result = sut.execute(
-            CarelevoUserSettingInfoRequestModel(
-                lowInsulinNoticeAmount = 30,
-                maxBasalSpeed = 15.0,
-                maxBolusDose = 10.0
+        val result = runBlocking {
+            sut.execute(
+                CarelevoUserSettingInfoRequestModel(
+                    lowInsulinNoticeAmount = 30,
+                    maxBasalSpeed = 15.0,
+                    maxBolusDose = 10.0
+                )
             )
-        ).blockingGet()
+        }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
@@ -38,7 +41,7 @@ internal class CarelevoCreateUserSettingInfoUseCaseTest {
     fun `it stores the three values of the request`() {
         whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
 
-        sut.execute(CarelevoUserSettingInfoRequestModel(lowInsulinNoticeAmount = 30, maxBasalSpeed = 15.0, maxBolusDose = 10.0)).blockingGet()
+        runBlocking { sut.execute(CarelevoUserSettingInfoRequestModel(lowInsulinNoticeAmount = 30, maxBasalSpeed = 15.0, maxBolusDose = 10.0)) }
 
         val stored = argumentCaptor<CarelevoUserSettingInfoDomainModel>().also { verify(userSettingInfoRepository).updateUserSettingInfo(it.capture()) }.firstValue
         assertThat(stored.lowInsulinNoticeAmount).isEqualTo(30)
@@ -50,14 +53,14 @@ internal class CarelevoCreateUserSettingInfoUseCaseTest {
     fun `a failed write is an error`() {
         whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(false)
 
-        val result = sut.execute(CarelevoUserSettingInfoRequestModel(lowInsulinNoticeAmount = 30, maxBasalSpeed = 15.0, maxBolusDose = 10.0)).blockingGet()
+        val result = runBlocking { sut.execute(CarelevoUserSettingInfoRequestModel(lowInsulinNoticeAmount = 30, maxBasalSpeed = 15.0, maxBolusDose = 10.0)) }
 
         assertThat((result as ResponseResult.Error).e.message).isEqualTo("create user setting info is failed")
     }
 
     @Test
     fun `a request of another type is an error and writes nothing`() {
-        val result = sut.execute(object : CarelevoUseCaseRequest {}).blockingGet()
+        val result = runBlocking { sut.execute(object : CarelevoUseCaseRequest {}) }
 
         assertThat((result as ResponseResult.Error).e.message).isEqualTo("request is not CarelevoUserSettingInfoRequestModel")
         verify(userSettingInfoRepository, never()).updateUserSettingInfo(any())

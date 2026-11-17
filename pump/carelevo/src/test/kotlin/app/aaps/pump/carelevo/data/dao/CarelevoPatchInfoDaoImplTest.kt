@@ -7,6 +7,8 @@ import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -26,7 +28,7 @@ import org.mockito.quality.Strictness
  * Pure-JVM round-trip coverage for [CarelevoPatchInfoDaoImpl].
  *
  * The DAO persists a single JSON blob under [CarelevoStringNonKey.PatchInfo] via [Preferences] and
- * caches the parsed entity in an internal `BehaviorSubject`. We back the mocked [Preferences] with an
+ * caches the parsed entity in an internal stream that keeps its last value. We back the mocked [Preferences] with an
  * in-memory map (the "fake preferences" approach) so save/load/update/delete really round-trip
  * through the real gson used by production code, and we spawn a fresh DAO instance sharing the same
  * store to exercise the cold-read (cache-miss) branches.
@@ -86,40 +88,40 @@ internal class CarelevoPatchInfoDaoImplTest {
         sut = CarelevoPatchInfoDaoImpl(preferences)
     }
 
-    // region getPatchInfo (Observable)
+    // region getPatchInfo (Flow)
 
     @Test
     fun `getPatchInfo emits the stored entity when preferences hold valid JSON`() {
         storeJson(samplePatch())
 
-        val emitted = sut.getPatchInfo().blockingFirst()
+        val emitted = runBlocking { sut.getPatchInfo().first() }
 
-        assertThat(emitted.isPresent).isTrue()
-        assertThat(emitted.get()).isEqualTo(samplePatch())
+        assertThat(emitted).isNotNull()
+        assertThat(emitted).isEqualTo(samplePatch())
     }
 
     @Test
-    fun `getPatchInfo emits empty when the preference is absent`() {
-        val emitted = sut.getPatchInfo().blockingFirst()
+    fun `getPatchInfo emits null when the preference is absent`() {
+        val emitted = runBlocking { sut.getPatchInfo().first() }
 
-        assertThat(emitted.isPresent).isFalse()
+        assertThat(emitted).isNull()
     }
 
     @Test
-    fun `getPatchInfo emits empty when the stored JSON is malformed`() {
+    fun `getPatchInfo emits null when the stored JSON is malformed`() {
         store[CarelevoStringNonKey.PatchInfo.key] = "{{{not-valid-json"
 
-        val emitted = sut.getPatchInfo().blockingFirst()
+        val emitted = runBlocking { sut.getPatchInfo().first() }
 
-        assertThat(emitted.isPresent).isFalse()
+        assertThat(emitted).isNull()
     }
 
     @Test
-    fun `getPatchInfo reads preferences only once and serves the cached subject afterwards`() {
+    fun `getPatchInfo reads preferences only once and serves the cached stream afterwards`() {
         storeJson(samplePatch())
 
-        sut.getPatchInfo().blockingFirst()
-        sut.getPatchInfo().blockingFirst()
+        runBlocking { sut.getPatchInfo().first() }
+        runBlocking { sut.getPatchInfo().first() }
 
         verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
@@ -178,7 +180,7 @@ internal class CarelevoPatchInfoDaoImplTest {
 
         assertThat(sut.updatePatchInfo(info)).isTrue()
         assertThat(sut.getPatchInfoBySync()).isEqualTo(info)
-        assertThat(sut.getPatchInfo().blockingFirst().get()).isEqualTo(info)
+        assertThat(runBlocking { sut.getPatchInfo().first() }).isEqualTo(info)
 
         verify(preferences, never()).get(any<StringNonPreferenceKey>())
     }
@@ -236,13 +238,13 @@ internal class CarelevoPatchInfoDaoImplTest {
     }
 
     @Test
-    fun `saved patch info is loadable by a fresh DAO instance via getPatchInfo observable`() {
+    fun `saved patch info is loadable by a fresh DAO instance via getPatchInfo flow`() {
         val info = samplePatch(insulinRemain = null, mode = null)
         sut.updatePatchInfo(info)
 
         val fresh = CarelevoPatchInfoDaoImpl(preferences)
 
-        assertThat(fresh.getPatchInfo().blockingFirst().get()).isEqualTo(info)
+        assertThat(runBlocking { fresh.getPatchInfo().first() }).isEqualTo(info)
     }
 
     @Test
@@ -253,7 +255,7 @@ internal class CarelevoPatchInfoDaoImplTest {
         val fresh = CarelevoPatchInfoDaoImpl(preferences)
 
         assertThat(fresh.getPatchInfoBySync()).isNull()
-        assertThat(fresh.getPatchInfo().blockingFirst().isPresent).isFalse()
+        assertThat(runBlocking { fresh.getPatchInfo().first() }).isNull()
     }
 
     // endregion

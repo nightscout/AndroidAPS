@@ -5,16 +5,14 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.util.Optional
 
 internal class CarelevoAlarmInfoUseCaseTest {
 
@@ -24,48 +22,43 @@ internal class CarelevoAlarmInfoUseCaseTest {
     @Test
     fun observeAlarms_returns_repository_stream() {
         val alarms = listOf(sampleAlarm())
-        whenever(repository.observeAlarms()).thenReturn(Observable.just(Optional.of(alarms)))
+        whenever(repository.observeAlarms()).thenReturn(flowOf(alarms))
 
-        val result = sut.observeAlarms().blockingFirst()
+        val result = runBlocking { sut.observeAlarms().first() }
 
-        assertThat(result.get()).hasSize(1)
+        assertThat(result).hasSize(1)
         verify(repository).observeAlarms()
     }
 
     @Test
     fun getAlarmsOnce_delegates_to_repository() {
-        whenever(repository.getAlarmsOnce()).thenReturn(Single.just(Optional.of(emptyList())))
+        whenever(repository.getAlarmsOnce()).thenReturn(emptyList())
 
-        val result = sut.getAlarmsOnce().blockingGet()
+        val result = runBlocking { sut.getAlarmsOnce() }
 
-        assertThat(result.isPresent).isTrue()
+        assertThat(result).isNotNull()
         verify(repository).getAlarmsOnce()
     }
 
     @Test
     fun upsertAlarm_delegates_to_repository() {
         val alarm = sampleAlarm()
-        whenever(repository.upsertAlarm(alarm)).thenReturn(Completable.complete())
 
-        sut.upsertAlarm(alarm).blockingAwait()
+        runBlocking { sut.upsertAlarm(alarm) }
 
         verify(repository).upsertAlarm(alarm)
     }
 
     @Test
     fun acknowledgeAlarm_removes_alarm_from_store() {
-        whenever(repository.removeAlarm(any())).thenReturn(Completable.complete())
-
-        sut.acknowledgeAlarm("alarm-1").blockingAwait()
+        runBlocking { sut.acknowledgeAlarm("alarm-1") }
 
         verify(repository).removeAlarm(eq("alarm-1"))
     }
 
     @Test
     fun clearAlarms_delegates_to_repository() {
-        whenever(repository.clearAlarms()).thenReturn(Completable.complete())
-
-        sut.clearAlarms().blockingAwait()
+        runBlocking { sut.clearAlarms() }
 
         verify(repository).clearAlarms()
     }

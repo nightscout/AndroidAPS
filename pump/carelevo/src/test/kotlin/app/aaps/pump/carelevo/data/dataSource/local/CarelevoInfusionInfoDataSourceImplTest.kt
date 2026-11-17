@@ -7,7 +7,7 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoImmeBolusInfusionInfoE
 import app.aaps.pump.carelevo.data.model.entities.CarelevoInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoTempBasalInfusionInfoEntity
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.flowOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,7 +18,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Delegation tests for [CarelevoInfusionInfoDataSourceImpl] — a thin pass-through over
@@ -60,7 +59,7 @@ internal class CarelevoInfusionInfoDataSourceImplTest {
 
     @Test
     fun `getInfusionInfo returns the dao stream unchanged`() {
-        val stream = Observable.just(Optional.of(CarelevoInfusionInfoEntity()))
+        val stream = flowOf(CarelevoInfusionInfoEntity())
         whenever(dao.getInfusionInfo()).thenReturn(stream)
 
         assertThat(sut.getInfusionInfo()).isSameInstanceAs(stream)

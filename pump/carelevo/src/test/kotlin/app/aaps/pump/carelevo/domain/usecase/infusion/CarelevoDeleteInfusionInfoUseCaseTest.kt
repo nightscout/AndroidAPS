@@ -11,6 +11,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -40,7 +41,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        val result = sut.execute(request(tempBasal = true)).blockingGet()
+        val result = runBlocking { sut.execute(request(tempBasal = true)) }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
@@ -54,7 +55,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        val result = sut.execute(request(immeBolus = true, extendBolus = true)).blockingGet()
+        val result = runBlocking { sut.execute(request(immeBolus = true, extendBolus = true)) }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
         verify(infusionInfoRepository, never()).deleteTempBasalInfusionInfo()
@@ -71,7 +72,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        sut.execute(request()).blockingGet()
+        runBlocking { sut.execute(request()) }
 
         val stored = argumentCaptor<CarelevoPatchInfoDomainModel>().also { verify(patchInfoRepository).updatePatchInfo(it.capture()) }.firstValue
         assertThat(stored.mode).isEqualTo(CarelevoPatchMode.BASAL_STOPPED)
@@ -84,7 +85,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        sut.execute(request()).blockingGet()
+        runBlocking { sut.execute(request()) }
 
         val stored = argumentCaptor<CarelevoPatchInfoDomainModel>().also { verify(patchInfoRepository).updatePatchInfo(it.capture()) }.firstValue
         assertThat(stored.mode).isEqualTo(CarelevoPatchMode.BASAL_RUNNING)
@@ -94,7 +95,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
     fun `a failed temp basal delete is an error`() {
         whenever(infusionInfoRepository.deleteTempBasalInfusionInfo()).thenReturn(false)
 
-        val result = sut.execute(request(tempBasal = true)).blockingGet()
+        val result = runBlocking { sut.execute(request(tempBasal = true)) }
 
         assertThat(errorMessage(result)).isEqualTo("Failed to delete temp basal infusion info")
         verify(patchInfoRepository, never()).updatePatchInfo(any())
@@ -104,7 +105,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
     fun `a failed immediate bolus delete is an error`() {
         whenever(infusionInfoRepository.deleteImmeBolusInfusionInfo()).thenReturn(false)
 
-        val result = sut.execute(request(immeBolus = true)).blockingGet()
+        val result = runBlocking { sut.execute(request(immeBolus = true)) }
 
         assertThat(errorMessage(result)).isEqualTo("Failed to delete immediate bolus infusion info")
     }
@@ -113,7 +114,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
     fun `a failed extended bolus delete is an error`() {
         whenever(infusionInfoRepository.deleteExtendBolusInfusionInfo()).thenReturn(false)
 
-        val result = sut.execute(request(extendBolus = true)).blockingGet()
+        val result = runBlocking { sut.execute(request(extendBolus = true)) }
 
         assertThat(errorMessage(result)).isEqualTo("Failed to delete extended bolus infusion info")
     }
@@ -122,7 +123,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
     fun `no infusion info after the delete is an error`() {
         whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(null)
 
-        val result = sut.execute(request()).blockingGet()
+        val result = runBlocking { sut.execute(request()) }
 
         assertThat(errorMessage(result)).isEqualTo("Infusion info must not be null after deletion step")
     }
@@ -132,7 +133,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
         whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
 
-        val result = sut.execute(request()).blockingGet()
+        val result = runBlocking { sut.execute(request()) }
 
         assertThat(errorMessage(result)).isEqualTo("Patch info must not be null")
     }
@@ -143,14 +144,14 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(false)
 
-        val result = sut.execute(request()).blockingGet()
+        val result = runBlocking { sut.execute(request()) }
 
         assertThat(errorMessage(result)).isEqualTo("Failed to update patch info (mode=0)")
     }
 
     @Test
     fun `a request of another type is an error`() {
-        val result = sut.execute(object : CarelevoUseCaseRequest {}).blockingGet()
+        val result = runBlocking { sut.execute(object : CarelevoUseCaseRequest {}) }
 
         assertThat(errorMessage(result)).isEqualTo("Request must be CarelevoDeleteInfusionRequestModel")
         verify(infusionInfoRepository, never()).getInfusionInfoBySync()

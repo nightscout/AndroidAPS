@@ -11,7 +11,9 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionI
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,11 +25,10 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Tests for [CarelevoInfusionInfoRepositoryImpl] — delegates to [CarelevoInfusionInfoDataSource] and
- * applies the entity <-> domain mappers. Covers the nullable/optional branches on the read paths and
+ * applies the entity <-> domain mappers. Covers the null branches on the read paths and
  * the domain->entity mapping on the write paths.
  */
 @ExtendWith(MockitoExtension::class)
@@ -64,20 +65,20 @@ internal class CarelevoInfusionInfoRepositoryImplTest {
     @Test
     fun `getInfusionInfo maps a present entity to a present domain model`() {
         whenever(dataSource.getInfusionInfo())
-            .thenReturn(Observable.just(Optional.of(CarelevoInfusionInfoEntity())))
+            .thenReturn(flowOf(CarelevoInfusionInfoEntity()))
 
-        val result = sut.getInfusionInfo().blockingFirst()
+        val result = runBlocking { sut.getInfusionInfo().first() }
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get().basalInfusionInfo).isNull()
+        assertThat(result).isNotNull()
+        assertThat(result!!.basalInfusionInfo).isNull()
         verify(dataSource).getInfusionInfo()
     }
 
     @Test
-    fun `getInfusionInfo maps an empty optional to an empty optional`() {
-        whenever(dataSource.getInfusionInfo()).thenReturn(Observable.just(Optional.empty<CarelevoInfusionInfoEntity>()))
+    fun `getInfusionInfo maps a null entity to a null domain model`() {
+        whenever(dataSource.getInfusionInfo()).thenReturn(flowOf(null))
 
-        assertThat(sut.getInfusionInfo().blockingFirst().isPresent).isFalse()
+        assertThat(runBlocking { sut.getInfusionInfo().first() }).isNull()
     }
 
     @Test

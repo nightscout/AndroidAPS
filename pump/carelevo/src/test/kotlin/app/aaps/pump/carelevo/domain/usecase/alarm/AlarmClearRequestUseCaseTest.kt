@@ -4,7 +4,6 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -108,8 +109,6 @@ internal class AlarmClearRequestUseCaseTest {
 
     @Test
     fun persistAlarmCleared_removes_alarm_and_returns_true() {
-        whenever(alarmRepository.removeAlarm(eq("alarm-1"))).thenReturn(Completable.complete())
-
         assertThat(sut.persistAlarmCleared("alarm-1")).isTrue()
 
         verify(alarmRepository).removeAlarm(eq("alarm-1"))
@@ -117,8 +116,7 @@ internal class AlarmClearRequestUseCaseTest {
 
     @Test
     fun persistAlarmCleared_returns_false_when_removal_errors() {
-        whenever(alarmRepository.removeAlarm(eq("alarm-1")))
-            .thenReturn(Completable.error(RuntimeException("db down")))
+        doThrow(RuntimeException("db down")).whenever(alarmRepository).removeAlarm(eq("alarm-1"))
 
         assertThat(sut.persistAlarmCleared("alarm-1")).isFalse()
 
@@ -127,24 +125,22 @@ internal class AlarmClearRequestUseCaseTest {
 
     @Test
     fun persistAlarmCleared_returns_false_when_repository_throws_synchronously() {
-        whenever(alarmRepository.removeAlarm(eq("alarm-1"))).thenThrow(IllegalStateException("boom"))
+        doThrow(IllegalStateException("boom")).whenever(alarmRepository).removeAlarm(eq("alarm-1"))
 
         assertThat(sut.persistAlarmCleared("alarm-1")).isFalse()
     }
 
     @Test
     fun persistAlarmCleared_returns_false_on_checked_style_error_without_rethrowing() {
-        whenever(alarmRepository.removeAlarm(eq("alarm-1")))
-            .thenReturn(Completable.error(IOException("io")))
+        // doAnswer, because Mockito refuses doThrow with a checked exception the method does not declare.
+        doAnswer { throw IOException("io") }.whenever(alarmRepository).removeAlarm(eq("alarm-1"))
 
-        // runCatching swallows the wrapped checked exception rather than escaping to the caller.
+        // runCatching swallows the checked exception rather than letting it escape to the caller.
         assertThat(sut.persistAlarmCleared("alarm-1")).isFalse()
     }
 
     @Test
     fun persistAlarmCleared_only_removes_the_requested_alarm() {
-        whenever(alarmRepository.removeAlarm(eq("alarm-7"))).thenReturn(Completable.complete())
-
         sut.persistAlarmCleared("alarm-7")
 
         verify(alarmRepository).removeAlarm(eq("alarm-7"))

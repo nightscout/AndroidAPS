@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -29,6 +28,7 @@ import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
@@ -43,19 +43,17 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val carelevoPatch: CarelevoPatch,
     private val commandQueue: CommandQueue,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
@@ -126,7 +124,6 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     private var _inputInsulin = 300
     val inputInsulin get() = _inputInsulin
 
-    private val compositeDisposable = CompositeDisposable()
 
     fun setIsCreated(isCreated: Boolean) {
         _isCreated = isCreated
@@ -220,7 +217,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     }
 
     fun startPatchDiscardProcess() {
-        when (carelevoPatch.patchState.value?.getOrNull()) {
+        when (carelevoPatch.patchState.latest) {
             is PatchState.NotConnectedNotBooting, null -> {
                 triggerEvent(CarelevoConnectEvent.DiscardComplete)
             }
@@ -246,37 +243,39 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
 
     private fun startPatchForceDiscard() {
         setUiState(UiState.Loading)
-        compositeDisposable += patchForceDiscardUseCase.execute()
-            .timeout(3000L, TimeUnit.MILLISECONDS)
-            .observeOn(aapsSchedulers.io)
-            .doOnError {
-                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
+        viewModelScope.launch {
+            val response = try {
+                withTimeoutOrNull(FORCE_DISCARD_TIMEOUT) { patchForceDiscardUseCase.execute() }
+                    ?: throw IllegalStateException("force discard did not end in $FORCE_DISCARD_TIMEOUT")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $e")
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoConnectEvent.DiscardFailed)
+                return@launch
             }
-            .subscribeOn(aapsSchedulers.io)
-            .subscribe { response ->
-                when (response) {
-                    is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
-                        carelevoPatch.discardTeardown()
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectEvent.DiscardComplete)
-                    }
+            when (response) {
+                is ResponseResult.Success -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response success")
+                    carelevoPatch.discardTeardown()
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectEvent.DiscardComplete)
+                }
 
-                    is ResponseResult.Error   -> {
-                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectEvent.DiscardFailed)
-                    }
+                is ResponseResult.Error   -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectEvent.DiscardFailed)
+                }
 
-                    else                      -> {
-                        aapsLogger.debug(LTag.PUMPCOMM, "response failed")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectEvent.DiscardFailed)
-                    }
+                else                      -> {
+                    aapsLogger.debug(LTag.PUMPCOMM, "response failed")
+                    setUiState(UiState.Idle)
+                    triggerEvent(CarelevoConnectEvent.DiscardFailed)
                 }
             }
+        }
     }
 
     // region ProfileGateStepHost
@@ -389,9 +388,6 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     }
 
     // endregion
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
-    }
 }
+
+private val FORCE_DISCARD_TIMEOUT = 3.seconds

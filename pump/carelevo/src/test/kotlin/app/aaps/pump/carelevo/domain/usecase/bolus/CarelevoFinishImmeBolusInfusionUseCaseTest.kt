@@ -12,6 +12,11 @@ import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -50,7 +55,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(CarelevoPatchInfoDomainModel("AA:BB", Clock.System.now(), Clock.System.now(), mode = 1))
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
@@ -84,7 +89,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     }
 
     private fun executeExpectingError(): Throwable {
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
         return (result as ResponseResult.Error).e
     }
@@ -159,7 +164,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     fun execute_success_carries_ResultSuccess_as_the_payload() {
         stubHappyPath()
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
         assertThat((result as ResponseResult.Success).data).isSameInstanceAs(ResultSuccess)
@@ -169,7 +174,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     fun execute_success_derives_BASAL_RUNNING_mode_1_from_a_running_basal() {
         stubHappyPath(infusionInfo = CarelevoInfusionInfoDomainModel(basalInfusionInfo = basalInfusion(isStop = false)))
 
-        assertThat(sut.execute().blockingGet()).isInstanceOf(ResponseResult.Success::class.java)
+        assertThat(runBlocking { sut.execute() }).isInstanceOf(ResponseResult.Success::class.java)
         assertThat(capturedPatch().mode).isEqualTo(1)
     }
 
@@ -177,7 +182,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     fun execute_success_derives_BASAL_STOPPED_mode_0_from_a_stopped_basal() {
         stubHappyPath(infusionInfo = CarelevoInfusionInfoDomainModel(basalInfusionInfo = basalInfusion(isStop = true)))
 
-        assertThat(sut.execute().blockingGet()).isInstanceOf(ResponseResult.Success::class.java)
+        assertThat(runBlocking { sut.execute() }).isInstanceOf(ResponseResult.Success::class.java)
         assertThat(capturedPatch().mode).isEqualTo(0)
     }
 
@@ -189,7 +194,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
             )
         )
 
-        assertThat(sut.execute().blockingGet()).isInstanceOf(ResponseResult.Success::class.java)
+        assertThat(runBlocking { sut.execute() }).isInstanceOf(ResponseResult.Success::class.java)
         assertThat(capturedPatch().mode).isEqualTo(2)
     }
 
@@ -202,7 +207,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
             )
         )
 
-        assertThat(sut.execute().blockingGet()).isInstanceOf(ResponseResult.Success::class.java)
+        assertThat(runBlocking { sut.execute() }).isInstanceOf(ResponseResult.Success::class.java)
         assertThat(capturedPatch().mode).isEqualTo(3)
     }
 
@@ -215,7 +220,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
             )
         )
 
-        assertThat(sut.execute().blockingGet()).isInstanceOf(ResponseResult.Success::class.java)
+        assertThat(runBlocking { sut.execute() }).isInstanceOf(ResponseResult.Success::class.java)
         assertThat(capturedPatch().mode).isEqualTo(5)
     }
 
@@ -234,7 +239,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(original)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.execute().blockingGet()).isInstanceOf(ResponseResult.Success::class.java)
+        assertThat(runBlocking { sut.execute() }).isInstanceOf(ResponseResult.Success::class.java)
 
         val persisted = capturedPatch()
         assertThat(persisted.address).isEqualTo("11:22:33:44:55:66")
@@ -247,12 +252,17 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     }
 
     @Test
-    fun execute_is_cold_and_does_not_touch_the_repositories_until_subscribed() {
+    fun execute_is_cold_and_does_not_touch_the_repositories_until_started() {
         stubHappyPath()
 
-        sut.execute()
+        // A coroutine that is built but not started yet is the coroutine form of a Single that has no subscriber.
+        val call = CoroutineScope(Dispatchers.Unconfined).async(start = CoroutineStart.LAZY) { sut.execute() }
 
         verify(infusionInfoRepository, never()).deleteImmeBolusInfusionInfo()
         verify(patchInfoRepository, never()).updatePatchInfo(any())
+
+        // Starting it does the work, so the checks above are not empty.
+        assertThat(runBlocking { call.await() }).isInstanceOf(ResponseResult.Success::class.java)
+        verify(infusionInfoRepository).deleteImmeBolusInfusionInfo()
     }
 }

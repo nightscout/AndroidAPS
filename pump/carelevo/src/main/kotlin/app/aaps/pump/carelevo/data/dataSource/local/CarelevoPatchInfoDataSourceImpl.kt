@@ -5,15 +5,14 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 @ContributesBinding(AppScope::class)
 class CarelevoPatchInfoDataSourceImpl @Inject constructor(
     private val patchInfoDao: CarelevoPatchInfoDao
 ) : CarelevoPatchInfoDataSource {
 
-    override fun getPatchInfo(): Observable<Optional<CarelevoPatchInfoEntity>> {
+    override fun getPatchInfo(): Flow<CarelevoPatchInfoEntity?> {
         return patchInfoDao.getPatchInfo()
     }
 

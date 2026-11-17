@@ -1,5 +1,9 @@
 package app.aaps.pump.carelevo.presentation.viewmodel
 
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -11,11 +15,11 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdNeedleCheck
 import app.aaps.pump.carelevo.command.CmdSetBasal
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.UiState
@@ -30,13 +34,9 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseC
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
@@ -44,6 +44,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -62,7 +63,6 @@ import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.Optional
 
 /**
  * Unit tests for [CarelevoPatchNeedleInsertionViewModel] — the activation wizard's needle-insertion
@@ -82,8 +82,11 @@ import java.util.Optional
  * shared virtual clock: `advanceUntilIdle()` then flushes the VM's `launch`ed work (including the
  * `delay(1000)` after `connectNewPump`) before state is asserted.
  *
- * **Rx.** [AapsSchedulers] is stubbed to [Schedulers.trampoline] so `observePatchInfo` and the
- * force-discard chain deliver synchronously on the test thread.
+ * **Patch info.** `observePatchInfo` collects in `viewModelScope` as well, so nothing happens on that
+ * dispatcher until its scheduler runs. A test therefore runs the scheduler (`runCurrent()`) after each
+ * patch-info value it sends, so each value is handled before the next one is sent. The source is a
+ * replay-1 flow that keeps only the newest value, so two values sent without a run in between would
+ * reach the collector as one.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -93,17 +96,16 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     private lateinit var aapsLogger: AAPSLogger
     private lateinit var pumpSync: PumpSync
     private lateinit var persistenceLayer: PersistenceLayer
-    private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var carelevoPatch: CarelevoPatch
     private lateinit var commandQueue: CommandQueue
     private lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     private lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
 
-    // The BehaviorSubjects CarelevoPatch exposes; `.value` is what the VM reads for serial /
-    // fail-count / patch-state, and onNext() drives observePatchInfo's subscription.
-    private lateinit var patchInfoSubject: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>>
-    private lateinit var patchStateSubject: BehaviorSubject<Optional<PatchState>>
-    private lateinit var profileSubject: BehaviorSubject<Optional<Profile>>
+    // The flows CarelevoPatch exposes; `latest` is what the VM reads for serial / fail-count /
+    // patch-state, and tryEmit() drives observePatchInfo's collector.
+    private lateinit var patchInfoFlow: MutableSharedFlow<CarelevoPatchInfoDomainModel?>
+    private lateinit var patchStateFlow: MutableSharedFlow<PatchState?>
+    private lateinit var profileFlow: MutableSharedFlow<Profile?>
 
     private lateinit var testDispatcher: TestDispatcher
     private lateinit var sut: CarelevoPatchNeedleInsertionViewModel
@@ -113,31 +115,23 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         aapsLogger = mock()
         pumpSync = mock()
         persistenceLayer = mock()
-        aapsSchedulers = mock()
         carelevoPatch = mock()
         commandQueue = mock()
         patchForceDiscardUseCase = mock()
         carelevoAlarmInfoUseCase = mock()
 
-        patchInfoSubject = BehaviorSubject.create()
-        patchStateSubject = BehaviorSubject.create()
-        profileSubject = BehaviorSubject.create()
+        patchInfoFlow = latestValueFlow()
+        patchStateFlow = latestValueFlow()
+        profileFlow = latestValueFlow()
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
-        whenever(carelevoPatch.profile).thenReturn(profileSubject)
+        whenever(carelevoPatch.patchInfo).thenReturn(patchInfoFlow)
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow)
+        whenever(carelevoPatch.profile).thenReturn(profileFlow)
         // No profile switch requested, unless a test asks for one.
         whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = null))
         // Wizard default: site rotation step skipped -> no location/arrow to patch onto the event.
         whenever(carelevoPatch.sitePlacementLocation).thenReturn(TE.Location.NONE)
         whenever(carelevoPatch.sitePlacementArrow).thenReturn(TE.Arrow.NONE)
-
-        // The force-discard chain ends in a single-arg subscribe(onSuccess); an errored source there
-        // routes an OnErrorNotImplementedException to the global handler. Swallow it so the
-        // doOnError branch can be tested without polluting the run.
-        RxJavaPlugins.setErrorHandler { }
 
         testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
@@ -146,7 +140,6 @@ class CarelevoPatchNeedleInsertionViewModelTest {
             aapsLogger = aapsLogger,
             pumpSync = pumpSync,
             persistenceLayer = persistenceLayer,
-            aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
@@ -157,7 +150,6 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        RxJavaPlugins.setErrorHandler(null)
     }
 
     // ---- helpers ------------------------------------------------------------------------------
@@ -203,7 +195,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     /** Bluetooth on + a profile set: the happy-path preconditions for startSetBasal. */
     private fun givenReadyToSetBasal() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
-        profileSubject.onNext(Optional.of(mock<Profile>()))
+        profileFlow.tryEmit(mock<Profile>())
     }
 
     // ---- simple state / accessors -------------------------------------------------------------
@@ -232,7 +224,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
 
     @Test
     fun `needleFailCount reads the count off the patch info`() {
-        patchInfoSubject.onNext(Optional.of(patchInfo(needleFailedCount = 2)))
+        patchInfoFlow.tryEmit(patchInfo(needleFailedCount = 2))
 
         assertThat(sut.needleFailCount()).isEqualTo(2)
     }
@@ -288,7 +280,8 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `observePatchInfo marks the needle as inserted`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
 
         assertThat(sut.isNeedleInsert.value).isTrue()
     }
@@ -297,10 +290,12 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `observePatchInfo clears the needle flag when the patch reports it withdrawn`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
         assertThat(sut.isNeedleInsert.value).isTrue()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
         assertThat(sut.isNeedleInsert.value).isFalse()
     }
 
@@ -312,8 +307,10 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         sut.observePatchInfo()
         givenReadyToSetBasal()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
 
         sut.startSetBasal()
         testDispatcher.scheduler.runCurrent()
@@ -333,13 +330,15 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         val ok = enactResult(true)
         whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
         sut.observePatchInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
 
         sut.startSetBasal()
         testDispatcher.scheduler.runCurrent()
         assertThat(sut.uiState.value).isEqualTo(UiState.Loading)
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
         // Advance past NEEDLE_TO_BASAL_DELAY_MS by a bounded amount: a cancelled job never fires, an
         // armed one would re-enter startSetBasal with a null insert instant and reach the queue.
         testDispatcher.scheduler.advanceTimeBy(11_000L)
@@ -353,24 +352,24 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `observePatchInfo ignores an empty patch info`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.empty())
+        patchInfoFlow.tryEmit(null)
+        testDispatcher.scheduler.runCurrent()
 
         assertThat(sut.isNeedleInsert.value).isFalse()
-        verify(carelevoAlarmInfoUseCase, never()).upsertAlarm(any())
+        verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
     }
 
     @Test
     fun `observePatchInfo raises a needle-insertion alarm and reports the failure at three attempts`() =
         runTest(testDispatcher.scheduler) {
-            whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.complete())
             val events = collectEvents()
             sut.observePatchInfo()
 
-            patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 3)))
+            patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 3))
             advanceUntilIdle()
 
             val captor = argumentCaptor<CarelevoAlarmInfo>()
-            verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+            verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
             assertThat(captor.firstValue.cause).isEqualTo(AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR)
             assertThat(captor.firstValue.alarmType).isEqualTo(AlarmType.WARNING)
             assertThat(captor.firstValue.isAcknowledged).isFalse()
@@ -381,17 +380,19 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `observePatchInfo does not alarm below three needle failures`() {
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 2)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 2))
+        testDispatcher.scheduler.runCurrent()
 
-        verify(carelevoAlarmInfoUseCase, never()).upsertAlarm(any())
+        verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
     }
 
     @Test
     fun `observePatchInfo logs when the alarm upsert fails`() {
-        whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.error(RuntimeException("boom")))
+        whenever { carelevoAlarmInfoUseCase.upsertAlarm(any()) }.thenAnswer { throw RuntimeException("boom") }
         sut.observePatchInfo()
 
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 3)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 3))
+        testDispatcher.scheduler.runCurrent()
 
         verify(aapsLogger).error(eq(LTag.PUMPCOMM), any<String>())
     }
@@ -435,7 +436,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
             val fail = enactResult(false)
             whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
             // A failed check leaves the count on the patch.
-            patchInfoSubject.onNext(Optional.of(patchInfo(needleFailedCount = 2)))
+            patchInfoFlow.tryEmit(patchInfo(needleFailedCount = 2))
             val events = collectEvents()
 
             sut.startCheckNeedle()
@@ -481,7 +482,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `startSetBasal without a profile reports it and returns to Idle`() =
         runTest(testDispatcher.scheduler) {
             whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
-            profileSubject.onNext(Optional.empty())
+            profileFlow.tryEmit(null)
             val events = collectEvents()
 
             sut.startSetBasal()
@@ -500,7 +501,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `startSetBasal takes the requested profile when the patch has none`() =
         runTest(testDispatcher.scheduler) {
             whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
-            profileSubject.onNext(Optional.empty())
+            profileFlow.tryEmit(null)
             val requested = mock<PumpProfile>()
             whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = requested))
             val ok = enactResult(true)
@@ -523,7 +524,8 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         // A needle inserted just now leaves ~10s of NEEDLE_TO_BASAL_DELAY_MS to run: the call must
         // park in a delayed job (Loading) instead of programming the basal immediately.
         sut.observePatchInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
 
         sut.startSetBasal()
         // runCurrent() flushes the setUiState launch but deliberately does NOT advance virtual time,
@@ -542,8 +544,10 @@ class CarelevoPatchNeedleInsertionViewModelTest {
             // Insert then withdraw clears the insert instant, so the needle-to-basal delay guard is
             // skipped entirely and the basal is programmed on the spot (no parked job).
             sut.observePatchInfo()
-            patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
-            patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 0)))
+            patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+            runCurrent()
+            patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 0))
+            runCurrent()
             givenReadyToSetBasal()
             val ok = enactResult(true)
             whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
@@ -566,7 +570,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `startSetBasal success syncs the pump and records both therapy events`() =
         runTest(testDispatcher.scheduler) {
             givenReadyToSetBasal()
-            patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-1")))
+            patchInfoFlow.tryEmit(patchInfo(manufactureNumber = "SN-1"))
             val ok = enactResult(true)
             whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
             whenever {
@@ -692,7 +696,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     fun `startSetBasal success retries each therapy event once when the first insert is rejected`() =
         runTest(testDispatcher.scheduler) {
             givenReadyToSetBasal()
-            patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-1")))
+            patchInfoFlow.tryEmit(patchInfo(manufactureNumber = "SN-1"))
             val ok = enactResult(true)
             whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
             // Never accepted -> both inserts take the SystemClock.sleep recovery path (Robolectric).
@@ -741,7 +745,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @Test
     fun `startDiscardProcess with no patch completes without touching the queue`() =
         runTest(testDispatcher.scheduler) {
-            patchStateSubject.onNext(Optional.of(PatchState.NotConnectedNotBooting))
+            patchStateFlow.tryEmit(PatchState.NotConnectedNotBooting)
             val events = collectEvents()
 
             sut.startDiscardProcess()
@@ -755,7 +759,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @Test
     fun `startDiscardProcess with an unknown patch state completes without touching the queue`() =
         runTest(testDispatcher.scheduler) {
-            // patchState never emitted -> value is null -> same branch as NotConnectedNotBooting.
+            // patchState never emitted -> `latest` is null -> same branch as NotConnectedNotBooting.
             val events = collectEvents()
 
             sut.startDiscardProcess()
@@ -768,7 +772,7 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @Test
     fun `startDiscardProcess success discards through the queue`() =
         runTest(testDispatcher.scheduler) {
-            patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+            patchStateFlow.tryEmit(PatchState.ConnectedBooted)
             val ok = enactResult(true)
             whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
             val events = collectEvents()
@@ -779,21 +783,17 @@ class CarelevoPatchNeedleInsertionViewModelTest {
             verifyBlocking(commandQueue) { customCommand(any<CmdDiscard>()) }
             assertThat(events).containsExactly(CarelevoConnectNeedleEvent.DiscardComplete)
             assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
-            verify(patchForceDiscardUseCase, never()).execute()
+            verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
         }
 
     @Test
     fun `startDiscardProcess falls back to a force discard when the queue cannot reach the patch`() =
         runTest(testDispatcher.scheduler) {
-            patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+            patchStateFlow.tryEmit(PatchState.ConnectedBooted)
             val fail = enactResult(false)
             whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
-            whenever(patchForceDiscardUseCase.execute())
-                .thenReturn(
-                    Single.just<ResponseResult<CarelevoUseCaseResponse>>(
-                        ResponseResult.Success<CarelevoUseCaseResponse>(null)
-                    )
-                )
+            whenever { patchForceDiscardUseCase.execute() }
+                .thenReturn(ResponseResult.Success<CarelevoUseCaseResponse>(null))
             val events = collectEvents()
 
             sut.startDiscardProcess()
@@ -808,13 +808,11 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @Test
     fun `startDiscardProcess reports failure when the force discard errors`() =
         runTest(testDispatcher.scheduler) {
-            patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+            patchStateFlow.tryEmit(PatchState.ConnectedBooted)
             val fail = enactResult(false)
             whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
-            whenever(patchForceDiscardUseCase.execute())
-                .thenReturn(
-                    Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Error(RuntimeException("boom")))
-                )
+            whenever { patchForceDiscardUseCase.execute() }
+                .thenReturn(ResponseResult.Error(RuntimeException("boom")))
             val events = collectEvents()
 
             sut.startDiscardProcess()
@@ -828,11 +826,11 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @Test
     fun `startDiscardProcess reports failure when the force discard returns a failure response`() =
         runTest(testDispatcher.scheduler) {
-            patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+            patchStateFlow.tryEmit(PatchState.ConnectedBooted)
             val fail = enactResult(false)
             whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
-            whenever(patchForceDiscardUseCase.execute())
-                .thenReturn(Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Failure("nope")))
+            whenever { patchForceDiscardUseCase.execute() }
+                .thenReturn(ResponseResult.Failure("nope"))
             val events = collectEvents()
 
             sut.startDiscardProcess()
@@ -846,17 +844,17 @@ class CarelevoPatchNeedleInsertionViewModelTest {
     @Test
     fun `startDiscardProcess reports failure when the force discard stream errors`() =
         runTest(testDispatcher.scheduler) {
-            patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+            patchStateFlow.tryEmit(PatchState.ConnectedBooted)
             val fail = enactResult(false)
             whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
-            whenever(patchForceDiscardUseCase.execute())
-                .thenReturn(Single.error<ResponseResult<CarelevoUseCaseResponse>>(RuntimeException("boom")))
+            whenever { patchForceDiscardUseCase.execute() }
+                .thenAnswer { throw RuntimeException("boom") }
             val events = collectEvents()
 
             sut.startDiscardProcess()
             advanceUntilIdle()
 
-            // doOnError branch of the force-discard chain.
+            // The catch branch of the force discard.
             assertThat(events).containsExactly(CarelevoConnectNeedleEvent.DiscardFailed)
             assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
             verify(carelevoPatch, never()).discardTeardown()
@@ -864,34 +862,42 @@ class CarelevoPatchNeedleInsertionViewModelTest {
 
     // ---- onCleared ----------------------------------------------------------------------------
 
-    /** onCleared is protected on ViewModel and the VM is final, so drive it reflectively. */
+    /**
+     * Clear the VM the way the framework does when its screen goes away: `viewModelScope` is cancelled,
+     * then `onCleared` runs. Calling only `onCleared` would leave the `viewModelScope` collectors running.
+     */
     private fun clearViewModel() {
-        val onCleared = sut.javaClass.getDeclaredMethod("onCleared")
-        onCleared.isAccessible = true
-        onCleared.invoke(sut)
+        val store = ViewModelStore()
+        ViewModelProvider(store, viewModelFactory { initializer { sut } })[CarelevoPatchNeedleInsertionViewModel::class]
+        store.clear()
     }
 
     @Test
     fun `onCleared disposes the patch-info subscription so later emissions are ignored`() {
         sut.observePatchInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
         assertThat(sut.isNeedleInsert.value).isTrue()
 
         clearViewModel()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
 
-        // Subscription disposed on teardown -> the withdrawal never reaches the flow.
+        // Collector cancelled on teardown -> the withdrawal never reaches the flow.
         assertThat(sut.isNeedleInsert.value).isTrue()
     }
 
     @Test
     fun `onCleared does not alarm on a post-teardown needle failure`() {
         sut.observePatchInfo()
+        // Let the collector start, so the teardown below really has a running collector to stop.
+        testDispatcher.scheduler.runCurrent()
 
         clearViewModel()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false, needleFailedCount = 3)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = false, needleFailedCount = 3))
+        testDispatcher.scheduler.runCurrent()
 
-        verify(carelevoAlarmInfoUseCase, never()).upsertAlarm(any())
+        verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
     }
 
     @Test
@@ -901,7 +907,8 @@ class CarelevoPatchNeedleInsertionViewModelTest {
         // un-cancelled job would merely re-park — the cancel is not observable through the queue.
         givenReadyToSetBasal()
         sut.observePatchInfo()
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true, needleFailedCount = 0)))
+        patchInfoFlow.tryEmit(patchInfo(checkNeedle = true, needleFailedCount = 0))
+        testDispatcher.scheduler.runCurrent()
         sut.startSetBasal()
         testDispatcher.scheduler.runCurrent()
         assertThat(sut.uiState.value).isEqualTo(UiState.Loading)

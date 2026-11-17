@@ -4,7 +4,9 @@ import app.aaps.pump.carelevo.data.dataSource.local.CarelevoPatchInfoDataSource
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -16,11 +18,10 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * Tests for [CarelevoPatchInfoRepositoryImpl] — delegates to [CarelevoPatchInfoDataSource] and
- * applies the entity <-> domain mappers. Covers the present/empty branches on the read paths and the
+ * applies the entity <-> domain mappers. Covers the present/null branches on the read paths and the
  * domain->entity mapping on the update path.
  */
 @ExtendWith(MockitoExtension::class)
@@ -50,22 +51,22 @@ internal class CarelevoPatchInfoRepositoryImplTest {
 
     @Test
     fun `getPatchInfo maps a present entity to a present domain model`() {
-        whenever(dataSource.getPatchInfo()).thenReturn(Observable.just(Optional.of(entity())))
+        whenever(dataSource.getPatchInfo()).thenReturn(flowOf(entity()))
 
-        val result = sut.getPatchInfo().blockingFirst()
+        val result = runBlocking { sut.getPatchInfo().first() }
 
-        assertThat(result.isPresent).isTrue()
-        assertThat(result.get().address).isEqualTo("AA:BB:CC:DD:EE:FF")
-        assertThat(result.get().manufactureNumber).isEqualTo("CARELEVO-001")
-        assertThat(result.get().insulinRemain).isEqualTo(55.0)
+        assertThat(result).isNotNull()
+        assertThat(result!!.address).isEqualTo("AA:BB:CC:DD:EE:FF")
+        assertThat(result.manufactureNumber).isEqualTo("CARELEVO-001")
+        assertThat(result.insulinRemain).isEqualTo(55.0)
         verify(dataSource).getPatchInfo()
     }
 
     @Test
-    fun `getPatchInfo maps an empty optional to an empty optional`() {
-        whenever(dataSource.getPatchInfo()).thenReturn(Observable.just(Optional.empty<CarelevoPatchInfoEntity>()))
+    fun `getPatchInfo maps a null entity to a null domain model`() {
+        whenever(dataSource.getPatchInfo()).thenReturn(flowOf(null))
 
-        assertThat(sut.getPatchInfo().blockingFirst().isPresent).isFalse()
+        assertThat(runBlocking { sut.getPatchInfo().first() }).isNull()
     }
 
     @Test

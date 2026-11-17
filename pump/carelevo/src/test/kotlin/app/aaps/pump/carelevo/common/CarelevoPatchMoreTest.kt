@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.ble.BleBonding
 import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.DeviceId
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
@@ -45,11 +44,14 @@ import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSetti
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -63,13 +65,12 @@ import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.stub
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 
@@ -84,15 +85,14 @@ import kotlin.time.Duration.Companion.hours
  * [CarelevoPatchTest] keeps its own (already green) coverage of the state-derivation matrix, the
  * Bluetooth ON→OFF alarm edge and `flushPatchInformation`; nothing here duplicates it.
  *
- * Every Rx hop is pinned to [Schedulers.trampoline] so emissions are delivered synchronously on the
- * test thread, exactly as in [CarelevoPatchTest].
+ * The patch runs its coroutines on [Dispatchers.Unconfined], so values are delivered and written on the
+ * test thread before each call returns, exactly as in [CarelevoPatchTest].
  */
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoPatchMoreTest {
 
     @Mock lateinit var central: BleCentral
-    @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -158,7 +158,6 @@ internal class CarelevoPatchMoreTest {
     private fun createPatch(): CarelevoPatch =
         CarelevoPatch(
             central = central,
-            aapsSchedulers = aapsSchedulers,
             rxBus = rxBus,
             preferences = preferences,
             aapsLogger = aapsLogger,
@@ -171,7 +170,16 @@ internal class CarelevoPatchMoreTest {
             pumpResumeUseCase = pumpResumeUseCase,
             pumpStopUseCase = pumpStopUseCase,
             activeAlarmSnapshotAlarmMapper = activeAlarmSnapshotAlarmMapper
-        )
+        ).apply {
+            // Collect the patch streams and write the store on the test thread, before each call returns.
+            dispatcher = Dispatchers.Unconfined
+        }
+
+    /** A monitor that never sends anything. */
+    private fun <T> silentFlow() = flow<T> { awaitCancellation() }
+
+    /** Starts [CarelevoPatch.initPatchAndAwait] without blocking the test; the job ends when the wait ends. */
+    private fun startInitPatchAndAwait(): Job = CoroutineScope(Dispatchers.Unconfined).launch { sut.initPatchAndAwait() }
 
     private fun profileWith(vararg values: Pair<Int, Double>): Profile {
         val profile = mock<Profile>()
@@ -189,12 +197,9 @@ internal class CarelevoPatchMoreTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(patchInfoMonitorUseCase.execute()).thenReturn(Observable.just(ResponseResult.Success(patchInfo())))
-        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(Observable.never())
-        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(Observable.never())
-        whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.complete())
+        whenever(patchInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(patchInfo())))
+        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(silentFlow())
+        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(silentFlow())
         // Default: no persisted edge-detection baseline (applyActiveAlarmSnapshots' snapshot-cause
         // store) — every snapshot poll behaves as a first-ever poll unless a test overrides this
         // with a real fake (see fakeSnapshotCauseStore) to exercise the persistence across polls.
@@ -208,10 +213,10 @@ internal class CarelevoPatchMoreTest {
             val now = invocation.getArgument<String>(2)
             ActiveAlarmSnapshotAlarmMapper().map(snapshots, currentPatch, now)
         }
-        whenever(patchRptInfusionInfoProcessUseCase.execute(any()))
-            .thenReturn(Single.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
-        whenever(createUserSettingInfoUseCase.execute(any()))
-            .thenReturn(Single.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+        whenever { patchRptInfusionInfoProcessUseCase.execute(any()) }
+            .thenReturn(ResponseResult.Success<CarelevoUseCaseResponse>(null))
+        whenever { createUserSettingInfoUseCase.execute(any()) }
+            .thenReturn(ResponseResult.Success<CarelevoUseCaseResponse>(null))
         whenever(central.bonding).thenReturn(bonding)
 
         sut = createPatch()
@@ -245,7 +250,7 @@ internal class CarelevoPatchMoreTest {
     // ---------------------------------------------------------------------------------------------
 
     @Test
-    fun `initPatch latches isWorking and subscribes each monitor exactly once`() {
+    fun `initPatch latches isWorking and collects each monitor exactly once`() {
         assertThat(sut.isWorking).isFalse()
 
         sut.initPatch()
@@ -258,58 +263,63 @@ internal class CarelevoPatchMoreTest {
     }
 
     @Test
-    fun `initPatchAndAwait defers initPatch until it is subscribed`() {
-        val completable = sut.initPatchAndAwait()
-
-        // Completable.defer: nothing runs at assembly time.
+    fun `initPatchAndAwait starts the patch when it runs`() {
+        // Nothing runs before the call.
         assertThat(sut.isWorking).isFalse()
         verify(patchInfoMonitorUseCase, never()).execute()
 
-        completable.subscribe({}, {})
+        val job = startInitPatchAndAwait()
 
         assertThat(sut.isWorking).isTrue()
         verify(patchInfoMonitorUseCase, times(1)).execute()
+        job.cancel()
     }
 
     @Test
-    fun `initPatchOnce shares one in-flight Completable across duplicate callers`() {
+    fun `initPatchOnce shares one in-flight start across duplicate callers`() {
         val first = sut.initPatchOnce()
         val second = sut.initPatchOnce()
 
         assertThat(second).isSameInstanceAs(first)
+        first.cancel()
     }
 
     @Test
     fun `initPatchAndAwait ends once a patch with Bluetooth on is ready`() {
         sut.onBluetoothStateChanged(bleState(enabled = true))
 
-        val observer = sut.initPatchAndAwait().test()
+        val job = startInitPatchAndAwait()
 
-        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.ConnectedBooted)
-        observer.assertComplete()
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.ConnectedBooted)
+        // Ended, and not by a failure.
+        assertThat(job.isCompleted).isTrue()
+        assertThat(job.isCancelled).isFalse()
     }
 
     @Test
     fun `initPatchAndAwait ends once it is known that there is no patch`() {
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+            .thenReturn(flowOf(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
         sut = createPatch()
         sut.onBluetoothStateChanged(bleState(enabled = true))
 
-        val observer = sut.initPatchAndAwait().test()
+        val job = startInitPatchAndAwait()
 
-        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.NotConnectedNotBooting)
-        observer.assertComplete()
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedNotBooting)
+        // Ended, and not by a failure.
+        assertThat(job.isCompleted).isTrue()
+        assertThat(job.isCancelled).isFalse()
     }
 
     @Test
     fun `initPatchAndAwait keeps waiting while Bluetooth is off`() {
         sut.onBluetoothStateChanged(bleState(enabled = false))
 
-        val observer = sut.initPatchAndAwait().test()
+        val job = startInitPatchAndAwait()
 
-        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.NotConnectedBooted)
-        observer.assertNotComplete()
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedBooted)
+        assertThat(job.isCompleted).isFalse()
+        job.cancel()
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -321,7 +331,7 @@ internal class CarelevoPatchMoreTest {
         sut.initPatch()
         sut.onBluetoothStateChanged(bleState(enabled = true))
 
-        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.ConnectedBooted)
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.ConnectedBooted)
 
         val events = sentEvents()
         assertThat(events.filterIsInstance<EventPumpStatusChanged>().map { it.status })
@@ -334,13 +344,13 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `no patch record publishes NotConnectedNotBooting and the DISCONNECTED fan-out`() {
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+            .thenReturn(flowOf(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
         sut = createPatch()
 
         sut.initPatch()
         sut.onBluetoothStateChanged(bleState(enabled = true))
 
-        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.NotConnectedNotBooting)
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedNotBooting)
         assertThat(sut.getPatchInfoAddress()).isNull()
 
         val events = sentEvents()
@@ -357,7 +367,7 @@ internal class CarelevoPatchMoreTest {
         sut.initPatch()
         sut.onBluetoothStateChanged(bleState(enabled = false))
 
-        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.NotConnectedBooted)
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedBooted)
         verify(rxBus, never()).send(any())
     }
 
@@ -444,7 +454,7 @@ internal class CarelevoPatchMoreTest {
         )
 
         val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
-        verify(patchRptInfusionInfoProcessUseCase).execute(captor.capture())
+        verifyBlocking(patchRptInfusionInfoProcessUseCase) { execute(captor.capture()) }
         val request = captor.firstValue
         assertThat(request.runningMinute).isEqualTo(42)
         assertThat(request.remains).isEqualTo(137.5)
@@ -469,7 +479,7 @@ internal class CarelevoPatchMoreTest {
         )
 
         val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
-        verify(patchRptInfusionInfoProcessUseCase).execute(captor.capture())
+        verifyBlocking(patchRptInfusionInfoProcessUseCase) { execute(captor.capture()) }
         assertThat(captor.firstValue.pumpState).isEqualTo(3)  // PumpStateResult.ERROR
         assertThat(captor.firstValue.mode).isEqualTo(-1)      // InfusionModeResult.ERROR
     }
@@ -479,7 +489,7 @@ internal class CarelevoPatchMoreTest {
         listOf(1, 2, 3, 4, 5).forEach { sut.applyInfusionInfoReport(0, 0.0, 0.0, 0.0, 0, it) }
 
         val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
-        verify(patchRptInfusionInfoProcessUseCase, times(5)).execute(captor.capture())
+        verifyBlocking(patchRptInfusionInfoProcessUseCase, times(5)) { execute(captor.capture()) }
         assertThat(captor.allValues.map { it.mode }).containsExactly(1, 2, 3, 4, 5).inOrder()
         // pumpStateRaw 0 → READY → 0 on every one of them.
         assertThat(captor.allValues.map { it.pumpState }.distinct()).containsExactly(0)
@@ -494,7 +504,7 @@ internal class CarelevoPatchMoreTest {
         sut.handleAlarm("warning", value = 5, cause = AlarmCause.ALARM_WARNING_LOW_INSULIN)
 
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
         val info = captor.firstValue
         assertThat(info.cause).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
         assertThat(info.alarmType).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN.alarmType)
@@ -507,20 +517,20 @@ internal class CarelevoPatchMoreTest {
 
     @Test
     fun `handleAlarm swallows an upsert failure instead of tearing down the caller`() {
-        whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.error(RuntimeException("db down")))
+        whenever { carelevoAlarmInfoUseCase.upsertAlarm(any()) }.thenAnswer { throw RuntimeException("db down") }
 
         // The bridge runs on the BLE notification path — an alarm write failure must not escape.
         sut.handleAlarm("alert", value = null, cause = AlarmCause.ALARM_ALERT_BLE_NOT_CONNECTED)
 
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
         assertThat(captor.firstValue.value).isNull()
     }
 
     @Test
     fun `applyActiveAlarmSnapshots de-duplicates lower tier alarms and syncs stopped state from infusing flag`() {
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = false, mode = 1))))
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = false, mode = 1))))
         sut = createPatch()
         sut.initPatch()
 
@@ -569,12 +579,12 @@ internal class CarelevoPatchMoreTest {
 
         // First-ever snapshot poll: no previous baseline, so the single de-duped cause is "newly raised".
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
         // CRITICAL tier resolves as a live 0xA1 report would: (AlarmType.WARNING, CAUSE 0x01).
         assertThat(captor.firstValue.cause).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
         verify(pumpStopUseCase).persistStopped(0)
-        assertThat(sut.patchInfo.value?.get()?.isStopped).isTrue()
-        assertThat(sut.patchInfo.value?.get()?.mode).isEqualTo(0)
+        assertThat(sut.patchInfo.latest?.isStopped).isTrue()
+        assertThat(sut.patchInfo.latest?.mode).isEqualTo(0)
     }
 
     /** Minimal fake backing [preferences] so the edge-detection baseline actually persists across calls. */
@@ -598,7 +608,7 @@ internal class CarelevoPatchMoreTest {
         // Only the first poll's edge (off -> on) raises the alarm. The second poll finds the same
         // condition still true and must NOT resurrect an alarm the user may have already confirmed —
         // this is the "확인을 눌렀는데 클리어가 안되네" regression.
-        verify(carelevoAlarmInfoUseCase, times(1)).upsertAlarm(any())
+        verifyBlocking(carelevoAlarmInfoUseCase, times(1)) { upsertAlarm(any()) }
     }
 
     @Test
@@ -614,7 +624,7 @@ internal class CarelevoPatchMoreTest {
         sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true, tier = advisory)))
 
         val captor = argumentCaptor<CarelevoAlarmInfo>()
-        verify(carelevoAlarmInfoUseCase, times(2)).upsertAlarm(captor.capture())
+        verifyBlocking(carelevoAlarmInfoUseCase, times(2)) { upsertAlarm(captor.capture()) }
         assertThat(captor.allValues.map { it.cause })
             .containsExactly(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
     }
@@ -632,22 +642,21 @@ internal class CarelevoPatchMoreTest {
             updatedAt = "now",
             isAcknowledged = false
         )
-        whenever(carelevoAlarmInfoUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(stale))))
-        whenever(carelevoAlarmInfoUseCase.acknowledgeAlarm(any())).thenReturn(Completable.complete())
+        whenever { carelevoAlarmInfoUseCase.getAlarmsOnce() }.thenReturn(listOf(stale))
 
         sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
         sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = false)))
 
         // The second poll no longer reports OUT_OF_INSULIN — the patch has confirmed it resolved, so
         // it is dropped locally even though nobody pressed "확인".
-        verify(carelevoAlarmInfoUseCase).acknowledgeAlarm("stale-1")
+        verifyBlocking(carelevoAlarmInfoUseCase) { acknowledgeAlarm("stale-1") }
     }
 
     @Test
     fun `applyActiveAlarmSnapshots routes infusing true through resume reconciliation`() {
         whenever(patchInfoMonitorUseCase.execute())
             .thenReturn(
-                Observable.just(
+                flowOf(
                     ResponseResult.Success(
                         patchInfo().copy(
                             isStopped = true,
@@ -687,8 +696,8 @@ internal class CarelevoPatchMoreTest {
         )
 
         verify(pumpResumeUseCase).persistResumed()
-        assertThat(sut.patchInfo.value?.get()?.isStopped).isFalse()
-        assertThat(sut.patchInfo.value?.get()?.mode).isEqualTo(1)
+        assertThat(sut.patchInfo.latest?.isStopped).isFalse()
+        assertThat(sut.patchInfo.latest?.mode).isEqualTo(1)
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -698,7 +707,7 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `reconcileAutoResumed clears the stopped state when the pump is stopped`() {
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
         whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
         sut = createPatch()
         sut.initPatch()
@@ -728,7 +737,7 @@ internal class CarelevoPatchMoreTest {
         sut.onUnsolicited(UnsolicitedMessage(INFUSION_INFO_REPORT[0], INFUSION_INFO_REPORT))
 
         val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
-        verify(patchRptInfusionInfoProcessUseCase).execute(captor.capture())
+        verifyBlocking(patchRptInfusionInfoProcessUseCase) { execute(captor.capture()) }
         val request = captor.firstValue
         assertThat(request.runningMinute).isEqualTo(150)
         assertThat(request.remains).isEqualTo(150.5)
@@ -742,7 +751,7 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `a stop report resumes a stopped pump`() {
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
         whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
         sut = createPatch()
         sut.initPatch()
@@ -756,7 +765,7 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `a basal restart report resumes a stopped pump`() {
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
         whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
         sut = createPatch()
         sut.initPatch()
@@ -772,7 +781,7 @@ internal class CarelevoPatchMoreTest {
 
         sut.onUnsolicited(UnsolicitedMessage(UNKNOWN_REPORT, byteArrayOf(UNKNOWN_REPORT, 0x01)))
 
-        verify(patchRptInfusionInfoProcessUseCase, never()).execute(any())
+        verifyBlocking(patchRptInfusionInfoProcessUseCase, never()) { execute(any()) }
         verify(pumpResumeUseCase, never()).persistResumed()
     }
 
@@ -783,16 +792,17 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `releasePatch clears both the cached patch and infusion info`() {
         whenever(infusionInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success(CarelevoInfusionInfoDomainModel())))
+            .thenReturn(flowOf(ResponseResult.Success(CarelevoInfusionInfoDomainModel())))
         sut = createPatch()
         sut.initPatch()
-        assertThat(sut.infusionInfo.value?.isPresent).isTrue()
+        assertThat(sut.infusionInfo.latest).isNotNull()
 
         sut.releasePatch()
 
         assertThat(sut.getPatchInfoAddress()).isNull()
-        assertThat(sut.patchInfo.value?.isPresent).isFalse()
-        assertThat(sut.infusionInfo.value?.isPresent).isFalse()
+        // Both streams hold a value, and it is "no record".
+        assertThat(sut.patchInfo.replayCache.single()).isNull()
+        assertThat(sut.infusionInfo.replayCache.single()).isNull()
     }
 
     @Test
@@ -839,16 +849,17 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `discardTeardown releases the single-flight latch for the next patch`() {
         // Drive patchInfo by hand so a SECOND patch can be activated after the first is discarded.
-        val patchRecords = PublishSubject.create<ResponseResult<CarelevoUseCaseResponse>>()
+        // No replay: a value goes only to the collector that is there, as before. The buffer lets tryEmit hand it over.
+        val patchRecords = MutableSharedFlow<ResponseResult<CarelevoUseCaseResponse>>(extraBufferCapacity = 1)
         whenever(patchInfoMonitorUseCase.execute()).thenReturn(patchRecords)
         sut = createPatch()
         sut.initPatch()
         sut.onBluetoothStateChanged(bleState(enabled = true))
 
-        patchRecords.onNext(ResponseResult.Success(patchInfo()))
+        assertThat(patchRecords.tryEmit(ResponseResult.Success(patchInfo()))).isTrue()
         sut.discardTeardown()
         // A later activation must not be blocked by a latch left set by the previous teardown.
-        patchRecords.onNext(ResponseResult.Success(patchInfo()))
+        assertThat(patchRecords.tryEmit(ResponseResult.Success(patchInfo()))).isTrue()
         sut.discardTeardown()
 
         verifyBlocking(bonding, times(2)) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
@@ -862,49 +873,50 @@ internal class CarelevoPatchMoreTest {
     @Test
     fun `a successful infusion info emission is cached`() {
         val model = CarelevoInfusionInfoDomainModel()
-        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(Observable.just(ResponseResult.Success(model)))
+        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(model)))
         sut = createPatch()
 
         sut.initPatch()
 
-        assertThat(sut.infusionInfo.value?.get()).isEqualTo(model)
+        assertThat(sut.infusionInfo.latest).isEqualTo(model)
     }
 
     @Test
     fun `monitor errors and failures leave the cached info empty`() {
         whenever(infusionInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
+            .thenReturn(flowOf(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
         whenever(patchInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
+            .thenReturn(flowOf(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
         whenever(userSettingInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
+            .thenReturn(flowOf(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
         sut = createPatch()
 
         sut.initPatch()
 
-        assertThat(sut.infusionInfo.value).isNull()
-        assertThat(sut.patchInfo.value).isNull()
-        assertThat(sut.userSettingInfo.value).isNull()
+        // No value at all, not even "no record".
+        assertThat(sut.infusionInfo.replayCache).isEmpty()
+        assertThat(sut.patchInfo.replayCache).isEmpty()
+        assertThat(sut.userSettingInfo.replayCache).isEmpty()
         // An errored user-setting read must NOT be mistaken for "no record" and seed defaults.
-        verify(createUserSettingInfoUseCase, never()).execute(any())
+        verifyBlocking(createUserSettingInfoUseCase, never()) { execute(any()) }
     }
 
     @Test
     fun `an existing user setting record is cached and no defaults are seeded`() {
         val model = CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 8, maxBasalSpeed = 15.0, maxBolusDose = 4.0)
-        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(Observable.just(ResponseResult.Success(model)))
+        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(model)))
         sut = createPatch()
 
         sut.initPatch()
 
-        assertThat(sut.userSettingInfo.value?.get()).isEqualTo(model)
-        verify(createUserSettingInfoUseCase, never()).execute(any())
+        assertThat(sut.userSettingInfo.latest).isEqualTo(model)
+        verifyBlocking(createUserSettingInfoUseCase, never()) { execute(any()) }
     }
 
     @Test
     fun `a missing user setting record seeds the defaults from the preferences`() {
         whenever(userSettingInfoMonitorUseCase.execute())
-            .thenReturn(Observable.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+            .thenReturn(flowOf(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(12)
         whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(7.5)
         sut = createPatch()
@@ -912,7 +924,7 @@ internal class CarelevoPatchMoreTest {
         sut.initPatch()
 
         val captor = argumentCaptor<CarelevoUserSettingInfoRequestModel>()
-        verify(createUserSettingInfoUseCase).execute(captor.capture())
+        verifyBlocking(createUserSettingInfoUseCase) { execute(captor.capture()) }
         assertThat(captor.firstValue.lowInsulinNoticeAmount).isEqualTo(12)
         assertThat(captor.firstValue.maxBasalSpeed).isEqualTo(15.0)
         assertThat(captor.firstValue.maxBolusDose).isEqualTo(7.5)

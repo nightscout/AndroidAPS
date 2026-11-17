@@ -8,41 +8,30 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 class CarelevoAlarmInfoLocalRepositoryImpl @Inject constructor(
     private val dataSource: CarelevoAlarmInfoLocalDataSource
 ) : CarelevoAlarmInfoRepository {
 
-    override fun observeAlarms(): Observable<Optional<List<CarelevoAlarmInfo>>> =
-        dataSource.observeAlarms() // Observable<Optional<List<CarelevoAlarmInfoEntity>>>
-            .map { opt ->
-                val list = opt.orElse(emptyList())
-                    .map { it.transformToDomainModel() }
-                Optional.of(list)
-            }
+    override fun observeAlarms(): Flow<List<CarelevoAlarmInfo>> =
+        dataSource.observeAlarms()
+            .map { list -> list.orEmpty().map { it.transformToDomainModel() } }
 
-    override fun getAlarmsOnce(): Single<Optional<List<CarelevoAlarmInfo>>> =
-        dataSource.getAlarmsOnce() // Single<Optional<List<Entity>>>
-            .map { opt ->
-                val list = opt.orElse(emptyList())
-                    .map { it.transformToDomainModel() }
-                Optional.of(list)
-            }
+    override fun getAlarmsOnce(): List<CarelevoAlarmInfo> =
+        dataSource.getAlarmsOnce().map { it.transformToDomainModel() }
 
-    override fun setAlarms(list: List<CarelevoAlarmInfo>): Completable =
+    override fun setAlarms(list: List<CarelevoAlarmInfo>) =
         dataSource.setAlarms(list.map { it.transformToEntity() })
 
-    override fun upsertAlarm(alarm: CarelevoAlarmInfo): Completable =
+    override fun upsertAlarm(alarm: CarelevoAlarmInfo) =
         dataSource.upsertAlarm(alarm.transformToEntity())
 
-    override fun removeAlarm(alarmId: String): Completable =
+    override fun removeAlarm(alarmId: String) =
         dataSource.removeAlarm(alarmId)
 
-    override fun clearAlarms(): Completable =
+    override fun clearAlarms() =
         dataSource.clearAlarms()
 }

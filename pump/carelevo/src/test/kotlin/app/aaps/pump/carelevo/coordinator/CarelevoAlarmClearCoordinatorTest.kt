@@ -8,11 +8,11 @@ import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.carelevo.command.CmdAlarmClear
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -30,7 +30,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 import java.util.concurrent.atomic.AtomicInteger
 
 @ExtendWith(MockitoExtension::class)
@@ -61,7 +60,7 @@ internal class CarelevoAlarmClearCoordinatorTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
+        whenever(carelevoPatch.patchInfo).thenReturn(latestValueFlow<CarelevoPatchInfoDomainModel?>().apply { tryEmit(null) })
         sut = CarelevoAlarmClearCoordinator(aapsLogger, commandQueue, carelevoPatch, central)
     }
 

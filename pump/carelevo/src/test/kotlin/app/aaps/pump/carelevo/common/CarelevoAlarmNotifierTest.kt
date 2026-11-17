@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -16,10 +15,11 @@ import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,13 +51,13 @@ import android.app.NotificationManager as AndroidNotificationManager
  * REAL application [Context]: string formatting, HTML parsing, PendingIntents and system
  * notifications all execute for real.
  *
- * Only the non-Android collaborators are mocked ([aapsLogger], [aapsSchedulers], [dateUtil], the
+ * Only the non-Android collaborators are mocked ([aapsLogger], [dateUtil], the
  * AAPS [NotificationManager] interface, [preferences], [alarmActionHandler]). Assertions are made against:
  *  - the mocked AAPS [NotificationManager] (the in-app "top notification" cards),
  *  - the [CarelevoAlarmNotifier.alarms] StateFlow and the `onAlarmsUpdated` callback,
  *  - Robolectric's [ShadowNotificationManager] for the system-tray notifications and channel.
  *
- * The schedulers are stubbed to [Schedulers.trampoline] so every Rx emission is delivered
+ * The notifier's dispatcher is set to [Dispatchers.Unconfined], so every emission is handled
  * synchronously on the test thread, keeping the tests deterministic.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -68,7 +68,6 @@ class CarelevoAlarmNotifierTest {
     private val context: Context = RuntimeEnvironment.getApplication()
 
     private lateinit var aapsLogger: AAPSLogger
-    private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var dateUtil: DateUtil
     private lateinit var notificationManager: NotificationManager
     private lateinit var preferences: Preferences
@@ -97,25 +96,22 @@ class CarelevoAlarmNotifierTest {
     @Before
     fun setUp() {
         aapsLogger = mock()
-        aapsSchedulers = mock()
         dateUtil = mock()
         notificationManager = mock()
         preferences = mock()
         alarmActionHandler = mock()
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(dateUtil.now()).thenReturn(1_000_000L)
 
         sut = CarelevoAlarmNotifier(
             context = context,
             aapsLogger = aapsLogger,
-            aapsSchedulers = aapsSchedulers,
             dateUtil = dateUtil,
             notificationManager = notificationManager,
             preferences = preferences,
             alarmActionHandler = alarmActionHandler
         )
+        sut.dispatcher = Dispatchers.Unconfined
     }
 
     // ---- helpers ------------------------------------------------------------------------------
@@ -147,7 +143,7 @@ class CarelevoAlarmNotifierTest {
 
     /** Create the system notification channel (needed before posting system-tray notifications). */
     private fun createChannel() {
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(Observable.empty<List<CarelevoAlarmInfo>>())
+        whenever(alarmActionHandler.observeAlarms()).thenReturn(emptyFlow<List<CarelevoAlarmInfo>>())
         sut.startObserving { }
     }
 
@@ -318,7 +314,7 @@ class CarelevoAlarmNotifierTest {
 
     @Test
     fun `startObserving creates the system notification channel`() {
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(Observable.empty<List<CarelevoAlarmInfo>>())
+        whenever(alarmActionHandler.observeAlarms()).thenReturn(emptyFlow<List<CarelevoAlarmInfo>>())
 
         sut.startObserving { }
 
@@ -329,7 +325,7 @@ class CarelevoAlarmNotifierTest {
     @Test
     fun `startObserving forwards emitted alarms to the callback and the state flow`() {
         val emitted = listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START))
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(Observable.just(emitted))
+        whenever(alarmActionHandler.observeAlarms()).thenReturn(flowOf(emitted))
         var received: List<CarelevoAlarmInfo>? = null
 
         sut.startObserving { received = it }
@@ -341,7 +337,7 @@ class CarelevoAlarmNotifierTest {
     @Test
     fun `startObserving logs and does not crash when the alarm stream errors`() {
         whenever(alarmActionHandler.observeAlarms())
-            .thenReturn(Observable.error<List<CarelevoAlarmInfo>>(RuntimeException("boom")))
+            .thenReturn(flow<List<CarelevoAlarmInfo>> { throw RuntimeException("boom") })
         var callbackInvoked = false
 
         sut.startObserving { callbackInvoked = true }
@@ -352,19 +348,20 @@ class CarelevoAlarmNotifierTest {
     }
 
     @Test
-    fun `stopObserving disposes the subscription so later emissions are ignored`() {
-        val subject = PublishSubject.create<List<CarelevoAlarmInfo>>()
+    fun `stopObserving cancels the collection so later emissions are ignored`() {
+        // A hot stream with no replay, as the PublishSubject was. One buffer slot lets tryEmit hand a value to the collector.
+        val subject = MutableSharedFlow<List<CarelevoAlarmInfo>>(extraBufferCapacity = 1)
         whenever(alarmActionHandler.observeAlarms()).thenReturn(subject)
         var callbackCount = 0
 
         sut.startObserving { callbackCount++ }
-        subject.onNext(emptyList())
+        subject.tryEmit(emptyList())
         assertThat(callbackCount).isEqualTo(1)
 
         sut.stopObserving()
-        subject.onNext(emptyList())
+        subject.tryEmit(emptyList())
 
-        // No further delivery after disposal.
+        // No further delivery after cancellation.
         assertThat(callbackCount).isEqualTo(1)
     }
 
@@ -373,7 +370,7 @@ class CarelevoAlarmNotifierTest {
     @Test
     fun `refreshAlarms updates the state flow from a one-shot load`() {
         val loaded = listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START))
-        whenever(alarmActionHandler.getAlarmsOnce()).thenReturn(Single.just(loaded))
+        whenever { alarmActionHandler.getAlarmsOnce() }.thenReturn(loaded)
 
         sut.refreshAlarms()
 
@@ -382,8 +379,8 @@ class CarelevoAlarmNotifierTest {
 
     @Test
     fun `refreshAlarms logs and does not crash when the load errors`() {
-        whenever(alarmActionHandler.getAlarmsOnce())
-            .thenReturn(Single.error<List<CarelevoAlarmInfo>>(RuntimeException("boom")))
+        whenever { alarmActionHandler.getAlarmsOnce() }
+            .thenAnswer { throw RuntimeException("boom") }
 
         sut.refreshAlarms()
 

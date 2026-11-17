@@ -39,7 +39,7 @@ import app.aaps.core.ui.R as CoreUiR
  * [patchStepTitle], the shared title mapper every step of that wizard is labelled with.
  *
  * **ViewModel:** the step takes a real [CarelevoPatchConnectionFlowViewModel] built from all-mocked
- * collaborators rather than a mock of the ViewModel itself. Construction touches none of the ten
+ * collaborators rather than a mock of the ViewModel itself. Construction touches none of the eleven
  * dependencies (every field is a plain initialiser) and the only member the step calls —
  * `setPage` — is pure state (`tryEmit` + a `workflowSteps.indexOf`), so the real object works and lets
  * the Next click be asserted against observable state (`page.value`) instead of a mock interaction.
@@ -102,7 +102,6 @@ class CarelevoPatchFlowStep01StartTest {
         exitFlowCalls = 0
         viewModel = CarelevoPatchConnectionFlowViewModel(
             aapsLogger = mock(),
-            aapsSchedulers = mock(),
             carelevoPatch = mock(),
             commandQueue = mock(),
             patchForceDiscardUseCase = mock(),

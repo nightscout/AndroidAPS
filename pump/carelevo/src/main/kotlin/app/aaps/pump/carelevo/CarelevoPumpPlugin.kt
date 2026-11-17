@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
 import androidx.lifecycle.Lifecycle
@@ -12,6 +13,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.di.PumpDriver
@@ -37,7 +39,6 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -64,12 +65,13 @@ import app.aaps.pump.carelevo.command.CmdUpdateExpiredThreshold
 import app.aaps.pump.carelevo.command.CmdUpdateLowInsulinNotice
 import app.aaps.pump.carelevo.command.CmdUpdateMaxBolus
 import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
-import app.aaps.pump.carelevo.common.CarelevoObserveReceiver
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.PatchState
+import app.aaps.pump.carelevo.common.registerCarelevoReceiver
 import app.aaps.pump.carelevo.compose.CarelevoComposeContent
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator
@@ -87,12 +89,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -102,16 +100,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
-import kotlin.jvm.optionals.getOrNull
+import kotlin.time.Duration.Companion.seconds
 import app.aaps.core.ui.R as CoreUiR
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
@@ -125,7 +125,6 @@ class CarelevoPumpPlugin @Inject constructor(
     override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val profileFunction: ProfileFunction,
     private val context: Context,
@@ -165,8 +164,11 @@ class CarelevoPumpPlugin @Inject constructor(
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump {
 
-    private var bleReceiverDisposable: Disposable? = null
-    private val pluginDisposable = CompositeDisposable()
+    // The Bluetooth adapter receiver while the plugin runs, unregistered by onStop.
+    private var bleReceiver: BroadcastReceiver? = null
+
+    /** Where the plugin collects its streams. A test sets an unconfined dispatcher. */
+    internal var dispatcher: CoroutineDispatcher = aapsIoDispatcher
 
     // Critical alarms escalate through the shared AAPS full-screen alarm (uiInteraction.runAlarm) —
     // see handleAlarms. This dedups that escalation to once per still-active alarm id: the alarms
@@ -209,8 +211,11 @@ class CarelevoPumpPlugin @Inject constructor(
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "onStop called")
         bleSession.unsolicitedHandler = null
-        settingsCoordinator.clearUserSettings(pluginDisposable)
-        pluginDisposable.clear()
+        scope?.let { settingsCoordinator.clearUserSettings(it) }
+        bleReceiver?.let { receiver ->
+            bleReceiver = null
+            context.unregisterReceiver(receiver)
+        }
 
         // onStart/onStop run as separate, unjoined pluginScope coroutines (PluginBase), so a fast
         // disable→re-enable can overlap them. Tear down only the generation captured here, and clear
@@ -233,7 +238,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     private fun registerPreferenceChangeObserver() {
-        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        val newScope = CoroutineScope(dispatcher + SupervisorJob())
         scope = newScope
 
         // Settings pushes go through the queue (connect-before-execute) like every other patch op — a
@@ -272,22 +277,17 @@ class CarelevoPumpPlugin @Inject constructor(
         // (changed while offline, or during a bolus) leaves a needXSyncPatch flag on the stored user
         // settings; when the patch is booted again, push it through the queue. The combiner is PURE and the
         // enqueue runs on IO.
-        pluginDisposable += Observable.combineLatest(
-            carelevoPatch.patchState,
-            carelevoPatch.infusionInfo,
-            carelevoPatch.userSettingInfo
-        ) { state, infusion, setting ->
-            computeSettingsSyncNeed(state.getOrNull(), infusion.getOrNull(), setting.getOrNull())
+        combine(carelevoPatch.patchState, carelevoPatch.infusionInfo, carelevoPatch.userSettingInfo) { state, infusion, setting ->
+            computeSettingsSyncNeed(state, infusion, setting)
         }
             .distinctUntilChanged()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { need ->
+            .onEach { need ->
                 newScope.launch {
                     need.maxBolusDose?.let { commandQueue.customCommand(CmdUpdateMaxBolus(it)) }
                     need.lowInsulinAmountUnits?.let { commandQueue.customCommand(CmdUpdateLowInsulinNotice(it)) }
                 }
             }
+            .launchIn(newScope)
     }
 
     /**
@@ -323,14 +323,14 @@ class CarelevoPumpPlugin @Inject constructor(
 
     /** One watchdog tick: reconcile a timed stop whose window has elapsed. Idempotent — safe to call repeatedly. */
     private suspend fun checkAutoResume() {
-        val patchInfo = carelevoPatch.patchInfo.value?.getOrNull() ?: return
+        val patchInfo = carelevoPatch.patchInfo.latest ?: return
         if (patchInfo.isStopped != true) return
         val stopMinutes = patchInfo.stopMinutes ?: return
         if (stopMinutes <= 0) return
         // Durable stop-start anchor: basalInfusionInfo.updatedAt is set at persistStopped, survives an app
         // restart (persisted), and is not moved by 0x91 status reads (which only rewrite patchInfo). Skip
         // until infusion info is loaded.
-        val stopStartedAt = carelevoPatch.infusionInfo.value?.getOrNull()?.basalInfusionInfo?.updatedAt?.toEpochMilliseconds() ?: return
+        val stopStartedAt = carelevoPatch.infusionInfo.latest?.basalInfusionInfo?.updatedAt?.toEpochMilliseconds() ?: return
         val elapsedMs = System.currentTimeMillis() - stopStartedAt
         if (elapsedMs < stopMinutes * 60_000L + autoResumeMarginMs) return
         aapsLogger.info(LTag.PUMPCOMM, "auto-resume: ${stopMinutes}min stop elapsed (${elapsedMs / 1000}s) -> reconcile")
@@ -363,39 +363,45 @@ class CarelevoPumpPlugin @Inject constructor(
         // patch uninitialized and appearing deactivated after an app update (dev fixed the same
         // race in eopatch). initPatchOnce() does not depend on other plugins; the basal profile is
         // applied best-effort here and, if not yet available, is set later via setNewBasalProfile().
-        pluginDisposable += carelevoPatch.initPatchOnce()
-            .subscribeOn(aapsSchedulers.io)
-            .timeout(5, TimeUnit.SECONDS)
-            .onErrorComplete()
-            .doOnSubscribe { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) initPatchOnce waiting") }
-            .doOnComplete { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) initPatchOnce completed") }
-            .andThen(
-                Completable.fromAction {
-                    val profile = runBlocking { profileFunction.getProfile() }
-                    if (profile != null) {
-                        carelevoPatch.setProfile(profile)
-                        aapsLogger.debug(LTag.PUMPCOMM, "onStart: 3) setProfile done: $profile")
-                    } else {
-                        aapsLogger.debug(LTag.PUMPCOMM, "onStart: 3) profile not ready, deferring to setNewBasalProfile")
-                    }
+        val activeScope = scope ?: return
+        activeScope.launch {
+            aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) initPatchOnce waiting")
+            // A start that fails or takes longer than 5 s does not stop the rest.
+            try {
+                withTimeoutOrNull(INIT_WAIT) { carelevoPatch.initPatchOnce().await() }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+            }
+            aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) initPatchOnce completed")
+            try {
+                val profile = profileFunction.getProfile()
+                if (profile != null) {
+                    carelevoPatch.setProfile(profile)
+                    aapsLogger.debug(LTag.PUMPCOMM, "onStart: 3) setProfile done: $profile")
+                } else {
+                    aapsLogger.debug(LTag.PUMPCOMM, "onStart: 3) profile not ready, deferring to setNewBasalProfile")
                 }
-            )
-            .subscribe(
-                { aapsLogger.debug(LTag.PUMPCOMM, "onStart: ALL COMPLETE") },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "onStart: chain error", e) }
-            )
+                aapsLogger.debug(LTag.PUMPCOMM, "onStart: ALL COMPLETE")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "onStart: chain error", e)
+            }
+        }
 
-        pluginDisposable += carelevoPatch.patchInfo
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           // No patch record: no reservoir to tell, which is not an empty one.
-                           _reservoirLevel.value = it.getOrNull()?.insulinRemain?.let(::PumpInsulin)
-                           _batteryLevel.value = 0
-                       }, fabricPrivacy::logException)
+        carelevoPatch.patchInfo
+            .onEach {
+                // No patch record: no reservoir to tell, which is not an empty one.
+                _reservoirLevel.value = it?.insulinRemain?.let(::PumpInsulin)
+                _batteryLevel.value = 0
+            }
+            .catch { fabricPrivacy.logException(it) }
+            .launchIn(activeScope)
     }
 
     private fun registerBleReceiverIfNeeded() {
-        if (bleReceiverDisposable?.isDisposed == false) return
+        if (bleReceiver != null) return
 
         // Seed the adapter state so isBluetoothEnabled()/patchState resolve before the first broadcast —
         // the receiver is now the ONLY btState source (adapter on/off; there is no resting link to track).
@@ -406,18 +412,15 @@ class CarelevoPumpPlugin @Inject constructor(
         // session — the one thing emulation is supposed to be immune to.
         if (isEmulating) return
 
-        bleReceiverDisposable = CarelevoObserveReceiver(context, createBluetoothIntentFilter())
-            .subscribe { intent ->
-                aapsLogger.debug(LTag.PUMPBTCOMM, "CarelevoObserveReceiver called: ${intent.action}")
-                if (intent.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
-                    val value = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
-                    if (value in setOf(BluetoothAdapter.STATE_ON, BluetoothAdapter.STATE_OFF, BluetoothAdapter.STATE_TURNING_ON, BluetoothAdapter.STATE_TURNING_OFF)) {
-                        carelevoPatch.onBluetoothStateChanged(adapterBleState(value.codeToDeviceResult()))
-                    }
+        bleReceiver = registerCarelevoReceiver(context, createBluetoothIntentFilter()) { intent ->
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Carelevo receiver called: ${intent.action}")
+            if (intent.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
+                val value = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                if (value in setOf(BluetoothAdapter.STATE_ON, BluetoothAdapter.STATE_OFF, BluetoothAdapter.STATE_TURNING_ON, BluetoothAdapter.STATE_TURNING_OFF)) {
+                    carelevoPatch.onBluetoothStateChanged(adapterBleState(value.codeToDeviceResult()))
                 }
             }
-
-        bleReceiverDisposable?.let { pluginDisposable.add(it) }
+        }
     }
 
     /**
@@ -569,7 +572,7 @@ class CarelevoPumpPlugin @Inject constructor(
     // contract invariant !isConfigured() => !isInitialized() holds by construction. Intentionally
     // independent of BLE: an attached-but-disconnected patch is still configured and may be delivering.
     override fun isConfigured(): Boolean =
-        carelevoPatch.patchInfo.value?.getOrNull() != null
+        carelevoPatch.patchInfo.latest != null
 
     override fun isInitialized(): Boolean {
         return connectionCoordinator.isInitialized()
@@ -579,7 +582,7 @@ class CarelevoPumpPlugin @Inject constructor(
         // Real delivery-suspend (pump stopped by the user), NOT the BLE connection state. Otherwise, a
         // normal idle disconnect (NotConnectedBooted, now that disconnect() actually disconnects) would
         // be reported as suspended and surface as an error/suspended icon on the overview.
-        return carelevoPatch.patchInfo.value?.getOrNull()?.isStopped ?: false
+        return carelevoPatch.patchInfo.latest?.isStopped ?: false
     }
 
     override fun isBusy(): Boolean {
@@ -674,7 +677,7 @@ class CarelevoPumpPlugin @Inject constructor(
         return result
     }
 
-    private fun updateBasalProfile(profile: Profile): PumpEnactResult {
+    private suspend fun updateBasalProfile(profile: Profile): PumpEnactResult {
         return basalProfileUpdateCoordinator.updateBasalProfile(
             profile = profile,
             cancelExtendedBolus = {
@@ -734,7 +737,7 @@ class CarelevoPumpPlugin @Inject constructor(
         get() {
             val secondsOfDay = Calendar.getInstance().let { it.get(Calendar.HOUR_OF_DAY) * SECONDS_PER_HOUR + it.get(Calendar.MINUTE) * 60 }
             val delivered = deliveredBasal()?.lastOrNull { it.timeAsSeconds <= secondsOfDay }?.value
-            return PumpRate(delivered ?: carelevoPatch.profile.value?.getOrNull()?.getBasal() ?: 0.0)
+            return PumpRate(delivered ?: carelevoPatch.profile.latest?.getBasal() ?: 0.0)
         }
 
     private val _reservoirLevel = MutableStateFlow<PumpInsulin?>(null)
@@ -752,7 +755,6 @@ class CarelevoPumpPlugin @Inject constructor(
             onStatusRefreshRequested = {
                 scope?.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus("Carelevo bolus completion") }
             },
-            pluginDisposable = pluginDisposable,
             onAlarmsRefreshRequested = ::refreshActiveAlarmSnapshots
         )
     }
@@ -823,7 +825,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     override fun serialNumber(): String {
-        return carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+        return carelevoPatch.patchInfo.latest?.manufactureNumber ?: ""
     }
 
     override val pumpDescription: PumpDescription
@@ -847,13 +849,16 @@ class CarelevoPumpPlugin @Inject constructor(
         // while resting. Skip ONLY when no patch is active; if the patch is present but its insulinRemain
         // is not yet known (e.g. before the first status read after reconnect) still push with 0 rather
         // than dropping the clock update (original `?: 0` semantics).
-        val patchInfo = carelevoPatch.patchInfo.value?.getOrNull() ?: return
+        val patchInfo = carelevoPatch.patchInfo.latest ?: return
         val insulin = patchInfo.insulinRemain?.toInt() ?: 0
         val result = commandQueue.customCommand(CmdTimeZoneUpdate(insulinAmount = insulin))
         if (result.success) _lastDataTime.value = System.currentTimeMillis()
     }
 
     private companion object {
+
+        /** How long the start waits for the patch streams before it applies the profile. */
+        val INIT_WAIT = 5.seconds
 
         const val SECONDS_PER_HOUR = 3600
     }

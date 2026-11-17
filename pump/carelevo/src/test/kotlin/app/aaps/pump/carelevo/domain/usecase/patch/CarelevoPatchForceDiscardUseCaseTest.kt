@@ -7,6 +7,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -41,7 +42,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
         whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
         verify(pumpSync).connectNewPump(true)
@@ -51,7 +52,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
     fun execute_returns_error_when_user_setting_missing() {
         whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(null)
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
     }
@@ -63,7 +64,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
         whenever(patchInfoRepository.deletePatchInfo()).thenReturn(false)
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
     }
@@ -76,7 +77,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
         whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
 
-        sut.execute().blockingGet()
+        runBlocking { sut.execute() }
 
         inOrder(patchInfoRepository, infusionInfoRepository) {
             verify(patchInfoRepository).deletePatchInfo()
@@ -91,7 +92,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
         whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
 
-        sut.execute().blockingGet()
+        runBlocking { sut.execute() }
 
         val stored = argumentCaptor<CarelevoUserSettingInfoDomainModel>().also { verify(userSettingInfoRepository).updateUserSettingInfo(it.capture()) }.firstValue
         assertThat(stored.needLowInsulinNoticeAmountSyncPatch).isFalse()
@@ -105,7 +106,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
         whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(false)
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat((result as ResponseResult.Error).e.message).isEqualTo("update user setting info is failed")
         verify(patchInfoRepository, never()).deletePatchInfo()
@@ -120,7 +121,7 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
         whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
         whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(false)
 
-        val result = sut.execute().blockingGet()
+        val result = runBlocking { sut.execute() }
 
         assertThat((result as ResponseResult.Error).e.message).isEqualTo("delete infusion info is failed")
         verify(pumpSync, never()).connectNewPump(any())

@@ -1,9 +1,9 @@
 package app.aaps.pump.carelevo.common
 
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -14,18 +14,17 @@ import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * SINGLE owner of the in-memory active-alarm queue and of the per-cause alarm-clear state machine,
@@ -40,14 +39,16 @@ import kotlinx.coroutines.launch
 @SingleIn(AppScope::class)
 class CarelevoAlarmActionHandler @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val commandQueue: CommandQueue,
     private val alarmUseCase: CarelevoAlarmInfoUseCase,
     private val alarmClearCoordinator: CarelevoAlarmClearCoordinator
 ) {
 
+    /** Where the alarm-clear ops and the store writes run. A test sets an unconfined dispatcher. */
+    internal var dispatcher: CoroutineDispatcher = aapsIoDispatcher
+
     // App-lifetime scope (this is an app-scoped singleton): drives the suspend queue-routed alarm-clear ops.
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope: CoroutineScope by lazy { CoroutineScope(dispatcher + SupervisorJob()) }
 
     private val _alarmQueue = MutableStateFlow<List<CarelevoAlarmInfo>>(emptyList())
     val alarmQueue = _alarmQueue.asStateFlow()
@@ -74,31 +75,25 @@ class CarelevoAlarmActionHandler @Inject constructor(
     /** The alarm most recently entering the clear flow (used by the UI for status text). */
     var alarmInfo: CarelevoAlarmInfo? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    fun observeAlarms(): Flow<List<CarelevoAlarmInfo>> = alarmUseCase.observeAlarms()
 
-    fun observeAlarms() =
-        alarmUseCase.observeAlarms()
-            .map { it.orElse(emptyList()) }
-
-    fun getAlarmsOnce(): Single<List<CarelevoAlarmInfo>> =
-        alarmUseCase.getAlarmsOnce()
-            .map { it.orElse(emptyList()) }
+    suspend fun getAlarmsOnce(): List<CarelevoAlarmInfo> = alarmUseCase.getAlarmsOnce()
 
     /** (Re)load the persisted active alarms into [alarmQueue], most severe tier first. */
     fun loadActiveAlarms() {
-        compositeDisposable += getAlarmsOnce()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { alarms ->
-                    val sorted = alarms
-                        .filter { !it.isAcknowledged }
-                        .sortedWith(compareBy<CarelevoAlarmInfo> { it.alarmType.code }.thenBy { it.createdAt })
-                    _alarmQueue.value = sorted
-                    if (sorted.isEmpty()) emitQueueEmpty()
-                },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "loadActiveAlarms.error", e) }
-            )
+        scope.launch {
+            try {
+                val sorted = getAlarmsOnce()
+                    .filter { !it.isAcknowledged }
+                    .sortedWith(compareBy<CarelevoAlarmInfo> { it.alarmType.code }.thenBy { it.createdAt })
+                _alarmQueue.value = sorted
+                if (sorted.isEmpty()) emitQueueEmpty()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "loadActiveAlarms.error", e)
+            }
+        }
     }
 
     fun triggerEvent(event: AlarmEvent) {
@@ -220,25 +215,27 @@ class CarelevoAlarmActionHandler @Inject constructor(
      * patch, so it is dropped from the snapshot baseline only after the local removal has landed.
      */
     private fun startAlarmAlertAbnormalClearProcess(info: CarelevoAlarmInfo, alarmCause: AlarmCause, forgetSnapshot: Boolean = false) {
-        compositeDisposable += alarmUseCase.acknowledgeAlarm(info.alarmId)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    if (forgetSnapshot) alarmClearCoordinator.forgetSnapshotAlarmCause(alarmCause)
-                    when (alarmCause) {
-                        AlarmCause.ALARM_ALERT_BLUETOOTH_OFF -> {
-                            // Keep the queue entry visible until the link is confirmed back;
-                            // ask the UI to fire the system Bluetooth-enable intent.
-                            startReconnect(info.alarmId)
-                            scope.launch { _uiRequests.emit(AlarmEvent.RequestBluetoothEnable) }
-                        }
+        scope.launch {
+            try {
+                alarmUseCase.acknowledgeAlarm(info.alarmId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "abnormalClear.acknowledge failed cause=$alarmCause", e)
+                return@launch
+            }
+            if (forgetSnapshot) alarmClearCoordinator.forgetSnapshotAlarmCause(alarmCause)
+            when (alarmCause) {
+                AlarmCause.ALARM_ALERT_BLUETOOTH_OFF -> {
+                    // Keep the queue entry visible until the link is confirmed back;
+                    // ask the UI to fire the system Bluetooth-enable intent.
+                    startReconnect(info.alarmId)
+                    _uiRequests.emit(AlarmEvent.RequestBluetoothEnable)
+                }
 
-                        else                                 -> removeFromQueue(info.alarmId)
-                    }
-                },
-                { error -> aapsLogger.error(LTag.PUMPCOMM, "abnormalClear.acknowledge failed cause=$alarmCause", error) }
-            )
+                else                                 -> removeFromQueue(info.alarmId)
+            }
+        }
     }
 
     private fun startReconnect(alarmId: String) {
@@ -263,17 +260,18 @@ class CarelevoAlarmActionHandler @Inject constructor(
      * store removal a cleared alarm resurrects on the next cold load / foreground refresh.
      */
     fun acknowledgeAndRemoveAlarm(alarmId: String) {
-        compositeDisposable += alarmUseCase.acknowledgeAlarm(alarmId)
-            .subscribeOn(aapsSchedulers.io)
-            .subscribe(
-                { removeFromQueue(alarmId) },
-                { e ->
-                    aapsLogger.error(LTag.PUMPCOMM, "acknowledgeAndRemoveAlarm.persist failed id=$alarmId", e)
-                    // Still drop it from the visible queue — the user confirmed it; worst case it
-                    // reappears on the next refresh instead of being stuck on screen forever.
-                    removeFromQueue(alarmId)
-                }
-            )
+        scope.launch {
+            try {
+                alarmUseCase.acknowledgeAlarm(alarmId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "acknowledgeAndRemoveAlarm.persist failed id=$alarmId", e)
+                // Still drop it from the visible queue — the user confirmed it; worst case it
+                // reappears on the next refresh instead of being stuck on screen forever.
+            }
+            removeFromQueue(alarmId)
+        }
     }
 
     private fun removeFromQueue(alarmId: String) {
@@ -282,17 +280,18 @@ class CarelevoAlarmActionHandler @Inject constructor(
     }
 
     fun clearAllAlarms() {
-        compositeDisposable += alarmUseCase.clearAlarms()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    _alarmQueue.value = emptyList()
-                    emitQueueEmpty()
-                },
-                { e ->
-                    aapsLogger.error(LTag.PUMPCOMM, "clearAllAlarms.error error=$e")
-                })
+        scope.launch {
+            try {
+                alarmUseCase.clearAlarms()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "clearAllAlarms.error error=$e")
+                return@launch
+            }
+            _alarmQueue.value = emptyList()
+            emitQueueEmpty()
+        }
     }
 
     private fun emitQueueEmpty() {

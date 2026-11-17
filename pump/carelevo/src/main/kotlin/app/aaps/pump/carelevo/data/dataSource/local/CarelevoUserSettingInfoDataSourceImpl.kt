@@ -5,15 +5,14 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 @ContributesBinding(AppScope::class)
 class CarelevoUserSettingInfoDataSourceImpl @Inject constructor(
     private val userSettingInfoDao: CarelevoUserSettingInfoDao
 ) : CarelevoUserSettingInfoDataSource {
 
-    override fun getUserSettingInfo(): Observable<Optional<CarelevoUserSettingInfoEntity>> {
+    override fun getUserSettingInfo(): Flow<CarelevoUserSettingInfoEntity?> {
         return userSettingInfoDao.getUserSetting()
     }
 

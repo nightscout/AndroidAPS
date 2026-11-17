@@ -1,13 +1,13 @@
 package app.aaps.pump.carelevo.common
 
 import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleResult
 import app.aaps.core.interfaces.pump.ble.DeviceId
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -48,28 +48,35 @@ import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSetti
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalDateTime
-import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.jvm.optionals.getOrNull
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 class CarelevoPatch @Inject constructor(
     @CarelevoCentral private val central: BleCentral,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
@@ -84,30 +91,35 @@ class CarelevoPatch @Inject constructor(
     private val activeAlarmSnapshotAlarmMapper: ActiveAlarmSnapshotAlarmMapper
 ) {
 
-    private val bleDisposable = CompositeDisposable()
+    /** Where the patch streams are collected and its storage written. A test sets an unconfined dispatcher. */
+    internal var dispatcher: CoroutineDispatcher = aapsIoDispatcher
 
-    private val infoDisposable = CompositeDisposable()
+    // A failure no caller handles is logged, not thrown at the app.
+    private val scope: CoroutineScope by lazy {
+        CoroutineScope(dispatcher + SupervisorJob() + CoroutineExceptionHandler { _, e -> aapsLogger.error(LTag.PUMPCOMM, "patch task failed", e) })
+    }
 
     private var _isWorking = false
     val isWorking get() = _isWorking
 
-    private val _btState: BehaviorSubject<Optional<BleState>> = BehaviorSubject.create()
-    val btState get() = _btState
+    // Each stream keeps its last value and has none before the first one: see latestValueFlow.
+    private val _btState = latestValueFlow<BleState?>()
+    val btState: SharedFlow<BleState?> get() = _btState
 
-    private val _patchState: BehaviorSubject<Optional<PatchState>> = BehaviorSubject.create()
-    val patchState get() = _patchState
+    private val _patchState = latestValueFlow<PatchState?>()
+    val patchState: SharedFlow<PatchState?> get() = _patchState
 
-    private val _patchInfo: BehaviorSubject<Optional<CarelevoPatchInfoDomainModel>> = BehaviorSubject.create()
-    val patchInfo get() = _patchInfo
+    private val _patchInfo = latestValueFlow<CarelevoPatchInfoDomainModel?>()
+    val patchInfo: SharedFlow<CarelevoPatchInfoDomainModel?> get() = _patchInfo
 
-    private val _infusionInfo: BehaviorSubject<Optional<CarelevoInfusionInfoDomainModel>> = BehaviorSubject.create()
-    val infusionInfo get() = _infusionInfo
+    private val _infusionInfo = latestValueFlow<CarelevoInfusionInfoDomainModel?>()
+    val infusionInfo: SharedFlow<CarelevoInfusionInfoDomainModel?> get() = _infusionInfo
 
-    private val _userSettingInfo: BehaviorSubject<Optional<CarelevoUserSettingInfoDomainModel>> = BehaviorSubject.create()
-    val userSettingInfo get() = _userSettingInfo
+    private val _userSettingInfo = latestValueFlow<CarelevoUserSettingInfoDomainModel?>()
+    val userSettingInfo: SharedFlow<CarelevoUserSettingInfoDomainModel?> get() = _userSettingInfo
 
-    private val _profile: BehaviorSubject<Optional<Profile>> = BehaviorSubject.create()
-    val profile get() = _profile
+    private val _profile = latestValueFlow<Profile?>()
+    val profile: SharedFlow<Profile?> get() = _profile
 
     /**
      * Site placement chosen during the activation wizard's site-location step. Read by the needle
@@ -136,34 +148,26 @@ class CarelevoPatch @Inject constructor(
         }
     }
 
-    fun initPatchAndAwait(): Completable =
-        Completable.defer {
-            initPatch()
-            patchState
-                .filter { state ->
-                    // The stream holds an Optional. Comparing the Optional itself with a state never matched, so a
-                    // start waited for its whole time limit.
-                    val known = state.getOrNull()
-                    known == PatchState.NotConnectedNotBooting || known == PatchState.ConnectedBooted
-                }
-                .firstOrError()
-                .ignoreElement()
-        }
+    /** Starts the patch streams, then waits until it is known whether a patch is there to use. */
+    suspend fun initPatchAndAwait() {
+        initPatch()
+        patchState.first { it == PatchState.NotConnectedNotBooting || it == PatchState.ConnectedBooted }
+    }
 
-    /** One-shot wrapper that shares the same init progress across duplicate calls. */
-    @Volatile private var inFlightInit: Completable? = null
-    fun initPatchOnce(): Completable = synchronized(this) {
+    /** One start shared by every caller that comes while it runs. It fails when it does not end in [INIT_TIMEOUT]. */
+    @Volatile private var inFlightInit: Deferred<Unit>? = null
+    fun initPatchOnce(): Deferred<Unit> = synchronized(this) {
         inFlightInit?.let { return it }
-        val c = initPatchAndAwait()
-            .timeout(20, TimeUnit.SECONDS)
-            .cache()
-            .doFinally { synchronized(this) { inFlightInit = null } }
-        inFlightInit = c
-        c
+        val started = scope.async {
+            withTimeoutOrNull(INIT_TIMEOUT) { initPatchAndAwait() } ?: throw IllegalStateException("patch init did not end in $INIT_TIMEOUT")
+        }
+        inFlightInit = started
+        started.invokeOnCompletion { synchronized(this) { if (inFlightInit === started) inFlightInit = null } }
+        started
     }
 
     fun getPatchInfoAddress(): String? {
-        return patchInfo.value?.getOrNull()?.address
+        return patchInfo.latest?.address
     }
 
     /**
@@ -173,8 +177,8 @@ class CarelevoPatch @Inject constructor(
      * [PatchState.NotConnectedBooted], and no patch is [PatchState.NotConnectedNotBooting].
      */
     fun resolvePatchState(): PatchState {
-        val isPatchValid = patchInfo.value?.getOrNull() != null
-        val btAvailable = btState.value?.getOrNull()?.isAvailable() ?: false
+        val isPatchValid = patchInfo.latest != null
+        val btAvailable = btState.latest?.isAvailable() ?: false
 
         return when {
             !isPatchValid -> PatchState.NotConnectedNotBooting
@@ -185,14 +189,10 @@ class CarelevoPatch @Inject constructor(
 
     private fun observeChangeState() {
         aapsLogger.debug(LTag.PUMPCOMM, "observeChangeState called")
-        bleDisposable += BehaviorSubject.combineLatest(
-            btState,
-            patchInfo
-        ) { _, _ ->
-            val result = resolvePatchState()
+        combine(btState, patchInfo) { _, _ -> resolvePatchState() }.onEach { result ->
             aapsLogger.debug(LTag.PUMPCOMM, "result : $result")
 
-            _patchState.onNext(Optional.ofNullable(result))
+            _patchState.tryEmit(result)
 
             when (result) {
                 is PatchState.NotConnectedNotBooting -> {
@@ -218,36 +218,22 @@ class CarelevoPatch @Inject constructor(
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                 }
             }
-
-            result
-        }
-            .observeOn(aapsSchedulers.io)
-            .subscribeOn(aapsSchedulers.io)
-            .doOnComplete {
-                aapsLogger.debug(LTag.PUMPCOMM, "doOnComplete called")
-            }
-            .doOnError {
-                it.printStackTrace()
-                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
-            }
-            .subscribe {
-                aapsLogger.debug(LTag.PUMPCOMM, "result : $it")
-            }
+        }.launchIn(scope)
     }
 
     fun isBluetoothEnabled(): Boolean {
-        return btState.value?.getOrNull()?.let {
+        return btState.latest?.let {
             it.isEnabled == DeviceModuleState.DEVICE_STATE_ON
         } ?: false
     }
 
     //===================================================================================================
     fun setProfile(profile: Profile?) {
-        _profile.onNext(Optional.ofNullable(profile))
+        _profile.tryEmit(profile)
     }
 
     fun checkIsSameProfile(newProfile: Profile?): Boolean {
-        val setProfile = profile.value?.getOrNull() ?: return false
+        val setProfile = profile.latest ?: return false
         val a = newProfile ?: return false
         val aVals = a.getBasalValues()
         val bVals = setProfile.getBasalValues()
@@ -289,7 +275,7 @@ class CarelevoPatch @Inject constructor(
             handleAlarm("alert", value = null, cause = AlarmCause.ALARM_ALERT_BLUETOOTH_OFF)
         }
         lastBtState = state
-        _btState.onNext(Optional.of(state))
+        _btState.tryEmit(state)
     }
 
     fun releasePatch() {
@@ -300,8 +286,8 @@ class CarelevoPatch @Inject constructor(
         // Clear cached patch/infusion info. This resets isCheckScreen (which otherwise keeps the
         // wizard latched to SAFETY_CHECK after a mid-activation discard) and immediately drops
         // patchState to NotConnectedNotBooting. There is no resting GATT to tear down — sessions are per-op.
-        _patchInfo.onNext(Optional.empty())
-        _infusionInfo.onNext(Optional.empty())
+        _patchInfo.tryEmit(null)
+        _infusionInfo.tryEmit(null)
         // The patch identity this baseline was tracking is gone too — see clearLastSnapshotAlarmCauses.
         clearLastSnapshotAlarmCauses()
     }
@@ -373,11 +359,7 @@ class CarelevoPatch @Inject constructor(
     }
 
     private fun dispatchInfusionInfo(requestModel: CarelevoPatchRptInfusionInfoRequestModel) {
-        bleDisposable += patchRptInfusionInfoProcessUseCase.execute(requestModel)
-            .timeout(3, TimeUnit.SECONDS)
-            .observeOn(aapsSchedulers.io)
-            .subscribeOn(aapsSchedulers.io)
-            .subscribe()
+        scope.launch { withTimeoutOrNull(REPORT_WRITE_TIMEOUT) { patchRptInfusionInfoProcessUseCase.execute(requestModel) } }
     }
 
     /**
@@ -398,13 +380,16 @@ class CarelevoPatch @Inject constructor(
             updatedAt = LocalDateTime.now().toString(),
             isAcknowledged = false
         )
-        bleDisposable += carelevoAlarmInfoUseCase.upsertAlarm(info)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                { aapsLogger.debug(LTag.PUMPCOMM, "handleAlarm upsert complete") },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "handleAlarm upsert error", e) }
-            )
+        scope.launch {
+            try {
+                carelevoAlarmInfoUseCase.upsertAlarm(info)
+                aapsLogger.debug(LTag.PUMPCOMM, "handleAlarm upsert complete")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "handleAlarm upsert error", e)
+            }
+        }
     }
 
     /**
@@ -431,7 +416,7 @@ class CarelevoPatch @Inject constructor(
         val now = LocalDateTime.now().toString()
         val currentAlarms = activeAlarmSnapshotAlarmMapper.map(
             snapshots = snapshots,
-            currentPatch = patchInfo.value?.getOrNull(),
+            currentPatch = patchInfo.latest,
             now = now
         )
         val currentCauses = currentAlarms.map { it.cause }.toSet()
@@ -440,35 +425,30 @@ class CarelevoPatch @Inject constructor(
         val newlyRaised = currentAlarms.filter { it.cause !in previousCauses }
         val resolvedCauses = previousCauses - currentCauses
 
-        val upserts = newlyRaised.map { carelevoAlarmInfoUseCase.upsertAlarm(it) }
-        val resolve = if (resolvedCauses.isEmpty()) {
-            Completable.complete()
-        } else {
-            carelevoAlarmInfoUseCase.getAlarmsOnce()
-                .map { it.orElse(emptyList()).filter { alarm -> alarm.cause in resolvedCauses } }
-                .flatMapCompletable { resolved ->
-                    if (resolved.isEmpty()) Completable.complete()
-                    else Completable.merge(resolved.map { carelevoAlarmInfoUseCase.acknowledgeAlarm(it.alarmId) })
+        // One after another, as the merged writes ran before: the new alarms, then the ones the patch no longer reports.
+        scope.launch {
+            try {
+                newlyRaised.forEach { carelevoAlarmInfoUseCase.upsertAlarm(it) }
+                if (resolvedCauses.isNotEmpty()) {
+                    carelevoAlarmInfoUseCase.getAlarmsOnce()
+                        .filter { alarm -> alarm.cause in resolvedCauses }
+                        .forEach { carelevoAlarmInfoUseCase.acknowledgeAlarm(it.alarmId) }
                 }
+                // Advance the edge-detection baseline only once the writes it represents actually
+                // landed — saving it eagerly (before upserts/resolves have run) would let
+                // a failed upsert get silently skipped forever, since the next poll would already
+                // see that cause as "already seen" and never retry it.
+                saveLastSnapshotAlarmCauses(currentCauses)
+                aapsLogger.info(
+                    LTag.PUMPCOMM,
+                    "applyActiveAlarmSnapshots newlyRaised=${newlyRaised.map { it.cause }} resolved=$resolvedCauses"
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "applyActiveAlarmSnapshots error", e)
+            }
         }
-
-        bleDisposable += Completable.merge(upserts + resolve)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                {
-                    // Advance the edge-detection baseline only once the writes it represents actually
-                    // landed — saving it eagerly (before upserts/resolves are even subscribed) would let
-                    // a failed upsert get silently skipped forever, since the next poll would already
-                    // see that cause as "already seen" and never retry it.
-                    saveLastSnapshotAlarmCauses(currentCauses)
-                    aapsLogger.info(
-                        LTag.PUMPCOMM,
-                        "applyActiveAlarmSnapshots newlyRaised=${newlyRaised.map { it.cause }} resolved=$resolvedCauses"
-                    )
-                },
-                { e -> aapsLogger.error(LTag.PUMPCOMM, "applyActiveAlarmSnapshots error", e) }
-            )
     }
 
     /**
@@ -509,7 +489,7 @@ class CarelevoPatch @Inject constructor(
     }
 
     private fun reconcileInfusingStateFromSnapshot(infusing: Boolean) {
-        val patch = patchInfo.value?.getOrNull() ?: return
+        val patch = patchInfo.latest ?: return
         val shouldBeStopped = !infusing
         if ((patch.isStopped ?: false) == shouldBeStopped) return
 
@@ -540,7 +520,7 @@ class CarelevoPatch @Inject constructor(
                 mode = 0
             )
         }
-        _patchInfo.onNext(Optional.of(updated))
+        _patchInfo.tryEmit(updated)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
         rxBus.send(EventRefreshOverview("Carelevo active alarm snapshot", true))
     }
@@ -558,7 +538,7 @@ class CarelevoPatch @Inject constructor(
         // Only act when the pump is currently marked stopped — there is nothing to resume otherwise. This
         // guards against a basal-restart report (0x88) that fires during normal delivery, or that races a
         // stop command: an unconditional persistResumed would clear a legitimate suspend.
-        if (patchInfo.value?.getOrNull()?.isStopped != true) {
+        if (patchInfo.latest?.isStopped != true) {
             aapsLogger.debug(LTag.PUMPCOMM, "auto-resume reconcile skipped: pump not stopped")
             return
         }
@@ -621,15 +601,13 @@ class CarelevoPatch @Inject constructor(
     }
 
     private fun observeInfusionInfo() {
-        infoDisposable += infusionInfoMonitorUseCase.execute()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { response ->
+        scope.launch {
+            infusionInfoMonitorUseCase.execute().collect { response ->
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoInfusionInfoDomainModel?
                         aapsLogger.debug(LTag.PUMPCOMM, "response success result ==> $result")
-                        _infusionInfo.onNext(Optional.ofNullable(result))
+                        _infusionInfo.tryEmit(result)
                     }
 
                     is ResponseResult.Error   -> {
@@ -641,18 +619,17 @@ class CarelevoPatch @Inject constructor(
                     }
                 }
             }
+        }
     }
 
     private fun observePatchInfo() {
-        infoDisposable += patchInfoMonitorUseCase.execute()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { response ->
+        scope.launch {
+            patchInfoMonitorUseCase.execute().collect { response ->
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoPatchInfoDomainModel?
                         aapsLogger.debug(LTag.PUMPCOMM, "response success result ==> ${result?.needleFailedCount}")
-                        _patchInfo.onNext(Optional.ofNullable(result))
+                        _patchInfo.tryEmit(result)
                     }
 
                     is ResponseResult.Error   -> {
@@ -664,18 +641,17 @@ class CarelevoPatch @Inject constructor(
                     }
                 }
             }
+        }
     }
 
     private fun observeUserSettingInfo() {
-        infoDisposable += userSettingInfoMonitorUseCase.execute()
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { response ->
+        scope.launch {
+            userSettingInfoMonitorUseCase.execute().collect { response ->
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoUserSettingInfoDomainModel?
                         aapsLogger.debug(LTag.PUMPCOMM, "response success result ==> $result")
-                        _userSettingInfo.onNext(Optional.ofNullable(result))
+                        _userSettingInfo.tryEmit(result)
                         if (result == null) {
                             createUserSettingInfo()
                         }
@@ -690,24 +666,28 @@ class CarelevoPatch @Inject constructor(
                     }
                 }
             }
+        }
     }
 
     private fun createUserSettingInfo() {
-        // Read prefs + build the request on IO: createUserSettingInfo() runs from observeUserSettingInfo's
-        // Main-thread subscribe, and SharedPreferences reads on the main thread risk an ANR.
-        infoDisposable += Single.fromCallable {
-            CarelevoUserSettingInfoRequestModel(
+        // Read prefs + build the request on the patch dispatcher (IO): SharedPreferences reads on the main thread risk an ANR.
+        scope.launch {
+            val request = CarelevoUserSettingInfoRequestModel(
                 lowInsulinNoticeAmount = preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS),
                 maxBasalSpeed = 15.0,
                 maxBolusDose = preferences.get(DoubleKey.SafetyMaxBolus)
             )
+            createUserSettingInfoUseCase.execute(request)
         }
-            .subscribeOn(aapsSchedulers.io)
-            .flatMap { createUserSettingInfoUseCase.execute(it) }
-            .subscribe()
     }
 
     private companion object {
+
+        /** How long a start waits to know whether a patch is there. */
+        val INIT_TIMEOUT = 20.seconds
+
+        /** How long the store write of a pushed infusion report may take. */
+        val REPORT_WRITE_TIMEOUT = 3.seconds
 
         // Unsolicited report opcodes (byte 0). Stop/basal-restart are the auto-resume signals; the
         // 0xA1/0xA2/0xA3 message reports are the pushed alarms (severity tier via AlarmType).

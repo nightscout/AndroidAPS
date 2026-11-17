@@ -20,6 +20,7 @@ import app.aaps.pump.carelevo.ble.commands.SafetyCheckCommand
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
@@ -27,7 +28,6 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
-import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearPatchDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearRequestUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
@@ -40,11 +40,10 @@ import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateLowInsuli
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateMaxBolusDoseUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -63,7 +62,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 
 /**
  * JVM unit tests for [CarelevoActivationExecutor]. Every op is driven through the public [CarelevoActivationExecutor.execute]
@@ -117,20 +115,23 @@ internal class CarelevoActivationExecutorTest {
         )
         whenever(dateUtil.now()).thenReturn(NOW)
         // Nothing runs and no patch report came, unless a test says so.
-        whenever(carelevoPatch.infusionInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoInfusionInfoDomainModel>()))
-        whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
+        whenever(carelevoPatch.infusionInfo).thenReturn(holding<CarelevoInfusionInfoDomainModel>(null))
+        whenever(carelevoPatch.patchInfo).thenReturn(holding<CarelevoPatchInfoDomainModel>(null))
         // No profile switch requested, unless a test asks for one.
         whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = null))
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Success(ResultSuccess)))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Success(ResultSuccess))
         // Happy default: a patch address is stored. Individual "no address" tests re-stub to null.
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(ADDRESS)
     }
 
     // region helpers ---------------------------------------------------------------------------------
 
+    /** A patch stream that holds [value], as the patch keeps its last value; null = "no record". */
+    private fun <T> holding(value: T?): MutableSharedFlow<T?> = latestValueFlow<T?>().apply { tryEmit(value) }
+
     private fun stubProfilePresent() {
         val profile = mock<Profile>()
-        whenever(carelevoPatch.profile).thenReturn(BehaviorSubject.createDefault(Optional.of(profile)))
+        whenever(carelevoPatch.profile).thenReturn(holding(profile))
     }
 
     private fun pumpState(profile: PumpProfile?) =
@@ -198,7 +199,7 @@ internal class CarelevoActivationExecutorTest {
     // region setBasal
 
     @Test fun `setBasal returns profile-not-set when no profile is present`() {
-        whenever(carelevoPatch.profile).thenReturn(BehaviorSubject.createDefault(Optional.empty<Profile>()))
+        whenever(carelevoPatch.profile).thenReturn(holding<Profile>(null))
         val result = sut.execute(CmdSetBasal())
         assertThat(result?.success).isFalse()
         assertThat(result?.enacted).isFalse()
@@ -211,7 +212,7 @@ internal class CarelevoActivationExecutorTest {
      */
     @Test fun `setBasal takes the requested profile when the patch has none`() {
         val requested = mock<PumpProfile>()
-        whenever(carelevoPatch.profile).thenReturn(BehaviorSubject.createDefault(Optional.empty<Profile>()))
+        whenever(carelevoPatch.profile).thenReturn(holding<Profile>(null))
         whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = requested))
         stubBasalPlan()
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
@@ -334,7 +335,7 @@ internal class CarelevoActivationExecutorTest {
     @Test fun `pumpStop records the stop with one instant and the patch serial`() {
         val patch = mock<CarelevoPatchInfoDomainModel>()
         whenever(patch.manufactureNumber).thenReturn("SN-0001")
-        whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.of(patch)))
+        whenever(carelevoPatch.patchInfo).thenReturn(holding(patch))
         stubRunSingle(SimpleResultResponse(resultCode = 0))
         whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
 
@@ -353,7 +354,7 @@ internal class CarelevoActivationExecutorTest {
 
     @Test fun `pumpStop ends an extended bolus that ran and gives an empty serial when no patch report came`() {
         whenever(carelevoPatch.infusionInfo).thenReturn(
-            BehaviorSubject.createDefault(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = mock<CarelevoExtendBolusInfusionInfoDomainModel>())))
+            holding(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = mock<CarelevoExtendBolusInfusionInfoDomainModel>()))
         )
         stubRunSingle(SimpleResultResponse(resultCode = 0))
         whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
@@ -587,11 +588,11 @@ internal class CarelevoActivationExecutorTest {
 
     @Test fun `discard deletes the stored patch, tears down and succeeds when the stop write is accepted`() {
         stubRunSingle(SimpleResultResponse(resultCode = 0))
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Success(ResultSuccess)))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Success(ResultSuccess))
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isTrue()
         assertThat(result?.enacted).isTrue()
-        verify(patchForceDiscardUseCase).execute()
+        verifyBlocking(patchForceDiscardUseCase) { execute() }
         // The bond is removed with the address read before the stored patch was deleted.
         verify(carelevoPatch).discardTeardown(ADDRESS)
     }
@@ -600,14 +601,14 @@ internal class CarelevoActivationExecutorTest {
     @Test fun `an accepted discard deletes the stored patch and infusion info`() {
         stubRunSingle(SimpleResultResponse(resultCode = 0))
         sut.execute(CmdDiscard())
-        verify(patchForceDiscardUseCase).execute()
+        verifyBlocking(patchForceDiscardUseCase) { execute() }
     }
 
     @Test fun `discard does not tear down and fails when the stop write is rejected`() {
         stubRunSingle(SimpleResultResponse(resultCode = 1))
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isFalse()
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
         verify(carelevoPatch, never()).discardTeardown(anyOrNull())
     }
 

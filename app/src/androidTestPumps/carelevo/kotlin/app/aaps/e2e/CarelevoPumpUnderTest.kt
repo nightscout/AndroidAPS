@@ -11,6 +11,7 @@ import app.aaps.di.testGraphs
 import app.aaps.e2e.scenario.PumpScenario
 import app.aaps.e2e.scenario.PumpUnderTest
 import app.aaps.pump.carelevo.CarelevoPumpPlugin
+import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.di.CarelevoAccessors
 import app.aaps.pump.carelevo.emulator.CarelevoEmulatorPeripheral
@@ -30,7 +31,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.Collections
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * The CareLevo patch for [PumpScenario]. It is activated as the wizard does it, with the wizard's own ViewModels and
@@ -54,7 +54,7 @@ class CarelevoPumpUnderTest : PumpUnderTest {
     override fun awaitStarted(scenario: PumpScenario) {
         // Set by the plugin's start. The wizard refuses every step until it is.
         scenario.awaitTrue("the driver reports Bluetooth on") { accessors.carelevoPatch.isBluetoothEnabled() }
-        scenario.awaitTrue("the user settings are loaded") { accessors.carelevoPatch.userSettingInfo.value?.getOrNull() != null }
+        scenario.awaitTrue("the user settings are loaded") { accessors.carelevoPatch.userSettingInfo.latest != null }
     }
 
     override fun pair(scenario: PumpScenario) {
@@ -111,7 +111,7 @@ class CarelevoPumpUnderTest : PumpUnderTest {
             listening.collectInto(events, overview.event)
             scenario.onMain { overview.startDiscardProcess() }
             val end = SystemClock.uptimeMillis() + DISCARD_TIMEOUT
-            while (accessors.carelevoPatch.patchState.value?.getOrNull() != PatchState.NotConnectedNotBooting) {
+            while (accessors.carelevoPatch.patchState.latest != PatchState.NotConnectedNotBooting) {
                 check(CarelevoOverviewEvent.DiscardFailed !in events) { "The discard failed. Events: $events" }
                 check(SystemClock.uptimeMillis() < end) { "The patch is still there. Events: $events" }
                 SystemClock.sleep(PumpScenario.POLL_MS)

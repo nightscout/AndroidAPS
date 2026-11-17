@@ -9,15 +9,14 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoTempBasalInfusionInfoE
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
+import kotlinx.coroutines.flow.Flow
 
 @ContributesBinding(AppScope::class)
 class CarelevoInfusionInfoDataSourceImpl @Inject constructor(
     private val infusionInfoDao: CarelevoInfusionInfoDao
 ) : CarelevoInfusionInfoDataSource {
 
-    override fun getInfusionInfo(): Observable<Optional<CarelevoInfusionInfoEntity>> {
+    override fun getInfusionInfo(): Flow<CarelevoInfusionInfoEntity?> {
         return infusionInfoDao.getInfusionInfo()
     }
 

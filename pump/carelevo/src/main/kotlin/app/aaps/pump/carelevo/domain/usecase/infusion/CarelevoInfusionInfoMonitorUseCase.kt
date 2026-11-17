@@ -4,29 +4,18 @@ import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 class CarelevoInfusionInfoMonitorUseCase @Inject constructor(
     private val infusionInfoRepository: CarelevoInfusionInfoRepository
 ) {
 
-    fun execute(): Observable<ResponseResult<CarelevoUseCaseResponse>> {
-        return runCatching {
-            infusionInfoRepository.getInfusionInfo()
-        }.fold(
-            onSuccess = { resultObservable ->
-                resultObservable
-                    .observeOn(Schedulers.io())
-                    .map { result ->
-                        ResponseResult.Success(result.getOrNull())
-                    }
-            },
-            onFailure = { error ->
-                error.printStackTrace()
-                Observable.just(ResponseResult.Error(error))
-            }
+    /** Every new value of the store, as a result. A store that cannot give its stream is one error. */
+    fun execute(): Flow<ResponseResult<CarelevoUseCaseResponse>> =
+        runCatching { infusionInfoRepository.getInfusionInfo() }.fold(
+            onSuccess = { values -> values.map { ResponseResult.Success(it) } },
+            onFailure = { error -> flowOf(ResponseResult.Error(error)) }
         )
-    }
 }

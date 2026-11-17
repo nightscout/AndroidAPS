@@ -1,5 +1,10 @@
 package app.aaps.pump.carelevo.presentation.viewmodel
 
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.ble.Advertisement
@@ -10,7 +15,6 @@ import app.aaps.core.interfaces.pump.ble.BleFailure
 import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.pump.ble.ScanFilter
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.CarelevoGatt
@@ -18,6 +22,7 @@ import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.UiState
@@ -30,19 +35,16 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoConnectNewPatch
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -56,6 +58,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -63,7 +66,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -72,7 +74,7 @@ import java.util.concurrent.TimeUnit
  * Unit tests for [CarelevoPatchConnectViewModel] — the activation wizard's scan/pair/discard step.
  *
  * **Plain JVM (JUnit5), not Robolectric.** The ViewModel touches no Android framework: it only drives
- * coroutines, RxJava and flows over mockable collaborators. `viewModelScope` needs a Main dispatcher,
+ * coroutines and flows over mockable collaborators. `viewModelScope` needs a Main dispatcher,
  * which [Dispatchers.setMain] supplies. Every collaborator is mocked — the final Kotlin classes
  * ([CarelevoPatch], [CarelevoBleSession], the two use cases) mock fine under Mockito 5's inline
  * mock-maker, exactly as `CarelevoPumpPluginTestBase` in this module already does.
@@ -85,8 +87,8 @@ import java.util.concurrent.TimeUnit
  *    Main dispatcher and cannot be virtualised (the VM injects no dispatcher). Those run on the real
  *    IO pool, so their tests [awaitEvent] on the terminal event instead of advancing virtual time.
  *
- * `startPatchForceDiscard`'s Rx chain is pinned to [Schedulers.trampoline] via the mocked
- * [AapsSchedulers], so it too completes synchronously on the test thread.
+ * `startPatchForceDiscard` also launches in `viewModelScope` on Main, so it too completes inside the
+ * call. Its 3 s timeout runs on the test dispatcher's virtual clock, which no test moves.
  *
  * One-shot events are captured through a collector subscribed in [setUp] — [CarelevoPatchConnectViewModel.event]
  * is a consume-once `EventFlow`, so exactly one collector must own it.
@@ -97,7 +99,6 @@ import java.util.concurrent.TimeUnit
 internal class CarelevoPatchConnectViewModelTest {
 
     @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var carelevoPatch: CarelevoPatch
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var preferences: Preferences
@@ -137,18 +138,11 @@ internal class CarelevoPatchConnectViewModelTest {
         // viewModelScope resolves Dispatchers.Main.immediate at first use; Unconfined makes every
         // Main-launched body (triggerEvent, the discard queue branch) run in-line.
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        // startPatchForceDiscard's `.subscribe { }` has no onError arm, so an errored stream reaches
-        // the global Rx handler as OnErrorNotImplementedException *after* doOnError already ran.
-        // Swallow it so that (intended) branch does not trip the default uncaught-exception handler.
-        RxJavaPlugins.setErrorHandler { }
 
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(central.bonding).thenReturn(bonding)
 
         sut = CarelevoPatchConnectViewModel(
             aapsLogger = aapsLogger,
-            aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             preferences = preferences,
@@ -166,7 +160,6 @@ internal class CarelevoPatchConnectViewModelTest {
     @AfterEach
     fun tearDown() {
         collectorScope.cancel()
-        RxJavaPlugins.reset()
         Dispatchers.resetMain()
     }
 
@@ -179,11 +172,13 @@ internal class CarelevoPatchConnectViewModelTest {
         assertThat(events).isNotEmpty()
     }
 
-    private fun patchStateSubject(state: PatchState?): BehaviorSubject<Optional<PatchState>> =
-        if (state == null) BehaviorSubject.create() else BehaviorSubject.createDefault(Optional.of(state))
+    /** A stream with [state] as its last value, or with no value at all for null. */
+    private fun patchStateFlow(state: PatchState?): MutableSharedFlow<PatchState?> =
+        latestValueFlow<PatchState?>().apply { if (state != null) tryEmit(state) }
 
-    private fun userSettingSubject(model: CarelevoUserSettingInfoDomainModel?): BehaviorSubject<Optional<CarelevoUserSettingInfoDomainModel>> =
-        if (model == null) BehaviorSubject.create() else BehaviorSubject.createDefault(Optional.of(model))
+    /** A stream with [model] as its last value, or with no value at all for null. */
+    private fun userSettingFlow(model: CarelevoUserSettingInfoDomainModel?): MutableSharedFlow<CarelevoUserSettingInfoDomainModel?> =
+        latestValueFlow<CarelevoUserSettingInfoDomainModel?>().apply { if (model != null) tryEmit(model) }
 
     private fun advertisement(name: String?, address: String, rssi: Int) =
         Advertisement(DeviceId(address), name, rssi, listOf(CarelevoGatt.SERVICE), emptyMap(), emptyMap())
@@ -221,18 +216,17 @@ internal class CarelevoPatchConnectViewModelTest {
         field.setBoolean(sut, value)
     }
 
-    /** The VM's private Rx bag — used to prove `onCleared` actually releases in-flight work. */
-    private fun compositeDisposable(): CompositeDisposable {
-        val field = CarelevoPatchConnectViewModel::class.java.getDeclaredField("compositeDisposable")
-        field.isAccessible = true
-        return field.get(sut) as CompositeDisposable
-    }
+    /** The VM's coroutines that still run — used to prove that clearing the VM actually stops in-flight work. */
+    private fun activeWork(): Int = sut.viewModelScope.coroutineContext.job.children.count { it.isActive }
 
-    /** `onCleared` is `protected` (inherited from [androidx.lifecycle.ViewModel]); the framework calls it. */
-    private fun invokeOnCleared() {
-        val method = CarelevoPatchConnectViewModel::class.java.getDeclaredMethod("onCleared")
-        method.isAccessible = true
-        method.invoke(sut)
+    /**
+     * Clear the VM the way the framework does when its screen goes away: `viewModelScope` is cancelled,
+     * then `onCleared` runs. Calling only `onCleared` would leave the `viewModelScope` work running.
+     */
+    private fun clearViewModel() {
+        val store = ViewModelStore()
+        ViewModelProvider(store, viewModelFactory { initializer { sut } })[CarelevoPatchConnectViewModel::class]
+        store.clear()
     }
 
     /** Queue answer for `commandQueue.customCommand`; built before the stub that returns it. */
@@ -243,7 +237,7 @@ internal class CarelevoPatchConnectViewModelTest {
     }
 
     private fun stubForceDiscardSuccess() {
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Success(ResultSuccess)))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Success(ResultSuccess))
     }
 
     // ---- initial state ------------------------------------------------------------------------
@@ -398,7 +392,7 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startConnect reports missing user settings before pairing`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(null))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(null))
 
         sut.startConnect(300)
 
@@ -413,7 +407,7 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startConnect clears the stale bond pairs the patch and persists it`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
         whenever { bleSession.runPairing(any(), any()) }.thenReturn(pairingResult)
         whenever(connectNewPatchUseCase.persistNewPatch(any(), any(), any(), any(), any())).thenReturn(true)
 
@@ -432,7 +426,7 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startConnect builds the pairing spec from the wizard input the prefs and the user settings`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(72)
         whenever(preferences.get(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)).thenReturn(true)
         whenever { bleSession.runPairing(any(), any()) }.thenReturn(pairingResult)
@@ -469,7 +463,7 @@ internal class CarelevoPatchConnectViewModelTest {
         val sessionReported = pairingResult.copy(address = "aa:bb:cc:dd:ee:ff")
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(72)
         whenever { bleSession.runPairing(any(), any()) }.thenReturn(sessionReported)
         whenever(connectNewPatchUseCase.persistNewPatch(any(), any(), any(), any(), any())).thenReturn(true)
@@ -499,7 +493,7 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startConnect lets a cancellation cancel the coroutine instead of reporting a pairing failure`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
         val pairingCalled = CountDownLatch(1)
         whenever { bleSession.runPairing(any(), any()) }.thenAnswer {
             pairingCalled.countDown()
@@ -521,7 +515,7 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startConnect reports failure when persisting the new patch fails`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
         whenever { bleSession.runPairing(any(), any()) }.thenReturn(pairingResult)
         // check(false) inside runCatching → IllegalStateException → onFailure arm.
         whenever(connectNewPatchUseCase.persistNewPatch(any(), any(), any(), any(), any())).thenReturn(false)
@@ -537,7 +531,7 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startConnect reports failure when the pairing session throws and never persists`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
-        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
         whenever { bleSession.runPairing(any(), any()) }.thenAnswer { throw IllegalStateException("connect refused") }
 
         sut.startConnect(300)
@@ -552,18 +546,18 @@ internal class CarelevoPatchConnectViewModelTest {
 
     @Test
     fun `startPatchDiscardProcess completes immediately when no patch state is known`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(null))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(null))
 
         sut.startPatchDiscardProcess()
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.DiscardComplete)
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
     }
 
     @Test
     fun `startPatchDiscardProcess completes immediately when the patch is not booting`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.NotConnectedNotBooting))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.NotConnectedNotBooting))
 
         sut.startPatchDiscardProcess()
 
@@ -575,7 +569,7 @@ internal class CarelevoPatchConnectViewModelTest {
 
     @Test
     fun `startPatchDiscardProcess routes a booted patch through the command queue`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.ConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.ConnectedBooted))
         stubQueueResult(success = true)
 
         sut.startPatchDiscardProcess()
@@ -583,7 +577,7 @@ internal class CarelevoPatchConnectViewModelTest {
         assertThat(events).contains(CarelevoConnectPrepareEvent.DiscardComplete)
         verifyBlocking(commandQueue) { customCommand(any<CmdDiscard>()) }
         // Queue succeeded → no DB-only fallback.
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
@@ -591,35 +585,35 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startPatchDiscardProcess routes a booted but disconnected patch through the command queue`() {
         // NotConnectedBooted is still a real patch on the body — only the link is down, so the discard
         // must go through the queue (which reconnects first), not straight to the DB-only fallback.
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.NotConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.NotConnectedBooted))
         stubQueueResult(success = true)
 
         sut.startPatchDiscardProcess()
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.DiscardComplete)
         verifyBlocking(commandQueue) { customCommand(any<CmdDiscard>()) }
-        verify(patchForceDiscardUseCase, never()).execute()
+        verifyBlocking(patchForceDiscardUseCase, never()) { execute() }
     }
 
     @Test
     fun `startPatchDiscardProcess falls back to force-discard when the queue cannot reach the patch`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.ConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.ConnectedBooted))
         stubQueueResult(success = false)
         stubForceDiscardSuccess()
 
         sut.startPatchDiscardProcess()
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.DiscardComplete)
-        verify(patchForceDiscardUseCase).execute()
+        verifyBlocking(patchForceDiscardUseCase) { execute() }
         verify(carelevoPatch).discardTeardown()
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
     @Test
     fun `startPatchDiscardProcess reports failure when force-discard returns an error`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.ConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.ConnectedBooted))
         stubQueueResult(success = false)
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Error(RuntimeException("db down"))))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Error(RuntimeException("db down")))
 
         sut.startPatchDiscardProcess()
 
@@ -630,10 +624,10 @@ internal class CarelevoPatchConnectViewModelTest {
 
     @Test
     fun `startPatchDiscardProcess reports failure when force-discard returns a failure result`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.ConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.ConnectedBooted))
         stubQueueResult(success = false)
         // Neither Success nor Error → the `else` arm of the response when.
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Failure("rejected")))
+        whenever { patchForceDiscardUseCase.execute() }.thenReturn(ResponseResult.Failure("rejected"))
 
         sut.startPatchDiscardProcess()
 
@@ -644,10 +638,10 @@ internal class CarelevoPatchConnectViewModelTest {
 
     @Test
     fun `startPatchDiscardProcess reports failure when the force-discard stream errors`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.ConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.ConnectedBooted))
         stubQueueResult(success = false)
-        // Errored stream → the doOnError arm (not the subscribe consumer).
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.error(RuntimeException("boom")))
+        // A throwing use case → the catch arm (not the response `when`).
+        whenever { patchForceDiscardUseCase.execute() }.thenAnswer { throw RuntimeException("boom") }
 
         sut.startPatchDiscardProcess()
 
@@ -659,18 +653,18 @@ internal class CarelevoPatchConnectViewModelTest {
 
     @Test
     fun `onCleared disposes force-discard work still in flight`() {
-        whenever(carelevoPatch.patchState).thenReturn(patchStateSubject(PatchState.ConnectedBooted))
+        whenever(carelevoPatch.patchState).thenReturn(patchStateFlow(PatchState.ConnectedBooted))
         stubQueueResult(success = false)
-        // Never terminates → the subscription stays parked in the VM's CompositeDisposable, which is
-        // exactly the state onCleared exists to clean up (the wizard step can be torn down mid-discard).
-        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.never())
+        // Never ends → the force-discard coroutine stays parked in the VM's viewModelScope, which is
+        // exactly the state clearing the VM exists to clean up (the wizard step can be torn down mid-discard).
+        whenever { patchForceDiscardUseCase.execute() }.doSuspendableAnswer { awaitCancellation() }
 
         sut.startPatchDiscardProcess()
-        assertThat(compositeDisposable().size()).isEqualTo(1)
+        assertThat(activeWork()).isEqualTo(1)
 
-        invokeOnCleared()
+        clearViewModel()
 
-        assertThat(compositeDisposable().size()).isEqualTo(0)
+        assertThat(activeWork()).isEqualTo(0)
     }
 
     // ---- resetForEnterStep --------------------------------------------------------------------

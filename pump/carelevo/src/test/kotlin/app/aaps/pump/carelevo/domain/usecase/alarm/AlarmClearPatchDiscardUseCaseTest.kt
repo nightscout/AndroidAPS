@@ -6,7 +6,6 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -15,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
@@ -62,7 +62,7 @@ internal class AlarmClearPatchDiscardUseCaseTest {
     }
 
     private fun givenAllWritesSucceed() {
-        whenever(alarmRepository.removeAlarm(any())).thenReturn(Completable.complete())
+        // alarmRepository.removeAlarm returns Unit, so an unstubbed mock already succeeds.
         whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(storedUserSetting)
         whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
         whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
@@ -126,14 +126,14 @@ internal class AlarmClearPatchDiscardUseCaseTest {
 
     @Test
     fun persistAlarmDiscarded_returns_false_when_alarm_removal_errors() {
-        whenever(alarmRepository.removeAlarm(any())).thenReturn(Completable.error(RuntimeException("db down")))
+        doThrow(RuntimeException("db down")).whenever(alarmRepository).removeAlarm(any())
 
         assertThat(sut.persistAlarmDiscarded("alarm-1")).isFalse()
     }
 
     @Test
     fun persistAlarmDiscarded_skips_all_bookkeeping_when_alarm_removal_errors() {
-        whenever(alarmRepository.removeAlarm(any())).thenReturn(Completable.error(RuntimeException("db down")))
+        doThrow(RuntimeException("db down")).whenever(alarmRepository).removeAlarm(any())
 
         sut.persistAlarmDiscarded("alarm-1")
 

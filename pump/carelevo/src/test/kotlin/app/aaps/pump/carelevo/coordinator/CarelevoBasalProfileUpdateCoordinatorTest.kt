@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
@@ -14,7 +15,10 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInf
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,7 +34,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import java.util.Optional
 import java.util.concurrent.atomic.AtomicInteger
 
 @ExtendWith(MockitoExtension::class)
@@ -66,12 +69,20 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         infusionId = "tbr-1", address = ADDRESS, mode = 2
     )
 
+    /** null = a stream with no value yet. */
     private fun stubInfusionInfo(model: CarelevoInfusionInfoDomainModel?) {
-        val subject =
-            if (model != null) BehaviorSubject.createDefault(Optional.of(model))
-            else BehaviorSubject.create<Optional<CarelevoInfusionInfoDomainModel>>()
-        whenever(carelevoPatch.infusionInfo).thenReturn(subject)
+        val flow = latestValueFlow<CarelevoInfusionInfoDomainModel?>()
+        if (model != null) flow.tryEmit(model)
+        whenever(carelevoPatch.infusionInfo).thenReturn(flow)
     }
+
+    /** [CarelevoBasalProfileUpdateCoordinator.updateBasalProfile] suspends: run it on the test thread and wait for it. */
+    private fun CarelevoBasalProfileUpdateCoordinator.updateBasalProfileBlocking(
+        profile: Profile,
+        cancelExtendedBolus: () -> PumpEnactResult,
+        cancelTempBasal: () -> PumpEnactResult,
+        onProfileUpdated: (Profile) -> Unit
+    ): PumpEnactResult = runBlocking { updateBasalProfile(profile, cancelExtendedBolus, cancelTempBasal, onProfileUpdated) }
 
     @BeforeEach
     fun setUp() {
@@ -101,7 +112,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `set mode success uses the set opcode and marks enacted`() {
         var updated: Profile? = null
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updated = it })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updated = it })
 
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isTrue()
@@ -114,7 +125,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `update mode uses the change opcode when a basal program already exists`() {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(basalInfusionInfo = basalInfusion()))
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
 
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isTrue()
@@ -123,7 +134,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
 
     @Test
     fun `plan is built from the profile and forwarded to the program write`() {
-        sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
 
         verify(setBasalProgramUseCase).buildBasalProgramPlan(profile)
         verifyBlocking(bleSession) { runBasalProgram(any(), eq(programs), any()) }
@@ -135,7 +146,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         val extendCalls = AtomicInteger(0)
         val tempCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(
+        val result = sut.updateBasalProfileBlocking(
             profile,
             { extendCalls.incrementAndGet(); enact(true) },
             { tempCalls.incrementAndGet(); enact(true) },
@@ -153,7 +164,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         val extendCalls = AtomicInteger(0)
         val tempCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(
+        val result = sut.updateBasalProfileBlocking(
             profile,
             { extendCalls.incrementAndGet(); enact(true) },
             { tempCalls.incrementAndGet(); enact(true) },
@@ -170,7 +181,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion()))
         val extendCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(profile, { extendCalls.incrementAndGet(); enact(true) }, { enact(true) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { extendCalls.incrementAndGet(); enact(true) }, { enact(true) }, { })
 
         assertThat(result.success).isTrue()
         assertThat(extendCalls.get()).isEqualTo(1)
@@ -182,7 +193,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasalInfusion()))
         val tempCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { tempCalls.incrementAndGet(); enact(true) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { tempCalls.incrementAndGet(); enact(true) }, { })
 
         assertThat(result.success).isTrue()
         assertThat(tempCalls.get()).isEqualTo(1)
@@ -200,7 +211,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         val extendCalls = AtomicInteger(0)
         val tempCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(
+        val result = sut.updateBasalProfileBlocking(
             profile,
             { extendCalls.incrementAndGet(); enact(true) },
             { tempCalls.incrementAndGet(); enact(true) },
@@ -220,7 +231,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(null)
         var updated: Profile? = null
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updated = it })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updated = it })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -232,7 +243,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(false)
         var updated: Profile? = null
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updated = it })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updated = it })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -245,7 +256,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenAnswer { throw RuntimeException("ble boom") }
         var updated: Profile? = null
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updated = it })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updated = it })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -257,7 +268,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         whenever(setBasalProgramUseCase.persistBasalProgram(any())).thenReturn(false)
         var updated: Profile? = null
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updated = it })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updated = it })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -269,7 +280,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `extended bolus cancel rejection fails before any program write`() {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion()))
 
-        val result = sut.updateBasalProfile(profile, { enact(false) }, { enact(true) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(false) }, { enact(true) }, { })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -280,7 +291,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `temp basal cancel rejection fails before any program write`() {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasalInfusion()))
 
-        val result = sut.updateBasalProfile(profile, { enact(true) }, { enact(false) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(false) }, { })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -295,7 +306,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         val extendCalls = AtomicInteger(0)
 
         val started = System.nanoTime()
-        val result = sut.updateBasalProfile(profile, { extendCalls.incrementAndGet(); enact(false) }, { enact(true) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { extendCalls.incrementAndGet(); enact(false) }, { enact(true) }, { })
         val tookMs = (System.nanoTime() - started) / 1_000_000
 
         assertThat(result.success).isFalse()
@@ -310,7 +321,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion()))
         val extendCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(profile, { enact(extendCalls.incrementAndGet() > 1) }, { enact(true) }, { })
+        val result = sut.updateBasalProfileBlocking(profile, { enact(extendCalls.incrementAndGet() > 1) }, { enact(true) }, { })
 
         assertThat(result.success).isTrue()
         assertThat(extendCalls.get()).isEqualTo(2)
@@ -325,7 +336,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         val extendCalls = AtomicInteger(0)
         val tempCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(
+        val result = sut.updateBasalProfileBlocking(
             profile,
             { extendCalls.incrementAndGet(); enact(true) },
             { tempCalls.incrementAndGet(); enact(false) },
@@ -343,7 +354,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         stubInfusionInfo(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasalInfusion()))
         val tempCalls = AtomicInteger(0)
 
-        val result = sut.updateBasalProfile(
+        val result = sut.updateBasalProfileBlocking(
             profile,
             { enact(true) },
             { if (tempCalls.incrementAndGet() == 1) throw IllegalStateException("link down") else enact(true) },
@@ -359,9 +370,47 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `a failed program write is not tried again`() {
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(false)
 
-        sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
 
         verifyBlocking(bleSession, times(1)) { runBasalProgram(any(), any(), any()) }
+    }
+
+    // --- a time limit inside the session is a failure, not a cancel ---------------------------------
+    // Found by the emulator scenario "a profile whose answer is lost": the session ends a write that gets no answer
+    // with its own time limit. Passed on as a cancel, the queue dropped the command and AAPS never learned the result.
+
+    /** A genuine [TimeoutCancellationException], as an inner `withTimeout` throws it (it has no public constructor). */
+    private fun innerTimeout(): TimeoutCancellationException =
+        runCatching { runBlocking { withTimeout(1) { delay(10_000) } } }.exceptionOrNull() as TimeoutCancellationException
+
+    @Test
+    fun `a program write ended by the session time limit is a failed result`() {
+        val timeout = innerTimeout()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenAnswer { throw timeout }
+        var updated: Profile? = null
+
+        val result = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updated = it })
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(updated).isNull()
+    }
+
+    @Test
+    fun `a cancel ended by a time limit inside it is tried again`() {
+        stubInfusionInfo(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasalInfusion()))
+        val timeout = innerTimeout()
+        val tempCalls = AtomicInteger(0)
+
+        val result = sut.updateBasalProfileBlocking(
+            profile,
+            { enact(true) },
+            { if (tempCalls.incrementAndGet() == 1) throw timeout else enact(true) },
+            { }
+        )
+
+        assertThat(result.success).isTrue()
+        assertThat(tempCalls.get()).isEqualTo(2)
     }
 
     // --- debounce ----------------------------------------------------------------------------------
@@ -379,12 +428,12 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `the same profile again within the spacing is skipped when the patch runs it`() {
         val waits = fakeTime()
         var updateCount = 0
-        val first = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updateCount++ })
+        val first = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updateCount++ })
         assertThat(first.success).isTrue()
         assertThat(first.enacted).isTrue()
         whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(true)
 
-        val second = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { updateCount++ })
+        val second = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { updateCount++ })
 
         // Nothing to do: success=true but NOT enacted, and the pump work happened only once.
         assertThat(second.success).isTrue()
@@ -398,10 +447,10 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     @Test
     fun `another profile within the spacing waits for its turn and is written`() {
         val waits = fakeTime()
-        sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
         whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(false)
 
-        val second = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        val second = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
 
         assertThat(second.success).isTrue()
         assertThat(second.enacted).isTrue()
@@ -413,11 +462,11 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
     fun `a try again after a failure within the spacing waits and is written`() {
         val waits = fakeTime()
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(false)
-        val first = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        val first = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
         assertThat(first.success).isFalse()
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
 
-        val second = sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+        val second = sut.updateBasalProfileBlocking(profile, { enact(true) }, { enact(true) }, { })
 
         assertThat(second.success).isTrue()
         assertThat(second.enacted).isTrue()
