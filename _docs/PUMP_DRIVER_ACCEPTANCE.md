@@ -88,8 +88,11 @@ pump (bolus, temp basal and extended bolus dialogs) are tested once, not per pum
 
 - **T1** Must: each packet seen on a real pump is parsed in a unit test with the real bytes, with the date and the
   firmware in a comment.
-- **T2** Must, for a Bluetooth pump: the transport passes the shared transport contract test
-  (`<Pump>BleTransportContractTest`).
+- **T2** Must, for a Bluetooth pump: the driver talks through the shared `BleCentral` (version 2 of the Bluetooth
+  layer, one implementation for Android and one for iOS), and its emulator is an `EmulatedPeripheral` on
+  `EmulatedBleCentral`. A new driver has no Bluetooth code of its own. A driver still on version 1 (`BleTransport`)
+  passes the version 1 contract test (`<Pump>BleTransportContractTest`) until it moves; each move is tested on a real
+  pump.
 - **T3** Should: the driver's service against the emulator on the JVM (as `DanaRSServiceIntegrationTest`), so the unit
   run covers the service too.
 
