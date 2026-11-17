@@ -1,7 +1,10 @@
 package app.aaps.pump.carelevo.emulator
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotCommand
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.AdditionalPrimingCommand
 import app.aaps.pump.carelevo.ble.commands.AlarmClearCommand
@@ -27,15 +30,22 @@ import app.aaps.pump.carelevo.ble.commands.PumpStopCommand
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckCommand
 import app.aaps.pump.carelevo.ble.commands.SetTimeCommand
 import app.aaps.pump.carelevo.ble.commands.SetTimeForPatchInfoCommand
+import app.aaps.pump.carelevo.ble.commands.SnapshotAlarmFlag
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import app.aaps.pump.carelevo.ble.commands.ThresholdSetupCommand
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import kotlin.experimental.xor
 import kotlin.time.Instant
 
@@ -993,7 +1003,86 @@ class CarelevoPumpEmulatorTest {
         assertThat(emulator.handle(byteArrayOf(0x7F, 0x01, 0x02))).isEmpty()
     }
 
+    // ---- Alarm clear, every flag on every tier ------------------------------------------------
+
+    /**
+     * 161/162/163 are the WARNING/ALERT/NOTICE push-report opcodes the app clears with, one tier each. A clear drops
+     * exactly the flag its cause names, on that tier only.
+     */
+    @Test
+    fun `an alarm clear drops each flag on its own tier and nothing else`() {
+        val allSet = ActiveAlarmSnapshotFlags(
+            outOfInsulin = true, operatingLifeExpired = true, lowBattery = true, outOfRangeTemperature = true,
+            autoOff = true, unconnectedBle = true, patchAppIncomplete = true, startInsulin = true,
+            selfDiagnosisFailed = true, patchExpired = true, patchError = true, occlusionDetected = true,
+            userForcedTermination = true
+        )
+        val tiers = listOf<Pair<Int, () -> ActiveAlarmSnapshotFlags>>(
+            161 to { state.criticalAlarmFlags },
+            162 to { state.advisoryAlarmFlags },
+            163 to { state.notificationAlarmFlags }
+        )
+        for ((alarmType, flagsOf) in tiers) {
+            state.criticalAlarmFlags = allSet
+            state.advisoryAlarmFlags = allSet
+            state.notificationAlarmFlags = allSet
+            // A flag with no cause code cannot be cleared by the app, so it stays set.
+            SnapshotAlarmFlag.entries.mapNotNull { flag -> flag.causeCode?.let { flag to it } }.forEachIndexed { index, (flag, cause) ->
+                emulator.handle(AlarmClearCommand(alarmType = alarmType, cause = cause).encode())
+
+                assertWithMessage("$alarmType $flag").that(setFlags(flagsOf())).isEqualTo(setFlags(allSet) - index - 1)
+            }
+            // The other tiers keep theirs.
+            tiers.filter { it.first != alarmType }.forEach { (other, otherFlags) ->
+                assertWithMessage("$alarmType cleared $other").that(otherFlags()).isEqualTo(allSet)
+            }
+        }
+    }
+
+    @Test
+    fun `an alarm clear with an unknown cause changes nothing`() {
+        state.criticalAlarmFlags = state.criticalAlarmFlags.copy(lowBattery = true)
+        val before = state.criticalAlarmFlags
+        val unknownCause = (0..100).first { cause -> SnapshotAlarmFlag.entries.none { it.causeCode == cause } }
+
+        emulator.handle(AlarmClearCommand(alarmType = 161, cause = unknownCause).encode())
+
+        assertThat(state.criticalAlarmFlags).isEqualTo(before)
+    }
+
+    // ---- The log --------------------------------------------------------------------------------
+
+    @Test
+    fun `each request is logged with its opcode and the answers in hex`() {
+        val logger = mock<AAPSLogger>()
+        val logged = CarelevoPumpEmulator(state, logger, clock = { now })
+
+        logged.handle(InfusionInfoCommand().encode())
+        state.silentOpcodes += InfusionInfoCommand.REQUEST_OPCODE
+        logged.handle(InfusionInfoCommand().encode())
+
+        verify(logger).debug(LTag.PUMPEMULATOR, "emulator: 0x31 -> 0x91")
+        verify(logger).debug(LTag.PUMPEMULATOR, "emulator: silently dropping 0x31")
+    }
+
+    @Test
+    fun `a rejected app auth is logged with both values in hex`() {
+        val logger = mock<AAPSLogger>()
+        val logged = CarelevoPumpEmulator(state, logger, clock = { now })
+        val mac = MacAddressCommand(MAC_KEY.toByte())
+        mac.decode(logged.handle(mac.encode()).single())
+
+        logged.handle(AppAuthCommand(0x05).encode())
+
+        val messages = argumentCaptor<String>()
+        verify(logger, atLeastOnce()).debug(eq(LTag.PUMPEMULATOR), messages.capture())
+        assertThat(messages.allValues.single { it.contains("auth rejected") }).matches("emulator: auth rejected, expected 0x[0-9A-F]{2} got 0x05")
+    }
+
     // ---- Helpers ----------------------------------------------------------------------------------
+
+    /** How many alarm flags are set. */
+    private fun setFlags(flags: ActiveAlarmSnapshotFlags): Int = flags.toString().split("=true").size - 1
 
     /** Runs the real 0x3B round-trip and returns the decoded response. */
     private fun readMac(key: Int): MacAddressResponse {
