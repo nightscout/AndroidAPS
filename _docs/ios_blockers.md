@@ -259,6 +259,18 @@ What the iOS side has to do:
 
 The tests are in `androidHostTest` (`KeepAliveRunnerTest`, 36 tests), so they do not run on iOS yet.
 
+### `RunningModeExpiryTimer` needs an iOS implementation
+
+`RunningModeExpiryScheduler` is in `plugins/aps/src/commonMain` now. It decides when the end of a
+temporary running mode (loop suspended, pump disconnected) has to run `RunningModeExpiryJob`, and asks a
+`RunningModeExpiryTimer` to run it then. Android's timer is WorkManager.
+
+The mode itself ends on its own time. The job is a safety net: it cancels the zero temp basal that was
+set for the mode, so that insulin does not stay off after it. iOS cannot run code at an exact time
+while the app sleeps, so the iOS timer should run the job late rather than never: a coroutine delay
+while the app is awake, and at the next wake check whether the end has passed and run the job then.
+`MainApp` calls `runningModeExpiryScheduler.start()`; a master iOS app has to call it too.
+
 ## Ready for iOS: the encrypted settings store (2026-10, not yet run on Apple)
 
 Written by the Windows session. `IosSp` and `NSUserDefaults` are gone as the settings store. iOS now

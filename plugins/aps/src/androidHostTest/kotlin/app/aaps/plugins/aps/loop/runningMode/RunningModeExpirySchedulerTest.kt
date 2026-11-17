@@ -1,15 +1,11 @@
 package app.aaps.plugins.aps.loop.runningMode
 
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +17,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -29,10 +24,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.reflect.KClass
 
+/** When the end of a temporary running mode is scheduled. `WorkManagerRunningModeExpiryTimerTest` covers how. */
 class RunningModeExpirySchedulerTest : TestBase() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var workManager: WorkManager
+    @Mock lateinit var timer: RunningModeExpiryTimer
     @Mock lateinit var config: Config
     @Mock lateinit var dateUtil: DateUtil
 
@@ -47,7 +43,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
         whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         scheduler = RunningModeExpiryScheduler(
             persistenceLayer = persistenceLayer,
-            workManager = workManager,
+            timer = timer,
             config = config,
             dateUtil = dateUtil,
             aapsLogger = aapsLogger,
@@ -61,8 +57,8 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val mode = permanent(RM.Mode.CLOSED_LOOP)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
-        verify(workManager, never()).cancelUniqueWork(any<String>())
+        verify(timer, never()).schedule(any())
+        verify(timer, never()).cancel()
     }
 
     @Test
@@ -70,8 +66,8 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val mode = permanent(RM.Mode.CLOSED_LOOP)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
-        verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
+        verify(timer).cancel()
+        verify(timer, never()).schedule(any())
     }
 
     @Test
@@ -80,11 +76,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val mode = temporary(RM.Mode.DISCONNECTED_PUMP, timestamp = now, durationMs = duration)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager).enqueueUniqueWork(
-            eq(RunningModeExpiryWorker.WORK_NAME),
-            eq(ExistingWorkPolicy.REPLACE),
-            any<OneTimeWorkRequest>()
-        )
+        verify(timer).schedule(duration)
     }
 
     @Test
@@ -93,8 +85,8 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val mode = temporary(RM.Mode.DISCONNECTED_PUMP, timestamp = now - T.mins(60).msecs(), durationMs = duration)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
-        verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
+        verify(timer).cancel()
+        verify(timer, never()).schedule(any())
     }
 
     @Test
@@ -107,16 +99,12 @@ class RunningModeExpirySchedulerTest : TestBase() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(workingMode)
 
         scheduler.start()
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
+        verify(timer).cancel()
 
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(disconnect)
         flow.emit(listOf(disconnect))
 
-        verify(workManager).enqueueUniqueWork(
-            eq(RunningModeExpiryWorker.WORK_NAME),
-            eq(ExistingWorkPolicy.REPLACE),
-            any<OneTimeWorkRequest>()
-        )
+        verify(timer).schedule(duration)
     }
 
     @Test
@@ -129,16 +117,12 @@ class RunningModeExpirySchedulerTest : TestBase() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(disconnect)
 
         scheduler.start()
-        verify(workManager).enqueueUniqueWork(
-            eq(RunningModeExpiryWorker.WORK_NAME),
-            eq(ExistingWorkPolicy.REPLACE),
-            any<OneTimeWorkRequest>()
-        )
+        verify(timer).schedule(duration)
 
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(working)
         flow.emit(listOf(working))
 
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
+        verify(timer).cancel()
     }
 
     @Test
@@ -146,8 +130,8 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val mode = RM(id = 99, timestamp = now, mode = RM.Mode.DISCONNECTED_PUMP, duration = 0L)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
-        verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
+        verify(timer).cancel()
+        verify(timer, never()).schedule(any())
     }
 
     @Test
@@ -162,8 +146,8 @@ class RunningModeExpirySchedulerTest : TestBase() {
         )
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
-        verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
+        verify(timer).cancel()
+        verify(timer, never()).schedule(any())
     }
 
     @Test
@@ -176,8 +160,8 @@ class RunningModeExpirySchedulerTest : TestBase() {
         )
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
-        verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
+        verify(timer).cancel()
+        verify(timer, never()).schedule(any())
     }
 
     @Test
@@ -185,9 +169,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val mode = temporary(RM.Mode.DISCONNECTED_PUMP, timestamp = now - T.mins(10).msecs(), durationMs = T.mins(30).msecs())
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
         scheduler.start()
-        val request = argumentCaptor<OneTimeWorkRequest>()
-        verify(workManager).enqueueUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME), eq(ExistingWorkPolicy.REPLACE), request.capture())
-        assertThat(request.firstValue.workSpec.initialDelay).isEqualTo(T.mins(20).msecs())
+        verify(timer).schedule(T.mins(20).msecs())
     }
 
     @Test
@@ -195,7 +177,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(permanent(RM.Mode.CLOSED_LOOP))
         scheduler.start()
         scheduler.start()
-        verify(workManager, times(1)).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
+        verify(timer, times(1)).cancel()
     }
 
     // --- Helpers ---
