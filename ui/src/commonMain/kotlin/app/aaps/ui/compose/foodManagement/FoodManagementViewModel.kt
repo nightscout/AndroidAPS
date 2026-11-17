@@ -284,7 +284,7 @@ class FoodManagementViewModel(
             foodBook.load()
             refreshTreatmentLinks()
             foodBook.book.collect { book ->
-                _uiState.update { it.copy(recipes = book.recipes, eatenMeals = book.eaten) }
+                _uiState.update { it.copy(recipes = book.recipes, eatenMeals = book.eaten, foodBarcodes = book.offLinks.associate { link -> link.foodId to link.barcode }) }
                 loadRecipePhotos(book)
             }
         }
@@ -372,6 +372,7 @@ class FoodManagementViewModel(
                     editorFat = food.fat?.toString() ?: "",
                     editorProtein = food.protein?.toString() ?: "",
                     editorEnergy = food.energy?.toString() ?: "",
+                    editorBarcode = it.foodBarcodes[food.id],
                     editorSaveAttempted = false,
                     editorOffProduct = null,
                     editorScaleMode = false,
@@ -397,6 +398,7 @@ class FoodManagementViewModel(
                     editorFat = "",
                     editorProtein = "",
                     editorEnergy = "",
+                    editorBarcode = null,
                     editorSaveAttempted = false,
                     editorOffProduct = null,
                     editorScaleMode = false,
@@ -466,17 +468,53 @@ class FoodManagementViewModel(
         runImport()
     }
 
-    /** Sent only when the user asks: OFF allows about 10 searches per minute. */
-    fun runImport() {
+    /**
+     * Sent only when the user asks: OFF allows about 10 searches per minute.
+     *
+     * A barcode already in the list is shown first, without asking OFF: it is local, works without
+     * network and keeps a request. [checkList] is false when the user wants another food for it anyway
+     * (another portion, for example).
+     */
+    fun runImport(checkList: Boolean = true) {
         val state = uiState.value
         val query = state.importQuery.trim()
         if (query.isEmpty() || state.importInProgress) return
+        if (checkList && OpenFoodFactsRepository.isBarcode(query)) {
+            val owners = state.foodsWithBarcode(query)
+            if (owners.isNotEmpty()) return _uiState.update { it.copy(barcodeOwners = owners, importResult = null) }
+        }
         _uiState.update { it.copy(importInProgress = true, importResult = null) }
         viewModelScope.launch {
             val result = openFoodFacts.lookup(query)
             _uiState.update { it.copy(importInProgress = false, importResult = result, importImages = emptyMap()) }
             if (result is OffResult.Found) loadImportImages(result.products)
         }
+    }
+
+    /** The barcode is in the list: opens that food instead of asking OFF. */
+    fun openBarcodeOwner(food: FD) {
+        _uiState.update { it.copy(barcodeOwners = emptyList(), showImport = false, showScanner = false) }
+        openEditor(food)
+    }
+
+    /** The barcode is in the list, and the user wants another food for the same product. */
+    fun importAnyway() {
+        _uiState.update { it.copy(barcodeOwners = emptyList()) }
+        runImport(checkList = false)
+    }
+
+    fun dismissBarcodeOwners() = _uiState.update { it.copy(barcodeOwners = emptyList()) }
+
+    /**
+     * OFF does not know the barcode: a new food is typed by hand with it, so the barcode is not lost.
+     * The next scan finds the food, and the product can be sent to OFF later.
+     */
+    fun makeFoodWithBarcode() {
+        val code = uiState.value.importQuery.trim()
+        if (!OpenFoodFactsRepository.isBarcode(code)) return
+        closeImport()
+        openEditor()
+        _uiState.update { it.copy(editorBarcode = code) }
     }
 
     /**
@@ -513,6 +551,7 @@ class FoodManagementViewModel(
                 editorName = MealMath.foodValuesFrom(product).name,
                 editorCategory = OFF_CATEGORY,
                 editorOffProduct = product,
+                editorBarcode = product.barcode,
                 // An OFF product starts in the portion mode: the values follow the portion.
                 editorScaleMode = true,
                 editorImage = it.importImages[product.barcode],
@@ -1093,6 +1132,8 @@ class FoodManagementViewModel(
         )
 
         val product = state.editorOffProduct
+        // A new food typed by hand for a barcode OFF does not know keeps the barcode.
+        val barcode = state.editorBarcode.takeIf { product == null && state.editorFood == null }
         val photo = state.editorImage
         val userPhoto = state.editorUserPhoto
         val photoChanged = state.editorPhotoChanged
@@ -1102,10 +1143,11 @@ class FoodManagementViewModel(
                 persistenceLayer.insertOrUpdateFood(food)
                 _uiState.update { it.copy(showEditor = false, showPhotoCamera = false) }
                 warnUnitChanged(state.editorFood, food)
-                if (product == null && !photoChanged) return@launch
+                if (product == null && barcode == null && !photoChanged) return@launch
                 val foodId = savedFoodId(food, lastId) ?: return@launch
                 // The OFF product with its photo, then the photo of the user, which is shown instead.
                 if (product != null) foodImages.link(foodId, product, photo)
+                else if (barcode != null) foodImages.linkBarcode(foodId, barcode)
                 if (photoChanged) foodImages.setUserPhoto(foodId, userPhoto)
                 val shown = foodImages.saved(listOf(foodId))[foodId]
                 _uiState.update { it.copy(foodImages = if (shown != null) it.foodImages + (foodId to shown) else it.foodImages - foodId) }
@@ -1283,6 +1325,8 @@ data class FoodManagementUiState(
     val editorUserPhoto: ByteArray? = null,
     /** True when the user took or removed a photo in the editor: it is saved with the food. */
     val editorPhotoChanged: Boolean = false,
+    /** The barcode of the editor food, shown small at the bottom of the editor. Null when it has none. */
+    val editorBarcode: String? = null,
     val showPhotoCamera: Boolean = false,
     /** The photo shown for each food on the list, by food id: the photo of the user, or else the OFF photo. */
     val foodImages: Map<Long, ByteArray> = emptyMap(),
@@ -1296,6 +1340,10 @@ data class FoodManagementUiState(
     /** The photos of the products found, by barcode, added as they are downloaded. */
     val importImages: Map<String, ByteArray> = emptyMap(),
     val showScanner: Boolean = false,
+    /** The foods that already have the barcode just scanned or typed. The dialog is shown while not empty. */
+    val barcodeOwners: List<FD> = emptyList(),
+    /** The barcode of each food that has one, by food id. The POC keeps it in the OFF links of the food book. */
+    val foodBarcodes: Map<Long, String> = emptyMap(),
     // Meal (proof of concept)
     val mealItems: List<MealItem> = emptyList(),
     val showMeal: Boolean = false,
@@ -1355,6 +1403,12 @@ data class FoodManagementUiState(
     fun imageOf(item: MealItem): ByteArray? =
         item.foodId?.let { foodImages[it] }
             ?: item.recipeId?.let { id -> recipes.firstOrNull { it.id == id }?.photo }?.let { recipePhotos[it] }
+
+    /** The foods of the list that have [barcode]. The same code with zeros in front counts ("0301..." is "301..."). */
+    fun foodsWithBarcode(barcode: String): List<FD> {
+        val code = barcode.trimStart('0')
+        return foods.filter { food -> foodBarcodes[food.id]?.trimStart('0') == code }
+    }
 }
 
 enum class FoodTab { FOODS, DISHES, MEALS, HISTORY }

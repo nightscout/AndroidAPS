@@ -395,6 +395,14 @@
     <string name="food_value_at_least" comment="A total of fat, protein or energy known for only part of the foods of a meal: the real value is at least this one. %1$s=the number. Example: >12 (shown as F: >12 g)">&gt;%1$s</string>
     <string name="food_photo_camera_refused">The camera is needed to take a photo.</string>
     <string name="food_off_not_found">No product found.</string>
+    <string name="food_barcode_make_food">Make the food with this barcode</string>
+    <string name="food_barcode_known_title">Already in your list</string>
+    <string name="food_barcode_known_text">This barcode is already in your list. Tap a food to open it, or make another food for the same product, for example for another portion.</string>
+    <string name="food_barcode_make_another">Make another food</string>
+    <string name="food_barcode_group" comment="Category and subcategory of a food. %1$s = category, %2$s = subcategory. Example: Breakfast / Cereals">%1$s / %2$s</string>
+    <string name="food_barcode_no_category">No category</string>
+    <string name="food_barcode_in_list" comment="On a product found on Open Food Facts whose barcode is already in the food list. %1$s = name of the food in the list. Example: In your list: Nutella">In your list: %1$s</string>
+    <string name="food_barcode_line" comment="At the bottom of the food editor. %1$s = barcode, digits only. Example: Barcode: 3017620422003">Barcode: %1$s</string>
     <string name="food_off_offline">No internet connection. You need internet to import a food.</string>
     <string name="food_off_failed">Open Food Facts did not answer. Try again in a minute.</string>
     <string name="food_off_rate_limited">Too many searches in a short time. Wait one minute, then try again.</string>

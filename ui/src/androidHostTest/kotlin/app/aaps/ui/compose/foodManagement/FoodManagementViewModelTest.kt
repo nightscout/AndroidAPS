@@ -31,6 +31,7 @@ import app.aaps.ui.compose.foodManagement.book.Recipe
 import app.aaps.ui.compose.foodManagement.book.RecipeItem
 import app.aaps.ui.compose.foodManagement.book.RecipeKind
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OffProduct
+import app.aaps.ui.compose.foodManagement.openfoodfacts.OffResult
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OpenFoodFactsRepository
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +50,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -1147,6 +1149,138 @@ internal class FoodManagementViewModelTest {
         sut.updateEditorPortion("200")
 
         assertThat(sut.uiState.value.editorCarbs).isEqualTo("50")
+    }
+
+    // ---- Barcodes: already in the list, unknown to OFF, shown in the editor ----
+
+    private val nutella = FD(id = 5, name = "Nutella", category = "Breakfast", subCategory = "Spread", portion = 15.0, unit = "g", carbs = 9)
+    private val nutellaCode = "3017620422003"
+    private val unknownCode = "2000000000017"
+
+    /** A screen whose food book has [links], with [foods] in the database. A food saved here gets the id 100. OFF knows nothing. */
+    private fun barcodeScreen(links: List<OffLink>, vararg foods: FD): Pair<FoodManagementViewModel, FoodBookRepository> {
+        val inDb = foods.toMutableList()
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
+                inDb += (it.arguments[0] as FD).copy(id = 100)
+                PersistenceLayer.TransactionResult<FD>()
+            }
+            whenever(openFoodFacts.lookup(any())).thenReturn(OffResult.NotFound)
+            links.forEach { book.saveOffLink(it) }
+        }
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, book, aapsLogger))
+        dispatcher.scheduler.runCurrent()
+        runUntil { !vm.uiState.value.isLoading && vm.uiState.value.foodBarcodes.size == links.size }
+        return vm to book
+    }
+
+    @Test
+    fun `a barcode already in the list is shown without asking OFF, and its food can be opened`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.openImport()
+        vm.updateImportQuery(nutellaCode)
+
+        vm.runImport()
+
+        assertThat(vm.uiState.value.barcodeOwners).containsExactly(nutella)
+        runBlocking { verify(openFoodFacts, never()).lookup(any()) }
+
+        vm.openBarcodeOwner(nutella)
+
+        val state = vm.uiState.value
+        assertThat(state.barcodeOwners).isEmpty()
+        assertThat(state.showImport).isFalse()
+        assertThat(state.showEditor).isTrue()
+        assertThat(state.editorFood).isEqualTo(nutella)
+        assertThat(state.editorBarcode).isEqualTo(nutellaCode)
+    }
+
+    @Test
+    fun `the same barcode with a zero in front is found`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.updateImportQuery("0$nutellaCode")
+
+        vm.runImport()
+
+        assertThat(vm.uiState.value.barcodeOwners).containsExactly(nutella)
+    }
+
+    @Test
+    fun `another food for a barcode in the list asks OFF`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.updateImportQuery(nutellaCode)
+        vm.runImport()
+
+        vm.importAnyway()
+        runUntil { vm.uiState.value.importResult != null }
+
+        assertThat(vm.uiState.value.barcodeOwners).isEmpty()
+        assertThat(vm.uiState.value.importResult).isEqualTo(OffResult.NotFound)
+        runBlocking { verify(openFoodFacts).lookup(nutellaCode) }
+    }
+
+    @Test
+    fun `the barcode of a deleted food does not count`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 9, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.updateImportQuery(nutellaCode)
+
+        vm.runImport()
+        runUntil { vm.uiState.value.importResult != null }
+
+        assertThat(vm.uiState.value.barcodeOwners).isEmpty()
+        runBlocking { verify(openFoodFacts).lookup(nutellaCode) }
+    }
+
+    @Test
+    fun `a barcode OFF does not know makes a food typed by hand that keeps it`() {
+        val (vm, book) = barcodeScreen(emptyList(), nutella)
+        vm.openImport()
+        vm.updateImportQuery(unknownCode)
+        vm.runImport()
+        runUntil { vm.uiState.value.importResult == OffResult.NotFound }
+
+        vm.makeFoodWithBarcode()
+
+        assertThat(vm.uiState.value.showImport).isFalse()
+        assertThat(vm.uiState.value.showEditor).isTrue()
+        assertThat(vm.uiState.value.editorFood).isNull()
+        assertThat(vm.uiState.value.editorScaleMode).isFalse()
+        assertThat(vm.uiState.value.editorBarcode).isEqualTo(unknownCode)
+        vm.updateEditorName("Home biscuits")
+        vm.updateEditorCarbs("12")
+        vm.saveFood()
+        runUntil { book.book.value.offLinks.isNotEmpty() }
+
+        assertThat(book.book.value.offLinks).containsExactly(OffLink(foodId = 100, barcode = unknownCode, hasImage = false, inOff = false))
+    }
+
+    @Test
+    fun `search words are never offered as a barcode for a new food`() {
+        val (vm, _) = barcodeScreen(emptyList(), nutella)
+        vm.openImport()
+        vm.updateImportQuery("biscuits")
+        vm.runImport()
+        runUntil { vm.uiState.value.importResult == OffResult.NotFound }
+
+        vm.makeFoodWithBarcode()
+
+        assertThat(vm.uiState.value.showEditor).isFalse()
+    }
+
+    @Test
+    fun `the editor shows the barcode of a food and of an OFF product, none for a food typed by hand`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+
+        vm.openEditor(nutella)
+        assertThat(vm.uiState.value.editorBarcode).isEqualTo(nutellaCode)
+
+        vm.openEditor()
+        assertThat(vm.uiState.value.editorBarcode).isNull()
+
+        vm.selectOffProduct(yogurt)
+        assertThat(vm.uiState.value.editorBarcode).isEqualTo(yogurt.barcode)
     }
 
     @Test

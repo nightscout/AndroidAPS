@@ -51,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
+import app.aaps.core.data.model.FD
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
@@ -64,6 +65,7 @@ import app.aaps.ui.compose.foodManagement.book.decodeFoodImage
 import app.aaps.ui.compose.foodManagement.openfoodfacts.BarcodeScanner
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OffProduct
 import app.aaps.ui.compose.foodManagement.openfoodfacts.OffResult
+import app.aaps.ui.compose.foodManagement.openfoodfacts.OpenFoodFactsRepository
 import app.aaps.ui.compose.foodManagement.openfoodfacts.barcodeScannerAvailable
 import kotlin.math.roundToInt
 
@@ -80,6 +82,7 @@ internal fun OffImportContent(
     onCloseScanner: () -> Unit,
     onScanned: (String) -> Unit,
     onSelect: (OffProduct) -> Unit,
+    onMakeFood: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -130,12 +133,23 @@ internal fun OffImportContent(
 
         when (val result = state.importResult) {
             null                   -> if (state.importInProgress) CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            OffResult.NotFound     -> Text(stringResource(UiStrings.food_off_not_found))
+            OffResult.NotFound     -> {
+                Text(stringResource(UiStrings.food_off_not_found))
+                // A barcode OFF does not know is kept on a food typed by hand.
+                if (OpenFoodFactsRepository.isBarcode(state.importQuery.trim()))
+                    TextButton(onClick = onMakeFood) { Text(stringResource(UiStrings.food_barcode_make_food)) }
+            }
+
             OffResult.Offline      -> Text(stringResource(UiStrings.food_off_offline), color = MaterialTheme.colorScheme.error)
             OffResult.RateLimited  -> Text(stringResource(UiStrings.food_off_rate_limited), color = MaterialTheme.colorScheme.error)
             OffResult.Failed       -> Text(stringResource(UiStrings.food_off_failed), color = MaterialTheme.colorScheme.error)
             is OffResult.Found     -> result.products.forEach { product ->
-                OffProductCard(product = product, image = state.importImages[product.barcode], onClick = { onSelect(product) })
+                OffProductCard(
+                    product = product,
+                    image = state.importImages[product.barcode],
+                    inList = state.foodsWithBarcode(product.barcode).firstOrNull()?.name,
+                    onClick = { onSelect(product) }
+                )
             }
         }
 
@@ -148,7 +162,7 @@ internal fun OffImportContent(
 }
 
 @Composable
-private fun OffProductCard(product: OffProduct, image: ByteArray?, onClick: () -> Unit) {
+private fun OffProductCard(product: OffProduct, image: ByteArray?, inList: String?, onClick: () -> Unit) {
     ElevatedCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -157,13 +171,13 @@ private fun OffProductCard(product: OffProduct, image: ByteArray?, onClick: () -
         // The photo of the package is often what tells two close products apart.
         Row(modifier = Modifier.padding(AapsSpacing.large), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
             FoodPhoto(bytes = image, size = AapsSpacing.foodThumbnailSize)
-            OffProductTexts(product = product, modifier = Modifier.weight(1f))
+            OffProductTexts(product = product, inList = inList, modifier = Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun OffProductTexts(product: OffProduct, modifier: Modifier) {
+private fun OffProductTexts(product: OffProduct, inList: String?, modifier: Modifier) {
     Column(modifier = modifier) {
         Text(text = product.name, style = MaterialTheme.typography.titleSmall)
         product.brand?.let {
@@ -180,7 +194,57 @@ private fun OffProductTexts(product: OffProduct, modifier: Modifier) {
             Text(text = stringResource(UiStrings.food_off_serving, it), style = MaterialTheme.typography.bodySmall)
         }
         Text(text = product.barcode, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        // The product is already in the list: a second food for it is rarely wanted.
+        inList?.let {
+            Text(text = stringResource(UiStrings.food_barcode_in_list, it), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary)
+        }
     }
+}
+
+/**
+ * The barcode just scanned or typed is already in the list. A tap on a food opens it. A second food
+ * can still be made: one for 100 g and one for 1 pot of the same product, for example.
+ */
+@Composable
+internal fun BarcodeOwnersDialog(owners: List<FD>, onOpen: (FD) -> Unit, onMakeAnother: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(UiStrings.food_barcode_known_title)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
+            ) {
+                Text(stringResource(UiStrings.food_barcode_known_text), style = MaterialTheme.typography.bodyMedium)
+                owners.forEach { food ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onOpen(food) }
+                            .padding(vertical = AapsSpacing.medium)
+                    ) {
+                        Text(text = food.name, style = MaterialTheme.typography.titleSmall)
+                        Text(text = groupOf(food), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            text = stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(food.portion), food.unit),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onMakeAnother) { Text(stringResource(UiStrings.food_barcode_make_another)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
+}
+
+/** "Breakfast / Cereals", or only the category, or "No category". */
+@Composable
+private fun groupOf(food: FD): String {
+    val category = food.category?.takeIf { it.isNotBlank() } ?: return stringResource(UiStrings.food_barcode_no_category)
+    val subCategory = food.subCategory?.takeIf { it.isNotBlank() } ?: return category
+    return stringResource(UiStrings.food_barcode_group, category, subCategory)
 }
 
 /**

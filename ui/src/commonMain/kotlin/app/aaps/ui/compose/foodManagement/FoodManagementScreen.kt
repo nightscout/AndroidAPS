@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -366,8 +367,19 @@ fun FoodManagementScreen(
                     onCloseScanner = viewModel::closeScanner,
                     onScanned = viewModel::onBarcodeScanned,
                     onSelect = viewModel::selectOffProduct,
+                    onMakeFood = viewModel::makeFoodWithBarcode,
                 )
             }
+        }
+
+        // A barcode already in the list: open that food, or make another one.
+        if (state.barcodeOwners.isNotEmpty()) {
+            BarcodeOwnersDialog(
+                owners = state.barcodeOwners,
+                onOpen = viewModel::openBarcodeOwner,
+                onMakeAnother = viewModel::importAnyway,
+                onDismiss = viewModel::dismissBarcodeOwners,
+            )
         }
 
         // Meal (proof of concept)
@@ -708,6 +720,17 @@ internal fun FoodEditorContent(
                 enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
+        }
+
+        // The barcode, small, to check it against the package. It can be selected and copied.
+        state.editorBarcode?.let { barcode ->
+            SelectionContainer {
+                Text(
+                    text = stringResource(UiStrings.food_barcode_line, barcode),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Spacer(Modifier.height(AapsSpacing.medium))

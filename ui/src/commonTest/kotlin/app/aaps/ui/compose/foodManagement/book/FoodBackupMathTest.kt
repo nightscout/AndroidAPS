@@ -63,6 +63,21 @@ class FoodBackupMathTest {
     }
 
     @Test
+    fun `a barcode that Open Food Facts did not know stays marked as such`() {
+        val book = FoodBook(offLinks = listOf(OffLink(foodId = 4, barcode = "2000000000017", hasImage = false, inOff = false), OffLink(foodId = 3, barcode = BARCODE, hasImage = false)))
+
+        val text = FoodBackupMath.encode(listOf(bread, yogurt), book, now = 5000)
+        val backup = assertNotNull(FoodBackupMath.decode(text))
+
+        // Written only when true: a file of the final version without it is read as "known".
+        assertEquals(1, Regex("notInOff").findAll(text).count())
+        assertEquals(
+            listOf(OffLink(foodId = 3, barcode = BARCODE, hasImage = false), OffLink(foodId = 4, barcode = "2000000000017", hasImage = false, inOff = false)),
+            backup.offLinks
+        )
+    }
+
+    @Test
     fun `a meal still waiting for its treatment is not in the backup`() {
         val waiting = eaten.copy(id = "eaten-2", validatedAt = null, treatmentId = null)
 

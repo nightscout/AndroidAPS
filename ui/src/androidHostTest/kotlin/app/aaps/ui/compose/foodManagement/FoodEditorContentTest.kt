@@ -75,6 +75,57 @@ class FoodEditorContentTest {
         compose.onNodeWithText(cancelLabel).performScrollTo().assertIsDisplayed()
     }
 
+    /** The barcode is written small at the bottom of the editor, so the user can check it. */
+    @Test
+    fun theBarcodeIsShownAtTheBottom() {
+        compose.setContent {
+            MaterialTheme {
+                FoodEditorContent(
+                    state = FoodManagementUiState(editorBarcode = "3017620422003"),
+                    onNameChange = {},
+                    onCategoryChange = {},
+                    onSubCategoryChange = {},
+                    onPortionChange = {},
+                    onUnitChange = {},
+                    onCarbsChange = {},
+                    onFatChange = {},
+                    onProteinChange = {},
+                    onEnergyChange = {},
+                    onSave = {},
+                    onCancel = {},
+                    isEditing = true
+                )
+            }
+        }
+        // The strings of :ui are not loaded in this test: a text shows as its key.
+        compose.onNodeWithText("food_barcode_line").performScrollTo().assertIsDisplayed()
+    }
+
+    /** A food without a barcode has no barcode line. */
+    @Test
+    fun noBarcodeNoLine() {
+        compose.setContent {
+            MaterialTheme {
+                FoodEditorContent(
+                    state = FoodManagementUiState(),
+                    onNameChange = {},
+                    onCategoryChange = {},
+                    onSubCategoryChange = {},
+                    onPortionChange = {},
+                    onUnitChange = {},
+                    onCarbsChange = {},
+                    onFatChange = {},
+                    onProteinChange = {},
+                    onEnergyChange = {},
+                    onSave = {},
+                    onCancel = {},
+                    isEditing = false
+                )
+            }
+        }
+        compose.onNodeWithText("food_barcode_line").assertDoesNotExist()
+    }
+
     /**
      * An import fills the category with "OFF". That value is not a search: opening the list must
      * still show every category, not only the ones that contain "off" (there are none).

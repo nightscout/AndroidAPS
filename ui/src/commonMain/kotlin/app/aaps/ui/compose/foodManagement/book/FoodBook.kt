@@ -44,6 +44,8 @@ data class FoodPhoto(
  * @param hasImage false when OFF has no photo for this product: nothing is downloaded then
  * @param imageUrl where the photo was. OFF changes it when a photo is replaced, so a missing photo
  *   reads the product again to get the address of today.
+ * @param inOff false when OFF did not know the barcode: the food was typed by hand with it. "OFF does
+ *   not know the product" is not "OFF has no photo": OFF can add the product later.
  */
 @Serializable
 data class OffLink(
@@ -51,6 +53,7 @@ data class OffLink(
     val barcode: String,
     val hasImage: Boolean,
     val imageUrl: String? = null,
+    val inOff: Boolean = true,
 )
 
 @Serializable

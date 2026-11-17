@@ -61,6 +61,13 @@ class FoodImages(
     }
 
     /**
+     * Remembers the barcode of [foodId], a food typed by hand because OFF did not know the barcode.
+     * There is no photo to download. The next scan of the barcode finds the food.
+     */
+    suspend fun linkBarcode(foodId: Long, barcode: String) =
+        foodBook.saveOffLink(OffLink(foodId = foodId, barcode = barcode, hasImage = false, inOff = false))
+
+    /**
      * The photo to show for each food of [foodIds] that has one: the photo of the user, or else the
      * saved OFF photo. Nothing is downloaded.
      */
