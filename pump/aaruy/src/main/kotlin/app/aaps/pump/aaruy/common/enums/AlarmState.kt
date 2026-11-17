@@ -31,6 +31,7 @@ enum class AlarmState(val state: Int) {
     PUMP_MOTOR_MCU_PLUSES_EXTRA(0x810B),        // The second controller saw more insulin than expected
     PUMP_MOTOR_DESTRUCTIVE_ANOMALY(0x810C),     // The motor slips on the piston thread. The pump cannot deliver any more
     PUMP_MOTOR_FAILED_PLUS(0x810D),             // Motor failed to run, a pump fault
+    PUMP_MOTOR_FAILED_ERROR(0x810E),            // A pump fault, from the vendor code in PR 5589
     PUMP_MOTOR_AUTO_POWEROFF(0x8114);           // The pump switched itself off
 
     companion object {
