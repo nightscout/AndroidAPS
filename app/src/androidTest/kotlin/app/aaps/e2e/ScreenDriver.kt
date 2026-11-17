@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
-import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
@@ -50,10 +49,39 @@ class ScreenDriver(private val device: UiDevice) {
     private fun scrollOn() {
         val scrollable = device.findObject(By.pkg(packageName).scrollable(true)) ?: return
         runCatching {
-            // scroll() says whether the view can still scroll that way.
-            if (!scrollable.scroll(if (scrollDown) Direction.DOWN else Direction.UP, SCROLL_PERCENT)) scrollDown = !scrollDown
+            // Its own swipe, not UiObject2.scroll(): at 320 x 640 that one did not move the pump settings list, and it
+            // said "at the end" after every step, so the step went down and up for ever. The end is where a step moves
+            // nothing.
+            val before = placeOf(scrollable)
+            val box = scrollable.visibleBounds
+            val x = box.left + (box.width() * SWIPE_X).toInt()
+            val low = box.top + (box.height() * SWIPE_LOW).toInt()
+            val high = box.top + (box.height() * SWIPE_HIGH).toInt()
+            if (scrollDown) device.swipe(x, low, x, high, SWIPE_STEPS) else device.swipe(x, high, x, low, SWIPE_STEPS)
+            if (settledPlace() == before) scrollDown = !scrollDown
         }
     }
+
+    /**
+     * The place of the scrollable view's content once it stands still. A swipe leaves the list gliding for a moment,
+     * and a tap on a gliding list only stops it: the tap on a button found right after a scroll step was lost that way.
+     */
+    private fun settledPlace(): String? {
+        var last: String? = null
+        repeat(SETTLE_CHECKS) {
+            SystemClock.sleep(SETTLE_MS)
+            val now = device.findObject(By.pkg(packageName).scrollable(true))?.let { placeOf(it) } ?: return null
+            if (now == last) return now
+            last = now
+        }
+        return last
+    }
+
+    /**
+     * Where the content of a scrollable view is now: the places on the screen of all that is in it. Not only of its
+     * children: a scrolling Compose column is one child that keeps its place.
+     */
+    private fun placeOf(view: UiObject2): String = view.findObjects(By.pkg(packageName)).joinToString { it.visibleBounds.toShortString() }
 
     /** One tap. For a button that starts a command: a second tap would start it again. */
     fun click(label: String) = withStaleRetry { find(label).click() }
@@ -147,7 +175,10 @@ class ScreenDriver(private val device: UiDevice) {
         while (SystemClock.uptimeMillis() < end) {
             // Back, not a scrim tap: the tap goes to the scrim node centre, which is ON the sheet once it is
             // tall enough (see AbstractDanaEmulatorUiTest). The find guards it, so Back needs a sheet to be up.
-            runCatching { if (device.findObject(byDesc("Close sheet")) != null) device.pressBack() }
+            // A sheet as tall as the screen covers its scrim, so its drag handle is the sign then (seen at 320 x 640).
+            runCatching {
+                if (device.findObject(byDesc("Close sheet")) != null || device.findObject(byDesc("Drag handle")) != null) device.pressBack()
+            }
             if (device.findObject(byDesc("Open navigation")) != null) return
             device.waitForIdle(IDLE_MS)
         }
@@ -215,7 +246,14 @@ class ScreenDriver(private val device: UiDevice) {
         private const val STALE_RETRIES = 10
         private const val STALE_SETTLE_MS = 700L
         private const val LOG_CHUNK = 3500
-        private const val SCROLL_PERCENT = 0.5f
+
+        // One scroll step: a slow swipe over the middle half of the view, near its left edge, where no slider or button is.
+        private const val SWIPE_X = 0.06f
+        private const val SWIPE_LOW = 0.75f
+        private const val SWIPE_HIGH = 0.25f
+        private const val SWIPE_STEPS = 30
+        private const val SETTLE_MS = 200L
+        private const val SETTLE_CHECKS = 15
         private const val EDIT_TEXT = "android.widget.EditText"
     }
 }

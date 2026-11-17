@@ -155,6 +155,18 @@ CI does (on Windows through `cmd`: PowerShell puts a byte-order mark before the 
 cmd /c "echo no| <sdk>\cmdline-tools\latest\bin\avdmanager.bat create avd -n citest_local -k system-images;android-31;google_apis_playstore;x86_64"
 ```
 
+With no `android-31` image at hand, any phone AVD shows the same layout faults once it is set to that screen:
+`adb -s <serial> shell wm size 320x640` and `adb -s <serial> shell wm density 160`. On a `-read-only` emulator the
+change is gone with the emulator.
+
+What the small screen has shown so far, all in `ScreenDriver`:
+
+- `UiObject2.scroll()` is not used. It did not move a pump settings list (a scrolling Compose column), and it returned
+  "at the end" after every step, so a search went one step down and one step up for ever. `ScreenDriver` swipes by
+  itself, near the left edge where no slider or button is, and turns around when a step moved nothing.
+- A bottom sheet as tall as the screen covers its scrim, so "Close sheet" is not there. The drag handle is the sign
+  then. The permissions sheet at the app start is that tall on a newer Android, which asks for more.
+
 Shard C's logcat can rotate before CI reads it, so the UI base adds the screen to the error, which the test output keeps.
 
 ## Traps
@@ -243,5 +255,8 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
 - A pump that reports its reservoir only below a limit (a pod says only "more than 50 U" above 50 U): the scenarios
   follow a bolus by the reservoir, so the emulated pump starts at that limit. Say so in the emulator: it is not what a
   new pump holds.
+- A pod has no stop on its screens, but its drivers write a profile as "stop the pod, then send the basal". A test
+  that needs a stopped pod loses the second command (`loseCommand(BASAL_PROFILE)`, then `profileWrittenOnce`). That is
+  also how a user comes to see "Resume Delivery".
 - A percent pump turns the loop's rate into a percent of the base rate. A trap needs a base on which the rate is a
   float error away from a step and still under the limits (1 U/h, 200 %): the amount scenario switches to 80 %.
