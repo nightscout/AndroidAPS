@@ -353,6 +353,34 @@ written, computed getters are not, and an enum from another module needs no anno
 that is part of the saved object needs `@Serializable` there too, with the plugin in that module.
 `:pump:carelevo:emulator` saves its patch this way.
 
+### RxJava to coroutines
+
+RxJava has no Kotlin/Native artifact, so a module that uses it must move to coroutines first. The Carelevo driver
+(`405beac0b1`, 48 files) found these traps:
+
+- **An inner time limit is not a cancel.** `withTimeout` throws `TimeoutCancellationException`, a
+  `CancellationException`. A `catch (e: CancellationException) { throw e }` around a call that has its own time limit
+  passes a timed-out BLE write up as if the caller was cancelled. The queue then drops the command and AAPS never
+  learns the result. Rx code with `runCatching` around `runBlocking` turned it into a normal failure. Write
+  `catch (e: CancellationException) { currentCoroutineContext().ensureActive(); /* handle as a failure */ }`.
+  Only an emulator scenario with a lost answer found this; every unit test passed.
+- **`BehaviorSubject` is not a `StateFlow`.** A `StateFlow` drops a value equal to the last one and starts with a value.
+  A faithful replacement is `MutableSharedFlow(replay = 1, extraBufferCapacity = 64, DROP_OLDEST)`, as
+  `latestValueFlow()` in `:pump:carelevo`; `replayCache.isEmpty()` is the old `value == null`. Without the buffer a
+  collector that is behind gets only the newest value, where `observeOn` queued them all.
+- **Trampolined tests become unconfined ones.** Give each class that launches collectors an
+  `internal var dispatcher` (default `aapsIoDispatcher`), and set `Dispatchers.Unconfined` in its test right after
+  construction. View models use `viewModelScope`; their tests already replace Main.
+- **A blocking call stays blocking.** A lambda that runs `runBlocking` inside cannot be stopped by an outer
+  `withTimeout`. Only a suspend call is cut by it.
+- **Look for Rx chains that never really ran.** A `subscribeOn(io)` chain added to a `CompositeDisposable` that is
+  cleared on the next line is almost always disposed before it starts. Port what the code does, not what its comment
+  says, and report it.
+- **The compiler can show one error per run.** In this build the Kotlin compile of a test source set reported only
+  the first error, also with `kotlin.incremental=false`. Convert by pattern, not by compile error.
+- **Never sort imports with PowerShell `Sort-Object -Unique`.** It is case-insensitive and drops `flow.Flow` when
+  `flow.flow` is there too.
+
 ### Pin what the code writes and shows before you move it
 
 The safe order is: tests that pin the current output first, green on the old code, then the move,
