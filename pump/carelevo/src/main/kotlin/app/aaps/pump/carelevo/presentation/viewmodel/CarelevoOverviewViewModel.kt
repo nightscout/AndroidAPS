@@ -50,8 +50,6 @@ import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusi
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.ext.BOOT_DATE_TIME_FORMAT
 import app.aaps.pump.carelevo.ext.OVERVIEW_DATE_TIME_FORMAT
-import app.aaps.pump.carelevo.ext.clockMinutesBetween
-import app.aaps.pump.carelevo.ext.plusOnTheClock
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewUiModel
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
@@ -82,16 +80,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
-import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.math.RoundingMode
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -293,16 +291,19 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     private fun buildUi(info: CarelevoPatchInfoDomainModel): CarelevoOverviewUiModel {
         aapsLogger.debug(LTag.PUMPCOMM, "info : $info")
-        val bootLdt = parseBootDateTime(info.bootDateTimeUtcMillis) ?: parseBootDateTime(info.bootDateTime)
-        val bootUi = bootLdt?.format(OVERVIEW_DATE_TIME_FORMAT) ?: ""
+        val zone = TimeZone.currentSystemDefault()
+        // The stored millis, or else the stored yyMMddHHmm text, read in the zone of the phone.
+        val boot = info.bootDateTimeUtcMillis?.let { Instant.fromEpochMilliseconds(it) }
+            ?: parseBootDateTime(info.bootDateTime)?.toInstant(zone)
+        val bootUi = boot?.toLocalDateTime(zone)?.format(OVERVIEW_DATE_TIME_FORMAT) ?: ""
 
         val infusedBasal = (info.infusedTotalBasalAmount ?: 0.0)
             .toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
         val infusedBolus = (info.infusedTotalBolusAmount ?: 0.0)
             .toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
 
-        val remainMinutes = bootLdt?.let { getRemainMin(it) } ?: 0
-        val expireAt = bootLdt?.let { getExpireAtText(it) } ?: ""
+        val remainMinutes = boot?.let { getRemainMin(it) } ?: 0
+        val expireAt = boot?.let { endAt(it).toLocalDateTime(zone).format(OVERVIEW_DATE_TIME_FORMAT) } ?: ""
 
         return CarelevoOverviewUiModel(
             serialNumber = info.manufactureNumber.orEmpty(),
@@ -703,16 +704,6 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
     }
 
-    fun parseBootDateTime(utcMillis: Long?): LocalDateTime? {
-        if (utcMillis == null) {
-            return null
-        }
-
-        return runCatching {
-            Instant.fromEpochMilliseconds(utcMillis).toLocalDateTime(TimeZone.currentSystemDefault())
-        }.getOrNull()
-    }
-
     private fun onDisconnectValue() {
         _overviewDataFlow.value = defaultOverviewData()
         _serialNumber.value = ""
@@ -925,23 +916,19 @@ class CarelevoOverviewViewModel @Inject constructor(
     private data class ConnectionInfo(val connected: Boolean, val lastConnectedAt: Long)
 
     /** Canonical clock for the expiry countdown — [dateUtil] so tests can inject a fake time. */
-    private fun nowLocal(): LocalDateTime =
-        Instant.fromEpochMilliseconds(dateUtil.now()).toLocalDateTime(TimeZone.currentSystemDefault())
+    private fun now(): Instant = Instant.fromEpochMilliseconds(dateUtil.now())
 
     /**
-     * 7 days, plus the 12 hour grace the patch adds once they are up. Both overview rows read it. Counted on the local
-     * clock: across a clock change the expiry keeps the boot hour.
+     * 7 days, plus the 12 hour grace the patch adds once they are up. Both overview rows read it. Counted in real hours,
+     * as the patch counts them, so across a clock change the expiry is not at the boot hour.
      */
-    private fun endAt(createdAt: LocalDateTime): LocalDateTime {
-        val baseEnd = LocalDateTime(createdAt.date.plus(7, DateTimeUnit.DAY), createdAt.time)
-        return if (nowLocal() > baseEnd) baseEnd.plusOnTheClock(12.hours) else baseEnd
+    private fun endAt(boot: Instant): Instant {
+        val baseEnd = boot + 7.days
+        return if (now() > baseEnd) baseEnd + 12.hours else baseEnd
     }
 
-    private fun getRemainMin(createdAt: LocalDateTime): Int =
-        clockMinutesBetween(nowLocal(), endAt(createdAt)).coerceAtLeast(0).toInt()
-
-    private fun getExpireAtText(createdAt: LocalDateTime): String =
-        endAt(createdAt).format(OVERVIEW_DATE_TIME_FORMAT)
+    private fun getRemainMin(boot: Instant): Int =
+        (endAt(boot) - now()).inWholeMinutes.coerceAtLeast(0).toInt()
 
     fun refreshPatchInfusionInfo() {
         if (!carelevoPatch.isBluetoothEnabled()) {

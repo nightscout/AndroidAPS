@@ -85,7 +85,6 @@ import org.robolectric.annotation.Config
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.CopyOnWriteArrayList
@@ -196,6 +195,7 @@ class CarelevoOverviewViewModelTest {
     /** Fixed "now" fed to the VM through [DateUtil.now]; the expiry maths is derived from it. */
     private val nowMillis = 1_752_000_000_000L
     private val dayMillis = 24L * 60L * 60L * 1000L
+    private val hourMillis = 60L * 60L * 1000L
 
     // ---- helpers ------------------------------------------------------------------------------
 
@@ -448,18 +448,6 @@ class CarelevoOverviewViewModelTest {
         assertThat(sut.parseBootDateTime("not-a-date")).isNull()
     }
 
-    // ---- parseBootDateTime(Long?) -------------------------------------------------------------
-
-    @Test
-    fun `parseBootDateTime returns null for null utc millis`() {
-        assertThat(sut.parseBootDateTime(null as Long?)).isNull()
-    }
-
-    @Test
-    fun `parseBootDateTime converts utc millis into the system zone`() {
-        assertThat(sut.parseBootDateTime(nowMillis)).isEqualTo(local(nowMillis).toKotlinLocalDateTime())
-    }
-
     // ---- observePatchInfo ---------------------------------------------------------------------
 
     @Test
@@ -472,7 +460,7 @@ class CarelevoOverviewViewModelTest {
 
         assertThat(sut.serialNumber.value).isEqualTo("SN-0001")
         assertThat(sut.bootDateTime.value).isEqualTo(uiFormat(bootLdt))
-        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7)))
+        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(local(bootMillis + 7 * dayMillis)))
         // 1.234 + 2.345 rounded HALF_UP to 2dp each = 1.23 + 2.35 = 3.58
         assertThat(sut.totalInsulinAmount.value).isEqualTo(3.58)
         assertThat(sut.isPumpStop.value).isFalse()
@@ -483,43 +471,102 @@ class CarelevoOverviewViewModelTest {
                 s(R.string.common_label_unit_value_dose_with_space, 200)
             )
         )
-        val expectedRemain = ChronoUnit.MINUTES.between(local(nowMillis), bootLdt.plusDays(7)).toInt()
+        val expectedRemain = ((bootMillis + 7 * dayMillis - nowMillis) / 60_000L).toInt()
         assertThat(sut.runningRemainMinutes.value).isEqualTo(expectedRemain)
         assertThat(expectedRemain).isGreaterThan(0)
     }
 
     @Test
     fun `the expiry shown moves to the grace end only once the seven days are up`() {
-        val bootMillis = nowMillis - 7 * dayMillis - 60 * 60 * 1000L
-        val bootLdt = local(bootMillis)
+        val bootMillis = nowMillis - 7 * dayMillis - hourMillis
         sut.observePatchInfo()
 
         patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
 
-        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
+        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(local(bootMillis + 7 * dayMillis + 12 * hourMillis)))
         // One hour into the grace, so eleven of the twelve hours are left.
         assertThat(sut.runningRemainMinutes.value).isEqualTo(11 * 60)
     }
 
     /**
-     * The seven days are counted on the local clock: across the spring clock change the expiry stays at the boot hour,
-     * and the minutes left are clock minutes, not elapsed ones. This pins what the overview does today.
+     * The patch counts its 7 days in real hours. When summer time starts during the week, the clock jumps an hour ahead,
+     * so the expiry shows an hour later than the boot hour.
      */
     @Test
-    fun `the expiry is seven days later on the local clock also across a clock change`() {
+    fun `the expiry is 168 real hours after the boot also when summer time starts`() {
         val saved = TimeZone.getDefault()
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
         try {
-            // Booted 2026-03-25 10:00 CET, now 2026-03-28 10:00 CET; summer time starts on 2026-03-29.
+            // Booted 2026-03-25 10:00 CET; summer time starts on 2026-03-29. Now is 5 days later: 2026-03-30 11:00 CEST.
             val bootMillis = 1_774_429_200_000L
-            whenever(dateUtil.now()).thenReturn(bootMillis + 3 * dayMillis)
+            whenever(dateUtil.now()).thenReturn(bootMillis + 5 * dayMillis)
             sut.observePatchInfo()
 
             patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
 
             assertThat(sut.bootDateTime.value).isEqualTo("2026-03-25 10:00")
-            assertThat(sut.expirationTime.value).isEqualTo("2026-04-01 10:00")
-            assertThat(sut.runningRemainMinutes.value).isEqualTo(4 * 24 * 60)
+            assertThat(sut.expirationTime.value).isEqualTo("2026-04-01 11:00")
+            assertThat(sut.runningRemainMinutes.value).isEqualTo(2 * 24 * 60)
+        } finally {
+            TimeZone.setDefault(saved)
+        }
+    }
+
+    /** When summer time ends during the week, the clock goes an hour back, so the expiry shows an hour before the boot hour. */
+    @Test
+    fun `the expiry is 168 real hours after the boot also when summer time ends`() {
+        val saved = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        try {
+            // Booted 2026-10-21 10:00 CEST; summer time ends on 2026-10-25. Now is 5 days later: 2026-10-26 09:00 CET.
+            val bootMillis = 1_792_569_600_000L
+            whenever(dateUtil.now()).thenReturn(bootMillis + 5 * dayMillis)
+            sut.observePatchInfo()
+
+            patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
+
+            assertThat(sut.bootDateTime.value).isEqualTo("2026-10-21 10:00")
+            assertThat(sut.expirationTime.value).isEqualTo("2026-10-28 09:00")
+            assertThat(sut.runningRemainMinutes.value).isEqualTo(2 * 24 * 60)
+        } finally {
+            TimeZone.setDefault(saved)
+        }
+    }
+
+    /** The 12 hour grace is counted in real hours too: it ends 180 hours after the boot. */
+    @Test
+    fun `the grace end is 180 real hours after the boot also when summer time starts`() {
+        val saved = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        try {
+            // Booted 2026-03-25 10:00 CET; now is 169 real hours later, one hour into the grace.
+            val bootMillis = 1_774_429_200_000L
+            whenever(dateUtil.now()).thenReturn(bootMillis + 7 * dayMillis + hourMillis)
+            sut.observePatchInfo()
+
+            patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
+
+            assertThat(sut.expirationTime.value).isEqualTo("2026-04-01 23:00")
+            assertThat(sut.runningRemainMinutes.value).isEqualTo(11 * 60)
+        } finally {
+            TimeZone.setDefault(saved)
+        }
+    }
+
+    /** A boot time known only as the stored local text is read in the zone of the phone, then counted in real hours. */
+    @Test
+    fun `the expiry from the stored boot text is 168 real hours later also when summer time starts`() {
+        val saved = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        try {
+            whenever(dateUtil.now()).thenReturn(1_774_429_200_000L)
+            sut.observePatchInfo()
+
+            patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = null, bootDateTime = "2603251000"))
+
+            assertThat(sut.bootDateTime.value).isEqualTo("2026-03-25 10:00")
+            assertThat(sut.expirationTime.value).isEqualTo("2026-04-01 11:00")
+            assertThat(sut.runningRemainMinutes.value).isEqualTo(7 * 24 * 60)
         } finally {
             TimeZone.setDefault(saved)
         }
@@ -574,13 +621,12 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `observePatchInfo stops the countdown at zero once the grace is spent`() {
         val bootMillis = nowMillis - 8 * dayMillis
-        val bootLdt = local(bootMillis)
         sut.observePatchInfo()
 
         patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
 
         assertThat(sut.runningRemainMinutes.value).isEqualTo(0)
-        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
+        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(local(bootMillis + 7 * dayMillis + 12 * hourMillis)))
     }
 
     @Test
@@ -1474,8 +1520,8 @@ class CarelevoOverviewViewModelTest {
         patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
         patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
-        // Derived, not hardcoded: the VM measures the countdown in local-calendar minutes.
-        val expected = ChronoUnit.MINUTES.between(local(nowMillis), local(bootMillis).plusDays(7)).toInt()
+        // The VM counts the time left in real minutes: 168 hours after the boot.
+        val expected = ((bootMillis + 7 * dayMillis - nowMillis) / 60_000L).toInt()
         val total = sut.runningRemainMinutes.value!!
         assertThat(total).isEqualTo(expected)
         assertThat(total).isGreaterThan(0)
