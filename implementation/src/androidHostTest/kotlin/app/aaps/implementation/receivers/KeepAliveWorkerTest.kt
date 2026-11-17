@@ -498,6 +498,161 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
     }
 
+    // ---- what had no test before the checks moved to shared code ---------------------------------
+
+    @Test
+    fun `doWorkAndLog retries a missing zero temp basal`() = runTest {
+        worker = createWorker()
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+
+        worker.doWorkAndLog()
+
+        verify(loop).verifyZeroDelivery()
+    }
+
+    @Test
+    fun `a run more than 10 minutes after the last one reports the gap`() = runTest {
+        worker = createWorker()
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+        setStaticLong("lastRun", now - T.mins(11).msecs())
+
+        worker.doWorkAndLog()
+
+        verify(fabricPrivacy).logCustom("KeepAliveFail")
+        verify(dstHelper).dstCheck()
+    }
+
+    @Test
+    fun `a run less than 10 minutes after the last one reports no gap`() = runTest {
+        worker = createWorker()
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+        setStaticLong("lastRun", now - T.mins(6).msecs())
+
+        worker.doWorkAndLog()
+
+        verify(fabricPrivacy, never()).logCustom("KeepAliveFail")
+        verify(dstHelper).dstCheck()
+    }
+
+    /** The pump was last read 20 minutes ago, so each check asks for its status. No profile is sent. */
+    private suspend fun pumpStatusOutdated(mode: RM.Mode = RM.Mode.OPEN_LOOP) {
+        whenever(loop.runningMode()).thenReturn(mode)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        whenever(commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)).thenReturn(true)
+        testPumpPlugin.lastData = now - T.mins(20).msecs()
+    }
+
+    @Test
+    fun `the pump unreachable alarm is checked only after a status read was asked for`() = runTest {
+        worker = createWorker()
+        pumpStatusOutdated()
+
+        worker.checkPump()
+        verify(localAlertUtils, never()).checkPumpUnreachableAlarm(any(), any(), any())
+
+        worker.checkPump()
+        verify(localAlertUtils).checkPumpUnreachableAlarm(now - T.mins(20).msecs(), true, false)
+    }
+
+    @Test
+    fun `a status read asked for 5 minutes 20 seconds ago still lets the pump unreachable alarm be checked`() = runTest {
+        worker = createWorker()
+        pumpStatusOutdated()
+        setStaticLong("lastReadStatus", now - T.secs(5 * 60 + 20).msecs())
+
+        worker.checkPump()
+
+        verify(localAlertUtils).checkPumpUnreachableAlarm(now - T.mins(20).msecs(), true, false)
+    }
+
+    @Test
+    fun `a status read asked for 6 minutes ago does not let the pump unreachable alarm be checked`() = runTest {
+        worker = createWorker()
+        pumpStatusOutdated()
+        setStaticLong("lastReadStatus", now - T.mins(6).msecs())
+
+        worker.checkPump()
+
+        verify(localAlertUtils, never()).checkPumpUnreachableAlarm(any(), any(), any())
+    }
+
+    @Test
+    fun `the pump unreachable alarm is told that the pump is disconnected`() = runTest {
+        worker = createWorker()
+        pumpStatusOutdated(RM.Mode.DISCONNECTED_PUMP)
+        setStaticLong("lastReadStatus", now - T.mins(5).msecs())
+
+        worker.checkPump()
+
+        verify(localAlertUtils).checkPumpUnreachableAlarm(now - T.mins(20).msecs(), true, true)
+        verify(commandQueue, never()).readStatus(any())
+    }
+
+    /** A temporary profile of one hour, made from profile switch 140, which ends at [end]. */
+    private suspend fun runningTemporaryProfileEnding(end: Long) {
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 140))
+        // Built before whenever(): the constructor reads activePlugin, a mock.
+        val running = ProfileSealed.EPS(effectiveProfileSwitch.copy(originalPsId = 140, originalDuration = T.hours(1).msecs(), originalEnd = end), activePlugin)
+        whenever(profileFunction.getProfile()).thenReturn(running)
+        testPumpPlugin.isProfileSet = true
+        testPumpPlugin.lastData = now
+    }
+
+    @Test
+    fun `checkPump sets the profile again when the running temporary profile has ended`() = runTest {
+        worker = createWorker()
+        runningTemporaryProfileEnding(now - T.mins(1).msecs())
+
+        worker.checkPump()
+
+        verify(mockedRxBus).send(any<EventProfileChangeRequested>())
+    }
+
+    @Test
+    fun `checkPump leaves a running temporary profile that has not ended`() = runTest {
+        worker = createWorker()
+        runningTemporaryProfileEnding(now + T.mins(1).msecs())
+
+        worker.checkPump()
+
+        verify(mockedRxBus, never()).send(any<EventProfileChangeRequested>())
+    }
+
+    @Test
+    fun `checkAPS uploads the status at most every 5 minutes`() = runTest {
+        worker = createWorker()
+        whenever(config.PUMPCONTROL).thenReturn(true)
+
+        worker.checkAPS()
+        worker.checkAPS()
+
+        verify(loop, times(1)).scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
+    }
+
+    @Test
+    fun `checkAPS uploads the status again when the last upload is more than 5 minutes old`() = runTest {
+        worker = createWorker()
+        whenever(config.PUMPCONTROL).thenReturn(true)
+        setStaticLong("lastIobUpload", now - T.mins(6).msecs())
+
+        worker.checkAPS()
+
+        verify(loop).scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
+    }
+
+    @Test
+    fun `checkAPS does not upload the status when the last upload is less than 5 minutes old`() = runTest {
+        worker = createWorker()
+        whenever(config.PUMPCONTROL).thenReturn(true)
+        setStaticLong("lastIobUpload", now - T.mins(4).msecs())
+
+        worker.checkAPS()
+
+        verify(loop, never()).scheduleBuildAndStoreDeviceStatus(any())
+    }
+
     private fun setStaticLong(name: String, value: Long) {
         val field = try {
             KeepAliveWorker::class.java.getDeclaredField(name)
