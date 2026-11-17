@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,8 +21,10 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.reflect.KClass
@@ -175,6 +178,24 @@ class RunningModeExpirySchedulerTest : TestBase() {
         scheduler.start()
         verify(workManager).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
         verify(workManager, never()).enqueueUniqueWork(any<String>(), any(), any<OneTimeWorkRequest>())
+    }
+
+    @Test
+    fun `the worker is scheduled for the end of the mode`() = runTest {
+        val mode = temporary(RM.Mode.DISCONNECTED_PUMP, timestamp = now - T.mins(10).msecs(), durationMs = T.mins(30).msecs())
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(mode)
+        scheduler.start()
+        val request = argumentCaptor<OneTimeWorkRequest>()
+        verify(workManager).enqueueUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME), eq(ExistingWorkPolicy.REPLACE), request.capture())
+        assertThat(request.firstValue.workSpec.initialDelay).isEqualTo(T.mins(20).msecs())
+    }
+
+    @Test
+    fun `a second start does not observe the modes again`() = runTest {
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(permanent(RM.Mode.CLOSED_LOOP))
+        scheduler.start()
+        scheduler.start()
+        verify(workManager, times(1)).cancelUniqueWork(eq(RunningModeExpiryWorker.WORK_NAME))
     }
 
     // --- Helpers ---
